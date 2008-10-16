@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.4.8)
 
 project(KPackageKit)
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/ )
+
 find_package(KDE4 REQUIRED)
 find_package(QPackageKit REQUIRED)
 include(KDE4Defaults)
