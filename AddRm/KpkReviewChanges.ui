@@ -23,7 +23,7 @@
       </font>
      </property>
      <property name="text" >
-      <string>You selected the folowing packages to be INSTALLED/REMOVED, press ok to proced:</string>
+      <string>You selected the following packages to be INSTALLED/REMOVED, press ok to proceed:</string>
      </property>
      <property name="alignment" >
       <set>Qt::AlignCenter</set>

@@ -184,7 +184,7 @@ void KpkNotify::getUpdatesFinished(PackageKit::Transaction::ExitStatus status, u
 	// i think 5 is the maximun number to show them detailed
 	if ( packages.size() <= 5 ) {
 	    QString text;
-	    text.append( i18np("<b>You have one update:", "<b>You have %1 updates:</b>", packages.size() ) );
+	    text.append( i18np("<b>You have one update:</b>", "<b>You have %1 updates:</b>", packages.size() ) );
 	    for ( int i = 0; i < packages.size(); i++) {
 		text.append( "<br><b>" + packages.at(i)->name() + "</b> - " + packages.at(i)->summary() );
 	    }

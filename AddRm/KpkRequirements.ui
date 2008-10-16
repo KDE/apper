@@ -19,7 +19,7 @@
       </font>
      </property>
      <property name="text" >
-      <string>The Following packages have also to be removed/installed:</string>
+      <string>The following packages also have to be removed/installed:</string>
      </property>
      <property name="textFormat" >
       <enum>Qt::AutoText</enum>

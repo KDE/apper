@@ -42,7 +42,7 @@ KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *pa
     // Set Apply and Cancel buttons
     setButtons( KDialog::Apply | KDialog::Cancel );
 
-    label->setText( i18n("The folowing packages will be INSTALLED/REMOVED, Apply to continue:") );
+    label->setText( i18n("The following packages will be INSTALLED/REMOVED, press Apply to continue:") );
 }
 
 KpkReviewChanges::~KpkReviewChanges()
@@ -98,7 +98,7 @@ void KpkReviewChanges::checkTask()
 	    }
         }
 	else
-	    KMessageBox::error( this, i18n("Sorry, your backend does not support removing packages"), i18n("Erro KPackageKit") );
+	    KMessageBox::error( this, i18n("Sorry, your backend does not support removing packages"), i18n("Error KPackageKit") );
     }
     else if ( !m_addPackages.isEmpty() ) {
         qDebug() << "task add else";
@@ -127,7 +127,7 @@ void KpkReviewChanges::checkTask()
 	    }
         }
 	else
-	    KMessageBox::error( this, i18n("Sorry, your backend does not support installing packages"), i18n("Erro KPackageKit") );
+	    KMessageBox::error( this, i18n("Sorry, your backend does not support installing packages"), i18n("Error KPackageKit") );
     }
     else {
         qDebug() << "task else";
@@ -222,7 +222,7 @@ void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
 	    checkTask();
 	    break;
 	case KpkTransaction::Failed :
-	    KMessageBox::error( this, i18n("Sorry an error occureed"), i18n("Erro KPackageKit") );
+	    KMessageBox::error( this, i18n("Sorry an error occurred"), i18n("Error KPackageKit") );
 	    setButtons( KDialog::Close );
 	    break;
 	case KpkTransaction::Cancelled :
@@ -243,7 +243,7 @@ void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
 	    checkTask();
 	    break;
 	case KpkTransaction::Failed :
-	    KMessageBox::error( this, i18n("Sorry an error occureed"), i18n("Erro KPackageKit") );
+	    KMessageBox::error( this, i18n("Sorry an error occurred"), i18n("Error KPackageKit") );
 	    setButtons( KDialog::Close );
 	    break;
 	case KpkTransaction::Cancelled :
