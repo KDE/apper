@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Service
+Categories=Qt;KDE;X-KDE-settings-hardware;
+Exec=kcmshell4 kpk_update
+Icon=security-high
+
+X-KDE-Library=kcm_kpk_update
+X-KDE-ParentApp=kcontrol
+X-KDE-ServiceTypes=KCModule,KCModuleInit
+X-KDE-System-Settings-Parent-Category=add-and-remove-software
+X-KDE-Weight=2
+
+Name=Software Updates
+Name[pt_BR]=Atualização de Programas
+Name[fr_FR]=Mises à jour logicielles
+
+Comment=Check and Install Updates
+Comment[pt_BR]=Selecionar e Instalar Atualizações
+Comment[fr_FR]=Sélectionner et installer les mises à jour
+
+X-KDE-Keywords=packagekit,update,upgrade
+X-KDE-Keywords[pt_BR]=packagekit,atualizar
+X-KDE-Keywords[fr_FR]=packagekit,mise à jour

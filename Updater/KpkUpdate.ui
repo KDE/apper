@@ -1,0 +1,121 @@
+<ui version="4.0" >
+ <class>KpkUpdate</class>
+ <widget class="QWidget" name="KpkUpdate" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <property name="locale" >
+   <locale country="UnitedStates" language="English" />
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2" >
+   <item row="0" column="0" colspan="3" >
+    <widget class="QSplitter" name="splitter" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QTreeView" name="packageView" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="MinimumExpanding" hsizetype="Expanding" >
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="horizontalScrollBarPolicy" >
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="autoScroll" >
+       <bool>false</bool>
+      </property>
+      <property name="showDropIndicator" stdset="0" >
+       <bool>false</bool>
+      </property>
+      <property name="alternatingRowColors" >
+       <bool>true</bool>
+      </property>
+      <property name="rootIsDecorated" >
+       <bool>true</bool>
+      </property>
+      <property name="itemsExpandable" >
+       <bool>true</bool>
+      </property>
+      <property name="animated" >
+       <bool>true</bool>
+      </property>
+      <property name="allColumnsShowFocus" >
+       <bool>false</bool>
+      </property>
+      <property name="headerHidden" >
+       <bool>true</bool>
+      </property>
+      <property name="expandsOnDoubleClick" >
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QDockWidget" name="detailsDW" >
+      <property name="floating" >
+       <bool>false</bool>
+      </property>
+      <property name="features" >
+       <set>QDockWidget::DockWidgetClosable</set>
+      </property>
+      <property name="windowTitle" >
+       <string>Information</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents" >
+       <layout class="QGridLayout" name="gridLayout" >
+        <item row="0" column="0" >
+         <widget class="KTextBrowser" name="descriptionKTB" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="QPushButton" name="updatePB" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="text" >
+      <string>Update System</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" >
+    <widget class="QPushButton" name="refreshPB" >
+     <property name="text" >
+      <string>Refresh</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" >
+    <widget class="QPushButton" name="historyPB" >
+     <property name="text" >
+      <string>History</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KTextBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header>ktextbrowser.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

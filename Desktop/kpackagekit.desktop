@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Icon=applications-other
+Exec=kpackagekit -caption "%c" %i %F
+X-DBUS-StartupType=Unique
+
+Name=KPackageKit
+GenericName=Software Management
+GenericName[pt_BR]=Gerenciamento de Software
+Comment=PackageKit interface for KDE
+
+MimeType=application/x-rpm;application/x-deb;
+Terminal=false
+Categories=Qt;KDE;System;SoftwareManagement;

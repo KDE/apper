@@ -1,0 +1,315 @@
+<ui version="4.0" >
+ <class>KpkAddRm</class>
+ <widget class="QWidget" name="KpkAddRm" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>541</width>
+    <height>426</height>
+   </rect>
+  </property>
+  <property name="sizePolicy" >
+   <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle" >
+   <string>Add and Remove Software</string>
+  </property>
+  <property name="locale" >
+   <locale country="UnitedStates" language="English" />
+  </property>
+  <layout class="QGridLayout" name="gridLayout" >
+   <property name="margin" >
+    <number>0</number>
+   </property>
+   <property name="spacing" >
+    <number>0</number>
+   </property>
+   <item row="0" column="3" >
+    <widget class="QToolButton" name="filtersTB" >
+     <property name="locale" >
+      <locale country="UnitedStates" language="English" />
+     </property>
+     <property name="text" >
+      <string>Filters</string>
+     </property>
+     <property name="popupMode" >
+      <enum>QToolButton::InstantPopup</enum>
+     </property>
+     <property name="toolButtonStyle" >
+      <enum>Qt::ToolButtonTextBesideIcon</enum>
+     </property>
+     <property name="arrowType" >
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4" >
+    <widget class="QComboBox" name="groupsCB" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <item>
+      <property name="text" >
+       <string>All Packages</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="5" >
+    <widget class="QSplitter" name="splitter" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QTreeView" name="packageView" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+        <horstretch>2</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>300</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="sizeIncrement" >
+       <size>
+        <width>0</width>
+        <height>2</height>
+       </size>
+      </property>
+      <property name="locale" >
+       <locale country="UnitedStates" language="English" />
+      </property>
+      <property name="rootIsDecorated" >
+       <bool>false</bool>
+      </property>
+      <property name="itemsExpandable" >
+       <bool>false</bool>
+      </property>
+      <property name="headerHidden" >
+       <bool>true</bool>
+      </property>
+      <property name="expandsOnDoubleClick" >
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QDockWidget" name="descriptionDW" >
+      <property name="font" >
+       <font>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="features" >
+       <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
+      </property>
+      <property name="windowTitle" >
+       <string>Information</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents" >
+       <layout class="QGridLayout" name="gridLayout_2" >
+        <item row="0" column="0" >
+         <widget class="QTabWidget" name="tabWidget" >
+          <property name="font" >
+           <font>
+            <stylestrategy>PreferDefault</stylestrategy>
+            <kerning>true</kerning>
+           </font>
+          </property>
+          <property name="tabPosition" >
+           <enum>QTabWidget::South</enum>
+          </property>
+          <property name="tabShape" >
+           <enum>QTabWidget::Rounded</enum>
+          </property>
+          <property name="currentIndex" >
+           <number>0</number>
+          </property>
+          <property name="elideMode" >
+           <enum>Qt::ElideNone</enum>
+          </property>
+          <widget class="QWidget" name="tab" >
+           <attribute name="title" >
+            <string>Description</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_3" >
+            <item row="0" column="0" >
+             <widget class="KTextBrowser" name="descriptionKTB" >
+              <property name="locale" >
+               <locale country="UnitedStates" language="English" />
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_2" >
+           <attribute name="title" >
+            <string>File List</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_4" >
+            <item row="0" column="0" >
+             <widget class="QPlainTextEdit" name="filesPTE" >
+              <property name="autoFillBackground" >
+               <bool>false</bool>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_3" >
+           <attribute name="title" >
+            <string>Depends on</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_5" >
+            <item row="0" column="0" >
+             <widget class="QListView" name="dependsOnLV" >
+              <property name="editTriggers" >
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="showDropIndicator" stdset="0" >
+               <bool>false</bool>
+              </property>
+              <property name="selectionMode" >
+               <enum>QAbstractItemView::NoSelection</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_4" >
+           <attribute name="title" >
+            <string>Required by</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_6" >
+            <item row="0" column="0" >
+             <widget class="QListView" name="requiredByLV" >
+              <property name="editTriggers" >
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="showDropIndicator" stdset="0" >
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="5" >
+    <widget class="QFrame" name="notifyF" >
+     <property name="frameShape" >
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Plain</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_7" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>0</number>
+      </property>
+      <item row="0" column="1" >
+       <widget class="QLabel" name="notifyL" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="autoFillBackground" >
+         <bool>false</bool>
+        </property>
+        <property name="text" >
+         <string>Notify</string>
+        </property>
+        <property name="wordWrap" >
+         <bool>true</bool>
+        </property>
+        <property name="indent" >
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" >
+       <widget class="QProgressBar" name="busyPB" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximum" >
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="2" >
+    <widget class="QPushButton" name="findPB" >
+     <property name="text" >
+      <string>&amp;Find</string>
+     </property>
+     <property name="default" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="KLineEdit" name="searchKLE" >
+     <property name="clickMessage" >
+      <string>Search package name</string>
+     </property>
+     <property name="showClearButton" stdset="0" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTextBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header>ktextbrowser.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>findPB</tabstop>
+  <tabstop>filtersTB</tabstop>
+  <tabstop>groupsCB</tabstop>
+  <tabstop>packageView</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>descriptionKTB</tabstop>
+  <tabstop>filesPTE</tabstop>
+  <tabstop>dependsOnLV</tabstop>
+  <tabstop>requiredByLV</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

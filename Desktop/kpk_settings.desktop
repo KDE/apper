@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Service
+Categories=Qt;KDE;X-KDE-settings-hardware;
+Exec=kcmshell4 kpk_settings
+Icon=preferences-other
+
+X-KDE-Library=kcm_kpk_settings
+X-KDE-ParentApp=kcontrol
+X-KDE-ServiceTypes=KCModule,KCModuleInit
+X-KDE-System-Settings-Parent-Category=add-and-remove-software
+X-KDE-Weight=3
+
+Name=Settings
+Name[pt_BR]=Configurações
+Name[fr_FR]=Configuration
+
+Comment=KPackageKit Settings
+Comment[pt_BR]=Configurações do KPackageKit
+Comment[fr_FR]=Configuration de KPackageKit
+
+X-KDE-Keywords=packagekit,setup,settings
+X-KDE-Keywords[pt_BR]=packagekit,configurações
+X-KDE-Keywords[fr_FR]=packagekit,configuration

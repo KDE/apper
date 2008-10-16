@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Service
+Categories=Qt;KDE;X-KDE-settings-hardware;
+Exec=kcmshell4 kpk_addrm
+Icon=preferences-desktop-default-applications
+
+X-KDE-Library=kcm_kpk_addrm
+X-KDE-ParentApp=kcontrol
+X-KDE-ServiceTypes=KCModule,KCModuleInit
+X-KDE-System-Settings-Parent-Category=add-and-remove-software
+X-KDE-Weight=1
+
+Name=Software Management
+Name[pt_BR]=Gerenciamento de Software
+Name[fr_FR]=Gestion des logiciels
+
+Comment=Add and Remove Software
+Comment[pt_BR]=Adicionar e Remover Programas
+Comment[fr_FR]=Ajouter/Supprimer des applications
+
+X-KDE-Keywords=install,unistall,remove,software,applications,management,packages,packagekit,purge
+X-KDE-Keywords[pt_BR]=instalar,desinstalar,remover,software,aplicativos,gerenciamento,pacotes,packagekit,eliminar
+X-KDE-Keywords[fr_FR]=installer,désinstaller,supprimer,logiciel,application,gestion,package,packagekit

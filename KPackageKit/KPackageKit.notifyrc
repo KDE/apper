@@ -1,0 +1,15 @@
+[Global]
+IconName=applications-other
+Comment=KPackageKit
+
+[Event/ShowUpdates]
+Name=New updates avaliable
+Action=Sound|Popup
+
+[Event/AutoInstallingUpdates]
+Name=Updates are being installed
+Action=Sound|Popup
+
+[Event/RestartRequired]
+Name=A System Restart is Required
+Action=Sound|Popup
