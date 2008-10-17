@@ -312,49 +312,49 @@ void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime
     findPB->setIcon(m_findIcon);
     switch(status) {
         case Transaction::Success :
-	    notifyL->setText("Search finished in " + KGlobal::locale()->formatDuration(runtime) );
+	    notifyL->setText(i18n("Search finished in %1", KGlobal::locale()->formatDuration(runtime)) );
             teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
             notifyL->setPalette(teste);
             notifyL->setAutoFillBackground(true);
             m_notifyT.start(100);
 	    break;
 	case Transaction::Failed :
-	    notifyL->setText("Search failed");
+	    notifyL->setText(i18n("Search failed"));
             teste.setColor(QPalette::Normal, QPalette::Window, QColor(255,0,0,150));
             notifyL->setPalette(teste);
             notifyL->setAutoFillBackground(true);
             m_notifyT.start(50);
 	    break;
 	case Transaction::Cancelled :
-            notifyL->setText("Search canceled");
+            notifyL->setText(i18n("Search canceled"));
             teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
             notifyL->setPalette(teste);
             notifyL->setAutoFillBackground(true);
             m_notifyT.start(100);
             break;
 	case Transaction::KeyRequired :
-            notifyL->setText("Search finished in " + KGlobal::locale()->formatDuration(runtime) );
+            notifyL->setText(i18n("Search finished in %1",KGlobal::locale()->formatDuration(runtime)) );
             teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
             notifyL->setPalette(teste);
             notifyL->setAutoFillBackground(true);
             m_notifyT.start(100);
             break;
 	case Transaction::EulaRequired :
-            notifyL->setText("Search finished in " + KGlobal::locale()->formatDuration(runtime) );
+            notifyL->setText(i18n("Search finished in %1", KGlobal::locale()->formatDuration(runtime)) );
             teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
             notifyL->setPalette(teste);
             notifyL->setAutoFillBackground(true);
             m_notifyT.start(100);
             break;
 	case Transaction::Killed :
-            notifyL->setText("Search killed");
+            notifyL->setText(i18n("Search killed"));
             teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
             notifyL->setPalette(teste);
             notifyL->setAutoFillBackground(true);
             m_notifyT.start(100);
             break;
 	case Transaction::UnknownExitStatus :
-            notifyL->setText("Search finished with unknown status");
+            notifyL->setText(i18n("Search finished with unknown status"));
             teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
             notifyL->setPalette(teste);
             notifyL->setAutoFillBackground(true);

@@ -37,7 +37,7 @@ KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *pa
     packageView->setModel(m_pkgModelMain = new KpkAddRmModel(packages, this));
     connect( m_pkgModelMain, SIGNAL( changed(bool) ), this, SLOT( enableButtonApply(bool) ) );
 
-    setCaption( "Review Changes - KPackageKit" );
+    setCaption( i18n("Review Changes - KPackageKit") );
 
     // Set Apply and Cancel buttons
     setButtons( KDialog::Apply | KDialog::Cancel );

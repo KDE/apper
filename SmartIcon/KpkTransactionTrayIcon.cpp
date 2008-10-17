@@ -132,7 +132,7 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
     QAction *refreshCacheAction = new QAction(this);
     if (refreshCache && m_act.contains(Client::ActionRefreshCache) ) {
 	m_menu->addSeparator();
-	refreshCacheAction->setText("Refresh Packages List");
+	refreshCacheAction->setText(i18n("Refresh Packages List"));
 	m_menu->addAction( refreshCacheAction );
     }
 }

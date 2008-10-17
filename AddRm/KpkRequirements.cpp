@@ -27,7 +27,7 @@ KpkRequirements::KpkRequirements( QString msg, KpkAddRmModel *model, QWidget *pa
 
     label->setText(msg);
     packageView->setModel(model);
-    setCaption( "Confirm" );
+    setCaption( i18n("Confirm") );
     setButtons( KDialog::Ok | KDialog::Cancel );
     setModal(true);
 }
