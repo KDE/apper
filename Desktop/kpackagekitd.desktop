@@ -6,5 +6,11 @@ X-KDE-Library=kpackagekitd
 X-KDE-Kded-autoload=true
 
 Name=KPackageKit Service
+Name[pt]=Serviço do KPackageKit
+Name[pt_BR]=Serviço do KPackageKit
+Name[uk]=Служба KPackageKit
 
 Comment=Tracks and Notify about Software Updates
+Comment[pt]=Segue e notifica as Actualizações de 'Software'
+Comment[pt_BR]=Segue e notifica as Actualizações de 'Software'
+Comment[uk]=Слідкує і сповіщає про оновлення програм

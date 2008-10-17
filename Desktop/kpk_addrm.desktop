@@ -11,8 +11,14 @@ X-KDE-System-Settings-Parent-Category=add-and-remove-software
 X-KDE-Weight=1
 
 Name=Software Management
+Name[pt]=Gestão de Aplicações
+Name[pt_BR]=Gestão de Aplicações
+Name[uk]=Керування програмами
 
 Comment=Add and Remove Software
+Comment[pt]=Adicionar e Remover Aplicações
+Comment[pt_BR]=Adicionar e Remover Aplicações
+Comment[uk]=Додайте або вилучіть програми
 
 X-KDE-Keywords=install,unistall,remove,software,applications,management,packages,packagekit,purge
 X-KDE-Keywords[pt_BR]=instalar,desinstalar,remover,software,aplicativos,gerenciamento,pacotes,packagekit,eliminar
