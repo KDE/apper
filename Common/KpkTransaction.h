@@ -31,7 +31,7 @@ using namespace PackageKit;
 class KpkTransaction : public KDialog, Ui::KpkTransaction
 {
     Q_OBJECT
-    Q_ENUMS(ExitStatus);
+    Q_ENUMS(ExitStatus)
 public:
     KpkTransaction( Transaction  *trans, bool modal = true, QWidget *parent=0);
     ~KpkTransaction();
