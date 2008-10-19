@@ -5,13 +5,16 @@ Exec=kpackagekit -caption "%c" %i %F
 X-DBUS-StartupType=Unique
 
 Name=KPackageKit
+Name[sv]=Kpackagekit
 GenericName=Software Management
 GenericName[pt]=Gestão de Aplicações
 GenericName[pt_BR]=Gestão de Aplicações
+GenericName[sv]=Programvaruhantering
 GenericName[uk]=Керування програмами
 Comment=PackageKit interface for KDE
 Comment[pt]=Interface do PackageKit para o KDE
 Comment[pt_BR]=Interface do PackageKit para o KDE
+Comment[sv]=Packagekit-gränssnitt för KDE
 Comment[uk]=Інтерфейс PackageKit для KDE
 
 MimeType=application/x-rpm;application/x-deb;

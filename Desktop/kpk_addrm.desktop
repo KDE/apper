@@ -13,11 +13,13 @@ X-KDE-Weight=1
 Name=Software Management
 Name[pt]=Gestão de Aplicações
 Name[pt_BR]=Gestão de Aplicações
+Name[sv]=Programvaruhantering
 Name[uk]=Керування програмами
 
 Comment=Add and Remove Software
 Comment[pt]=Adicionar e Remover Aplicações
 Comment[pt_BR]=Adicionar e Remover Aplicações
+Comment[sv]=Lägg till och ta bort programvara
 Comment[uk]=Додайте або вилучіть програми
 
 X-KDE-Keywords=install,unistall,remove,software,applications,management,packages,packagekit,purge

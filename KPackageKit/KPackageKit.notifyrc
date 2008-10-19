@@ -1,11 +1,13 @@
 [Global]
 IconName=applications-other
 Comment=KPackageKit
+Comment[sv]=Kpackagekit
 
 [Event/ShowUpdates]
 Name=New updates avaliable
 Name[pt]=Estão disponíveis actualizações novas
 Name[pt_BR]=Estão disponíveis actualizações novas
+Name[sv]=Nya uppdateringar tillgängliga
 Name[uk]=Доступні оновлення
 Action=Sound|Popup
 
@@ -13,6 +15,7 @@ Action=Sound|Popup
 Name=Updates are being installed
 Name[pt]=As actualizações estão a ser instaladas
 Name[pt_BR]=As actualizações estão a ser instaladas
+Name[sv]=Uppdateringar installeras
 Name[uk]=Оновлення, які буде встановлено
 Action=Sound|Popup
 
@@ -20,5 +23,6 @@ Action=Sound|Popup
 Name=A System Restart is Required
 Name[pt]=É Necessário Reiniciar o Sistema
 Name[pt_BR]=É Necessário Reiniciar o Sistema
+Name[sv]=En omstart av systemet krävs
 Name[uk]=Потрібне перезавантаження системи
 Action=Sound|Popup

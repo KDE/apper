@@ -13,11 +13,13 @@ X-KDE-Weight=3
 Name=Settings
 Name[pt]=Configuração
 Name[pt_BR]=Configuração
+Name[sv]=Inställningar
 Name[uk]=Параметри
 
 Comment=KPackageKit Settings
 Comment[pt]=Configuração do KPackageKit
 Comment[pt_BR]=Configuração do KPackageKit
+Comment[sv]=Inställningar av Kpackagekit
 Comment[uk]=Параметри KPackageKit
 
 X-KDE-Keywords=packagekit,setup,settings
