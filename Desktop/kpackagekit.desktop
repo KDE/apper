@@ -3,6 +3,7 @@ Type=Application
 Icon=applications-other
 Exec=kpackagekit -caption "%c" %i %F
 X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.KPackageKit
 
 Name=KPackageKit
 Name[sv]=Kpackagekit

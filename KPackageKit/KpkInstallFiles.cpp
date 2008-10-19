@@ -33,37 +33,34 @@ KpkInstallFiles::~KpkInstallFiles()
 {
 }
 
-void KpkInstallFiles::installFiles(KCmdLineArgs *args)
+void KpkInstallFiles::installFiles(KUrl::List &urls)
 {
     // yeah we are running so please be
     // polited and don't close the application :P
     m_running++;
 
-//     KUrl::List urlList;
-
     QStringList files;
     QStringList notFiles;
-    QString lastDirectory = args->url(0).directory();
-    QString lastDirectoryNotFiles = args->url(0).directory();
+    QString lastDirectory = urls.at(0).directory();
+    QString lastDirectoryNotFiles = urls.at(0).directory();
     bool showFullPath = false;
     bool showFullPathNotFiles = false;
-    for ( int i = 0; i < args->count(); i++) {
-	if ( QFileInfo( args->url(i).path() ).isFile() ) {
+    for ( int i = 0; i < urls.count(); i++) {
+	if ( QFileInfo( urls.at(i).path() ).isFile() ) {
 	    qDebug() << "isFIle";
-// 	    urlList << args.url(i);
-	    files << args->url(i).path();
+	    files << urls.at(i).path();
 	    // if the path of all the files is the same
 	    // why bothering the user showing a full path?
-	    if ( args->url(i).directory() != lastDirectory )
+	    if ( urls.at(i).directory() != lastDirectory )
 		showFullPath = true;
-	    lastDirectory = args->url(i).directory();
+	    lastDirectory = urls.at(i).directory();
 	}
 	else {
 	    qDebug() << "~isFIle";
-	    notFiles << args->url(i).path();
-	    if ( args->url(i).directory() != lastDirectoryNotFiles )
+	    notFiles << urls.at(i).path();
+	    if ( urls.at(i).directory() != lastDirectoryNotFiles )
 		showFullPathNotFiles = true;
-	    lastDirectoryNotFiles =args->url(i).directory();
+	    lastDirectoryNotFiles =urls.at(i).directory();
 	}
     }
 

@@ -36,7 +36,9 @@ public:
     ~KpkInstallFiles();
 
     bool canClose() { return !(m_running); };
-    void installFiles(KCmdLineArgs *args);
+
+public slots:
+    void installFiles(KUrl::List &urls);
 
 signals:
     void appClose();

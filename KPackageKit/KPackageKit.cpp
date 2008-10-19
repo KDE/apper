@@ -46,11 +46,13 @@ KPackageKit::KPackageKit()
 
     m_pkUi = new KpkUi(this);
     connect(m_pkNotify, SIGNAL( showUpdatesUi() ), m_pkUi, SLOT( showUpdatesUi() ) );
-//     connect(m_pkNotify, SIGNAL( showUpdatesTrayIcon() ), m_pkUi, SLOT( showUpdatesTrayIcon() ) );
     connect(m_pkUi, SIGNAL( appClose() ), this, SLOT( appClose() ) );
 
     m_instFiles = new KpkInstallFiles(this);
     connect(m_instFiles, SIGNAL( appClose() ), this, SLOT( appClose() ) );
+    // register Meta Type so we can queue que connection
+    qRegisterMetaType<KUrl::List>("KUrl::List &");
+    connect(this, SIGNAL( installFiles(KUrl::List &) ), m_instFiles, SLOT( installFiles(KUrl::List &) ), Qt::QueuedConnection );
 }
 
 KPackageKit::~KPackageKit()
@@ -73,7 +75,11 @@ int KPackageKit::newInstance()
 	m_smartUpdate->smartUpdate();
     }
     else if ( args->count() ) {
-	m_instFiles->installFiles(args);
+	// grab the list of files
+	KUrl::List urls;
+	for ( int i = 0; i < args->count(); i++)
+	    urls << args->url(i);
+	emit installFiles(urls);
     }
     else {
 	qDebug() << "SHOW UI!";

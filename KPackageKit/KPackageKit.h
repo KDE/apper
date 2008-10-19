@@ -40,6 +40,9 @@ public:
 
     virtual int newInstance();
 
+signals:
+    void installFiles(KUrl::List &urls);
+
 public slots:
     void appClose();
 
