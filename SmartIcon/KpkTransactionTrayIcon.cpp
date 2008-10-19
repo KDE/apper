@@ -19,8 +19,8 @@
  ***************************************************************************/
 
 #include "KpkTransactionTrayIcon.h"
-#include "../Common/KpkStrings.h"
-#include "../Common/KpkTransaction.h"
+#include <KpkStrings.h>
+#include <KpkTransaction.h>
 
 #include <KMessageBox>
 #include <KLocale>

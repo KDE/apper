@@ -22,7 +22,7 @@
 #include <KDebug>
 
 #include "KpkRequirements.h"
-#include "../Common/KpkStrings.h"
+#include <KpkStrings.h>
 #include "KpkReviewChanges.h"
 
 #define UNIVERSAL_PADDING 6

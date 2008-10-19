@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "KPackageKit.h"
-#include "../Common/version.h"
+#include <version.h>
 
 #include <KDebug>
 #include <KConfig>

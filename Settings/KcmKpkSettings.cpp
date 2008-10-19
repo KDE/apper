@@ -22,7 +22,7 @@
 #include <KAboutData>
 
 #include "KcmKpkSettings.h"
-#include "../Common/version.h"
+#include <version.h>
 
 K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkSettings>(); )
 K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_settings"))

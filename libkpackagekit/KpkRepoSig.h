@@ -18,22 +18,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPKLICENSEAGREEMENT_H
-#define KPKLICENSEAGREEMENT_H
+#ifndef KPKREPOSIG_H
+#define KPKREPOSIG_H
 
 #include <KDialog>
 
-#include "ui_KpkLicenseAgreement.h"
+#include "ui_KpkRepoSig.h"
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkLicenseAgreement : public KDialog, Ui::KpkLicenseAgreement
+class KDE_EXPORT KpkRepoSig : public KDialog, Ui::KpkRepoSig
 {
     Q_OBJECT
 public:
-    KpkLicenseAgreement( PackageKit::Client::EulaInfo info, bool modal = true, QWidget *parent=0);
-    ~KpkLicenseAgreement();
+    KpkRepoSig( PackageKit::Client::SignatureInfo info, bool modal = true, QWidget *parent=0);
+    ~KpkRepoSig();
 };
 
 #endif

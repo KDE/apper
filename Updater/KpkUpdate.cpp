@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "KpkUpdate.h"
-#include "../Common/KpkStrings.h"
+#include <KpkStrings.h>
 
 #include <KMessageBox>
 

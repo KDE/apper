@@ -24,8 +24,8 @@
 #include <QPackageKit>
 
 #include "KpkUpdateModel.h"
-#include "../Common/KpkTransaction.h"
-#include "../Common/KpkDelegate.h"
+#include <KpkTransaction.h>
+#include <KpkDelegate.h>
 
 #include "ui_KpkUpdate.h"
 

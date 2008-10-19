@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "KpkUpdateModel.h"
-#include "../Common/KpkStrings.h"
+#include <KpkStrings.h>
 
 #define UNIVERSAL_PADDING 6
 #define FAV_ICON_SIZE 24

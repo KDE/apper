@@ -29,7 +29,7 @@
 /**
  * Delegate for displaying the packages
  */
-class KpkDelegate: public QItemDelegate
+class KDE_EXPORT KpkDelegate: public QItemDelegate
 {
     Q_OBJECT
     

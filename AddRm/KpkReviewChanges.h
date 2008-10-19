@@ -24,8 +24,8 @@
 #include <KDialog>
 #include <KProgressDialog>
 
-#include "../Common/KpkDelegate.h"
-#include "../Common/KpkTransaction.h"
+#include <KpkDelegate.h>
+#include <KpkTransaction.h>
 #include "KpkAddRmModel.h"
 #include "ui_KpkReviewChanges.h"
 #include <QPackageKit>

@@ -21,7 +21,7 @@
 #ifndef KPKINSTALLFILES_H
 #define KPKINSTALLFILES_H
 
-#include "../Common/KpkTransaction.h"
+#include <KpkTransaction.h>
 
 #include <QPackageKit>
 #include <KCmdLineArgs>

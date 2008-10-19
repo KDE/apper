@@ -27,7 +27,7 @@
 
 #include "KpkAddRm.h"
 #include "KpkReviewChanges.h"
-#include "../Common/KpkStrings.h"
+#include <KpkStrings.h>
 
 #define UNIVERSAL_PADDING 6
 

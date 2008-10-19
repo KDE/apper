@@ -27,7 +27,7 @@
 #include <KIcon>
 
 #include "KpkAddRmModel.h"
-#include "../Common/KpkDelegate.h"
+#include <KpkDelegate.h>
 
 #include <QPackageKit>
 #include "ui_KpkAddRm.h"

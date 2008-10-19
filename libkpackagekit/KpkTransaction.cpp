@@ -28,10 +28,18 @@
 #include "KpkRepoSig.h"
 #include "KpkLicenseAgreement.h"
 
-KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent )
- : KDialog(parent), m_trans(trans), m_handlyingGpgOrEula(false)
+#include "ui_KpkTransaction.h"
+
+class KpkTransactionPrivate
 {
-    setupUi( mainWidget() );
+public:
+    Ui::KpkTransaction ui;
+};
+
+KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent )
+ : KDialog(parent), m_trans(trans), m_handlyingGpgOrEula(false), d(new KpkTransactionPrivate)
+{
+    d->ui.setupUi( mainWidget() );
     setModal(modal);
 
     // Set Cancel and custom buoton hide
@@ -57,7 +65,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
 
     enableButtonCancel( m_trans->allowCancel() );
 
-    currentL->setText( KpkStrings::status( m_trans->status() ) );
+    d->ui.currentL->setText( KpkStrings::status( m_trans->status() ) );
 
     connect( m_trans, SIGNAL( package(PackageKit::Package *) ),
 	this, SLOT( currPackage(PackageKit::Package *) ) );
@@ -80,17 +88,17 @@ void KpkTransaction::setTransaction(Transaction *trans)
 void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
 {
     if (info.percentage) {
-	progressBar->setMaximum(100);
-	progressBar->setValue(info.percentage);
+	d->ui.progressBar->setMaximum(100);
+	d->ui.progressBar->setValue(info.percentage);
     }
     else
-	progressBar->setMaximum(0);
+	d->ui.progressBar->setMaximum(0);
 }
 
 void KpkTransaction::currPackage(Package *p)
 {
-    packageL->setText( p->name() + " - " + p->version() + " (" + p->arch() + ")" );
-    descriptionL->setText( p->summary() );
+    d->ui.packageL->setText( p->name() + " - " + p->version() + " (" + p->arch() + ")" );
+    d->ui.descriptionL->setText( p->summary() );
 }
 
 void KpkTransaction::slotButtonClicked(int button)
@@ -119,7 +127,7 @@ void KpkTransaction::slotButtonClicked(int button)
 
 void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
 {
-    currentL->setText( KpkStrings::status(status) );
+    d->ui.currentL->setText( KpkStrings::status(status) );
 }
 
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)

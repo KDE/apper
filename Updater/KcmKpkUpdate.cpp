@@ -22,7 +22,7 @@
 #include <KAboutData>
 
 #include "KcmKpkUpdate.h"
-#include "../Common/version.h"
+#include <version.h>
 
 K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkUpdate>(); )
 K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_update"))

@@ -19,8 +19,8 @@
  ***************************************************************************/
 
 #include "KpkNotify.h"
-#include "../Common/KpkStrings.h"
-#include "../Common/KpkTransaction.h"
+#include <KpkStrings.h>
+#include <KpkTransaction.h>
 
 #include <KLocale>
 #include <KIcon>

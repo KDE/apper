@@ -18,36 +18,53 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPKSTRINGS_H
-#define KPKSTRINGS_H
+#ifndef KPKTRANSACTION_H
+#define KPKTRANSACTION_H
 
-#include <QObject>
-#include <KIcon>
+#include <KDialog>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkStrings : public QObject
+class KpkTransactionPrivate;
+
+class KDE_EXPORT KpkTransaction : public KDialog
 {
     Q_OBJECT
+    Q_ENUMS(ExitStatus);
 public:
-    KpkStrings( QObject *parent=0);
-    ~KpkStrings();
+    KpkTransaction( Transaction  *trans, bool modal = true, QWidget *parent=0);
+    ~KpkTransaction();
 
-    static QString finished(PackageKit::Transaction::ExitStatus status);
-    static QString error(PackageKit::Client::ErrorType error);
-    static QString errorMessage(PackageKit::Client::ErrorType error);
-    static QString status(PackageKit::Transaction::Status status);
-    static KIcon   statusIcon(PackageKit::Transaction::Status status);
-    static QString groups(Client::Group group);
-    static KIcon   groupsIcon(Client::Group group);
-    static QString info(Package::State state);
-    static QString infoUpdate(Package::State state, int number);
-    static QString updateState(Client::UpgradeType value);
-    static QString restartTypeFuture(Client::RestartType value);
-    static QString action(Client::Action action);
-    static KIcon   actionIcon(Client::Action action);
+    void setTransaction(Transaction *trans);
+
+    typedef enum {
+	Success,
+	Failed,
+	Cancelled,
+	ReQueue
+    } ExitStatus;
+
+signals:
+    void kTransactionFinished(KpkTransaction::ExitStatus status);
+
+private:
+    Transaction *m_trans;
+    bool m_handlyingGpgOrEula;
+    KpkTransactionPrivate* d;
+
+private slots:
+    void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void errorCode(PackageKit::Client::ErrorType error, const QString &details);
+    void statusChanged(PackageKit::Transaction::Status status);
+    void currPackage(PackageKit::Package *);
+    void progressChanged(PackageKit::Transaction::ProgressInfo info);
+    void eulaRequired(PackageKit::Client::EulaInfo info);
+    void repoSignatureRequired(PackageKit::Client::SignatureInfo info);
+
+protected slots:
+    virtual void slotButtonClicked(int button);
 };
 
 #endif

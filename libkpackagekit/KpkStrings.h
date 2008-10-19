@@ -18,5 +18,36 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#define KPK_VERSION "0.3.1"
+#ifndef KPKSTRINGS_H
+#define KPKSTRINGS_H
 
+#include <QObject>
+#include <KIcon>
+
+#include <QPackageKit>
+
+using namespace PackageKit;
+
+class KDE_EXPORT KpkStrings : public QObject
+{
+    Q_OBJECT
+public:
+    KpkStrings( QObject *parent=0);
+    ~KpkStrings();
+
+    static QString finished(PackageKit::Transaction::ExitStatus status);
+    static QString error(PackageKit::Client::ErrorType error);
+    static QString errorMessage(PackageKit::Client::ErrorType error);
+    static QString status(PackageKit::Transaction::Status status);
+    static KIcon   statusIcon(PackageKit::Transaction::Status status);
+    static QString groups(Client::Group group);
+    static KIcon   groupsIcon(Client::Group group);
+    static QString info(Package::State state);
+    static QString infoUpdate(Package::State state, int number);
+    static QString updateState(Client::UpgradeType value);
+    static QString restartTypeFuture(Client::RestartType value);
+    static QString action(Client::Action action);
+    static KIcon   actionIcon(Client::Action action);
+};
+
+#endif
