@@ -142,7 +142,7 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
 	delete m_waitPD;
 	m_waitPD = 0;
 	if ( m_pkgModelReq->rowCount( QModelIndex() ) > 0 ) {
-	    KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be removed for depenencies"), m_pkgModelReq, this );
+	    KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be removed for dependencies"), m_pkgModelReq, this );
 	    connect( requimentD, SIGNAL( okClicked() ), this, SLOT( removePackages() ) );
 	    connect( requimentD, SIGNAL( cancelClicked() ), this, SLOT( close() ) );
 	    requimentD->show();
