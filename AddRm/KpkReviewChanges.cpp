@@ -21,8 +21,8 @@
 #include <KMessageBox>
 #include <KDebug>
 
-#include "KpkRequirements.h"
 #include <KpkStrings.h>
+#include "KpkRequirements.h"
 #include "KpkReviewChanges.h"
 
 #define UNIVERSAL_PADDING 6
@@ -41,13 +41,14 @@ KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *pa
 
     // Set Apply and Cancel buttons
     setButtons( KDialog::Apply | KDialog::Cancel );
+    setButtonText( KDialog::Apply, i18n("Install Now") );
+    setMinimumSize( QSize(320,280) );
 
-    label->setText( i18n("The following packages will be INSTALLED/REMOVED, press Apply to continue:") );
+    label->setText( i18n("The following packages will be INSTALLED/REMOVED:") );
 }
 
 KpkReviewChanges::~KpkReviewChanges()
 {
-
 }
 
 void KpkReviewChanges::doAction()
