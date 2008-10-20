@@ -32,7 +32,7 @@ class KpkTransactionPrivate;
 class KDE_EXPORT KpkTransaction : public KDialog
 {
     Q_OBJECT
-    Q_ENUMS(ExitStatus);
+    Q_ENUMS(ExitStatus)
 public:
     KpkTransaction( Transaction  *trans, bool modal = true, QWidget *parent=0);
     ~KpkTransaction();
