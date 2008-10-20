@@ -5,6 +5,8 @@ Comment[sv]=Kpackagekit
 
 [Event/ShowUpdates]
 Name=New updates avaliable
+Name[el]=Νέες ενημερώσεις διαθέσιμες
+Name[gl]=Hai novas actualizacións disponíbeis
 Name[pt]=Estão disponíveis actualizações novas
 Name[pt_BR]=Estão disponíveis actualizações novas
 Name[sv]=Nya uppdateringar tillgängliga
@@ -13,6 +15,8 @@ Action=Sound|Popup
 
 [Event/AutoInstallingUpdates]
 Name=Updates are being installed
+Name[el]=Γίνεται εγκατάσταση των ενημερώσεων
+Name[gl]=Estanse a instalar actualizacións
 Name[pt]=As actualizações estão a ser instaladas
 Name[pt_BR]=As actualizações estão a ser instaladas
 Name[sv]=Uppdateringar installeras
@@ -21,6 +25,8 @@ Action=Sound|Popup
 
 [Event/RestartRequired]
 Name=A System Restart is Required
+Name[el]=Απαιτείται επανεκκίνηση του συστήματος
+Name[gl]=Requérese un reinicio do sistema
 Name[pt]=É Necessário Reiniciar o Sistema
 Name[pt_BR]=É Necessário Reiniciar o Sistema
 Name[sv]=En omstart av systemet krävs

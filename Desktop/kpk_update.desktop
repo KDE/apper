@@ -11,12 +11,16 @@ X-KDE-System-Settings-Parent-Category=add-and-remove-software
 X-KDE-Weight=2
 
 Name=Software Updates
+Name[el]=Ενημερώσεις λογισμικού
+Name[gl]=Actualizacións de software
 Name[pt]=Actualizações das Aplicações
 Name[pt_BR]=Actualizações das Aplicações
 Name[sv]=Uppdateringar av programvara
 Name[uk]=Оновлення програм
 
 Comment=Check and Install Updates
+Comment[el]=Έλεγχος και εγκατάσταση ενημερώσεων
+Comment[gl]=Vixía e instala actualizacións
 Comment[pt]=Verificar e Instalar as Actualizações
 Comment[pt_BR]=Verificar e Instalar as Actualizações
 Comment[sv]=Kontrollera och installera uppdateringar
