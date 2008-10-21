@@ -107,7 +107,7 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
 
 KIcon KpkStrings::statusIcon(PackageKit::Transaction::Status status)
 {
-    KIconLoader *ic = new KIconLoader();
+    KIconLoader *ic = KIconLoader::global();
     ic->addAppDir("kpackagekit");
     switch (status) {
         case Transaction::Setup :
@@ -213,7 +213,7 @@ QString KpkStrings::action(Client::Action action)
 
 KIcon KpkStrings::actionIcon(Client::Action action)
 {
-    KIconLoader *ic = new KIconLoader();
+    KIconLoader *ic = KIconLoader::global();
     ic->addAppDir("kpackagekit");
     switch (action) {
         case Client::ActionGetDepends :
