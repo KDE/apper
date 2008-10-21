@@ -409,7 +409,7 @@ void KpkAddRm::files(PackageKit::Package *package, const QStringList &files)
 
 void KpkAddRm::filterMenu(Client::Filters filters)
 {
-    if(filters.size() != 0) {
+    if(!filters.isEmpty()) {
         m_filtersQM = new QMenu(this);
         filtersTB->setMenu(m_filtersQM);
 
