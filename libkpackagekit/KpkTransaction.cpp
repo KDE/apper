@@ -53,6 +53,7 @@ KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent 
 
 KpkTransaction::~KpkTransaction()
 {
+    delete d;
 }
 
 void KpkTransaction::setTransaction(Transaction *trans)
