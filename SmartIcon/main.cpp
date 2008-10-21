@@ -30,7 +30,7 @@
 int main(int argc, char **argv)
 {
     KAboutData about(
-	"kpackagekit-smart-icon", 0, ki18n("kpackagekit-smart-icon"),
+	"kpackagekit-smart-icon", "kpackagekit", ki18n("kpackagekit-smart-icon"),
 	KPK_VERSION, ki18n("KPackageKit-Smart-Icon application for showing running transactions"),
 	KAboutData::License_GPL, ki18n("(C) 2008 Daniel Nicoletti"),
 	KLocalizedString(), "http://www.packagekit.org/");
