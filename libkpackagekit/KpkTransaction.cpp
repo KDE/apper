@@ -43,11 +43,13 @@ KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent 
     setModal(modal);
 
     // Set Cancel and custom buoton hide
-    setButtons( KDialog::Cancel | KDialog::User1 );
+    setButtons( KDialog::Cancel | KDialog::User1 | KDialog::Details );
     setButtonText( KDialog::User1, i18n("Hide") );
     setButtonToolTip( KDialog::User1, i18n("Allows you to hide the window but keeps running transaction task") );
+    setEscapeButton( KDialog::User1 );
     enableButtonCancel(false);
-
+    setDetailsWidget(d->ui.detailGroup);
+    setDetailsWidgetVisible(false);
     setTransaction(m_trans);
 }
 
@@ -67,6 +69,10 @@ void KpkTransaction::setTransaction(Transaction *trans)
     enableButtonCancel( m_trans->allowCancel() );
 
     d->ui.currentL->setText( KpkStrings::status( m_trans->status() ) );
+    
+    progressChanged(m_trans->progress());
+    currPackage(m_trans->lastPackage());
+    statusChanged(m_trans->status());
 
     connect( m_trans, SIGNAL( package(PackageKit::Package *) ),
 	this, SLOT( currPackage(PackageKit::Package *) ) );
@@ -89,17 +95,35 @@ void KpkTransaction::setTransaction(Transaction *trans)
 void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
 {
     if (info.percentage) {
-	d->ui.progressBar->setMaximum(100);
-	d->ui.progressBar->setValue(info.percentage);
+        d->ui.progressBar->setMaximum(100);
+        d->ui.progressBar->setValue(info.percentage);
+    } else {
+        d->ui.progressBar->setMaximum(0);
+        d->ui.subprogressBar->reset();
     }
-    else
-	d->ui.progressBar->setMaximum(0);
+    if (info.subpercentage) {
+        d->ui.progressBar->setMaximum(100);
+        d->ui.progressBar->setValue(info.subpercentage);
+    } else {
+        d->ui.subprogressBar->setMaximum(0);
+        d->ui.subprogressBar->reset();
+    }
+    if (info.remaining) {
+        d->ui.timeL->setText(i18n("%s remaining").arg(KGlobal::locale()->formatDuration(info.remaining*1000)));
+    } else {
+        d->ui.timeL->setText("");
+    }
 }
 
 void KpkTransaction::currPackage(Package *p)
 {
-    d->ui.packageL->setText( p->name() + " - " + p->version() + " (" + p->arch() + ")" );
-    d->ui.descriptionL->setText( p->summary() );
+    if (p->name() != "") {
+        d->ui.packageL->setText( p->name() + " - " + p->version() + " (" + p->arch() + ")" );
+        d->ui.descriptionL->setText( p->summary() );
+    } else {
+        d->ui.packageL->setText("");
+        d->ui.descriptionL->setText("");
+    }
 }
 
 void KpkTransaction::slotButtonClicked(int button)

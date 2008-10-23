@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>106</height>
+    <width>406</width>
+    <height>209</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -30,8 +30,8 @@
   <property name="locale" >
    <locale country="UnitedStates" language="English" />
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <item row="0" column="0" colspan="2" >
+  <layout class="QVBoxLayout" name="verticalLayout_2" >
+   <item>
     <widget class="QLabel" name="currentL" >
      <property name="font" >
       <font>
@@ -44,14 +44,14 @@
       <locale country="UnitedStates" language="English" />
      </property>
      <property name="text" >
-      <string/>
+      <string>Downloading Packages</string>
      </property>
      <property name="alignment" >
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2" >
+   <item>
     <widget class="QProgressBar" name="progressBar" >
      <property name="locale" >
       <locale country="UnitedStates" language="English" />
@@ -61,34 +61,56 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2" >
-    <widget class="QLabel" name="descriptionL" >
-     <property name="font" >
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text" >
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" >
-    <widget class="QLabel" name="packageL" >
-     <property name="text" >
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1" >
+   <item>
     <widget class="QLabel" name="timeL" >
      <property name="text" >
-      <string/>
+      <string>4 minutes</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2" >
+   <item>
+    <widget class="QGroupBox" name="detailGroup" >
+     <property name="title" >
+      <string>Details</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout" >
+      <item>
+       <widget class="QProgressBar" name="subprogressBar" >
+        <property name="locale" >
+         <locale country="UnitedStates" language="English" />
+        </property>
+        <property name="maximum" >
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="descriptionL" >
+        <property name="font" >
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>A library to do foo</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="packageL" >
+        <property name="text" >
+         <string>libfoo</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer" >
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
