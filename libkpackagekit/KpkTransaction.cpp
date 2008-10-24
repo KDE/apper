@@ -36,6 +36,18 @@ public:
     Ui::KpkTransaction ui;
 };
 
+static const Transaction::Status detailedStates[] = {
+    Transaction::Download,
+    Transaction::Install,
+    Transaction::Update,
+    Transaction::Cleanup,
+    Transaction::Remove,
+    Transaction::TestCommit,
+    Transaction::Commit
+};
+
+static const int stateCount = 7;
+
 KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent )
  : KDialog(parent), m_trans(trans), m_handlyingGpgOrEula(false), d(new KpkTransactionPrivate)
 {
@@ -51,6 +63,7 @@ KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent 
     setDetailsWidget(d->ui.detailGroup);
     setDetailsWidgetVisible(false);
     setTransaction(m_trans);
+    enableButton(KDialog::Details, false);
 }
 
 KpkTransaction::~KpkTransaction()
@@ -99,7 +112,7 @@ void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
         d->ui.progressBar->setValue(info.percentage);
     } else {
         d->ui.progressBar->setMaximum(0);
-        d->ui.subprogressBar->reset();
+        d->ui.progressBar->reset();
     }
     if (info.subpercentage) {
         d->ui.progressBar->setMaximum(100);
@@ -153,6 +166,16 @@ void KpkTransaction::slotButtonClicked(int button)
 void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
 {
     d->ui.currentL->setText( KpkStrings::status(status) );
+    int i = 0;
+    Transaction::Status s;
+    do {
+        s = detailedStates[i];
+        i++;
+    } while (s!=status && i<stateCount);
+    if (i==stateCount)
+        enableButton(KDialog::Details, false);
+    else
+        enableButton(KDialog::Details, true);
 }
 
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)
