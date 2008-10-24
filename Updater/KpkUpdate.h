@@ -23,7 +23,7 @@
 
 #include <QPackageKit>
 
-#include "KpkUpdateModel.h"
+#include "KpkPackageModel.h"
 #include <KpkTransaction.h>
 #include <KpkDelegate.h>
 
@@ -48,9 +48,11 @@ private slots:
     void updateColumnsWidth(bool force = false);
     void on_packageView_pressed(const QModelIndex &index);
     void updateDetail(PackageKit::Client::UpdateInfo info);
+    
+    void checkEnableUpdateButton();
 
 private:
-    KpkUpdateModel *m_pkg_model_updates;
+    KpkPackageModel *m_pkg_model_updates;
     KpkDelegate *pkg_delegate;
     Client *m_client;
     Transaction *m_updatesT;

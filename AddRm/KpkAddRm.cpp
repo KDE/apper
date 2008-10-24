@@ -42,13 +42,13 @@ KpkAddRm::KpkAddRm( QWidget *parent )
 
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(this));
-    packageView->setModel(m_pkg_model_main = new KpkAddRmModel(this));
+    packageView->setModel(m_pkg_model_main = new KpkPackageModel(this));
     packageView->viewport()->setAttribute(Qt::WA_Hover);
 
     // check to see if the backend support these actions
     m_actions = m_client->getActions();
     if ( m_actions.contains(Client::ActionInstallPackages) || m_actions.contains(Client::ActionRemovePackages) )
-        connect( m_pkg_model_main, SIGNAL( changed(bool) ), this, SIGNAL( changed(bool) ) );
+        connect( m_pkg_model_main, SIGNAL( dataChanged(const QModelIndex, const QModelIndex) ), this, SLOT( checkChanged() ) );
 
     if ( m_actions.contains(Client::ActionGetDetails) )
 	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getDetails(PackageKit::Package *) ) );
@@ -61,14 +61,14 @@ KpkAddRm::KpkAddRm( QWidget *parent )
         tabWidget->setTabEnabled(1, false);
 
     if ( m_actions.contains(Client::ActionGetDepends) ) {
-	dependsOnLV->setModel( m_pkg_model_dep = new KpkAddRmModel(this) );
+	dependsOnLV->setModel( m_pkg_model_dep = new KpkPackageModel(this) );
 	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getDepends(PackageKit::Package *) ) );
     }
     else
         tabWidget->setTabEnabled(2, false);
 
     if ( m_actions.contains(Client::ActionGetRequires) ) {
-	requiredByLV->setModel(m_pkg_model_req = new KpkAddRmModel(this));
+	requiredByLV->setModel(m_pkg_model_req = new KpkPackageModel(this));
 	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getRequires(PackageKit::Package *) ) );
     }
     else
@@ -101,6 +101,14 @@ KpkAddRm::KpkAddRm( QWidget *parent )
     notifyF->hide();
 }
 
+void KpkAddRm::checkChanged()
+{
+    if (m_pkg_model_main->selectedPackages().size()>0)
+      emit changed(true);
+    else
+      emit changed(false);
+}
+
 void KpkAddRm::getDetails(PackageKit::Package *p)
 {
     // create the description transaction
@@ -125,7 +133,7 @@ void KpkAddRm::getDepends(PackageKit::Package *p)
 {
     // create a transaction for the dependecies, and its model.
     Transaction *t = m_client->getDepends(p);
-    m_pkg_model_dep->clearPkg();
+    m_pkg_model_dep->clear();
     connect( t, SIGNAL( package(PackageKit::Package *) ),
 	m_pkg_model_dep, SLOT( addPackage(PackageKit::Package *) ) );
     connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
@@ -136,7 +144,7 @@ void KpkAddRm::getRequires(PackageKit::Package *p)
 {  
     // create a transaction for the requirements, and its model.
     Transaction *t = m_client->getRequires(p);
-    m_pkg_model_req->clearPkg();
+    m_pkg_model_req->clear();
     connect( t, SIGNAL( package(PackageKit::Package *) ),
 	m_pkg_model_req, SLOT( addPackage(PackageKit::Package *) ) );
     connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
@@ -153,7 +161,9 @@ void KpkAddRm::getInfoFinished(PackageKit::Transaction::ExitStatus status, uint 
 void KpkAddRm::on_packageView_pressed( const QModelIndex & index )
 {
     if ( index.column() == 0 ) {
-	emit getInfo( m_pkg_model_main->package(index) );
+        Package* p = m_pkg_model_main->package(index);
+        if (p)
+            emit getInfo( m_pkg_model_main->package(index) );
     }
 }
 
@@ -252,7 +262,7 @@ void KpkAddRm::search()
     descriptionDW->setVisible(false);
     notifyF->hide();
     // cleans the models
-    m_pkg_model_main->clearPkg();
+    m_pkg_model_main->clear();
     busyPB->setMaximum(0);
     busyPB->setValue(0);
     m_mTransRuning = true;
@@ -286,9 +296,9 @@ void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &d
 
 void KpkAddRm::save()
 {
-    KpkReviewChanges *frm = new KpkReviewChanges( m_pkg_model_main->packagesChanges(), this);
+    KpkReviewChanges *frm = new KpkReviewChanges( m_pkg_model_main->selectedPackages(), this);
     if ( frm->exec() == QDialog::Accepted )
-        m_pkg_model_main->clearPkgChanges();
+        m_pkg_model_main->uncheckAll();
     else
 	QTimer::singleShot(1, m_pkg_model_main, SLOT( checkChanges() ) );
     delete frm;
@@ -297,7 +307,7 @@ void KpkAddRm::save()
 
 void KpkAddRm::load()
 {
-    m_pkg_model_main->clearPkgChanges();
+    m_pkg_model_main->uncheckAll();
 }
 
 void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime)

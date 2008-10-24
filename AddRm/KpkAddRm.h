@@ -26,7 +26,7 @@
 
 #include <KIcon>
 
-#include "KpkAddRmModel.h"
+#include "KpkPackageModel.h"
 #include <KpkDelegate.h>
 
 #include <QPackageKit>
@@ -50,9 +50,9 @@ public slots:
 
 private:
     bool m_mTransRuning;//main trans
-    KpkAddRmModel *m_pkg_model_main;
-    KpkAddRmModel *m_pkg_model_dep;
-    KpkAddRmModel *m_pkg_model_req;
+    KpkPackageModel *m_pkg_model_main;
+    KpkPackageModel *m_pkg_model_dep;
+    KpkPackageModel *m_pkg_model_req;
     KpkDelegate *pkg_delegate;
 
     Client *m_client;
@@ -101,6 +101,7 @@ private slots:
 
     void notifyUpdate();
     void progressChanged(PackageKit::Transaction::ProgressInfo info);
+    void checkChanged();
 
 signals:
     void changed(bool state);

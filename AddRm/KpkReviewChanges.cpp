@@ -34,7 +34,9 @@ KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *pa
 
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(m_pkgDelegate = new KpkDelegate(this));
-    packageView->setModel(m_pkgModelMain = new KpkAddRmModel(packages, this));
+    packageView->setModel(m_pkgModelMain = new KpkPackageModel(packages, this));
+    m_pkgModelMain->checkAll();
+    packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     connect( m_pkgModelMain, SIGNAL( changed(bool) ), this, SLOT( enableButtonApply(bool) ) );
 
     setCaption( i18n("Review Changes - KPackageKit") );
@@ -56,15 +58,15 @@ void KpkReviewChanges::doAction()
     m_client = Client::instance();
     m_actions = m_client->getActions();
     // check what packages are installed and marked to be removed
-    for (int i = 0; i < m_pkgModelMain->packagesChanges().size(); ++i) {
-        if ( m_pkgModelMain->packagesChanges().at(i)->state() == Package::Installed )
-            m_remPackages << m_pkgModelMain->packagesChanges().takeAt(i);
+    for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
+        if ( m_pkgModelMain->selectedPackages().at(i)->state() == Package::Installed )
+            m_remPackages << m_pkgModelMain->selectedPackages().takeAt(i);
     }
 
     // check what packages are avaliable and marked to be installed
-    for (int i = 0; i < m_pkgModelMain->packagesChanges().size(); ++i) {
-        if ( m_pkgModelMain->packagesChanges().at(i)->state() == Package::Available )
-            m_addPackages << m_pkgModelMain->packagesChanges().takeAt(i);
+    for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
+        if ( m_pkgModelMain->selectedPackages().at(i)->state() == Package::Available )
+            m_addPackages << m_pkgModelMain->selectedPackages().takeAt(i);
     }
 
     checkTask();
@@ -78,7 +80,7 @@ void KpkReviewChanges::checkTask()
 	    if ( m_actions.contains(Client::ActionGetRequires) ) {
 	        m_reqDepPackages = m_remPackages;
 	        // Create the requirements transaction and it's model
-                m_pkgModelReq = new KpkAddRmModel(this);
+                m_pkgModelReq = new KpkPackageModel(this);
 		m_transactionReq = m_client->getRequires(m_reqDepPackages, Client::FilterInstalled, true);
                 connect( m_transactionReq, SIGNAL( package(PackageKit::Package *) ),
 		    m_pkgModelReq, SLOT( addPackage(PackageKit::Package *) ) );
@@ -107,7 +109,7 @@ void KpkReviewChanges::checkTask()
 	    if ( m_actions.contains(Client::ActionGetDepends) ) {
 	        m_reqDepPackages = m_addPackages;
 		// Create the depends transaction and it's model
-                m_pkgModelDep = new KpkAddRmModel(this);
+                m_pkgModelDep = new KpkPackageModel(this);
 		m_transactionDep = m_client->getDepends(m_reqDepPackages, Client::FilterNotInstalled, true);
                 connect( m_transactionDep, SIGNAL( package(PackageKit::Package *) ),
 		    m_pkgModelDep, SLOT( addPackage(PackageKit::Package *) ) );

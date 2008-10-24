@@ -1,7 +1,6 @@
 set(kpk_addrm_SRCS
     KcmKpkAddRm.cpp
     KpkAddRm.cpp
-    KpkAddRmModel.cpp
     KpkReviewChanges.cpp
     KpkRequirements.cpp
 )

@@ -21,6 +21,7 @@
 #include "KpkUpdate.h"
 #include <KpkStrings.h>
 
+#include <KDebug>
 #include <KMessageBox>
 
 #define UNIVERSAL_PADDING 6
@@ -32,8 +33,10 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(this));
-    packageView->setModel(m_pkg_model_updates = new KpkUpdateModel(this, packageView));
-    connect( m_pkg_model_updates, SIGNAL( updatesSelected(bool) ), updatePB, SLOT( setEnabled(bool) ) );
+    packageView->setModel(m_pkg_model_updates = new KpkPackageModel(this));
+    m_pkg_model_updates->setGrouped(true);
+    connect( m_pkg_model_updates, SIGNAL( dataChanged(const QModelIndex, const QModelIndex) ), this, SLOT( checkEnableUpdateButton() ) );
+    //connect( m_pkg_model_updates, SIGNAL( updatesSelected(bool) ), updatePB, SLOT( setEnabled(bool) ) );
 
     // Create a new client
     m_client = Client::instance();
@@ -44,12 +47,21 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
     updateFinished(KpkTransaction::Success);
 }
 
+void KpkUpdate::checkEnableUpdateButton()
+{
+    if (m_pkg_model_updates->selectedPackages().size()>0)
+      updatePB->setEnabled(true);
+    else
+      updatePB->setEnabled(false);
+}
+
 void KpkUpdate::on_updatePB_clicked()
 {
     qDebug() << "update";
     QList<Package*> packages = m_pkg_model_updates->selectedPackages();
     //check to see if the user selected all selectable packages
-    if ( packages.size() == m_pkg_model_updates->selectablePackages() )
+    if (m_pkg_model_updates->allSelected())
+    //if ( packages.size() == m_pkg_model_updates->selectablePackages() )
 	// if so let's do system-update instead
 	if ( Transaction *t = m_client->updateSystem() ) {
 	    KpkTransaction *frm = new KpkTransaction(t, this);
@@ -104,12 +116,12 @@ void KpkUpdate::on_packageView_pressed( const QModelIndex & index )
 {
     if ( index.column() == 0 ) {
         Package *p = m_pkg_model_updates->package(index);
-	// check to see if the backend support
-	if (p && m_actions.contains(Client::ActionGetUpdateDetail) ) {
-	    Transaction *t = m_client->getUpdateDetail(p);
-	    connect( t, SIGNAL( updateDetail(PackageKit::Client::UpdateInfo) ),
-		this, SLOT( updateDetail(PackageKit::Client::UpdateInfo) ) );
-	}
+        // check to see if the backend support
+        if (p && m_actions.contains(Client::ActionGetUpdateDetail) ) {
+            Transaction *t = m_client->getUpdateDetail(p);
+            connect( t, SIGNAL( updateDetail(PackageKit::Client::UpdateInfo) ),
+          this, SLOT( updateDetail(PackageKit::Client::UpdateInfo) ) );
+        }
     }
 }
 

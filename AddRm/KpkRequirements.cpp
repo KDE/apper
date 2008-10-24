@@ -20,7 +20,7 @@
 
 #include "KpkRequirements.h"
 
-KpkRequirements::KpkRequirements( QString msg, KpkAddRmModel *model, QWidget *parent )
+KpkRequirements::KpkRequirements( QString msg, KpkPackageModel *model, QWidget *parent )
  : KDialog( parent )
 {
     setupUi( mainWidget() );

@@ -1,7 +1,6 @@
 set(kpk_update_SRCS
     KcmKpkUpdate.cpp
     KpkUpdate.cpp
-    KpkUpdateModel.cpp
 )
 kde4_add_ui_files(kpk_update_SRCS
     KpkUpdate.ui

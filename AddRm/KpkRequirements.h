@@ -23,7 +23,7 @@
 
 #include <KDialog>
 
-#include "KpkAddRmModel.h"
+#include "KpkPackageModel.h"
 #include "ui_KpkRequirements.h"
 
 using namespace PackageKit;
@@ -32,7 +32,7 @@ class KpkRequirements : public KDialog, Ui::KpkRequirements
 {
     Q_OBJECT
 public:
-    KpkRequirements( QString msg, KpkAddRmModel *model, QWidget *parent=0);
+    KpkRequirements( QString msg, KpkPackageModel *model, QWidget *parent=0);
     ~KpkRequirements();
 };
 

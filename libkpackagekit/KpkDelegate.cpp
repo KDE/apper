@@ -26,6 +26,7 @@
 
 #include <KDebug>
 #include <KIconLoader>
+#include "KpkPackageModel.h"
 
 #define FAV_ICON_SIZE 24
 #define EMBLEM_ICON_SIZE 16
@@ -302,7 +303,19 @@ bool KpkDelegate::editorEvent(QEvent *event,
 QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
         const QModelIndex &index ) const
 {
-    int width = (index.column() == 0) ? index.model()->data(index, Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE;
+    int width;
+    if (index.column() == 0) {
+        QStyleOptionViewItem local_option_title(option);
+        QStyleOptionViewItem local_option_normal(option);
+        
+        local_option_title.font.setBold(true);
+        local_option_title.font.setPointSize(local_option_title.font.pointSize() + 2);
+        QFontMetrics title(local_option_title.font);
+        QFontMetrics normal(local_option_normal.font);
+        width = qMax(title.width(index.data(Qt::DisplayRole).toString()), normal.width(index.data(KpkPackageModel::SummaryRole).toString())) + MAIN_ICON_SIZE + FADE_LENGTH;
+    } else {
+        width = FAV_ICON_SIZE;
+    }
     return QSize(width, calcItemHeight(option));
 }
 

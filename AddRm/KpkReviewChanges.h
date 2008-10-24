@@ -26,7 +26,7 @@
 
 #include <KpkDelegate.h>
 #include <KpkTransaction.h>
-#include "KpkAddRmModel.h"
+#include "KpkPackageModel.h"
 #include "ui_KpkReviewChanges.h"
 #include <QPackageKit>
 
@@ -49,7 +49,7 @@ public slots:
     void removePackages();
 
 private:
-    KpkAddRmModel *m_pkgModelMain, *m_pkgModelReq, *m_pkgModelDep;
+    KpkPackageModel *m_pkgModelMain, *m_pkgModelReq, *m_pkgModelDep;
     KpkDelegate *m_pkgDelegate;
     
     KProgressDialog *m_waitPD;

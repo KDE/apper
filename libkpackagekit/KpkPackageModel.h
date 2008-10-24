@@ -18,8 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPKADDRMMODEL_H
-#define KPKADDRMMODEL_H
+
+#ifndef KPKPACKAGEMODEL_H
+#define KPKPACKAGEMODEL_H
 
 #include <QAbstractTableModel>
 #include <KIcon>
@@ -28,47 +29,59 @@
 
 using namespace PackageKit;
 
-class KpkAddRmModel : public QAbstractTableModel
+class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
 {
-Q_OBJECT
+    Q_OBJECT
+    Q_PROPERTY(bool groupPackages READ isGrouped WRITE setGrouped)
 
 public:
-    KpkAddRmModel(QObject *parent = 0);
-    KpkAddRmModel(const QList<Package*> &packages, QObject *parent = 0);
+    KpkPackageModel(QObject *parent = 0);
+    KpkPackageModel(const QList<Package*> &packages, QObject *parent = 0);
 
-    int rowCount(const QModelIndex &/*parent = QModelIndex()*/) const;
-    int columnCount(const QModelIndex &) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     Qt::ItemFlags flags(const QModelIndex &index) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+    bool allSelected() const;
+    QList<Package*> selectedPackages() const;
+    QList<Package*> packagesWithState(Package::State) const;
     void removePackage(Package *package);
     Package * package(const QModelIndex &index) const;
-    void clearPkg();
-    void clearPkgChanges();
-
-    QList<Package*> packagesChanges() { return m_packagesChanges; };
+    void clear();
+    void uncheckAll();
+    void checkAll();
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &index) const;
+    
+    void setGrouped(bool g);
+    bool isGrouped() const;
 
     enum {
-        SummaryRole = 32,
+        SummaryRole = Qt::UserRole,
         InstalledRole,
         IdRole
-        };
+    };
 
 public slots:
     void addPackage(PackageKit::Package *package);
-    void checkChanges();
-
-signals:
-    void changed(bool state);
 
 private:
+    QVariant icon(Package::State state) const;
     QList<Package*> m_packages;
-    QList<Package*> m_packagesChanges;
-    KIcon m_iconDeb;
-    KIcon m_iconRpm;
-    KIcon m_iconTgz;
+    QList<Package*> m_checkedPackages;
+    QMap<Package::State, QList<Package*> > m_groups;
     KIcon m_iconGeneric;
+    bool  m_grouped;
+    KIcon m_iconBugFix;
+    KIcon m_iconLow;
+    KIcon m_iconImportant;
+    KIcon m_iconEnhancement;
+    KIcon m_iconSecurity;
+    KIcon m_iconNormal;
+    KIcon m_iconBlocked;
 };
 
 #endif
