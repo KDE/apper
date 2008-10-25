@@ -55,6 +55,7 @@ public:
     void checkAll();
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
     
     void setGrouped(bool g);
     bool isGrouped() const;
@@ -64,6 +65,7 @@ public:
         InstalledRole,
         IdRole
     };
+    
 
 public slots:
     void addPackage(PackageKit::Package *package);
@@ -82,6 +84,7 @@ private:
     KIcon m_iconSecurity;
     KIcon m_iconNormal;
     KIcon m_iconBlocked;
+    
 };
 
 #endif

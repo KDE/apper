@@ -51,6 +51,79 @@ KpkPackageModel::KpkPackageModel(const QList<Package*> &packages, QObject *paren
     }
 }
 
+//Sort helpers
+bool packageNameSortLessThan(const Package* p1, const Package* p2)
+{
+    return p1->name().toLower() < p2->name().toLower();
+}
+
+bool packageNameSortGreaterThan(const Package* p1, const Package* p2)
+{
+    return p1->name().toLower() > p2->name().toLower();
+}
+
+//A fancy function object to allow the use of the checklist
+class ascendingSelectionSorter {
+    public:
+        ascendingSelectionSorter(QList<Package*> l) : m_list(l) {}
+        bool operator()(const Package* p1, const Package*p2) {
+            if (m_list.contains(const_cast<Package*>(p1)) && m_list.contains(const_cast<Package*>(p2)))
+                return false;
+            return m_list.contains(const_cast<Package*>(p2));
+        }
+        QList<Package*> m_list;
+};
+
+class descendingSelectionSorter {
+    public:
+        descendingSelectionSorter(QList<Package*> l) : m_list(l) {}
+        bool operator()(const Package* p1, const Package* p2) {
+            if (m_list.contains(const_cast<Package*>(p1)) && m_list.contains(const_cast<Package*>(p2)))
+                return false;
+            return m_list.contains(const_cast<Package*>(p1));
+        }
+        QList<Package*> m_list;
+};
+
+void KpkPackageModel::sort(int column, Qt::SortOrder order)
+{
+    if (column == 0) {
+        if (order == Qt::DescendingOrder) {
+            qSort(m_packages.begin(), m_packages.end(), packageNameSortGreaterThan);
+            foreach(Package::State group, m_groups.keys()) {
+                qSort(m_groups[group].begin(), m_groups[group].end(), packageNameSortGreaterThan);
+            }
+        } else {
+            qSort(m_packages.begin(), m_packages.end(), packageNameSortLessThan);
+            foreach(Package::State group, m_groups.keys()) {
+                qSort(m_groups[group].begin(), m_groups[group].end(), packageNameSortLessThan);
+            }
+        }
+    } else if (column == 1) {
+        if (order == Qt::DescendingOrder){
+            descendingSelectionSorter sort(m_checkedPackages);
+            qSort(m_packages.begin(), m_packages.end(), sort);
+            foreach(Package::State group, m_groups.keys()) {
+                qSort(m_groups[group].begin(), m_groups[group].end(), sort);
+            }
+        } else {
+            ascendingSelectionSorter sort(m_checkedPackages);
+            qSort(m_packages.begin(), m_packages.end(), sort);
+            foreach(Package::State group, m_groups.keys()) {
+                qSort(m_groups[group].begin(), m_groups[group].end(), sort);
+            }
+        }
+    }
+    if (m_grouped) {
+        for (int i = 0;i<rowCount(QModelIndex());i++) {
+            QModelIndex group = index(i, 0);
+            emit dataChanged(index(0, 0, group), index(0, rowCount(group), group));
+        }
+    } else {
+        reset();
+    }
+}
+
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
@@ -75,14 +148,18 @@ int KpkPackageModel::rowCount(const QModelIndex &parent) const
         Package::State group = m_groups.keys().at(parent.row());
         return m_groups.value(group).size();
     } else {
+        if (parent.internalPointer())
+            return 0;
         return m_packages.size();
     }
 }
 
 QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (!m_grouped)
+    if (!m_grouped && !parent.isValid())
         return createIndex(row, column, 0);
+    else if (!m_grouped)
+        return QModelIndex();
 
     if (!hasIndex(row, column, parent))
         return QModelIndex();
