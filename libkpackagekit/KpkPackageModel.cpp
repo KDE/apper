@@ -278,6 +278,10 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         if (m_checkedPackages.contains(p))
                             return Qt::Checked;
                         return Qt::Unchecked;
+                    case InstalledRole:
+                        if (p->state() == Package::Installed)
+                            return true;
+                        return false;
                     default:
                         return QVariant();
                 }
