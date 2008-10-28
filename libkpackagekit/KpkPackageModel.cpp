@@ -52,14 +52,15 @@ KpkPackageModel::KpkPackageModel(const QList<Package*> &packages, QObject *paren
 }
 
 //Sort helpers
+//Untill QPackageKit2 makes its methods const, we need to mess with it this way.
 bool packageNameSortLessThan(const Package* p1, const Package* p2)
 {
-    return p1->name().toLower() < p2->name().toLower();
+    return const_cast<Package*>(p1)->name().toLower() < const_cast<Package*>(p2)->name().toLower();
 }
 
 bool packageNameSortGreaterThan(const Package* p1, const Package* p2)
 {
-    return p1->name().toLower() > p2->name().toLower();
+    return const_cast<Package*>(p1)->name().toLower() > const_cast<Package*>(p2)->name().toLower();
 }
 
 //A fancy function object to allow the use of the checklist
