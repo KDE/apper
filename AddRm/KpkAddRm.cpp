@@ -419,9 +419,10 @@ void KpkAddRm::files(PackageKit::Package *package, const QStringList &files)
 
 void KpkAddRm::filterMenu(Client::Filters filters)
 {
+    m_filtersQM = new QMenu(this);
+    filtersTB->setMenu(m_filtersQM);
+    
     if(!filters.isEmpty()) {
-        m_filtersQM = new QMenu(this);
-        filtersTB->setMenu(m_filtersQM);
 
         if ( filters.contains(Client::FilterInstalled)  || filters.contains(Client::FilterNotInstalled) ) {
             // Installed
@@ -635,11 +636,17 @@ void KpkAddRm::filterMenu(Client::Filters filters)
 
             actions << newest;
         }
-
+        
+        m_filtersQM->addSeparator();
     }
     else {
-        filtersTB->setDisabled(true);
+        //filtersTB->setDisabled(true);
     }
+    QAction *groupResults = new QAction(i18n("View in groups"), m_filtersQM);
+    groupResults->setCheckable(true);
+    m_filtersQM->addAction(groupResults);
+    groupResults->setToolTip( i18n("Display packages in groups according to status") );
+    connect(groupResults, SIGNAL(toggled(bool)), m_pkg_model_main, SLOT(setGrouped(bool)));
 }
 
 Client::Filters KpkAddRm::filters()

@@ -57,7 +57,6 @@ public:
     QModelIndex parent(const QModelIndex &index) const;
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
     
-    void setGrouped(bool g);
     bool isGrouped() const;
 
     enum {
@@ -69,6 +68,7 @@ public:
 
 public slots:
     void addPackage(PackageKit::Package *package);
+    void setGrouped(bool g);
 
 private:
     QVariant icon(Package::State state) const;
@@ -84,6 +84,7 @@ private:
     KIcon m_iconSecurity;
     KIcon m_iconNormal;
     KIcon m_iconBlocked;
+    KIcon m_iconDownload;
     
 };
 

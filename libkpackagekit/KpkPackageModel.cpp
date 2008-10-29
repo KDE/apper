@@ -32,7 +32,8 @@ KpkPackageModel::KpkPackageModel(QObject *parent)
       m_iconEnhancement("ktip"),
       m_iconSecurity("emblem-important"),
       m_iconNormal("security-medium"),
-      m_iconBlocked("edit-delete")
+      m_iconBlocked("edit-delete"),
+      m_iconDownload("package-download")
 {
 }
 
@@ -149,7 +150,7 @@ int KpkPackageModel::rowCount(const QModelIndex &parent) const
         Package::State group = m_groups.keys().at(parent.row());
         return m_groups.value(group).size();
     } else {
-        if (parent.internalPointer())
+        if (parent.isValid())
             return 0;
         return m_packages.size();
     }
@@ -194,6 +195,7 @@ QModelIndex KpkPackageModel::parent(const QModelIndex &index) const
 void KpkPackageModel::setGrouped(bool g)
 {
     m_grouped = g;
+    reset();
 }
 
 bool KpkPackageModel::isGrouped() const
@@ -429,6 +431,8 @@ QVariant KpkPackageModel::icon(Package::State state) const
             return m_iconNormal;
         case Package::Blocked :
             return m_iconBlocked;
+        case Package::Available:
+            return m_iconDownload;
         default :
             return m_iconGeneric;
     }
