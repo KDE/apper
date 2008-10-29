@@ -10,6 +10,7 @@ Name[gl]=Hai novas actualizacións disponíbeis
 Name[pt]=Estão disponíveis actualizações novas
 Name[pt_BR]=Estão disponíveis actualizações novas
 Name[sv]=Nya uppdateringar tillgängliga
+Name[tr]=Yeni güncellemeler var
 Name[uk]=Доступні оновлення
 Action=Sound|Popup
 
@@ -20,6 +21,7 @@ Name[gl]=Estanse a instalar actualizacións
 Name[pt]=As actualizações estão a ser instaladas
 Name[pt_BR]=As actualizações estão a ser instaladas
 Name[sv]=Uppdateringar installeras
+Name[tr]=Güncellemeler yükleniyor
 Name[uk]=Оновлення, які буде встановлено
 Action=Sound|Popup
 
@@ -30,5 +32,6 @@ Name[gl]=Requérese un reinicio do sistema
 Name[pt]=É Necessário Reiniciar o Sistema
 Name[pt_BR]=É Necessário Reiniciar o Sistema
 Name[sv]=En omstart av systemet krävs
+Name[tr]=Sistemin Yeniden Başlatılması Gerekiyor
 Name[uk]=Потрібне перезавантаження системи
 Action=Sound|Popup

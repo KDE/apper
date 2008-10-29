@@ -16,6 +16,7 @@ Name[gl]=Xestión do software
 Name[pt]=Gestão de Aplicações
 Name[pt_BR]=Gestão de Aplicações
 Name[sv]=Programvaruhantering
+Name[tr]=Yazılım Yönetimi
 Name[uk]=Керування програмами
 
 Comment=Add and Remove Software
@@ -24,6 +25,7 @@ Comment[gl]=Engade e elimina software
 Comment[pt]=Adicionar e Remover Aplicações
 Comment[pt_BR]=Adicionar e Remover Aplicações
 Comment[sv]=Lägg till och ta bort programvara
+Comment[tr]=Yazılım Ekle ve Kaldır
 Comment[uk]=Додайте або вилучіть програми
 
 X-KDE-Keywords=install,unistall,remove,software,applications,management,packages,packagekit,purge
