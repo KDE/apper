@@ -36,16 +36,6 @@ public:
     Ui::KpkTransaction ui;
 };
 
-static const Transaction::Status detailedStates[] = {
-    Transaction::Download,
-    Transaction::Install,
-    Transaction::Update,
-    Transaction::Cleanup,
-    Transaction::Remove,
-    Transaction::TestCommit,
-    Transaction::Commit
-};
-
 static const int stateCount = 7;
 
 KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent )
@@ -115,8 +105,8 @@ void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
         d->ui.progressBar->reset();
     }
     if (info.subpercentage) {
-        d->ui.progressBar->setMaximum(100);
-        d->ui.progressBar->setValue(info.subpercentage);
+        d->ui.subprogressBar->setMaximum(100);
+        d->ui.subprogressBar->setValue(info.subpercentage);
     } else {
         d->ui.subprogressBar->setMaximum(0);
         d->ui.subprogressBar->reset();
@@ -131,11 +121,16 @@ void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
 void KpkTransaction::currPackage(Package *p)
 {
     if (p->name() != "") {
-        d->ui.packageL->setText( p->name() + " - " + p->version() + " (" + p->arch() + ")" );
+        QString packageText(p->name());
+        if (p->version() != "")
+            packageText+=" "+p->version();
+        d->ui.packageL->setText( packageText );
         d->ui.descriptionL->setText( p->summary() );
+        enableButton(KDialog::Details, true);
     } else {
         d->ui.packageL->setText("");
         d->ui.descriptionL->setText("");
+        enableButton(KDialog::Details, false);
     }
 }
 
@@ -166,16 +161,6 @@ void KpkTransaction::slotButtonClicked(int button)
 void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
 {
     d->ui.currentL->setText( KpkStrings::status(status) );
-    int i = 0;
-    Transaction::Status s;
-    do {
-        s = detailedStates[i];
-        i++;
-    } while (s!=status && i<stateCount);
-    if (i==stateCount)
-        enableButton(KDialog::Details, false);
-    else
-        enableButton(KDialog::Details, true);
 }
 
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)

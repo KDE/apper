@@ -88,13 +88,10 @@ void KpkReviewChanges::checkTask()
 		    this, SLOT( reqFinished(PackageKit::Transaction::ExitStatus, uint) ) );
 		connect( m_transactionReq, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
 		    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
-		// Create a KProgressDialog to don't upset the user
-		m_waitPD = new KProgressDialog(this, i18n("Wait - KPackageKit"), i18n("Checking required packages") );
-		m_waitPD->progressBar()->setMinimum(0);
-		m_waitPD->progressBar()->setMaximum(0);
-		m_waitPD->setAutoClose(false);
-		m_waitPD->setModal(true);
-		m_waitPD->show();
+		// Create a Transaction dialog to don't upset the user
+        m_waitPD = new KpkTransaction(m_transactionReq, true, this);
+        m_waitPD->enableButton(KDialog::User1, false);
+        m_waitPD->show();
 	    }
 	    else {
 	       removePackages();
@@ -117,13 +114,10 @@ void KpkReviewChanges::checkTask()
 		    this, SLOT( depFinished(PackageKit::Transaction::ExitStatus, uint) ) );
 		connect( m_transactionDep, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
 		    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
-		// Create a KProgressDialog to don't upset the user
-		m_waitPD = new KProgressDialog(this, i18n("Wait - KPackageKit"), i18n("Checking for dependencies") );
-		m_waitPD->progressBar()->setMinimum(0);
-		m_waitPD->progressBar()->setMaximum(0);
-		m_waitPD->setAutoClose(false);
-		m_waitPD->setModal(true);
-		m_waitPD->show();
+		// Create a Transaction dialog to don't upset the user
+        m_waitPD = new KpkTransaction(m_transactionDep, true, this);
+        m_waitPD->enableButton(KDialog::User1, false);
+        m_waitPD->show();
 	    }
 	    else {
 	        installPackages();
@@ -171,6 +165,7 @@ void KpkReviewChanges::removePackages()
     if ( Transaction *t = m_client->removePackages(m_remPackages) ) {
         KpkTransaction *frm = new KpkTransaction(t, this);
         connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( remFinished(KpkTransaction::ExitStatus) ) );
+        frm->enableButton(KDialog::User1, false);
         frm->show();
     }
     else
@@ -210,6 +205,7 @@ void KpkReviewChanges::installPackages()
     if ( Transaction *t = m_client->installPackages(m_addPackages) ) {
         KpkTransaction *frm = new KpkTransaction(t, this);
         connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( addFinished(KpkTransaction::ExitStatus) ) );
+        frm->enableButton(KDialog::User1, false);
         frm->show();
     }
     else

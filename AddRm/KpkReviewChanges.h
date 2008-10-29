@@ -52,7 +52,7 @@ private:
     KpkPackageModel *m_pkgModelMain, *m_pkgModelReq, *m_pkgModelDep;
     KpkDelegate *m_pkgDelegate;
     
-    KProgressDialog *m_waitPD;
+    KpkTransaction *m_waitPD;
     
     Client *m_client;
     Transaction *m_transactionReq;
