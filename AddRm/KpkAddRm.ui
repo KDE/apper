@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>541</width>
-    <height>426</height>
+    <height>433</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -90,7 +90,7 @@
        <locale country="UnitedStates" language="English" />
       </property>
       <property name="rootIsDecorated" >
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="itemsExpandable" >
        <bool>true</bool>

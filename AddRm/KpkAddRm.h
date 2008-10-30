@@ -103,6 +103,8 @@ private slots:
     void progressChanged(PackageKit::Transaction::ProgressInfo info);
     void checkChanged();
 
+    void packageViewSetRootIsDecorated(bool value);
+
 signals:
     void changed(bool state);
 

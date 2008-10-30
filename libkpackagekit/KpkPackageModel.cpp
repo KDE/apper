@@ -1,4 +1,6 @@
 /***************************************************************************
+ *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   dantti85-pk@yahoo.com.br                                              *
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
  *                                                                         *
@@ -20,33 +22,48 @@
 
 #include "KpkPackageModel.h"
 #include <KpkStrings.h>
+#include <KIconLoader>
 #include <KDebug>
+
+#define UNIVERSAL_PADDING 6
+#define FAV_ICON_SIZE 24
 
 using namespace PackageKit;
 
-KpkPackageModel::KpkPackageModel(QObject *parent)
-    : QAbstractItemModel(parent), m_iconGeneric("utilities-file-archiver"), m_grouped(false),
-      m_iconBugFix("script-error"),
-      m_iconLow("security-high"),
-      m_iconImportant("security-low"),
-      m_iconEnhancement("ktip"),
-      m_iconSecurity("emblem-important"),
-      m_iconNormal("security-medium"),
-      m_iconBlocked("edit-delete"),
-      m_iconDownload("package-download")
+KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
+: QAbstractItemModel(parent),
+  m_packageView(packageView),
+  m_grouped(false),
+  m_iconBugFix("script-error"),
+  m_iconLow("security-high"),
+  m_iconImportant("security-low"),
+  m_iconEnhancement("ktip"),
+  m_iconSecurity("emblem-important"),
+  m_iconNormal("security-medium"),
+  m_iconBlocked("edit-delete")
 {
+    KIconLoader *ic = KIconLoader::global();
+    ic->addAppDir("kpackagekit");
+    m_iconGeneric = KIcon("package", ic);
+    m_iconDownload = KIcon("package-download", ic);
+    m_iconInstalled = KIcon("package-installed", ic);
 }
 
-KpkPackageModel::KpkPackageModel(const QList<Package*> &packages, QObject *parent)
-    : QAbstractItemModel(parent), m_iconGeneric("utilities-file-archiver"), m_grouped(false),
-      m_iconBugFix("script-error"),
-      m_iconLow("security-high"),
-      m_iconImportant("security-low"),
-      m_iconEnhancement("ktip"),
-      m_iconSecurity("emblem-important"),
-      m_iconNormal("security-medium"),
-      m_iconBlocked("edit-delete")
+KpkPackageModel::KpkPackageModel(const QList<Package*> &packages, QObject *parent, QAbstractItemView *packageView)
+: QAbstractItemModel(parent),
+  m_packageView(packageView),
+  m_grouped(false),
+  m_iconBugFix("script-error"),
+  m_iconLow("security-high"),
+  m_iconImportant("security-low"),
+  m_iconEnhancement("ktip"),
+  m_iconSecurity("emblem-important"),
+  m_iconNormal("security-medium"),
+  m_iconBlocked("edit-delete")
 {
+    KIconLoader *ic = KIconLoader::global();
+    ic->addAppDir("kpackagekit");
+    m_iconGeneric = KIcon("package", ic);
     foreach(Package* p, packages) {
         addPackage(p);
     }
@@ -134,7 +151,7 @@ QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, i
             case 0:
                 return QVariant("Package");
             case 1:
-                return QVariant("Install/Remove");
+                return QVariant("Action");
         }
     }
     return QVariant();
@@ -213,8 +230,6 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         Package::State group = m_groups.keys().at(index.row());
         int count = m_groups.value(group).size();
         //TODO: Group descriptions
-        bool unchecked = false;
-        bool maybechecked = false;
         switch(index.column()) {
             case 0:
                 switch(role) {
@@ -222,24 +237,41 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         return KpkStrings::infoUpdate(group, count);
                     case Qt::DecorationRole:
                         return icon(group);
+		    case GroupRole:
+			return true;
+		    case Qt::SizeHintRole:
+			if (m_packageView) {
+			    int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
+			    // Here we are discouting the plus sign
+			    // of the tree 20 is a value get with kruller
+			    // not sure but this might change... 
+			    return QSize(width - 20, 50);
+			}
                     default:
                         return QVariant();
                 }
             case 1:
                 switch(role) {
-                    case Qt::CheckStateRole:
+		    case Qt::CheckStateRole:
+		    {
+		        int nChecked = 0;
                         foreach(Package* p, m_groups[group]) {
-                            if (!m_checkedPackages.contains(p)) {
-                                unchecked = true;
-                            } else {
-                                maybechecked = true;
-                            }
+                            if ( m_checkedPackages.contains(p) )
+				nChecked++;
                         }
-                        if (unchecked)
+                        if (m_groups[group].size() == nChecked)
+                            return Qt::Checked;
+                        else if (nChecked == 0)
                             return Qt::Unchecked;
-                        if (maybechecked)
-                            return Qt::PartiallyChecked;
-                        return Qt::Checked;
+			else
+			    return Qt::PartiallyChecked;
+		    }
+		    case InstalledRole:
+                        if (group == Package::Installed)
+                            return true;
+                        return false;
+		    case Qt::SizeHintRole:
+			return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, 50);
                     default:
                         return QVariant();
                 }
@@ -272,19 +304,37 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         return false;
                     case IdRole:
                         return p->id();
+		    case GroupRole:
+			return false;
+		    case Qt::SizeHintRole:
+			if (m_packageView) {
+			    int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
+			    // Here we are discouting the plus sign
+			    // of the tree 20 is a value get with kruller
+			    // not sure but this might change... 
+			    if (m_grouped)
+				return QSize(width - 40, 50);
+			    else
+				//if not grouped we SHOULD not show the decorated root so
+				// we have nothing to discount
+				return QSize(width, 50);
+			}
                     default:
                         return QVariant();
                 }
             case 1: //Checkbox column
                 switch(role) {
                     case Qt::CheckStateRole:
-                        if (m_checkedPackages.contains(p))
+                        if ( m_checkedPackages.contains(p) )
                             return Qt::Checked;
-                        return Qt::Unchecked;
+			else
+			    return Qt::Unchecked;
                     case InstalledRole:
                         if (p->state() == Package::Installed)
                             return true;
                         return false;
+		    case Qt::SizeHintRole:
+			return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, 50);
                     default:
                         return QVariant();
                 }
@@ -340,33 +390,74 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
 Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 {
     if (index.column() == 1) {
-        if (package(index))
-            return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
-        return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsTristate;
+        if ( package(index) ) {
+	    if ( package(index)->state() == Package::Blocked )
+		return QAbstractItemModel::flags(index);
+	    else
+		return Qt::ItemIsUserCheckable | QAbstractItemModel::flags(index);
+	}
+	else if ( m_groups.keys().at(index.row()) == Package::Blocked )
+	    return QAbstractItemModel::flags(index);
+	else
+	    return Qt::ItemIsUserCheckable | Qt::ItemIsTristate | QAbstractItemModel::flags(index);;
     }
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    return QAbstractItemModel::flags(index);
 }
 
-int KpkPackageModel::columnCount(const QModelIndex &/*parent*/) const
+int KpkPackageModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return 2;
 }
 
 Package* KpkPackageModel::package(const QModelIndex &index) const
 {
-    Package* p = static_cast<Package*>(index.internalPointer());
-    if (p)
-        return p;
-    return 0;
+    if (m_grouped && !index.parent().isValid() ) {
+	return 0;
+    }
+    else {
+	if (m_grouped)
+            return packagesWithState( m_groups.keys().at( index.parent().row() ) ).at( index.row() );
+        else
+            return m_packages.at( index.row() );
+    }
 }
 
 //TODO: Sometimes duplicate packages are added. Not sure who's fault, but add some defenses.
+// THIS IS DBUS Session fault(it also happens in gnome version..)
+// please don't add unessary defences dbus is the one
+// who needs fixing ;)
 void KpkPackageModel::addPackage(PackageKit::Package *package)
 {
-    beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
-    m_packages.append(package);
-    m_groups[package->state()].append(package);
-    endInsertRows();
+    // YOU MUST check if the item has a parent so you don't break
+    // QT rules
+    // check to see if the list of info has any package
+    if (!m_grouped) {
+	beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
+	m_packages.append(package);
+	m_groups[package->state()].append(package);
+	endInsertRows();
+    }
+    else if ( !m_groups.contains( package->state() ) ) {
+	// insert the group item
+	beginInsertRows( QModelIndex(), m_groups.size(), m_groups.size() );
+	m_groups[ package->state() ].append(package);
+	endInsertRows();
+	// now insert the package
+	beginInsertRows( createIndex( m_groups.keys().indexOf( package->state() ), 0), m_groups[ package->state() ].size(), m_groups[ package->state() ].size() );
+	m_packages.append(package);
+	endInsertRows();
+	// the displayed data of the parent MUST be updated to show the right number of packages
+	emit dataChanged( createIndex( m_groups.keys().indexOf( package->state() ), 0), createIndex( m_groups.keys().indexOf( package->state() ), 0) );
+    }
+    else {
+	beginInsertRows( createIndex( m_groups.keys().indexOf( package->state() ), 0), m_groups[ package->state() ].size(), m_groups[ package->state() ].size() );
+	m_packages.append(package);
+	m_groups[package->state()].append(package);
+	endInsertRows();
+	// the displayed data of the parent MUST be updated to show the right number of packages
+	emit dataChanged( createIndex( m_groups.keys().indexOf( package->state() ), 0), createIndex( m_groups.keys().indexOf( package->state() ), 0) );
+    }
 }
 
 void KpkPackageModel::removePackage(Package *package)
@@ -392,7 +483,11 @@ void KpkPackageModel::uncheckAll()
 
 void KpkPackageModel::checkAll()
 {
-    m_checkedPackages = m_packages;
+    m_checkedPackages.clear();
+    foreach(Package *package, m_packages) {
+        if ( package->state() != Package::Blocked )
+            m_checkedPackages << package;
+    }
 }
 
 QList<Package*> KpkPackageModel::selectedPackages() const
@@ -407,8 +502,8 @@ QList<Package*> KpkPackageModel::packagesWithState(Package::State state) const
 
 bool KpkPackageModel::allSelected() const
 {
-    foreach(Package* package, m_packages) {
-        if (package->state() != Package::Blocked && !m_checkedPackages.contains(package))
+    foreach(Package *package, m_packages) {
+        if ( package->state() != Package::Blocked && !m_checkedPackages.contains(package) )
             return false;
     }
     return true;
@@ -433,6 +528,8 @@ QVariant KpkPackageModel::icon(Package::State state) const
             return m_iconBlocked;
         case Package::Available:
             return m_iconDownload;
+	case Package::Installed:
+            return m_iconInstalled;
         default :
             return m_iconGeneric;
     }

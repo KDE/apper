@@ -50,6 +50,7 @@ private slots:
     void updateDetail(PackageKit::Client::UpdateInfo info);
     
     void checkEnableUpdateButton();
+    void errorCode(PackageKit::Client::ErrorType error, const QString &details);
 
 private:
     KpkPackageModel *m_pkg_model_updates;

@@ -9,7 +9,7 @@
     <x>0</x>
     <y>0</y>
     <width>406</width>
-    <height>209</height>
+    <height>212</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -62,12 +62,22 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="timeL" >
-     <property name="text" >
-      <string>4 minutes</string>
+    <widget class="QLabel" name="descriptionL" >
+     <property name="font" >
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
      </property>
-     <property name="alignment" >
-      <set>Qt::AlignCenter</set>
+     <property name="text" >
+      <string>A library to do foo</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="packageL" >
+     <property name="text" >
+      <string>libfoo</string>
      </property>
     </widget>
    </item>
@@ -88,22 +98,12 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="descriptionL" >
-        <property name="font" >
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
+       <widget class="QLabel" name="timeL" >
         <property name="text" >
-         <string>A library to do foo</string>
+         <string>4 minutes</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="packageL" >
-        <property name="text" >
-         <string>libfoo</string>
+        <property name="alignment" >
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>

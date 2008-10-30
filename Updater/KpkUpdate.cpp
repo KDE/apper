@@ -33,9 +33,10 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(this));
-    packageView->setModel(m_pkg_model_updates = new KpkPackageModel(this));
+    packageView->setModel( m_pkg_model_updates = new KpkPackageModel(this, packageView) );
     m_pkg_model_updates->setGrouped(true);
-    connect( m_pkg_model_updates, SIGNAL( dataChanged(const QModelIndex, const QModelIndex) ), this, SLOT( checkEnableUpdateButton() ) );
+    connect( m_pkg_model_updates, SIGNAL( dataChanged(const QModelIndex, const QModelIndex) ),
+	this, SLOT( checkEnableUpdateButton() ) );
     //connect( m_pkg_model_updates, SIGNAL( updatesSelected(bool) ), updatePB, SLOT( setEnabled(bool) ) );
 
     // Create a new client
@@ -49,15 +50,14 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 
 void KpkUpdate::checkEnableUpdateButton()
 {
-    if (m_pkg_model_updates->selectedPackages().size()>0)
-      updatePB->setEnabled(true);
+    if (m_pkg_model_updates->selectedPackages().size() > 0) 
+        updatePB->setEnabled(true);
     else
-      updatePB->setEnabled(false);
+        updatePB->setEnabled(false);
 }
 
 void KpkUpdate::on_updatePB_clicked()
 {
-    qDebug() << "update";
     QList<Package*> packages = m_pkg_model_updates->selectedPackages();
     //check to see if the user selected all selectable packages
     if (m_pkg_model_updates->allSelected())
@@ -86,7 +86,10 @@ void KpkUpdate::updateFinished(KpkTransaction::ExitStatus status)
     if (status == KpkTransaction::Success){
         m_pkg_model_updates->clear();
 	m_updatesT = m_client->getUpdates();
-	connect( m_updatesT, SIGNAL( package(PackageKit::Package *) ), m_pkg_model_updates, SLOT( addPackage(PackageKit::Package *) ) );
+	connect( m_updatesT, SIGNAL( package(PackageKit::Package *) ),
+	    m_pkg_model_updates, SLOT( addPackage(PackageKit::Package *) ) );
+	connect( m_updatesT, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
+	    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString &) ) );
     }
 }
 
@@ -193,6 +196,11 @@ bool KpkUpdate::event(QEvent *event)
     }
 
     return QWidget::event(event);
+}
+
+void KpkUpdate::errorCode(PackageKit::Client::ErrorType error, const QString &details)
+{
+    KMessageBox::detailedSorry( this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify );
 }
 
 void KpkUpdate::updateColumnsWidth(bool force)

@@ -42,7 +42,7 @@ KpkAddRm::KpkAddRm( QWidget *parent )
 
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(this));
-    packageView->setModel(m_pkg_model_main = new KpkPackageModel(this));
+    packageView->setModel( m_pkg_model_main = new KpkPackageModel(this, packageView) );
     packageView->viewport()->setAttribute(Qt::WA_Hover);
 
     // check to see if the backend support these actions
@@ -61,14 +61,14 @@ KpkAddRm::KpkAddRm( QWidget *parent )
         tabWidget->setTabEnabled(1, false);
 
     if ( m_actions.contains(Client::ActionGetDepends) ) {
-	dependsOnLV->setModel( m_pkg_model_dep = new KpkPackageModel(this) );
+	dependsOnLV->setModel( m_pkg_model_dep = new KpkPackageModel(this, packageView) );
 	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getDepends(PackageKit::Package *) ) );
     }
     else
         tabWidget->setTabEnabled(2, false);
 
     if ( m_actions.contains(Client::ActionGetRequires) ) {
-	requiredByLV->setModel(m_pkg_model_req = new KpkPackageModel(this));
+	requiredByLV->setModel( m_pkg_model_req = new KpkPackageModel(this, packageView ));
 	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getRequires(PackageKit::Package *) ) );
     }
     else
@@ -161,9 +161,9 @@ void KpkAddRm::getInfoFinished(PackageKit::Transaction::ExitStatus status, uint 
 void KpkAddRm::on_packageView_pressed( const QModelIndex & index )
 {
     if ( index.column() == 0 ) {
-        Package* p = m_pkg_model_main->package(index);
+        Package *p = m_pkg_model_main->package(index);
         if (p)
-            emit getInfo( m_pkg_model_main->package(index) );
+            emit getInfo(p);
     }
 }
 
@@ -646,7 +646,13 @@ void KpkAddRm::filterMenu(Client::Filters filters)
     groupResults->setCheckable(true);
     m_filtersQM->addAction(groupResults);
     groupResults->setToolTip( i18n("Display packages in groups according to status") );
-    connect(groupResults, SIGNAL(toggled(bool)), m_pkg_model_main, SLOT(setGrouped(bool)));
+    connect(groupResults, SIGNAL( toggled(bool) ), m_pkg_model_main, SLOT( setGrouped(bool) ) );
+    connect(groupResults, SIGNAL( toggled(bool) ), this, SLOT( packageViewSetRootIsDecorated(bool) ) );
+}
+
+void KpkAddRm::packageViewSetRootIsDecorated(bool value)
+{
+    packageView->setRootIsDecorated(value);
 }
 
 Client::Filters KpkAddRm::filters()

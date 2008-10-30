@@ -22,7 +22,8 @@
 #ifndef KPKPACKAGEMODEL_H
 #define KPKPACKAGEMODEL_H
 
-#include <QAbstractTableModel>
+#include <QAbstractItemModel>
+#include <QAbstractItemView>
 #include <KIcon>
 
 #include <QPackageKit>
@@ -35,8 +36,8 @@ class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
     Q_PROPERTY(bool groupPackages READ isGrouped WRITE setGrouped)
 
 public:
-    KpkPackageModel(QObject *parent = 0);
-    KpkPackageModel(const QList<Package*> &packages, QObject *parent = 0);
+    KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
+    KpkPackageModel(const QList<Package*> &packages, QObject *parent = 0, QAbstractItemView *packageView = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -62,7 +63,8 @@ public:
     enum {
         SummaryRole = Qt::UserRole,
         InstalledRole,
-        IdRole
+        IdRole,
+	GroupRole
     };
     
 
@@ -71,12 +73,13 @@ public slots:
     void setGrouped(bool g);
 
 private:
+    QAbstractItemView *m_packageView;
     QVariant icon(Package::State state) const;
     QList<Package*> m_packages;
     QList<Package*> m_checkedPackages;
     QMap<Package::State, QList<Package*> > m_groups;
-    KIcon m_iconGeneric;
     bool  m_grouped;
+    KIcon m_iconGeneric;
     KIcon m_iconBugFix;
     KIcon m_iconLow;
     KIcon m_iconImportant;
@@ -85,6 +88,7 @@ private:
     KIcon m_iconNormal;
     KIcon m_iconBlocked;
     KIcon m_iconDownload;
+    KIcon m_iconInstalled;
     
 };
 

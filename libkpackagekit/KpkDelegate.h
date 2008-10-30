@@ -49,7 +49,8 @@ private:
     enum {
         SummaryRole = 32,
         InstalledRole,
-        IdRole
+        IdRole,
+	GroupRole
         };
 
     KIcon m_addIcon;

@@ -52,14 +52,14 @@ void KpkDelegate::paint(QPainter *painter,
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
 
     switch (index.column()) {
-    case 0:
-        paintColMain(painter, option, index);
-        break;
-    case 1:
-        paintColFav(painter, option, index);
-        break;
-    default:
-        kDebug() << "unexpected column";
+	case 0:
+	    paintColMain(painter, option, index);
+	    break;
+	case 1:
+	    paintColFav(painter, option, index);
+	    break;
+	default:
+	    kDebug() << "unexpected column";
     }
 }
 
@@ -84,8 +84,18 @@ void KpkDelegate::paintColMain(QPainter *painter,
     int width = option.rect.width();
 
     bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
+    
+    //grab the info from the model
+    QString title = index.model()->data(index, Qt::DisplayRole).toString();
+    QString description = index.model()->data(index, SummaryRole).toString();
+    bool group = index.model()->data(index, GroupRole).toBool();
+    
     // selects the mode to paint the icon based on the info field
-    QIcon::Mode iconMode = ( index.model()->data(index, InstalledRole).toBool() ? QIcon::Disabled : QIcon::Normal);
+    QIcon::Mode iconMode;
+    if (group)
+	iconMode = QIcon::Normal;
+    else
+	iconMode = ( index.model()->data(index, InstalledRole).toBool() ? QIcon::Normal : QIcon::Disabled);
 
     QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
         option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
@@ -104,9 +114,6 @@ void KpkDelegate::paintColMain(QPainter *painter,
 
     QLinearGradient gradient;
 
-    QString title = index.model()->data(index, Qt::DisplayRole).toString();
-    QString description = index.model()->data(index, SummaryRole).toString();
-
     // Painting
 
     // Text
@@ -114,7 +121,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     const int itemHeight = calcItemHeight(option);
 
     p.setPen(foregroundColor);
-    if ( description.isEmpty() ) {
+    if (group) {
 	p.setFont(local_option_title.font);
 	p.drawText(
 		left + (leftToRight ? textInner : 0),
@@ -213,6 +220,9 @@ void KpkDelegate::paintColFav(QPainter *painter,
 //     if (! (option.state & QStyle::State_MouseOver) && m_onFavoriteIconItem == item)
 //         m_onFavoriteIconItem = NULL;
 
+    if ( !(index.flags() & Qt::ItemIsUserCheckable) )
+	return;
+
     QIcon::Mode iconMode = QIcon::Normal;
     switch ( index.model()->data(index, Qt::CheckStateRole).toInt() ) {
 	case Qt::Unchecked :
@@ -291,6 +301,9 @@ bool KpkDelegate::editorEvent(QEvent *event,
                                const QStyleOptionViewItem &option,
                                const QModelIndex &index)
 {
+    if ( !(index.flags() & Qt::ItemIsUserCheckable) )
+	return false;
+
     if ( event->type() == QEvent::MouseButtonPress && index.column() == 1 )
         return model->setData(index, !model->data(index, Qt::CheckStateRole).toBool(), Qt::CheckStateRole );
 //     else if ( event->type() == QEvent::KeyPress ) {
@@ -303,19 +316,20 @@ bool KpkDelegate::editorEvent(QEvent *event,
 QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
         const QModelIndex &index ) const
 {
-    int width;
-    if (index.column() == 0) {
-        QStyleOptionViewItem local_option_title(option);
-        QStyleOptionViewItem local_option_normal(option);
-        
-        local_option_title.font.setBold(true);
-        local_option_title.font.setPointSize(local_option_title.font.pointSize() + 2);
-        QFontMetrics title(local_option_title.font);
-        QFontMetrics normal(local_option_normal.font);
-        width = qMax(title.width(index.data(Qt::DisplayRole).toString()), normal.width(index.data(KpkPackageModel::SummaryRole).toString())) + MAIN_ICON_SIZE + FADE_LENGTH;
-    } else {
-        width = FAV_ICON_SIZE;
-    }
+//     int width;
+//     if (index.column() == 0) {
+//         QStyleOptionViewItem local_option_title(option);
+//         QStyleOptionViewItem local_option_normal(option);
+//         
+//         local_option_title.font.setBold(true);
+//         local_option_title.font.setPointSize(local_option_title.font.pointSize() + 2);
+//         QFontMetrics title(local_option_title.font);
+//         QFontMetrics normal(local_option_normal.font);
+//         width = qMax(title.width(index.data(Qt::DisplayRole).toString()), normal.width(index.data(KpkPackageModel::SummaryRole).toString())) + MAIN_ICON_SIZE + FADE_LENGTH;
+//     } else {
+//         width = FAV_ICON_SIZE;
+//     }
+    int width = (index.column() == 0) ? index.model()->data(index, Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE;
     return QSize(width, calcItemHeight(option));
 }
 

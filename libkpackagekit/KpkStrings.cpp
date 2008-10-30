@@ -688,10 +688,10 @@ QString KpkStrings::infoUpdate(Package::State state, int number)
 	    return i18np("1 enhancement update", "%1 enhancement updates", number);
 	case Package::Blocked :
 	    return i18np("1 blocked update", "%1 blocked updates", number);
-    case Package::Installed:
-        return i18np("1 installed package", "%1 installed packages", number);
-    case Package::Available:
-        return i18np("1 available package", "%1 available packages", number);
+	case Package::Installed:
+	    return i18np("1 installed package", "%1 installed packages", number);
+	case Package::Available:
+	    return i18np("1 available package", "%1 available packages", number);
         default :
 	    kDebug() << "update info unrecognised: " << state;
 	    return i18np("1 unknown update", "%1 unknown updates", number);
