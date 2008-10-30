@@ -301,7 +301,7 @@ void KpkAddRm::save()
     if ( frm->exec() == QDialog::Accepted )
         m_pkg_model_main->uncheckAll();
     else
-	QTimer::singleShot(1, m_pkg_model_main, SLOT( checkChanges() ) );
+	QTimer::singleShot(1, this, SLOT( checkChanged() ) );
     delete frm;
     search();
 }
