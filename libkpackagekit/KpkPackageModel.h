@@ -89,6 +89,7 @@ private:
     KIcon m_iconBlocked;
     KIcon m_iconDownload;
     KIcon m_iconInstalled;
+    KIcon m_iconRemove;
     
 };
 

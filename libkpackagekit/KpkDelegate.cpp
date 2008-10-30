@@ -94,8 +94,26 @@ void KpkDelegate::paintColMain(QPainter *painter,
     QIcon::Mode iconMode;
     if (group)
 	iconMode = QIcon::Normal;
-    else
-	iconMode = ( index.model()->data(index, InstalledRole).toBool() ? QIcon::Normal : QIcon::Disabled);
+    else {
+	if ( index.model()->data(index, InstalledRole).toBool() )
+	    iconMode = index.model()->data(index, Qt::CheckStateRole).toInt() == Qt::Checked ? QIcon::Disabled : QIcon::Normal;
+	else
+	    iconMode = index.model()->data(index, Qt::CheckStateRole).toInt() == Qt::Checked ? QIcon::Selected : QIcon::Disabled;
+    }
+	
+// 	    QIcon::Mode iconMode = QIcon::Normal;
+//     switch ( index.model()->data(index, Qt::CheckStateRole).toInt() ) {
+// 	case Qt::Unchecked :
+// 	    iconMode = QIcon::Disabled;
+// 	    break;
+// 	case Qt::PartiallyChecked :
+// 	    iconMode = QIcon::Selected;
+// 	    break;
+// 	case Qt::Checked :
+// 	    iconMode = QIcon::Active;
+// 	    break;
+//     }
+
 
     QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
         option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);

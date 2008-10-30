@@ -47,6 +47,7 @@ KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView
     m_iconGeneric = KIcon("package", ic);
     m_iconDownload = KIcon("package-download", ic);
     m_iconInstalled = KIcon("package-installed", ic);
+    m_iconRemove = KIcon("package-remove", ic);
 }
 
 KpkPackageModel::KpkPackageModel(const QList<Package*> &packages, QObject *parent, QAbstractItemView *packageView)
@@ -64,6 +65,8 @@ KpkPackageModel::KpkPackageModel(const QList<Package*> &packages, QObject *paren
     KIconLoader *ic = KIconLoader::global();
     ic->addAppDir("kpackagekit");
     m_iconGeneric = KIcon("package", ic);
+    m_iconDownload = KIcon("package-download", ic);
+    m_iconRemove = KIcon("package-remove", ic);
     foreach(Package* p, packages) {
         addPackage(p);
     }
@@ -254,10 +257,13 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 switch(role) {
 		    case Qt::CheckStateRole:
 		    {
+		    	// we do this here cause it's the same code for column 1 and 2		    
 		        int nChecked = 0;
                         foreach(Package* p, m_groups[group]) {
-                            if ( m_checkedPackages.contains(p) )
-				nChecked++;
+			    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+				if ( m_checkedPackages.at(i)->id() == p->id() )
+				    nChecked++;
+			    }
                         }
                         if (m_groups[group].size() == nChecked)
                             return Qt::Checked;
@@ -267,9 +273,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 			    return Qt::PartiallyChecked;
 		    }
 		    case InstalledRole:
-                        if (group == Package::Installed)
-                            return true;
-                        return false;
+                        return group == Package::Installed;
 		    case Qt::SizeHintRole:
 			return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, 50);
                     default:
@@ -288,20 +292,35 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             p = packagesWithState(m_groups.keys().at(index.parent().row())).at(index.row());
         else
             p = m_packages.at(index.row());
+
+	// we do this here cause it's the same code for column 1 and 2
+	if (role == Qt::CheckStateRole) {
+	    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+		if ( m_checkedPackages.at(i)->id() == p->id() )
+		    return Qt::Checked;
+	    }
+	    return Qt::Unchecked;
+	}
+
         //TODO: Change the background color depending on a package's state
         switch (index.column()) {
             case 0: //Package name column
-                switch (role) {
+                switch (role) {			    
                     case Qt::DisplayRole:
                         return p->name();
                     case Qt::DecorationRole:
-                        return m_iconGeneric;
+			if ( m_checkedPackages.contains(p) ){
+			    if (p->state() == Package::Installed)
+			        return m_iconRemove;
+			    else
+				return m_iconDownload;
+			}
+			else
+			    return m_iconGeneric;
                     case SummaryRole:
                         return p->summary();
                     case InstalledRole:
-                        if (p->state() == Package::Installed)
-                            return true;
-                        return false;
+                        return p->state() == Package::Installed;
                     case IdRole:
                         return p->id();
 		    case GroupRole:
@@ -324,15 +343,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 }
             case 1: //Checkbox column
                 switch(role) {
-                    case Qt::CheckStateRole:
-                        if ( m_checkedPackages.contains(p) )
-                            return Qt::Checked;
-			else
-			    return Qt::Unchecked;
                     case InstalledRole:
-                        if (p->state() == Package::Installed)
-                            return true;
-                        return false;
+                        return p->state() == Package::Installed;
 		    case Qt::SizeHintRole:
 			return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, 50);
                     default:
@@ -356,28 +368,46 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
                     m_checkedPackages.append(m_packages.at(index.row()));
                 emit dataChanged(index, index);
                 if (m_grouped)
-                    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(),index.parent().column()+1));
+                    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column() + 1) );
+		    // emit this so the packageIcon can also change
+		    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column()) );
             } else {
                 Package::State group = m_groups.keys().at(index.row());
                 foreach(Package* package, m_groups[group]) {
-                    if (!m_checkedPackages.contains(package))
-                        m_checkedPackages.append(package);
+		    int nChecked = 0;
+		    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+			if ( m_checkedPackages.at(i)->id() == package->id() )
+			    nChecked++;
+		    }
+		    if (!nChecked)
+			m_checkedPackages.append(package);
                 }
                 emit dataChanged(this->index(0, 1, index), this->index(m_groups[group].size(), 1, index));
             }
         } else {
             if (p || !m_grouped) {
                 if (p)
-                    m_checkedPackages.removeAll(p);
+		    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+			if ( m_checkedPackages.at(i)->id() == p->id() )
+			    m_checkedPackages.removeAt(i);
+		    }
                 else
-                    m_checkedPackages.removeAll(m_packages.at(index.row()));
+		    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+			if ( m_checkedPackages.at(i)->id() == m_packages.at( index.row() )->id() )
+			    m_checkedPackages.removeAt(i);
+		    }
                 emit dataChanged(index, index);
                 if (m_grouped)
-                    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(),index.parent().column()+1));
+                    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column() + 1) );
+		    // emit this so the packageIcon can also change
+		    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column()) );
             } else {
                 Package::State group = m_groups.keys().at(index.row());
                 foreach(Package* package, m_groups[group]) {
-                    m_checkedPackages.removeAll(package);
+		    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+			if ( m_checkedPackages.at(i)->id() == package->id() )
+			    m_checkedPackages.removeAt(i);
+		    }
                 }
                 emit dataChanged(this->index(0, 1, index), this->index(m_groups[group].size(), 1, index));
             }
@@ -471,7 +501,6 @@ void KpkPackageModel::removePackage(Package *package)
 void KpkPackageModel::clear()
 {
     m_packages.clear();
-    m_checkedPackages.clear();
     m_groups.clear();
     reset();
 }

@@ -85,6 +85,7 @@ void KpkUpdate::updateFinished(KpkTransaction::ExitStatus status)
 {
     if (status == KpkTransaction::Success){
         m_pkg_model_updates->clear();
+	m_pkg_model_updates->uncheckAll();
 	m_updatesT = m_client->getUpdates();
 	connect( m_updatesT, SIGNAL( package(PackageKit::Package *) ),
 	    m_pkg_model_updates, SLOT( addPackage(PackageKit::Package *) ) );

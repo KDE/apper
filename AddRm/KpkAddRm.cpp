@@ -231,6 +231,8 @@ void KpkAddRm::on_findPB_clicked()
 	m_searchAction = Client::ActionSearchName;
 	m_searchString = searchKLE->text();
 	m_searchFilters = filters();
+	// select "All Packages"
+	groupsCB->setCurrentIndex(0);
 	// create the main transaction
 	search();
     }
@@ -250,7 +252,6 @@ void KpkAddRm::on_groupsCB_currentIndexChanged( int index )
 
 void KpkAddRm::search()
 {
-//     updateColumnsWidth();
     // search
     if ( m_searchAction == Client::ActionSearchGroup )
 	m_pkClient_main = m_client->searchGroup( m_searchGroup, m_searchFilters );
