@@ -453,6 +453,13 @@ Package* KpkPackageModel::package(const QModelIndex &index) const
     }
 }
 
+void KpkPackageModel::addSelectedPackage(PackageKit::Package* package)
+{
+    if (package->state() != Package::Blocked)
+        m_checkedPackages << package;
+    addPackage(package);
+}
+
 //TODO: Sometimes duplicate packages are added. Not sure who's fault, but add some defenses.
 // THIS IS DBUS Session fault(it also happens in gnome version..)
 // please don't add unessary defences dbus is the one
@@ -508,6 +515,15 @@ void KpkPackageModel::clear()
 void KpkPackageModel::uncheckAll()
 {
     m_checkedPackages.clear();
+    if (m_grouped) {
+        emit dataChanged(createIndex(0, 1), createIndex(m_groups.size(), 1));
+        foreach(Package::State group, m_groups.keys()) {
+            QModelIndex groupIndex = index(m_groups.keys().indexOf(group), 0, QModelIndex());
+            emit dataChanged(index(0, 1, groupIndex), index(m_groups[group].size(), 1, groupIndex));
+        }
+    } else {
+        emit dataChanged(createIndex(0, 1), createIndex(m_groups.size(), 1));
+    }
 }
 
 void KpkPackageModel::checkAll()
@@ -516,6 +532,15 @@ void KpkPackageModel::checkAll()
     foreach(Package *package, m_packages) {
         if ( package->state() != Package::Blocked )
             m_checkedPackages << package;
+    }
+    if (m_grouped) {
+        emit dataChanged(createIndex(0, 1), createIndex(m_groups.size(), 1));
+        foreach(Package::State group, m_groups.keys()) {
+            QModelIndex groupIndex = index(m_groups.keys().indexOf(group), 0, QModelIndex());
+            emit dataChanged(index(0, 1, groupIndex), index(m_groups[group].size(), 1, groupIndex));
+        }
+    } else {
+        emit dataChanged(createIndex(0, 1), createIndex(m_groups.size(), 1));
     }
 }
 

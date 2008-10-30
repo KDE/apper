@@ -88,7 +88,7 @@ void KpkUpdate::updateFinished(KpkTransaction::ExitStatus status)
 	m_pkg_model_updates->uncheckAll();
 	m_updatesT = m_client->getUpdates();
 	connect( m_updatesT, SIGNAL( package(PackageKit::Package *) ),
-	    m_pkg_model_updates, SLOT( addPackage(PackageKit::Package *) ) );
+	    m_pkg_model_updates, SLOT( addSelectedPackage(PackageKit::Package *) ) );
 	connect( m_updatesT, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
 	    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString &) ) );
     }

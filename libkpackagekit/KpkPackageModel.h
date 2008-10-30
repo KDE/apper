@@ -70,6 +70,7 @@ public:
 
 public slots:
     void addPackage(PackageKit::Package *package);
+    void addSelectedPackage(PackageKit::Package *package);
     void setGrouped(bool g);
 
 private:
