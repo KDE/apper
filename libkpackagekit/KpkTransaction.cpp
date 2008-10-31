@@ -27,6 +27,7 @@
 #include "KpkStrings.h"
 #include "KpkRepoSig.h"
 #include "KpkLicenseAgreement.h"
+#include "KpkIcons.h"
 
 #include "ui_KpkTransaction.h"
 
@@ -65,7 +66,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
 {
     m_trans = trans;
 
-    setWindowIcon( KpkStrings::actionIcon( m_trans->role().action ) );
+    setWindowIcon( KpkIcons::actionIcon( m_trans->role().action ) );
     // Sets all the status of the current transaction
     setCaption( KpkStrings::action( m_trans->role().action ) );
 

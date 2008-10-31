@@ -28,6 +28,7 @@
 #include "KpkAddRm.h"
 #include "KpkReviewChanges.h"
 #include <KpkStrings.h>
+#include <KpkIcons.h>
 
 #define UNIVERSAL_PADDING 6
 
@@ -82,7 +83,7 @@ KpkAddRm::KpkAddRm( QWidget *parent )
 
     //initialize the groups
     foreach (Client::Group group, m_client->getGroups() ) {
-	groupsCB->addItem( KpkStrings::groupsIcon(group), KpkStrings::groups(group), group );
+	groupsCB->addItem( KpkIcons::groupsIcon(group), KpkStrings::groups(group), group );
     }
 
     // install the backend filters

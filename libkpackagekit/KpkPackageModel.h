@@ -75,22 +75,10 @@ public slots:
 
 private:
     QAbstractItemView *m_packageView;
-    QVariant icon(Package::State state) const;
     QList<Package*> m_packages;
     QList<Package*> m_checkedPackages;
     QMap<Package::State, QList<Package*> > m_groups;
     bool  m_grouped;
-    KIcon m_iconGeneric;
-    KIcon m_iconBugFix;
-    KIcon m_iconLow;
-    KIcon m_iconImportant;
-    KIcon m_iconEnhancement;
-    KIcon m_iconSecurity;
-    KIcon m_iconNormal;
-    KIcon m_iconBlocked;
-    KIcon m_iconDownload;
-    KIcon m_iconInstalled;
-    KIcon m_iconRemove;
     
 };
 

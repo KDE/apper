@@ -24,6 +24,7 @@
 #include <KpkStrings.h>
 #include <KIconLoader>
 #include <KDebug>
+#include <KpkIcons.h>
 
 #define UNIVERSAL_PADDING 6
 #define FAV_ICON_SIZE 24
@@ -34,40 +35,15 @@ using namespace PackageKit;
 KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
   m_packageView(packageView),
-  m_grouped(false),
-  m_iconBugFix("script-error"),
-  m_iconLow("security-high"),
-  m_iconImportant("security-low"),
-  m_iconEnhancement("ktip"),
-  m_iconSecurity("emblem-important"),
-  m_iconNormal("security-medium"),
-  m_iconBlocked("edit-delete")
+  m_grouped(false)
 {
-    KIconLoader *ic = KIconLoader::global();
-    ic->addAppDir("kpackagekit");
-    m_iconGeneric = KIcon("package", ic);
-    m_iconDownload = KIcon("package-download", ic);
-    m_iconInstalled = KIcon("package-installed", ic);
-    m_iconRemove = KIcon("package-remove", ic);
 }
 
 KpkPackageModel::KpkPackageModel(const QList<Package*> &packages, QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
   m_packageView(packageView),
-  m_grouped(false),
-  m_iconBugFix("script-error"),
-  m_iconLow("security-high"),
-  m_iconImportant("security-low"),
-  m_iconEnhancement("ktip"),
-  m_iconSecurity("emblem-important"),
-  m_iconNormal("security-medium"),
-  m_iconBlocked("edit-delete")
+  m_grouped(false)
 {
-    KIconLoader *ic = KIconLoader::global();
-    ic->addAppDir("kpackagekit");
-    m_iconGeneric = KIcon("package", ic);
-    m_iconDownload = KIcon("package-download", ic);
-    m_iconRemove = KIcon("package-remove", ic);
     foreach(Package* p, packages) {
         addPackage(p);
     }
@@ -240,7 +216,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                     case Qt::DisplayRole:
                         return KpkStrings::infoUpdate(group, count);
                     case Qt::DecorationRole:
-                        return icon(group);
+                        return KpkIcons::packageIcon(group);
 		    case GroupRole:
 			return true;
 		    case Qt::SizeHintRole:
@@ -311,14 +287,10 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         return p->name();
                     case Qt::DecorationRole:
 			for (int i = 0; i < m_checkedPackages.size(); ++i) {
-			    if ( m_checkedPackages.at(i)->id() == p->id() ) {
-				if (p->state() == Package::Installed)
-				    return m_iconRemove;
-				else
-				    return m_iconDownload;
-			    }
+			    if ( m_checkedPackages.at(i)->id() == p->id() )
+                    return (p->state() == Package::Installed) ? KpkIcons::getIcon("package-remove") : KpkIcons::getIcon("package-download");
 			}
-			return m_iconGeneric;
+            return KpkIcons::packageIcon(p->state());
                     case SummaryRole:
                         return p->summary();
                     case InstalledRole:
@@ -563,30 +535,4 @@ bool KpkPackageModel::allSelected() const
             return false;
     }
     return true;
-}
-
-QVariant KpkPackageModel::icon(Package::State state) const
-{
-    switch (state) {
-        case Package::Bugfix :
-            return m_iconBugFix;
-        case Package::Important :
-            return m_iconImportant;
-        case Package::Low :
-            return m_iconLow;
-        case Package::Enhancement :
-            return m_iconEnhancement;
-        case Package::Security :
-            return m_iconSecurity;
-        case Package::Normal :
-            return m_iconNormal;
-        case Package::Blocked :
-            return m_iconBlocked;
-        case Package::Available:
-            return m_iconDownload;
-	case Package::Installed:
-            return m_iconInstalled;
-        default :
-            return m_iconGeneric;
-    }
 }

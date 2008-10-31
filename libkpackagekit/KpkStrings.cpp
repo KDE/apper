@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include <KLocale>
-#include <KIconLoader>
 
 #include <KDebug>
 
@@ -105,43 +104,6 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
     }
 }
 
-KIcon KpkStrings::statusIcon(PackageKit::Transaction::Status status)
-{
-    KIconLoader *ic = KIconLoader::global();
-    ic->addAppDir("kpackagekit");
-    switch (status) {
-        case Transaction::Setup :
-	    return KIcon("package-setup", ic);
-        case Transaction::Wait :
-	    return KIcon("package-wait", ic);
-        case Transaction::Running :
-	    return KIcon("package-setup", ic);
-        case Transaction::Query :
-	    return KIcon("package-search", ic);
-        case Transaction::Info :
-	    return KIcon("package-info", ic);
-        case Transaction::Download :
-	    return KIcon("package-download", ic);
-        case Transaction::Update :
-	    return KIcon("package-update", ic);
-        case Transaction::DepResolve :
-	    return KIcon("package-info", ic);
-        case Transaction::SigCheck :
-	    return KIcon("package-info", ic);//TODO needs a better icon
-        case Transaction::Rollback :
-	    return KIcon("package-rollback", ic);
-        case Transaction::TestCommit :
-	    return KIcon("package-info", ic);//TODO needs a better icon
-        case Transaction::Commit :
-	    return KIcon("package-setup", ic);//TODO needs a better icon
-        case Transaction::Request :
-	    return KIcon("package-search", ic);
-	default :
-	    kDebug() << "status icon unrecognised: " << status;
-	    return KIcon("applications-other");
-    }
-}
-
 QString KpkStrings::action(Client::Action action)
 {
     switch (action) {
@@ -208,63 +170,6 @@ QString KpkStrings::action(Client::Action action)
         default :
 	    kDebug() << "action unrecognised: " << action;
 	    return QString();
-    }
-}
-
-KIcon KpkStrings::actionIcon(Client::Action action)
-{
-    KIconLoader *ic = KIconLoader::global();
-    ic->addAppDir("kpackagekit");
-    switch (action) {
-        case Client::ActionGetDepends :
-	    return KIcon("package-info", ic);
-        case Client::ActionGetDetails :
-	    return KIcon("package-info", ic);
-        case Client::ActionGetFiles :
-	    return KIcon("package-search", ic);
-        case Client::ActionGetPackages :
-	    return KIcon("package-packages", ic);
-        case Client::ActionGetRepoList :
-	    return KIcon("package-orign", ic);
-        case Client::ActionGetRequires :
-	    return KIcon("package-info", ic);
-        case Client::ActionGetUpdateDetail :
-	    return KIcon("package-info", ic);
-        case Client::ActionGetUpdates :
-	    return KIcon("package-info", ic);
-        case Client::ActionRepoEnable :
-	    return KIcon("package-orign", ic);
-        case Client::ActionRepoSetData :
-	    return KIcon("package-orign", ic);
-        case Client::ActionResolve :
-	    return KIcon("package-search", ic);
-        case Client::ActionRollback :
-	    return KIcon("package-rollback", ic);
-        case Client::ActionSearchDetails :
-	    return KIcon("package-search", ic);
-        case Client::ActionSearchFile :
-	    return KIcon("package-search", ic);
-        case Client::ActionSearchGroup :
-	    return KIcon("package-search", ic);
-        case Client::ActionSearchName :
-	    return KIcon("package-search", ic);
-        case Client::ActionServicePack :
-	    return KIcon("package-update", ic);
-        case Client::ActionUpdatePackages :
-	    return KIcon("package-update", ic);
-        case Client::ActionUpdateSystem :
-	    return KIcon("package-update", ic);
-        case Client::ActionWhatProvides :
-	    return KIcon("package-search", ic);
-        case Client::ActionAcceptEula :
-	    return KIcon("package-info", ic);
-        case Client::ActionDownloadPackages :
-	    return KIcon("package-download", ic);
-        case Client::ActionGetDistroUpgrades :
-	    return KIcon("package-info", ic);
-        default :
-	    kDebug() << "action unrecognised: " << action;
-	    return KIcon("applications-other");
     }
 }
 
@@ -564,81 +469,6 @@ QString KpkStrings::groups(Client::Group group)
 	default :
 	    kDebug() << "group unrecognised: " << group;
 	    return QString();
-    }
-}
-
-KIcon KpkStrings::groupsIcon(Client::Group group)
-{
-    switch (group) {
-        case Client::Accessibility :
-	    return KIcon("preferences-desktop-accessibility");
-        case Client::Accessories :
-	    return KIcon("applications-accessories");
-        case Client::AdminTools :
-	    return KIcon("dialog-password");
-        case Client::Communication :
-	    return KIcon("network-workgroup");//FIXME
-        case Client::DesktopGnome :
-	    return KIcon("user-desktop");//FIXME
-        case Client::DesktopKde :
-	    return KIcon("kde");
-        case Client::DesktopOther :
-	    return KIcon("user-desktop");
-        case Client::DesktopXfce :
-	    return KIcon("user-desktop");//FIXME
-        case Client::Documentation :
-	    return KIcon("accessories-dictionary");//FIXME
-        case Client::Education :
-	    return KIcon("applications-education");
-        case Client::Electronics :
-	    return KIcon("media-flash");
-        case Client::Fonts :
-	    return KIcon("preferences-desktop-font");
-        case Client::Games :
-	    return KIcon("applications-games");
-        case Client::Graphics :
-	    return KIcon("applications-graphics");
-        case Client::Internet :
-	    return KIcon("applications-internet");
-        case Client::Legacy :
-	    return KIcon("media-floppy");
-        case Client::Localization :
-	    return KIcon("applications-education-language");
-        case Client::Maps :
-	    return KIcon("Maps");//FIXME
-        case Client::MetaPackages :
-	    return KIcon("unknown");//FIXME
-        case Client::Multimedia :
-	    return KIcon("applications-multimedia");
-        case Client::Network :
-	    return KIcon("network-wired");
-        case Client::Office :
-	    return KIcon("applications-office");
-        case Client::Other :
-	    return KIcon("applications-other");
-        case Client::PowerManagement :
-	    return KIcon("battery");
-        case Client::Programming :
-	    return KIcon("applications-development");
-        case Client::Publishing :
-	    return KIcon("accessories-text-editor");
-        case Client::Repos :
-	    return KIcon("application-x-compressed-tar");
-        case Client::Science :
-	    return KIcon("applications-science");
-        case Client::Security :
-	    return KIcon("security-high");
-        case Client::Servers :
-	    return KIcon("network-server");
-        case Client::System :
-	    return KIcon("applications-system");
-        case Client::Virtualization :
-	    return KIcon("cpu");
-        case Client::UnknownGroup :
-	    return KIcon("unknown");
-	default :
-	    kDebug() << "group unrecognised: " << group;
-	    return KIcon();
     }
 }
 

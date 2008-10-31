@@ -21,6 +21,7 @@
 #include "KpkTransactionTrayIcon.h"
 #include <KpkStrings.h>
 #include <KpkTransaction.h>
+#include <KpkIcons.h>
 
 #include <KMessageBox>
 #include <KLocale>
@@ -79,7 +80,7 @@ void KpkTransactionTrayIcon::triggered(QAction *action)
 void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
 {
     if ( m_menu->isVisible() && tids.size() ) {
-	m_smartSTI->setIcon( KpkStrings::statusIcon( tids.first()->status() ) );
+	m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );
 	connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
 	    this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
 	m_smartSTI->show();
@@ -96,7 +97,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
 	emit appClose(SEVEN_MINUTES);
     }
     else {
-	m_smartSTI->setIcon( KpkStrings::statusIcon( tids.first()->status() ) );
+	m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );
 	connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
 	    this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
 	m_smartSTI->show();
@@ -105,7 +106,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
 
 void KpkTransactionTrayIcon::currentStatusChanged(PackageKit::Transaction::Status status)
 {
-    m_smartSTI->setIcon( KpkStrings::statusIcon(status) );
+    m_smartSTI->setIcon( KpkIcons::statusIcon(status) );
 }
 
 void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &tids)
@@ -125,7 +126,7 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
 	    refreshCache = false;
 	text = KpkStrings::action( t->role().action ) + " " + t->role().terms.join(", ") + " (" + KpkStrings::status( t->status() ) + ")";
 	transactionAction->setText(text);
-	transactionAction->setIcon( KpkStrings::statusIcon( t->status() ) );
+	transactionAction->setIcon( KpkIcons::statusIcon( t->status() ) );
 	m_menu->addAction(transactionAction);
     }
 

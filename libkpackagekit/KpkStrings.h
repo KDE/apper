@@ -39,15 +39,12 @@ public:
     static QString error(PackageKit::Client::ErrorType error);
     static QString errorMessage(PackageKit::Client::ErrorType error);
     static QString status(PackageKit::Transaction::Status status);
-    static KIcon   statusIcon(PackageKit::Transaction::Status status);
     static QString groups(Client::Group group);
-    static KIcon   groupsIcon(Client::Group group);
     static QString info(Package::State state);
     static QString infoUpdate(Package::State state, int number);
     static QString updateState(Client::UpgradeType value);
     static QString restartTypeFuture(Client::RestartType value);
     static QString action(Client::Action action);
-    static KIcon   actionIcon(Client::Action action);
 };
 
 #endif
