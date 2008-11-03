@@ -443,7 +443,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
 // 	    }
 
 //             if ( filters.contains(Client::FilterNotInstalled) ) {
-		QAction *installedFalse = new QAction(i18n("Only avaliable"), installedGroup);
+		QAction *installedFalse = new QAction(i18n("Only available"), installedGroup);
 		installedFalse->setCheckable(true);
 		m_filtersAction[installedFalse] = Client::FilterNotInstalled;
 		installedGroup->addAction(installedFalse);

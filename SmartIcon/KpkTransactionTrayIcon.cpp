@@ -46,7 +46,7 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon( QObject *parent ) : QObject( par
 
     connect(m_client, SIGNAL( transactionListChanged(const QList<PackageKit::Transaction*> &) ), this, SLOT( transactionListChanged(const QList<PackageKit::Transaction*> &) ) );
 
-    m_menu = new QMenu("Transactions");
+    m_menu = new QMenu(i18n("Transactions"));
     connect(m_menu, SIGNAL( triggered(QAction *) ), this, SLOT( triggered(QAction *) ) );
 }
 

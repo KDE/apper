@@ -121,7 +121,7 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 	    break;
 	case KpkTransaction::Failed :
 	    m_transactionFiles.remove( (KpkTransaction *) sender() );
-	    KMessageBox::error( 0, i18n("Sorry an error occured"), i18n("Error KPackageKit") );
+	    KMessageBox::error( 0, i18n("Sorry an error occured"), i18n("KPackageKit") );
 	    break;
 	case KpkTransaction::ReQueue :
 	    kDebug() << "ReQueue";

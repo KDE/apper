@@ -192,7 +192,7 @@ void KpkNotify::getUpdatesFinished(PackageKit::Transaction::ExitStatus status, u
 	}
 	else {
 	    QString text;
-	    text.append( i18n("<b>You have %1 updates:</b>", packages.size() ) );
+	    text.append( i18np("<b>You have one update:</b>", "<b>You have %1 updates:</b>", packages.size() ) );
 
 	    QHash<Package::State, int> state;
 	    for ( int i = 0; i < packages.size(); i++) {

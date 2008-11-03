@@ -124,7 +124,7 @@ void KpkReviewChanges::checkTask()
 	    }
         }
 	else
-	    KMessageBox::error( this, i18n("Sorry, your backend does not support installing packages"), i18n("Error KPackageKit") );
+	    KMessageBox::error( this, i18n("Sorry, your backend does not support installing packages"), i18n("KPackageKit") );
     }
     else {
         qDebug() << "task else";
@@ -221,7 +221,7 @@ void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
 	    checkTask();
 	    break;
 	case KpkTransaction::Failed :
-	    KMessageBox::error( this, i18n("Sorry an error occurred"), i18n("Error KPackageKit") );
+	    KMessageBox::error( this, i18n("Sorry an error occurred"), i18n("KPackageKit") );
 	    setButtons( KDialog::Close );
 	    break;
 	case KpkTransaction::Cancelled :
@@ -242,7 +242,7 @@ void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
 	    checkTask();
 	    break;
 	case KpkTransaction::Failed :
-	    KMessageBox::error( this, i18n("Sorry an error occurred"), i18n("Error KPackageKit") );
+	    KMessageBox::error( this, i18n("Sorry an error occurred"), i18n("KPackageKit") );
 	    setButtons( KDialog::Close );
 	    break;
 	case KpkTransaction::Cancelled :

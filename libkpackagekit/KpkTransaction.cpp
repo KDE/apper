@@ -113,7 +113,7 @@ void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
         d->ui.subprogressBar->reset();
     }
     if (info.remaining) {
-        d->ui.timeL->setText(i18n("%s remaining").arg(KGlobal::locale()->formatDuration(info.remaining*1000)));
+        d->ui.timeL->setText(i18n("%1 remaining").arg(KGlobal::locale()->formatDuration(info.remaining*1000)));
     } else {
         d->ui.timeL->setText("");
     }
