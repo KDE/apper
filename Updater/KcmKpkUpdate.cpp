@@ -36,4 +36,17 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     m_grid = new QGridLayout(this);
     view = new KpkUpdate(this);
     m_grid->addWidget(view);
+    connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+}
+
+void
+KcmKpkUpdate::load()
+{
+    view->load();
+}
+
+void
+KcmKpkUpdate::save()
+{
+    view->save();
 }

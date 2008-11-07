@@ -37,6 +37,13 @@ Q_OBJECT
 public:
     KpkUpdate( QWidget *parent=0 );
 
+signals:
+    void changed(bool);
+    
+public slots:
+    void load();
+    void save();
+
 private slots:
     void on_updatePB_clicked();
     void on_refreshPB_clicked();

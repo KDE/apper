@@ -31,6 +31,9 @@ Q_OBJECT
 public:
     KcmKpkUpdate(QWidget *&parent, const QVariantList &args);
 
+public slots:
+    void save();
+    void load();
 //TODO see if this can fix the resing issue
 // protected:
 //     virtual void showEvent(QShowEvent *ev);

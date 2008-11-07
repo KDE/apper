@@ -44,16 +44,22 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 
     // check to see what roles the backend
     m_actions = m_client->getActions();
-
-    updateFinished(KpkTransaction::Success);
 }
 
 void KpkUpdate::checkEnableUpdateButton()
 {
-    if (m_pkg_model_updates->selectedPackages().size() > 0) 
+    if (m_pkg_model_updates->selectedPackages().size() > 0) {
         updatePB->setEnabled(true);
-    else
+        emit changed(true);
+    } else {
         updatePB->setEnabled(false);
+        emit changed(false);
+    }
+}
+
+void KpkUpdate::save()
+{
+    on_updatePB_clicked();
 }
 
 void KpkUpdate::on_updatePB_clicked()
@@ -81,9 +87,15 @@ void KpkUpdate::on_updatePB_clicked()
 	    KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
 }
 
+void KpkUpdate::load()
+{
+    updateFinished(KpkTransaction::Success);
+}
+
 void KpkUpdate::updateFinished(KpkTransaction::ExitStatus status)
 {
-    if (status == KpkTransaction::Success){
+    checkEnableUpdateButton();
+    if (status == KpkTransaction::Success) {
         m_pkg_model_updates->clear();
 	m_pkg_model_updates->uncheckAll();
 	m_updatesT = m_client->getUpdates();
