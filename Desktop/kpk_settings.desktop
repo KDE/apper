@@ -18,6 +18,7 @@ Name[pt_BR]=Configuração
 Name[sv]=Inställningar
 Name[tr]=Ayarlar
 Name[uk]=Параметри
+Name[x-test]=xxSettingsxx
 
 Comment=KPackageKit Settings
 Comment[el]=Ρυθμίσεις KPackageKit
@@ -27,6 +28,7 @@ Comment[pt_BR]=Configuração do KPackageKit
 Comment[sv]=Inställningar av Kpackagekit
 Comment[tr]=KPackageKit Ayarları
 Comment[uk]=Параметри KPackageKit
+Comment[x-test]=xxKPackageKit Settingsxx
 
 X-KDE-Keywords=packagekit,setup,settings
 X-KDE-Keywords[pt_BR]=packagekit,configurações

@@ -13,6 +13,7 @@ Name[pt_BR]=Serviço do KPackageKit
 Name[sv]=Kpackagekit-tjänst
 Name[tr]=KPackageKit Servisi
 Name[uk]=Служба KPackageKit
+Name[x-test]=xxKPackageKit Servicexx
 
 Comment=Tracks and Notify about Software Updates
 Comment[el]=Καταγραφή και ειδοποίηση σχετικά με ενημερώσεις λογισμικού
@@ -22,3 +23,4 @@ Comment[pt_BR]=Segue e notifica as Actualizações de 'Software'
 Comment[sv]=Spårar och underrättar om uppdateringar av programvara
 Comment[tr]=Yazılım güncellemelerini izler ve bildirir
 Comment[uk]=Слідкує і сповіщає про оновлення програм
+Comment[x-test]=xxTracks and Notify about Software Updatesxx
