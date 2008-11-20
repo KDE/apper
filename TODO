@@ -33,3 +33,9 @@ And after 4.2 (Jan 27):
 
 - Use a KExtendibleItemDelegate for the package detail view.
   (Daniel)
+
+- Don't download updates when there isn't a network
+  (packagekit list)
+
+- Query solid to see if installation should occur, depending on Solid::PowerManagement::appShouldConserveResources()
+  (packagekit list)
