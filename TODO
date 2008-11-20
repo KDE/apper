@@ -19,6 +19,9 @@ Before the 4.2 release (Hard Freeze: Nov 17):
 
 And after 4.2 (Jan 27):
 
+- Add a 'throbber' widget to show when tasks are in queue, eg, loading updates or waiting for a search to run
+  (Trever)
+
 - Move the notifications and automagic upgrade into the SmartIcon
   (Trever)
 
