@@ -166,7 +166,7 @@ KIcon KpkIcons::groupsIcon(Client::Group group)
             return KpkIcons::getIcon("applications-education-language");
         case Client::Maps :
             return KpkIcons::getIcon("Maps");//FIXME
-        case Client::MetaPackages :
+        case Client::Collections :
             return KpkIcons::getIcon("unknown");//FIXME
         case Client::Multimedia :
             return KpkIcons::getIcon("applications-multimedia");

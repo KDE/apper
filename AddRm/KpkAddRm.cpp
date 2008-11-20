@@ -425,7 +425,26 @@ void KpkAddRm::filterMenu(Client::Filters filters)
     filtersTB->setMenu(m_filtersQM);
     
     if(!filters.isEmpty()) {
-
+        if (filters.contains(Client::FilterCollections) || filters.contains(Client::FilterNotCollections)) {
+            QMenu *menuCollections = new QMenu(i18n("Collections"), m_filtersQM);
+            m_filtersQM->addMenu(menuCollections);
+            QActionGroup *collectionGroup = new QActionGroup(menuCollections);
+            collectionGroup->setExclusive(true);
+            
+            QAction *collectionTrue = new QAction(i18n("Only collections"), collectionGroup);
+            collectionTrue->setCheckable(true);
+            m_filtersAction[collectionTrue] = Client::FilterCollections;
+            collectionGroup->addAction(collectionTrue);
+            menuCollections->addAction(collectionTrue);
+            actions << collectionTrue;
+            
+            QAction *collectionFalse = new QAction(i18n("Exclude collections"), collectionGroup);
+            collectionFalse->setCheckable(true);
+            m_filtersAction[collectionFalse] = Client::FilterNotCollections;
+            collectionGroup->addAction(collectionFalse);
+            menuCollections->addAction(collectionFalse);
+            actions << collectionFalse;
+        }
         if ( filters.contains(Client::FilterInstalled)  || filters.contains(Client::FilterNotInstalled) ) {
             // Installed
             QMenu *menuInstalled = new QMenu(i18n("Installed"), m_filtersQM);

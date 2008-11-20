@@ -454,7 +454,7 @@ QString KpkStrings::groups(Client::Group group)
 	    return i18n("Documentation");
         case Client::Electronics :
 	    return i18n("Electronics");
-        case Client::MetaPackages ://TODO check this one
+        case Client::Collections ://TODO check this one
 	    return i18n("Package collections");
         case Client::Security :
 	    return i18n("Security");
