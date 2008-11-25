@@ -71,7 +71,7 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
 		notFiles[i] = KUrl( notFiles.at(i) ).fileName();
 	    }
 	    KMessageBox::errorList(0,
-		i18np("This item is not supported by your backend or it is not a file", "These itens are not supported by your backend or they are not files", notFiles.count() ),
+		i18np("This item is not supported by your backend or it is not a file", "These items are not supported by your backend or they are not files", notFiles.count() ),
 		notFiles,
 		i18n("Impossible to install")
 	    );
@@ -121,7 +121,7 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 	    break;
 	case KpkTransaction::Failed :
 	    m_transactionFiles.remove( (KpkTransaction *) sender() );
-	    KMessageBox::error( 0, i18n("Sorry an error occured"), i18n("KPackageKit") );
+	    KMessageBox::error( 0, i18n("Sorry, an error occured"), i18n("KPackageKit") );
 	    break;
 	case KpkTransaction::ReQueue :
 	    kDebug() << "ReQueue";
