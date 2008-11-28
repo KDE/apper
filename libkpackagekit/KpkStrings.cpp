@@ -326,7 +326,7 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
 	    return i18n("The remote software source name was not found.\n"
 			"You may need to enable an item in Software Sources.");
 	case Client::CannotRemoveSystemPackage :
-	    return i18n("Removing a protected system package is not alloed.");
+	    return i18n("Removing a protected system package is not allowed.");
 	case Client::ProcessKill :
 	    return i18n("The task was canceled successfully and no packages were changed.\n"
 			"The backend did not exit cleanly.");
