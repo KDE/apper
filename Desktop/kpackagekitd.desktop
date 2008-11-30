@@ -8,6 +8,7 @@ X-KDE-Kded-autoload=true
 Name=KPackageKit Service
 Name[el]=Υπηρεσία KPackageKit
 Name[gl]=Servizo KPackageKit
+Name[nds]=KPackageKit-Deenst
 Name[pt]=Serviço do KPackageKit
 Name[pt_BR]=Serviço do KPackageKit
 Name[sv]=Kpackagekit-tjänst
