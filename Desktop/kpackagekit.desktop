@@ -21,6 +21,7 @@ GenericName[x-test]=xxSoftware Managementxx
 Comment=PackageKit interface for KDE
 Comment[el]=Διασύνδεση PackageKit για το KDE
 Comment[gl]=Interface de PackageKit para KDE
+Comment[nds]=KPackageKit-Koppelsteed för KDE
 Comment[pt]=Interface do PackageKit para o KDE
 Comment[pt_BR]=Interface do PackageKit para o KDE
 Comment[sv]=Packagekit-gränssnitt för KDE

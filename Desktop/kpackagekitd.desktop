@@ -19,6 +19,7 @@ Name[x-test]=xxKPackageKit Servicexx
 Comment=Tracks and Notify about Software Updates
 Comment[el]=Καταγραφή και ειδοποίηση σχετικά με ενημερώσεις λογισμικού
 Comment[gl]=Vixía e notifica a existencia de actualizacións de software
+Comment[nds]=Op Software-Opfrischen luern un Bescheed geven
 Comment[pt]=Segue e notifica as Actualizações de 'Software'
 Comment[pt_BR]=Segue e notifica as Actualizações de 'Software'
 Comment[sv]=Spårar och underrättar om uppdateringar av programvara
