@@ -9,6 +9,7 @@ Name=KPackageKit
 Name[sv]=Kpackagekit
 Name[x-test]=xxKPackageKitxx
 GenericName=Software Management
+GenericName[de]=Softwareverwaltung
 GenericName[el]=Διαχείριση λογισμικού
 GenericName[gl]=Xestión de software
 GenericName[nds]=Programmpleeg

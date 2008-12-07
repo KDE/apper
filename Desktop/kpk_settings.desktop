@@ -11,6 +11,7 @@ X-KDE-System-Settings-Parent-Category=add-and-remove-software
 X-KDE-Weight=3
 
 Name=Settings
+Name[de]=Einstellungen
 Name[el]=Ρυθμίσεις
 Name[gl]=Configuración
 Name[nds]=Instellen
@@ -22,6 +23,7 @@ Name[uk]=Параметри
 Name[x-test]=xxSettingsxx
 
 Comment=KPackageKit Settings
+Comment[de]=Einstellungen von KPackageKit
 Comment[el]=Ρυθμίσεις KPackageKit
 Comment[gl]=Configuración de KPackageKit
 Comment[nds]=KPackageKit instellen

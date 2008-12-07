@@ -11,6 +11,7 @@ X-KDE-System-Settings-Parent-Category=add-and-remove-software
 X-KDE-Weight=2
 
 Name=Software Updates
+Name[de]=Software-Aktualisierung
 Name[el]=Ενημερώσεις λογισμικού
 Name[gl]=Actualizacións de software
 Name[nds]=Software-Opfrischen
