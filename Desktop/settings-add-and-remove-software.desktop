@@ -7,6 +7,7 @@ X-KDE-System-Settings-Category=add-and-remove-software
 X-KDE-System-Settings-Parent-Category=computer-administration
 
 Name=Add and Remove Software
+Name[cs]=Přidat a odebrat software
 Name[de]=Hinzufügen und Entfernen von Software
 Name[el]=Προσθήκη και αφαίρεση λογισμικού
 Name[gl]=Engadir e eliminar software

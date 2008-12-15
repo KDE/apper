@@ -19,6 +19,7 @@ Action=Sound|Popup
 
 [Event/AutoInstallingUpdates]
 Name=Updates are being installed
+Name[cs]=Aktualizace jsou instalovány
 Name[el]=Γίνεται εγκατάσταση των ενημερώσεων
 Name[gl]=Estanse a instalar actualizacións
 Name[nds]=Opfrischen warrt installeert
@@ -32,6 +33,7 @@ Action=Sound|Popup
 
 [Event/RestartRequired]
 Name=A System Restart is Required
+Name[cs]=Po této aktualizaci je vyžadován restart
 Name[el]=Απαιτείται επανεκκίνηση του συστήματος
 Name[gl]=Requérese un reinicio do sistema
 Name[nds]=En Systeem-Niegstart deit noot
