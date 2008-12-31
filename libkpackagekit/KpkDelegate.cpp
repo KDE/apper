@@ -84,25 +84,25 @@ void KpkDelegate::paintColMain(QPainter *painter,
     int width = option.rect.width();
 
     bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
-    
+
     //grab the info from the model
     QString title = index.model()->data(index, Qt::DisplayRole).toString();
     QString description = index.model()->data(index, SummaryRole).toString();
     bool group = index.model()->data(index, GroupRole).toBool();
-    
+
     // selects the mode to paint the icon based on the info field
     QIcon::Mode iconMode;
     if (group)
 	iconMode = QIcon::Normal;
     else {
 	if ( index.model()->data(index, InstalledRole).toBool() )
-	    iconMode = index.model()->data(index, Qt::CheckStateRole).toInt() == Qt::Checked ? QIcon::Disabled : QIcon::Normal;
+	    iconMode = index.model()->data(index, CheckedRole).toInt() == Qt::Checked ? QIcon::Disabled : QIcon::Normal;
 	else
-	    iconMode = index.model()->data(index, Qt::CheckStateRole).toInt() == Qt::Checked ? QIcon::Selected : QIcon::Disabled;
+	    iconMode = index.model()->data(index, CheckedRole).toInt() == Qt::Checked ? QIcon::Selected : QIcon::Disabled;
     }
 	
 // 	    QIcon::Mode iconMode = QIcon::Normal;
-//     switch ( index.model()->data(index, Qt::CheckStateRole).toInt() ) {
+//     switch ( index.model()->data(index, CheckedRole).toInt() ) {
 // 	case Qt::Unchecked :
 // 	    iconMode = QIcon::Disabled;
 // 	    break;
@@ -118,7 +118,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
         option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
 
-    // Painting main column             
+    // Painting main column
     QStyleOptionViewItem local_option_title(option);
     QStyleOptionViewItem local_option_normal(option);
 
@@ -242,7 +242,7 @@ void KpkDelegate::paintColFav(QPainter *painter,
 	return;
 
     QIcon::Mode iconMode = QIcon::Normal;
-    switch ( index.model()->data(index, Qt::CheckStateRole).toInt() ) {
+    switch ( index.model()->data(index, CheckedRole).toInt() ) {
 	case Qt::Unchecked :
 	    iconMode = QIcon::Disabled;
 	    break;
@@ -269,7 +269,7 @@ void KpkDelegate::paintColFav(QPainter *painter,
 
     iconMode = QIcon::Active;
 
-    const KIcon * icon = (index.model()->data(index, Qt::CheckStateRole).toBool() )? & m_removeIcon : & m_addIcon;
+    const KIcon * icon = (index.model()->data(index, CheckedRole).toBool() )? & m_removeIcon : & m_addIcon;
 
     if ( option.state & QStyle::State_MouseOver )
         icon->paint(painter, 
@@ -323,7 +323,7 @@ bool KpkDelegate::editorEvent(QEvent *event,
 	return false;
 
     if ( event->type() == QEvent::MouseButtonPress && index.column() == 1 )
-        return model->setData(index, !model->data(index, Qt::CheckStateRole).toBool(), Qt::CheckStateRole );
+        return model->setData(index, !model->data(index, CheckedRole).toBool(), CheckedRole );
 //     else if ( event->type() == QEvent::KeyPress ) {
 //     
 //     }
@@ -338,7 +338,7 @@ QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
 //     if (index.column() == 0) {
 //         QStyleOptionViewItem local_option_title(option);
 //         QStyleOptionViewItem local_option_normal(option);
-//         
+//
 //         local_option_title.font.setBold(true);
 //         local_option_title.font.setPointSize(local_option_title.font.pointSize() + 2);
 //         QFontMetrics title(local_option_title.font);

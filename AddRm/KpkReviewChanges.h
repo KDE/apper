@@ -51,9 +51,9 @@ public slots:
 private:
     KpkPackageModel *m_pkgModelMain, *m_pkgModelReq, *m_pkgModelDep;
     KpkDelegate *m_pkgDelegate;
-    
+
     KpkTransaction *m_waitPD;
-    
+
     Client *m_client;
     Transaction *m_transactionReq;
     Transaction *m_transactionDep;
@@ -72,13 +72,13 @@ private:
 
 private slots:
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
-
+    void checkChanged();
 protected slots:
     virtual void slotButtonClicked(int button);
 
 protected:
-    virtual void resizeEvent( QResizeEvent * event );
-    virtual bool event( QEvent * event );
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual bool event(QEvent *event);
 };
 
 #endif

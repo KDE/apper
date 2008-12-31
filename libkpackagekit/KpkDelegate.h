@@ -32,14 +32,14 @@
 class KDE_EXPORT KpkDelegate: public QItemDelegate
 {
     Q_OBJECT
-    
+
 public:
     KpkDelegate(QObject *parent = 0);
-    
+
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
     int columnWidth (int column, int viewWidth) const;
-        
+
     bool editorEvent(QEvent *event,
                      QAbstractItemModel *model,
                      const QStyleOptionViewItem &option,
@@ -50,8 +50,9 @@ private:
         SummaryRole = 32,
         InstalledRole,
         IdRole,
-	GroupRole
-        };
+        GroupRole,
+        CheckedRole
+    };
 
     KIcon m_addIcon;
     KIcon m_removeIcon;
@@ -60,7 +61,7 @@ private:
             const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void paintColFav(QPainter *painter,
             const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    
+
     int calcItemHeight(const QStyleOptionViewItem &option) const;
 };
 

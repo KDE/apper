@@ -37,16 +37,17 @@ KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *pa
     packageView->setModel(m_pkgModelMain = new KpkPackageModel(packages, this, packageView));
     m_pkgModelMain->checkAll();
     packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    connect( m_pkgModelMain, SIGNAL( changed(bool) ), this, SLOT( enableButtonApply(bool) ) );
+    connect(m_pkgModelMain, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+            this, SLOT(checkChanged()));
 
     setCaption( i18n("Review Changes - KPackageKit") );
 
     // Set Apply and Cancel buttons
-    setButtons( KDialog::Apply | KDialog::Cancel );
-    setButtonText( KDialog::Apply, i18n("Install Now") );
-    setMinimumSize( QSize(320,280) );
+    setButtons(KDialog::Apply | KDialog::Cancel);
+    setButtonText(KDialog::Apply, i18n("Apply Now"));
+    setMinimumSize(QSize(320,280));
 
-    label->setText( i18n("The following packages will be INSTALLED/REMOVED:") );
+    label->setText(i18n("The following packages will be INSTALLED/REMOVED:"));
 }
 
 KpkReviewChanges::~KpkReviewChanges()
@@ -304,6 +305,14 @@ void KpkReviewChanges::updateColumnsWidth(bool force)
 
     packageView->setColumnWidth(0, m_pkgDelegate->columnWidth(0, m_viewWidth));
     packageView->setColumnWidth(1, m_pkgDelegate->columnWidth(1, m_viewWidth));
+}
+
+void KpkReviewChanges::checkChanged()
+{
+    if (m_pkgModelMain->selectedPackages().size() > 0)
+      enableButtonApply(true);
+    else
+      enableButtonApply(false);
 }
 
 #include "KpkReviewChanges.moc"

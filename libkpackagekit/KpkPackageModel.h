@@ -57,16 +57,17 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
-    
+
     bool isGrouped() const;
 
     enum {
         SummaryRole = Qt::UserRole,
         InstalledRole,
         IdRole,
-	GroupRole
+        GroupRole,
+        CheckedRole
     };
-    
+
 
 public slots:
     void addPackage(PackageKit::Package *package);
@@ -79,7 +80,7 @@ private:
     QList<Package*> m_checkedPackages;
     QMap<Package::State, QList<Package*> > m_groups;
     bool  m_grouped;
-    
+
 };
 
 #endif

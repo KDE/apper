@@ -271,16 +271,6 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="2" >
-    <widget class="QPushButton" name="findPB" >
-     <property name="text" >
-      <string>&amp;Find</string>
-     </property>
-     <property name="default" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="1" >
     <widget class="KLineEdit" name="searchKLE" >
      <property name="clickMessage" >
@@ -291,7 +281,32 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="2" >
+    <widget class="QToolButton" name="findTB" >
+     <property name="text" >
+      <string>Find</string>
+     </property>
+     <property name="toolButtonStyle" >
+      <enum>Qt::ToolButtonTextBesideIcon</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
+  <action name="actionFindName" >
+   <property name="text" >
+    <string>Find Name</string>
+   </property>
+  </action>
+  <action name="actionFindDescription" >
+   <property name="text" >
+    <string>Find Description</string>
+   </property>
+  </action>
+  <action name="actionFindFile" >
+   <property name="text" >
+    <string>Find File</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -306,15 +321,16 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>findPB</tabstop>
+  <tabstop>searchKLE</tabstop>
+  <tabstop>findTB</tabstop>
   <tabstop>filtersTB</tabstop>
   <tabstop>groupsCB</tabstop>
   <tabstop>packageView</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>descriptionKTB</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>requiredByLV</tabstop>
   <tabstop>filesPTE</tabstop>
   <tabstop>dependsOnLV</tabstop>
-  <tabstop>requiredByLV</tabstop>
  </tabstops>
  <resources/>
  <connections/>

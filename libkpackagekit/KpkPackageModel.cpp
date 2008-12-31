@@ -232,7 +232,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 }
             case 1:
                 switch(role) {
-		    case Qt::CheckStateRole:
+		    case CheckedRole:
 		    {
 		    	// we do this here cause it's the same code for column 1 and 2		    
 		        int nChecked = 0;
@@ -271,7 +271,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             p = m_packages.at(index.row());
 
 	// we do this here cause it's the same code for column 1 and 2
-	if (role == Qt::CheckStateRole) {
+	if (role == CheckedRole) {
 	    for (int i = 0; i < m_checkedPackages.size(); ++i) {
 		if ( m_checkedPackages.at(i)->id() == p->id() )
 		    return Qt::Checked;
@@ -282,15 +282,17 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         //TODO: Change the background color depending on a package's state
         switch (index.column()) {
             case 0: //Package name column
-                switch (role) {			    
+                switch (role) {
                     case Qt::DisplayRole:
                         return p->name();
                     case Qt::DecorationRole:
 			for (int i = 0; i < m_checkedPackages.size(); ++i) {
 			    if ( m_checkedPackages.at(i)->id() == p->id() )
-                    return (p->state() == Package::Installed) ? KpkIcons::getIcon("package-remove") : KpkIcons::getIcon("package-download");
+                                return (p->state() == Package::Installed) ?
+                                        KpkIcons::getIcon("package-remove")
+                                      : KpkIcons::getIcon("package-download");
 			}
-            return KpkIcons::packageIcon(p->state());
+                        return KpkIcons::getIcon("package-remove");
                     case SummaryRole:
                         return p->summary();
                     case InstalledRole:
@@ -332,7 +334,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
 bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role == Qt::CheckStateRole) {
+    if (role == CheckedRole) {
         Package* p = package(index);
         if (value.toBool()) {
             if (p || !m_grouped) {

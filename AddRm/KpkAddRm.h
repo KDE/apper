@@ -43,12 +43,41 @@ public:
 
 signals:
     void getInfo(PackageKit::Package *package);
+    void changed(bool state);
 
 public slots:
     void load();
     void save();
 
+private slots:
+    void getDetails(PackageKit::Package *p);
+    void getFiles(PackageKit::Package *p);
+    void getDepends(PackageKit::Package *p);
+    void getRequires(PackageKit::Package *p);
+    void getInfoFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+
+    void on_actionFindName_triggered();
+    void on_actionFindDescription_triggered();
+    void on_actionFindFile_triggered();
+
+    void on_groupsCB_currentIndexChanged(int index);
+    void on_packageView_pressed(const QModelIndex &index);
+
+    void description(PackageKit::Package *package);
+    void files(PackageKit::Package *package, const QStringList &files);
+    void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void message(PackageKit::Client::MessageType message, const QString &details);
+    void errorCode(PackageKit::Client::ErrorType error, const QString &detail);
+    void statusChanged(PackageKit::Transaction::Status status);
+
+    void notifyUpdate();
+    void progressChanged(PackageKit::Transaction::ProgressInfo info);
+    void checkChanged();
+
+    void packageViewSetRootIsDecorated(bool value);
+
 private:
+    QMenu *m_findMenu;
     bool m_mTransRuning;//main trans
     KpkPackageModel *m_pkg_model_main;
     KpkPackageModel *m_pkg_model_dep;
@@ -70,6 +99,7 @@ private:
     Client::Filters filters();
 
     void updateColumnsWidth(bool force = false);
+    void setDefaultAction(QAction *action);
     void search();
     void connectTransaction(Transaction *transaction);
 
@@ -81,36 +111,9 @@ private:
     Client::Group   m_searchGroup;
     Client::Filters m_searchFilters;
 
-private slots:
-    void getDetails(PackageKit::Package *p);
-    void getFiles(PackageKit::Package *p);
-    void getDepends(PackageKit::Package *p);
-    void getRequires(PackageKit::Package *p);
-    void getInfoFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-
-    void on_findPB_clicked();
-    void on_groupsCB_currentIndexChanged(int index);
-    void on_packageView_pressed(const QModelIndex &index);
-
-    void description(PackageKit::Package *package);
-    void files(PackageKit::Package *package, const QStringList &files);
-    void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void message(PackageKit::Client::MessageType message, const QString &details);
-    void errorCode(PackageKit::Client::ErrorType error, const QString &detail);
-    void statusChanged(PackageKit::Transaction::Status status);
-
-    void notifyUpdate();
-    void progressChanged(PackageKit::Transaction::ProgressInfo info);
-    void checkChanged();
-
-    void packageViewSetRootIsDecorated(bool value);
-
-signals:
-    void changed(bool state);
-
 protected:
-    virtual void resizeEvent ( QResizeEvent * event );
-    virtual bool event ( QEvent * event );
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual bool event(QEvent *event);
 
 };
 

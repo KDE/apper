@@ -30,6 +30,8 @@
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 
+#include <KDebug>
+
 #define UNIVERSAL_PADDING 6
 
 KpkAddRm::KpkAddRm( QWidget *parent )
@@ -75,11 +77,38 @@ KpkAddRm::KpkAddRm( QWidget *parent )
     else
         tabWidget->setTabEnabled(3, false);
 
-    if ( !m_actions.contains(Client::ActionSearchName) )
-        findPB->setEnabled(false);
+    m_findMenu = new QMenu(this);
+    // Define actions icon
+    actionFindFile->setIcon(m_findIcon);
+    actionFindDescription->setIcon(m_findIcon);
+    actionFindName->setIcon(m_findIcon);
 
-    if ( !m_actions.contains(Client::ActionSearchGroup) )
+    // Add actions that the backend supports
+    if ( m_actions.contains(Client::ActionSearchFile) ) {
+        m_findMenu->addAction(actionFindFile);
+        findTB->setDefaultAction(actionFindFile);
+    }
+    if ( m_actions.contains(Client::ActionSearchDetails) ) {
+        m_findMenu->addAction(actionFindDescription);
+        findTB->setDefaultAction(actionFindDescription);
+    }
+    if ( m_actions.contains(Client::ActionSearchName) ) {
+        m_findMenu->addAction(actionFindName);
+        findTB->setDefaultAction(actionFindName);
+    }
+    // If no action was set we can't use this search
+    if (findTB->defaultAction() == 0) {
+        findTB->setEnabled(false);
+    } else {
+        // Remove from the menu the current action
+        m_findMenu->removeAction(findTB->defaultAction());
+        if (!m_findMenu->isEmpty())
+            findTB->setMenu(m_findMenu);
+    }
+
+    if ( !m_actions.contains(Client::ActionSearchGroup) ) {
         groupsCB->setEnabled(false);
+    }
 
     //initialize the groups
     foreach (Client::Group group, m_client->getGroups() ) {
@@ -94,8 +123,6 @@ KpkAddRm::KpkAddRm( QWidget *parent )
 
     // set fucus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
-    findPB->setDefault(true);
-    findPB->setIcon(m_findIcon);
 
     // hides the description to have more space.
     descriptionDW->setVisible(false);
@@ -104,7 +131,7 @@ KpkAddRm::KpkAddRm( QWidget *parent )
 
 void KpkAddRm::checkChanged()
 {
-    if (m_pkg_model_main->selectedPackages().size()>0)
+    if (m_pkg_model_main->selectedPackages().size() > 0)
       emit changed(true);
     else
       emit changed(false);
@@ -195,7 +222,18 @@ void KpkAddRm::resizeEvent ( QResizeEvent * event )
 bool KpkAddRm::event ( QEvent * event )
 {
     switch (event->type()) {
-	case QEvent::Paint:
+        case QEvent::KeyPress:
+            // use bracktes to don't cross initialization og keyEvent
+            {
+                QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+                if (ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter) {
+                    // special tab handling here
+                    findTB->click();
+                    return true;
+                }
+            }
+            break;
+        case QEvent::Paint:
         case QEvent::PolishRequest:
         case QEvent::Polish:
             updateColumnsWidth(true);
@@ -222,20 +260,69 @@ KpkAddRm::~KpkAddRm()
 {
 }
 
-void KpkAddRm::on_findPB_clicked()
+void KpkAddRm::setDefaultAction(QAction *action)
 {
+    if (findTB->defaultAction() != action) {
+        m_findMenu->removeAction(action);
+        m_findMenu->addAction(findTB->defaultAction());
+        findTB->setDefaultAction(action);
+    }
+}
+
+void KpkAddRm::on_actionFindName_triggered()
+{
+    kDebug();
+    setDefaultAction(actionFindName);
     if ( m_mTransRuning ) {
         m_pkClient_main->cancel();
     }
     else if ( !searchKLE->text().isEmpty() ) {
-	// cache the search
-	m_searchAction = Client::ActionSearchName;
-	m_searchString = searchKLE->text();
-	m_searchFilters = filters();
-	// select "All Packages"
-	groupsCB->setCurrentIndex(0);
-	// create the main transaction
-	search();
+        // cache the search
+        m_searchAction = Client::ActionSearchName;
+        m_searchString = searchKLE->text();
+        m_searchFilters = filters();
+        // select "All Packages"
+        groupsCB->setCurrentIndex(0);
+        // create the main transaction
+        search();
+    }
+}
+
+void KpkAddRm::on_actionFindDescription_triggered()
+{
+    kDebug();
+    setDefaultAction(actionFindDescription);
+    if ( m_mTransRuning ) {
+        m_pkClient_main->cancel();
+    }
+    else if ( !searchKLE->text().isEmpty() ) {
+        // cache the search
+        m_searchAction = Client::ActionSearchDetails;
+        m_searchString = searchKLE->text();
+        m_searchFilters = filters();
+        // select "All Packages"
+        groupsCB->setCurrentIndex(0);
+        // create the main transaction
+        search();
+    }
+}
+
+void KpkAddRm::on_actionFindFile_triggered()
+{
+    kDebug();
+    setDefaultAction(actionFindFile);
+    if ( m_mTransRuning ) {
+        m_pkClient_main->cancel();
+    }
+    else if ( !searchKLE->text().isEmpty() ) {
+        // cache the search
+        m_searchAction = Client::ActionSearchFile;
+        m_searchString = searchKLE->text();
+        m_searchFilters = filters();
+        // select "All Packages"
+        groupsCB->setCurrentIndex(0);
+        // create the main transaction
+        search();
     }
 }
 
@@ -254,10 +341,19 @@ void KpkAddRm::on_groupsCB_currentIndexChanged( int index )
 void KpkAddRm::search()
 {
     // search
-    if ( m_searchAction == Client::ActionSearchGroup )
-	m_pkClient_main = m_client->searchGroup( m_searchGroup, m_searchFilters );
-    else if ( m_searchAction == Client::ActionSearchName )
-	m_pkClient_main = m_client->searchName( m_searchString, m_searchFilters );
+    if ( m_searchAction == Client::ActionSearchName ) {
+        m_pkClient_main = m_client->searchName( m_searchString, m_searchFilters );
+    } else if ( m_searchAction == Client::ActionSearchDetails ) {
+        m_pkClient_main = m_client->searchDetails( m_searchString, m_searchFilters );
+    } else if ( m_searchAction == Client::ActionSearchFile ) {
+        m_pkClient_main = m_client->searchFile( m_searchString, m_searchFilters );
+    } else if ( m_searchAction == Client::ActionSearchGroup ) {
+        m_pkClient_main = m_client->searchGroup( m_searchGroup, m_searchFilters );
+    } else {
+        kWarning() << "Search type not implemented yet";
+        return;
+    }
+
     connectTransaction(m_pkClient_main);
     statusChanged( m_pkClient_main->status() );
     // hides the description to have more space.
@@ -268,9 +364,9 @@ void KpkAddRm::search()
     busyPB->setMaximum(0);
     busyPB->setValue(0);
     m_mTransRuning = true;
-    findPB->setText( i18n("&Cancel") );
-    findPB->setIcon(m_cancelIcon);
-    findPB->setEnabled(false);
+    findTB->defaultAction()->setText( i18n("&Cancel") );
+    findTB->defaultAction()->setIcon(m_cancelIcon);
+    findTB->defaultAction()->setEnabled(false);
 }
 
 void KpkAddRm::connectTransaction(Transaction *transaction)
@@ -286,7 +382,7 @@ void KpkAddRm::connectTransaction(Transaction *transaction)
     connect( transaction, SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
 	this, SLOT( statusChanged(PackageKit::Transaction::Status) ) );
     connect( transaction, SIGNAL( allowCancelChanged(bool) ),
-	findPB, SLOT( setEnabled(bool) ) );
+	findTB->defaultAction(), SLOT( setEnabled(bool) ) );
     connect( transaction, SIGNAL( progressChanged(PackageKit::Transaction::ProgressInfo) ),
 	this, SLOT( progressChanged(PackageKit::Transaction::ProgressInfo) ) );
 }
@@ -319,9 +415,19 @@ void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime
     busyPB->setMaximum(100);
     busyPB->setValue(100);
     m_mTransRuning = false;
-    findPB->setEnabled(true);
-    findPB->setText( i18n("&Find") );
-    findPB->setIcon(m_findIcon);
+    findTB->defaultAction()->setEnabled(true);
+    if ( m_searchAction == Client::ActionSearchName ) {
+        findTB->defaultAction()->setText( i18n("Find &Name") );
+    } else if ( m_searchAction == Client::ActionSearchDetails ) {
+        findTB->defaultAction()->setText( i18n("Find &Description") );
+    } else if ( m_searchAction == Client::ActionSearchFile ) {
+            findTB->defaultAction()->setText( i18n("&Find File") );
+    } else if ( m_searchAction == Client::ActionSearchGroup ) {
+    } else {
+        kWarning() << "Search type not implemented yet";
+        return;
+    }
+    findTB->defaultAction()->setIcon(m_findIcon);
     switch(status) {
         case Transaction::Success :
 	    notifyL->setText(i18n("Search finished in %1", KGlobal::locale()->formatDuration(runtime)) );
