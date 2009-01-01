@@ -25,7 +25,7 @@
 #include <KMessageBox>
 
 #define UNIVERSAL_PADDING 6
- 
+
 KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 {
     setupUi( this );
@@ -83,10 +83,10 @@ void KpkUpdate::on_updatePB_clicked()
 
 void KpkUpdate::load()
 {
-    updateFinished(KpkTransaction::Success);
+    displayUpdates(KpkTransaction::Success);
 }
 
-void KpkUpdate::updateFinished(KpkTransaction::ExitStatus status)
+void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
 {
     checkEnableUpdateButton();
     if (status == KpkTransaction::Success) {
@@ -105,24 +105,14 @@ void KpkUpdate::on_refreshPB_clicked()
     if ( Transaction *t = m_client->refreshCache(true) ) {
         KpkTransaction *frm = new KpkTransaction(t, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                this, SLOT(refreshCacheFinished(KpkTransaction::ExitStatus)));
+                this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
         frm->show();
     } else {
         KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
     }
 }
 
-void KpkUpdate::refreshCacheFinished(KpkTransaction::ExitStatus status)
-{
-    if (status == KpkTransaction::Success) {
-        KConfig config("KPackageKit");
-        KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-        checkUpdateGroup.writeEntry("lastChecked", QDateTime::currentDateTime().toTime_t());
-    }
-    updateFinished(KpkTransaction::Success);
-}
-
-void KpkUpdate::on_packageView_pressed( const QModelIndex & index )
+void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
 {
     if (index.column() == 0) {
         Package *p = m_pkg_model_updates->package(index);
@@ -142,13 +132,13 @@ void KpkUpdate::updateDetail(PackageKit::Client::UpdateInfo info)
     description += "<b>" + i18n("New version") + ":</b> " + info.package->name()
                 + "-" + info.package->version() + "<br />";
     if ( info.updates.size() ) {
-	QStringList updates;
-	foreach (Package *p, info.updates) updates << p->name() + "-" + p->version();
+        QStringList updates;
+        foreach (Package *p, info.updates) updates << p->name() + "-" + p->version();
         description += "<b>" + i18n("Updates") + ":</b> " + updates.join(", ") + "<br />";
     }
     if ( info.obsoletes.size() ) {
-	QStringList obsoletes;
-	foreach (Package *p, info.obsoletes) obsoletes << p->id() + "-" + p->version();
+        QStringList obsoletes;
+        foreach (Package *p, info.obsoletes) obsoletes << p->id() + "-" + p->version();
         description += "<b>" + i18n("Obsoletes") + ":</b> " + obsoletes.join(", ") + "<br />";
     }
     if ( !info.updateText.isEmpty() )
@@ -201,7 +191,7 @@ void KpkUpdate::resizeEvent(QResizeEvent *event)
 bool KpkUpdate::event(QEvent *event)
 {
     switch (event->type()) {
-	case QEvent::Paint:
+        case QEvent::Paint:
         case QEvent::PolishRequest:
         case QEvent::Polish:
             updateColumnsWidth(true);
@@ -230,4 +220,4 @@ void KpkUpdate::updateColumnsWidth(bool force)
     packageView->setColumnWidth(1, pkg_delegate->columnWidth(1, m_viewWidth));
 }
 
-#include "KpkUpdate.moc" 
+#include "KpkUpdate.moc"

@@ -50,6 +50,8 @@ KIcon KpkIcons::statusIcon(PackageKit::Transaction::Status status)
             return KpkIcons::getIcon("package-search");
         case Transaction::Info :
             return KpkIcons::getIcon("package-info");
+        case Transaction::Remove :
+            return KpkIcons::getIcon("package-remove");
         case Transaction::Download :
             return KpkIcons::getIcon("package-download");
         case Transaction::Update :

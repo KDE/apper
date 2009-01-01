@@ -45,8 +45,7 @@ private slots:
     void on_refreshPB_clicked();
     void on_historyPB_clicked();
 
-    void updateFinished(KpkTransaction::ExitStatus status);
-    void refreshCacheFinished(KpkTransaction::ExitStatus status);
+    void displayUpdates(KpkTransaction::ExitStatus status);
 
     void updateColumnsWidth(bool force = false);
     void on_packageView_pressed(const QModelIndex &index);
