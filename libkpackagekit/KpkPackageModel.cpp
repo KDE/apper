@@ -1,24 +1,24 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
- *   Copyright (C) 2008 by Trever Fischer                                  *
- *   wm161@wm161.net                                                       *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+*   Copyright (C) 2008 by Daniel Nicoletti                                *
+*   dantti85-pk@yahoo.com.br                                              *
+*   Copyright (C) 2008 by Trever Fischer                                  *
+*   wm161@wm161.net                                                       *
+*                                                                         *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program; if not, write to the                         *
+*   Free Software Foundation, Inc.,                                       *
+*   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+***************************************************************************/
 
 #include "KpkPackageModel.h"
 #include <KpkStrings.h>
@@ -34,15 +34,15 @@ using namespace PackageKit;
 
 KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
-  m_packageView(packageView),
-  m_grouped(false)
+m_packageView(packageView),
+m_grouped(false)
 {
 }
 
 KpkPackageModel::KpkPackageModel(const QList<Package*> &packages, QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
-  m_packageView(packageView),
-  m_grouped(false)
+m_packageView(packageView),
+m_grouped(false)
 {
     foreach(Package* p, packages) {
         addPackage(p);
@@ -174,7 +174,7 @@ QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &paren
 
 QModelIndex KpkPackageModel::parent(const QModelIndex &index) const
 {
-  //If we're not grouping anything, everyone lies at the root
+    // If we're not grouping anything, everyone lies at the root
     if (!m_grouped)
         return QModelIndex();
 
@@ -217,42 +217,42 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         return KpkStrings::infoUpdate(group, count);
                     case Qt::DecorationRole:
                         return KpkIcons::packageIcon(group);
-		    case GroupRole:
-			return true;
-		    case Qt::SizeHintRole:
-			if (m_packageView) {
-			    int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
-			    // Here we are discouting the plus sign
-			    // of the tree 20 is a value get with kruller
-			    // not sure but this might change... 
-			    return QSize(width - 20, ICON_HEIGHT);
-			}
+                    case GroupRole:
+                        return true;
+                    case Qt::SizeHintRole:
+                        if (m_packageView) {
+                            int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
+                            // Here we are discouting the plus sign
+                            // of the tree 20 is a value get with kruller
+                            // not sure but this might change...
+                            return QSize(width - 20, ICON_HEIGHT);
+                        }
                     default:
                         return QVariant();
                 }
             case 1:
                 switch(role) {
-		    case CheckedRole:
-		    {
-		    	// we do this here cause it's the same code for column 1 and 2		    
-		        int nChecked = 0;
+                    case CheckedRole:
+                    {
+                        // we do this here cause it's the same code for column 1 and 2
+                        int nChecked = 0;
                         foreach(Package* p, m_groups[group]) {
-			    for (int i = 0; i < m_checkedPackages.size(); ++i) {
-				if ( m_checkedPackages.at(i)->id() == p->id() )
-				    nChecked++;
-			    }
+                            for (int i = 0; i < m_checkedPackages.size(); ++i) {
+                                if ( m_checkedPackages.at(i)->id() == p->id() )
+                                    nChecked++;
+                            }
                         }
                         if (m_groups[group].size() == nChecked)
                             return Qt::Checked;
                         else if (nChecked == 0)
                             return Qt::Unchecked;
-			else
-			    return Qt::PartiallyChecked;
-		    }
-		    case InstalledRole:
+                        else
+                            return Qt::PartiallyChecked;
+                    }
+                    case InstalledRole:
                         return group == Package::Installed;
-		    case Qt::SizeHintRole:
-			return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, ICON_HEIGHT);
+                    case Qt::SizeHintRole:
+                        return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, ICON_HEIGHT);
                     default:
                         return QVariant();
                 }
@@ -270,14 +270,14 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         else
             p = m_packages.at(index.row());
 
-	// we do this here cause it's the same code for column 1 and 2
-	if (role == CheckedRole) {
-	    for (int i = 0; i < m_checkedPackages.size(); ++i) {
-		if ( m_checkedPackages.at(i)->id() == p->id() )
-		    return Qt::Checked;
-	    }
-	    return Qt::Unchecked;
-	}
+        // we do this here cause it's the same code for column 1 and 2
+        if (role == CheckedRole) {
+            for (int i = 0; i < m_checkedPackages.size(); ++i) {
+                if ( m_checkedPackages.at(i)->id() == p->id() )
+                    return Qt::Checked;
+            }
+            return Qt::Unchecked;
+        }
 
         //TODO: Change the background color depending on a package's state
         switch (index.column()) {
@@ -286,34 +286,34 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                     case Qt::DisplayRole:
                         return p->name();
                     case Qt::DecorationRole:
-			for (int i = 0; i < m_checkedPackages.size(); ++i) {
-			    if ( m_checkedPackages.at(i)->id() == p->id() )
+                        for (int i = 0; i < m_checkedPackages.size(); ++i) {
+                            if ( m_checkedPackages.at(i)->id() == p->id() )
                                 return (p->state() == Package::Installed) ?
                                         KpkIcons::getIcon("package-remove")
                                       : KpkIcons::getIcon("package-download");
-			}
-                        return KpkIcons::getIcon("package-remove");
+                        }
+                        return KpkIcons::packageIcon(p->state());;
                     case SummaryRole:
                         return p->summary();
                     case InstalledRole:
                         return p->state() == Package::Installed;
                     case IdRole:
                         return p->id();
-		    case GroupRole:
-			return false;
-		    case Qt::SizeHintRole:
-			if (m_packageView) {
-			    int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
-			    // Here we are discouting the plus sign
-			    // of the tree 20 is a value get with kruller
-			    // not sure but this might change... 
-			    if (m_grouped)
-				return QSize(width - 40, ICON_HEIGHT);
-			    else
-				//if not grouped we SHOULD not show the decorated root so
-				// we have nothing to discount
-				return QSize(width, ICON_HEIGHT);
-			}
+                    case GroupRole:
+                        return false;
+                    case Qt::SizeHintRole:
+                        if (m_packageView) {
+                            int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
+                            // Here we are discouting the plus sign
+                            // of the tree 20 is a value get with kruller
+                            // not sure but this might change...
+                            if (m_grouped)
+                                return QSize(width - 40, ICON_HEIGHT);
+                            else
+                                //if not grouped we SHOULD not show the decorated root so
+                                // we have nothing to discount
+                                return QSize(width, ICON_HEIGHT);
+                        }
                     default:
                         return QVariant();
                 }
@@ -321,8 +321,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 switch(role) {
                     case InstalledRole:
                         return p->state() == Package::Installed;
-		    case Qt::SizeHintRole:
-			return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, ICON_HEIGHT);
+                    case Qt::SizeHintRole:
+                        return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, ICON_HEIGHT);
                     default:
                         return QVariant();
                 }
@@ -345,45 +345,45 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
                 emit dataChanged(index, index);
                 if (m_grouped)
                     emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column() + 1) );
-		    // emit this so the packageIcon can also change
-		    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column()) );
+                    // emit this so the packageIcon can also change
+                    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column()) );
             } else {
                 Package::State group = m_groups.keys().at(index.row());
                 foreach(Package* package, m_groups[group]) {
-		    int nChecked = 0;
-		    for (int i = 0; i < m_checkedPackages.size(); ++i) {
-			if ( m_checkedPackages.at(i)->id() == package->id() )
-			    nChecked++;
-		    }
-		    if (!nChecked)
-			m_checkedPackages.append(package);
+                    int nChecked = 0;
+                    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+                        if ( m_checkedPackages.at(i)->id() == package->id() )
+                            nChecked++;
+                    }
+                    if (!nChecked)
+                        m_checkedPackages.append(package);
                 }
                 emit dataChanged(this->index(0, 1, index), this->index(m_groups[group].size(), 1, index));
             }
         } else {
             if (p || !m_grouped) {
                 if (p)
-		    for (int i = 0; i < m_checkedPackages.size(); ++i) {
-			if ( m_checkedPackages.at(i)->id() == p->id() )
-			    m_checkedPackages.removeAt(i);
-		    }
+                    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+                        if ( m_checkedPackages.at(i)->id() == p->id() )
+                            m_checkedPackages.removeAt(i);
+                    }
                 else
-		    for (int i = 0; i < m_checkedPackages.size(); ++i) {
-			if ( m_checkedPackages.at(i)->id() == m_packages.at( index.row() )->id() )
-			    m_checkedPackages.removeAt(i);
-		    }
+                    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+                        if ( m_checkedPackages.at(i)->id() == m_packages.at( index.row() )->id() )
+                            m_checkedPackages.removeAt(i);
+                    }
                 emit dataChanged(index, index);
                 if (m_grouped)
                     emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column() + 1) );
-		    // emit this so the packageIcon can also change
-		    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column()) );
+                    // emit this so the packageIcon can also change
+                    emit dataChanged(index.parent(), index.parent().sibling(index.parent().row(), index.parent().column()) );
             } else {
                 Package::State group = m_groups.keys().at(index.row());
                 foreach(Package* package, m_groups[group]) {
-		    for (int i = 0; i < m_checkedPackages.size(); ++i) {
-			if ( m_checkedPackages.at(i)->id() == package->id() )
-			    m_checkedPackages.removeAt(i);
-		    }
+                    for (int i = 0; i < m_checkedPackages.size(); ++i) {
+                        if ( m_checkedPackages.at(i)->id() == package->id() )
+                            m_checkedPackages.removeAt(i);
+                    }
                 }
                 emit dataChanged(this->index(0, 1, index), this->index(m_groups[group].size(), 1, index));
             }
@@ -397,15 +397,15 @@ Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 {
     if (index.column() == 1) {
         if ( package(index) ) {
-	    if ( package(index)->state() == Package::Blocked )
-		return QAbstractItemModel::flags(index);
-	    else
-		return Qt::ItemIsUserCheckable | QAbstractItemModel::flags(index);
-	}
-	else if ( m_groups.keys().at(index.row()) == Package::Blocked )
-	    return QAbstractItemModel::flags(index);
-	else
-	    return Qt::ItemIsUserCheckable | Qt::ItemIsTristate | QAbstractItemModel::flags(index);;
+            if ( package(index)->state() == Package::Blocked )
+                return QAbstractItemModel::flags(index);
+            else
+                return Qt::ItemIsUserCheckable | QAbstractItemModel::flags(index);
+        }
+        else if ( m_groups.keys().at(index.row()) == Package::Blocked )
+            return QAbstractItemModel::flags(index);
+        else
+            return Qt::ItemIsUserCheckable | Qt::ItemIsTristate | QAbstractItemModel::flags(index);;
     }
     return QAbstractItemModel::flags(index);
 }
@@ -419,10 +419,10 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
 Package* KpkPackageModel::package(const QModelIndex &index) const
 {
     if (m_grouped && !index.parent().isValid() ) {
-	return 0;
+        return 0;
     }
     else {
-	if (m_grouped)
+        if (m_grouped)
             return packagesWithState( m_groups.keys().at( index.parent().row() ) ).at( index.row() );
         else
             return m_packages.at( index.row() );
@@ -446,30 +446,30 @@ void KpkPackageModel::addPackage(PackageKit::Package *package)
     // QT rules
     // check to see if the list of info has any package
     if (!m_grouped) {
-	beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
-	m_packages.append(package);
-	m_groups[package->state()].append(package);
-	endInsertRows();
+        beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
+        m_packages.append(package);
+        m_groups[package->state()].append(package);
+        endInsertRows();
     }
     else if ( !m_groups.contains( package->state() ) ) {
-	// insert the group item
-	beginInsertRows( QModelIndex(), m_groups.size(), m_groups.size() );
-	m_groups[ package->state() ].append(package);
-	endInsertRows();
-	// now insert the package
-	beginInsertRows( createIndex( m_groups.keys().indexOf( package->state() ), 0), m_groups[ package->state() ].size(), m_groups[ package->state() ].size() );
-	m_packages.append(package);
-	endInsertRows();
-	// the displayed data of the parent MUST be updated to show the right number of packages
-	emit dataChanged( createIndex( m_groups.keys().indexOf( package->state() ), 0), createIndex( m_groups.keys().indexOf( package->state() ), 0) );
+        // insert the group item
+        beginInsertRows( QModelIndex(), m_groups.size(), m_groups.size() );
+        m_groups[ package->state() ].append(package);
+        endInsertRows();
+        // now insert the package
+        beginInsertRows( createIndex( m_groups.keys().indexOf( package->state() ), 0), m_groups[ package->state() ].size(), m_groups[ package->state() ].size() );
+        m_packages.append(package);
+        endInsertRows();
+        // the displayed data of the parent MUST be updated to show the right number of packages
+        emit dataChanged( createIndex( m_groups.keys().indexOf( package->state() ), 0), createIndex( m_groups.keys().indexOf( package->state() ), 0) );
     }
     else {
-	beginInsertRows( createIndex( m_groups.keys().indexOf( package->state() ), 0), m_groups[ package->state() ].size(), m_groups[ package->state() ].size() );
-	m_packages.append(package);
-	m_groups[package->state()].append(package);
-	endInsertRows();
-	// the displayed data of the parent MUST be updated to show the right number of packages
-	emit dataChanged( createIndex( m_groups.keys().indexOf( package->state() ), 0), createIndex( m_groups.keys().indexOf( package->state() ), 0) );
+        beginInsertRows( createIndex( m_groups.keys().indexOf( package->state() ), 0), m_groups[ package->state() ].size(), m_groups[ package->state() ].size() );
+        m_packages.append(package);
+        m_groups[package->state()].append(package);
+        endInsertRows();
+        // the displayed data of the parent MUST be updated to show the right number of packages
+        emit dataChanged( createIndex( m_groups.keys().indexOf( package->state() ), 0), createIndex( m_groups.keys().indexOf( package->state() ), 0) );
     }
 }
 
