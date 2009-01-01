@@ -30,19 +30,15 @@
 #include "ui_KpkUpdate.h"
 
 using namespace PackageKit;
- 
+
 class KpkUpdate : public QWidget, Ui::KpkUpdate
 {
 Q_OBJECT
 public:
-    KpkUpdate( QWidget *parent=0 );
+    KpkUpdate(QWidget *parent = 0);
 
-signals:
-    void changed(bool);
-    
 public slots:
     void load();
-    void save();
 
 private slots:
     void on_updatePB_clicked();
@@ -55,7 +51,7 @@ private slots:
     void updateColumnsWidth(bool force = false);
     void on_packageView_pressed(const QModelIndex &index);
     void updateDetail(PackageKit::Client::UpdateInfo info);
-    
+
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
 
@@ -67,8 +63,8 @@ private:
     Client::Actions m_actions;
 
 protected:
-    virtual void resizeEvent ( QResizeEvent * event );
-    virtual bool event ( QEvent * event );
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual bool event(QEvent *event);
 };
 
 #endif

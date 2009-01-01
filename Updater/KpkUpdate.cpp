@@ -33,11 +33,10 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(this));
-    packageView->setModel( m_pkg_model_updates = new KpkPackageModel(this, packageView) );
+    packageView->setModel(m_pkg_model_updates = new KpkPackageModel(this, packageView));
     m_pkg_model_updates->setGrouped(true);
-    connect( m_pkg_model_updates, SIGNAL( dataChanged(const QModelIndex, const QModelIndex) ),
-	this, SLOT( checkEnableUpdateButton() ) );
-    //connect( m_pkg_model_updates, SIGNAL( updatesSelected(bool) ), updatePB, SLOT( setEnabled(bool) ) );
+    connect(m_pkg_model_updates, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+            this, SLOT(checkEnableUpdateButton()));
 
     // Create a new client
     m_client = Client::instance();
@@ -50,41 +49,36 @@ void KpkUpdate::checkEnableUpdateButton()
 {
     if (m_pkg_model_updates->selectedPackages().size() > 0) {
         updatePB->setEnabled(true);
-        emit changed(true);
     } else {
         updatePB->setEnabled(false);
-        emit changed(false);
     }
-}
-
-void KpkUpdate::save()
-{
-    on_updatePB_clicked();
 }
 
 void KpkUpdate::on_updatePB_clicked()
 {
     QList<Package*> packages = m_pkg_model_updates->selectedPackages();
     //check to see if the user selected all selectable packages
-    if (m_pkg_model_updates->allSelected())
-    //if ( packages.size() == m_pkg_model_updates->selectablePackages() )
-	// if so let's do system-update instead
-	if ( Transaction *t = m_client->updateSystem() ) {
-	    KpkTransaction *frm = new KpkTransaction(t, this);
-	    connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( updateFinished(KpkTransaction::ExitStatus) ) );
-	    frm->show();
-	}
-	else
-	    KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
-    else
-	// else lets install only the selected ones
-	if ( Transaction *t = m_client->updatePackages(packages) ) {
-	    KpkTransaction *frm = new KpkTransaction(t, this);
-	    connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( updateFinished(KpkTransaction::ExitStatus) ) );
-	    frm->show();
-	}
-	else
-	    KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
+    if (m_pkg_model_updates->allSelected()) {
+        // if so let's do system-update instead
+        if ( Transaction *t = m_client->updateSystem() ) {
+            KpkTransaction *frm = new KpkTransaction(t, this);
+            connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
+            frm->show();
+        } else {
+            KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
+        }
+    } else {
+        // else lets install only the selected ones
+        if ( Transaction *t = m_client->updatePackages(packages) ) {
+            KpkTransaction *frm = new KpkTransaction(t, this);
+            connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                    this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
+            frm->show();
+        } else {
+            KMessageBox::error(this, i18n("Authentication failed"), i18n("KPackageKit"));
+        }
+    }
 }
 
 void KpkUpdate::load()
@@ -97,12 +91,12 @@ void KpkUpdate::updateFinished(KpkTransaction::ExitStatus status)
     checkEnableUpdateButton();
     if (status == KpkTransaction::Success) {
         m_pkg_model_updates->clear();
-	m_pkg_model_updates->uncheckAll();
-	m_updatesT = m_client->getUpdates();
-	connect( m_updatesT, SIGNAL( package(PackageKit::Package *) ),
-	    m_pkg_model_updates, SLOT( addSelectedPackage(PackageKit::Package *) ) );
-	connect( m_updatesT, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
-	    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString &) ) );
+        m_pkg_model_updates->uncheckAll();
+        m_updatesT = m_client->getUpdates();
+        connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
+                m_pkg_model_updates, SLOT(addSelectedPackage(PackageKit::Package *)));
+        connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
+                this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
     }
 }
 
@@ -110,33 +104,33 @@ void KpkUpdate::on_refreshPB_clicked()
 {
     if ( Transaction *t = m_client->refreshCache(true) ) {
         KpkTransaction *frm = new KpkTransaction(t, this);
-        connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ),
-	    this, SLOT( refreshCacheFinished(KpkTransaction::ExitStatus) ) );
+        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                this, SLOT(refreshCacheFinished(KpkTransaction::ExitStatus)));
         frm->show();
-    }
-    else
+    } else {
         KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
+    }
 }
 
 void KpkUpdate::refreshCacheFinished(KpkTransaction::ExitStatus status)
 {
     if (status == KpkTransaction::Success) {
         KConfig config("KPackageKit");
-        KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
-        checkUpdateGroup.writeEntry( "lastChecked", QDateTime::currentDateTime().toTime_t() );
+        KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
+        checkUpdateGroup.writeEntry("lastChecked", QDateTime::currentDateTime().toTime_t());
     }
     updateFinished(KpkTransaction::Success);
 }
 
 void KpkUpdate::on_packageView_pressed( const QModelIndex & index )
 {
-    if ( index.column() == 0 ) {
+    if (index.column() == 0) {
         Package *p = m_pkg_model_updates->package(index);
         // check to see if the backend support
-        if (p && m_actions.contains(Client::ActionGetUpdateDetail) ) {
+        if (p && m_actions.contains(Client::ActionGetUpdateDetail)) {
             Transaction *t = m_client->getUpdateDetail(p);
-            connect( t, SIGNAL( updateDetail(PackageKit::Client::UpdateInfo) ),
-          this, SLOT( updateDetail(PackageKit::Client::UpdateInfo) ) );
+            connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
+                    this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
         }
     }
 }
@@ -145,7 +139,8 @@ void KpkUpdate::updateDetail(PackageKit::Client::UpdateInfo info)
 {
     //format and show description
     QString description;
-    description += "<b>" + i18n("New version") + ":</b> " + info.package->name() + "-" + info.package->version() + "<br />";
+    description += "<b>" + i18n("New version") + ":</b> " + info.package->name()
+                + "-" + info.package->version() + "<br />";
     if ( info.updates.size() ) {
 	QStringList updates;
 	foreach (Package *p, info.updates) updates << p->name() + "-" + p->version();
@@ -159,9 +154,13 @@ void KpkUpdate::updateDetail(PackageKit::Client::UpdateInfo info)
     if ( !info.updateText.isEmpty() )
         description += "<b>" + i18n("Details") + ":</b> " + info.updateText + "<br />";
     if ( !info.vendorUrl.isEmpty() )
-        description += "<b>" + i18n("Vendor Home Page") + ":</b> <a href=\"" + info.vendorUrl.split(";").at(0) + "\">" + info.vendorUrl.split(";").at(1) + "</a><br />";
+        description += "<b>" + i18n("Vendor Home Page")
+                    + ":</b> <a href=\"" + info.vendorUrl.split(";").at(0) + "\">"
+                    + info.vendorUrl.split(";").at(1) + "</a><br />";
     if ( !info.bugzillaUrl.isEmpty() )
-        description += "<b>" + i18n("Bugzilla Home Page") + ":</b> <a href=\"" + info.bugzillaUrl.split(";").at(0) + "\">" + info.bugzillaUrl.split(";").at(1) + "</a><br />";
+        description += "<b>" + i18n("Bugzilla Home Page")
+                    + ":</b> <a href=\"" + info.bugzillaUrl.split(";").at(0) + "\">"
+                    + info.bugzillaUrl.split(";").at(1) + "</a><br />";
     if ( !info.cveUrl.isEmpty() )
         description += "<b>" + i18n("CVE Home Page") + ":</b> <a href=\"" + info.cveUrl.split(";").at(0) + "\">" + info.cveUrl.split(";").at(1) + "</a><br />";
     if ( !info.changelog.isEmpty() )
@@ -169,11 +168,14 @@ void KpkUpdate::updateDetail(PackageKit::Client::UpdateInfo info)
     if ( info.state != Client::UnknownUpgradeType)
         description += "<b>" + i18n("State") + ":</b> " + KpkStrings::updateState(info.state) + "<br />";
     if ( info.restart != Client::UnknownRestartType)
-        description += "<b>" + i18n("Restart") + ":</b> " + KpkStrings::restartTypeFuture(info.restart) + "<br />";
+        description += "<b>" + i18n("Restart") + ":</b> " + KpkStrings::restartTypeFuture(info.restart)
+                    + "<br />";
     if ( !info.issued.toString().isEmpty() )
-        description += "<b>" + i18n("Issued") + ":</b> " + KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate) + "<br />";
+        description += "<b>" + i18n("Issued") + ":</b> "
+                    + KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate) + "<br />";
     if ( !info.updated.toString().isEmpty() )
-        description += "<b>" + i18n("Updated") + ":</b> " + KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate) + "<br />";
+        description += "<b>" + i18n("Updated") + ":</b> "
+                    + KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate) + "<br />";
     descriptionKTB->setHtml(description);
     detailsDW->show();
 }
