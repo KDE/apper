@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "kpackagekitd.h"
+#include "../libkpackagekit/KpkEnum.h"
 
 #include <KGenericFactory>
 #include <KStandardDirs>
@@ -35,11 +36,12 @@ KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant>&)
     : KDEDModule(parent), m_refreshCacheT(0)
 {
     m_qtimer = new QTimer(this);
-    connect( m_qtimer, SIGNAL( timeout() ), this, SLOT( init() ) ) ;
+    connect(m_qtimer, SIGNAL(timeout()), this, SLOT(init())) ;
 
     // Create a new daemon
     m_client = Client::instance();
-    connect(m_client, SIGNAL( transactionListChanged(const QList<PackageKit::Transaction*> &) ), this, SLOT( transactionListChanged(const QList<PackageKit::Transaction*> &) ) );
+    connect(m_client, SIGNAL(transactionListChanged(const QList<PackageKit::Transaction*> &)),
+            this, SLOT(transactionListChanged(const QList<PackageKit::Transaction*> &)));
 
     // Start after 5 minutes, 360000 msec
     // To keep the startup fast..
@@ -54,25 +56,24 @@ void KPackageKitD::init()
 {
     m_qtimer->stop();
     m_qtimer->disconnect();
-    connect( m_qtimer, SIGNAL( timeout() ), this, SLOT( read() ) );
-
+    connect(m_qtimer, SIGNAL(timeout()), this, SLOT(read()));
 
     Client::Actions act = m_client->getActions();
 
     // check to see when the next check update will happen
     // if more that 15 minutes, call show updates
     KConfig config("KPackageKit");
-    KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
+    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     // default to one day, 86400 sec
-    uint interval = checkUpdateGroup.readEntry( "interval", 86400 );
-
+    uint interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
 
     // 1160 -> 15 minutes
-    if ( ( (m_client->getTimeSinceAction(Client::ActionRefreshCache) - interval > 1160) && interval != 0 ) || !( act.contains(Client::ActionRefreshCache) ) )
-	QProcess::execute("kpackagekit", QStringList() << "--smart-update");
+    if (((m_client->getTimeSinceAction(Client::ActionRefreshCache) - interval > 1160) && interval != 0)
+        || !( act.contains(Client::ActionRefreshCache))) {
+        QProcess::execute("kpackagekit", QStringList() << "--smart-update");
+    }
 
-
-    if ( !act.contains(Client::ActionRefreshCache) ) {
+    if (!act.contains(Client::ActionRefreshCache)) {
         //if the backend does not suport refreshing cache let's don't do nothing
         return;
     }
@@ -82,10 +83,10 @@ void KPackageKitD::init()
     //check if any changes to the file occour
     //this also prevents from reading when a checkUpdate happens
     m_confWatch = new KDirWatch(this);
-    m_confWatch->addFile( KStandardDirs::locateLocal("config", "KPackageKit") );
-    connect( m_confWatch, SIGNAL( dirty(const QString &) ), this, SLOT( read() ) );
-    connect( m_confWatch, SIGNAL( created(const QString &) ), this, SLOT( read() ) );
-    connect( m_confWatch, SIGNAL( deleted(const QString &) ), this, SLOT( read() ) );
+    m_confWatch->addFile(KStandardDirs::locateLocal("config", "KPackageKit"));
+    connect(m_confWatch, SIGNAL(dirty(const QString &)),   this, SLOT(read()));
+    connect(m_confWatch, SIGNAL(created(const QString &)), this, SLOT(read()));
+    connect(m_confWatch, SIGNAL(deleted(const QString &)), this, SLOT(read()));
     m_confWatch->startScan();
 }
 
@@ -94,27 +95,27 @@ void KPackageKitD::read()
     KConfig config("KPackageKit");
     KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
     // default to one day, 86400 sec
-    int interval = checkUpdateGroup.readEntry( "interval", 86400 );
+    int interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
     int actRefreshCache = m_client->getTimeSinceAction(Client::ActionRefreshCache);
-    if ( interval == 0 )
+    if (interval == KpkEnum::Never) {
         return;
-    if ( actRefreshCache >= interval ) {
-        checkUpdates();
     }
-    else
-    {
+    if (actRefreshCache >= interval) {
+        checkUpdates();
+    } else {
         //check first to see any overflow...
-        if ( ( interval - actRefreshCache ) > 4294966 )
-            m_qtimer->start( UINT_MAX );
-        else
-            m_qtimer->start( ( interval - actRefreshCache ) * 1000 );
+        if ((interval - actRefreshCache) > 4294966) {
+            m_qtimer->start(UINT_MAX);
+        } else {
+            m_qtimer->start((interval - actRefreshCache) * 1000);
+        }
     }
 }
 
 void KPackageKitD::finished(PackageKit::Transaction::ExitStatus status, uint)
 {
-    if ( status == Transaction::Success )
-	QProcess::execute("kpackagekit", QStringList() << "--smart-update");
+    if (status == Transaction::Success)
+        QProcess::execute("kpackagekit", QStringList() << "--smart-update");
     else
         // try again in 5 minutes
         m_qtimer->start(FIVE_MIN);
@@ -123,15 +124,18 @@ void KPackageKitD::finished(PackageKit::Transaction::ExitStatus status, uint)
 void KPackageKitD::checkUpdates()
 {
     m_refreshCacheT = m_client->refreshCache(true);
-    if ( m_refreshCacheT == 0 )
+    if (m_refreshCacheT == 0) {
         // try again in 5 minutes
-	m_qtimer->start(FIVE_MIN);
-    else
-	connect( m_refreshCacheT, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint)), this, SLOT( finished(PackageKit::Transaction::ExitStatus, uint) ) );
+        m_qtimer->start(FIVE_MIN);
+    } else {
+        connect(m_refreshCacheT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
+    }
 }
 
 void KPackageKitD::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
 {
-    if ( tids.size() )
-	QProcess::execute("kpackagekit-smart-icon");
+    if (tids.size()) {
+        QProcess::execute("kpackagekit-smart-icon");
+    }
 }

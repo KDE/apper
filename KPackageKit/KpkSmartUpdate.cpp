@@ -19,18 +19,14 @@
  ***************************************************************************/
 
 #include "KpkSmartUpdate.h"
+#include "../libkpackagekit/KpkEnum.h"
 
 #include <KConfig>
 #include <KConfigGroup>
-
 #include <KDebug>
 
-#define NONE 0
-#define SECURITY 1
-#define ALL 2
-
-KpkSmartUpdate::KpkSmartUpdate( QObject *parent ) :
- QObject( parent ), m_running(false)
+KpkSmartUpdate::KpkSmartUpdate( QObject *parent) :
+QObject( parent ), m_running(false)
 {
 }
 
@@ -41,23 +37,22 @@ KpkSmartUpdate::~KpkSmartUpdate()
 void KpkSmartUpdate::smartUpdate()
 {
     if (!m_running) {
-	m_running = true;
-	KConfig config("KPackageKit");
-	KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
-	m_autoUpdateType = checkUpdateGroup.readEntry( "autoUpdate", SECURITY );
-	packages.clear();
-	if ( m_autoUpdateType == NONE ) {
-	    emit showUpdates();
-	    m_running = false;
-	}
-	else {
-	    kDebug() << "PkSmartUpdate";
-	    Transaction *t = Client::instance()->getUpdates();
-	    connect( t, SIGNAL( package(PackageKit::Package *) ),
-		this, SLOT( package(PackageKit::Package *) ) );
-	    connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-		this, SLOT( getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-	}
+        m_running = true;
+        KConfig config("KPackageKit");
+        KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
+        m_autoUpdateType = checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault);
+        packages.clear();
+        if (m_autoUpdateType == KpkEnum::None) {
+            emit showUpdates();
+            m_running = false;
+        } else {
+            kDebug() << "PkSmartUpdate";
+            Transaction *t = Client::instance()->getUpdates();
+            connect(t, SIGNAL(package(PackageKit::Package *)),
+                    this, SLOT(package(PackageKit::Package *)));
+            connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                    this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+        }
     }
 }
 
@@ -65,41 +60,37 @@ void KpkSmartUpdate::getUpdatesFinished(PackageKit::Transaction::ExitStatus stat
 {
     kDebug() << "Status: " << status ;
     if (status == Transaction::Success) {
-	if ( packages.size() && m_autoUpdateType != NONE) {
-	    if ( m_autoUpdateType == ALL ) {
-	    kDebug() << "ALL" << packages.size();
-		if (Transaction *t = Client::instance()->updateSystem() ) {
-		    connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-			this, SLOT( updatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-		    emit autoUpdatesBeingInstalled(t);
-		}
-		else {
-		    emit showUpdates();
-		    m_running = false;
-		}
-	    }
-	    else {
-	    kDebug() << "Security" << packages.size();
-		// Defaults to Security
-		if ( Transaction *t = Client::instance()->updatePackages(packages) ) {
-		    connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-			this, SLOT( updatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-		    emit autoUpdatesBeingInstalled(t);
-		}
-		else {
-		    emit showUpdates();
-		    m_running = false;
-		}
-	    }
-	}
-	else {
-	    kDebug() << "Show Uptates Only";
-	    emit showUpdates();
-	    m_running = false;
-	}
+        if (packages.size() && m_autoUpdateType != KpkEnum::None) {
+            if (m_autoUpdateType == KpkEnum::All) {
+            kDebug() << "ALL" << packages.size();
+                if (Transaction *t = Client::instance()->updateSystem() ) {
+                    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                            this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+                    emit autoUpdatesBeingInstalled(t);
+                } else {
+                    emit showUpdates();
+                    m_running = false;
+                }
+            } else {
+                kDebug() << "Security" << packages.size();
+                // Defaults to Security
+                if ( Transaction *t = Client::instance()->updatePackages(packages) ) {
+                    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                            this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+                    emit autoUpdatesBeingInstalled(t);
+                } else {
+                    emit showUpdates();
+                    m_running = false;
+                }
+            }
+        } else {
+            kDebug() << "Show Uptates Only";
+            emit showUpdates();
+            m_running = false;
+        }
+    } else {
+        m_running = false;
     }
-    else
-	m_running = false;
     packages.clear();
     kDebug() << "Running: " << m_running ;
 }
@@ -108,18 +99,18 @@ void KpkSmartUpdate::updatesFinished(PackageKit::Transaction::ExitStatus status,
 {
     kDebug() << "Status: " << status;
     if (status == Transaction::Success) {
-	emit showUpdates();
+        emit showUpdates();
     }
     m_running = false;
 }
 
 void KpkSmartUpdate::package(PackageKit::Package *p)
 {
-    if ( p->state() != Package::Blocked ) {
-	if ( m_autoUpdateType == SECURITY && p->state() == Package::Security )
-	    packages << p;
-	else
-	    packages << p;
+    if (p->state() != Package::Blocked) {
+        if ( m_autoUpdateType == KpkEnum::Security && p->state() == Package::Security)
+            packages << p;
+        else
+            packages << p;
     }
 }
 

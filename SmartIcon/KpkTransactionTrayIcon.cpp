@@ -64,43 +64,43 @@ void KpkTransactionTrayIcon::checkTransactionList()
 void KpkTransactionTrayIcon::triggered(QAction *action)
 {
     if ( m_transAction.contains(action) ) {
-	KpkTransaction *transaction = new KpkTransaction( m_transAction[action], false);
-	transaction->show();
+        KpkTransaction *transaction = new KpkTransaction( m_transAction[action], false);
+        transaction->show();
     }
     else {
-	if ( Transaction *t = m_client->refreshCache(true) ) {
-	    KpkTransaction *frm = new KpkTransaction(t, false);
-	    frm->show();
-	}
-	else
-	    KMessageBox::error( m_menu, i18n("Authentication failed"), i18n("KPackageKit") );
+        if ( Transaction *t = m_client->refreshCache(true) ) {
+            KpkTransaction *frm = new KpkTransaction(t, false);
+            frm->show();
+        }
+        else
+            KMessageBox::error( m_menu, i18n("Authentication failed"), i18n("KPackageKit") );
     }
 }
 
 void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
 {
     if ( m_menu->isVisible() && tids.size() ) {
-	m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );
-	connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
-	    this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
-	m_smartSTI->show();
-	updateMenu(tids);
-	emit cancelClose();
+        m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );
+        connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
+            this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
+        m_smartSTI->show();
+        updateMenu(tids);
+        emit cancelClose();
     }
     else if ( tids.size() == 0){
-	kDebug() << "No more transactions";
-	m_menu->hide();
-	// to avoid warning that the object was deleted in it's event handler
-	QTimer::singleShot(1, m_smartSTI, SLOT( hide() ) );
-	// this will start a timer to close the app
-	m_menu->clear();
-	emit appClose(SEVEN_MINUTES);
+        kDebug() << "No more transactions";
+        m_menu->hide();
+        // to avoid warning that the object was deleted in it's event handler
+        QTimer::singleShot(1, m_smartSTI, SLOT( hide() ) );
+        // this will start a timer to close the app
+        m_menu->clear();
+        emit appClose(SEVEN_MINUTES);
     }
     else {
-	m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );
-	connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
-	    this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
-	m_smartSTI->show();
+        m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );
+        connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
+            this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
+        m_smartSTI->show();
     }
 }
 
@@ -120,38 +120,38 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
 //     for (int i = tids.size() - 1; i >= 0; i--) {
     foreach (Transaction *t, tids ) {
 // 	t = tids.at(i);
-	QAction *transactionAction = new QAction(this);
-	m_transAction[transactionAction] = t;
-	if ( t->role().action == Client::ActionRefreshCache )
-	    refreshCache = false;
-	text = KpkStrings::action( t->role().action ) + " " + t->role().terms.join(", ") + " (" + KpkStrings::status( t->status() ) + ")";
-	transactionAction->setText(text);
-	transactionAction->setIcon( KpkIcons::statusIcon( t->status() ) );
-	m_menu->addAction(transactionAction);
+        QAction *transactionAction = new QAction(this);
+        m_transAction[transactionAction] = t;
+        if ( t->role().action == Client::ActionRefreshCache )
+            refreshCache = false;
+        text = KpkStrings::action( t->role().action ) + " " + t->role().terms.join(", ") + " (" + KpkStrings::status( t->status() ) + ")";
+        transactionAction->setText(text);
+        transactionAction->setIcon( KpkIcons::statusIcon( t->status() ) );
+        m_menu->addAction(transactionAction);
     }
 
     QAction *refreshCacheAction = new QAction(this);
     if (refreshCache && m_act.contains(Client::ActionRefreshCache) ) {
-	m_menu->addSeparator();
-	refreshCacheAction->setText(i18n("Refresh Packages List"));
-	m_menu->addAction( refreshCacheAction );
+        m_menu->addSeparator();
+        refreshCacheAction->setText(i18n("Refresh Packages List"));
+        m_menu->addAction( refreshCacheAction );
     }
 }
 
 void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason != QSystemTrayIcon::Context) {
-	QList<PackageKit::Transaction*> tids( m_client->getTransactions() );
-	if ( tids.size() ) {
-	    updateMenu( tids );
-	    m_menu->exec( QCursor::pos() );
-	}
-	else{
-	    m_menu->hide();
-	    m_menu->clear();
-	    // to avoid warning that the object was deleted in it's event handler
-	    QTimer::singleShot(1, m_smartSTI, SLOT( hide() ) );
-	}
+        QList<PackageKit::Transaction*> tids( m_client->getTransactions() );
+        if ( tids.size() ) {
+            updateMenu( tids );
+            m_menu->exec( QCursor::pos() );
+        }
+        else{
+            m_menu->hide();
+            m_menu->clear();
+            // to avoid warning that the object was deleted in it's event handler
+            QTimer::singleShot(1, m_smartSTI, SLOT( hide() ) );
+        }
     }
 }
 

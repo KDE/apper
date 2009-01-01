@@ -18,37 +18,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPACKAGEKITD_H
-#define KPACKAGEKITD_H
+namespace KpkEnum {
 
-#include <KDEDModule>
-#include <KDirWatch>
-#include <QTimer>
-#include <QPackageKit>
+    typedef enum {
+            None,
+            Security,
+            All
+    } AutoUpdate;
+    const int AutoUpdateDefault = None;
 
-using namespace PackageKit;
+    typedef enum {
+            Never   =       0,
+            Hourly  =    3600,
+            Daily   =   86400,
+            Weekly  =  604800,
+            Monthly = 2628000
+    } TimeInterval;
+    const int TimeIntervalDefault = Weekly;
 
-class KPackageKitD : public KDEDModule
-{
-Q_OBJECT
-
-public:
-    KPackageKitD(QObject *parent, const QList<QVariant>&);
-    ~KPackageKitD();
-
-private slots:
-    void init();
-    void read();
-    void checkUpdates();
-    void finished(PackageKit::Transaction::ExitStatus status, uint);
-
-    void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
-
-private:
-    QTimer *m_qtimer;
-    KDirWatch *m_confWatch;
-    Client *m_client;
-    Transaction *m_refreshCacheT;
-};
-
-#endif
+}
