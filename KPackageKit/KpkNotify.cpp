@@ -44,6 +44,7 @@ KpkNotify::KpkNotify( QObject *parent ) : QObject( parent ),
  m_showingAutoUpdate(false),
  m_showingUpdates(false)
 {
+    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 }
 
 KpkNotify::~KpkNotify()

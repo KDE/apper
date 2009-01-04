@@ -27,6 +27,7 @@
 KpkInstallFiles::KpkInstallFiles( QObject *parent ) :
  QObject( parent ), m_running(0)
 {
+    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 }
 
 KpkInstallFiles::~KpkInstallFiles()

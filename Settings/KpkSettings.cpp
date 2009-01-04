@@ -33,6 +33,7 @@ QWidget( parent ), m_originModel(0)
 {
     setupUi( this );
 
+    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
     m_actions = Client::instance()->getActions();
 
     if ( !m_actions.contains(Client::ActionRefreshCache) ) {

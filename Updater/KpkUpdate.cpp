@@ -31,6 +31,8 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
     setupUi( this );
     detailsDW->hide();
 
+    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
+
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(this));
     packageView->setModel(m_pkg_model_updates = new KpkPackageModel(this, packageView));

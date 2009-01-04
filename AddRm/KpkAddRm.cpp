@@ -40,6 +40,8 @@ KpkAddRm::KpkAddRm( QWidget *parent )
 {
     setupUi( this );
 
+    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
+
     // Create a new daemon
     m_client = Client::instance();
 

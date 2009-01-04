@@ -37,6 +37,8 @@
 
 KpkTransactionTrayIcon::KpkTransactionTrayIcon( QObject *parent ) : QObject( parent )
 {
+    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
+
     m_smartSTI = new KSystemTrayIcon("applications-other");
     connect(m_smartSTI, SIGNAL( activated(QSystemTrayIcon::ActivationReason) ), this, SLOT( activated(QSystemTrayIcon::ActivationReason) ) );
 
