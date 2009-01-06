@@ -34,7 +34,7 @@ namespace kpackagekit {
 KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
  : KUniqueApplication()
 {
-    // this enables not quiting when closing a transaction ui
+    // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);
 
     m_closeT = new QTimer(this);

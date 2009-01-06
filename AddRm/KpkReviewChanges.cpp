@@ -64,7 +64,7 @@ void KpkReviewChanges::doAction()
             m_remPackages << m_pkgModelMain->selectedPackages().takeAt(i);
     }
 
-    // check what packages are avaliable and marked to be installed
+    // check what packages are available and marked to be installed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
         if ( m_pkgModelMain->selectedPackages().at(i)->state() == Package::Available )
             m_addPackages << m_pkgModelMain->selectedPackages().takeAt(i);

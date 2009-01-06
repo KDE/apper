@@ -54,7 +54,7 @@ signals:
 
 private:
     Transaction *m_trans;
-    bool m_handlyingGpgOrEula;
+    bool m_handlingGpgOrEula;
     KpkTransactionPrivate* d;
 
 private slots:

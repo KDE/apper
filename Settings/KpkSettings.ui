@@ -71,7 +71,7 @@
          <bool>true</bool>
         </property>
         <property name="text" >
-         <string>Notify when updates are avaliable</string>
+         <string>Notify when updates are available</string>
         </property>
         <property name="checked" >
          <bool>true</bool>

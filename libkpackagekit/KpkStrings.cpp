@@ -85,7 +85,7 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
 	case Transaction::DownloadFilelist :
 	    return i18n("Downloading file lists");
 	case Transaction::DownloadChangelog :
-	    return i18n("Downloading lists of changes");
+	    return i18n("Downloading software changelogs");
 	case Transaction::DownloadGroup :
 	    return i18n("Downloading groups");
 	case Transaction::DownloadUpdateinfo :
@@ -120,7 +120,7 @@ QString KpkStrings::action(Client::Action action)
         case Client::ActionGetRepoList :
 	    return i18n("Getting list of repositories");
         case Client::ActionGetRequires :
-	    return i18n("Getting requires");
+	    return i18n("Getting prerequesites");
         case Client::ActionGetUpdateDetail :
 	    return i18n("Getting update detail");
         case Client::ActionGetUpdates :
@@ -150,15 +150,15 @@ QString KpkStrings::action(Client::Action action)
         case Client::ActionSearchGroup :
 	    return i18n("Searching groups");
         case Client::ActionSearchName :
-	    return i18n("Searching for package name");
+	    return i18n("Searching by package name");
         case Client::ActionServicePack :
-	    return i18n("Service pack");
+	    return i18n("Applying service pack");
         case Client::ActionUpdatePackages :
 	    return i18n("Updating packages");
         case Client::ActionUpdateSystem :
 	    return i18n("Updating system");
         case Client::ActionWhatProvides :
-	    return i18n("Getting what provides");
+	    return i18n("Searching for prerequesites");
         case Client::ActionAcceptEula :
 	    return i18n("Accepting EULA");
         case Client::ActionDownloadPackages :
@@ -275,22 +275,22 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
     switch (error) {
 	case Client::Oom :
 	    return i18n("The service that is responsible for handling user requests is out of memory.\n"
-			"Please restart your computer.");
+			"Please close some programs or restart your computer.");
 	case Client::NoNetwork :
 	    return i18n("There is no network connection available.\n"
 			"Please check your connection settings and try again");
 	case Client::NotSupported :
 	    return i18n("The action is not supported by this backend.\n"
-			"Please report a bug as this shouldn't have happened.");
+			"Please report a bug as this should not have happened.");
 	case Client::InternalError :
 	    return i18n("A problem that we were not expecting has occurred.\n"
 			"Please report this bug with the error description.");
 	case Client::GpgFailure :
-	    return i18n("A security trust relationship could not be made with software source.\n"
-			"Please check your security settings.");
+	    return i18n("A security trust relationship could not be made with the software source.\n"
+			"Please check your software signature settings.");
 	case Client::PackageIdInvalid :
-	    return i18n("The package identifier was not well formed when sent to the server.\n"
-			"This normally indicates an internal error and should be reported.");
+	    return i18n("The package identifier was not well formed when sent to the system daemon.\n"
+			"This normally indicates an internal bug and should be reported.");
 	case Client::PackageNotInstalled :
 	    return i18n("The package that is trying to be removed or updated is not already installed.");
 	case Client::PackageNotFound :
@@ -308,14 +308,14 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
 			"Refreshing your cache may help, although this is normally a software "
 			"source error.");
 	case Client::DepResolutionFailed :
-	    return i18n("A package could not be found that allows the task to complete.\n"
+	    return i18n("A package dependency could not be found.\n"
 			"More information is available in the detailed report.");
 	case Client::FilterInvalid :
 	    return i18n("The search filter was not correctly formed.");
 	case Client::CreateThreadFailed :
 	    return i18n("A thread could not be created to service the user request.");
 	case Client::TransactionError :
-	    return i18n("An unspecified task error has occurred.\n"
+	    return i18n("An error occurred while running the transaction.\n"
 			"More information is available in the detailed report.");
 	case Client::TransactionCancelled :
 	    return i18n("The task was canceled successfully and no packages were changed.");
@@ -338,7 +338,7 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
 			"This error can normally be ignored.");
 	case Client::FailedConfigParsing :
 	    return i18n("The native package configuration file could not be opened.\n"
-			"Please make sure configuration is valid.");
+			"Please make sure your system's configuration is valid.");
 	case Client::CannotCancel :
 	    return i18n("The task is not safe to be cancelled at this time.");
 	case Client::CannotGetLock :
@@ -377,14 +377,14 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
 	    return i18n("The package you are attempting to install is not valid.\n"
 			"The package file could be corrupt, or not a proper package.");
 	case Client::PackageInstallBlocked :
-	    return i18n("Installation of this package prevented by your packaging system's configuration.");
+	    return i18n("Installation of this package was prevented by your packaging system's configuration.");
 	case Client::PackageCorrupt :
 	    return i18n("The package that was downloaded is corrupt and needs to be downloaded again.");
 	case Client::AllPackagesAlreadyInstalled :
 	    return i18n("All of the packages selected for install are already installed on the system.");
 	case Client::FileNotFound :
 	    return i18n("The specified file could not be found on the system.\n"
-			 "Check the file still exists and has not been deleted.");
+			 "Check that the file still exists and has not been deleted.");
 	case Client::NoMoreMirrorsToTry :
 	    return i18n("Required data could not be found on any of the configured software sources.\n"
 			 "There were no more download mirrors that could be tried.");

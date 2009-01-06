@@ -122,7 +122,7 @@ void KpkNotify::installingAutoUpdates(Transaction *transaction)
 	QStringList actions;
 	if ( transaction->allowCancel() )
 	    actions << i18n("Cancel Update");
-	actions << i18n("Don't notify me again");
+	actions << i18n("Do not notify me again");
 	m_notifyAutoUpdate->setActions(actions);
 	connect( m_notifyAutoUpdate, SIGNAL( activated(uint) ), this , SLOT( autoUpdatesActions(uint) ) );
 	connect( m_notifyAutoUpdate, SIGNAL( closed() ), this , SLOT( autoUpdatesClosed() ) );

@@ -40,7 +40,7 @@ public:
 static const int stateCount = 7;
 
 KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent )
- : KDialog(parent), m_trans(trans), m_handlyingGpgOrEula(false), d(new KpkTransactionPrivate)
+ : KDialog(parent), m_trans(trans), m_handlingGpgOrEula(false), d(new KpkTransactionPrivate)
 {
     d->ui.setupUi( mainWidget() );
 
@@ -173,7 +173,7 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
     kDebug() << "errorCode: " << error;
     // check to see if we are already handlying these errors
     if ( error == Client::GpgFailure || error == Client::NoLicenseAgreement )
-	if (m_handlyingGpgOrEula)
+	if (m_handlingGpgOrEula)
 	    return;
 
 // this will be for files signature as seen in gpk
@@ -189,17 +189,17 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
 void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
 {
     kDebug() << "eula by: " << info.vendorName;
-    if (m_handlyingGpgOrEula) {
+    if (m_handlingGpgOrEula) {
 	// if its true means that we alread passed here
-	m_handlyingGpgOrEula = false;
+	m_handlingGpgOrEula = false;
 	return;
     }
     else
-	m_handlyingGpgOrEula = true;
+	m_handlingGpgOrEula = true;
 
     KpkLicenseAgreement *frm = new KpkLicenseAgreement(info, true, this);
     if (frm->exec() == KDialog::Yes && Client::instance()->acceptEula(info) )
-	m_handlyingGpgOrEula = false;
+	m_handlingGpgOrEula = false;
     // Well try again, if fail will show the erroCode
     emit kTransactionFinished(ReQueue);
 }
@@ -207,18 +207,18 @@ void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
 void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo info)
 {
     kDebug() << "signature by: " << info.keyId;
-    if (m_handlyingGpgOrEula) {
+    if (m_handlingGpgOrEula) {
 	// if its true means that we alread passed here
-	m_handlyingGpgOrEula = false;
+	m_handlingGpgOrEula = false;
 	return;
     }
     else
-	m_handlyingGpgOrEula = true;
+	m_handlingGpgOrEula = true;
 
     KpkRepoSig *frm = new KpkRepoSig(info, true, this);
     if (frm->exec() == KDialog::Yes &&
     Client::instance()->installSignature(info.type, info.keyId, info.package) )
-	m_handlyingGpgOrEula = false;
+	m_handlingGpgOrEula = false;
     emit kTransactionFinished(ReQueue);
 }
 
