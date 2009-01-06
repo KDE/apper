@@ -7,6 +7,7 @@ X-KDE-Kded-autoload=true
 
 Name=KPackageKit Service
 Name[el]=Υπηρεσία KPackageKit
+Name[et]=KPackageKiti teenus
 Name[fr]=Service KPackageKit
 Name[gl]=Servizo KPackageKit
 Name[nds]=KPackageKit-Deenst
@@ -20,6 +21,7 @@ Name[x-test]=xxKPackageKit Servicexx
 
 Comment=Tracks and Notify about Software Updates
 Comment[el]=Καταγραφή και ειδοποίηση σχετικά με ενημερώσεις λογισμικού
+Comment[et]=Tarkvarauuenduste jälgimine ja neist teadaandmine
 Comment[fr]=Surveille et informe sur les mises à jour logicielles
 Comment[gl]=Vixía e notifica a existencia de actualizacións de software
 Comment[nds]=Op Software-Opfrischen luern un Bescheed geven

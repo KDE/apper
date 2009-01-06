@@ -13,6 +13,7 @@ X-KDE-Weight=2
 Name=Software Updates
 Name[de]=Software-Aktualisierung
 Name[el]=Ενημερώσεις λογισμικού
+Name[et]=Tarkvarauuendused
 Name[fr]=Mises à jour logicielles
 Name[gl]=Actualizacións de software
 Name[nds]=Software-Opfrischen
@@ -26,6 +27,7 @@ Name[x-test]=xxSoftware Updatesxx
 
 Comment=Check and Install Updates
 Comment[el]=Έλεγχος και εγκατάσταση ενημερώσεων
+Comment[et]=Uuenduste kontroll ja paigaldamine
 Comment[fr]=Vérifier et installer les mises à jour
 Comment[gl]=Vixía e instala actualizacións
 Comment[nds]=Na Opfrischen kieken un se installeren
