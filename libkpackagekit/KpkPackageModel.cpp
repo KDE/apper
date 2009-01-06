@@ -284,7 +284,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             case 0: //Package name column
                 switch (role) {
                     case Qt::DisplayRole:
-                        return p->name();
+                        return p->name() + " - " + p->version() + (p->arch().isNull() ? "" : " (" + p->arch() + ")");
                     case Qt::DecorationRole:
                         for (int i = 0; i < m_checkedPackages.size(); ++i) {
                             if ( m_checkedPackages.at(i)->id() == p->id() )

@@ -144,43 +144,65 @@ void KpkUpdate::updateDetail(PackageKit::Client::UpdateInfo info)
 {
     //format and show description
     QString description;
-    description += "<b>" + i18n("New version") + ":</b> " + info.package->name()
-                + "-" + info.package->version() + "<br />";
+    description += "<table><tbody>";
+    description += "<tr><td align=\"right\"><b>" + i18n("New version") + ":</b></td><td>" + info.package->name()
+                + "-" + info.package->version()
+                + "</td></tr>";
+
     if ( info.updates.size() ) {
         QStringList updates;
         foreach (Package *p, info.updates) updates << p->name() + "-" + p->version();
-        description += "<b>" + i18n("Updates") + ":</b> " + updates.join(", ") + "<br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Updates") + ":</b></td><td>"
+                    + updates.join(", ")
+                    + "</td></tr>";
     }
     if ( info.obsoletes.size() ) {
         QStringList obsoletes;
         foreach (Package *p, info.obsoletes) obsoletes << p->id() + "-" + p->version();
-        description += "<b>" + i18n("Obsoletes") + ":</b> " + obsoletes.join(", ") + "<br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Obsoletes") + ":</b></td><td>"
+                    + obsoletes.join(", ")
+                    + "</td></tr>";
     }
     if ( !info.updateText.isEmpty() )
-        description += "<b>" + i18n("Details") + ":</b> " + info.updateText + "<br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Details") + ":</b></td><td>"
+                    + info.updateText.replace('\n', "<br />")
+                    + "</td></tr>";
     if ( !info.vendorUrl.isEmpty() )
-        description += "<b>" + i18n("Vendor Home Page")
-                    + ":</b> <a href=\"" + info.vendorUrl.split(";").at(0) + "\">"
-                    + info.vendorUrl.split(";").at(1) + "</a><br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Vendor Home Page")
+                    + ":</b></td><td><a href=\"" + info.vendorUrl.section(';', 0, 0) + "\">"
+                    + info.vendorUrl.section(';', -1)
+                    + "</a></td></tr>";
     if ( !info.bugzillaUrl.isEmpty() )
-        description += "<b>" + i18n("Bugzilla Home Page")
-                    + ":</b> <a href=\"" + info.bugzillaUrl.split(";").at(0) + "\">"
-                    + info.bugzillaUrl.split(";").at(1) + "</a><br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Bugzilla Home Page")
+                    + ":</b></td><td><a href=\"" + info.bugzillaUrl.section(';', 0, 0) + "\">"
+                    + info.bugzillaUrl.section(';', -1)
+                    + "</a></td></tr>";
     if ( !info.cveUrl.isEmpty() )
-        description += "<b>" + i18n("CVE Home Page") + ":</b> <a href=\"" + info.cveUrl.split(";").at(0) + "\">" + info.cveUrl.split(";").at(1) + "</a><br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("CVE Home Page")
+                    + ":</b></td><td><a href=\"" + info.cveUrl.section(';', 0, 0) + "\">"
+                    + info.cveUrl.section(';', -1)
+                    + "</a></td></tr>";
     if ( !info.changelog.isEmpty() )
-        description += "<b>" + i18n("Change Log") + ":</b> " + info.changelog + "<br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Change Log") + ":</b></td><td>"
+                    + info.changelog.replace('\n', "<br />")
+                    + "</td></tr>";
     if ( info.state != Client::UnknownUpgradeType)
-        description += "<b>" + i18n("State") + ":</b> " + KpkStrings::updateState(info.state) + "<br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("State") + ":</b></td><td>"
+                    + KpkStrings::updateState(info.state)
+                    + "</td></tr>";
     if ( info.restart != Client::UnknownRestartType)
-        description += "<b>" + i18n("Restart") + ":</b> " + KpkStrings::restartTypeFuture(info.restart)
-                    + "<br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Restart") + ":</b></td><td>"
+                    + KpkStrings::restartTypeFuture(info.restart)
+                    + "</td></tr>";
     if ( !info.issued.toString().isEmpty() )
-        description += "<b>" + i18n("Issued") + ":</b> "
-                    + KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate) + "<br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Issued") + ":</b></td><td>"
+                    + KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate)
+                    + "</td></tr>";
     if ( !info.updated.toString().isEmpty() )
-        description += "<b>" + i18n("Updated") + ":</b> "
-                    + KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate) + "<br />";
+        description += "<tr><td align=\"right\"><b>" + i18n("Updated") + ":</b></td><td>"
+                    + KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate)
+                    + "</td></tr>";
+    description += "</table></tbody>";
     descriptionKTB->setHtml(description);
     detailsDW->show();
 }

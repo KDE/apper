@@ -347,7 +347,7 @@ QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
 //     } else {
 //         width = FAV_ICON_SIZE;
 //     }
-    int width = (index.column() == 0) ? index.model()->data(index, Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE;
+    int width = (index.column() == 0) ? index.model()->data(index, Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
     return QSize(width, calcItemHeight(option));
 }
 
