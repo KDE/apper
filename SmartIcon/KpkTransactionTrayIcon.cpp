@@ -66,12 +66,12 @@ void KpkTransactionTrayIcon::checkTransactionList()
 void KpkTransactionTrayIcon::triggered(QAction *action)
 {
     if ( m_transAction.contains(action) ) {
-        KpkTransaction *transaction = new KpkTransaction( m_transAction[action], false);
+        KpkTransaction *transaction = new KpkTransaction( m_transAction[action]);
         transaction->show();
     }
     else {
         if ( Transaction *t = m_client->refreshCache(true) ) {
-            KpkTransaction *frm = new KpkTransaction(t, false);
+            KpkTransaction *frm = new KpkTransaction(t);
             frm->show();
         }
         else

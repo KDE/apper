@@ -78,7 +78,7 @@ void KpkUpdate::applyUpdates()
             KpkTransaction *frm = new KpkTransaction(t, this);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
-                     frm->show();
+            frm->exec();
         } else {
             KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
         }
@@ -88,7 +88,7 @@ void KpkUpdate::applyUpdates()
             KpkTransaction *frm = new KpkTransaction(t, this);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
-                     frm->show();
+            frm->exec();
         } else {
             KMessageBox::error(this, i18n("Authentication failed"), i18n("KPackageKit"));
         }
@@ -99,10 +99,10 @@ void KpkUpdate::applyUpdates()
 void KpkUpdate::refresh()
 {
     if ( Transaction *t = m_client->refreshCache(true) ) {
-        KpkTransaction *frm = new KpkTransaction(t, this);
+        KpkTransaction *frm = new KpkTransaction(t, true, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                  this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
-                 frm->show();
+        frm->exec();
     } else {
         KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
     }

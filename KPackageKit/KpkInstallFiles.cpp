@@ -96,7 +96,7 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
       
 		) == KMessageBox::Yes ) {
 	    if ( Transaction *t = Client::instance()->installFiles(files, true) ) {
-		KpkTransaction *trans = new KpkTransaction(t, this);
+		KpkTransaction *trans = new KpkTransaction(t);
 		connect( trans, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( installFilesFinished(KpkTransaction::ExitStatus) ) );
 		trans->show();
 		m_transactionFiles[trans] = files;

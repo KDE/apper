@@ -43,7 +43,6 @@ KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent 
  : KDialog(parent), m_trans(trans), m_handlyingGpgOrEula(false), d(new KpkTransactionPrivate)
 {
     d->ui.setupUi( mainWidget() );
-    setModal(modal);
 
     // Set Cancel and custom buoton hide
     setButtons( KDialog::Cancel | KDialog::User1 | KDialog::Details );
@@ -55,6 +54,11 @@ KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent 
     setDetailsWidgetVisible(false);
     setTransaction(m_trans);
     enableButton(KDialog::Details, false);
+    
+    if (modal) {
+        setWindowModality(Qt::WindowModal);
+        enableButton(KDialog::User1, false);
+    }
 }
 
 KpkTransaction::~KpkTransaction()

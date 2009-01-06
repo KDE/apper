@@ -91,8 +91,7 @@ void KpkReviewChanges::checkTask()
 		    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
 		// Create a Transaction dialog to don't upset the user
         m_waitPD = new KpkTransaction(m_transactionReq, true, this);
-        m_waitPD->enableButton(KDialog::User1, false);
-        m_waitPD->show();
+        m_waitPD->exec();
 	    }
 	    else {
 	       removePackages();
@@ -117,8 +116,7 @@ void KpkReviewChanges::checkTask()
 		    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
 		// Create a Transaction dialog to don't upset the user
         m_waitPD = new KpkTransaction(m_transactionDep, true, this);
-        m_waitPD->enableButton(KDialog::User1, false);
-        m_waitPD->show();
+        m_waitPD->exec();
 	    }
 	    else {
 	        installPackages();
@@ -143,7 +141,7 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
 	    KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be removed for dependencies"), m_pkgModelReq, this );
 	    connect( requimentD, SIGNAL( okClicked() ), this, SLOT( removePackages() ) );
 	    connect( requimentD, SIGNAL( cancelClicked() ), this, SLOT( close() ) );
-	    requimentD->show();
+	    requimentD->exec();
 	}
 	else
 	    removePackages();
@@ -166,8 +164,7 @@ void KpkReviewChanges::removePackages()
     if ( Transaction *t = m_client->removePackages(m_remPackages) ) {
         KpkTransaction *frm = new KpkTransaction(t, this);
         connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( remFinished(KpkTransaction::ExitStatus) ) );
-        frm->enableButton(KDialog::User1, false);
-        frm->show();
+        frm->exec();
     }
     else
         KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
@@ -184,7 +181,7 @@ void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, u
 	    KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be installed as dependencies"), m_pkgModelDep, this );
 	    connect( requimentD, SIGNAL( okClicked() ), this, SLOT( installPackages() ) );
 	    connect( requimentD, SIGNAL( cancelClicked() ), this, SLOT( close() ) );
-	    requimentD->show();
+	    requimentD->exec();
 	}
 	else
 	    installPackages();
@@ -206,8 +203,7 @@ void KpkReviewChanges::installPackages()
     if ( Transaction *t = m_client->installPackages(m_addPackages) ) {
         KpkTransaction *frm = new KpkTransaction(t, this);
         connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( addFinished(KpkTransaction::ExitStatus) ) );
-        frm->enableButton(KDialog::User1, false);
-        frm->show();
+        frm->exec();
     }
     else
         KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
