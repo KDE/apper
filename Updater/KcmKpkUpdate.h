@@ -33,6 +33,7 @@ public:
 
 public slots:
     void load();
+    void save();
 
 private:
     KpkUpdate *view;

@@ -51,12 +51,24 @@ void KpkUpdate::checkEnableUpdateButton()
 {
     if (m_pkg_model_updates->selectedPackages().size() > 0) {
         updatePB->setEnabled(true);
+        emit changed(true);
     } else {
         updatePB->setEnabled(false);
+        emit changed(false);
     }
 }
 
 void KpkUpdate::on_updatePB_clicked()
+{
+    applyUpdates();
+}
+
+void KpkUpdate::load()
+{
+    displayUpdates(KpkTransaction::Success);
+}
+
+void KpkUpdate::applyUpdates()
 {
     QList<Package*> packages = m_pkg_model_updates->selectedPackages();
     //check to see if the user selected all selectable packages
@@ -65,8 +77,8 @@ void KpkUpdate::on_updatePB_clicked()
         if ( Transaction *t = m_client->updateSystem() ) {
             KpkTransaction *frm = new KpkTransaction(t, this);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
-            frm->show();
+                     this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
+                     frm->show();
         } else {
             KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
         }
@@ -75,17 +87,25 @@ void KpkUpdate::on_updatePB_clicked()
         if ( Transaction *t = m_client->updatePackages(packages) ) {
             KpkTransaction *frm = new KpkTransaction(t, this);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                    this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
-            frm->show();
+                     this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
+                     frm->show();
         } else {
             KMessageBox::error(this, i18n("Authentication failed"), i18n("KPackageKit"));
         }
     }
+    load();
 }
 
-void KpkUpdate::load()
+void KpkUpdate::refresh()
 {
-    displayUpdates(KpkTransaction::Success);
+    if ( Transaction *t = m_client->refreshCache(true) ) {
+        KpkTransaction *frm = new KpkTransaction(t, this);
+        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                 this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
+                 frm->show();
+    } else {
+        KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
+    }
 }
 
 void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
@@ -104,14 +124,7 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
 
 void KpkUpdate::on_refreshPB_clicked()
 {
-    if ( Transaction *t = m_client->refreshCache(true) ) {
-        KpkTransaction *frm = new KpkTransaction(t, this);
-        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
-        frm->show();
-    } else {
-        KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
-    }
+    refresh();
 }
 
 void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
