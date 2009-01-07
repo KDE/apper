@@ -1,6 +1,7 @@
 [Global]
 IconName=applications-other
 Comment=KPackageKit
+Comment[pa]=ਕੇ-ਪੈਕੇਜ-ਕਿੱਟ
 Comment[sv]=Kpackagekit
 Comment[x-test]=xxKPackageKitxx
 
@@ -11,6 +12,7 @@ Name[et]=Saadaval on uuendused
 Name[fr]=De nouvelles mises à jour sont disponibles
 Name[gl]=Hai novas actualizacións disponíbeis
 Name[nds]=Nieg Opfrischen verföögbor
+Name[pa]=ਨਵੇਂ ਅੱਪਡੇਟ ਉਪਲੱਬਧ ਹਨ
 Name[pt]=Estão disponíveis actualizações novas
 Name[pt_BR]=Novas atualizações estão disponíveis
 Name[ro]=Sînt disponibile actualizări
@@ -28,6 +30,7 @@ Name[et]=Uuendused paigaldatakse
 Name[fr]=Installation des mises à jour
 Name[gl]=Estanse a instalar actualizacións
 Name[nds]=Opfrischen warrt installeert
+Name[pa]=ਅੱਪਡੇਟ ਇੰਸਟਾਲ ਕਰਨ ਦੀ ਲੋੜ ਹੈ
 Name[pt]=As actualizações estão a ser instaladas
 Name[pt_BR]=As atualizações estão sendo instaladas
 Name[ro]=Actualizările se instalează
@@ -45,6 +48,7 @@ Name[et]=Vajalik on süsteemi taaskäivitus
 Name[fr]=Un redémarrage du système est nécessaire
 Name[gl]=Requérese un reinicio do sistema
 Name[nds]=En Systeem-Niegstart deit noot
+Name[pa]=ਸਿਸਟਮ ਨੂੰ ਮੁੜ-ਚਾਲੂ ਕਰਨ ਦੀ ਲੋੜ ਹੈ
 Name[pt]=É Necessário Reiniciar o Sistema
 Name[pt_BR]=É necessário reiniciar o sistema
 Name[ro]=Este necesară o repornire a sistemului
