@@ -42,6 +42,9 @@
      <property name="toolButtonStyle" >
       <enum>Qt::ToolButtonTextBesideIcon</enum>
      </property>
+     <property name="autoRaise" >
+      <bool>true</bool>
+     </property>
      <property name="arrowType" >
       <enum>Qt::NoArrow</enum>
      </property>
@@ -282,13 +285,12 @@
     </widget>
    </item>
    <item row="0" column="2" >
-    <widget class="QToolButton" name="findTB" >
-     <property name="text" >
-      <string>Find</string>
-     </property>
-     <property name="toolButtonStyle" >
-      <enum>Qt::ToolButtonTextBesideIcon</enum>
-     </property>
+    <widget class="QWidget" native="1" name="widget" >
+     <layout class="QGridLayout" name="gridLayout_9" >
+      <item row="0" column="0" >
+       <layout class="QGridLayout" name="gridLayout_8" />
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -322,7 +324,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>searchKLE</tabstop>
-  <tabstop>findTB</tabstop>
   <tabstop>filtersTB</tabstop>
   <tabstop>groupsCB</tabstop>
   <tabstop>packageView</tabstop>

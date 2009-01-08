@@ -35,10 +35,14 @@
 #define UNIVERSAL_PADDING 6
 
 KpkAddRm::KpkAddRm( QWidget *parent )
- : QWidget( parent ),m_mTransRuning(false), m_findIcon("edit-find"),
-   m_cancelIcon("dialog-cancel")
+ : QWidget( parent ), m_currentAction(0), m_mTransRuning(false),  m_findIcon("edit-find"),
+   m_cancelIcon("dialog-cancel"), m_filterIcon("view-filter")
 {
     setupUi( this );
+
+    // create our toolbar
+    gridLayout_9->addWidget(toolBar = new QToolBar);
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 
@@ -55,57 +59,67 @@ KpkAddRm::KpkAddRm( QWidget *parent )
     if ( m_actions.contains(Client::ActionInstallPackages) || m_actions.contains(Client::ActionRemovePackages) )
         connect( m_pkg_model_main, SIGNAL( dataChanged(const QModelIndex, const QModelIndex) ), this, SLOT( checkChanged() ) );
 
-    if ( m_actions.contains(Client::ActionGetDetails) )
-	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getDetails(PackageKit::Package *) ) );
+    if (m_actions.contains(Client::ActionGetDetails))
+        connect(this, SIGNAL(getInfo(PackageKit::Package *)),
+                this, SLOT(getDetails(PackageKit::Package *)));
     else
-	tabWidget->setTabEnabled(0, false);
+        tabWidget->setTabEnabled(0, false);
 
-    if ( m_actions.contains(Client::ActionGetFiles) )
-	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getFiles(PackageKit::Package *) ) );
+    if (m_actions.contains(Client::ActionGetFiles))
+        connect(this, SIGNAL(getInfo(PackageKit::Package *)),
+                this, SLOT(getFiles(PackageKit::Package *)));
     else
         tabWidget->setTabEnabled(1, false);
 
     if ( m_actions.contains(Client::ActionGetDepends) ) {
-	dependsOnLV->setModel( m_pkg_model_dep = new KpkPackageModel(this, packageView) );
-	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getDepends(PackageKit::Package *) ) );
+        dependsOnLV->setModel( m_pkg_model_dep = new KpkPackageModel(this, packageView) );
+        connect(this, SIGNAL(getInfo(PackageKit::Package *)),
+                this, SLOT( getDepends(PackageKit::Package *)));
     }
     else
         tabWidget->setTabEnabled(2, false);
 
     if ( m_actions.contains(Client::ActionGetRequires) ) {
-	requiredByLV->setModel( m_pkg_model_req = new KpkPackageModel(this, packageView ));
-	connect(this, SIGNAL( getInfo(PackageKit::Package *) ), this, SLOT( getRequires(PackageKit::Package *) ) );
+        requiredByLV->setModel(m_pkg_model_req = new KpkPackageModel(this, packageView));
+        connect(this, SIGNAL(getInfo(PackageKit::Package *)),
+                this, SLOT(getRequires(PackageKit::Package *)));
     }
     else
         tabWidget->setTabEnabled(3, false);
 
     m_findMenu = new QMenu(this);
-    // Define actions icon
-    actionFindFile->setIcon(m_findIcon);
-    actionFindDescription->setIcon(m_findIcon);
-    actionFindName->setIcon(m_findIcon);
+    setActionsDefaults();
+    // find is just a generic name in case we don't have any search method
+    m_genericActionK = new KToolBarPopupAction(m_findIcon, i18n("Find"), this);
+    toolBar->addAction(m_genericActionK);
 
     // Add actions that the backend supports
     if ( m_actions.contains(Client::ActionSearchFile) ) {
         m_findMenu->addAction(actionFindFile);
-        findTB->setDefaultAction(actionFindFile);
+        setCurrentAction(actionFindFile);
     }
     if ( m_actions.contains(Client::ActionSearchDetails) ) {
         m_findMenu->addAction(actionFindDescription);
-        findTB->setDefaultAction(actionFindDescription);
+        setCurrentAction(actionFindDescription);
     }
     if ( m_actions.contains(Client::ActionSearchName) ) {
         m_findMenu->addAction(actionFindName);
-        findTB->setDefaultAction(actionFindName);
+        setCurrentAction(actionFindName);
     }
+
     // If no action was set we can't use this search
-    if (findTB->defaultAction() == 0) {
-        findTB->setEnabled(false);
+    if (m_currentAction == 0) {
+        m_genericActionK->setEnabled(false);
     } else {
         // Remove from the menu the current action
-        m_findMenu->removeAction(findTB->defaultAction());
+        m_findMenu->removeAction(m_currentAction);
         if (!m_findMenu->isEmpty())
-            findTB->setMenu(m_findMenu);
+            m_genericActionK->setMenu(m_findMenu);
+        else {
+            toolBar->removeAction(m_genericActionK);
+            toolBar->addAction(m_currentAction);
+        }
+        connect(m_genericActionK, SIGNAL(triggered()), this, SLOT(actionFindNameK()));
     }
 
     if ( !m_actions.contains(Client::ActionSearchGroup) ) {
@@ -114,14 +128,15 @@ KpkAddRm::KpkAddRm( QWidget *parent )
 
     //initialize the groups
     foreach (Client::Group group, m_client->getGroups() ) {
-	groupsCB->addItem( KpkIcons::groupsIcon(group), KpkStrings::groups(group), group );
+        groupsCB->addItem( KpkIcons::groupsIcon(group), KpkStrings::groups(group), group);
     }
 
     // install the backend filters
-    filterMenu( m_client->getFilters() );
+    filterMenu(m_client->getFilters());
+    filtersTB->setIcon(m_filterIcon);
 
     // connect the notify
-    connect( &m_notifyT, SIGNAL( timeout() ), this, SLOT( notifyUpdate() ) );
+    connect(&m_notifyT, SIGNAL(timeout()), this, SLOT(notifyUpdate()));
 
     // set fucus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
@@ -129,6 +144,36 @@ KpkAddRm::KpkAddRm( QWidget *parent )
     // hides the description to have more space.
     descriptionDW->setVisible(false);
     notifyF->hide();
+}
+
+void KpkAddRm::actionFindNameK()
+{
+    kDebug();
+    m_currentAction->trigger();
+}
+
+void KpkAddRm::setCurrentAction(QAction *action)
+{
+    kDebug();
+    if (m_currentAction != action) {
+        m_currentAction = action;
+        m_genericActionK->setText(m_currentAction->text());
+    }
+}
+
+void KpkAddRm::setActionsDefaults()
+{
+    actionFindName->setText(i18n("Find by &Name"));
+    actionFindFile->setText(i18n("Find by f&ile name"));
+    actionFindDescription->setText(i18n("Find by &description"));
+    // Define actions icon
+    actionFindFile->setIcon(m_findIcon);
+    actionFindDescription->setIcon(m_findIcon);
+    actionFindName->setIcon(m_findIcon);
+    if (m_currentAction) {
+        m_genericActionK->setText(m_currentAction->text());
+        actionFindName->setIcon(m_currentAction->icon());
+    }
 }
 
 void KpkAddRm::checkChanged()
@@ -230,7 +275,7 @@ bool KpkAddRm::event ( QEvent * event )
                 QKeyEvent *ke = static_cast<QKeyEvent *>(event);
                 if (ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter) {
                     // special tab handling here
-                    findTB->click();
+                    m_currentAction->trigger();
                     return true;
                 }
             }
@@ -262,23 +307,23 @@ KpkAddRm::~KpkAddRm()
 {
 }
 
-void KpkAddRm::setDefaultAction(QAction *action)
-{
-    if (findTB->defaultAction() != action) {
-        m_findMenu->removeAction(action);
-        m_findMenu->addAction(findTB->defaultAction());
-        findTB->setDefaultAction(action);
-    }
-}
+// void KpkAddRm::setDefaultAction(QAction *action)
+// {
+//     if (findTB->defaultAction() != action) {
+//         m_findMenu->removeAction(action);
+//         m_findMenu->addAction(findTB->defaultAction());
+//         findTB->setDefaultAction(action);
+//     }
+// }
 
 void KpkAddRm::on_actionFindName_triggered()
 {
     kDebug();
-    setDefaultAction(actionFindName);
-    if ( m_mTransRuning ) {
+    setCurrentAction(actionFindName);
+    if (m_mTransRuning) {
         m_pkClient_main->cancel();
     }
-    else if ( !searchKLE->text().isEmpty() ) {
+    else if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchAction = Client::ActionSearchName;
         m_searchString = searchKLE->text();
@@ -293,11 +338,11 @@ void KpkAddRm::on_actionFindName_triggered()
 void KpkAddRm::on_actionFindDescription_triggered()
 {
     kDebug();
-    setDefaultAction(actionFindDescription);
-    if ( m_mTransRuning ) {
+    setCurrentAction(actionFindDescription);
+    if (m_mTransRuning) {
         m_pkClient_main->cancel();
     }
-    else if ( !searchKLE->text().isEmpty() ) {
+    else if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchAction = Client::ActionSearchDetails;
         m_searchString = searchKLE->text();
@@ -312,11 +357,11 @@ void KpkAddRm::on_actionFindDescription_triggered()
 void KpkAddRm::on_actionFindFile_triggered()
 {
     kDebug();
-    setDefaultAction(actionFindFile);
-    if ( m_mTransRuning ) {
+    setCurrentAction(actionFindFile);
+    if (m_mTransRuning) {
         m_pkClient_main->cancel();
     }
-    else if ( !searchKLE->text().isEmpty() ) {
+    else if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchAction = Client::ActionSearchFile;
         m_searchString = searchKLE->text();
@@ -366,9 +411,14 @@ void KpkAddRm::search()
     busyPB->setMaximum(0);
     busyPB->setValue(0);
     m_mTransRuning = true;
-    findTB->defaultAction()->setText( i18n("&Cancel") );
-    findTB->defaultAction()->setIcon(m_cancelIcon);
-    findTB->defaultAction()->setEnabled(false);
+    setActionCancel(false);
+}
+
+void KpkAddRm::setActionCancel(bool enabled)
+{
+    m_currentAction->setText(i18n("&Cancel"));
+    m_currentAction->setIcon(m_cancelIcon);
+    m_currentAction->setEnabled(enabled);
 }
 
 void KpkAddRm::connectTransaction(Transaction *transaction)
@@ -384,7 +434,7 @@ void KpkAddRm::connectTransaction(Transaction *transaction)
     connect( transaction, SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
 	this, SLOT( statusChanged(PackageKit::Transaction::Status) ) );
     connect( transaction, SIGNAL( allowCancelChanged(bool) ),
-	findTB->defaultAction(), SLOT( setEnabled(bool) ) );
+	m_currentAction, SLOT( setEnabled(bool) ) );
     connect( transaction, SIGNAL( progressChanged(PackageKit::Transaction::ProgressInfo) ),
 	this, SLOT( progressChanged(PackageKit::Transaction::ProgressInfo) ) );
 }
@@ -417,19 +467,9 @@ void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime
     busyPB->setMaximum(100);
     busyPB->setValue(100);
     m_mTransRuning = false;
-    findTB->defaultAction()->setEnabled(true);
-    if ( m_searchAction == Client::ActionSearchName ) {
-        findTB->defaultAction()->setText( i18n("Find &Name") );
-    } else if ( m_searchAction == Client::ActionSearchDetails ) {
-        findTB->defaultAction()->setText( i18n("Find &Description") );
-    } else if ( m_searchAction == Client::ActionSearchFile ) {
-            findTB->defaultAction()->setText( i18n("&Find File") );
-    } else if ( m_searchAction == Client::ActionSearchGroup ) {
-    } else {
-        kWarning() << "Search type not implemented yet";
-        return;
-    }
-    findTB->defaultAction()->setIcon(m_findIcon);
+    m_currentAction->setEnabled(true);
+    m_currentAction->setIcon(m_findIcon);
+    setActionsDefaults();
     switch(status) {
         case Transaction::Success :
 	    notifyL->setText(i18n("Search finished in %1", KGlobal::locale()->formatDuration(runtime)) );
@@ -542,21 +582,21 @@ void KpkAddRm::filterMenu(Client::Filters filters)
 {
     m_filtersQM = new QMenu(this);
     filtersTB->setMenu(m_filtersQM);
-    
+
     if(!filters.isEmpty()) {
         if (filters.contains(Client::FilterCollections) || filters.contains(Client::FilterNotCollections)) {
             QMenu *menuCollections = new QMenu(i18n("Collections"), m_filtersQM);
             m_filtersQM->addMenu(menuCollections);
             QActionGroup *collectionGroup = new QActionGroup(menuCollections);
             collectionGroup->setExclusive(true);
-            
+
             QAction *collectionTrue = new QAction(i18n("Only collections"), collectionGroup);
             collectionTrue->setCheckable(true);
             m_filtersAction[collectionTrue] = Client::FilterCollections;
             collectionGroup->addAction(collectionTrue);
             menuCollections->addAction(collectionTrue);
             actions << collectionTrue;
-            
+
             QAction *collectionFalse = new QAction(i18n("Exclude collections"), collectionGroup);
             collectionFalse->setCheckable(true);
             m_filtersAction[collectionFalse] = Client::FilterNotCollections;
@@ -652,7 +692,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
 		menuGui->addAction(guiFalse);
 		actions << guiFalse;
 // 	    }
-	    
+
             QAction *guiNone = new QAction(i18n("No filter"), guiGroup);
             guiNone->setCheckable(true);
             guiNone->setChecked(true);

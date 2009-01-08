@@ -25,6 +25,7 @@
 #include <QtCore/QtCore>
 
 #include <KIcon>
+#include <KToolBarPopupAction>
 
 #include "KpkPackageModel.h"
 #include <KpkDelegate.h>
@@ -56,6 +57,8 @@ private slots:
     void getRequires(PackageKit::Package *p);
     void getInfoFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
+void actionFindNameK();
+
     void on_actionFindName_triggered();
     void on_actionFindDescription_triggered();
     void on_actionFindFile_triggered();
@@ -78,6 +81,10 @@ private slots:
 
 private:
     QMenu *m_findMenu;
+    QToolBar *toolBar;
+    KToolBarPopupAction *m_genericActionK;
+    QAction *m_currentAction;
+    void setCurrentAction(QAction *action);
     bool m_mTransRuning;//main trans
     KpkPackageModel *m_pkg_model_main;
     KpkPackageModel *m_pkg_model_dep;
@@ -91,6 +98,7 @@ private:
     QMenu *m_filtersQM;
     KIcon m_findIcon;
     KIcon m_cancelIcon;
+    KIcon m_filterIcon;
 
     // We need to keep a list to build the filters string
     QList<QAction*> actions;
@@ -99,7 +107,8 @@ private:
     Client::Filters filters();
 
     void updateColumnsWidth(bool force = false);
-    void setDefaultAction(QAction *action);
+    void setActionsDefaults();
+    void setActionCancel(bool enabled);
     void search();
     void connectTransaction(Transaction *transaction);
 
