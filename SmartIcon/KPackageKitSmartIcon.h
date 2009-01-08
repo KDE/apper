@@ -22,7 +22,6 @@
 #define KPACKAGEKITSMARTICON_H
 
 #include <KUniqueApplication>
-#include <QTimer>
 
 #include "KpkTransactionTrayIcon.h"
 
@@ -38,7 +37,6 @@ public:
 
 private:
     KpkTransactionTrayIcon *m_trayIcon;
-    QTimer *m_closeT;
 };
 
 }

@@ -33,8 +33,6 @@
 
 #include <KDebug>
 
-#define SEVEN_MINUTES 420000
-
 KpkTransactionTrayIcon::KpkTransactionTrayIcon( QObject *parent ) : QObject( parent )
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
@@ -87,7 +85,6 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
             this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
         m_smartSTI->show();
         updateMenu(tids);
-        emit cancelClose();
     }
     else if ( tids.size() == 0){
         kDebug() << "No more transactions";
@@ -96,7 +93,6 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
         QTimer::singleShot(1, m_smartSTI, SLOT( hide() ) );
         // this will start a timer to close the app
         m_menu->clear();
-        emit appClose(SEVEN_MINUTES);
     }
     else {
         m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );

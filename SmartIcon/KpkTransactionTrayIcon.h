@@ -35,10 +35,6 @@ public:
 
     void checkTransactionList();
 
-signals:
-    void appClose(int msecs);
-    void cancelClose();
-
 private slots:
     void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
     void activated(QSystemTrayIcon::ActivationReason reason);

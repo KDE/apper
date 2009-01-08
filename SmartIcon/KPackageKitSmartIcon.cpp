@@ -37,11 +37,7 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);
 
-    m_closeT = new QTimer(this);
     m_trayIcon = new KpkTransactionTrayIcon(this);
-    connect(m_trayIcon, SIGNAL( appClose(int) ), m_closeT, SLOT( start(int) ) );
-    connect(m_trayIcon, SIGNAL( cancelClose() ), m_closeT, SLOT( stop() ) );
-    connect(m_closeT, SIGNAL( timeout( ) ), this, SLOT( quit() ) );
 
     // This MUST be called after connecting all the signals or slots!
     m_trayIcon->checkTransactionList();
