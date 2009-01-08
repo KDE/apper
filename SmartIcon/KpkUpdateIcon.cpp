@@ -23,16 +23,12 @@
 #include <KpkIcons.h>
 #include <KDebug>
 #include <KpkStrings.h>
+#include <KpkEnum.h>
 
 #include <QMenu>
 #include <KStandardAction>
 #include <KActionCollection>
 #include <KAction>
-
-//TODO: These constants are scattered around the source. Put them somewhere nice.
-#define NONE 0
-#define SECURITY 1
-#define ALL 2
 
 using namespace PackageKit;
 
@@ -173,11 +169,13 @@ KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uint run
         m_icon->show();
         KConfig config("KPackageKit");
         KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
-        uint updateType = checkUpdateGroup.readEntry( "autoUpdate", SECURITY );
-        if (updateType == NONE) {
+        uint updateType = (uint) checkUpdateGroup.readEntry( "autoUpdate", KpkEnum::AutoUpdateDefault );
+        if (updateType == KpkEnum::None) {
+            kDebug() << "None.";
             notifyUpdates();
         } else {
-            if (updateType == SECURITY) {
+            if (updateType == KpkEnum::Security) {
+                kDebug() << "Security";
                 QList<PackageKit::Package*> updateList;
                 foreach(PackageKit::Package* package, m_updateList) {
                     if (package->state()==PackageKit::Package::Security)
@@ -194,12 +192,15 @@ KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uint run
                         autoInstallNotify->setPixmap(KpkIcons::packageIcon(highState).pixmap(64,64));
                         autoInstallNotify->sendEvent();
                     } else {
+                        kDebug() << "security Trans failed." << t;
                         notifyUpdates();
                     }
                 } else {
+                    kDebug() << "No security updates.";
                     notifyUpdates();
                 }
             } else {
+                kDebug() << "All";
                 if (Transaction* t = Client::instance()->updateSystem()) {
                     connect(t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
                              this, SLOT( updatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
@@ -209,6 +210,7 @@ KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uint run
                              autoInstallNotify->setPixmap(KpkIcons::packageIcon(highState).pixmap(64,64));
                              autoInstallNotify->sendEvent();
                 } else {
+                    kDebug() << "All Trans failed.";
                     notifyUpdates();
                 }
             }
