@@ -162,7 +162,7 @@ void KpkReviewChanges::removePackages()
 {
     qDebug() << "removePackages";
     if ( Transaction *t = m_client->removePackages(m_remPackages) ) {
-        KpkTransaction *frm = new KpkTransaction(t, this);
+        KpkTransaction *frm = new KpkTransaction(t, true, this);
         connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( remFinished(KpkTransaction::ExitStatus) ) );
         frm->exec();
     }
@@ -201,7 +201,7 @@ void KpkReviewChanges::installPackages()
 {
     qDebug() << "installPackages";
     if ( Transaction *t = m_client->installPackages(m_addPackages) ) {
-        KpkTransaction *frm = new KpkTransaction(t, this);
+        KpkTransaction *frm = new KpkTransaction(t, true, this);
         connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( addFinished(KpkTransaction::ExitStatus) ) );
         frm->exec();
     }

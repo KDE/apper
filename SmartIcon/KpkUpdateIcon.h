@@ -43,6 +43,7 @@ class KpkUpdateIcon : public QObject {
         void handleUpdateAction(uint action);
         void notifyUpdates();
         void hideUpdates();
+        void updaterClosed(int);
         void showUpdates( QSystemTrayIcon::ActivationReason = QSystemTrayIcon::Unknown);
         void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 

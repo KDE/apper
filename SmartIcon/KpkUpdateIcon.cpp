@@ -50,6 +50,16 @@ KpkUpdateIcon::hideUpdates()
 }
 
 void
+KpkUpdateIcon::updaterClosed(int exitCode)
+{
+    hideUpdates();
+    if (exitCode == QDialog::Accepted) {
+        m_icon->hide();
+        checkUpdates();
+    }
+}
+
+void
 KpkUpdateIcon::showUpdates(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason==QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::Unknown) {
@@ -58,7 +68,7 @@ KpkUpdateIcon::showUpdates(QSystemTrayIcon::ActivationReason reason)
             m_updateView->setWindowIcon( KIcon("applications-other") );
             m_updateView->addModule( KCModuleInfo::KCModuleInfo("kpk_update.desktop") );
             connect(m_updateView, SIGNAL( finished(int) ),
-                    this, SLOT( hideUpdates() ));
+                     this, SLOT( updaterClosed(int) ));
             m_updateView->raise();
             m_updateView->show();
         } else {
