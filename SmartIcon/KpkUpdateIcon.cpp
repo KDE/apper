@@ -24,6 +24,11 @@
 #include <KDebug>
 #include <KpkStrings.h>
 
+#include <QMenu>
+#include <KStandardAction>
+#include <KActionCollection>
+#include <KAction>
+
 //TODO: These constants are scattered around the source. Put them somewhere nice.
 #define NONE 0
 #define SECURITY 1
@@ -38,6 +43,20 @@ KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
     connect(m_icon, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
              this, SLOT( showUpdates( QSystemTrayIcon::ActivationReason ) ));
     m_updateView = 0;
+
+    m_icon->actionCollection()->addAction(KStandardAction::Preferences, this, SLOT( showSettings() ));
+    m_icon->contextMenu()->addAction(m_icon->actionCollection()->action(KStandardAction::name(KStandardAction::Preferences)));
+}
+
+void
+KpkUpdateIcon::showSettings()
+{
+    KCMultiDialog* settings = new KCMultiDialog();
+    settings->setWindowIcon( KIcon("applications-other") );
+    settings->addModule( KCModuleInfo::KCModuleInfo("kpk_settings.desktop") );
+    connect(settings, SIGNAL( finished() ),
+             settings, SLOT( deleteLater() ));
+    settings->show();
 }
 
 void
