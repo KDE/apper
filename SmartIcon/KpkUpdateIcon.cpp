@@ -148,7 +148,7 @@ KpkUpdateIcon::notifyUpdates()
     
     updateNotify->setText(text);
     QStringList actions;
-    
+    m_icon->setToolTip(i18np("%1 update available", "%1 updates available",m_updateList.size()).arg(m_updateList.size()));
     actions << i18n("Review and update");
     actions << i18n("Remind me later");
     actions << i18n("Don't ask anymore.");
@@ -169,6 +169,7 @@ KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uint run
             if (p->state()>highState)
                 highState = p->state();
         m_icon->setIcon(KpkIcons::packageIcon(highState));
+        m_icon->setToolTip("");
         m_icon->show();
         KConfig config("KPackageKit");
         KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
