@@ -106,18 +106,23 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
 
 void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 {
+    kDebug() << "Finished.";
     switch (status) {
 	case KpkTransaction::Success :
 	case KpkTransaction::Cancelled :
+        kDebug() << "Success";
 	    m_transactionFiles.remove( (KpkTransaction *) sender() );
 	    break;
 	case KpkTransaction::Failed :
+        kDebug() << "Failure";
 	    m_transactionFiles.remove( (KpkTransaction *) sender() );
 	    break;
 	case KpkTransaction::ReQueue :
 	    kDebug() << "ReQueue";
 	    KpkTransaction *trans = (KpkTransaction *) sender();
-	    trans->setTransaction( Client::instance()->installFiles(m_transactionFiles[trans], false) );
+        Transaction* t = Client::instance()->installFiles(m_transactionFiles[trans], false);
+        if (t)
+            trans->setTransaction( t );
 	    break;
     }
 }

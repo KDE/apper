@@ -147,20 +147,20 @@ void KpkTransaction::slotButtonClicked(int button)
 {
     switch(button) {
         case KDialog::Cancel :
-	    kDebug() << "KDialog::Cancel";
+            kDebug() << "KDialog::Cancel";
             m_trans->cancel();
             break;
         case KDialog::User1 :
-	    kDebug() << "KDialog::User1";
-	    emit kTransactionFinished(Success);
-	    // If you call Close it will
-	    // come back to hunt you with Cancel
-	    KDialog::slotButtonClicked(KDialog::Yes);
+            kDebug() << "KDialog::User1";
+            emit kTransactionFinished(Success);
+            // If you call Close it will
+            // come back to hunt you with Cancel
+            done(KDialog::User1);
             break;
-	case KDialog::Close :
-	    kDebug() << "KDialog::Close";
-	    emit kTransactionFinished(Cancelled);
-            KDialog::slotButtonClicked(KDialog::Close);
+        case KDialog::Close :
+            kDebug() << "KDialog::Close";
+            emit kTransactionFinished(Cancelled);
+            done(KDialog::Close);
             break;
         default :
             KDialog::slotButtonClicked(button);
@@ -174,8 +174,25 @@ void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
 
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)
 {
-    Q_UNUSED(error);
-    Q_UNUSED(details);
+    //Q_UNUSED(details);
+    if (error == Client::MissingGpgSignature) {
+        kDebug() << "Missing GPG!";
+        m_handlingGpgOrEula = true;
+        int ret = KMessageBox::warningYesNo(this, 
+                                             details+
+                                             i18n("<br />Installing unsigned packages can compromise your system,"
+                                             "as it is impossible to verify if the software came from a trusted"
+                                             "source. Are you sure you want to continue instalation?"),
+                                             i18n("Installing unsigned software"));
+        if (ret == KMessageBox::Yes) {
+            emit kTransactionFinished(ReQueue);
+            kDebug() << "Asking for a re-queue";
+        } else {
+            emit kTransactionFinished(Cancelled);
+            if (m_flags & CloseOnFinish)
+                done(QDialog::Rejected);
+        }
+    }
     /*kDebug() << "errorCode: " << error;
     // check to see if we are already handlying these errors
     if ( error == Client::GpgFailure || error == Client::NoLicenseAgreement )
@@ -224,6 +241,7 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
     if (frm->exec() == KDialog::Yes &&
     Client::instance()->installSignature(info.type, info.keyId, info.package) )
 	m_handlingGpgOrEula = false;
+    kDebug() << "Requeue!";
     emit kTransactionFinished(ReQueue);
 }
 
@@ -231,19 +249,23 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint /
 {
     switch(status) {
         case Transaction::Success :
-	    kDebug() << "finished succes: " << status;
 	    emit kTransactionFinished(Success);
-	    KDialog::slotButtonClicked(KDialog::Close);
+        if (m_flags & CloseOnFinish)
+            done(QDialog::Accepted);
 	    break;
 	case Transaction::Cancelled :
-            kDebug() << "finished cancelled: " << status;
 	    emit kTransactionFinished(Cancelled);
-	    KDialog::slotButtonClicked(KDialog::Close);
-            break;
+        if (m_flags & CloseOnFinish)
+            done(QDialog::Rejected);
+        break;
 	case Transaction::Failed :
-	    kDebug() << "finished failed: " << status;
-	    emit kTransactionFinished(Failed);
-	    KDialog::slotButtonClicked(KDialog::Close);
+        kDebug() << "Failed.";
+        if (!m_handlingGpgOrEula) {
+            kDebug() << "Yep, we failed.";
+            emit kTransactionFinished(Failed);
+            if (m_flags & CloseOnFinish)
+                done(QDialog::Rejected);
+        }
 	    break;
 	case Transaction::KeyRequired :
 	case Transaction::EulaRequired :
@@ -254,8 +276,6 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint /
 	    KDialog::slotButtonClicked(KDialog::Close);
             break;
     }
-    if (m_flags & CloseOnFinish)
-        close();
 }
 
 #include "KpkTransaction.moc"
