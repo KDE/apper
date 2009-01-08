@@ -144,7 +144,7 @@ KpkUpdateIcon::notifyUpdates()
     
     updateNotify->setText(text);
     QStringList actions;
-    m_icon->setToolTip(i18np("%1 update available", "%1 updates available",m_updateList.size()).arg(m_updateList.size()));
+    m_icon->setToolTip(i18np("%1 update available", "%1 updates available",m_updateList.size()));
     actions << i18n("Review and update");
     actions << i18n("Remind me later");
     actions << i18n("Don't ask anymore.");
