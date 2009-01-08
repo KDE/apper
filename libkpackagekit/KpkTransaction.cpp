@@ -39,12 +39,16 @@ public:
 
 static const int stateCount = 7;
 
-KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent )
- : KDialog(parent), m_trans(trans), m_handlingGpgOrEula(false), d(new KpkTransactionPrivate)
+KpkTransaction::KpkTransaction( Transaction *trans, Behaviors flags, QWidget *parent )
+ : KDialog(parent),
+   m_trans(trans),
+   m_handlingGpgOrEula(false),
+   m_flags(flags),
+   d(new KpkTransactionPrivate)
 {
     d->ui.setupUi( mainWidget() );
 
-    // Set Cancel and custom buoton hide
+    // Set Cancel and custom button hide
     setButtons( KDialog::Cancel | KDialog::User1 | KDialog::Details );
     setButtonText( KDialog::User1, i18n("Hide") );
     setButtonToolTip( KDialog::User1, i18n("Allows you to hide the window but keeps running transaction task") );
@@ -55,7 +59,7 @@ KpkTransaction::KpkTransaction( Transaction *trans, bool modal, QWidget *parent 
     setTransaction(m_trans);
     enableButton(KDialog::Details, false);
     
-    if (modal) {
+    if (m_flags & Modal) {
         setWindowModality(Qt::WindowModal);
         enableButton(KDialog::User1, false);
     }
@@ -250,6 +254,8 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint /
 	    KDialog::slotButtonClicked(KDialog::Close);
             break;
     }
+    if (m_flags & CloseOnFinish)
+        close();
 }
 
 #include "KpkTransaction.moc"

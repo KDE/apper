@@ -34,10 +34,15 @@ class KDE_EXPORT KpkTransaction : public KDialog
     Q_OBJECT
     Q_ENUMS(ExitStatus)
 public:
-    /**
-     * When modal is true, the 'hide' button is disabled and the dialog is set to WindowModal.
-     **/
-    explicit KpkTransaction( Transaction  *trans, bool modal = false, QWidget *parent=0);
+    
+    enum BehaviorFlag {
+        Modal,
+        CloseOnFinish
+    };
+    
+    Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
+    
+    explicit KpkTransaction( Transaction  *trans, Behaviors flags = 0, QWidget *parent=0);
     ~KpkTransaction();
 
     void setTransaction(Transaction *trans);
@@ -55,6 +60,7 @@ signals:
 private:
     Transaction *m_trans;
     bool m_handlingGpgOrEula;
+    Behaviors m_flags;
     KpkTransactionPrivate* d;
 
 private slots:
@@ -69,5 +75,7 @@ private slots:
 protected slots:
     virtual void slotButtonClicked(int button);
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KpkTransaction::Behaviors)
 
 #endif

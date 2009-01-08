@@ -28,7 +28,7 @@
 #define UNIVERSAL_PADDING 6
 
 KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *parent )
- : KDialog(parent), m_waitPD(0)
+ : KDialog(parent)
 {
     setupUi( mainWidget() );
 
@@ -90,8 +90,8 @@ void KpkReviewChanges::checkTask()
 		connect( m_transactionReq, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
 		    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
 		// Create a Transaction dialog to don't upset the user
-        m_waitPD = new KpkTransaction(m_transactionReq, true, this);
-        m_waitPD->exec();
+        KpkTransaction* reqFinder = new KpkTransaction(m_transactionReq, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
+        reqFinder->exec();
 	    }
 	    else {
 	       removePackages();
@@ -115,8 +115,8 @@ void KpkReviewChanges::checkTask()
 		connect( m_transactionDep, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
 		    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
 		// Create a Transaction dialog to don't upset the user
-        m_waitPD = new KpkTransaction(m_transactionDep, true, this);
-        m_waitPD->exec();
+        KpkTransaction* reqFinder = new KpkTransaction(m_transactionDep, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
+        reqFinder->exec();
 	    }
 	    else {
 	        installPackages();
@@ -135,8 +135,6 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
 {
     qDebug() << "reqFinished";
     if (status == Transaction::Success) {
-	delete m_waitPD;
-	m_waitPD = 0;
 	if ( m_pkgModelReq->rowCount( QModelIndex() ) > 0 ) {
 	    KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be removed for dependencies"), m_pkgModelReq, this );
 	    connect( requimentD, SIGNAL( okClicked() ), this, SLOT( removePackages() ) );
@@ -147,8 +145,6 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
 	    removePackages();
     }
     else {
-	delete m_waitPD;
-	m_waitPD = 0;
 	// TODO inform the user
         qDebug() << "getReq Failed: " << status;
 	m_reqDepPackages.clear();
@@ -162,7 +158,7 @@ void KpkReviewChanges::removePackages()
 {
     qDebug() << "removePackages";
     if ( Transaction *t = m_client->removePackages(m_remPackages) ) {
-        KpkTransaction *frm = new KpkTransaction(t, true, this);
+        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( remFinished(KpkTransaction::ExitStatus) ) );
         frm->exec();
     }
@@ -175,8 +171,6 @@ void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, u
 {
     qDebug() << "depFinished";
     if (status == Transaction::Success) {
-	delete m_waitPD;
-	m_waitPD = 0;
 	if ( m_pkgModelDep->rowCount( QModelIndex() ) > 0 ) {
 	    KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be installed as dependencies"), m_pkgModelDep, this );
 	    connect( requimentD, SIGNAL( okClicked() ), this, SLOT( installPackages() ) );
@@ -187,8 +181,6 @@ void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, u
 	    installPackages();
     }
     else {
-	delete m_waitPD;
-	m_waitPD = 0;
         qDebug() << "getDep Failed: " << status;
 	m_reqDepPackages.clear();
 	m_addPackages.clear();
@@ -201,7 +193,7 @@ void KpkReviewChanges::installPackages()
 {
     qDebug() << "installPackages";
     if ( Transaction *t = m_client->installPackages(m_addPackages) ) {
-        KpkTransaction *frm = new KpkTransaction(t, true, this);
+        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( addFinished(KpkTransaction::ExitStatus) ) );
         frm->exec();
     }

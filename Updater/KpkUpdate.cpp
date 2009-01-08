@@ -75,7 +75,7 @@ void KpkUpdate::applyUpdates()
     if (m_pkg_model_updates->allSelected()) {
         // if so let's do system-update instead
         if ( Transaction *t = m_client->updateSystem() ) {
-            KpkTransaction *frm = new KpkTransaction(t, true, this);
+            KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish, this);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
             frm->exec();
@@ -85,7 +85,7 @@ void KpkUpdate::applyUpdates()
     } else {
         // else lets install only the selected ones
         if ( Transaction *t = m_client->updatePackages(packages) ) {
-            KpkTransaction *frm = new KpkTransaction(t, true, this);
+            KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish, this);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
             frm->exec();
@@ -99,7 +99,7 @@ void KpkUpdate::applyUpdates()
 void KpkUpdate::refresh()
 {
     if ( Transaction *t = m_client->refreshCache(true) ) {
-        KpkTransaction *frm = new KpkTransaction(t, true, this);
+        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                  this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
         frm->exec();
