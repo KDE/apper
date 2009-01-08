@@ -1,6 +1,9 @@
 [Global]
 IconName=applications-other
 Name=KPackageKit
+Name[pa]=ਕੇ-ਪੈਕੇਜ-ਕਿੱਟ
+Name[sv]=Kpackagekit
+Name[x-test]=xxKPackageKitxx
 Comment=KPackageKit
 Comment[pa]=ਕੇ-ਪੈਕੇਜ-ਕਿੱਟ
 Comment[sv]=Kpackagekit
