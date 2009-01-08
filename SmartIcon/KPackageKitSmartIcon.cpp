@@ -26,8 +26,12 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <QStringList>
+#include <KCModuleInfo>
+#include <KNotification>
+#include <QStringList>
 
 #include "KPackageKitSmartIcon.h"
+
 
 namespace kpackagekit {
 
@@ -41,6 +45,18 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
 
     // This MUST be called after connecting all the signals or slots!
     m_trayIcon->checkTransactionList();
+    m_updateIcon = new KpkUpdateIcon(this);
+}
+
+int KPackageKit_Smart_Icon::newInstance()
+{
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    
+    if (args->isSet("update")) {
+        kDebug() << "Running update checker";
+        m_updateIcon->checkUpdates();
+    }
+    return 0;
 }
 
 KPackageKit_Smart_Icon::~KPackageKit_Smart_Icon()

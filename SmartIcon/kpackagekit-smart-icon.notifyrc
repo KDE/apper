@@ -1,5 +1,6 @@
 [Global]
 IconName=applications-other
+Name=KPackageKit
 Comment=KPackageKit
 Comment[pa]=ਕੇ-ਪੈਕੇਜ-ਕਿੱਟ
 Comment[sv]=Kpackagekit
@@ -56,4 +57,16 @@ Name[sv]=En omstart av systemet krävs
 Name[tr]=Sistemin Yeniden Başlatılması Gerekiyor
 Name[uk]=Потрібне перезавантаження системи
 Name[x-test]=xxA System Restart is Requiredxx
+Action=Sound|Popup
+
+[Event/TransactionFailed]
+Name=A transaction failed to complete successfully
+Action=Sound|Popup
+
+[Event/UpdatesComplete]
+Name=Updates finished installing
+Action=Sound|Popup
+
+[Event/TransactionError]
+Name=A transaction error ocurred
 Action=Sound|Popup

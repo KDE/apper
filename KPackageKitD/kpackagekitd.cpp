@@ -68,10 +68,9 @@ void KPackageKitD::init()
     uint interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
 
     // 1160 -> 15 minutes
-    if (((m_client->getTimeSinceAction(Client::ActionRefreshCache) - interval > 1160) && interval != 0)
-        || !( act.contains(Client::ActionRefreshCache))) {
-        QProcess::execute("kpackagekit", QStringList() << "--smart-update");
-    }
+
+    if ( ( (m_client->getTimeSinceAction(Client::ActionRefreshCache) - interval > 1160) && interval != 0 ) || !( act.contains(Client::ActionRefreshCache) ) )
+        checkUpdates();
 
     if (!act.contains(Client::ActionRefreshCache)) {
         //if the backend does not suport refreshing cache let's don't do nothing
@@ -114,8 +113,8 @@ void KPackageKitD::read()
 
 void KPackageKitD::finished(PackageKit::Transaction::ExitStatus status, uint)
 {
-    if (status == Transaction::Success)
-        QProcess::execute("kpackagekit", QStringList() << "--smart-update");
+    if ( status == Transaction::Success )
+        QProcess::execute("kpackagekit-smart-icon", QStringList() << "--update");
     else
         // try again in 5 minutes
         m_qtimer->start(FIVE_MIN);

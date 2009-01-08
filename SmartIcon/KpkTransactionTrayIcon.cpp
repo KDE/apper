@@ -30,6 +30,7 @@
 #include <QMenu>
 #include <KRun>
 #include <QTimer>
+#include <KNotification>
 
 #include <KDebug>
 
@@ -77,28 +78,64 @@ void KpkTransactionTrayIcon::triggered(QAction *action)
     }
 }
 
+void KpkTransactionTrayIcon::showTransactionError(PackageKit::Client::ErrorType err, const QString &details)
+{
+    KNotification* errorNotification = new KNotification("TransactionError");
+    errorNotification->setFlags(KNotification::Persistent);
+    errorNotification->setText("<b>"+KpkStrings::error(err)+"</b><br>"+KpkStrings::errorMessage(err));
+    KIcon icon("dialog-error");
+    errorNotification->setPixmap(icon.pixmap(64, 64));
+    errorNotification->sendEvent();
+}
+
+//FIXME: Implement the proper dbus calls to restart things.
+void KpkTransactionTrayIcon::showRestartMessage(PackageKit::Client::RestartType type, const QString &details)
+{
+    if (type==Client::RestartNone)
+        return;
+    KNotification* notify = new KNotification("RestartRequired");
+    QString text;
+    QStringList events;
+    KIcon icon;
+    switch(type) {
+        case Client::RestartApplication:
+            text = i18n("Restart the application for system changes to take effect.");
+            //FIXME: Need a way to detect which program it is
+            icon = KIcon("window-close");
+            break;
+        case Client::RestartSession:
+            text = i18n("You must logout and log back in for system changes to take effect.");
+            icon = KIcon("system-restart"); //FIXME: find the logout icon
+            break;
+        case Client::RestartSystem:
+            text = i18n("Please restart your computer for system changes to take effect.");
+            icon = KIcon("system-restart");
+            break;
+        case Client::RestartNone:
+        case Client::UnknownRestartType:
+            return;
+    }
+    notify->setPixmap(icon.pixmap(64, 64));
+    notify->setText("<b>"+text+"</b><br>"+details);
+    notify->sendEvent();
+}
+
 void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
 {
-    if ( m_menu->isVisible() && tids.size() ) {
+    if (tids.size()) {
         m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );
-        connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
-            this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
         m_smartSTI->show();
+        connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
+                  this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
+        connect( tids.first(), SIGNAL( errorCode( PackageKit::Client::ErrorType, const QString) ),
+                  this, SLOT( showTransactionError(PackageKit::Client::ErrorType, const QString) ));
+        connect( tids.first(), SIGNAL( requireRestart(PackageKit::Client::RestartType, const QString) ),
+                  this, SLOT( showRestartMessage(PackageKit::Client::RestartType, const QString) ));
         updateMenu(tids);
-    }
-    else if ( tids.size() == 0){
-        kDebug() << "No more transactions";
+    } else {
         m_menu->hide();
-        // to avoid warning that the object was deleted in it's event handler
-        QTimer::singleShot(1, m_smartSTI, SLOT( hide() ) );
-        // this will start a timer to close the app
         m_menu->clear();
-    }
-    else {
-        m_smartSTI->setIcon( KpkIcons::statusIcon( tids.first()->status() ) );
-        connect( tids.first(), SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
-            this, SLOT( currentStatusChanged(PackageKit::Transaction::Status) ) );
-        m_smartSTI->show();
+        QTimer::singleShot(0, m_smartSTI, SLOT( hide() ) );
     }
 }
 
@@ -148,7 +185,7 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
             m_menu->hide();
             m_menu->clear();
             // to avoid warning that the object was deleted in it's event handler
-            QTimer::singleShot(1, m_smartSTI, SLOT( hide() ) );
+            //QTimer::singleShot(1, m_smartSTI, SLOT( hide() ) );
         }
     }
 }

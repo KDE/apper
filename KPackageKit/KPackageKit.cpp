@@ -26,6 +26,7 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <QStringList>
+#include <KCModuleInfo>
 
 #include "KPackageKit.h"
 
@@ -37,16 +38,14 @@ KPackageKit::KPackageKit()
     // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);
 
-    m_pkNotify = new KpkNotify(this);
-    connect(m_pkNotify, SIGNAL( appClose() ), this, SLOT( appClose() ) );
-
-    m_smartUpdate = new KpkSmartUpdate(this);
-    connect(m_smartUpdate, SIGNAL( showUpdates() ), m_pkNotify, SLOT( showUpdates() ) );
-    connect(m_smartUpdate, SIGNAL( autoUpdatesBeingInstalled(Transaction *) ), m_pkNotify, SLOT( installingAutoUpdates(Transaction *) ) );
-
-    m_pkUi = new KpkUi(this);
-    connect(m_pkNotify, SIGNAL( showUpdatesUi() ), m_pkUi, SLOT( showUpdatesUi() ) );
-    connect(m_pkUi, SIGNAL( appClose() ), this, SLOT( appClose() ) );
+    m_pkUi = new KCMultiDialog();
+    m_pkUi->setCaption( QString() );
+    m_pkUi->setWindowIcon( KIcon("applications-other") );
+    connect( m_pkUi, SIGNAL( finished() ), this, SLOT ( appClose() ) );
+    m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_addrm.desktop") );
+    m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_update.desktop") );
+    m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_settings.desktop") );
+    //connect(m_pkNotify, SIGNAL( showUpdatesUi() ), m_pkUi, SLOT( showUpdatesUi() ) );
 
     m_instFiles = new KpkInstallFiles(this);
     connect(m_instFiles, SIGNAL( appClose() ), this, SLOT( appClose() ) );
@@ -62,7 +61,7 @@ KPackageKit::~KPackageKit()
 void KPackageKit::appClose()
 {
     //check whether we can close
-    if ( m_pkNotify->canClose() && m_smartUpdate->canClose() && m_pkUi->canClose() && m_instFiles->canClose() )
+    if ( m_instFiles->canClose() )
 	quit();
 }
 
@@ -70,20 +69,17 @@ int KPackageKit::newInstance()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    if ( args->isSet("smart-update") ) {
-	kDebug() << "Smartly handling updates";
-	m_smartUpdate->smartUpdate();
-    }
-    else if ( args->count() ) {
-	// grab the list of files
-	KUrl::List urls;
-	for ( int i = 0; i < args->count(); i++)
-	    urls << args->url(i);
-	emit installFiles(urls);
+    if ( args->count() ) {
+        // grab the list of files
+        KUrl::List urls;
+        for ( int i = 0; i < args->count(); i++)
+            urls << args->url(i);
+        emit installFiles(urls);
     }
     else {
-	qDebug() << "SHOW UI!";
-	m_pkUi->showUi();
+        qDebug() << "SHOW UI!";
+        m_pkUi->show();
+        m_pkUi->raise();
     }
 
     args->clear();

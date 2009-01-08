@@ -23,7 +23,9 @@
 
 #include <KUniqueApplication>
 
+#include "KpkUpdateIcon.h"
 #include "KpkTransactionTrayIcon.h"
+
 
 namespace kpackagekit {
 
@@ -34,9 +36,11 @@ Q_OBJECT
 public:
     KPackageKit_Smart_Icon();
     virtual ~KPackageKit_Smart_Icon();
+    int newInstance();
 
 private:
     KpkTransactionTrayIcon *m_trayIcon;
+    KpkUpdateIcon* m_updateIcon;
 };
 
 }

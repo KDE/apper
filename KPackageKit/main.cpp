@@ -42,7 +42,6 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
 
     KCmdLineOptions options;
-    options.add( "smart-update", ki18n("Smartly display/install Updates") );
     options.add("+[package]", ki18n("Package file to install"));
     KCmdLineArgs::addCmdLineOptions(options);
 

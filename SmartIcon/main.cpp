@@ -41,6 +41,14 @@ int main(int argc, char **argv)
     about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"),"@");
 
     KCmdLineArgs::init(argc, argv, &about);
+    
+    KCmdLineOptions options;
+    //TODO: icky string
+    options.add( "update", ki18n("Perform an automatic system update according to system settings.") );
+    KCmdLineArgs::addCmdLineOptions(options);
+    
+    kpackagekit::KPackageKit_Smart_Icon::addCmdLineOptions();
+
     if (!kpackagekit::KPackageKit_Smart_Icon::start()) {
         //kDebug() << "KPackageKit-Smart-Icon is already running!";
         return 0;

@@ -40,6 +40,8 @@ private slots:
     void activated(QSystemTrayIcon::ActivationReason reason);
     void triggered(QAction *action);
     void currentStatusChanged(PackageKit::Transaction::Status status);
+    void showTransactionError(PackageKit::Client::ErrorType, const QString&);
+    void showRestartMessage(PackageKit::Client::RestartType, const QString&);
 
 private:
     void updateMenu(const QList<PackageKit::Transaction*> &tids);

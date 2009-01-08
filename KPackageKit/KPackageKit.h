@@ -22,10 +22,8 @@
 #define KPACKAGEKIT_H
 
 #include <KUniqueApplication>
+#include <KCMultiDialog>
 
-#include "KpkNotify.h"
-#include "KpkSmartUpdate.h"
-#include "KpkUi.h"
 #include "KpkInstallFiles.h"
 
 namespace kpackagekit {
@@ -47,9 +45,7 @@ public slots:
     void appClose();
 
 private:
-    KpkNotify *m_pkNotify;
-    KpkSmartUpdate *m_smartUpdate;
-    KpkUi *m_pkUi;
+    KCMultiDialog *m_pkUi;
     KpkInstallFiles *m_instFiles;
 };
 
