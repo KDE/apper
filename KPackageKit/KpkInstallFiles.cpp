@@ -25,7 +25,7 @@
 #include <KDebug>
 
 KpkInstallFiles::KpkInstallFiles( QObject *parent ) :
- QObject( parent ), m_running(0)
+ QObject( parent )
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 }
@@ -36,10 +36,6 @@ KpkInstallFiles::~KpkInstallFiles()
 
 void KpkInstallFiles::installFiles(KUrl::List &urls)
 {
-    // yeah we are running so please be
-    // polited and don't close the application :P
-    m_running++;
-
     QStringList files;
     QStringList notFiles;
     QString lastDirectory = urls.at(0).directory();
@@ -100,17 +96,12 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
 		connect( trans, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( installFilesFinished(KpkTransaction::ExitStatus) ) );
 		trans->show();
 		m_transactionFiles[trans] = files;
-		//to skip the running thing
-		return;
 	    }
 	    else {
 		KMessageBox::error( 0, i18n("Authentication failed"), i18n("KPackageKit") );
 	    }
 	}
     }
-    // ok we are not running anymore..
-    m_running--;
-    emit appClose();
 }
 
 void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
@@ -122,17 +113,13 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 	    break;
 	case KpkTransaction::Failed :
 	    m_transactionFiles.remove( (KpkTransaction *) sender() );
-	    KMessageBox::error( 0, i18n("Sorry, an error occurred"), i18n("KPackageKit") );
 	    break;
 	case KpkTransaction::ReQueue :
 	    kDebug() << "ReQueue";
 	    KpkTransaction *trans = (KpkTransaction *) sender();
 	    trans->setTransaction( Client::instance()->installFiles(m_transactionFiles[trans], false) );
-	    // return to avoid the running--
-	    return;
+	    break;
     }
-    m_running--;
-    emit appClose();
 }
 
 #include "KpkInstallFiles.moc"

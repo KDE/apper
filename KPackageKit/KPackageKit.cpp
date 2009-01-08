@@ -35,20 +35,14 @@ namespace kpackagekit {
 KPackageKit::KPackageKit()
  : KUniqueApplication()
 {
-    // this enables not quitting when closing a transaction ui
-    setQuitOnLastWindowClosed(false);
-
     m_pkUi = new KCMultiDialog();
     m_pkUi->setCaption( QString() );
     m_pkUi->setWindowIcon( KIcon("applications-other") );
-    connect( m_pkUi, SIGNAL( finished() ), this, SLOT ( appClose() ) );
     m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_addrm.desktop") );
     m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_update.desktop") );
     m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_settings.desktop") );
-    //connect(m_pkNotify, SIGNAL( showUpdatesUi() ), m_pkUi, SLOT( showUpdatesUi() ) );
 
     m_instFiles = new KpkInstallFiles(this);
-    connect(m_instFiles, SIGNAL( appClose() ), this, SLOT( appClose() ) );
     // register Meta Type so we can queue que connection
     qRegisterMetaType<KUrl::List>("KUrl::List &");
     connect(this, SIGNAL( installFiles(KUrl::List &) ), m_instFiles, SLOT( installFiles(KUrl::List &) ), Qt::QueuedConnection );
@@ -56,13 +50,6 @@ KPackageKit::KPackageKit()
 
 KPackageKit::~KPackageKit()
 {
-}
-
-void KPackageKit::appClose()
-{
-    //check whether we can close
-    if ( m_instFiles->canClose() )
-	quit();
 }
 
 int KPackageKit::newInstance()

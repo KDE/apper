@@ -170,7 +170,9 @@ void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
 
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)
 {
-    kDebug() << "errorCode: " << error;
+    Q_UNUSED(error);
+    Q_UNUSED(details);
+    /*kDebug() << "errorCode: " << error;
     // check to see if we are already handlying these errors
     if ( error == Client::GpgFailure || error == Client::NoLicenseAgreement )
 	if (m_handlingGpgOrEula)
@@ -181,9 +183,8 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
 
     // ignoring these as gpk does
     if ( error == Client::TransactionCancelled || error == Client::ProcessKill )
-	return;
-
-    KMessageBox::detailedSorry( this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify );
+	return;*/
+    
 }
 
 void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
