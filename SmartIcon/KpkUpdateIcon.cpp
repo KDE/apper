@@ -140,7 +140,7 @@ KpkUpdateIcon::notifyUpdates()
         text.append("<br><b>"+packageGroups[highState].at(i)->name()+"</b> - "+packageGroups[highState].at(i)->summary());
     i = m_updateList.size() - i;
     if (i>0)
-        text.append(i18n("<br><i>And %1 more updates</i>").arg(i));
+        text.append(i18np("<br><i>And another update</i>", "<br><i>And %1 more updates</i>", i));
     
     updateNotify->setText(text);
     QStringList actions;
