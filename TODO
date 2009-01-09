@@ -1,7 +1,5 @@
 A quick list of things that need to be done.
 
-Before the 4.2 release (Hard Freeze: Nov 17):
-
 - Push KPK into KDE.
   (Daniel)
 
@@ -17,12 +15,7 @@ Before the 4.2 release (Hard Freeze: Nov 17):
 - Find and hammer out all the hidden bugs in the model.
   (Trever)
 
-And after 4.2 (Jan 27):
-
 - Add a 'throbber' widget to show when tasks are in queue, eg, loading updates or waiting for a search to run
-  (Trever)
-
-- Move the notifications and automagic upgrade into the SmartIcon
   (Trever)
 
 - Keep a list of changes to be made that gets updated as AddRm selects packages

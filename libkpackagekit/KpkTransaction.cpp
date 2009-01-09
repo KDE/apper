@@ -149,6 +149,7 @@ void KpkTransaction::slotButtonClicked(int button)
         case KDialog::Cancel :
             kDebug() << "KDialog::Cancel";
             m_trans->cancel();
+            m_flags |= CloseOnFinish;
             break;
         case KDialog::User1 :
             kDebug() << "KDialog::User1";
