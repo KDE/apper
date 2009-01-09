@@ -181,9 +181,9 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
         m_handlingGpgOrEula = true;
         int ret = KMessageBox::warningYesNo(this, 
                                              details+
-                                             i18n("<br />Installing unsigned packages can compromise your system,"
-                                             "as it is impossible to verify if the software came from a trusted"
-                                             "source. Are you sure you want to continue instalation?"),
+                                             i18n("<br />Installing unsigned packages can compromise your system, "
+                                             "as it is impossible to verify if the software came from a trusted "
+                                             "source. Are you sure you want to continue installation?"),
                                              i18n("Installing unsigned software"));
         if (ret == KMessageBox::Yes) {
             emit kTransactionFinished(ReQueue);
