@@ -65,6 +65,7 @@ Action=Sound|Popup
 [Event/TransactionFailed]
 Name=A transaction failed to complete successfully
 Name[et]=Ülekande lõpetamine nurjus
+Name[fr]=L'échec d'une transaction n'a pas permis de terminer convenablement
 Name[gl]=Unha transacción non se completou satisfactoriamente
 Name[nds]=En Transakschoon lett sik nich mit Spood afsluten
 Name[pt]=Não foi possível terminar com sucesso uma transacção
@@ -76,6 +77,7 @@ Action=Sound|Popup
 [Event/UpdatesComplete]
 Name=Updates finished installing
 Name[et]=Uuendused on paigaldatud
+Name[fr]=Fin de l'installation des mises à jour
 Name[gl]=Rematou de instalarse as actualizacións
 Name[nds]=Opfrischen installeert
 Name[pt]=As actualizações acabar de ser instaladas
@@ -87,6 +89,7 @@ Action=Sound|Popup
 [Event/TransactionError]
 Name=A transaction error ocurred
 Name[et]=Tekkis ülekandeviga
+Name[fr]=Une erreur de transaction est apparue
 Name[gl]=Aconteceu un erro na transacción
 Name[nds]=Dat geev en Fehler bi en Transakschoon
 Name[pt]=Ocorreu um erro de transacção
