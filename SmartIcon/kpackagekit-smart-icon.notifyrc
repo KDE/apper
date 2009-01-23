@@ -90,6 +90,7 @@ Name[nds]=Opfrischen installeert
 Name[pt]=As actualizações acabar de ser instaladas
 Name[pt_BR]=As actualizações acabar de ser instaladas
 Name[sv]=Installering av uppdateringar klar
+Name[tr]=Güncellemelerin yüklenmesi tamamlandı
 Name[uk]=Встановлення оновлень завершено
 Action=Sound|Popup
 
@@ -103,5 +104,6 @@ Name[nds]=Dat geev en Fehler bi en Transakschoon
 Name[pt]=Ocorreu um erro de transacção
 Name[pt_BR]=Ocorreu um erro de transacção
 Name[sv]=Ett transaktionsfel uppstod
+Name[tr]=Bir aktarım hatası oluştu
 Name[uk]=Під час операції сталася помилка
 Action=Sound|Popup
