@@ -85,11 +85,8 @@
    </item>
    <item row="1" column="0" >
     <widget class="QPushButton" name="updatePB" >
-     <property name="enabled" >
-      <bool>false</bool>
-     </property>
      <property name="text" >
-      <string>Update System</string>
+      <string>Apply all available updates</string>
      </property>
     </widget>
    </item>

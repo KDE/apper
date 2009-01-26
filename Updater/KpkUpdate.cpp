@@ -50,16 +50,15 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 void KpkUpdate::checkEnableUpdateButton()
 {
     if (m_pkg_model_updates->selectedPackages().size() > 0) {
-        updatePB->setEnabled(true);
         emit changed(true);
     } else {
-        updatePB->setEnabled(false);
         emit changed(false);
     }
 }
 
 void KpkUpdate::on_updatePB_clicked()
 {
+    m_pkg_model_updates->checkAll();
     applyUpdates();
 }
 
@@ -116,7 +115,7 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
         m_pkg_model_updates->uncheckAll();
         m_updatesT = m_client->getUpdates();
         connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
-                m_pkg_model_updates, SLOT(addSelectedPackage(PackageKit::Package *)));
+                m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
         connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
                 this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
     }
