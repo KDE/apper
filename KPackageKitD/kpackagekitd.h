@@ -49,6 +49,7 @@ private:
     KDirWatch *m_confWatch;
     Client *m_client;
     Transaction *m_refreshCacheT;
+    bool systemIsReady();
 };
 
 #endif

@@ -26,6 +26,9 @@
 #include <KConfigGroup>
 #include <QDateTime>
 #include <limits.h>
+#include <solid/networking.h>
+#include <solid/acadapter.h>
+#include <solid/powermanagement.h>
 
 #define FIVE_MIN 360000
 
@@ -120,8 +123,29 @@ void KPackageKitD::finished(PackageKit::Transaction::ExitStatus status, uint)
         m_qtimer->start(FIVE_MIN);
 }
 
+bool KPackageKitD::systemIsReady()
+{
+    // test whether network is connected
+    if ( Solid::Networking::status() != Solid::Networking::Connected  &&
+        Solid::Networking::status() != Solid::Networking::Unknown ) {
+        return false;
+    }
+
+    // check how applications should behave (e.g. on battery power)
+    if ( Solid::PowerManagement::appShouldConserveResources() )
+        return false;
+
+    return true;
+}
+
 void KPackageKitD::checkUpdates()
 {
+    // check whether system is ready for an updates check
+    if (!systemIsReady()) {
+        m_qtimer->start(FIVE_MIN);
+        return;
+    }
+
     m_refreshCacheT = m_client->refreshCache(true);
     if (m_refreshCacheT == 0) {
         // try again in 5 minutes
