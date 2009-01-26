@@ -248,6 +248,8 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
 
 void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
 {
+    d->ui.progressBar->setMaximum(100);
+    d->ui.progressBar->setValue(100);
     switch(status) {
         case Transaction::Success :
 	    emit kTransactionFinished(Success);
