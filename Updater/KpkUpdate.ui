@@ -43,6 +43,9 @@
       <property name="itemsExpandable" >
        <bool>true</bool>
       </property>
+      <property name="sortingEnabled" >
+       <bool>true</bool>
+      </property>
       <property name="animated" >
        <bool>false</bool>
       </property>
@@ -50,7 +53,7 @@
        <bool>false</bool>
       </property>
       <property name="headerHidden" >
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="expandsOnDoubleClick" >
        <bool>true</bool>
@@ -107,6 +110,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
   <customwidget>
    <class>KTextBrowser</class>
    <extends>QTextBrowser</extends>
