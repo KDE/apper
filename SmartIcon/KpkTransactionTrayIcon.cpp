@@ -65,7 +65,7 @@ void KpkTransactionTrayIcon::checkTransactionList()
 void KpkTransactionTrayIcon::triggered(QAction *action)
 {
     if ( m_transAction.contains(action) ) {
-        KpkTransaction *transaction = new KpkTransaction( m_transAction[action]);
+        KpkTransaction *transaction = new KpkTransaction(m_transAction[action]);
         transaction->show();
     }
     else {
@@ -74,7 +74,7 @@ void KpkTransactionTrayIcon::triggered(QAction *action)
             frm->show();
         }
         else
-            KMessageBox::error( m_menu, i18n("Authentication failed"), i18n("KPackageKit") );
+            KMessageBox::error( m_menu, i18n("Authentication failed"), i18n("KPackageKit"));
     }
 }
 
@@ -83,9 +83,10 @@ void KpkTransactionTrayIcon::showTransactionError(PackageKit::Client::ErrorType 
     kDebug() << "Transaction Error:" << err << details;
     KNotification* errorNotification = new KNotification("TransactionError");
     errorNotification->setFlags(KNotification::Persistent);
-    errorNotification->setText("<b>"+KpkStrings::error(err)+"</b><br>"+KpkStrings::errorMessage(err));
+    errorNotification->setText("<b>"+KpkStrings::error(err)+"</b><br />"+KpkStrings::errorMessage(err));
     KIcon icon("dialog-error");
-    errorNotification->setPixmap(icon.pixmap(64, 64));
+    // Use QSize for proper icon
+    errorNotification->setPixmap(icon.pixmap(QSize(128, 128)));
     errorNotification->sendEvent();
 }
 
@@ -116,8 +117,9 @@ void KpkTransactionTrayIcon::showRestartMessage(PackageKit::Client::RestartType 
         case Client::UnknownRestartType:
             return;
     }
-    notify->setPixmap(icon.pixmap(64, 64));
-    notify->setText("<b>"+text+"</b><br>"+details);
+    // Use QSize for proper icon
+    notify->setPixmap(icon.pixmap(QSize(128, 128)));
+    notify->setText("<b>"+text+"</b><br />"+details);
     notify->sendEvent();
 }
 

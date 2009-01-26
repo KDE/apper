@@ -127,7 +127,7 @@ void KpkSettings::load()
 
     uint autoUpdate = checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault);
     ret = autoCB->findData(autoUpdate);
-    if ( ret == -1 )
+    if (ret == -1)
         // this is if someone change the file by hand...
         autoCB->setCurrentIndex( autoCB->findData(KpkEnum::AutoUpdateDefault) );
     else

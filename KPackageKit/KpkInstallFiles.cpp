@@ -25,7 +25,7 @@
 #include <KDebug>
 
 KpkInstallFiles::KpkInstallFiles( QObject *parent ) :
- QObject( parent )
+QObject( parent )
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 }
@@ -43,64 +43,64 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
     bool showFullPath = false;
     bool showFullPathNotFiles = false;
     for ( int i = 0; i < urls.count(); i++) {
-	if ( QFileInfo( urls.at(i).path() ).isFile() ) {
-	    qDebug() << "isFIle";
-	    files << urls.at(i).path();
-	    // if the path of all the files is the same
-	    // why bothering the user showing a full path?
-	    if ( urls.at(i).directory() != lastDirectory )
-		showFullPath = true;
-	    lastDirectory = urls.at(i).directory();
-	}
-	else {
-	    qDebug() << "~isFIle";
-	    notFiles << urls.at(i).path();
-	    if ( urls.at(i).directory() != lastDirectoryNotFiles )
-		showFullPathNotFiles = true;
-	    lastDirectoryNotFiles =urls.at(i).directory();
-	}
+        if ( QFileInfo( urls.at(i).path() ).isFile() ) {
+            qDebug() << "isFIle";
+            files << urls.at(i).path();
+            // if the path of all the files is the same
+            // why bothering the user showing a full path?
+            if ( urls.at(i).directory() != lastDirectory )
+                showFullPath = true;
+            lastDirectory = urls.at(i).directory();
+        }
+        else {
+            qDebug() << "~isFIle";
+            notFiles << urls.at(i).path();
+            if ( urls.at(i).directory() != lastDirectoryNotFiles )
+                showFullPathNotFiles = true;
+            lastDirectoryNotFiles =urls.at(i).directory();
+        }
     }
 
     // check if there were "false" files
     if ( notFiles.count() ) {
-	if (!showFullPathNotFiles)
-	    for(int i = 0; i < notFiles.count(); i++) {
-		notFiles[i] = KUrl( notFiles.at(i) ).fileName();
-	    }
-	    KMessageBox::errorList(0,
-		i18np("This item is not supported by your backend or it is not a file", "These items are not supported by your backend or they are not files", notFiles.count() ),
-		notFiles,
-		i18n("Impossible to install")
-	    );
+        if (!showFullPathNotFiles)
+            for(int i = 0; i < notFiles.count(); i++) {
+                notFiles[i] = KUrl( notFiles.at(i) ).fileName();
+            }
+            KMessageBox::errorList(0,
+                i18np("This item is not supported by your backend or it is not a file", "These items are not supported by your backend or they are not files", notFiles.count() ),
+                notFiles,
+                i18n("Impossible to install")
+            );
     }
-	
+
     if ( files.count() ) {
-	QStringList displayFiles = files;
-	if (!showFullPath)
-	    for(int i = 0; i < displayFiles.count(); i++) {
-		displayFiles[i] = KUrl( displayFiles.at(i) ).fileName();
-	    }
+        QStringList displayFiles = files;
+        if (!showFullPath)
+            for(int i = 0; i < displayFiles.count(); i++) {
+                displayFiles[i] = KUrl( displayFiles.at(i) ).fileName();
+            }
 
-	KGuiItem installBt = KStandardGuiItem::yes();
-	installBt.setText( i18n("Install") );
+        KGuiItem installBt = KStandardGuiItem::yes();
+        installBt.setText( i18n("Install") );
 
-	if ( KMessageBox::questionYesNoList(0,
-			i18np("Do you want to install this file?", "Do you want to install these files?", displayFiles.count() ),
-			displayFiles,
-			i18n("Install?"),
-			installBt
-      
-		) == KMessageBox::Yes ) {
-	    if ( Transaction *t = Client::instance()->installFiles(files, true) ) {
-		KpkTransaction *trans = new KpkTransaction(t);
-		connect( trans, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( installFilesFinished(KpkTransaction::ExitStatus) ) );
-		trans->show();
-		m_transactionFiles[trans] = files;
-	    }
-	    else {
-		KMessageBox::error( 0, i18n("Authentication failed"), i18n("KPackageKit") );
-	    }
-	}
+        if ( KMessageBox::questionYesNoList(0,
+                        i18np("Do you want to install this file?", "Do you want to install these files?", displayFiles.count() ),
+                        displayFiles,
+                        i18n("Install?"),
+                        installBt
+
+                ) == KMessageBox::Yes ) {
+            if ( Transaction *t = Client::instance()->installFiles(files, true) ) {
+                KpkTransaction *trans = new KpkTransaction(t);
+                connect( trans, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( installFilesFinished(KpkTransaction::ExitStatus) ) );
+                trans->show();
+                m_transactionFiles[trans] = files;
+            }
+            else {
+                KMessageBox::error( 0, i18n("Authentication failed"), i18n("KPackageKit") );
+            }
+        }
     }
 }
 
@@ -108,22 +108,22 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
     switch (status) {
-	case KpkTransaction::Success :
-	case KpkTransaction::Cancelled :
+        case KpkTransaction::Success :
+        case KpkTransaction::Cancelled :
         kDebug() << "Success";
-	    m_transactionFiles.remove( (KpkTransaction *) sender() );
-	    break;
-	case KpkTransaction::Failed :
+            m_transactionFiles.remove( (KpkTransaction *) sender() );
+            break;
+        case KpkTransaction::Failed :
         kDebug() << "Failure";
-	    m_transactionFiles.remove( (KpkTransaction *) sender() );
-	    break;
-	case KpkTransaction::ReQueue :
-	    kDebug() << "ReQueue";
-	    KpkTransaction *trans = (KpkTransaction *) sender();
+            m_transactionFiles.remove( (KpkTransaction *) sender() );
+            break;
+        case KpkTransaction::ReQueue :
+            kDebug() << "ReQueue";
+            KpkTransaction *trans = (KpkTransaction *) sender();
         Transaction* t = Client::instance()->installFiles(m_transactionFiles[trans], false);
         if (t)
             trans->setTransaction( t );
-	    break;
+            break;
     }
 }
 

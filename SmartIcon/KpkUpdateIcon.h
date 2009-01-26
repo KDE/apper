@@ -24,15 +24,17 @@
 #include <QObject>
 #include <KSystemTrayIcon>
 #include <KCMultiDialog>
+#include <KNotification>
 #include <QList>
 #include <QPackageKit>
 
 class KpkUpdateIcon : public QObject {
-    
+
     Q_OBJECT
-    
+
     public:
         KpkUpdateIcon(QObject* parent=0);
+        ~KpkUpdateIcon();
 
     public slots:
         void checkUpdates();
@@ -42,23 +44,24 @@ class KpkUpdateIcon : public QObject {
         void updateListed(PackageKit::Package*);
         void updateCheckFinished(PackageKit::Transaction::ExitStatus, uint runtime);
         void handleUpdateAction(uint action);
+        void handleUpdateActionClosed();
         void notifyUpdates();
         void hideUpdates();
         void showSettings();
         void updaterClosed(int);
         void showUpdates( QSystemTrayIcon::ActivationReason = QSystemTrayIcon::Unknown);
         void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-	void distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString&);
-	void handleDistroUpgradeAction(uint action);
-	void distroUpgradeError( QProcess::ProcessError error );
-	void distroUpgradeFinished( int exitCode, QProcess::ExitStatus exitStatus );
-
-
+        void distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString&);
+        void handleDistroUpgradeAction(uint action);
+        void distroUpgradeError( QProcess::ProcessError error );
+        void distroUpgradeFinished( int exitCode, QProcess::ExitStatus exitStatus );
 
     private:
         KSystemTrayIcon* m_icon;
+        KNotification *m_updateNotify;
         KCMultiDialog* m_updateView;
         QList<PackageKit::Package*> m_updateList;
+        bool m_checking;
 	QProcess* m_distroUpgradeProcess;
 };
 

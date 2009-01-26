@@ -51,7 +51,7 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
 int KPackageKit_Smart_Icon::newInstance()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    
+
     if (args->isSet("update")) {
         kDebug() << "Running update checker";
         m_updateIcon->checkUpdates();

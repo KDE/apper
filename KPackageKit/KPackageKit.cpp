@@ -36,16 +36,18 @@ KPackageKit::KPackageKit()
  : KUniqueApplication()
 {
     m_pkUi = new KCMultiDialog();
-    m_pkUi->setCaption( QString() );
-    m_pkUi->setWindowIcon( KIcon("applications-other") );
-    m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_addrm.desktop") );
-    m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_update.desktop") );
-    m_pkUi->addModule( KCModuleInfo::KCModuleInfo("kpk_settings.desktop") );
+    m_pkUi->setCaption(QString());
+    m_pkUi->setWindowIcon(KIcon("applications-other"));
+    m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_addrm.desktop"));
+    m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
+    m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
 
     m_instFiles = new KpkInstallFiles(this);
     // register Meta Type so we can queue que connection
     qRegisterMetaType<KUrl::List>("KUrl::List &");
-    connect(this, SIGNAL( installFiles(KUrl::List &) ), m_instFiles, SLOT( installFiles(KUrl::List &) ), Qt::QueuedConnection );
+    connect(this, SIGNAL(installFiles(KUrl::List &)),
+            m_instFiles, SLOT(installFiles(KUrl::List &)),
+            Qt::QueuedConnection);
 }
 
 KPackageKit::~KPackageKit()
@@ -56,14 +58,13 @@ int KPackageKit::newInstance()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    if ( args->count() ) {
+    if (args->count()) {
         // grab the list of files
         KUrl::List urls;
-        for ( int i = 0; i < args->count(); i++)
+        for (int i = 0; i < args->count(); i++)
             urls << args->url(i);
         emit installFiles(urls);
-    }
-    else {
+    } else {
         qDebug() << "SHOW UI!";
         m_pkUi->show();
         m_pkUi->raise();
