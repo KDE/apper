@@ -36,6 +36,7 @@ class KpkUpdateIcon : public QObject {
 
     public slots:
         void checkUpdates();
+        void checkDistroUpgrades();
 
     private slots:
         void updateListed(PackageKit::Package*);
@@ -47,11 +48,18 @@ class KpkUpdateIcon : public QObject {
         void updaterClosed(int);
         void showUpdates( QSystemTrayIcon::ActivationReason = QSystemTrayIcon::Unknown);
         void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+	void distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString&);
+	void handleDistroUpgradeAction(uint action);
+	void distroUpgradeError( QProcess::ProcessError error );
+	void distroUpgradeFinished( int exitCode, QProcess::ExitStatus exitStatus );
+
+
 
     private:
         KSystemTrayIcon* m_icon;
         KCMultiDialog* m_updateView;
         QList<PackageKit::Package*> m_updateList;
+	QProcess* m_distroUpgradeProcess;
 };
 
 #endif

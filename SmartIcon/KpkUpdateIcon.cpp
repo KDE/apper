@@ -39,6 +39,7 @@ KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
     connect(m_icon, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
              this, SLOT( showUpdates( QSystemTrayIcon::ActivationReason ) ));
     m_updateView = 0;
+    m_distroUpgradeProcess = 0;
 
     m_icon->actionCollection()->addAction(KStandardAction::Preferences, this, SLOT( showSettings() ));
     m_icon->contextMenu()->addAction(m_icon->actionCollection()->action(KStandardAction::name(KStandardAction::Preferences)));
@@ -101,6 +102,15 @@ KpkUpdateIcon::checkUpdates()
              this, SLOT( updateListed(PackageKit::Package*) ) );
     connect(t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
             this, SLOT( updateCheckFinished(PackageKit::Transaction::ExitStatus, uint ) ));
+}
+
+void
+KpkUpdateIcon::checkDistroUpgrades()
+{
+    Transaction* t = Client::instance()->getDistroUpgrades();
+
+    connect(t, SIGNAL( distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString& ) ),
+             this, SLOT( distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString& ) ) );
 }
 
 void
@@ -249,3 +259,85 @@ void KpkUpdateIcon::handleUpdateAction(uint action)
             break;
     }
 }
+
+//TODO: Add this to the updater UI as well
+void KpkUpdateIcon::distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description)
+{
+    kDebug() << "Distro upgrade found!" << name << description;
+    Q_UNUSED(type);
+    KNotification* notify = new KNotification("DistroUpgradeAvailable", m_updateView, KNotification::Persistent | KNotification::CloseWhenWidgetActivated);
+
+    QString text;
+
+    text =  i18n("Distribution upgrade available") + "<br/>";
+    text += "<b>" + name + "</b><br/>";
+    text += description;
+
+    notify->setText(text);
+
+    QStringList actions;
+    actions << i18n("Start upgrade now");
+    notify->setActions(actions);
+    connect(notify, SIGNAL(activated(uint)), this, SLOT(handleDistroUpgradeAction(uint)));
+    notify->sendEvent();
+}
+
+void KpkUpdateIcon::handleDistroUpgradeAction(uint action)
+{
+    switch(action) {
+        case 1:
+            if ( m_distroUpgradeProcess ) {
+                return;
+            }
+            m_distroUpgradeProcess = new QProcess;
+            connect (m_distroUpgradeProcess, SIGNAL (error ( QProcess::ProcessError )),
+                this, SLOT(distroUpgradeError( QProcess::ProcessError  ) ));
+            connect (m_distroUpgradeProcess, SIGNAL (finished(int, QProcess::ExitStatus)),
+                this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus  ) ));
+
+            m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
+            break;
+        // perhaps more actions needed in the future
+    }
+}
+
+void KpkUpdateIcon::distroUpgradeFinished( int exitCode, QProcess::ExitStatus exitStatus )
+{
+    KNotification* notify = new KNotification("DistroUpgradeFinished", m_updateView, KNotification::Persistent | KNotification::CloseWhenWidgetActivated);
+    if ( exitStatus == QProcess::NormalExit && exitCode == 0 ) {
+        notify->setPixmap(KIcon("security-high").pixmap(64, 64));
+        notify->setText(i18n("Distribution upgrade finished. "));
+    } else if ( exitStatus == QProcess::NormalExit ) {
+        notify->setPixmap(KIcon("dialog-warning").pixmap(64, 64));
+        notify->setText(i18n("Distribution upgrade process exited with code %1.", exitCode));
+    }/* else {
+        notify->setText(i18n("Distribution upgrade didn't exit normally, the process probably crashed. "));
+    }*/
+    notify->sendEvent();
+    m_distroUpgradeProcess->deleteLater();
+    m_distroUpgradeProcess = 0;
+}
+
+
+void KpkUpdateIcon::distroUpgradeError( QProcess::ProcessError error )
+{
+    QString text;
+
+    KNotification* notify = new KNotification("DistroUpgradeError", m_updateView, KNotification::Persistent | KNotification::CloseWhenWidgetActivated);
+    switch(error) {
+        case QProcess::FailedToStart:
+            text = i18n("The distribution upgrade process failed to start."); 
+            break;
+        case QProcess::Crashed:
+            text = i18n("The distribution upgrade process crashed some time after starting successfully.") ;
+            break;
+        default:
+            text = i18n("The distribution upgrade process failed with an unknown error.");
+            break;
+    }
+    notify->setPixmap(KIcon("dialog-error").pixmap(64,64));
+    notify->setText(text);
+    notify->sendEvent();
+}
+
+

@@ -55,6 +55,7 @@ int KPackageKit_Smart_Icon::newInstance()
     if (args->isSet("update")) {
         kDebug() << "Running update checker";
         m_updateIcon->checkUpdates();
+        m_updateIcon->checkDistroUpgrades();
     }
     return 0;
 }

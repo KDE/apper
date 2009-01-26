@@ -107,3 +107,15 @@ Name[sv]=Ett transaktionsfel uppstod
 Name[tr]=Bir aktarım hatası oluştu
 Name[uk]=Під час операції сталася помилка
 Action=Sound|Popup
+
+[Event/DistroUpgradeAvailable]
+Name=A distribution upgrade is available
+Action=Sound|Popup
+
+[Event/DistroUpgradeFinished]
+Name=The distribution upgrade completed
+Action=Sound|Popup
+
+[Event/DistroUpgradeError]
+Name=The distribution upgrade completed with an error
+Action=Sound|Popup
