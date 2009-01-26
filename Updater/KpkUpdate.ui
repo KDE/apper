@@ -84,21 +84,21 @@
     </widget>
    </item>
    <item row="1" column="0" >
-    <widget class="QPushButton" name="updatePB" >
+    <widget class="KPushButton" name="updatePB" >
      <property name="text" >
       <string>Apply all available updates</string>
      </property>
     </widget>
    </item>
    <item row="1" column="1" >
-    <widget class="QPushButton" name="refreshPB" >
+    <widget class="KPushButton" name="refreshPB" >
      <property name="text" >
       <string>Refresh</string>
      </property>
     </widget>
    </item>
    <item row="1" column="2" >
-    <widget class="QPushButton" name="historyPB" >
+    <widget class="KPushButton" name="historyPB" >
      <property name="text" >
       <string>History</string>
      </property>

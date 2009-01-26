@@ -30,6 +30,10 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 {
     setupUi( this );
     detailsDW->hide();
+    
+    updatePB->setIcon(KIcon("package-update"));
+    refreshPB->setIcon(KIcon("view-refresh"));
+    historyPB->setIcon(KIcon("view-history"));
 
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 
