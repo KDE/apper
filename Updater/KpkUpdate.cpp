@@ -23,11 +23,18 @@
 
 #include <KDebug>
 #include <KMessageBox>
+#include <KProgressDialog>
+#include <KColorScheme>
 #include <solid/powermanagement.h>
+#include <solid/device.h>
+#include <solid/acadapter.h>
 
 #define UNIVERSAL_PADDING 6
 
-KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
+KpkUpdate::KpkUpdate( QWidget *parent )
+    : QWidget( parent ),
+    m_distroUpgradeProcess(0),
+    m_distroUpgradeDialog(0)
 {
     setupUi( this );
     detailsDW->hide();
@@ -50,6 +57,102 @@ KpkUpdate::KpkUpdate( QWidget *parent ) : QWidget( parent )
 
     // check to see what roles the backend
     m_actions = m_client->getActions();
+    
+    // Setup the distro upgrade banner
+    //TODO: Find the distribution's logo
+    distroTitle->setPixmap(KIcon("system-software-update"));
+    /*QPalette titleColors(distroTitle->palette());
+    //FIXME: This is a bug in kdelibs. The background color doesn't get changed.
+    KColorScheme::adjustBackground(titleColors, KColorScheme::PositiveBackground);
+    distroTitle->setPalette(titleColors);*/
+    distroTitle->hide();
+    distroDescription->hide();
+    distroUpgradeBtn->hide();
+    
+    connect(distroUpgradeBtn, SIGNAL(clicked(bool)), this, SLOT(startDistroUpgrade()));
+    
+    
+}
+
+void KpkUpdate::startDistroUpgrade()
+{
+    QList<Solid::Device> powerPlugs = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter);
+    bool pluggedIn = true;
+    bool hasBattery = Solid::Device::listFromType(Solid::DeviceInterface::Battery).size()>0;
+    foreach(const Solid::Device dev, powerPlugs)
+        if (!dev.as<Solid::AcAdapter>()->isPlugged())
+            pluggedIn = false;
+    
+    QString warning = i18n("You are about to upgrade your distribution to the latest version. "
+    "This is usually a very lengthy process and takes a lot longer than "
+    "simply upgrading your packages.");
+    
+    if (!pluggedIn)
+        warning+=" "+i18n("It is recommended to plug in your computer before proceeding.");
+    else if (hasBattery)
+        warning+=" "+i18n("It is recommended that you keep your computer plugged in while the upgrade is being performed.");
+    
+    if (KMessageBox::warningContinueCancel(this,warning) == KMessageBox::Continue) {
+        m_distroUpgradeProcess = new QProcess;
+        connect (m_distroUpgradeProcess, SIGNAL (error ( QProcess::ProcessError )),
+            this, SLOT(distroUpgradeError( QProcess::ProcessError  ) ));
+        connect (m_distroUpgradeProcess, SIGNAL (finished(int, QProcess::ExitStatus)),
+            this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus  ) ));
+
+        
+        m_distroUpgradeDialog = new KProgressDialog(this);
+        m_distroUpgradeDialog->setLabelText("Waiting for distribution upgrade to complete");
+        m_distroUpgradeDialog->showCancelButton(false);
+        m_distroUpgradeDialog->setModal(true);
+        m_distroUpgradeDialog->progressBar()->setMaximum(0); //Makes it a busy indicator
+        m_distroUpgradeDialog->progressBar()->setMinimum(0);
+        m_distroUpgradeDialog->show();
+        m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
+        suppressSleep(true);
+    }
+}
+
+void KpkUpdate::distroUpgradeError(QProcess::ProcessError error)
+{
+    QString text;
+    switch(error) {
+        case QProcess::FailedToStart:
+            KMessageBox::error(this, i18n("The distribution upgrade process failed to start."));
+            break;
+        case QProcess::Crashed:
+            KMessageBox::error(this, i18n("The distribution upgrade process crashed some time after starting successfully."));
+            break;
+        default:
+            KMessageBox::error(this, i18n("The distribution upgrade process failed with an unknown error."));
+            break;
+    }
+}
+
+void KpkUpdate::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    if ( exitStatus == QProcess::NormalExit && exitCode == 0 ) {
+        KMessageBox::information(this, i18n("Distribution upgrade complete."));
+    } else if ( exitStatus == QProcess::NormalExit ) {
+        KMessageBox::error(this, i18n("Distribution upgrade process exited with code %1.", exitCode));
+    }
+    m_distroUpgradeProcess->deleteLater();
+    m_distroUpgradeProcess = 0;
+    m_distroUpgradeDialog->close();
+    m_distroUpgradeDialog->deleteLater();
+    m_distroUpgradeDialog = 0;
+    suppressSleep(false);
+}
+
+//TODO: We should add some kind of configuration to let users show unstable distributions
+//That way, by default, users only see stable ones.
+void KpkUpdate::distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description)
+{
+    Q_UNUSED(type)
+    distroDescription->setText(description);
+    distroUpgradeBtn->setText(i18n("Upgrade to %1", name));
+    distroTitle->show();
+    distroDescription->show();
+    distroUpgradeBtn->show();
 }
 
 void KpkUpdate::checkEnableUpdateButton()
@@ -146,6 +249,10 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
                 m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
         connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
                 this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+        Transaction* t = m_client->getDistroUpgrades();
+        connect(t,
+                 SIGNAL( distroUpgrade( PackageKit::Client::UpgradeType, const QString&, const QString& ) ),
+             this, SLOT( distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString& ) ) );
     }
 }
 

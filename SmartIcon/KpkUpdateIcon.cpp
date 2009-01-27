@@ -317,7 +317,6 @@ void KpkUpdateIcon::handleUpdateActionClosed()
     m_checking = false;
 }
 
-//TODO: Add this to the updater UI as well
 void KpkUpdateIcon::distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description)
 {
     kDebug() << "Distro upgrade found!" << name << description;

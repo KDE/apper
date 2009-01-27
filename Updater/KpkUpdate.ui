@@ -5,15 +5,47 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>360</height>
+    <width>449</width>
+    <height>410</height>
    </rect>
   </property>
   <property name="locale" >
    <locale country="UnitedStates" language="English" />
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" >
-   <item row="0" column="0" colspan="3" >
+  <layout class="QVBoxLayout" name="verticalLayout_2" >
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout" >
+     <item>
+      <widget class="KTitleWidget" name="distroTitle" >
+       <property name="text" >
+        <string>Distribution Upgrade Available!</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout" >
+       <item>
+        <widget class="QLabel" name="distroDescription" >
+         <property name="text" >
+          <string/>
+         </property>
+         <property name="wordWrap" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KPushButton" name="distroUpgradeBtn" >
+         <property name="text" >
+          <string>Upgrade to %1</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QSplitter" name="splitter" >
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
@@ -86,26 +118,30 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="KPushButton" name="updatePB" >
-     <property name="text" >
-      <string>Apply all available updates</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" >
-    <widget class="KPushButton" name="refreshPB" >
-     <property name="text" >
-      <string>Refresh</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2" >
-    <widget class="KPushButton" name="historyPB" >
-     <property name="text" >
-      <string>History</string>
-     </property>
-    </widget>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2" >
+     <item>
+      <widget class="KPushButton" name="updatePB" >
+       <property name="text" >
+        <string>Apply all available updates</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KPushButton" name="refreshPB" >
+       <property name="text" >
+        <string>Refresh</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KPushButton" name="historyPB" >
+       <property name="text" >
+        <string>History</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -119,6 +155,11 @@
    <class>KTextBrowser</class>
    <extends>QTextBrowser</extends>
    <header>ktextbrowser.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTitleWidget</class>
+   <extends>QWidget</extends>
+   <header>ktitlewidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
