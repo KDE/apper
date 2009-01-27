@@ -27,8 +27,5 @@ A quick list of things that need to be done.
 - Use a KExtendibleItemDelegate for the package detail view.
   (Daniel)
 
-- Don't download updates when there isn't a network
-  (packagekit list)
-
-- Query solid to see if installation should occur, depending on Solid::PowerManagement::appShouldConserveResources()
-  (packagekit list)
+- Implement and enforce hughsie's law
+  (Trever)
