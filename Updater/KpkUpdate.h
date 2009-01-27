@@ -58,6 +58,7 @@ private slots:
 
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
+    void updateFinished(KpkTransaction::ExitStatus status);
 
 private:
     KpkPackageModel *m_pkg_model_updates;
@@ -65,6 +66,8 @@ private:
     Client *m_client;
     Transaction *m_updatesT;
     Client::Actions m_actions;
+    int m_inhibitCookie;
+    void suppressSleep(bool enable);
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);

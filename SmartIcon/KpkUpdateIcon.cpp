@@ -29,11 +29,15 @@
 #include <KStandardAction>
 #include <KActionCollection>
 #include <KAction>
+#include <solid/powermanagement.h>
 
 using namespace PackageKit;
 
 KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
-    : QObject(parent), m_updateNotify(0), m_checking(false)
+    : QObject(parent),
+    m_updateNotify(0),
+    m_checking(false),
+    m_inhibitCookie(-1)
 {
     m_icon = new KSystemTrayIcon("applications-other");
     connect(m_icon, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
@@ -235,6 +239,7 @@ KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uint run
                 }
                 if (updateList.size()>0) {
                     if (Transaction* t = Client::instance()->updatePackages(updateList)) {
+                        suppressSleep(true);
                         connect(t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
                                 this, SLOT( updatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
                         //autoUpdatesInstalling(t);
@@ -244,7 +249,7 @@ KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uint run
                         autoInstallNotify->setPixmap(KpkIcons::packageIcon(highState).pixmap(QSize(128,128)));
                         autoInstallNotify->sendEvent();
                     } else {
-                        kDebug() << "security Trans failed." << t;
+                        kDebug() << "security Trans failed.";
                         notifyUpdates();
                     }
                 } else {
@@ -262,6 +267,7 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
 {
     Q_UNUSED(runtime)
     KNotification* notify = new KNotification("UpdatesComplete");
+    suppressSleep(false);
     if (status == Transaction::Success) {
         KIcon icon("task-complete");
         // use of QSize does the right thing
@@ -347,6 +353,7 @@ void KpkUpdateIcon::handleDistroUpgradeAction(uint action)
                 this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus  ) ));
 
             m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
+            suppressSleep(true);
             break;
         // perhaps more actions needed in the future
     }
@@ -367,6 +374,7 @@ void KpkUpdateIcon::distroUpgradeFinished( int exitCode, QProcess::ExitStatus ex
     notify->sendEvent();
     m_distroUpgradeProcess->deleteLater();
     m_distroUpgradeProcess = 0;
+    suppressSleep(false);
 }
 
 
@@ -391,4 +399,17 @@ void KpkUpdateIcon::distroUpgradeError( QProcess::ProcessError error )
     notify->sendEvent();
 }
 
-
+void KpkUpdateIcon::suppressSleep(bool enable)
+{
+    if ( enable ) {
+        kDebug() << "Disabling powermanagement sleep";
+        m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
+        if (m_inhibitCookie == -1)
+            kDebug() << "Sleep suppression denied!";
+    } else {
+        kDebug() << "Enable powermanagement sleep";
+        if (m_inhibitCookie == -1)
+            if ( ! Solid::PowerManagement::stopSuppressingSleep( m_inhibitCookie ))
+                kDebug() << "Enable failed: invalid cookie.";
+    }
+}

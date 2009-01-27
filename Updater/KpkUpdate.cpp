@@ -23,6 +23,7 @@
 
 #include <KDebug>
 #include <KMessageBox>
+#include <solid/powermanagement.h>
 
 #define UNIVERSAL_PADDING 6
 
@@ -71,6 +72,12 @@ void KpkUpdate::load()
     displayUpdates(KpkTransaction::Success);
 }
 
+void KpkUpdate::updateFinished(KpkTransaction::ExitStatus status)
+{
+    Q_UNUSED(status)
+    suppressSleep(false);
+}
+
 void KpkUpdate::applyUpdates()
 {
     QList<Package*> packages = m_pkg_model_updates->selectedPackages();
@@ -79,6 +86,7 @@ void KpkUpdate::applyUpdates()
         // if so let's do system-update instead
         if ( Transaction *t = m_client->updateSystem() ) {
             KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish, this);
+            suppressSleep(true);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
             frm->exec();
@@ -89,6 +97,7 @@ void KpkUpdate::applyUpdates()
         // else lets install only the selected ones
         if ( Transaction *t = m_client->updatePackages(packages) ) {
             KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish, this);
+            suppressSleep(true);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
             frm->exec();
@@ -97,6 +106,21 @@ void KpkUpdate::applyUpdates()
         }
     }
     load();
+}
+
+void KpkUpdate::suppressSleep(bool enable)
+{
+    if ( enable ) {
+        kDebug() << "Disabling powermanagement sleep";
+        m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
+        if (m_inhibitCookie == -1)
+            kDebug() << "Sleep suppression denied!";
+    } else {
+        kDebug() << "Enable powermanagement sleep";
+        if (m_inhibitCookie == -1)
+            if ( ! Solid::PowerManagement::stopSuppressingSleep( m_inhibitCookie ))
+                kDebug() << "Enable failed: invalid cookie.";
+    }
 }
 
 void KpkUpdate::refresh()

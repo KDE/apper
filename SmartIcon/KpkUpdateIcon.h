@@ -62,7 +62,9 @@ class KpkUpdateIcon : public QObject {
         KCMultiDialog* m_updateView;
         QList<PackageKit::Package*> m_updateList;
         bool m_checking;
-	QProcess* m_distroUpgradeProcess;
+        QProcess* m_distroUpgradeProcess;
+        int m_inhibitCookie;
+        void suppressSleep(bool enable);
 };
 
 #endif

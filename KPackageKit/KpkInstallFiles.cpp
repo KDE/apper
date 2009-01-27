@@ -21,11 +21,13 @@
 #include "KpkInstallFiles.h"
 
 #include <KMessageBox>
+#include <solid/powermanagement.h>
 
 #include <KDebug>
 
 KpkInstallFiles::KpkInstallFiles( QObject *parent ) :
-QObject( parent )
+ QObject( parent ),
+ m_inhibitCookie(-1)
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 }
@@ -89,10 +91,10 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
                         displayFiles,
                         i18n("Install?"),
                         installBt
-
                 ) == KMessageBox::Yes ) {
             if ( Transaction *t = Client::instance()->installFiles(files, true) ) {
                 KpkTransaction *trans = new KpkTransaction(t);
+                suppressSleep(true);
                 connect( trans, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( installFilesFinished(KpkTransaction::ExitStatus) ) );
                 trans->show();
                 m_transactionFiles[trans] = files;
@@ -104,6 +106,21 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
     }
 }
 
+void KpkInstallFiles::suppressSleep(bool enable)
+{
+    if ( enable ) {
+        kDebug() << "Disabling powermanagement sleep";
+        m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
+        if (m_inhibitCookie == -1)
+            kDebug() << "Sleep suppression denied!";
+    } else {
+        kDebug() << "Enable powermanagement sleep";
+        if (m_inhibitCookie == -1)
+            if ( ! Solid::PowerManagement::stopSuppressingSleep( m_inhibitCookie ))
+                kDebug() << "Enable failed: invalid cookie.";
+    }
+}
+
 void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
@@ -112,10 +129,12 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
         case KpkTransaction::Cancelled :
         kDebug() << "Success";
             m_transactionFiles.remove( (KpkTransaction *) sender() );
+            suppressSleep(false);
             break;
         case KpkTransaction::Failed :
         kDebug() << "Failure";
             m_transactionFiles.remove( (KpkTransaction *) sender() );
+            suppressSleep(false);
             break;
         case KpkTransaction::ReQueue :
             kDebug() << "ReQueue";

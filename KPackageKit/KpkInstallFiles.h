@@ -43,6 +43,8 @@ private slots:
 
 private:
     QHash <KpkTransaction *,QStringList> m_transactionFiles;
+    int m_inhibitCookie;
+    void suppressSleep(bool enable);
 };
 
 #endif
