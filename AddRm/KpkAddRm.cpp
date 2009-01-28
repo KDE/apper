@@ -305,6 +305,14 @@ void KpkAddRm::updateColumnsWidth(bool force)
 
 KpkAddRm::~KpkAddRm()
 {
+    KConfig config("KPackageKit");
+    KConfigGroup filterMenuGroup(&config, "FilterMenu");
+
+    kDebug() << "Saving filters settings";
+    
+    filterMenuGroup.writeEntry("OnlyNewestPackages", m_actionNewestOnly->isChecked());
+    filterMenuGroup.writeEntry("HideSubpackages", m_actionBasename->isChecked());
+    filterMenuGroup.writeEntry("ViewInGroups", m_actionViewInGroups->isChecked());
 }
 
 // void KpkAddRm::setDefaultAction(QAction *action)
@@ -583,6 +591,10 @@ void KpkAddRm::filterMenu(Client::Filters filters)
     m_filtersQM = new QMenu(this);
     filtersTB->setMenu(m_filtersQM);
 
+    // Loads the filter menu settings
+    KConfig config("KPackageKit");
+    KConfigGroup filterMenuGroup(&config, "FilterMenu");
+
     if(!filters.isEmpty()) {
         if (filters.contains(Client::FilterCollections) || filters.contains(Client::FilterNotCollections)) {
             QMenu *menuCollections = new QMenu(i18n("Collections"), m_filtersQM);
@@ -617,7 +629,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
 		m_filtersAction[installedTrue] = Client::FilterInstalled;
 		installedGroup->addAction(installedTrue);
 		menuInstalled->addAction(installedTrue);
-		actions << installedTrue;
+// 		actions << installedTrue;
 // 	    }
 
 //             if ( filters.contains(Client::FilterNotInstalled) ) {
@@ -798,23 +810,25 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         }
         if (filters.contains(Client::FilterBasename)) {
             m_filtersQM->addSeparator();
-            QAction *basename = new QAction(i18n("Hide subpackages"), m_filtersQM);
-            basename->setCheckable(true);
-	    basename->setToolTip( i18n("Only show one package, not subpackages") );
-	    m_filtersAction[basename] = Client::FilterBasename;
-            m_filtersQM->addAction(basename);
+            m_actionBasename = new QAction(i18n("Hide subpackages"), m_filtersQM);
+            m_actionBasename->setCheckable(true);
+	    m_actionBasename->setToolTip( i18n("Only show one package, not subpackages") );
+	    m_filtersAction[m_actionBasename] = Client::FilterBasename;
+            m_filtersQM->addAction(m_actionBasename);
 
-            actions << basename;
+            actions << m_actionBasename;
+            m_actionBasename->setChecked(filterMenuGroup.readEntry("HideSubpackages", false));
         }
         if (filters.contains(Client::FilterNewest)) {
             m_filtersQM->addSeparator();
-            QAction *newest = new QAction(i18n("Only newest packages"), m_filtersQM);
-            newest->setCheckable(true);
-	    newest->setToolTip( i18n("Only show the newest available package") );
-	    m_filtersAction[newest] = Client::FilterNewest;
-            m_filtersQM->addAction(newest);
+            m_actionNewestOnly = new QAction(i18n("Only newest packages"), m_filtersQM);
+            m_actionNewestOnly->setCheckable(true);
+            m_actionNewestOnly->setToolTip( i18n("Only show the newest available package") );
+            m_filtersAction[m_actionNewestOnly] = Client::FilterNewest;
+            m_filtersQM->addAction(m_actionNewestOnly);
 
-            actions << newest;
+            actions << m_actionNewestOnly;
+            m_actionNewestOnly->setChecked(filterMenuGroup.readEntry("OnlyNewestPackages", false));
         }
         
         m_filtersQM->addSeparator();
@@ -822,12 +836,20 @@ void KpkAddRm::filterMenu(Client::Filters filters)
     else {
         //filtersTB->setDisabled(true);
     }
-    QAction *groupResults = new QAction(i18n("View in groups"), m_filtersQM);
-    groupResults->setCheckable(true);
-    m_filtersQM->addAction(groupResults);
-    groupResults->setToolTip( i18n("Display packages in groups according to status") );
-    connect(groupResults, SIGNAL( toggled(bool) ), m_pkg_model_main, SLOT( setGrouped(bool) ) );
-    connect(groupResults, SIGNAL( toggled(bool) ), this, SLOT( packageViewSetRootIsDecorated(bool) ) );
+    
+    m_actionViewInGroups = new QAction(i18n("View in groups"), m_filtersQM);
+    m_actionViewInGroups->setCheckable(true);
+    m_filtersQM->addAction(m_actionViewInGroups);
+    m_actionViewInGroups->setToolTip( i18n("Display packages in groups according to status") );
+    if (filterMenuGroup.readEntry("ViewInGroups", false)) {
+        m_pkg_model_main->setGrouped(true);
+        packageViewSetRootIsDecorated(true);
+        m_actionViewInGroups->setChecked(true);
+    }
+
+    
+    connect(m_actionViewInGroups, SIGNAL( toggled(bool) ), m_pkg_model_main, SLOT( setGrouped(bool) ) );
+    connect(m_actionViewInGroups, SIGNAL( toggled(bool) ), this, SLOT( packageViewSetRootIsDecorated(bool) ) );
 }
 
 void KpkAddRm::packageViewSetRootIsDecorated(bool value)

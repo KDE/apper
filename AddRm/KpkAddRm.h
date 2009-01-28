@@ -81,6 +81,11 @@ void actionFindNameK();
 
 private:
     QMenu *m_findMenu;
+
+    QAction *m_actionBasename;
+    QAction *m_actionNewestOnly;
+    QAction *m_actionViewInGroups;
+    
     QToolBar *toolBar;
     KToolBarPopupAction *m_genericActionK;
     QAction *m_currentAction;
