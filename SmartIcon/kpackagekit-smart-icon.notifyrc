@@ -110,12 +110,15 @@ Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
 Name=A distribution upgrade is available
+Name[uk]=Доступне оновлення дистрибутива
 Action=Sound|Popup
 
 [Event/DistroUpgradeFinished]
 Name=The distribution upgrade completed
+Name[uk]=Оновлення дистрибутива завершено
 Action=Sound|Popup
 
 [Event/DistroUpgradeError]
 Name=The distribution upgrade completed with an error
+Name[uk]=Спроба оновлення дистрибутива завершилася повідомленням про помилку
 Action=Sound|Popup
