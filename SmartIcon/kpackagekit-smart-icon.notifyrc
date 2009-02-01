@@ -77,6 +77,7 @@ Name[nds]=En Transakschoon lett sik nich mit Spood afsluten
 Name[pt]=Não foi possível terminar com sucesso uma transacção
 Name[pt_BR]=Não foi possível terminar com sucesso uma transacção
 Name[sv]=En transaktion misslyckades göras färdig med lyckat resultat
+Name[tr]=Bir aktarım başarılı bir şekilde tamamlanamadı
 Name[uk]=Операцію не вдалося успішно завершити
 Action=Sound|Popup
 
@@ -110,15 +111,21 @@ Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
 Name=A distribution upgrade is available
+Name[sv]=En uppgradering av distributionen är tillgänglig
+Name[tr]=Bir dağıtım güncellemesi mevcut
 Name[uk]=Доступне оновлення дистрибутива
 Action=Sound|Popup
 
 [Event/DistroUpgradeFinished]
 Name=The distribution upgrade completed
+Name[sv]=Uppgraderingen av distributionen färdig
+Name[tr]=Dağıtım güncellemesi tamamlandı
 Name[uk]=Оновлення дистрибутива завершено
 Action=Sound|Popup
 
 [Event/DistroUpgradeError]
 Name=The distribution upgrade completed with an error
+Name[sv]=Uppgraderingen av distributionen avslutades med ett fel
+Name[tr]=Dağıtım güncellemesi bir hata ile tamamlandı
 Name[uk]=Спроба оновлення дистрибутива завершилася повідомленням про помилку
 Action=Sound|Popup
