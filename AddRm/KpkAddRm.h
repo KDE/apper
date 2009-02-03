@@ -71,10 +71,7 @@ void actionFindNameK();
     void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void message(PackageKit::Client::MessageType message, const QString &details);
     void errorCode(PackageKit::Client::ErrorType error, const QString &detail);
-    void statusChanged(PackageKit::Transaction::Status status);
 
-    void notifyUpdate();
-    void progressChanged(PackageKit::Transaction::ProgressInfo info);
     void checkChanged();
 
     void packageViewSetRootIsDecorated(bool value);
@@ -99,7 +96,6 @@ private:
     Client *m_client;
     Transaction *m_pkClient_main;
 
-    QTimer m_notifyT;
     QMenu *m_filtersQM;
     KIcon m_findIcon;
     KIcon m_cancelIcon;

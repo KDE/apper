@@ -135,15 +135,13 @@ KpkAddRm::KpkAddRm( QWidget *parent )
     filterMenu(m_client->getFilters());
     filtersTB->setIcon(m_filterIcon);
 
-    // connect the notify
-    connect(&m_notifyT, SIGNAL(timeout()), this, SLOT(notifyUpdate()));
-
     // set fucus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
 
     // hides the description to have more space.
     descriptionDW->setVisible(false);
-    notifyF->hide();
+    
+    transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
 }
 
 void KpkAddRm::actionFindNameK()
@@ -192,6 +190,7 @@ void KpkAddRm::getDetails(PackageKit::Package *p)
         this, SLOT( description(PackageKit::Package *) ) );
     connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
 	this, SLOT( getInfoFinished(PackageKit::Transaction::ExitStatus, uint) ) );
+    transactionBar->addTransaction(t);
 }
 
 void KpkAddRm::getFiles(PackageKit::Package *p)
@@ -202,6 +201,7 @@ void KpkAddRm::getFiles(PackageKit::Package *p)
 	this, SLOT( files(PackageKit::Package *, const QStringList &) ) );
     connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
 	this, SLOT( getInfoFinished(PackageKit::Transaction::ExitStatus, uint) ) );
+    transactionBar->addTransaction(t);
 }
 
 void KpkAddRm::getDepends(PackageKit::Package *p)
@@ -213,6 +213,7 @@ void KpkAddRm::getDepends(PackageKit::Package *p)
 	m_pkg_model_dep, SLOT( addPackage(PackageKit::Package *) ) );
     connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
 	this, SLOT( getInfoFinished(PackageKit::Transaction::ExitStatus, uint) ) );
+    transactionBar->addTransaction(t);
 }
 
 void KpkAddRm::getRequires(PackageKit::Package *p)
@@ -224,6 +225,7 @@ void KpkAddRm::getRequires(PackageKit::Package *p)
 	m_pkg_model_req, SLOT( addPackage(PackageKit::Package *) ) );
     connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
 	this, SLOT( getInfoFinished(PackageKit::Transaction::ExitStatus, uint) ) );
+    transactionBar->addTransaction(t);
 }
 
 void KpkAddRm::getInfoFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
@@ -240,19 +242,6 @@ void KpkAddRm::on_packageView_pressed( const QModelIndex & index )
         if (p)
             emit getInfo(p);
     }
-}
-
-void KpkAddRm::statusChanged(PackageKit::Transaction::Status status)
-{
-    notifyF->show();
-    notifyL->setText( KpkStrings::status(status) );
-    busyPB->setMaximum(0);
-}
-
-void KpkAddRm::progressChanged(PackageKit::Transaction::ProgressInfo info)
-{
-    busyPB->setMaximum(100);
-    busyPB->setValue(info.percentage);
 }
 
 void KpkAddRm::errorCode(PackageKit::Client::ErrorType error, const QString &details)
@@ -410,23 +399,12 @@ void KpkAddRm::search()
     }
 
     connectTransaction(m_pkClient_main);
-    statusChanged( m_pkClient_main->status() );
+    transactionBar->addTransaction(m_pkClient_main);
     // hides the description to have more space.
     descriptionDW->setVisible(false);
-    notifyF->hide();
     // cleans the models
     m_pkg_model_main->clear();
-    busyPB->setMaximum(0);
-    busyPB->setValue(0);
     m_mTransRuning = true;
-    setActionCancel(false);
-}
-
-void KpkAddRm::setActionCancel(bool enabled)
-{
-    m_currentAction->setText(i18n("&Cancel"));
-    m_currentAction->setIcon(m_cancelIcon);
-    m_currentAction->setEnabled(enabled);
 }
 
 void KpkAddRm::connectTransaction(Transaction *transaction)
@@ -437,14 +415,6 @@ void KpkAddRm::connectTransaction(Transaction *transaction)
 	this, SLOT( finished(PackageKit::Transaction::ExitStatus, uint)) );
     connect( transaction, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
 	this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString &) ) );
-    connect( transaction, SIGNAL( message(PackageKit::Client::MessageType, const QString&) ),
-	this, SLOT( message(PackageKit::Client::MessageType, const QString &) ) );
-    connect( transaction, SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
-	this, SLOT( statusChanged(PackageKit::Transaction::Status) ) );
-    connect( transaction, SIGNAL( allowCancelChanged(bool) ),
-	m_currentAction, SLOT( setEnabled(bool) ) );
-    connect( transaction, SIGNAL( progressChanged(PackageKit::Transaction::ProgressInfo) ),
-	this, SLOT( progressChanged(PackageKit::Transaction::ProgressInfo) ) );
 }
 
 void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &details)
@@ -470,81 +440,8 @@ void KpkAddRm::load()
 
 void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
-    notifyF->show();
-    QPalette teste;
-    busyPB->setMaximum(100);
-    busyPB->setValue(100);
+    Q_UNUSED(runtime)
     m_mTransRuning = false;
-    m_currentAction->setEnabled(true);
-    m_currentAction->setIcon(m_findIcon);
-    setActionsDefaults();
-    switch(status) {
-        case Transaction::Success :
-	    notifyL->setText(i18n("Search finished in %1", KGlobal::locale()->formatDuration(runtime)) );
-            teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
-            notifyL->setPalette(teste);
-            notifyL->setAutoFillBackground(true);
-            m_notifyT.start(100);
-	    break;
-	case Transaction::Failed :
-	    notifyL->setText(i18n("Search failed"));
-            teste.setColor(QPalette::Normal, QPalette::Window, QColor(255,0,0,150));
-            notifyL->setPalette(teste);
-            notifyL->setAutoFillBackground(true);
-            m_notifyT.start(50);
-	    break;
-	case Transaction::Cancelled :
-            notifyL->setText(i18n("Search canceled"));
-            teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
-            notifyL->setPalette(teste);
-            notifyL->setAutoFillBackground(true);
-            m_notifyT.start(100);
-            break;
-	case Transaction::KeyRequired :
-            notifyL->setText(i18n("Search finished in %1",KGlobal::locale()->formatDuration(runtime)) );
-            teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
-            notifyL->setPalette(teste);
-            notifyL->setAutoFillBackground(true);
-            m_notifyT.start(100);
-            break;
-	case Transaction::EulaRequired :
-            notifyL->setText(i18n("Search finished in %1", KGlobal::locale()->formatDuration(runtime)) );
-            teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
-            notifyL->setPalette(teste);
-            notifyL->setAutoFillBackground(true);
-            m_notifyT.start(100);
-            break;
-	case Transaction::Killed :
-            notifyL->setText(i18n("Search killed"));
-            teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
-            notifyL->setPalette(teste);
-            notifyL->setAutoFillBackground(true);
-            m_notifyT.start(100);
-            break;
-	case Transaction::UnknownExitStatus :
-            notifyL->setText(i18n("Search finished with unknown status"));
-            teste.setColor( QPalette::Normal, QPalette::Window, QColor(0,255,0,150));
-            notifyL->setPalette(teste);
-            notifyL->setAutoFillBackground(true);
-            m_notifyT.start(100);
-            break;
-    }
-}
-
-void KpkAddRm::notifyUpdate()
-{
-    QPalette palleteN(notifyL->palette());
-    QColor colorN(palleteN.color(QPalette::Normal, QPalette::Window));
-    if ( colorN.alpha() <= 0 ) {
-        m_notifyT.stop();
-        notifyL->setAutoFillBackground(false);
-        notifyF->hide();
-    }
-    else {
-        colorN.setAlpha(colorN.alpha() - 5);
-        palleteN.setColor(QPalette::Normal, QPalette::Window, colorN);
-        notifyL->setPalette(palleteN);
-    }
 }
 
 void KpkAddRm::description(PackageKit::Package *p)

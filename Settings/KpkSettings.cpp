@@ -25,6 +25,7 @@
 #include <KConfig>
 #include <KLocale>
 #include <KMessageBox>
+#include <KpkTransactionBar.h>
 
 using namespace PackageKit;
 
@@ -33,6 +34,7 @@ QWidget( parent ), m_originModel(0)
 {
     setupUi( this );
 
+    transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
     m_actions = Client::instance()->getActions();
 
@@ -80,6 +82,7 @@ void KpkSettings::on_showOriginsCB_stateChanged(int state)
     connect(m_trasaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
             m_originModel, SLOT(finished()));
     connect(m_originModel, SIGNAL(stateChanged()), this, SLOT(checkChanges()));
+    transactionBar->addTransaction(m_trasaction);
 }
 
 void KpkSettings::checkChanges()
@@ -140,6 +143,7 @@ void KpkSettings::load()
         connect(m_trasaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                 m_originModel, SLOT(finished()));
         connect(m_originModel, SIGNAL(stateChanged()), this, SLOT(checkChanges()));
+        transactionBar->addTransaction(m_trasaction);
     }
 }
 

@@ -6,6 +6,7 @@ set(libkpk_SRCS
   KpkLicenseAgreement.cpp
   KpkPackageModel.cpp
   KpkIcons.cpp
+  KpkTransactionBar.cpp
 )
 
 kde4_add_ui_files(libkpk_SRCS

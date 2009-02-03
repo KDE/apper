@@ -28,6 +28,7 @@
 #include <solid/powermanagement.h>
 #include <solid/device.h>
 #include <solid/acadapter.h>
+#include <KpkTransactionBar.h>
 
 #define UNIVERSAL_PADDING 6
 
@@ -42,6 +43,7 @@ KpkUpdate::KpkUpdate( QWidget *parent )
     updatePB->setIcon(KIcon("package-update"));
     refreshPB->setIcon(KIcon("view-refresh"));
     historyPB->setIcon(KIcon("view-history"));
+    transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
 
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 
@@ -245,11 +247,13 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
         m_pkg_model_updates->clear();
         m_pkg_model_updates->uncheckAll();
         m_updatesT = m_client->getUpdates();
+        transactionBar->addTransaction(m_updatesT);
         connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
                 m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
         connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
                 this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
         Transaction* t = m_client->getDistroUpgrades();
+        transactionBar->addTransaction(t);
         connect(t,
                  SIGNAL( distroUpgrade( PackageKit::Client::UpgradeType, const QString&, const QString& ) ),
              this, SLOT( distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString& ) ) );
