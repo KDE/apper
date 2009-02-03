@@ -111,6 +111,9 @@ Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
 Name=A distribution upgrade is available
+Name[et]=Saadaval on distributsiooni uuendus
+Name[pt]=Está disponível uma actualização da distribuição
+Name[pt_BR]=Está disponível uma actualização da distribuição
 Name[sv]=En uppgradering av distributionen är tillgänglig
 Name[tr]=Bir dağıtım güncellemesi mevcut
 Name[uk]=Доступне оновлення дистрибутива
@@ -118,6 +121,9 @@ Action=Sound|Popup
 
 [Event/DistroUpgradeFinished]
 Name=The distribution upgrade completed
+Name[et]=Distributsioon on uuendatud
+Name[pt]=A actualização da distribuição está completa
+Name[pt_BR]=A actualização da distribuição está completa
 Name[sv]=Uppgraderingen av distributionen färdig
 Name[tr]=Dağıtım güncellemesi tamamlandı
 Name[uk]=Оновлення дистрибутива завершено
@@ -125,6 +131,9 @@ Action=Sound|Popup
 
 [Event/DistroUpgradeError]
 Name=The distribution upgrade completed with an error
+Name[et]=Distributsioon uuendati, aga vigadega
+Name[pt]=A actualização da distribuição terminou com erros
+Name[pt_BR]=A actualização da distribuição terminou com erros
 Name[sv]=Uppgraderingen av distributionen avslutades med ett fel
 Name[tr]=Dağıtım güncellemesi bir hata ile tamamlandı
 Name[uk]=Спроба оновлення дистрибутива завершилася повідомленням про помилку
