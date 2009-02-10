@@ -76,9 +76,6 @@ private:
     Transaction *m_updatesT;
     Client::Actions m_actions;
 
-    int m_inhibitCookie;
-    void suppressSleep(bool enable);
-
     KUrlLabel *m_distroUpgradeUL;
     QProcess *m_distroUpgradeProcess;
     KProgressDialog *m_distroUpgradeDialog;

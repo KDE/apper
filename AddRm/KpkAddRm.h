@@ -41,11 +41,10 @@ class KpkAddRm : public QWidget, public Ui::KpkAddRm
 {
     Q_OBJECT
 public:
-    KpkAddRm( QWidget *parent=0 );
+    KpkAddRm(QWidget *parent = 0);
     ~KpkAddRm();
 
 signals:
-    void getInfo(PackageKit::Package *package);
     void changed(bool state);
 
 public slots:
@@ -82,7 +81,6 @@ private:
     bool m_mTransRuning;//main trans
     KpkPackageModel *m_pkg_model_main;
     KpkDelegate *pkg_delegate;
-//     QHash<QModelIndex, Client::Filter> m_filtersAction;
 
     Client *m_client;
     Transaction *m_pkClient_main;

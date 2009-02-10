@@ -110,7 +110,6 @@ void KpkUpdate::startDistroUpgrade()
         m_distroUpgradeDialog->progressBar()->setMinimum(0);
         m_distroUpgradeDialog->show();
         m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
-        suppressSleep(true);
     }
 }
 
@@ -142,7 +141,6 @@ void KpkUpdate::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitSta
     m_distroUpgradeDialog->close();
     m_distroUpgradeDialog->deleteLater();
     m_distroUpgradeDialog = 0;
-    suppressSleep(false);
 }
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
@@ -180,7 +178,6 @@ void KpkUpdate::load()
 void KpkUpdate::updateFinished(KpkTransaction::ExitStatus status)
 {
     Q_UNUSED(status)
-    suppressSleep(false);
 }
 
 void KpkUpdate::applyUpdates()
@@ -191,7 +188,6 @@ void KpkUpdate::applyUpdates()
         // if so let's do system-update instead
         if ( Transaction *t = m_client->updateSystem() ) {
             KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish, this);
-            suppressSleep(true);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
             frm->exec();
@@ -202,7 +198,6 @@ void KpkUpdate::applyUpdates()
         // else lets install only the selected ones
         if ( Transaction *t = m_client->updatePackages(packages) ) {
             KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish, this);
-            suppressSleep(true);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
             frm->exec();
@@ -211,21 +206,6 @@ void KpkUpdate::applyUpdates()
         }
     }
     load();
-}
-
-void KpkUpdate::suppressSleep(bool enable)
-{
-    if (enable) {
-        kDebug() << "Disabling powermanagement sleep";
-        m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
-        if (m_inhibitCookie == -1)
-            kDebug() << "Sleep suppression denied!";
-    } else {
-        kDebug() << "Enable powermanagement sleep";
-        if (m_inhibitCookie == -1)
-            if ( ! Solid::PowerManagement::stopSuppressingSleep( m_inhibitCookie ))
-                kDebug() << "Enable failed: invalid cookie.";
-    }
 }
 
 void KpkUpdate::refresh()

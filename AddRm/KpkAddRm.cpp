@@ -99,7 +99,8 @@ KpkAddRm::KpkAddRm(QWidget *parent)
             toolBar->removeAction(m_genericActionK);
             toolBar->addAction(m_currentAction);
         }
-        connect(m_genericActionK, SIGNAL(triggered()), this, SLOT(genericActionKTriggered()));
+        connect(m_genericActionK, SIGNAL(triggered()),
+                this, SLOT(genericActionKTriggered()));
     }
 
     if (!m_actions.contains(Client::ActionSearchGroup)) {
@@ -107,8 +108,10 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     }
 
     //initialize the groups
+    // TODO add non selectable groups if Client::ActionSearchGroup
+    // is not supported
     foreach (Client::Group group, m_client->getGroups()) {
-        groupsCB->addItem( KpkIcons::groupsIcon(group), KpkStrings::groups(group), group);
+        groupsCB->addItem(KpkIcons::groupsIcon(group), KpkStrings::groups(group), group);
     }
 
     // install the backend filters
@@ -122,7 +125,6 @@ KpkAddRm::KpkAddRm(QWidget *parent)
 
 void KpkAddRm::genericActionKTriggered()
 {
-    kDebug();
     m_currentAction->trigger();
 }
 
@@ -162,10 +164,11 @@ void KpkAddRm::setActionsDefaults()
 
 void KpkAddRm::checkChanged()
 {
-    if (m_pkg_model_main->selectedPackages().size() > 0)
+    if (m_pkg_model_main->selectedPackages().size() > 0) {
       emit changed(true);
-    else
+    } else {
       emit changed(false);
+    }
 }
 
 void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
@@ -173,9 +176,6 @@ void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
     if (index.column() == 0) {
         Package *p = m_pkg_model_main->package(index);
         if (p) {
-        kDebug() << p->name();
-//             emit getInfo(p);
-//             KpkPackageDetails
             if (pkg_delegate->isExtended(index)) {
                 pkg_delegate->contractItem(index);
             } else {
@@ -187,7 +187,7 @@ void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
 
 void KpkAddRm::errorCode(PackageKit::Client::ErrorType error, const QString &details)
 {
-    KMessageBox::detailedSorry( this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify );
+    KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify);
 }
 
 KpkAddRm::~KpkAddRm()
@@ -208,15 +208,6 @@ KpkAddRm::~KpkAddRm()
 //     writeEntry(filterMenuGroup, "SelectedFilters", Client::FilterNotCollections);
 //     writeEntry(filterMenuGroup, "SelectedFilters", filters().toList());
 }
-
-// void KpkAddRm::setDefaultAction(QAction *action)
-// {
-//     if (findTB->defaultAction() != action) {
-//         m_findMenu->removeAction(action);
-//         m_findMenu->addAction(findTB->defaultAction());
-//         findTB->setDefaultAction(action);
-//     }
-// }
 
 void KpkAddRm::on_actionFindName_triggered()
 {
@@ -274,7 +265,7 @@ void KpkAddRm::on_actionFindFile_triggered()
 
 void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
 {
-    if (groupsCB->itemData(index, Qt::UserRole ).isValid()) {
+    if (groupsCB->itemData(index, Qt::UserRole).isValid()) {
         // cache the search
         m_searchAction = Client::ActionSearchGroup;
         m_searchGroup = (Client::Group) groupsCB->itemData(index, Qt::UserRole).toUInt();
@@ -327,10 +318,10 @@ void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &d
 void KpkAddRm::save()
 {
     KpkReviewChanges *frm = new KpkReviewChanges( m_pkg_model_main->selectedPackages(), this);
-    if ( frm->exec() == QDialog::Accepted ) {
+    if (frm->exec() == QDialog::Accepted) {
         m_pkg_model_main->uncheckAll();
     } else {
-        QTimer::singleShot(1, this, SLOT( checkChanged() ) );
+        QTimer::singleShot(1, this, SLOT(checkChanged()));
     }
     delete frm;
     search();

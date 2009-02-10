@@ -30,7 +30,7 @@
      <item>
       <widget class="KLineEdit" name="searchKLE" >
        <property name="clickMessage" >
-        <string>Search package name</string>
+        <string>Search packages</string>
        </property>
        <property name="showClearButton" stdset="0" >
         <bool>true</bool>
