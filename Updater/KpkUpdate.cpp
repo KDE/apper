@@ -63,15 +63,15 @@ KpkUpdate::KpkUpdate(QWidget *parent)
     // Setup the distro upgrade banner
     //TODO: Find the distribution's logo
     distroTitle->setPixmap(KIcon("system-software-update"));
+    distroTitle->setWidget(m_distroUpgradeUL = new KUrlLabel(this));
     /*QPalette titleColors(distroTitle->palette());
     //FIXME: This is a bug in kdelibs. The background color doesn't get changed.
     KColorScheme::adjustBackground(titleColors, KColorScheme::PositiveBackground);
     distroTitle->setPalette(titleColors);*/
     distroTitle->hide();
-    distroDescription->hide();
-    distroUpgradeBtn->hide();
 
-    connect(distroUpgradeBtn, SIGNAL(clicked(bool)), this, SLOT(startDistroUpgrade()));
+    connect(m_distroUpgradeUL, SIGNAL(leftClickedUrl()),
+            SLOT(startDistroUpgrade()));
 }
 
 void KpkUpdate::startDistroUpgrade()
@@ -150,11 +150,11 @@ void KpkUpdate::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitSta
 void KpkUpdate::distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description)
 {
     Q_UNUSED(type)
-    distroDescription->setText(description);
-    distroUpgradeBtn->setText(i18n("Upgrade to %1", name));
+    distroTitle->setComment(description);
+    m_distroUpgradeUL->setText(i18n("Upgrade to %1", name));
+    m_distroUpgradeUL->setUrl(i18n("Upgrade to %1", name));
+    m_distroUpgradeUL->setTipText(i18n("Click to upgrage %1 to", name));
     distroTitle->show();
-    distroDescription->show();
-    distroUpgradeBtn->show();
 }
 
 void KpkUpdate::checkEnableUpdateButton()

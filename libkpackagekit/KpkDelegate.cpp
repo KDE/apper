@@ -39,8 +39,8 @@
 KpkDelegate::KpkDelegate(QAbstractItemView *parent)
  : KExtendableItemDelegate(parent), m_addIcon("list-add"), m_removeIcon("list-remove")
 {
-    setExtendPixmap(SmallIcon("arrow-right"));
-    setContractPixmap(SmallIcon("arrow-down"));
+//     setExtendPixmap(SmallIcon("arrow-right"));
+//     setContractPixmap(SmallIcon("arrow-down"));
 }
 
 void KpkDelegate::paint(QPainter *painter,

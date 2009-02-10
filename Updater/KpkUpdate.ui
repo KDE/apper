@@ -13,34 +13,9 @@
    <locale country="UnitedStates" language="English" />
   </property>
   <layout class="QGridLayout" name="gridLayout" >
-   <item row="0" column="0" >
-    <layout class="QGridLayout" name="gridLayout_2" >
-     <item row="0" column="0" >
-      <widget class="KTitleWidget" name="distroTitle" >
-       <property name="text" >
-        <string>Distribution Upgrade Available!</string>
-       </property>
-      </widget>
-     </item>
-     <item rowspan="2" row="0" column="1" >
-      <widget class="KPushButton" name="distroUpgradeBtn" >
-       <property name="text" >
-        <string>Upgrade to %1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" >
-      <widget class="QLabel" name="distroDescription" >
-       <property name="text" >
-        <string/>
-       </property>
-       <property name="wordWrap" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
+   <property name="margin" >
+    <number>0</number>
+   </property>
    <item row="1" column="0" >
     <widget class="QTreeView" name="packageView" >
      <property name="sizePolicy" >
@@ -111,6 +86,16 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="0" column="0" >
+    <widget class="KTitleWidget" name="distroTitle" >
+     <property name="text" >
+      <string>Distribution Upgrade Available!</string>
+     </property>
+     <property name="autoHideTimeout" >
+      <number>15000</number>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

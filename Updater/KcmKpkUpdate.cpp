@@ -32,7 +32,7 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
 {
     KAboutData *about = new KAboutData("kcm_kpk_update", 0, ki18n("KPackageKit Update"), KPK_VERSION);
     setAboutData(about);
-    setButtons(NoAdditionalButton );
+    setButtons(NoAdditionalButton);
     m_grid = new QGridLayout(this);
     view = new KpkUpdate(this);
     m_grid->addWidget(view);

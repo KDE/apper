@@ -183,7 +183,6 @@ void KpkPackageDetails::on_fileListTB_clicked()
 void KpkPackageDetails::getDepends(PackageKit::Package *p)
 {
     // create a transaction for the dependecies not recursive
-    // TODO poke adrien to add a convenience method to not need PackageKit::Client::NoFilter
     Transaction *t = Client::instance()->getDepends(p, PackageKit::Client::NoFilter, false);
     dependsOnLV->setModel(m_pkg_model_dep = new KpkPackageModel(this, dependsOnLV));
     connect(t, SIGNAL(package(PackageKit::Package *)),

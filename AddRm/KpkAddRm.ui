@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>552</width>
-    <height>368</height>
+    <width>488</width>
+    <height>222</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -22,63 +22,70 @@
    <locale country="UnitedStates" language="English" />
   </property>
   <layout class="QGridLayout" name="gridLayout" >
-   <item rowspan="2" row="0" column="0" >
-    <widget class="KLineEdit" name="searchKLE" >
-     <property name="clickMessage" >
-      <string>Search package name</string>
-     </property>
-     <property name="showClearButton" stdset="0" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item rowspan="2" row="0" column="1" colspan="2" >
-    <widget class="QWidget" native="1" name="widget" >
-     <layout class="QGridLayout" name="gridLayout_9" >
-      <item row="0" column="0" >
-       <layout class="QGridLayout" name="gridLayout_8" />
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item rowspan="2" row="0" column="3" >
-    <widget class="QComboBox" name="groupsCB" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <property name="margin" >
+    <number>0</number>
+   </property>
+   <item row="0" column="0" >
+    <layout class="QHBoxLayout" name="horizontalLayout" >
      <item>
-      <property name="text" >
-       <string>All Packages</string>
-      </property>
+      <widget class="KLineEdit" name="searchKLE" >
+       <property name="clickMessage" >
+        <string>Search package name</string>
+       </property>
+       <property name="showClearButton" stdset="0" >
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
-    </widget>
+     <item>
+      <widget class="QWidget" native="1" name="widget" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="filtersTB" >
+       <property name="locale" >
+        <locale country="UnitedStates" language="English" />
+       </property>
+       <property name="text" >
+        <string>Filters</string>
+       </property>
+       <property name="popupMode" >
+        <enum>QToolButton::InstantPopup</enum>
+       </property>
+       <property name="toolButtonStyle" >
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+       <property name="autoRaise" >
+        <bool>true</bool>
+       </property>
+       <property name="arrowType" >
+        <enum>Qt::NoArrow</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="groupsCB" >
+       <item>
+        <property name="text" >
+         <string>All Packages</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="1" column="2" >
-    <widget class="QToolButton" name="filtersTB" >
-     <property name="locale" >
-      <locale country="UnitedStates" language="English" />
-     </property>
-     <property name="text" >
-      <string>Filters</string>
-     </property>
-     <property name="popupMode" >
-      <enum>QToolButton::InstantPopup</enum>
-     </property>
-     <property name="toolButtonStyle" >
-      <enum>Qt::ToolButtonTextBesideIcon</enum>
-     </property>
-     <property name="autoRaise" >
-      <bool>true</bool>
-     </property>
-     <property name="arrowType" >
-      <enum>Qt::NoArrow</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="4" >
+   <item row="1" column="0" >
     <widget class="QTreeView" name="packageView" >
      <property name="sizePolicy" >
       <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
@@ -121,41 +128,23 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="4" >
-    <widget class="QFrame" name="notifyF" >
-     <property name="frameShape" >
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow" >
-      <enum>QFrame::Plain</enum>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_7" >
-      <property name="margin" >
-       <number>0</number>
-      </property>
-      <property name="spacing" >
-       <number>0</number>
-      </property>
-      <item row="0" column="0" >
-       <widget class="KpkTransactionBar" native="1" name="transactionBar" />
-      </item>
-     </layout>
-    </widget>
+   <item row="2" column="0" >
+    <widget class="KpkTransactionBar" native="1" name="transactionBar" />
    </item>
   </layout>
   <action name="actionFindName" >
    <property name="text" >
-    <string>Find Name</string>
+    <string>Find by name</string>
    </property>
   </action>
   <action name="actionFindDescription" >
    <property name="text" >
-    <string>Find Description</string>
+    <string>Find by description</string>
    </property>
   </action>
   <action name="actionFindFile" >
    <property name="text" >
-    <string>Find File</string>
+    <string>Find by file name</string>
    </property>
   </action>
  </widget>
@@ -173,9 +162,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>searchKLE</tabstop>
-  <tabstop>filtersTB</tabstop>
-  <tabstop>groupsCB</tabstop>
   <tabstop>packageView</tabstop>
  </tabstops>
  <resources/>

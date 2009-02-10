@@ -26,6 +26,7 @@
 
 #include <KIcon>
 #include <KToolBarPopupAction>
+#include <KDebug>
 
 #include "KpkPackageModel.h"
 #include "KpkPackageDetails.h"
@@ -52,7 +53,7 @@ public slots:
     void save();
 
 private slots:
-void actionFindNameK();
+    void genericActionKTriggered();
 
     void on_actionFindName_triggered();
     void on_actionFindDescription_triggered();
@@ -72,8 +73,6 @@ void actionFindNameK();
 private:
     QMenu *m_findMenu;
 
-    QAction *m_actionBasename;
-    QAction *m_actionNewestOnly;
     QAction *m_actionViewInGroups;
 
     QToolBar *toolBar;

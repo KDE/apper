@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>615</width>
-    <height>486</height>
+    <width>468</width>
+    <height>374</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -16,11 +16,14 @@
    <property name="margin" >
     <number>0</number>
    </property>
-   <property name="spacing" >
-    <number>0</number>
-   </property>
-   <item row="0" column="0" >
+   <item row="0" column="0" colspan="2" >
     <widget class="QGroupBox" name="groupBox" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title" >
       <string>KPackageKit Settings</string>
      </property>
@@ -59,8 +62,14 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" >
+   <item row="1" column="0" colspan="2" >
     <widget class="QGroupBox" name="groupBox_2" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title" >
       <string>Smart Tray Icon</string>
      </property>
@@ -97,26 +106,10 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0" >
-    <spacer name="verticalSpacer" >
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType" >
-      <enum>QSizePolicy::Ignored</enum>
-     </property>
-     <property name="sizeHint" stdset="0" >
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="0" >
+   <item rowspan="2" row="2" column="0" colspan="2" >
     <widget class="QGroupBox" name="originGB" >
      <property name="sizePolicy" >
-      <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+      <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -135,10 +128,20 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="KpkTransactionBar" native="1" name="transactionBar" />
-      </item>
      </layout>
+     <zorder>originLW</zorder>
+     <zorder>showOriginsCB</zorder>
+     <zorder>transactionBar</zorder>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2" >
+    <widget class="KpkTransactionBar" native="1" name="transactionBar" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
     </widget>
    </item>
   </layout>

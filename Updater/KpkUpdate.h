@@ -27,6 +27,8 @@
 #include <KpkTransaction.h>
 #include <KpkDelegate.h>
 
+#include <KUrlLabel>
+
 #include "ui_KpkUpdate.h"
 
 class KProgressDialog;
@@ -73,10 +75,13 @@ private:
     Client *m_client;
     Transaction *m_updatesT;
     Client::Actions m_actions;
+
     int m_inhibitCookie;
     void suppressSleep(bool enable);
-    QProcess* m_distroUpgradeProcess;
-    KProgressDialog* m_distroUpgradeDialog;
+
+    KUrlLabel *m_distroUpgradeUL;
+    QProcess *m_distroUpgradeProcess;
+    KProgressDialog *m_distroUpgradeDialog;
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);
