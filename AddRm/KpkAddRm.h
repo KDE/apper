@@ -28,6 +28,7 @@
 #include <KToolBarPopupAction>
 
 #include "KpkPackageModel.h"
+#include "KpkPackageDetails.h"
 #include <KpkDelegate.h>
 
 #include <QPackageKit>
@@ -51,12 +52,6 @@ public slots:
     void save();
 
 private slots:
-    void getDetails(PackageKit::Package *p);
-    void getFiles(PackageKit::Package *p);
-    void getDepends(PackageKit::Package *p);
-    void getRequires(PackageKit::Package *p);
-    void getInfoFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-
 void actionFindNameK();
 
     void on_actionFindName_triggered();
@@ -66,8 +61,6 @@ void actionFindNameK();
     void on_groupsCB_currentIndexChanged(int index);
     void on_packageView_pressed(const QModelIndex &index);
 
-    void description(PackageKit::Package *package);
-    void files(PackageKit::Package *package, const QStringList &files);
     void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void message(PackageKit::Client::MessageType message, const QString &details);
     void errorCode(PackageKit::Client::ErrorType error, const QString &detail);
@@ -82,16 +75,15 @@ private:
     QAction *m_actionBasename;
     QAction *m_actionNewestOnly;
     QAction *m_actionViewInGroups;
-    
+
     QToolBar *toolBar;
     KToolBarPopupAction *m_genericActionK;
     QAction *m_currentAction;
     void setCurrentAction(QAction *action);
     bool m_mTransRuning;//main trans
     KpkPackageModel *m_pkg_model_main;
-    KpkPackageModel *m_pkg_model_dep;
-    KpkPackageModel *m_pkg_model_req;
     KpkDelegate *pkg_delegate;
+//     QHash<QModelIndex, Client::Filter> m_filtersAction;
 
     Client *m_client;
     Transaction *m_pkClient_main;
@@ -103,7 +95,7 @@ private:
 
     // We need to keep a list to build the filters string
     QList<QAction*> actions;
-    QHash<QAction *,Client::Filter> m_filtersAction;
+    QHash<QAction *, Client::Filter> m_filtersAction;
     void filterMenu(Client::Filters filters);
     Client::Filters filters();
 

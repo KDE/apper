@@ -61,8 +61,10 @@ public:
     bool isGrouped() const;
 
     enum {
-        SummaryRole = Qt::UserRole,
+        NameRole = Qt::UserRole,
+        SummaryRole,
         InstalledRole,
+        IconRole,
         IdRole,
         GroupRole,
         CheckedRole

@@ -1,5 +1,8 @@
 A quick list of things that need to be done.
 
+- Create the ui to remove programs by they EXEC name and add the "Uninstall" action to kickoff :D
+  (Daniel)
+
 - Push KPK into KDE.
   (Daniel)
 
@@ -10,7 +13,7 @@ A quick list of things that need to be done.
   (Trever)
 
 - Documentation. And lots of it.
-  (Trever)
+  (Trever, Daniel)
 
 - Find and hammer out all the hidden bugs in the model.
   (Trever)
@@ -22,9 +25,6 @@ A quick list of things that need to be done.
   (Trever)
 
 - Implement the DBUS api to install files, codecs, etc that packagekit-gnome does
-  (Daniel)
-
-- Use a KExtendibleItemDelegate for the package detail view.
   (Daniel)
 
 - Implement and enforce hughsie's law

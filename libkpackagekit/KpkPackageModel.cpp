@@ -213,20 +213,20 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         switch(index.column()) {
             case 0:
                 switch(role) {
-                    case Qt::DisplayRole:
+                    case NameRole:
                         return KpkStrings::infoUpdate(group, count);
-                    case Qt::DecorationRole:
+                    case IconRole:
                         return KpkIcons::packageIcon(group);
                     case GroupRole:
                         return true;
-                    case Qt::SizeHintRole:
-                        if (m_packageView) {
-                            int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
-                            // Here we are discouting the plus sign
-                            // of the tree 20 is a value get with kruller
-                            // not sure but this might change...
-                            return QSize(width - 20, ICON_HEIGHT);
-                        }
+//                     case Qt::SizeHintRole:
+//                         if (m_packageView) {
+//                             int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
+//                             // Here we are discouting the plus sign
+//                             // of the tree 20 is a value get with kruller
+//                             // not sure but this might change...
+//                             return QSize(width - 20, ICON_HEIGHT);
+//                         }
                     default:
                         return QVariant();
                 }
@@ -251,8 +251,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                     }
                     case InstalledRole:
                         return group == Package::Installed;
-                    case Qt::SizeHintRole:
-                        return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, ICON_HEIGHT);
+//                     case Qt::SizeHintRole:
+//                         return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, ICON_HEIGHT);
                     default:
                         return QVariant();
                 }
@@ -283,9 +283,9 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         switch (index.column()) {
             case 0: //Package name column
                 switch (role) {
-                    case Qt::DisplayRole:
+                    case NameRole:
                         return p->name() + " - " + p->version() + (p->arch().isNull() ? "" : " (" + p->arch() + ")");
-                    case Qt::DecorationRole:
+                    case IconRole:
                         for (int i = 0; i < m_checkedPackages.size(); ++i) {
                             if ( m_checkedPackages.at(i)->id() == p->id() )
                                 return (p->state() == Package::Installed) ?
@@ -301,19 +301,19 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         return p->id();
                     case GroupRole:
                         return false;
-                    case Qt::SizeHintRole:
-                        if (m_packageView) {
-                            int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
-                            // Here we are discouting the plus sign
-                            // of the tree 20 is a value get with kruller
-                            // not sure but this might change...
-                            if (m_grouped)
-                                return QSize(width - 40, ICON_HEIGHT);
-                            else
-                                //if not grouped we SHOULD not show the decorated root so
-                                // we have nothing to discount
-                                return QSize(width, ICON_HEIGHT);
-                        }
+//                     case Qt::SizeHintRole:
+//                         if (m_packageView) {
+//                             int width = m_packageView->viewport()->width() - (FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING);
+//                             // Here we are discouting the plus sign
+//                             // of the tree 20 is a value get with kruller
+//                             // not sure but this might change...
+//                             if (m_grouped)
+//                                 return QSize(width - 40, ICON_HEIGHT);
+//                             else
+//                                 //if not grouped we SHOULD not show the decorated root so
+//                                 // we have nothing to discount
+//                                 return QSize(width, ICON_HEIGHT);
+//                         }
                     default:
                         return QVariant();
                 }
@@ -321,8 +321,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 switch(role) {
                     case InstalledRole:
                         return p->state() == Package::Installed;
-                    case Qt::SizeHintRole:
-                        return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, ICON_HEIGHT);
+//                     case Qt::SizeHintRole:
+//                         return QSize(FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING, ICON_HEIGHT);
                     default:
                         return QVariant();
                 }

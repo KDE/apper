@@ -23,37 +23,34 @@
 
 #include <QtCore/QtCore>
 #include <QtGui/QtGui>
+#include <KExtendableItemDelegate>
 
 #include <KIcon>
 
 /**
  * Delegate for displaying the packages
  */
-class KDE_EXPORT KpkDelegate: public QItemDelegate
+class KDE_EXPORT KpkDelegate: public KExtendableItemDelegate
 {
     Q_OBJECT
 
 public:
-    KpkDelegate(QObject *parent = 0);
+    KpkDelegate(QAbstractItemView *parent);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-    int columnWidth (int column, int viewWidth) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    int columnWidth(int column, int viewWidth) const;
 
     bool editorEvent(QEvent *event,
                      QAbstractItemModel *model,
                      const QStyleOptionViewItem &option,
                      const QModelIndex &index);
 
-private:
-    enum {
-        SummaryRole = 32,
-        InstalledRole,
-        IdRole,
-        GroupRole,
-        CheckedRole
-    };
+// public slots:
+//     void closeExpandableDetails(const QModelIndex &index = QModelIndex());
+//     void itemActivated(const QModelIndex &index);
 
+private:
     KIcon m_addIcon;
     KIcon m_removeIcon;
 

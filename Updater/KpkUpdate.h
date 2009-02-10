@@ -51,7 +51,7 @@ private slots:
     void on_updatePB_clicked();
     void on_refreshPB_clicked();
     void on_historyPB_clicked();
-    
+
     void startDistroUpgrade();
     void distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description);
 
@@ -59,12 +59,11 @@ private slots:
 
     void updateColumnsWidth(bool force = false);
     void on_packageView_pressed(const QModelIndex &index);
-    void updateDetail(PackageKit::Client::UpdateInfo info);
 
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
     void updateFinished(KpkTransaction::ExitStatus status);
-    
+
     void distroUpgradeError(QProcess::ProcessError);
     void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
 

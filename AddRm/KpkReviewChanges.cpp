@@ -33,7 +33,7 @@ KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *pa
     setupUi( mainWidget() );
 
     //initialize the model, delegate, client and  connect it's signals
-    packageView->setItemDelegate(m_pkgDelegate = new KpkDelegate(this));
+    packageView->setItemDelegate(m_pkgDelegate = new KpkDelegate(packageView));
     packageView->setModel(m_pkgModelMain = new KpkPackageModel(packages, this, packageView));
     m_pkgModelMain->checkAll();
     packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);

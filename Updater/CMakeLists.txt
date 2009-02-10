@@ -1,9 +1,11 @@
 set(kpk_update_SRCS
     KcmKpkUpdate.cpp
     KpkUpdate.cpp
+    KpkUpdateDetails.cpp
 )
 kde4_add_ui_files(kpk_update_SRCS
     KpkUpdate.ui
+    KpkUpdateDetails.ui
 )
 
 kde4_add_plugin(kcm_kpk_update ${kpk_update_SRCS})

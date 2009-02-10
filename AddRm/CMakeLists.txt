@@ -3,12 +3,14 @@ set(kpk_addrm_SRCS
     KpkAddRm.cpp
     KpkReviewChanges.cpp
     KpkRequirements.cpp
+    KpkPackageDetails.cpp
 )
 
 kde4_add_ui_files(kpk_addrm_SRCS
     KpkAddRm.ui
     KpkReviewChanges.ui
     KpkRequirements.ui
+    KpkPackageDetails.ui
 )
 
 kde4_add_plugin(kcm_kpk_addrm ${kpk_addrm_SRCS})

@@ -1,0 +1,232 @@
+/***************************************************************************
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   dantti85-pk@yahoo.com.br                                              *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#include "KpkPackageDetails.h"
+
+#include <KpkStrings.h>
+
+#include <QPlainTextEdit>
+#include <QTextDocument>
+
+KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client::Actions &actions, QWidget *parent)
+ : QWidget(parent), currentWidget(0)
+{
+    setupUi(this);
+
+    // we check to see if the actions are supported by the backend
+    // if so we ask for information and create the containers
+    if (actions.contains(Client::ActionGetDetails)) {
+        descriptionKTB = new KTextBrowser(this);
+        descriptionTB->click();
+        getDetails(package);
+    } else {
+        descriptionTB->setEnabled(false);
+    }
+
+    if (actions.contains(Client::ActionGetFiles)) {
+        filesPTE = new QPlainTextEdit(this);
+        filesPTE->setVisible(false);
+        if (!currentWidget) {
+            fileListTB->click();
+        }
+        getFiles(package);
+    } else {
+        fileListTB->setEnabled(false);
+    }
+
+    if (actions.contains(Client::ActionGetDepends)) {
+        dependsOnLV = new QListView(this);
+        dependsOnLV->setVisible(false);
+        if (!currentWidget) {
+            dependsOnTB->click();
+        }
+        getDepends(package);
+    } else {
+        dependsOnTB->setEnabled(false);
+    }
+
+    if (actions.contains(Client::ActionGetRequires)) {
+        requiredByLV = new QListView(this);
+        requiredByLV->setVisible(false);
+        if (!currentWidget) {
+            requiredByTB->click();
+        }
+        getRequires(package);
+    } else {
+        requiredByTB->setEnabled(false);
+    }
+}
+
+KpkPackageDetails::~KpkPackageDetails()
+{
+//     qDebug() << "~KpkPackageDetails()";
+}
+
+void KpkPackageDetails::setCurrentWidget(QWidget *widget)
+{
+    // if a current widget is set remove it
+    if (currentWidget) {
+        gridLayout->removeWidget(currentWidget);
+        // hides the current widget
+        currentWidget->setVisible(false);
+    }
+    // make sure the widget is visible
+    widget->setVisible(true);
+    // add the widget to the layout
+    gridLayout->addWidget(currentWidget = widget);
+}
+
+void KpkPackageDetails::getDetails(PackageKit::Package *p)
+{
+    // create the description transaction
+    Transaction *t = Client::instance()->getDetails(p);
+    connect(t, SIGNAL(details(PackageKit::Package *)),
+            this, SLOT(description(PackageKit::Package *)));
+    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+            this, SLOT(getDetailsFinished(PackageKit::Transaction::ExitStatus, uint)));
+}
+
+void KpkPackageDetails::description(PackageKit::Package *p)
+{
+    //format and show description
+    Package::Details *details = p->details();
+    QString description;
+    description += "<table><tbody>";
+    description += "<tr><td align=\"right\"><b>" + i18n("Package Name") + ":</b></td><td>" + p->name() + "</td></tr>";
+    if ( details->license() != Package::UnknownLicense )
+        description += "<tr><td align=\"right\"><b>" + i18n("License")
+                    + ":</b></td><td>" + details->license()
+                    + "</td></tr>";
+    if ( details->group() != Client::UnknownGroup )
+        description += "<tr><td align=\"right\"><b>" + i18n("Group") + ":</b></td><td>"
+                    + KpkStrings::groups( details->group() )
+                    + "</td></tr>";
+    if ( !details->description().isEmpty() )
+        description += "<tr><td align=\"right\"><b>" + i18n("Details")
+                    + ":</b></td><td>" + details->description().replace('\n', "<br />")
+                    + "</td></tr>";
+    if ( !details->url().isEmpty() )
+        description += "<tr><td align=\"right\"><b>" + i18n("Home Page")
+                    + ":</b></td><td><a href=\"" + details->url() + "\">" + details->url()
+                    + "</a></td></tr>";
+    if ( details->size() > 0 )
+        description += "<tr><td align=\"right\"><b>" + i18n("Size")
+                    + ":</b></td><td>" + KGlobal::locale()->formatByteSize( details->size() )
+                    + "</td></tr>";
+    description += "</table></tbody>";
+    descriptionKTB->setHtml(description);
+}
+
+void KpkPackageDetails::getDetailsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(status)
+    Q_UNUSED(runtime)
+//     if (status == Transaction::Success)
+//      descriptionDW->setVisible(true);
+}
+
+void KpkPackageDetails::on_descriptionTB_clicked()
+{
+    setCurrentWidget(descriptionKTB);
+}
+
+void KpkPackageDetails::getFiles(PackageKit::Package *p)
+{
+    // create the files transaction
+    Transaction *t = Client::instance()->getFiles(p);
+    connect(t, SIGNAL(files(PackageKit::Package *, const QStringList &)),
+            this, SLOT(files(PackageKit::Package *, const QStringList &)));
+    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+            this, SLOT(getFilesFinished(PackageKit::Transaction::ExitStatus, uint)));
+}
+
+void KpkPackageDetails::files(PackageKit::Package *package, const QStringList &files)
+{
+    Q_UNUSED(package)
+    filesPTE->clear();
+    for (int i = 0; i < files.size(); ++i)
+        filesPTE->appendPlainText(files.at(i));
+}
+
+void KpkPackageDetails::getFilesFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(runtime)
+    if (status == Transaction::Success) {
+        if (filesPTE->document()->toPlainText().isEmpty()) {
+            filesPTE->appendPlainText(i18n("No files were found."));
+        }
+    }
+}
+
+void KpkPackageDetails::on_fileListTB_clicked()
+{
+    setCurrentWidget(filesPTE);
+}
+
+void KpkPackageDetails::getDepends(PackageKit::Package *p)
+{
+    // create a transaction for the dependecies not recursive
+    // TODO poke adrien to add a convenience method to not need PackageKit::Client::NoFilter
+    Transaction *t = Client::instance()->getDepends(p, PackageKit::Client::NoFilter, false);
+    dependsOnLV->setModel(m_pkg_model_dep = new KpkPackageModel(this, dependsOnLV));
+    connect(t, SIGNAL(package(PackageKit::Package *)),
+            m_pkg_model_dep, SLOT(addPackage(PackageKit::Package *)));
+    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+            this, SLOT(getDependsFinished(PackageKit::Transaction::ExitStatus, uint)));
+}
+
+void KpkPackageDetails::getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(status)
+    Q_UNUSED(runtime)
+//     if (status == Transaction::Success)
+//      descriptionDW->setVisible(true);
+}
+
+void KpkPackageDetails::on_dependsOnTB_clicked()
+{
+    setCurrentWidget(dependsOnLV);
+}
+
+void KpkPackageDetails::getRequires(PackageKit::Package *p)
+{
+    // create a transaction for the requirements not recursive
+    Transaction *t = Client::instance()->getRequires(p, PackageKit::Client::NoFilter, false);
+    requiredByLV->setModel(m_pkg_model_req = new KpkPackageModel(this, requiredByLV));
+    connect(t, SIGNAL(package(PackageKit::Package *)),
+            m_pkg_model_req, SLOT(addPackage(PackageKit::Package *)));
+    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+            this, SLOT(getRequiresFinished(PackageKit::Transaction::ExitStatus, uint)));
+}
+
+void KpkPackageDetails::getRequiresFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(status)
+    Q_UNUSED(runtime)
+//     if (status == Transaction::Success)
+//      descriptionDW->setVisible(true);
+}
+
+void KpkPackageDetails::on_requiredByTB_clicked()
+{
+    setCurrentWidget(requiredByLV);
+}
+
+#include "KpkPackageDetails.moc"

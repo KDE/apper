@@ -50,42 +50,16 @@ KpkAddRm::KpkAddRm( QWidget *parent )
     m_client = Client::instance();
 
     //initialize the model, delegate, client and  connect it's signals
-    packageView->setItemDelegate(pkg_delegate = new KpkDelegate(this));
-    packageView->setModel( m_pkg_model_main = new KpkPackageModel(this, packageView) );
+    packageView->setItemDelegate(pkg_delegate = new KpkDelegate(packageView));
+    packageView->setModel(m_pkg_model_main = new KpkPackageModel(this, packageView));
     packageView->viewport()->setAttribute(Qt::WA_Hover);
 
     // check to see if the backend support these actions
     m_actions = m_client->getActions();
-    if ( m_actions.contains(Client::ActionInstallPackages) || m_actions.contains(Client::ActionRemovePackages) )
-        connect( m_pkg_model_main, SIGNAL( dataChanged(const QModelIndex, const QModelIndex) ), this, SLOT( checkChanged() ) );
-
-    if (m_actions.contains(Client::ActionGetDetails))
-        connect(this, SIGNAL(getInfo(PackageKit::Package *)),
-                this, SLOT(getDetails(PackageKit::Package *)));
-    else
-        tabWidget->setTabEnabled(0, false);
-
-    if (m_actions.contains(Client::ActionGetFiles))
-        connect(this, SIGNAL(getInfo(PackageKit::Package *)),
-                this, SLOT(getFiles(PackageKit::Package *)));
-    else
-        tabWidget->setTabEnabled(1, false);
-
-    if ( m_actions.contains(Client::ActionGetDepends) ) {
-        dependsOnLV->setModel( m_pkg_model_dep = new KpkPackageModel(this, packageView) );
-        connect(this, SIGNAL(getInfo(PackageKit::Package *)),
-                this, SLOT( getDepends(PackageKit::Package *)));
+    if (m_actions.contains(Client::ActionInstallPackages) || m_actions.contains(Client::ActionRemovePackages)) {
+        connect(m_pkg_model_main, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+                this, SLOT(checkChanged()) );
     }
-    else
-        tabWidget->setTabEnabled(2, false);
-
-    if ( m_actions.contains(Client::ActionGetRequires) ) {
-        requiredByLV->setModel(m_pkg_model_req = new KpkPackageModel(this, packageView));
-        connect(this, SIGNAL(getInfo(PackageKit::Package *)),
-                this, SLOT(getRequires(PackageKit::Package *)));
-    }
-    else
-        tabWidget->setTabEnabled(3, false);
 
     m_findMenu = new QMenu(this);
     setActionsDefaults();
@@ -94,15 +68,15 @@ KpkAddRm::KpkAddRm( QWidget *parent )
     toolBar->addAction(m_genericActionK);
 
     // Add actions that the backend supports
-    if ( m_actions.contains(Client::ActionSearchFile) ) {
+    if (m_actions.contains(Client::ActionSearchFile)) {
         m_findMenu->addAction(actionFindFile);
         setCurrentAction(actionFindFile);
     }
-    if ( m_actions.contains(Client::ActionSearchDetails) ) {
+    if (m_actions.contains(Client::ActionSearchDetails)) {
         m_findMenu->addAction(actionFindDescription);
         setCurrentAction(actionFindDescription);
     }
-    if ( m_actions.contains(Client::ActionSearchName) ) {
+    if (m_actions.contains(Client::ActionSearchName)) {
         m_findMenu->addAction(actionFindName);
         setCurrentAction(actionFindName);
     }
@@ -122,12 +96,12 @@ KpkAddRm::KpkAddRm( QWidget *parent )
         connect(m_genericActionK, SIGNAL(triggered()), this, SLOT(actionFindNameK()));
     }
 
-    if ( !m_actions.contains(Client::ActionSearchGroup) ) {
+    if (!m_actions.contains(Client::ActionSearchGroup)) {
         groupsCB->setEnabled(false);
     }
 
     //initialize the groups
-    foreach (Client::Group group, m_client->getGroups() ) {
+    foreach (Client::Group group, m_client->getGroups()) {
         groupsCB->addItem( KpkIcons::groupsIcon(group), KpkStrings::groups(group), group);
     }
 
@@ -138,9 +112,6 @@ KpkAddRm::KpkAddRm( QWidget *parent )
     // set fucus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
 
-    // hides the description to have more space.
-    descriptionDW->setVisible(false);
-    
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
 }
 
@@ -182,65 +153,20 @@ void KpkAddRm::checkChanged()
       emit changed(false);
 }
 
-void KpkAddRm::getDetails(PackageKit::Package *p)
+void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
 {
-    // create the description transaction
-    Transaction *t = m_client->getDetails(p);
-    connect( t, SIGNAL(details(PackageKit::Package *) ),
-        this, SLOT( description(PackageKit::Package *) ) );
-    connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-	this, SLOT( getInfoFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-    transactionBar->addTransaction(t);
-}
-
-void KpkAddRm::getFiles(PackageKit::Package *p)
-{
-    // create the files transaction
-    Transaction *t = m_client->getFiles(p);
-    connect( t, SIGNAL( files(PackageKit::Package *, const QStringList &) ),
-	this, SLOT( files(PackageKit::Package *, const QStringList &) ) );
-    connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-	this, SLOT( getInfoFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-    transactionBar->addTransaction(t);
-}
-
-void KpkAddRm::getDepends(PackageKit::Package *p)
-{
-    // create a transaction for the dependecies, and its model.
-    Transaction *t = m_client->getDepends(p);
-    m_pkg_model_dep->clear();
-    connect( t, SIGNAL( package(PackageKit::Package *) ),
-	m_pkg_model_dep, SLOT( addPackage(PackageKit::Package *) ) );
-    connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-	this, SLOT( getInfoFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-    transactionBar->addTransaction(t);
-}
-
-void KpkAddRm::getRequires(PackageKit::Package *p)
-{  
-    // create a transaction for the requirements, and its model.
-    Transaction *t = m_client->getRequires(p);
-    m_pkg_model_req->clear();
-    connect( t, SIGNAL( package(PackageKit::Package *) ),
-	m_pkg_model_req, SLOT( addPackage(PackageKit::Package *) ) );
-    connect( t, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-	this, SLOT( getInfoFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-    transactionBar->addTransaction(t);
-}
-
-void KpkAddRm::getInfoFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
-{
-    Q_UNUSED(runtime);
-    if (status == Transaction::Success)
-	descriptionDW->setVisible(true);
-}
-
-void KpkAddRm::on_packageView_pressed( const QModelIndex & index )
-{
-    if ( index.column() == 0 ) {
+    if (index.column() == 0) {
         Package *p = m_pkg_model_main->package(index);
-        if (p)
-            emit getInfo(p);
+        if (p) {
+        kDebug() << p->name();
+//             emit getInfo(p);
+//             KpkPackageDetails
+            if (pkg_delegate->isExtended(index)) {
+                pkg_delegate->contractItem(index);
+            } else {
+                pkg_delegate->extendItem(new KpkPackageDetails(p, m_actions), index);
+            }
+        }
     }
 }
 
@@ -298,7 +224,7 @@ KpkAddRm::~KpkAddRm()
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
     kDebug() << "Saving filters settings";
-    
+
     filterMenuGroup.writeEntry("OnlyNewestPackages", m_actionNewestOnly->isChecked());
     filterMenuGroup.writeEntry("HideSubpackages", m_actionBasename->isChecked());
     filterMenuGroup.writeEntry("ViewInGroups", m_actionViewInGroups->isChecked());
@@ -373,12 +299,12 @@ void KpkAddRm::on_actionFindFile_triggered()
 void KpkAddRm::on_groupsCB_currentIndexChanged( int index )
 {
     if ( groupsCB->itemData( index, Qt::UserRole ).isValid() ) {
-	// cache the search
-	m_searchAction = Client::ActionSearchGroup;
-	m_searchGroup = (Client::Group) groupsCB->itemData( index, Qt::UserRole ).toUInt();
-	m_searchFilters = filters();
-	// create the main transaction
-	search();
+        // cache the search
+        m_searchAction = Client::ActionSearchGroup;
+        m_searchGroup = (Client::Group) groupsCB->itemData( index, Qt::UserRole ).toUInt();
+        m_searchFilters = filters();
+        // create the main transaction
+        search();
     }
 }
 
@@ -400,8 +326,8 @@ void KpkAddRm::search()
 
     connectTransaction(m_pkClient_main);
     transactionBar->addTransaction(m_pkClient_main);
-    // hides the description to have more space.
-    descriptionDW->setVisible(false);
+    // contract and delete and details widgets
+    pkg_delegate->contractAll();
     // cleans the models
     m_pkg_model_main->clear();
     m_mTransRuning = true;
@@ -409,12 +335,12 @@ void KpkAddRm::search()
 
 void KpkAddRm::connectTransaction(Transaction *transaction)
 {
-    connect( transaction, SIGNAL( package(PackageKit::Package *)),
-	m_pkg_model_main, SLOT( addPackage(PackageKit::Package *)) );
-    connect( transaction, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint)),
-	this, SLOT( finished(PackageKit::Transaction::ExitStatus, uint)) );
-    connect( transaction, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
-	this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString &) ) );
+    connect(transaction, SIGNAL(package(PackageKit::Package *)),
+            m_pkg_model_main, SLOT(addPackage(PackageKit::Package *)));
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+            this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
+    connect(transaction, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString&)),
+            this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
 }
 
 void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &details)
@@ -441,46 +367,8 @@ void KpkAddRm::load()
 void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
     Q_UNUSED(runtime)
+    Q_UNUSED(status)
     m_mTransRuning = false;
-}
-
-void KpkAddRm::description(PackageKit::Package *p)
-{
-    //format and show description
-    Package::Details *details = p->details();
-    QString description;
-    description += "<table><tbody>";
-    description += "<tr><td align=\"right\"><b>" + i18n("Package Name") + ":</b></td><td>" + p->name() + "</td></tr>";
-    if ( details->license() != Package::UnknownLicense )
-        description += "<tr><td align=\"right\"><b>" + i18n("License")
-                    + ":</b></td><td>" + details->license()
-                    + "</td></tr>";
-    if ( details->group() != Client::UnknownGroup )
-        description += "<tr><td align=\"right\"><b>" + i18n("Group") + ":</b></td><td>"
-                    + KpkStrings::groups( details->group() )
-                    + "</td></tr>";
-    if ( !details->description().isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("Details")
-                    + ":</b></td><td>" + details->description().replace('\n', "<br />")
-                    + "</td></tr>";
-    if ( !details->url().isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("Home Page")
-                    + ":</b></td><td><a href=\"" + details->url() + "\">" + details->url()
-                    + "</a></td></tr>";
-    if ( details->size() > 0 )
-        description += "<tr><td align=\"right\"><b>" + i18n("Size")
-                    + ":</b></td><td>" + KGlobal::locale()->formatByteSize( details->size() )
-                    + "</td></tr>";
-    description += "</table></tbody>";
-    descriptionKTB->setHtml(description);
-}
-
-void KpkAddRm::files(PackageKit::Package *package, const QStringList &files)
-{
-    Q_UNUSED(package);
-    filesPTE->clear();
-    for (int i = 0; i < files.size(); ++i)
-        filesPTE->appendPlainText(files.at(i));
 }
 
 void KpkAddRm::filterMenu(Client::Filters filters)
@@ -727,13 +615,13 @@ void KpkAddRm::filterMenu(Client::Filters filters)
             actions << m_actionNewestOnly;
             m_actionNewestOnly->setChecked(filterMenuGroup.readEntry("OnlyNewestPackages", false));
         }
-        
+
         m_filtersQM->addSeparator();
     }
     else {
         //filtersTB->setDisabled(true);
     }
-    
+
     m_actionViewInGroups = new QAction(i18n("View in groups"), m_filtersQM);
     m_actionViewInGroups->setCheckable(true);
     m_filtersQM->addAction(m_actionViewInGroups);
@@ -744,13 +632,16 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         m_actionViewInGroups->setChecked(true);
     }
 
-    
-    connect(m_actionViewInGroups, SIGNAL( toggled(bool) ), m_pkg_model_main, SLOT( setGrouped(bool) ) );
-    connect(m_actionViewInGroups, SIGNAL( toggled(bool) ), this, SLOT( packageViewSetRootIsDecorated(bool) ) );
+    connect(m_actionViewInGroups, SIGNAL(toggled(bool)),
+            m_pkg_model_main, SLOT(setGrouped(bool)));
+    connect(m_actionViewInGroups, SIGNAL(toggled(bool)),
+            this, SLOT(packageViewSetRootIsDecorated(bool)));
 }
 
 void KpkAddRm::packageViewSetRootIsDecorated(bool value)
 {
+    // contract and delete and details widgets
+    pkg_delegate->contractAll();
     packageView->setRootIsDecorated(value);
 }
 

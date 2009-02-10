@@ -1,0 +1,49 @@
+<ui version="4.0" >
+ <class>KpkUpdateDetails</class>
+ <widget class="QWidget" name="KpkUpdateDetails" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>367</width>
+    <height>191</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2" >
+   <property name="margin" >
+    <number>0</number>
+   </property>
+   <item row="0" column="0" >
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Details</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout" >
+      <item row="0" column="0" >
+       <widget class="KTextBrowser" name="descriptionKTB" >
+        <property name="maximumSize" >
+         <size>
+          <width>16777215</width>
+          <height>150</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KTextBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header>ktextbrowser.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

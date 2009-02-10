@@ -5,123 +5,89 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>449</width>
+    <width>454</width>
     <height>423</height>
    </rect>
   </property>
   <property name="locale" >
    <locale country="UnitedStates" language="English" />
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" >
-   <item>
-    <layout class="QVBoxLayout" name="verticalLayout" >
-     <item>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" >
+    <layout class="QGridLayout" name="gridLayout_2" >
+     <item row="0" column="0" >
       <widget class="KTitleWidget" name="distroTitle" >
        <property name="text" >
         <string>Distribution Upgrade Available!</string>
        </property>
       </widget>
      </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout" >
-       <item>
-        <widget class="QLabel" name="distroDescription" >
-         <property name="text" >
-          <string/>
-         </property>
-         <property name="wordWrap" >
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="KPushButton" name="distroUpgradeBtn" >
-         <property name="text" >
-          <string>Upgrade to %1</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+     <item rowspan="2" row="0" column="1" >
+      <widget class="KPushButton" name="distroUpgradeBtn" >
+       <property name="text" >
+        <string>Upgrade to %1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" >
+      <widget class="QLabel" name="distroDescription" >
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
-   <item>
-    <widget class="QSplitter" name="splitter" >
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
+   <item row="1" column="0" >
+    <widget class="QTreeView" name="packageView" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="MinimumExpanding" hsizetype="Expanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <widget class="QTreeView" name="packageView" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="MinimumExpanding" hsizetype="Expanding" >
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="horizontalScrollBarPolicy" >
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="autoScroll" >
-       <bool>false</bool>
-      </property>
-      <property name="showDropIndicator" stdset="0" >
-       <bool>false</bool>
-      </property>
-      <property name="alternatingRowColors" >
-       <bool>true</bool>
-      </property>
-      <property name="rootIsDecorated" >
-       <bool>true</bool>
-      </property>
-      <property name="itemsExpandable" >
-       <bool>true</bool>
-      </property>
-      <property name="sortingEnabled" >
-       <bool>true</bool>
-      </property>
-      <property name="animated" >
-       <bool>false</bool>
-      </property>
-      <property name="allColumnsShowFocus" >
-       <bool>false</bool>
-      </property>
-      <property name="headerHidden" >
-       <bool>false</bool>
-      </property>
-      <property name="expandsOnDoubleClick" >
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QDockWidget" name="detailsDW" >
-      <property name="floating" >
-       <bool>false</bool>
-      </property>
-      <property name="features" >
-       <set>QDockWidget::DockWidgetClosable</set>
-      </property>
-      <property name="windowTitle" >
-       <string>Information</string>
-      </property>
-      <widget class="QWidget" name="dockWidgetContents" >
-       <layout class="QGridLayout" name="gridLayout" >
-        <item row="0" column="0" >
-         <widget class="KTextBrowser" name="descriptionKTB" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
+     <property name="horizontalScrollBarPolicy" >
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="autoScroll" >
+      <bool>false</bool>
+     </property>
+     <property name="showDropIndicator" stdset="0" >
+      <bool>false</bool>
+     </property>
+     <property name="alternatingRowColors" >
+      <bool>true</bool>
+     </property>
+     <property name="rootIsDecorated" >
+      <bool>true</bool>
+     </property>
+     <property name="itemsExpandable" >
+      <bool>true</bool>
+     </property>
+     <property name="sortingEnabled" >
+      <bool>true</bool>
+     </property>
+     <property name="animated" >
+      <bool>false</bool>
+     </property>
+     <property name="allColumnsShowFocus" >
+      <bool>false</bool>
+     </property>
+     <property name="headerHidden" >
+      <bool>false</bool>
+     </property>
+     <property name="expandsOnDoubleClick" >
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
-   <item>
+   <item row="2" column="0" >
     <widget class="KpkTransactionBar" native="1" name="transactionBar" />
    </item>
-   <item>
+   <item row="3" column="0" >
     <layout class="QHBoxLayout" name="horizontalLayout_2" >
      <item>
       <widget class="KPushButton" name="updatePB" >
@@ -153,11 +119,6 @@
    <class>KPushButton</class>
    <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTextBrowser</class>
-   <extends>QTextBrowser</extends>
-   <header>ktextbrowser.h</header>
   </customwidget>
   <customwidget>
    <class>KTitleWidget</class>

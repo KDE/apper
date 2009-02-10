@@ -36,10 +36,11 @@
 #define DROPDOWN_PADDING 2
 #define DROPDOWN_SEPARATOR_HEIGHT 32
 
-KpkDelegate::KpkDelegate(QObject * parent)
- : QItemDelegate(parent), m_addIcon("list-add"), m_removeIcon("list-remove")
+KpkDelegate::KpkDelegate(QAbstractItemView *parent)
+ : KExtendableItemDelegate(parent), m_addIcon("list-add"), m_removeIcon("list-remove")
 {
-
+    setExtendPixmap(SmallIcon("arrow-right"));
+    setContractPixmap(SmallIcon("arrow-down"));
 }
 
 void KpkDelegate::paint(QPainter *painter,
@@ -50,16 +51,16 @@ void KpkDelegate::paint(QPainter *painter,
     QStyleOptionViewItemV4 opt(option);
     QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
-
+KExtendableItemDelegate::paint(painter, opt, index);
     switch (index.column()) {
-	case 0:
-	    paintColMain(painter, option, index);
-	    break;
-	case 1:
-	    paintColFav(painter, option, index);
-	    break;
-	default:
-	    kDebug() << "unexpected column";
+        case 0:
+            paintColMain(painter, option, index);
+            break;
+        case 1:
+            paintColFav(painter, option, index);
+            break;
+        default:
+            kDebug() << "unexpected column";
     }
 }
 
@@ -86,23 +87,23 @@ void KpkDelegate::paintColMain(QPainter *painter,
     bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
 
     //grab the info from the model
-    QString title = index.model()->data(index, Qt::DisplayRole).toString();
-    QString description = index.model()->data(index, SummaryRole).toString();
-    bool group = index.model()->data(index, GroupRole).toBool();
+    QString title = index.model()->data(index, KpkPackageModel::NameRole).toString();
+    QString description = index.model()->data(index, KpkPackageModel::SummaryRole).toString();
+    bool group = index.model()->data(index, KpkPackageModel::GroupRole).toBool();
 
     // selects the mode to paint the icon based on the info field
     QIcon::Mode iconMode;
     if (group)
 	iconMode = QIcon::Normal;
     else {
-	if ( index.model()->data(index, InstalledRole).toBool() )
-	    iconMode = index.model()->data(index, CheckedRole).toInt() == Qt::Checked ? QIcon::Disabled : QIcon::Normal;
+	if ( index.model()->data(index, KpkPackageModel::InstalledRole).toBool() )
+	    iconMode = index.model()->data(index, KpkPackageModel::CheckedRole).toInt() == Qt::Checked ? QIcon::Disabled : QIcon::Normal;
 	else
-	    iconMode = index.model()->data(index, CheckedRole).toInt() == Qt::Checked ? QIcon::Selected : QIcon::Disabled;
+	    iconMode = index.model()->data(index, KpkPackageModel::CheckedRole).toInt() == Qt::Checked ? QIcon::Selected : QIcon::Disabled;
     }
 	
 // 	    QIcon::Mode iconMode = QIcon::Normal;
-//     switch ( index.model()->data(index, CheckedRole).toInt() ) {
+//     switch ( index.model()->data(index, KpkPackageModel::CheckedRole).toInt() ) {
 // 	case Qt::Unchecked :
 // 	    iconMode = QIcon::Disabled;
 // 	    break;
@@ -163,7 +164,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     }
 
     // Main icon
-    index.model()->data(index, Qt::DecorationRole).value<QIcon>().paint(&p, 
+    index.model()->data(index, KpkPackageModel::IconRole).value<QIcon>().paint(&p,
             leftToRight ? left + UNIVERSAL_PADDING : left + width - UNIVERSAL_PADDING - MAIN_ICON_SIZE,
             top + UNIVERSAL_PADDING, 
             MAIN_ICON_SIZE, MAIN_ICON_SIZE, Qt::AlignCenter, iconMode);
@@ -242,7 +243,7 @@ void KpkDelegate::paintColFav(QPainter *painter,
 	return;
 
     QIcon::Mode iconMode = QIcon::Normal;
-    switch ( index.model()->data(index, CheckedRole).toInt() ) {
+    switch ( index.model()->data(index, KpkPackageModel::CheckedRole).toInt() ) {
 	case Qt::Unchecked :
 	    iconMode = QIcon::Disabled;
 	    break;
@@ -258,7 +259,7 @@ void KpkDelegate::paintColFav(QPainter *painter,
 
 //     const KIcon * icon = ( index.model()->data(index, PkAddRmModel::InstalledRole).toBool() )? & m_removeIcon : & m_addIcon;
 
-    if ( index.model()->data(index, InstalledRole).toBool() )
+    if ( index.model()->data(index, KpkPackageModel::InstalledRole).toBool() )
         m_removeIcon.paint(painter, 
             left + width - FAV_ICON_SIZE - UNIVERSAL_PADDING, top + UNIVERSAL_PADDING, 
             FAV_ICON_SIZE, FAV_ICON_SIZE, Qt::AlignCenter, iconMode);
@@ -269,7 +270,7 @@ void KpkDelegate::paintColFav(QPainter *painter,
 
     iconMode = QIcon::Active;
 
-    const KIcon * icon = (index.model()->data(index, CheckedRole).toBool() )? & m_removeIcon : & m_addIcon;
+    const KIcon * icon = (index.model()->data(index, KpkPackageModel::CheckedRole).toBool() )? & m_removeIcon : & m_addIcon;
 
     if ( option.state & QStyle::State_MouseOver )
         icon->paint(painter, 
@@ -319,16 +320,19 @@ bool KpkDelegate::editorEvent(QEvent *event,
                                const QStyleOptionViewItem &option,
                                const QModelIndex &index)
 {
-    if ( !(index.flags() & Qt::ItemIsUserCheckable) )
-	return false;
+    Q_UNUSED(option)
+    if (!(index.flags() & Qt::ItemIsUserCheckable)) {
+        return false;
+    }
 
-    if ( event->type() == QEvent::MouseButtonPress && index.column() == 1 )
-        return model->setData(index, !model->data(index, CheckedRole).toBool(), CheckedRole );
+    if (event->type() == QEvent::MouseButtonPress && index.column() == 1) {
+        return model->setData(index, !model->data(index, KpkPackageModel::CheckedRole).toBool(), KpkPackageModel::CheckedRole );
 //     else if ( event->type() == QEvent::KeyPress ) {
 //     
-//     }
-    else
-        return QItemDelegate::editorEvent(event, model, option, index);
+    }  else {
+        return false;
+//         return QItemDelegate::editorEvent(event, model, option, index);
+    }
 }
 
 QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
@@ -343,12 +347,19 @@ QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
 //         local_option_title.font.setPointSize(local_option_title.font.pointSize() + 2);
 //         QFontMetrics title(local_option_title.font);
 //         QFontMetrics normal(local_option_normal.font);
-//         width = qMax(title.width(index.data(Qt::DisplayRole).toString()), normal.width(index.data(KpkPackageModel::SummaryRole).toString())) + MAIN_ICON_SIZE + FADE_LENGTH;
+//         width = qMax(title.width(index.data(KpkPackageModel::NameRole).toString()), normal.width(index.data(KpkPackageModel::SummaryRole).toString())) + MAIN_ICON_SIZE + FADE_LENGTH;
 //     } else {
 //         width = FAV_ICON_SIZE;
 //     }
     int width = (index.column() == 0) ? index.model()->data(index, Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
-    return QSize(width, calcItemHeight(option));
+    QSize ret(KExtendableItemDelegate::sizeHint(option, index));
+    // remove the default size of the index
+    ret -= QStyledItemDelegate::sizeHint(option, index);
+
+    ret.rheight() += calcItemHeight(option);
+    ret.rwidth()  += width;
+    return ret;
+
 }
 
 int KpkDelegate::columnWidth (int column, int viewWidth) const
@@ -357,5 +368,26 @@ int KpkDelegate::columnWidth (int column, int viewWidth) const
         return FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
     } else return viewWidth - /*2 **/ columnWidth(1, viewWidth);
 }
+
+// void KpkDelegate::itemActivated(const QModelIndex &index)
+// {
+//     const TransferTreeModel * transferTreeModel = static_cast <const TransferTreeModel *> (index.model());
+// 
+//     if(!transferTreeModel->isTransferGroup(index) && Settings::showExpandableTransferDetails() && index.column() == 0) {
+//         if(!isExtended(index)) {
+//             TransferHandler *handler = static_cast <TransferHandler *> (index.internalPointer());
+//             QWidget *widget = getDetailsWidgetForTransfer(handler);
+// 
+//             m_editingIndexes.append(index);
+//             extendItem(widget, index);
+//         }
+//         else {
+//             removeTransferObserver(index);
+// 
+//             m_editingIndexes.removeAll(index);
+//             contractItem(index);
+//         }
+//     }
+// }
 
 #include "KpkDelegate.moc"

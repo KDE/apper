@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "KpkUpdate.h"
+#include "KpkUpdateDetails.h"
 #include <KpkStrings.h>
 
 #include <KDebug>
@@ -32,14 +33,13 @@
 
 #define UNIVERSAL_PADDING 6
 
-KpkUpdate::KpkUpdate( QWidget *parent )
-    : QWidget( parent ),
+KpkUpdate::KpkUpdate(QWidget *parent)
+    : QWidget(parent),
     m_distroUpgradeProcess(0),
     m_distroUpgradeDialog(0)
 {
-    setupUi( this );
-    detailsDW->hide();
-    
+    setupUi(this);
+
     updatePB->setIcon(KIcon("package-update"));
     refreshPB->setIcon(KIcon("view-refresh"));
     historyPB->setIcon(KIcon("view-history"));
@@ -48,7 +48,7 @@ KpkUpdate::KpkUpdate( QWidget *parent )
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 
     //initialize the model, delegate, client and  connect it's signals
-    packageView->setItemDelegate(pkg_delegate = new KpkDelegate(this));
+    packageView->setItemDelegate(pkg_delegate = new KpkDelegate(packageView));
     packageView->setModel(m_pkg_model_updates = new KpkPackageModel(this, packageView));
     m_pkg_model_updates->setGrouped(true);
     connect(m_pkg_model_updates, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
@@ -59,7 +59,7 @@ KpkUpdate::KpkUpdate( QWidget *parent )
 
     // check to see what roles the backend
     m_actions = m_client->getActions();
-    
+
     // Setup the distro upgrade banner
     //TODO: Find the distribution's logo
     distroTitle->setPixmap(KIcon("system-software-update"));
@@ -70,10 +70,8 @@ KpkUpdate::KpkUpdate( QWidget *parent )
     distroTitle->hide();
     distroDescription->hide();
     distroUpgradeBtn->hide();
-    
+
     connect(distroUpgradeBtn, SIGNAL(clicked(bool)), this, SLOT(startDistroUpgrade()));
-    
-    
 }
 
 void KpkUpdate::startDistroUpgrade()
@@ -81,27 +79,29 @@ void KpkUpdate::startDistroUpgrade()
     QList<Solid::Device> powerPlugs = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter);
     bool pluggedIn = true;
     bool hasBattery = Solid::Device::listFromType(Solid::DeviceInterface::Battery).size()>0;
-    foreach(const Solid::Device dev, powerPlugs)
-        if (!dev.as<Solid::AcAdapter>()->isPlugged())
+    foreach(const Solid::Device dev, powerPlugs) {
+        if (!dev.as<Solid::AcAdapter>()->isPlugged()) {
             pluggedIn = false;
-    
+        }
+    }
+
     QString warning = i18n("You are about to upgrade your distribution to the latest version. "
-    "This is usually a very lengthy process and takes a lot longer than "
-    "simply upgrading your packages.");
-    
-    if (!pluggedIn)
-        warning+=" "+i18n("It is recommended to plug in your computer before proceeding.");
-    else if (hasBattery)
-        warning+=" "+i18n("It is recommended that you keep your computer plugged in while the upgrade is being performed.");
-    
+                           "This is usually a very lengthy process and takes a lot longer than "
+                           "simply upgrading your packages.");
+
+    if (!pluggedIn) {
+        warning += " "+i18n("It is recommended to plug in your computer before proceeding.");
+    } else if (hasBattery) {
+        warning += " "+i18n("It is recommended that you keep your computer plugged in while the upgrade is being performed.");
+    }
+
     if (KMessageBox::warningContinueCancel(this,warning) == KMessageBox::Continue) {
         m_distroUpgradeProcess = new QProcess;
-        connect (m_distroUpgradeProcess, SIGNAL (error ( QProcess::ProcessError )),
-            this, SLOT(distroUpgradeError( QProcess::ProcessError  ) ));
-        connect (m_distroUpgradeProcess, SIGNAL (finished(int, QProcess::ExitStatus)),
-            this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus  ) ));
+        connect(m_distroUpgradeProcess, SIGNAL(error (QProcess::ProcessError)),
+                this, SLOT(distroUpgradeError(QProcess::ProcessError)));
+        connect(m_distroUpgradeProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
+                this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus)));
 
-        
         m_distroUpgradeDialog = new KProgressDialog(this);
         m_distroUpgradeDialog->setLabelText("Waiting for distribution upgrade to complete");
         m_distroUpgradeDialog->showCancelButton(false);
@@ -215,7 +215,7 @@ void KpkUpdate::applyUpdates()
 
 void KpkUpdate::suppressSleep(bool enable)
 {
-    if ( enable ) {
+    if (enable) {
         kDebug() << "Disabling powermanagement sleep";
         m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
         if (m_inhibitCookie == -1)
@@ -244,6 +244,9 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
 {
     checkEnableUpdateButton();
     if (status == KpkTransaction::Success) {
+        // contract and delete and update details widgets
+        pkg_delegate->contractAll();
+        // clears the model
         m_pkg_model_updates->clear();
         m_pkg_model_updates->uncheckAll();
         m_updatesT = m_client->getUpdates();
@@ -254,9 +257,8 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
                 this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
         Transaction* t = m_client->getDistroUpgrades();
         transactionBar->addTransaction(t);
-        connect(t,
-                 SIGNAL( distroUpgrade( PackageKit::Client::UpgradeType, const QString&, const QString& ) ),
-             this, SLOT( distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString& ) ) );
+        connect(t, SIGNAL(distroUpgrade(PackageKit::Client::UpgradeType, const QString &, const QString &)),
+                this, SLOT(distroUpgrade(PackageKit::Client::UpgradeType, const QString &, const QString &)));
     }
 }
 
@@ -271,78 +273,13 @@ void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
         Package *p = m_pkg_model_updates->package(index);
         // check to see if the backend support
         if (p && m_actions.contains(Client::ActionGetUpdateDetail)) {
-            Transaction *t = m_client->getUpdateDetail(p);
-            connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
-                    this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
+            if (pkg_delegate->isExtended(index)) {
+                pkg_delegate->contractItem(index);
+            } else {
+                pkg_delegate->extendItem(new KpkUpdateDetails(p), index);
+            }
         }
     }
-}
-
-void KpkUpdate::updateDetail(PackageKit::Client::UpdateInfo info)
-{
-    //format and show description
-    QString description;
-    description += "<table><tbody>";
-    description += "<tr><td align=\"right\"><b>" + i18n("New version") + ":</b></td><td>" + info.package->name()
-                + "-" + info.package->version()
-                + "</td></tr>";
-
-    if ( info.updates.size() ) {
-        QStringList updates;
-        foreach (Package *p, info.updates) updates << p->name() + "-" + p->version();
-        description += "<tr><td align=\"right\"><b>" + i18n("Updates") + ":</b></td><td>"
-                    + updates.join(", ")
-                    + "</td></tr>";
-    }
-    if ( info.obsoletes.size() ) {
-        QStringList obsoletes;
-        foreach (Package *p, info.obsoletes) obsoletes << p->id() + "-" + p->version();
-        description += "<tr><td align=\"right\"><b>" + i18n("Obsoletes") + ":</b></td><td>"
-                    + obsoletes.join(", ")
-                    + "</td></tr>";
-    }
-    if ( !info.updateText.isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("Details") + ":</b></td><td>"
-                    + info.updateText.replace('\n', "<br />")
-                    + "</td></tr>";
-    if ( !info.vendorUrl.isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("Vendor Home Page")
-                    + ":</b></td><td><a href=\"" + info.vendorUrl.section(';', 0, 0) + "\">"
-                    + info.vendorUrl.section(';', -1)
-                    + "</a></td></tr>";
-    if ( !info.bugzillaUrl.isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("Bugzilla Home Page")
-                    + ":</b></td><td><a href=\"" + info.bugzillaUrl.section(';', 0, 0) + "\">"
-                    + info.bugzillaUrl.section(';', -1)
-                    + "</a></td></tr>";
-    if ( !info.cveUrl.isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("CVE Home Page")
-                    + ":</b></td><td><a href=\"" + info.cveUrl.section(';', 0, 0) + "\">"
-                    + info.cveUrl.section(';', -1)
-                    + "</a></td></tr>";
-    if ( !info.changelog.isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("Change Log") + ":</b></td><td>"
-                    + info.changelog.replace('\n', "<br />")
-                    + "</td></tr>";
-    if ( info.state != Client::UnknownUpgradeType)
-        description += "<tr><td align=\"right\"><b>" + i18n("State") + ":</b></td><td>"
-                    + KpkStrings::updateState(info.state)
-                    + "</td></tr>";
-    if ( info.restart != Client::UnknownRestartType)
-        description += "<tr><td align=\"right\"><b>" + i18n("Restart") + ":</b></td><td>"
-                    + KpkStrings::restartTypeFuture(info.restart)
-                    + "</td></tr>";
-    if ( !info.issued.toString().isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("Issued") + ":</b></td><td>"
-                    + KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate)
-                    + "</td></tr>";
-    if ( !info.updated.toString().isEmpty() )
-        description += "<tr><td align=\"right\"><b>" + i18n("Updated") + ":</b></td><td>"
-                    + KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate)
-                    + "</td></tr>";
-    description += "</table></tbody>";
-    descriptionKTB->setHtml(description);
-    detailsDW->show();
 }
 
 void KpkUpdate::on_historyPB_clicked()
