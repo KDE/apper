@@ -92,9 +92,6 @@
      <property name="text" >
       <string>Distribution Upgrade Available!</string>
      </property>
-     <property name="autoHideTimeout" >
-      <number>15000</number>
-     </property>
     </widget>
    </item>
   </layout>
