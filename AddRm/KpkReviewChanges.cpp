@@ -156,7 +156,7 @@ void KpkReviewChanges::removePackages()
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                 this, SLOT(remFinished(KpkTransaction::ExitStatus)));
-        frm->exec();
+        frm->show();
     } else {
         KMessageBox::sorry(this,
                            i18n("You don't have the necessary privileges to perform this action."),
@@ -193,7 +193,7 @@ void KpkReviewChanges::installPackages()
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                 this, SLOT(addFinished(KpkTransaction::ExitStatus)));
-        frm->exec();
+        frm->show();
     } else {
         KMessageBox::sorry(this,
                              i18n("You don't have the necessary privileges to perform this action."),
@@ -210,7 +210,7 @@ void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
             checkTask();
             break;
         case KpkTransaction::Failed :
-            KMessageBox::error(this, i18n("Sorry an error occurred"), i18n("KPackageKit"));
+            //TODO This is not nice we should close instead
             setButtons(KDialog::Close);
             break;
         case KpkTransaction::Cancelled :
@@ -231,7 +231,6 @@ void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
             checkTask();
             break;
         case KpkTransaction::Failed :
-            KMessageBox::error(this, i18n("Sorry an error occurred"), i18n("KPackageKit"));
             setButtons(KDialog::Close);
             break;
         case KpkTransaction::Cancelled :

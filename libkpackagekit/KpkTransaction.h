@@ -35,8 +35,8 @@ class KDE_EXPORT KpkTransaction : public KDialog
     Q_ENUMS(ExitStatus)
 public:
     enum BehaviorFlag {
-        Modal,
-        CloseOnFinish
+        Modal = 1,
+        CloseOnFinish = 2
     };
     Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
 

@@ -39,7 +39,7 @@ public:
 
 static const int stateCount = 7;
 
-KpkTransaction::KpkTransaction( Transaction *trans, Behaviors flags, QWidget *parent )
+KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
  : KDialog(parent),
    m_trans(trans),
    m_handlingGpgOrEula(false),
@@ -50,9 +50,9 @@ KpkTransaction::KpkTransaction( Transaction *trans, Behaviors flags, QWidget *pa
 
     // Set Cancel and custom button hide
     setButtons(KDialog::Cancel | KDialog::User1 | KDialog::Details);
-    setButtonText( KDialog::User1, i18n("Hide") );
-    setButtonToolTip( KDialog::User1, i18n("Allows you to hide the window but keeps running transaction task") );
-    setEscapeButton( KDialog::User1 );
+    setButtonText(KDialog::User1, i18n("Hide"));
+    setButtonToolTip(KDialog::User1, i18n("Allows you to hide the window but keeps running transaction task"));
+    setEscapeButton(KDialog::User1);
     enableButtonCancel(false);
     setDetailsWidget(d->ui.detailGroup);
     setDetailsWidgetVisible(false);
@@ -63,6 +63,8 @@ KpkTransaction::KpkTransaction( Transaction *trans, Behaviors flags, QWidget *pa
         setWindowModality(Qt::WindowModal);
         enableButton(KDialog::User1, false);
     }
+
+    d->ui.currentL->setText(KpkStrings::status(Transaction::Setup));
 }
 
 KpkTransaction::~KpkTransaction()
@@ -75,11 +77,11 @@ void KpkTransaction::setTransaction(Transaction *trans)
     m_trans = trans;
 
     setWindowIcon(KpkIcons::actionIcon(m_trans->role().action));
-    // Sets all the status of the current transaction
+    // Sets the kind of transaction
     setCaption(KpkStrings::action(m_trans->role().action));
-
+    // check to see if we can cancel
     enableButtonCancel(m_trans->allowCancel());
-
+    // sets the current status
     d->ui.currentL->setText(KpkStrings::status(m_trans->status()));
 
     progressChanged(m_trans->progress());
@@ -106,20 +108,24 @@ void KpkTransaction::setTransaction(Transaction *trans)
 
 void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
 {
-    if (info.percentage) {
+    if (info.percentage && info.percentage <= 100) {
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(info.percentage);
-    } else {
+    } else if (d->ui.progressBar->maximum() != 0) {
         d->ui.progressBar->setMaximum(0);
         d->ui.progressBar->reset();
     }
-    if (info.subpercentage) {
+
+    if (info.subpercentage && info.subpercentage <= 100) {
         d->ui.subprogressBar->setMaximum(100);
         d->ui.subprogressBar->setValue(info.subpercentage);
-    } else {
+    // Check if we didn't already set the maximum as this
+    // causes a weird behavior when we keep reseting
+    } else if (d->ui.subprogressBar->maximum() != 0) {
         d->ui.subprogressBar->setMaximum(0);
         d->ui.subprogressBar->reset();
     }
+
     if (info.remaining) {
         d->ui.timeL->setText(i18n("%1 remaining", KGlobal::locale()->formatDuration(info.remaining*1000)));
     } else {
@@ -170,7 +176,7 @@ void KpkTransaction::slotButtonClicked(int button)
 
 void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
 {
-    d->ui.currentL->setText( KpkStrings::status(status) );
+    d->ui.currentL->setText(KpkStrings::status(status));
 }
 
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)
@@ -194,26 +200,40 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
             if (m_flags & CloseOnFinish)
                 done(QDialog::Rejected);
         }
+        return;
     }
-//     kDebug() << "errorCode: " << error;
-//     check to see if we are already handlying these errors
-//     if ( error == Client::GpgFailure || error == Client::NoLicenseAgreement )
-// 	if (m_handlingGpgOrEula)
-// 	    return;
+
+    // check to see if we are already handlying these errors
+    if (error == Client::GpgFailure || error == Client::NoLicenseAgreement) {
+        if (m_handlingGpgOrEula) {
+            return;
+        }
+    }
 
 // this will be for files signature as seen in gpk
 //     if ( error == Client::BadGpgSignature || error Client::MissingGpgSignature)
 
     // ignoring these as gpk does
-//     if ( error == Client::TransactionCancelled || error == Client::ProcessKill )
-// 	return;
+    if (error == Client::TransactionCancelled || error == Client::ProcessKill) {
+        return;
+    }
 
-//     KMessageBox::detailedSorry( this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify );
+    KMessageBox::detailedSorry(this,
+                               KpkStrings::errorMessage(error),
+                               details,
+                               KpkStrings::error(error),
+                               KMessageBox::Notify);
+
+    // when we receive an error we are done
+    if (m_flags & CloseOnFinish) {
+        done(QDialog::Rejected);
+    }
 }
 
 void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
 {
     kDebug() << "eula by: " << info.vendorName;
+
     if (m_handlingGpgOrEula) {
         // if its true means that we alread passed here
         m_handlingGpgOrEula = false;
@@ -254,16 +274,18 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
 void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
     Q_UNUSED(runtime)
-    d->ui.progressBar->setMaximum(100);
-    d->ui.progressBar->setValue(100);
     switch(status) {
         case Transaction::Success :
+            d->ui.progressBar->setMaximum(100);
+            d->ui.progressBar->setValue(100);
             emit kTransactionFinished(Success);
             if (m_flags & CloseOnFinish) {
                 done(QDialog::Accepted);
             }
             break;
         case Transaction::Cancelled :
+            d->ui.progressBar->setMaximum(100);
+            d->ui.progressBar->setValue(100);
             emit kTransactionFinished(Cancelled);
             if (m_flags & CloseOnFinish) {
                 done(QDialog::Rejected);
@@ -272,18 +294,23 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
         case Transaction::Failed :
             kDebug() << "Failed.";
             if (!m_handlingGpgOrEula) {
+                d->ui.progressBar->setMaximum(0);
+                d->ui.progressBar->reset();
                 kDebug() << "Yep, we failed.";
                 emit kTransactionFinished(Failed);
-                if (m_flags & CloseOnFinish) {
-                    done(QDialog::Rejected);
-                }
             }
             break;
         case Transaction::KeyRequired :
         case Transaction::EulaRequired :
             kDebug() << "finished KeyRequired or EulaRequired: " << status;
+            d->ui.currentL->setText(KpkStrings::status(Transaction::Setup));
+            if (!m_handlingGpgOrEula) {
+                emit kTransactionFinished(Failed);
+            }
             break;
         default :
+            d->ui.progressBar->setMaximum(100);
+            d->ui.progressBar->setValue(100);
             kDebug() << "finished default" << status;
             KDialog::slotButtonClicked(KDialog::Close);
             break;
