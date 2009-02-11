@@ -29,6 +29,8 @@
 #include "KpkLicenseAgreement.h"
 #include "KpkIcons.h"
 
+#include "KpkProgressBar.h"
+
 #include "ui_KpkTransaction.h"
 
 class KpkTransactionPrivate
@@ -126,11 +128,7 @@ void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
         d->ui.subprogressBar->reset();
     }
 
-    if (info.remaining) {
-        d->ui.timeL->setText(i18n("%1 remaining", KGlobal::locale()->formatDuration(info.remaining*1000)));
-    } else {
-        d->ui.timeL->setText("");
-    }
+    d->ui.progressBar->setRemaining(info.remaining);
 }
 
 void KpkTransaction::currPackage(Package *p)

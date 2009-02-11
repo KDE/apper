@@ -9,7 +9,7 @@
     <x>0</x>
     <y>0</y>
     <width>406</width>
-    <height>212</height>
+    <height>176</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -52,7 +52,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QProgressBar" name="progressBar" >
+    <widget class="KpkProgressBar" name="progressBar" >
      <property name="locale" >
       <locale country="UnitedStates" language="English" />
      </property>
@@ -97,16 +97,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="timeL" >
-        <property name="text" >
-         <string>4 minutes</string>
-        </property>
-        <property name="alignment" >
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -125,6 +115,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KpkProgressBar</class>
+   <extends>QProgressBar</extends>
+   <header>KpkProgressBar.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

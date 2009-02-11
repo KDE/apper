@@ -8,6 +8,7 @@ set(libkpk_SRCS
   KpkSimplePackageModel.cpp
   KpkIcons.cpp
   KpkTransactionBar.cpp
+  KpkProgressBar.cpp
 )
 
 kde4_add_ui_files(libkpk_SRCS
