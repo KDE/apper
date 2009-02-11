@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -38,28 +38,6 @@ void KpkSimplePackageModel::addPackage(PackageKit::Package *p)
     item->setIcon(KpkIcons::packageIcon(p->state()));
     item->setSelectable(false);
     item->setEditable(false);
-//     item->setDragEnabled(false);
-//     item->setDropEnabled(false);
-//     item->setIcon((p->state() == Package::Installed) ?
-//                                                        KpkIcons::getIcon("package-remove")
-//                                                      : KpkIcons::getIcon("package-download"));
     item->setToolTip(p->summary());
     appendRow(item);
-    //                     case NameRole:
-//                         return p->name() + " - " + p->version() + (p->arch().isNull() ? "" : " (" + p->arch() + ")");
-//                     case IconRole:
-//                         for (int i = 0; i < m_checkedPackages.size(); ++i) {
-//                             if ( m_checkedPackages.at(i)->id() == p->id() )
-//                                 return (p->state() == Package::Installed) ?
-//                                         KpkIcons::getIcon("package-remove")
-//                                       : KpkIcons::getIcon("package-download");
-//                         }
-//                         return KpkIcons::packageIcon(p->state());;
-//                     case SummaryRole:
-//                         return p->summary();
-//                     case InstalledRole:
-//                         return p->state() == Package::Installed;
-//                     case IdRole:
-//                         return p->id();
-
 }

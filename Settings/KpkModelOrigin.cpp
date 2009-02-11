@@ -92,22 +92,24 @@ void KpkModelOrigin::clearChanges()
 
 bool KpkModelOrigin::changed() const
 {
-    for (int i = 0; i < m_items.size(); i++)
+    for (int i = 0; i < m_items.size(); i++) {
         if ( m_items.at(i).value(Qt::CheckStateRole) != m_actualState.value( m_items.at(i).value(Qt::UserRole).toString() ) ) {
             return true;
         }
+    }
     return false;
 }
 
 bool KpkModelOrigin::save()
 {
     QString repoId;
-    for (int i = 0; i < m_items.size(); i++)
+    for (int i = 0; i < m_items.size(); i++) {
         if ( m_items.at(i).value(Qt::CheckStateRole) != m_actualState.value( m_items.at(i).value(Qt::UserRole).toString() ) ) {
-	    repoId = m_items.at(i).value(Qt::UserRole).toString();
-	    if ( m_client->repoEnable(repoId, (bool) m_actualState.value( repoId ) ) == 0 ) 
-		return false;
+            repoId = m_items.at(i).value(Qt::UserRole).toString();
+            if ( m_client->repoEnable(repoId, (bool) m_actualState.value( repoId ) ) == 0 )
+                return false;
         }
+    }
     return true;
 }
 

@@ -159,7 +159,9 @@ void KpkSettings::save()
     // check to see if the backend support this
     if ( m_actions.contains(Client::ActionGetRepoList) ) {
         if ( !m_originModel->save() ) {
-            KMessageBox::error(this, i18n("Authentication failed"), i18n("KPackageKit"));
+            KMessageBox::sorry(this,
+                               i18n("You don't have the necessary privileges to perform this action."),
+                               i18n("Failed set origin data"));
             QTimer::singleShot(1, this, SLOT(checkChanges()));
         }
         on_showOriginsCB_stateChanged(showOriginsCB->checkState());

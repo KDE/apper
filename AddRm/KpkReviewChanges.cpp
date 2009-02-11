@@ -158,7 +158,9 @@ void KpkReviewChanges::removePackages()
                 this, SLOT(remFinished(KpkTransaction::ExitStatus)));
         frm->exec();
     } else {
-        KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
+        KMessageBox::sorry(this,
+                           i18n("You don't have the necessary privileges to perform this action."),
+                           i18n("Failed to remove package"));
     }
     kDebug() << "finished remove";
 }
@@ -193,7 +195,9 @@ void KpkReviewChanges::installPackages()
                 this, SLOT(addFinished(KpkTransaction::ExitStatus)));
         frm->exec();
     } else {
-        KMessageBox::error(this, i18n("Authentication failed"), i18n("KPackageKit"));
+        KMessageBox::sorry(this,
+                             i18n("You don't have the necessary privileges to perform this action."),
+                             i18n("Failed to install package"));
     }
     kDebug() << "finished install";
 }

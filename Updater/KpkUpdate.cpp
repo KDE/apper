@@ -192,7 +192,9 @@ void KpkUpdate::applyUpdates()
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
             frm->exec();
         } else {
-            KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
+            KMessageBox::sorry(this,
+                               i18n("You don't have the necessary privileges to perform this action."),
+                               i18n("Failed to update system"));
         }
     } else {
         // else lets install only the selected ones
@@ -202,7 +204,9 @@ void KpkUpdate::applyUpdates()
                      this, SLOT(updateFinished(KpkTransaction::ExitStatus)));
             frm->exec();
         } else {
-            KMessageBox::error(this, i18n("Authentication failed"), i18n("KPackageKit"));
+            KMessageBox::sorry(this,
+                               i18n("You don't have the necessary privileges to perform this action."),
+                               i18n("Failed to update package lists"));
         }
     }
     load();
@@ -216,7 +220,9 @@ void KpkUpdate::refresh()
                  this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
         frm->exec();
     } else {
-        KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
+        KMessageBox::sorry(this,
+                           i18n("You don't have the necessary privileges to perform this action."),
+                           i18n("Failed to refresh package lists"));
     }
 }
 
