@@ -111,6 +111,8 @@ void KpkTransactionBar::addTransaction(Transaction *trans)
 
 void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
 {
+    m_progress->setMaximum(100);
+    m_progress->setValue(100);
     QPalette colors(palette());
     switch (status) {
         case Transaction::Success:
@@ -138,10 +140,15 @@ void KpkTransactionBar::errorCode(Client::ErrorType type, const QString &details
     m_label->setText( KpkStrings::error(type) );
 }
 
-void KpkTransactionBar::progressChanged(Transaction::ProgressInfo progress)
+void KpkTransactionBar::progressChanged(Transaction::ProgressInfo info)
 {
-    m_progress->setMaximum(100);
-    m_progress->setValue(progress.percentage);
+    if (info.percentage && info.percentage <= 100) {
+        m_progress->setMaximum(100);
+        m_progress->setValue(info.percentage);
+    } else if (m_progress->maximum() != 0) {
+        m_progress->setMaximum(0);
+        m_progress->reset();
+    }
 }
 
 void KpkTransactionBar::statusChanged(Transaction::Status status)
