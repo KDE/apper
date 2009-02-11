@@ -5,6 +5,7 @@ set(libkpk_SRCS
   KpkRepoSig.cpp
   KpkLicenseAgreement.cpp
   KpkPackageModel.cpp
+  KpkSimplePackageModel.cpp
   KpkIcons.cpp
   KpkTransactionBar.cpp
 )

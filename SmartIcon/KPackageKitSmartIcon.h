@@ -24,8 +24,8 @@
 #include <KUniqueApplication>
 
 #include "KpkUpdateIcon.h"
+#include "KpkDistroUpgrade.h"
 #include "KpkTransactionTrayIcon.h"
-
 
 namespace kpackagekit {
 
@@ -40,7 +40,8 @@ public:
 
 private:
     KpkTransactionTrayIcon *m_trayIcon;
-    KpkUpdateIcon* m_updateIcon;
+    KpkUpdateIcon *m_updateIcon;
+    KpkDistroUpgrade *m_distroUpgrade;
 };
 
 }

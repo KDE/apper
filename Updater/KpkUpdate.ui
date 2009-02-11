@@ -90,7 +90,7 @@
    <item row="0" column="0" >
     <widget class="KTitleWidget" name="distroTitle" >
      <property name="text" >
-      <string>Distribution Upgrade Available!</string>
+      <string>Distribution upgrade available</string>
      </property>
     </widget>
    </item>

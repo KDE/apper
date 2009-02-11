@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -23,7 +23,7 @@
 
 #include <KDialog>
 
-#include "KpkPackageModel.h"
+#include "KpkSimplePackageModel.h"
 #include "ui_KpkRequirements.h"
 
 using namespace PackageKit;
@@ -32,7 +32,7 @@ class KpkRequirements : public KDialog, Ui::KpkRequirements
 {
     Q_OBJECT
 public:
-    KpkRequirements( QString msg, KpkPackageModel *model, QWidget *parent=0);
+    KpkRequirements(QString msg, KpkSimplePackageModel *model, QWidget *parent = 0);
     ~KpkRequirements();
 };
 

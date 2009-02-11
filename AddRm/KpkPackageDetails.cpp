@@ -26,7 +26,13 @@
 #include <QTextDocument>
 
 KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client::Actions &actions, QWidget *parent)
- : QWidget(parent), currentWidget(0)
+ : QWidget(parent),
+   m_package(package),
+   currentWidget(0),
+   m_gettingOrGotDescription(false),
+   m_gettingOrGotFiles(false),
+   m_gettingOrGotDepends(false),
+   m_gettingOrGotRequires(false)
 {
     setupUi(this);
 
@@ -35,7 +41,7 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
     if (actions.contains(Client::ActionGetDetails)) {
         descriptionKTB = new KTextBrowser(this);
         descriptionTB->click();
-        getDetails(package);
+
     } else {
         descriptionTB->setEnabled(false);
     }
@@ -46,7 +52,6 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
         if (!currentWidget) {
             fileListTB->click();
         }
-        getFiles(package);
     } else {
         fileListTB->setEnabled(false);
     }
@@ -54,10 +59,10 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
     if (actions.contains(Client::ActionGetDepends)) {
         dependsOnLV = new QListView(this);
         dependsOnLV->setVisible(false);
+        dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
         if (!currentWidget) {
             dependsOnTB->click();
         }
-        getDepends(package);
     } else {
         dependsOnTB->setEnabled(false);
     }
@@ -65,10 +70,10 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
     if (actions.contains(Client::ActionGetRequires)) {
         requiredByLV = new QListView(this);
         requiredByLV->setVisible(false);
+        requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
         if (!currentWidget) {
             requiredByTB->click();
         }
-        getRequires(package);
     } else {
         requiredByTB->setEnabled(false);
     }
@@ -105,6 +110,7 @@ void KpkPackageDetails::getDetails(PackageKit::Package *p)
 
 void KpkPackageDetails::description(PackageKit::Package *p)
 {
+    descriptionKTB->clear();
     //format and show description
     Package::Details *details = p->details();
     QString description;
@@ -136,15 +142,19 @@ void KpkPackageDetails::description(PackageKit::Package *p)
 
 void KpkPackageDetails::getDetailsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
-    Q_UNUSED(status)
     Q_UNUSED(runtime)
-//     if (status == Transaction::Success)
-//      descriptionDW->setVisible(true);
+    if (status != Transaction::Success) {
+        m_gettingOrGotDescription = false;
+    }
 }
 
 void KpkPackageDetails::on_descriptionTB_clicked()
 {
     setCurrentWidget(descriptionKTB);
+    if (!m_gettingOrGotDescription) {
+        getDetails(m_package);
+        m_gettingOrGotDescription = true;
+    }
 }
 
 void KpkPackageDetails::getFiles(PackageKit::Package *p)
@@ -161,8 +171,9 @@ void KpkPackageDetails::files(PackageKit::Package *package, const QStringList &f
 {
     Q_UNUSED(package)
     filesPTE->clear();
-    for (int i = 0; i < files.size(); ++i)
+    for (int i = 0; i < files.size(); ++i) {
         filesPTE->appendPlainText(files.at(i));
+    }
 }
 
 void KpkPackageDetails::getFilesFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
@@ -172,19 +183,25 @@ void KpkPackageDetails::getFilesFinished(PackageKit::Transaction::ExitStatus sta
         if (filesPTE->document()->toPlainText().isEmpty()) {
             filesPTE->appendPlainText(i18n("No files were found."));
         }
+    } else {
+        m_gettingOrGotFiles = false;
     }
 }
 
 void KpkPackageDetails::on_fileListTB_clicked()
 {
     setCurrentWidget(filesPTE);
+    if (!m_gettingOrGotFiles) {
+        getFiles(m_package);
+        m_gettingOrGotFiles = true;
+    }
 }
 
 void KpkPackageDetails::getDepends(PackageKit::Package *p)
 {
     // create a transaction for the dependecies not recursive
     Transaction *t = Client::instance()->getDepends(p, PackageKit::Client::NoFilter, false);
-    dependsOnLV->setModel(m_pkg_model_dep = new KpkPackageModel(this, dependsOnLV));
+    m_pkg_model_dep->clear();
     connect(t, SIGNAL(package(PackageKit::Package *)),
             m_pkg_model_dep, SLOT(addPackage(PackageKit::Package *)));
     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
@@ -193,22 +210,26 @@ void KpkPackageDetails::getDepends(PackageKit::Package *p)
 
 void KpkPackageDetails::getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
-    Q_UNUSED(status)
     Q_UNUSED(runtime)
-//     if (status == Transaction::Success)
-//      descriptionDW->setVisible(true);
+    if (status != Transaction::Success) {
+        m_gettingOrGotDepends = false;
+    }
 }
 
 void KpkPackageDetails::on_dependsOnTB_clicked()
 {
     setCurrentWidget(dependsOnLV);
+    if (!m_gettingOrGotDepends) {
+        getDepends(m_package);
+        m_gettingOrGotDepends = true;
+    }
 }
 
 void KpkPackageDetails::getRequires(PackageKit::Package *p)
 {
     // create a transaction for the requirements not recursive
     Transaction *t = Client::instance()->getRequires(p, PackageKit::Client::NoFilter, false);
-    requiredByLV->setModel(m_pkg_model_req = new KpkPackageModel(this, requiredByLV));
+    m_pkg_model_req->clear();
     connect(t, SIGNAL(package(PackageKit::Package *)),
             m_pkg_model_req, SLOT(addPackage(PackageKit::Package *)));
     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
@@ -217,15 +238,19 @@ void KpkPackageDetails::getRequires(PackageKit::Package *p)
 
 void KpkPackageDetails::getRequiresFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
-    Q_UNUSED(status)
     Q_UNUSED(runtime)
-//     if (status == Transaction::Success)
-//      descriptionDW->setVisible(true);
+    if (status != Transaction::Success) {
+        m_gettingOrGotRequires = false;
+    }
 }
 
 void KpkPackageDetails::on_requiredByTB_clicked()
 {
     setCurrentWidget(requiredByLV);
+    if (!m_gettingOrGotRequires) {
+        getRequires(m_package);
+        m_gettingOrGotRequires = true;
+    }
 }
 
 #include "KpkPackageDetails.moc"

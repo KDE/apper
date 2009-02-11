@@ -28,7 +28,7 @@
 #include <QPlainTextEdit>
 #include <QListView>
 
-#include "KpkPackageModel.h"
+#include <KpkSimplePackageModel.h>
 
 #include "ui_KpkPackageDetails.h"
 
@@ -56,14 +56,21 @@ private slots:
     void on_requiredByTB_clicked();
 
 private:
-    KpkPackageModel *m_pkg_model_dep;
-    KpkPackageModel *m_pkg_model_req;
+    Package *m_package;
+
+    KpkSimplePackageModel *m_pkg_model_dep;
+    KpkSimplePackageModel *m_pkg_model_req;
 
     KTextBrowser   *descriptionKTB;
     QPlainTextEdit *filesPTE;
     QListView      *dependsOnLV;
     QListView      *requiredByLV;
     QWidget        *currentWidget;
+
+    bool m_gettingOrGotDescription;
+    bool m_gettingOrGotFiles;
+    bool m_gettingOrGotDepends;
+    bool m_gettingOrGotRequires;
 
     void setCurrentWidget(QWidget *widget);
 

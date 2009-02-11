@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,15 +20,15 @@
 
 #include "KpkRequirements.h"
 
-KpkRequirements::KpkRequirements( QString msg, KpkPackageModel *model, QWidget *parent )
- : KDialog( parent )
+KpkRequirements::KpkRequirements(QString msg, KpkSimplePackageModel *model, QWidget *parent)
+ : KDialog(parent)
 {
-    setupUi( mainWidget() );
+    setupUi(mainWidget());
 
     label->setText(msg);
     packageView->setModel(model);
-    setCaption( i18n("Confirm") );
-    setButtons( KDialog::Ok | KDialog::Cancel );
+    setCaption(i18n("Confirm"));
+    setButtons(KDialog::Ok | KDialog::Cancel);
     setModal(true);
 }
 

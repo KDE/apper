@@ -34,24 +34,22 @@ class KDE_EXPORT KpkTransaction : public KDialog
     Q_OBJECT
     Q_ENUMS(ExitStatus)
 public:
-    
     enum BehaviorFlag {
         Modal,
         CloseOnFinish
     };
-    
     Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
-    
-    explicit KpkTransaction( Transaction  *trans, Behaviors flags = 0, QWidget *parent=0);
+
+    explicit KpkTransaction(Transaction *trans, Behaviors flags = 0, QWidget *parent = 0);
     ~KpkTransaction();
 
     void setTransaction(Transaction *trans);
 
     typedef enum {
-	Success,
-	Failed,
-	Cancelled,
-	ReQueue
+        Success,
+        Failed,
+        Cancelled,
+        ReQueue
     } ExitStatus;
 
 signals:

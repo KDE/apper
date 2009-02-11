@@ -36,14 +36,14 @@ using namespace PackageKit;
 KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
     : QObject(parent),
     m_updateNotify(0),
-    m_checking(false),
+    m_checkingUpdates(false),
     m_inhibitCookie(-1)
 {
     m_icon = new KSystemTrayIcon("applications-other");
     connect(m_icon, SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
              this, SLOT( showUpdates( QSystemTrayIcon::ActivationReason ) ));
-    m_updateView = 0;
-    m_distroUpgradeProcess = 0;
+//     m_updateView = 0;
+//     m_distroUpgradeProcess = 0;
 
     m_icon->actionCollection()->addAction(KStandardAction::Preferences, this, SLOT( showSettings() ));
     m_icon->contextMenu()->addAction(m_icon->actionCollection()->action(KStandardAction::name(KStandardAction::Preferences)));
@@ -69,39 +69,39 @@ KpkUpdateIcon::showSettings()
     settings->show();
 }
 
-void
-KpkUpdateIcon::hideUpdates()
-{
-    if (m_updateView!=0) {
-        m_updateView->deleteLater();
-        m_updateView = 0;
-    }
-}
+// void
+// KpkUpdateIcon::hideUpdates()
+// {
+//     if (m_updateView!=0) {
+//         m_updateView->deleteLater();
+//         m_updateView = 0;
+//     }
+// }
 
-void
-KpkUpdateIcon::updaterClosed(int exitCode)
-{
-    hideUpdates();
-    if (exitCode == QDialog::Accepted) {
-        m_icon->hide();
-    }
-}
+// void
+// KpkUpdateIcon::updaterClosed(int exitCode)
+// {
+//     hideUpdates();
+//     if (exitCode == QDialog::Accepted) {
+//         m_icon->hide();
+//     }
+// }
 
 void
 KpkUpdateIcon::showUpdates(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason==QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::Unknown) {
-        if (m_updateView==0) {
-            m_updateView = new KCMultiDialog();
-            m_updateView->setWindowIcon( KIcon("applications-other") );
-            m_updateView->addModule( KCModuleInfo::KCModuleInfo("kpk_update.desktop") );
-            connect(m_updateView, SIGNAL( finished(int) ),
-                     this, SLOT( updaterClosed(int) ));
-            m_updateView->raise();
-            m_updateView->show();
-        } else {
-            hideUpdates();
-        }
+//         if (m_updateView==0) {
+//             m_updateView = new KCMultiDialog();
+//             m_updateView->setWindowIcon( KIcon("applications-other") );
+//             m_updateView->addModule( KCModuleInfo::KCModuleInfo("kpk_update.desktop") );
+//             connect(m_updateView, SIGNAL( finished(int) ),
+//                      this, SLOT( updaterClosed(int) ));
+//             m_updateView->raise();
+//             m_updateView->show();
+//         } else {
+//             hideUpdates();
+//         }
     }
 }
 
@@ -110,11 +110,11 @@ KpkUpdateIcon::checkUpdates()
 {
     // This is really necessary to don't bother the user with
     // tons of popups
-    if (!m_checking) {
+    if (!m_checkingUpdates) {
         KConfig config("KPackageKit");
         KConfigGroup notifyGroup(&config, "Notify");
         if (Qt::Checked == (Qt::CheckState) notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked)) {
-            m_checking = true;
+            m_checkingUpdates = true;
             m_updateList.clear();
             Transaction* t = Client::instance()->getUpdates();
             connect(t, SIGNAL(package(PackageKit::Package *)),
@@ -123,15 +123,6 @@ KpkUpdateIcon::checkUpdates()
                     this, SLOT(updateCheckFinished(PackageKit::Transaction::ExitStatus, uint)));
         }
     }
-}
-
-void
-KpkUpdateIcon::checkDistroUpgrades()
-{
-    Transaction* t = Client::instance()->getDistroUpgrades();
-
-    connect(t, SIGNAL( distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString& ) ),
-             this, SLOT( distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString& ) ) );
 }
 
 void
@@ -165,7 +156,7 @@ KpkUpdateIcon::notifyUpdates()
             highState = state;
 
     KIcon icon = KpkIcons::packageIcon(highState);
-    m_updateNotify = new KNotification("ShowUpdates", m_updateView, KNotification::Persistent | KNotification::CloseWhenWidgetActivated);
+    m_updateNotify = new KNotification("ShowUpdates", 0, KNotification::Persistent | KNotification::CloseWhenWidgetActivated);
     // use of QSize does the right thing
     m_updateNotify->setPixmap(icon.pixmap(QSize(128,128)));
 
@@ -259,7 +250,7 @@ KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uint run
             }
         }
     } else {
-        m_checking = false;
+        m_checkingUpdates = false;
     }
 }
 
@@ -274,7 +265,7 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
         notify->setPixmap(icon.pixmap(QSize(128,128)));
         notify->setText(i18n("System update was successful!"));
         notify->sendEvent();
-        m_checking = false;
+        m_checkingUpdates = false;
         // check for updates to see if there are updates that
         // couldn't be automatically installed
         checkUpdates();
@@ -284,7 +275,7 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
         notify->setPixmap(icon.pixmap(QSize(128,128)));
         notify->setText(i18n("The software update failed.")); //TODO: Point the user to the logs, or give more detail.
         notify->sendEvent();
-        m_checking = false;
+        m_checkingUpdates = false;
     }
 }
 
@@ -314,88 +305,7 @@ void KpkUpdateIcon::handleUpdateActionClosed()
 {
     kDebug();
     m_updateNotify = 0;
-    m_checking = false;
-}
-
-void KpkUpdateIcon::distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description)
-{
-    kDebug() << "Distro upgrade found!" << name << description;
-    Q_UNUSED(type);
-    KNotification* notify = new KNotification("DistroUpgradeAvailable", m_updateView, KNotification::Persistent | KNotification::CloseWhenWidgetActivated);
-
-    QString text;
-
-    text =  i18n("Distribution upgrade available") + "<br/>";
-    text += "<b>" + name + "</b><br/>";
-    text += description;
-
-    notify->setText(text);
-
-    QStringList actions;
-    actions << i18n("Start upgrade now");
-    notify->setActions(actions);
-    connect(notify, SIGNAL(activated(uint)), this, SLOT(handleDistroUpgradeAction(uint)));
-    notify->sendEvent();
-}
-
-void KpkUpdateIcon::handleDistroUpgradeAction(uint action)
-{
-    switch(action) {
-        case 1:
-            if ( m_distroUpgradeProcess ) {
-                return;
-            }
-            m_distroUpgradeProcess = new QProcess;
-            connect (m_distroUpgradeProcess, SIGNAL (error ( QProcess::ProcessError )),
-                this, SLOT(distroUpgradeError( QProcess::ProcessError  ) ));
-            connect (m_distroUpgradeProcess, SIGNAL (finished(int, QProcess::ExitStatus)),
-                this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus  ) ));
-
-            m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
-            suppressSleep(true);
-            break;
-        // perhaps more actions needed in the future
-    }
-}
-
-void KpkUpdateIcon::distroUpgradeFinished( int exitCode, QProcess::ExitStatus exitStatus )
-{
-    KNotification* notify = new KNotification("DistroUpgradeFinished", m_updateView, KNotification::Persistent | KNotification::CloseWhenWidgetActivated);
-    if ( exitStatus == QProcess::NormalExit && exitCode == 0 ) {
-        notify->setPixmap(KIcon("security-high").pixmap(64, 64));
-        notify->setText(i18n("Distribution upgrade finished. "));
-    } else if ( exitStatus == QProcess::NormalExit ) {
-        notify->setPixmap(KIcon("dialog-warning").pixmap(64, 64));
-        notify->setText(i18n("Distribution upgrade process exited with code %1.", exitCode));
-    }/* else {
-        notify->setText(i18n("Distribution upgrade didn't exit normally, the process probably crashed. "));
-    }*/
-    notify->sendEvent();
-    m_distroUpgradeProcess->deleteLater();
-    m_distroUpgradeProcess = 0;
-    suppressSleep(false);
-}
-
-
-void KpkUpdateIcon::distroUpgradeError( QProcess::ProcessError error )
-{
-    QString text;
-
-    KNotification* notify = new KNotification("DistroUpgradeError", m_updateView, KNotification::Persistent | KNotification::CloseWhenWidgetActivated);
-    switch(error) {
-        case QProcess::FailedToStart:
-            text = i18n("The distribution upgrade process failed to start."); 
-            break;
-        case QProcess::Crashed:
-            text = i18n("The distribution upgrade process crashed some time after starting successfully.") ;
-            break;
-        default:
-            text = i18n("The distribution upgrade process failed with an unknown error.");
-            break;
-    }
-    notify->setPixmap(KIcon("dialog-error").pixmap(64,64));
-    notify->setText(text);
-    notify->sendEvent();
+    m_checkingUpdates = false;
 }
 
 void KpkUpdateIcon::suppressSleep(bool enable)

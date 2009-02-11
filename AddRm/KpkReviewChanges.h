@@ -27,6 +27,7 @@
 #include <KpkDelegate.h>
 #include <KpkTransaction.h>
 #include "KpkPackageModel.h"
+#include "KpkSimplePackageModel.h"
 #include "ui_KpkReviewChanges.h"
 #include <QPackageKit>
 
@@ -49,7 +50,8 @@ public slots:
     void removePackages();
 
 private:
-    KpkPackageModel *m_pkgModelMain, *m_pkgModelReq, *m_pkgModelDep;
+    KpkPackageModel *m_pkgModelMain;
+    KpkSimplePackageModel *m_pkgModelReq, *m_pkgModelDep;
     KpkDelegate *m_pkgDelegate;
 
     Client *m_client;

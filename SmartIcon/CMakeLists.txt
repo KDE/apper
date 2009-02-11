@@ -5,6 +5,7 @@ set(kpackagekit_smart_icon_SRCS
     KPackageKitSmartIcon.cpp
     KpkTransactionTrayIcon.cpp
     KpkUpdateIcon.cpp
+    KpkDistroUpgrade.cpp
 )
 
 kde4_add_executable(kpackagekit-smart-icon ${kpackagekit_smart_icon_SRCS})

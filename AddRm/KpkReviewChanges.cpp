@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -40,7 +40,7 @@ KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *pa
     connect(m_pkgModelMain, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkChanged()));
 
-    setCaption( i18n("Review Changes - KPackageKit") );
+    setCaption(i18n("Review Changes - KPackageKit"));
 
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply | KDialog::Cancel);
@@ -75,172 +75,168 @@ void KpkReviewChanges::doAction()
 
 void KpkReviewChanges::checkTask()
 {
-    if ( !m_remPackages.isEmpty() ) {
-        qDebug() << "task rm if";
-        if ( m_actions.contains(Client::ActionRemovePackages) ) {
-	    if ( m_actions.contains(Client::ActionGetRequires) ) {
-	        m_reqDepPackages = m_remPackages;
-	        // Create the requirements transaction and it's model
-                m_pkgModelReq = new KpkPackageModel(this);
-		m_transactionReq = m_client->getRequires(m_reqDepPackages, Client::FilterInstalled, true);
-                connect( m_transactionReq, SIGNAL( package(PackageKit::Package *) ),
-		    m_pkgModelReq, SLOT( addPackage(PackageKit::Package *) ) );
-                connect( m_transactionReq, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-		    this, SLOT( reqFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-		connect( m_transactionReq, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
-		    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
-		// Create a Transaction dialog to don't upset the user
-        KpkTransaction* reqFinder = new KpkTransaction(m_transactionReq, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-        reqFinder->exec();
-	    }
-	    else {
-	       removePackages();
-	    }
+    if (!m_remPackages.isEmpty()) {
+        kDebug() << "task rm if";
+        if (m_actions.contains(Client::ActionRemovePackages)) {
+            if (m_actions.contains(Client::ActionGetRequires)) {
+                m_reqDepPackages = m_remPackages;
+                // Create the requirements transaction and it's model
+                m_pkgModelReq = new KpkSimplePackageModel(this);
+                m_transactionReq = m_client->getRequires(m_reqDepPackages, Client::FilterInstalled, true);
+                connect(m_transactionReq, SIGNAL(package(PackageKit::Package *)),
+                        m_pkgModelReq, SLOT(addPackage(PackageKit::Package *)));
+                connect(m_transactionReq, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                        this, SLOT(reqFinished(PackageKit::Transaction::ExitStatus, uint)));
+                connect(m_transactionReq, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
+                        this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+                // Create a Transaction dialog to don't upset the user
+                KpkTransaction* reqFinder = new KpkTransaction(m_transactionReq, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
+                reqFinder->exec();
+            } else {
+                removePackages();
+            }
+        } else {
+            KMessageBox::error(this, i18n("Sorry, your backend does not support removing packages"), i18n("Error KPackageKit"));
         }
-	else
-	    KMessageBox::error( this, i18n("Sorry, your backend does not support removing packages"), i18n("Error KPackageKit") );
-    }
-    else if ( !m_addPackages.isEmpty() ) {
-        qDebug() << "task add else";
-        if ( m_actions.contains(Client::ActionInstallPackages) ) {
-	    if ( m_actions.contains(Client::ActionGetDepends) ) {
-	        m_reqDepPackages = m_addPackages;
-		// Create the depends transaction and it's model
-                m_pkgModelDep = new KpkPackageModel(this);
-		m_transactionDep = m_client->getDepends(m_reqDepPackages, Client::FilterNotInstalled, true);
-                connect( m_transactionDep, SIGNAL( package(PackageKit::Package *) ),
-		    m_pkgModelDep, SLOT( addPackage(PackageKit::Package *) ) );
-                connect( m_transactionDep, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-		    this, SLOT( depFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-		connect( m_transactionDep, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
-		    this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
-		// Create a Transaction dialog to don't upset the user
-        KpkTransaction* reqFinder = new KpkTransaction(m_transactionDep, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
-        reqFinder->exec();
-	    }
-	    else {
-	        installPackages();
-	    }
+    } else if (!m_addPackages.isEmpty()) {
+        kDebug() << "task add else";
+        if (m_actions.contains(Client::ActionInstallPackages)) {
+            if (m_actions.contains(Client::ActionGetDepends)) {
+                m_reqDepPackages = m_addPackages;
+                // Create the depends transaction and it's model
+                m_pkgModelDep = new KpkSimplePackageModel(this);
+                m_transactionDep = m_client->getDepends(m_reqDepPackages, Client::FilterNotInstalled, true);
+                connect(m_transactionDep, SIGNAL(package(PackageKit::Package *)),
+                        m_pkgModelDep, SLOT(addPackage(PackageKit::Package *)));
+                connect(m_transactionDep, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint)),
+                        this, SLOT(depFinished(PackageKit::Transaction::ExitStatus, uint)));
+                connect(m_transactionDep, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
+                        this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+                // Create a Transaction dialog to don't upset the user
+                KpkTransaction* reqFinder = new KpkTransaction(m_transactionDep, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
+                reqFinder->exec();
+            } else {
+                installPackages();
+            }
+        } else {
+            KMessageBox::error(this, i18n("Sorry, your backend does not support installing packages"), i18n("KPackageKit"));
         }
-	else
-	    KMessageBox::error( this, i18n("Sorry, your backend does not support installing packages"), i18n("KPackageKit") );
-    }
-    else {
-        qDebug() << "task else";
+    } else {
+        kDebug() << "task else";
         KDialog::slotButtonClicked(KDialog::Ok);
     }
 }
 
 void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
 {
-    qDebug() << "reqFinished";
+    kDebug() << "reqFinished";
     if (status == Transaction::Success) {
-	if ( m_pkgModelReq->rowCount( QModelIndex() ) > 0 ) {
-	    KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be removed for dependencies"), m_pkgModelReq, this );
-	    connect( requimentD, SIGNAL( okClicked() ), this, SLOT( removePackages() ) );
-	    connect( requimentD, SIGNAL( cancelClicked() ), this, SLOT( close() ) );
-	    requimentD->exec();
-	}
-	else
-	    removePackages();
-    }
-    else {
-	// TODO inform the user
-        qDebug() << "getReq Failed: " << status;
-	m_reqDepPackages.clear();
-	m_remPackages.clear();
+        if (m_pkgModelReq->rowCount( QModelIndex() ) > 0) {
+            KpkRequirements *requimentD = new KpkRequirements(i18n("The following packages will also be removed for dependencies"), m_pkgModelReq, this);
+            connect(requimentD, SIGNAL(okClicked()), this, SLOT(removePackages()));
+            connect(requimentD, SIGNAL(cancelClicked()), this, SLOT(close()));
+            requimentD->show();
+        } else {
+            removePackages();
+        }
+    } else {
+        // TODO inform the user
+        kDebug() << "getReq Failed: " << status;
+        m_reqDepPackages.clear();
+        m_remPackages.clear();
         checkTask();
     }
-    qDebug() << "reqFinished2";
+    kDebug() << "reqFinished2";
 }
 
 void KpkReviewChanges::removePackages()
 {
-    qDebug() << "removePackages";
-    if ( Transaction *t = m_client->removePackages(m_remPackages) ) {
+    kDebug() << "removePackages";
+    if (Transaction *t = m_client->removePackages(m_remPackages)) {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-        connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( remFinished(KpkTransaction::ExitStatus) ) );
+        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                this, SLOT(remFinished(KpkTransaction::ExitStatus)));
         frm->exec();
-    }
-    else
+    } else {
         KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
-    qDebug() << "finished remove";
+    }
+    kDebug() << "finished remove";
 }
 
 void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
 {
-    qDebug() << "depFinished";
+    kDebug() << "depFinished";
     if (status == Transaction::Success) {
-	if ( m_pkgModelDep->rowCount( QModelIndex() ) > 0 ) {
-	    KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be installed as dependencies"), m_pkgModelDep, this );
-	    connect( requimentD, SIGNAL( okClicked() ), this, SLOT( installPackages() ) );
-	    connect( requimentD, SIGNAL( cancelClicked() ), this, SLOT( close() ) );
-	    requimentD->exec();
-	}
-	else
-	    installPackages();
-    }
-    else {
-        qDebug() << "getDep Failed: " << status;
-	m_reqDepPackages.clear();
-	m_addPackages.clear();
+        if (m_pkgModelDep->rowCount(QModelIndex()) > 0) {
+            KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be installed as dependencies"), m_pkgModelDep, this );
+            connect(requimentD, SIGNAL(okClicked()), this, SLOT(installPackages()));
+            connect(requimentD, SIGNAL(cancelClicked()), this, SLOT(close()));
+            requimentD->show();
+        } else {
+            installPackages();
+        }
+    } else {
+        kDebug() << "getDep Failed: " << status;
+        m_reqDepPackages.clear();
+        m_addPackages.clear();
         checkTask();
     }
-    qDebug() << "depFinished2";
+    kDebug() << "depFinished2";
 }
 
 void KpkReviewChanges::installPackages()
 {
-    qDebug() << "installPackages";
+    kDebug() << "installPackages";
     if ( Transaction *t = m_client->installPackages(m_addPackages) ) {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-        connect( frm, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( addFinished(KpkTransaction::ExitStatus) ) );
+        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                this, SLOT(addFinished(KpkTransaction::ExitStatus)));
         frm->exec();
+    } else {
+        KMessageBox::error(this, i18n("Authentication failed"), i18n("KPackageKit"));
     }
-    else
-        KMessageBox::error( this, i18n("Authentication failed"), i18n("KPackageKit") );
-    qDebug() << "finished install";
+    kDebug() << "finished install";
 }
 
 void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
 {
     switch (status) {
-	case KpkTransaction::Success :
-	    m_remPackages.clear();
-	    checkTask();
-	    break;
-	case KpkTransaction::Failed :
-	    KMessageBox::error( this, i18n("Sorry an error occurred"), i18n("KPackageKit") );
-	    setButtons( KDialog::Close );
-	    break;
-	case KpkTransaction::Cancelled :
-	    KDialog::slotButtonClicked(KDialog::Close);
-	    break;
-	case KpkTransaction::ReQueue :
-	    KpkTransaction *trans = (KpkTransaction *) sender();
-	    trans->setTransaction( m_client->removePackages(m_remPackages) );
-	    break;
+        case KpkTransaction::Success :
+            m_remPackages.clear();
+            checkTask();
+            break;
+        case KpkTransaction::Failed :
+            KMessageBox::error(this, i18n("Sorry an error occurred"), i18n("KPackageKit"));
+            setButtons(KDialog::Close);
+            break;
+        case KpkTransaction::Cancelled :
+            KDialog::slotButtonClicked(KDialog::Close);
+            break;
+        case KpkTransaction::ReQueue :
+            KpkTransaction *trans = (KpkTransaction *) sender();
+            trans->setTransaction(m_client->removePackages(m_remPackages));
+            break;
     }
 }
 
 void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
 {
     switch (status) {
-	case KpkTransaction::Success :
-	    m_addPackages.clear();
-	    checkTask();
-	    break;
-	case KpkTransaction::Failed :
-	    KMessageBox::error( this, i18n("Sorry an error occurred"), i18n("KPackageKit") );
-	    setButtons( KDialog::Close );
-	    break;
-	case KpkTransaction::Cancelled :
-	    KDialog::slotButtonClicked(KDialog::Close);
-	    break;
-	case KpkTransaction::ReQueue :
-	    KpkTransaction *trans = (KpkTransaction *) sender();
-	    trans->setTransaction( m_client->installPackages(m_addPackages) );
-	    break;
+        case KpkTransaction::Success :
+            m_addPackages.clear();
+            checkTask();
+            break;
+        case KpkTransaction::Failed :
+            KMessageBox::error(this, i18n("Sorry an error occurred"), i18n("KPackageKit"));
+            setButtons(KDialog::Close);
+            break;
+        case KpkTransaction::Cancelled :
+            KDialog::slotButtonClicked(KDialog::Close);
+            break;
+        case KpkTransaction::ReQueue :
+            KpkTransaction *trans = (KpkTransaction *) sender();
+            trans->setTransaction(m_client->installPackages(m_addPackages));
+            break;
     }
 }
 
@@ -260,16 +256,17 @@ void KpkReviewChanges::slotButtonClicked(int button)
 
 void KpkReviewChanges::errorCode(PackageKit::Client::ErrorType error, const QString &details)
 {
-    KMessageBox::detailedSorry( this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify );
+    KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error),
+            details, KpkStrings::error(error), KMessageBox::Notify);
 }
 
-void KpkReviewChanges::resizeEvent ( QResizeEvent * event )
+void KpkReviewChanges::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     updateColumnsWidth();
 }
 
-bool KpkReviewChanges::event ( QEvent * event )
+bool KpkReviewChanges::event(QEvent *event)
 {
     switch (event->type()) {
         case QEvent::PolishRequest:
@@ -297,10 +294,11 @@ void KpkReviewChanges::updateColumnsWidth(bool force)
 
 void KpkReviewChanges::checkChanged()
 {
-    if (m_pkgModelMain->selectedPackages().size() > 0)
-      enableButtonApply(true);
-    else
-      enableButtonApply(false);
+    if (m_pkgModelMain->selectedPackages().size() > 0) {
+        enableButtonApply(true);
+    } else {
+        enableButtonApply(false);
+    }
 }
 
 #include "KpkReviewChanges.moc"
