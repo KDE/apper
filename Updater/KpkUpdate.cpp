@@ -62,7 +62,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 
     // Setup the distro upgrade banner
     //TODO: Find the distribution's logo
-    distroTitle->setPixmap(KIcon("system-software-update"));
+    distroTitle->setPixmap(KIcon("distro-upgrade"));
     distroTitle->setWidget(m_distroUpgradeUL = new KUrlLabel(this));
     /*QPalette titleColors(distroTitle->palette());
     //FIXME: This is a bug in kdelibs. The background color doesn't get changed.
