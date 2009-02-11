@@ -26,8 +26,7 @@
 #include <KDebug>
 
 KpkInstallFiles::KpkInstallFiles( QObject *parent ) :
- QObject( parent ),
- m_inhibitCookie(-1)
+ QObject( parent ), m_running(0)
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 }
@@ -38,6 +37,10 @@ KpkInstallFiles::~KpkInstallFiles()
 
 void KpkInstallFiles::installFiles(KUrl::List &urls)
 {
+    // yeah we are running so please be
+    // polited and don't close the application :P
+    m_running++;
+
     QStringList files;
     QStringList notFiles;
     QString lastDirectory = urls.at(0).directory();
@@ -87,63 +90,51 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
         installBt.setText( i18n("Install") );
 
         if ( KMessageBox::questionYesNoList(0,
-                        i18np("Do you want to install this file?", "Do you want to install these files?", displayFiles.count() ),
-                        displayFiles,
-                        i18n("Install?"),
-                        installBt
-                ) == KMessageBox::Yes ) {
-            if ( Transaction *t = Client::instance()->installFiles(files, true) ) {
-                KpkTransaction *trans = new KpkTransaction(t);
-                suppressSleep(true);
-                connect( trans, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( installFilesFinished(KpkTransaction::ExitStatus) ) );
-                trans->show();
-                m_transactionFiles[trans] = files;
-            }
-            else {
-                KMessageBox::error( 0, i18n("Authentication failed"), i18n("KPackageKit") );
-            }
-        }
+			i18np("Do you want to install this file?", "Do you want to install these files?", displayFiles.count() ),
+			displayFiles,
+			i18n("Install?"),
+			installBt
+      
+		) == KMessageBox::Yes ) {
+	    if ( Transaction *t = Client::instance()->installFiles(files, true) ) {
+		KpkTransaction *trans = new KpkTransaction(t);
+		connect( trans, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( installFilesFinished(KpkTransaction::ExitStatus) ) );
+		trans->show();
+		m_transactionFiles[trans] = files;
+		//to skip the running thing
+		return;
+	    }
+	    else {
+		KMessageBox::error( 0, i18n("Authentication failed"), i18n("KPackageKit") );
+	    }
+	}
     }
-}
-
-void KpkInstallFiles::suppressSleep(bool enable)
-{
-    if ( enable ) {
-        kDebug() << "Disabling powermanagement sleep";
-        m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
-        if (m_inhibitCookie == -1)
-            kDebug() << "Sleep suppression denied!";
-    } else {
-        kDebug() << "Enable powermanagement sleep";
-        if (m_inhibitCookie == -1)
-            if ( ! Solid::PowerManagement::stopSuppressingSleep( m_inhibitCookie ))
-                kDebug() << "Enable failed: invalid cookie.";
-    }
+    // ok we are not running anymore..
+    m_running--;
+    emit appClose();
 }
 
 void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
     switch (status) {
-        case KpkTransaction::Success :
-        case KpkTransaction::Cancelled :
-        kDebug() << "Success";
-            m_transactionFiles.remove( (KpkTransaction *) sender() );
-            suppressSleep(false);
-            break;
-        case KpkTransaction::Failed :
-        kDebug() << "Failure";
-            m_transactionFiles.remove( (KpkTransaction *) sender() );
-            suppressSleep(false);
-            break;
-        case KpkTransaction::ReQueue :
-            kDebug() << "ReQueue";
-            KpkTransaction *trans = (KpkTransaction *) sender();
-        Transaction* t = Client::instance()->installFiles(m_transactionFiles[trans], false);
-        if (t)
-            trans->setTransaction( t );
-            break;
+	case KpkTransaction::Success :
+	case KpkTransaction::Cancelled :
+	    m_transactionFiles.remove( (KpkTransaction *) sender() );
+	    break;
+	case KpkTransaction::Failed :
+	    m_transactionFiles.remove( (KpkTransaction *) sender() );
+	    KMessageBox::error( 0, i18n("Sorry, an error occurred"), i18n("KPackageKit") );
+	    break;
+	case KpkTransaction::ReQueue :
+	    kDebug() << "ReQueue";
+	    KpkTransaction *trans = (KpkTransaction *) sender();
+	    trans->setTransaction( Client::instance()->installFiles(m_transactionFiles[trans], false) );
+	    // return to avoid the running--
+	    return;
     }
+    m_running--;
+    emit appClose();
 }
 
 #include "KpkInstallFiles.moc"

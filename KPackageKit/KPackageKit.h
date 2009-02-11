@@ -41,6 +41,9 @@ public:
 signals:
     void installFiles(KUrl::List &urls);
 
+public slots:
+    void appClose();
+
 private:
     KCMultiDialog *m_pkUi;
     KpkInstallFiles *m_instFiles;

@@ -206,7 +206,8 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
     // ignoring these as gpk does
     if ( error == Client::TransactionCancelled || error == Client::ProcessKill )
 	return;*/
-    
+
+    KMessageBox::detailedSorry( this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify );
 }
 
 void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)

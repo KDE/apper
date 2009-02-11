@@ -35,16 +35,20 @@ public:
     KpkInstallFiles( QObject *parent=0 );
     ~KpkInstallFiles();
 
+    bool canClose() { return !(m_running); };
+
 public slots:
     void installFiles(KUrl::List &urls);
+
+signals:
+    void appClose();
 
 private slots:
     void installFilesFinished(KpkTransaction::ExitStatus status);
 
 private:
     QHash <KpkTransaction *,QStringList> m_transactionFiles;
-    int m_inhibitCookie;
-    void suppressSleep(bool enable);
+    int m_running;
 };
 
 #endif

@@ -80,7 +80,6 @@ void KpkTransactionTrayIcon::triggered(QAction *action)
 
 void KpkTransactionTrayIcon::showTransactionError(PackageKit::Client::ErrorType err, const QString &details)
 {
-    kDebug() << "Transaction Error:" << err << details;
     KNotification* errorNotification = new KNotification("TransactionError");
     errorNotification->setFlags(KNotification::Persistent);
     errorNotification->setText("<b>"+KpkStrings::error(err)+"</b><br />"+KpkStrings::errorMessage(err));
