@@ -128,7 +128,7 @@ void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
     KFadeWidgetEffect *animation = new KFadeWidgetEffect(this);
     setAutoFillBackground(false);
     setPalette(QPalette());
-    animation->start();
+    animation->start(500);
     if (m_flags & AutoHide)
         m_timer->start(2000);
     nextTransaction();

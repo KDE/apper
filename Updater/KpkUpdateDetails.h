@@ -45,6 +45,10 @@ private slots:
     void updateDetail(PackageKit::Client::UpdateInfo info);
     void updateDetailFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
+private:
+    Package::State state;
+
+    QString getLinkList(const QString &links) const;
 };
 
 #endif

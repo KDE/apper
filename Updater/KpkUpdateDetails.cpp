@@ -24,12 +24,15 @@
 
 #include <QPlainTextEdit>
 #include <QTextDocument>
+#include <KDebug>
 
 KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent)
  : QWidget(parent)
 {
     setupUi(this);
 
+    // only the model package has the right state
+    state = package->state();
     Transaction *t = Client::instance()->getUpdateDetail(package);
     connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
             this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
@@ -39,7 +42,7 @@ KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent
 
 KpkUpdateDetails::~KpkUpdateDetails()
 {
-//     qDebug() << "~KpkUpdateDetails()";
+//     kDebug() << "~KpkUpdateDetails()";
 }
 
 void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
@@ -47,10 +50,42 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     //format and show description
     QString description;
     description += "<table><tbody>";
+
+    // update type (ie Security Update)
+    if (state == Package::UnknownState) {
+        state = Package::Normal;
+    }
+    description += "<tr><td align=\"right\"><b>" + i18n("Type") + ":</b></td><td>"
+                   + KpkStrings::info(state)
+                   + "</td></tr>";
+
+    // state
+    if (info.state != Client::UnknownUpgradeType) {
+        description += "<tr><td align=\"right\"><b>" + i18n("State") + ":</b></td><td>"
+                    + KpkStrings::updateState(info.state)
+                    + "</td></tr>";
+    }
+
+    // Issued
+    if (!info.issued.toString().isEmpty()) {
+        description += "<tr><td align=\"right\"><b>" + i18n("Issued") + ":</b></td><td>"
+                    + KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate)
+                    + "</td></tr>";
+    }
+
+    // Updated
+    if (!info.updated.toString().isEmpty()) {
+        description += "<tr><td align=\"right\"><b>" + i18n("Updated") + ":</b></td><td>"
+                    + KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate)
+                    + "</td></tr>";
+    }
+
+    // New version (ie package version)
     description += "<tr><td align=\"right\"><b>" + i18n("New version") + ":</b></td><td>" + info.package->name()
                 + "-" + info.package->version()
                 + "</td></tr>";
 
+    // Updates (lists of packages that are updated)
     if (info.updates.size()) {
         QStringList updates;
         foreach (Package *p, info.updates) updates << p->name() + "-" + p->version();
@@ -58,6 +93,8 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
                     + updates.join(", ")
                     + "</td></tr>";
     }
+
+    // Obsoletes (lists of packages that are obsoleted)
     if (info.obsoletes.size()) {
         QStringList obsoletes;
         foreach (Package *p, info.obsoletes) obsoletes << p->id() + "-" + p->version();
@@ -65,65 +102,85 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
                     + obsoletes.join(", ")
                     + "</td></tr>";
     }
+
+    // Repository (this is the repository the package come from)
+    description += "<tr><td align=\"right\"><b>" + i18n("Repository") + ":</b></td><td>" + info.package->name()
+                + "-" + info.package->data()
+                + "</td></tr>";
+
+    // Description
     if (!info.updateText.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Details") + ":</b></td><td>"
+        description += "<tr><td align=\"right\"><b>" + i18n("Description") + ":</b></td><td>"
                     + info.updateText.replace('\n', "<br />")
                     + "</td></tr>";
     }
-    if (!info.vendorUrl.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Vendor Home Page")
-                    + ":</b></td><td><a href=\"" + info.vendorUrl.section(';', 0, 0) + "\">"
-                    + info.vendorUrl.section(';', -1)
-                    + "</a></td></tr>";
-    }
-    if (!info.bugzillaUrl.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Bugzilla Home Page")
-                    + ":</b></td><td><a href=\"" + info.bugzillaUrl.section(';', 0, 0) + "\">"
-                    + info.bugzillaUrl.section(';', -1)
-                    + "</a></td></tr>";
-    }
-    if (!info.cveUrl.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("CVE Home Page")
-                    + ":</b></td><td><a href=\"" + info.cveUrl.section(';', 0, 0) + "\">"
-                    + info.cveUrl.section(';', -1)
-                    + "</a></td></tr>";
-    }
+
+    // ChangeLog
     if (!info.changelog.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Change Log") + ":</b></td><td>"
+        description += "<tr><td align=\"right\"><b>" + i18n("Changes") + ":</b></td><td>"
                     + info.changelog.replace('\n', "<br />")
                     + "</td></tr>";
     }
-    if (info.state != Client::UnknownUpgradeType) {
-        description += "<tr><td align=\"right\"><b>" + i18n("State") + ":</b></td><td>"
-                    + KpkStrings::updateState(info.state)
-                    + "</td></tr>";
+
+    // links
+    //  Vendor
+    if (!info.vendorUrl.isEmpty()) {
+        description += "<tr><td align=\"right\"><b>" + i18n("Vendor")
+                    + ":</b></td><td>" + getLinkList(info.vendorUrl) + "</td></tr>";
     }
-    if (info.restart != Client::UnknownRestartType) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Restart") + ":</b></td><td>"
+
+    //  Bugzilla
+    if (!info.bugzillaUrl.isEmpty()) {
+        description += "<tr><td align=\"right\"><b>" + i18n("Bugzilla")
+                    + ":</b></td><td>" + getLinkList(info.bugzillaUrl) + "</td></tr>";
+    }
+
+    //  CVE
+    if (!info.cveUrl.isEmpty()) {
+        description += "<tr><td align=\"right\"><b>" + i18n("CVE")
+                    + ":</b></td><td>" + getLinkList(info.cveUrl) + "</td></tr>";
+    }
+
+    // Notice (about the need for a reboot)
+    if (info.restart == Client::RestartSession || info.restart == Client::RestartSystem) {
+        description += "<tr><td align=\"right\"><b>" + i18n("Notice") + ":</b></td><td>"
                     + KpkStrings::restartTypeFuture(info.restart)
                     + "</td></tr>";
     }
-    if (!info.issued.toString().isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Issued") + ":</b></td><td>"
-                    + KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate)
-                    + "</td></tr>";
-    }
-    if (!info.updated.toString().isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Updated") + ":</b></td><td>"
-                    + KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate)
-                    + "</td></tr>";
-    }
+
     description += "</table></tbody>";
     descriptionKTB->setHtml(description);
 }
 
+QString KpkUpdateDetails::getLinkList(const QString &links) const
+{
+    QStringList linkList = links.split(';');
+    int length = linkList.size();
+    QString ret;
+
+    // check for malformed strings with ';'
+    if (length % 2 != 0) {
+        kWarning() << "length not correct, correcting";
+        length--;
+    }
+
+    for (int i = 0; i < length; i += 2) {
+        if (!ret.isEmpty()) {
+            ret += "<br />";
+        }
+        ret = "<a href=\"" + linkList.at(i) + "\">"
+              + linkList.at(i + 1) + "</a>";
+    }
+    return ret;
+}
 
 void KpkUpdateDetails::updateDetailFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
     Q_UNUSED(status)
     Q_UNUSED(runtime)
-//     if (status == Transaction::Success)
-//      descriptionDW->setVisible(true);
+    if (descriptionKTB->document()->toPlainText().isEmpty()) {
+       descriptionKTB->setPlainText(i18n("Sorry, no update description was found."));
+    }
 }
 
 #include "KpkUpdateDetails.moc"

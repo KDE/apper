@@ -21,6 +21,7 @@
 #include "KpkUpdate.h"
 #include "KpkUpdateDetails.h"
 #include <KpkStrings.h>
+#include <KpkIcons.h>
 
 #include <KDebug>
 #include <KMessageBox>
@@ -40,9 +41,9 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 {
     setupUi(this);
 
-    updatePB->setIcon(KIcon("package-update"));
-    refreshPB->setIcon(KIcon("view-refresh"));
-    historyPB->setIcon(KIcon("view-history"));
+    updatePB->setIcon(KpkIcons::getIcon("package-update"));
+    refreshPB->setIcon(KpkIcons::getIcon("view-refresh"));
+    historyPB->setIcon(KpkIcons::getIcon("view-history"));
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
 
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
@@ -62,7 +63,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 
     // Setup the distro upgrade banner
     //TODO: Find the distribution's logo
-    distroTitle->setPixmap(KIcon("distro-upgrade"));
+    distroTitle->setPixmap(KpkIcons::getIcon("distro-upgrade"));
     distroTitle->setWidget(m_distroUpgradeUL = new KUrlLabel(this));
     /*QPalette titleColors(distroTitle->palette());
     //FIXME: This is a bug in kdelibs. The background color doesn't get changed.
