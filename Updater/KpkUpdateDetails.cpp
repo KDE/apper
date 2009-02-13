@@ -90,7 +90,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
         QStringList updates;
         foreach (Package *p, info.updates) updates << p->name() + "-" + p->version();
         description += "<tr><td align=\"right\"><b>" + i18n("Updates") + ":</b></td><td>"
-                    + updates.join(", ")
+                    + updates.join("<br />")
                     + "</td></tr>";
     }
 
@@ -99,13 +99,13 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
         QStringList obsoletes;
         foreach (Package *p, info.obsoletes) obsoletes << p->id() + "-" + p->version();
         description += "<tr><td align=\"right\"><b>" + i18n("Obsoletes") + ":</b></td><td>"
-                    + obsoletes.join(", ")
+                    + obsoletes.join("<br />")
                     + "</td></tr>";
     }
 
     // Repository (this is the repository the package come from)
-    description += "<tr><td align=\"right\"><b>" + i18n("Repository") + ":</b></td><td>" + info.package->name()
-                + "-" + info.package->data()
+    description += "<tr><td align=\"right\"><b>" + i18n("Repository") + ":</b></td><td>"
+                + info.package->data()
                 + "</td></tr>";
 
     // Description
@@ -144,7 +144,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     // Notice (about the need for a reboot)
     if (info.restart == Client::RestartSession || info.restart == Client::RestartSystem) {
         description += "<tr><td align=\"right\"><b>" + i18n("Notice") + ":</b></td><td>"
-                    + KpkStrings::restartTypeFuture(info.restart)
+                    + KpkStrings::restartType(info.restart)
                     + "</td></tr>";
     }
 

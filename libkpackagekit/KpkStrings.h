@@ -43,6 +43,7 @@ public:
     static QString info(Package::State state);
     static QString infoUpdate(Package::State state, int number);
     static QString updateState(Client::UpgradeType value);
+    static QString restartType(Client::RestartType value);
     static QString restartTypeFuture(Client::RestartType value);
     static QString action(Client::Action action);
 };

@@ -528,6 +528,25 @@ QString KpkStrings::infoUpdate(Package::State state, int number)
     }
 }
 
+QString KpkStrings::restartType(Client::RestartType value)
+{
+    switch (value) {
+        case Client::RestartNone :
+            return i18n("No restart is required");
+        case Client::RestartSystem :
+            return i18n("A system restart is required");
+        case Client::RestartSession :
+            return i18n("You will need to log off and log back on");
+        case Client::RestartApplication :
+            return i18n("You need to restart the application");
+        case Client::UnknownRestartType :
+            return QString();
+        default :
+            kDebug() << "restart unrecognised: " << value;
+            return QString();
+    }
+}
+
 QString KpkStrings::restartTypeFuture(Client::RestartType value)
 {
     switch (value) {
@@ -542,7 +561,7 @@ QString KpkStrings::restartTypeFuture(Client::RestartType value)
         case Client::UnknownRestartType :
             return QString();
         default :
-            kDebug() << "value unrecognised: " << value;
+            kDebug() << "restart unrecognised: " << value;
             return QString();
     }
 }
