@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,33 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <KGenericFactory>
-#include <KAboutData>
+#ifndef KPK_DISTRO_UPGRADE_H
+#define KPK_DISTRO_UPGRADE_H
 
-#include "KcmKpkUpdate.h"
-#include <version.h>
+#include <QPackageKit>
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkUpdate>(); )
-K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_update"))
+#include <KTitleWidget>
+#include <KUrlLabel>
+#include <KProgressDialog>
 
-KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
-    : KCModule(KPackageKitFactory::componentData(), parent, args)
+using namespace PackageKit;
+
+class KpkDistroUpgrade : public KTitleWidget
 {
-    KAboutData *about = new KAboutData("kcm_kpk_update", 0, ki18n("KPackageKit Update"), KPK_VERSION);
-    setAboutData(about);
-    setButtons(Apply);
-    m_grid = new QGridLayout(this);
-    view = new KpkUpdate(this);
-    m_grid->addWidget(view);
-    connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-}
+Q_OBJECT
+public:
+    KpkDistroUpgrade(QWidget *parent = 0);
+    ~KpkDistroUpgrade();
 
-void KcmKpkUpdate::load()
-{
-    view->load();
-}
+    void setName(const QString &name);
 
-void KcmKpkUpdate::save()
-{
-    view->applyUpdates();
-}
+private slots:
+    void startDistroUpgrade();
+//     void distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description);
+
+    void distroUpgradeError(QProcess::ProcessError);
+    void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
+
+private:
+    KUrlLabel *m_distroUpgradeUL;
+    QProcess *m_distroUpgradeProcess;
+    KProgressDialog *m_distroUpgradeDialog;
+};
+
+#endif

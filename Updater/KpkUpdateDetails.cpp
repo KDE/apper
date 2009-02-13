@@ -22,8 +22,6 @@
 
 #include <KpkStrings.h>
 
-#include <QPlainTextEdit>
-#include <QTextDocument>
 #include <KDebug>
 
 KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent)

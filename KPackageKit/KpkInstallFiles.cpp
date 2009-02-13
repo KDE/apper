@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -25,8 +25,8 @@
 
 #include <KDebug>
 
-KpkInstallFiles::KpkInstallFiles( QObject *parent ) :
-QObject( parent ), m_running(0)
+KpkInstallFiles::KpkInstallFiles( QObject *parent )
+ : QObject(parent), m_running(0)
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
 }
@@ -47,58 +47,64 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
     QString lastDirectoryNotFiles = urls.at(0).directory();
     bool showFullPath = false;
     bool showFullPathNotFiles = false;
-    for ( int i = 0; i < urls.count(); i++) {
-        if ( QFileInfo( urls.at(i).path() ).isFile() ) {
+    for (int i = 0; i < urls.count(); i++) {
+        if (QFileInfo(urls.at(i).path()).isFile()) {
             qDebug() << "isFIle";
             files << urls.at(i).path();
             // if the path of all the files is the same
             // why bothering the user showing a full path?
-            if ( urls.at(i).directory() != lastDirectory )
+            if (urls.at(i).directory() != lastDirectory) {
                 showFullPath = true;
+            }
             lastDirectory = urls.at(i).directory();
-        }
-        else {
+        } else {
             qDebug() << "~isFIle";
             notFiles << urls.at(i).path();
-            if ( urls.at(i).directory() != lastDirectoryNotFiles )
+            if (urls.at(i).directory() != lastDirectoryNotFiles) {
                 showFullPathNotFiles = true;
+            }
             lastDirectoryNotFiles =urls.at(i).directory();
         }
     }
 
     // check if there were "false" files
-    if ( notFiles.count() ) {
+    if (notFiles.count()) {
         if (!showFullPathNotFiles)
             for(int i = 0; i < notFiles.count(); i++) {
-                notFiles[i] = KUrl( notFiles.at(i) ).fileName();
+                notFiles[i] = KUrl(notFiles.at(i)).fileName();
             }
             KMessageBox::errorList(0,
-                i18np("This item is not supported by your backend or it is not a file", "These items are not supported by your backend or they are not files", notFiles.count() ),
+                i18np("This item is not supported by your backend or it is not a file",
+                      "These items are not supported by your backend or they are not files",
+                      notFiles.count()),
                 notFiles,
                 i18n("Impossible to install")
             );
     }
 
-    if ( files.count() ) {
+    if (files.count()) {
         QStringList displayFiles = files;
-        if (!showFullPath)
+        if (!showFullPath) {
             for(int i = 0; i < displayFiles.count(); i++) {
-                displayFiles[i] = KUrl( displayFiles.at(i) ).fileName();
+                displayFiles[i] = KUrl(displayFiles.at(i)).fileName();
             }
+        }
 
         KGuiItem installBt = KStandardGuiItem::yes();
-        installBt.setText( i18n("Install") );
+        installBt.setText(i18n("Install"));
 
-        if ( KMessageBox::questionYesNoList(0,
-                        i18np("Do you want to install this file?", "Do you want to install these files?", displayFiles.count() ),
+        int ret;
+        ret = KMessageBox::questionYesNoList(0,
+                        i18np("Do you want to install this file?", "Do you want to install these files?",
+                        displayFiles.count()),
                         displayFiles,
                         i18n("Install?"),
-                        installBt
-
-                ) == KMessageBox::Yes ) {
-            if ( Transaction *t = Client::instance()->installFiles(files, true) ) {
+                        installBt);
+        if (ret == KMessageBox::Yes) {
+            if (Transaction *t = Client::instance()->installFiles(files, true)) {
                 KpkTransaction *trans = new KpkTransaction(t);
-                connect( trans, SIGNAL( kTransactionFinished(KpkTransaction::ExitStatus) ), this, SLOT( installFilesFinished(KpkTransaction::ExitStatus) ) );
+                connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                        this, SLOT(installFilesFinished(KpkTransaction::ExitStatus)));
                 trans->show();
                 m_transactionFiles[trans] = files;
                 //to skip the running thing
@@ -109,6 +115,11 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
                                    i18np("Failed to install file",
                                          "Failed to install files", displayFiles.count()));
             }
+        } else {
+            KMessageBox::sorry(0, i18np("The file was not installed",
+                                        "The files were not installed", displayFiles.count()),
+                                  i18np("The file was not installed",
+                                        "The files were not installed", displayFiles.count()));
         }
     }
     // ok we are not running anymore..
@@ -119,19 +130,25 @@ void KpkInstallFiles::installFiles(KUrl::List &urls)
 void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
+    KpkTransaction *transaction = (KpkTransaction *) sender();
     switch (status) {
         case KpkTransaction::Success :
+            KMessageBox::information(0, i18np("File was installed successfully",
+                                              "Files were installed successfully",
+                                              m_transactionFiles[transaction].count()),
+                                        i18np("File was installed successfully",
+                                              "Files were installed successfully",
+                                              m_transactionFiles[transaction].count()));
         case KpkTransaction::Cancelled :
-            m_transactionFiles.remove( (KpkTransaction *) sender() );
+            m_transactionFiles.remove(transaction);
             break;
         case KpkTransaction::Failed :
-            m_transactionFiles.remove( (KpkTransaction *) sender() );
-            KMessageBox::error( 0, i18n("Sorry, an error occurred"), i18n("KPackageKit") );
+            m_transactionFiles.remove(transaction);
+            KMessageBox::error(0, i18n("Sorry, an error occurred"), i18n("KPackageKit"));
             break;
         case KpkTransaction::ReQueue :
             kDebug() << "ReQueue";
-            KpkTransaction *trans = (KpkTransaction *) sender();
-            trans->setTransaction( Client::instance()->installFiles(m_transactionFiles[trans], false) );
+            transaction->setTransaction(Client::instance()->installFiles(m_transactionFiles[transaction], false));
             // return to avoid the running--
             return;
     }

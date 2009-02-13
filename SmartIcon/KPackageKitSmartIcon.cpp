@@ -45,7 +45,7 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
 
     // This MUST be called after connecting all the signals or slots!
     m_trayIcon->checkTransactionList();
-//     m_updateIcon = new KpkUpdateIcon(this);
+    m_updateIcon = new KpkUpdateIcon(this);
     m_distroUpgrade = new KpkDistroUpgrade(this);
 }
 
@@ -55,7 +55,7 @@ int KPackageKit_Smart_Icon::newInstance()
 
     if (args->isSet("update")) {
         kDebug() << "Running update checker";
-//         m_updateIcon->checkUpdates();
+        m_updateIcon->checkUpdates();
         m_distroUpgrade->checkDistroUpgrades();
     }
     return 0;

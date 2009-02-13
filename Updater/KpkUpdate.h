@@ -54,8 +54,7 @@ private slots:
     void on_refreshPB_clicked();
     void on_historyPB_clicked();
 
-    void startDistroUpgrade();
-    void distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description);
+    void distroUpgrade(PackageKit::Client::UpgradeType type, const QString &name, const QString &description);
 
     void displayUpdates(KpkTransaction::ExitStatus status);
 
@@ -64,10 +63,6 @@ private slots:
 
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
-    void updateFinished(KpkTransaction::ExitStatus status);
-
-    void distroUpgradeError(QProcess::ProcessError);
-    void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     KpkPackageModel *m_pkg_model_updates;
@@ -75,10 +70,6 @@ private:
     Client *m_client;
     Transaction *m_updatesT;
     Client::Actions m_actions;
-
-    KUrlLabel *m_distroUpgradeUL;
-    QProcess *m_distroUpgradeProcess;
-    KProgressDialog *m_distroUpgradeDialog;
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);

@@ -21,12 +21,7 @@
 #ifndef KPK_UPDATE_DETAILS_H
 #define KPK_UPDATE_DETAILS_H
 
-#include <QWidget>
 #include <QPackageKit>
-
-#include <KTextBrowser>
-#include <QPlainTextEdit>
-#include <QListView>
 
 #include "KpkPackageModel.h"
 
