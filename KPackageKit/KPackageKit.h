@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -38,14 +38,23 @@ public:
 
     virtual int newInstance();
 
+    void showUi();
+    void showUpdates();
+    void showSettings();
+
 signals:
     void installFiles(KUrl::List &urls);
 
-public slots:
+private slots:
     void appClose();
+    void kcmFinished();
 
 private:
     KCMultiDialog *m_pkUi;
+    KPageWidgetItem *m_addrmPWI;
+    KPageWidgetItem *m_updatePWI;
+    KPageWidgetItem *m_settingsPWI;
+
     KpkInstallFiles *m_instFiles;
 };
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -33,21 +33,14 @@
 namespace kpackagekit {
 
 KPackageKit::KPackageKit()
- : KUniqueApplication()
+ : KUniqueApplication(),
+   m_pkUi(0),
+   m_addrmPWI(0),
+   m_updatePWI(0),
+   m_settingsPWI(0)
 {
-    // this enables not quitting when closing a transaction ui
-    setQuitOnLastWindowClosed(false);
-
-    m_pkUi = new KCMultiDialog();
-    m_pkUi->setCaption(QString());
-    m_pkUi->setWindowIcon(KIcon("applications-other"));
-    m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_addrm.desktop"));
-    m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
-    m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
-    //connect(m_pkNotify, SIGNAL( showUpdatesUi() ), m_pkUi, SLOT( showUpdatesUi() ) );
-
     m_instFiles = new KpkInstallFiles(this);
-    connect(m_instFiles, SIGNAL( appClose() ), this, SLOT( appClose() ) );
+    connect(m_instFiles, SIGNAL(appClose()), this, SLOT(appClose()));
     // register Meta Type so we can queue que connection
     qRegisterMetaType<KUrl::List>("KUrl::List &");
     connect(this, SIGNAL(installFiles(KUrl::List &)),
@@ -62,8 +55,19 @@ KPackageKit::~KPackageKit()
 void KPackageKit::appClose()
 {
     //check whether we can close
-    if ( m_instFiles->canClose() )
-	quit();
+    if (m_instFiles->canClose() && !m_pkUi) {
+        quit();
+    }
+}
+
+void KPackageKit::kcmFinished()
+{
+    // kcm is finished we set to 0 to be able to quit
+    m_pkUi = 0;
+    m_addrmPWI = 0;
+    m_updatePWI = 0;
+    m_settingsPWI = 0;
+    appClose();
 }
 
 int KPackageKit::newInstance()
@@ -73,19 +77,96 @@ int KPackageKit::newInstance()
     if (args->count()) {
         // grab the list of files
         KUrl::List urls;
-        for (int i = 0; i < args->count(); i++)
+        for (int i = 0; i < args->count(); i++) {
             urls << args->url(i);
+        }
         emit installFiles(urls);
+    } else if (args->isSet("updates")) {
+        kDebug() << "SHOW UPDATES!";
+        showUpdates();
+    } else if (args->isSet("settings")) {
+        kDebug() << "SHOW SETTINGS!";
+        showSettings();
     } else {
-        qDebug() << "SHOW UI!";
-        m_pkUi->show();
-        m_pkUi->raise();
+        kDebug() << "SHOW UI!";
+        showUi();
     }
 
     args->clear();
     return 0;
 }
 
+void KPackageKit::showUi()
+{
+    if (!m_pkUi) {
+        kDebug() << "GO UI!";
+        m_pkUi = new KCMultiDialog();
+        m_pkUi->setCaption(QString());
+        m_pkUi->setWindowIcon(KIcon("applications-other"));
+        connect(m_pkUi, SIGNAL(finished()), this, SLOT (appClose()));
+        m_addrmPWI    = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_addrm.desktop"));
+        m_updatePWI   = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
+        m_settingsPWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
+        m_pkUi->show();
+        m_pkUi->activateWindow();
+        m_pkUi->raise();
+    } else {
+        kDebug() << "RAISE UI!";
+        // check to see if all are added
+        if (!m_addrmPWI) {
+            m_addrmPWI    = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_addrm.desktop"));
+        }
+        if (!m_updatePWI) {
+            m_updatePWI   = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
+        }
+        if (!m_settingsPWI) {
+            m_settingsPWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
+        }
+        m_pkUi->setCurrentPage(m_addrmPWI);
+        m_pkUi->activateWindow();
+        m_pkUi->raise();
+    }
+}
+
+void KPackageKit::showUpdates()
+{
+    if (!m_pkUi) {
+        kDebug() << "GO UI!";
+        m_pkUi = new KCMultiDialog();
+        m_pkUi->setCaption(QString());
+        m_pkUi->setWindowIcon(KIcon("applications-other"));
+        connect(m_pkUi, SIGNAL(finished()), this, SLOT(appClose()));
+        m_updatePWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
+        m_pkUi->show();
+        m_pkUi->raise();
+    } else {
+        if (!m_updatePWI) {
+            m_updatePWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
+        }
+        m_pkUi->setCurrentPage(m_updatePWI);
+        m_pkUi->activateWindow();
+    }
+}
+
+void KPackageKit::showSettings()
+{
+    if (!m_pkUi) {
+        kDebug() << "GO UI!";
+        m_pkUi = new KCMultiDialog();
+        m_pkUi->setCaption(QString());
+        m_pkUi->setWindowIcon(KIcon("applications-other"));
+        connect(m_pkUi, SIGNAL(finished()), this, SLOT(appClose()));
+        m_settingsPWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
+        m_pkUi->show();
+        m_pkUi->raise();
+    } else {
+        if (!m_settingsPWI) {
+            m_settingsPWI   = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
+        }
+        m_pkUi->setCurrentPage(m_settingsPWI);
+        m_pkUi->activateWindow();
+    }
+}
 
 }
 

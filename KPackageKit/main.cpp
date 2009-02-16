@@ -29,19 +29,23 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about(
-	"KPackageKit", 0, ki18n("KPackageKit"),
-	KPK_VERSION, ki18n("KPackageKit user interface and notification"),
-	KAboutData::License_GPL, ki18n("(C) 2008 Daniel Nicoletti"),
-	KLocalizedString());
+    KAboutData about("KPackageKit",
+                     0,
+                     ki18n("KPackageKit"),
+                     KPK_VERSION,
+                     ki18n("KPackageKit user interface"),
+                     KAboutData::License_GPL, ki18n("(C) 2008-2009 Daniel Nicoletti"),
+                     KLocalizedString());
 
-    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti85-pk@yahoo.com.br","http://www.packagekit.org" );
+    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti85-pk@yahoo.com.br", "http://www.packagekit.org");
 
-    about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"),"@");
+    about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"), "@");
 
     KCmdLineArgs::init(argc, argv, &about);
 
     KCmdLineOptions options;
+    options.add("updates", ki18n("Shows Updates"));
+    options.add("settings", ki18n("Shows Settings"));
     options.add("+[package]", ki18n("Package file to install"));
     KCmdLineArgs::addCmdLineOptions(options);
 
@@ -49,8 +53,8 @@ int main(int argc, char **argv)
 
     if (!kpackagekit::KPackageKit::start())
     {
-	qDebug() << "KPackageKit is already running!";
-	return 0;
+        qDebug() << "KPackageKit is already running!";
+        return 0;
     }
 
     kpackagekit::KPackageKit app;
