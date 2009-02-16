@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,40 +18,39 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPACKAGEKITSMARTICON_H
-#define KPACKAGEKITSMARTICON_H
+#include "KpkAbstractSmartIcon.h"
 
-#include <KUniqueApplication>
-#include <QTimer>
+#include <KDebug>
 
-#include "KpkUpdateIcon.h"
-#include "KpkDistroUpgrade.h"
-#include "KpkTransactionTrayIcon.h"
-
-namespace kpackagekit {
-
-class KPackageKit_Smart_Icon : public KUniqueApplication
+KpkAbstractSmartIcon::KpkAbstractSmartIcon(QObject *parent)
+ : QObject(parent),
+   m_running(0)
 {
-Q_OBJECT
-
-public:
-    KPackageKit_Smart_Icon();
-    virtual ~KPackageKit_Smart_Icon();
-    int newInstance();
-
-private slots:
-    void prepareToClose();
-    void close();
-
-private:
-    bool isRunning();
-    QTimer *m_closeT;
-
-    KpkTransactionTrayIcon *m_trayIcon;
-    KpkUpdateIcon *m_updateIcon;
-    KpkDistroUpgrade *m_distroUpgrade;
-};
-
 }
 
-#endif
+KpkAbstractSmartIcon::~KpkAbstractSmartIcon()
+{
+}
+
+void KpkAbstractSmartIcon::increaseRunning()
+{
+    m_running++;
+    kDebug();
+}
+
+void KpkAbstractSmartIcon::decreaseRunning()
+{
+    m_running--;
+    kDebug();
+    if (!isRunning()) {
+        kDebug() << "Is not Running anymore";
+        emit close();
+    }
+}
+
+bool KpkAbstractSmartIcon::isRunning() const
+{
+    return m_running > 0;
+}
+
+#include "KpkAbstractSmartIcon.moc"

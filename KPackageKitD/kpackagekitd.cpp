@@ -35,11 +35,11 @@
 K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KPackageKitD>(); )
 K_EXPORT_PLUGIN(KPackageKitFactory("kpackagekitd"))
 
-KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant>&)
+KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant> &)
     : KDEDModule(parent), m_refreshCacheT(0)
 {
     m_qtimer = new QTimer(this);
-    connect(m_qtimer, SIGNAL(timeout()), this, SLOT(init())) ;
+    connect(m_qtimer, SIGNAL(timeout()), this, SLOT(init()));
 
     // Create a new daemon
     m_client = Client::instance();
@@ -71,9 +71,12 @@ void KPackageKitD::init()
     uint interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
 
     // 1160 -> 15 minutes
-
-    if ( ( (m_client->getTimeSinceAction(Client::ActionRefreshCache) - interval > 1160) && interval != 0 ) || !( act.contains(Client::ActionRefreshCache) ) )
-        checkUpdates();
+    if (((m_client->getTimeSinceAction(Client::ActionRefreshCache) - interval > 1160) && interval != 0 )
+        || !act.contains(Client::ActionRefreshCache)) {
+        // WE ARE NOT GOING TO REFRESH THE CACHE if it not time BUT
+        // WE can SHOW the user his system update :D
+        QProcess::execute("kpackagekit-smart-icon", QStringList() << "--update");
+    }
 
     if (!act.contains(Client::ActionRefreshCache)) {
         //if the backend does not suport refreshing cache let's don't do nothing
@@ -116,24 +119,26 @@ void KPackageKitD::read()
 
 void KPackageKitD::finished(PackageKit::Transaction::ExitStatus status, uint)
 {
-    if ( status == Transaction::Success )
+    if (status == Transaction::Success) {
         QProcess::execute("kpackagekit-smart-icon", QStringList() << "--update");
-    else
+    } else {
         // try again in 5 minutes
         m_qtimer->start(FIVE_MIN);
+    }
 }
 
 bool KPackageKitD::systemIsReady()
 {
     // test whether network is connected
-    if ( Solid::Networking::status() != Solid::Networking::Connected  &&
-        Solid::Networking::status() != Solid::Networking::Unknown ) {
+    if (Solid::Networking::status() != Solid::Networking::Connected  &&
+        Solid::Networking::status() != Solid::Networking::Unknown) {
         return false;
     }
 
     // check how applications should behave (e.g. on battery power)
-    if ( Solid::PowerManagement::appShouldConserveResources() )
+    if (Solid::PowerManagement::appShouldConserveResources()) {
         return false;
+    }
 
     return true;
 }

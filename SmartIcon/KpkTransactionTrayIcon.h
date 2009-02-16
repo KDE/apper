@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,21 +18,24 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPKTRANSACTIONTRAYICON_H
-#define KPKTRANSACTIONTRAYICON_H
+#ifndef KPK_TRANSACTION_TRAY_ICON_H
+#define KPK_TRANSACTION_TRAY_ICON_H
+
+#include "KpkAbstractSmartIcon.h"
 
 #include <QPackageKit>
 #include <KSystemTrayIcon>
 
 using namespace PackageKit;
 
-class KpkTransactionTrayIcon : public QObject
+class KpkTransactionTrayIcon : public KpkAbstractSmartIcon
 {
 Q_OBJECT
 public:
-    KpkTransactionTrayIcon( QObject *parent=0 );
+    KpkTransactionTrayIcon(QObject *parent = 0);
     ~KpkTransactionTrayIcon();
 
+    bool isRunning();
     void checkTransactionList();
 
 private slots:
@@ -40,11 +43,13 @@ private slots:
     void activated(QSystemTrayIcon::ActivationReason reason);
     void triggered(QAction *action);
     void currentStatusChanged(PackageKit::Transaction::Status status);
-    void showTransactionError(PackageKit::Client::ErrorType, const QString&);
-    void showRestartMessage(PackageKit::Client::RestartType, const QString&);
+    void currentProgressChanged(PackageKit::Transaction::ProgressInfo);
+//     void showTransactionError(PackageKit::Client::ErrorType, const QString&);
+//     void showRestartMessage(PackageKit::Client::RestartType, const QString&);
 
 private:
     void updateMenu(const QList<PackageKit::Transaction*> &tids);
+    void setCurrentTransaction(PackageKit::Transaction *transaction);
 
     Client::Actions m_act;
     KSystemTrayIcon *m_smartSTI;
@@ -52,6 +57,8 @@ private:
     Transaction *m_pkClient_updates;
     QMenu *m_menu;
     QHash<QAction *,Transaction*> m_transAction;
+
+    PackageKit::Transaction *m_currentTransaction;
 };
 
 #endif

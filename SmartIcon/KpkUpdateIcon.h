@@ -21,6 +21,8 @@
 #ifndef KPKUPDATEICON_H
 #define KPKUPDATEICON_H
 
+#include "KpkAbstractSmartIcon.h"
+
 #include <QObject>
 #include <KSystemTrayIcon>
 #include <KCMultiDialog>
@@ -28,43 +30,34 @@
 #include <QList>
 #include <QPackageKit>
 
-class KpkUpdateIcon : public QObject {
+class KpkUpdateIcon : public KpkAbstractSmartIcon
+{
+Q_OBJECT
 
-    Q_OBJECT
+public:
+    KpkUpdateIcon(QObject *parent = 0);
+    ~KpkUpdateIcon();
 
-    public:
-        KpkUpdateIcon(QObject* parent=0);
-        ~KpkUpdateIcon();
+public slots:
+    void checkUpdates();
 
-    public slots:
-        void checkUpdates();
-//         void checkDistroUpgrades();
+private slots:
+    void updateListed(PackageKit::Package*);
+    void updateCheckFinished(PackageKit::Transaction::ExitStatus, uint runtime);
+    void handleUpdateAction(uint action);
+    void handleUpdateActionClosed();
+    void notifyUpdates();
+    void showSettings();
+    void showUpdates(QSystemTrayIcon::ActivationReason = QSystemTrayIcon::Unknown);
+    void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
-    private slots:
-        void updateListed(PackageKit::Package*);
-        void updateCheckFinished(PackageKit::Transaction::ExitStatus, uint runtime);
-        void handleUpdateAction(uint action);
-        void handleUpdateActionClosed();
-        void notifyUpdates();
-//         void hideUpdates();
-        void showSettings();
-//         void updaterClosed(int);
-        void showUpdates( QSystemTrayIcon::ActivationReason = QSystemTrayIcon::Unknown);
-        void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-//         void distroUpgrade(PackageKit::Client::UpgradeType, const QString&, const QString&);
-//         void handleDistroUpgradeAction(uint action);
-//         void distroUpgradeError( QProcess::ProcessError error );
-//         void distroUpgradeFinished( int exitCode, QProcess::ExitStatus exitStatus );
+private:
+    KSystemTrayIcon* m_icon;
+    KNotification *m_updateNotify;
+    QList<PackageKit::Package*> m_updateList;
 
-    private:
-        KSystemTrayIcon* m_icon;
-        KNotification *m_updateNotify;
-//         KCMultiDialog* m_updateView;
-        QList<PackageKit::Package*> m_updateList;
-        bool m_checkingUpdates;
-        
-        int m_inhibitCookie;
-        void suppressSleep(bool enable);
+//     int m_inhibitCookie;
+//     void suppressSleep(bool enable);
 };
 
 #endif

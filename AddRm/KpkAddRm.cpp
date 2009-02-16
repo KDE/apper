@@ -321,7 +321,7 @@ void KpkAddRm::save()
     if (frm->exec() == QDialog::Accepted) {
         m_pkg_model_main->uncheckAll();
     } else {
-        QTimer::singleShot(1, this, SLOT(checkChanged()));
+        QTimer::singleShot(0, this, SLOT(checkChanged()));
     }
     delete frm;
     search();
@@ -369,7 +369,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
             menuCollections->addAction(collectionFalse);
             actions << collectionFalse;
         }
-        if ( filters.contains(Client::FilterInstalled)  || filters.contains(Client::FilterNotInstalled) ) {
+        if (filters.contains(Client::FilterInstalled)  || filters.contains(Client::FilterNotInstalled)) {
             // Installed
             QMenu *menuInstalled = new QMenu(i18n("Installed"), m_filtersQM);
             m_filtersQM->addMenu(menuInstalled);
@@ -401,7 +401,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
             menuInstalled->addAction(installedNone);
             actions << installedNone;
         }
-        if ( filters.contains(Client::FilterDevelopment) || filters.contains(Client::FilterNotDevelopment) ) {
+        if (filters.contains(Client::FilterDevelopment) || filters.contains(Client::FilterNotDevelopment)) {
             // Development
             QMenu *menuDevelopment = new QMenu(i18n("Development"), m_filtersQM);
             m_filtersQM->addMenu(menuDevelopment);
@@ -433,7 +433,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
             menuDevelopment->addAction(developmentNone);
             actions << developmentNone;
         }
-        if ( filters.contains(Client::FilterGui) || filters.contains(Client::FilterNotGui) ) {
+        if (filters.contains(Client::FilterGui) || filters.contains(Client::FilterNotGui)) {
             // Graphical
             QMenu *menuGui = new QMenu(i18n("Graphical"), m_filtersQM);
             m_filtersQM->addMenu(menuGui);
@@ -465,7 +465,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
             menuGui->addAction(guiNone);
             actions << guiNone;
         }
-        if ( filters.contains(Client::FilterFree) || filters.contains(Client::FilterNotFree) ) {
+        if (filters.contains(Client::FilterFree) || filters.contains(Client::FilterNotFree)) {
             // Free
             QMenu *menuFree = new QMenu(i18n("Free"), m_filtersQM);
             m_filtersQM->addMenu(menuFree);
@@ -497,7 +497,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
             menuFree->addAction(freeNone);
             actions << freeNone;
         }
-        if ( filters.contains(Client::FilterArch) || filters.contains(Client::FilterNotArch) ) {
+        if (filters.contains(Client::FilterArch) || filters.contains(Client::FilterNotArch)) {
             // Arch
             QMenu *menuArch = new QMenu(i18n("Architectures"), m_filtersQM);
             m_filtersQM->addMenu(menuArch);
@@ -529,7 +529,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
             menuArch->addAction(archNone);
             actions << archNone;
         }
-        if ( filters.contains(Client::FilterSource) || filters.contains(Client::FilterNotSource) ) {
+        if (filters.contains(Client::FilterSource) || filters.contains(Client::FilterNotSource)) {
             // Source
             QMenu *menuSource = new QMenu(i18n("Source"), m_filtersQM);
             m_filtersQM->addMenu(menuSource);
@@ -624,13 +624,13 @@ Client::Filters KpkAddRm::filters()
     return m_searchFilters = buffer;
 }
 
-void KpkAddRm::resizeEvent ( QResizeEvent * event )
+void KpkAddRm::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     updateColumnsWidth();
 }
 
-bool KpkAddRm::event ( QEvent * event )
+bool KpkAddRm::event(QEvent *event)
 {
     switch (event->type()) {
         case QEvent::KeyPress:

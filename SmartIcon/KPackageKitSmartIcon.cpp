@@ -32,21 +32,72 @@
 
 #include "KPackageKitSmartIcon.h"
 
+#define MINUTE 5000
 
-namespace kpackagekit {
+using namespace kpackagekit;
 
 KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
- : KUniqueApplication()
+ : KUniqueApplication(),
+   m_trayIcon(0),
+   m_updateIcon(0),
+   m_distroUpgrade(0)
 {
     // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);
 
-    m_trayIcon = new KpkTransactionTrayIcon(this);
+    // create the close timer and connect it's signal
+    m_closeT = new QTimer(this);
+    connect(m_closeT, SIGNAL(timeout()),
+            this, SLOT(close()));
 
+    m_trayIcon = new KpkTransactionTrayIcon(this);
+    connect(m_trayIcon, SIGNAL(close()), this, SLOT(prepareToClose()));
     // This MUST be called after connecting all the signals or slots!
     m_trayIcon->checkTransactionList();
+
     m_updateIcon = new KpkUpdateIcon(this);
+    connect(m_updateIcon, SIGNAL(close()), this, SLOT(prepareToClose()));
+
     m_distroUpgrade = new KpkDistroUpgrade(this);
+    connect(m_distroUpgrade, SIGNAL(close()), this, SLOT(prepareToClose()));
+
+    prepareToClose();
+}
+
+void KPackageKit_Smart_Icon::prepareToClose()
+{
+    if (isRunning()) {
+        kDebug() << "Stoping Timer";
+        m_closeT->stop();
+    } else {
+        kDebug() << "Starting Timer: " << MINUTE;
+        m_closeT->start(MINUTE);
+    }
+}
+
+bool KPackageKit_Smart_Icon::isRunning()
+{
+    // check to see if no piece of code is running
+    if (m_trayIcon && m_trayIcon->isRunning()) {
+        return true;
+    }
+    if (m_updateIcon && m_updateIcon->isRunning()) {
+        return true;
+    }
+    if (m_distroUpgrade && m_distroUpgrade->isRunning()) {
+        return true;
+    }
+    return false;
+}
+
+void KPackageKit_Smart_Icon::close()
+{
+    // This will run when the timer times out, we will check
+    // again just to be sure.
+    if (!isRunning()) {
+        kDebug() << "Closed by Timer";
+        QTimer::singleShot(1, this, SLOT(quit()));
+    }
 }
 
 int KPackageKit_Smart_Icon::newInstance()
@@ -63,8 +114,6 @@ int KPackageKit_Smart_Icon::newInstance()
 
 KPackageKit_Smart_Icon::~KPackageKit_Smart_Icon()
 {
-}
-
 }
 
 #include "KPackageKitSmartIcon.moc"

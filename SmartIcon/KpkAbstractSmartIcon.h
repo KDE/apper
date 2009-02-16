@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,40 +18,29 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPACKAGEKITSMARTICON_H
-#define KPACKAGEKITSMARTICON_H
+#ifndef KPK_ABSTRACT_SMART_ICON_H
+#define KPK_ABSTRACT_SMART_ICON_H
 
-#include <KUniqueApplication>
-#include <QTimer>
+#include <QObject>
 
-#include "KpkUpdateIcon.h"
-#include "KpkDistroUpgrade.h"
-#include "KpkTransactionTrayIcon.h"
-
-namespace kpackagekit {
-
-class KPackageKit_Smart_Icon : public KUniqueApplication
+class KpkAbstractSmartIcon : public QObject
 {
 Q_OBJECT
-
 public:
-    KPackageKit_Smart_Icon();
-    virtual ~KPackageKit_Smart_Icon();
-    int newInstance();
+    KpkAbstractSmartIcon(QObject *parent = 0);
+    ~KpkAbstractSmartIcon();
 
-private slots:
-    void prepareToClose();
+    bool isRunning() const;
+
+signals:
     void close();
 
+protected slots:
+    void increaseRunning();
+    void decreaseRunning();
+
 private:
-    bool isRunning();
-    QTimer *m_closeT;
-
-    KpkTransactionTrayIcon *m_trayIcon;
-    KpkUpdateIcon *m_updateIcon;
-    KpkDistroUpgrade *m_distroUpgrade;
+    int m_running;
 };
-
-}
 
 #endif
