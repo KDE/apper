@@ -21,6 +21,7 @@
 #include "KpkUpdate.h"
 #include "KpkUpdateDetails.h"
 #include "KpkDistroUpgrade.h"
+#include "KpkHistory.h"
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 
@@ -198,12 +199,9 @@ void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
 
 void KpkUpdate::on_historyPB_clicked()
 {
-    QString text;
-    text.append("Time since last cache refresh: "
-                + KGlobal::locale()->formatDuration(
-                        m_client->getTimeSinceAction(Client::ActionRefreshCache) * 1000));
-    // TODO here we will show the transaction list aka gpk-log
-    KMessageBox::information(this, text, i18n("History"));
+    KpkHistory *frm = new KpkHistory(this);
+    frm->exec();
+    delete frm;
 }
 
 void KpkUpdate::resizeEvent(QResizeEvent *event)

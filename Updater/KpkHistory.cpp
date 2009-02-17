@@ -1,0 +1,91 @@
+/***************************************************************************
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   dantti85-pk@yahoo.com.br                                              *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#include "KpkHistory.h"
+
+#include <KpkIcons.h>
+#include <QPackageKit>
+
+#include <KDebug>
+
+KpkHistory::KpkHistory(QWidget *parent)
+ : KDialog(parent)
+{
+    setupUi(mainWidget());
+
+    m_transactionModel = new KpkSimpleTransactionModel(this);
+    treeView->setModel(m_transactionModel);
+
+    setButtons(KDialog::User2 | KDialog::User1 | KDialog::Close);
+
+    setButtonText(KDialog::User2, i18n("Rollback"));
+    setButtonIcon(KDialog::User2, KpkIcons::getIcon("go-previous"));
+    // Dummy backend does not support this so we can't test
+    enableButton(KDialog::User2, false);
+
+    setButtonText(KDialog::User1, i18n("Refresh transactions list"));
+    setButtonIcon(KDialog::User1, KpkIcons::getIcon("view-refresh"));
+
+    setModal(true);
+
+    slotButtonClicked(KDialog::User1);
+}
+
+KpkHistory::~KpkHistory()
+{
+}
+
+void KpkHistory::slotButtonClicked(int button)
+{
+    switch (button) {
+        case KDialog::User2 :
+            // TODO implement rollback
+            kDebug() << "Roolback";
+            break;
+        case KDialog::User1 :
+            // Refresh transaction list
+            kDebug() << "Refresh transaction list";
+            m_transactionModel->clear();
+            if (Transaction *t = Client::instance()->getOldTransactions(0)) {
+                connect(t, SIGNAL(transaction(PackageKit::Transaction *)),
+                        m_transactionModel, SLOT(addTransaction(PackageKit::Transaction *)));
+                connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                        this, SLOT(finished()));
+            }
+            break;
+        default :
+            KDialog::slotButtonClicked(button);
+    }
+    QString text;
+    uint time = Client::instance()->getTimeSinceAction(Client::ActionRefreshCache) * 1000;
+    text = i18n("Time since last cache refresh: %1", KGlobal::locale()->formatDuration(time));
+    timeCacheLabel->setText(text);
+}
+
+void KpkHistory::finished()
+{
+    treeView->resizeColumnToContents(0);
+    treeView->resizeColumnToContents(1);
+    treeView->resizeColumnToContents(2);
+    treeView->resizeColumnToContents(3);
+    treeView->resizeColumnToContents(4);
+}
+
+#include "KpkHistory.moc"

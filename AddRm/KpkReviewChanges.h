@@ -73,6 +73,7 @@ private:
 private slots:
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
     void checkChanged();
+
 protected slots:
     virtual void slotButtonClicked(int button);
 

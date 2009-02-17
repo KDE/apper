@@ -104,6 +104,27 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
     }
 }
 
+QString KpkStrings::statusPast(PackageKit::Transaction::Status status)
+{
+    switch (status) {
+        case Transaction::Download:
+            return i18n("Downloaded");
+        case Transaction::Update:
+            return i18n("Updated");
+        case Transaction::Install:
+            return i18n("Installed");
+        case Transaction::Remove:
+            return i18n("Removed");
+        case Transaction::Cleanup:
+            return i18n("Cleaned Up");
+        case Transaction::Obsolete:
+            return i18n("Obsoleted");
+        default :
+            kDebug() << "status unrecognised: " << status;
+            return QString();
+    }
+}
+
 QString KpkStrings::action(Client::Action action)
 {
     switch (action) {
@@ -120,7 +141,7 @@ QString KpkStrings::action(Client::Action action)
         case Client::ActionGetRepoList :
             return i18n("Getting list of repositories");
         case Client::ActionGetRequires :
-            return i18n("Getting prerequesites");
+            return i18n("Getting requires");
         case Client::ActionGetUpdateDetail :
             return i18n("Getting update detail");
         case Client::ActionGetUpdates :
@@ -151,22 +172,87 @@ QString KpkStrings::action(Client::Action action)
             return i18n("Searching groups");
         case Client::ActionSearchName :
             return i18n("Searching by package name");
-        case Client::ActionServicePack :
-            return i18n("Applying service pack");
+//         case Client::ActionServicePack :
+//             return i18n("Applying service pack");
         case Client::ActionUpdatePackages :
             return i18n("Updating packages");
         case Client::ActionUpdateSystem :
             return i18n("Updating system");
         case Client::ActionWhatProvides :
-            return i18n("Searching for prerequesites");
+            return i18n("Getting what provides");
         case Client::ActionAcceptEula :
             return i18n("Accepting EULA");
         case Client::ActionDownloadPackages :
             return i18n("Downloading packages");
         case Client::ActionGetDistroUpgrades :
             return i18n("Getting distribution upgrade information");
-        case Client::UnkownAction :
+        default :
+            kDebug() << "action unrecognised: " << action;
             return QString();
+    }
+}
+
+QString KpkStrings::actionPast(Client::Action action)
+{
+    switch (action) {
+        case Client::ActionCancel :
+            return i18n("Canceled");
+        case Client::ActionGetDepends :
+            return i18n("Got dependencies");
+        case Client::ActionGetDetails :
+            return i18n("Got details");
+        case Client::ActionGetFiles :
+            return i18n("Got file list");
+        case Client::ActionGetPackages :
+            return i18n("Got package lists");
+        case Client::ActionGetRepoList :
+            return i18n("Got list of repositories");
+        case Client::ActionGetRequires :
+            return i18n("Got requires");
+        case Client::ActionGetUpdateDetail :
+            return i18n("Got update detail");
+        case Client::ActionGetUpdates :
+            return i18n("Got updates");
+        case Client::ActionInstallFiles :
+            return i18n("Installed local files");
+        case Client::ActionInstallPackages :
+            return i18n("Installed packages");
+        case Client::ActionInstallSignature :
+            return i18n("Installed signature");
+        case Client::ActionRefreshCache :
+            return i18n("Refreshed package cache");
+        case Client::ActionRemovePackages :
+            return i18n("Removed packages");
+        case Client::ActionRepoEnable :
+            return i18n("Enabled repository");
+        case Client::ActionRepoSetData :
+            return i18n("Set repository data");
+        case Client::ActionResolve :
+            return i18n("Resolved");
+        case Client::ActionRollback :
+            return i18n("Rolled back");
+        case Client::ActionSearchDetails :
+            return i18n("Searched for package details");
+        case Client::ActionSearchFile :
+            return i18n("Searched for file");
+        case Client::ActionSearchGroup :
+            return i18n("Searched groups");
+        case Client::ActionSearchName :
+            return i18n("Searched for package name");
+//         case Client::ActionServicePack :
+//             return i18n("Applying service pack");
+        case Client::ActionUpdatePackages :
+            return i18n("Updated packages");
+        case Client::ActionUpdateSystem :
+            return i18n("Updated system");
+        case Client::ActionWhatProvides :
+            return i18n("Got what provides");
+        case Client::ActionAcceptEula :
+            return i18n("Accepted EULA");
+        case Client::ActionDownloadPackages :
+            return i18n("Downloaded packages");
+        case Client::ActionGetDistroUpgrades :
+            return i18n("Got distribution upgrades");
         default :
             kDebug() << "action unrecognised: " << action;
             return QString();

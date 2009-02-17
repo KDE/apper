@@ -51,7 +51,7 @@ KIcon KpkIcons::statusIcon(PackageKit::Transaction::Status status)
         case Transaction::Info :
             return KpkIcons::getIcon("package-info");
         case Transaction::Remove :
-            return KpkIcons::getIcon("package-remove");
+            return KpkIcons::getIcon("package-removed");
         case Transaction::Download :
             return KpkIcons::getIcon("package-download");
         case Transaction::Update :
@@ -114,7 +114,7 @@ KIcon KpkIcons::actionIcon(Client::Action action)
         case Client::ActionUpdatePackages :
             return KpkIcons::getIcon("package-update");
         case Client::ActionUpdateSystem :
-            return KpkIcons::getIcon("package-update");
+            return KpkIcons::getIcon("distro-upgrade");//TODO
         case Client::ActionWhatProvides :
             return KpkIcons::getIcon("package-search");
         case Client::ActionAcceptEula :
@@ -122,7 +122,11 @@ KIcon KpkIcons::actionIcon(Client::Action action)
         case Client::ActionDownloadPackages :
             return KpkIcons::getIcon("package-download");
         case Client::ActionGetDistroUpgrades :
-            return KpkIcons::getIcon("package-info");
+            return KpkIcons::getIcon("distro-upgrade");
+        case Client::ActionInstallPackages :
+            return KpkIcons::getIcon("package-installed");
+        case Client::ActionRemovePackages :
+            return KpkIcons::getIcon("package-removed");
         default :
             kDebug() << "action unrecognised: " << action;
             return KpkIcons::getIcon("applications-other");

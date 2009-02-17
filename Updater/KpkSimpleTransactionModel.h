@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,36 +18,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPKSTRINGS_H
-#define KPKSTRINGS_H
+#ifndef KPK_SIMPLE_TRANSACTION_MODEL_H
+#define KPK_SIMPLE_TRANSACTION_MODEL_H
 
-#include <QObject>
+#include <QStandardItemModel>
 #include <KIcon>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KDE_EXPORT KpkStrings : public QObject
+class KpkSimpleTransactionModel : public QStandardItemModel
 {
-    Q_OBJECT
-public:
-    KpkStrings( QObject *parent=0);
-    ~KpkStrings();
+Q_OBJECT
 
-    static QString finished(PackageKit::Transaction::ExitStatus status);
-    static QString error(PackageKit::Client::ErrorType error);
-    static QString errorMessage(PackageKit::Client::ErrorType error);
-    static QString status(PackageKit::Transaction::Status status);
-    static QString statusPast(PackageKit::Transaction::Status status);
-    static QString groups(Client::Group group);
-    static QString info(Package::State state);
-    static QString infoUpdate(Package::State state, int number);
-    static QString updateState(Client::UpgradeType value);
-    static QString restartType(Client::RestartType value);
-    static QString restartTypeFuture(Client::RestartType value);
-    static QString action(Client::Action action);
-    static QString actionPast(Client::Action action);
+public:
+    KpkSimpleTransactionModel(QObject *parent = 0);
+
+    void clear();
+
+public slots:
+    void addTransaction(PackageKit::Transaction *trans);
+
+private:
+    QString getDetailsLocalized(const QString &data) const;
+    QString getTypeLine(const QStringList &lines, Transaction::Status status) const;
+
+    QList<PackageKit::Transaction *> m_transactions;
 };
 
 #endif

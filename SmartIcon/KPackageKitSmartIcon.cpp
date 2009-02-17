@@ -32,7 +32,7 @@
 
 #include "KPackageKitSmartIcon.h"
 
-#define MINUTE 5000
+#define MINUTE 60000
 
 using namespace kpackagekit;
 

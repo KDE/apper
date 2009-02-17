@@ -3,10 +3,13 @@ set(kpk_update_SRCS
     KpkUpdate.cpp
     KpkUpdateDetails.cpp
     KpkDistroUpgrade.cpp
+    KpkSimpleTransactionModel.cpp
+    KpkHistory.cpp
 )
 kde4_add_ui_files(kpk_update_SRCS
     KpkUpdate.ui
     KpkUpdateDetails.ui
+    KpkHistory.ui
 )
 
 kde4_add_plugin(kcm_kpk_update ${kpk_update_SRCS})
