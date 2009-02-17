@@ -30,7 +30,7 @@ K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_addrm"))
 KcmKpkAddRm::KcmKpkAddRm(QWidget *parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
-    KAboutData *about = new KAboutData("kcm_kpk_addrm", 0, ki18n("Add and Remove Software"), KPK_VERSION);
+    KAboutData *about = new KAboutData("kcm_kpk_addrm", "kpackagekit", ki18n("Add and Remove Software"), KPK_VERSION);
     setAboutData(about);
     setButtons(Apply);
     m_grid = new QGridLayout(this);
