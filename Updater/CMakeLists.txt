@@ -5,6 +5,7 @@ set(kpk_update_SRCS
     KpkDistroUpgrade.cpp
     KpkSimpleTransactionModel.cpp
     KpkHistory.cpp
+    KpkTransactionFilterModel.cpp
 )
 kde4_add_ui_files(kpk_update_SRCS
     KpkUpdate.ui

@@ -59,6 +59,8 @@ void KpkSimpleTransactionModel::addTransaction(PackageKit::Transaction *trans)
     QStandardItem *appI     = new QStandardItem;
 
     dateI->setText(KGlobal::locale()->formatDate(trans->timespec().date()));
+    // this is for the filterSort model
+    dateI->setData(trans->timespec(), Qt::UserRole);
     dateI->setEditable(false);
 
     roleI->setText(KpkStrings::actionPast(trans->role().action));
@@ -117,7 +119,6 @@ QString KpkSimpleTransactionModel::getTypeLine(const QStringList &lines, Transac
     foreach(const QString &line, lines) {
         QStringList sections = line.split('\t');
         if (sections.size() > 1) {
-            kDebug() << sections.at(0) << sections.at(1);
             switch (status) {
                 case Transaction::Install:
                     if (sections.at(0) != "installing") {

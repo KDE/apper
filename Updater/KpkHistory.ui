@@ -17,7 +17,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0" >
-    <widget class="KLineEdit" name="klineedit" >
+    <widget class="KLineEdit" name="searchLineKLE" >
      <property name="clickMessage" >
       <string>Type filter</string>
      </property>

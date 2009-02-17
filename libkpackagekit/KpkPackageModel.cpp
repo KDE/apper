@@ -289,7 +289,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         for (int i = 0; i < m_checkedPackages.size(); ++i) {
                             if ( m_checkedPackages.at(i)->id() == p->id() )
                                 return (p->state() == Package::Installed) ?
-                                        KpkIcons::getIcon("package-remove")
+                                        KpkIcons::getIcon("package-removed")
                                       : KpkIcons::getIcon("package-download");
                         }
                         return KpkIcons::packageIcon(p->state());;

@@ -31,7 +31,13 @@ KpkHistory::KpkHistory(QWidget *parent)
     setupUi(mainWidget());
 
     m_transactionModel = new KpkSimpleTransactionModel(this);
-    treeView->setModel(m_transactionModel);
+    m_proxyModel = new KpkTransactionFilterModel(this);
+    m_proxyModel->setSourceModel(m_transactionModel);
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->setFilterKeyColumn(-1);
+    treeView->setModel(m_proxyModel);
+    connect(searchLineKLE, SIGNAL(textChanged(const QString &)),
+            m_proxyModel, SLOT(setFilterRegExp(const QString &)));
 
     setButtons(KDialog::User2 | KDialog::User1 | KDialog::Close);
 
@@ -46,10 +52,18 @@ KpkHistory::KpkHistory(QWidget *parent)
     setModal(true);
 
     slotButtonClicked(KDialog::User1);
+
+    incrementInitialSize(QSize(450,0));
+    KConfig config("KPackageKit");
+    KConfigGroup historyDialog(&config, "HistoryDialog");
+    restoreDialogSize(historyDialog);
 }
 
 KpkHistory::~KpkHistory()
 {
+    KConfig config("KPackageKit");
+    KConfigGroup historyDialog(&config, "HistoryDialog");
+    saveDialogSize(historyDialog);
 }
 
 void KpkHistory::slotButtonClicked(int button)

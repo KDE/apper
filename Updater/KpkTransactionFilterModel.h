@@ -18,34 +18,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPK_HISTORY_H
-#define KPK_HISTORY_H
+#ifndef KPKTRANSACTIONFILTERMODEL_H
+#define KPKTRANSACTIONFILTERMODEL_H
 
-#include <KDialog>
 #include <QSortFilterProxyModel>
 
-#include "KpkTransactionFilterModel.h"
-#include "KpkSimpleTransactionModel.h"
-#include "ui_KpkHistory.h"
-
-using namespace PackageKit;
-
-class KpkHistory : public KDialog, Ui::KpkHistory
+class KpkTransactionFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    KpkHistory(QWidget *parent = 0);
-    ~KpkHistory();
+    KpkTransactionFilterModel(QObject *parent = 0);
+    ~KpkTransactionFilterModel();
 
-private slots:
-    void finished();
-
-private:
-    KpkSimpleTransactionModel *m_transactionModel;
-    KpkTransactionFilterModel *m_proxyModel;
-
-protected slots:
-    virtual void slotButtonClicked(int button);
+protected:
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 };
 
 #endif
