@@ -121,6 +121,7 @@ Action=Sound|Popup
 [Event/DistroUpgradeAvailable]
 Name=A distribution upgrade is available
 Name[et]=Saadaval on distributsiooni uuendus
+Name[nds]=Distributschoon-Opfrischen verföögbor
 Name[nn]=Ei distribusjonsoppdatering er tilgjengeleg
 Name[pt]=Está disponível uma actualização da distribuição
 Name[pt_BR]=Está disponível uma actualização da distribuição
@@ -133,6 +134,7 @@ Action=Sound|Popup
 [Event/DistroUpgradeFinished]
 Name=The distribution upgrade completed
 Name[et]=Distributsioon on uuendatud
+Name[nds]=Distributschoon-Opfrischen afslaten
 Name[nn]=Distribusjonsoppdateringa er fullførd
 Name[pt]=A actualização da distribuição está completa
 Name[pt_BR]=A actualização da distribuição está completa
@@ -145,6 +147,7 @@ Action=Sound|Popup
 [Event/DistroUpgradeError]
 Name=The distribution upgrade completed with an error
 Name[et]=Distributsioon uuendati, aga vigadega
+Name[nds]=Distributschoon-Opfrischen wöör mit en Fehler beendt
 Name[nn]=Distribusjonsoppdateringa er fullførd med feil
 Name[pt]=A actualização da distribuição terminou com erros
 Name[pt_BR]=A actualização da distribuição terminou com erros
