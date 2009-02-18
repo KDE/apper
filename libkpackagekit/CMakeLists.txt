@@ -1,20 +1,24 @@
 set(libkpk_SRCS
-  KpkDelegate.cpp
-  KpkTransaction.cpp
-  KpkStrings.cpp
-  KpkRepoSig.cpp
-  KpkLicenseAgreement.cpp
-  KpkPackageModel.cpp
-  KpkSimplePackageModel.cpp
-  KpkIcons.cpp
-  KpkTransactionBar.cpp
-  KpkProgressBar.cpp
+    KpkDelegate.cpp
+    KpkTransaction.cpp
+    KpkStrings.cpp
+    KpkRepoSig.cpp
+    KpkLicenseAgreement.cpp
+    KpkPackageModel.cpp
+    KpkSimplePackageModel.cpp
+    KpkIcons.cpp
+    KpkTransactionBar.cpp
+    KpkProgressBar.cpp
+    KpkReviewChanges.cpp
+    KpkRequirements.cpp
 )
 
 kde4_add_ui_files(libkpk_SRCS
-  KpkTransaction.ui
-  KpkRepoSig.ui
-  KpkLicenseAgreement.ui
+    KpkTransaction.ui
+    KpkRepoSig.ui
+    KpkLicenseAgreement.ui
+    KpkReviewChanges.ui
+    KpkRequirements.ui
 )
 
 kde4_add_library(kpackagekitlib SHARED ${libkpk_SRCS})

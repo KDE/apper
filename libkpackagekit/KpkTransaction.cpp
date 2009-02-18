@@ -48,7 +48,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
    m_flags(flags),
    d(new KpkTransactionPrivate)
 {
-    d->ui.setupUi( mainWidget() );
+    d->ui.setupUi(mainWidget());
 
     // Set Cancel and custom button hide
     setButtons(KDialog::Cancel | KDialog::User1 | KDialog::Details);
@@ -67,6 +67,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     }
 
     d->ui.currentL->setText(KpkStrings::status(Transaction::Setup));
+    setInitialSize(QSize(1,1));
 }
 
 KpkTransaction::~KpkTransaction()
@@ -89,6 +90,17 @@ void KpkTransaction::setTransaction(Transaction *trans)
     progressChanged(m_trans->progress());
     currPackage(m_trans->lastPackage());
     statusChanged(m_trans->status());
+    d->ui.packageL->clear();
+    d->ui.descriptionL->clear();
+
+    if (m_trans->role().action == Client::ActionRefreshCache ||
+        m_trans->role().action == Client::ActionWhatProvides) {
+        d->ui.packageL->hide();
+        d->ui.descriptionL->hide();
+    } else {
+        d->ui.packageL->show();
+        d->ui.descriptionL->show();
+    }
 
     connect(m_trans, SIGNAL(package(PackageKit::Package *)),
             this, SLOT(currPackage(PackageKit::Package *)));
@@ -137,12 +149,12 @@ void KpkTransaction::currPackage(Package *p)
         QString packageText(p->name());
         if (p->version() != "")
             packageText+=" "+p->version();
-        d->ui.packageL->setText( packageText );
-        d->ui.descriptionL->setText( p->summary() );
+        d->ui.packageL->setText(packageText);
+        d->ui.descriptionL->setText(p->summary());
         enableButton(KDialog::Details, true);
     } else {
-        d->ui.packageL->setText("");
-        d->ui.descriptionL->setText("");
+        d->ui.packageL->clear();
+        d->ui.descriptionL->clear();
         enableButton(KDialog::Details, false);
     }
 }

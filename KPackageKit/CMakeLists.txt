@@ -4,6 +4,7 @@ set(kpackagekit_SRCS
     main.cpp
     KPackageKit.cpp
     KpkInstallFiles.cpp
+    KpkInstallMimeType.cpp
 )
 
 kde4_add_executable(kpackagekit ${kpackagekit_SRCS})

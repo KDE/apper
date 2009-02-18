@@ -30,6 +30,8 @@
 
 #include "KPackageKit.h"
 
+#include "KpkInstallMimeType.h"
+
 namespace kpackagekit {
 
 KPackageKit::KPackageKit()
@@ -73,7 +75,7 @@ void KPackageKit::kcmFinished()
 int KPackageKit::newInstance()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
+    bool notSet = true;
     if (args->count()) {
         // grab the list of files
         KUrl::List urls;
@@ -81,16 +83,32 @@ int KPackageKit::newInstance()
             urls << args->url(i);
         }
         emit installFiles(urls);
-    } else if (args->isSet("updates")) {
+        notSet = false;
+    }
+
+    if (args->isSet("updates")) {
         kDebug() << "SHOW UPDATES!";
         showUpdates();
-    } else if (args->isSet("settings")) {
+        notSet = false;
+    }
+    if (args->isSet("settings")) {
         kDebug() << "SHOW SETTINGS!";
         showSettings();
-    } else {
+        notSet = false;
+    }
+
+    if (args->isSet("install-mime-type")) {
+        kDebug() << "install-mime-type!" << args->getOptionList("install-mime-type");
+        KpkInstallMimeType *mime = new KpkInstallMimeType(this);
+        mime->installMimeType(args->getOptionList("install-mime-type"));
+        notSet = false;
+    }
+
+    if (notSet) {
         kDebug() << "SHOW UI!";
         showUi();
     }
+
 
     args->clear();
     return 0;

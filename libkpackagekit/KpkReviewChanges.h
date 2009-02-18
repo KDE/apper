@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPKREVIEWCHANGES_H
-#define KPKREVIEWCHANGES_H
+#ifndef KPK_REVIEWCHANGES_H
+#define KPK_REVIEWCHANGES_H
 
 #include <KDialog>
 #include <KProgressDialog>
@@ -28,17 +28,22 @@
 #include <KpkTransaction.h>
 #include "KpkPackageModel.h"
 #include "KpkSimplePackageModel.h"
-#include "ui_KpkReviewChanges.h"
+
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkReviewChanges : public KDialog, Ui::KpkReviewChanges
+class KpkReviewChangesPrivate;
+
+class KDE_EXPORT KpkReviewChanges : public KDialog
 {
     Q_OBJECT
 public:
-    KpkReviewChanges( const QList<Package*> &packages, QWidget *parent=0);
+    KpkReviewChanges(const QList<Package*> &packages, QWidget *parent = 0);
     ~KpkReviewChanges();
+
+    void setTitle(const QString &title);
+    void setText(const QString &text);
 
 public slots:
     void remFinished(KpkTransaction::ExitStatus);
@@ -50,6 +55,7 @@ public slots:
     void removePackages();
 
 private:
+    KpkReviewChangesPrivate* d;
     KpkPackageModel *m_pkgModelMain;
     KpkSimplePackageModel *m_pkgModelReq, *m_pkgModelDep;
     KpkDelegate *m_pkgDelegate;

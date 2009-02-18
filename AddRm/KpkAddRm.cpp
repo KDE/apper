@@ -26,7 +26,7 @@
 #include <QColor>
 
 #include "KpkAddRm.h"
-#include "KpkReviewChanges.h"
+#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 
@@ -317,7 +317,8 @@ void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &d
 
 void KpkAddRm::save()
 {
-    KpkReviewChanges *frm = new KpkReviewChanges( m_pkg_model_main->selectedPackages(), this);
+    KpkReviewChanges *frm = new KpkReviewChanges(m_pkg_model_main->selectedPackages(), this);
+    frm->setTitle(i18n("Review Changes"));
     if (frm->exec() == QDialog::Accepted) {
         m_pkg_model_main->uncheckAll();
     } else {

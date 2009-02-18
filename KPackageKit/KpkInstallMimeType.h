@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KPKINSTALLFILES_H
-#define KPKINSTALLFILES_H
+#ifndef KPKINSTALLMIMETYPE_H
+#define KPKINSTALLMIMETYPE_H
 
 #include <KpkTransaction.h>
 
@@ -27,27 +27,26 @@
 
 using namespace PackageKit;
 
-class KpkInstallFiles : public QObject
+class KpkInstallMimeType : public QObject
 {
 Q_OBJECT
 public:
-    KpkInstallFiles(QObject *parent = 0);
-    ~KpkInstallFiles();
+    KpkInstallMimeType(QObject *parent = 0);
+    ~KpkInstallMimeType();
 
-    bool canClose() { return !(m_running); };
-
-public slots:
-    void installFiles(const KUrl::List &urls);
+    void installMimeType(const QStringList &mimeTypes);
 
 signals:
     void appClose();
 
 private slots:
-    void installFilesFinished(KpkTransaction::ExitStatus status);
+    void installMimeTypeFinished(KpkTransaction::ExitStatus status);
+    void addPackage(PackageKit::Package *package);
 
 private:
+    QList<Package*> m_foundPackages;
     QHash <KpkTransaction *,QStringList> m_transactionFiles;
-    int m_running;
+//     int m_running;
 };
 
 #endif

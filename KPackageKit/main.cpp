@@ -44,8 +44,9 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
 
     KCmdLineOptions options;
-    options.add("updates", ki18n("Shows Updates"));
-    options.add("settings", ki18n("Shows Settings"));
+    options.add("updates", ki18n("Show Updates"));
+    options.add("settings", ki18n("Show Settings"));
+    options.add("install-mime-type <mime-type>", ki18n("Mime Type Installer"));
     options.add("+[package]", ki18n("Package file to install"));
     KCmdLineArgs::addCmdLineOptions(options);
 

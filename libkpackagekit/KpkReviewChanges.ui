@@ -5,25 +5,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>533</width>
-    <height>445</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
-  <property name="windowTitle" >
-   <string>Review Changes - KPackageKit</string>
-  </property>
   <layout class="QGridLayout" name="gridLayout" >
+   <property name="leftMargin" >
+    <number>0</number>
+   </property>
+   <property name="topMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
    <item row="0" column="0" >
     <widget class="QLabel" name="label" >
-     <property name="font" >
-      <font>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
      <property name="text" >
-      <string>You selected the following packages to be INSTALLED/REMOVED, press ok to proceed:</string>
+      <string>TextLabel</string>
      </property>
      <property name="alignment" >
       <set>Qt::AlignCenter</set>
@@ -35,26 +34,8 @@
    </item>
    <item row="1" column="0" >
     <widget class="QTreeView" name="packageView" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-       <horstretch>2</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize" >
-      <size>
-       <width>300</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="sizeIncrement" >
-      <size>
-       <width>0</width>
-       <height>2</height>
-      </size>
-     </property>
-     <property name="locale" >
-      <locale country="UnitedStates" language="English" />
+     <property name="alternatingRowColors" >
+      <bool>true</bool>
      </property>
      <property name="rootIsDecorated" >
       <bool>false</bool>
@@ -67,6 +48,13 @@
      </property>
      <property name="expandsOnDoubleClick" >
       <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <widget class="Line" name="line" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>

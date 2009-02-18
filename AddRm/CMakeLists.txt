@@ -1,15 +1,11 @@
 set(kpk_addrm_SRCS
     KcmKpkAddRm.cpp
     KpkAddRm.cpp
-    KpkReviewChanges.cpp
-    KpkRequirements.cpp
     KpkPackageDetails.cpp
 )
 
 kde4_add_ui_files(kpk_addrm_SRCS
     KpkAddRm.ui
-    KpkReviewChanges.ui
-    KpkRequirements.ui
     KpkPackageDetails.ui
 )
 

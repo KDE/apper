@@ -24,34 +24,82 @@
 #include <KpkStrings.h>
 #include "KpkRequirements.h"
 #include "KpkReviewChanges.h"
+#include "ui_KpkReviewChanges.h"
 
 #define UNIVERSAL_PADDING 6
 
-KpkReviewChanges::KpkReviewChanges( const QList<Package*> &packages, QWidget *parent )
- : KDialog(parent)
+class KpkReviewChangesPrivate
 {
-    setupUi( mainWidget() );
+public:
+    Ui::KpkReviewChanges ui;
+};
+
+KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *parent)
+ : KDialog(parent), d(new KpkReviewChangesPrivate)
+{
+    d->ui.setupUi(mainWidget());
 
     //initialize the model, delegate, client and  connect it's signals
-    packageView->setItemDelegate(m_pkgDelegate = new KpkDelegate(packageView));
-    packageView->setModel(m_pkgModelMain = new KpkPackageModel(packages, this, packageView));
+    d->ui.packageView->setItemDelegate(m_pkgDelegate = new KpkDelegate(d->ui.packageView));
+    d->ui.packageView->setModel(m_pkgModelMain = new KpkPackageModel(packages, this, d->ui.packageView));
     m_pkgModelMain->checkAll();
-    packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    d->ui.packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     connect(m_pkgModelMain, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkChanged()));
 
-    setCaption(i18n("Review Changes - KPackageKit"));
-
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply | KDialog::Cancel);
-    setButtonText(KDialog::Apply, i18n("Apply Now"));
-    setMinimumSize(QSize(320,280));
 
-    label->setText(i18n("The following packages will be INSTALLED/REMOVED:"));
+    // Count how many items will be installed and removed to set
+    // better apply text and description text
+    int countRemove  = 0;
+    int countInstall = 0;
+    foreach (Package *package, packages) {
+        // If the package is installed we are going to remove it
+        if (package->state() == Package::Installed) {
+            countRemove++;
+        } else {
+            countInstall++;
+        }
+    }
+
+    if (packages.size() == countInstall) {
+        setText(i18np("The following package will be installed:",
+                      "The following packages will be installed:", countInstall));
+        setButtonText(KDialog::Apply, i18n("Install Now"));
+    } else if (packages.size() == countRemove) {
+        setText(i18np("The following package will be removed:",
+                      "The following packages will be removed:", countRemove));
+        setButtonText(KDialog::Apply, i18n("Remove Now"));
+    } else {
+        setText(i18np("The following package will be removed and installed:",
+                      "The following packages will be removed and installed:", packages.size()));
+        setButtonText(KDialog::Apply, i18n("Apply Now"));
+    }
+
+    // restore size
+    setMinimumSize(QSize(320,280));
+    KConfig config("KPackageKit");
+    KConfigGroup reviewChangesDialog(&config, "ReviewChangesDialog");
+    restoreDialogSize(reviewChangesDialog);
 }
 
 KpkReviewChanges::~KpkReviewChanges()
 {
+    // save size
+    KConfig config("KPackageKit");
+    KConfigGroup reviewChangesDialog(&config, "ReviewChangesDialog");
+    saveDialogSize(reviewChangesDialog);
+}
+
+void KpkReviewChanges::setTitle(const QString &title)
+{
+    setCaption(title);
+}
+
+void KpkReviewChanges::setText(const QString &text)
+{
+    d->ui.label->setText(text);
 }
 
 void KpkReviewChanges::doAction()
@@ -60,8 +108,9 @@ void KpkReviewChanges::doAction()
     m_actions = m_client->getActions();
     // check what packages are installed and marked to be removed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
-        if ( m_pkgModelMain->selectedPackages().at(i)->state() == Package::Installed )
+        if (m_pkgModelMain->selectedPackages().at(i)->state() == Package::Installed) {
             m_remPackages << m_pkgModelMain->selectedPackages().takeAt(i);
+        }
     }
 
     // check what packages are available and marked to be installed
@@ -285,14 +334,14 @@ bool KpkReviewChanges::event(QEvent *event)
 
 void KpkReviewChanges::updateColumnsWidth(bool force)
 {
-    m_viewWidth = packageView->viewport()->width();
+    m_viewWidth = d->ui.packageView->viewport()->width();
 
     if (force) {
         m_viewWidth -= style()->pixelMetric(QStyle::PM_ScrollBarExtent) + UNIVERSAL_PADDING;
     }
 
-    packageView->setColumnWidth(0, m_pkgDelegate->columnWidth(0, m_viewWidth));
-    packageView->setColumnWidth(1, m_pkgDelegate->columnWidth(1, m_viewWidth));
+    d->ui.packageView->setColumnWidth(0, m_pkgDelegate->columnWidth(0, m_viewWidth));
+    d->ui.packageView->setColumnWidth(1, m_pkgDelegate->columnWidth(1, m_viewWidth));
 }
 
 void KpkReviewChanges::checkChanged()
