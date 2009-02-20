@@ -54,7 +54,7 @@ void KpkDistroUpgrade::setName(const QString &name)
 {
     m_distroUpgradeUL->setText(i18n("Upgrade to %1", name));
     m_distroUpgradeUL->setUrl(i18n("Upgrade to %1", name));
-    m_distroUpgradeUL->setToolTip(i18n("Click to upgrage to %1", name));
+    m_distroUpgradeUL->setToolTip(i18n("Click to upgrade to %1", name));
 }
 
 void KpkDistroUpgrade::startDistroUpgrade()
