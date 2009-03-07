@@ -77,6 +77,9 @@ public slots:
     void setGrouped(bool g);
 
 private:
+    void removeChecked(Package *package);
+    bool containsChecked(Package *package) const;
+
     QAbstractItemView *m_packageView;
     QList<Package*> m_packages;
     QList<Package*> m_checkedPackages;

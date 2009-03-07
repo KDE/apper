@@ -88,7 +88,7 @@ void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
 void KpkInstallMimeType::installMimeTypeFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
-    KpkTransaction *transaction = (KpkTransaction *) sender();
+//     KpkTransaction *transaction = (KpkTransaction *) sender();
     if (status == KpkTransaction::Success) {
         if (m_foundPackages.size()) {
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages);
