@@ -57,10 +57,13 @@ KpkTransactionBar::~KpkTransactionBar()
 void KpkTransactionBar::setBehaviors(KpkTransactionBar::Behaviors flags)
 {
     m_flags = flags;
-    if (m_flags & AutoHide && m_trans.size()==0)
+    if (m_flags & AutoHide && m_trans.size()==0) {
         hide();
-    else if (m_flags & AutoHide && m_trans.size()>0)
+    } else if (m_flags & AutoHide && m_trans.size()>0) {
         show();
+    }
+    // hides the cancel button
+    m_cancel->setVisible(!(m_flags & HideCancel));
     kDebug() << "Hide!" << m_flags;
 }
 
@@ -100,6 +103,8 @@ void KpkTransactionBar::nextTransaction()
         this, SLOT( progressChanged(PackageKit::Transaction::ProgressInfo) ) );
     connect( trans, SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
         this, SLOT( statusChanged(PackageKit::Transaction::Status) ) );
+    connect(m_cancel, SIGNAL(clicked()),
+        trans, SLOT(cancel()));
 }
 
 void KpkTransactionBar::addTransaction(Transaction *trans)

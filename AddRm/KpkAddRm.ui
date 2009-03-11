@@ -143,17 +143,17 @@
   </layout>
   <action name="actionFindName" >
    <property name="text" >
-    <string>Find by name</string>
+    <string>Find by &amp;name</string>
    </property>
   </action>
   <action name="actionFindDescription" >
    <property name="text" >
-    <string>Find by description</string>
+    <string>Find by &amp;description</string>
    </property>
   </action>
   <action name="actionFindFile" >
    <property name="text" >
-    <string>Find by file name</string>
+    <string>Find by f&amp;ile name</string>
    </property>
   </action>
  </widget>

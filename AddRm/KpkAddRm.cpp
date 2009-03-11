@@ -64,7 +64,6 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     }
 
     m_findMenu = new QMenu(this);
-    setActionsDefaults();
     // find is just a generic name in case we don't have any search method
     m_genericActionK = new KToolBarPopupAction(m_findIcon, i18n("Find"), this);
     toolBar->addAction(m_genericActionK);
@@ -90,8 +89,10 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     // If no action was set we can't use this search
     if (m_currentAction == 0) {
         m_genericActionK->setEnabled(false);
+        searchKLE->setEnabled(false);
     } else {
         // Check to see if we need the KToolBarPopupAction
+        setCurrentActionCancel(false);
         if (m_findMenu->actions().size() > 1) {
             m_currentAction->setVisible(false);
             m_genericActionK->setMenu(m_findMenu);
@@ -120,7 +121,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
 
     // set focus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
-    transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
+    transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
 }
 
 void KpkAddRm::genericActionKTriggered()
@@ -136,29 +137,56 @@ void KpkAddRm::setCurrentAction(QAction *action)
     if (m_currentAction != action) {
         // ensures the current action was created
         if (m_currentAction) {
-            m_currentAction->setVisible(true);
+            // hides the item from the list
+            m_currentAction->setVisible(false);
+        } else {
+            // shows the item
+            action->setVisible(true);
         }
         m_currentAction = action;
-        // hides the item from the list
-        m_currentAction->setVisible(false);
         // copy data from the curront action
         m_genericActionK->setText(m_currentAction->text());
         m_genericActionK->setIcon(m_currentAction->icon());
     }
 }
 
-void KpkAddRm::setActionsDefaults()
+void KpkAddRm::setCurrentActionEnabled(bool state)
 {
-    actionFindName->setText(i18n("Find by &Name"));
-    actionFindFile->setText(i18n("Find by f&ile name"));
-    actionFindDescription->setText(i18n("Find by &description"));
-    // Define actions icon
-    actionFindFile->setIcon(m_findIcon);
-    actionFindDescription->setIcon(m_findIcon);
-    actionFindName->setIcon(m_findIcon);
     if (m_currentAction) {
-        m_genericActionK->setText(m_currentAction->text());
-        actionFindName->setIcon(m_currentAction->icon());
+        m_currentAction->setEnabled(state);
+    }
+    m_genericActionK->setEnabled(state);
+}
+
+void KpkAddRm::setCurrentActionCancel(bool cancel)
+{
+    if (cancel) {
+        // every action should like cancel
+        actionFindName->setText(i18n("&Cancel"));
+        actionFindFile->setText(i18n("&Cancel"));
+        actionFindDescription->setText(i18n("&Cancel"));
+        m_genericActionK->setText(i18n("&Cancel"));
+        // set cancel icons
+        actionFindFile->setIcon(m_cancelIcon);
+        actionFindDescription->setIcon(m_cancelIcon);
+        actionFindName->setIcon(m_cancelIcon);
+        m_genericActionK->setIcon(m_cancelIcon);
+    } else {
+        actionFindName->setText(i18n("Find by &name"));
+        actionFindFile->setText(i18n("Find by f&ile name"));
+        actionFindDescription->setText(i18n("Find by &description"));
+        // Define actions icon
+        actionFindFile->setIcon(m_findIcon);
+        actionFindDescription->setIcon(m_findIcon);
+        actionFindName->setIcon(m_findIcon);
+        m_genericActionK->setIcon(m_findIcon);
+        if (m_currentAction) {
+            m_genericActionK->setText(m_currentAction->text());
+        } else {
+            // This might happen when the backend can
+            // only search groups
+            m_genericActionK->setText(i18n("Find"));
+        }
     }
 }
 
@@ -217,8 +245,8 @@ void KpkAddRm::on_actionFindName_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchAction = Client::ActionSearchName;
-        m_searchString = searchKLE->text();
+        m_searchAction  = Client::ActionSearchName;
+        m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // select "All Packages"
         groupsCB->setCurrentIndex(0);
@@ -235,8 +263,8 @@ void KpkAddRm::on_actionFindDescription_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchAction = Client::ActionSearchDetails;
-        m_searchString = searchKLE->text();
+        m_searchAction  = Client::ActionSearchDetails;
+        m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // select "All Packages"
         groupsCB->setCurrentIndex(0);
@@ -253,8 +281,8 @@ void KpkAddRm::on_actionFindFile_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchAction = Client::ActionSearchFile;
-        m_searchString = searchKLE->text();
+        m_searchAction  = Client::ActionSearchFile;
+        m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // select "All Packages"
         groupsCB->setCurrentIndex(0);
@@ -267,8 +295,8 @@ void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
 {
     if (groupsCB->itemData(index, Qt::UserRole).isValid()) {
         // cache the search
-        m_searchAction = Client::ActionSearchGroup;
-        m_searchGroup = (Client::Group) groupsCB->itemData(index, Qt::UserRole).toUInt();
+        m_searchAction  = Client::ActionSearchGroup;
+        m_searchGroup   = (Client::Group) groupsCB->itemData(index, Qt::UserRole).toUInt();
         m_searchFilters = filters();
         // create the main transaction
         search();
@@ -291,13 +319,19 @@ void KpkAddRm::search()
         return;
     }
 
-    connectTransaction(m_pkClient_main);
-    transactionBar->addTransaction(m_pkClient_main);
-    // contract and delete and details widgets
-    pkg_delegate->contractAll();
-    // cleans the models
-    m_pkg_model_main->clear();
-    m_mTransRuning = true;
+    if (m_pkClient_main) {
+        setCurrentActionCancel(true);
+        connectTransaction(m_pkClient_main);
+        transactionBar->addTransaction(m_pkClient_main);
+        // contract and delete and details widgets
+        pkg_delegate->contractAll();
+        // cleans the models
+        m_pkg_model_main->clear();
+        m_mTransRuning = true;
+    } else {
+        kWarning() << "Search didn't work";
+        setCurrentActionEnabled(true);
+    }
 }
 
 void KpkAddRm::connectTransaction(Transaction *transaction)
@@ -308,6 +342,9 @@ void KpkAddRm::connectTransaction(Transaction *transaction)
             this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
     connect(transaction, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
             this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+    connect(transaction, SIGNAL(allowCancelChanged(bool)),
+            this, SLOT(setCurrentActionEnabled(bool)));
+    setCurrentActionEnabled(transaction->allowCancel());
 }
 
 void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &details)
@@ -337,6 +374,11 @@ void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime
 {
     Q_UNUSED(runtime)
     Q_UNUSED(status)
+    // if m_currentAction is false means that our
+    // find button should be disable as there aren't any
+    // search methods
+    setCurrentActionEnabled(m_currentAction);
+    setCurrentActionCancel(false);
     m_mTransRuning = false;
 }
 

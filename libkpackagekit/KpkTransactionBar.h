@@ -44,25 +44,26 @@ using namespace PackageKit;
 
 class KDE_EXPORT KpkTransactionBar : public QWidget {
     Q_OBJECT
-    
+
 public:
     KpkTransactionBar(QWidget *parent = 0);
     ~KpkTransactionBar();
-    
+
     enum BehaviorFlag {
-        None,
-        AutoHide
+        None = 1,
+        AutoHide = 2,
+        HideCancel = 4,
     };
-    
+
     Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
-    
+
     /**
      * @short Set the currently handled transaction
      *
      * While a transaction is running, the widget is shown if the AutoHide behavior is set.
      */
     void addTransaction(Transaction *trans);
-    
+
     void setBehaviors(Behaviors);
     Behaviors behaviors() const;
 

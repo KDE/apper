@@ -57,6 +57,7 @@ private slots:
     void on_actionFindName_triggered();
     void on_actionFindDescription_triggered();
     void on_actionFindFile_triggered();
+    void setCurrentActionEnabled(bool state);
 
     void on_groupsCB_currentIndexChanged(int index);
     void on_packageView_pressed(const QModelIndex &index);
@@ -78,6 +79,7 @@ private:
     KToolBarPopupAction *m_genericActionK;
     QAction *m_currentAction;
     void setCurrentAction(QAction *action);
+    void setCurrentActionCancel(bool cancel);
     bool m_mTransRuning;//main trans
     KpkPackageModel *m_pkg_model_main;
     KpkDelegate *pkg_delegate;
@@ -97,7 +99,6 @@ private:
     Client::Filters filters();
 
     void updateColumnsWidth(bool force = false);
-    void setActionsDefaults();
     void setActionCancel(bool enabled);
     void search();
     void connectTransaction(Transaction *transaction);
