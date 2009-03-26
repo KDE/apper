@@ -88,10 +88,13 @@ void KpkTransactionBar::nextTransaction()
 
     enableButtonCancel( trans->allowCancel() );
 
-    m_label->setText( KpkStrings::status( trans->status() ) );
-
     progressChanged(trans->progress());
-    statusChanged(trans->status());
+
+    if (trans->status() == Transaction::UnknownStatus) {
+       statusChanged(Transaction::Setup);
+    } else {
+       statusChanged(trans->status());
+    }
 
     connect( trans, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
         this, SLOT( finished(PackageKit::Transaction::ExitStatus, uint) ) );

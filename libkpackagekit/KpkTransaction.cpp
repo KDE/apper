@@ -58,7 +58,6 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     enableButtonCancel(false);
     setDetailsWidget(d->ui.detailGroup);
     setDetailsWidgetVisible(false);
-    setTransaction(m_trans);
     enableButton(KDialog::Details, false);
 
     if (m_flags & Modal) {
@@ -66,8 +65,10 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
         enableButton(KDialog::User1, false);
     }
 
-    d->ui.currentL->setText(KpkStrings::status(Transaction::Setup));
     setInitialSize(QSize(1,1));
+
+    // after ALL set, lets set the transaction
+    setTransaction(m_trans);
 }
 
 KpkTransaction::~KpkTransaction()
@@ -79,19 +80,25 @@ void KpkTransaction::setTransaction(Transaction *trans)
 {
     m_trans = trans;
 
+    // sets the action icon to be the window icon
     setWindowIcon(KpkIcons::actionIcon(m_trans->role().action));
     // Sets the kind of transaction
     setCaption(KpkStrings::action(m_trans->role().action));
     // check to see if we can cancel
     enableButtonCancel(m_trans->allowCancel());
-    // sets the current status
-    d->ui.currentL->setText(KpkStrings::status(m_trans->status()));
-
-    progressChanged(m_trans->progress());
-    currPackage(m_trans->lastPackage());
-    statusChanged(m_trans->status());
+    // clears the package label
     d->ui.packageL->clear();
     d->ui.descriptionL->clear();
+    // Now sets the last package
+    currPackage(m_trans->lastPackage());
+    // sets the current progress
+    progressChanged(m_trans->progress());
+    // sets the current status
+    if (m_trans->status() == Transaction::UnknownStatus) {
+       statusChanged(Transaction::Setup);
+    } else {
+       statusChanged(m_trans->status());
+    }
 
     if (m_trans->role().action == Client::ActionRefreshCache ||
         m_trans->role().action == Client::ActionWhatProvides) {
@@ -145,10 +152,12 @@ void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
 
 void KpkTransaction::currPackage(Package *p)
 {
-    if (p->name() != "") {
+    kDebug() << "PACKAGE: " << p->id();
+    if (!p->id().isEmpty()) {
         QString packageText(p->name());
-        if (p->version() != "")
-            packageText+=" "+p->version();
+        if (p->version() != "") {
+            packageText += " " + p->version();
+        }
         d->ui.packageL->setText(packageText);
         d->ui.descriptionL->setText(p->summary());
         enableButton(KDialog::Details, true);

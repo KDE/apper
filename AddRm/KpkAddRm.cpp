@@ -97,6 +97,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
             m_currentAction->setVisible(false);
             m_genericActionK->setMenu(m_findMenu);
         } else {
+            m_currentAction->setVisible(true);
             toolBar->removeAction(m_genericActionK);
             toolBar->addAction(m_currentAction);
         }
@@ -135,13 +136,12 @@ void KpkAddRm::setCurrentAction(QAction *action)
     // just load the new action if it changes this
     // also ensures that our menu has more than one action
     if (m_currentAction != action) {
+        // hides the item from the list
+        action->setVisible(false);
         // ensures the current action was created
         if (m_currentAction) {
-            // hides the item from the list
-            m_currentAction->setVisible(false);
-        } else {
-            // shows the item
-            action->setVisible(true);
+            // show the item back in the list
+            m_currentAction->setVisible(true);
         }
         m_currentAction = action;
         // copy data from the curront action
