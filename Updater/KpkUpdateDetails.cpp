@@ -177,7 +177,7 @@ void KpkUpdateDetails::updateDetailFinished(PackageKit::Transaction::ExitStatus 
     Q_UNUSED(status)
     Q_UNUSED(runtime)
     if (descriptionKTB->document()->toPlainText().isEmpty()) {
-       descriptionKTB->setPlainText(i18n("Sorry, no update description was found."));
+       descriptionKTB->setPlainText(i18n("No update description was found."));
     }
 }
 

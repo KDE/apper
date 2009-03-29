@@ -74,8 +74,8 @@ void KpkInstallFiles::installFiles(const KUrl::List &urls)
                 notFiles[i] = KUrl(notFiles.at(i)).fileName();
             }
             KMessageBox::errorList(0,
-                i18np("This item is not supported by your backend or it is not a file",
-                      "These items are not supported by your backend or they are not files",
+                i18np("This item is not supported by your backend, or it is not a file.",
+                      "These items are not supported by your backend, or they are not files.",
                       notFiles.count()),
                 notFiles,
                 i18n("Impossible to install")
@@ -111,7 +111,7 @@ void KpkInstallFiles::installFiles(const KUrl::List &urls)
                 return;
             } else {
                 KMessageBox::sorry(0,
-                                   i18n("You don't have the necessary privileges to perform this action."),
+                                   i18n("You do not have the necessary privileges to perform this action."),
                                    i18np("Failed to install file",
                                          "Failed to install files", displayFiles.count()));
             }
@@ -144,7 +144,7 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
             break;
         case KpkTransaction::Failed :
             m_transactionFiles.remove(transaction);
-            KMessageBox::error(0, i18n("Sorry, an error occurred"), i18n("KPackageKit"));
+            KMessageBox::error(0, i18n("An error occurred."), i18n("KPackageKit Error"));
             break;
         case KpkTransaction::ReQueue :
             kDebug() << "ReQueue";

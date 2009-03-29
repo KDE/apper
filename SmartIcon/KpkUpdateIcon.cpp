@@ -186,7 +186,7 @@ void KpkUpdateIcon::notifyUpdates()
 //     m_icon->show();
     actions << i18n("Review and update");
     actions << i18n("Not now");
-    actions << i18n("Don't ask anymore");
+    actions << i18n("Do not ask again");
     m_updateNotify->setActions(actions);
     m_updateNotify->sendEvent();
     connect(m_updateNotify, SIGNAL(activated(uint)),
@@ -281,7 +281,7 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
         KIcon icon("task-complete");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(128,128)));
-        notify->setText(i18n("System update was successful!"));
+        notify->setText(i18n("System update was successful."));
         notify->sendEvent();
         // check for updates to see if there are updates that
         // couldn't be automatically installed

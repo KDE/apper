@@ -145,7 +145,7 @@ void KpkReviewChanges::checkTask()
                 removePackages();
             }
         } else {
-            KMessageBox::error(this, i18n("Sorry, your backend does not support removing packages"), i18n("Error KPackageKit"));
+            KMessageBox::error(this, i18n("The current backend does not support removing packages."), i18n("KPackageKit Error"));
         }
     } else if (!m_addPackages.isEmpty()) {
         kDebug() << "task add else";
@@ -168,7 +168,7 @@ void KpkReviewChanges::checkTask()
                 installPackages();
             }
         } else {
-            KMessageBox::error(this, i18n("Sorry, your backend does not support installing packages"), i18n("KPackageKit"));
+            KMessageBox::error(this, i18n("Current backend does not support installing packages."), i18n("KPackageKit Error"));
         }
     } else {
         kDebug() << "task else";
@@ -208,7 +208,7 @@ void KpkReviewChanges::removePackages()
         frm->show();
     } else {
         KMessageBox::sorry(this,
-                           i18n("You don't have the necessary privileges to perform this action."),
+                           i18n("You do not have the necessary privileges to perform this action."),
                            i18n("Failed to remove package"));
     }
     kDebug() << "finished remove";
@@ -245,7 +245,7 @@ void KpkReviewChanges::installPackages()
         frm->show();
     } else {
         KMessageBox::sorry(this,
-                             i18n("You don't have the necessary privileges to perform this action."),
+                             i18n("You do not have the necessary privileges to perform this action."),
                              i18n("Failed to install package"));
     }
     kDebug() << "finished install";

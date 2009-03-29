@@ -457,7 +457,7 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
             return i18n("Multiple packages exist that are not compatible with each other.\n"
                         "This is usually due to mixing packages from different software sources.");
         case Client::RepoNotAvailable :
-            return i18n("There was a (possibly temporary) problem connecting to a software source\n"
+            return i18n("There was a (possibly temporary) problem connecting to a software source.\n"
                         "Please check the detailed error for further details.");
         case Client::InvalidPackageFile :
             return i18n("The package you are attempting to install is not valid.\n"

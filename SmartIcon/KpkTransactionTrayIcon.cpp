@@ -85,7 +85,7 @@ void KpkTransactionTrayIcon::triggered(QAction *action)
             trans->show();
         } else {
             KMessageBox::sorry(m_menu,
-                               i18n("You don't have the necessary privileges to perform this action."),
+                               i18n("You do not have the necessary privileges to perform this action."),
                                i18n("Failed to refresh package lists"));
         }
     }

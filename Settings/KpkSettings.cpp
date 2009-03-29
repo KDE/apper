@@ -160,8 +160,8 @@ void KpkSettings::save()
     if ( m_actions.contains(Client::ActionGetRepoList) ) {
         if ( !m_originModel->save() ) {
             KMessageBox::sorry(this,
-                               i18n("You don't have the necessary privileges to perform this action."),
-                               i18n("Failed set origin data"));
+                               i18n("You do not have the necessary privileges to perform this action."),
+                               i18n("Failed to set origin data"));
             QTimer::singleShot(1, this, SLOT(checkChanges()));
         }
         on_showOriginsCB_stateChanged(showOriginsCB->checkState());

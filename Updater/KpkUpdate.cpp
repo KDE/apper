@@ -114,7 +114,7 @@ void KpkUpdate::applyUpdates()
             frm->show();
         } else {
             KMessageBox::sorry(this,
-                               i18n("You don't have the necessary privileges to perform this action."),
+                               i18n("You do not have the necessary privileges to perform this action."),
                                i18n("Failed to update system"));
         }
     } else {
@@ -126,7 +126,7 @@ void KpkUpdate::applyUpdates()
             frm->show();
         } else {
             KMessageBox::sorry(this,
-                               i18n("You don't have the necessary privileges to perform this action."),
+                               i18n("You do not have the necessary privileges to perform this action."),
                                i18n("Failed to update package lists"));
         }
     }
@@ -141,7 +141,7 @@ void KpkUpdate::refresh()
         frm->show();
     } else {
         KMessageBox::sorry(this,
-                           i18n("You don't have the necessary privileges to perform this action."),
+                           i18n("You do not have the necessary privileges to perform this action."),
                            i18n("Failed to refresh package lists"));
     }
 }

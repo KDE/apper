@@ -103,7 +103,7 @@ Name[x-test]=xxUpdates finished installingxx
 Action=Sound|Popup
 
 [Event/TransactionError]
-Name=A transaction error ocurred
+Name=A transaction error occurred
 Name[et]=Tekkis ülekandeviga
 Name[fr]=Une erreur de transaction est apparue
 Name[gl]=Aconteceu un erro na transacción
