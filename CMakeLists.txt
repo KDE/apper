@@ -3,7 +3,9 @@ project(KPackageKit)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
 find_package(KDE4 REQUIRED)
-find_package(QPackageKit REQUIRED)
+
+include(FindPkgConfig)
+pkg_check_modules (QPACKAGEKIT REQUIRED packagekit-qt>=0.4.5)
 include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS} ${KDE_DEFINITIONS})
