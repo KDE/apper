@@ -9,7 +9,9 @@ pkg_check_modules (QPACKAGEKIT REQUIRED packagekit-qt>=0.4.5)
 include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS} ${KDE_DEFINITIONS})
-include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${KDE4_INCLUDES} ${QPACKAGEKIT_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/libkpackagekit )
+include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} 
+                     ${KDE4_INCLUDES} ${QPACKAGEKIT_INCLUDE_DIRS} ${QPACKAGEKIT_INCLUDEDIR}/PackageKit/packagekit-qt
+                     ${CMAKE_CURRENT_SOURCE_DIR}/libkpackagekit )
 
 add_subdirectory( libkpackagekit)
 add_subdirectory( AddRm )
