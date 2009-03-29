@@ -37,7 +37,7 @@
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
  : KpkAbstractSmartIcon(parent)
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 
     m_smartSTI = new KSystemTrayIcon("applications-other");
     connect(m_smartSTI, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -213,8 +213,8 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
             refreshCache = false;
         }
         text = KpkStrings::action(t->role().action)
-               + " " + t->role().terms.join(", ")
-               + " (" + KpkStrings::status(t->status()) + ")";
+               + ' ' + t->role().terms.join(", ")
+               + " (" + KpkStrings::status(t->status()) + ')';
         transactionAction->setText(text);
         transactionAction->setIcon(KpkIcons::statusIcon(t->status()));
         m_menu->addAction(transactionAction);

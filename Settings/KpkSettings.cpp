@@ -35,7 +35,7 @@ QWidget( parent ), m_originModel(0)
     setupUi( this );
 
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
-    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     m_actions = Client::instance()->getActions();
 
     if ( !m_actions.contains(Client::ActionRefreshCache) ) {
@@ -57,15 +57,15 @@ QWidget( parent ), m_originModel(0)
         originGB->setEnabled(false);
     }
 
-    intervalCB->addItem(i18n("Hourly"),  KpkEnum::Hourly);
-    intervalCB->addItem(i18n("Daily"),   KpkEnum::Daily);
-    intervalCB->addItem(i18n("Weekly"),  KpkEnum::Weekly);
-    intervalCB->addItem(i18n("Monthly"), KpkEnum::Monthly);
-    intervalCB->addItem(i18n("Never"),   KpkEnum::Never);
+    intervalCB->addItem(i18nc("Hourly refresh the package cache", "Hourly"),  KpkEnum::Hourly);
+    intervalCB->addItem(i18nc("Daily refresh the package cache", "Daily"),   KpkEnum::Daily);
+    intervalCB->addItem(i18nc("Weekly refresh the package cache", "Weekly"),  KpkEnum::Weekly);
+    intervalCB->addItem(i18nc("Monthly refresh the package cache", "Monthly"), KpkEnum::Monthly);
+    intervalCB->addItem(i18nc("Never refresh package cache", "Never"),   KpkEnum::Never);
 
     autoCB->addItem(i18n("Security Only"), KpkEnum::Security);
     autoCB->addItem(i18n("All Updates"),   KpkEnum::All);
-    autoCB->addItem(i18n("None"),          KpkEnum::None);
+    autoCB->addItem(i18nc("None updates will be automatically installed", "None"),          KpkEnum::None);
 
     connect(notifyUpdatesCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(notifyLongTasksCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));

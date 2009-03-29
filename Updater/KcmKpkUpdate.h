@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPACKAGEKIT_H
-#define KPACKAGEKIT_H
+#ifndef KCM_KPK_UPDATE_H
+#define KCM_KPK_UPDATE_H
 
 #include <KCModule>
 #include <QGridLayout>

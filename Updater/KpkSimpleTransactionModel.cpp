@@ -46,7 +46,7 @@ void KpkSimpleTransactionModel::clear()
     setHorizontalHeaderItem(0, new QStandardItem(i18n("Date")));
     setHorizontalHeaderItem(1, new QStandardItem(i18n("Action")));
     setHorizontalHeaderItem(2, new QStandardItem(i18n("Details")));
-    setHorizontalHeaderItem(3, new QStandardItem(i18n("Username")));
+    setHorizontalHeaderItem(3, new QStandardItem(i18nc("Machine user who issued the transaction", "Username")));
     setHorizontalHeaderItem(4, new QStandardItem(i18n("Application")));
 }
 

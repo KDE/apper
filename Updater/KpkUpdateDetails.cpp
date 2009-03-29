@@ -59,7 +59,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // state
     if (info.state != Client::UnknownUpgradeType) {
-        description += "<tr><td align=\"right\"><b>" + i18n("State") + ":</b></td><td>"
+        description += "<tr><td align=\"right\"><b>" + i18nc("State of the upgrade (ie testing, unstable..)", "State") + ":</b></td><td>"
                     + KpkStrings::updateState(info.state)
                     + "</td></tr>";
     }
@@ -80,13 +80,13 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // New version (ie package version)
     description += "<tr><td align=\"right\"><b>" + i18n("New version") + ":</b></td><td>" + info.package->name()
-                + "-" + info.package->version()
+                + '-' + info.package->version()
                 + "</td></tr>";
 
     // Updates (lists of packages that are updated)
     if (info.updates.size()) {
         QStringList updates;
-        foreach (Package *p, info.updates) updates << p->name() + "-" + p->version();
+        foreach (Package *p, info.updates) updates << p->name() + '-' + p->version();
         description += "<tr><td align=\"right\"><b>" + i18n("Updates") + ":</b></td><td>"
                     + updates.join("<br />")
                     + "</td></tr>";
@@ -95,7 +95,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     // Obsoletes (lists of packages that are obsoleted)
     if (info.obsoletes.size()) {
         QStringList obsoletes;
-        foreach (Package *p, info.obsoletes) obsoletes << p->id() + "-" + p->version();
+        foreach (Package *p, info.obsoletes) obsoletes << p->id() + '-' + p->version();
         description += "<tr><td align=\"right\"><b>" + i18n("Obsoletes") + ":</b></td><td>"
                     + obsoletes.join("<br />")
                     + "</td></tr>";

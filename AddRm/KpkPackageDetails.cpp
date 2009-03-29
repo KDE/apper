@@ -121,7 +121,7 @@ void KpkPackageDetails::description(PackageKit::Package *p)
                     + ":</b></td><td>" + details->license()
                     + "</td></tr>";
     if (details->group() != Client::UnknownGroup)
-        description += "<tr><td align=\"right\"><b>" + i18n("Group") + ":</b></td><td>"
+        description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
                     + KpkStrings::groups(details->group())
                     + "</td></tr>";
     if (!details->description().isEmpty())

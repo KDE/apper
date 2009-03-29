@@ -75,7 +75,7 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
         case Transaction::Request :
             return i18n("Requesting data");
         case Transaction::Finished :
-            return i18n("Finished");
+            return i18nc("The transaction state", "Finished");
         case Transaction::Cancel :
             return i18n("Cancelling");
         case Transaction::DownloadRepository :
@@ -196,7 +196,7 @@ QString KpkStrings::actionPast(Client::Action action)
 {
     switch (action) {
         case Client::ActionCancel :
-            return i18n("Canceled");
+            return i18nc("The role of the transaction, in past tense", "Canceled");
         case Client::ActionGetDepends :
             return i18n("Got dependencies");
         case Client::ActionGetDetails :
@@ -487,71 +487,71 @@ QString KpkStrings::groups(Client::Group group)
 {
     switch (group) {
         case Client::Accessibility :
-            return i18n("Accessibility");
+            return i18nc("The group type", "Accessibility");
         case Client::Accessories :
-            return i18n("Accessories");
+            return i18nc("The group type", "Accessories");
         case Client::AdminTools :
-            return i18n("Admin tools");
+            return i18nc("The group type", "Admin tools");
         case Client::Communication :
-            return i18n("Communication");
+            return i18nc("The group type", "Communication");
         case Client::DesktopGnome :
-            return i18n("GNOME desktop");
+            return i18nc("The group type", "GNOME desktop");
         case Client::DesktopKde :
-            return i18n("KDE desktop");
+            return i18nc("The group type", "KDE desktop");
         case Client::DesktopOther :
-            return i18n("Other desktops");
+            return i18nc("The group type", "Other desktops");
         case Client::DesktopXfce :
-            return i18n("XFCE desktop");
+            return i18nc("The group type", "XFCE desktop");
         case Client::Education :
-            return i18n("Education");
+            return i18nc("The group type", "Education");
         case Client::Fonts :
-            return i18n("Fonts");
+            return i18nc("The group type", "Fonts");
         case Client::Games :
-            return i18n("Games");
+            return i18nc("The group type", "Games");
         case Client::Graphics :
-            return i18n("Graphics");
+            return i18nc("The group type", "Graphics");
         case Client::Internet :
-            return i18n("Internet");
+            return i18nc("The group type", "Internet");
         case Client::Legacy :
-            return i18n("Legacy");
+            return i18nc("The group type", "Legacy");
         case Client::Localization :
-            return i18n("Localization");
+            return i18nc("The group type", "Localization");
         case Client::Maps :
-            return i18n("Maps");
+            return i18nc("The group type", "Maps");
         case Client::Multimedia :
-            return i18n("Multimedia");
+            return i18nc("The group type", "Multimedia");
         case Client::Network :
-            return i18n("Network");
+            return i18nc("The group type", "Network");
         case Client::Office :
-            return i18n("Office");
+            return i18nc("The group type", "Office");
         case Client::Other :
-            return i18n("Other");
+            return i18nc("The group type", "Other");
         case Client::PowerManagement :
-            return i18n("Power management");
+            return i18nc("The group type", "Power management");
         case Client::Programming :
-            return i18n("Development");
+            return i18nc("The group type", "Development");
         case Client::Publishing :
-            return i18n("Publishing");
+            return i18nc("The group type", "Publishing");
         case Client::Repos :
-            return i18n("Software sources");
+            return i18nc("The group type", "Software sources");
         case Client::Science :
-            return i18n("Science");
+            return i18nc("The group type", "Science");
         case Client::Documentation :
-            return i18n("Documentation");
+            return i18nc("The group type", "Documentation");
         case Client::Electronics :
-            return i18n("Electronics");
+            return i18nc("The group type", "Electronics");
         case Client::Collections ://TODO check this one
-            return i18n("Package collections");
+            return i18nc("The group type", "Package collections");
         case Client::Security :
-            return i18n("Security");
+            return i18nc("The group type", "Security");
         case Client::Servers :
-            return i18n("Servers");
+            return i18nc("The group type", "Servers");
         case Client::System :
-            return i18n("System");
+            return i18nc("The group type", "System");
         case Client::Virtualization :
-            return i18n("Virtualization");
+            return i18nc("The group type", "Virtualization");
         case Client::UnknownGroup :
-            return i18n("Unknown group");
+            return i18nc("The group type", "Unknown group");
         default :
             kDebug() << "group unrecognised: " << group;
             return QString();
@@ -562,25 +562,25 @@ QString KpkStrings::info(Package::State state)
 {
     switch (state) {
         case Package::Low :
-            return i18n("Trivial update");
+            return i18nc("The type of update", "Trivial update");
         case Package::Normal :
-            return i18n("Normal update");
+            return i18nc("The type of update", "Normal update");
         case Package::Important :
-            return i18n("Important update");
+            return i18nc("The type of update", "Important update");
         case Package::Security :
-            return i18n("Security update");
+            return i18nc("The type of update", "Security update");
         case Package::Bugfix :
-            return i18n("Bug fix update");
+            return i18nc("The type of update", "Bug fix update");
         case Package::Enhancement :
-            return i18n("Enhancement update");
+            return i18nc("The type of update", "Enhancement update");
         case Package::Blocked :
-            return i18n("Blocked update");
+            return i18nc("The type of update", "Blocked update");
         case Package::Installed :
-            return i18n("Installed");
+            return i18nc("The type of update", "Installed");
         case Package::Available :
-            return i18n("Available");
+            return i18nc("The type of update", "Available");
         case Package::UnknownState :
-            return i18n("Unknown update");
+            return i18nc("The type of update", "Unknown update");
         default :
             kDebug() << "info unrecognised: " << state;
             return QString();
@@ -593,7 +593,7 @@ QString KpkStrings::infoUpdate(Package::State state, int number)
         case Package::Low :
             return i18np("1 trivial update", "%1 trivial updates", number);
         case Package::Normal :
-            return i18np("1 update", "%1 updates", number);
+            return i18npc("Type of update, in the case it's just an update", "1 update", "%1 updates", number);
         case Package::Important :
             return i18np("1 important update", "%1 important updates", number);
         case Package::Security :

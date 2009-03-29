@@ -278,7 +278,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             case 0: //Package name column
                 switch (role) {
                     case NameRole:
-                        return p->name() + " - " + p->version() + (p->arch().isNull() ? "" : " (" + p->arch() + ")");
+                        return p->name() + " - " + p->version() + (p->arch().isNull() ? '' : " (" + p->arch() + ')');
                     case IconRole:
                         if (containsChecked(p)) {
                             return (p->state() == Package::Installed) ?

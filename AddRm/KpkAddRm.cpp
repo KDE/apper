@@ -18,6 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
+#include "KpkAddRm.h"
+
 #include <KLocale>
 #include <KStandardDirs>
 #include <KMessageBox>
@@ -25,7 +27,6 @@
 #include <QPalette>
 #include <QColor>
 
-#include "KpkAddRm.h"
 #include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
@@ -46,7 +47,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     gridLayout_2->addWidget(toolBar = new QToolBar);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 
     // Create a new daemon
     m_client = Client::instance();
@@ -112,7 +113,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     //initialize the groups
     // TODO add non selectable groups if Client::ActionSearchGroup
     // is not supported
-    foreach (Client::Group group, m_client->getGroups()) {
+    foreach (const Client::Group &group, m_client->getGroups()) {
         groupsCB->addItem(KpkIcons::groupsIcon(group), KpkStrings::groups(group), group);
     }
 
@@ -510,7 +511,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         }
         if (filters.contains(Client::FilterFree) || filters.contains(Client::FilterNotFree)) {
             // Free
-            QMenu *menuFree = new QMenu(i18n("Free"), m_filtersQM);
+            QMenu *menuFree = new QMenu(i18nc("Filter for free packages", "Free"), m_filtersQM);
             m_filtersQM->addMenu(menuFree);
             QActionGroup *freeGroup = new QActionGroup(menuFree);
             freeGroup->setExclusive(true);
@@ -574,7 +575,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         }
         if (filters.contains(Client::FilterSource) || filters.contains(Client::FilterNotSource)) {
             // Source
-            QMenu *menuSource = new QMenu(i18n("Source"), m_filtersQM);
+            QMenu *menuSource = new QMenu(i18nc("Filter for source packages", "Source"), m_filtersQM);
             m_filtersQM->addMenu(menuSource);
             QActionGroup *sourceGroup = new QActionGroup(menuSource);
             sourceGroup->setExclusive(true);

@@ -62,7 +62,7 @@ void KpkDistroUpgrade::startDistroUpgrade()
     QList<Solid::Device> powerPlugs = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter);
     bool pluggedIn = true;
     bool hasBattery = Solid::Device::listFromType(Solid::DeviceInterface::Battery).size()>0;
-    foreach(const Solid::Device dev, powerPlugs) {
+    foreach(const Solid::Device &dev, powerPlugs) {
         if (!dev.as<Solid::AcAdapter>()->isPlugged()) {
             pluggedIn = false;
         }
@@ -73,9 +73,9 @@ void KpkDistroUpgrade::startDistroUpgrade()
                            "simply upgrading your packages.");
 
     if (!pluggedIn) {
-        warning += " "+i18n("It is recommended to plug in your computer before proceeding.");
+        warning += ' ' + i18n("It is recommended to plug in your computer before proceeding.");
     } else if (hasBattery) {
-        warning += " "+i18n("It is recommended that you keep your computer plugged in while the upgrade is being performed.");
+        warning += ' ' + i18n("It is recommended that you keep your computer plugged in while the upgrade is being performed.");
     }
 
     if (KMessageBox::warningContinueCancel(this,warning) == KMessageBox::Continue) {

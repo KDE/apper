@@ -29,7 +29,7 @@
 KpkInstallMimeType::KpkInstallMimeType( QObject *parent )
  : QObject(parent)/*, m_running(0)*/
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkInstallMimeType::~KpkInstallMimeType()
@@ -57,7 +57,7 @@ void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
     }
     QString msg = "<b>" + title + "</b><br />" + message;
     KGuiItem searchBt = KStandardGuiItem::yes();
-    searchBt.setText(i18n("Search"));
+    searchBt.setText(i18nc("Search for a new mime type" ,"Search"));
     searchBt.setIcon(KIcon::KIcon("edit-find"));
     int ret;
     ret = KMessageBox::questionYesNo(0,

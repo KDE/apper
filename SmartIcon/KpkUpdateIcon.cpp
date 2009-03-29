@@ -154,7 +154,7 @@ void KpkUpdateIcon::notifyUpdates()
         packageGroups[p->state()].append(p);
     }
 
-    foreach(Package::State state, packageGroups.keys()) {
+    foreach(const Package::State &state, packageGroups.keys()) {
         if (state>highState) {
             highState = state;
         }

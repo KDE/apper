@@ -18,6 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
+#include "KPackageKitSmartIcon.h"
+
 #include <KGlobal>
 #include <KStartupInfo>
 #include <KCmdLineArgs>
@@ -28,9 +30,6 @@
 #include <QStringList>
 #include <KCModuleInfo>
 #include <KNotification>
-#include <QStringList>
-
-#include "KPackageKitSmartIcon.h"
 
 #define MINUTE 60000
 

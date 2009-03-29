@@ -18,6 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
+#include "KPackageKit.h"
+
 #include <KGlobal>
 #include <KStartupInfo>
 #include <KCmdLineArgs>
@@ -27,8 +29,6 @@
 #include <KDebug>
 #include <QStringList>
 #include <KCModuleInfo>
-
-#include "KPackageKit.h"
 
 #include "KpkInstallMimeType.h"
 

@@ -84,7 +84,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="groupsCB" >
+      <widget class="KComboBox" name="groupsCB" >
        <item>
         <property name="text" >
          <string>All Packages</string>

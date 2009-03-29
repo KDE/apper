@@ -33,7 +33,7 @@ class KpkUpdateDetails : public QWidget, Ui::KpkUpdateDetails
 {
 Q_OBJECT
 public:
-    KpkUpdateDetails(PackageKit::Package *package, QWidget *parent = 0);
+    explicit KpkUpdateDetails(PackageKit::Package *package, QWidget *parent = 0);
     ~KpkUpdateDetails();
 
 private slots:

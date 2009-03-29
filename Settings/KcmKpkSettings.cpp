@@ -18,10 +18,11 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
+#include "KcmKpkSettings.h"
+
 #include <KGenericFactory>
 #include <KAboutData>
 
-#include "KcmKpkSettings.h"
 #include <version.h>
 
 K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkSettings>(); )

@@ -30,7 +30,7 @@
 KpkSmartUpdate::KpkSmartUpdate( QObject *parent) :
 QObject( parent ), m_running(false)
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + "." + KGlobal::locale()->encoding());
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkSmartUpdate::~KpkSmartUpdate()
