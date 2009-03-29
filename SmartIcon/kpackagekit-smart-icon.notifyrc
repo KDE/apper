@@ -104,18 +104,6 @@ Action=Sound|Popup
 
 [Event/TransactionError]
 Name=A transaction error occurred
-Name[et]=Tekkis ülekandeviga
-Name[fr]=Une erreur de transaction est apparue
-Name[gl]=Aconteceu un erro na transacción
-Name[km]=កំហុស​ផ្ទេរ​បានកើត​ឡើង
-Name[nds]=Dat geev en Fehler bi en Transakschoon
-Name[nn]=Det oppstod ein feil under overføringa
-Name[pt]=Ocorreu um erro de transacção
-Name[pt_BR]=Ocorreu um erro na transação
-Name[sv]=Ett transaktionsfel uppstod
-Name[tr]=Bir aktarım hatası oluştu
-Name[uk]=Під час операції сталася помилка
-Name[x-test]=xxA transaction error ocurredxx
 Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
