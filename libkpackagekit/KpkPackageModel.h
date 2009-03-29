@@ -36,8 +36,8 @@ class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
     Q_PROPERTY(bool groupPackages READ isGrouped WRITE setGrouped)
 
 public:
-    KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
-    KpkPackageModel(const QList<Package*> &packages, QObject *parent = 0, QAbstractItemView *packageView = 0);
+    explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
+    explicit KpkPackageModel(const QList<Package*> &packages, QObject *parent = 0, QAbstractItemView *packageView = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;

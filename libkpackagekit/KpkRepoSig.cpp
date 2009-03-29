@@ -18,12 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "KpkRepoSig.h"
+
 #include <KLocale>
 
 #include <KDebug>
 
 #include "KpkStrings.h"
-#include "KpkRepoSig.h"
 
 KpkRepoSig::KpkRepoSig( PackageKit::Client::SignatureInfo info, bool modal, QWidget *parent )
  : KDialog(parent)

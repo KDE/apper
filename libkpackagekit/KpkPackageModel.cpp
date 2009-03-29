@@ -86,12 +86,12 @@ void KpkPackageModel::sort(int column, Qt::SortOrder order)
     if (column == 0) {
         if (order == Qt::DescendingOrder) {
             qSort(m_packages.begin(), m_packages.end(), packageNameSortGreaterThan);
-            foreach(Package::State group, m_groups.keys()) {
+            foreach(const Package::State &group, m_groups.keys()) {
                 qSort(m_groups[group].begin(), m_groups[group].end(), packageNameSortGreaterThan);
             }
         } else {
             qSort(m_packages.begin(), m_packages.end(), packageNameSortLessThan);
-            foreach(Package::State group, m_groups.keys()) {
+            foreach(const Package::State &group, m_groups.keys()) {
                 qSort(m_groups[group].begin(), m_groups[group].end(), packageNameSortLessThan);
             }
         }
@@ -99,13 +99,13 @@ void KpkPackageModel::sort(int column, Qt::SortOrder order)
         if (order == Qt::DescendingOrder){
             descendingSelectionSorter sort(m_checkedPackages);
             qSort(m_packages.begin(), m_packages.end(), sort);
-            foreach(Package::State group, m_groups.keys()) {
+            foreach(const Package::State &group, m_groups.keys()) {
                 qSort(m_groups[group].begin(), m_groups[group].end(), sort);
             }
         } else {
             ascendingSelectionSorter sort(m_checkedPackages);
             qSort(m_packages.begin(), m_packages.end(), sort);
-            foreach(Package::State group, m_groups.keys()) {
+            foreach(const Package::State &group, m_groups.keys()) {
                 qSort(m_groups[group].begin(), m_groups[group].end(), sort);
             }
         }
@@ -505,7 +505,7 @@ void KpkPackageModel::uncheckAll()
     emit dataChanged(createIndex(0, 1),
                      createIndex(m_groups.size(), 1));
     if (m_grouped) {
-        foreach(Package::State group, m_groups.keys()) {
+        foreach(const Package::State &group, m_groups.keys()) {
             QModelIndex groupIndex = index(m_groups.keys().indexOf(group), 0, QModelIndex());
             emit dataChanged(index(0, 1, groupIndex),
                              index(m_groups[group].size(),
@@ -526,7 +526,7 @@ void KpkPackageModel::checkAll()
     emit dataChanged(createIndex(0, 1),
                      createIndex(m_groups.size(), 1));
     if (m_grouped) {
-        foreach(Package::State group, m_groups.keys()) {
+        foreach(const Package::State &group, m_groups.keys()) {
             QModelIndex groupIndex = index(m_groups.keys().indexOf(group), 0, QModelIndex());
             emit dataChanged(index(0, 1, groupIndex),
                              index(m_groups[group].size(),

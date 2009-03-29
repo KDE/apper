@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef KPKENUM_H
+#define KPKENUM_H
+
 namespace KpkEnum {
 
     typedef enum {
@@ -37,3 +40,5 @@ namespace KpkEnum {
     const int TimeIntervalDefault = Weekly;
 
 }
+
+#endif

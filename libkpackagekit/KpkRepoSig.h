@@ -32,7 +32,7 @@ class KDE_EXPORT KpkRepoSig : public KDialog, Ui::KpkRepoSig
 {
     Q_OBJECT
 public:
-    KpkRepoSig( PackageKit::Client::SignatureInfo info, bool modal = true, QWidget *parent=0);
+    explicit KpkRepoSig( PackageKit::Client::SignatureInfo info, bool modal = true, QWidget *parent=0);
     ~KpkRepoSig();
 };
 

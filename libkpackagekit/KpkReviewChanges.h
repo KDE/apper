@@ -39,7 +39,7 @@ class KDE_EXPORT KpkReviewChanges : public KDialog
 {
     Q_OBJECT
 public:
-    KpkReviewChanges(const QList<Package*> &packages, QWidget *parent = 0);
+    explicit KpkReviewChanges(const QList<Package*> &packages, QWidget *parent = 0);
     ~KpkReviewChanges();
 
     void setTitle(const QString &title);

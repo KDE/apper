@@ -18,11 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "KpkStrings.h"
+
 #include <KLocale>
 
 #include <KDebug>
-
-#include "KpkStrings.h"
 
 KpkStrings::KpkStrings( QObject *parent )
  : QObject(parent)

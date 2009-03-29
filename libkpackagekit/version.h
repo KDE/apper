@@ -18,5 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef KPKVERSION_H
+#define KPKVERSION_H
 #define KPK_VERSION "0.4.0"
-
+#endif

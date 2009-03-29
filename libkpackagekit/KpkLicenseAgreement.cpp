@@ -18,10 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "KpkLicenseAgreement.h"
+
 #include <KLocale>
 
 #include "KpkStrings.h"
-#include "KpkLicenseAgreement.h"
 
 KpkLicenseAgreement::KpkLicenseAgreement( PackageKit::Client::EulaInfo info, bool modal, QWidget *parent )
  : KDialog(parent)

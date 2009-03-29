@@ -32,7 +32,7 @@ class KDE_EXPORT KpkLicenseAgreement : public KDialog, Ui::KpkLicenseAgreement
 {
     Q_OBJECT
 public:
-    KpkLicenseAgreement( PackageKit::Client::EulaInfo info, bool modal = true, QWidget *parent=0);
+    explicit KpkLicenseAgreement( PackageKit::Client::EulaInfo info, bool modal = true, QWidget *parent=0);
     ~KpkLicenseAgreement();
 };
 

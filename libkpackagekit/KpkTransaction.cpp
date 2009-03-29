@@ -18,12 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "KpkTransaction.h"
+
 #include <KLocale>
 #include <KMessageBox>
 
 #include <KDebug>
 
-#include "KpkTransaction.h"
 #include "KpkStrings.h"
 #include "KpkRepoSig.h"
 #include "KpkLicenseAgreement.h"
@@ -155,8 +156,8 @@ void KpkTransaction::currPackage(Package *p)
     kDebug() << "PACKAGE: " << p->id();
     if (!p->id().isEmpty()) {
         QString packageText(p->name());
-        if (p->version() != "") {
-            packageText += " " + p->version();
+        if (!p->version().isEmpty()) {
+            packageText += ' ' + p->version();
         }
         d->ui.packageL->setText(packageText);
         d->ui.descriptionL->setText(p->summary());
