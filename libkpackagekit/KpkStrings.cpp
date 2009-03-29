@@ -23,6 +23,7 @@
 #include <KLocale>
 
 #include <KDebug>
+#include <klocalizedstring.h>
 
 KpkStrings::KpkStrings( QObject *parent )
  : QObject(parent)
@@ -593,7 +594,7 @@ QString KpkStrings::infoUpdate(Package::State state, int number)
         case Package::Low :
             return i18np("1 trivial update", "%1 trivial updates", number);
         case Package::Normal :
-            return i18npc("Type of update, in the case it's just an update", "1 update", "%1 updates", number);
+            return i18ncp("Type of update, in the case it's just an update", "1 update", "%1 updates", number);
         case Package::Important :
             return i18np("1 important update", "%1 important updates", number);
         case Package::Security :
