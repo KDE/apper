@@ -47,4 +47,4 @@ Comment[x-test]=xxPackageKit interface for KDExx
 
 MimeType=application/x-rpm;application/x-deb;
 Terminal=false
-Categories=Qt;KDE;System;SoftwareManagement;
+Categories=Qt;KDE;System;PackageManager;
