@@ -104,6 +104,7 @@ Action=Sound|Popup
 
 [Event/TransactionError]
 Name=A transaction error occurred
+Name[uk]=Під час операції сталася помилка.
 Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
