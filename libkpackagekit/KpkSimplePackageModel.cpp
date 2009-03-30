@@ -34,7 +34,7 @@ KpkSimplePackageModel::KpkSimplePackageModel(QObject *parent)
 void KpkSimplePackageModel::addPackage(PackageKit::Package *p)
 {
     QStandardItem *item = new QStandardItem;
-    item->setText(p->name() + " - " + p->version() + (p->arch().isNull() ? '' : " (" + p->arch() + ')'));
+    item->setText(p->name() + " - " + p->version() + (p->arch().isNull() ? NULL : " (" + p->arch() + ')'));
     item->setIcon(KpkIcons::packageIcon(p->state()));
     item->setSelectable(false);
     item->setEditable(false);

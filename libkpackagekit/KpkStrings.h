@@ -18,36 +18,30 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKSTRINGS_H
-#define KPKSTRINGS_H
+#ifndef KPK_STRINGS_H
+#define KPK_STRINGS_H
 
-#include <QObject>
-#include <KIcon>
+#include <kdemacros.h>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KDE_EXPORT KpkStrings : public QObject
+namespace KpkStrings
 {
-    Q_OBJECT
-public:
-    KpkStrings( QObject *parent=0);
-    ~KpkStrings();
-
-    static QString finished(PackageKit::Transaction::ExitStatus status);
-    static QString error(PackageKit::Client::ErrorType error);
-    static QString errorMessage(PackageKit::Client::ErrorType error);
-    static QString status(PackageKit::Transaction::Status status);
-    static QString statusPast(PackageKit::Transaction::Status status);
-    static QString groups(Client::Group group);
-    static QString info(Package::State state);
-    static QString infoUpdate(Package::State state, int number);
-    static QString updateState(Client::UpgradeType value);
-    static QString restartType(Client::RestartType value);
-    static QString restartTypeFuture(Client::RestartType value);
-    static QString action(Client::Action action);
-    static QString actionPast(Client::Action action);
+    KDE_EXPORT QString finished(PackageKit::Transaction::ExitStatus status);
+    KDE_EXPORT QString error(PackageKit::Client::ErrorType error);
+    KDE_EXPORT QString errorMessage(PackageKit::Client::ErrorType error);
+    KDE_EXPORT QString status(PackageKit::Transaction::Status status);
+    KDE_EXPORT QString statusPast(PackageKit::Transaction::Status status);
+    KDE_EXPORT QString groups(Client::Group group);
+    KDE_EXPORT QString info(Package::State state);
+    KDE_EXPORT QString infoUpdate(Package::State state, int number);
+    KDE_EXPORT QString updateState(Client::UpgradeType value);
+    KDE_EXPORT QString restartType(Client::RestartType value);
+    KDE_EXPORT QString restartTypeFuture(Client::RestartType value);
+    KDE_EXPORT QString action(Client::Action action);
+    KDE_EXPORT QString actionPast(Client::Action action);
 };
 
 #endif
