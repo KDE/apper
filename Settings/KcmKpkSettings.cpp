@@ -31,7 +31,7 @@ K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_settings"))
 KcmKpkSettings::KcmKpkSettings(QWidget *parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
-    KAboutData *about = new KAboutData("kcm_kpk_settings", 0, ki18n("KPackageKit Settings"), KPK_VERSION);
+    KAboutData *about = new KAboutData("kcm_kpk_settings", "kpackagekit", ki18n("KPackageKit Settings"), KPK_VERSION);
     setAboutData(about);
     m_grid = new QGridLayout(this);
     view = new KpkSettings(this);
