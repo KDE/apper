@@ -43,7 +43,7 @@ public:
     void showSettings();
 
 signals:
-    void installFiles(KUrl::List &urls);
+    void installFiles(const KUrl::List &urls);
 
 private slots:
     void appClose();

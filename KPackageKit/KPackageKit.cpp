@@ -45,8 +45,8 @@ KPackageKit::KPackageKit()
     connect(m_instFiles, SIGNAL(appClose()), this, SLOT(appClose()));
     // register Meta Type so we can queue que connection
     qRegisterMetaType<KUrl::List>("KUrl::List &");
-    connect(this, SIGNAL(installFiles(KUrl::List &)),
-            m_instFiles, SLOT(installFiles(KUrl::List &)),
+    connect(this, SIGNAL(installFiles(const KUrl::List &)),
+            m_instFiles, SLOT(installFiles(const KUrl::List &)),
             Qt::QueuedConnection);
 }
 

@@ -95,7 +95,7 @@ void KPackageKit_Smart_Icon::close()
     // again just to be sure.
     if (!isRunning()) {
         kDebug() << "Closed by Timer";
-        QTimer::singleShot(1, this, SLOT(quit()));
+        quit();
     }
 }
 

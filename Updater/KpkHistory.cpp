@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "KpkHistory.h"
-#include "KpkHistoryDelegate.h"
 
 #include <KpkIcons.h>
 #include <QPackageKit>
@@ -39,9 +38,6 @@ KpkHistory::KpkHistory(QWidget *parent)
     treeView->setModel(m_proxyModel);
     connect(searchLineKLE, SIGNAL(textChanged(const QString &)),
             m_proxyModel, SLOT(setFilterRegExp(const QString &)));
-
-    KpkHistoryDelegate *delegate = new KpkHistoryDelegate(this);
-    treeView->setItemDelegate(delegate);
 
     setButtons(KDialog::User2 | KDialog::User1 | KDialog::Close);
 

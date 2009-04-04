@@ -25,6 +25,8 @@
 
 #include <KDebug>
 
+#include <QMovie>
+
 #include "KpkStrings.h"
 #include "KpkRepoSig.h"
 #include "KpkLicenseAgreement.h"
@@ -40,12 +42,11 @@ public:
     Ui::KpkTransaction ui;
 };
 
-static const int stateCount = 7;
-
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
  : KDialog(parent),
    m_trans(trans),
    m_handlingGpgOrEula(false),
+   m_showingError(false),
    m_flags(flags),
    d(new KpkTransactionPrivate)
 {
@@ -66,14 +67,24 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
         enableButton(KDialog::User1, false);
     }
 
-    setInitialSize(QSize(1,1));
-
     // after ALL set, lets set the transaction
     setTransaction(m_trans);
+
+//     QLabel label;
+ QMovie *movie = new QMovie("/home/daniel/code/packagekit/kde/kpackagekit/KPackageKit/Animations/hi48-action-refresh-cache.mng");
+// movie->setScaledSize(QSize(48,48));
+// connect(movie, SIGNAL(finished()), movie, SLOT(start()));
+// movie->setPaused(false);
+ d->ui.label->setMovie(movie);
+
+ movie->start();
+ kDebug() << movie->loopCount() << "movie->loopCount()";
 }
 
 KpkTransaction::~KpkTransaction()
 {
+    // DO NOT disconnect the transaction here,
+    // it might not exist when this happen
     delete d;
 }
 
@@ -179,6 +190,8 @@ void KpkTransaction::slotButtonClicked(int button)
             break;
         case KDialog::User1 :
             kDebug() << "KDialog::User1";
+            // Always disconnect BEFORE emitting finished
+            m_trans->disconnect();
             emit kTransactionFinished(Success);
             // If you call Close it will
             // come back to hunt you with Cancel
@@ -186,10 +199,12 @@ void KpkTransaction::slotButtonClicked(int button)
             break;
         case KDialog::Close :
             kDebug() << "KDialog::Close";
+            // Always disconnect BEFORE emitting finished
+            m_trans->disconnect();
             emit kTransactionFinished(Cancelled);
             done(KDialog::Close);
             break;
-        default :
+        default : // Should be only details
             KDialog::slotButtonClicked(button);
     }
 }
@@ -238,11 +253,13 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
         return;
     }
 
+    m_showingError = true;
     KMessageBox::detailedSorry(this,
                                KpkStrings::errorMessage(error),
                                details,
                                KpkStrings::error(error),
                                KMessageBox::Notify);
+    m_showingError = false;
 
     // when we receive an error we are done
     if (m_flags & CloseOnFinish) {
@@ -295,45 +312,45 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
 {
     Q_UNUSED(runtime)
     switch(status) {
-        case Transaction::Success :
-            d->ui.progressBar->setMaximum(100);
-            d->ui.progressBar->setValue(100);
-            emit kTransactionFinished(Success);
-            if (m_flags & CloseOnFinish) {
-                done(QDialog::Accepted);
-            }
-            break;
-        case Transaction::Cancelled :
-            d->ui.progressBar->setMaximum(100);
-            d->ui.progressBar->setValue(100);
-            emit kTransactionFinished(Cancelled);
-            if (m_flags & CloseOnFinish) {
-                done(QDialog::Rejected);
-            }
-            break;
-        case Transaction::Failed :
-            kDebug() << "Failed.";
-            if (!m_handlingGpgOrEula) {
-                d->ui.progressBar->setMaximum(0);
-                d->ui.progressBar->reset();
-                kDebug() << "Yep, we failed.";
-                emit kTransactionFinished(Failed);
-            }
-            break;
-        case Transaction::KeyRequired :
-        case Transaction::EulaRequired :
-            kDebug() << "finished KeyRequired or EulaRequired: " << status;
-            d->ui.currentL->setText(KpkStrings::status(Transaction::Setup));
-            if (!m_handlingGpgOrEula) {
-                emit kTransactionFinished(Failed);
-            }
-            break;
-        default :
-            d->ui.progressBar->setMaximum(100);
-            d->ui.progressBar->setValue(100);
-            kDebug() << "finished default" << status;
-            KDialog::slotButtonClicked(KDialog::Close);
-            break;
+    case Transaction::Success :
+        d->ui.progressBar->setMaximum(100);
+        d->ui.progressBar->setValue(100);
+        emit kTransactionFinished(Success);
+        break;
+    case Transaction::Cancelled :
+        d->ui.progressBar->setMaximum(100);
+        d->ui.progressBar->setValue(100);
+        emit kTransactionFinished(Cancelled);
+        break;
+    case Transaction::Failed :
+        kDebug() << "Failed.";
+        if (!m_handlingGpgOrEula) {
+            d->ui.progressBar->setMaximum(0);
+            d->ui.progressBar->reset();
+            kDebug() << "Yep, we failed.";
+            emit kTransactionFinished(Failed);
+        }
+        break;
+    case Transaction::KeyRequired :
+    case Transaction::EulaRequired :
+        kDebug() << "finished KeyRequired or EulaRequired: " << status;
+        d->ui.currentL->setText(KpkStrings::status(Transaction::Setup));
+        if (!m_handlingGpgOrEula) {
+            emit kTransactionFinished(Failed);
+        }
+        break;
+    default :
+        d->ui.progressBar->setMaximum(100);
+        d->ui.progressBar->setValue(100);
+        kDebug() << "finished default" << status;
+        KDialog::slotButtonClicked(KDialog::Close);
+        break;
+    }
+    // if we're not showing an error or don't have the
+    // CloseOnFinish flag don't close the dialog
+    if (m_flags & CloseOnFinish && !m_handlingGpgOrEula && !m_showingError) {
+        done(QDialog::Rejected);
+        deleteLater();
     }
 }
 

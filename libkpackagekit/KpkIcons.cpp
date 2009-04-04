@@ -222,7 +222,7 @@ KIcon KpkIcons::packageIcon(Package::State state)
     case Package::Normal :
         return KpkIcons::getIcon("security-medium");
     case Package::Blocked :
-        return KpkIcons::getIcon("edit-delete");
+        return KpkIcons::getIcon("dialog-cancel");
     case Package::Available:
         return KpkIcons::getIcon("package-download");
     case Package::Installed:

@@ -32,12 +32,12 @@
 #define EMBLEM_ICON_SIZE 16
 #define UNIVERSAL_PADDING 6
 #define FADE_LENGTH 32
-#define MAIN_ICON_SIZE 48
+#define MAIN_ICON_SIZE 32
 #define DROPDOWN_PADDING 2
 #define DROPDOWN_SEPARATOR_HEIGHT 32
 
 KpkDelegate::KpkDelegate(QAbstractItemView *parent)
- : KExtendableItemDelegate(parent), m_addIcon("list-add"), m_removeIcon("list-remove")
+ : KExtendableItemDelegate(parent), m_addIcon("go-down"), m_removeIcon("edit-delete")
 {
 //     setExtendPixmap(SmallIcon("arrow-right"));
 //     setContractPixmap(SmallIcon("arrow-down"));
@@ -51,7 +51,7 @@ void KpkDelegate::paint(QPainter *painter,
     QStyleOptionViewItemV4 opt(option);
     QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
-KExtendableItemDelegate::paint(painter, opt, index);
+    KExtendableItemDelegate::paint(painter, opt, index);
     switch (index.column()) {
         case 0:
             paintColMain(painter, option, index);
@@ -96,9 +96,9 @@ void KpkDelegate::paintColMain(QPainter *painter,
     if (group)
 	iconMode = QIcon::Normal;
     else {
-	if ( index.model()->data(index, KpkPackageModel::InstalledRole).toBool() )
-	    iconMode = index.model()->data(index, KpkPackageModel::CheckedRole).toInt() == Qt::Checked ? QIcon::Disabled : QIcon::Normal;
-	else
+// 	if ( index.model()->data(index, KpkPackageModel::InstalledRole).toBool() )
+// 	    iconMode = index.model()->data(index, KpkPackageModel::CheckedRole).toInt() == Qt::Checked ? QIcon::Disabled : QIcon::Normal;
+// 	else
 	    iconMode = index.model()->data(index, KpkPackageModel::CheckedRole).toInt() == Qt::Checked ? QIcon::Selected : QIcon::Disabled;
     }
 	
@@ -123,7 +123,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     QStyleOptionViewItem local_option_title(option);
     QStyleOptionViewItem local_option_normal(option);
 
-    local_option_title.font.setBold(true);
+//     local_option_title.font.setBold(true);
     local_option_title.font.setPointSize(local_option_title.font.pointSize() + 2);
 
     QPixmap pixmap(option.rect.size());
@@ -268,14 +268,14 @@ void KpkDelegate::paintColFav(QPainter *painter,
             left + width - FAV_ICON_SIZE - UNIVERSAL_PADDING, top + UNIVERSAL_PADDING, 
             FAV_ICON_SIZE, FAV_ICON_SIZE, Qt::AlignCenter, iconMode);
 
-    iconMode = QIcon::Active;
-
-    const KIcon * icon = (index.model()->data(index, KpkPackageModel::CheckedRole).toBool() )? & m_removeIcon : & m_addIcon;
-
-    if ( option.state & QStyle::State_MouseOver )
-        icon->paint(painter, 
-                left + width - EMBLEM_ICON_SIZE - UNIVERSAL_PADDING, top + UNIVERSAL_PADDING, 
-                EMBLEM_ICON_SIZE, EMBLEM_ICON_SIZE, Qt::AlignCenter, iconMode);
+//     iconMode = QIcon::Active;
+// 
+//     const KIcon * icon = (index.model()->data(index, KpkPackageModel::CheckedRole).toBool() )? & m_removeIcon : & m_addIcon;
+// 
+//     if ( option.state & QStyle::State_MouseOver )
+//         icon->paint(painter,
+//                 left + width - EMBLEM_ICON_SIZE - UNIVERSAL_PADDING, top + UNIVERSAL_PADDING,
+//                 EMBLEM_ICON_SIZE, EMBLEM_ICON_SIZE, Qt::AlignCenter, iconMode);
 }
 
 // void PkDelegate::paintColRemove(QPainter *painter,
@@ -328,7 +328,7 @@ bool KpkDelegate::editorEvent(QEvent *event,
     if (event->type() == QEvent::MouseButtonPress && index.column() == 1) {
         return model->setData(index, !model->data(index, KpkPackageModel::CheckedRole).toBool(), KpkPackageModel::CheckedRole );
 //     else if ( event->type() == QEvent::KeyPress ) {
-//     
+//
     }  else {
         return false;
 //         return QItemDelegate::editorEvent(event, model, option, index);

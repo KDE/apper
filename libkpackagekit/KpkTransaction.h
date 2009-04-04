@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKTRANSACTION_H
-#define KPKTRANSACTION_H
+#ifndef KPK_TRANSACTION_H
+#define KPK_TRANSACTION_H
 
 #include <KDialog>
 
@@ -44,6 +44,7 @@ public:
     ~KpkTransaction();
 
     void setTransaction(Transaction *trans);
+    Transaction* transaction() const {return m_trans;};
 
     typedef enum {
         Success,
@@ -58,6 +59,7 @@ signals:
 private:
     Transaction *m_trans;
     bool m_handlingGpgOrEula;
+    bool m_showingError; //This might replace the above
     Behaviors m_flags;
     KpkTransactionPrivate* d;
 

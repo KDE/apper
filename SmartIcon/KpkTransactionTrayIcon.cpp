@@ -32,6 +32,8 @@
 #include <QTimer>
 #include <KNotification>
 
+Q_DECLARE_METATYPE(Transaction*)
+
 #include <KDebug>
 
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
@@ -39,9 +41,18 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 
+    // Creates our smart icon
     m_smartSTI = new KSystemTrayIcon("applications-other");
     connect(m_smartSTI, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(activated(QSystemTrayIcon::ActivationReason)));
+
+    // Creates our transaction menu
+    m_menu = new QMenu(i18n("Transactions"));
+    connect(m_menu, SIGNAL(triggered(QAction *)),
+            this, SLOT(triggered(QAction *)));
+
+    // sets the contextMenu to our menu so we overwrite the KSystemTrayIcon one
+    m_smartSTI->setContextMenu(m_menu);
 
     // Create a new daemon
     m_client = Client::instance();
@@ -49,14 +60,14 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
 
     connect(m_client, SIGNAL(transactionListChanged(const QList<PackageKit::Transaction*> &)),
             this, SLOT(transactionListChanged(const QList<PackageKit::Transaction*> &)));
-
-    m_menu = new QMenu(i18n("Transactions"));
-    connect(m_menu, SIGNAL(triggered(QAction *)),
-            this, SLOT(triggered(QAction *)));
 }
 
 KpkTransactionTrayIcon::~KpkTransactionTrayIcon()
 {
+    // this is a QObject that want's a QWidget as parent!?
+    m_smartSTI->deleteLater();
+    // This is a QWidget
+    m_menu->deleteLater();
 }
 
 void KpkTransactionTrayIcon::checkTransactionList()
@@ -68,27 +79,56 @@ void KpkTransactionTrayIcon::checkTransactionList()
 
 void KpkTransactionTrayIcon::triggered(QAction *action)
 {
-    if (m_transAction.contains(action)) {
-        increaseRunning();
-        // we need to close on finish otherwise smart-icon will timeout
-        KpkTransaction *trans = new KpkTransaction(m_transAction[action], KpkTransaction::CloseOnFinish);
-        connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                this, SLOT(decreaseRunning()));
-        trans->show();
-    } else {
+    // Check to see if we set a Transaction* in action
+    if (action->data().isNull()) {
+        // in this case refreshCache action must be clicked
         if (Transaction *t = m_client->refreshCache(true)) {
-            increaseRunning();
-            // we need to close on finish otherwise smart-icon will timeout
-            KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
-            connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                    this, SLOT(decreaseRunning()));
-            trans->show();
+            createTransactionDialog(t);
         } else {
             KMessageBox::sorry(m_menu,
                                i18n("You do not have the necessary privileges to perform this action."),
                                i18n("Failed to refresh package lists"));
         }
+    } else {
+        // we need to find if the action clicked has already a dialog
+        QList<Transaction *> values = m_transDialogs.keys();
+        Transaction *trans = action->data().value<Transaction*>();
+        QString tid = trans->tid();
+        for (int i = 0; i < values.size(); ++i) {
+            // We have to compare the tids since the Transaction
+            // pointer changes.
+            if (tid == values.at(i)->tid()) {
+                // lets raise the dialog
+                m_transDialogs[values.at(i)]->raise();
+                return;
+            }
+        }
+        // here will happen when we don't find a dialog
+        // for the transaction set in action.
+        createTransactionDialog(trans);
     }
+}
+
+void KpkTransactionTrayIcon::createTransactionDialog(Transaction *t)
+{
+    kDebug();
+    increaseRunning();
+    // we need to close on finish otherwise smart-icon will timeout
+    KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish, m_menu);
+    // Connect to finished since the transaction may fail
+    // due to GPG or EULA and we can't handle this here..
+    connect(trans, SIGNAL(finished()),
+            this, SLOT(transactionDialogClosed()));
+    m_transDialogs[t] = trans;
+    trans->show();
+}
+
+void KpkTransactionTrayIcon::transactionDialogClosed()
+{
+    KpkTransaction *trans = qobject_cast<KpkTransaction*>(sender());
+    m_transDialogs.remove(trans->transaction());
+    // DO NOT delete the kpkTransaction it might have errors to print
+    decreaseRunning();
 }
 
 // void KpkTransactionTrayIcon::showTransactionError(PackageKit::Client::ErrorType err, const QString &details)
@@ -198,20 +238,19 @@ void KpkTransactionTrayIcon::currentStatusChanged(PackageKit::Transaction::Statu
 
 void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &tids)
 {
-    m_menu->clear();
-    m_transAction.clear();
-
     QString text;
     bool refreshCache = true;
-//     Transaction *t;
-//     for (int i = tids.size() - 1; i >= 0; i--) {
+
+    m_menu->clear();
+
     foreach (Transaction *t, tids) {
-// 	t = tids.at(i);
         QAction *transactionAction = new QAction(this);
-        m_transAction[transactionAction] = t;
+        transactionAction->setData(qVariantFromValue(t));
+
         if (t->role().action == Client::ActionRefreshCache) {
             refreshCache = false;
         }
+
         text = KpkStrings::action(t->role().action)
                + ' ' + t->role().terms.join(", ")
                + " (" + KpkStrings::status(t->status()) + ')';

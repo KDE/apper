@@ -28,6 +28,7 @@
 
 using namespace PackageKit;
 
+class KpkTransaction;
 class KpkTransactionTrayIcon : public KpkAbstractSmartIcon
 {
 Q_OBJECT
@@ -44,6 +45,8 @@ private slots:
     void triggered(QAction *action);
     void currentStatusChanged(PackageKit::Transaction::Status status);
     void currentProgressChanged(PackageKit::Transaction::ProgressInfo);
+    void createTransactionDialog(Transaction *t);
+    void transactionDialogClosed();
 //     void showTransactionError(PackageKit::Client::ErrorType, const QString&);
 //     void showRestartMessage(PackageKit::Client::RestartType, const QString&);
 
@@ -56,7 +59,7 @@ private:
     Client *m_client;
     Transaction *m_pkClient_updates;
     QMenu *m_menu;
-    QHash<QAction *,Transaction*> m_transAction;
+    QHash<Transaction *, KpkTransaction *> m_transDialogs;
 
     PackageKit::Transaction *m_currentTransaction;
 };

@@ -48,7 +48,7 @@ private slots:
     void handleUpdateActionClosed();
     void notifyUpdates();
     void showSettings();
-    void showUpdates(QSystemTrayIcon::ActivationReason = QSystemTrayIcon::Unknown);
+    void showUpdates(QSystemTrayIcon::ActivationReason = KSystemTrayIcon::Unknown);
     void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
 private:

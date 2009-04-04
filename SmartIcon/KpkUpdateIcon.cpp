@@ -93,7 +93,7 @@ void KpkUpdateIcon::showSettings()
 
 void KpkUpdateIcon::showUpdates(QSystemTrayIcon::ActivationReason reason)
 {
-    if (reason==QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::Unknown) {
+    if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::Unknown) {
         QProcess::execute("kpackagekit", QStringList() << "--updates");
 //         if (m_updateView==0) {
 //             m_updateView = new KCMultiDialog();

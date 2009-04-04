@@ -322,6 +322,10 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
                     m_checkedPackages.append(m_packages.at(index.row()));
                 }
                 emit dataChanged(index, index);
+                // emit this so the package icon is also updated
+                emit dataChanged(index,
+                                 index.sibling(index.row(),
+                                 index.column() - 1));
                 if (m_grouped) {
                     emit dataChanged(index.parent(),
                                      index.parent().sibling(index.parent().row(),
@@ -350,6 +354,10 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
                 }
                 removeChecked(p);
                 emit dataChanged(index, index);
+                // emit this so the package icon is also updated
+                emit dataChanged(index,
+                                 index.sibling(index.row(),
+                                 index.column() - 1));
                 if (m_grouped) {
                     emit dataChanged(index.parent(),
                                      index.parent().sibling(index.parent().row(),

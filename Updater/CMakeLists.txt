@@ -6,7 +6,6 @@ set(kpk_update_SRCS
     KpkSimpleTransactionModel.cpp
     KpkHistory.cpp
     KpkTransactionFilterModel.cpp
-    KpkHistoryDelegate.cpp
 )
 kde4_add_ui_files(kpk_update_SRCS
     KpkUpdate.ui
