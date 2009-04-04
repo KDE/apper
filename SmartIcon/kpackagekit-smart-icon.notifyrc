@@ -106,7 +106,9 @@ Action=Sound|Popup
 Name=A transaction error occurred
 Name[pt]=Ocorreu um erro de transacção
 Name[pt_BR]=Ocorreu um erro de transacção
+Name[sv]=Ett transaktionsfel uppstod
 Name[uk]=Під час операції сталася помилка.
+Name[x-test]=xxA transaction error occurredxx
 Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
