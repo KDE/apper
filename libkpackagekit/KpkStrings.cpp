@@ -89,8 +89,8 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
         return i18nc("The transaction state", "Scanning installed applications");
     case Transaction::GeneratePackageList :
         return i18nc("The transaction state", "Generating package lists");
-    case Transaction::WaitingForLock :
-        return i18nc("The transaction state", "Waiting for package manager lock");
+//  case Transaction::WaitingForLock :
+//      return i18nc("The transaction state", "Waiting for package manager lock");
     }
     kDebug() << "status unrecognised: " << status;
     return QString();
@@ -140,6 +140,8 @@ QString KpkStrings::action(Client::Action action)
         return i18nc("The role of the transaction, in present tense", "Searching groups");
     case Client::ActionSearchName :
         return i18nc("The role of the transaction, in present tense", "Searching by package name");
+    case Client::ActionServicePack :
+        return i18nc("The role of the transaction, in present tense", "Applying service pack");
     case Client::ActionRemovePackages :
         return i18nc("The role of the transaction, in present tense", "Removing");
     case Client::ActionInstallPackages :
@@ -180,8 +182,8 @@ QString KpkStrings::action(Client::Action action)
         return i18nc("The role of the transaction, in present tense", "Getting distribution upgrade information");
     case Client::ActionGetCategories :
         return i18nc("The role of the transaction, in present tense", "Getting categories");
-    case Client::ActionGetOldTransactions :
-        return i18nc("The role of the transaction, in present tense", "Getting old transactions");
+//  case Client::ActionGetOldTransactions :
+//      return i18nc("The role of the transaction, in present tense", "Getting old transactions");
     }
     kDebug() << "action unrecognised: " << action;
     return QString();
@@ -210,6 +212,8 @@ QString KpkStrings::actionPast(Client::Action action)
         return i18nc("The role of the transaction, in past tense", "Searched groups");
     case Client::ActionSearchName :
         return i18nc("The role of the transaction, in past tense", "Searched for package name");
+    case Client::ActionServicePack :
+        return i18nc("The role of the transaction, in past tense", "Applied service pack");
     case Client::ActionRemovePackages :
         return i18nc("The role of the transaction, in past tense", "Removed packages");
     case Client::ActionInstallPackages :
@@ -250,8 +254,8 @@ QString KpkStrings::actionPast(Client::Action action)
         return i18nc("The role of the transaction, in past tense", "Got distribution upgrades");
     case Client::ActionGetCategories :
         return i18nc("The role of the transaction, in past tense", "Got categories");
-    case Client::ActionGetOldTransactions :
-        return i18nc("The role of the transaction, in past tense", "Got old transactions");
+//  case Client::ActionGetOldTransactions :
+//      return i18nc("The role of the transaction, in past tense", "Got old transactions");
     }
     kDebug() << "action unrecognised: " << action;
     return QString();
@@ -346,12 +350,12 @@ QString KpkStrings::error(PackageKit::Client::ErrorType error)
         return i18n("The specified file could not be found");
     case Client::NoMoreMirrorsToTry :
         return i18n("No more mirrors are available");
-    case Client::NoDistroUpgradeData :
-        return i18n("No distribution upgrade data is available");
-    case Client::IncompatibleArchitecture :
-        return i18n("Package is incompatible with this system");
-    case Client::NoSpaceOnDevice :
-        return i18n("No space is left on the disk");
+//  case Client::NoDistroUpgradeData :
+//      return i18n("No distribution upgrade data is available");
+//  case Client::IncompatibleArchitecture :
+//      return i18n("Package is incompatible with this system");
+//  case Client::NoSpaceOnDevice :
+//      return i18n("No space is left on the disk");
     case Client::UnknownErrorType :
         return i18n("Unknown error");
     }
@@ -477,14 +481,14 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
     case Client::NoMoreMirrorsToTry :
         return i18n("Required data could not be found on any of the configured software sources.\n"
                     "There were no more download mirrors that could be tried.");
-    case Client::NoDistroUpgradeData :
-        return i18n("Required upgrade data could not be found in any of the configured software sources.\n"
-                    "The list of distribution upgrades will be unavailable.");
-    case Client::IncompatibleArchitecture :
-        return i18n("The package that is trying to be installed is incompatible with this system.");
-    case Client::NoSpaceOnDevice :
-        return i18n("There is insufficient space on the device.\n"
-                    "Free some space on the system disk to perform this operation.");
+//  case Client::NoDistroUpgradeData :
+//      return i18n("Required upgrade data could not be found in any of the configured software sources.\n"
+//                  "The list of distribution upgrades will be unavailable.");
+//  case Client::IncompatibleArchitecture :
+//      return i18n("The package that is trying to be installed is incompatible with this system.");
+//  case Client::NoSpaceOnDevice :
+//      return i18n("There is insufficient space on the device.\n"
+//                  "Free some space on the system disk to perform this operation.");
     case Client::UnknownErrorType :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
@@ -589,10 +593,10 @@ QString KpkStrings::info(Package::State state)
     case Package::Blocked :
         return i18nc("The type of update", "Blocked update");
     case Package::Installed :
-    case Package::CollectionInstalled :
+//  case Package::CollectionInstalled :
         return i18nc("The type of update", "Installed");
     case Package::Available :
-    case Package::CollectionAvailable :
+//  case Package::CollectionAvailable :
         return i18nc("The type of update", "Available");
     case Package::UnknownState :
         return i18nc("The type of update", "Unknown update");

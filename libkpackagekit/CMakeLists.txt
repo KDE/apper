@@ -22,6 +22,6 @@ kde4_add_ui_files(libkpk_SRCS
 )
 
 kde4_add_library(kpackagekitlib SHARED ${libkpk_SRCS})
-target_link_libraries(kpackagekitlib ${KDE4_KDEUI_LIBS} ${QPACKAGEKIT_LIBRARIES})
+target_link_libraries(kpackagekitlib ${KDE4_KDEUI_LIBS} ${QPACKAGEKIT_LIB})
 
 install(TARGETS kpackagekitlib ${INSTALL_TARGETS_DEFAULT_ARGS})
