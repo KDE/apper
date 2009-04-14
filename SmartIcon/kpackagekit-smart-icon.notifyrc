@@ -104,6 +104,7 @@ Action=Sound|Popup
 
 [Event/TransactionError]
 Name=A transaction error occurred
+Name[et]=Tekkis ülekandeviga
 Name[pt]=Ocorreu um erro de transacção
 Name[pt_BR]=Ocorreu um erro de transacção
 Name[sv]=Ett transaktionsfel uppstod
