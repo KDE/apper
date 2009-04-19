@@ -1,102 +1,112 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KpkPackageDetails</class>
- <widget class="QWidget" name="KpkPackageDetails" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KpkPackageDetails">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
-    <height>183</height>
+    <width>390</width>
+    <height>164</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3" >
-   <property name="margin" >
+  <layout class="QGridLayout" name="gridLayout_3">
+   <property name="margin">
     <number>0</number>
    </property>
-   <item row="0" column="0" >
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string/>
      </property>
-     <layout class="QGridLayout" name="gridLayout_4" >
-      <item row="0" column="0" colspan="5" >
-       <widget class="QWidget" native="1" name="widget" >
-        <property name="maximumSize" >
+     <layout class="QGridLayout" name="gridLayout_4">
+      <property name="margin">
+       <number>2</number>
+      </property>
+      <item row="0" column="0" colspan="5">
+       <widget class="QWidget" name="widget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>150</height>
+          <height>120</height>
          </size>
         </property>
-        <layout class="QGridLayout" name="gridLayout" >
-         <property name="margin" >
+        <layout class="QGridLayout" name="gridLayout">
+         <property name="margin">
           <number>0</number>
          </property>
         </layout>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QToolButton" name="descriptionTB" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QToolButton" name="descriptionTB">
+        <property name="text">
          <string>Description</string>
         </property>
-        <property name="checkable" >
+        <property name="checkable">
          <bool>true</bool>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
-        <property name="autoExclusive" >
+        <property name="autoExclusive">
          <bool>true</bool>
         </property>
-        <property name="autoRaise" >
+        <property name="autoRaise">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QToolButton" name="fileListTB" >
-        <property name="text" >
+      <item row="1" column="1">
+       <widget class="QToolButton" name="fileListTB">
+        <property name="text">
          <string>File List</string>
         </property>
-        <property name="checkable" >
+        <property name="checkable">
          <bool>true</bool>
         </property>
-        <property name="autoExclusive" >
+        <property name="autoExclusive">
          <bool>true</bool>
         </property>
-        <property name="autoRaise" >
+        <property name="autoRaise">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="2" >
-       <widget class="QToolButton" name="dependsOnTB" >
-        <property name="text" >
+      <item row="1" column="2">
+       <widget class="QToolButton" name="dependsOnTB">
+        <property name="text">
          <string>Depends on</string>
         </property>
-        <property name="checkable" >
+        <property name="checkable">
          <bool>true</bool>
         </property>
-        <property name="autoExclusive" >
+        <property name="autoExclusive">
          <bool>true</bool>
         </property>
-        <property name="autoRaise" >
+        <property name="autoRaise">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="3" colspan="2" >
-       <widget class="QToolButton" name="requiredByTB" >
-        <property name="text" >
+      <item row="1" column="3" colspan="2">
+       <widget class="QToolButton" name="requiredByTB">
+        <property name="text">
          <string>Required by</string>
         </property>
-        <property name="checkable" >
+        <property name="checkable">
          <bool>true</bool>
         </property>
-        <property name="autoExclusive" >
+        <property name="autoExclusive">
          <bool>true</bool>
         </property>
-        <property name="autoRaise" >
+        <property name="autoRaise">
          <bool>true</bool>
         </property>
        </widget>

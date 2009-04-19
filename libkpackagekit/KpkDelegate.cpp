@@ -29,12 +29,12 @@
 #include "KpkPackageModel.h"
 
 #define FAV_ICON_SIZE 24
-#define EMBLEM_ICON_SIZE 16
-#define UNIVERSAL_PADDING 6
-#define FADE_LENGTH 32
+#define EMBLEM_ICON_SIZE 8
+#define UNIVERSAL_PADDING 4
+#define FADE_LENGTH 16
 #define MAIN_ICON_SIZE 32
 #define DROPDOWN_PADDING 2
-#define DROPDOWN_SEPARATOR_HEIGHT 32
+// #define DROPDOWN_SEPARATOR_HEIGHT 32
 
 KpkDelegate::KpkDelegate(QAbstractItemView *parent)
  : KExtendableItemDelegate(parent), m_addIcon("go-down"), m_removeIcon("edit-delete")
@@ -124,7 +124,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     QStyleOptionViewItem local_option_normal(option);
 
 //     local_option_title.font.setBold(true);
-    local_option_title.font.setPointSize(local_option_title.font.pointSize() + 2);
+    local_option_title.font.setPointSize(local_option_title.font.pointSize());
 
     QPixmap pixmap(option.rect.size());
     pixmap.fill(Qt::transparent);
@@ -138,6 +138,8 @@ void KpkDelegate::paintColMain(QPainter *painter,
     // Text
     int textInner = 2 * UNIVERSAL_PADDING + MAIN_ICON_SIZE;
     const int itemHeight = calcItemHeight(option);
+
+    local_option_normal.font.setPointSize(local_option_normal.font.pointSize() - 2);
 
     p.setPen(foregroundColor);
     if (group) {
