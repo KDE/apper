@@ -42,6 +42,7 @@ namespace KpkStrings
     KDE_EXPORT QString restartTypeFuture(Client::RestartType value);
     KDE_EXPORT QString action(Client::Action action);
     KDE_EXPORT QString actionPast(Client::Action action);
+    KDE_EXPORT QString mediaType(Transaction::MediaType value);
 };
 
 #endif

@@ -46,7 +46,7 @@ public:
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
  : KDialog(parent),
    m_trans(trans),
-   m_handlingGpgOrEula(false),
+   m_handlingActionRequired(false),
    m_showingError(false),
    m_flags(flags),
    d(new KpkTransactionPrivate)
@@ -146,6 +146,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
             this, SLOT(statusChanged(PackageKit::Transaction::Status)));
     connect(m_trans, SIGNAL(eulaRequired(PackageKit::Client::EulaInfo)),
             this, SLOT(eulaRequired(PackageKit::Client::EulaInfo)));
+    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)),
+            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
     connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Client::SignatureInfo)),
             this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
 }
@@ -175,7 +177,6 @@ void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
 
 void KpkTransaction::currPackage(Package *p)
 {
-    kDebug() << "PACKAGE: " << p->id();
     if (!p->id().isEmpty()) {
         QString packageText(p->name());
         if (!p->version().isEmpty()) {
@@ -230,13 +231,17 @@ void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
 
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)
 {
-    //Q_UNUSED(details);
-    kDebug() << "errorCode: " << error << details;
+//     kDebug() << "errorCode: " << error << details;
+    // obvious message, don't tell the user
+    if (error == Client::TransactionCancelled) {
+        return;
+    }
+
     if (error == Client::MissingGpgSignature) {
         kDebug() << "Missing GPG!";
-        m_handlingGpgOrEula = true;
+        m_handlingActionRequired = true;
         int ret = KMessageBox::warningYesNo(this,
-                                            details+
+                                            details +
                                             i18n("<br />Installing unsigned packages can compromise your system, "
                                             "as it is impossible to verify if the software came from a trusted "
                                             "source. Are you sure you want to continue installation?"),
@@ -253,8 +258,11 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
     }
 
     // check to see if we are already handlying these errors
-    if (error == Client::GpgFailure || error == Client::NoLicenseAgreement) {
-        if (m_handlingGpgOrEula) {
+    if (error == Client::GpgFailure ||
+        error == Client::NoLicenseAgreement ||
+        error == Client::MediaChangeRequired)
+    {
+        if (m_handlingActionRequired) {
             return;
         }
     }
@@ -270,7 +278,7 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
     m_showingError = true;
     KMessageBox::detailedSorry(this,
                                KpkStrings::errorMessage(error),
-                               details,
+                               QString(details).replace('\n', "<br />"),
                                KpkStrings::error(error),
                                KMessageBox::Notify);
     m_showingError = false;
@@ -285,38 +293,64 @@ void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
 {
     kDebug() << "eula by: " << info.vendorName;
 
-    if (m_handlingGpgOrEula) {
+    if (m_handlingActionRequired) {
         // if its true means that we alread passed here
-        m_handlingGpgOrEula = false;
+        m_handlingActionRequired = false;
         return;
     } else {
-        m_handlingGpgOrEula = true;
+        m_handlingActionRequired = true;
     }
 
     KpkLicenseAgreement *frm = new KpkLicenseAgreement(info, true, this);
     if (frm->exec() == KDialog::Yes && Client::instance()->acceptEula(info)) {
-        m_handlingGpgOrEula = false;
+        m_handlingActionRequired = false;
     }
 
     // Well try again, if fail will show the erroCode
     emit kTransactionFinished(ReQueue);
 }
 
+void KpkTransaction::mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text)
+{
+    Q_UNUSED(id)
+    kDebug() << "mediaChangeRequired: " << id << text;
+
+    m_handlingActionRequired = true;
+    int ret = KMessageBox::questionYesNo(this,
+                                        i18n("Please insert the %1 labeled '%2', and press continue",
+                                            KpkStrings::mediaType(type),
+                                            text),
+                                        i18n("A media change is required"),
+                                        KStandardGuiItem::cont(),
+                                        KStandardGuiItem::cancel());
+    m_handlingActionRequired = false;
+
+    // if the user clicked continue we got yes
+    if (ret == KMessageBox::Yes) {
+        emit kTransactionFinished(ReQueue);
+    } else {
+        // when we receive an error we are done
+        if (m_flags & CloseOnFinish) {
+            done(QDialog::Rejected);
+        }
+    }
+}
+
 void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo info)
 {
     kDebug() << "signature by: " << info.keyId;
-    if (m_handlingGpgOrEula) {
+    if (m_handlingActionRequired) {
         // if its true means that we alread passed here
-        m_handlingGpgOrEula = false;
+        m_handlingActionRequired = false;
         return;
     } else {
-        m_handlingGpgOrEula = true;
+        m_handlingActionRequired = true;
     }
 
     KpkRepoSig *frm = new KpkRepoSig(info, true, this);
     if (frm->exec() == KDialog::Yes &&
         Client::instance()->installSignature(info.type, info.keyId, info.package)) {
-        m_handlingGpgOrEula = false;
+        m_handlingActionRequired = false;
     }
     kDebug() << "Requeue!";
     emit kTransactionFinished(ReQueue);
@@ -338,7 +372,7 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
         break;
     case Transaction::Failed :
         kDebug() << "Failed.";
-        if (!m_handlingGpgOrEula) {
+        if (!m_handlingActionRequired) {
             d->ui.progressBar->setMaximum(0);
             d->ui.progressBar->reset();
             kDebug() << "Yep, we failed.";
@@ -347,9 +381,10 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
         break;
     case Transaction::KeyRequired :
     case Transaction::EulaRequired :
+    case Transaction::MediaChangeRequired :
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
         d->ui.currentL->setText(KpkStrings::status(Transaction::Setup));
-        if (!m_handlingGpgOrEula) {
+        if (!m_handlingActionRequired) {
             emit kTransactionFinished(Failed);
         }
         break;
@@ -362,7 +397,7 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
     }
     // if we're not showing an error or don't have the
     // CloseOnFinish flag don't close the dialog
-    if (m_flags & CloseOnFinish && !m_handlingGpgOrEula && !m_showingError) {
+    if (m_flags & CloseOnFinish && !m_handlingActionRequired && !m_showingError) {
         done(QDialog::Rejected);
         deleteLater();
     }

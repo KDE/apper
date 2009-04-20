@@ -106,15 +106,37 @@ KpkAddRm::KpkAddRm(QWidget *parent)
                 this, SLOT(genericActionKTriggered()));
     }
 
-    if (!m_actions.contains(Client::ActionSearchGroup)) {
-        groupsCB->setEnabled(false);
-    }
+    m_groupsModel = new QStandardItemModel(this);
+    groupsCB->setModel(m_groupsModel);
 
     //initialize the groups
-    // TODO add non selectable groups if Client::ActionSearchGroup
-    // is not supported
-    foreach (const Client::Group &group, m_client->getGroups()) {
-        groupsCB->addItem(KpkIcons::groupsIcon(group), KpkStrings::groups(group), group);
+    QSet<Client::Group> groups = m_client->getGroups();
+    // Add All packages entry
+    QStandardItem *groupItem;
+    m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("All packages")));
+    groupItem->setData(AllPackages, Qt::UserRole);
+
+    m_groupsModel->appendRow(listOfChangesItem = new QStandardItem(i18n("List of changes")));
+    listOfChangesItem->setEnabled(false);
+    listOfChangesItem->setData(ListOfChanges, Qt::UserRole);
+
+    if (groups.size()) {
+        // An empty small item
+        m_groupsModel->appendRow(groupItem = new QStandardItem(QString()));
+        groupItem->setEnabled(false);
+        groupItem->setSizeHint(groupItem->sizeHint() + QSize(5, 5));
+        m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("Groups:")));
+        groupItem->setEnabled(false);
+
+        foreach (const Client::Group &group, groups) {
+            m_groupsModel->appendRow(groupItem = new QStandardItem(KpkStrings::groups(group)));
+            groupItem->setData(Group, Qt::UserRole);
+            groupItem->setData(group, Group);
+            groupItem->setIcon(KpkIcons::groupsIcon(group));
+            if (!m_actions.contains(Client::ActionSearchGroup)) {
+                groupItem->setSelectable(false);
+            }
+        }
     }
 
     // install the backend filters
@@ -195,8 +217,10 @@ void KpkAddRm::checkChanged()
 {
     if (m_pkg_model_main->selectedPackages().size() > 0) {
       emit changed(true);
+      listOfChangesItem->setEnabled(true);
     } else {
       emit changed(false);
+      listOfChangesItem->setEnabled(false);
     }
 }
 
@@ -249,8 +273,6 @@ void KpkAddRm::on_actionFindName_triggered()
         m_searchAction  = Client::ActionSearchName;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
-        // select "All Packages"
-        groupsCB->setCurrentIndex(0);
         // create the main transaction
         search();
     }
@@ -267,8 +289,6 @@ void KpkAddRm::on_actionFindDescription_triggered()
         m_searchAction  = Client::ActionSearchDetails;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
-        // select "All Packages"
-        groupsCB->setCurrentIndex(0);
         // create the main transaction
         search();
     }
@@ -285,8 +305,6 @@ void KpkAddRm::on_actionFindFile_triggered()
         m_searchAction  = Client::ActionSearchFile;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
-        // select "All Packages"
-        groupsCB->setCurrentIndex(0);
         // create the main transaction
         search();
     }
@@ -295,12 +313,30 @@ void KpkAddRm::on_actionFindFile_triggered()
 void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
 {
     if (groupsCB->itemData(index, Qt::UserRole).isValid()) {
-        // cache the search
-        m_searchAction  = Client::ActionSearchGroup;
-        m_searchGroup   = (Client::Group) groupsCB->itemData(index, Qt::UserRole).toUInt();
-        m_searchFilters = filters();
-        // create the main transaction
-        search();
+        switch ((ItemType) groupsCB->itemData(index, Qt::UserRole).toUInt()) {
+        case AllPackages :
+            // contract and delete and details widgets
+            pkg_delegate->contractAll();
+            // cleans the models
+            m_pkg_model_main->clear();
+            break;
+        case ListOfChanges :
+            // contract and delete and details widgets
+            pkg_delegate->contractAll();
+            // cleans the models
+            m_pkg_model_main->clear();
+            foreach (Package *pkg, m_pkg_model_main->selectedPackages()) {
+                m_pkg_model_main->addPackage(pkg);
+            }
+            break;
+        case Group :
+            // cache the search
+            m_searchAction  = Client::ActionSearchGroup;
+            m_searchGroup   = (Client::Group) groupsCB->itemData(index, Group).toUInt();
+            m_searchFilters = filters();
+            // create the main transaction
+            search();
+        }
     }
 }
 
@@ -318,6 +354,11 @@ void KpkAddRm::search()
     } else {
         kWarning() << "Search type not implemented yet";
         return;
+    }
+
+    if (m_searchAction != Client::ActionSearchGroup) {
+        // select "All Packages"
+        groupsCB->setCurrentIndex(0);
     }
 
     if (m_pkClient_main) {

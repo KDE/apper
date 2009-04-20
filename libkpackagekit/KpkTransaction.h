@@ -58,7 +58,7 @@ signals:
 
 private:
     Transaction *m_trans;
-    bool m_handlingGpgOrEula;
+    bool m_handlingActionRequired;
     bool m_showingError; //This might replace the above
     Behaviors m_flags;
     KpkTransactionPrivate* d;
@@ -70,6 +70,7 @@ private slots:
     void currPackage(PackageKit::Package *);
     void progressChanged(PackageKit::Transaction::ProgressInfo info);
     void eulaRequired(PackageKit::Client::EulaInfo info);
+    void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
     void repoSignatureRequired(PackageKit::Client::SignatureInfo info);
 
 protected slots:

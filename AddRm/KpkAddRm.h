@@ -84,6 +84,14 @@ private:
     KpkPackageModel *m_pkg_model_main;
     KpkDelegate *pkg_delegate;
 
+    enum ItemType {
+        AllPackages = Qt::UserRole + 1,
+        ListOfChanges,
+        Group
+    };
+    QStandardItemModel *m_groupsModel;
+    QStandardItem *listOfChangesItem;
+
     Client *m_client;
     Transaction *m_pkClient_main;
 

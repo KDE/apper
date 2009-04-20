@@ -352,6 +352,8 @@ QString KpkStrings::error(PackageKit::Client::ErrorType error)
         return i18n("Package is incompatible with this system");
     case Client::NoSpaceOnDevice :
         return i18n("No space is left on the disk");
+    case Client::MediaChangeRequired :
+        return i18n("A media change is required");
     case Client::UnknownErrorType :
         return i18n("Unknown error");
     }
@@ -485,6 +487,8 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
     case Client::NoSpaceOnDevice :
         return i18n("There is insufficient space on the device.\n"
                     "Free some space on the system disk to perform this operation.");
+    case Client::MediaChangeRequired :
+        return i18n("Additional media is required to complete the transaction.");
     case Client::UnknownErrorType :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
@@ -675,6 +679,22 @@ QString KpkStrings::updateState(Client::UpgradeType value)
     case Client::UpgradeTesting :
         return i18n("Testing");
     case Client::UnknownUpgradeType :
+        return QString();
+    }
+    kDebug() << "value unrecognised: " << value;
+    return QString();
+}
+
+QString KpkStrings::mediaType(Transaction::MediaType value)
+{
+    switch (value) {
+    case Transaction::Cd :
+        return i18n("CD");
+    case Transaction::Dvd :
+        return i18n("DVD");
+    case Transaction::Disc :
+        return i18n("disc");
+    case Transaction::UnknownMediaType :
         return QString();
     }
     kDebug() << "value unrecognised: " << value;
