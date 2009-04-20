@@ -40,6 +40,7 @@ class KpkTransactionPrivate
 {
 public:
     Ui::KpkTransaction ui;
+    bool showDetails;
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
@@ -60,6 +61,10 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     enableButtonCancel(false);
     setDetailsWidget(d->ui.detailGroup);
     setDetailsWidgetVisible(false);
+    KConfig config("KPackageKit");
+    KConfigGroup transactionGroup(&config, "Transaction");
+    d->showDetails = transactionGroup.readEntry("ShowDetails", false);
+
     enableButton(KDialog::Details, false);
 
     if (m_flags & Modal) {
@@ -83,6 +88,12 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
 KpkTransaction::~KpkTransaction()
 {
+    if (isButtonEnabled(KDialog::Details)) {
+        KConfig config("KPackageKit");
+        KConfigGroup transactionGroup(&config, "Transaction");
+        transactionGroup.writeEntry("ShowDetails", isDetailsWidgetVisible());
+    }
+
     // DO NOT disconnect the transaction here,
     // it might not exist when this happen
     delete d;
@@ -173,6 +184,7 @@ void KpkTransaction::currPackage(Package *p)
         d->ui.packageL->setText(packageText);
         d->ui.descriptionL->setText(p->summary());
         enableButton(KDialog::Details, true);
+        setDetailsWidgetVisible(d->showDetails);
     } else {
         d->ui.packageL->clear();
         d->ui.descriptionL->clear();
@@ -204,6 +216,8 @@ void KpkTransaction::slotButtonClicked(int button)
             emit kTransactionFinished(Cancelled);
             done(KDialog::Close);
             break;
+        case KDialog::Details :
+            d->showDetails = !d->showDetails;
         default : // Should be only details
             KDialog::slotButtonClicked(button);
     }
