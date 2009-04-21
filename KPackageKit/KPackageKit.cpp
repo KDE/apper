@@ -33,6 +33,7 @@
 #include "KpkInstallFiles.h"
 #include "KpkInstallMimeType.h"
 #include "KpkInstallPackageName.h"
+#include "KpkInstallProvideFile.h"
 
 namespace kpackagekit {
 
@@ -117,6 +118,15 @@ int KPackageKit::newInstance()
     if (args->isSet("install-package-name")) {
         KpkInstallPackageName *helper;
         helper = new KpkInstallPackageName(args->getOptionList("install-package-name"), this);
+        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
+        QTimer::singleShot(0, helper, SLOT(start()));
+        m_running++;
+        notSet = false;
+    }
+
+    if (args->isSet("install-provide-file")) {
+        KpkInstallProvideFile *helper;
+        helper = new KpkInstallProvideFile(args->getOptionList("install-provide-file"), this);
         connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
         QTimer::singleShot(0, helper, SLOT(start()));
         m_running++;

@@ -47,7 +47,8 @@ int main(int argc, char **argv)
     options.add("updates", ki18n("Show updates"));
     options.add("settings", ki18n("Show settings"));
     options.add("install-mime-type <mime-type>", ki18n("Mime type installer"));
-    options.add("install-package-name <packages>", ki18n("Package name installer"));
+    options.add("install-package-name <name>", ki18n("Package name installer"));
+    options.add("install-provide-file <file>", ki18n("Single file installer"));
     options.add("+[package]", ki18n("Package file to install"));
     KCmdLineArgs::addCmdLineOptions(options);
 
