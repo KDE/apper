@@ -685,20 +685,20 @@ QString KpkStrings::updateState(Client::UpdateState value)
     return QString();
 }
 
-QString KpkStrings::mediaType(Transaction::MediaType value)
+QString KpkStrings::mediaMessage(Transaction::MediaType value, const QString &text)
 {
     switch (value) {
     case Transaction::MediaCd :
-        return i18n("CD");
+        return i18n("Please insert the CD labeled '%1', and press continue.", text);
     case Transaction::MediaDvd :
-        return i18n("DVD");
+        return i18n("Please insert the DVD labeled '%1', and press continue.", text);
     case Transaction::MediaDisc :
-        return i18n("disc");
+        return i18n("Please insert the disc labeled '%1', and press continue.", text);
     case Transaction::UnknownMediaType :
-        return QString();
+        return i18n("Please insert the medium labeled '%1', and press continue.", text);
     }
     kDebug() << "value unrecognised: " << value;
-    return QString();
+    return i18n("Please insert the medium labeled '%1', and press continue.", text);
 }
 
 QString KpkStrings::message(PackageKit::Client::MessageType value)

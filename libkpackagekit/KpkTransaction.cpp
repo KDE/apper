@@ -317,12 +317,10 @@ void KpkTransaction::mediaChangeRequired(PackageKit::Transaction::MediaType type
 
     m_handlingActionRequired = true;
     int ret = KMessageBox::questionYesNo(this,
-                                        i18n("Please insert the %1 labeled '%2', and press continue",
-                                            KpkStrings::mediaType(type),
-                                            text),
-                                        i18n("A media change is required"),
-                                        KStandardGuiItem::cont(),
-                                        KStandardGuiItem::cancel());
+                                         KpkStrings::mediaMessage(type, text),
+                                         i18n("A media change is required"),
+                                         KStandardGuiItem::cont(),
+                                         KStandardGuiItem::cancel());
     m_handlingActionRequired = false;
 
     // if the user clicked continue we got yes
