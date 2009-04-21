@@ -118,7 +118,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
     progressChanged(m_trans->progress());
     // sets the current status
     if (m_trans->status() == Transaction::UnknownStatus) {
-       statusChanged(Transaction::Setup);
+       statusChanged(Transaction::StatusSetup);
     } else {
        statusChanged(m_trans->status());
     }
@@ -233,11 +233,11 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
 {
 //     kDebug() << "errorCode: " << error << details;
     // obvious message, don't tell the user
-    if (error == Client::TransactionCancelled) {
+    if (error == Client::ErrorTransactionCancelled) {
         return;
     }
 
-    if (error == Client::MissingGpgSignature) {
+    if (error == Client::ErrorMissingGpgSignature) {
         kDebug() << "Missing GPG!";
         m_handlingActionRequired = true;
         int ret = KMessageBox::warningYesNo(this,
@@ -258,9 +258,9 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
     }
 
     // check to see if we are already handlying these errors
-    if (error == Client::GpgFailure ||
-        error == Client::NoLicenseAgreement ||
-        error == Client::MediaChangeRequired)
+    if (error == Client::ErrorGpgFailure ||
+        error == Client::ErrorNoLicenseAgreement ||
+        error == Client::ErrorMediaChangeRequired)
     {
         if (m_handlingActionRequired) {
             return;
@@ -271,7 +271,7 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
 //     if ( error == Client::BadGpgSignature || error Client::MissingGpgSignature)
 
     // ignoring these as gpk does
-    if (error == Client::TransactionCancelled || error == Client::ProcessKill) {
+    if (error == Client::ErrorTransactionCancelled || error == Client::ErrorProcessKill) {
         return;
     }
 
@@ -360,17 +360,17 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
 {
     Q_UNUSED(runtime)
     switch(status) {
-    case Transaction::Success :
+    case Transaction::ExitSuccess :
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
         emit kTransactionFinished(Success);
         break;
-    case Transaction::Cancelled :
+    case Transaction::ExitCancelled :
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
         emit kTransactionFinished(Cancelled);
         break;
-    case Transaction::Failed :
+    case Transaction::ExitFailed :
         kDebug() << "Failed.";
         if (!m_handlingActionRequired) {
             d->ui.progressBar->setMaximum(0);
@@ -379,11 +379,11 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
             emit kTransactionFinished(Failed);
         }
         break;
-    case Transaction::KeyRequired :
-    case Transaction::EulaRequired :
-    case Transaction::MediaChangeRequired :
+    case Transaction::ExitKeyRequired :
+    case Transaction::ExitEulaRequired :
+    case Transaction::ExitMediaChangeRequired :
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
-        d->ui.currentL->setText(KpkStrings::status(Transaction::Setup));
+        d->ui.currentL->setText(KpkStrings::status(Transaction::StatusSetup));
         if (!m_handlingActionRequired) {
             emit kTransactionFinished(Failed);
         }

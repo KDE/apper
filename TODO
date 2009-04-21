@@ -3,9 +3,6 @@ A quick list of things that need to be done.
 - Find or create a Markdown Qt parser to HTML (update/package descriptions use Markdown)
   (Daniel)
 
-- Add to the group combobox entries to list selected packages
-  (Daniel)
-
 - Create the ui to remove programs by they EXEC name and add the "Uninstall" action to kickoff :D
   (Daniel)
 

@@ -26,7 +26,7 @@
 #include <KDebug>
 
 KpkInstallFiles::KpkInstallFiles(QObject *parent)
- : QObject(parent), m_running(0)
+ : KpkAbstractIsRunning(parent)
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
@@ -39,7 +39,7 @@ void KpkInstallFiles::installFiles(const KUrl::List &urls)
 {
     // yeah we are running so please be
     // polited and don't close the application :P
-    m_running++;
+    increaseRunning();
 
     QStringList files;
     QStringList notFiles;
@@ -123,8 +123,7 @@ void KpkInstallFiles::installFiles(const KUrl::List &urls)
         }
     }
     // ok we are not running anymore..
-    m_running--;
-    emit appClose();
+    decreaseRunning();
 }
 
 void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
@@ -152,8 +151,7 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
             // return to avoid the running--
             return;
     }
-    m_running--;
-    emit appClose();
+    decreaseRunning();
 }
 
 #include "KpkInstallFiles.moc"

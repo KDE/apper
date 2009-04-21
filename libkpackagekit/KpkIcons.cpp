@@ -40,33 +40,33 @@ KIcon KpkIcons::getIcon(const QString &name)
 KIcon KpkIcons::statusIcon(PackageKit::Transaction::Status status)
 {
     switch (status) {
-    case Transaction::Setup :
+    case Transaction::StatusSetup :
         return KpkIcons::getIcon("package-setup");
-    case Transaction::Wait :
+    case Transaction::StatusWait :
         return KpkIcons::getIcon("package-wait");
-    case Transaction::Running :
+    case Transaction::StatusRunning :
         return KpkIcons::getIcon("package-setup");
-    case Transaction::Query :
+    case Transaction::StatusQuery :
         return KpkIcons::getIcon("package-search");
-    case Transaction::Info :
+    case Transaction::StatusInfo :
         return KpkIcons::getIcon("package-info");
-    case Transaction::Remove :
+    case Transaction::StatusRemove :
         return KpkIcons::getIcon("package-removed");
-    case Transaction::Download :
+    case Transaction::StatusDownload :
         return KpkIcons::getIcon("package-download");
-    case Transaction::Update :
+    case Transaction::StatusUpdate :
         return KpkIcons::getIcon("package-update");
-    case Transaction::DepResolve :
+    case Transaction::StatusDepResolve :
         return KpkIcons::getIcon("package-info");
-    case Transaction::SigCheck :
+    case Transaction::StatusSigCheck :
         return KpkIcons::getIcon("package-info");//TODO needs a better icon
-    case Transaction::Rollback :
+    case Transaction::StatusRollback :
         return KpkIcons::getIcon("package-rollback");
-    case Transaction::TestCommit :
+    case Transaction::StatusTestCommit :
         return KpkIcons::getIcon("package-info");//TODO needs a better icon
-    case Transaction::Commit :
+    case Transaction::StatusCommit :
         return KpkIcons::getIcon("package-setup");//TODO needs a better icon
-    case Transaction::Request :
+    case Transaction::StatusRequest :
         return KpkIcons::getIcon("package-search");
     default :
         kDebug() << "status icon unrecognised: " << status;
@@ -134,69 +134,69 @@ KIcon KpkIcons::actionIcon(Client::Action action)
 KIcon KpkIcons::groupsIcon(Client::Group group)
 {
     switch (group) {
-    case Client::Accessibility :
+    case Client::GroupAccessibility :
         return KpkIcons::getIcon("preferences-desktop-accessibility");
-    case Client::Accessories :
+    case Client::GroupAccessories :
         return KpkIcons::getIcon("applications-accessories");
-    case Client::AdminTools :
+    case Client::GroupAdminTools :
         return KpkIcons::getIcon("dialog-password");
-    case Client::Communication :
+    case Client::GroupCommunication :
         return KpkIcons::getIcon("network-workgroup");//FIXME
-    case Client::DesktopGnome :
+    case Client::GroupDesktopGnome :
         return KpkIcons::getIcon("user-desktop");//FIXME
-    case Client::DesktopKde :
+    case Client::GroupDesktopKde :
         return KpkIcons::getIcon("kde");
-    case Client::DesktopOther :
+    case Client::GroupDesktopOther :
         return KpkIcons::getIcon("user-desktop");
-    case Client::DesktopXfce :
+    case Client::GroupDesktopXfce :
         return KpkIcons::getIcon("user-desktop");//FIXME
-    case Client::Documentation :
+    case Client::GroupDocumentation :
         return KpkIcons::getIcon("accessories-dictionary");//FIXME
-    case Client::Education :
+    case Client::GroupEducation :
         return KpkIcons::getIcon("applications-education");
-    case Client::Electronics :
+    case Client::GroupElectronics :
         return KpkIcons::getIcon("media-flash");
-    case Client::Fonts :
+    case Client::GroupFonts :
         return KpkIcons::getIcon("preferences-desktop-font");
-    case Client::Games :
+    case Client::GroupGames :
         return KpkIcons::getIcon("applications-games");
-    case Client::Graphics :
+    case Client::GroupGraphics :
         return KpkIcons::getIcon("applications-graphics");
-    case Client::Internet :
+    case Client::GroupInternet :
         return KpkIcons::getIcon("applications-internet");
-    case Client::Legacy :
+    case Client::GroupLegacy :
         return KpkIcons::getIcon("media-floppy");
-    case Client::Localization :
+    case Client::GroupLocalization :
         return KpkIcons::getIcon("applications-education-language");
-    case Client::Maps :
+    case Client::GroupMaps :
         return KpkIcons::getIcon("Maps");//FIXME
-    case Client::Collections :
+    case Client::GroupCollections :
         return KpkIcons::getIcon("unknown");//FIXME
-    case Client::Multimedia :
+    case Client::GroupMultimedia :
         return KpkIcons::getIcon("applications-multimedia");
-    case Client::Network :
+    case Client::GroupNetwork :
         return KpkIcons::getIcon("network-wired");
-    case Client::Office :
+    case Client::GroupOffice :
         return KpkIcons::getIcon("applications-office");
-    case Client::Other :
+    case Client::GroupOther :
         return KpkIcons::getIcon("applications-other");
-    case Client::PowerManagement :
+    case Client::GroupPowerManagement :
         return KpkIcons::getIcon("battery");
-    case Client::Programming :
+    case Client::GroupProgramming :
         return KpkIcons::getIcon("applications-development");
-    case Client::Publishing :
+    case Client::GroupPublishing :
         return KpkIcons::getIcon("accessories-text-editor");
-    case Client::Repos :
+    case Client::GroupRepos :
         return KpkIcons::getIcon("application-x-compressed-tar");
-    case Client::Science :
+    case Client::GroupScience :
         return KpkIcons::getIcon("applications-science");
-    case Client::Security :
+    case Client::GroupSecurity :
         return KpkIcons::getIcon("security-high");
-    case Client::Servers :
+    case Client::GroupServers :
         return KpkIcons::getIcon("network-server");
-    case Client::System :
+    case Client::GroupSystem :
         return KpkIcons::getIcon("applications-system");
-    case Client::Virtualization :
+    case Client::GroupVirtualization :
         return KpkIcons::getIcon("cpu");
     case Client::UnknownGroup :
         return KpkIcons::getIcon("unknown");
@@ -209,23 +209,23 @@ KIcon KpkIcons::groupsIcon(Client::Group group)
 KIcon KpkIcons::packageIcon(Package::State state)
 {
     switch (state) {
-    case Package::Bugfix :
+    case Package::StateBugfix :
         return KpkIcons::getIcon("script-error");
-    case Package::Important :
+    case Package::StateImportant :
         return KpkIcons::getIcon("security-low");
-    case Package::Low :
+    case Package::StateLow :
         return KpkIcons::getIcon("security-high");
-    case Package::Enhancement :
+    case Package::StateEnhancement :
         return KpkIcons::getIcon("ktip");
-    case Package::Security :
+    case Package::StateSecurity :
         return KpkIcons::getIcon("emblem-important");
-    case Package::Normal :
+    case Package::StateNormal :
         return KpkIcons::getIcon("security-medium");
-    case Package::Blocked :
+    case Package::StateBlocked :
         return KpkIcons::getIcon("dialog-cancel");
-    case Package::Available:
+    case Package::StateAvailable:
         return KpkIcons::getIcon("package-download");
-    case Package::Installed:
+    case Package::StateInstalled:
         return KpkIcons::getIcon("package-installed");
     default :
         return KpkIcons::getIcon("package");

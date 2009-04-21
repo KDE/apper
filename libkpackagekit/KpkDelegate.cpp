@@ -124,7 +124,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     QStyleOptionViewItem local_option_normal(option);
 
 //     local_option_title.font.setBold(true);
-    local_option_title.font.setPointSize(local_option_title.font.pointSize());
+    local_option_title.font.setPointSize(local_option_title.font.pointSize() + 1);
 
     QPixmap pixmap(option.rect.size());
     pixmap.fill(Qt::transparent);
@@ -139,7 +139,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     int textInner = 2 * UNIVERSAL_PADDING + MAIN_ICON_SIZE;
     const int itemHeight = calcItemHeight(option);
 
-    local_option_normal.font.setPointSize(local_option_normal.font.pointSize() - 2);
+    local_option_normal.font.setPointSize(local_option_normal.font.pointSize());
 
     p.setPen(foregroundColor);
     if (group) {

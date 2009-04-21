@@ -143,7 +143,7 @@ void KpkPackageDetails::description(PackageKit::Package *p)
 void KpkPackageDetails::getDetailsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status != Transaction::Success) {
+    if (status != Transaction::ExitSuccess) {
         m_gettingOrGotDescription = false;
     }
 }
@@ -179,7 +179,7 @@ void KpkPackageDetails::files(PackageKit::Package *package, const QStringList &f
 void KpkPackageDetails::getFilesFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status == Transaction::Success) {
+    if (status == Transaction::ExitSuccess) {
         if (filesPTE->document()->toPlainText().isEmpty()) {
             filesPTE->appendPlainText(i18n("No files were found."));
         }
@@ -211,7 +211,7 @@ void KpkPackageDetails::getDepends(PackageKit::Package *p)
 void KpkPackageDetails::getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status != Transaction::Success) {
+    if (status != Transaction::ExitSuccess) {
         m_gettingOrGotDepends = false;
     }
 }
@@ -239,7 +239,7 @@ void KpkPackageDetails::getRequires(PackageKit::Package *p)
 void KpkPackageDetails::getRequiresFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status != Transaction::Success) {
+    if (status != Transaction::ExitSuccess) {
         m_gettingOrGotRequires = false;
     }
 }

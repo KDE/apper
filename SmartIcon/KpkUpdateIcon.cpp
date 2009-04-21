@@ -36,7 +36,7 @@
 using namespace PackageKit;
 
 KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
-    : KpkAbstractSmartIcon(parent),
+    : KpkAbstractIsRunning(parent),
     m_updateNotify(0)
 {
     // TODO this needs better thinking, it's not fine
@@ -132,7 +132,7 @@ void KpkUpdateIcon::updateListed(PackageKit::Package *package)
 {
     // Blocked updates are not instalable updates so there is no
     // reason to show/count them
-    if (package->state() != Package::Blocked) {
+    if (package->state() != Package::StateBlocked) {
         m_updateList.append(package);
     }
 }
@@ -147,7 +147,7 @@ void KpkUpdateIcon::notifyUpdates()
         return;
     }
 
-    Package::State highState = Package::Installed;
+    Package::State highState = Package::StateInstalled;
     QHash<Package::State, QList<Package*> > packageGroups;
 
     foreach(Package *p, m_updateList) {
@@ -201,7 +201,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
     Q_UNUSED(runtime)
     if (m_updateList.size() > 0) {
         kDebug() << "Found " << m_updateList.size() << " updates";
-        Package::State highState = Package::Installed;
+        Package::State highState = Package::StateInstalled;
         //FIXME: This assumes that PackageKit shares our priority ranking.
         foreach(Package *p, m_updateList) {
             if (p->state() > highState) {
@@ -240,7 +240,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                 kDebug() << "Security";
                 QList<PackageKit::Package*> updateList;
                 foreach(PackageKit::Package *package, m_updateList) {
-                    if (package->state() == Package::Security) {
+                    if (package->state() == Package::StateSecurity) {
                         updateList.append(package);
                     }
                 }
@@ -277,7 +277,7 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
     decreaseRunning();
     KNotification *notify = new KNotification("UpdatesComplete");
 //     suppressSleep(false);
-    if (status == Transaction::Success) {
+    if (status == Transaction::ExitSuccess) {
         KIcon icon("task-complete");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(128,128)));
@@ -286,7 +286,7 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
         // check for updates to see if there are updates that
         // couldn't be automatically installed
         checkUpdates();
-    } else if (status==Transaction::Failed) {
+    } else if (status==Transaction::ExitFailed) {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(128,128)));

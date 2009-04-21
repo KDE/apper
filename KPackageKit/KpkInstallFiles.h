@@ -22,19 +22,18 @@
 #define KPKINSTALLFILES_H
 
 #include <KpkTransaction.h>
+#include <KpkAbstractIsRunning.h>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkInstallFiles : public QObject
+class KpkInstallFiles : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
     KpkInstallFiles(QObject *parent = 0);
     ~KpkInstallFiles();
-
-    bool canClose() { return !(m_running); };
 
 public slots:
     void installFiles(const KUrl::List &urls);
@@ -47,7 +46,7 @@ private slots:
 
 private:
     QHash <KpkTransaction *,QStringList> m_transactionFiles;
-    int m_running;
+/*    int m_running;*/
 };
 
 #endif

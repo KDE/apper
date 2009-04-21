@@ -40,7 +40,7 @@ signals:
     void appClose();
 
 private slots:
-    void installMimeTypeFinished(KpkTransaction::ExitStatus status);
+    void kTransactionFinished(KpkTransaction::ExitStatus status);
     void addPackage(PackageKit::Package *package);
 
 private:

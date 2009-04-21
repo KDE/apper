@@ -30,6 +30,8 @@
 #include <QMenu>
 #include <KRun>
 #include <QTimer>
+#include <QTreeView>
+#include <QStandardItemModel>
 #include <KNotification>
 
 Q_DECLARE_METATYPE(Transaction*)
@@ -37,7 +39,8 @@ Q_DECLARE_METATYPE(Transaction*)
 #include <KDebug>
 
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
- : KpkAbstractSmartIcon(parent)
+ : KpkAbstractIsRunning(parent),
+   m_refreshCacheAction(0)
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 
@@ -60,6 +63,25 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
 
     connect(m_client, SIGNAL(transactionListChanged(const QList<PackageKit::Transaction*> &)),
             this, SLOT(transactionListChanged(const QList<PackageKit::Transaction*> &)));
+
+    if (m_act.contains(Client::ActionRefreshCache)) {
+        m_refreshCacheAction = new QAction(this);
+        m_refreshCacheAction->setText(i18n("Refresh package list"));
+        m_refreshCacheAction->setIcon(KIcon("view-refresh"));
+        connect(m_refreshCacheAction, SIGNAL(triggered(bool)),
+            this, SLOT(refreshCache()));
+    }
+
+    m_messagesAction = new QAction(this);
+    m_messagesAction->setText(i18n("Show messages"));
+    m_messagesAction->setIcon(KIcon("view-pim-notes"));
+    connect(m_messagesAction, SIGNAL(triggered(bool)),
+            this, SLOT(showMessages()));
+
+    m_hideAction = new QAction(this);
+    m_hideAction->setText(i18n("Hide this icon"));
+    connect(m_hideAction, SIGNAL(triggered(bool)),
+            m_smartSTI, SLOT(hide()));
 }
 
 KpkTransactionTrayIcon::~KpkTransactionTrayIcon()
@@ -77,19 +99,24 @@ void KpkTransactionTrayIcon::checkTransactionList()
     transactionListChanged(m_client->getTransactions());
 }
 
+void KpkTransactionTrayIcon::refreshCache()
+{
+    increaseRunning();
+    // in this case refreshCache action must be clicked
+    if (Transaction *t = m_client->refreshCache(true)) {
+        createTransactionDialog(t);
+    } else {
+        KMessageBox::sorry(m_menu,
+                            i18n("You do not have the necessary privileges to perform this action."),
+                            i18n("Failed to refresh package lists"));
+    }
+    decreaseRunning();
+}
+
 void KpkTransactionTrayIcon::triggered(QAction *action)
 {
     // Check to see if we set a Transaction* in action
-    if (action->data().isNull()) {
-        // in this case refreshCache action must be clicked
-        if (Transaction *t = m_client->refreshCache(true)) {
-            createTransactionDialog(t);
-        } else {
-            KMessageBox::sorry(m_menu,
-                               i18n("You do not have the necessary privileges to perform this action."),
-                               i18n("Failed to refresh package lists"));
-        }
-    } else {
+    if (!action->data().isNull()) {
         // we need to find if the action clicked has already a dialog
         QList<Transaction *> values = m_transDialogs.keys();
         Transaction *trans = action->data().value<Transaction*>();
@@ -181,12 +208,12 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
 {
     if (tids.size()) {
         setCurrentTransaction(tids.first());
-        updateMenu(tids);
     } else {
-        emit close();
         m_menu->hide();
-        m_menu->clear();
-        QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
+        if (m_messages.isEmpty()) {
+            QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
+            emit close();
+        }
     }
 }
 
@@ -199,6 +226,8 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
             this, SLOT(currentStatusChanged(PackageKit::Transaction::Status)));
     connect(m_currentTransaction, SIGNAL(progressChanged(PackageKit::Transaction::ProgressInfo)),
             this, SLOT(currentProgressChanged(PackageKit::Transaction::ProgressInfo)));
+    connect(m_currentTransaction, SIGNAL(message(PackageKit::Client::MessageType, const QString &)),
+            this, SLOT(message(PackageKit::Client::MessageType, const QString &)));
     // TODO we don't want do display all transactions informatiom
     // There will certainly be more than one user so this will never work.
 //     connect(tids.first(), SIGNAL(errorCode( PackageKit::Client::ErrorType, const QString)),
@@ -211,13 +240,11 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
 void KpkTransactionTrayIcon::currentProgressChanged(PackageKit::Transaction::ProgressInfo info)
 {
     QString toolTip;
-
     if (info.percentage && info.percentage <= 100) {
         toolTip = i18n("%1% - %2", info.percentage, KpkStrings::status(m_currentTransaction->status()));
     } else {
         toolTip = i18n("%1", KpkStrings::status(m_currentTransaction->status()));
     }
-
     m_smartSTI->setToolTip(toolTip);
 }
 
@@ -234,6 +261,47 @@ void KpkTransactionTrayIcon::currentStatusChanged(PackageKit::Transaction::Statu
 
     m_smartSTI->setToolTip(toolTip);
     m_smartSTI->setIcon(KpkIcons::statusIcon(status));
+}
+
+void KpkTransactionTrayIcon::message(PackageKit::Client::MessageType type, const QString &message)
+{
+    m_messages.append(qMakePair(type, message));
+}
+
+void KpkTransactionTrayIcon::showMessages()
+{
+    if (!m_messages.isEmpty()) {
+        increaseRunning();
+        KDialog *dialog = new KDialog;
+        dialog->setCaption(i18n("Package Manager Messages"));
+        dialog->setButtons(KDialog::Close);
+
+        QTreeView *tree = new QTreeView(dialog);
+        tree->setRootIsDecorated(false);
+        tree->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        tree->setTextElideMode(Qt::ElideNone);
+        tree->setAlternatingRowColors(true);
+        dialog->setMainWidget(tree);
+
+        QStandardItemModel *model = new QStandardItemModel(this);
+        tree->setModel(model);
+
+        model->setHorizontalHeaderLabels(QStringList() << i18n("Message") << i18n("Details"));
+        while (!m_messages.isEmpty()) {
+            QPair<Client::MessageType, QString> pair = m_messages.takeFirst();
+            model->appendRow(QList<QStandardItem *>()
+                             << new QStandardItem(KpkStrings::message(pair.first))
+                             << new QStandardItem(pair.second)
+                            );
+        }
+        tree->resizeColumnToContents(0);
+        tree->resizeColumnToContents(1);
+        connect(dialog, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+        dialog->show();
+        // We call this so that the icon can hide if there
+        // are no more messages and transactions running
+        transactionListChanged(m_client->getTransactions());
+    }
 }
 
 void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &tids)
@@ -259,11 +327,20 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
         m_menu->addAction(transactionAction);
     }
 
-    QAction *refreshCacheAction = new QAction(this);
-    if (refreshCache && m_act.contains(Client::ActionRefreshCache)) {
+    if (refreshCache && m_refreshCacheAction) {
         m_menu->addSeparator();
-        refreshCacheAction->setText(i18n("Refresh Packages List"));
-        m_menu->addAction(refreshCacheAction);
+        m_menu->addAction(m_refreshCacheAction);
+        if (m_messages.size()) {
+            m_menu->addAction(m_messagesAction);
+        }
+        m_menu->addAction(m_hideAction);
+    } else if (m_messages.size()) {
+        m_menu->addSeparator();
+        m_menu->addAction(m_messagesAction);
+        m_menu->addAction(m_hideAction);
+    } else {
+        m_menu->addSeparator();
+        m_menu->addAction(m_hideAction);
     }
 }
 
@@ -271,12 +348,11 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason != QSystemTrayIcon::Context) {
         QList<PackageKit::Transaction*> tids(m_client->getTransactions());
-        if (tids.size()) {
+        if (tids.size() || !m_messages.isEmpty()) {
             updateMenu(tids);
             m_menu->exec(QCursor::pos());
         } else {
             m_menu->hide();
-            m_menu->clear();
             // to avoid warning that the object was deleted in it's event handler
             QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
         }
@@ -285,7 +361,9 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 
 bool KpkTransactionTrayIcon::isRunning()
 {
-    return KpkAbstractSmartIcon::isRunning() || m_client->getTransactions().size();
+    return KpkAbstractIsRunning::isRunning() ||
+           m_client->getTransactions().size() ||
+           m_messages.size();
 }
 
 #include "KpkTransactionTrayIcon.moc"

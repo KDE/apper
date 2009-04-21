@@ -18,29 +18,39 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_ABSTRACT_SMART_ICON_H
-#define KPK_ABSTRACT_SMART_ICON_H
+#include "KpkAbstractIsRunning.h"
 
-#include <QObject>
+#include <KDebug>
 
-class KpkAbstractSmartIcon : public QObject
+KpkAbstractIsRunning::KpkAbstractIsRunning(QObject *parent)
+ : QObject(parent),
+   m_running(0)
 {
-Q_OBJECT
-public:
-    KpkAbstractSmartIcon(QObject *parent = 0);
-    ~KpkAbstractSmartIcon();
+}
 
-    bool isRunning() const;
+KpkAbstractIsRunning::~KpkAbstractIsRunning()
+{
+}
 
-signals:
-    void close();
+void KpkAbstractIsRunning::increaseRunning()
+{
+    m_running++;
+    kDebug();
+}
 
-protected slots:
-    void increaseRunning();
-    void decreaseRunning();
+void KpkAbstractIsRunning::decreaseRunning()
+{
+    m_running--;
+    kDebug();
+    if (!isRunning()) {
+        kDebug() << "Is not Running anymore";
+        emit close();
+    }
+}
 
-private:
-    int m_running;
-};
+bool KpkAbstractIsRunning::isRunning() const
+{
+    return m_running > 0;
+}
 
-#endif
+#include "KpkAbstractIsRunning.moc"

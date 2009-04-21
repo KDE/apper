@@ -27,7 +27,7 @@
 #include <KDebug>
 
 KpkDistroUpgrade::KpkDistroUpgrade(QObject *parent)
- : KpkAbstractSmartIcon(parent),
+ : KpkAbstractIsRunning(parent),
    m_distroUpgradeProcess(0)
 {
 }
@@ -49,7 +49,7 @@ void KpkDistroUpgrade::checkDistroUpgrades()
     }
 }
 
-void KpkDistroUpgrade::distroUpgrade(PackageKit::Client::UpgradeType type, const QString &name, const QString &description)
+void KpkDistroUpgrade::distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     kDebug() << "Distro upgrade found!" << name << description;

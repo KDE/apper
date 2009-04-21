@@ -91,7 +91,7 @@ void KpkTransactionBar::nextTransaction()
     progressChanged(trans->progress());
 
     if (trans->status() == Transaction::UnknownStatus) {
-       statusChanged(Transaction::Setup);
+       statusChanged(Transaction::StatusSetup);
     } else {
        statusChanged(trans->status());
     }
@@ -123,7 +123,7 @@ void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
     m_progress->setValue(100);
     QPalette colors(palette());
     switch (status) {
-        case Transaction::Success:
+        case Transaction::ExitSuccess:
             KColorScheme::adjustBackground(colors, KColorScheme::PositiveBackground, QPalette::Window, KColorScheme::Window);
             m_label->setText(i18n("Finished in %1.", KGlobal::locale()->formatDuration(runtime)));
             break;

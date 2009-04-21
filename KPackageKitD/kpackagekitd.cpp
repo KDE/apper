@@ -119,7 +119,7 @@ void KPackageKitD::read()
 
 void KPackageKitD::finished(PackageKit::Transaction::ExitStatus status, uint)
 {
-    if (status == Transaction::Success) {
+    if (status == Transaction::ExitSuccess) {
         QProcess::execute("kpackagekit-smart-icon", QStringList() << "--update");
     } else {
         // try again in 5 minutes

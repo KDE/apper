@@ -245,7 +245,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                             return Qt::PartiallyChecked;
                     }
                     case InstalledRole:
-                        return group == Package::Installed;
+                        return group == Package::StateInstalled;
                     default:
                         return QVariant();
                 }
@@ -281,7 +281,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         return p->name() + " - " + p->version() + (p->arch().isNull() ? NULL : " (" + p->arch() + ')');
                     case IconRole:
                         if (containsChecked(p)) {
-                            return (p->state() == Package::Installed) ?
+                            return (p->state() == Package::StateInstalled) ?
                                 KpkIcons::getIcon("package-removed")
                                 : KpkIcons::getIcon("package-download");
                         }
@@ -289,7 +289,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                     case SummaryRole:
                         return p->summary();
                     case InstalledRole:
-                        return p->state() == Package::Installed;
+                        return p->state() == Package::StateInstalled;
                     case IdRole:
                         return p->id();
                     case GroupRole:
@@ -300,7 +300,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             case 1: //Checkbox column
                 switch(role) {
                     case InstalledRole:
-                        return p->state() == Package::Installed;
+                        return p->state() == Package::StateInstalled;
                     default:
                         return QVariant();
                 }
@@ -415,12 +415,12 @@ Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 {
     if (index.column() == 1) {
         if (package(index)) {
-            if (package(index)->state() == Package::Blocked) {
+            if (package(index)->state() == Package::StateBlocked) {
                 return QAbstractItemModel::flags(index);
             } else {
                 return Qt::ItemIsUserCheckable | QAbstractItemModel::flags(index);
             }
-        } else if (m_groups.keys().at(index.row()) == Package::Blocked) {
+        } else if (m_groups.keys().at(index.row()) == Package::StateBlocked) {
             return QAbstractItemModel::flags(index);
         } else {
             return Qt::ItemIsUserCheckable | Qt::ItemIsTristate | QAbstractItemModel::flags(index);
@@ -450,7 +450,7 @@ Package* KpkPackageModel::package(const QModelIndex &index) const
 
 void KpkPackageModel::addSelectedPackage(PackageKit::Package *package)
 {
-    if (package->state() != Package::Blocked) {
+    if (package->state() != Package::StateBlocked) {
         m_checkedPackages << package;
     }
     addPackage(package);
@@ -527,7 +527,7 @@ void KpkPackageModel::checkAll()
 {
     m_checkedPackages.clear();
     foreach(Package *package, m_packages) {
-        if (package->state() != Package::Blocked) {
+        if (package->state() != Package::StateBlocked) {
             m_checkedPackages << package;
         }
     }
@@ -557,7 +557,7 @@ QList<Package*> KpkPackageModel::packagesWithState(Package::State state) const
 bool KpkPackageModel::allSelected() const
 {
     foreach(Package *p, m_packages) {
-        if (p->state() != Package::Blocked && !containsChecked(p)) {
+        if (p->state() != Package::StateBlocked && !containsChecked(p)) {
             return false;
         }
     }

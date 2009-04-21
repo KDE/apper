@@ -54,7 +54,7 @@ private slots:
     void on_refreshPB_clicked();
     void on_historyPB_clicked();
 
-    void distroUpgrade(PackageKit::Client::UpgradeType type, const QString &name, const QString &description);
+    void distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description);
 
     void displayUpdates(KpkTransaction::ExitStatus status);
 

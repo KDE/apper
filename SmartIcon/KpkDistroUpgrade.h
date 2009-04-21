@@ -21,13 +21,13 @@
 #ifndef KPK_DISTRO_UPGRADE_H
 #define KPK_DISTRO_UPGRADE_H
 
-#include "KpkAbstractSmartIcon.h"
+#include <KpkAbstractIsRunning.h>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkDistroUpgrade : public KpkAbstractSmartIcon
+class KpkDistroUpgrade : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
@@ -37,7 +37,7 @@ public:
     void checkDistroUpgrades();
 
 private slots:
-    void distroUpgrade(PackageKit::Client::UpgradeType type, const QString &name, const QString &description);
+    void distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description);
     void handleDistroUpgradeAction(uint action);
     void distroUpgradeError(QProcess::ProcessError error);
     void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);

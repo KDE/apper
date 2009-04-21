@@ -95,17 +95,17 @@ QString KpkSimpleTransactionModel::getDetailsLocalized(const QString &data) cons
     QStringList ret;
 
     QString text;
-    text = getTypeLine(lines, Transaction::Install);
+    text = getTypeLine(lines, Transaction::StatusInstall);
     if (!text.isNull()) {
         ret << text;
     }
 
-    text = getTypeLine(lines, Transaction::Remove);
+    text = getTypeLine(lines, Transaction::StatusRemove);
     if (!text.isNull()) {
         ret << text;
     }
 
-    text = getTypeLine(lines, Transaction::Update);
+    text = getTypeLine(lines, Transaction::StatusUpdate);
     if (!text.isNull()) {
         ret << text;
     }
@@ -120,17 +120,17 @@ QString KpkSimpleTransactionModel::getTypeLine(const QStringList &lines, Transac
         QStringList sections = line.split('\t');
         if (sections.size() > 1) {
             switch (status) {
-                case Transaction::Install:
+                case Transaction::StatusInstall:
                     if (sections.at(0) != "installing") {
                         continue;
                     }
                     break;
-                case Transaction::Remove:
+                case Transaction::StatusRemove:
                     if (sections.at(0) != "removing") {
                         continue;
                     }
                     break;
-                case Transaction::Update:
+                case Transaction::StatusUpdate:
                     if (sections.at(0) != "updating") {
                         continue;
                     }

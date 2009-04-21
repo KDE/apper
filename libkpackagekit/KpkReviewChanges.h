@@ -39,7 +39,14 @@ class KDE_EXPORT KpkReviewChanges : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KpkReviewChanges(const QList<Package*> &packages, QWidget *parent = 0);
+    enum BehaviorFlag {
+        None = 1,
+        AutoClose = 2,
+        AutoStart = 4
+    };
+    Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
+
+    explicit KpkReviewChanges(const QList<Package*> &packages, Behaviors flags = 0, QWidget *parent = 0);
     ~KpkReviewChanges();
 
     void setTitle(const QString &title);

@@ -64,7 +64,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
 //That way, by default, users only see stable ones.
-void KpkUpdate::distroUpgrade(PackageKit::Client::UpgradeType type, const QString &name, const QString &description)
+void KpkUpdate::distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     if (verticalLayout->count()) {
@@ -172,8 +172,8 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
         // Check for distribution Upgrades
         Transaction* t = m_client->getDistroUpgrades();
         transactionBar->addTransaction(t);
-        connect(t, SIGNAL(distroUpgrade(PackageKit::Client::UpgradeType, const QString &, const QString &)),
-                this, SLOT(distroUpgrade(PackageKit::Client::UpgradeType, const QString &, const QString &)));
+        connect(t, SIGNAL(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)),
+                this, SLOT(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)));
     }
 }
 

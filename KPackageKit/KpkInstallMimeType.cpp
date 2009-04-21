@@ -55,7 +55,7 @@ void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
                       parentTitle,
                       mimeTypes.size());
     }
-    QString msg = "<b>" + title + "</b><br />" + message;
+    QString msg = "<h3>" + title + "</h3>" + message;
     KGuiItem searchBt = KStandardGuiItem::yes();
     searchBt.setText(i18nc("Search for a new mime type" ,"Search"));
     searchBt.setIcon(KIcon::KIcon("edit-find"));
@@ -70,7 +70,7 @@ void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
                                                               Client::FilterNotInstalled)) {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                    this, SLOT(installMimeTypeFinished(KpkTransaction::ExitStatus)));
+                    this, SLOT(kTransactionFinished(KpkTransaction::ExitStatus)));
             connect(t, SIGNAL(package(PackageKit::Package *)),
                     this, SLOT(addPackage(PackageKit::Package *)));
             trans->show();
@@ -85,7 +85,7 @@ void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
     emit appClose();
 }
 
-void KpkInstallMimeType::installMimeTypeFinished(KpkTransaction::ExitStatus status)
+void KpkInstallMimeType::kTransactionFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
 //     KpkTransaction *transaction = (KpkTransaction *) sender();

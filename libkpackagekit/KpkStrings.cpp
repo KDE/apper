@@ -29,67 +29,67 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
     switch (status) {
     case Transaction::UnknownStatus :
         return i18nc("The transaction state", "Unknown state");
-    case Transaction::Setup :
+    case Transaction::StatusSetup :
         return i18nc("The transaction state", "Waiting for service to start");
-    case Transaction::Wait :
+    case Transaction::StatusWait :
         return i18nc("The transaction state", "Waiting for other tasks");
-    case Transaction::Running :
+    case Transaction::StatusRunning :
         return i18nc("The transaction state", "Running task");
-    case Transaction::Query :
+    case Transaction::StatusQuery :
         return i18nc("The transaction state", "Querying");
-    case Transaction::Info :
+    case Transaction::StatusInfo :
         return i18nc("The transaction state", "Getting information");
-    case Transaction::Remove :
+    case Transaction::StatusRemove :
         return i18nc("The transaction state", "Removing packages");
-    case Transaction::Download :
+    case Transaction::StatusDownload :
         return i18nc("The transaction state", "Downloading packages");
-    case Transaction::Install :
+    case Transaction::StatusInstall :
         return i18nc("The transaction state", "Installing packages");
-    case Transaction::RefreshCache :
+    case Transaction::StatusRefreshCache :
         return i18nc("The transaction state", "Refreshing software list");
-    case Transaction::Update :
+    case Transaction::StatusUpdate :
         return i18nc("The transaction state", "Updating packages");
-    case Transaction::Cleanup :
+    case Transaction::StatusCleanup :
         return i18nc("The transaction state", "Cleaning up packages");
-    case Transaction::Obsolete :
+    case Transaction::StatusObsolete :
         return i18nc("The transaction state", "Obsoleting packages");
-    case Transaction::DepResolve :
+    case Transaction::StatusDepResolve :
         return i18nc("The transaction state", "Resolving dependencies");
-    case Transaction::SigCheck :
+    case Transaction::StatusSigCheck :
         return i18nc("The transaction state", "Checking signatures");
-    case Transaction::Rollback :
+    case Transaction::StatusRollback :
         return i18nc("The transaction state", "Rolling back");
-    case Transaction::TestCommit :
+    case Transaction::StatusTestCommit :
         return i18nc("The transaction state", "Testing changes");
-    case Transaction::Commit :
+    case Transaction::StatusCommit :
         return i18nc("The transaction state", "Committing changes");
-    case Transaction::Request :
+    case Transaction::StatusRequest :
         return i18nc("The transaction state", "Requesting data");
-    case Transaction::Finished :
+    case Transaction::StatusFinished :
         return i18nc("The transaction state", "Finished");
-    case Transaction::Cancel :
+    case Transaction::StatusCancel :
         return i18nc("The transaction state", "Cancelling");
-    case Transaction::DownloadRepository :
+    case Transaction::StatusDownloadRepository :
         return i18nc("The transaction state", "Downloading repository information");
-    case Transaction::DownloadPackagelist :
+    case Transaction::StatusDownloadPackagelist :
         return i18nc("The transaction state", "Downloading list of packages");
-    case Transaction::DownloadFilelist :
+    case Transaction::StatusDownloadFilelist :
         return i18nc("The transaction state", "Downloading file lists");
-    case Transaction::DownloadChangelog :
+    case Transaction::StatusDownloadChangelog :
         return i18nc("The transaction state", "Downloading lists of changes");
-    case Transaction::DownloadGroup :
+    case Transaction::StatusDownloadGroup :
         return i18nc("The transaction state", "Downloading groups");
-    case Transaction::DownloadUpdateinfo :
+    case Transaction::StatusDownloadUpdateinfo :
         return i18nc("The transaction state", "Downloading update information");
-    case Transaction::Repackaging :
+    case Transaction::StatusRepackaging :
         return i18nc("The transaction state", "Repackaging files");
-    case Transaction::LoadingCache :
+    case Transaction::StatusLoadingCache :
         return i18nc("The transaction state", "Loading cache");
-    case Transaction::ScanApplications :
+    case Transaction::StatusScanApplications :
         return i18nc("The transaction state", "Scanning installed applications");
-    case Transaction::GeneratePackageList :
+    case Transaction::StatusGeneratePackageList :
         return i18nc("The transaction state", "Generating package lists");
-    case Transaction::WaitingForLock :
+    case Transaction::StatusWaitingForLock :
         return i18nc("The transaction state", "Waiting for package manager lock");
     }
     kDebug() << "status unrecognised: " << status;
@@ -99,17 +99,17 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
 QString KpkStrings::statusPast(PackageKit::Transaction::Status status)
 {
     switch (status) {
-    case Transaction::Download:
+    case Transaction::StatusDownload:
         return i18nc("The action of the package, in past tense", "Downloaded");
-    case Transaction::Update:
+    case Transaction::StatusUpdate:
         return i18nc("The action of the package, in past tense", "Updated");
-    case Transaction::Install:
+    case Transaction::StatusInstall:
         return i18nc("The action of the package, in past tense", "Installed");
-    case Transaction::Remove:
+    case Transaction::StatusRemove:
         return i18nc("The action of the package, in past tense", "Removed");
-    case Transaction::Cleanup:
+    case Transaction::StatusCleanup:
         return i18nc("The action of the package, in past tense", "Cleaned Up");
-    case Transaction::Obsolete:
+    case Transaction::StatusObsolete:
         return i18nc("The action of the package, in past tense", "Obsoleted");
     default : // In this case we don't want to map all enums
         kDebug() << "status unrecognised: " << status;
@@ -260,99 +260,99 @@ QString KpkStrings::actionPast(Client::Action action)
 QString KpkStrings::error(PackageKit::Client::ErrorType error)
 {
     switch (error) {
-    case Client::NoNetwork :
+    case Client::ErrorNoNetwork :
         return i18n("No network connection available");
-    case Client::NoCache :
+    case Client::ErrorNoCache :
         return i18n("No package cache is available");
-    case Client::Oom :
+    case Client::ErrorOom :
         return i18n("Out of memory");
-    case Client::CreateThreadFailed :
+    case Client::ErrorCreateThreadFailed :
         return i18n("Failed to create a thread");
-    case Client::NotSupported :
+    case Client::ErrorNotSupported :
         return i18n("Not supported by this backend");
-    case Client::InternalError :
+    case Client::ErrorInternalError :
         return i18n("An internal system error has occurred");
-    case Client::GpgFailure :
+    case Client::ErrorGpgFailure :
         return i18n("A security trust relationship is not present");
-    case Client::PackageNotInstalled :
+    case Client::ErrorPackageNotInstalled :
         return i18n("The package is not installed");
-    case Client::PackageNotFound :
+    case Client::ErrorPackageNotFound :
         return i18n("The package was not found");
-    case Client::PackageAlreadyInstalled :
+    case Client::ErrorPackageAlreadyInstalled :
         return i18n("The package is already installed");
-    case Client::PackageDownloadFailed :
+    case Client::ErrorPackageDownloadFailed :
         return i18n("The package download failed");
-    case Client::GroupNotFound :
+    case Client::ErrorGroupNotFound :
         return i18n("The group was not found");
-    case Client::GroupListInvalid :
+    case Client::ErrorGroupListInvalid :
         return i18n("The group list was invalid");
-    case Client::DepResolutionFailed :
+    case Client::ErrorDepResolutionFailed :
         return i18n("Dependency resolution failed");
-    case Client::FilterInvalid :
+    case Client::ErrorFilterInvalid :
         return i18n("Search filter was invalid");
-    case Client::PackageIdInvalid :
+    case Client::ErrorPackageIdInvalid :
         return i18n("The package identifier was not well formed");
-    case Client::TransactionError :
+    case Client::ErrorTransactionError :
         return i18n("Transaction error");
-    case Client::RepoNotFound :
+    case Client::ErrorRepoNotFound :
         return i18n("Repository name was not found");
-    case Client::CannotRemoveSystemPackage :
+    case Client::ErrorCannotRemoveSystemPackage :
         return i18n("Could not remove a protected system package");
-    case Client::TransactionCancelled :
+    case Client::ErrorTransactionCancelled :
         return i18n("The task was canceled");
-    case Client::ProcessKill :
+    case Client::ErrorProcessKill :
         return i18n("The task was forcibly canceled");
-    case Client::FailedConfigParsing :
+    case Client::ErrorFailedConfigParsing :
         return i18n("Reading the config file failed");
-    case Client::CannotCancel :
+    case Client::ErrorCannotCancel :
         return i18n("The task cannot be cancelled");
-    case Client::CannotInstallSourcePackage :
+    case Client::ErrorCannotInstallSourcePackage :
         return i18n("Source packages cannot be installed");
-    case Client::NoLicenseAgreement :
+    case Client::ErrorNoLicenseAgreement :
         return i18n("The license agreement failed");
-    case Client::FileConflicts :
+    case Client::ErrorFileConflicts :
         return i18n("Local file conflict between packages");
-    case Client::PackageConflicts :
+    case Client::ErrorPackageConflicts :
         return i18n("Packages are not compatible");
-    case Client::RepoNotAvailable :
+    case Client::ErrorRepoNotAvailable :
         return i18n("Problem connecting to a software source");
-    case Client::FailedInitialization :
+    case Client::ErrorFailedInitialization :
         return i18n("Failed to initialize");
-    case Client::FailedFinalise :
+    case Client::ErrorFailedFinalise :
         return i18n("Failed to finalize");
-    case Client::CannotGetLock :
+    case Client::ErrorCannotGetLock :
         return i18n("Cannot get lock");
-    case Client::NoPackagesToUpdate :
+    case Client::ErrorNoPackagesToUpdate :
         return i18n("No packages to update");
-    case Client::CannotWriteRepoConfig :
+    case Client::ErrorCannotWriteRepoConfig :
         return i18n("Cannot write repository configuration");
-    case Client::LocalInstallFailed :
+    case Client::ErrorLocalInstallFailed :
         return i18n("Local install failed");
-    case Client::BadGpgSignature :
+    case Client::ErrorBadGpgSignature :
         return i18n("Bad GPG signature");
-    case Client::MissingGpgSignature :
+    case Client::ErrorMissingGpgSignature :
         return i18n("Missing GPG signature");
-    case Client::RepoConfigurationError :
+    case Client::ErrorRepoConfigurationError :
         return i18n("Repository configuration invalid");
-    case Client::InvalidPackageFile :
+    case Client::ErrorInvalidPackageFile :
         return i18n("Invalid package file");
-    case Client::PackageInstallBlocked :
+    case Client::ErrorPackageInstallBlocked :
         return i18n("Package install blocked");
-    case Client::PackageCorrupt :
+    case Client::ErrorPackageCorrupt :
         return i18n("Package is corrupt");
-    case Client::AllPackagesAlreadyInstalled :
+    case Client::ErrorAllPackagesAlreadyInstalled :
         return i18n("All packages are already installed");
-    case Client::FileNotFound :
+    case Client::ErrorFileNotFound :
         return i18n("The specified file could not be found");
-    case Client::NoMoreMirrorsToTry :
+    case Client::ErrorNoMoreMirrorsToTry :
         return i18n("No more mirrors are available");
-    case Client::NoDistroUpgradeData :
+    case Client::ErrorNoDistroUpgradeData :
         return i18n("No distribution upgrade data is available");
-    case Client::IncompatibleArchitecture :
+    case Client::ErrorIncompatibleArchitecture :
         return i18n("Package is incompatible with this system");
-    case Client::NoSpaceOnDevice :
+    case Client::ErrorNoSpaceOnDevice :
         return i18n("No space is left on the disk");
-    case Client::MediaChangeRequired :
+    case Client::ErrorMediaChangeRequired :
         return i18n("A media change is required");
     case Client::UnknownErrorType :
         return i18n("Unknown error");
@@ -364,130 +364,130 @@ QString KpkStrings::error(PackageKit::Client::ErrorType error)
 QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
 {
     switch (error) {
-    case Client::NoNetwork :
+    case Client::ErrorNoNetwork :
         return i18n("There is no network connection available.\n"
                     "Please check your connection settings and try again");
-    case Client::NoCache :
+    case Client::ErrorNoCache :
         return i18n("The package list needs to be rebuilt.\n"
                     "This should have been done by the backend automatically.");
-    case Client::Oom :
+    case Client::ErrorOom :
         return i18n("The service that is responsible for handling user requests is out of memory.\n"
                     "Please close some programs or restart your computer.");
-    case Client::CreateThreadFailed :
+    case Client::ErrorCreateThreadFailed :
         return i18n("A thread could not be created to service the user request.");
-    case Client::NotSupported :
+    case Client::ErrorNotSupported :
         return i18n("The action is not supported by this backend.\n"
                     "Please report a bug as this should not have happened.");
-    case Client::InternalError :
+    case Client::ErrorInternalError :
         return i18n("A problem that we were not expecting has occurred.\n"
                     "Please report this bug with the error description.");
-    case Client::GpgFailure :
+    case Client::ErrorGpgFailure :
         return i18n("A security trust relationship could not be made with the software source.\n"
                     "Please check your software signature settings.");
-    case Client::PackageNotInstalled :
+    case Client::ErrorPackageNotInstalled :
         return i18n("The package that is trying to be removed or updated is not already installed.");
-    case Client::PackageNotFound :
+    case Client::ErrorPackageNotFound :
         return i18n("The package that is being modified was not found on your system or in any software source.");
-    case Client::PackageAlreadyInstalled :
+    case Client::ErrorPackageAlreadyInstalled :
         return i18n("The package that is trying to be installed is already installed.");
-    case Client::PackageDownloadFailed :
+    case Client::ErrorPackageDownloadFailed :
         return i18n("The package download failed.\n"
                     "Please check your network connectivity.");
-    case Client::GroupNotFound :
+    case Client::ErrorGroupNotFound :
         return i18n("The group type was not found.\n"
                     "Please check your group list and try again.");
-    case Client::GroupListInvalid :
+    case Client::ErrorGroupListInvalid :
         return i18n("The group list could not be loaded.\n"
                     "Refreshing your cache may help, although this is normally a software "
                     "source error.");
-    case Client::DepResolutionFailed :
+    case Client::ErrorDepResolutionFailed :
         return i18n("A package dependency could not be found.\n"
                     "More information is available in the detailed report.");
-    case Client::FilterInvalid :
+    case Client::ErrorFilterInvalid :
         return i18n("The search filter was not correctly formed.");
-    case Client::PackageIdInvalid :
+    case Client::ErrorPackageIdInvalid :
         return i18n("The package identifier was not well formed when sent to the system daemon.\n"
                     "This normally indicates an internal bug and should be reported.");
-    case Client::TransactionError :
+    case Client::ErrorTransactionError :
         return i18n("An error occurred while running the transaction.\n"
                     "More information is available in the detailed report.");
-    case Client::RepoNotFound :
+    case Client::ErrorRepoNotFound :
         return i18n("The remote software source name was not found.\n"
                     "You may need to enable an item in Software Sources.");
-    case Client::CannotRemoveSystemPackage :
+    case Client::ErrorCannotRemoveSystemPackage :
         return i18n("Removing a protected system package is not allowed.");
-    case Client::TransactionCancelled :
+    case Client::ErrorTransactionCancelled :
         return i18n("The task was canceled successfully and no packages were changed.");
-    case Client::ProcessKill :
+    case Client::ErrorProcessKill :
         return i18n("The task was canceled successfully and no packages were changed.\n"
                     "The backend did not exit cleanly.");
-    case Client::FailedConfigParsing :
+    case Client::ErrorFailedConfigParsing :
         return i18n("The native package configuration file could not be opened.\n"
                     "Please make sure your system's configuration is valid.");
-    case Client::CannotCancel :
+    case Client::ErrorCannotCancel :
         return i18n("The task is not safe to be cancelled at this time.");
-    case Client::CannotInstallSourcePackage :
+    case Client::ErrorCannotInstallSourcePackage :
         return i18n("Source packages are not normally installed this way.\n"
                     "Check the extension of the file you are trying to install.");
-    case Client::NoLicenseAgreement :
+    case Client::ErrorNoLicenseAgreement :
         return i18n("The license agreement was not agreed to.\n"
                     "To use this software you have to accept the license.");
-    case Client::FileConflicts :
+    case Client::ErrorFileConflicts :
         return i18n("Two packages provide the same file.\n"
                     "This is usually due to mixing packages for different software sources.");
-    case Client::PackageConflicts :
+    case Client::ErrorPackageConflicts :
         return i18n("Multiple packages exist that are not compatible with each other.\n"
                     "This is usually due to mixing packages from different software sources.");
-    case Client::RepoNotAvailable :
+    case Client::ErrorRepoNotAvailable :
         return i18n("There was a (possibly temporary) problem connecting to a software source.\n"
                     "Please check the detailed error for further details.");
-    case Client::FailedInitialization :
+    case Client::ErrorFailedInitialization :
         return i18n("Failed to initialize packaging backend.\n"
                     "This may occur if other packaging tools are being used simultaneously.");
-    case Client::FailedFinalise :
+    case Client::ErrorFailedFinalise :
         return i18n("Failed to close down the backend instance.\n"
                     "This error can normally be ignored.");
-    case Client::CannotGetLock :
+    case Client::ErrorCannotGetLock :
         return i18n("Cannot get the exclusive lock on the packaging backend.\n"
                     "Please close any other legacy packaging tools that may be open.");
-    case Client::NoPackagesToUpdate :
+    case Client::ErrorNoPackagesToUpdate :
         return i18n("None of the selected packages could be updated.");
-    case Client::CannotWriteRepoConfig :
+    case Client::ErrorCannotWriteRepoConfig :
         return i18n("The repository configuration could not be modified.");
-    case Client::LocalInstallFailed :
+    case Client::ErrorLocalInstallFailed :
         return i18n("Installing the local file failed.\n"
                     "More information is available in the detailed report.");
-    case Client::BadGpgSignature :
+    case Client::ErrorBadGpgSignature :
         return i18n("The package signature could not be verified.");
-    case Client::MissingGpgSignature :
+    case Client::ErrorMissingGpgSignature :
         return i18n("The package signature was missing and this package is untrusted.\n"
                     "This package was not signed with a GPG key when created.");
-    case Client::RepoConfigurationError :
+    case Client::ErrorRepoConfigurationError :
         return i18n("Repository configuration was invalid and could not be read.");
-    case Client::InvalidPackageFile :
+    case Client::ErrorInvalidPackageFile :
         return i18n("The package you are attempting to install is not valid.\n"
                     "The package file could be corrupt, or not a proper package.");
-    case Client::PackageInstallBlocked :
+    case Client::ErrorPackageInstallBlocked :
         return i18n("Installation of this package was prevented by your packaging system's configuration.");
-    case Client::PackageCorrupt :
+    case Client::ErrorPackageCorrupt :
         return i18n("The package that was downloaded is corrupt and needs to be downloaded again.");
-    case Client::AllPackagesAlreadyInstalled :
+    case Client::ErrorAllPackagesAlreadyInstalled :
         return i18n("All of the packages selected for install are already installed on the system.");
-    case Client::FileNotFound :
+    case Client::ErrorFileNotFound :
         return i18n("The specified file could not be found on the system.\n"
                     "Check that the file still exists and has not been deleted.");
-    case Client::NoMoreMirrorsToTry :
+    case Client::ErrorNoMoreMirrorsToTry :
         return i18n("Required data could not be found on any of the configured software sources.\n"
                     "There were no more download mirrors that could be tried.");
-    case Client::NoDistroUpgradeData :
+    case Client::ErrorNoDistroUpgradeData :
         return i18n("Required upgrade data could not be found in any of the configured software sources.\n"
                     "The list of distribution upgrades will be unavailable.");
-    case Client::IncompatibleArchitecture :
+    case Client::ErrorIncompatibleArchitecture :
         return i18n("The package that is trying to be installed is incompatible with this system.");
-    case Client::NoSpaceOnDevice :
+    case Client::ErrorNoSpaceOnDevice :
         return i18n("There is insufficient space on the device.\n"
                     "Free some space on the system disk to perform this operation.");
-    case Client::MediaChangeRequired :
+    case Client::ErrorMediaChangeRequired :
         return i18n("Additional media is required to complete the transaction.");
     case Client::UnknownErrorType :
         return i18n("Unknown error, please report a bug.\n"
@@ -500,73 +500,73 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
 QString KpkStrings::groups(Client::Group group)
 {
     switch (group) {
-    case Client::Accessibility :
+    case Client::GroupAccessibility :
         return i18nc("The group type", "Accessibility");
-    case Client::Accessories :
+    case Client::GroupAccessories :
         return i18nc("The group type", "Accessories");
-    case Client::Education :
+    case Client::GroupEducation :
         return i18nc("The group type", "Education");
-    case Client::Games :
+    case Client::GroupGames :
         return i18nc("The group type", "Games");
-    case Client::Graphics :
+    case Client::GroupGraphics :
         return i18nc("The group type", "Graphics");
-    case Client::Internet :
+    case Client::GroupInternet :
         return i18nc("The group type", "Internet");
-    case Client::Office :
+    case Client::GroupOffice :
         return i18nc("The group type", "Office");
-    case Client::Other :
+    case Client::GroupOther :
         return i18nc("The group type", "Other");
-    case Client::Programming :
+    case Client::GroupProgramming :
         return i18nc("The group type", "Development");
-    case Client::Multimedia :
+    case Client::GroupMultimedia :
         return i18nc("The group type", "Multimedia");
-    case Client::System :
+    case Client::GroupSystem :
         return i18nc("The group type", "System");
-    case Client::DesktopGnome :
+    case Client::GroupDesktopGnome :
         return i18nc("The group type", "GNOME desktop");
-    case Client::DesktopKde :
+    case Client::GroupDesktopKde :
         return i18nc("The group type", "KDE desktop");
-    case Client::DesktopXfce :
+    case Client::GroupDesktopXfce :
         return i18nc("The group type", "XFCE desktop");
-    case Client::DesktopOther :
+    case Client::GroupDesktopOther :
         return i18nc("The group type", "Other desktops");
-    case Client::Publishing :
+    case Client::GroupPublishing :
         return i18nc("The group type", "Publishing");
-    case Client::Servers :
+    case Client::GroupServers :
         return i18nc("The group type", "Servers");
-    case Client::Fonts :
+    case Client::GroupFonts :
         return i18nc("The group type", "Fonts");
-    case Client::AdminTools :
+    case Client::GroupAdminTools :
         return i18nc("The group type", "Admin tools");
-    case Client::Legacy :
+    case Client::GroupLegacy :
         return i18nc("The group type", "Legacy");
-    case Client::Localization :
+    case Client::GroupLocalization :
         return i18nc("The group type", "Localization");
-    case Client::Virtualization :
+    case Client::GroupVirtualization :
         return i18nc("The group type", "Virtualization");
-    case Client::Security :
+    case Client::GroupSecurity :
         return i18nc("The group type", "Security");
-    case Client::PowerManagement :
+    case Client::GroupPowerManagement :
         return i18nc("The group type", "Power management");
-    case Client::Communication :
+    case Client::GroupCommunication :
         return i18nc("The group type", "Communication");
-    case Client::Network :
+    case Client::GroupNetwork :
         return i18nc("The group type", "Network");
-    case Client::Maps :
+    case Client::GroupMaps :
         return i18nc("The group type", "Maps");
-    case Client::Repos :
+    case Client::GroupRepos :
         return i18nc("The group type", "Software sources");
-    case Client::Science :
+    case Client::GroupScience :
         return i18nc("The group type", "Science");
-    case Client::Documentation :
+    case Client::GroupDocumentation :
         return i18nc("The group type", "Documentation");
-    case Client::Electronics :
+    case Client::GroupElectronics :
         return i18nc("The group type", "Electronics");
-    case Client::Collections ://TODO check this one
+    case Client::GroupCollections ://TODO check this one
         return i18nc("The group type", "Package collections");
-    case Client::Vendor :
+    case Client::GroupVendor :
         return i18nc("The group type", "Vendor");
-    case Client::Newest :
+    case Client::GroupNewest :
         return i18nc("The group type", "Newest packages");
     case Client::UnknownGroup :
         return i18nc("The group type", "Unknown group");
@@ -578,25 +578,25 @@ QString KpkStrings::groups(Client::Group group)
 QString KpkStrings::info(Package::State state)
 {
     switch (state) {
-    case Package::Low :
+    case Package::StateLow :
         return i18nc("The type of update", "Trivial update");
-    case Package::Normal :
+    case Package::StateNormal :
         return i18nc("The type of update", "Normal update");
-    case Package::Important :
+    case Package::StateImportant :
         return i18nc("The type of update", "Important update");
-    case Package::Security :
+    case Package::StateSecurity :
         return i18nc("The type of update", "Security update");
-    case Package::Bugfix :
+    case Package::StateBugfix :
         return i18nc("The type of update", "Bug fix update");
-    case Package::Enhancement :
+    case Package::StateEnhancement :
         return i18nc("The type of update", "Enhancement update");
-    case Package::Blocked :
+    case Package::StateBlocked :
         return i18nc("The type of update", "Blocked update");
-    case Package::Installed :
-    case Package::CollectionInstalled :
+    case Package::StateInstalled :
+    case Package::StateCollectionInstalled :
         return i18nc("The type of update", "Installed");
-    case Package::Available :
-    case Package::CollectionAvailable :
+    case Package::StateAvailable :
+    case Package::StateCollectionAvailable :
         return i18nc("The type of update", "Available");
     case Package::UnknownState :
         return i18nc("The type of update", "Unknown update");
@@ -609,23 +609,23 @@ QString KpkStrings::info(Package::State state)
 QString KpkStrings::infoUpdate(Package::State state, int number)
 {
     switch (state) {
-    case Package::Low :
+    case Package::StateLow :
         return i18np("1 trivial update", "%1 trivial updates", number);
-    case Package::Normal :
+    case Package::StateNormal :
         return i18ncp("Type of update, in the case it's just an update", "1 update", "%1 updates", number);
-    case Package::Important :
+    case Package::StateImportant :
         return i18np("1 important update", "%1 important updates", number);
-    case Package::Security :
+    case Package::StateSecurity :
         return i18np("1 security update", "%1 security updates", number);
-    case Package::Bugfix :
+    case Package::StateBugfix :
         return i18np("1 bug fix update", "%1 bug fix updates", number);
-    case Package::Enhancement :
+    case Package::StateEnhancement :
         return i18np("1 enhancement update", "%1 enhancement updates", number);
-    case Package::Blocked :
+    case Package::StateBlocked :
         return i18np("1 blocked update", "%1 blocked updates", number);
-    case Package::Installed :
+    case Package::StateInstalled :
         return i18np("1 installed package", "%1 installed packages", number);
-    case Package::Available :
+    case Package::StateAvailable :
         return i18np("1 available package", "%1 available packages", number);
     default : // In this case we don't want to map all enums
         kDebug() << "update info unrecognised: " << state;
@@ -669,16 +669,16 @@ QString KpkStrings::restartTypeFuture(Client::RestartType value)
     return QString();
 }
 
-QString KpkStrings::updateState(Client::UpgradeType value)
+QString KpkStrings::updateState(Client::UpdateState value)
 {
     switch (value) {
-    case Client::UpgradeStable :
+    case Client::UpdateStable :
         return i18n("Stable");
-    case Client::UpgradeUnstable :
+    case Client::UpdateUnstable :
         return i18n("Unstable");
-    case Client::UpgradeTesting :
+    case Client::UpdateTesting :
         return i18n("Testing");
-    case Client::UnknownUpgradeType :
+    case Client::UnknownUpdateState :
         return QString();
     }
     kDebug() << "value unrecognised: " << value;
@@ -688,13 +688,47 @@ QString KpkStrings::updateState(Client::UpgradeType value)
 QString KpkStrings::mediaType(Transaction::MediaType value)
 {
     switch (value) {
-    case Transaction::Cd :
+    case Transaction::MediaCd :
         return i18n("CD");
-    case Transaction::Dvd :
+    case Transaction::MediaDvd :
         return i18n("DVD");
-    case Transaction::Disc :
+    case Transaction::MediaDisc :
         return i18n("disc");
     case Transaction::UnknownMediaType :
+        return QString();
+    }
+    kDebug() << "value unrecognised: " << value;
+    return QString();
+}
+
+QString KpkStrings::message(PackageKit::Client::MessageType value)
+{
+    switch (value) {
+    case Client::MessageBrokenMirror :
+        return i18n("A mirror is possibly broken");
+    case Client::MessageConnectionRefused :
+        return i18n("The connection was refused");
+    case Client::MessageParameterInvalid :
+        return i18n("The parameter was invalid");
+    case Client::MessagePriorityInvalid :
+        return i18n("The priority was invalid");
+    case Client::MessageBackendError :
+        return i18n("Backend warning");
+    case Client::MessageDaemonError :
+        return i18n("Daemon warning");
+    case Client::MessageCacheBeingRebuilt :
+        return i18n("The package list cache is being rebuilt");
+    case Client::MessageUntrustedPackage :
+        return i18n("An untrusted package was installed");
+    case Client::MessageNewerPackageExists :
+        return i18n("A newer package exists");
+    case Client::MessageCouldNotFindPackage :
+        return i18n("Could not find package");
+    case Client::MessageConfigFilesChanged :
+        return i18n("Configuration files were changed");
+    case Client::MessagePackageAlreadyInstalled :
+        return i18n("Package is already installed");
+    case Client::UnknownMessageType :
         return QString();
     }
     kDebug() << "value unrecognised: " << value;

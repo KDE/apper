@@ -124,17 +124,19 @@ KpkAddRm::KpkAddRm(QWidget *parent)
         // An empty small item
         m_groupsModel->appendRow(groupItem = new QStandardItem(QString()));
         groupItem->setEnabled(false);
-        groupItem->setSizeHint(groupItem->sizeHint() + QSize(5, 5));
-        m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("Groups:")));
+        groupItem->setSizeHint(QSize(5, 5));
+        m_groupsModel->appendRow(groupItem = new QStandardItem(i18np("Group:", "Groups:", groups.size())));
         groupItem->setEnabled(false);
 
         foreach (const Client::Group &group, groups) {
-            m_groupsModel->appendRow(groupItem = new QStandardItem(KpkStrings::groups(group)));
-            groupItem->setData(Group, Qt::UserRole);
-            groupItem->setData(group, Group);
-            groupItem->setIcon(KpkIcons::groupsIcon(group));
-            if (!m_actions.contains(Client::ActionSearchGroup)) {
-                groupItem->setSelectable(false);
+            if (group != Client::UnknownGroup) {
+                m_groupsModel->appendRow(groupItem = new QStandardItem(KpkStrings::groups(group)));
+                groupItem->setData(Group, Qt::UserRole);
+                groupItem->setData(group, Group);
+                groupItem->setIcon(KpkIcons::groupsIcon(group));
+                if (!m_actions.contains(Client::ActionSearchGroup)) {
+                    groupItem->setSelectable(false);
+                }
             }
         }
     }
@@ -342,23 +344,28 @@ void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
 
 void KpkAddRm::search()
 {
-    // search
-    if (m_searchAction == Client::ActionSearchName) {
-        m_pkClient_main = m_client->searchName(m_searchString, m_searchFilters );
-    } else if (m_searchAction == Client::ActionSearchDetails) {
-        m_pkClient_main = m_client->searchDetails(m_searchString, m_searchFilters);
-    } else if (m_searchAction == Client::ActionSearchFile) {
-        m_pkClient_main = m_client->searchFile(m_searchString, m_searchFilters);
-    } else if (m_searchAction == Client::ActionSearchGroup) {
-        m_pkClient_main = m_client->searchGroup(m_searchGroup, m_searchFilters);
-    } else {
-        kWarning() << "Search type not implemented yet";
+    // Check to see if "list of changes" is selected
+    // if so refresh it and do nothing
+    int index = groupsCB->currentIndex();
+    if (groupsCB->itemData(index, Qt::UserRole).isValid() &&
+        ListOfChanges == (ItemType) groupsCB->itemData(index, Qt::UserRole).toUInt())
+    {
+        on_groupsCB_currentIndexChanged(index);
         return;
-    }
-
-    if (m_searchAction != Client::ActionSearchGroup) {
-        // select "All Packages"
-        groupsCB->setCurrentIndex(0);
+    } else {
+        // search
+        if (m_searchAction == Client::ActionSearchName) {
+            m_pkClient_main = m_client->searchName(m_searchString, m_searchFilters );
+        } else if (m_searchAction == Client::ActionSearchDetails) {
+            m_pkClient_main = m_client->searchDetails(m_searchString, m_searchFilters);
+        } else if (m_searchAction == Client::ActionSearchFile) {
+            m_pkClient_main = m_client->searchFile(m_searchString, m_searchFilters);
+        } else if (m_searchAction == Client::ActionSearchGroup) {
+            m_pkClient_main = m_client->searchGroup(m_searchGroup, m_searchFilters);
+        } else {
+            kWarning() << "Search type not implemented yet";
+            return;
+        }
     }
 
     if (m_pkClient_main) {
@@ -396,7 +403,7 @@ void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &d
 
 void KpkAddRm::save()
 {
-    KpkReviewChanges *frm = new KpkReviewChanges(m_pkg_model_main->selectedPackages(), this);
+    KpkReviewChanges *frm = new KpkReviewChanges(m_pkg_model_main->selectedPackages(), KpkReviewChanges::None, this);
     frm->setTitle(i18n("Review Changes"));
     if (frm->exec() == QDialog::Accepted) {
         m_pkg_model_main->uncheckAll();

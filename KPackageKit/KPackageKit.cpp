@@ -31,6 +31,7 @@
 #include <KCModuleInfo>
 
 #include "KpkInstallMimeType.h"
+#include "KpkInstallPackageName.h"
 
 namespace kpackagekit {
 
@@ -57,7 +58,7 @@ KPackageKit::~KPackageKit()
 void KPackageKit::appClose()
 {
     //check whether we can close
-    if (m_instFiles->canClose() && !m_pkUi) {
+    if (!m_instFiles->isRunning() && !m_pkUi) {
         quit();
     }
 }
@@ -101,6 +102,13 @@ int KPackageKit::newInstance()
         kDebug() << "install-mime-type!" << args->getOptionList("install-mime-type");
         KpkInstallMimeType *mime = new KpkInstallMimeType(this);
         mime->installMimeType(args->getOptionList("install-mime-type"));
+        notSet = false;
+    }
+
+    if (args->isSet("install-package-name")) {
+        kDebug() << "install-package-name!" << args->getOptionList("install-package-name");
+        KpkInstallPackageName *mime = new KpkInstallPackageName(this);
+        mime->installPackageName(args->getOptionList("install-package-name"));
         notSet = false;
     }
 

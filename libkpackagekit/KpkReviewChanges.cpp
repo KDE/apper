@@ -35,7 +35,7 @@ public:
     Ui::KpkReviewChanges ui;
 };
 
-KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *parent)
+KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, Behaviors flags, QWidget *parent)
  : KDialog(parent), d(new KpkReviewChangesPrivate)
 {
     d->ui.setupUi(mainWidget());
@@ -57,7 +57,7 @@ KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *par
     int countInstall = 0;
     foreach (Package *package, packages) {
         // If the package is installed we are going to remove it
-        if (package->state() == Package::Installed) {
+        if (package->state() == Package::StateInstalled) {
             countRemove++;
         } else {
             countInstall++;
@@ -83,6 +83,10 @@ KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *par
     KConfig config("KPackageKit");
     KConfigGroup reviewChangesDialog(&config, "ReviewChangesDialog");
     restoreDialogSize(reviewChangesDialog);
+
+    if (flags & AutoStart) {
+        doAction();
+    }
 }
 
 KpkReviewChanges::~KpkReviewChanges()
@@ -109,14 +113,14 @@ void KpkReviewChanges::doAction()
     m_actions = m_client->getActions();
     // check what packages are installed and marked to be removed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
-        if (m_pkgModelMain->selectedPackages().at(i)->state() == Package::Installed) {
+        if (m_pkgModelMain->selectedPackages().at(i)->state() == Package::StateInstalled) {
             m_remPackages << m_pkgModelMain->selectedPackages().takeAt(i);
         }
     }
 
     // check what packages are available and marked to be installed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
-        if ( m_pkgModelMain->selectedPackages().at(i)->state() == Package::Available )
+        if ( m_pkgModelMain->selectedPackages().at(i)->state() == Package::StateAvailable )
             m_addPackages << m_pkgModelMain->selectedPackages().takeAt(i);
     }
 
@@ -180,7 +184,7 @@ void KpkReviewChanges::checkTask()
 void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
 {
     kDebug() << "reqFinished";
-    if (status == Transaction::Success) {
+    if (status == Transaction::ExitSuccess) {
         if (m_pkgModelReq->rowCount( QModelIndex() ) > 0) {
             KpkRequirements *requimentD = new KpkRequirements(i18n("The following packages will also be removed for dependencies"), m_pkgModelReq, this);
             connect(requimentD, SIGNAL(okClicked()), this, SLOT(removePackages()));
@@ -218,7 +222,7 @@ void KpkReviewChanges::removePackages()
 void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
 {
     kDebug() << "depFinished";
-    if (status == Transaction::Success) {
+    if (status == Transaction::ExitSuccess) {
         if (m_pkgModelDep->rowCount(QModelIndex()) > 0) {
             KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be installed as dependencies"), m_pkgModelDep, this );
             connect(requimentD, SIGNAL(okClicked()), this, SLOT(installPackages()));

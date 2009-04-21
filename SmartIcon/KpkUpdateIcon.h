@@ -18,10 +18,10 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKUPDATEICON_H
-#define KPKUPDATEICON_H
+#ifndef KPK_UPDATE_ICON_H
+#define KPK_UPDATE_ICON_H
 
-#include "KpkAbstractSmartIcon.h"
+#include <KpkAbstractIsRunning.h>
 
 #include <QObject>
 #include <KSystemTrayIcon>
@@ -30,7 +30,7 @@
 #include <QList>
 #include <QPackageKit>
 
-class KpkUpdateIcon : public KpkAbstractSmartIcon
+class KpkUpdateIcon : public KpkAbstractIsRunning
 {
 Q_OBJECT
 

@@ -21,7 +21,7 @@
 #ifndef KPK_TRANSACTION_TRAY_ICON_H
 #define KPK_TRANSACTION_TRAY_ICON_H
 
-#include "KpkAbstractSmartIcon.h"
+#include <KpkAbstractIsRunning.h>
 
 #include <QPackageKit>
 #include <KSystemTrayIcon>
@@ -29,7 +29,7 @@
 using namespace PackageKit;
 
 class KpkTransaction;
-class KpkTransactionTrayIcon : public KpkAbstractSmartIcon
+class KpkTransactionTrayIcon : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
@@ -47,8 +47,12 @@ private slots:
     void currentProgressChanged(PackageKit::Transaction::ProgressInfo);
     void createTransactionDialog(Transaction *t);
     void transactionDialogClosed();
+    void message(PackageKit::Client::MessageType type, const QString &message);
 //     void showTransactionError(PackageKit::Client::ErrorType, const QString&);
 //     void showRestartMessage(PackageKit::Client::RestartType, const QString&);
+
+    void refreshCache();
+    void showMessages();
 
 private:
     void updateMenu(const QList<PackageKit::Transaction*> &tids);
@@ -62,6 +66,16 @@ private:
     QHash<Transaction *, KpkTransaction *> m_transDialogs;
 
     PackageKit::Transaction *m_currentTransaction;
+
+    // Refresh Cache menu entry
+    QAction *m_refreshCacheAction;
+
+    // Message Container
+    QList<QPair<Client::MessageType, QString> > m_messages;
+    QAction *m_messagesAction;
+
+    // Hide this icon action
+    QAction *m_hideAction;
 };
 
 #endif

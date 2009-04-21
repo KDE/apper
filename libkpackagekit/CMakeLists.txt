@@ -11,6 +11,7 @@ set(libkpk_SRCS
     KpkProgressBar.cpp
     KpkReviewChanges.cpp
     KpkRequirements.cpp
+    KpkAbstractIsRunning.cpp
 )
 
 kde4_add_ui_files(libkpk_SRCS

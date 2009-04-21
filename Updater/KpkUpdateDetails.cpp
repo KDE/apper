@@ -51,14 +51,14 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // update type (ie Security Update)
     if (state == Package::UnknownState) {
-        state = Package::Normal;
+        state = Package::StateNormal;
     }
     description += "<tr><td align=\"right\"><b>" + i18n("Type") + ":</b></td><td>"
                    + KpkStrings::info(state)
                    + "</td></tr>";
 
     // state
-    if (info.state != Client::UnknownUpgradeType) {
+    if (info.state != Client::UnknownUpdateState) {
         description += "<tr><td align=\"right\"><b>" + i18nc("State of the upgrade (ie testing, unstable..)", "State") + ":</b></td><td>"
                     + KpkStrings::updateState(info.state)
                     + "</td></tr>";
