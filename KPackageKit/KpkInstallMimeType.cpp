@@ -26,34 +26,35 @@
 
 #include <KDebug>
 
-KpkInstallMimeType::KpkInstallMimeType( QObject *parent )
- : QObject(parent)/*, m_running(0)*/
+KpkInstallMimeType::KpkInstallMimeType(const QStringList &args, QObject *parent)
+ : KpkAbstractIsRunning(parent),
+   m_args(args)
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkInstallMimeType::~KpkInstallMimeType()
 {
 }
 
-void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
+void KpkInstallMimeType::start()
 {
-    kDebug() << mimeTypes.first();
+    increaseRunning();
+    kDebug() << m_args.first();
     QString message = i18n("An additional program is required to open this type of file:<br />%1<br/>"
                            "Do you want to search for a program to open this file type now?",
-                           mimeTypes.first());
+                           m_args.first());
     QString parentTitle;
     QString title;
     // this will come from DBus interface
     if (parentTitle.isNull()) {
         title = i18np("A program requires a new mime type",
                       "A program requires new mime types",
-                      mimeTypes.size());
+                      m_args.size());
     } else {
         title = i18np("%1 requires a new mime type",
                       "%1 requires new mime types",
                       parentTitle,
-                      mimeTypes.size());
+                      m_args.size());
     }
     QString msg = "<h3>" + title + "</h3>" + message;
     KGuiItem searchBt = KStandardGuiItem::yes();
@@ -66,7 +67,7 @@ void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
                                      searchBt);
     if (ret == KMessageBox::Yes) {
         if (Transaction *t = Client::instance()->whatProvides(Client::ProvidesMimetype,
-                                                              mimeTypes.first(),
+                                                              m_args.first(),
                                                               Client::FilterNotInstalled)) {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
@@ -74,7 +75,7 @@ void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
             connect(t, SIGNAL(package(PackageKit::Package *)),
                     this, SLOT(addPackage(PackageKit::Package *)));
             trans->show();
-            // to skip the appClose()
+            // return to avoid the decreaseRunning()
             return;
         } else {
             KMessageBox::error(0,
@@ -82,20 +83,20 @@ void KpkInstallMimeType::installMimeType(const QStringList &mimeTypes)
                                i18n("Failed to search for provides"));
         }
     }
-    emit appClose();
+    decreaseRunning();
 }
 
 void KpkInstallMimeType::kTransactionFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
-//     KpkTransaction *transaction = (KpkTransaction *) sender();
     if (status == KpkTransaction::Success) {
         if (m_foundPackages.size()) {
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages);
             frm->setTitle(i18np("Application that can open this type of file",
                                 "Applications that can open this type of file", m_foundPackages.size()));
+            connect(frm, SIGNAL(finished()), this, SLOT(decreaseRunning()));
             frm->show();
-            // to avoid appClose
+            // return to avoid the decreaseRunning()
             return;
         } else {
             KMessageBox::sorry(0,
@@ -103,7 +104,7 @@ void KpkInstallMimeType::kTransactionFinished(KpkTransaction::ExitStatus status)
                                 i18n("Failed to find software"));
         }
     }
-    emit appClose();
+    decreaseRunning();
 }
 
 void KpkInstallMimeType::addPackage(PackageKit::Package *package)

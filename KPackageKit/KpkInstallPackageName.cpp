@@ -26,41 +26,43 @@
 
 #include <KDebug>
 
-KpkInstallPackageName::KpkInstallPackageName( QObject *parent )
- : QObject(parent)/*, m_running(0)*/
+KpkInstallPackageName::KpkInstallPackageName(const QStringList &args, QObject *parent)
+ : KpkAbstractIsRunning(parent),
+   m_args(args)
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    kDebug() << "install-package-name!" << args;
 }
 
 KpkInstallPackageName::~KpkInstallPackageName()
 {
 }
 
-void KpkInstallPackageName::installPackageName(const QStringList &items)
+void KpkInstallPackageName::start()
 {
-    kDebug() << items.first();
+    increaseRunning();
+    kDebug() << m_args.first();
     QString message = i18np("An additional package is required:",
-                            "Additional packages are required:", items.size())
-                            + QString("<ul><li>%1</li></ul>").arg(items.join("</li><li>")) +
+                            "Additional packages are required:", m_args.size())
+                            + QString("<ul><li>%1</li></ul>").arg(m_args.join("</li><li>")) +
                       i18np("Do you want to search for and install this package now?",
                             "Do you want to search for and install these packages now?",
-                           items.size());
+                           m_args.size());
     QString parentTitle;
     QString title;
     // this will come from DBus interface
     if (parentTitle.isNull()) {
         title = i18np("A program wants to install a package",
                       "A program wants to install packages",
-                      items.size());
+                      m_args.size());
     } else {
         title = i18np("%1 wants to install a package",
                       "%1 wants to install packages",
                       parentTitle,
-                      items.size());
+                      m_args.size());
     }
     QString msg = "<h3>" + title + "</h3>" + message;
     KGuiItem searchBt = KStandardGuiItem::yes();
-    searchBt.setText(i18nc("Search for a new mime type" ,"Install"));
+    searchBt.setText(i18nc("Search for a package and install it" ,"Install"));
     searchBt.setIcon(KIcon::KIcon("edit-find"));
     int ret;
     ret = KMessageBox::questionYesNo(0,
@@ -68,7 +70,7 @@ void KpkInstallPackageName::installPackageName(const QStringList &items)
                                      title,
                                      searchBt);
     if (ret == KMessageBox::Yes) {
-        if (Transaction *t = Client::instance()->resolve(items,
+        if (Transaction *t = Client::instance()->resolve(m_args,
                                                          Client::FilterNotInstalled)) {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
@@ -76,35 +78,39 @@ void KpkInstallPackageName::installPackageName(const QStringList &items)
             connect(t, SIGNAL(package(PackageKit::Package *)),
                     this, SLOT(addPackage(PackageKit::Package *)));
             trans->show();
-            // to skip the appClose()
+            // return to avoid the decreaseRunning()
             return;
         } else {
             KMessageBox::error(0,
-                               i18n("Failed to search for provides"),
-                               i18n("Failed to search for provides"));
+                               i18n("Failed to start resolve transaction"),
+                               i18n("Failed to start resolve transaction"));
         }
     }
-    emit appClose();
+    decreaseRunning();
 }
 
 void KpkInstallPackageName::kTransactionFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
-//     KpkTransaction *transaction = (KpkTransaction *) sender();
     if (status == KpkTransaction::Success) {
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, KpkReviewChanges::AutoStart);
-            frm->setTitle(i18np("Application that can open this type of file",
-                                "Applications that can open this type of file", m_foundPackages.size()));
-            // to avoid appClose
+            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages);
+            frm->setTitle(i18np("The following package will be installed",
+                                "The following packages will be installed",
+                                m_foundPackages.size()));
+            connect(frm, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+            QTimer::singleShot(0, frm, SLOT(doAction()));
+            frm->show();
+            // return to avoid the decreaseRunning()
             return;
         } else {
             KMessageBox::sorry(0,
-                                i18n("No new applications can be found to handle this type of file"),
-                                i18n("Failed to find software"));
+                                i18np("The package could not be found in any software source",
+                                      "The packages could not be found in any software source", m_args.size()),
+                                i18n("Could not find %1", m_args.join(", ")));
         }
     }
-    emit appClose();
+    decreaseRunning();
 }
 
 void KpkInstallPackageName::addPackage(PackageKit::Package *package)

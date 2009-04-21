@@ -30,6 +30,7 @@
 #include <QStringList>
 #include <KCModuleInfo>
 
+#include "KpkInstallFiles.h"
 #include "KpkInstallMimeType.h"
 #include "KpkInstallPackageName.h"
 
@@ -40,15 +41,10 @@ KPackageKit::KPackageKit()
    m_pkUi(0),
    m_addrmPWI(0),
    m_updatePWI(0),
-   m_settingsPWI(0)
+   m_settingsPWI(0),
+   m_running(0)
 {
-    m_instFiles = new KpkInstallFiles(this);
-    connect(m_instFiles, SIGNAL(appClose()), this, SLOT(appClose()));
-    // register Meta Type so we can queue que connection
-    qRegisterMetaType<KUrl::List>("KUrl::List &");
-    connect(this, SIGNAL(installFiles(const KUrl::List &)),
-            m_instFiles, SLOT(installFiles(const KUrl::List &)),
-            Qt::QueuedConnection);
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KPackageKit::~KPackageKit()
@@ -58,7 +54,7 @@ KPackageKit::~KPackageKit()
 void KPackageKit::appClose()
 {
     //check whether we can close
-    if (!m_instFiles->isRunning() && !m_pkUi) {
+    if (!m_running && !m_pkUi) {
         quit();
     }
 }
@@ -73,6 +69,13 @@ void KPackageKit::kcmFinished()
     appClose();
 }
 
+void KPackageKit::decreaseAndKillRunning()
+{
+    m_running--;
+    sender()->deleteLater();
+    appClose();
+}
+
 int KPackageKit::newInstance()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -83,7 +86,10 @@ int KPackageKit::newInstance()
         for (int i = 0; i < args->count(); i++) {
             urls << args->url(i);
         }
-        emit installFiles(urls);
+        KpkInstallFiles *helper = new KpkInstallFiles(urls, this);
+        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
+        QTimer::singleShot(0, helper, SLOT(start()));
+        m_running++;
         notSet = false;
     }
 
@@ -100,15 +106,20 @@ int KPackageKit::newInstance()
 
     if (args->isSet("install-mime-type")) {
         kDebug() << "install-mime-type!" << args->getOptionList("install-mime-type");
-        KpkInstallMimeType *mime = new KpkInstallMimeType(this);
-        mime->installMimeType(args->getOptionList("install-mime-type"));
+        KpkInstallMimeType *helper;
+        helper = new KpkInstallMimeType(args->getOptionList("install-mime-type"), this);
+        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
+        QTimer::singleShot(0, helper, SLOT(start()));
+        m_running++;
         notSet = false;
     }
 
     if (args->isSet("install-package-name")) {
-        kDebug() << "install-package-name!" << args->getOptionList("install-package-name");
-        KpkInstallPackageName *mime = new KpkInstallPackageName(this);
-        mime->installPackageName(args->getOptionList("install-package-name"));
+        KpkInstallPackageName *helper;
+        helper = new KpkInstallPackageName(args->getOptionList("install-package-name"), this);
+        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
+        QTimer::singleShot(0, helper, SLOT(start()));
+        m_running++;
         notSet = false;
     }
 

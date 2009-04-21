@@ -37,6 +37,8 @@ public:
     ~KpkTransactionTrayIcon();
 
     bool isRunning();
+
+public slots:
     void checkTransactionList();
 
 private slots:

@@ -22,22 +22,21 @@
 #define KPK_INSTALL_PACKAGE_NAME_H
 
 #include <KpkTransaction.h>
+#include <KpkAbstractIsRunning.h>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkInstallPackageName : public QObject
+class KpkInstallPackageName : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
-    KpkInstallPackageName(QObject *parent = 0);
+    KpkInstallPackageName(const QStringList &args, QObject *parent = 0);
     ~KpkInstallPackageName();
 
-    void installPackageName(const QStringList &items);
-
-signals:
-    void appClose();
+public slots:
+    void start();
 
 private slots:
     void kTransactionFinished(KpkTransaction::ExitStatus status);
@@ -46,7 +45,7 @@ private slots:
 private:
     QList<Package*> m_foundPackages;
     QHash <KpkTransaction *,QStringList> m_transactionFiles;
-//     int m_running;
+    QStringList m_args;
 };
 
 #endif

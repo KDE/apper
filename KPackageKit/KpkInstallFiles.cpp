@@ -25,17 +25,17 @@
 
 #include <KDebug>
 
-KpkInstallFiles::KpkInstallFiles(QObject *parent)
- : KpkAbstractIsRunning(parent)
+KpkInstallFiles::KpkInstallFiles(const KUrl::List &urls, QObject *parent)
+ : KpkAbstractIsRunning(parent),
+   m_urls(urls)
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkInstallFiles::~KpkInstallFiles()
 {
 }
 
-void KpkInstallFiles::installFiles(const KUrl::List &urls)
+void KpkInstallFiles::start()
 {
     // yeah we are running so please be
     // polited and don't close the application :P
@@ -43,27 +43,27 @@ void KpkInstallFiles::installFiles(const KUrl::List &urls)
 
     QStringList files;
     QStringList notFiles;
-    QString lastDirectory = urls.at(0).directory();
-    QString lastDirectoryNotFiles = urls.at(0).directory();
+    QString lastDirectory = m_urls.at(0).directory();
+    QString lastDirectoryNotFiles = m_urls.at(0).directory();
     bool showFullPath = false;
     bool showFullPathNotFiles = false;
-    for (int i = 0; i < urls.count(); i++) {
-        if (QFileInfo(urls.at(i).path()).isFile()) {
+    for (int i = 0; i < m_urls.count(); i++) {
+        if (QFileInfo(m_urls.at(i).path()).isFile()) {
             qDebug() << "isFIle";
-            files << urls.at(i).path();
+            files << m_urls.at(i).path();
             // if the path of all the files is the same
             // why bothering the user showing a full path?
-            if (urls.at(i).directory() != lastDirectory) {
+            if (m_urls.at(i).directory() != lastDirectory) {
                 showFullPath = true;
             }
-            lastDirectory = urls.at(i).directory();
+            lastDirectory = m_urls.at(i).directory();
         } else {
             qDebug() << "~isFIle";
-            notFiles << urls.at(i).path();
-            if (urls.at(i).directory() != lastDirectoryNotFiles) {
+            notFiles << m_urls.at(i).path();
+            if (m_urls.at(i).directory() != lastDirectoryNotFiles) {
                 showFullPathNotFiles = true;
             }
-            lastDirectoryNotFiles =urls.at(i).directory();
+            lastDirectoryNotFiles =m_urls.at(i).directory();
         }
     }
 
@@ -107,7 +107,7 @@ void KpkInstallFiles::installFiles(const KUrl::List &urls)
                         this, SLOT(installFilesFinished(KpkTransaction::ExitStatus)));
                 trans->show();
                 m_transactionFiles[trans] = files;
-                //to skip the running thing
+                // return to avoid the decreaseRunning()
                 return;
             } else {
                 KMessageBox::sorry(0,
@@ -148,7 +148,7 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
         case KpkTransaction::ReQueue :
             kDebug() << "ReQueue";
             transaction->setTransaction(Client::instance()->installFiles(m_transactionFiles[transaction], false));
-            // return to avoid the running--
+            // return to avoid the decreaseRunning()
             return;
     }
     decreaseRunning();

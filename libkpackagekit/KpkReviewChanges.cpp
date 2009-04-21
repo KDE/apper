@@ -35,7 +35,7 @@ public:
     Ui::KpkReviewChanges ui;
 };
 
-KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, Behaviors flags, QWidget *parent)
+KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *parent)
  : KDialog(parent), d(new KpkReviewChangesPrivate)
 {
     d->ui.setupUi(mainWidget());
@@ -83,10 +83,6 @@ KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, Behaviors fl
     KConfig config("KPackageKit");
     KConfigGroup reviewChangesDialog(&config, "ReviewChangesDialog");
     restoreDialogSize(reviewChangesDialog);
-
-    if (flags & AutoStart) {
-        doAction();
-    }
 }
 
 KpkReviewChanges::~KpkReviewChanges()
@@ -224,7 +220,7 @@ void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, u
     kDebug() << "depFinished";
     if (status == Transaction::ExitSuccess) {
         if (m_pkgModelDep->rowCount(QModelIndex()) > 0) {
-            KpkRequirements *requimentD = new KpkRequirements( i18n("The following packages will also be installed as dependencies"), m_pkgModelDep, this );
+            KpkRequirements *requimentD = new KpkRequirements(i18n("The following packages will also be installed as dependencies"), m_pkgModelDep, this);
             connect(requimentD, SIGNAL(okClicked()), this, SLOT(installPackages()));
             connect(requimentD, SIGNAL(cancelClicked()), this, SLOT(close()));
             requimentD->show();

@@ -39,20 +39,16 @@ class KDE_EXPORT KpkReviewChanges : public KDialog
 {
     Q_OBJECT
 public:
-    enum BehaviorFlag {
-        None = 1,
-        AutoClose = 2,
-        AutoStart = 4
-    };
-    Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
-
-    explicit KpkReviewChanges(const QList<Package*> &packages, Behaviors flags = 0, QWidget *parent = 0);
+    explicit KpkReviewChanges(const QList<Package*> &packages, QWidget *parent = 0);
     ~KpkReviewChanges();
 
     void setTitle(const QString &title);
     void setText(const QString &text);
 
 public slots:
+    void doAction();
+
+private slots:
     void remFinished(KpkTransaction::ExitStatus);
     void addFinished(KpkTransaction::ExitStatus);
 
@@ -60,6 +56,9 @@ public slots:
     void depFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void installPackages();
     void removePackages();
+
+    void errorCode(PackageKit::Client::ErrorType error, const QString &details);
+    void checkChanged();
 
 private:
     KpkReviewChangesPrivate* d;
@@ -74,7 +73,6 @@ private:
     int m_viewWidth;
 
     void updateColumnsWidth(bool force = false);
-    void doAction();
     void checkTask();
 
     QList<Package*> m_remPackages;
@@ -82,10 +80,6 @@ private:
     QList<Package*> m_reqDepPackages;
 
     Client::Actions m_actions;
-
-private slots:
-    void errorCode(PackageKit::Client::ErrorType error, const QString &details);
-    void checkChanged();
 
 protected slots:
     virtual void slotButtonClicked(int button);

@@ -32,21 +32,18 @@ class KpkInstallFiles : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
-    KpkInstallFiles(QObject *parent = 0);
+    KpkInstallFiles(const KUrl::List &urls, QObject *parent = 0);
     ~KpkInstallFiles();
 
 public slots:
-    void installFiles(const KUrl::List &urls);
-
-signals:
-    void appClose();
+    void start();
 
 private slots:
     void installFilesFinished(KpkTransaction::ExitStatus status);
 
 private:
-    QHash <KpkTransaction *,QStringList> m_transactionFiles;
-/*    int m_running;*/
+    QHash <KpkTransaction *, QStringList> m_transactionFiles;
+    KUrl::List m_urls;
 };
 
 #endif

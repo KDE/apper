@@ -24,8 +24,6 @@
 #include <KUniqueApplication>
 #include <KCMultiDialog>
 
-#include "KpkInstallFiles.h"
-
 namespace kpackagekit {
 
 class KPackageKit : public KUniqueApplication
@@ -42,12 +40,10 @@ public:
     void showUpdates();
     void showSettings();
 
-signals:
-    void installFiles(const KUrl::List &urls);
-
 private slots:
     void appClose();
     void kcmFinished();
+    void decreaseAndKillRunning();
 
 private:
     KCMultiDialog *m_pkUi;
@@ -55,7 +51,7 @@ private:
     KPageWidgetItem *m_updatePWI;
     KPageWidgetItem *m_settingsPWI;
 
-    KpkInstallFiles *m_instFiles;
+    int m_running;
 };
 
 }

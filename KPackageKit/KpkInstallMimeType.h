@@ -22,22 +22,21 @@
 #define KPKINSTALLMIMETYPE_H
 
 #include <KpkTransaction.h>
+#include <KpkAbstractIsRunning.h>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkInstallMimeType : public QObject
+class KpkInstallMimeType : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
-    KpkInstallMimeType(QObject *parent = 0);
+    KpkInstallMimeType(const QStringList &args, QObject *parent = 0);
     ~KpkInstallMimeType();
 
-    void installMimeType(const QStringList &mimeTypes);
-
-signals:
-    void appClose();
+public slots:
+    void start();
 
 private slots:
     void kTransactionFinished(KpkTransaction::ExitStatus status);
@@ -46,7 +45,7 @@ private slots:
 private:
     QList<Package*> m_foundPackages;
     QHash <KpkTransaction *,QStringList> m_transactionFiles;
-//     int m_running;
+    QStringList m_args;
 };
 
 #endif

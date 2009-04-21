@@ -403,7 +403,7 @@ void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &d
 
 void KpkAddRm::save()
 {
-    KpkReviewChanges *frm = new KpkReviewChanges(m_pkg_model_main->selectedPackages(), KpkReviewChanges::None, this);
+    KpkReviewChanges *frm = new KpkReviewChanges(m_pkg_model_main->selectedPackages(), this);
     frm->setTitle(i18n("Review Changes"));
     if (frm->exec() == QDialog::Accepted) {
         m_pkg_model_main->uncheckAll();

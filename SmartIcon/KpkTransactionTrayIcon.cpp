@@ -297,10 +297,10 @@ void KpkTransactionTrayIcon::showMessages()
         tree->resizeColumnToContents(0);
         tree->resizeColumnToContents(1);
         connect(dialog, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-        dialog->show();
         // We call this so that the icon can hide if there
         // are no more messages and transactions running
-        transactionListChanged(m_client->getTransactions());
+        connect(dialog, SIGNAL(finished()), this, SLOT(checkTransactionList()));
+        dialog->show();
     }
 }
 
@@ -348,7 +348,7 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason != QSystemTrayIcon::Context) {
         QList<PackageKit::Transaction*> tids(m_client->getTransactions());
-        if (tids.size() || !m_messages.isEmpty()) {
+        if (tids.size() || isRunning()) {
             updateMenu(tids);
             m_menu->exec(QCursor::pos());
         } else {
