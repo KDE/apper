@@ -49,6 +49,7 @@ int main(int argc, char **argv)
     options.add("install-mime-type <mime-type>", ki18n("Mime type installer"));
     options.add("install-package-name <name>", ki18n("Package name installer"));
     options.add("install-provide-file <file>", ki18n("Single file installer"));
+    options.add("remove-package-by-file <filename>", ki18n("Single package remover"));
     options.add("+[package]", ki18n("Package file to install"));
     KCmdLineArgs::addCmdLineOptions(options);
 
