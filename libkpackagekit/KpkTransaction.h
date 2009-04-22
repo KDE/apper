@@ -64,6 +64,7 @@ private:
     KpkTransactionPrivate* d;
 
 private slots:
+    void finishedDialog();
     void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
     void statusChanged(PackageKit::Transaction::Status status);

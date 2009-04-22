@@ -26,6 +26,8 @@
 #include <KDebug>
 
 #include <QMovie>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusConnection>
 
 #include "KpkStrings.h"
 #include "KpkRepoSig.h"
@@ -41,6 +43,7 @@ class KpkTransactionPrivate
 public:
     Ui::KpkTransaction ui;
     bool showDetails;
+    bool finished;
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
@@ -52,6 +55,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
    d(new KpkTransactionPrivate)
 {
     d->ui.setupUi(mainWidget());
+    d->finished = true; // for sanity we are finished till some transaction is set
 
     // Set Cancel and custom button hide
     setButtons(KDialog::Cancel | KDialog::User1 | KDialog::Details);
@@ -69,8 +73,10 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
     if (m_flags & Modal) {
         setWindowModality(Qt::WindowModal);
-        enableButton(KDialog::User1, false);
     }
+
+    // We need to track when the user close the dialog using the [X] button
+    connect(this, SIGNAL(finished()), SLOT(finishedDialog()));
 
     // after ALL set, lets set the transaction
     setTransaction(m_trans);
@@ -102,6 +108,7 @@ KpkTransaction::~KpkTransaction()
 void KpkTransaction::setTransaction(Transaction *trans)
 {
     m_trans = trans;
+    d->finished = false;
 
     // sets the action icon to be the window icon
     setWindowIcon(KpkIcons::actionIcon(m_trans->role().action));
@@ -193,6 +200,11 @@ void KpkTransaction::currPackage(Package *p)
     }
 }
 
+void KpkTransaction::finishedDialog()
+{
+    slotButtonClicked(KDialog::User1);
+}
+
 void KpkTransaction::slotButtonClicked(int button)
 {
     switch(button) {
@@ -203,8 +215,24 @@ void KpkTransaction::slotButtonClicked(int button)
             break;
         case KDialog::User1 :
             kDebug() << "KDialog::User1";
-            // Always disconnect BEFORE emitting finished
-            m_trans->disconnect();
+            if (!d->finished) {
+                // We are going to hide the transaction,
+                // which can make the user even close System Settings or KPackageKit
+                // so we call the tray icon to keep watching the transaction so if the
+                // transaction receives some error we can display them
+                QDBusMessage message;
+                message = QDBusMessage::createMethodCall("org.kde.KPackageKit.Tray",
+                                                        "/",
+                                                        "org.kde.KPackageKit.Tray",
+                                                        QLatin1String("WatchTransaction"));
+                message << qVariantFromValue(m_trans->tid());
+                QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+                if (reply.type() != QDBusMessage::ReplyMessage) {
+                    kWarning() << "Message did not receive a reply";
+                }
+                // Always disconnect BEFORE emitting finished
+                m_trans->disconnect();
+            }
             emit kTransactionFinished(Success);
             // If you call Close it will
             // come back to hunt you with Cancel
@@ -357,6 +385,7 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
 void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint runtime)
 {
     Q_UNUSED(runtime)
+    d->finished = true;
     switch(status) {
     case Transaction::ExitSuccess :
         d->ui.progressBar->setMaximum(100);

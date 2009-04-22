@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008 Daniel Nicoletti <dantti85-pk@yahoo.com.br>        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -13,45 +12,43 @@
  *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU General Public License     *
- *   along with this program; see the file COPYING. If not, write to       *
- *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
- *   Boston, MA 02110-1301, USA.                                           *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef KPACKAGEKITD_H
-#define KPACKAGEKITD_H
+#include "KpkInterface.h"
+#include "trayadaptor.h"
 
-#include <KDEDModule>
-#include <KDirWatch>
-#include <QTimer>
-#include <QPackageKit>
+#include <QtDBus/QDBusConnection>
+#include <KDebug>
 
-using namespace PackageKit;
-
-class KPackageKitD : public KDEDModule
+KpkInterface::KpkInterface(QObject *parent)
+        : QObject(parent)
 {
-Q_OBJECT
+    qDebug() << "Creating Helper";
+    (void) new TrayAdaptor(this);
+    if (!QDBusConnection::sessionBus().registerService("org.kde.KPackageKit.Tray")) {
+        kDebug() << "another helper is already running";
+        return;
+    }
 
-public:
-    KPackageKitD(QObject *parent, const QList<QVariant>&);
-    ~KPackageKitD();
+    if (!QDBusConnection::sessionBus().registerObject("/", this)) {
+        kDebug() << "unable to register service interface to dbus";
+        return;
+    }
+}
 
-private slots:
-    void init();
-    void read();
-    void checkUpdates();
-    void finished(PackageKit::Transaction::ExitStatus status, uint);
+KpkInterface::~KpkInterface()
+{
+}
 
-    void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
+void KpkInterface::WatchTransaction(const QString &tid)
+{
+    emit watchTransaction(tid);
+}
 
-private:
-    void update();
-
-    QTimer *m_qtimer;
-    KDirWatch *m_confWatch;
-    Client *m_client;
-    Transaction *m_refreshCacheT;
-    bool systemIsReady();
-};
-
-#endif
+void KpkInterface::Update()
+{
+    emit update();
+}

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Trever Fischer                                  *
- *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,49 +18,34 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_UPDATE_ICON_H
-#define KPK_UPDATE_ICON_H
+#ifndef KPK_TRANSACTION_WATCHER_H
+#define KPK_TRANSACTION_WATCHER_H
 
 #include <KpkAbstractIsRunning.h>
 
-#include <QObject>
-#include <KSystemTrayIcon>
-#include <KCMultiDialog>
-#include <KNotification>
-#include <QList>
 #include <QPackageKit>
 
-class KpkUpdateIcon : public KpkAbstractIsRunning
+using namespace PackageKit;
+
+class KpkTransaction;
+class KpkTransactionWatcher : public KpkAbstractIsRunning
 {
 Q_OBJECT
-
 public:
-    KpkUpdateIcon(QObject *parent = 0);
-    ~KpkUpdateIcon();
-
-signals:
-    void watchTransaction(const QString &tid);
+    KpkTransactionWatcher(QObject *parent = 0);
+    ~KpkTransactionWatcher();
 
 public slots:
-    void checkUpdates();
+    void watchTransaction(const QString &tid);
+    void removeTransactionWatcher(const QString &tid);
 
 private slots:
-    void updateListed(PackageKit::Package*);
-    void updateCheckFinished(PackageKit::Transaction::ExitStatus, uint runtime);
-    void handleUpdateAction(uint action);
-    void handleUpdateActionClosed();
-    void notifyUpdates();
-    void showSettings();
-    void showUpdates(QSystemTrayIcon::ActivationReason = KSystemTrayIcon::Unknown);
-    void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void errorCode(PackageKit::Client::ErrorType, const QString&);
+//     void showRestartMessage(PackageKit::Client::RestartType, const QString&);
+    void finished(PackageKit::Transaction::ExitStatus status, uint time);
 
 private:
-    KSystemTrayIcon* m_icon;
-    KNotification *m_updateNotify;
-    QList<PackageKit::Package*> m_updateList;
-
-//     int m_inhibitCookie;
-//     void suppressSleep(bool enable);
+    QList<Transaction *> m_hiddenTransactions;
 };
 
 #endif

@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "KpkTransactionTrayIcon.h"
+
 #include <KpkStrings.h>
 #include <KpkTransaction.h>
 #include <KpkIcons.h>
@@ -26,24 +27,20 @@
 #include <KMessageBox>
 #include <KLocale>
 #include <KIcon>
-#include <QSize>
 #include <QMenu>
-#include <KRun>
 #include <QTimer>
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <KNotification>
 
-Q_DECLARE_METATYPE(Transaction*)
-
 #include <KDebug>
+
+Q_DECLARE_METATYPE(Transaction*)
 
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
  : KpkAbstractIsRunning(parent),
    m_refreshCacheAction(0)
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-
     // Creates our smart icon
     m_smartSTI = new KSystemTrayIcon("applications-other");
     connect(m_smartSTI, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -146,6 +143,7 @@ void KpkTransactionTrayIcon::createTransactionDialog(Transaction *t)
     // due to GPG or EULA and we can't handle this here..
     connect(trans, SIGNAL(finished()),
             this, SLOT(transactionDialogClosed()));
+    emit removeTransactionWatcher(t->tid());
     m_transDialogs[t] = trans;
     trans->show();
 }
@@ -158,60 +156,16 @@ void KpkTransactionTrayIcon::transactionDialogClosed()
     decreaseRunning();
 }
 
-// void KpkTransactionTrayIcon::showTransactionError(PackageKit::Client::ErrorType err, const QString &details)
-// {
-// // TODO this needs a DBus interface to track only HIDDEN transactions
-// //     KNotification* errorNotification = new KNotification("TransactionError");
-// //     errorNotification->setFlags(KNotification::Persistent);
-// //     errorNotification->setText("<b>"+KpkStrings::error(err)+"</b><br />"+KpkStrings::errorMessage(err));
-// //     KIcon icon("dialog-error");
-// //     // Use QSize for proper icon
-// //     errorNotification->setPixmap(icon.pixmap(QSize(128, 128)));
-// //     errorNotification->sendEvent();
-// }
-
-// //FIXME: Implement the proper dbus calls to restart things.
-// void KpkTransactionTrayIcon::showRestartMessage(PackageKit::Client::RestartType type, const QString &details)
-// {
-//     if (type==Client::RestartNone) {
-//         return;
-//     }
-//     KNotification *notify = new KNotification("RestartRequired");
-//     QString text;
-//     QStringList events;
-//     KIcon icon;
-//     switch(type) {
-//         case Client::RestartApplication:
-//             text = i18n("Restart the application for system changes to take effect.");
-//             //FIXME: Need a way to detect which program it is
-//             icon = KIcon("window-close");
-//             break;
-//         case Client::RestartSession:
-//             text = i18n("You must logout and log back in for system changes to take effect.");
-//             icon = KIcon("system-restart"); //FIXME: find the logout icon
-//             break;
-//         case Client::RestartSystem:
-//             text = i18n("Please restart your computer for system changes to take effect.");
-//             icon = KIcon("system-restart");
-//             break;
-//         case Client::RestartNone:
-//         case Client::UnknownRestartType:
-//             return;
-//     }
-//     // Use QSize for proper icon
-//     notify->setPixmap(icon.pixmap(QSize(128, 128)));
-//     notify->setText("<b>"+text+"</b><br />"+details);
-//     notify->sendEvent();
-// }
-
 void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
 {
+    kDebug() << tids.size();
     if (tids.size()) {
         setCurrentTransaction(tids.first());
     } else {
         m_menu->hide();
         if (m_messages.isEmpty()) {
-            QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
+            m_smartSTI->hide(); // EXPERIMENTAL
+//             QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
             emit close();
         }
     }
@@ -228,12 +182,6 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
             this, SLOT(currentProgressChanged(PackageKit::Transaction::ProgressInfo)));
     connect(m_currentTransaction, SIGNAL(message(PackageKit::Client::MessageType, const QString &)),
             this, SLOT(message(PackageKit::Client::MessageType, const QString &)));
-    // TODO we don't want do display all transactions informatiom
-    // There will certainly be more than one user so this will never work.
-//     connect(tids.first(), SIGNAL(errorCode( PackageKit::Client::ErrorType, const QString)),
-//             this, SLOT(showTransactionError(PackageKit::Client::ErrorType, const QString)));
-//     connect(tids.first(), SIGNAL(requireRestart(PackageKit::Client::RestartType, const QString)),
-//             this, SLOT(showRestartMessage(PackageKit::Client::RestartType, const QString)));
     m_smartSTI->show();
 }
 

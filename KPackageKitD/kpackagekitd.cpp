@@ -24,7 +24,11 @@
 #include <KGenericFactory>
 #include <KStandardDirs>
 #include <KConfigGroup>
+
 #include <QDateTime>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusConnection>
+
 #include <limits.h>
 #include <solid/networking.h>
 #include <solid/acadapter.h>
@@ -75,7 +79,7 @@ void KPackageKitD::init()
         || !act.contains(Client::ActionRefreshCache)) {
         // WE ARE NOT GOING TO REFRESH THE CACHE if it not time BUT
         // WE can SHOW the user his system update :D
-        QProcess::execute("kpackagekit-smart-icon", QStringList() << "--update");
+        update();
     }
 
     if (!act.contains(Client::ActionRefreshCache)) {
@@ -120,7 +124,7 @@ void KPackageKitD::read()
 void KPackageKitD::finished(PackageKit::Transaction::ExitStatus status, uint)
 {
     if (status == Transaction::ExitSuccess) {
-        QProcess::execute("kpackagekit-smart-icon", QStringList() << "--update");
+        update();
     } else {
         // try again in 5 minutes
         m_qtimer->start(FIVE_MIN);
@@ -164,6 +168,23 @@ void KPackageKitD::checkUpdates()
 void KPackageKitD::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
 {
     if (tids.size()) {
-        QProcess::execute("kpackagekit-smart-icon");
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall("org.freedesktop.DBus",
+                                                 "/",
+                                                 "org.freedesktop.DBus",
+                                                 QLatin1String("StartServiceByName"));
+        message << qVariantFromValue(QString("org.kde.KPackageKit.Tray"));
+        message << qVariantFromValue((uint) 0);
+        QDBusConnection::sessionBus().call(message);
     }
+}
+
+void KPackageKitD::update()
+{
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKit.Tray",
+                                            "/",
+                                            "org.kde.KPackageKit.Tray",
+                                            QLatin1String("Update"));
+    QDBusConnection::sessionBus().call(message);
 }

@@ -27,6 +27,8 @@
 #include "KpkUpdateIcon.h"
 #include "KpkDistroUpgrade.h"
 #include "KpkTransactionTrayIcon.h"
+#include "KpkInterface.h"
+#include "KpkTransactionWatcher.h"
 
 namespace kpackagekit {
 
@@ -50,6 +52,9 @@ private:
     KpkTransactionTrayIcon *m_trayIcon;
     KpkUpdateIcon *m_updateIcon;
     KpkDistroUpgrade *m_distroUpgrade;
+
+    KpkInterface *m_interface;
+    KpkTransactionWatcher *m_transWatcher;
 };
 
 }

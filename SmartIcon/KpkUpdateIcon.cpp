@@ -23,11 +23,11 @@
 #include "KpkUpdateIcon.h"
 
 #include <KpkIcons.h>
-#include <KDebug>
 #include <KpkStrings.h>
 #include <KpkEnum.h>
 
 #include <QMenu>
+#include <KDebug>
 #include <KStandardAction>
 #include <KActionCollection>
 #include <KAction>
@@ -223,6 +223,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                 if (Transaction* t = Client::instance()->updateSystem()) {
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                             this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+                    emit watchTransaction(t->tid());
                     //autoUpdatesInstalling(t);
                     KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
                     autoInstallNotify->setText(i18n("Updates are being automatically installed."));
@@ -249,6 +250,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
 //                         suppressSleep(true);
                         connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                                 this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+                        emit watchTransaction(t->tid());
                         //autoUpdatesInstalling(t);
                         KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
                         autoInstallNotify->setText(i18n("Security updates are being automatically installed."));

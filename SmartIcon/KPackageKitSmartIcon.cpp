@@ -20,16 +20,8 @@
 
 #include "KPackageKitSmartIcon.h"
 
-#include <KGlobal>
-#include <KStartupInfo>
 #include <KCmdLineArgs>
-#include <KStandardDirs>
-#include <KConfig>
-#include <KConfigGroup>
 #include <KDebug>
-#include <QStringList>
-#include <KCModuleInfo>
-#include <KNotification>
 
 #define MINUTE 60000
 
@@ -41,6 +33,8 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
    m_updateIcon(0),
    m_distroUpgrade(0)
 {
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+
     // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);
 
@@ -60,6 +54,23 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     m_distroUpgrade = new KpkDistroUpgrade(this);
     connect(m_distroUpgrade, SIGNAL(close()), this, SLOT(prepareToClose()));
 
+    m_interface = new KpkInterface(this);
+    // connect the update signal from DBus to our update and distro classes
+    connect(m_interface, SIGNAL(update()),
+            m_updateIcon, SLOT(checkUpdates()));
+    connect(m_interface, SIGNAL(update()),
+            m_distroUpgrade, SLOT(checkDistroUpgrades()));
+
+    m_transWatcher = new KpkTransactionWatcher(this);
+    // connect the watch transaction comming through DBus to our watcher
+    connect(m_interface, SIGNAL(watchTransaction(const QString &)),
+            m_transWatcher, SLOT(watchTransaction(const QString &)));
+    // connect the watch transaction comming from the updater icon to our watcher
+    connect(m_updateIcon, SIGNAL(watchTransaction(const QString &)),
+            m_transWatcher, SLOT(watchTransaction(const QString &)));
+    // do not watch a transaction that is being
+    connect(m_trayIcon, SIGNAL(removeTransactionWatcher(const QString &)),
+            m_transWatcher, SLOT(removeTransactionWatcher(const QString &)));
     prepareToClose();
 }
 
@@ -101,13 +112,6 @@ void KPackageKit_Smart_Icon::close()
 
 int KPackageKit_Smart_Icon::newInstance()
 {
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-    if (args->isSet("update")) {
-        kDebug() << "Running update checker";
-        m_updateIcon->checkUpdates();
-        m_distroUpgrade->checkDistroUpgrades();
-    }
     return 0;
 }
 

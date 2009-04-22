@@ -38,6 +38,9 @@ public:
 
     bool isRunning();
 
+signals:
+    void removeTransactionWatcher(const QString &tid);
+
 public slots:
     void checkTransactionList();
 
@@ -50,8 +53,6 @@ private slots:
     void createTransactionDialog(Transaction *t);
     void transactionDialogClosed();
     void message(PackageKit::Client::MessageType type, const QString &message);
-//     void showTransactionError(PackageKit::Client::ErrorType, const QString&);
-//     void showRestartMessage(PackageKit::Client::RestartType, const QString&);
 
     void refreshCache();
     void showMessages();

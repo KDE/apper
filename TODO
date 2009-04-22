@@ -35,3 +35,6 @@ A quick list of things that need to be done.
 
 - Fix error handling on repo Settings
   (Daniel)
+
+- Fix duplicate calls to User1 in transaction due to finished() signal
+  (Daniel)

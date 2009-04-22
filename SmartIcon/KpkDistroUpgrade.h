@@ -34,6 +34,7 @@ public:
     KpkDistroUpgrade(QObject *parent = 0);
     ~KpkDistroUpgrade();
 
+public slots:
     void checkDistroUpgrades();
 
 private slots:

@@ -40,8 +40,8 @@ void KpkDistroUpgrade::checkDistroUpgrades()
 {
     if (!isRunning()) {
         if (Transaction *t = Client::instance()->getDistroUpgrades()) {
-            connect(t, SIGNAL(distroUpgrade(PackageKit::Client::UpgradeType, const QString &, const QString &)),
-                    this, SLOT(distroUpgrade(PackageKit::Client::UpgradeType, const QString &, const QString &)));
+            connect(t, SIGNAL(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)),
+                    this, SLOT(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)));
             connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                     this, SLOT(decreaseRunning()));
             increaseRunning();
