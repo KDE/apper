@@ -49,7 +49,7 @@ void KpkRemovePackageByFile::start()
     // this will come from DBus interface
     if (parentTitle.isNull()) {
         title = i18np("A program wants to remove a file",
-                      "A program wants to remove filess",
+                      "A program wants to remove files",
                       m_args.size());
     } else {
         title = i18np("%1 wants to remove a file",
@@ -63,7 +63,7 @@ void KpkRemovePackageByFile::start()
                             m_args.size())
                             + QString("<ul><li>%1</li></ul>").arg(m_args.join("</li><li>")) +
                       i18np("Do you want to search for packages containing this file and remove it now?",
-                            "Do you want to search for packages containing these files and remove it now?",
+                            "Do you want to search for packages containing these files and remove them now?",
                            m_args.size());
     QString msg = "<h3>" + title + "</h3>" + message;
     KGuiItem searchBt = KStandardGuiItem::yes();
