@@ -32,7 +32,7 @@ class KpkInstallProvideFile : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
-    KpkInstallProvideFile(const QStringList &args, QObject *parent = 0);
+    explicit KpkInstallProvideFile(const QStringList &args, QObject *parent = 0);
     ~KpkInstallProvideFile();
 
 public slots:

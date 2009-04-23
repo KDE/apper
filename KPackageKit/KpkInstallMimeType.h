@@ -32,7 +32,7 @@ class KpkInstallMimeType : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
-    KpkInstallMimeType(const QStringList &args, QObject *parent = 0);
+    explicit KpkInstallMimeType(const QStringList &args, QObject *parent = 0);
     ~KpkInstallMimeType();
 
 public slots:

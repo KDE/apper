@@ -125,7 +125,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
         m_groupsModel->appendRow(groupItem = new QStandardItem(QString()));
         groupItem->setEnabled(false);
         groupItem->setSizeHint(QSize(5, 5));
-        m_groupsModel->appendRow(groupItem = new QStandardItem(i18np("Group:", "Groups:", groups.size())));
+        m_groupsModel->appendRow(groupItem = new QStandardItem(i18ncp("Groups of packages", "Group:", "Groups:", groups.size())));
         groupItem->setEnabled(false);
 
         foreach (const Client::Group &group, groups) {

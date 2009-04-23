@@ -32,7 +32,7 @@ class KpkInstallPackageName : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
-    KpkInstallPackageName(const QStringList &args, QObject *parent = 0);
+    explicit KpkInstallPackageName(const QStringList &args, QObject *parent = 0);
     ~KpkInstallPackageName();
 
 public slots:

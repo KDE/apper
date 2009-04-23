@@ -32,7 +32,7 @@ class KpkInstallFiles : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
-    KpkInstallFiles(const KUrl::List &urls, QObject *parent = 0);
+    explicit KpkInstallFiles(const KUrl::List &urls, QObject *parent = 0);
     ~KpkInstallFiles();
 
 public slots:

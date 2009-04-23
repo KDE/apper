@@ -62,10 +62,10 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
             m_distroUpgrade, SLOT(checkDistroUpgrades()));
 
     m_transWatcher = new KpkTransactionWatcher(this);
-    // connect the watch transaction comming through DBus to our watcher
+    // connect the watch transaction coming through DBus to our watcher
     connect(m_interface, SIGNAL(watchTransaction(const QString &)),
             m_transWatcher, SLOT(watchTransaction(const QString &)));
-    // connect the watch transaction comming from the updater icon to our watcher
+    // connect the watch transaction coming from the updater icon to our watcher
     connect(m_updateIcon, SIGNAL(watchTransaction(const QString &)),
             m_transWatcher, SLOT(watchTransaction(const QString &)));
     // do not watch a transaction that is being

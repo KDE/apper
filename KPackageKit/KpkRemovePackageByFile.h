@@ -32,7 +32,7 @@ class KpkRemovePackageByFile : public KpkAbstractIsRunning
 {
 Q_OBJECT
 public:
-    KpkRemovePackageByFile(const QStringList &args, QObject *parent = 0);
+    explicit KpkRemovePackageByFile(const QStringList &args, QObject *parent = 0);
     ~KpkRemovePackageByFile();
 
 public slots:
