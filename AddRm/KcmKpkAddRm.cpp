@@ -32,6 +32,7 @@ KcmKpkAddRm::KcmKpkAddRm(QWidget *parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
     KAboutData *about = new KAboutData("kcm_kpk_addrm", "kpackagekit", ki18n("Add and Remove Software"), KPK_VERSION);
+    KGlobal::locale()->insertCatalog("kpackagekit");
     setAboutData(about);
     setButtons(Apply);
     m_grid = new QGridLayout(this);

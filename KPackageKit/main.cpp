@@ -30,7 +30,7 @@
 int main(int argc, char **argv)
 {
     KAboutData about("KPackageKit",
-                     0,
+                     "kpackagekit",
                      ki18n("KPackageKit"),
                      KPK_VERSION,
                      ki18n("KPackageKit user interface"),

@@ -40,4 +40,5 @@ KcmKpkSettings::KcmKpkSettings(QWidget *parent, const QVariantList &args)
     connect(this, SIGNAL(s_defaults()), view, SLOT(defaults()) );
     connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)) );
     m_grid->addWidget(view);
+    KGlobal::locale()->insertCatalog("kpackagekit");
 }

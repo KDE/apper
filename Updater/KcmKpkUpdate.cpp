@@ -38,6 +38,7 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     view = new KpkUpdate(this);
     m_grid->addWidget(view);
     connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+    KGlobal::locale()->insertCatalog("kpackagekit");
 }
 
 void KcmKpkUpdate::load()
