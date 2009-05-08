@@ -6,6 +6,7 @@ X-KDE-Library=kpackagekitd
 X-KDE-Kded-autoload=true
 
 Name=KPackageKit Service
+Name[ca]=Servei del KPackageKit
 Name[el]=Υπηρεσία KPackageKit
 Name[et]=KPackageKiti teenus
 Name[fr]=Service KPackageKit
@@ -24,6 +25,7 @@ Name[uk]=Служба KPackageKit
 Name[x-test]=xxKPackageKit Servicexx
 
 Comment=Tracks and Notify about Software Updates
+Comment[ca]=Segueix i comunica les actualitzacions de programari
 Comment[el]=Καταγραφή και ειδοποίηση σχετικά με ενημερώσεις λογισμικού
 Comment[et]=Tarkvarauuenduste jälgimine ja neist teadaandmine
 Comment[fr]=Surveille et informe sur les mises à jour logicielles
