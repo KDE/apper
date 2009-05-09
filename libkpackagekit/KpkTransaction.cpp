@@ -42,6 +42,8 @@ class KpkTransactionPrivate
 {
 public:
     Ui::KpkTransaction ui;
+
+    QString tid;
     bool showDetails;
     bool finished;
 };
@@ -105,9 +107,15 @@ KpkTransaction::~KpkTransaction()
     delete d;
 }
 
+QString KpkTransaction::tid() const
+{
+    return d->tid;
+}
+
 void KpkTransaction::setTransaction(Transaction *trans)
 {
     m_trans = trans;
+    d->tid = trans->tid();
     d->finished = false;
 
     // sets the action icon to be the window icon
@@ -221,9 +229,9 @@ void KpkTransaction::slotButtonClicked(int button)
                 // so we call the tray icon to keep watching the transaction so if the
                 // transaction receives some error we can display them
                 QDBusMessage message;
-                message = QDBusMessage::createMethodCall("org.kde.KPackageKit.Tray",
+                message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
                                                         "/",
-                                                        "org.kde.KPackageKit.Tray",
+                                                        "org.kde.KPackageKitSmartIcon",
                                                         QLatin1String("WatchTransaction"));
                 message << qVariantFromValue(m_trans->tid());
                 QDBusMessage reply = QDBusConnection::sessionBus().call(message);

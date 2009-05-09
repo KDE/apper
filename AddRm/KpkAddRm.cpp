@@ -59,7 +59,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
 
     // check to see if the backend support these actions
     m_actions = m_client->getActions();
-    if (m_actions.contains(Client::ActionInstallPackages) || m_actions.contains(Client::ActionRemovePackages)) {
+    if ((m_actions & Client::ActionInstallPackages) || (m_actions & Client::ActionRemovePackages)) {
         connect(m_pkg_model_main, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
                 this, SLOT(checkChanged()) );
     }
@@ -70,17 +70,17 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     toolBar->addAction(m_genericActionK);
 
     // Add actions that the backend supports
-    if (m_actions.contains(Client::ActionSearchName)) {
+    if (m_actions & Client::ActionSearchName) {
         m_findMenu->addAction(actionFindName);
         setCurrentAction(actionFindName);
     }
-    if (m_actions.contains(Client::ActionSearchDetails)) {
+    if (m_actions & Client::ActionSearchDetails) {
         m_findMenu->addAction(actionFindDescription);
         if (!m_currentAction) {
             setCurrentAction(actionFindDescription);
         }
     }
-    if (m_actions.contains(Client::ActionSearchFile)) {
+    if (m_actions & Client::ActionSearchFile) {
         m_findMenu->addAction(actionFindFile);
         if (!m_currentAction) {
             setCurrentAction(actionFindFile);
@@ -110,7 +110,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     groupsCB->setModel(m_groupsModel);
 
     //initialize the groups
-    QSet<Client::Group> groups = m_client->getGroups();
+    Client::Groups groups = m_client->getGroups();
     // Add All packages entry
     QStandardItem *groupItem;
     m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("All packages")));
@@ -134,7 +134,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
                 groupItem->setData(Group, Qt::UserRole);
                 groupItem->setData(group, Group);
                 groupItem->setIcon(KpkIcons::groupsIcon(group));
-                if (!m_actions.contains(Client::ActionSearchGroup)) {
+                if (!(m_actions & Client::ActionSearchGroup)) {
                     groupItem->setSelectable(false);
                 }
             }
@@ -250,18 +250,13 @@ KpkAddRm::~KpkAddRm()
     KConfig config("KPackageKit");
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
-    kDebug() << "Saving filters settings";
+    kDebug() << "Saving settings";
+    // For usability we will only save ViewInGroups settings,
+    // - The user might get angry when he does not find any packages because he didn't
+    //   see that a filter is set by config
 
-//     filterMenuGroup.writeEntry("OnlyNewestPackages", m_actionNewestOnly->isChecked());
-//     filterMenuGroup.writeEntry("HideSubpackages", m_actionBasename->isChecked());
     // This entry does not depend on the backend it's ok to call this pointer
     filterMenuGroup.writeEntry("ViewInGroups", m_actionViewInGroups->isChecked());
-    // We call filters so we can save all of them, although i'm not sure
-    // most people will want to save them
-    // TODO make the filter bold when it's has not the default filters
-    //      this way people can see that their old filter were loaded
-//     writeEntry(filterMenuGroup, "SelectedFilters", Client::FilterNotCollections);
-//     writeEntry(filterMenuGroup, "SelectedFilters", filters().toList());
 }
 
 void KpkAddRm::on_actionFindName_triggered()
@@ -440,242 +435,240 @@ void KpkAddRm::filterMenu(Client::Filters filters)
     KConfig config("KPackageKit");
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
-    if (!filters.isEmpty()) {
-        if (filters.contains(Client::FilterCollections) || filters.contains(Client::FilterNotCollections)) {
-            QMenu *menuCollections = new QMenu(i18n("Collections"), m_filtersQM);
-            m_filtersQM->addMenu(menuCollections);
-            QActionGroup *collectionGroup = new QActionGroup(menuCollections);
-            collectionGroup->setExclusive(true);
+    if (filters & Client::FilterCollections || filters & Client::FilterNotCollections) {
+        QMenu *menuCollections = new QMenu(i18n("Collections"), m_filtersQM);
+        m_filtersQM->addMenu(menuCollections);
+        QActionGroup *collectionGroup = new QActionGroup(menuCollections);
+        collectionGroup->setExclusive(true);
 
-            QAction *collectionTrue = new QAction(i18n("Only collections"), collectionGroup);
-            collectionTrue->setCheckable(true);
-            m_filtersAction[collectionTrue] = Client::FilterCollections;
-            collectionGroup->addAction(collectionTrue);
-            menuCollections->addAction(collectionTrue);
-            actions << collectionTrue;
+        QAction *collectionTrue = new QAction(i18n("Only collections"), collectionGroup);
+        collectionTrue->setCheckable(true);
+        m_filtersAction[collectionTrue] = Client::FilterCollections;
+        collectionGroup->addAction(collectionTrue);
+        menuCollections->addAction(collectionTrue);
+        actions << collectionTrue;
 
-            QAction *collectionFalse = new QAction(i18n("Exclude collections"), collectionGroup);
-            collectionFalse->setCheckable(true);
-            m_filtersAction[collectionFalse] = Client::FilterNotCollections;
-            collectionGroup->addAction(collectionFalse);
-            menuCollections->addAction(collectionFalse);
-            actions << collectionFalse;
-        }
-        if (filters.contains(Client::FilterInstalled)  || filters.contains(Client::FilterNotInstalled)) {
-            // Installed
-            QMenu *menuInstalled = new QMenu(i18n("Installed"), m_filtersQM);
-            m_filtersQM->addMenu(menuInstalled);
-            QActionGroup *installedGroup = new QActionGroup(menuInstalled);
-            installedGroup->setExclusive(true);
-
-//             if ( filters.contains(Client::FilterInstalled) ) {
-                QAction *installedTrue = new QAction(i18n("Only installed"), installedGroup);
-                installedTrue->setCheckable(true);
-                m_filtersAction[installedTrue] = Client::FilterInstalled;
-                installedGroup->addAction(installedTrue);
-                menuInstalled->addAction(installedTrue);
-                actions << installedTrue;
-//             }
-
-//             if ( filters.contains(Client::FilterNotInstalled) ) {
-                QAction *installedFalse = new QAction(i18n("Only available"), installedGroup);
-                installedFalse->setCheckable(true);
-                m_filtersAction[installedFalse] = Client::FilterNotInstalled;
-                installedGroup->addAction(installedFalse);
-                menuInstalled->addAction(installedFalse);
-                actions << installedFalse;
-//             }
-
-            QAction *installedNone = new QAction(i18n("No filter"), installedGroup);
-            installedNone->setCheckable(true);
-            installedNone->setChecked(true);
-            installedGroup->addAction(installedNone);
-            menuInstalled->addAction(installedNone);
-            actions << installedNone;
-        }
-        if (filters.contains(Client::FilterDevelopment) || filters.contains(Client::FilterNotDevelopment)) {
-            // Development
-            QMenu *menuDevelopment = new QMenu(i18n("Development"), m_filtersQM);
-            m_filtersQM->addMenu(menuDevelopment);
-            QActionGroup *developmentGroup = new QActionGroup(menuDevelopment);
-            developmentGroup->setExclusive(true);
-
-//             if ( filters.contains(Client::FilterDevelopment) ) {
-                QAction *developmentTrue = new QAction(i18n("Only development"), developmentGroup);
-                developmentTrue->setCheckable(true);
-                m_filtersAction[developmentTrue] = Client::FilterDevelopment;
-                developmentGroup->addAction(developmentTrue);
-                menuDevelopment->addAction(developmentTrue);
-                actions << developmentTrue;
-//             }
-
-//             if ( filters.contains(Client::FilterNotDevelopment) ) {
-                QAction *developmentFalse = new QAction(i18n("Only end user files"), developmentGroup);
-                developmentFalse->setCheckable(true);
-                m_filtersAction[developmentFalse] = Client::FilterNotDevelopment;
-                developmentGroup->addAction(developmentFalse);
-                menuDevelopment->addAction(developmentFalse);
-                actions << developmentFalse;
-//             }
-
-            QAction *developmentNone = new QAction(i18n("No filter"), developmentGroup);
-            developmentNone->setCheckable(true);
-            developmentNone->setChecked(true);
-            developmentGroup->addAction(developmentNone);
-            menuDevelopment->addAction(developmentNone);
-            actions << developmentNone;
-        }
-        if (filters.contains(Client::FilterGui) || filters.contains(Client::FilterNotGui)) {
-            // Graphical
-            QMenu *menuGui = new QMenu(i18n("Graphical"), m_filtersQM);
-            m_filtersQM->addMenu(menuGui);
-            QActionGroup *guiGroup = new QActionGroup(menuGui);
-            guiGroup->setExclusive(true);
-
-//             if ( filters.contains(Client::FilterGui) ) {
-                QAction *guiTrue = new QAction(i18n("Only graphical"), guiGroup);
-                guiTrue->setCheckable(true);
-                m_filtersAction[guiTrue] = Client::FilterGui;
-                guiGroup->addAction(guiTrue);
-                menuGui->addAction(guiTrue);
-                actions << guiTrue;
-//             }
-
-//             if ( filters.contains(Client::FilterNotGui) ) {
-                QAction *guiFalse = new QAction(i18n("Only text"), guiGroup);
-                guiFalse->setCheckable(true);
-                m_filtersAction[guiFalse] = Client::FilterNotGui;
-                guiGroup->addAction(guiFalse);
-                menuGui->addAction(guiFalse);
-                actions << guiFalse;
-//             }
-
-            QAction *guiNone = new QAction(i18n("No filter"), guiGroup);
-            guiNone->setCheckable(true);
-            guiNone->setChecked(true);
-            guiGroup->addAction(guiNone);
-            menuGui->addAction(guiNone);
-            actions << guiNone;
-        }
-        if (filters.contains(Client::FilterFree) || filters.contains(Client::FilterNotFree)) {
-            // Free
-            QMenu *menuFree = new QMenu(i18nc("Filter for free packages", "Free"), m_filtersQM);
-            m_filtersQM->addMenu(menuFree);
-            QActionGroup *freeGroup = new QActionGroup(menuFree);
-            freeGroup->setExclusive(true);
-
-//             if ( filters.contains(Client::FilterFree) ) {
-                QAction *freeTrue = new QAction(i18n("Only free software"), freeGroup);
-                freeTrue->setCheckable(true);
-                m_filtersAction[freeTrue] = Client::FilterFree;
-                freeGroup->addAction(freeTrue);
-                menuFree->addAction(freeTrue);
-                actions << freeTrue;
-//             }
-
-//             if ( filters.contains(Client::FilterNotFree) ) {
-                QAction *freeFalse = new QAction(i18n("Only non-free software"), freeGroup);
-                freeFalse->setCheckable(true);
-                m_filtersAction[freeFalse] = Client::FilterNotFree;
-                freeGroup->addAction(freeFalse);
-                menuFree->addAction(freeFalse);
-                actions << freeFalse;
-//             }
-
-            QAction *freeNone = new QAction(i18n("No filter"), freeGroup);
-            freeNone->setCheckable(true);
-            freeNone->setChecked(true);
-            freeGroup->addAction(freeNone);
-            menuFree->addAction(freeNone);
-            actions << freeNone;
-        }
-        if (filters.contains(Client::FilterArch) || filters.contains(Client::FilterNotArch)) {
-            // Arch
-            QMenu *menuArch = new QMenu(i18n("Architectures"), m_filtersQM);
-            m_filtersQM->addMenu(menuArch);
-            QActionGroup *archGroup = new QActionGroup(menuArch);
-            archGroup->setExclusive(true);
-
-//             if ( filters.contains(Client::FilterArch) ) {
-                QAction *archTrue = new QAction(i18n("Only native architectures"), archGroup);
-                archTrue->setCheckable(true);
-                m_filtersAction[archTrue] = Client::FilterArch;
-                archGroup->addAction(archTrue);
-                menuArch->addAction(archTrue);
-                actions << archTrue;
-//             }
-
-//             if ( filters.contains(Client::FilterNotArch) ) {
-                QAction *archFalse = new QAction(i18n("Only non-native architectures"), archGroup);
-                archFalse->setCheckable(true);
-                m_filtersAction[archFalse] = Client::FilterNotArch;
-                archGroup->addAction(archFalse);
-                menuArch->addAction(archFalse);
-                actions << archFalse;
-//             }
-
-            QAction *archNone = new QAction(i18n("No filter"), archGroup);
-            archNone->setCheckable(true);
-            archNone->setChecked(true);
-            archGroup->addAction(archNone);
-            menuArch->addAction(archNone);
-            actions << archNone;
-        }
-        if (filters.contains(Client::FilterSource) || filters.contains(Client::FilterNotSource)) {
-            // Source
-            QMenu *menuSource = new QMenu(i18nc("Filter for source packages", "Source"), m_filtersQM);
-            m_filtersQM->addMenu(menuSource);
-            QActionGroup *sourceGroup = new QActionGroup(menuSource);
-            sourceGroup->setExclusive(true);
-
-//             if ( filters.contains(Client::FilterSource) ) {
-                QAction *sourceTrue = new QAction(i18n("Only sourcecode"), sourceGroup);
-                sourceTrue->setCheckable(true);
-                m_filtersAction[sourceTrue] = Client::FilterSource;
-                sourceGroup->addAction(sourceTrue);
-                menuSource->addAction(sourceTrue);
-                actions << sourceTrue;
-//             }
-
-//             if ( filters.contains(Client::FilterNotSource) ) {
-                QAction *sourceFalse = new QAction(i18n("Only non-sourcecode"), sourceGroup);
-                sourceFalse->setCheckable(true);
-                m_filtersAction[sourceFalse] = Client::FilterNotSource;
-                sourceGroup->addAction(sourceFalse);
-                menuSource->addAction(sourceFalse);
-                actions << sourceFalse;
-//             }
-
-            QAction *sourceNone = new QAction(i18n("No filter"), sourceGroup);
-            sourceNone->setCheckable(true);
-            sourceNone->setChecked(true);
-            sourceGroup->addAction(sourceNone);
-            menuSource->addAction(sourceNone);
-            actions << sourceNone;
-        }
-        if (filters.contains(Client::FilterBasename)) {
-            m_filtersQM->addSeparator();
-            QAction *basename = new QAction(i18n("Hide subpackages"), m_filtersQM);
-            basename->setCheckable(true);
-            basename->setToolTip( i18n("Only show one package, not subpackages") );
-            m_filtersAction[basename] = Client::FilterBasename;
-            m_filtersQM->addAction(basename);
-
-            actions << basename;
-        }
-        if (filters.contains(Client::FilterNewest)) {
-            m_filtersQM->addSeparator();
-            QAction *newest = new QAction(i18n("Only newest packages"), m_filtersQM);
-            newest->setCheckable(true);
-            newest->setToolTip( i18n("Only show the newest available package") );
-            m_filtersAction[newest] = Client::FilterNewest;
-            m_filtersQM->addAction(newest);
-
-            actions << newest;
-        }
-
-        m_filtersQM->addSeparator();
+        QAction *collectionFalse = new QAction(i18n("Exclude collections"), collectionGroup);
+        collectionFalse->setCheckable(true);
+        m_filtersAction[collectionFalse] = Client::FilterNotCollections;
+        collectionGroup->addAction(collectionFalse);
+        menuCollections->addAction(collectionFalse);
+        actions << collectionFalse;
     }
+    if (filters & Client::FilterInstalled || filters & Client::FilterNotInstalled) {
+        // Installed
+        QMenu *menuInstalled = new QMenu(i18n("Installed"), m_filtersQM);
+        m_filtersQM->addMenu(menuInstalled);
+        QActionGroup *installedGroup = new QActionGroup(menuInstalled);
+        installedGroup->setExclusive(true);
+
+//             if (filters & Client::FilterInstalled) {
+            QAction *installedTrue = new QAction(i18n("Only installed"), installedGroup);
+            installedTrue->setCheckable(true);
+            m_filtersAction[installedTrue] = Client::FilterInstalled;
+            installedGroup->addAction(installedTrue);
+            menuInstalled->addAction(installedTrue);
+            actions << installedTrue;
+//             }
+
+//             if (filters & Client::FilterNotInstalled) {
+            QAction *installedFalse = new QAction(i18n("Only available"), installedGroup);
+            installedFalse->setCheckable(true);
+            m_filtersAction[installedFalse] = Client::FilterNotInstalled;
+            installedGroup->addAction(installedFalse);
+            menuInstalled->addAction(installedFalse);
+            actions << installedFalse;
+//             }
+
+        QAction *installedNone = new QAction(i18n("No filter"), installedGroup);
+        installedNone->setCheckable(true);
+        installedNone->setChecked(true);
+        installedGroup->addAction(installedNone);
+        menuInstalled->addAction(installedNone);
+        actions << installedNone;
+    }
+    if (filters & Client::FilterDevelopment || filters & Client::FilterNotDevelopment) {
+        // Development
+        QMenu *menuDevelopment = new QMenu(i18n("Development"), m_filtersQM);
+        m_filtersQM->addMenu(menuDevelopment);
+        QActionGroup *developmentGroup = new QActionGroup(menuDevelopment);
+        developmentGroup->setExclusive(true);
+
+//             if (filters & Client::FilterDevelopment) {
+            QAction *developmentTrue = new QAction(i18n("Only development"), developmentGroup);
+            developmentTrue->setCheckable(true);
+            m_filtersAction[developmentTrue] = Client::FilterDevelopment;
+            developmentGroup->addAction(developmentTrue);
+            menuDevelopment->addAction(developmentTrue);
+            actions << developmentTrue;
+//             }
+
+//             if (filters & Client::FilterNotDevelopment) {
+            QAction *developmentFalse = new QAction(i18n("Only end user files"), developmentGroup);
+            developmentFalse->setCheckable(true);
+            m_filtersAction[developmentFalse] = Client::FilterNotDevelopment;
+            developmentGroup->addAction(developmentFalse);
+            menuDevelopment->addAction(developmentFalse);
+            actions << developmentFalse;
+//             }
+
+        QAction *developmentNone = new QAction(i18n("No filter"), developmentGroup);
+        developmentNone->setCheckable(true);
+        developmentNone->setChecked(true);
+        developmentGroup->addAction(developmentNone);
+        menuDevelopment->addAction(developmentNone);
+        actions << developmentNone;
+    }
+    if (filters & Client::FilterGui || filters & Client::FilterNotGui) {
+        // Graphical
+        QMenu *menuGui = new QMenu(i18n("Graphical"), m_filtersQM);
+        m_filtersQM->addMenu(menuGui);
+        QActionGroup *guiGroup = new QActionGroup(menuGui);
+        guiGroup->setExclusive(true);
+
+//             if (filters & Client::FilterGui) {
+            QAction *guiTrue = new QAction(i18n("Only graphical"), guiGroup);
+            guiTrue->setCheckable(true);
+            m_filtersAction[guiTrue] = Client::FilterGui;
+            guiGroup->addAction(guiTrue);
+            menuGui->addAction(guiTrue);
+            actions << guiTrue;
+//             }
+
+//             if (filters & Client::FilterNotGui) {
+            QAction *guiFalse = new QAction(i18n("Only text"), guiGroup);
+            guiFalse->setCheckable(true);
+            m_filtersAction[guiFalse] = Client::FilterNotGui;
+            guiGroup->addAction(guiFalse);
+            menuGui->addAction(guiFalse);
+            actions << guiFalse;
+//             }
+
+        QAction *guiNone = new QAction(i18n("No filter"), guiGroup);
+        guiNone->setCheckable(true);
+        guiNone->setChecked(true);
+        guiGroup->addAction(guiNone);
+        menuGui->addAction(guiNone);
+        actions << guiNone;
+    }
+    if (filters & Client::FilterFree || filters & Client::FilterNotFree) {
+        // Free
+        QMenu *menuFree = new QMenu(i18nc("Filter for free packages", "Free"), m_filtersQM);
+        m_filtersQM->addMenu(menuFree);
+        QActionGroup *freeGroup = new QActionGroup(menuFree);
+        freeGroup->setExclusive(true);
+
+//             if (filters & Client::FilterFree) {
+            QAction *freeTrue = new QAction(i18n("Only free software"), freeGroup);
+            freeTrue->setCheckable(true);
+            m_filtersAction[freeTrue] = Client::FilterFree;
+            freeGroup->addAction(freeTrue);
+            menuFree->addAction(freeTrue);
+            actions << freeTrue;
+//             }
+
+//             if (filters & Client::FilterNotFree) {
+            QAction *freeFalse = new QAction(i18n("Only non-free software"), freeGroup);
+            freeFalse->setCheckable(true);
+            m_filtersAction[freeFalse] = Client::FilterNotFree;
+            freeGroup->addAction(freeFalse);
+            menuFree->addAction(freeFalse);
+            actions << freeFalse;
+//             }
+
+        QAction *freeNone = new QAction(i18n("No filter"), freeGroup);
+        freeNone->setCheckable(true);
+        freeNone->setChecked(true);
+        freeGroup->addAction(freeNone);
+        menuFree->addAction(freeNone);
+        actions << freeNone;
+    }
+    if (filters & Client::FilterArch || filters & Client::FilterNotArch) {
+        // Arch
+        QMenu *menuArch = new QMenu(i18n("Architectures"), m_filtersQM);
+        m_filtersQM->addMenu(menuArch);
+        QActionGroup *archGroup = new QActionGroup(menuArch);
+        archGroup->setExclusive(true);
+
+//             if (filters & Client::FilterArch) {
+            QAction *archTrue = new QAction(i18n("Only native architectures"), archGroup);
+            archTrue->setCheckable(true);
+            m_filtersAction[archTrue] = Client::FilterArch;
+            archGroup->addAction(archTrue);
+            menuArch->addAction(archTrue);
+            actions << archTrue;
+//             }
+
+//             if (filters & Client::FilterNotArch) {
+            QAction *archFalse = new QAction(i18n("Only non-native architectures"), archGroup);
+            archFalse->setCheckable(true);
+            m_filtersAction[archFalse] = Client::FilterNotArch;
+            archGroup->addAction(archFalse);
+            menuArch->addAction(archFalse);
+            actions << archFalse;
+//             }
+
+        QAction *archNone = new QAction(i18n("No filter"), archGroup);
+        archNone->setCheckable(true);
+        archNone->setChecked(true);
+        archGroup->addAction(archNone);
+        menuArch->addAction(archNone);
+        actions << archNone;
+    }
+    if (filters & Client::FilterSource || filters & Client::FilterNotSource) {
+        // Source
+        QMenu *menuSource = new QMenu(i18nc("Filter for source packages", "Source"), m_filtersQM);
+        m_filtersQM->addMenu(menuSource);
+        QActionGroup *sourceGroup = new QActionGroup(menuSource);
+        sourceGroup->setExclusive(true);
+
+//             if (filters & Client::FilterSource) {
+            QAction *sourceTrue = new QAction(i18n("Only sourcecode"), sourceGroup);
+            sourceTrue->setCheckable(true);
+            m_filtersAction[sourceTrue] = Client::FilterSource;
+            sourceGroup->addAction(sourceTrue);
+            menuSource->addAction(sourceTrue);
+            actions << sourceTrue;
+//             }
+
+//             if (filters & Client::FilterNotSource) {
+            QAction *sourceFalse = new QAction(i18n("Only non-sourcecode"), sourceGroup);
+            sourceFalse->setCheckable(true);
+            m_filtersAction[sourceFalse] = Client::FilterNotSource;
+            sourceGroup->addAction(sourceFalse);
+            menuSource->addAction(sourceFalse);
+            actions << sourceFalse;
+//             }
+
+        QAction *sourceNone = new QAction(i18n("No filter"), sourceGroup);
+        sourceNone->setCheckable(true);
+        sourceNone->setChecked(true);
+        sourceGroup->addAction(sourceNone);
+        menuSource->addAction(sourceNone);
+        actions << sourceNone;
+    }
+    if (filters & Client::FilterBasename) {
+        m_filtersQM->addSeparator();
+        QAction *basename = new QAction(i18n("Hide subpackages"), m_filtersQM);
+        basename->setCheckable(true);
+        basename->setToolTip( i18n("Only show one package, not subpackages") );
+        m_filtersAction[basename] = Client::FilterBasename;
+        m_filtersQM->addAction(basename);
+
+        actions << basename;
+    }
+    if (filters & Client::FilterNewest) {
+        m_filtersQM->addSeparator();
+        QAction *newest = new QAction(i18n("Only newest packages"), m_filtersQM);
+        newest->setCheckable(true);
+        newest->setToolTip( i18n("Only show the newest available package") );
+        m_filtersAction[newest] = Client::FilterNewest;
+        m_filtersQM->addAction(newest);
+
+        actions << newest;
+    }
+
+    m_filtersQM->addSeparator();
 
     m_actionViewInGroups = new QAction(i18n("View in groups"), m_filtersQM);
     m_actionViewInGroups->setCheckable(true);
@@ -702,18 +695,20 @@ void KpkAddRm::packageViewSetRootIsDecorated(bool value)
 
 Client::Filters KpkAddRm::filters()
 {
-    Client::Filters buffer;
+    Client::Filters filters;
+    bool filterSet = false;
     for (int i = 0 ; i < actions.size(); ++i) {
         if (actions.at(i)->isChecked()) {
             if (m_filtersAction.contains(actions.at(i))) {
-                buffer << m_filtersAction[actions.at(i)];
+                filters |= m_filtersAction[actions.at(i)];
+                filterSet = true;
             }
         }
     }
-    if (buffer.size() == 0) {
-        buffer << Client::NoFilter;
+    if (!filterSet) {
+        filters = Client::NoFilter;
     }
-    return m_searchFilters = buffer;
+    return m_searchFilters = filters;
 }
 
 void KpkAddRm::resizeEvent(QResizeEvent *event)

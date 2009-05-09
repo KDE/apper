@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include "KpkInterface.h"
-#include "trayadaptor.h"
+#include "kpackagekitsmarticonadaptor.h"
 
 #include <QtDBus/QDBusConnection>
 #include <KDebug>
@@ -27,11 +27,11 @@ KpkInterface::KpkInterface(QObject *parent)
         : QObject(parent)
 {
     qDebug() << "Creating Helper";
-    (void) new TrayAdaptor(this);
-    if (!QDBusConnection::sessionBus().registerService("org.kde.KPackageKit.Tray")) {
-        kDebug() << "another helper is already running";
-        return;
-    }
+    (void) new KPackageKitSmartIconAdaptor(this);
+//     if (!QDBusConnection::sessionBus().registerService("org.kde.kpackagekit-smart-icon")) {
+//         kDebug() << "another helper is already running";
+//         return;
+//     }
 
     if (!QDBusConnection::sessionBus().registerObject("/", this)) {
         kDebug() << "unable to register service interface to dbus";

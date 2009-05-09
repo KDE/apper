@@ -120,7 +120,7 @@ QString KpkStrings::statusPast(PackageKit::Transaction::Status status)
 QString KpkStrings::action(Client::Action action)
 {
     switch (action) {
-    case Client::UnkownAction :
+    case Client::UnknownAction :
         return i18nc("The role of the transaction, in present tense", "Unknown role type");
     case Client::ActionGetDepends :
         return i18nc("The role of the transaction, in present tense", "Getting dependencies");
@@ -190,7 +190,7 @@ QString KpkStrings::action(Client::Action action)
 QString KpkStrings::actionPast(Client::Action action)
 {
     switch (action) {
-    case Client::UnkownAction :
+    case Client::UnknownAction :
         return i18nc("The role of the transaction, in past tense", "Unknown role type");
     case Client::ActionGetDepends :
         return i18nc("The role of the transaction, in past tense", "Got dependencies");
@@ -630,6 +630,65 @@ QString KpkStrings::infoUpdate(Package::State state, int number)
     default : // In this case we don't want to map all enums
         kDebug() << "update info unrecognised: " << state;
         return i18np("1 unknown update", "%1 unknown updates", number);
+    }
+}
+
+QString KpkStrings::infoUpdate(Package::State state, int updates, int selected)
+{
+    if (updates == selected) {
+        switch (state) {
+        case Package::StateLow :
+            return i18np("1 trivial update selected", "%1 trivial updates selected", updates);
+        case Package::StateNormal :
+            return i18ncp("Type of update, in the case it's just an update",
+                          "1 update selected",
+                          "%1 updates selected", updates);
+        case Package::StateImportant :
+            return i18np("1 important update selected", "%1 important updates selected", updates);
+        case Package::StateSecurity :
+            return i18np("1 security update selected", "%1 security updates selected", updates);
+        case Package::StateBugfix :
+            return i18np("1 bug fix update selected", "%1 bug fix updates selected", updates);
+        case Package::StateEnhancement :
+            return i18np("1 enhancement update selected", "%1 enhancement updates selected", updates);
+        case Package::StateInstalled :
+            return i18np("1 installed package selected to be removed",
+                         "%1 installed packages selected to be removed", updates);
+        case Package::StateAvailable :
+            return i18np("1 available package selected to be installed",
+                         "%1 available packages selected to be installed", updates);
+        default : // In this case we don't want to map all enums
+            kDebug() << "update info unrecognised: " << state;
+            return i18np("1 unknown update", "%1 unknown updates", updates);
+        }
+    } else if (selected == 0) {
+        return infoUpdate(state, updates);
+    } else {
+        switch (state) {
+        case Package::StateLow :
+            return i18np("1 trivial update", "%1 trivial updates, %2 selected", updates, selected);
+        case Package::StateNormal :
+            return i18ncp("Type of update, in the case it's just an update",
+                          "1 update", "%1 updates, %2 selected", updates, selected);
+        case Package::StateImportant :
+            return i18np("1 important update", "%1 important updates, %2 selected", updates, selected);
+        case Package::StateSecurity :
+            return i18np("1 security update", "%1 security updates, %2 selected", updates, selected);
+        case Package::StateBugfix :
+            return i18np("1 bug fix update", "%1 bug fix updates, %2 selected", updates, selected);
+        case Package::StateEnhancement :
+            return i18np("1 enhancement update", "%1 enhancement updates, %2 selected", updates, selected);
+        case Package::StateBlocked :
+            // Blocked updates aren't selectable
+            return i18np("1 blocked update", "%1 blocked updates", updates);
+        case Package::StateInstalled :
+            return i18np("1 installed package", "%1 installed packages, %2 selected to be removed", updates, selected);
+        case Package::StateAvailable :
+            return i18np("1 available package", "%1 available packages, %2 selected to be installed", updates, selected);
+        default : // In this case we don't want to map all enums
+            kDebug() << "update info unrecognised: " << state;
+            return i18np("1 unknown update", "%1 unknown updates", updates);
+        }
     }
 }
 

@@ -25,7 +25,7 @@
 class KpkInterface : public QObject, protected QDBusContext
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.KPackageKit.Tray")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KPackageKitSmartIcon")
 public:
     KpkInterface(QObject *parent = 0);
     ~KpkInterface();

@@ -146,11 +146,21 @@ void KpkUpdate::refresh()
     }
 }
 
+void KpkUpdate::getUpdatesFinished(Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(status)
+    Q_UNUSED(runtime)
+    // If we just have one group let's expand it
+    if (m_pkg_model_updates->rowCount() == 1) {
+        packageView->expandAll();
+    }
+}
+
 void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
 {
     checkEnableUpdateButton();
     if (status == KpkTransaction::Success) {
-        // contract and delete and update details widgets
+        // contract to delete all update details widgets
         pkg_delegate->contractAll();
         // clears the model
         m_pkg_model_updates->clear();
@@ -161,6 +171,8 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
                 m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
         connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
                 this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
         // Clean the distribution upgrades area
         QLayoutItem *child;
         while ((child = verticalLayout->takeAt(0)) != 0) {
@@ -187,7 +199,7 @@ void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
     if (index.column() == 0) {
         Package *p = m_pkg_model_updates->package(index);
         // check to see if the backend support
-        if (p && m_actions.contains(Client::ActionGetUpdateDetail)) {
+        if (p && (m_actions & Client::ActionGetUpdateDetail)) {
             if (pkg_delegate->isExtended(index)) {
                 pkg_delegate->contractItem(index);
             } else {

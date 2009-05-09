@@ -29,11 +29,13 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about(
-    "kpackagekit-smart-icon", "kpackagekit", ki18n("KPackageKit"),
-    KPK_VERSION, ki18n("KPackageKit Tray Icon"),
-    KAboutData::License_GPL, ki18n("(C) 2008-2009 Daniel Nicoletti"),
-    KLocalizedString(), "http://www.packagekit.org/");
+    KAboutData about("kpackagekit-smart-icon",
+                     "kpackagekit",
+                     ki18n("KPackageKit"),
+                     KPK_VERSION,
+                     ki18n("KPackageKit Tray Icon"),
+                     KAboutData::License_GPL,
+                     ki18n("(C) 2008-2009 Daniel Nicoletti"));
 
     about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti85-pk@yahoo.com.br", "http://www.packagekit.org" );
     about.addAuthor(ki18n("Trever Fischer"), KLocalizedString(), "wm161@wm161.net", "http://wm161.net");

@@ -57,6 +57,7 @@ private slots:
     void distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description);
 
     void displayUpdates(KpkTransaction::ExitStatus status);
+    void getUpdatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
     void updateColumnsWidth(bool force = false);
     void on_packageView_pressed(const QModelIndex &index);

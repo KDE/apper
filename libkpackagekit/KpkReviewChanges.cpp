@@ -127,8 +127,8 @@ void KpkReviewChanges::checkTask()
 {
     if (!m_remPackages.isEmpty()) {
         kDebug() << "task rm if";
-        if (m_actions.contains(Client::ActionRemovePackages)) {
-            if (m_actions.contains(Client::ActionGetRequires)) {
+        if (m_actions & Client::ActionRemovePackages) {
+            if (m_actions & Client::ActionGetRequires) {
                 m_reqDepPackages = m_remPackages;
                 // Create the requirements transaction and it's model
                 m_pkgModelReq = new KpkSimplePackageModel(this);
@@ -150,8 +150,8 @@ void KpkReviewChanges::checkTask()
         }
     } else if (!m_addPackages.isEmpty()) {
         kDebug() << "task add else";
-        if (m_actions.contains(Client::ActionInstallPackages)) {
-            if (m_actions.contains(Client::ActionGetDepends)) {
+        if (m_actions & Client::ActionInstallPackages) {
+            if (m_actions & Client::ActionGetDepends) {
                 m_reqDepPackages = m_addPackages;
                 // Create the depends transaction and it's model
                 m_pkgModelDep = new KpkSimplePackageModel(this);

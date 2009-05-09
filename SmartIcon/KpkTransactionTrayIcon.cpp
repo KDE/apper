@@ -61,7 +61,7 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
     connect(m_client, SIGNAL(transactionListChanged(const QList<PackageKit::Transaction*> &)),
             this, SLOT(transactionListChanged(const QList<PackageKit::Transaction*> &)));
 
-    if (m_act.contains(Client::ActionRefreshCache)) {
+    if (m_act & Client::ActionRefreshCache) {
         m_refreshCacheAction = new QAction(this);
         m_refreshCacheAction->setText(i18n("Refresh package list"));
         m_refreshCacheAction->setIcon(KIcon("view-refresh"));
@@ -112,24 +112,27 @@ void KpkTransactionTrayIcon::refreshCache()
 
 void KpkTransactionTrayIcon::triggered(QAction *action)
 {
-    // Check to see if we set a Transaction* in action
+    // Check to see if we set a Transaction->tid() in action
     if (!action->data().isNull()) {
         // we need to find if the action clicked has already a dialog
-        QList<Transaction *> values = m_transDialogs.keys();
-        Transaction *trans = action->data().value<Transaction*>();
-        QString tid = trans->tid();
-        for (int i = 0; i < values.size(); ++i) {
-            // We have to compare the tids since the Transaction
-            // pointer changes.
-            if (tid == values.at(i)->tid()) {
-                // lets raise the dialog
-                m_transDialogs[values.at(i)]->raise();
-                return;
+        QString tid = action->data().toString();
+        if (m_transDialogs.contains(tid)) {
+            m_transDialogs[tid]->raise();
+        } else {
+            // if we don't have a dialog already displaying
+            // our transaction let's create one
+            // BUT first we need to get the transaction pointer,
+            // since it might be already deleted if the transaction
+            // finished
+            foreach(Transaction *trans, Client::instance()->getTransactions()) {
+                if (trans->tid() == tid) {
+                    // found it let's create a dialog
+                    createTransactionDialog(trans);
+                    break;
+                }
             }
+            // if we don't find just don't do anything
         }
-        // here will happen when we don't find a dialog
-        // for the transaction set in action.
-        createTransactionDialog(trans);
     }
 }
 
@@ -144,14 +147,14 @@ void KpkTransactionTrayIcon::createTransactionDialog(Transaction *t)
     connect(trans, SIGNAL(finished()),
             this, SLOT(transactionDialogClosed()));
     emit removeTransactionWatcher(t->tid());
-    m_transDialogs[t] = trans;
+    m_transDialogs[t->tid()] = trans;
     trans->show();
 }
 
 void KpkTransactionTrayIcon::transactionDialogClosed()
 {
     KpkTransaction *trans = qobject_cast<KpkTransaction*>(sender());
-    m_transDialogs.remove(trans->transaction());
+    m_transDialogs.remove(trans->tid());
     // DO NOT delete the kpkTransaction it might have errors to print
     decreaseRunning();
 }
@@ -261,7 +264,9 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
 
     foreach (Transaction *t, tids) {
         QAction *transactionAction = new QAction(this);
-        transactionAction->setData(qVariantFromValue(t));
+        // We use the tid since the pointer might get deleted
+        // as it was some times
+        transactionAction->setData(t->tid());
 
         if (t->role().action == Client::ActionRefreshCache) {
             refreshCache = false;
@@ -301,8 +306,9 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
             m_menu->exec(QCursor::pos());
         } else {
             m_menu->hide();
+            m_smartSTI->hide(); // EXPERIMENTAL
             // to avoid warning that the object was deleted in it's event handler
-            QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
+//             QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
         }
     }
 }
@@ -310,7 +316,7 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 bool KpkTransactionTrayIcon::isRunning()
 {
     return KpkAbstractIsRunning::isRunning() ||
-           m_client->getTransactions().size() ||
+           Client::instance()->getTransactions().size() ||
            m_messages.size();
 }
 

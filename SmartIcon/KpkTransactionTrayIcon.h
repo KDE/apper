@@ -66,7 +66,7 @@ private:
     Client *m_client;
     Transaction *m_pkClient_updates;
     QMenu *m_menu;
-    QHash<Transaction *, KpkTransaction *> m_transDialogs;
+    QHash<QString, KpkTransaction *> m_transDialogs;
 
     PackageKit::Transaction *m_currentTransaction;
 

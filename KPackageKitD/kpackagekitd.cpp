@@ -76,13 +76,13 @@ void KPackageKitD::init()
 
     // 1160 -> 15 minutes
     if (((m_client->getTimeSinceAction(Client::ActionRefreshCache) - interval > 1160) && interval != 0 )
-        || !act.contains(Client::ActionRefreshCache)) {
-        // WE ARE NOT GOING TO REFRESH THE CACHE if it not time BUT
-        // WE can SHOW the user his system update :D
+        || !(act & Client::ActionRefreshCache)) {
+        // WE ARE NOT GOING TO REFRESH THE CACHE if it is not the time BUT
+        // WE can SHOW the user his system updates :D
         update();
     }
 
-    if (!act.contains(Client::ActionRefreshCache)) {
+    if (!(act & Client::ActionRefreshCache)) {
         //if the backend does not suport refreshing cache let's don't do nothing
         return;
     }
@@ -173,7 +173,7 @@ void KPackageKitD::transactionListChanged(const QList<PackageKit::Transaction*> 
                                                  "/",
                                                  "org.freedesktop.DBus",
                                                  QLatin1String("StartServiceByName"));
-        message << qVariantFromValue(QString("org.kde.KPackageKit.Tray"));
+        message << qVariantFromValue(QString("org.kde.KPackageKitSmartIcon"));
         message << qVariantFromValue((uint) 0);
         QDBusConnection::sessionBus().call(message);
     }
@@ -181,10 +181,13 @@ void KPackageKitD::transactionListChanged(const QList<PackageKit::Transaction*> 
 
 void KPackageKitD::update()
 {
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKit.Tray",
-                                            "/",
-                                            "org.kde.KPackageKit.Tray",
-                                            QLatin1String("Update"));
-    QDBusConnection::sessionBus().call(message);
+    // check whether system is ready for an update
+    if (systemIsReady()) {
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                                "/",
+                                                "org.kde.KPackageKitSmartIcon",
+                                                QLatin1String("Update"));
+        QDBusConnection::sessionBus().call(message);
+    }
 }

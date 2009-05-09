@@ -51,6 +51,11 @@ KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
 //     m_icon->actionCollection()->addAction(KStandardAction::Preferences,
 //                                           this, SLOT(showSettings()));
 //     m_icon->contextMenu()->addAction(m_icon->actionCollection()->action(KStandardAction::name(KStandardAction::Preferences)));
+
+
+        int m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
+        if (m_inhibitCookie == -1)
+            kDebug() << "Sleep suppression denied!";
 }
 
 KpkUpdateIcon::~KpkUpdateIcon()

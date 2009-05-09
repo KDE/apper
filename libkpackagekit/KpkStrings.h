@@ -38,6 +38,7 @@ namespace KpkStrings
     KDE_EXPORT QString groups(Client::Group group);
     KDE_EXPORT QString info(Package::State state);
     KDE_EXPORT QString infoUpdate(Package::State state, int number);
+    KDE_EXPORT QString infoUpdate(Package::State state, int updates, int selected);
     KDE_EXPORT QString updateState(Client::UpdateState value);
     KDE_EXPORT QString restartType(Client::RestartType value);
     KDE_EXPORT QString restartTypeFuture(Client::RestartType value);

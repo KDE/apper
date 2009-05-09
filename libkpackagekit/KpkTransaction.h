@@ -44,7 +44,10 @@ public:
     ~KpkTransaction();
 
     void setTransaction(Transaction *trans);
-    Transaction* transaction() const {return m_trans;};
+    // Do not create a method to retrieve the internal pointer
+    // of Transaction, instead compare the tid with the tids from
+    // Client::getTransaction(), to avoid deleted pointers.
+    QString tid() const;
 
     typedef enum {
         Success,

@@ -38,7 +38,7 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
 
     // we check to see if the actions are supported by the backend
     // if so we ask for information and create the containers
-    if (actions.contains(Client::ActionGetDetails)) {
+    if (actions & Client::ActionGetDetails) {
         descriptionKTB = new KTextBrowser(this);
         descriptionTB->click();
 
@@ -46,7 +46,7 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
         descriptionTB->setEnabled(false);
     }
 
-    if (actions.contains(Client::ActionGetFiles)) {
+    if (actions & Client::ActionGetFiles) {
         filesPTE = new QPlainTextEdit(this);
         filesPTE->setVisible(false);
         if (!currentWidget) {
@@ -56,7 +56,7 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
         fileListTB->setEnabled(false);
     }
 
-    if (actions.contains(Client::ActionGetDepends)) {
+    if (actions & Client::ActionGetDepends) {
         dependsOnLV = new QListView(this);
         dependsOnLV->setVisible(false);
         dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
@@ -67,7 +67,7 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
         dependsOnTB->setEnabled(false);
     }
 
-    if (actions.contains(Client::ActionGetRequires)) {
+    if (actions & Client::ActionGetRequires) {
         requiredByLV = new QListView(this);
         requiredByLV->setVisible(false);
         requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
@@ -116,7 +116,7 @@ void KpkPackageDetails::description(PackageKit::Package *p)
     QString description;
     description += "<table><tbody>";
     description += "<tr><td align=\"right\"><b>" + i18n("Package Name") + ":</b></td><td>" + p->name() + "</td></tr>";
-    if (details->license() != Package::UnknownLicense)
+    if (!details->license().isEmpty())
         description += "<tr><td align=\"right\"><b>" + i18n("License")
                     + ":</b></td><td>" + details->license()
                     + "</td></tr>";

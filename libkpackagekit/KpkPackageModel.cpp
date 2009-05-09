@@ -213,12 +213,19 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         //Grouped, and the parent is invalid means this is a group
         Package::State group = m_groups.keys().at(index.row());
         int count = m_groups.value(group).size();
+        // we do this here cause it's the same code for column 1 and 2
+        int nChecked = 0;
+        foreach(Package *p, m_groups[group]) {
+            if (containsChecked(p)) {
+                nChecked++;
+            }
+        }
         //TODO: Group descriptions
         switch(index.column()) {
             case 0:
                 switch(role) {
                     case NameRole:
-                        return KpkStrings::infoUpdate(group, count);
+                        return KpkStrings::infoUpdate(group, count, nChecked);
                     case IconRole:
                         return KpkIcons::packageIcon(group);
                     case GroupRole:
@@ -229,21 +236,13 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             case 1:
                 switch(role) {
                     case CheckedRole:
-                    {
-                        // we do this here cause it's the same code for column 1 and 2
-                        int nChecked = 0;
-                        foreach(Package *p, m_groups[group]) {
-                            if (containsChecked(p)) {
-                                nChecked++;
-                            }
-                        }
-                        if (m_groups[group].size() == nChecked)
+                        if (m_groups[group].size() == nChecked) {
                             return Qt::Checked;
-                        else if (nChecked == 0)
+                        } else if (nChecked == 0) {
                             return Qt::Unchecked;
-                        else
+                        } else {
                             return Qt::PartiallyChecked;
-                    }
+                        }
                     case InstalledRole:
                         return group == Package::StateInstalled;
                     default:

@@ -38,14 +38,14 @@ QWidget( parent ), m_originModel(0)
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     m_actions = Client::instance()->getActions();
 
-    if ( !m_actions.contains(Client::ActionRefreshCache) ) {
+    if (!(m_actions & Client::ActionRefreshCache)) {
         intervalL->setEnabled(false);
         intervalCB->setEnabled(false);
     }
 
     m_originModel = new KpkModelOrigin(this);
     originLW->setModel(m_originModel);
-    if ( m_actions.contains(Client::ActionGetRepoList) ) {
+    if (m_actions & Client::ActionGetRepoList) {
         m_trasaction = Client::instance()->getRepoList(PackageKit::Client::FilterNotDevelopment);
         connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
                 m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
@@ -102,7 +102,7 @@ void KpkSettings::checkChanges()
         autoCB->itemData( autoCB->currentIndex() ).toUInt() !=
         (uint) checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault)
         ||
-        ( m_actions.contains(Client::ActionGetRepoList) ? m_originModel->changed() : false))
+        ((m_actions & Client::ActionGetRepoList) ? m_originModel->changed() : false))
         emit(changed(true));
     else
         emit(changed(false));
@@ -136,7 +136,7 @@ void KpkSettings::load()
     else
         autoCB->setCurrentIndex(ret);
 
-    if ( m_actions.contains(Client::ActionGetRepoList) ) {
+    if (m_actions & Client::ActionGetRepoList) {
         m_trasaction = Client::instance()->getRepoList(PackageKit::Client::FilterNotDevelopment);
         connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
                 m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
@@ -157,7 +157,7 @@ void KpkSettings::save()
     checkUpdateGroup.writeEntry("interval", intervalCB->itemData(intervalCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("autoUpdate", autoCB->itemData(autoCB->currentIndex()).toUInt());
     // check to see if the backend support this
-    if ( m_actions.contains(Client::ActionGetRepoList) ) {
+    if (m_actions & Client::ActionGetRepoList) {
         if ( !m_originModel->save() ) {
             KMessageBox::sorry(this,
                                i18n("You do not have the necessary privileges to perform this action."),

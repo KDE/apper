@@ -31,6 +31,7 @@ K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_update"))
 KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
+    KGlobal::locale()->insertCatalog("kpackagekit");
     KAboutData *about = new KAboutData("kcm_kpk_update", "kpackagekit", ki18n("KPackageKit Update"), KPK_VERSION);
     setAboutData(about);
     setButtons(Apply);
@@ -38,7 +39,6 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     view = new KpkUpdate(this);
     m_grid->addWidget(view);
     connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-    KGlobal::locale()->insertCatalog("kpackagekit");
 }
 
 void KcmKpkUpdate::load()

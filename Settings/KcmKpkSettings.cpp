@@ -31,6 +31,7 @@ K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_settings"))
 KcmKpkSettings::KcmKpkSettings(QWidget *parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
+    KGlobal::locale()->insertCatalog("kpackagekit");
     KAboutData *about = new KAboutData("kcm_kpk_settings", "kpackagekit", ki18n("KPackageKit Settings"), KPK_VERSION);
     setAboutData(about);
     m_grid = new QGridLayout(this);
@@ -40,5 +41,4 @@ KcmKpkSettings::KcmKpkSettings(QWidget *parent, const QVariantList &args)
     connect(this, SIGNAL(s_defaults()), view, SLOT(defaults()) );
     connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)) );
     m_grid->addWidget(view);
-    KGlobal::locale()->insertCatalog("kpackagekit");
 }
