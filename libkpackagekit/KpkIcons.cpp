@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -71,6 +73,73 @@ KIcon KpkIcons::statusIcon(PackageKit::Transaction::Status status)
     default :
         kDebug() << "status icon unrecognised: " << status;
         return KpkIcons::getIcon("applications-other");
+    }
+}
+
+QString KpkIcons::statusAnimation(PackageKit::Transaction::Status status)
+{
+    QString icon;
+    switch (status) {
+    case Transaction::UnknownStatus :
+        return "help-browser";//TODO find out what is help-browser
+    case Transaction::StatusCancel :
+    case Transaction::StatusCleanup :
+        return "pk-cleaning-up";
+    case Transaction::StatusCommit :
+        return "package-setup";
+    case Transaction::StatusDepResolve :
+        return "pk-testing";
+    case Transaction::StatusDownloadChangelog :
+    case Transaction::StatusDownloadFilelist :
+    case Transaction::StatusDownloadGroup :
+    case Transaction::StatusDownloadPackagelist :
+        return "pk-refresh-cache";
+    case Transaction::StatusDownload :
+        return "pk-downloading";
+    case Transaction::StatusDownloadRepository :
+    case Transaction::StatusDownloadUpdateinfo :
+        return "pk-refresh-cache";
+    case Transaction::StatusFinished :
+        return "pk-cleaning-up";
+    case Transaction::StatusGeneratePackageList :
+        return "pk-searching";
+    case Transaction::StatusInfo :
+        return "package-working";
+    case Transaction::StatusInstall :
+        return "pk-installing";
+    case Transaction::StatusLoadingCache :
+        return "pk-refresh-cache";
+    case Transaction::StatusObsolete :
+        return "pk-cleaning-up";
+    case Transaction::StatusQuery :
+        return "pk-searching";
+    case Transaction::StatusRefreshCache :
+        return "pk-refresh-cache";
+    case Transaction::StatusRemove :
+        return "pk-removing";
+    case Transaction::StatusRepackaging :
+        return "package-info";
+    case Transaction::StatusRequest :
+        return "process-working";
+    case Transaction::StatusRollback :
+        return "pk-removing";
+    case Transaction::StatusRunning :
+        return "pk-setup";
+    case Transaction::StatusScanApplications :
+        return "pk-searching";
+    case Transaction::StatusSetup :
+        return "package-info";
+    case Transaction::StatusSigCheck :
+        return "package-info";
+    case Transaction::StatusTestCommit :
+        return "pk-testing";
+    case Transaction::StatusUpdate :
+        return "pk-installing";
+    case Transaction::StatusWait :
+        return "pk-waiting";
+    default :
+        kDebug() << "status icon unrecognised: " << status;
+        return "applications-other";
     }
 }
 

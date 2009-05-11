@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -82,16 +82,6 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
     // after ALL set, lets set the transaction
     setTransaction(m_trans);
-
-//     QLabel label;
- QMovie *movie = new QMovie("/home/daniel/code/packagekit/kde/kpackagekit/KPackageKit/Animations/hi48-action-refresh-cache.mng");
-// movie->setScaledSize(QSize(48,48));
-// connect(movie, SIGNAL(finished()), movie, SLOT(start()));
-// movie->setPaused(false);
- d->ui.label->setMovie(movie);
-
- movie->start();
- kDebug() << movie->loopCount() << "movie->loopCount()";
 }
 
 KpkTransaction::~KpkTransaction()
@@ -263,6 +253,23 @@ void KpkTransaction::slotButtonClicked(int button)
 void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
 {
     d->ui.currentL->setText(KpkStrings::status(status));
+
+    QMovie *movie;
+    // Grab the right icon name
+    QString icon(KpkIcons::statusAnimation(status));
+    movie = KIconLoader::global()->loadMovie(icon,
+                                             KIconLoader::NoGroup,
+                                             48,
+                                             this);
+    if (movie) {
+        // If the movie is set we KIconLoader it,
+        // set it and start
+        d->ui.label->setMovie(movie);
+        movie->start();
+    } else {
+        // Else it's probably a static icon so try to load
+        d->ui.label->setPixmap(KpkIcons::getIcon(icon).pixmap(48,48));
+    }
 }
 
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)

@@ -28,11 +28,12 @@ using namespace PackageKit;
 
 class KDE_EXPORT KpkIcons {
     public:
-        static KIcon groupsIcon(Client::Group group);
-        static KIcon statusIcon(PackageKit::Transaction::Status status);
-        static KIcon actionIcon(Client::Action action);
-        static KIcon packageIcon(Package::State state);
-        static KIcon getIcon(const QString &name);
+        static KIcon   groupsIcon(Client::Group group);
+        static KIcon   statusIcon(PackageKit::Transaction::Status status);
+        static QString statusAnimation(PackageKit::Transaction::Status status);
+        static KIcon   actionIcon(Client::Action action);
+        static KIcon   packageIcon(Package::State state);
+        static KIcon   getIcon(const QString &name);
 
     private:
         static QHash<QString, KIcon> cache;
