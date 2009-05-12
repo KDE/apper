@@ -16,12 +16,12 @@ qt4_add_dbus_adaptor(kpackagekit_smart_dbus_SRCS
     KpkInterface
 )
 
-kde4_add_executable(kpackagekit-smart-icon
+kde4_add_executable(kpackagekitsmarticon
     ${kpackagekit_smart_icon_SRCS}
     ${kpackagekit_smart_dbus_SRCS}
 )
 
-target_link_libraries(kpackagekit-smart-icon
+target_link_libraries(kpackagekitsmarticon
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KUTILS_LIBS}
     ${QPACKAGEKIT_LIBRARIES}
@@ -29,9 +29,9 @@ target_link_libraries(kpackagekit-smart-icon
     kpackagekitlib
 )
 
-install(TARGETS kpackagekit-smart-icon DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS kpackagekitsmarticon DESTINATION ${LIBEXEC_INSTALL_DIR})
 
-install(FILES KPackageKitSmartIcon.notifyrc DESTINATION ${DATA_INSTALL_DIR}/KPackageKit)
+install(FILES KPackageKitSmartIcon.notifyrc DESTINATION ${DATA_INSTALL_DIR}/KPackageKitSmartIcon)
 
 include(PkgConfigGetVar)
 dbus_add_activation_service(org.kde.KPackageKitSmartIcon.service.in)

@@ -185,8 +185,8 @@ void KPackageKitD::update()
     if (systemIsReady()) {
         QDBusMessage message;
         message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                "/",
-                                                "org.kde.KPackageKitSmartIcon",
+                                                 "/",
+                                                 "org.kde.KPackageKitSmartIcon",
                                                 QLatin1String("Update"));
         QDBusConnection::sessionBus().call(message);
     }

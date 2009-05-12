@@ -28,10 +28,10 @@ KpkInterface::KpkInterface(QObject *parent)
 {
     qDebug() << "Creating Helper";
     (void) new KPackageKitSmartIconAdaptor(this);
-//     if (!QDBusConnection::sessionBus().registerService("org.kde.kpackagekit-smart-icon")) {
-//         kDebug() << "another helper is already running";
-//         return;
-//     }
+    if (!QDBusConnection::sessionBus().registerService("org.kde.KPackageKitSmartIcon")) {
+        kDebug() << "another helper is already running";
+        return;
+    }
 
     if (!QDBusConnection::sessionBus().registerObject("/", this)) {
         kDebug() << "unable to register service interface to dbus";

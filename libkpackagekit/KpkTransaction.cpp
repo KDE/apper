@@ -78,7 +78,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     }
 
     // We need to track when the user close the dialog using the [X] button
-    connect(this, SIGNAL(finished()), SLOT(finishedDialog()));
+    connect(this, SIGNAL(/*finished*/()), SLOT(finishedDialog()));
 
     // after ALL set, lets set the transaction
     setTransaction(m_trans);
@@ -220,9 +220,9 @@ void KpkTransaction::slotButtonClicked(int button)
                 // transaction receives some error we can display them
                 QDBusMessage message;
                 message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                        "/",
-                                                        "org.kde.KPackageKitSmartIcon",
-                                                        QLatin1String("WatchTransaction"));
+                                                         "/",
+                                                         "org.kde.KPackageKitSmartIcon",
+                                                         QLatin1String("WatchTransaction"));
                 message << qVariantFromValue(m_trans->tid());
                 QDBusMessage reply = QDBusConnection::sessionBus().call(message);
                 if (reply.type() != QDBusMessage::ReplyMessage) {
@@ -230,8 +230,8 @@ void KpkTransaction::slotButtonClicked(int button)
                 }
                 // Always disconnect BEFORE emitting finished
                 m_trans->disconnect();
+                emit kTransactionFinished(Success);
             }
-            emit kTransactionFinished(Success);
             // If you call Close it will
             // come back to hunt you with Cancel
             done(KDialog::User1);

@@ -29,7 +29,7 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about("kpackagekit-smart-icon",
+    KAboutData about("KPackageKitSmartIcon",
                      "kpackagekit",
                      ki18n("KPackageKit"),
                      KPK_VERSION,

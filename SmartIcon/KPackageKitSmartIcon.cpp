@@ -46,7 +46,7 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     m_trayIcon = new KpkTransactionTrayIcon(this);
     connect(m_trayIcon, SIGNAL(close()), this, SLOT(prepareToClose()));
     // This MUST be called after connecting all the signals or slots!
-    m_trayIcon->checkTransactionList();
+    QTimer::singleShot(0, m_trayIcon, SLOT(checkTransactionList()));
 
     m_updateIcon = new KpkUpdateIcon(this);
     connect(m_updateIcon, SIGNAL(close()), this, SLOT(prepareToClose()));
@@ -71,7 +71,8 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     // do not watch a transaction that is being
     connect(m_trayIcon, SIGNAL(removeTransactionWatcher(const QString &)),
             m_transWatcher, SLOT(removeTransactionWatcher(const QString &)));
-    prepareToClose();
+
+    QTimer::singleShot(0, m_trayIcon, SLOT(prepareToClose()));
 }
 
 void KPackageKit_Smart_Icon::prepareToClose()
