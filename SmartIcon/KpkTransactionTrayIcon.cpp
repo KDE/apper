@@ -167,9 +167,11 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
     } else {
         m_menu->hide();
         if (m_messages.isEmpty()) {
-            m_smartSTI->hide(); // EXPERIMENTAL
-//             QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
+            m_smartSTI->hide();
             emit close();
+        } else {
+            m_smartSTI->setToolTip(i18np("You have a message", "You have messages", m_messages.size()));
+            m_smartSTI->setIcon(KpkIcons::getIcon("kpk-important"));
         }
     }
 }
@@ -233,6 +235,7 @@ void KpkTransactionTrayIcon::showMessages()
         tree->setTextElideMode(Qt::ElideNone);
         tree->setAlternatingRowColors(true);
         dialog->setMainWidget(tree);
+        dialog->setWindowIcon(KIcon("view-pim-notes"));
 
         QStandardItemModel *model = new QStandardItemModel(this);
         tree->setModel(model);
