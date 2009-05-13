@@ -42,46 +42,75 @@ KIcon KpkIcons::getIcon(const QString &name)
 KIcon KpkIcons::statusIcon(PackageKit::Transaction::Status status)
 {
     switch (status) {
-    case Transaction::StatusSetup :
-        return KpkIcons::getIcon("package-setup");
-    case Transaction::StatusWait :
-        return KpkIcons::getIcon("package-wait");
-    case Transaction::StatusRunning :
-        return KpkIcons::getIcon("package-setup");
-    case Transaction::StatusQuery :
-        return KpkIcons::getIcon("package-search");
-    case Transaction::StatusInfo :
-        return KpkIcons::getIcon("package-info");
-    case Transaction::StatusRemove :
-        return KpkIcons::getIcon("package-removed");
-    case Transaction::StatusDownload :
-        return KpkIcons::getIcon("package-download");
-    case Transaction::StatusUpdate :
-        return KpkIcons::getIcon("package-update");
-    case Transaction::StatusDepResolve :
-        return KpkIcons::getIcon("package-info");
-    case Transaction::StatusSigCheck :
-        return KpkIcons::getIcon("package-info");//TODO needs a better icon
-    case Transaction::StatusRollback :
-        return KpkIcons::getIcon("package-rollback");
-    case Transaction::StatusTestCommit :
-        return KpkIcons::getIcon("package-info");//TODO needs a better icon
+    case Transaction::UnknownStatus :
+        return KpkIcons::getIcon("help-browser");
+    case Transaction::StatusCancel :
+    case Transaction::StatusCleanup :
+        return KpkIcons::getIcon("kpk-clean-up");
     case Transaction::StatusCommit :
         return KpkIcons::getIcon("package-setup");//TODO needs a better icon
+    case Transaction::StatusDepResolve :
+        return KpkIcons::getIcon("package-info");
+    case Transaction::StatusDownloadChangelog :
+    case Transaction::StatusDownloadFilelist :
+    case Transaction::StatusDownloadGroup :
+    case Transaction::StatusDownloadPackagelist :
+        return KpkIcons::getIcon("kpk-refresh-cache");
+    case Transaction::StatusDownload :
+        return KpkIcons::getIcon("package-download");
+    case Transaction::StatusDownloadRepository :
+    case Transaction::StatusDownloadUpdateinfo :
+        return KpkIcons::getIcon("kpk-refresh-cache");
+    case Transaction::StatusFinished :
+        return KpkIcons::getIcon("kpk-clean-up");
+    case Transaction::StatusGeneratePackageList :
+        return KpkIcons::getIcon("kpk-refresh-cache");
+    case Transaction::StatusWaitingForLock :
+        return KpkIcons::getIcon("dialog-password");
+    case Transaction::StatusInfo :
+        return KpkIcons::getIcon("package-info");
+    case Transaction::StatusInstall :
+        return KpkIcons::getIcon("kpk-package-add");
+    case Transaction::StatusLoadingCache :
+        return KpkIcons::getIcon("kpk-refresh-cache");
+    case Transaction::StatusObsolete :
+        return KpkIcons::getIcon("kpk-clean-up");
+    case Transaction::StatusQuery :
+        return KpkIcons::getIcon("package-search");
+    case Transaction::StatusRefreshCache :
+        return KpkIcons::getIcon("kpk-refresh-cache");
+    case Transaction::StatusRemove :
+        return KpkIcons::getIcon("package-removed");
+    case Transaction::StatusRepackaging :
+        return KpkIcons::getIcon("kpk-clean-up");
     case Transaction::StatusRequest :
         return KpkIcons::getIcon("package-search");
+    case Transaction::StatusRollback :
+        return KpkIcons::getIcon("package-rollback");
+    case Transaction::StatusRunning :
+        return KpkIcons::getIcon("package-setup");
+    case Transaction::StatusScanApplications :
+        return KpkIcons::getIcon("package-search");
+    case Transaction::StatusSetup :
+        return KpkIcons::getIcon("package-setup");
+    case Transaction::StatusSigCheck :
+    case Transaction::StatusTestCommit :
+        return KpkIcons::getIcon("package-info");//TODO needs a better icon
+    case Transaction::StatusUpdate :
+        return KpkIcons::getIcon("package-update");
+    case Transaction::StatusWait :
+        return KpkIcons::getIcon("package-wait");
     default :
         kDebug() << "status icon unrecognised: " << status;
-        return KpkIcons::getIcon("applications-other");
+        return KpkIcons::getIcon("help-browser");
     }
 }
 
 QString KpkIcons::statusAnimation(PackageKit::Transaction::Status status)
 {
-    QString icon;
     switch (status) {
     case Transaction::UnknownStatus :
-        return "help-browser";//TODO find out what is help-browser
+        return "help-browser";
     case Transaction::StatusCancel :
     case Transaction::StatusCleanup :
         return "pk-cleaning-up";
@@ -103,6 +132,8 @@ QString KpkIcons::statusAnimation(PackageKit::Transaction::Status status)
         return "pk-cleaning-up";
     case Transaction::StatusGeneratePackageList :
         return "pk-searching";
+    case Transaction::StatusWaitingForLock :
+        return "pk-waiting";
     case Transaction::StatusInfo :
         return "package-working";
     case Transaction::StatusInstall :
@@ -139,7 +170,7 @@ QString KpkIcons::statusAnimation(PackageKit::Transaction::Status status)
         return "pk-waiting";
     default :
         kDebug() << "status icon unrecognised: " << status;
-        return "applications-other";
+        return "help-browser";
     }
 }
 
