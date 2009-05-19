@@ -35,6 +35,7 @@
 #include "KpkInstallPackageName.h"
 #include "KpkInstallProvideFile.h"
 #include "KpkRemovePackageByFile.h"
+#include "KpkBackendDetails.h"
 
 namespace kpackagekit {
 
@@ -139,6 +140,15 @@ int KPackageKit::newInstance()
         helper = new KpkRemovePackageByFile(args->getOptionList("remove-package-by-file"), this);
         connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
         QTimer::singleShot(0, helper, SLOT(start()));
+        m_running++;
+        notSet = false;
+    }
+
+    if (args->isSet("backend-details")) {
+        KpkBackendDetails *helper;
+        helper = new KpkBackendDetails;
+        connect(helper, SIGNAL(finished()), this, SLOT(decreaseAndKillRunning()));
+        helper->show();
         m_running++;
         notSet = false;
     }

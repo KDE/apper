@@ -45,6 +45,7 @@ int main(int argc, char **argv)
     KCmdLineOptions options;
     options.add("updates", ki18n("Show updates"));
     options.add("settings", ki18n("Show settings"));
+    options.add("backend-details", ki18n("Show backend details"));
     options.add("install-mime-type <mime-type>", ki18n("Mime type installer"));
     options.add("install-package-name <name>", ki18n("Package name installer"));
     options.add("install-provide-file <file>", ki18n("Single file installer"));

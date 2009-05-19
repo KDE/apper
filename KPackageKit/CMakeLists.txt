@@ -8,6 +8,11 @@ set(kpackagekit_SRCS
     KpkInstallPackageName.cpp
     KpkInstallProvideFile.cpp
     KpkRemovePackageByFile.cpp
+    KpkBackendDetails.cpp
+)
+
+kde4_add_ui_files(kpackagekit_SRCS
+    KpkBackendDetails.ui
 )
 
 kde4_add_executable(kpackagekit ${kpackagekit_SRCS})
