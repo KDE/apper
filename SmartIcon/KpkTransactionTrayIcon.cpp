@@ -33,6 +33,9 @@
 #include <QStandardItemModel>
 #include <KNotification>
 
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusConnection>
+
 #include <KDebug>
 
 Q_DECLARE_METATYPE(Transaction*)
@@ -79,6 +82,13 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
     m_hideAction->setText(i18n("Hide this icon"));
     connect(m_hideAction, SIGNAL(triggered(bool)),
             m_smartSTI, SLOT(hide()));
+
+    // initiate the restart type
+    m_restartType = Client::RestartNone;
+
+    m_restartAction = new QAction(this);
+    connect(m_restartAction, SIGNAL(triggered(bool)),
+            this, SLOT(logout()));
 }
 
 KpkTransactionTrayIcon::~KpkTransactionTrayIcon()
@@ -104,8 +114,8 @@ void KpkTransactionTrayIcon::refreshCache()
         createTransactionDialog(t);
     } else {
         KMessageBox::sorry(m_menu,
-                            i18n("You do not have the necessary privileges to perform this action."),
-                            i18n("Failed to refresh package lists"));
+                           i18n("You do not have the necessary privileges to perform this action."),
+                           i18n("Failed to refresh package lists"));
     }
     decreaseRunning();
 }
@@ -165,13 +175,35 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
     if (tids.size()) {
         setCurrentTransaction(tids.first());
     } else {
-        m_menu->hide();
-        if (m_messages.isEmpty()) {
+        if (m_messages.isEmpty() &&
+            m_restartType == Client::RestartNone)
+        {
+            m_menu->hide();
             m_smartSTI->hide();
             emit close();
         } else {
-            m_smartSTI->setToolTip(i18np("You have a message", "You have messages", m_messages.size()));
-            m_smartSTI->setIcon(KpkIcons::getIcon("kpk-important"));
+            QString toolTip;
+            if (m_restartType != Client::RestartNone) {
+                toolTip.append(KpkStrings::restartType(m_restartType) + '\n');
+                toolTip.append(i18np("Package: %1",
+                                     "Packages: %1",
+                                     m_restartPackages.join(", "),
+                                     m_restartPackages.size()));
+                m_smartSTI->setIcon(KpkIcons::restartIcon(m_restartType));
+            }
+            if (m_messages.size()) {
+                if (!toolTip.isEmpty()) {
+                    toolTip.append('\n');
+                } else {
+                    // in case the restart icon is not set
+                    m_smartSTI->setIcon(KpkIcons::getIcon("kpk-important"));
+                }
+                toolTip.append(i18np("One message from the package manager",
+                                     "%1 messages from the package manager",
+                                     m_messages.size()));
+
+            }
+            m_smartSTI->setToolTip(toolTip);
         }
     }
 }
@@ -187,6 +219,8 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
             this, SLOT(currentProgressChanged(PackageKit::Transaction::ProgressInfo)));
     connect(m_currentTransaction, SIGNAL(message(PackageKit::Client::MessageType, const QString &)),
             this, SLOT(message(PackageKit::Client::MessageType, const QString &)));
+    connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Client::RestartType, Package *)),
+            this, SLOT(requireRestart(PackageKit::Client::RestartType, Package *)));
     m_smartSTI->show();
 }
 
@@ -283,21 +317,17 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
         m_menu->addAction(transactionAction);
     }
 
+    m_menu->addSeparator();
     if (refreshCache && m_refreshCacheAction) {
-        m_menu->addSeparator();
         m_menu->addAction(m_refreshCacheAction);
-        if (m_messages.size()) {
-            m_menu->addAction(m_messagesAction);
-        }
-        m_menu->addAction(m_hideAction);
-    } else if (m_messages.size()) {
-        m_menu->addSeparator();
-        m_menu->addAction(m_messagesAction);
-        m_menu->addAction(m_hideAction);
-    } else {
-        m_menu->addSeparator();
-        m_menu->addAction(m_hideAction);
     }
+    if (m_restartType != Client::RestartNone) {
+        m_menu->addAction(m_restartAction);
+    }
+    if (m_messages.size()) {
+        m_menu->addAction(m_messagesAction);
+    }
+    m_menu->addAction(m_hideAction);
 }
 
 void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
@@ -309,10 +339,102 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
             m_menu->exec(QCursor::pos());
         } else {
             m_menu->hide();
-            m_smartSTI->hide(); // EXPERIMENTAL
-            // to avoid warning that the object was deleted in it's event handler
-//             QTimer::singleShot(0, m_smartSTI, SLOT(hide()));
+            m_smartSTI->hide();
         }
+    }
+}
+
+void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type, Package *pkg)
+{
+//     decreaseRunning(); //TODO make it persistent when kde fixes that
+    m_restartPackages << pkg->name();
+
+    KNotification *notify = new KNotification("RestartRequired");
+    QString text("<b>" + i18n("The system update has completed") + "</b>");
+    text.append("<br />" + KpkStrings::restartType(type));
+    notify->setText(text);
+
+    QStringList actions;
+    switch (type) {
+    case Client::RestartSystem :
+        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(64, 64));
+        actions << i18n("Restart");
+        actions << i18n("Not now");
+        m_restartType = Client::RestartSystem;
+        m_restartAction->setIcon(KpkIcons::restartIcon(type));
+        m_restartAction->setText(i18n("Restart"));
+        break;
+    case Client::RestartSession :
+        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(64, 64));
+        actions << i18n("Logout");
+        actions << i18n("Not now");
+        if (m_restartType != Client::RestartSystem) {
+            m_restartType = Client::RestartSession;
+        }
+        m_restartAction->setIcon(KpkIcons::restartIcon(type));
+        m_restartAction->setText(i18n("Logout"));
+        break;
+    case Client::RestartApplication :
+        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(64, 64));
+        // What do we do in restart application?
+        // we don't even know what application is
+        // SHOULD we check for pkg and see the installed
+        // files and try to match some running process?
+        break;
+    case Client::RestartNone :
+    case Client::UnknownRestartType :
+        // We do not set a restart type cause it will probably
+        // be already none, if not we will still want that restart type.
+        return;
+    }
+
+    notify->setActions(actions);
+    connect(notify, SIGNAL(activated(uint)),
+            this, SLOT(restartActivated(uint)));
+
+    notify->sendEvent();
+}
+
+void KpkTransactionTrayIcon::restartActivated(uint action)
+{
+    if (action == 1) {
+        logout();
+    }
+    // in persistent mode we need to manually close it
+//     notify->close();
+}
+
+void KpkTransactionTrayIcon::logout()
+{
+    // We call KSM server to restart or logout our system
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.ksmserver",
+                                             "/KSMServer",
+                                             "org.kde.KSMServerInterface",
+                                             QLatin1String("logout"));
+    // We are polite
+    // KWorkSpace::ShutdownConfirmYes = 1
+    message << qVariantFromValue(1);
+
+    if (m_restartType == Client::RestartSystem) {
+        // The restart type was system
+        // KWorkSpace::ShutdownTypeReboot = 1
+        message << qVariantFromValue(1);
+    } else if (m_restartType == Client::RestartSession) {
+        // The restart type was session
+        // KWorkSpace::ShutdownTypeLogout = 3
+        message << qVariantFromValue(3);
+    } else {
+        kWarning() << "Unknown restart type:" << m_restartType;
+        return;
+    }
+    // Try now
+    // KWorkSpace::ShutdownModeTryNow = 1
+    message << qVariantFromValue(1);
+
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+    if (reply.type() != QDBusMessage::ReplyMessage) {
+        kWarning() << "Message did not receive a reply" << reply;
     }
 }
 
@@ -320,7 +442,8 @@ bool KpkTransactionTrayIcon::isRunning()
 {
     return KpkAbstractIsRunning::isRunning() ||
            Client::instance()->getTransactions().size() ||
-           m_messages.size();
+           m_messages.size() ||
+           m_restartType != Client::RestartNone;
 }
 
 #include "KpkTransactionTrayIcon.moc"

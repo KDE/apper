@@ -692,17 +692,17 @@ QString KpkStrings::infoUpdate(Package::State state, int updates, int selected)
     }
 }
 
-QString KpkStrings::restartType(Client::RestartType value)
+QString KpkStrings::restartTypeFuture(Client::RestartType value)
 {
     switch (value) {
     case Client::RestartNone :
-        return i18n("No restart is required");
-    case Client::RestartSystem :
-        return i18n("A system restart is required");
-    case Client::RestartSession :
-        return i18n("You will need to log off and log back on");
+        return i18n("No restart is necessary");
     case Client::RestartApplication :
-        return i18n("You need to restart the application");
+        return i18n("You will be required to restart this application");
+    case Client::RestartSession :
+        return i18n("You will be required to log out and back in");
+    case Client::RestartSystem :
+        return i18n("A restart will be required");
     case Client::UnknownRestartType :
         return QString();
     }
@@ -710,17 +710,17 @@ QString KpkStrings::restartType(Client::RestartType value)
     return QString();
 }
 
-QString KpkStrings::restartTypeFuture(Client::RestartType value)
+QString KpkStrings::restartType(Client::RestartType value)
 {
     switch (value) {
     case Client::RestartNone :
-        return i18n("No restart is necessary for this update");
-    case Client::RestartApplication :
-        return i18n("An application restart is required after this update");
-    case Client::RestartSession :
-        return i18n("You will be required to log off and back on after this update");
+        return i18n("No restart is required");
     case Client::RestartSystem :
-        return i18n("A system restart is required after this update");
+        return i18n("A restart is required");
+    case Client::RestartSession :
+        return i18n("You need to log out and log back in");
+    case Client::RestartApplication :
+        return i18n("You need to restart the application");
     case Client::UnknownRestartType :
         return QString();
     }

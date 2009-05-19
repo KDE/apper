@@ -108,7 +108,7 @@ void KpkDistroUpgrade::handleDistroUpgradeActionClosed()
     decreaseRunning();
 }
 
-void KpkDistroUpgrade::distroUpgradeFinished( int exitCode, QProcess::ExitStatus exitStatus )
+void KpkDistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     decreaseRunning();
     KNotification *notify = new KNotification("DistroUpgradeFinished");

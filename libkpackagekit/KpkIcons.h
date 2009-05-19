@@ -33,6 +33,7 @@ class KDE_EXPORT KpkIcons {
         static QString statusAnimation(PackageKit::Transaction::Status status);
         static KIcon   actionIcon(Client::Action action);
         static KIcon   packageIcon(Package::State state);
+        static KIcon   restartIcon(Client::RestartType type);
         static KIcon   getIcon(const QString &name);
 
     private:

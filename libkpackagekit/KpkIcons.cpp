@@ -331,3 +331,17 @@ KIcon KpkIcons::packageIcon(Package::State state)
         return KpkIcons::getIcon("package");
     }
 }
+
+KIcon KpkIcons::restartIcon(Client::RestartType type)
+{
+    switch (type) {
+    case Client::RestartSystem :
+        return KpkIcons::getIcon("system-restart");
+    case Client::RestartSession :
+        return KpkIcons::getIcon("system-log-out");
+    case Client::RestartApplication :
+        return KpkIcons::getIcon("process-stop");
+    default :
+        return KpkIcons::getIcon("");
+    }
+}

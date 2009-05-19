@@ -53,6 +53,9 @@ private slots:
     void createTransactionDialog(Transaction *t);
     void transactionDialogClosed();
     void message(PackageKit::Client::MessageType type, const QString &message);
+    void requireRestart(PackageKit::Client::RestartType type, Package *pkg);
+    void restartActivated(uint action = 1);
+    void logout();
 
     void refreshCache();
     void showMessages();
@@ -76,6 +79,11 @@ private:
     // Message Container
     QList<QPair<Client::MessageType, QString> > m_messages;
     QAction *m_messagesAction;
+
+    // Restart menu entry
+    Client::RestartType m_restartType;
+    QAction *m_restartAction;
+    QStringList m_restartPackages;
 
     // Hide this icon action
     QAction *m_hideAction;
