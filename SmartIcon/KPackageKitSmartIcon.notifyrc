@@ -117,6 +117,7 @@ Name[pt]=Ocorreu um erro de transacção
 Name[pt_BR]=Ocorreu um erro na transação
 Name[ro]=A intervenit o eroare la tranzacție
 Name[sv]=Ett transaktionsfel uppstod
+Name[tr]=Bir işlem hatası oluştu
 Name[uk]=Під час операції сталася помилка.
 Name[x-test]=xxA transaction error occurredxx
 Action=Sound|Popup
