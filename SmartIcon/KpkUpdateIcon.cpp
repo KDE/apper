@@ -165,8 +165,7 @@ void KpkUpdateIcon::notifyUpdates()
     }
 
     KIcon icon = KpkIcons::packageIcon(highState);
-    // FIXME persistent does not work in 4.2 anymore, remove the comments when it's fixed
-    m_updateNotify = new KNotification("ShowUpdates"/*, 0, KNotification::Persistent*/);
+    m_updateNotify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
     // use of QSize does the right thing
     m_updateNotify->setPixmap(icon.pixmap(QSize(128,128)));
 
