@@ -113,6 +113,7 @@ Action=Sound|Popup
 Name=A transaction error occurred
 Name[ca]=Hi ha hagut un error durant la transacció
 Name[et]=Tekkis ülekandeviga
+Name[nds]=Dat geev en Fehler bi en Transakschoon.
 Name[pt]=Ocorreu um erro de transacção
 Name[pt_BR]=Ocorreu um erro na transação
 Name[ro]=A intervenit o eroare la tranzacție
