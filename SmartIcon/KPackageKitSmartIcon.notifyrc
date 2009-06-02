@@ -11,6 +11,7 @@ Comment[x-test]=xxKPackageKitxx
 
 [Event/ShowUpdates]
 Name=New updates avaliable
+Name[bg]=Има нови налични обновления
 Name[ca]=Hi ha noves actualitzacions disponibles
 Name[el]=Νέες ενημερώσεις διαθέσιμες
 Name[et]=Saadaval on uuendused
@@ -31,6 +32,7 @@ Action=Sound|Popup
 
 [Event/AutoInstallingUpdates]
 Name=Updates are being installed
+Name[bg]=Обновяванията се инсталират
 Name[ca]=S'estan instal·lant les actualitzacions
 Name[cs]=Aktualizace jsou instalovány
 Name[el]=Γίνεται εγκατάσταση των ενημερώσεων
@@ -54,6 +56,7 @@ Action=Sound|Popup
 
 [Event/RestartRequired]
 Name=A System Restart is Required
+Name[bg]=Нужен е рестарт на системата
 Name[ca]=Cal reiniciar el sistema
 Name[cs]=Po této aktualizaci je vyžadován restart
 Name[el]=Απαιτείται επανεκκίνηση του συστήματος
@@ -93,6 +96,7 @@ Action=Sound|Popup
 
 [Event/UpdatesComplete]
 Name=Updates finished installing
+Name[bg]=Приключено с инсталирането на обновления
 Name[ca]=Les actualitzacions s'han acabat d'instal·lar
 Name[et]=Uuendused on paigaldatud
 Name[fr]=Fin de l'installation des mises à jour
