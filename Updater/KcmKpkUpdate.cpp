@@ -25,15 +25,21 @@
 
 #include <version.h>
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkUpdate>(); )
+K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkUpdate>();)
 K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_update"))
 
 KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
-    KGlobal::locale()->insertCatalog("kpackagekit");
-    KAboutData *about = new KAboutData("kcm_kpk_update", "kpackagekit", ki18n("KPackageKit Update"), KPK_VERSION);
-    setAboutData(about);
+    KAboutData *aboutData;
+    aboutData = new KAboutData("kpackagekit",
+                               "kpackagekit",
+                               ki18n("Software update"),
+                               KPK_VERSION,
+                               ki18n("KDE interface for updating software"),
+                               KAboutData::License_GPL,
+                               ki18n("(C) 2008-2009 Daniel Nicoletti"));
+    setAboutData(aboutData);
     setButtons(Apply);
     m_grid = new QGridLayout(this);
     view = new KpkUpdate(this);

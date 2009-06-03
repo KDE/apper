@@ -9,6 +9,7 @@ set(kpackagekit_SRCS
     KpkInstallProvideFile.cpp
     KpkRemovePackageByFile.cpp
     KpkBackendDetails.cpp
+    KpkMainUi.cpp
 )
 
 kde4_add_ui_files(kpackagekit_SRCS

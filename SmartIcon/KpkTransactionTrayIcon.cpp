@@ -24,14 +24,14 @@
 #include <KpkTransaction.h>
 #include <KpkIcons.h>
 
-#include <KMessageBox>
-#include <KLocale>
-#include <KIcon>
 #include <QMenu>
 #include <QTimer>
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <KNotification>
+#include <KProtocolManager>
+#include <KMessageBox>
+#include <KLocale>
 
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -110,6 +110,7 @@ void KpkTransactionTrayIcon::refreshCache()
 {
     increaseRunning();
     // in this case refreshCache action must be clicked
+    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     if (Transaction *t = m_client->refreshCache(true)) {
         createTransactionDialog(t);
     } else {

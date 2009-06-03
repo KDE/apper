@@ -83,6 +83,8 @@ void KpkTransactionWatcher::finished(PackageKit::Transaction::ExitStatus status,
 void KpkTransactionWatcher::errorCode(PackageKit::Client::ErrorType err, const QString &details)
 {
     Q_UNUSED(details)
+    // TODO add a details button to show details in a message box
+    // do not forget to increase count ^^
     KNotification* errorNotification = new KNotification("TransactionError");
     errorNotification->setFlags(KNotification::Persistent);
     errorNotification->setText("<b>"+KpkStrings::error(err)+"</b><br />"+KpkStrings::errorMessage(err));

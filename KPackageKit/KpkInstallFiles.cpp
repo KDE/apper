@@ -22,6 +22,7 @@
 
 #include <KLocale>
 #include <KMessageBox>
+#include <KProtocolManager>
 
 #include <KDebug>
 
@@ -101,6 +102,8 @@ void KpkInstallFiles::start()
                         i18n("Install?"),
                         installBt);
         if (ret == KMessageBox::Yes) {
+            // Just in case it want to download some dependency
+            Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
             if (Transaction *t = Client::instance()->installFiles(files, true)) {
                 KpkTransaction *trans = new KpkTransaction(t);
                 connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
@@ -147,6 +150,7 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
             break;
         case KpkTransaction::ReQueue :
             kDebug() << "ReQueue";
+            Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
             transaction->setTransaction(Client::instance()->installFiles(m_transactionFiles[transaction], false));
             // return to avoid the decreaseRunning()
             return;

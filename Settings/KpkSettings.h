@@ -33,7 +33,7 @@ class KpkSettings : public QWidget, public Ui::KpkSettings
 Q_OBJECT
 
 public:
-    KpkSettings( QWidget *parent=0 );
+    KpkSettings(QWidget *parent = 0);
 
 public slots:
     void load();

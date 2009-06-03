@@ -22,13 +22,14 @@
 #include "KpkUpdateDetails.h"
 #include "KpkDistroUpgrade.h"
 #include "KpkHistory.h"
+
 #include <KpkStrings.h>
 #include <KpkIcons.h>
-
-#include <KDebug>
-#include <KMessageBox>
-
 #include <KpkTransactionBar.h>
+
+#include <KMessageBox>
+#include <KProtocolManager>
+#include <KDebug>
 
 #define UNIVERSAL_PADDING 6
 
@@ -107,6 +108,7 @@ void KpkUpdate::applyUpdates()
     //check to see if the user selected all selectable packages
     if (m_pkg_model_updates->allSelected()) {
         // if so let's do system-update instead
+        Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
         if (Transaction *t = m_client->updateSystem()) {
             KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
@@ -119,6 +121,7 @@ void KpkUpdate::applyUpdates()
         }
     } else {
         // else lets install only the selected ones
+        Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
         if (Transaction *t = m_client->updatePackages(packages)) {
             KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),

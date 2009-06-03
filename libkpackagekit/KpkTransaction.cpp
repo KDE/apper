@@ -78,7 +78,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     }
 
     // We need to track when the user close the dialog using the [X] button
-    connect(this, SIGNAL(/*finished*/()), SLOT(finishedDialog()));
+    connect(this, SIGNAL(finished()), SLOT(finishedDialog()));
 
     // after ALL set, lets set the transaction
     setTransaction(m_trans);

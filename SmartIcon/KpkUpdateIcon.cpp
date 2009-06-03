@@ -27,10 +27,13 @@
 #include <KpkEnum.h>
 
 #include <QMenu>
-#include <KDebug>
 #include <KStandardAction>
 #include <KActionCollection>
 #include <KAction>
+#include <KProtocolManager>
+
+#include <KDebug>
+
 #include <solid/powermanagement.h>
 
 using namespace PackageKit;
@@ -223,6 +226,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
         } else {
             if (updateType == KpkEnum::All) {
                 kDebug() << "All";
+                Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
                 if (Transaction* t = Client::instance()->updateSystem()) {
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                             this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
@@ -249,6 +253,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                     }
                 }
                 if (updateList.size() > 0) {
+                    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
                     if (Transaction *t = Client::instance()->updatePackages(updateList)) {
 //                         suppressSleep(true);
                         connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),

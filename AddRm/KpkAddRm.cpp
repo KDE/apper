@@ -38,8 +38,12 @@
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Client, Filter)
 
 KpkAddRm::KpkAddRm(QWidget *parent)
- : QWidget(parent), m_currentAction(0), m_mTransRuning(false),  m_findIcon("edit-find"),
-   m_cancelIcon("dialog-cancel"), m_filterIcon("view-filter")
+ : QWidget(parent)
+ , m_currentAction(0)
+ , m_mTransRuning(false)
+ , m_findIcon("edit-find")
+ , m_cancelIcon("dialog-cancel")
+ , m_filterIcon("view-filter")
 {
     setupUi( this );
 
@@ -59,10 +63,10 @@ KpkAddRm::KpkAddRm(QWidget *parent)
 
     // check to see if the backend support these actions
     m_actions = m_client->getActions();
-    if ((m_actions & Client::ActionInstallPackages) || (m_actions & Client::ActionRemovePackages)) {
-        connect(m_pkg_model_main, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
-                this, SLOT(checkChanged()) );
-    }
+    // Connect this signal anyway so users that have backend that
+    // do not support install or remove can be informed properly
+    connect(m_pkg_model_main, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+            this, SLOT(checkChanged()));
 
     m_findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method

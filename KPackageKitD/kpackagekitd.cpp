@@ -24,6 +24,7 @@
 #include <KGenericFactory>
 #include <KStandardDirs>
 #include <KConfigGroup>
+#include <KProtocolManager>
 
 #include <QDateTime>
 #include <QtDBus/QDBusMessage>
@@ -36,7 +37,7 @@
 
 #define FIVE_MIN 360000
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KPackageKitD>(); )
+K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KPackageKitD>();)
 K_EXPORT_PLUGIN(KPackageKitFactory("kpackagekitd"))
 
 KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant> &)
@@ -155,11 +156,24 @@ void KPackageKitD::checkUpdates()
         return;
     }
 
+    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     m_refreshCacheT = m_client->refreshCache(true);
     if (m_refreshCacheT == 0) {
         // try again in 5 minutes
         m_qtimer->start(FIVE_MIN);
     } else {
+        // If something goes wrong at least kpackagekitSmartIcon
+        // will show the error
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                                    "/",
+                                                    "org.kde.KPackageKitSmartIcon",
+                                                    QLatin1String("WatchTransaction"));
+        message << qVariantFromValue(m_refreshCacheT->tid());
+        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+        if (reply.type() != QDBusMessage::ReplyMessage) {
+            kWarning() << "Message did not receive a reply";
+        }
         connect(m_refreshCacheT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                 this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
     }

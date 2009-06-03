@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,33 +18,31 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KcmKpkSettings.h"
+#ifndef KPK_MAIN_UI_H
+#define KPK_MAIN_UI_H
 
-#include <KGenericFactory>
-#include <KAboutData>
+#include <QPackageKit>
 
-#include <version.h>
+#include <KCMultiDialog>
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkSettings>();)
-K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_settings"))
+using namespace PackageKit;
 
-KcmKpkSettings::KcmKpkSettings(QWidget *parent, const QVariantList &args)
-    : KCModule(KPackageKitFactory::componentData(), parent, args)
+class KpkMainUi : public KCMultiDialog
 {
-    KAboutData *aboutData;
-    aboutData = new KAboutData("kpackagekit",
-                               "kpackagekit",
-                               ki18n("KPackageKit settings"),
-                               KPK_VERSION,
-                               ki18n("KPackageKit settings"),
-                               KAboutData::License_GPL,
-                               ki18n("(C) 2008-2009 Daniel Nicoletti"));
-    setAboutData(aboutData);
-    m_grid = new QGridLayout(this);
-    view = new KpkSettings(this);
-    connect(this, SIGNAL(s_load()), view, SLOT(load()));
-    connect(this, SIGNAL(s_save()), view, SLOT(save()));
-    connect(this, SIGNAL(s_defaults()), view, SLOT(defaults()));
-    connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-    m_grid->addWidget(view);
-}
+Q_OBJECT
+
+public:
+    KpkMainUi(QWidget *parent = 0);
+    ~KpkMainUi();
+
+    void showAll();
+    void showUpdates();
+    void showSettings();
+
+private:
+    KPageWidgetItem *m_addrmPWI;
+    KPageWidgetItem *m_updatePWI;
+    KPageWidgetItem *m_settingsPWI;
+};
+
+#endif

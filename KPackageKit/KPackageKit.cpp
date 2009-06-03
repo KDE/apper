@@ -42,12 +42,11 @@ namespace kpackagekit {
 KPackageKit::KPackageKit()
  : KUniqueApplication(),
    m_pkUi(0),
-   m_addrmPWI(0),
-   m_updatePWI(0),
-   m_settingsPWI(0),
    m_running(0)
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+
+    setQuitOnLastWindowClosed(false);
 }
 
 KPackageKit::~KPackageKit()
@@ -65,10 +64,11 @@ void KPackageKit::appClose()
 void KPackageKit::kcmFinished()
 {
     // kcm is finished we set to 0 to be able to quit
+    m_pkUi->deleteLater();
     m_pkUi = 0;
-    m_addrmPWI = 0;
-    m_updatePWI = 0;
-    m_settingsPWI = 0;
+//     m_addrmPWI = 0;
+//     m_updatePWI = 0;
+//     m_settingsPWI = 0;
     appClose();
 }
 
@@ -158,7 +158,6 @@ int KPackageKit::newInstance()
         showUi();
     }
 
-
     args->clear();
     return 0;
 }
@@ -166,73 +165,35 @@ int KPackageKit::newInstance()
 void KPackageKit::showUi()
 {
     if (!m_pkUi) {
-        kDebug() << "GO UI!";
-        m_pkUi = new KCMultiDialog();
-        m_pkUi->setCaption(QString());
-        m_pkUi->setWindowIcon(KIcon("applications-other"));
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT (appClose()));
-        m_addrmPWI    = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_addrm.desktop"));
-        m_updatePWI   = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
-        m_settingsPWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
-        m_pkUi->show();
-        m_pkUi->activateWindow();
-        m_pkUi->raise();
-    } else {
-        kDebug() << "RAISE UI!";
-        // check to see if all are added
-        if (!m_addrmPWI) {
-            m_addrmPWI    = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_addrm.desktop"));
-        }
-        if (!m_updatePWI) {
-            m_updatePWI   = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
-        }
-        if (!m_settingsPWI) {
-            m_settingsPWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
-        }
-        m_pkUi->setCurrentPage(m_addrmPWI);
-        m_pkUi->activateWindow();
-        m_pkUi->raise();
+        m_pkUi = new KpkMainUi();
+        connect(m_pkUi, SIGNAL(finished()), this, SLOT (kcmFinished()));
     }
+    // Show all
+    m_pkUi->showAll();
+    m_pkUi->show();
+    m_pkUi->activateWindow();
 }
 
 void KPackageKit::showUpdates()
 {
     if (!m_pkUi) {
-        kDebug() << "GO UI!";
-        m_pkUi = new KCMultiDialog();
-        m_pkUi->setCaption(QString());
-        m_pkUi->setWindowIcon(KIcon("applications-other"));
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT(appClose()));
-        m_updatePWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
-        m_pkUi->show();
-        m_pkUi->raise();
-    } else {
-        if (!m_updatePWI) {
-            m_updatePWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
-        }
-        m_pkUi->setCurrentPage(m_updatePWI);
-        m_pkUi->activateWindow();
+        m_pkUi = new KpkMainUi();
+        connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
     }
+    m_pkUi->showUpdates();
+    m_pkUi->show();
+    m_pkUi->activateWindow();
 }
 
 void KPackageKit::showSettings()
 {
     if (!m_pkUi) {
-        kDebug() << "GO UI!";
-        m_pkUi = new KCMultiDialog();
-        m_pkUi->setCaption(QString());
-        m_pkUi->setWindowIcon(KIcon("applications-other"));
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT(appClose()));
-        m_settingsPWI = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
-        m_pkUi->show();
-        m_pkUi->raise();
-    } else {
-        if (!m_settingsPWI) {
-            m_settingsPWI   = m_pkUi->addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
-        }
-        m_pkUi->setCurrentPage(m_settingsPWI);
-        m_pkUi->activateWindow();
+        m_pkUi = new KpkMainUi();
+        connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
     }
+    m_pkUi->showSettings();
+    m_pkUi->show();
+    m_pkUi->activateWindow();
 }
 
 }

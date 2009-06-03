@@ -29,10 +29,10 @@
 
 using namespace PackageKit;
 
-KpkSettings::KpkSettings( QWidget *parent ) :
-QWidget( parent ), m_originModel(0)
+KpkSettings::KpkSettings(QWidget *parent)
+  : QWidget(parent), m_originModel(0)
 {
-    setupUi( this );
+    setupUi(this);
 
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());

@@ -25,15 +25,21 @@
 
 #include <version.h>
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkAddRm>(); )
+K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkAddRm>();)
 K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_addrm"))
 
 KcmKpkAddRm::KcmKpkAddRm(QWidget *parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
-    KGlobal::locale()->insertCatalog("kpackagekit");
-    KAboutData *about = new KAboutData("kcm_kpk_addrm", "kpackagekit", ki18n("Add and Remove Software"), KPK_VERSION);
-    setAboutData(about);
+    KAboutData *aboutData;
+    aboutData = new KAboutData("kpackagekit",
+                               "kpackagekit",
+                               ki18n("Add and remove software"),
+                               KPK_VERSION,
+                               ki18n("KDE interface for managing software"),
+                               KAboutData::License_GPL,
+                               ki18n("(C) 2008-2009 Daniel Nicoletti"));
+    setAboutData(aboutData);
     setButtons(Apply);
     m_grid = new QGridLayout(this);
     view = new KpkAddRm(this);

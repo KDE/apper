@@ -22,7 +22,7 @@
 #define KPACKAGEKIT_H
 
 #include <KUniqueApplication>
-#include <KCMultiDialog>
+#include "KpkMainUi.h"
 
 namespace kpackagekit {
 
@@ -46,10 +46,10 @@ private slots:
     void decreaseAndKillRunning();
 
 private:
-    KCMultiDialog *m_pkUi;
-    KPageWidgetItem *m_addrmPWI;
-    KPageWidgetItem *m_updatePWI;
-    KPageWidgetItem *m_settingsPWI;
+    KpkMainUi *m_pkUi;
+//     KPageWidgetItem *m_addrmPWI;
+//     KPageWidgetItem *m_updatePWI;
+//     KPageWidgetItem *m_settingsPWI;
 
     int m_running;
 };

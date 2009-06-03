@@ -23,22 +23,6 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 
-// #include <kworkspace.h>
-
-// enum    KWorkSpace::ShutdownConfirm { KWorkSpace::ShutdownConfirmDefault = -1, KWorkSpace::ShutdownConfirmNo = 0, KWorkSpace::ShutdownConfirmYes = 1 }
-//   enum    KWorkSpace::ShutdownMode {
-//    KWorkSpace::ShutdownModeDefault = -1, KWorkSpace::ShutdownModeSchedule = 0, KWorkSpace::ShutdownModeTryNow = 1, KWorkSpace::ShutdownModeForceNow = 2,
-//    KWorkSpace::ShutdownModeInteractive = 3
-//  }
-//   enum    KWorkSpace::ShutdownType {
-//    KWorkSpace::ShutdownTypeDefault = -1, KWorkSpace::ShutdownTypeNone = 0, KWorkSpace::ShutdownTypeReboot = 1, KWorkSpace::ShutdownTypeHalt = 2,
-//    KWorkSpace::ShutdownTypeLogout = 3
-//  }
-// 
-// 
-// 1
-// 1
-// 1
 #define MINUTE 60000
 
 using namespace kpackagekit;

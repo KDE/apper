@@ -21,9 +21,11 @@
 #include "KpkReviewChanges.h"
 
 #include <KMessageBox>
+#include <KProtocolManager>
+
 #include <KDebug>
 
-#include <KpkStrings.h>
+#include "KpkStrings.h"
 #include "KpkRequirements.h"
 #include "ui_KpkReviewChanges.h"
 
@@ -202,6 +204,7 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
 void KpkReviewChanges::removePackages()
 {
     kDebug() << "removePackages";
+    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     if (Transaction *t = m_client->removePackages(m_remPackages)) {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
@@ -239,6 +242,7 @@ void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, u
 void KpkReviewChanges::installPackages()
 {
     kDebug() << "installPackages";
+    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     if ( Transaction *t = m_client->installPackages(m_addPackages) ) {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
@@ -268,6 +272,7 @@ void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
             break;
         case KpkTransaction::ReQueue :
             KpkTransaction *trans = (KpkTransaction *) sender();
+            Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
             trans->setTransaction(m_client->removePackages(m_remPackages));
             break;
     }
@@ -288,6 +293,7 @@ void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
             break;
         case KpkTransaction::ReQueue :
             KpkTransaction *trans = (KpkTransaction *) sender();
+            Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
             trans->setTransaction(m_client->installPackages(m_addPackages));
             break;
     }

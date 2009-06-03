@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,33 +18,64 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KcmKpkSettings.h"
+#include "KpkMainUi.h"
 
-#include <KGenericFactory>
-#include <KAboutData>
+#include <KDebug>
+#include <KConfig>
+#include <KLocale>
+#include <KMessageBox>
 
-#include <version.h>
+using namespace PackageKit;
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkSettings>();)
-K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_settings"))
-
-KcmKpkSettings::KcmKpkSettings(QWidget *parent, const QVariantList &args)
-    : KCModule(KPackageKitFactory::componentData(), parent, args)
+KpkMainUi::KpkMainUi(QWidget *parent)
+  : KCMultiDialog(parent),
+    m_addrmPWI(0),
+    m_updatePWI(0),
+    m_settingsPWI(0)
 {
-    KAboutData *aboutData;
-    aboutData = new KAboutData("kpackagekit",
-                               "kpackagekit",
-                               ki18n("KPackageKit settings"),
-                               KPK_VERSION,
-                               ki18n("KPackageKit settings"),
-                               KAboutData::License_GPL,
-                               ki18n("(C) 2008-2009 Daniel Nicoletti"));
-    setAboutData(aboutData);
-    m_grid = new QGridLayout(this);
-    view = new KpkSettings(this);
-    connect(this, SIGNAL(s_load()), view, SLOT(load()));
-    connect(this, SIGNAL(s_save()), view, SLOT(save()));
-    connect(this, SIGNAL(s_defaults()), view, SLOT(defaults()));
-    connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-    m_grid->addWidget(view);
+    setCaption(QString());
+    setWindowIcon(KIcon("applications-other"));
+
+    KConfig config("KPackageKit");
+    KConfigGroup kpackagekitMain(&config, "KpkMainUi");
+    restoreDialogSize(kpackagekitMain);
+    kDebug();
 }
+
+KpkMainUi::~KpkMainUi()
+{
+    // save size
+    KConfig config("KPackageKit");
+    KConfigGroup kpackagekitMain(&config, "KpkMainUi");
+    saveDialogSize(kpackagekitMain);
+    kDebug();
+}
+
+void KpkMainUi::showAll()
+{
+    // check to see if all are added
+    showSettings();
+    showUpdates();
+    if (!m_addrmPWI) {
+        m_addrmPWI = addModule(KCModuleInfo::KCModuleInfo("kpk_addrm.desktop"));
+    }
+    setCurrentPage(m_addrmPWI);
+}
+
+void KpkMainUi::showUpdates()
+{
+    if (!m_updatePWI) {
+        m_updatePWI = addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
+    }
+    setCurrentPage(m_updatePWI);
+}
+
+void KpkMainUi::showSettings()
+{
+    if (!m_settingsPWI) {
+        m_settingsPWI = addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
+    }
+    setCurrentPage(m_settingsPWI);
+}
+
+#include "KpkMainUi.moc"
