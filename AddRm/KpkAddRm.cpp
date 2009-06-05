@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -246,7 +246,9 @@ void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
 
 void KpkAddRm::errorCode(PackageKit::Client::ErrorType error, const QString &details)
 {
-    KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify);
+    if (error != Client::ErrorTransactionCancelled) {
+        KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify);
+    }
 }
 
 KpkAddRm::~KpkAddRm()

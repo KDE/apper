@@ -21,6 +21,7 @@
 #include "KpkTransactionWatcher.h"
 
 #include <KpkStrings.h>
+#include <KLocale>
 
 #include <KNotification>
 #include <KIcon>
@@ -85,9 +86,12 @@ void KpkTransactionWatcher::errorCode(PackageKit::Client::ErrorType err, const Q
     Q_UNUSED(details)
     // TODO add a details button to show details in a message box
     // do not forget to increase count ^^
-    KNotification* errorNotification = new KNotification("TransactionError");
+    KNotification* errorNotification = new KNotification("TransactionError", 0, KNotification::Persistent);
     errorNotification->setFlags(KNotification::Persistent);
     errorNotification->setText("<b>"+KpkStrings::error(err)+"</b><br />"+KpkStrings::errorMessage(err));
+//     QStringList actions;
+//     actions << i18n("Details");
+//     errorNotification->setActions(actions);
     KIcon icon("dialog-error");
     // Use QSize for proper icon
     errorNotification->setPixmap(icon.pixmap(QSize(128, 128)));

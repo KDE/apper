@@ -43,8 +43,8 @@ KcmKpkAddRm::KcmKpkAddRm(QWidget *parent, const QVariantList &args)
     setButtons(Apply);
     m_grid = new QGridLayout(this);
     view = new KpkAddRm(this);
-    connect(this, SIGNAL(s_load()), view, SLOT(load()) );
-    connect(this, SIGNAL(s_save()), view, SLOT(save()) );
-    connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)) );
+    connect(this, SIGNAL(s_load()), view, SLOT(load()));
+    connect(this, SIGNAL(s_save()), view, SLOT(save()));
+    connect(view, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
     m_grid->addWidget(view);
 }
