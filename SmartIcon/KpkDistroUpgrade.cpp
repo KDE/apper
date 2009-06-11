@@ -54,9 +54,8 @@ void KpkDistroUpgrade::distroUpgrade(PackageKit::Client::DistroUpgradeType type,
     Q_UNUSED(type)
     kDebug() << "Distro upgrade found!" << name << description;
     increaseRunning();
-    // TODO kde4.2 does not work with KNotification::Persistent, when it's fixed we move back
-    // otherwise we will leak
-    KNotification *notify = new KNotification("DistroUpgradeAvailable", 0, KNotification::CloseOnTimeout);
+
+    KNotification *notify = new KNotification("DistroUpgradeAvailable", 0, KNotification::Persistent);
 
     QString text;
     text =  i18n("Distribution upgrade available") + "<br/>";
@@ -70,14 +69,14 @@ void KpkDistroUpgrade::distroUpgrade(PackageKit::Client::DistroUpgradeType type,
     connect(notify, SIGNAL(activated(uint)),
             this, SLOT(handleDistroUpgradeAction(uint)));
     connect(notify, SIGNAL(closed()),
-            this , SLOT(handleDistroUpgradeActionClosed()));
+            this , SLOT(decreaseRunning()));
     notify->sendEvent();
 }
 
 void KpkDistroUpgrade::handleDistroUpgradeAction(uint action)
 {
     // get the sender cause there might be more than one
-    KNotification *notify = (KNotification *) sender();
+    KNotification *notify = qobject_cast<KNotification*>(sender());
     switch(action) {
         case 1:
             // Check to see if there isn't another process running
@@ -100,12 +99,6 @@ void KpkDistroUpgrade::handleDistroUpgradeAction(uint action)
     }
     // in persistent mode we need to manually close it
     notify->close();
-}
-
-void KpkDistroUpgrade::handleDistroUpgradeActionClosed()
-{
-    kDebug();
-    decreaseRunning();
 }
 
 void KpkDistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)

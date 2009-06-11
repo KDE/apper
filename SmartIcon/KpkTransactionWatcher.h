@@ -41,7 +41,7 @@ public slots:
 
 private slots:
     void errorCode(PackageKit::Client::ErrorType, const QString&);
-//     void showRestartMessage(PackageKit::Client::RestartType, const QString&);
+    void errorActivated(uint action);
     void finished(PackageKit::Transaction::ExitStatus status, uint time);
 
 private:

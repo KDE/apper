@@ -6,12 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>399</width>
+    <width>407</width>
     <height>454</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
    <property name="margin">
@@ -26,7 +23,7 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>General</string>
+      <string>About Backend</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
@@ -39,7 +36,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="nameL">
         <property name="text">
-         <string>name</string>
+         <string>backend name here</string>
         </property>
        </widget>
       </item>
@@ -53,7 +50,7 @@
       <item row="1" column="1">
        <widget class="QLabel" name="authorL">
         <property name="text">
-         <string>author</string>
+         <string>backend author name here</string>
         </property>
        </widget>
       </item>
@@ -484,7 +481,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Visible</string>
+         <string>Package is visible</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -532,7 +529,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Free</string>
+         <string>Free software</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

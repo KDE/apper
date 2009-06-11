@@ -86,32 +86,44 @@ void KpkPackageModel::sort(int column, Qt::SortOrder order)
     if (column == 0) {
         if (order == Qt::DescendingOrder) {
             qSort(m_packages.begin(), m_packages.end(), packageNameSortGreaterThan);
-            foreach(const Package::State &group, m_groups.keys()) {
-                qSort(m_groups[group].begin(), m_groups[group].end(), packageNameSortGreaterThan);
+
+            QMap<Package::State, QList<Package*> >::const_iterator i = m_groups.constBegin();
+            while (i != m_groups.constEnd()) {
+                qSort(m_groups[i.key()].begin(), m_groups[i.key()].end(), packageNameSortGreaterThan);
+                ++i;
             }
         } else {
             qSort(m_packages.begin(), m_packages.end(), packageNameSortLessThan);
-            foreach(const Package::State &group, m_groups.keys()) {
-                qSort(m_groups[group].begin(), m_groups[group].end(), packageNameSortLessThan);
+
+            QMap<Package::State, QList<Package*> >::const_iterator i = m_groups.constBegin();
+            while (i != m_groups.constEnd()) {
+                qSort(m_groups[i.key()].begin(), m_groups[i.key()].end(), packageNameSortLessThan);
+                ++i;
             }
         }
     } else if (column == 1) {
         if (order == Qt::DescendingOrder){
             descendingSelectionSorter sort(m_checkedPackages);
             qSort(m_packages.begin(), m_packages.end(), sort);
-            foreach(const Package::State &group, m_groups.keys()) {
-                qSort(m_groups[group].begin(), m_groups[group].end(), sort);
+
+            QMap<Package::State, QList<Package*> >::const_iterator i = m_groups.constBegin();
+            while (i != m_groups.constEnd()) {
+                qSort(m_groups[i.key()].begin(), m_groups[i.key()].end(), sort);
+                ++i;
             }
         } else {
             ascendingSelectionSorter sort(m_checkedPackages);
             qSort(m_packages.begin(), m_packages.end(), sort);
-            foreach(const Package::State &group, m_groups.keys()) {
-                qSort(m_groups[group].begin(), m_groups[group].end(), sort);
+
+            QMap<Package::State, QList<Package*> >::const_iterator i = m_groups.constBegin();
+            while (i != m_groups.constEnd()) {
+                qSort(m_groups[i.key()].begin(), m_groups[i.key()].end(), sort);
+                ++i;
             }
         }
     }
     if (m_grouped) {
-        for (int i = 0;i<rowCount(QModelIndex());i++) {
+        for (int i = 0; i < rowCount(QModelIndex()); i++) {
             QModelIndex group = index(i, 0);
             emit dataChanged(index(0, 0, group), index(0, rowCount(group), group));
         }
@@ -512,12 +524,14 @@ void KpkPackageModel::uncheckAll()
     emit dataChanged(createIndex(0, 1),
                      createIndex(m_groups.size(), 1));
     if (m_grouped) {
-        foreach(const Package::State &group, m_groups.keys()) {
-            QModelIndex groupIndex = index(m_groups.keys().indexOf(group), 0, QModelIndex());
+        QMap<Package::State, QList<Package*> >::const_iterator i = m_groups.constBegin();
+        while (i != m_groups.constEnd()) {
+            QModelIndex groupIndex = index(m_groups.keys().indexOf(i.key()), 0, QModelIndex());
             emit dataChanged(index(0, 1, groupIndex),
-                             index(m_groups[group].size(),
+                             index(m_groups[i.key()].size(),
                              1,
                              groupIndex));
+            ++i;
         }
     }
 }
@@ -533,12 +547,14 @@ void KpkPackageModel::checkAll()
     emit dataChanged(createIndex(0, 1),
                      createIndex(m_groups.size(), 1));
     if (m_grouped) {
-        foreach(const Package::State &group, m_groups.keys()) {
-            QModelIndex groupIndex = index(m_groups.keys().indexOf(group), 0, QModelIndex());
+        QMap<Package::State, QList<Package*> >::const_iterator i = m_groups.constBegin();
+        while (i != m_groups.constEnd()) {
+            QModelIndex groupIndex = index(m_groups.keys().indexOf(i.key()), 0, QModelIndex());
             emit dataChanged(index(0, 1, groupIndex),
-                             index(m_groups[group].size(),
+                             index(m_groups[i.key()].size(),
                              1,
                              groupIndex));
+            ++i;
         }
     }
 }

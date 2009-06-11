@@ -149,7 +149,6 @@ void KpkTransactionTrayIcon::triggered(QAction *action)
 
 void KpkTransactionTrayIcon::createTransactionDialog(Transaction *t)
 {
-    kDebug();
     increaseRunning();
     // we need to close on finish otherwise smart-icon will timeout
     KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish, m_menu);
@@ -172,7 +171,7 @@ void KpkTransactionTrayIcon::transactionDialogClosed()
 
 void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
 {
-    kDebug() << tids.size();
+//     kDebug() << tids.size();
     if (tids.size()) {
         setCurrentTransaction(tids.first());
     } else {
@@ -347,10 +346,10 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 
 void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type, Package *pkg)
 {
-//     decreaseRunning(); //TODO make it persistent when kde fixes that
+    increaseRunning();
     m_restartPackages << pkg->name();
 
-    KNotification *notify = new KNotification("RestartRequired");
+    KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
     QString text("<b>" + i18n("The system update has completed") + "</b>");
     text.append("<br />" + KpkStrings::restartType(type));
     notify->setText(text);
@@ -359,11 +358,11 @@ void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type
     switch (type) {
     case Client::RestartSystem :
         notify->setPixmap(KpkIcons::restartIcon(type).pixmap(64, 64));
-        actions << i18n("Restart");
+        actions << i18nc("Restart the computer", "Restart");
         actions << i18n("Not now");
         m_restartType = Client::RestartSystem;
         m_restartAction->setIcon(KpkIcons::restartIcon(type));
-        m_restartAction->setText(i18n("Restart"));
+        m_restartAction->setText(i18nc("Restart the computer", "Restart"));
         break;
     case Client::RestartSession :
         notify->setPixmap(KpkIcons::restartIcon(type).pixmap(64, 64));
@@ -392,6 +391,8 @@ void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type
     notify->setActions(actions);
     connect(notify, SIGNAL(activated(uint)),
             this, SLOT(restartActivated(uint)));
+    connect(notify, SIGNAL(closed()),
+            this, SLOT(decreaseRunning()));
 
     notify->sendEvent();
 }
@@ -402,7 +403,7 @@ void KpkTransactionTrayIcon::restartActivated(uint action)
         logout();
     }
     // in persistent mode we need to manually close it
-//     notify->close();
+    qobject_cast<KNotification*>(sender())->close();
 }
 
 void KpkTransactionTrayIcon::logout()

@@ -55,9 +55,9 @@ KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
 //                                           this, SLOT(showSettings()));
 //     m_icon->contextMenu()->addAction(m_icon->actionCollection()->action(KStandardAction::name(KStandardAction::Preferences)));
 
-        int m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
-        if (m_inhibitCookie == -1)
-            kDebug() << "Sleep suppression denied!";
+//     int m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
+//     if (m_inhibitCookie == -1)
+//         kDebug() << "Sleep suppression denied!";
 }
 
 KpkUpdateIcon::~KpkUpdateIcon()
@@ -159,11 +159,8 @@ void KpkUpdateIcon::notifyUpdates()
 
     foreach(Package *p, m_updateList) {
         packageGroups[p->state()].append(p);
-    }
-
-    foreach(const Package::State &state, packageGroups.keys()) {
-        if (state>highState) {
-            highState = state;
+        if (p->state() > highState) {
+            highState = p->state();
         }
     }
 
@@ -206,7 +203,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
 {
     Q_UNUSED(runtime)
     if (m_updateList.size() > 0) {
-        kDebug() << "Found " << m_updateList.size() << " updates";
+//         kDebug() << "Found " << m_updateList.size() << " updates";
         Package::State highState = Package::StateInstalled;
         //FIXME: This assumes that PackageKit shares our priority ranking.
         foreach(Package *p, m_updateList) {
@@ -221,11 +218,11 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
         uint updateType = (uint) checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault);
         if (updateType == KpkEnum::None) {
-            kDebug() << "None.";
+//             kDebug() << "None.";
             notifyUpdates();
         } else {
             if (updateType == KpkEnum::All) {
-                kDebug() << "All";
+//                 kDebug() << "All";
                 Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
                 if (Transaction* t = Client::instance()->updateSystem()) {
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
@@ -240,12 +237,12 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                     autoInstallNotify->sendEvent();
                     increaseRunning();
                 } else {
-                    kDebug() << "All Trans failed.";
+//                     kDebug() << "All Trans failed.";
                     notifyUpdates();
                 }
             } else {
                 // Defaults to security
-                kDebug() << "Security";
+//                 kDebug() << "Security";
                 QList<PackageKit::Package*> updateList;
                 foreach(PackageKit::Package *package, m_updateList) {
                     if (package->state() == Package::StateSecurity) {
@@ -267,11 +264,11 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                         autoInstallNotify->sendEvent();
                         increaseRunning();
                     } else {
-                        kDebug() << "security Trans failed.";
+//                         kDebug() << "security Trans failed.";
                         notifyUpdates();
                     }
                 } else {
-                    kDebug() << "No security updates.";
+//                     kDebug() << "No security updates.";
                     notifyUpdates();
                 }
             }
@@ -307,7 +304,7 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
 
 void KpkUpdateIcon::handleUpdateAction(uint action)
 {
-    qDebug() << "action" << action;
+//     kDebug() << "action" << action;
     switch(action) {
         case 1:
             showUpdates();
@@ -329,7 +326,7 @@ void KpkUpdateIcon::handleUpdateAction(uint action)
 
 void KpkUpdateIcon::handleUpdateActionClosed()
 {
-    kDebug();
+//     kDebug();
     m_updateNotify = 0;
     decreaseRunning();
 }

@@ -42,7 +42,6 @@ private slots:
     void handleDistroUpgradeAction(uint action);
     void distroUpgradeError(QProcess::ProcessError error);
     void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
-    void handleDistroUpgradeActionClosed();
 
 private:
     QProcess *m_distroUpgradeProcess;

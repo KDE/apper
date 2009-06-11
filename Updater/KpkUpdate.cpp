@@ -38,7 +38,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 {
     setupUi(this);
 
-    updatePB->setIcon(KpkIcons::getIcon("package-update"));
+    selectAllPB->setIcon(KpkIcons::getIcon("package-update"));
     refreshPB->setIcon(KpkIcons::getIcon("view-refresh"));
     historyPB->setIcon(KpkIcons::getIcon("view-history"));
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
@@ -91,10 +91,9 @@ void KpkUpdate::checkEnableUpdateButton()
     }
 }
 
-void KpkUpdate::on_updatePB_clicked()
+void KpkUpdate::on_selectAllPB_clicked()
 {
     m_pkg_model_updates->checkAll();
-    applyUpdates();
 }
 
 void KpkUpdate::load()
@@ -214,7 +213,7 @@ void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
 
 void KpkUpdate::on_historyPB_clicked()
 {
-    KpkHistory *frm = new KpkHistory(this);
+    QPointer<KpkHistory> frm = new KpkHistory(this);
     frm->exec();
     delete frm;
 }

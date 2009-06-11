@@ -50,6 +50,5 @@ int main(int argc, char **argv)
     }
 
     kpackagekit::KPackageKit_Smart_Icon app;
-    app.exec();
-    return 0;
+    return app.exec();
 }

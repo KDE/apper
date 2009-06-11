@@ -44,15 +44,18 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
             this, SLOT(close()));
 
     m_trayIcon = new KpkTransactionTrayIcon(this);
-    connect(m_trayIcon, SIGNAL(close()), this, SLOT(prepareToClose()));
+    connect(m_trayIcon, SIGNAL(close()),
+            this, SLOT(prepareToClose()));
     // This MUST be called after connecting all the signals or slots!
     QTimer::singleShot(0, m_trayIcon, SLOT(checkTransactionList()));
 
     m_updateIcon = new KpkUpdateIcon(this);
-    connect(m_updateIcon, SIGNAL(close()), this, SLOT(prepareToClose()));
+    connect(m_updateIcon, SIGNAL(close()),
+            this, SLOT(prepareToClose()));
 
     m_distroUpgrade = new KpkDistroUpgrade(this);
-    connect(m_distroUpgrade, SIGNAL(close()), this, SLOT(prepareToClose()));
+    connect(m_distroUpgrade, SIGNAL(close()),
+            this, SLOT(prepareToClose()));
 
     m_interface = new KpkInterface(this);
     // connect the update signal from DBus to our update and distro classes
@@ -62,6 +65,8 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
             m_distroUpgrade, SLOT(checkDistroUpgrades()));
 
     m_transWatcher = new KpkTransactionWatcher(this);
+    connect(m_transWatcher, SIGNAL(close()),
+            this, SLOT(prepareToClose()));
     // connect the watch transaction coming through DBus to our watcher
     connect(m_interface, SIGNAL(watchTransaction(const QString &)),
             m_transWatcher, SLOT(watchTransaction(const QString &)));
@@ -98,6 +103,10 @@ bool KPackageKit_Smart_Icon::isRunning()
     if (m_distroUpgrade && m_distroUpgrade->isRunning()) {
         return true;
     }
+    if (m_transWatcher && m_transWatcher->isRunning()) {
+        return true;
+    }
+
     return false;
 }
 

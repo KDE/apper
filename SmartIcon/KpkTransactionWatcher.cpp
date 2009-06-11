@@ -25,7 +25,10 @@
 
 #include <KNotification>
 #include <KIcon>
+#include <KMessageBox>
 #include <KDebug>
+
+Q_DECLARE_METATYPE(PackageKit::Client::ErrorType)
 
 KpkTransactionWatcher::KpkTransactionWatcher(QObject *parent)
  : KpkAbstractIsRunning(parent)
@@ -41,14 +44,14 @@ void KpkTransactionWatcher::watchTransaction(const QString &tid)
     foreach(Transaction *trans, m_hiddenTransactions) {
         if (trans->tid() == tid) {
             // Oops we are already watching this one
-            kDebug() << "Oops we are already watching this one" << tid;
+//             kDebug() << "Oops we are already watching this one" << tid;
             return;
         }
     }
     foreach(Transaction *trans, Client::instance()->getTransactions()) {
         if (trans->tid() == tid) {
             // found it let's start watching
-            kDebug() << "found it let's start watching" << tid;
+//             kDebug() << "found it let's start watching" << tid;
             m_hiddenTransactions.append(trans);
             connect(trans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                     this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
@@ -64,7 +67,7 @@ void KpkTransactionWatcher::removeTransactionWatcher(const QString &tid)
     foreach(Transaction *trans, m_hiddenTransactions) {
         if (trans->tid() == tid) {
             // Found it, let's remove
-            kDebug() << "found it let's remove" << tid;
+//             kDebug() << "found it let's remove" << tid;
             m_hiddenTransactions.removeOne(trans);
             // disconnect to not show any notification
             trans->disconnect();
@@ -83,53 +86,40 @@ void KpkTransactionWatcher::finished(PackageKit::Transaction::ExitStatus status,
 
 void KpkTransactionWatcher::errorCode(PackageKit::Client::ErrorType err, const QString &details)
 {
-    Q_UNUSED(details)
-    // TODO add a details button to show details in a message box
-    // do not forget to increase count ^^
-    KNotification* errorNotification = new KNotification("TransactionError", 0, KNotification::Persistent);
-    errorNotification->setFlags(KNotification::Persistent);
-    errorNotification->setText("<b>"+KpkStrings::error(err)+"</b><br />"+KpkStrings::errorMessage(err));
-//     QStringList actions;
-//     actions << i18n("Details");
-//     errorNotification->setActions(actions);
+    increaseRunning();
+    KNotification *notify = new KNotification("TransactionError", 0, KNotification::Persistent);
+    notify->setText("<b>"+KpkStrings::error(err)+"</b><br />"+KpkStrings::errorMessage(err));
+    notify->setProperty("ErrorType", QVariant::fromValue(err));
+    notify->setProperty("Details", details);
+    QStringList actions;
+    actions << i18n("Details") << i18n("Ignore");
+    notify->setActions(actions);
     KIcon icon("dialog-error");
     // Use QSize for proper icon
-    errorNotification->setPixmap(icon.pixmap(QSize(128, 128)));
-    errorNotification->sendEvent();
+    notify->setPixmap(icon.pixmap(QSize(128, 128)));
+    connect(notify, SIGNAL(activated(uint)),
+            this, SLOT(errorActivated(uint)));
+    connect(notify, SIGNAL(closed()),
+            this, SLOT(decreaseRunning()));
+    notify->sendEvent();
 }
 
-// //FIXME: Implement the proper dbus calls to restart things.
-// void KpkTransactionWatcher::showRestartMessage(PackageKit::Client::RestartType type, const QString &details)
-// {
-//     if (type==Client::RestartNone) {
-//         return;
-//     }
-//     KNotification *notify = new KNotification("RestartRequired");
-//     QString text;
-//     QStringList events;
-//     KIcon icon;
-//     switch(type) {
-//         case Client::RestartApplication:
-//             text = i18n("Restart the application for system changes to take effect.");
-//             //FIXME: Need a way to detect which program it is
-//             icon = KIcon("window-close");
-//             break;
-//         case Client::RestartSession:
-//             text = i18n("You must logout and log back in for system changes to take effect.");
-//             icon = KIcon("system-restart"); //FIXME: find the logout icon
-//             break;
-//         case Client::RestartSystem:
-//             text = i18n("Please restart your computer for system changes to take effect.");
-//             icon = KIcon("system-restart");
-//             break;
-//         case Client::RestartNone:
-//         case Client::UnknownRestartType:
-//             return;
-//     }
-//     // Use QSize for proper icon
-//     notify->setPixmap(icon.pixmap(QSize(128, 128)));
-//     notify->setText("<b>"+text+"</b><br />"+details);
-//     notify->sendEvent();
-// }
+void KpkTransactionWatcher::errorActivated(uint action)
+{
+    KNotification *notify = qobject_cast<KNotification*>(sender());
+    // if the user clicked "Details"
+    if (action == 1) {
+        PackageKit::Client::ErrorType error = notify->property("ErrorType").value<PackageKit::Client::ErrorType>();
+        QString details = notify->property("Details").toString();
+        KMessageBox::detailedSorry(0,
+                               KpkStrings::errorMessage(error),
+                               QString(details).replace('\n', "<br />"),
+                               KpkStrings::error(error),
+                               KMessageBox::Notify);
+    }
+
+    // in persistent mode we need to manually close it
+    notify->close();
+}
 
 #include "KpkTransactionWatcher.moc"

@@ -142,8 +142,9 @@ void KpkReviewChanges::checkTask()
                 connect(m_transactionReq, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
                         this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
                 // Create a Transaction dialog to don't upset the user
-                KpkTransaction* reqFinder = new KpkTransaction(m_transactionReq, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
+                QPointer<KpkTransaction> reqFinder = new KpkTransaction(m_transactionReq, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
                 reqFinder->exec();
+                delete reqFinder;
             } else {
                 removePackages();
             }
@@ -165,8 +166,9 @@ void KpkReviewChanges::checkTask()
                 connect(m_transactionDep, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
                         this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
                 // Create a Transaction dialog to don't upset the user
-                KpkTransaction* reqFinder = new KpkTransaction(m_transactionDep, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
+                QPointer<KpkTransaction> reqFinder = new KpkTransaction(m_transactionDep, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
                 reqFinder->exec();
+                delete reqFinder;
             } else {
                 installPackages();
             }

@@ -200,53 +200,51 @@ void KpkTransaction::currPackage(Package *p)
 
 void KpkTransaction::finishedDialog()
 {
-    slotButtonClicked(KDialog::User1);
+    if (!d->finished) {
+        // We are going to hide the transaction,
+        // which can make the user even close System Settings or KPackageKit
+        // so we call the tray icon to keep watching the transaction so if the
+        // transaction receives some error we can display them
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                                    "/",
+                                                    "org.kde.KPackageKitSmartIcon",
+                                                    QLatin1String("WatchTransaction"));
+        message << qVariantFromValue(m_trans->tid());
+        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+        if (reply.type() != QDBusMessage::ReplyMessage) {
+            kWarning() << "Message did not receive a reply";
+        }
+        // Always disconnect BEFORE emitting finished
+        m_trans->disconnect();
+        emit kTransactionFinished(Success);
+    }
 }
 
 void KpkTransaction::slotButtonClicked(int button)
 {
     switch(button) {
-        case KDialog::Cancel :
-            kDebug() << "KDialog::Cancel";
-            m_trans->cancel();
-            m_flags |= CloseOnFinish;
-            break;
-        case KDialog::User1 :
-            kDebug() << "KDialog::User1";
-            if (!d->finished) {
-                // We are going to hide the transaction,
-                // which can make the user even close System Settings or KPackageKit
-                // so we call the tray icon to keep watching the transaction so if the
-                // transaction receives some error we can display them
-                QDBusMessage message;
-                message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                         "/",
-                                                         "org.kde.KPackageKitSmartIcon",
-                                                         QLatin1String("WatchTransaction"));
-                message << qVariantFromValue(m_trans->tid());
-                QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-                if (reply.type() != QDBusMessage::ReplyMessage) {
-                    kWarning() << "Message did not receive a reply";
-                }
-                // Always disconnect BEFORE emitting finished
-                m_trans->disconnect();
-                emit kTransactionFinished(Success);
-            }
-            // If you call Close it will
-            // come back to hunt you with Cancel
-            done(KDialog::User1);
-            break;
-        case KDialog::Close :
-            kDebug() << "KDialog::Close";
-            // Always disconnect BEFORE emitting finished
-            m_trans->disconnect();
-            emit kTransactionFinished(Cancelled);
-            done(KDialog::Close);
-            break;
-        case KDialog::Details :
-            d->showDetails = !d->showDetails;
-        default : // Should be only details
-            KDialog::slotButtonClicked(button);
+    case KDialog::Cancel :
+        kDebug() << "KDialog::Cancel";
+        m_trans->cancel();
+        m_flags |= CloseOnFinish;
+        break;
+    case KDialog::User1 :
+        kDebug() << "KDialog::User1";
+        // when we're done finishedDialog() is called
+        done(KDialog::User1);
+        break;
+    case KDialog::Close :
+        kDebug() << "KDialog::Close";
+        // Always disconnect BEFORE emitting finished
+        m_trans->disconnect();
+        emit kTransactionFinished(Cancelled);
+        done(KDialog::Close);
+        break;
+    case KDialog::Details :
+        d->showDetails = !d->showDetails;
+    default : // Should be only details
+        KDialog::slotButtonClicked(button);
     }
 }
 
@@ -344,10 +342,11 @@ void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
         m_handlingActionRequired = true;
     }
 
-    KpkLicenseAgreement *frm = new KpkLicenseAgreement(info, true, this);
+    QPointer<KpkLicenseAgreement> frm = new KpkLicenseAgreement(info, true, this);
     if (frm->exec() == KDialog::Yes && Client::instance()->acceptEula(info)) {
         m_handlingActionRequired = false;
     }
+    delete frm;
 
     // Well try again, if fail will show the erroCode
     emit kTransactionFinished(ReQueue);
@@ -388,12 +387,14 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
         m_handlingActionRequired = true;
     }
 
-    KpkRepoSig *frm = new KpkRepoSig(info, true, this);
+    QPointer<KpkRepoSig> frm = new KpkRepoSig(info, true, this);
     if (frm->exec() == KDialog::Yes &&
         Client::instance()->installSignature(info.type, info.keyId, info.package)) {
         m_handlingActionRequired = false;
     }
-    kDebug() << "Requeue!";
+    delete frm;
+
+//     kDebug() << "Requeue!";
     emit kTransactionFinished(ReQueue);
 }
 
