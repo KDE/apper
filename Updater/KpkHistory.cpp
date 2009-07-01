@@ -89,7 +89,7 @@ void KpkHistory::slotButtonClicked(int button)
     }
     QString text;
     uint time = Client::instance()->getTimeSinceAction(Client::ActionRefreshCache) * 1000;
-    text = i18n("Time since last cache refresh: %1", KGlobal::locale()->formatDuration(time));
+    text = i18n("Time since last cache refresh: %1", KGlobal::locale()->prettyFormatDuration(time));
     timeCacheLabel->setText(text);
 }
 

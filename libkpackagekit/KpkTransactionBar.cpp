@@ -125,7 +125,7 @@ void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
     switch (status) {
         case Transaction::ExitSuccess:
             KColorScheme::adjustBackground(colors, KColorScheme::PositiveBackground, QPalette::Window, KColorScheme::Window);
-            m_label->setText(i18n("Finished in %1.", KGlobal::locale()->formatDuration(runtime)));
+            m_label->setText(i18n("Finished in %1.", KGlobal::locale()->prettyFormatDuration(runtime)));
             break;
         default:
             KColorScheme::adjustBackground(colors, KColorScheme::NegativeBackground, QPalette::Window, KColorScheme::Window);

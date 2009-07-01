@@ -35,7 +35,7 @@ KpkProgressBar::~KpkProgressBar()
 QString KpkProgressBar::text() const
 {
     if (m_remaining) {
-        return i18n("%1 remaining", KGlobal::locale()->formatDuration(m_remaining * 1000));
+        return i18n("%1 remaining", KGlobal::locale()->prettyFormatDuration(m_remaining * 1000));
     } else {
         return QProgressBar::text();
     }

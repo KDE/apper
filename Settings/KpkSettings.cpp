@@ -122,7 +122,7 @@ void KpkSettings::load()
     int ret = intervalCB->findData(interval);
     if (ret == -1) {
         // this is if someone change the file by hand...
-        intervalCB->addItem(KGlobal::locale()->formatDuration(interval * 1000), interval);
+        intervalCB->addItem(KGlobal::locale()->prettyFormatDuration(interval * 1000), interval);
         intervalCB->setCurrentIndex(intervalCB->count() - 1);
     } else {
         intervalCB->setCurrentIndex(ret);
