@@ -25,6 +25,7 @@
 #include <KIconLoader>
 #include <KDebug>
 #include <KpkIcons.h>
+#include <KLocale>
 
 using namespace PackageKit;
 
@@ -138,9 +139,9 @@ QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, i
     if (role == Qt::DisplayRole) {
         switch(section) {
             case 0:
-                return QVariant("Package");
+                return QVariant(i18n("Package"));
             case 1:
-                return QVariant("Action");
+                return QVariant(i18n("Action"));
         }
     }
     return QVariant();
