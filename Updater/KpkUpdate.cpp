@@ -26,6 +26,10 @@
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 #include <KpkTransactionBar.h>
+#include <KpkPackageModel.h>
+#include <KpkSimplePackageModel.h>
+#include <KpkDelegate.h>
+#include <KpkRequirements.h>
 
 #include <KMessageBox>
 #include <KProtocolManager>
@@ -38,6 +42,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 {
     setupUi(this);
 
+    m_dependsPkgModel = new KpkSimplePackageModel(this);
     selectAllPB->setIcon(KpkIcons::getIcon("package-update"));
     refreshPB->setIcon(KpkIcons::getIcon("view-refresh"));
     historyPB->setIcon(KpkIcons::getIcon("view-history"));
@@ -84,11 +89,9 @@ void KpkUpdate::distroUpgrade(PackageKit::Client::DistroUpgradeType type, const 
 
 void KpkUpdate::checkEnableUpdateButton()
 {
-    if (m_pkg_model_updates->selectedPackages().size() > 0) {
-        emit changed(true);
-    } else {
-        emit changed(false);
-    }
+    emit changed(m_pkg_model_updates->selectedPackages().size() > 0);
+    // if we don't have any upates let's disable the button
+    selectAllPB->setEnabled(m_pkg_model_updates->rowCount() != 0);
 }
 
 void KpkUpdate::on_selectAllPB_clicked()
@@ -103,34 +106,71 @@ void KpkUpdate::load()
 
 void KpkUpdate::applyUpdates()
 {
-    QList<Package*> packages = m_pkg_model_updates->selectedPackages();
-    //check to see if the user selected all selectable packages
-    if (m_pkg_model_updates->allSelected()) {
-        // if so let's do system-update instead
-        Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-        if (Transaction *t = m_client->updateSystem()) {
-            KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
-            connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                    this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
-            frm->show();
-        } else {
-            KMessageBox::sorry(this,
-                               i18n("You do not have the necessary privileges to perform this action."),
-                               i18n("Failed to update system"));
-        }
+    // If the backend supports getRequires do it
+    if (m_actions & Client::ActionGetRequires) {
+
+        PackageKit::Transaction *dependsT;
+        dependsT = m_client->getDepends(m_pkg_model_updates->selectedPackages(), Client::FilterNotInstalled, true);
+        m_dependsPkgModel->clear();
+        connect(dependsT, SIGNAL(package(PackageKit::Package *)),
+                m_dependsPkgModel, SLOT(addPackage(PackageKit::Package *)));
+        connect(dependsT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(getDependsFinished(PackageKit::Transaction::ExitStatus, uint)));
+        connect(dependsT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
+                this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+
+        // Create a Transaction dialog to don't upset the user
+        QPointer<KpkTransaction> reqFinder = new KpkTransaction(dependsT, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
+        reqFinder->exec();
+        delete reqFinder;
     } else {
-        // else lets install only the selected ones
-        Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-        if (Transaction *t = m_client->updatePackages(packages)) {
-            KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
-            connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                    this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
-            frm->show();
+        updatePackages();
+    }
+}
+
+void KpkUpdate::getUpdatesFinished(Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(status)
+    Q_UNUSED(runtime)
+
+    // If we just have one group let's expand it
+    if (m_pkg_model_updates->rowCount() == 1) {
+        packageView->expandAll();
+    }
+    checkEnableUpdateButton();
+}
+
+void KpkUpdate::getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(status)
+    Q_UNUSED(runtime)
+
+    if (status == Transaction::ExitSuccess) {
+        if (m_dependsPkgModel->rowCount(QModelIndex()) > 0) {
+            KpkRequirements *requimentD = new KpkRequirements(i18n("The following packages will also be installed as dependencies"), m_dependsPkgModel, this);
+            connect(requimentD, SIGNAL(okClicked()), this, SLOT(updatePackages()));
+            requimentD->show();
         } else {
-            KMessageBox::sorry(this,
-                               i18n("You do not have the necessary privileges to perform this action."),
-                               i18n("Failed to update package lists"));
+            updatePackages();
         }
+    }
+
+}
+
+void KpkUpdate::updatePackages()
+{
+    QList<Package*> packages = m_pkg_model_updates->selectedPackages();
+    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
+
+    if (Transaction *t = m_client->updatePackages(packages)) {
+        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
+        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
+        frm->show();
+    } else {
+        KMessageBox::sorry(this,
+                           i18n("You do not have the necessary privileges to perform this action."),
+                           i18n("Failed to update package lists"));
     }
 }
 
@@ -145,16 +185,6 @@ void KpkUpdate::refresh()
         KMessageBox::sorry(this,
                            i18n("You do not have the necessary privileges to perform this action."),
                            i18n("Failed to refresh package lists"));
-    }
-}
-
-void KpkUpdate::getUpdatesFinished(Transaction::ExitStatus status, uint runtime)
-{
-    Q_UNUSED(status)
-    Q_UNUSED(runtime)
-    // If we just have one group let's expand it
-    if (m_pkg_model_updates->rowCount() == 1) {
-        packageView->expandAll();
     }
 }
 

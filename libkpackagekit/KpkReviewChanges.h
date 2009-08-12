@@ -61,7 +61,7 @@ private slots:
     void checkChanged();
 
 private:
-    KpkReviewChangesPrivate* d;
+    KpkReviewChangesPrivate *d;
     KpkPackageModel *m_pkgModelMain;
     KpkSimplePackageModel *m_pkgModelReq, *m_pkgModelDep;
     KpkDelegate *m_pkgDelegate;

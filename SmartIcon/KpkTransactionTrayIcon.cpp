@@ -38,6 +38,8 @@
 
 #include <KDebug>
 
+#define RESTART_ICON_SIZE 64
+
 Q_DECLARE_METATYPE(Transaction*)
 
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
@@ -346,6 +348,12 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 
 void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type, Package *pkg)
 {
+    // Check if the type is NOT the most important restart type
+    if (type <= m_restartType) {
+        // we alread have the most important one
+        return;
+    }
+
     increaseRunning();
     m_restartPackages << pkg->name();
 
@@ -357,7 +365,7 @@ void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type
     QStringList actions;
     switch (type) {
     case Client::RestartSystem :
-        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(64, 64));
+        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(RESTART_ICON_SIZE, RESTART_ICON_SIZE));
         actions << i18nc("Restart the computer", "Restart");
         actions << i18n("Not now");
         m_restartType = Client::RestartSystem;
@@ -365,7 +373,7 @@ void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type
         m_restartAction->setText(i18nc("Restart the computer", "Restart"));
         break;
     case Client::RestartSession :
-        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(64, 64));
+        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(RESTART_ICON_SIZE, RESTART_ICON_SIZE));
         actions << i18n("Logout");
         actions << i18n("Not now");
         if (m_restartType != Client::RestartSystem) {
@@ -375,7 +383,7 @@ void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type
         m_restartAction->setText(i18n("Logout"));
         break;
     case Client::RestartApplication :
-        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(64, 64));
+        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(RESTART_ICON_SIZE, RESTART_ICON_SIZE));
         // What do we do in restart application?
         // we don't even know what application is
         // SHOULD we check for pkg and see the installed

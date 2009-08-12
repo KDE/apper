@@ -336,7 +336,7 @@ KIcon KpkIcons::restartIcon(Client::RestartType type)
 {
     switch (type) {
     case Client::RestartSystem :
-        return KpkIcons::getIcon("system-restart");
+        return KpkIcons::getIcon("system-reboot");
     case Client::RestartSession :
         return KpkIcons::getIcon("system-log-out");
     case Client::RestartApplication :

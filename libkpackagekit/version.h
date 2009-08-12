@@ -20,5 +20,5 @@
 
 #ifndef KPKVERSION_H
 #define KPKVERSION_H
-#define KPK_VERSION "0.4.1.1"
+#define KPK_VERSION "0.4.2"
 #endif

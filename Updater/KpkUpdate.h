@@ -23,14 +23,14 @@
 
 #include <QPackageKit>
 
-#include "KpkPackageModel.h"
 #include <KpkTransaction.h>
-#include <KpkDelegate.h>
-
 #include <KUrlLabel>
 
 #include "ui_KpkUpdate.h"
 
+class KpkPackageModel;
+class KpkSimplePackageModel;
+class KpkDelegate;
 class KProgressDialog;
 
 using namespace PackageKit;
@@ -58,6 +58,8 @@ private slots:
 
     void displayUpdates(KpkTransaction::ExitStatus status);
     void getUpdatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void updatePackages();
 
     void updateColumnsWidth(bool force = false);
     void on_packageView_pressed(const QModelIndex &index);
@@ -67,6 +69,8 @@ private slots:
 
 private:
     KpkPackageModel *m_pkg_model_updates;
+    KpkSimplePackageModel *m_dependsPkgModel;
+
     KpkDelegate *pkg_delegate;
     Client *m_client;
     Transaction *m_updatesT;

@@ -24,16 +24,20 @@
 #include <KDialog>
 
 #include "KpkSimplePackageModel.h"
-#include "ui_KpkRequirements.h"
 
 using namespace PackageKit;
 
-class KpkRequirements : public KDialog, Ui::KpkRequirements
+class KpkRequirementsPrivate;
+
+class KDE_EXPORT KpkRequirements : public KDialog
 {
     Q_OBJECT
 public:
     KpkRequirements(QString msg, KpkSimplePackageModel *model, QWidget *parent = 0);
     ~KpkRequirements();
+
+private:
+    KpkRequirementsPrivate *d;
 };
 
 #endif

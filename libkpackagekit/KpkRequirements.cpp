@@ -19,14 +19,21 @@
  ***************************************************************************/
 
 #include "KpkRequirements.h"
+#include "ui_KpkRequirements.h"
+
+class KpkRequirementsPrivate
+{
+public:
+    Ui::KpkRequirements ui;
+};
 
 KpkRequirements::KpkRequirements(QString msg, KpkSimplePackageModel *model, QWidget *parent)
- : KDialog(parent)
+ : KDialog(parent), d(new KpkRequirementsPrivate)
 {
-    setupUi(mainWidget());
+    d->ui.setupUi(mainWidget());
 
-    label->setText(msg);
-    packageView->setModel(model);
+    d->ui.label->setText(msg);
+    d->ui.packageView->setModel(model);
     setCaption(i18n("Confirm"));
     setButtons(KDialog::Ok | KDialog::Cancel);
     setModal(true);

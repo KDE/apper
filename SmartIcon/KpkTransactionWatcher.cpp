@@ -94,9 +94,7 @@ void KpkTransactionWatcher::errorCode(PackageKit::Client::ErrorType err, const Q
     QStringList actions;
     actions << i18n("Details") << i18n("Ignore");
     notify->setActions(actions);
-    KIcon icon("dialog-error");
-    // Use QSize for proper icon
-    notify->setPixmap(icon.pixmap(QSize(128, 128)));
+    notify->setPixmap(KIcon("dialog-error").pixmap(64, 64));
     connect(notify, SIGNAL(activated(uint)),
             this, SLOT(errorActivated(uint)));
     connect(notify, SIGNAL(closed()),
