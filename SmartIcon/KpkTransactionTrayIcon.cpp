@@ -113,12 +113,11 @@ void KpkTransactionTrayIcon::refreshCache()
     increaseRunning();
     // in this case refreshCache action must be clicked
     Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-    if (Transaction *t = m_client->refreshCache(true)) {
-        createTransactionDialog(t);
+    Transaction *t = m_client->refreshCache(true);
+    if (t->error()) {
+        KMessageBox::error(0, KpkStrings::daemonError(t->error()));
     } else {
-        KMessageBox::sorry(m_menu,
-                           i18n("You do not have the necessary privileges to perform this action."),
-                           i18n("Failed to refresh package lists"));
+        createTransactionDialog(t);
     }
     decreaseRunning();
 }

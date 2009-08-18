@@ -48,6 +48,12 @@ public:
     // of Transaction, instead compare the tid with the tids from
     // Client::getTransaction(), to avoid deleted pointers.
     QString tid() const;
+    bool allowDeps() const;
+    bool onlyTrusted() const;
+    QList<Package*> packages() const;
+
+    void setAllowDeps(bool allowDeps);
+    void setPackages(QList<Package*> packages);
 
     typedef enum {
         Success,

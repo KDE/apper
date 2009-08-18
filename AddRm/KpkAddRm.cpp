@@ -369,7 +369,10 @@ void KpkAddRm::search()
         }
     }
 
-    if (m_pkClient_main) {
+    if (m_pkClient_main->error()) {
+        KMessageBox::error(this, KpkStrings::daemonError(m_pkClient_main->error()));
+        setCurrentActionEnabled(true);
+    } else {
         setCurrentActionCancel(true);
         connectTransaction(m_pkClient_main);
         transactionBar->addTransaction(m_pkClient_main);
@@ -378,9 +381,6 @@ void KpkAddRm::search()
         // cleans the models
         m_pkg_model_main->clear();
         m_mTransRuning = true;
-    } else {
-        kWarning() << "Search didn't work";
-        setCurrentActionEnabled(true);
     }
 }
 

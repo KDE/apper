@@ -22,6 +22,7 @@
 
 #include <KpkStrings.h>
 
+#include <KMessageBox>
 #include <QPlainTextEdit>
 #include <QTextDocument>
 
@@ -102,10 +103,14 @@ void KpkPackageDetails::getDetails(PackageKit::Package *p)
 {
     // create the description transaction
     Transaction *t = Client::instance()->getDetails(p);
-    connect(t, SIGNAL(details(PackageKit::Package *)),
-            this, SLOT(description(PackageKit::Package *)));
-    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(getDetailsFinished(PackageKit::Transaction::ExitStatus, uint)));
+    if (t->error()) {
+        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+    } else {
+        connect(t, SIGNAL(details(PackageKit::Package *)),
+                this, SLOT(description(PackageKit::Package *)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(getDetailsFinished(PackageKit::Transaction::ExitStatus, uint)));
+    }
 }
 
 void KpkPackageDetails::description(PackageKit::Package *p)
@@ -161,10 +166,14 @@ void KpkPackageDetails::getFiles(PackageKit::Package *p)
 {
     // create the files transaction
     Transaction *t = Client::instance()->getFiles(p);
-    connect(t, SIGNAL(files(PackageKit::Package *, const QStringList &)),
-            this, SLOT(files(PackageKit::Package *, const QStringList &)));
-    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(getFilesFinished(PackageKit::Transaction::ExitStatus, uint)));
+    if (t->error()) {
+        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+    } else {
+        connect(t, SIGNAL(files(PackageKit::Package *, const QStringList &)),
+                this, SLOT(files(PackageKit::Package *, const QStringList &)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(getFilesFinished(PackageKit::Transaction::ExitStatus, uint)));
+    }
 }
 
 void KpkPackageDetails::files(PackageKit::Package *package, const QStringList &files)
@@ -202,10 +211,14 @@ void KpkPackageDetails::getDepends(PackageKit::Package *p)
     // create a transaction for the dependecies not recursive
     Transaction *t = Client::instance()->getDepends(p, PackageKit::Client::NoFilter, false);
     m_pkg_model_dep->clear();
-    connect(t, SIGNAL(package(PackageKit::Package *)),
-            m_pkg_model_dep, SLOT(addPackage(PackageKit::Package *)));
-    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(getDependsFinished(PackageKit::Transaction::ExitStatus, uint)));
+    if (t->error()) {
+        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+    } else {
+        connect(t, SIGNAL(package(PackageKit::Package *)),
+                m_pkg_model_dep, SLOT(addPackage(PackageKit::Package *)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(getDependsFinished(PackageKit::Transaction::ExitStatus, uint)));
+    }
 }
 
 void KpkPackageDetails::getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
@@ -230,10 +243,14 @@ void KpkPackageDetails::getRequires(PackageKit::Package *p)
     // create a transaction for the requirements not recursive
     Transaction *t = Client::instance()->getRequires(p, PackageKit::Client::NoFilter, false);
     m_pkg_model_req->clear();
-    connect(t, SIGNAL(package(PackageKit::Package *)),
-            m_pkg_model_req, SLOT(addPackage(PackageKit::Package *)));
-    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(getRequiresFinished(PackageKit::Transaction::ExitStatus, uint)));
+    if (t->error()) {
+        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+    } else {
+        connect(t, SIGNAL(package(PackageKit::Package *)),
+                m_pkg_model_req, SLOT(addPackage(PackageKit::Package *)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(getRequiresFinished(PackageKit::Transaction::ExitStatus, uint)));
+    }
 }
 
 void KpkPackageDetails::getRequiresFinished(PackageKit::Transaction::ExitStatus status, uint runtime)

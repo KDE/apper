@@ -30,6 +30,7 @@
 #include "ui_KpkReviewChanges.h"
 
 #define UNIVERSAL_PADDING 6
+#define AUTOREMOVE true
 
 class KpkReviewChangesPrivate
 {
@@ -146,7 +147,8 @@ void KpkReviewChanges::checkTask()
                 reqFinder->exec();
                 delete reqFinder;
             } else {
-                removePackages();
+                // As we can't check for requires don't allow deps removal
+                removePackages(false);
             }
         } else {
             KMessageBox::error(this, i18n("The current backend does not support removing packages."), i18n("KPackageKit Error"));
@@ -191,7 +193,8 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
             connect(requimentD, SIGNAL(cancelClicked()), this, SLOT(close()));
             requimentD->show();
         } else {
-            removePackages();
+            // As there was no requires don't allow deps removal
+            removePackages(false);
         }
     } else {
         // TODO inform the user
@@ -203,12 +206,13 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
     kDebug() << "reqFinished2";
 }
 
-void KpkReviewChanges::removePackages()
+void KpkReviewChanges::removePackages(bool allowDeps)
 {
     kDebug() << "removePackages";
     Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-    if (Transaction *t = m_client->removePackages(m_remPackages)) {
+    if (Transaction *t = m_client->removePackages(m_remPackages, allowDeps, true)) {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
+        frm->setAllowDeps(allowDeps);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                 this, SLOT(remFinished(KpkTransaction::ExitStatus)));
         frm->show();
@@ -245,7 +249,7 @@ void KpkReviewChanges::installPackages()
 {
     kDebug() << "installPackages";
     Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-    if ( Transaction *t = m_client->installPackages(m_addPackages) ) {
+    if ( Transaction *t = m_client->installPackages(true, m_addPackages) ) {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                 this, SLOT(addFinished(KpkTransaction::ExitStatus)));
@@ -275,7 +279,7 @@ void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
         case KpkTransaction::ReQueue :
             KpkTransaction *trans = (KpkTransaction *) sender();
             Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-            trans->setTransaction(m_client->removePackages(m_remPackages));
+            trans->setTransaction(m_client->removePackages(m_remPackages, trans->allowDeps(), AUTOREMOVE));
             break;
     }
 }
@@ -296,7 +300,7 @@ void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
         case KpkTransaction::ReQueue :
             KpkTransaction *trans = (KpkTransaction *) sender();
             Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-            trans->setTransaction(m_client->installPackages(m_addPackages));
+            trans->setTransaction(m_client->installPackages(trans->onlyTrusted(), m_addPackages));
             break;
     }
 }

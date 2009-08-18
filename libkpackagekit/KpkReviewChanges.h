@@ -55,7 +55,7 @@ private slots:
     void reqFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void depFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void installPackages();
-    void removePackages();
+    void removePackages(bool allow_deps = true);
 
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
     void checkChanged();

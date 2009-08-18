@@ -218,13 +218,17 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
         uint updateType = (uint) checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault);
         if (updateType == KpkEnum::None) {
-//             kDebug() << "None.";
+            // update none
             notifyUpdates();
         } else {
             if (updateType == KpkEnum::All) {
-//                 kDebug() << "All";
+                // update all
                 Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-                if (Transaction* t = Client::instance()->updateSystem()) {
+                Transaction* t = Client::instance()->updateSystem(true);
+                if (t->error()) {
+                    // update all failed
+                    notifyUpdates();
+                } else {
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                             this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
                     emit watchTransaction(t->tid());
@@ -236,13 +240,9 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                     autoInstallNotify->setPixmap(icon.pixmap(QSize(128,128)));
                     autoInstallNotify->sendEvent();
                     increaseRunning();
-                } else {
-//                     kDebug() << "All Trans failed.";
-                    notifyUpdates();
                 }
             } else {
                 // Defaults to security
-//                 kDebug() << "Security";
                 QList<PackageKit::Package*> updateList;
                 foreach(PackageKit::Package *package, m_updateList) {
                     if (package->state() == Package::StateSecurity) {
@@ -251,7 +251,11 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                 }
                 if (updateList.size() > 0) {
                     Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-                    if (Transaction *t = Client::instance()->updatePackages(updateList)) {
+                    Transaction *t = Client::instance()->updatePackages(true, updateList);
+                    if (t->error()) {
+                        // security Trans failed.
+                        notifyUpdates();
+                    } else {
 //                         suppressSleep(true);
                         connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                                 this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
@@ -263,9 +267,6 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                         autoInstallNotify->setPixmap(KpkIcons::packageIcon(highState).pixmap(QSize(128,128)));
                         autoInstallNotify->sendEvent();
                         increaseRunning();
-                    } else {
-//                         kDebug() << "security Trans failed.";
-                        notifyUpdates();
                     }
                 } else {
 //                     kDebug() << "No security updates.";
@@ -293,7 +294,7 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
         // check for updates to see if there are updates that
         // couldn't be automatically installed
         checkUpdates();
-    } else if (status==Transaction::ExitFailed) {
+    } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(128,128)));

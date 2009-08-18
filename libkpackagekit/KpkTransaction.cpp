@@ -46,6 +46,9 @@ public:
     QString tid;
     bool showDetails;
     bool finished;
+    bool allowDeps;
+    bool onlyTrusted;
+    QList<Package*> packages;
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
@@ -58,6 +61,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 {
     d->ui.setupUi(mainWidget());
     d->finished = true; // for sanity we are finished till some transaction is set
+    d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
 
     // Set Cancel and custom button hide
     setButtons(KDialog::Cancel | KDialog::User1 | KDialog::Details);
@@ -100,6 +104,31 @@ KpkTransaction::~KpkTransaction()
 QString KpkTransaction::tid() const
 {
     return d->tid;
+}
+
+bool KpkTransaction::allowDeps() const
+{
+    return d->allowDeps;
+}
+
+bool KpkTransaction::onlyTrusted() const
+{
+    return d->onlyTrusted;
+}
+
+QList<Package*> KpkTransaction::packages() const
+{
+    return d->packages;
+}
+
+void KpkTransaction::setAllowDeps(bool allowDeps)
+{
+    d->allowDeps = allowDeps;
+}
+
+void KpkTransaction::setPackages(QList<Package*> packages)
+{
+    d->packages = packages;
 }
 
 void KpkTransaction::setTransaction(Transaction *trans)
@@ -270,6 +299,22 @@ void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
     }
 }
 
+// Return value: if the error code suggests to try with only_trusted %FALSE
+
+static bool untrustedIsNeed(PackageKit::Client::ErrorType error)
+{
+    switch (error) {
+    case Client::ErrorGpgFailure:
+    case Client::ErrorBadGpgSignature:
+    case Client::ErrorMissingGpgSignature:
+    case Client::ErrorCannotInstallRepoUnsigned:
+    case Client::ErrorCannotUpdateRepoUnsigned:
+        return true;
+    default:
+        return false;
+    }
+}
+
 void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)
 {
 //     kDebug() << "errorCode: " << error << details;
@@ -278,7 +323,7 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
         return;
     }
 
-    if (error == Client::ErrorMissingGpgSignature) {
+    if (untrustedIsNeed(error)) {
         kDebug() << "Missing GPG!";
         m_handlingActionRequired = true;
         int ret = KMessageBox::warningYesNo(this,
@@ -288,6 +333,8 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
                                             "source. Are you sure you want to continue installation?"),
                                             i18n("Installing unsigned software"));
         if (ret == KMessageBox::Yes) {
+            // Set only trusted to false, to do as the user asked
+            d->onlyTrusted = false;
             emit kTransactionFinished(ReQueue);
             kDebug() << "Asking for a re-queue";
         } else {

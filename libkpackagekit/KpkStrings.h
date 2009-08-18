@@ -45,6 +45,7 @@ namespace KpkStrings
     KDE_EXPORT QString action(Client::Action action);
     KDE_EXPORT QString actionPast(Client::Action action);
     KDE_EXPORT QString mediaMessage(Transaction::MediaType value, const QString &text);
+    KDE_EXPORT QString daemonError(PackageKit::Client::DaemonError value);
 };
 
 #endif

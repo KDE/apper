@@ -315,7 +315,7 @@ QString KpkStrings::error(PackageKit::Client::ErrorType error)
     case Client::ErrorPackageConflicts :
         return i18n("Packages are not compatible");
     case Client::ErrorRepoNotAvailable :
-        return i18n("Problem connecting to a software source");
+        return i18n("Problem connecting to a software orign");
     case Client::ErrorFailedInitialization :
         return i18n("Failed to initialize");
     case Client::ErrorFailedFinalise :
@@ -354,6 +354,20 @@ QString KpkStrings::error(PackageKit::Client::ErrorType error)
         return i18n("No space is left on the disk");
     case Client::ErrorMediaChangeRequired :
         return i18n("A media change is required");
+    case Client::ErrorNotAuthorized :
+        return i18n("Authorization failed");
+    case Client::ErrorUpdateNotFound :
+        return i18n("Update not found");
+    case Client::ErrorCannotInstallRepoUnsigned :
+        return i18n("Cannot install from untrusted orign");
+    case Client::ErrorCannotUpdateRepoUnsigned :
+        return i18n("Cannot update from untrusted orign");
+    case Client::ErrorCannotGetFilelist :
+        return i18n("Cannot get the file list");
+    case Client::ErrorCannotGetRequires :
+        return i18n("Cannot get package requires");
+    case Client::ErrorCannotDisableRepository :
+        return i18n("Cannot disable orign");
     case Client::UnknownErrorType :
         return i18n("Unknown error");
     }
@@ -382,12 +396,12 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
         return i18n("A problem that we were not expecting has occurred.\n"
                     "Please report this bug with the error description.");
     case Client::ErrorGpgFailure :
-        return i18n("A security trust relationship could not be made with the software source.\n"
+        return i18n("A security trust relationship could not be made with the software orign.\n"
                     "Please check your software signature settings.");
     case Client::ErrorPackageNotInstalled :
         return i18n("The package that is trying to be removed or updated is not already installed.");
     case Client::ErrorPackageNotFound :
-        return i18n("The package that is being modified was not found on your system or in any software source.");
+        return i18n("The package that is being modified was not found on your system or in any software orign.");
     case Client::ErrorPackageAlreadyInstalled :
         return i18n("The package that is trying to be installed is already installed.");
     case Client::ErrorPackageDownloadFailed :
@@ -399,7 +413,7 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
     case Client::ErrorGroupListInvalid :
         return i18n("The group list could not be loaded.\n"
                     "Refreshing your cache may help, although this is normally a software "
-                    "source error.");
+                    "orign error.");
     case Client::ErrorDepResolutionFailed :
         return i18n("A package dependency could not be found.\n"
                     "More information is available in the detailed report.");
@@ -412,8 +426,8 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
         return i18n("An error occurred while running the transaction.\n"
                     "More information is available in the detailed report.");
     case Client::ErrorRepoNotFound :
-        return i18n("The remote software source name was not found.\n"
-                    "You may need to enable an item in Software Sources.");
+        return i18n("The remote software orign name was not found.\n"
+                    "You may need to enable an item in Software Origns.");
     case Client::ErrorCannotRemoveSystemPackage :
         return i18n("Removing a protected system package is not allowed.");
     case Client::ErrorTransactionCancelled :
@@ -434,12 +448,12 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
                     "To use this software you have to accept the license.");
     case Client::ErrorFileConflicts :
         return i18n("Two packages provide the same file.\n"
-                    "This is usually due to mixing packages for different software sources.");
+                    "This is usually due to mixing packages for different software origns.");
     case Client::ErrorPackageConflicts :
         return i18n("Multiple packages exist that are not compatible with each other.\n"
-                    "This is usually due to mixing packages from different software sources.");
+                    "This is usually due to mixing packages from different software origns.");
     case Client::ErrorRepoNotAvailable :
-        return i18n("There was a (possibly temporary) problem connecting to a software source.\n"
+        return i18n("There was a (possibly temporary) problem connecting to a software origns.\n"
                     "Please check the detailed error for further details.");
     case Client::ErrorFailedInitialization :
         return i18n("Failed to initialize packaging backend.\n"
@@ -477,10 +491,10 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
         return i18n("The specified file could not be found on the system.\n"
                     "Check that the file still exists and has not been deleted.");
     case Client::ErrorNoMoreMirrorsToTry :
-        return i18n("Required data could not be found on any of the configured software sources.\n"
+        return i18n("Required data could not be found on any of the configured software origns.\n"
                     "There were no more download mirrors that could be tried.");
     case Client::ErrorNoDistroUpgradeData :
-        return i18n("Required upgrade data could not be found in any of the configured software sources.\n"
+        return i18n("Required upgrade data could not be found in any of the configured software origns.\n"
                     "The list of distribution upgrades will be unavailable.");
     case Client::ErrorIncompatibleArchitecture :
         return i18n("The package that is trying to be installed is incompatible with this system.");
@@ -489,6 +503,22 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
                     "Free some space on the system disk to perform this operation.");
     case Client::ErrorMediaChangeRequired :
         return i18n("Additional media is required to complete the transaction.");
+    case Client::ErrorNotAuthorized :
+        return i18n("You have failed to provide correct authentication.\n"
+                    "Please check any passwords or account settings.");
+    case Client::ErrorUpdateNotFound :
+        return i18n("The specified update could not be found.\n"
+                    "It could have already been installed or no longer available on the remote server.");
+    case Client::ErrorCannotInstallRepoUnsigned :
+        return i18n("The package could not be installed from untrusted orign.");
+    case Client::ErrorCannotUpdateRepoUnsigned :
+        return i18n("The package could not be updated from untrusted orign.");
+    case Client::ErrorCannotGetFilelist :
+        return i18n("The file list is not available for this package.");
+    case Client::ErrorCannotGetRequires :
+        return i18n("The information about what requires this package could not be obtained.");
+    case Client::ErrorCannotDisableRepository :
+        return i18n("The specified software orign could not be disabled.");
     case Client::UnknownErrorType :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
@@ -787,9 +817,39 @@ QString KpkStrings::message(PackageKit::Client::MessageType value)
         return i18n("Configuration files were changed");
     case Client::MessagePackageAlreadyInstalled :
         return i18n("Package is already installed");
+    case Client::MessageAutoremoveIgnored :
+        return i18n("Automatic cleanup is being ignored");
     case Client::UnknownMessageType :
         return QString();
     }
     kDebug() << "value unrecognised: " << value;
     return QString();
+}
+
+QString KpkStrings::daemonError(PackageKit::Client::DaemonError value)
+{
+    switch (value) {
+    case Client::ErrorFailedAuth :
+        return i18n("You don't have the necessary privileges to perform this action.");
+    case Client::ErrorNoTid :
+        return i18n("Could not get a transaction id from packagekitd.");
+    case Client::ErrorAlreadyTid :
+        return i18n("Cannot connect to this transaction id.");
+    case Client::ErrorRoleUnkown :
+        return i18n("This action is unknown.");
+    case Client::ErrorCannotStartDaemon :
+        return i18n("The packagekitd service could not be started.");
+    case Client::ErrorInvalidInput :
+        return i18n("The query is not valid.");
+    case Client::ErrorInvalidFile :
+        return i18n("The file is not valid.");
+    case Client::ErrorFunctionNotSupported :
+        return i18n("This function is not yet supported.");
+    case Client::ErrorDaemonUnreachable :
+        return i18n("Could not talk to packagekitd.");
+    case Client::NoError :
+    case Client::ErrorFailed :
+    case Client::UnkownError :
+        return i18n("An unknown error happened.");
+    }
 }

@@ -23,6 +23,7 @@
 #include <KpkStrings.h>
 
 #include <KDebug>
+#include <KMessageBox>
 
 KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent)
  : QWidget(parent)
@@ -32,10 +33,14 @@ KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent
     // only the model package has the right state
     state = package->state();
     Transaction *t = Client::instance()->getUpdateDetail(package);
-    connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
-            this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
-    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(updateDetailFinished(PackageKit::Transaction::ExitStatus, uint)));
+    if (t->error()) {
+        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+    } else {
+        connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
+                this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(updateDetailFinished(PackageKit::Transaction::ExitStatus, uint)));
+    }
 }
 
 KpkUpdateDetails::~KpkUpdateDetails()
