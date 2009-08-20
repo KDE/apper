@@ -56,6 +56,7 @@ Comment[tr]=KDE için PackageKit arayüzü
 Comment[uk]=Інтерфейс PackageKit для KDE
 Comment[x-test]=xxPackageKit interface for KDExx
 
-MimeType=application/x-rpm;application/x-deb;
+MimeType=application/x-deb;application/x-rpm;application/x-redhat-package-manager;application/x-servicepack;
 Terminal=false
 Categories=Qt;KDE;System;PackageManager;
+InitialPreference=10
