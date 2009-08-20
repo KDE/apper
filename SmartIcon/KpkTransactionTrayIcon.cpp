@@ -23,6 +23,7 @@
 #include <KpkStrings.h>
 #include <KpkTransaction.h>
 #include <KpkIcons.h>
+#include <KpkImportance.h>
 
 #include <QMenu>
 #include <QTimer>
@@ -222,7 +223,69 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
             this, SLOT(message(PackageKit::Client::MessageType, const QString &)));
     connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Client::RestartType, Package *)),
             this, SLOT(requireRestart(PackageKit::Client::RestartType, Package *)));
+    connect(m_currentTransaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+            this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
     m_smartSTI->show();
+}
+
+void KpkTransactionTrayIcon::finished(PackageKit::Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(status)
+    Q_UNUSED(runtime)
+
+    // check if the transaction emitted any require restart
+    if (m_restartType != Client::RestartNone) {
+        increaseRunning();
+        Client::RestartType type = m_restartType;
+
+        // Create the notification object
+        KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
+        QString text("<b>" + i18n("The system update has completed") + "</b>");
+        text.append("<br />" + KpkStrings::restartType(type));
+        m_restartPackages.removeDuplicates();
+        m_restartPackages.sort();
+        if (m_restartPackages.size()) {
+            text.append("<br />Packages: " + m_restartPackages.join(", "));
+        }
+
+        QStringList actions;
+        switch (type) {
+        case Client::RestartSystem :
+        case Client::RestartSecuritySystem :
+            actions << i18nc("Restart the computer", "Restart");
+            actions << i18n("Not now");
+            m_restartAction->setText(i18nc("Restart the computer", "Restart"));
+            break;
+        case Client::RestartSession :
+        case Client::RestartSecuritySession :
+            actions << i18n("Logout");
+            actions << i18n("Not now");
+            m_restartAction->setText(i18n("Logout"));
+            break;
+        case Client::RestartApplication :
+            // What do we do in restart application?
+            // we don't even know what application is
+            // SHOULD we check for pkg and see the installed
+            // files and try to match some running process?
+            break;
+        case Client::RestartNone :
+        case Client::UnknownRestartType :
+            // We do not set a restart type cause it will probably
+            // be already none, if not we will still want that restart type.
+            return;
+        }
+
+        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(RESTART_ICON_SIZE, RESTART_ICON_SIZE));
+        m_restartAction->setIcon(KpkIcons::restartIcon(type));
+        notify->setText(text);
+        notify->setActions(actions);
+        connect(notify, SIGNAL(activated(uint)),
+                this, SLOT(restartActivated(uint)));
+        connect(notify, SIGNAL(closed()),
+                this, SLOT(decreaseRunning()));
+
+        notify->sendEvent();
+    }
 }
 
 void KpkTransactionTrayIcon::currentProgressChanged(PackageKit::Transaction::ProgressInfo info)
@@ -347,61 +410,16 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 
 void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type, Package *pkg)
 {
-    // Check if the type is NOT the most important restart type
-    if (type <= m_restartType) {
-        // we alread have the most important one
-        return;
+    int old = KpkImportance::restartImportance(m_restartType);
+    int newer = KpkImportance::restartImportance(type);
+    // Check to see which one is more important
+    if (newer > old) {
+        m_restartType = type;
     }
 
-    increaseRunning();
-    m_restartPackages << pkg->name();
-
-    KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
-    QString text("<b>" + i18n("The system update has completed") + "</b>");
-    text.append("<br />" + KpkStrings::restartType(type));
-    notify->setText(text);
-
-    QStringList actions;
-    switch (type) {
-    case Client::RestartSystem :
-        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(RESTART_ICON_SIZE, RESTART_ICON_SIZE));
-        actions << i18nc("Restart the computer", "Restart");
-        actions << i18n("Not now");
-        m_restartType = Client::RestartSystem;
-        m_restartAction->setIcon(KpkIcons::restartIcon(type));
-        m_restartAction->setText(i18nc("Restart the computer", "Restart"));
-        break;
-    case Client::RestartSession :
-        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(RESTART_ICON_SIZE, RESTART_ICON_SIZE));
-        actions << i18n("Logout");
-        actions << i18n("Not now");
-        if (m_restartType != Client::RestartSystem) {
-            m_restartType = Client::RestartSession;
-        }
-        m_restartAction->setIcon(KpkIcons::restartIcon(type));
-        m_restartAction->setText(i18n("Logout"));
-        break;
-    case Client::RestartApplication :
-        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(RESTART_ICON_SIZE, RESTART_ICON_SIZE));
-        // What do we do in restart application?
-        // we don't even know what application is
-        // SHOULD we check for pkg and see the installed
-        // files and try to match some running process?
-        break;
-    case Client::RestartNone :
-    case Client::UnknownRestartType :
-        // We do not set a restart type cause it will probably
-        // be already none, if not we will still want that restart type.
-        return;
+    if (!pkg->name().isEmpty()) {
+        m_restartPackages << pkg->name();
     }
-
-    notify->setActions(actions);
-    connect(notify, SIGNAL(activated(uint)),
-            this, SLOT(restartActivated(uint)));
-    connect(notify, SIGNAL(closed()),
-            this, SLOT(decreaseRunning()));
-
-    notify->sendEvent();
 }
 
 void KpkTransactionTrayIcon::restartActivated(uint action)

@@ -54,6 +54,7 @@ private slots:
     void transactionDialogClosed();
     void message(PackageKit::Client::MessageType type, const QString &message);
     void requireRestart(PackageKit::Client::RestartType type, Package *pkg);
+    void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void restartActivated(uint action = 1);
     void logout();
 

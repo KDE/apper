@@ -92,7 +92,7 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
     case Transaction::StatusWaitingForLock :
         return i18nc("The transaction state", "Waiting for package manager lock");
     }
-    kDebug() << "status unrecognised: " << status;
+    kWarning() << "status unrecognised: " << status;
     return QString();
 }
 
@@ -112,7 +112,7 @@ QString KpkStrings::statusPast(PackageKit::Transaction::Status status)
     case Transaction::StatusObsolete:
         return i18nc("The action of the package, in past tense", "Obsoleted");
     default : // In this case we don't want to map all enums
-        kDebug() << "status unrecognised: " << status;
+        kWarning() << "status unrecognised: " << status;
         return QString();
     }
 }
@@ -183,7 +183,7 @@ QString KpkStrings::action(Client::Action action)
     case Client::ActionGetOldTransactions :
         return i18nc("The role of the transaction, in present tense", "Getting old transactions");
     }
-    kDebug() << "action unrecognised: " << action;
+    kWarning() << "action unrecognised: " << action;
     return QString();
 }
 
@@ -253,7 +253,7 @@ QString KpkStrings::actionPast(Client::Action action)
     case Client::ActionGetOldTransactions :
         return i18nc("The role of the transaction, in past tense", "Got old transactions");
     }
-    kDebug() << "action unrecognised: " << action;
+    kWarning() << "action unrecognised: " << action;
     return QString();
 }
 
@@ -368,10 +368,18 @@ QString KpkStrings::error(PackageKit::Client::ErrorType error)
         return i18n("Cannot get package requires");
     case Client::ErrorCannotDisableRepository :
         return i18n("Cannot disable orign");
+    case Client::ErrorRestrictedDownload :
+        return i18n("The download failed");
+    case Client::ErrorPackageFailedToConfigure :
+        return i18n("Package failed to configure");
+    case Client::ErrorPackageFailedToBuild :
+        return i18n("Package failed to build");
+    case Client::ErrorPackageFailedToInstall :
+        return i18n("Package failed to install");
     case Client::UnknownErrorType :
         return i18n("Unknown error");
     }
-    kDebug() << "error unrecognised: " << error;
+    kWarning() << "error unrecognised: " << error;
     return QString();
 }
 
@@ -519,11 +527,23 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
         return i18n("The information about what requires this package could not be obtained.");
     case Client::ErrorCannotDisableRepository :
         return i18n("The specified software orign could not be disabled.");
+    case Client::ErrorRestrictedDownload :
+        return i18n("The download could not be done automatically and should be done manually.\n"
+                    "More information is available in the detailed report.");
+    case Client::ErrorPackageFailedToConfigure :
+        return i18n("One of the selected packages failed to configure correctly.\n"
+                    "More information is available in the detailed report.");
+    case Client::ErrorPackageFailedToBuild :
+        return i18n("One of the selected packages failed to build correctly.\n"
+                    "More information is available in the detailed report.");
+    case Client::ErrorPackageFailedToInstall :
+        return i18n("One of the selected packages failed to install correctly.\n"
+                    "More information is available in the detailed report.");
     case Client::UnknownErrorType :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
     }
-    kDebug() << "error unrecognised: " << error;
+    kWarning() << "error unrecognised: " << error;
     return QString();
 }
 
@@ -601,7 +621,7 @@ QString KpkStrings::groups(Client::Group group)
     case Client::UnknownGroup :
         return i18nc("The group type", "Unknown group");
     }
-    kDebug() << "group unrecognised: " << group;
+    kWarning() << "group unrecognised: " << group;
     return QString();
 }
 
@@ -631,7 +651,7 @@ QString KpkStrings::info(Package::State state)
     case Package::UnknownState :
         return i18nc("The type of update", "Unknown update");
     default : // In this case we don't want to map all enums
-        kDebug() << "info unrecognised: " << state;
+        kWarning() << "info unrecognised: " << state;
         return QString();
     }
 }
@@ -658,7 +678,7 @@ QString KpkStrings::infoUpdate(Package::State state, int number)
     case Package::StateAvailable :
         return i18np("1 available package", "%1 available packages", number);
     default : // In this case we don't want to map all enums
-        kDebug() << "update info unrecognised: " << state;
+        kWarning() << "update info unrecognised: " << state;
         return i18np("1 unknown update", "%1 unknown updates", number);
     }
 }
@@ -688,7 +708,7 @@ QString KpkStrings::infoUpdate(Package::State state, int updates, int selected)
             return i18np("1 available package selected to be installed",
                          "%1 available packages selected to be installed", updates);
         default : // In this case we don't want to map all enums
-            kDebug() << "update info unrecognised: " << state;
+            kWarning() << "update info unrecognised: " << state;
             return i18np("1 unknown update", "%1 unknown updates", updates);
         }
     } else if (selected == 0) {
@@ -716,7 +736,7 @@ QString KpkStrings::infoUpdate(Package::State state, int updates, int selected)
         case Package::StateAvailable :
             return i18np("%1 available package", "%1 available packages, %2 selected to be installed", updates, selected);
         default : // In this case we don't want to map all enums
-            kDebug() << "update info unrecognised: " << state;
+            kWarning() << "update info unrecognised: " << state;
             return i18np("%1 unknown update", "%1 unknown updates", updates);
         }
     }
@@ -733,10 +753,14 @@ QString KpkStrings::restartTypeFuture(Client::RestartType value)
         return i18n("You will be required to log out and back in");
     case Client::RestartSystem :
         return i18n("A restart will be required");
+    case Client::RestartSecuritySession :
+        return i18n("You will be required to log out and back in due to a security update.");
+    case Client::RestartSecuritySystem :
+        return i18n("A restart will be required due to a security update.");
     case Client::UnknownRestartType :
         return QString();
     }
-    kDebug() << "restart unrecognised: " << value;
+    kWarning() << "restart unrecognised: " << value;
     return QString();
 }
 
@@ -751,10 +775,14 @@ QString KpkStrings::restartType(Client::RestartType value)
         return i18n("You need to log out and log back in");
     case Client::RestartApplication :
         return i18n("You need to restart the application");
+    case Client::RestartSecuritySession :
+        return i18n("You need to log out and log back in to remain secure.");
+    case Client::RestartSecuritySystem :
+        return i18n("A restart is required to remain secure.");
     case Client::UnknownRestartType :
         return QString();
     }
-    kDebug() << "restart unrecognised: " << value;
+    kWarning() << "restart unrecognised: " << value;
     return QString();
 }
 
@@ -770,7 +798,7 @@ QString KpkStrings::updateState(Client::UpdateState value)
     case Client::UnknownUpdateState :
         return QString();
     }
-    kDebug() << "value unrecognised: " << value;
+    kWarning() << "value unrecognised: " << value;
     return QString();
 }
 
@@ -786,7 +814,7 @@ QString KpkStrings::mediaMessage(Transaction::MediaType value, const QString &te
     case Transaction::UnknownMediaType :
         return i18n("Please insert the medium labeled '%1', and press continue.", text);
     }
-    kDebug() << "value unrecognised: " << value;
+    kWarning() << "value unrecognised: " << value;
     return i18n("Please insert the medium labeled '%1', and press continue.", text);
 }
 
@@ -822,7 +850,7 @@ QString KpkStrings::message(PackageKit::Client::MessageType value)
     case Client::UnknownMessageType :
         return QString();
     }
-    kDebug() << "value unrecognised: " << value;
+    kWarning() << "value unrecognised: " << value;
     return QString();
 }
 
@@ -852,4 +880,6 @@ QString KpkStrings::daemonError(PackageKit::Client::DaemonError value)
     case Client::UnkownError :
         return i18n("An unknown error happened.");
     }
+    kWarning() << "value unrecognised: " << value;
+    return QString();
 }

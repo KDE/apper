@@ -12,6 +12,7 @@ set(libkpk_SRCS
     KpkReviewChanges.cpp
     KpkRequirements.cpp
     KpkAbstractIsRunning.cpp
+    KpkImportance.cpp
 )
 
 kde4_add_ui_files(libkpk_SRCS
