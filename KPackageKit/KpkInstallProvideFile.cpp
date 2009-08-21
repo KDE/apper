@@ -31,6 +31,7 @@ KpkInstallProvideFile::KpkInstallProvideFile(const QStringList &args, QObject *p
    m_args(args)
 {
     kDebug() << "install-provide-file" << args;
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkInstallProvideFile::~KpkInstallProvideFile()

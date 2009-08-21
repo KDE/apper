@@ -758,6 +758,7 @@ QString KpkStrings::restartTypeFuture(Client::RestartType value)
     case Client::RestartSecuritySystem :
         return i18n("A restart will be required due to a security update.");
     case Client::UnknownRestartType :
+        kWarning() << "restartTypeFuture(Client::UnknownRestartType)";
         return QString();
     }
     kWarning() << "restart unrecognised: " << value;
@@ -780,6 +781,7 @@ QString KpkStrings::restartType(Client::RestartType value)
     case Client::RestartSecuritySystem :
         return i18n("A restart is required to remain secure.");
     case Client::UnknownRestartType :
+        kWarning() << "restartType(Client::UnknownRestartType)";
         return QString();
     }
     kWarning() << "restart unrecognised: " << value;
@@ -796,6 +798,7 @@ QString KpkStrings::updateState(Client::UpdateState value)
     case Client::UpdateTesting :
         return i18n("Testing");
     case Client::UnknownUpdateState :
+        kWarning() << "updateState(Client::UnknownUpdateState)";
         return QString();
     }
     kWarning() << "value unrecognised: " << value;
@@ -848,6 +851,7 @@ QString KpkStrings::message(PackageKit::Client::MessageType value)
     case Client::MessageAutoremoveIgnored :
         return i18n("Automatic cleanup is being ignored");
     case Client::UnknownMessageType :
+        kWarning() << "message(Client::UnknownMessageType)";
         return QString();
     }
     kWarning() << "value unrecognised: " << value;
@@ -881,5 +885,5 @@ QString KpkStrings::daemonError(PackageKit::Client::DaemonError value)
         return i18n("An unknown error happened.");
     }
     kWarning() << "value unrecognised: " << value;
-    return QString();
+    return i18n("An unknown error happened.");
 }

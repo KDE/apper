@@ -34,6 +34,7 @@ KpkRemovePackageByFile::KpkRemovePackageByFile(const QStringList &args, QObject 
     kDebug() << "remove-package-by-file" << args;
     KService *srv = new KService("oi", args.first(), "j");
     kDebug() << "remove-package-by-exec" << srv->exec() << srv->path();
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkRemovePackageByFile::~KpkRemovePackageByFile()

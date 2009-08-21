@@ -30,6 +30,7 @@ KpkInstallMimeType::KpkInstallMimeType(const QStringList &args, QObject *parent)
  : KpkAbstractIsRunning(parent),
    m_args(args)
 {
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkInstallMimeType::~KpkInstallMimeType()

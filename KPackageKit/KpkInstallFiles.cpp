@@ -30,6 +30,7 @@ KpkInstallFiles::KpkInstallFiles(const KUrl::List &urls, QObject *parent)
  : KpkAbstractIsRunning(parent),
    m_urls(urls)
 {
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkInstallFiles::~KpkInstallFiles()

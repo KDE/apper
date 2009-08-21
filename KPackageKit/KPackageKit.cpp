@@ -44,8 +44,6 @@ KPackageKit::KPackageKit()
    m_pkUi(0),
    m_running(0)
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-
     setQuitOnLastWindowClosed(false);
 }
 
@@ -98,12 +96,12 @@ int KPackageKit::newInstance()
 
     if (args->isSet("updates")) {
         kDebug() << "SHOW UPDATES!";
-        showUpdates();
+        QTimer::singleShot(0, this, SLOT(showUpdates()));
         notSet = false;
     }
     if (args->isSet("settings")) {
         kDebug() << "SHOW SETTINGS!";
-        showSettings();
+        QTimer::singleShot(0, this, SLOT(showSettings()));
         notSet = false;
     }
 
@@ -148,14 +146,14 @@ int KPackageKit::newInstance()
         KpkBackendDetails *helper;
         helper = new KpkBackendDetails;
         connect(helper, SIGNAL(finished()), this, SLOT(decreaseAndKillRunning()));
-        helper->show();
+        QTimer::singleShot(0, helper, SLOT(show()));
         m_running++;
         notSet = false;
     }
 
     if (notSet) {
         kDebug() << "SHOW UI!";
-        showUi();
+        QTimer::singleShot(0, this, SLOT(showUi()));
     }
 
     args->clear();

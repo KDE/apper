@@ -31,6 +31,7 @@ KpkInstallPackageName::KpkInstallPackageName(const QStringList &args, QObject *p
    m_args(args)
 {
     kDebug() << "install-package-name!" << args;
+    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
 }
 
 KpkInstallPackageName::~KpkInstallPackageName()

@@ -36,14 +36,13 @@ public:
 
     virtual int newInstance();
 
-    void showUi();
-    void showUpdates();
-    void showSettings();
-
 private slots:
     void appClose();
     void kcmFinished();
     void decreaseAndKillRunning();
+    void showUi();
+    void showUpdates();
+    void showSettings();
 
 private:
     KpkMainUi *m_pkUi;
