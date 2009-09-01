@@ -62,6 +62,10 @@ KpkBackendDetails::KpkBackendDetails(QWidget *parent)
     repositorySetEnableCB->setChecked(actions & Client::ActionRepoSetData);
     whatProvidesCB->setChecked(actions & Client::ActionWhatProvides);
     getPackagesCB->setChecked(actions & Client::ActionGetPackages);
+    simulateInstallFilesCB->setChecked(actions & Client::ActionSimulateInstallFiles);
+    simulateInstallPackagesCB->setChecked(actions & Client::ActionSimulateInstallPackages);
+    simulateRemovePackagesCB->setChecked(actions & Client::ActionSimulateRemovePackages);
+    simulateUpdatePackagesCB->setChecked(actions & Client::ActionSimulateUpdatePackages);
 
     // FILTERS - Setup filters
     Client::Filters filters = Client::instance()->getFilters();

@@ -342,12 +342,12 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
             if (m_flags & CloseOnFinish)
                 done(QDialog::Rejected);
         }
+        m_handlingActionRequired = false;
         return;
     }
 
     // check to see if we are already handlying these errors
-    if (error == Client::ErrorGpgFailure ||
-        error == Client::ErrorNoLicenseAgreement ||
+    if (error == Client::ErrorNoLicenseAgreement ||
         error == Client::ErrorMediaChangeRequired)
     {
         if (m_handlingActionRequired) {
@@ -472,6 +472,7 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
     case Transaction::ExitKeyRequired :
     case Transaction::ExitEulaRequired :
     case Transaction::ExitMediaChangeRequired :
+    case Transaction::ExitNeedUntrusted :
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
         d->ui.currentL->setText(KpkStrings::status(Transaction::StatusSetup));
         if (!m_handlingActionRequired) {

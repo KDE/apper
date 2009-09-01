@@ -91,6 +91,14 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
         return i18nc("The transaction state", "Generating package lists");
     case Transaction::StatusWaitingForLock :
         return i18nc("The transaction state", "Waiting for package manager lock");
+    case Transaction::StatusWaitingForAuth :
+        return i18nc("The transaction state", "Waiting for authentication");
+    case Transaction::StatusScanProcessList :
+        return i18nc("The transaction state", "Updating the list of running applications");
+    case Transaction::StatusCheckExecutableFiles :
+        return i18nc("The transaction state", "Checking for applications currently in use");
+    case Transaction::StatusCheckLibraries :
+        return i18nc("The transaction state", "Checking for libraries currently in use");
     }
     kWarning() << "status unrecognised: " << status;
     return QString();
@@ -182,6 +190,14 @@ QString KpkStrings::action(Client::Action action)
         return i18nc("The role of the transaction, in present tense", "Getting categories");
     case Client::ActionGetOldTransactions :
         return i18nc("The role of the transaction, in present tense", "Getting old transactions");
+    case Client::ActionSimulateInstallFiles :
+        return i18nc("The role of the transaction, in present tense", "Simulating the install of files");
+    case Client::ActionSimulateInstallPackages :
+        return i18nc("The role of the transaction, in present tense", "Simulating the install");
+    case Client::ActionSimulateRemovePackages :
+        return i18nc("The role of the transaction, in present tense", "Simulating the remove");
+    case Client::ActionSimulateUpdatePackages :
+        return i18nc("The role of the transaction, in present tense", "Simulating the update");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
@@ -252,6 +268,14 @@ QString KpkStrings::actionPast(Client::Action action)
         return i18nc("The role of the transaction, in past tense", "Got categories");
     case Client::ActionGetOldTransactions :
         return i18nc("The role of the transaction, in past tense", "Got old transactions");
+    case Client::ActionSimulateInstallFiles :
+        return i18nc("The role of the transaction, in past tense", "Simulated the install of files");
+    case Client::ActionSimulateInstallPackages :
+        return i18nc("The role of the transaction, in past tense", "Simulated the install");
+    case Client::ActionSimulateRemovePackages :
+        return i18nc("The role of the transaction, in past tense", "Simulated the remove");
+    case Client::ActionSimulateUpdatePackages :
+        return i18nc("The role of the transaction, in past tense", "Simulated the update");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
@@ -376,6 +400,8 @@ QString KpkStrings::error(PackageKit::Client::ErrorType error)
         return i18n("Package failed to build");
     case Client::ErrorPackageFailedToInstall :
         return i18n("Package failed to install");
+    case Client::ErrorPackageFailedToRemove :
+        return i18n("Package failed to be removed");
     case Client::UnknownErrorType :
         return i18n("Unknown error");
     }
@@ -538,6 +564,9 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
                     "More information is available in the detailed report.");
     case Client::ErrorPackageFailedToInstall :
         return i18n("One of the selected packages failed to install correctly.\n"
+                    "More information is available in the detailed report.");
+    case Client::ErrorPackageFailedToRemove :
+        return i18n("One of the selected packages failed to be removed correctly.\n"
                     "More information is available in the detailed report.");
     case Client::UnknownErrorType :
         return i18n("Unknown error, please report a bug.\n"
