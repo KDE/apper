@@ -63,8 +63,8 @@ void KpkSimpleTransactionModel::addTransaction(PackageKit::Transaction *trans)
     dateI->setData(trans->timespec(), Qt::UserRole);
     dateI->setEditable(false);
 
-    roleI->setText(KpkStrings::actionPast(trans->role().action));
-    roleI->setIcon(KpkIcons::actionIcon(trans->role().action));
+    roleI->setText(KpkStrings::actionPast(trans->role()));
+    roleI->setIcon(KpkIcons::actionIcon(trans->role()));
     roleI->setEditable(false);
 
     detailsI->setText(getDetailsLocalized(trans->data()));

@@ -138,9 +138,9 @@ void KpkTransaction::setTransaction(Transaction *trans)
     d->finished = false;
 
     // sets the action icon to be the window icon
-    setWindowIcon(KpkIcons::actionIcon(m_trans->role().action));
+    setWindowIcon(KpkIcons::actionIcon(m_trans->role()));
     // Sets the kind of transaction
-    setCaption(KpkStrings::action(m_trans->role().action));
+    setCaption(KpkStrings::action(m_trans->role()));
     // check to see if we can cancel
     enableButtonCancel(m_trans->allowCancel());
     // clears the package label
@@ -157,8 +157,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
        statusChanged(m_trans->status());
     }
 
-    if (m_trans->role().action == Client::ActionRefreshCache ||
-        m_trans->role().action == Client::ActionWhatProvides) {
+    if (m_trans->role() == Client::ActionRefreshCache ||
+        m_trans->role() == Client::ActionWhatProvides) {
         d->ui.packageL->hide();
         d->ui.descriptionL->hide();
     } else {

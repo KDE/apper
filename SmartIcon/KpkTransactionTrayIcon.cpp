@@ -369,12 +369,11 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
         // as it was some times
         transactionAction->setData(t->tid());
 
-        if (t->role().action == Client::ActionRefreshCache) {
+        if (t->role() == Client::ActionRefreshCache) {
             refreshCache = false;
         }
 
-        text = KpkStrings::action(t->role().action)
-               + ' ' + t->role().terms.join(", ")
+        text = KpkStrings::action(t->role())
                + " (" + KpkStrings::status(t->status()) + ')';
         transactionAction->setText(text);
         transactionAction->setIcon(KpkIcons::statusIcon(t->status()));
