@@ -131,17 +131,15 @@ void KpkReviewChanges::checkTask()
     if (!m_remPackages.isEmpty()) {
         kDebug() << "task rm if";
         if (m_actions & Client::ActionRemovePackages) {
-            if (m_actions & Client::ActionGetRequires) {
+            if (m_actions & Client::ActionSimulateRemovePackages) {
                 m_reqDepPackages = m_remPackages;
                 // Create the requirements transaction and it's model
-                m_pkgModelReq = new KpkSimplePackageModel(this);
-                m_transactionReq = m_client->getRequires(m_reqDepPackages, Client::FilterInstalled, true);
+                m_removePkgModel = new KpkSimulateModel(this);
+                m_transactionReq = m_client->simulateRemovePackages(m_reqDepPackages);
                 connect(m_transactionReq, SIGNAL(package(PackageKit::Package *)),
-                        m_pkgModelReq, SLOT(addPackage(PackageKit::Package *)));
+                        m_removePkgModel, SLOT(addPackage(PackageKit::Package *)));
                 connect(m_transactionReq, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                         this, SLOT(reqFinished(PackageKit::Transaction::ExitStatus, uint)));
-                connect(m_transactionReq, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-                        this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
                 // Create a Transaction dialog to don't upset the user
                 QPointer<KpkTransaction> reqFinder = new KpkTransaction(m_transactionReq, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
                 reqFinder->exec();
@@ -156,17 +154,15 @@ void KpkReviewChanges::checkTask()
     } else if (!m_addPackages.isEmpty()) {
         kDebug() << "task add else";
         if (m_actions & Client::ActionInstallPackages) {
-            if (m_actions & Client::ActionGetDepends) {
+            if (m_actions & Client::ActionSimulateInstallPackages) {
                 m_reqDepPackages = m_addPackages;
                 // Create the depends transaction and it's model
-                m_pkgModelDep = new KpkSimplePackageModel(this);
-                m_transactionDep = m_client->getDepends(m_reqDepPackages, Client::FilterNotInstalled, true);
+                m_installPkgModel = new KpkSimulateModel(this);
+                m_transactionDep = m_client->simulateInstallPackages(m_reqDepPackages);
                 connect(m_transactionDep, SIGNAL(package(PackageKit::Package *)),
-                        m_pkgModelDep, SLOT(addPackage(PackageKit::Package *)));
+                        m_installPkgModel, SLOT(addPackage(PackageKit::Package *)));
                 connect(m_transactionDep, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint)),
                         this, SLOT(depFinished(PackageKit::Transaction::ExitStatus, uint)));
-                connect(m_transactionDep, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-                        this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
                 // Create a Transaction dialog to don't upset the user
                 QPointer<KpkTransaction> reqFinder = new KpkTransaction(m_transactionDep, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
                 reqFinder->exec();
@@ -187,8 +183,8 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
 {
     kDebug() << "reqFinished";
     if (status == Transaction::ExitSuccess) {
-        if (m_pkgModelReq->rowCount(QModelIndex()) > 0) {
-            KpkRequirements *requimentD = new KpkRequirements(i18n("The following packages will also be removed for dependencies"), m_pkgModelReq, this);
+        if (m_removePkgModel->rowCount() > 0) {
+            KpkRequirements *requimentD = new KpkRequirements(m_removePkgModel, this);
             connect(requimentD, SIGNAL(okClicked()), this, SLOT(removePackages()));
             connect(requimentD, SIGNAL(cancelClicked()), this, SLOT(close()));
             requimentD->show();
@@ -198,7 +194,7 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
         }
     } else {
         // TODO inform the user
-        kDebug() << "getReq Failed: " << status;
+        kDebug() << "simulateRemovePackages Failed: " << status;
         m_reqDepPackages.clear();
         m_remPackages.clear();
         checkTask();
@@ -210,16 +206,17 @@ void KpkReviewChanges::removePackages(bool allowDeps)
 {
     kDebug() << "removePackages";
     Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-    if (Transaction *t = m_client->removePackages(m_remPackages, allowDeps, true)) {
+    Transaction *t = m_client->removePackages(m_remPackages, allowDeps, true);
+    if (t->error()) {
+        KMessageBox::sorry(this,
+                           KpkStrings::daemonError(t->error()),
+                           i18n("Failed to remove package"));
+    } else {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         frm->setAllowDeps(allowDeps);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                 this, SLOT(remFinished(KpkTransaction::ExitStatus)));
         frm->show();
-    } else {
-        KMessageBox::sorry(this,
-                           i18n("You do not have the necessary privileges to perform this action."),
-                           i18n("Failed to remove package"));
     }
     kDebug() << "finished remove";
 }
@@ -228,8 +225,8 @@ void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, u
 {
     kDebug() << "depFinished";
     if (status == Transaction::ExitSuccess) {
-        if (m_pkgModelDep->rowCount(QModelIndex()) > 0) {
-            KpkRequirements *requimentD = new KpkRequirements(i18n("The following packages will also be installed as dependencies"), m_pkgModelDep, this);
+        if (m_installPkgModel->rowCount() > 0) {
+            KpkRequirements *requimentD = new KpkRequirements(m_installPkgModel, this);
             connect(requimentD, SIGNAL(okClicked()), this, SLOT(installPackages()));
             connect(requimentD, SIGNAL(cancelClicked()), this, SLOT(close()));
             requimentD->show();
@@ -237,7 +234,7 @@ void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, u
             installPackages();
         }
     } else {
-        kDebug() << "getDep Failed: " << status;
+        kDebug() << "simulateInstallPackages Failed: " << status;
         m_reqDepPackages.clear();
         m_addPackages.clear();
         checkTask();
@@ -249,15 +246,16 @@ void KpkReviewChanges::installPackages()
 {
     kDebug() << "installPackages";
     Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-    if ( Transaction *t = m_client->installPackages(true, m_addPackages) ) {
+    Transaction *t = m_client->installPackages(true, m_addPackages);
+    if (t->error()) {
+        KMessageBox::sorry(this,
+                           KpkStrings::daemonError(t->error()),
+                           i18n("Failed to install package"));
+    } else {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                 this, SLOT(addFinished(KpkTransaction::ExitStatus)));
         frm->show();
-    } else {
-        KMessageBox::sorry(this,
-                             i18n("You do not have the necessary privileges to perform this action."),
-                             i18n("Failed to install package"));
     }
     kDebug() << "finished install";
 }
@@ -317,12 +315,6 @@ void KpkReviewChanges::slotButtonClicked(int button)
         default :
             KDialog::slotButtonClicked(button);
     }
-}
-
-void KpkReviewChanges::errorCode(PackageKit::Client::ErrorType error, const QString &details)
-{
-    KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error),
-            details, KpkStrings::error(error), KMessageBox::Notify);
 }
 
 void KpkReviewChanges::resizeEvent(QResizeEvent *event)

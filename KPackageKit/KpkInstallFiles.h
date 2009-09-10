@@ -28,6 +28,7 @@
 
 using namespace PackageKit;
 
+class KpkSimulateModel;
 class KpkInstallFiles : public KpkAbstractIsRunning
 {
 Q_OBJECT
@@ -40,10 +41,15 @@ public slots:
 
 private slots:
     void installFilesFinished(KpkTransaction::ExitStatus status);
+    void simulateFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
 private:
+    void installFiles();
     QHash <KpkTransaction *, QStringList> m_transactionFiles;
     KUrl::List m_urls;
+    QStringList files;
+
+    KpkSimulateModel *m_installFilesModel;
 };
 
 #endif

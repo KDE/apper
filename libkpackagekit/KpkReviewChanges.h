@@ -27,7 +27,7 @@
 #include <KpkDelegate.h>
 #include <KpkTransaction.h>
 #include "KpkPackageModel.h"
-#include "KpkSimplePackageModel.h"
+#include "KpkSimulateModel.h"
 
 #include <QPackageKit>
 
@@ -57,13 +57,12 @@ private slots:
     void installPackages();
     void removePackages(bool allow_deps = true);
 
-    void errorCode(PackageKit::Client::ErrorType error, const QString &details);
     void checkChanged();
 
 private:
     KpkReviewChangesPrivate *d;
     KpkPackageModel *m_pkgModelMain;
-    KpkSimplePackageModel *m_pkgModelReq, *m_pkgModelDep;
+    KpkSimulateModel *m_installPkgModel, *m_removePkgModel;
     KpkDelegate *m_pkgDelegate;
 
     Client *m_client;

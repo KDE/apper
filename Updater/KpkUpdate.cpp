@@ -27,7 +27,7 @@
 #include <KpkIcons.h>
 #include <KpkTransactionBar.h>
 #include <KpkPackageModel.h>
-#include <KpkSimplePackageModel.h>
+#include <KpkSimulateModel.h>
 #include <KpkDelegate.h>
 #include <KpkRequirements.h>
 
@@ -42,7 +42,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 {
     setupUi(this);
 
-    m_dependsPkgModel = new KpkSimplePackageModel(this);
+    m_simulateUpdatePkgModel = new KpkSimulateModel(this);
     selectAllPB->setIcon(KpkIcons::getIcon("package-update"));
     refreshPB->setIcon(KpkIcons::getIcon("view-refresh"));
     historyPB->setIcon(KpkIcons::getIcon("view-history"));
@@ -107,17 +107,17 @@ void KpkUpdate::load()
 void KpkUpdate::applyUpdates()
 {
     // If the backend supports getRequires do it
-    if (m_actions & Client::ActionGetRequires) {
+    if (m_actions & Client::ActionSimulateUpdatePackages) {
 
         PackageKit::Transaction *dependsT;
 
-        dependsT = m_client->getDepends(m_pkg_model_updates->selectedPackages(), Client::FilterNotInstalled, true);
-        m_dependsPkgModel->clear();
+        dependsT = m_client->simulateUpdatePackages(m_pkg_model_updates->selectedPackages());
+        m_simulateUpdatePkgModel->clear();
         if (dependsT->error()) {
-                KMessageBox::error(this, KpkStrings::daemonError(dependsT->error()));
+                KMessageBox::sorry(this, KpkStrings::daemonError(dependsT->error()));
         } else {
                 connect(dependsT, SIGNAL(package(PackageKit::Package *)),
-                        m_dependsPkgModel, SLOT(addPackage(PackageKit::Package *)));
+                        m_simulateUpdatePkgModel, SLOT(addPackage(PackageKit::Package *)));
                 connect(dependsT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                         this, SLOT(getDependsFinished(PackageKit::Transaction::ExitStatus, uint)));
                 connect(dependsT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
@@ -151,8 +151,8 @@ void KpkUpdate::getDependsFinished(PackageKit::Transaction::ExitStatus status, u
     Q_UNUSED(runtime)
 
     if (status == Transaction::ExitSuccess) {
-        if (m_dependsPkgModel->rowCount(QModelIndex()) > 0) {
-            KpkRequirements *requimentD = new KpkRequirements(i18n("The following packages will also be installed as dependencies"), m_dependsPkgModel, this);
+        if (m_simulateUpdatePkgModel->rowCount(QModelIndex()) > 0) {
+            KpkRequirements *requimentD = new KpkRequirements(m_simulateUpdatePkgModel, this);
             connect(requimentD, SIGNAL(okClicked()), this, SLOT(updatePackages()));
             requimentD->show();
         } else {
@@ -169,7 +169,7 @@ void KpkUpdate::updatePackages()
 
     Transaction *t = m_client->updatePackages(true, packages);
     if (t->error()) {
-        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
         frm->setPackages(packages);
@@ -183,7 +183,7 @@ void KpkUpdate::refresh()
 {
     Transaction *t = m_client->refreshCache(true);
     if (t->error()) {
-        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
@@ -204,15 +204,15 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
         m_pkg_model_updates->uncheckAll();
         m_updatesT = m_client->getUpdates();
         if (m_updatesT->error()) {
-                KMessageBox::error(this, KpkStrings::daemonError(m_updatesT->error()));
+            KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
         } else {
-                transactionBar->addTransaction(m_updatesT);
-                connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
-                        m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
-                connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-                        this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
-                connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                        this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
+            transactionBar->addTransaction(m_updatesT);
+            connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
+                    m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
+            connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
+                    this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+            connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                    this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
         }
 
         // Clean the distribution upgrades area
@@ -227,14 +227,14 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
         // Check for distribution Upgrades
         Transaction *t = m_client->getDistroUpgrades();
         if (!t->error()) {
-                transactionBar->addTransaction(t);
-                connect(t, SIGNAL(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)),
-                        this, SLOT(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)));
+            transactionBar->addTransaction(t);
+            connect(t, SIGNAL(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)),
+                    this, SLOT(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)));
         }
     } else if (status == KpkTransaction::ReQueue) {
         Transaction *t = m_client->updatePackages(trans->onlyTrusted(), trans->packages());
         if (t->error()) {
-                KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+                KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
                 trans->deleteLater();
         } else {
                 trans->setTransaction(t);

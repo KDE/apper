@@ -29,7 +29,7 @@
 #include "ui_KpkUpdate.h"
 
 class KpkPackageModel;
-class KpkSimplePackageModel;
+class KpkSimulateModel;
 class KpkDelegate;
 class KProgressDialog;
 
@@ -69,7 +69,7 @@ private slots:
 
 private:
     KpkPackageModel *m_pkg_model_updates;
-    KpkSimplePackageModel *m_dependsPkgModel;
+    KpkSimulateModel *m_simulateUpdatePkgModel;
 
     KpkDelegate *pkg_delegate;
     Client *m_client;

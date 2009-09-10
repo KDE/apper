@@ -101,7 +101,7 @@ void KpkDistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus 
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
         KMessageBox::information(this, i18n("Distribution upgrade complete."));
     } else if (exitStatus == QProcess::NormalExit) {
-        KMessageBox::error(this, i18n("Distribution upgrade process exited with code %1.", exitCode));
+        KMessageBox::sorry(this, i18n("Distribution upgrade process exited with code %1.", exitCode));
     }
     m_distroUpgradeProcess->deleteLater();
     m_distroUpgradeProcess = 0;
@@ -115,15 +115,15 @@ void KpkDistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
     QString text;
     switch(error) {
         case QProcess::FailedToStart:
-            KMessageBox::error(this,
+            KMessageBox::sorry(this,
                     i18n("The distribution upgrade process failed to start."));
             break;
         case QProcess::Crashed:
-            KMessageBox::error(this,
+            KMessageBox::sorry(this,
                     i18n("The distribution upgrade process crashed some time after starting successfully."));
             break;
         default:
-            KMessageBox::error(this,
+            KMessageBox::sorry(this,
                     i18n("The distribution upgrade process failed with an unknown error."));
             break;
     }

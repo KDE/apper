@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,29 +18,39 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKREQUIREMENTS_H
-#define KPKREQUIREMENTS_H
+#ifndef KPK_SIMULATE_MODEL_H
+#define KPK_SIMULATE_MODEL_H
 
-#include <KDialog>
+#include <QAbstractTableModel>
+#include <KIcon>
 
-#include "KpkSimulateModel.h"
+#include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkRequirementsPrivate;
-
-class KDE_EXPORT KpkRequirements : public KDialog
+class KDE_EXPORT KpkSimulateModel : public QAbstractTableModel
 {
-    Q_OBJECT
-public:
-    KpkRequirements(KpkSimulateModel *model, QWidget *parent = 0);
-    ~KpkRequirements();
+Q_OBJECT
 
-private slots:
-    void actionClicked(const QModelIndex &index);
+public:
+    KpkSimulateModel(QObject *parent = 0);
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+    Package::State currentState() const;
+    void setCurrentState(Package::State currentState);
+    int countState(Package::State state);
+    void clear();
+
+public slots:
+    void addPackage(PackageKit::Package *package);
 
 private:
-    KpkRequirementsPrivate *d;
+    QHash<Package::State, QList<Package*> > m_packages;
+    Package::State m_currentState;
 };
 
 #endif

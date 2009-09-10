@@ -119,7 +119,7 @@ bool KpkModelOrigin::save()
             repoId = m_items.at(i).value(Qt::UserRole).toString();
             Transaction *t = m_client->repoEnable(repoId, (bool) m_actualState.value(repoId));
             if (t->error()) {
-                KMessageBox::error(0, KpkStrings::daemonError(t->error()));
+                KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
                 return false;
             }
         }

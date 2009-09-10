@@ -34,7 +34,7 @@ KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent
     state = package->state();
     Transaction *t = Client::instance()->getUpdateDetail(package);
     if (t->error()) {
-        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
                 this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));

@@ -37,6 +37,7 @@ public:
 
 public slots:
     void addPackage(PackageKit::Package *package);
+    void addPackages(const QList<PackageKit::Package *> &pkgs);
 };
 
 #endif

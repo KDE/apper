@@ -41,3 +41,16 @@ void KpkSimplePackageModel::addPackage(PackageKit::Package *p)
     item->setToolTip(p->summary());
     appendRow(item);
 }
+
+void KpkSimplePackageModel::addPackages(const QList<PackageKit::Package *> &pkgs)
+{
+    QStandardItem *item = new QStandardItem;
+    foreach (const PackageKit::Package *p, pkgs) {
+        item->setText(p->name() + " - " + p->version() + (p->arch().isNull() ? NULL : " (" + p->arch() + ')'));
+        item->setIcon(KpkIcons::packageIcon(p->state()));
+        item->setSelectable(false);
+        item->setEditable(false);
+        item->setToolTip(p->summary());
+        appendRow(item);
+    }
+}

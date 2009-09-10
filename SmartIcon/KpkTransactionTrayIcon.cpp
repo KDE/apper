@@ -116,7 +116,7 @@ void KpkTransactionTrayIcon::refreshCache()
     Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     Transaction *t = m_client->refreshCache(true);
     if (t->error()) {
-        KMessageBox::error(0, KpkStrings::daemonError(t->error()));
+        KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
     } else {
         createTransactionDialog(t);
     }

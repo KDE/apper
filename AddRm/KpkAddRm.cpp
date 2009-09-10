@@ -370,7 +370,7 @@ void KpkAddRm::search()
     }
 
     if (m_pkClient_main->error()) {
-        KMessageBox::error(this, KpkStrings::daemonError(m_pkClient_main->error()));
+        KMessageBox::sorry(this, KpkStrings::daemonError(m_pkClient_main->error()));
         setCurrentActionEnabled(true);
     } else {
         setCurrentActionCancel(true);

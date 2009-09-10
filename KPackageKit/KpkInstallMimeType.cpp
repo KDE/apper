@@ -19,7 +19,9 @@
  ***************************************************************************/
 
 #include "KpkInstallMimeType.h"
+
 #include <KpkReviewChanges.h>
+#include <KpkStrings.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -67,9 +69,14 @@ void KpkInstallMimeType::start()
                                      title,
                                      searchBt);
     if (ret == KMessageBox::Yes) {
-        if (Transaction *t = Client::instance()->whatProvides(Client::ProvidesMimetype,
-                                                              m_args.first(),
-                                                              Client::FilterNotInstalled)) {
+        Transaction *t = Client::instance()->whatProvides(Client::ProvidesMimetype,
+                                                          m_args.first(),
+                                                          Client::FilterNotInstalled);
+        if (t->error()) {
+            KMessageBox::sorry(0,
+                               KpkStrings::daemonError(t->error()),
+                               i18n("Failed to search for provides"));
+        } else {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                     this, SLOT(kTransactionFinished(KpkTransaction::ExitStatus)));
@@ -78,10 +85,6 @@ void KpkInstallMimeType::start()
             trans->show();
             // return to avoid the decreaseRunning()
             return;
-        } else {
-            KMessageBox::error(0,
-                               i18n("Failed to search for provides"),
-                               i18n("Failed to search for provides"));
         }
     }
     decreaseRunning();

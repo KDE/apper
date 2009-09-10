@@ -21,7 +21,10 @@
 #include "KpkHistory.h"
 
 #include <KpkIcons.h>
+#include <KpkStrings.h>
 #include <QPackageKit>
+
+#include <KMessageBox>
 
 #include <KDebug>
 
@@ -68,6 +71,7 @@ KpkHistory::~KpkHistory()
 
 void KpkHistory::slotButtonClicked(int button)
 {
+    Transaction *t;
     switch (button) {
         case KDialog::User2 :
             // TODO implement rollback
@@ -77,7 +81,10 @@ void KpkHistory::slotButtonClicked(int button)
             // Refresh transaction list
             kDebug() << "Refresh transaction list";
             m_transactionModel->clear();
-            if (Transaction *t = Client::instance()->getOldTransactions(0)) {
+            t = Client::instance()->getOldTransactions(0);
+            if (t->error()) {
+                KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+            } else {
                 connect(t, SIGNAL(transaction(PackageKit::Transaction *)),
                         m_transactionModel, SLOT(addTransaction(PackageKit::Transaction *)));
                 connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),

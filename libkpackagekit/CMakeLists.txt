@@ -13,6 +13,7 @@ set(libkpk_SRCS
     KpkRequirements.cpp
     KpkAbstractIsRunning.cpp
     KpkImportance.cpp
+    KpkSimulateModel.cpp
 )
 
 kde4_add_ui_files(libkpk_SRCS

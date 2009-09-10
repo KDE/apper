@@ -104,7 +104,7 @@ void KpkPackageDetails::getDetails(PackageKit::Package *p)
     // create the description transaction
     Transaction *t = Client::instance()->getDetails(p);
     if (t->error()) {
-        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         connect(t, SIGNAL(details(PackageKit::Package *)),
                 this, SLOT(description(PackageKit::Package *)));
@@ -167,7 +167,7 @@ void KpkPackageDetails::getFiles(PackageKit::Package *p)
     // create the files transaction
     Transaction *t = Client::instance()->getFiles(p);
     if (t->error()) {
-        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         connect(t, SIGNAL(files(PackageKit::Package *, const QStringList &)),
                 this, SLOT(files(PackageKit::Package *, const QStringList &)));
@@ -212,7 +212,7 @@ void KpkPackageDetails::getDepends(PackageKit::Package *p)
     Transaction *t = Client::instance()->getDepends(p, PackageKit::Client::NoFilter, false);
     m_pkg_model_dep->clear();
     if (t->error()) {
-        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         connect(t, SIGNAL(package(PackageKit::Package *)),
                 m_pkg_model_dep, SLOT(addPackage(PackageKit::Package *)));
@@ -244,7 +244,7 @@ void KpkPackageDetails::getRequires(PackageKit::Package *p)
     Transaction *t = Client::instance()->getRequires(p, PackageKit::Client::NoFilter, false);
     m_pkg_model_req->clear();
     if (t->error()) {
-        KMessageBox::error(this, KpkStrings::daemonError(t->error()));
+        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         connect(t, SIGNAL(package(PackageKit::Package *)),
                 m_pkg_model_req, SLOT(addPackage(PackageKit::Package *)));

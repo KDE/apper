@@ -490,8 +490,7 @@ void KpkPackageModel::addPackage(PackageKit::Package *package)
         endInsertRows();
         // the displayed data of the parent MUST be updated to show the right number of packages
         emit dataChanged(index, index);
-    }
-    else {
+    } else {
         QModelIndex index(createIndex(m_groups.keys().indexOf(package->state()), 0));
         beginInsertRows(index,
                         m_groups[package->state()].size(),

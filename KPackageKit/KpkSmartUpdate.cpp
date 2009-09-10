@@ -51,10 +51,12 @@ void KpkSmartUpdate::smartUpdate()
         } else {
             kDebug() << "PkSmartUpdate";
             Transaction *t = Client::instance()->getUpdates();
-            connect(t, SIGNAL(package(PackageKit::Package *)),
-                    this, SLOT(package(PackageKit::Package *)));
-            connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+            if (!t->error()) {
+                connect(t, SIGNAL(package(PackageKit::Package *)),
+                        this, SLOT(package(PackageKit::Package *)));
+                connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                        this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+            }
         }
     }
 }
@@ -66,24 +68,26 @@ void KpkSmartUpdate::getUpdatesFinished(PackageKit::Transaction::ExitStatus stat
         if (packages.size() && m_autoUpdateType != KpkEnum::None) {
             if (m_autoUpdateType == KpkEnum::All) {
             kDebug() << "ALL" << packages.size();
-                if (Transaction *t = Client::instance()->updateSystem() ) {
+                Transaction *t = Client::instance()->updateSystem();
+                if (t->error()) {
+                    emit showUpdates();
+                    m_running = false;
+                } else {
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                             this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
                     emit autoUpdatesBeingInstalled(t);
-                } else {
-                    emit showUpdates();
-                    m_running = false;
                 }
             } else {
                 kDebug() << "Security" << packages.size();
                 // Defaults to Security
-                if ( Transaction *t = Client::instance()->updatePackages(packages) ) {
+                Transaction *t = Client::instance()->updatePackages(packages);
+                if (t->error()) {
+                    emit showUpdates();
+                    m_running = false;
+                } else {
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                             this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
                     emit autoUpdatesBeingInstalled(t);
-                } else {
-                    emit showUpdates();
-                    m_running = false;
                 }
             }
         } else {

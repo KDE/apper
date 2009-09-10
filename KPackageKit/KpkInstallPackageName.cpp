@@ -19,7 +19,9 @@
  ***************************************************************************/
 
 #include "KpkInstallPackageName.h"
+
 #include <KpkReviewChanges.h>
+#include <KpkStrings.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -71,8 +73,13 @@ void KpkInstallPackageName::start()
                                      title,
                                      searchBt);
     if (ret == KMessageBox::Yes) {
-        if (Transaction *t = Client::instance()->resolve(m_args,
-                                                         Client::FilterNotInstalled)) {
+        Transaction *t = Client::instance()->resolve(m_args,
+                                                     Client::FilterNotInstalled);
+        if (t->error()) {
+            KMessageBox::sorry(0,
+                               KpkStrings::daemonError(t->error()),
+                               i18n("Failed to start resolve transaction"));
+        } else {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                     this, SLOT(kTransactionFinished(KpkTransaction::ExitStatus)));
@@ -81,10 +88,6 @@ void KpkInstallPackageName::start()
             trans->show();
             // return to avoid the decreaseRunning()
             return;
-        } else {
-            KMessageBox::error(0,
-                               i18n("Failed to start resolve transaction"),
-                               i18n("Failed to start resolve transaction"));
         }
     }
     decreaseRunning();

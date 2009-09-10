@@ -20,6 +20,10 @@
 
 #include "KpkInstallFiles.h"
 
+#include <KpkSimulateModel.h>
+#include <KpkRequirements.h>
+#include <KpkStrings.h>
+
 #include <KLocale>
 #include <KMessageBox>
 #include <KProtocolManager>
@@ -43,7 +47,6 @@ void KpkInstallFiles::start()
     // polited and don't close the application :P
     increaseRunning();
 
-    QStringList files;
     QStringList notFiles;
     QString lastDirectory = m_urls.at(0).directory();
     QString lastDirectoryNotFiles = m_urls.at(0).directory();
@@ -103,22 +106,26 @@ void KpkInstallFiles::start()
                         i18n("Install?"),
                         installBt);
         if (ret == KMessageBox::Yes) {
-            // Just in case it want to download some dependency
-            Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
-            if (Transaction *t = Client::instance()->installFiles(files, true)) {
-                KpkTransaction *trans = new KpkTransaction(t);
-                connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                        this, SLOT(installFilesFinished(KpkTransaction::ExitStatus)));
-                trans->show();
-                m_transactionFiles[trans] = files;
-                // return to avoid the decreaseRunning()
-                return;
+            if (Client::instance()->getActions() & Client::ActionSimulateInstallFiles) {
+                // TODO
+                m_installFilesModel = new KpkSimulateModel(this);
+                Transaction *t;
+                t = Client::instance()->simulateInstallFiles(files);
+                connect(t, SIGNAL(package(PackageKit::Package *)),
+                        m_installFilesModel, SLOT(addPackage(PackageKit::Package *)));
+                connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                        this, SLOT(simulateFinished(PackageKit::Transaction::ExitStatus, uint)));
+                QPointer<KpkTransaction> reqFinder;
+                reqFinder = new KpkTransaction(t,
+                                               KpkTransaction::CloseOnFinish | KpkTransaction::Modal);
+                reqFinder->exec();
+                delete reqFinder;
+                return; // to avoid decreaseRunning()
             } else {
-                KMessageBox::sorry(0,
-                                   i18n("You do not have the necessary privileges to perform this action."),
-                                   i18np("Failed to install file",
-                                         "Failed to install files", displayFiles.count()));
+                installFiles();
+                return; // to avoid decreaseRunning()
             }
+
         } else {
             KMessageBox::sorry(0, i18np("The file was not installed",
                                         "The files were not installed", displayFiles.count()),
@@ -128,6 +135,47 @@ void KpkInstallFiles::start()
     }
     // ok we are not running anymore..
     decreaseRunning();
+}
+
+void KpkInstallFiles::simulateFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(runtime)
+    if (status == Transaction::ExitSuccess) {
+        if (m_installFilesModel->rowCount() > 0) {
+            KpkRequirements *frm = new KpkRequirements(m_installFilesModel);
+            if (frm->exec() == QDialog::Accepted) {
+                installFiles();
+            }
+            delete frm;
+        } else {
+            installFiles();
+        }
+    } else {
+        // ok we are not running anymore..
+        decreaseRunning();
+    }
+}
+
+void KpkInstallFiles::installFiles()
+{
+    Transaction *t = Client::instance()->installFiles(files, true);
+    if (t->error()) {
+        KpkTransaction *trans = new KpkTransaction(t);
+        connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                this, SLOT(installFilesFinished(KpkTransaction::ExitStatus)));
+        trans->show();
+        m_transactionFiles[trans] = files;
+        // return to avoid the decreaseRunning()
+        return;
+    } else {
+        KMessageBox::sorry(0,
+                           KpkStrings::daemonError(t->error()),
+                           i18np("Failed to install file",
+                                 "Failed to install files",
+                                 files.count()));
+        // ok we are not running anymore..
+        decreaseRunning();
+    }
 }
 
 void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
