@@ -225,10 +225,9 @@ KIcon KpkIcons::actionIcon(Client::Action action)
         return KpkIcons::getIcon("package-installed");
     case Client::ActionRemovePackages :
         return KpkIcons::getIcon("package-removed");
-    default :
-        kDebug() << "action unrecognised: " << action;
-        return KpkIcons::getIcon("applications-other");
     }
+    kDebug() << "action unrecognised: " << action;
+    return KpkIcons::getIcon("applications-other");
 }
 
 KIcon KpkIcons::groupsIcon(Client::Group group)
@@ -300,10 +299,9 @@ KIcon KpkIcons::groupsIcon(Client::Group group)
         return KpkIcons::getIcon("cpu");
     case Client::UnknownGroup :
         return KpkIcons::getIcon("unknown");
-    default :
-        kDebug() << "group unrecognised: " << group;
-        return KpkIcons::getIcon("unknown");
     }
+    kDebug() << "group unrecognised: " << group;
+    return KpkIcons::getIcon("unknown");
 }
 
 KIcon KpkIcons::packageIcon(Package::State state)
@@ -341,7 +339,6 @@ KIcon KpkIcons::restartIcon(Client::RestartType type)
         return KpkIcons::getIcon("system-log-out");
     case Client::RestartApplication :
         return KpkIcons::getIcon("process-stop");
-    default :
-        return KpkIcons::getIcon("");
     }
+    return KpkIcons::getIcon("");
 }

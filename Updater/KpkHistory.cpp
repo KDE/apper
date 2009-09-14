@@ -80,6 +80,7 @@ void KpkHistory::slotButtonClicked(int button)
         case KDialog::User1 :
             // Refresh transaction list
             kDebug() << "Refresh transaction list";
+            //TODO make sure this deletes the transaction since they are pointers
             m_transactionModel->clear();
             t = Client::instance()->getOldTransactions(0);
             if (t->error()) {

@@ -138,8 +138,10 @@ void KpkReviewChanges::checkTask()
                 m_transactionReq = m_client->simulateRemovePackages(m_reqDepPackages);
                 connect(m_transactionReq, SIGNAL(package(PackageKit::Package *)),
                         m_removePkgModel, SLOT(addPackage(PackageKit::Package *)));
-                connect(m_transactionReq, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                        this, SLOT(reqFinished(PackageKit::Transaction::ExitStatus, uint)));
+                connect(m_transactionReq,
+                        SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                        this,
+                        SLOT(simRemFinished(PackageKit::Transaction::ExitStatus, uint)));
                 // Create a Transaction dialog to don't upset the user
                 QPointer<KpkTransaction> reqFinder = new KpkTransaction(m_transactionReq, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
                 reqFinder->exec();
@@ -161,8 +163,10 @@ void KpkReviewChanges::checkTask()
                 m_transactionDep = m_client->simulateInstallPackages(m_reqDepPackages);
                 connect(m_transactionDep, SIGNAL(package(PackageKit::Package *)),
                         m_installPkgModel, SLOT(addPackage(PackageKit::Package *)));
-                connect(m_transactionDep, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint)),
-                        this, SLOT(depFinished(PackageKit::Transaction::ExitStatus, uint)));
+                connect(m_transactionDep,
+                        SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                        this,
+                        SLOT(simInstFinished(PackageKit::Transaction::ExitStatus, uint)));
                 // Create a Transaction dialog to don't upset the user
                 QPointer<KpkTransaction> reqFinder = new KpkTransaction(m_transactionDep, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
                 reqFinder->exec();
@@ -179,15 +183,17 @@ void KpkReviewChanges::checkTask()
     }
 }
 
-void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
+void KpkReviewChanges::simRemFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
 {
-    kDebug() << "reqFinished";
+    kDebug() << "simRemFinished";
     if (status == Transaction::ExitSuccess) {
         if (m_removePkgModel->rowCount() > 0) {
-            KpkRequirements *requimentD = new KpkRequirements(m_removePkgModel, this);
-            connect(requimentD, SIGNAL(okClicked()), this, SLOT(removePackages()));
-            connect(requimentD, SIGNAL(cancelClicked()), this, SLOT(close()));
-            requimentD->show();
+            KpkRequirements *frm = new KpkRequirements(m_removePkgModel, this);
+            if (frm->exec() == QDialog::Accepted) {
+                removePackages();
+            } else {
+                close();
+            }
         } else {
             // As there was no requires don't allow deps removal
             removePackages(false);
@@ -199,7 +205,7 @@ void KpkReviewChanges::reqFinished(PackageKit::Transaction::ExitStatus status, u
         m_remPackages.clear();
         checkTask();
     }
-    kDebug() << "reqFinished2";
+    kDebug() << "simRemFinished2";
 }
 
 void KpkReviewChanges::removePackages(bool allowDeps)
@@ -221,15 +227,17 @@ void KpkReviewChanges::removePackages(bool allowDeps)
     kDebug() << "finished remove";
 }
 
-void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
+void KpkReviewChanges::simInstFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
 {
-    kDebug() << "depFinished";
+    kDebug() << "simInstFinished";
     if (status == Transaction::ExitSuccess) {
         if (m_installPkgModel->rowCount() > 0) {
-            KpkRequirements *requimentD = new KpkRequirements(m_installPkgModel, this);
-            connect(requimentD, SIGNAL(okClicked()), this, SLOT(installPackages()));
-            connect(requimentD, SIGNAL(cancelClicked()), this, SLOT(close()));
-            requimentD->show();
+            KpkRequirements *frm = new KpkRequirements(m_installPkgModel, this);
+            if (frm->exec() == QDialog::Accepted) {
+                installPackages();
+            } else {
+                close();
+            }
         } else {
             installPackages();
         }
@@ -239,7 +247,7 @@ void KpkReviewChanges::depFinished(PackageKit::Transaction::ExitStatus status, u
         m_addPackages.clear();
         checkTask();
     }
-    kDebug() << "depFinished2";
+    kDebug() << "simInstFinished2";
 }
 
 void KpkReviewChanges::installPackages()

@@ -52,14 +52,15 @@ private slots:
     void remFinished(KpkTransaction::ExitStatus);
     void addFinished(KpkTransaction::ExitStatus);
 
-    void reqFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void depFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void installPackages();
-    void removePackages(bool allow_deps = true);
+    void simRemFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void simInstFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
     void checkChanged();
 
 private:
+    void installPackages();
+    void removePackages(bool allow_deps = true);
+
     KpkReviewChangesPrivate *d;
     KpkPackageModel *m_pkgModelMain;
     KpkSimulateModel *m_installPkgModel, *m_removePkgModel;
