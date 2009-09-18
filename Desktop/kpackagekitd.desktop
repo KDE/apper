@@ -6,6 +6,7 @@ X-KDE-Library=kpackagekitd
 X-KDE-Kded-autoload=true
 
 Name=KPackageKit Service
+Name[bg]=Услуга KPackageKit
 Name[ca]=Servei del KPackageKit
 Name[cs]=Služba KPackageKit
 Name[da]=KPackageKit-tjeneste

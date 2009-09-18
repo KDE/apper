@@ -6,6 +6,7 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.KPackageKit
 
 Name=KPackageKit
+Name[bg]=KPackageKit
 Name[ca]=KPackageKit
 Name[cs]=KPackageKit
 Name[da]=KPackageKit
@@ -56,6 +57,7 @@ GenericName[tr]=Yazılım Yönetimi
 GenericName[uk]=Керування програмами
 GenericName[x-test]=xxSoftware Managementxx
 Comment=PackageKit interface for KDE
+Comment[bg]=Интерфейс на PackageKit за KDE
 Comment[ca]=Interfície del PackageKit per al KDE
 Comment[cs]=PackageKit rozhraní pro KDE
 Comment[da]=PackageKit-brugerflade til KDE

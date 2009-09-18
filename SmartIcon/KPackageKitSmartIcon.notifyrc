@@ -1,6 +1,7 @@
 [Global]
 IconName=applications-other
 Name=KPackageKit
+Name[bg]=KPackageKit
 Name[ca]=KPackageKit
 Name[cs]=KPackageKit
 Name[da]=KPackageKit
@@ -26,6 +27,7 @@ Name[tr]=KPackageKit
 Name[uk]=KPackageKit
 Name[x-test]=xxKPackageKitxx
 Comment=KPackageKit
+Comment[bg]=KPackageKit
 Comment[ca]=KPackageKit
 Comment[cs]=KPackageKit
 Comment[da]=KPackageKit
