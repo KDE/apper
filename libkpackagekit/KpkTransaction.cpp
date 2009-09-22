@@ -327,10 +327,9 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
         kDebug() << "Missing GPG!";
         m_handlingActionRequired = true;
         int ret = KMessageBox::warningYesNo(this,
-                                            details +
-                                            i18n("<br />Installing unsigned packages can compromise your system, "
+                                            i18n("You are about to install unsigned packages can compromise your system, "
                                             "as it is impossible to verify if the software came from a trusted "
-                                            "source. Are you sure you want to continue installation?"),
+                                            "source.\n Are you sure you want to continue installation?"),
                                             i18n("Installing unsigned software"));
         if (ret == KMessageBox::Yes) {
             // Set only trusted to false, to do as the user asked
