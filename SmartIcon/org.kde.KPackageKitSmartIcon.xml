@@ -7,5 +7,9 @@
        </method>
        <method name="Update" >
        </method>
+       <method name="RefreshCache" >
+       </method>
+       <method name="UpdateProxy" >
+       </method>
    </interface>
 </node>

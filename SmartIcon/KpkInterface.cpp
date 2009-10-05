@@ -21,7 +21,12 @@
 #include "kpackagekitsmarticonadaptor.h"
 
 #include <QtDBus/QDBusConnection>
+#include <KProtocolManager>
+#include <QPackageKit>
+
 #include <KDebug>
+
+using namespace PackageKit;
 
 KpkInterface::KpkInterface(QObject *parent)
         : QObject(parent)
@@ -52,3 +57,20 @@ void KpkInterface::Update()
 {
     emit update();
 }
+
+void KpkInterface::RefreshCache()
+{
+}
+
+void KpkInterface::UpdateProxy()
+{
+    if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) {
+        Client::instance()->setProxy(KProtocolManager::proxyFor("http"),
+                                     KProtocolManager::proxyFor("ftp"));
+        kDebug() << "Setting a non blank proxy";
+    } else {
+        Client::instance()->setProxy(QString(), QString());
+        kDebug() << "Setting a blank proxy";
+    }
+}
+

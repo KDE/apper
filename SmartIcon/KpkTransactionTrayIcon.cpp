@@ -30,7 +30,6 @@
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <KNotification>
-#include <KProtocolManager>
 #include <KMessageBox>
 #include <KLocale>
 
@@ -113,7 +112,6 @@ void KpkTransactionTrayIcon::refreshCache()
 {
     increaseRunning();
     // in this case refreshCache action must be clicked
-    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     Transaction *t = m_client->refreshCache(true);
     if (t->error()) {
         KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));

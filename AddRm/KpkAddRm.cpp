@@ -26,6 +26,7 @@
 
 #include <QPalette>
 #include <QColor>
+#include <QDBusConnection>
 
 #include <KpkReviewChanges.h>
 #include <KpkStrings.h>
@@ -52,6 +53,12 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("UpdateProxy"));
+    QDBusConnection::sessionBus().call(message);
 
     // Create a new daemon
     m_client = Client::instance();

@@ -23,6 +23,8 @@
 #include "KpkDistroUpgrade.h"
 #include "KpkHistory.h"
 
+#include <QDBusConnection>
+
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 #include <KpkTransactionBar.h>
@@ -32,7 +34,6 @@
 #include <KpkRequirements.h>
 
 #include <KMessageBox>
-#include <KProtocolManager>
 #include <KDebug>
 
 #define UNIVERSAL_PADDING 6
@@ -49,6 +50,12 @@ KpkUpdate::KpkUpdate(QWidget *parent)
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
 
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("UpdateProxy"));
+    QDBusConnection::sessionBus().call(message);
 
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(packageView));
@@ -165,7 +172,6 @@ void KpkUpdate::getDependsFinished(PackageKit::Transaction::ExitStatus status, u
 void KpkUpdate::updatePackages()
 {
     QList<Package*> packages = m_pkg_model_updates->selectedPackages();
-    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
 
     Transaction *t = m_client->updatePackages(true, packages);
     if (t->error()) {

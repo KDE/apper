@@ -26,7 +26,6 @@
 
 #include <KLocale>
 #include <KMessageBox>
-#include <KProtocolManager>
 
 #include <KDebug>
 
@@ -199,7 +198,6 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
             break;
         case KpkTransaction::ReQueue :
             kDebug() << "ReQueue";
-            Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
             transaction->setTransaction(Client::instance()->installFiles(m_transactionFiles[transaction], false));
             // return to avoid the decreaseRunning()
             return;

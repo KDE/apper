@@ -30,6 +30,8 @@
 #include <QStringList>
 #include <KCModuleInfo>
 
+#include <QDBusConnection>
+
 #include "KpkInstallFiles.h"
 #include "KpkInstallMimeType.h"
 #include "KpkInstallPackageName.h"
@@ -45,6 +47,18 @@ KPackageKit::KPackageKit()
    m_running(0)
 {
     setQuitOnLastWindowClosed(false);
+
+    // If something goes wrong at least kpackagekitSmartIcon
+    // will show the error
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("UpdateProxy"));
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+    if (reply.type() != QDBusMessage::ReplyMessage) {
+        kWarning() << "Message did not receive a reply";
+    }
 }
 
 KPackageKit::~KPackageKit()

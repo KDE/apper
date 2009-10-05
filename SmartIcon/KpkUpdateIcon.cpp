@@ -30,7 +30,6 @@
 #include <KStandardAction>
 #include <KActionCollection>
 #include <KAction>
-#include <KProtocolManager>
 
 #include <KDebug>
 
@@ -223,7 +222,6 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
         } else {
             if (updateType == KpkEnum::All) {
                 // update all
-                Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
                 Transaction* t = Client::instance()->updateSystem(true);
                 if (t->error()) {
                     // update all failed
@@ -250,7 +248,6 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                     }
                 }
                 if (updateList.size() > 0) {
-                    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
                     Transaction *t = Client::instance()->updatePackages(true, updateList);
                     if (t->error()) {
                         // security Trans failed.

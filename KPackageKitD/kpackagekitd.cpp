@@ -24,7 +24,6 @@
 #include <KGenericFactory>
 #include <KStandardDirs>
 #include <KConfigGroup>
-#include <KProtocolManager>
 
 #include <QDateTime>
 #include <QtDBus/QDBusMessage>
@@ -54,6 +53,14 @@ KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant> &)
     // Start after 5 minutes, 360000 msec
     // To keep the startup fast..
     m_qtimer->start(FIVE_MIN);
+
+    // Check if any changes to the proxy file occours
+    KDirWatch *proxyWatch = new KDirWatch(this);
+    proxyWatch->addFile(KStandardDirs::locateLocal("config", "kioslaverc"));
+    connect(proxyWatch, SIGNAL(  dirty(const QString &)), this, SLOT(proxyChanged()));
+    connect(proxyWatch, SIGNAL(created(const QString &)), this, SLOT(proxyChanged()));
+    connect(proxyWatch, SIGNAL(deleted(const QString &)), this, SLOT(proxyChanged()));
+    proxyWatch->startScan();
 }
 
 KPackageKitD::~KPackageKitD()
@@ -94,7 +101,7 @@ void KPackageKitD::init()
     //this also prevents from reading when a checkUpdate happens
     m_confWatch = new KDirWatch(this);
     m_confWatch->addFile(KStandardDirs::locateLocal("config", "KPackageKit"));
-    connect(m_confWatch, SIGNAL(dirty(const QString &)),   this, SLOT(read()));
+    connect(m_confWatch, SIGNAL(  dirty(const QString &)), this, SLOT(read()));
     connect(m_confWatch, SIGNAL(created(const QString &)), this, SLOT(read()));
     connect(m_confWatch, SIGNAL(deleted(const QString &)), this, SLOT(read()));
     m_confWatch->startScan();
@@ -119,6 +126,21 @@ void KPackageKitD::read()
         } else {
             m_qtimer->start((interval - actRefreshCache) * 1000);
         }
+    }
+}
+
+void KPackageKitD::proxyChanged()
+{
+    // If something goes wrong at least kpackagekitSmartIcon
+    // will show the error
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("UpdateProxy"));
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+    if (reply.type() != QDBusMessage::ReplyMessage) {
+        kWarning() << "Message did not receive a reply";
     }
 }
 
@@ -156,7 +178,6 @@ void KPackageKitD::checkUpdates()
         return;
     }
 
-    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     m_refreshCacheT = m_client->refreshCache(true);
     if (m_refreshCacheT == 0) {
         // try again in 5 minutes

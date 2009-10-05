@@ -20,6 +20,8 @@
 
 #include "KPackageKitSmartIcon.h"
 
+#include <QDBusConnection>
+
 #include <KCmdLineArgs>
 #include <KDebug>
 
@@ -34,6 +36,12 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
    m_distroUpgrade(0)
 {
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("UpdateProxy"));
+    QDBusConnection::sessionBus().call(message);
 
     // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);

@@ -879,6 +879,8 @@ QString KpkStrings::message(PackageKit::Client::MessageType value)
         return i18n("Package is already installed");
     case Client::MessageAutoremoveIgnored :
         return i18n("Automatic cleanup is being ignored");
+    case Client::MessageRepoMetadataDownloadFailed :
+        return i18n("Software source download failed");
     case Client::UnknownMessageType :
         kWarning() << "message(Client::UnknownMessageType)";
         return QString();

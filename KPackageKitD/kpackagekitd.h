@@ -40,6 +40,7 @@ private slots:
     void init();
     void read();
     void checkUpdates();
+    void proxyChanged();
     void finished(PackageKit::Transaction::ExitStatus status, uint);
 
     void transactionListChanged(const QList<PackageKit::Transaction*> &tids);

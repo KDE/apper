@@ -21,7 +21,6 @@
 #include "KpkReviewChanges.h"
 
 #include <KMessageBox>
-#include <KProtocolManager>
 
 #include <KDebug>
 
@@ -211,7 +210,6 @@ void KpkReviewChanges::simRemFinished(PackageKit::Transaction::ExitStatus status
 void KpkReviewChanges::removePackages(bool allowDeps)
 {
     kDebug() << "removePackages";
-    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     Transaction *t = m_client->removePackages(m_remPackages, allowDeps, true);
     if (t->error()) {
         KMessageBox::sorry(this,
@@ -253,7 +251,6 @@ void KpkReviewChanges::simInstFinished(PackageKit::Transaction::ExitStatus statu
 void KpkReviewChanges::installPackages()
 {
     kDebug() << "installPackages";
-    Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
     Transaction *t = m_client->installPackages(true, m_addPackages);
     if (t->error()) {
         KMessageBox::sorry(this,
@@ -284,7 +281,6 @@ void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
             break;
         case KpkTransaction::ReQueue :
             KpkTransaction *trans = (KpkTransaction *) sender();
-            Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
             trans->setTransaction(m_client->removePackages(m_remPackages, trans->allowDeps(), AUTOREMOVE));
             break;
     }
@@ -305,7 +301,6 @@ void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
             break;
         case KpkTransaction::ReQueue :
             KpkTransaction *trans = (KpkTransaction *) sender();
-            Client::instance()->setProxy(KProtocolManager::proxyFor("http"), KProtocolManager::proxyFor("ftp"));
             trans->setTransaction(m_client->installPackages(trans->onlyTrusted(), m_addPackages));
             break;
     }
