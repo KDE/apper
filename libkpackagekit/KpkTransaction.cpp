@@ -145,7 +145,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
     enableButtonCancel(m_trans->allowCancel());
     // clears the package label
     d->ui.packageL->clear();
-    d->ui.descriptionL->clear();
+    d->ui.descriptionL->setText(QString());
     // Now sets the last package
     currPackage(m_trans->lastPackage());
     // sets the current progress
@@ -222,7 +222,7 @@ void KpkTransaction::currPackage(Package *p)
         setDetailsWidgetVisible(d->showDetails);
     } else {
         d->ui.packageL->clear();
-        d->ui.descriptionL->clear();
+        d->ui.descriptionL->setText(QString());
         enableButton(KDialog::Details, false);
     }
 }
