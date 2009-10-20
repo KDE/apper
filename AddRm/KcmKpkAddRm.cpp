@@ -39,6 +39,7 @@ KcmKpkAddRm::KcmKpkAddRm(QWidget *parent, const QVariantList &args)
                                ki18n("KDE interface for managing software"),
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2009 Daniel Nicoletti"));
+    KGlobal::locale()->insertCatalog("kpackagekit");
     setAboutData(aboutData);
     setButtons(Apply);
     m_grid = new QGridLayout(this);
