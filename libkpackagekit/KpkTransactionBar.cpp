@@ -64,7 +64,7 @@ void KpkTransactionBar::setBehaviors(KpkTransactionBar::Behaviors flags)
     }
     // hides the cancel button
     m_cancel->setVisible(!(m_flags & HideCancel));
-    kDebug() << "Hide!" << m_flags;
+//  kDebug() << "Hide!" << m_flags;
 }
 
 KpkTransactionBar::Behaviors KpkTransactionBar::behaviors() const
