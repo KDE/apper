@@ -50,12 +50,6 @@ KpkUpdate::KpkUpdate(QWidget *parent)
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
 
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                             "/",
-                                             "org.kde.KPackageKitSmartIcon",
-                                             QLatin1String("UpdateProxy"));
-    QDBusConnection::sessionBus().call(message);
 
     //initialize the model, delegate, client and  connect it's signals
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(packageView));
@@ -73,6 +67,17 @@ KpkUpdate::KpkUpdate(QWidget *parent)
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
     line->hide();
+    QTimer::singleShot(0, this, SLOT(init()));
+}
+
+void KpkUpdate::init()
+{
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("UpdateProxy"));
+    QDBusConnection::sessionBus().call(message);
 }
 
 //TODO: We should add some kind of configuration to let users show unstable distributions

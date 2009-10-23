@@ -106,6 +106,7 @@ private:
     void filterMenu(Client::Filters filters);
     Client::Filters filters();
 
+    void init();
     void updateColumnsWidth(bool force = false);
     void setActionCancel(bool enabled);
     void search();

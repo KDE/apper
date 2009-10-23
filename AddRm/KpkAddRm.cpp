@@ -53,12 +53,6 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                             "/",
-                                             "org.kde.KPackageKitSmartIcon",
-                                             QLatin1String("UpdateProxy"));
-    QDBusConnection::sessionBus().call(message);
 
     // Create a new daemon
     m_client = Client::instance();
@@ -159,6 +153,17 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     // set focus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
+    QTimer::singleShot(0, this, SLOT(init()));
+}
+
+void KpkAddRm::init()
+{
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("UpdateProxy"));
+    QDBusConnection::sessionBus().call(message);
 }
 
 void KpkAddRm::genericActionKTriggered()

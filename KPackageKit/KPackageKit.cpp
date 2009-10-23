@@ -48,7 +48,6 @@ KPackageKit::KPackageKit()
    m_init(false)
 {
     setQuitOnLastWindowClosed(false);
-
 }
 
 KPackageKit::~KPackageKit()

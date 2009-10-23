@@ -68,6 +68,8 @@ private slots:
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
 
 private:
+    void init();
+
     KpkPackageModel *m_pkg_model_updates;
     KpkSimulateModel *m_simulateUpdatePkgModel;
 
