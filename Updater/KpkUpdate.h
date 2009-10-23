@@ -50,6 +50,7 @@ public slots:
     void refresh();
 
 private slots:
+    void init();
     void on_selectAllPB_clicked();
     void on_refreshPB_clicked();
     void on_historyPB_clicked();
@@ -68,8 +69,6 @@ private slots:
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
 
 private:
-    void init();
-
     KpkPackageModel *m_pkg_model_updates;
     KpkSimulateModel *m_simulateUpdatePkgModel;
 

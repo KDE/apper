@@ -66,6 +66,7 @@ private slots:
     void message(PackageKit::Client::MessageType message, const QString &details);
     void errorCode(PackageKit::Client::ErrorType error, const QString &detail);
 
+    void init();
     void checkChanged();
 
     void packageViewSetRootIsDecorated(bool value);
@@ -106,7 +107,6 @@ private:
     void filterMenu(Client::Filters filters);
     Client::Filters filters();
 
-    void init();
     void updateColumnsWidth(bool force = false);
     void setActionCancel(bool enabled);
     void search();
