@@ -89,7 +89,7 @@ QString KpkIcons::statusAnimation(PackageKit::Transaction::Status status)
     case Transaction::UnknownStatus             : return "help-browser";
     case Transaction::StatusCancel              :
     case Transaction::StatusCleanup             : return "pk-cleaning-up";
-    case Transaction::StatusCommit              : return "package-setup";
+    case Transaction::StatusCommit              :
     case Transaction::StatusDepResolve          : return "pk-testing";
     case Transaction::StatusDownloadChangelog   :
     case Transaction::StatusDownloadFilelist    :
@@ -107,13 +107,13 @@ QString KpkIcons::statusAnimation(PackageKit::Transaction::Status status)
     case Transaction::StatusObsolete            : return "pk-cleaning-up";
     case Transaction::StatusQuery               : return "pk-searching";
     case Transaction::StatusRefreshCache        : return "pk-refresh-cache";
-    case Transaction::StatusRemove              : return "pk-removing";
-    case Transaction::StatusRepackaging         : return "package-info";
+    case Transaction::StatusRemove              : return "package-removed";//TODO do the animation
+    case Transaction::StatusRepackaging         : return "pk-searching";
     case Transaction::StatusRequest             : return "process-working";
-    case Transaction::StatusRollback            : return "pk-removing";
-    case Transaction::StatusRunning             : return "pk-setup";
+    case Transaction::StatusRollback            : return "package-removed";
+    case Transaction::StatusRunning             : return "pk-testing";
     case Transaction::StatusScanApplications    : return "pk-searching";
-    case Transaction::StatusSetup               : return "package-info";
+    case Transaction::StatusSetup               : return "pk-searching";
     case Transaction::StatusSigCheck            : return "package-info";
     case Transaction::StatusTestCommit          : return "pk-testing";
     case Transaction::StatusUpdate              : return "pk-installing";
@@ -144,7 +144,7 @@ KIcon KpkIcons::actionIcon(Client::Action action)
     case Client::ActionInstallFiles            : return KpkIcons::getIcon("package-installed");
     case Client::ActionInstallPackages         : return KpkIcons::getIcon("package-installed");
     case Client::ActionInstallSignature        : return KpkIcons::getIcon("package-installed");
-    case Client::ActionRefreshCache            : return KpkIcons::getIcon("pk-refresh-cache");
+    case Client::ActionRefreshCache            : return KpkIcons::getIcon("kpk-refresh-cache");
     case Client::ActionRemovePackages          : return KpkIcons::getIcon("package-removed");
     case Client::ActionRepoEnable              : return KpkIcons::getIcon("package-orign");
     case Client::ActionRepoSetData             : return KpkIcons::getIcon("package-orign");

@@ -65,17 +65,25 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
     // Set Cancel and custom button hide
     setButtons(KDialog::Cancel | KDialog::User1 | KDialog::Details);
+    enableButton(KDialog::Details, false);
     setButtonText(KDialog::User1, i18n("Hide"));
     setButtonToolTip(KDialog::User1, i18n("Allows you to hide the window whilst keeping the transaction task running."));
     setEscapeButton(KDialog::User1);
     enableButtonCancel(false);
     setDetailsWidget(d->ui.detailGroup);
-    setDetailsWidgetVisible(false);
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
     d->showDetails = transactionGroup.readEntry("ShowDetails", false);
-
-    enableButton(KDialog::Details, false);
+    setDetailsWidgetVisible(d->showDetails);
+    // This MUST come after setDetailsWidgetVisible since
+    // it keeps ajusting the size (which sucks btw)
+    // This doesn't work, KDialog resizes when the details
+    // button is clicked, maybe it should save the size
+    // before showing the details then when hiding it it would
+    // go back to the first size.
+//     setMinimumSize(QSize(400,120));
+//     KConfigGroup transactionDialog(&config, "TransactionDialog");
+//     restoreDialogSize(transactionDialog);
 
     if (m_flags & Modal) {
         setWindowModality(Qt::WindowModal);
@@ -90,11 +98,13 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
 KpkTransaction::~KpkTransaction()
 {
+    KConfig config("KPackageKit");
     if (isButtonEnabled(KDialog::Details)) {
-        KConfig config("KPackageKit");
         KConfigGroup transactionGroup(&config, "Transaction");
         transactionGroup.writeEntry("ShowDetails", isDetailsWidgetVisible());
     }
+//     KConfigGroup transactionDialog(&config, "TransactionDialog");
+//     saveDialogSize(transactionDialog);
 
     // DO NOT disconnect the transaction here,
     // it might not exist when this happen
@@ -219,11 +229,11 @@ void KpkTransaction::currPackage(Package *p)
         d->ui.packageL->setText(packageText);
         d->ui.descriptionL->setText(p->summary());
         enableButton(KDialog::Details, true);
-        setDetailsWidgetVisible(d->showDetails);
     } else {
         d->ui.packageL->clear();
         d->ui.descriptionL->setText(QString());
         enableButton(KDialog::Details, false);
+        setDetailsWidgetVisible(false);
     }
 }
 
@@ -289,11 +299,13 @@ void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
                                              48,
                                              this);
     if (movie) {
+//         qDebug() << "OK "<< icon;
         // If the movie is set we KIconLoader it,
         // set it and start
         d->ui.label->setMovie(movie);
         movie->start();
     } else {
+//         qDebug() << "NOT OK "<< icon;
         // Else it's probably a static icon so try to load
         d->ui.label->setPixmap(KpkIcons::getIcon(icon).pixmap(48,48));
     }
