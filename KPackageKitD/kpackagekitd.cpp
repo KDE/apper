@@ -24,6 +24,7 @@
 #include <KGenericFactory>
 #include <KStandardDirs>
 #include <KConfigGroup>
+#include <KDirWatch>
 
 #include <QDateTime>
 #include <QtDBus/QDBusMessage>
@@ -40,7 +41,7 @@ K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KPackageKitD>();)
 K_EXPORT_PLUGIN(KPackageKitFactory("kpackagekitd"))
 
 KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant> &)
-    : KDEDModule(parent), m_refreshCacheT(0)
+    : KDEDModule(parent)
 {
     m_qtimer = new QTimer(this);
     connect(m_qtimer, SIGNAL(timeout()), this, SLOT(init()));
@@ -53,14 +54,6 @@ KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant> &)
     // Start after 5 minutes, 360000 msec
     // To keep the startup fast..
     m_qtimer->start(FIVE_MIN);
-
-    // Check if any changes to the proxy file occours
-    KDirWatch *proxyWatch = new KDirWatch(this);
-    proxyWatch->addFile(KStandardDirs::locateLocal("config", "kioslaverc"));
-    connect(proxyWatch, SIGNAL(  dirty(const QString &)), this, SLOT(proxyChanged()));
-    connect(proxyWatch, SIGNAL(created(const QString &)), this, SLOT(proxyChanged()));
-    connect(proxyWatch, SIGNAL(deleted(const QString &)), this, SLOT(proxyChanged()));
-    proxyWatch->startScan();
 }
 
 KPackageKitD::~KPackageKitD()
@@ -99,12 +92,12 @@ void KPackageKitD::init()
 
     //check if any changes to the file occour
     //this also prevents from reading when a checkUpdate happens
-    m_confWatch = new KDirWatch(this);
-    m_confWatch->addFile(KStandardDirs::locateLocal("config", "KPackageKit"));
-    connect(m_confWatch, SIGNAL(  dirty(const QString &)), this, SLOT(read()));
-    connect(m_confWatch, SIGNAL(created(const QString &)), this, SLOT(read()));
-    connect(m_confWatch, SIGNAL(deleted(const QString &)), this, SLOT(read()));
-    m_confWatch->startScan();
+    KDirWatch *confWatch = new KDirWatch(this);
+    confWatch->addFile(KStandardDirs::locateLocal("config", "KPackageKit"));
+    connect(confWatch, SIGNAL(  dirty(const QString &)), this, SLOT(read()));
+    connect(confWatch, SIGNAL(created(const QString &)), this, SLOT(read()));
+    connect(confWatch, SIGNAL(deleted(const QString &)), this, SLOT(read()));
+    confWatch->startScan();
 }
 
 void KPackageKitD::read()
@@ -118,7 +111,7 @@ void KPackageKitD::read()
         return;
     }
     if (actRefreshCache >= interval) {
-        checkUpdates();
+        refreshAndUpdate();
     } else {
         //check first to see any overflow...
         if ((interval - actRefreshCache) > 4294966) {
@@ -126,31 +119,6 @@ void KPackageKitD::read()
         } else {
             m_qtimer->start((interval - actRefreshCache) * 1000);
         }
-    }
-}
-
-void KPackageKitD::proxyChanged()
-{
-    // If something goes wrong at least kpackagekitSmartIcon
-    // will show the error
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                             "/",
-                                             "org.kde.KPackageKitSmartIcon",
-                                             QLatin1String("UpdateProxy"));
-    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-    if (reply.type() != QDBusMessage::ReplyMessage) {
-        kWarning() << "Message did not receive a reply";
-    }
-}
-
-void KPackageKitD::finished(PackageKit::Transaction::ExitStatus status, uint)
-{
-    if (status == Transaction::ExitSuccess) {
-        update();
-    } else {
-        // try again in 5 minutes
-        m_qtimer->start(FIVE_MIN);
     }
 }
 
@@ -170,36 +138,6 @@ bool KPackageKitD::systemIsReady()
     return true;
 }
 
-void KPackageKitD::checkUpdates()
-{
-    // check whether system is ready for an updates check
-    if (!systemIsReady()) {
-        m_qtimer->start(FIVE_MIN);
-        return;
-    }
-
-    m_refreshCacheT = m_client->refreshCache(true);
-    if (m_refreshCacheT == 0) {
-        // try again in 5 minutes
-        m_qtimer->start(FIVE_MIN);
-    } else {
-        // If something goes wrong at least kpackagekitSmartIcon
-        // will show the error
-        QDBusMessage message;
-        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                    "/",
-                                                    "org.kde.KPackageKitSmartIcon",
-                                                    QLatin1String("WatchTransaction"));
-        message << qVariantFromValue(m_refreshCacheT->tid());
-        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-        if (reply.type() != QDBusMessage::ReplyMessage) {
-            kWarning() << "Message did not receive a reply";
-        }
-        connect(m_refreshCacheT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
-    }
-}
-
 void KPackageKitD::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
 {
     if (tids.size()) {
@@ -212,6 +150,20 @@ void KPackageKitD::transactionListChanged(const QList<PackageKit::Transaction*> 
         message << qVariantFromValue((uint) 0);
         QDBusConnection::sessionBus().call(message);
     }
+}
+
+void KPackageKitD::refreshAndUpdate()
+{
+    // check whether system is ready for an update
+    if (systemIsReady()) {
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                                 "/",
+                                                 "org.kde.KPackageKitSmartIcon",
+                                                QLatin1String("RefreshAndUpdate"));
+        QDBusConnection::sessionBus().call(message);
+    }
+    m_qtimer->start(FIVE_MIN);
 }
 
 void KPackageKitD::update()

@@ -25,6 +25,7 @@
 #include <KpkIcons.h>
 #include <KpkStrings.h>
 #include <KpkEnum.h>
+#include <KpkMacros.h>
 
 #include <QMenu>
 #include <KStandardAction>
@@ -115,22 +116,49 @@ void KpkUpdateIcon::showUpdates(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void KpkUpdateIcon::checkUpdates()
+// refresh the cache and try to update,
+// if it can't automatically update show
+// a notification about updates available
+void KpkUpdateIcon::refreshAndUpdate(bool refresh)
 {
     // This is really necessary to don't bother the user with
     // tons of popups
     if (!isRunning()) {
-        KConfig config("KPackageKit");
-        KConfigGroup notifyGroup(&config, "Notify");
-        if (Qt::Checked == (Qt::CheckState) notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked)) {
-            m_updateList.clear();
-            Transaction* t = Client::instance()->getUpdates();
-            connect(t, SIGNAL(package(PackageKit::Package *)),
-                    this, SLOT(updateListed(PackageKit::Package *)));
-            connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SLOT(updateCheckFinished(PackageKit::Transaction::ExitStatus, uint)));
+        if (refresh) {
+            SET_PROXY
+            Transaction *t = Client::instance()->refreshCache(true);
+            if (t->error()) {
+                KNotification *notify = new KNotification("TransactionError", 0, KNotification::Persistent);
+                notify->setText(KpkStrings::daemonError(t->error()));
+                notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+                notify->sendEvent();
+            } else {
+                connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                    this, SIGNAL(update()));
+                emit watchTransaction(t->tid());
+                increaseRunning();
+                return; // to not reach the signal below
+            }
+        } else {
+            update();
             increaseRunning();
         }
+    }
+}
+
+void KpkUpdateIcon::update()
+{
+    KConfig config("KPackageKit");
+    KConfigGroup notifyGroup(&config, "Notify");
+    if (Qt::Checked == (Qt::CheckState) notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked)) {
+        m_updateList.clear();
+        Transaction *t = Client::instance()->getUpdates();
+        connect(t, SIGNAL(package(PackageKit::Package *)),
+                this, SLOT(updateListed(PackageKit::Package *)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(updateCheckFinished(PackageKit::Transaction::ExitStatus, uint)));
+    } else {
+        decreaseRunning();
     }
 }
 
@@ -166,7 +194,7 @@ void KpkUpdateIcon::notifyUpdates()
     KIcon icon = KpkIcons::packageIcon(highState);
     m_updateNotify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
     // use of QSize does the right thing
-    m_updateNotify->setPixmap(icon.pixmap(QSize(128,128)));
+    m_updateNotify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
 
     QString text;
     text = i18n("You have %1", KpkStrings::infoUpdate(highState, packageGroups[highState].size()));
@@ -222,6 +250,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
         } else {
             if (updateType == KpkEnum::All) {
                 // update all
+                SET_PROXY
                 Transaction* t = Client::instance()->updateSystem(true);
                 if (t->error()) {
                     // update all failed
@@ -235,7 +264,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                     autoInstallNotify->setText(i18n("Updates are being automatically installed."));
                     // use of QSize does the right thing
                     KIcon icon("plasmagik");
-                    autoInstallNotify->setPixmap(icon.pixmap(QSize(128,128)));
+                    autoInstallNotify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
                     autoInstallNotify->sendEvent();
                     increaseRunning();
                 }
@@ -248,6 +277,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                     }
                 }
                 if (updateList.size() > 0) {
+                    SET_PROXY
                     Transaction *t = Client::instance()->updatePackages(true, updateList);
                     if (t->error()) {
                         // security Trans failed.
@@ -261,7 +291,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                         KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
                         autoInstallNotify->setText(i18n("Security updates are being automatically installed."));
                         // use of QSize does the right thing
-                        autoInstallNotify->setPixmap(KpkIcons::packageIcon(highState).pixmap(QSize(128,128)));
+                        autoInstallNotify->setPixmap(KpkIcons::packageIcon(highState).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
                         autoInstallNotify->sendEvent();
                         increaseRunning();
                     }
@@ -285,16 +315,16 @@ void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, 
     if (status == Transaction::ExitSuccess) {
         KIcon icon("task-complete");
         // use of QSize does the right thing
-        notify->setPixmap(icon.pixmap(QSize(128,128)));
+        notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
         notify->setText(i18n("System update was successful."));
         notify->sendEvent();
         // check for updates to see if there are updates that
         // couldn't be automatically installed
-        checkUpdates();
+        update();
     } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing
-        notify->setPixmap(icon.pixmap(QSize(128,128)));
+        notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
         notify->setText(i18n("The software update failed.")); //TODO: Point the user to the logs, or give more detail.
         notify->sendEvent();
     }

@@ -32,13 +32,13 @@ public:
 
 public slots:
     void WatchTransaction(const QString &tid);
-    void Update();
     void RefreshCache();
-    void UpdateProxy();
+    void RefreshAndUpdate();
+    void Update();
 
 signals:
     void watchTransaction(const QString &tid);
-    void update();
+    void refreshAndUpdate(bool refresh);
 };
 
 

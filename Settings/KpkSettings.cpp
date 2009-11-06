@@ -61,14 +61,13 @@ KpkSettings::KpkSettings(QWidget *parent)
     intervalCB->addItem(i18nc("Daily refresh the package cache", "Daily"),   KpkEnum::Daily);
     intervalCB->addItem(i18nc("Weekly refresh the package cache", "Weekly"),  KpkEnum::Weekly);
     intervalCB->addItem(i18nc("Monthly refresh the package cache", "Monthly"), KpkEnum::Monthly);
-    intervalCB->addItem(i18nc("Never refresh package cache", "Never"),   KpkEnum::Never);
+    intervalCB->addItem(i18nc("Never refresh package cache", "Never"), KpkEnum::Never);
 
-    autoCB->addItem(i18n("Security Only"), KpkEnum::Security);
-    autoCB->addItem(i18n("All Updates"),   KpkEnum::All);
+    autoCB->addItem(i18n("Security only"), KpkEnum::Security);
+    autoCB->addItem(i18n("All updates"),   KpkEnum::All);
     autoCB->addItem(i18nc("None updates will be automatically installed", "None"),          KpkEnum::None);
 
     connect(notifyUpdatesCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
-    connect(notifyLongTasksCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(intervalCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
     connect(autoCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
 }
@@ -93,19 +92,23 @@ void KpkSettings::checkChanges()
     if (notifyUpdatesCB->checkState() !=
         (Qt::CheckState) notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked)
         ||
-        notifyLongTasksCB->checkState() !=
-        (Qt::CheckState) notifyGroup.readEntry("notifyLongTasks", (int) Qt::Checked)
-        ||
-        intervalCB->itemData( intervalCB->currentIndex() ).toUInt() !=
+        intervalCB->itemData(intervalCB->currentIndex()).toUInt() !=
         (uint) checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault)
         ||
-        autoCB->itemData( autoCB->currentIndex() ).toUInt() !=
+        autoCB->itemData(autoCB->currentIndex()).toUInt() !=
         (uint) checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault)
         ||
-        ((m_actions & Client::ActionGetRepoList) ? m_originModel->changed() : false))
+        ((m_actions & Client::ActionGetRepoList) ? m_originModel->changed() : false)) {
         emit(changed(true));
-    else
+    } else {
         emit(changed(false));
+    }
+
+    // Check if interval update is never
+    bool enabled = intervalCB->itemData(intervalCB->currentIndex()).toUInt() != KpkEnum::Never;
+    autoInsL->setEnabled(enabled);
+    notifyUpdatesCB->setEnabled(enabled);
+    autoCB->setEnabled(enabled);
 }
 
 void KpkSettings::load()
@@ -113,8 +116,6 @@ void KpkSettings::load()
     KConfig config("KPackageKit");
     KConfigGroup notifyGroup( &config, "Notify" );
     notifyUpdatesCB->setCheckState((Qt::CheckState) notifyGroup.readEntry("notifyUpdates",
-        (int) Qt::Checked));
-    notifyLongTasksCB->setCheckState((Qt::CheckState) notifyGroup.readEntry("notifyLongTasks",
         (int) Qt::Checked));
 
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
@@ -150,9 +151,10 @@ void KpkSettings::load()
 void KpkSettings::save()
 {
     KConfig config("KPackageKit");
-    KConfigGroup notifyGroup( &config, "Notify" );
+    KConfigGroup notifyGroup(&config, "Notify");
+    // not used anymore
+    notifyGroup.deleteEntry("notifyLongTasks");
     notifyGroup.writeEntry("notifyUpdates", (int) notifyUpdatesCB->checkState());
-    notifyGroup.writeEntry("notifyLongTasks", (int) notifyLongTasksCB->checkState());
     KConfigGroup checkUpdateGroup( &config, "CheckUpdate");
     checkUpdateGroup.writeEntry("interval", intervalCB->itemData(intervalCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("autoUpdate", autoCB->itemData(autoCB->currentIndex()).toUInt());
@@ -171,7 +173,6 @@ void KpkSettings::save()
 void KpkSettings::defaults()
 {
     notifyUpdatesCB->setCheckState(Qt::Checked);
-    notifyLongTasksCB->setCheckState(Qt::Checked);
     intervalCB->setCurrentIndex(intervalCB->findData(KpkEnum::TimeIntervalDefault));
     autoCB->setCurrentIndex(autoCB->findData(KpkEnum::AutoUpdateDefault) );
     m_originModel->clearChanges();

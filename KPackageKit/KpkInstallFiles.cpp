@@ -23,6 +23,7 @@
 #include <KpkSimulateModel.h>
 #include <KpkRequirements.h>
 #include <KpkStrings.h>
+#include <KpkMacros.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -157,6 +158,7 @@ void KpkInstallFiles::simulateFinished(PackageKit::Transaction::ExitStatus statu
 
 void KpkInstallFiles::installFiles()
 {
+    SET_PROXY
     Transaction *t = Client::instance()->installFiles(files, true);
     if (t->error()) {
         KpkTransaction *trans = new KpkTransaction(t);
@@ -182,25 +184,26 @@ void KpkInstallFiles::installFilesFinished(KpkTransaction::ExitStatus status)
     kDebug() << "Finished.";
     KpkTransaction *transaction = (KpkTransaction *) sender();
     switch (status) {
-        case KpkTransaction::Success :
-            KMessageBox::information(0, i18np("File was installed successfully",
-                                              "Files were installed successfully",
-                                              m_transactionFiles[transaction].count()),
-                                        i18np("File was installed successfully",
-                                              "Files were installed successfully",
-                                              m_transactionFiles[transaction].count()));
-        case KpkTransaction::Cancelled :
-            m_transactionFiles.remove(transaction);
-            break;
-        case KpkTransaction::Failed :
-            m_transactionFiles.remove(transaction);
-            KMessageBox::error(0, i18n("An error occurred."), i18n("KPackageKit Error"));
-            break;
-        case KpkTransaction::ReQueue :
-            kDebug() << "ReQueue";
-            transaction->setTransaction(Client::instance()->installFiles(m_transactionFiles[transaction], false));
-            // return to avoid the decreaseRunning()
-            return;
+    case KpkTransaction::Success :
+        KMessageBox::information(0, i18np("File was installed successfully",
+                                          "Files were installed successfully",
+                                          m_transactionFiles[transaction].count()),
+                                    i18np("File was installed successfully",
+                                          "Files were installed successfully",
+                                          m_transactionFiles[transaction].count()));
+    case KpkTransaction::Cancelled :
+        m_transactionFiles.remove(transaction);
+        break;
+    case KpkTransaction::Failed :
+        m_transactionFiles.remove(transaction);
+        KMessageBox::error(0, i18n("An error occurred."), i18n("KPackageKit Error"));
+        break;
+    case KpkTransaction::ReQueue :
+        kDebug() << "ReQueue";
+        SET_PROXY
+        transaction->setTransaction(Client::instance()->installFiles(m_transactionFiles[transaction], false));
+        // return to avoid the decreaseRunning()
+        return;
     }
     decreaseRunning();
 }

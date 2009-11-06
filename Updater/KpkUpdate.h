@@ -50,7 +50,6 @@ public slots:
     void refresh();
 
 private slots:
-    void init();
     void on_selectAllPB_clicked();
     void on_refreshPB_clicked();
     void on_historyPB_clicked();

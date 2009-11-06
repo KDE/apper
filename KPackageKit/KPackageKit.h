@@ -37,7 +37,6 @@ public:
     virtual int newInstance();
 
 private slots:
-    void init();
     void appClose();
     void kcmFinished();
     void decreaseAndKillRunning();

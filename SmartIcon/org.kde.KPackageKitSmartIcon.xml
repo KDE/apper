@@ -5,11 +5,11 @@
            <!-- IN: transaction id -->
            <arg direction="in" type="s" name="tid" />
        </method>
-       <method name="Update" >
-       </method>
        <method name="RefreshCache" >
        </method>
-       <method name="UpdateProxy" >
+       <method name="Update" >
+       </method>
+       <method name="RefreshAndUpdate" >
        </method>
    </interface>
 </node>

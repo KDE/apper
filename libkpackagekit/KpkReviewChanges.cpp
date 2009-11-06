@@ -20,6 +20,7 @@
 
 #include "KpkReviewChanges.h"
 
+#include <KpkMacros.h>
 #include <KMessageBox>
 
 #include <KDebug>
@@ -210,6 +211,7 @@ void KpkReviewChanges::simRemFinished(PackageKit::Transaction::ExitStatus status
 void KpkReviewChanges::removePackages(bool allowDeps)
 {
     kDebug() << "removePackages";
+    SET_PROXY
     Transaction *t = m_client->removePackages(m_remPackages, allowDeps, true);
     if (t->error()) {
         KMessageBox::sorry(this,
@@ -251,6 +253,7 @@ void KpkReviewChanges::simInstFinished(PackageKit::Transaction::ExitStatus statu
 void KpkReviewChanges::installPackages()
 {
     kDebug() << "installPackages";
+    SET_PROXY
     Transaction *t = m_client->installPackages(true, m_addPackages);
     if (t->error()) {
         KMessageBox::sorry(this,
@@ -268,41 +271,43 @@ void KpkReviewChanges::installPackages()
 void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
 {
     switch (status) {
-        case KpkTransaction::Success :
-            m_remPackages.clear();
-            checkTask();
-            break;
-        case KpkTransaction::Failed :
-            //TODO This is not nice we should close instead
-            setButtons(KDialog::Close);
-            break;
-        case KpkTransaction::Cancelled :
-            KDialog::slotButtonClicked(KDialog::Close);
-            break;
-        case KpkTransaction::ReQueue :
-            KpkTransaction *trans = (KpkTransaction *) sender();
-            trans->setTransaction(m_client->removePackages(m_remPackages, trans->allowDeps(), AUTOREMOVE));
-            break;
+    case KpkTransaction::Success :
+        m_remPackages.clear();
+        checkTask();
+        break;
+    case KpkTransaction::Failed :
+        //TODO This is not nice we should close instead
+        setButtons(KDialog::Close);
+        break;
+    case KpkTransaction::Cancelled :
+        KDialog::slotButtonClicked(KDialog::Close);
+        break;
+    case KpkTransaction::ReQueue :
+        KpkTransaction *trans = (KpkTransaction *) sender();
+        SET_PROXY
+        trans->setTransaction(m_client->removePackages(m_remPackages, trans->allowDeps(), AUTOREMOVE));
+        break;
     }
 }
 
 void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
 {
     switch (status) {
-        case KpkTransaction::Success :
-            m_addPackages.clear();
-            checkTask();
-            break;
-        case KpkTransaction::Failed :
-            setButtons(KDialog::Close);
-            break;
-        case KpkTransaction::Cancelled :
-            KDialog::slotButtonClicked(KDialog::Close);
-            break;
-        case KpkTransaction::ReQueue :
-            KpkTransaction *trans = (KpkTransaction *) sender();
-            trans->setTransaction(m_client->installPackages(trans->onlyTrusted(), m_addPackages));
-            break;
+    case KpkTransaction::Success :
+        m_addPackages.clear();
+        checkTask();
+        break;
+    case KpkTransaction::Failed :
+        setButtons(KDialog::Close);
+        break;
+    case KpkTransaction::Cancelled :
+        KDialog::slotButtonClicked(KDialog::Close);
+        break;
+    case KpkTransaction::ReQueue :
+        KpkTransaction *trans = (KpkTransaction *) sender();
+        SET_PROXY
+        trans->setTransaction(m_client->installPackages(trans->onlyTrusted(), m_addPackages));
+        break;
     }
 }
 

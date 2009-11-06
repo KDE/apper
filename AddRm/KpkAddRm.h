@@ -66,7 +66,6 @@ private slots:
     void message(PackageKit::Client::MessageType message, const QString &details);
     void errorCode(PackageKit::Client::ErrorType error, const QString &detail);
 
-    void init();
     void checkChanged();
 
     void packageViewSetRootIsDecorated(bool value);

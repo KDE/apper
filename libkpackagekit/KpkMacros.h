@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Trever Fischer                                  *
- *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,50 +18,19 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_UPDATE_ICON_H
-#define KPK_UPDATE_ICON_H
+#ifndef KPKMACROS_H
+#define KPKMACROS_H
 
-#include <KpkAbstractIsRunning.h>
+#include <KProtocolManager>
 
-#include <QObject>
-#include <KSystemTrayIcon>
-#include <KCMultiDialog>
-#include <KNotification>
-#include <QList>
-#include <QPackageKit>
+#define SET_PROXY                                                         \
+    if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) { \
+        Client::instance()->setProxy(KProtocolManager::proxyFor("http"),  \
+                                     KProtocolManager::proxyFor("ftp"));  \
+    } else {                                                              \
+        Client::instance()->setProxy(QString(), QString());               \
+    }
 
-class KpkUpdateIcon : public KpkAbstractIsRunning
-{
-Q_OBJECT
-
-public:
-    KpkUpdateIcon(QObject *parent = 0);
-    ~KpkUpdateIcon();
-
-signals:
-    void watchTransaction(const QString &tid);
-
-public slots:
-    void refreshAndUpdate(bool refresh);
-
-private slots:
-    void update();
-    void updateListed(PackageKit::Package*);
-    void updateCheckFinished(PackageKit::Transaction::ExitStatus, uint runtime);
-    void handleUpdateAction(uint action);
-    void handleUpdateActionClosed();
-    void notifyUpdates();
-    void showSettings();
-    void showUpdates(QSystemTrayIcon::ActivationReason = KSystemTrayIcon::Unknown);
-    void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-
-private:
-    KSystemTrayIcon* m_icon;
-    KNotification *m_updateNotify;
-    QList<PackageKit::Package*> m_updateList;
-
-//     int m_inhibitCookie;
-//     void suppressSleep(bool enable);
-};
+#define KPK_ICON_SIZE 64
 
 #endif

@@ -153,17 +153,6 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     // set focus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
-    QTimer::singleShot(0, this, SLOT(init()));
-}
-
-void KpkAddRm::init()
-{
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                             "/",
-                                             "org.kde.KPackageKitSmartIcon",
-                                             QLatin1String("UpdateProxy"));
-    QDBusConnection::sessionBus().call(message);
 }
 
 void KpkAddRm::genericActionKTriggered()
@@ -269,12 +258,18 @@ KpkAddRm::~KpkAddRm()
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
     kDebug() << "Saving settings";
-    // For usability we will only save ViewInGroups settings,
+    // For usability we will only save ViewInGroups settings and Newest filter,
     // - The user might get angry when he does not find any packages because he didn't
     //   see that a filter is set by config
 
     // This entry does not depend on the backend it's ok to call this pointer
     filterMenuGroup.writeEntry("ViewInGroups", m_actionViewInGroups->isChecked());
+
+    // This entry does not depend on the backend it's ok to call this pointer
+    if (m_client->getFilters() & Client::FilterNewest) {
+        filterMenuGroup.writeEntry("FilterNewest",
+                                   (bool) filters() & Client::FilterNewest);
+    }
 }
 
 void KpkAddRm::on_actionFindName_triggered()
@@ -679,6 +674,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         m_filtersQM->addSeparator();
         QAction *newest = new QAction(i18n("Only newest packages"), m_filtersQM);
         newest->setCheckable(true);
+        newest->setChecked(filterMenuGroup.readEntry("FilterNewest", true));
         newest->setToolTip( i18n("Only show the newest available package") );
         m_filtersAction[newest] = Client::FilterNewest;
         m_filtersQM->addAction(newest);

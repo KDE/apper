@@ -22,7 +22,7 @@
 #define KPACKAGEKITD_H
 
 #include <KDEDModule>
-#include <KDirWatch>
+
 #include <QTimer>
 #include <QPackageKit>
 
@@ -39,20 +39,16 @@ public:
 private slots:
     void init();
     void read();
-    void checkUpdates();
-    void proxyChanged();
-    void finished(PackageKit::Transaction::ExitStatus status, uint);
 
     void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
 
 private:
     void update();
+    void refreshAndUpdate();
+    bool systemIsReady();
 
     QTimer *m_qtimer;
-    KDirWatch *m_confWatch;
     Client *m_client;
-    Transaction *m_refreshCacheT;
-    bool systemIsReady();
 };
 
 #endif

@@ -21,6 +21,7 @@
 #include "KpkTransactionWatcher.h"
 
 #include <KpkStrings.h>
+#include <KpkMacros.h>
 #include <KLocale>
 
 #include <KNotification>
@@ -94,7 +95,7 @@ void KpkTransactionWatcher::errorCode(PackageKit::Client::ErrorType err, const Q
     QStringList actions;
     actions << i18n("Details") << i18n("Ignore");
     notify->setActions(actions);
-    notify->setPixmap(KIcon("dialog-error").pixmap(64, 64));
+    notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     connect(notify, SIGNAL(activated(uint)),
             this, SLOT(errorActivated(uint)));
     connect(notify, SIGNAL(closed()),

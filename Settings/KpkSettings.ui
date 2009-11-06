@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KpkSettings</class>
- <widget class="QWidget" name="KpkSettings" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KpkSettings">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,135 +10,110 @@
     <height>374</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3" >
-   <property name="margin" >
+  <layout class="QGridLayout" name="gridLayout_3">
+   <property name="margin">
     <number>0</number>
    </property>
-   <item row="0" column="0" colspan="2" >
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+   <item row="0" column="0" colspan="2">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="title" >
-      <string>KPackageKit Settings</string>
+     <property name="title">
+      <string>Update settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="intervalL" >
-        <property name="text" >
-         <string>Check for Updates:</string>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="intervalL">
+        <property name="text">
+         <string>Check for updates:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2" >
-       <widget class="KComboBox" name="intervalCB" >
-        <property name="currentIndex" >
+      <item row="0" column="1" colspan="2">
+       <widget class="KComboBox" name="intervalCB">
+        <property name="currentIndex">
          <number>-1</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_3" >
-        <property name="enabled" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="autoInsL">
+        <property name="enabled">
          <bool>true</bool>
         </property>
-        <property name="text" >
-         <string>Automatically Install:</string>
+        <property name="text">
+         <string>Automatically install:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="2" >
-       <widget class="KComboBox" name="autoCB" >
-        <property name="enabled" >
+      <item row="1" column="1" colspan="2">
+       <widget class="KComboBox" name="autoCB">
+        <property name="enabled">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2" >
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title" >
-      <string>Smart Tray Icon</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2" >
-      <item row="0" column="0" >
-       <widget class="QCheckBox" name="notifyUpdatesCB" >
-        <property name="enabled" >
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="notifyUpdatesCB">
+        <property name="enabled">
          <bool>true</bool>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Notify when updates are available</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
-        <property name="tristate" >
+        <property name="tristate">
          <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" >
-       <widget class="QCheckBox" name="notifyLongTasksCB" >
-        <property name="enabled" >
-         <bool>false</bool>
-        </property>
-        <property name="text" >
-         <string>Notify when long tasks have been completed</string>
-        </property>
-        <property name="checked" >
-         <bool>true</bool>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item rowspan="2" row="2" column="0" colspan="2" >
-    <widget class="QGroupBox" name="originGB" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+   <item row="1" column="0" rowspan="2" colspan="2">
+    <widget class="QGroupBox" name="originGB">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="title" >
-      <string>Origin of Packages</string>
+     <property name="title">
+      <string>Origin of packages</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_4" >
-      <item row="0" column="0" >
-       <widget class="QListView" name="originLW" />
+     <layout class="QGridLayout" name="gridLayout_4">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QListView" name="originLW"/>
       </item>
-      <item row="1" column="0" >
-       <widget class="QCheckBox" name="showOriginsCB" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="showOriginsCB">
+        <property name="text">
          <string>&amp;Show origins of debug and development packages</string>
         </property>
        </widget>
       </item>
      </layout>
-     <zorder>originLW</zorder>
-     <zorder>showOriginsCB</zorder>
-     <zorder>transactionBar</zorder>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2" >
-    <widget class="KpkTransactionBar" native="1" name="transactionBar" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+   <item row="3" column="0" colspan="2">
+    <widget class="KpkTransactionBar" name="transactionBar" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -148,9 +124,14 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
    <class>KpkTransactionBar</class>
    <extends>QWidget</extends>
-   <header location="global" >KpkTransactionBar.h</header>
+   <header location="global">KpkTransactionBar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

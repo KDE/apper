@@ -21,7 +21,10 @@
 #include "kpackagekitsmarticonadaptor.h"
 
 #include <QtDBus/QDBusConnection>
-#include <KProtocolManager>
+#include <KpkStrings.h>
+#include <KpkMacros.h>
+#include <KIcon>
+#include <KNotification>
 #include <QPackageKit>
 
 #include <KDebug>
@@ -53,24 +56,26 @@ void KpkInterface::WatchTransaction(const QString &tid)
     emit watchTransaction(tid);
 }
 
-void KpkInterface::Update()
-{
-    emit update();
-}
-
 void KpkInterface::RefreshCache()
 {
-}
-
-void KpkInterface::UpdateProxy()
-{
-    if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) {
-        Client::instance()->setProxy(KProtocolManager::proxyFor("http"),
-                                     KProtocolManager::proxyFor("ftp"));
-        kDebug() << "Setting a non blank proxy";
+    SET_PROXY
+    Transaction *t = Client::instance()->refreshCache(true);
+    if (t->error()) {
+        KNotification *notify = new KNotification("TransactionError", 0, KNotification::Persistent);
+            notify->setText(KpkStrings::daemonError(t->error()));
+            notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+            notify->sendEvent();
     } else {
-        Client::instance()->setProxy(QString(), QString());
-        kDebug() << "Setting a blank proxy";
+        emit watchTransaction(t->tid());
     }
 }
 
+void KpkInterface::Update()
+{
+    emit refreshAndUpdate(false);
+}
+
+void KpkInterface::RefreshAndUpdate()
+{
+    emit refreshAndUpdate(true);
+}

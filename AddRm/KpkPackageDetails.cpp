@@ -120,27 +120,32 @@ void KpkPackageDetails::description(PackageKit::Package *p)
     Package::Details *details = p->details();
     QString description;
     description += "<table><tbody>";
-    description += "<tr><td align=\"right\"><b>" + i18n("Package Name") + ":</b></td><td>" + p->name() + "</td></tr>";
-    if (!details->license().isEmpty())
-        description += "<tr><td align=\"right\"><b>" + i18n("License")
-                    + ":</b></td><td>" + details->license()
-                    + "</td></tr>";
-    if (details->group() != Client::UnknownGroup)
-        description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
-                    + KpkStrings::groups(details->group())
-                    + "</td></tr>";
-    if (!details->description().isEmpty())
+    if (!details->description().isEmpty()) {
         description += "<tr><td align=\"right\"><b>" + i18n("Details")
                     + ":</b></td><td>" + details->description().replace('\n', "<br />")
                     + "</td></tr>";
-    if (!details->url().isEmpty())
+    }
+    if (!details->url().isEmpty()) {
         description += "<tr><td align=\"right\"><b>" + i18n("Home Page")
                     + ":</b></td><td><a href=\"" + details->url() + "\">" + details->url()
                     + "</a></td></tr>";
-    if (details->size() > 0)
+    }
+    if (!details->license().isEmpty() && details->license() != "unknown") {
+        description += "<tr><td align=\"right\"><b>" + i18n("License")
+                    + ":</b></td><td>" + details->license()
+                    + "</td></tr>";
+    }
+    if (details->group() != Client::UnknownGroup) {
+        description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
+                    + KpkStrings::groups(details->group())
+                    + "</td></tr>";
+    }
+
+    if (details->size() > 0) {
         description += "<tr><td align=\"right\"><b>" + i18n("Size")
                     + ":</b></td><td>" + KGlobal::locale()->formatByteSize(details->size())
                     + "</td></tr>";
+    }
     description += "</table></tbody>";
     descriptionKTB->setHtml(description);
 }

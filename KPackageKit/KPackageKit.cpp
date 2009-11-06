@@ -30,8 +30,6 @@
 #include <QStringList>
 #include <KCModuleInfo>
 
-#include <QDBusConnection>
-
 #include "KpkInstallFiles.h"
 #include "KpkInstallMimeType.h"
 #include "KpkInstallPackageName.h"
@@ -44,33 +42,13 @@ namespace kpackagekit {
 KPackageKit::KPackageKit()
  : KUniqueApplication(),
    m_pkUi(0),
-   m_running(0),
-   m_init(false)
+   m_running(0)
 {
     setQuitOnLastWindowClosed(false);
 }
 
 KPackageKit::~KPackageKit()
 {
-}
-
-
-void KPackageKit::init()
-{
-    if (!m_init) {
-        // If something goes wrong at least kpackagekitSmartIcon
-        // will show the error
-        QDBusMessage message;
-        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                 "/",
-                                                 "org.kde.KPackageKitSmartIcon",
-                                                 QLatin1String("UpdateProxy"));
-        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-        if (reply.type() != QDBusMessage::ReplyMessage) {
-            kWarning() << "Message did not receive a reply";
-        }
-        m_init = true;
-    }
 }
 
 void KPackageKit::appClose()
@@ -177,7 +155,6 @@ int KPackageKit::newInstance()
         kDebug() << "SHOW UI!";
         QTimer::singleShot(0, this, SLOT(showUi()));
     }
-    QTimer::singleShot(0, this, SLOT(init()));
 
     args->clear();
     return 0;

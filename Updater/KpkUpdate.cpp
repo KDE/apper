@@ -22,6 +22,7 @@
 #include "KpkUpdateDetails.h"
 #include "KpkDistroUpgrade.h"
 #include "KpkHistory.h"
+#include "KpkMacros.h"
 
 #include <QDBusConnection>
 
@@ -67,17 +68,6 @@ KpkUpdate::KpkUpdate(QWidget *parent)
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
     line->hide();
-    QTimer::singleShot(0, this, SLOT(init()));
-}
-
-void KpkUpdate::init()
-{
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                             "/",
-                                             "org.kde.KPackageKitSmartIcon",
-                                             QLatin1String("UpdateProxy"));
-    QDBusConnection::sessionBus().call(message);
 }
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
@@ -178,6 +168,7 @@ void KpkUpdate::updatePackages()
 {
     QList<Package*> packages = m_pkg_model_updates->selectedPackages();
 
+    SET_PROXY
     Transaction *t = m_client->updatePackages(true, packages);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
@@ -192,6 +183,7 @@ void KpkUpdate::updatePackages()
 
 void KpkUpdate::refresh()
 {
+    SET_PROXY
     Transaction *t = m_client->refreshCache(true);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
@@ -243,6 +235,7 @@ void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
                     this, SLOT(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)));
         }
     } else if (status == KpkTransaction::ReQueue) {
+        SET_PROXY
         Transaction *t = m_client->updatePackages(trans->onlyTrusted(), trans->packages());
         if (t->error()) {
                 KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
