@@ -62,6 +62,8 @@ public:
         ReQueue
     } ExitStatus;
 
+    KpkTransaction::ExitStatus exitStatus() const;
+
 signals:
     void kTransactionFinished(KpkTransaction::ExitStatus status);
 
@@ -70,6 +72,7 @@ private:
     bool m_handlingActionRequired;
     bool m_showingError; //This might replace the above
     Behaviors m_flags;
+    ExitStatus m_exitStatus;
     KpkTransactionPrivate* d;
 
 private slots:
@@ -82,6 +85,8 @@ private slots:
     void eulaRequired(PackageKit::Client::EulaInfo info);
     void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
     void repoSignatureRequired(PackageKit::Client::SignatureInfo info);
+
+    void setExitStatus(KpkTransaction::ExitStatus status);
 
 protected slots:
     virtual void slotButtonClicked(int button);

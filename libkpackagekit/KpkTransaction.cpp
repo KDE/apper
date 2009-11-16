@@ -57,6 +57,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
    m_handlingActionRequired(false),
    m_showingError(false),
    m_flags(flags),
+   m_exitStatus(Success),
    d(new KpkTransactionPrivate)
 {
     d->ui.setupUi(mainWidget());
@@ -91,6 +92,8 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
     // We need to track when the user close the dialog using the [X] button
     connect(this, SIGNAL(finished()), SLOT(finishedDialog()));
+    connect(this, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+            SLOT(setExitStatus(KpkTransaction::ExitStatus)));
 
     // after ALL set, lets set the transaction
     setTransaction(m_trans);
@@ -503,6 +506,16 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
         done(QDialog::Rejected);
         deleteLater();
     }
+}
+
+KpkTransaction::ExitStatus KpkTransaction::exitStatus() const
+{
+    return m_exitStatus;
+}
+
+void KpkTransaction::setExitStatus(KpkTransaction::ExitStatus status)
+{
+    m_exitStatus = status;
 }
 
 #include "KpkTransaction.moc"

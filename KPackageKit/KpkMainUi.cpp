@@ -41,12 +41,7 @@ KpkMainUi::KpkMainUi(QWidget *parent)
     restoreDialogSize(kpackagekitMain);
 
     // Set Apply and Cancel buttons
-//     setButtons(KDialog::Apply | KDialog::Help | KDialog::Default /*| KDialog::Reset*/);
-//     enableButton(KDialog::Apply, false);
-//     enableButton(KDialog::Help, false);
-//     enableButton(KDialog::Default, false);
-    // Find out how to call load() on the kcm
-//     enableButton(KDialog::Reset, false);
+    setButtons(KDialog::Apply | KDialog::Help | KDialog::Default | KDialog::Reset);
 }
 
 KpkMainUi::~KpkMainUi()

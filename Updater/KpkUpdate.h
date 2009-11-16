@@ -29,7 +29,6 @@
 #include "ui_KpkUpdate.h"
 
 class KpkPackageModel;
-class KpkSimulateModel;
 class KpkDelegate;
 class KProgressDialog;
 
@@ -58,7 +57,6 @@ private slots:
 
     void displayUpdates(KpkTransaction::ExitStatus status);
     void getUpdatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void updatePackages();
 
     void updateColumnsWidth(bool force = false);
@@ -69,7 +67,6 @@ private slots:
 
 private:
     KpkPackageModel *m_pkg_model_updates;
-    KpkSimulateModel *m_simulateUpdatePkgModel;
 
     KpkDelegate *pkg_delegate;
     Client *m_client;
