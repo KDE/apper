@@ -44,7 +44,6 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 {
     setupUi(this);
 
-    m_simulateUpdatePkgModel = new KpkSimulateModel(this);
     selectAllPB->setIcon(KpkIcons::getIcon("package-update"));
     refreshPB->setIcon(KpkIcons::getIcon("view-refresh"));
     historyPB->setIcon(KpkIcons::getIcon("view-history"));
@@ -111,23 +110,30 @@ void KpkUpdate::applyUpdates()
     // If the backend supports getRequires do it
     if (m_actions & Client::ActionSimulateUpdatePackages) {
 
-        PackageKit::Transaction *dependsT;
+        PackageKit::Transaction *t;
+        KpkSimulateModel *simulateModel = new KpkSimulateModel(this);
 
-        dependsT = m_client->simulateUpdatePackages(m_pkg_model_updates->selectedPackages());
-        m_simulateUpdatePkgModel->clear();
-        if (dependsT->error()) {
-                KMessageBox::sorry(this, KpkStrings::daemonError(dependsT->error()));
+        t = m_client->simulateUpdatePackages(m_pkg_model_updates->selectedPackages());
+        if (t->error()) {
+                KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-                connect(dependsT, SIGNAL(package(PackageKit::Package *)),
-                        m_simulateUpdatePkgModel, SLOT(addPackage(PackageKit::Package *)));
-                connect(dependsT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                        this, SLOT(getDependsFinished(PackageKit::Transaction::ExitStatus, uint)));
-                connect(dependsT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-                        this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+                connect(t, SIGNAL(package(PackageKit::Package *)),
+                        simulateModel, SLOT(addPackage(PackageKit::Package *)));
 
                 // Create a Transaction dialog to don't upset the user
-                QPointer<KpkTransaction> reqFinder = new KpkTransaction(dependsT, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
+                QPointer<KpkTransaction> reqFinder = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
                 reqFinder->exec();
+                if (reqFinder->exitStatus() == KpkTransaction::Success) {
+                    if (simulateModel->rowCount(QModelIndex()) > 0) {
+                        QPointer<KpkRequirements> rq = new KpkRequirements(simulateModel, this);
+                        if (rq->exec() == QDialog::Accepted) {
+                            updatePackages();
+                        }
+                        delete rq;
+                    } else {
+                        updatePackages();
+                    }
+                }
                 delete reqFinder;
         }
     } else {
@@ -143,25 +149,27 @@ void KpkUpdate::getUpdatesFinished(Transaction::ExitStatus status, uint runtime)
     // If we just have one group let's expand it
     if (m_pkg_model_updates->rowCount() == 1) {
         packageView->expandAll();
-    }
-    checkEnableUpdateButton();
-}
+    } else if (m_pkg_model_updates->rowCount() == 2) {
+        int nonBlockedIndex = -1;
+        if (m_pkg_model_updates->data(m_pkg_model_updates->index(0,0),
+                                      KpkPackageModel::StateRole).toUInt()
+            == Package::StateBlocked) {
+            // We got a blocked update in index 0, so 1 is not blocked...
+            nonBlockedIndex = 1;
+        }
+        if (m_pkg_model_updates->data(m_pkg_model_updates->index(1,0),
+                                      KpkPackageModel::StateRole).toUInt()
+            == Package::StateBlocked) {
+            // We got a blocked update in index 1, so 0 is not blocked...
+            nonBlockedIndex = 0;
+        }
 
-void KpkUpdate::getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
-{
-    Q_UNUSED(status)
-    Q_UNUSED(runtime)
-
-    if (status == Transaction::ExitSuccess) {
-        if (m_simulateUpdatePkgModel->rowCount(QModelIndex()) > 0) {
-            KpkRequirements *requimentD = new KpkRequirements(m_simulateUpdatePkgModel, this);
-            connect(requimentD, SIGNAL(okClicked()), this, SLOT(updatePackages()));
-            requimentD->show();
-        } else {
-            updatePackages();
+        if (nonBlockedIndex != -1) {
+            // we have a blocked update expand the non blocked one
+            packageView->expand(m_pkg_model_updates->index(nonBlockedIndex,0));
         }
     }
-
+    checkEnableUpdateButton();
 }
 
 void KpkUpdate::updatePackages()
@@ -177,7 +185,7 @@ void KpkUpdate::updatePackages()
         frm->setPackages(packages);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                 this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
-        frm->show();
+        frm->exec();
     }
 }
 

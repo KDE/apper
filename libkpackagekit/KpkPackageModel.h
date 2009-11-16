@@ -66,9 +66,9 @@ public:
         IconRole,
         IdRole,
         GroupRole,
-        CheckedRole
+        CheckedRole,
+        StateRole
     };
-
 
 public slots:
     void addPackage(PackageKit::Package *package);

@@ -243,6 +243,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                         return KpkIcons::packageIcon(group);
                     case GroupRole:
                         return true;
+                    case StateRole:
+                        return group;
                     default:
                         return QVariant();
                 }
