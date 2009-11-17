@@ -25,7 +25,7 @@
 #include "KpkTransactionTrayIcon.h"
 #include "KpkInterface.h"
 #include "KpkTransactionWatcher.h"
-//#include "PkInterface.h"
+// #include "PkInterface.h"
 
 #include <KCmdLineArgs>
 #include <KDebug>
@@ -75,16 +75,16 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     connect(m_transWatcher, SIGNAL(close()),
             this, SLOT(prepareToClose()));
     // connect the watch transaction coming through DBus to our watcher
-    connect(m_interface, SIGNAL(watchTransaction(const QString &)),
-            m_transWatcher, SLOT(watchTransaction(const QString &)));
+    connect(m_interface, SIGNAL(watchTransaction(const QString &, bool)),
+            m_transWatcher, SLOT(watchTransaction(const QString &, bool)));
     // connect the watch transaction coming from the updater icon to our watcher
-    connect(m_updateIcon, SIGNAL(watchTransaction(const QString &)),
-            m_transWatcher, SLOT(watchTransaction(const QString &)));
+    connect(m_updateIcon, SIGNAL(watchTransaction(const QString &, bool)),
+            m_transWatcher, SLOT(watchTransaction(const QString &, bool)));
     // do not watch a transaction that is being
     connect(m_trayIcon, SIGNAL(removeTransactionWatcher(const QString &)),
             m_transWatcher, SLOT(removeTransactionWatcher(const QString &)));
 
-   // m_pkInterface = new PkInterface(this);
+//     m_pkInterface = new PkInterface(this);
 
     this->prepareToClose();
 }
@@ -116,9 +116,9 @@ bool KPackageKit_Smart_Icon::isRunning()
         return true;
     }
 
-    //if (m_pkInterface && m_pkInterface->isRunning()) {
-      //  return true;
-   // }
+//     if (m_pkInterface && m_pkInterface->isRunning()) {
+//         return true;
+//     }
 
     return false;
 }

@@ -54,7 +54,7 @@ KpkInterface::~KpkInterface()
 
 void KpkInterface::WatchTransaction(const QString &tid)
 {
-    emit watchTransaction(tid);
+    emit watchTransaction(tid, true);
 }
 
 void KpkInterface::RefreshCache()
@@ -67,16 +67,19 @@ void KpkInterface::RefreshCache()
             notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
             notify->sendEvent();
     } else {
-        emit watchTransaction(t->tid());
+        emit watchTransaction(t->tid(), true);
     }
 }
 
 void KpkInterface::Update()
 {
+    // This is to show updates when the session
+    // starts and it's not time to refresh the cache
     emit refreshAndUpdate(false);
 }
 
 void KpkInterface::RefreshAndUpdate()
 {
+    // This is to show updates and refresh the cache
     emit refreshAndUpdate(true);
 }

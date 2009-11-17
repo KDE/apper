@@ -37,7 +37,7 @@ public slots:
     void Update();
 
 signals:
-    void watchTransaction(const QString &tid);
+    void watchTransaction(const QString &tid, bool interactive);
     void refreshAndUpdate(bool refresh);
 };
 

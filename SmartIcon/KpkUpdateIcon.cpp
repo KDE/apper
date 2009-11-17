@@ -128,14 +128,15 @@ void KpkUpdateIcon::refreshAndUpdate(bool refresh)
             SET_PROXY
             Transaction *t = Client::instance()->refreshCache(true);
             if (t->error()) {
-                KNotification *notify = new KNotification("TransactionError", 0, KNotification::Persistent);
+                KNotification *notify = new KNotification("TransactionError");
                 notify->setText(KpkStrings::daemonError(t->error()));
                 notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
                 notify->sendEvent();
             } else {
                 connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SIGNAL(update()));
-                emit watchTransaction(t->tid());
+                        this, SLOT(update()));
+                // don't be interactive to not upset an idle user
+                emit watchTransaction(t->tid(), false);
                 increaseRunning();
                 return; // to not reach the signal below
             }
@@ -258,7 +259,8 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                 } else {
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                             this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
-                    emit watchTransaction(t->tid());
+                    // don't be interactive to not upset an idle user
+                    emit watchTransaction(t->tid(), false);
                     //autoUpdatesInstalling(t);
                     KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
                     autoInstallNotify->setText(i18n("Updates are being automatically installed."));
@@ -286,7 +288,8 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
 //                         suppressSleep(true);
                         connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                                 this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
-                        emit watchTransaction(t->tid());
+                        // don't be interactive to not upset an idle user
+                        emit watchTransaction(t->tid(), false);
                         //autoUpdatesInstalling(t);
                         KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
                         autoInstallNotify->setText(i18n("Security updates are being automatically installed."));

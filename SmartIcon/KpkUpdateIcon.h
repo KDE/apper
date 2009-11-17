@@ -39,7 +39,7 @@ public:
     ~KpkUpdateIcon();
 
 signals:
-    void watchTransaction(const QString &tid);
+    void watchTransaction(const QString &tid, bool interactive);
 
 public slots:
     void refreshAndUpdate(bool refresh);

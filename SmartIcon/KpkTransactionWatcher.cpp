@@ -40,7 +40,7 @@ KpkTransactionWatcher::~KpkTransactionWatcher()
 {
 }
 
-void KpkTransactionWatcher::watchTransaction(const QString &tid)
+void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactive)
 {
     foreach(Transaction *trans, m_hiddenTransactions) {
         if (trans->tid() == tid) {
@@ -54,6 +54,7 @@ void KpkTransactionWatcher::watchTransaction(const QString &tid)
             // found it let's start watching
 //             kDebug() << "found it let's start watching" << tid;
             m_hiddenTransactions.append(trans);
+            trans->setProperty("interactive", QVariant(interactive));
             connect(trans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                     this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
             connect(trans, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
@@ -88,7 +89,12 @@ void KpkTransactionWatcher::finished(PackageKit::Transaction::ExitStatus status,
 void KpkTransactionWatcher::errorCode(PackageKit::Client::ErrorType err, const QString &details)
 {
     increaseRunning();
-    KNotification *notify = new KNotification("TransactionError", 0, KNotification::Persistent);
+    KNotification *notify;
+    if (sender()->property("interactive").toBool() == true) {
+        notify = new KNotification("TransactionError", 0, KNotification::Persistent);
+    } else {
+        notify = new KNotification("TransactionError");
+    }
     notify->setText("<b>"+KpkStrings::error(err)+"</b><br />"+KpkStrings::errorMessage(err));
     notify->setProperty("ErrorType", QVariant::fromValue(err));
     notify->setProperty("Details", details);
@@ -99,26 +105,42 @@ void KpkTransactionWatcher::errorCode(PackageKit::Client::ErrorType err, const Q
     connect(notify, SIGNAL(activated(uint)),
             this, SLOT(errorActivated(uint)));
     connect(notify, SIGNAL(closed()),
-            this, SLOT(decreaseRunning()));
+                this, SLOT(decreaseRunning()));
     notify->sendEvent();
 }
 
 void KpkTransactionWatcher::errorActivated(uint action)
 {
     KNotification *notify = qobject_cast<KNotification*>(sender());
+
     // if the user clicked "Details"
     if (action == 1) {
-        PackageKit::Client::ErrorType error = notify->property("ErrorType").value<PackageKit::Client::ErrorType>();
-        QString details = notify->property("Details").toString();
-        KMessageBox::detailedSorry(0,
+        // the notify object gets deleted when not in persistant
+        // mode so pass it to another function
+        QTimer *t = new QTimer(this);
+        connect(t, SIGNAL(timeout()), this, SLOT(showError()));
+        t->setProperty("ErrorType",   notify->property("ErrorType"));
+        t->setProperty("Details",     notify->property("Details"));
+        t->start();
+    }
+
+    notify->close();
+}
+
+void KpkTransactionWatcher::showError()
+{
+    increaseRunning();
+    PackageKit::Client::ErrorType error;
+    QString details;
+    error = sender()->property("ErrorType").value<PackageKit::Client::ErrorType>();
+    details = sender()->property("Details").toString();
+    KMessageBox::detailedSorry(0,
                                KpkStrings::errorMessage(error),
                                QString(details).replace('\n', "<br />"),
                                KpkStrings::error(error),
                                KMessageBox::Notify);
-    }
-
-    // in persistent mode we need to manually close it
-    notify->close();
+    decreaseRunning();
+    sender()->deleteLater();
 }
 
 #include "KpkTransactionWatcher.moc"

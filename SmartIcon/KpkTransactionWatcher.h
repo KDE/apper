@@ -36,13 +36,14 @@ public:
     ~KpkTransactionWatcher();
 
 public slots:
-    void watchTransaction(const QString &tid);
+    void watchTransaction(const QString &tid, bool interactive);
     void removeTransactionWatcher(const QString &tid);
 
 private slots:
     void errorCode(PackageKit::Client::ErrorType, const QString&);
     void errorActivated(uint action);
     void finished(PackageKit::Transaction::ExitStatus status, uint time);
+    void showError();
 
 private:
     QList<Transaction *> m_hiddenTransactions;

@@ -24,6 +24,7 @@
 #include <KpkTransaction.h>
 #include <KpkIcons.h>
 #include <KpkImportance.h>
+#include <KpkEnum.h>
 
 #include <QMenu>
 #include <QTimer>
@@ -37,8 +38,6 @@
 #include <QtDBus/QDBusConnection>
 
 #include <KDebug>
-
-#define RESTART_ICON_SIZE 64
 
 Q_DECLARE_METATYPE(Transaction*)
 
@@ -185,10 +184,10 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
             QString toolTip;
             if (m_restartType != Client::RestartNone) {
                 toolTip.append(KpkStrings::restartType(m_restartType) + '\n');
-                toolTip.append(i18np("Package: %1",
-                                     "Packages: %1",
-                                     m_restartPackages.join(", "),
-                                     m_restartPackages.size()));
+                toolTip.append(i18np("Package: %2",
+                                     "Packages: %2",
+                                     m_restartPackages.size(),
+                                     m_restartPackages.join(", ")));
                 m_smartSTI->setIcon(KpkIcons::restartIcon(m_restartType));
             }
             if (m_messages.size()) {
@@ -273,7 +272,7 @@ void KpkTransactionTrayIcon::finished(PackageKit::Transaction::ExitStatus status
             return;
         }
 
-        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(RESTART_ICON_SIZE, RESTART_ICON_SIZE));
+        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         m_restartAction->setIcon(KpkIcons::restartIcon(type));
         notify->setText(text);
         notify->setActions(actions);
@@ -283,6 +282,9 @@ void KpkTransactionTrayIcon::finished(PackageKit::Transaction::ExitStatus status
                 this, SLOT(decreaseRunning()));
 
         notify->sendEvent();
+
+        // Reset the restart type
+        m_restartType = Client::RestartNone;
     }
 }
 
