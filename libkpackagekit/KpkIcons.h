@@ -24,6 +24,8 @@
 #include <QPackageKit>
 #include <KIcon>
 
+#define KPK_ICON_SIZE 64
+
 using namespace PackageKit;
 
 class KDE_EXPORT KpkIcons {

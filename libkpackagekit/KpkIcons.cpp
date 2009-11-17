@@ -78,6 +78,7 @@ KIcon KpkIcons::statusIcon(PackageKit::Transaction::Status status)
     case Transaction::StatusScanProcessList      : return KpkIcons::getIcon("package-info");
     case Transaction::StatusCheckExecutableFiles : return KpkIcons::getIcon("package-info");
     case Transaction::StatusCheckLibraries       : return KpkIcons::getIcon("package-info");
+    case Transaction::StatusCopyFiles            : return KpkIcons::getIcon("package-info");
     }
     kDebug() << "status icon unrecognised: " << status;
     return KpkIcons::getIcon("help-browser");

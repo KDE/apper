@@ -31,6 +31,4 @@
         Client::instance()->setProxy(QString(), QString());               \
     }
 
-#define KPK_ICON_SIZE 64
-
 #endif

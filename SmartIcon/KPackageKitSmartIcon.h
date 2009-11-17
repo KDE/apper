@@ -24,11 +24,12 @@
 #include <KUniqueApplication>
 #include <QTimer>
 
-#include "KpkUpdateIcon.h"
-#include "KpkDistroUpgrade.h"
-#include "KpkTransactionTrayIcon.h"
-#include "KpkInterface.h"
-#include "KpkTransactionWatcher.h"
+class KpkUpdateIcon;
+class KpkDistroUpgrade;
+class KpkTransactionTrayIcon;
+class KpkInterface;
+class KpkTransactionWatcher;
+class PkInterface;
 
 namespace kpackagekit {
 
@@ -55,6 +56,7 @@ private:
 
     KpkInterface *m_interface;
     KpkTransactionWatcher *m_transWatcher;
+    PkInterface *m_pkInterface;
 };
 
 }

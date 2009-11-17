@@ -20,6 +20,13 @@
 
 #include "KPackageKitSmartIcon.h"
 
+#include "KpkUpdateIcon.h"
+#include "KpkDistroUpgrade.h"
+#include "KpkTransactionTrayIcon.h"
+#include "KpkInterface.h"
+#include "KpkTransactionWatcher.h"
+#include "PkInterface.h"
+
 #include <KCmdLineArgs>
 #include <KDebug>
 
@@ -77,6 +84,8 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     connect(m_trayIcon, SIGNAL(removeTransactionWatcher(const QString &)),
             m_transWatcher, SLOT(removeTransactionWatcher(const QString &)));
 
+    m_pkInterface = new PkInterface(this);
+
     this->prepareToClose();
 }
 
@@ -104,6 +113,10 @@ bool KPackageKit_Smart_Icon::isRunning()
         return true;
     }
     if (m_transWatcher && m_transWatcher->isRunning()) {
+        return true;
+    }
+
+    if (m_pkInterface && m_pkInterface->isRunning()) {
         return true;
     }
 

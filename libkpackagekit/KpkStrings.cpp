@@ -28,77 +28,116 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
 {
     switch (status) {
     case Transaction::UnknownStatus :
-        return i18nc("The transaction state", "Unknown state");
+        return i18nc("This is when the transaction status is not known",
+                     "Unknown state");
     case Transaction::StatusSetup :
-        return i18nc("The transaction state", "Waiting for service to start");
+        return i18nc("transaction state, the daemon is in the process of starting",
+                     "Waiting for service to start");
     case Transaction::StatusWait :
-        return i18nc("The transaction state", "Waiting for other tasks");
+        return i18nc("transaction state, the transaction is waiting for another to complete",
+                     "Waiting for other tasks");
     case Transaction::StatusRunning :
-        return i18nc("The transaction state", "Running task");
+        return i18nc("transaction state, just started",
+                     "Running task");
     case Transaction::StatusQuery :
-        return i18nc("The transaction state", "Querying");
+        return i18nc("transaction state, is querying data",
+                     "Querying");
     case Transaction::StatusInfo :
-        return i18nc("The transaction state", "Getting information");
+        return i18nc("transaction state, getting data from a server",
+                     "Getting information");
     case Transaction::StatusRemove :
-        return i18nc("The transaction state", "Removing packages");
+        return i18nc("transaction state, removing packages",
+                     "Removing packages");
     case Transaction::StatusDownload :
-        return i18nc("The transaction state", "Downloading packages");
+        return i18nc("transaction state, downloading package files",
+                     "Downloading packages");
     case Transaction::StatusInstall :
-        return i18nc("The transaction state", "Installing packages");
+        return i18nc("transaction state, installing packages",
+                     "Installing packages");
     case Transaction::StatusRefreshCache :
-        return i18nc("The transaction state", "Refreshing software list");
+        return i18nc("transaction state, refreshing internal lists",
+                     "Refreshing software list");
     case Transaction::StatusUpdate :
-        return i18nc("The transaction state", "Updating packages");
+        return i18nc("transaction state, installing updates",
+                     "Updating packages");
     case Transaction::StatusCleanup :
-        return i18nc("The transaction state", "Cleaning up packages");
+        return i18nc("transaction state, removing old packages, and cleaning config files",
+                     "Cleaning up packages");
     case Transaction::StatusObsolete :
-        return i18nc("The transaction state", "Obsoleting packages");
+        return i18nc("transaction state, obsoleting old packages",
+                     "Obsoleting packages");
     case Transaction::StatusDepResolve :
-        return i18nc("The transaction state", "Resolving dependencies");
+        return i18nc("transaction state, checking the transaction before we do it",
+                     "Resolving dependencies");
     case Transaction::StatusSigCheck :
-        return i18nc("The transaction state", "Checking signatures");
+        return i18nc("transaction state, checking if we have all the security keys for the operation",
+                     "Checking signatures");
     case Transaction::StatusRollback :
-        return i18nc("The transaction state", "Rolling back");
+        return i18nc("transaction state, when we return to a previous system state",
+                     "Rolling back");
     case Transaction::StatusTestCommit :
-        return i18nc("The transaction state", "Testing changes");
+        return i18nc("transaction state, when we're doing a test transaction",
+                     "Testing changes");
     case Transaction::StatusCommit :
-        return i18nc("The transaction state", "Committing changes");
+        return i18nc("transaction state, when we're writing to the system package database",
+                     "Committing changes");
     case Transaction::StatusRequest :
-        return i18nc("The transaction state", "Requesting data");
+        return i18nc("transaction state, requesting data from a server",
+                     "Requesting data");
     case Transaction::StatusFinished :
-        return i18nc("The transaction state", "Finished");
+        return i18nc("transaction state, all done!",
+                     "Finished");
     case Transaction::StatusCancel :
-        return i18nc("The transaction state", "Cancelling");
+        return i18nc("transaction state, in the process of cancelling",
+                     "Cancelling");
     case Transaction::StatusDownloadRepository :
-        return i18nc("The transaction state", "Downloading repository information");
+        return i18nc("transaction state, downloading metadata",
+                     "Downloading repository information");
     case Transaction::StatusDownloadPackagelist :
-        return i18nc("The transaction state", "Downloading list of packages");
+        return i18nc("transaction state, downloading metadata",
+                     "Downloading list of packages");
     case Transaction::StatusDownloadFilelist :
-        return i18nc("The transaction state", "Downloading file lists");
+        return i18nc("transaction state, downloading metadata",
+                     "Downloading file lists");
     case Transaction::StatusDownloadChangelog :
-        return i18nc("The transaction state", "Downloading lists of changes");
+        return i18nc("transaction state, downloading metadata",
+                     "Downloading lists of changes");
     case Transaction::StatusDownloadGroup :
-        return i18nc("The transaction state", "Downloading groups");
+        return i18nc("transaction state, downloading metadata",
+                     "Downloading groups");
     case Transaction::StatusDownloadUpdateinfo :
-        return i18nc("The transaction state", "Downloading update information");
+        return i18nc("transaction state, downloading metadata",
+                     "Downloading update information");
     case Transaction::StatusRepackaging :
-        return i18nc("The transaction state", "Repackaging files");
+        return i18nc("transaction state, repackaging delta files",
+                     "Repackaging files");
     case Transaction::StatusLoadingCache :
-        return i18nc("The transaction state", "Loading cache");
+        return i18nc("transaction state, loading databases",
+                     "Loading cache");
     case Transaction::StatusScanApplications :
-        return i18nc("The transaction state", "Scanning installed applications");
+        return i18nc("transaction state, scanning for running processes",
+                     "Scanning installed applications");
     case Transaction::StatusGeneratePackageList :
-        return i18nc("The transaction state", "Generating package lists");
+        return i18nc("transaction state, generating a list of packages installed on the system",
+                     "Generating package lists");
     case Transaction::StatusWaitingForLock :
-        return i18nc("The transaction state", "Waiting for package manager lock");
+        return i18nc("transaction state, when we're waiting for the native tools to exit",
+                     "Waiting for package manager lock");
     case Transaction::StatusWaitingForAuth :
-        return i18nc("The transaction state", "Waiting for authentication");
+        return i18nc("waiting for user to type in a password",
+                     "Waiting for authentication");
     case Transaction::StatusScanProcessList :
-        return i18nc("The transaction state", "Updating the list of running applications");
+        return i18nc("we are updating the list of processes",
+                     "Updating the list of running applications");
     case Transaction::StatusCheckExecutableFiles :
-        return i18nc("The transaction state", "Checking for applications currently in use");
+        return i18nc("we are checking executable files in use",
+                     "Checking for applications currently in use");
     case Transaction::StatusCheckLibraries :
-        return i18nc("The transaction state", "Checking for libraries currently in use");
+        return i18nc("we are checking for libraries in use",
+                     "Checking for libraries currently in use");
+    case Transaction::StatusCopyFiles :
+        return i18nc("we are copying package files to prepare to install",
+                     "Copying files");
     }
     kWarning() << "status unrecognised: " << status;
     return QString();

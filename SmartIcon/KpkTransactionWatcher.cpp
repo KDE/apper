@@ -21,7 +21,7 @@
 #include "KpkTransactionWatcher.h"
 
 #include <KpkStrings.h>
-#include <KpkMacros.h>
+#include <KpkIcons.h>
 #include <KLocale>
 
 #include <KNotification>
