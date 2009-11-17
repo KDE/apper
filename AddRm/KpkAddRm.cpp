@@ -116,9 +116,9 @@ KpkAddRm::KpkAddRm(QWidget *parent)
 
     //initialize the groups
     Client::Groups groups = m_client->getGroups();
-    // Add All packages entry
+    // Add Text search entry
     QStandardItem *groupItem;
-    m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("All packages")));
+    m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("Text search")));
     groupItem->setData(AllPackages, Qt::UserRole);
 
     m_groupsModel->appendRow(listOfChangesItem = new QStandardItem(i18n("List of changes")));
