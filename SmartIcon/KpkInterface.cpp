@@ -22,6 +22,7 @@
 
 #include <QtDBus/QDBusConnection>
 #include <KpkStrings.h>
+#include <KpkIcons.h>
 #include <KpkMacros.h>
 #include <KIcon>
 #include <KNotification>
