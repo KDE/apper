@@ -18,77 +18,77 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "PkInstallPackageNames.h"
+#include "PkRemovePackageByFiles.h"
 
 #include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
 #include <KLocale>
 #include <KMessageBox>
+#include <KService>
 
 #include <KDebug>
 
-PkInstallPackageNames::PkInstallPackageNames(uint xid,
-                                             const QStringList &packages,
-                                             const QString &interaction,
-                                             const QDBusMessage &message,
-                                             QWidget *parent)
+PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
+                                               const QStringList &files,
+                                               const QString &interaction,
+                                               const QDBusMessage &message,
+                                               QWidget *parent)
  : KpkAbstractTask(xid, interaction, message, parent),
-   m_packages(packages),
-   m_message(message),
-   m_alreadyInstalled(false)
+   m_files(files)
 {
 }
 
-PkInstallPackageNames::~PkInstallPackageNames()
+PkRemovePackageByFiles::~PkRemovePackageByFiles()
 {
 }
 
-void PkInstallPackageNames::start()
+void PkRemovePackageByFiles::start()
 {
-    kDebug() << m_packages.first();
     int ret = KMessageBox::Yes;
     if (showConfirmSearch()) {
-        QString message = i18np("An additional package is required: <ul><li>%2</li></ul>"
-                                "Do you want to search for and install this package now?",
-                                "Additional packages are required: <ul><li>%2</li></ul>"
-                                "Do you want to search for and install these packages now?",
-                                m_packages.size(),
-                                m_packages.join("</li><li>"));
         QString title;
         // this will come from DBus interface
         if (parentTitle.isNull()) {
-            title = i18np("A program wants to install a package",
-                          "A program wants to install packages",
-                          m_packages.size());
+            title = i18np("A program wants to remove a file",
+                        "A program wants to remove files",
+                        m_files.size());
         } else {
-            title = i18np("%1 wants to install a package",
-                          "%1 wants to install packages",
-                          m_packages.size(),
-                          parentTitle);
+            title = i18np("%1 wants to remove a file",
+                        "%1 wants to remove files",
+                        parentTitle,
+                        m_files.size());
         }
+
+        QString message = i18np("The following file is going to be removed:",
+                                "The following files are going to be removed:",
+                                m_files.size())
+                                + QString("<ul><li>%1</li></ul>").arg(m_files.join("</li><li>")) +
+                        i18np("Do you want to search for packages containing this file and remove it now?",
+                                "Do you want to search for packages containing these files and remove them now?",
+                            m_files.size());
         QString msg = "<h3>" + title + "</h3>" + message;
         KGuiItem searchBt = KStandardGuiItem::yes();
-        searchBt.setText(i18nc("Search for a package and install it", "Install"));
+        searchBt.setText(i18nc("Search for a package and remove", "Search"));
         searchBt.setIcon(KIcon::KIcon("edit-find"));
+        int ret;
         ret = KMessageBox::questionYesNo(this,
-                                         msg,
-                                         title,
-                                         searchBt);
+                                        msg,
+                                        title,
+                                        searchBt);
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->resolve(m_packages,
-                                                     Client::FilterArch |
-                                                     Client::FilterNewest);
+        Transaction *t = Client::instance()->searchFile(m_files,
+                                                        Client::FilterInstalled);
         if (t->error()) {
-            QString msg(i18n("Failed to start resolve transaction"));
+            QString msg(i18n("Failed to start search file transaction"));
             if (showWarning()) {
                 KMessageBox::sorry(this,
                                    KpkStrings::daemonError(t->error()),
                                    msg);
             }
-            sendErrorFinished(Failed, msg);
+            sendErrorFinished(Failed, "Failed to search for package");
         } else {
             connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                     this, SLOT(resolveFinished(PackageKit::Transaction::ExitStatus, uint)));
@@ -105,26 +105,16 @@ void PkInstallPackageNames::start()
     }
 }
 
-void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::ExitStatus status,
+void PkRemovePackageByFiles::searchFinished(PackageKit::Transaction::ExitStatus status,
                                             uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
-        if (m_alreadyInstalled.size()) {
-            if (showWarning()) {
-                KMessageBox::sorry(this,
-                                   i18np("The package %2 is already installed",
-                                         "The packages %2 are already installed",
-                                         m_alreadyInstalled.size(),
-                                         m_alreadyInstalled.join(",")),
-                                   i18n("Failed to install packages"));
-            }
-            sendErrorFinished(Failed, "package already found");
-        } else if (m_foundPackages.size()) {
+        if (m_foundPackages.size()) {
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this);
-            frm->setTitle(i18np("The following package will be installed",
-                                "The following packages will be installed",
+            frm->setTitle(i18np("The following package will be removed",
+                                "The following packages will be removed",
                                 m_foundPackages.size()));
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
@@ -134,25 +124,22 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::ExitStatus 
         } else {
             if (showWarning()) {
                 KMessageBox::sorry(this,
-                                   i18np("The package could not be found in any software source",
-                                         "The packages could not be found in any software source",
-                                         m_packages.size()),
-                                   i18n("Could not find %1", m_packages.join(", ")));
+                                   i18np("The file could not be found in any installed package",
+                                         "The files could not be found in any installed package",
+                                         m_files.size()),
+                                   i18n("Could not find %1",
+                                        m_files.join(", ")));
             }
             sendErrorFinished(NoPackagesFound, "no package found");
         }
     } else {
-        sendErrorFinished(Failed, "failed to resolve package name");
+        sendErrorFinished(Failed, "failed to search for file");
     }
 }
 
-void PkInstallPackageNames::addPackage(PackageKit::Package *package)
+void PkRemovePackageByFiles::addPackage(PackageKit::Package *package)
 {
-    if (package->state() != Package::StateInstalled) {
-        m_foundPackages.append(package);
-    } else {
-        m_alreadyInstalled << package->name();
-    }
+    m_foundPackages.append(package);
 }
 
-#include "PkInstallPackageNames.moc"
+#include "PkRemovePackageByFiles.moc"

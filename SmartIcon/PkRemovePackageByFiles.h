@@ -18,34 +18,38 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_REMOVE_PACKAGE_BY_FILE_H
-#define KPK_REMOVE_PACKAGE_BY_FILE_H
+#ifndef PK_REMOVE_PACKAGE_BY_FILES_H
+#define PK_REMOVE_PACKAGE_BY_FILES_H
 
 #include <KpkTransaction.h>
-#include <KpkAbstractIsRunning.h>
+#include <KpkAbstractTask.h>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class KpkRemovePackageByFile : public KpkAbstractIsRunning
+class PkRemovePackageByFiles : public KpkAbstractTask
 {
 Q_OBJECT
 public:
-    explicit KpkRemovePackageByFile(const QStringList &args, QObject *parent = 0);
-    ~KpkRemovePackageByFile();
+    PkRemovePackageByFiles(uint xid,
+                           const QStringList &files,
+                           const QString &interaction,
+                           const QDBusMessage &message,
+                           QWidget *parent = 0);
+    ~PkRemovePackageByFiles();
 
 public slots:
     void start();
 
 private slots:
-    void kTransactionFinished(KpkTransaction::ExitStatus status);
+    void searchFinished(PackageKit::Transaction::ExitStatus status,
+                        uint runtime);
     void addPackage(PackageKit::Package *package);
 
 private:
     QList<Package*> m_foundPackages;
-    QHash <KpkTransaction *,QStringList> m_transactionFiles;
-    QStringList m_args;
+    QStringList m_files;
 };
 
 #endif

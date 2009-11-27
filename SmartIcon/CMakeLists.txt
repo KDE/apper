@@ -19,6 +19,7 @@ set(kpackagekit_smart_icon_SRCS
     PkInstallPackageFiles.cpp
     PkInstallProvideFiles.cpp
     PkInstallCatalogs.cpp
+    PkRemovePackageByFiles.cpp
 )
 
 qt4_add_dbus_adaptor(kpackagekit_smart_dbus_SRCS

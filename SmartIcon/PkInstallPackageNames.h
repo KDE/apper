@@ -51,7 +51,6 @@ private slots:
 private:
     QList<Package*> m_foundPackages;
     QStringList  m_packages;
-    QString      m_interaction;
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;
 };
