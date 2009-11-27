@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,7 +18,46 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKVERSION_H
-#define KPKVERSION_H
-#define KPK_VERSION "0.5.2"
+#ifndef PK_INSTALL_CATALOGS_H
+#define PK_INSTALL_CATALOGS_H
+
+#include "KpkAbstractTask.h"
+#include <KpkTransaction.h>
+#include <QPackageKit>
+#include <QDBusMessage>
+
+class KpkTransaction;
+
+using namespace PackageKit;
+
+class PkInstallCatalogs : public KpkAbstractTask
+{
+Q_OBJECT
+public:
+    PkInstallCatalogs(uint xid,
+                          const QStringList &files,
+                          const QString &interaction,
+                          const QDBusMessage &message,
+                          QWidget *parent = 0);
+    ~PkInstallCatalogs();
+
+private slots:
+    void start();
+
+private slots:
+    void addPackage(PackageKit::Package *package);
+
+private:
+    bool installPackages(const QStringList &packages);
+    bool installProvides(const QStringList &provides);
+    bool installFiles(const QStringList &files);
+    bool runTransaction(Transaction *trans);
+
+    QList<Package*> m_foundPackages;
+    QStringList  m_files;
+    QString      m_interaction;
+    QDBusMessage m_message;
+    QStringList  m_alreadyInstalled;
+};
+
 #endif

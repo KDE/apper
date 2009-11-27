@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,7 +18,39 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKVERSION_H
-#define KPKVERSION_H
-#define KPK_VERSION "0.5.2"
+#ifndef PK_SEARCH_FILE_H
+#define PK_SEARCH_FILE_H
+
+#include "KpkAbstractTask.h"
+
+#include <QPackageKit>
+#include <QDBusMessage>
+
+class KpkTransaction;
+
+using namespace PackageKit;
+
+class PkSearchFile : public KpkAbstractTask
+{
+Q_OBJECT
+public:
+    PkSearchFile(const QString &file_name,
+                 const QString &interaction,
+                 const QDBusMessage &message,
+                 QWidget *parent = 0);
+    ~PkSearchFile();
+
+private slots:
+    void start();
+
+private slots:
+    void searchFinished(PackageKit::Transaction::ExitStatus, uint);
+    void addPackage(PackageKit::Package *package);
+
+private:
+    QList<Package*> m_foundPackages;
+    QString         m_fileName;
+    QDBusMessage    m_message;
+};
+
 #endif

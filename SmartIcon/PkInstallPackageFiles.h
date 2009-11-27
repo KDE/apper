@@ -18,7 +18,43 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKVERSION_H
-#define KPKVERSION_H
-#define KPK_VERSION "0.5.2"
+#ifndef PK_INSTALL_PACKAGE_FILES_H
+#define PK_INSTALL_PACKAGE_FILES_H
+
+#include <KpkTransaction.h>
+#include "KpkAbstractTask.h"
+
+#include <QPackageKit>
+
+using namespace PackageKit;
+
+class KpkSimulateModel;
+class PkInstallPackageFiles : public KpkAbstractTask
+{
+Q_OBJECT
+public:
+    PkInstallPackageFiles(uint xid,
+                          const QStringList &files,
+                          const QString &interaction,
+                          const QDBusMessage &message,
+                          QWidget *parent = 0);
+    ~PkInstallPackageFiles();
+
+public slots:
+    void start();
+
+private slots:
+    void installFilesFinished(KpkTransaction::ExitStatus status);
+    void simulateFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+//     void installFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+
+private:
+    void installFiles();
+    QHash <KpkTransaction *, QStringList> m_transactionFiles;
+    KUrl::List m_urls;
+    QStringList m_files;
+
+    KpkSimulateModel *m_installFilesModel;
+};
+
 #endif

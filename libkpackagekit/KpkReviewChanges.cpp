@@ -39,9 +39,13 @@ public:
 };
 
 KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *parent)
- : KDialog(parent), d(new KpkReviewChangesPrivate)
+ : KDialog(parent),
+   d(new KpkReviewChangesPrivate),
+   m_flags(Default)
 {
     d->ui.setupUi(mainWidget());
+
+    m_client = Client::instance();
 
     //initialize the model, delegate, client and  connect it's signals
     d->ui.packageView->setItemDelegate(m_pkgDelegate = new KpkDelegate(d->ui.packageView));
@@ -106,9 +110,26 @@ void KpkReviewChanges::setText(const QString &text)
     d->ui.label->setText(text);
 }
 
+int KpkReviewChanges::exec(OperationModes flags)
+{
+    m_flags = flags;
+    if (m_flags & ShowConfirmation) {
+        this->show();
+    } else {
+        // Starts the action without showing the dialog
+        QTimer::singleShot(0, this, SLOT(doAction()));
+    }
+
+    QEventLoop loop;
+    connect(this, SIGNAL(finished(int)), &loop, SLOT(quit()));
+    loop.exec();
+
+    kDebug() << result();
+    return result();
+}
+
 void KpkReviewChanges::doAction()
 {
-    m_client = Client::instance();
     m_actions = m_client->getActions();
     // check what packages are installed and marked to be removed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
@@ -119,8 +140,9 @@ void KpkReviewChanges::doAction()
 
     // check what packages are available and marked to be installed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
-        if ( m_pkgModelMain->selectedPackages().at(i)->state() == Package::StateAvailable )
+        if (m_pkgModelMain->selectedPackages().at(i)->state() == Package::StateAvailable) {
             m_addPackages << m_pkgModelMain->selectedPackages().takeAt(i);
+        }
     }
 
     checkTask();
@@ -131,7 +153,8 @@ void KpkReviewChanges::checkTask()
     if (!m_remPackages.isEmpty()) {
         kDebug() << "task rm if";
         if (m_actions & Client::ActionRemovePackages) {
-            if (m_actions & Client::ActionSimulateRemovePackages) {
+            if (m_actions & Client::ActionSimulateRemovePackages &&
+                !(m_flags & HideConfirmDeps)) {
                 m_reqDepPackages = m_remPackages;
                 // Create the requirements transaction and it's model
                 m_removePkgModel = new KpkSimulateModel(this);
@@ -143,20 +166,26 @@ void KpkReviewChanges::checkTask()
                         this,
                         SLOT(simRemFinished(PackageKit::Transaction::ExitStatus, uint)));
                 // Create a Transaction dialog to don't upset the user
-                QPointer<KpkTransaction> reqFinder = new KpkTransaction(m_transactionReq, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-                reqFinder->exec();
-                delete reqFinder;
+                KpkTransaction *kTrans = new KpkTransaction(m_transactionReq,
+                                                            KpkTransaction::CloseOnFinish
+                                                            | KpkTransaction::Modal,
+                                                            this);
+                if (!(m_flags & HideProgress)) {
+                    kTrans->show();
+                }
             } else {
                 // As we can't check for requires don't allow deps removal
                 removePackages(false);
             }
         } else {
             KMessageBox::error(this, i18n("The current backend does not support removing packages."), i18n("KPackageKit Error"));
+            removeDone();
         }
     } else if (!m_addPackages.isEmpty()) {
         kDebug() << "task add else";
         if (m_actions & Client::ActionInstallPackages) {
-            if (m_actions & Client::ActionSimulateInstallPackages) {
+            if (m_actions & Client::ActionSimulateInstallPackages &&
+                !(m_flags & HideConfirmDeps)) {
                 m_reqDepPackages = m_addPackages;
                 // Create the depends transaction and it's model
                 m_installPkgModel = new KpkSimulateModel(this);
@@ -168,24 +197,52 @@ void KpkReviewChanges::checkTask()
                         this,
                         SLOT(simInstFinished(PackageKit::Transaction::ExitStatus, uint)));
                 // Create a Transaction dialog to don't upset the user
-                QPointer<KpkTransaction> reqFinder = new KpkTransaction(m_transactionDep, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-                reqFinder->exec();
-                delete reqFinder;
+                KpkTransaction *kTrans = new KpkTransaction(m_transactionDep,
+                                                            KpkTransaction::CloseOnFinish
+                                                            | KpkTransaction::Modal,
+                                                            this);
+                if (!(m_flags & HideProgress)) {
+                    kTrans->show();
+                }
             } else {
                 installPackages();
             }
         } else {
             KMessageBox::error(this, i18n("Current backend does not support installing packages."), i18n("KPackageKit Error"));
+            installDone();
         }
     } else {
-        kDebug() << "task else";
-        KDialog::slotButtonClicked(KDialog::Ok);
+        kDebug() << "No more tasks to do";
+        slotButtonClicked(KDialog::Ok);
     }
 }
 
-void KpkReviewChanges::simRemFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
+void KpkReviewChanges::simInstFinished(PackageKit::Transaction::ExitStatus status,
+                                       uint runtime)
 {
-    kDebug() << "simRemFinished";
+    Q_UNUSED(runtime)
+    kDebug();
+    if (status == Transaction::ExitSuccess) {
+        if (m_installPkgModel->rowCount() > 0) {
+            KpkRequirements *frm = new KpkRequirements(m_installPkgModel, this);
+            if (frm->exec() == QDialog::Accepted) {
+                installPackages();
+            } else {
+                close();
+            }
+        } else {
+            installPackages();
+        }
+    } else {
+        kDebug() << "Failed " << status;
+        installDone();
+    }
+}
+
+void KpkReviewChanges::simRemFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+{
+    Q_UNUSED(runtime)
+    kDebug();
     if (status == Transaction::ExitSuccess) {
         if (m_removePkgModel->rowCount() > 0) {
             KpkRequirements *frm = new KpkRequirements(m_removePkgModel, this);
@@ -199,129 +256,160 @@ void KpkReviewChanges::simRemFinished(PackageKit::Transaction::ExitStatus status
             removePackages(false);
         }
     } else {
-        // TODO inform the user
-        kDebug() << "simulateRemovePackages Failed: " << status;
-        m_reqDepPackages.clear();
-        m_remPackages.clear();
-        checkTask();
+        kDebug() << "Failed " << status;
+        removeDone();
     }
-    kDebug() << "simRemFinished2";
-}
-
-void KpkReviewChanges::removePackages(bool allowDeps)
-{
-    kDebug() << "removePackages";
-    SET_PROXY
-    Transaction *t = m_client->removePackages(m_remPackages, allowDeps, true);
-    if (t->error()) {
-        KMessageBox::sorry(this,
-                           KpkStrings::daemonError(t->error()),
-                           i18n("Failed to remove package"));
-    } else {
-        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-        frm->setAllowDeps(allowDeps);
-        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                this, SLOT(remFinished(KpkTransaction::ExitStatus)));
-        frm->show();
-    }
-    kDebug() << "finished remove";
-}
-
-void KpkReviewChanges::simInstFinished(PackageKit::Transaction::ExitStatus status, uint /*runtime*/)
-{
-    kDebug() << "simInstFinished";
-    if (status == Transaction::ExitSuccess) {
-        if (m_installPkgModel->rowCount() > 0) {
-            KpkRequirements *frm = new KpkRequirements(m_installPkgModel, this);
-            if (frm->exec() == QDialog::Accepted) {
-                installPackages();
-            } else {
-                close();
-            }
-        } else {
-            installPackages();
-        }
-    } else {
-        kDebug() << "simulateInstallPackages Failed: " << status;
-        m_reqDepPackages.clear();
-        m_addPackages.clear();
-        checkTask();
-    }
-    kDebug() << "simInstFinished2";
 }
 
 void KpkReviewChanges::installPackages()
 {
-    kDebug() << "installPackages";
+    kDebug();
     SET_PROXY
     Transaction *t = m_client->installPackages(true, m_addPackages);
     if (t->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(t->error()),
                            i18n("Failed to install package"));
+        installDone();
     } else {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                this, SLOT(addFinished(KpkTransaction::ExitStatus)));
-        frm->show();
+        if (m_flags & ReturnOnlyWhenFinished) {
+            connect(t,
+                    SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                    this,
+                    SLOT(ensureInstallFinished(PackageKit::Transaction::ExitStatus, uint)));
+        } else {
+            connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                    this, SLOT(addFinished(KpkTransaction::ExitStatus)));
+        }
+
+        if (!(m_flags & HideProgress)) {
+            frm->show();
+        }
     }
-    kDebug() << "finished install";
 }
 
-void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
+void KpkReviewChanges::removePackages(bool allowDeps)
 {
-    switch (status) {
-    case KpkTransaction::Success :
-        m_remPackages.clear();
-        checkTask();
-        break;
-    case KpkTransaction::Failed :
-        //TODO This is not nice we should close instead
-        setButtons(KDialog::Close);
-        break;
-    case KpkTransaction::Cancelled :
-        KDialog::slotButtonClicked(KDialog::Close);
-        break;
-    case KpkTransaction::ReQueue :
-        KpkTransaction *trans = (KpkTransaction *) sender();
-        SET_PROXY
-        trans->setTransaction(m_client->removePackages(m_remPackages, trans->allowDeps(), AUTOREMOVE));
-        break;
+    kDebug();
+    SET_PROXY
+    Transaction *t = m_client->removePackages(m_remPackages, allowDeps, true);
+    if (t->error()) {
+        KMessageBox::sorry(this,
+                           KpkStrings::daemonError(t->error()),
+                           i18n("Failed to remove package"));
+        removeDone();
+    } else {
+        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
+        frm->setAllowDeps(allowDeps);
+        if (m_flags & ReturnOnlyWhenFinished) {
+            connect(t,
+                    SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                    this,
+                    SLOT(ensureRemoveFinished(PackageKit::Transaction::ExitStatus, uint)));
+        } else {
+            connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+                    this, SLOT(remFinished(KpkTransaction::ExitStatus)));
+        }
+
+        if (!(m_flags & HideProgress)) {
+            frm->show();
+        }
     }
 }
 
 void KpkReviewChanges::addFinished(KpkTransaction::ExitStatus status)
 {
+    kDebug() << status;
+    KpkTransaction *trans = (KpkTransaction *) sender();
     switch (status) {
     case KpkTransaction::Success :
-        m_addPackages.clear();
-        checkTask();
+        installDone();
         break;
     case KpkTransaction::Failed :
-        setButtons(KDialog::Close);
-        break;
     case KpkTransaction::Cancelled :
-        KDialog::slotButtonClicked(KDialog::Close);
+        slotButtonClicked(KDialog::Close);
         break;
     case KpkTransaction::ReQueue :
-        KpkTransaction *trans = (KpkTransaction *) sender();
         SET_PROXY
-        trans->setTransaction(m_client->installPackages(trans->onlyTrusted(), m_addPackages));
+        trans->setTransaction(m_client->installPackages(trans->onlyTrusted(),
+                                                        m_addPackages));
         break;
     }
+}
+
+void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
+{
+    KpkTransaction *trans = (KpkTransaction *) sender();
+    switch (status) {
+    case KpkTransaction::Success :
+        removeDone();
+        break;
+    case KpkTransaction::Failed :
+    case KpkTransaction::Cancelled :
+        slotButtonClicked(KDialog::Close);
+        break;
+    case KpkTransaction::ReQueue :
+        SET_PROXY
+        trans->setTransaction(m_client->removePackages(m_remPackages,
+                                                       trans->allowDeps(),
+                                                       AUTOREMOVE));
+        break;
+    }
+}
+
+void KpkReviewChanges::ensureRemoveFinished(PackageKit::Transaction::ExitStatus status,
+                                            uint runtime)
+{
+    Q_UNUSED(runtime)
+    kDebug();
+    if (status == Transaction::ExitSuccess) {
+        removeDone();
+    } else {
+        slotButtonClicked(KDialog::Cancel);
+    }
+}
+
+void KpkReviewChanges::ensureInstallFinished(PackageKit::Transaction::ExitStatus status,
+                                             uint runtime)
+{
+    Q_UNUSED(runtime)
+    kDebug();
+    if (status == Transaction::ExitSuccess) {
+        installDone();
+    } else {
+        slotButtonClicked(KDialog::Cancel);
+    }
+}
+
+void KpkReviewChanges::installDone()
+{
+    m_addPackages.clear();
+    checkTask();
+}
+
+void KpkReviewChanges::removeDone()
+{
+    m_remPackages.clear();
+    checkTask();
 }
 
 void KpkReviewChanges::slotButtonClicked(int button)
 {
     switch(button) {
-        case KDialog::Cancel :
-            close();
-            break;
-        case KDialog::Apply :
-            doAction();
-            break;
-        default :
-            KDialog::slotButtonClicked(button);
+    case KDialog::Cancel :
+    case KDialog::Close :
+        reject();
+        break;
+    case KDialog::Ok :
+        accept();
+        break;
+    case KDialog::Apply :
+        hide();
+        doAction();
+        break;
+    default :
+        KDialog::slotButtonClicked(button);
     }
 }
 

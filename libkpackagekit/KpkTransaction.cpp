@@ -162,13 +162,14 @@ void KpkTransaction::setTransaction(Transaction *trans)
     // Now sets the last package
     currPackage(m_trans->lastPackage());
     // sets the current progress
-    progressChanged(m_trans->progress());
+    updateUi();
     // sets the current status
-    if (m_trans->status() == Transaction::UnknownStatus) {
-       statusChanged(Transaction::StatusSetup);
-    } else {
-       statusChanged(m_trans->status());
-    }
+    // TODO
+//     if (m_trans->status() == Transaction::UnknownStatus) {
+//        statusChanged(Transaction::StatusSetup);
+//     } else {
+//        statusChanged(m_trans->status());
+//     }
 
     if (m_trans->role() == Client::ActionRefreshCache ||
         m_trans->role() == Client::ActionWhatProvides) {
@@ -179,39 +180,58 @@ void KpkTransaction::setTransaction(Transaction *trans)
         d->ui.descriptionL->show();
     }
 
+    // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
     connect(m_trans, SIGNAL(package(PackageKit::Package *)),
             this, SLOT(currPackage(PackageKit::Package *)));
     connect(m_trans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
             this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
-    connect(m_trans, SIGNAL(allowCancelChanged(bool)),
-            this, SLOT(enableButtonCancel(bool)));
     connect(m_trans, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
             this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
-    connect(m_trans, SIGNAL(progressChanged(PackageKit::Transaction::ProgressInfo)),
-            this, SLOT(progressChanged(PackageKit::Transaction::ProgressInfo)));
-    connect(m_trans, SIGNAL(statusChanged(PackageKit::Transaction::Status)),
-            this, SLOT(statusChanged(PackageKit::Transaction::Status)));
+    connect(m_trans, SIGNAL(changed()),
+            this, SLOT(updateUi()));
     connect(m_trans, SIGNAL(eulaRequired(PackageKit::Client::EulaInfo)),
             this, SLOT(eulaRequired(PackageKit::Client::EulaInfo)));
     connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)),
             this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
     connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Client::SignatureInfo)),
             this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
+    // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
 }
 
-void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
+void KpkTransaction::unsetTransaction()
 {
-    if (info.percentage && info.percentage <= 100) {
+    disconnect(m_trans, SIGNAL(package(PackageKit::Package *)),
+               this, SLOT(currPackage(PackageKit::Package *)));
+    disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+               this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
+    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
+               this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+    disconnect(m_trans, SIGNAL(changed()),
+               this, SLOT(updateUi()));
+    disconnect(m_trans, SIGNAL(eulaRequired(PackageKit::Client::EulaInfo)),
+               this, SLOT(eulaRequired(PackageKit::Client::EulaInfo)));
+    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,
+                                                   const QString &, const QString &)),
+               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
+    disconnect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Client::SignatureInfo)),
+               this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
+}
+
+void KpkTransaction::updateUi()
+{
+    uint percentage = m_trans->percentage();
+    uint subpercentage = m_trans->subpercentage();
+    if (percentage && percentage <= 100) {
         d->ui.progressBar->setMaximum(100);
-        d->ui.progressBar->setValue(info.percentage);
+        d->ui.progressBar->setValue(percentage);
     } else if (d->ui.progressBar->maximum() != 0) {
         d->ui.progressBar->setMaximum(0);
         d->ui.progressBar->reset();
     }
 
-    if (info.subpercentage && info.subpercentage <= 100) {
+    if (subpercentage && subpercentage <= 100) {
         d->ui.subprogressBar->setMaximum(100);
-        d->ui.subprogressBar->setValue(info.subpercentage);
+        d->ui.subprogressBar->setValue(subpercentage);
     // Check if we didn't already set the maximum as this
     // causes a weird behavior when we keep reseting
     } else if (d->ui.subprogressBar->maximum() != 0) {
@@ -219,7 +239,33 @@ void KpkTransaction::progressChanged(PackageKit::Transaction::ProgressInfo info)
         d->ui.subprogressBar->reset();
     }
 
-    d->ui.progressBar->setRemaining(info.remaining);
+    d->ui.progressBar->setRemaining(m_trans->remainingTime());
+
+    // Status
+    Transaction::Status status = m_trans->status();
+    d->ui.currentL->setText(KpkStrings::status(status));
+
+    QMovie *movie;
+    // Grab the right icon name
+    QString icon(KpkIcons::statusAnimation(status));
+    movie = KIconLoader::global()->loadMovie(icon,
+                                             KIconLoader::NoGroup,
+                                             48,
+                                             this);
+    if (movie) {
+//         qDebug() << "OK "<< icon;
+        // If the movie is set we KIconLoader it,
+        // set it and start
+        d->ui.label->setMovie(movie);
+        movie->start();
+    } else {
+//         qDebug() << "NOT OK "<< icon;
+        // Else it's probably a static icon so try to load
+        d->ui.label->setPixmap(KpkIcons::getIcon(icon).pixmap(48,48));
+    }
+
+    // Allow cancel
+    enableButtonCancel(m_trans->allowCancel());
 }
 
 void KpkTransaction::currPackage(Package *p)
@@ -249,16 +295,17 @@ void KpkTransaction::finishedDialog()
         // transaction receives some error we can display them
         QDBusMessage message;
         message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                    "/",
-                                                    "org.kde.KPackageKitSmartIcon",
-                                                    QLatin1String("WatchTransaction"));
+                                                 "/",
+                                                 "org.kde.KPackageKitSmartIcon",
+                                                 QLatin1String("WatchTransaction"));
         message << qVariantFromValue(m_trans->tid());
         QDBusMessage reply = QDBusConnection::sessionBus().call(message);
         if (reply.type() != QDBusMessage::ReplyMessage) {
             kWarning() << "Message did not receive a reply";
         }
         // Always disconnect BEFORE emitting finished
-        m_trans->disconnect();
+        unsetTransaction();
+
         emit kTransactionFinished(Success);
     }
 }
@@ -279,7 +326,7 @@ void KpkTransaction::slotButtonClicked(int button)
     case KDialog::Close :
         kDebug() << "KDialog::Close";
         // Always disconnect BEFORE emitting finished
-        m_trans->disconnect();
+        unsetTransaction();
         emit kTransactionFinished(Cancelled);
         done(KDialog::Close);
         break;
@@ -287,30 +334,6 @@ void KpkTransaction::slotButtonClicked(int button)
         d->showDetails = !d->showDetails;
     default : // Should be only details
         KDialog::slotButtonClicked(button);
-    }
-}
-
-void KpkTransaction::statusChanged(PackageKit::Transaction::Status status)
-{
-    d->ui.currentL->setText(KpkStrings::status(status));
-
-    QMovie *movie;
-    // Grab the right icon name
-    QString icon(KpkIcons::statusAnimation(status));
-    movie = KIconLoader::global()->loadMovie(icon,
-                                             KIconLoader::NoGroup,
-                                             48,
-                                             this);
-    if (movie) {
-//         qDebug() << "OK "<< icon;
-        // If the movie is set we KIconLoader it,
-        // set it and start
-        d->ui.label->setMovie(movie);
-        movie->start();
-    } else {
-//         qDebug() << "NOT OK "<< icon;
-        // Else it's probably a static icon so try to load
-        d->ui.label->setPixmap(KpkIcons::getIcon(icon).pixmap(48,48));
     }
 }
 

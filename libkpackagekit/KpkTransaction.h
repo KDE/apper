@@ -74,14 +74,14 @@ private:
     Behaviors m_flags;
     ExitStatus m_exitStatus;
     KpkTransactionPrivate* d;
+    void unsetTransaction();
 
 private slots:
     void finishedDialog();
     void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
-    void statusChanged(PackageKit::Transaction::Status status);
     void currPackage(PackageKit::Package *);
-    void progressChanged(PackageKit::Transaction::ProgressInfo info);
+    void updateUi();
     void eulaRequired(PackageKit::Client::EulaInfo info);
     void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
     void repoSignatureRequired(PackageKit::Client::SignatureInfo info);

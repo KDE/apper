@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KpkAddRm</class>
- <widget class="QWidget" name="KpkAddRm" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KpkAddRm">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,73 +10,73 @@
     <height>222</height>
    </rect>
   </property>
-  <property name="sizePolicy" >
-   <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Add and Remove Software</string>
   </property>
-  <property name="locale" >
-   <locale country="UnitedStates" language="English" />
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <property name="margin" >
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
     <number>0</number>
    </property>
-   <item row="0" column="0" >
-    <layout class="QHBoxLayout" name="horizontalLayout" >
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="KLineEdit" name="searchKLE" >
-       <property name="clickMessage" >
+      <widget class="KLineEdit" name="searchKLE">
+       <property name="clickMessage">
         <string>Search packages</string>
        </property>
-       <property name="showClearButton" stdset="0" >
+       <property name="showClearButton" stdset="0">
         <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QWidget" native="1" name="widget" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+      <widget class="QWidget" name="widget" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2" >
-        <property name="margin" >
+       <layout class="QGridLayout" name="gridLayout_2">
+        <property name="margin">
          <number>0</number>
         </property>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QWidget" native="1" name="widget_2" >
-       <layout class="QGridLayout" name="gridLayout_3" >
-        <property name="margin" >
+      <widget class="QWidget" name="widget_2" native="true">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <property name="margin">
          <number>0</number>
         </property>
-        <item row="0" column="0" >
-         <widget class="QToolButton" name="filtersTB" >
-          <property name="locale" >
-           <locale country="UnitedStates" language="English" />
+        <item row="0" column="0">
+         <widget class="QToolButton" name="filtersTB">
+          <property name="locale">
+           <locale language="English" country="UnitedStates"/>
           </property>
-          <property name="text" >
+          <property name="text">
            <string>Filters</string>
           </property>
-          <property name="popupMode" >
+          <property name="popupMode">
            <enum>QToolButton::InstantPopup</enum>
           </property>
-          <property name="toolButtonStyle" >
+          <property name="toolButtonStyle">
            <enum>Qt::ToolButtonTextBesideIcon</enum>
           </property>
-          <property name="autoRaise" >
+          <property name="autoRaise">
            <bool>true</bool>
           </property>
-          <property name="arrowType" >
+          <property name="arrowType">
            <enum>Qt::NoArrow</enum>
           </property>
          </widget>
@@ -84,9 +85,9 @@
       </widget>
      </item>
      <item>
-      <widget class="KComboBox" name="groupsCB" >
+      <widget class="KComboBox" name="groupsCB">
        <item>
-        <property name="text" >
+        <property name="text">
          <string>All Packages</string>
         </property>
        </item>
@@ -94,65 +95,68 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0" >
-    <widget class="QTreeView" name="packageView" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+   <item row="1" column="0">
+    <widget class="QTreeView" name="packageView">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>2</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="minimumSize" >
+     <property name="minimumSize">
       <size>
        <width>300</width>
        <height>0</height>
       </size>
      </property>
-     <property name="sizeIncrement" >
+     <property name="sizeIncrement">
       <size>
        <width>0</width>
        <height>2</height>
       </size>
      </property>
-     <property name="locale" >
-      <locale country="UnitedStates" language="English" />
+     <property name="locale">
+      <locale language="English" country="UnitedStates"/>
      </property>
-     <property name="rootIsDecorated" >
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="rootIsDecorated">
       <bool>false</bool>
      </property>
-     <property name="itemsExpandable" >
+     <property name="itemsExpandable">
       <bool>true</bool>
      </property>
-     <property name="sortingEnabled" >
+     <property name="sortingEnabled">
       <bool>true</bool>
      </property>
-     <property name="animated" >
+     <property name="animated">
       <bool>false</bool>
      </property>
-     <property name="headerHidden" >
+     <property name="headerHidden">
       <bool>false</bool>
      </property>
-     <property name="expandsOnDoubleClick" >
+     <property name="expandsOnDoubleClick">
       <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" >
-    <widget class="KpkTransactionBar" native="1" name="transactionBar" />
+   <item row="2" column="0">
+    <widget class="KpkTransactionBar" name="transactionBar" native="true"/>
    </item>
   </layout>
-  <action name="actionFindName" >
-   <property name="text" >
+  <action name="actionFindName">
+   <property name="text">
     <string>Find by &amp;name</string>
    </property>
   </action>
-  <action name="actionFindDescription" >
-   <property name="text" >
+  <action name="actionFindDescription">
+   <property name="text">
     <string>Find by &amp;description</string>
    </property>
   </action>
-  <action name="actionFindFile" >
-   <property name="text" >
+  <action name="actionFindFile">
+   <property name="text">
     <string>Find by f&amp;ile name</string>
    </property>
   </action>
@@ -164,9 +168,14 @@
    <header>klineedit.h</header>
   </customwidget>
   <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
    <class>KpkTransactionBar</class>
    <extends>QWidget</extends>
-   <header location="global" >KpkTransactionBar.h</header>
+   <header location="global">KpkTransactionBar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,7 +18,40 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKVERSION_H
-#define KPKVERSION_H
-#define KPK_VERSION "0.5.2"
+#ifndef PK_INSTALL_FONTCONFIG_RESOURCES_H
+#define PK_INSTALL_FONTCONFIG_RESOURCES_H
+
+#include "KpkAbstractTask.h"
+#include <KpkTransaction.h>
+
+#include <QDBusMessage>
+
+#include <QPackageKit>
+
+using namespace PackageKit;
+
+class PkInstallFontconfigResources : public KpkAbstractTask
+{
+Q_OBJECT
+public:
+    PkInstallFontconfigResources(uint xid,
+                                 const QStringList &resources,
+                                 const QString &interaction,
+                                 const QDBusMessage &message,
+                                 QWidget *parent = 0);
+    ~PkInstallFontconfigResources();
+
+public slots:
+    void start();
+
+private slots:
+    void whatProvidesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void addPackage(PackageKit::Package *package);
+
+private:
+    QList<Package*> m_foundPackages;
+    QStringList     m_resources;
+    QDBusMessage    m_message;
+};
+
 #endif

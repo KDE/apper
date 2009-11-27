@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_REVIEWCHANGES_H
-#define KPK_REVIEWCHANGES_H
+#ifndef KPK_REVIEW_CHANGES_H
+#define KPK_REVIEW_CHANGES_H
 
 #include <KDialog>
 #include <KProgressDialog>
@@ -42,11 +42,20 @@ public:
     explicit KpkReviewChanges(const QList<Package*> &packages, QWidget *parent = 0);
     ~KpkReviewChanges();
 
+    enum OperationMode {
+        // Doesn't show confirmation and exits if some transaction is hidden
+        Default                 = 0x00,
+        ShowConfirmation        = 0x01,
+        ReturnOnlyWhenFinished  = 0x02,
+        HideProgress            = 0x04,
+        HideConfirmDeps         = 0x10
+    };
+    Q_DECLARE_FLAGS(OperationModes, OperationMode)
+
     void setTitle(const QString &title);
     void setText(const QString &text);
 
-public slots:
-    void doAction();
+    int exec(OperationModes flags = 0);
 
 private slots:
     void remFinished(KpkTransaction::ExitStatus);
@@ -55,11 +64,18 @@ private slots:
     void simRemFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void simInstFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
+    void ensureRemoveFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void ensureInstallFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+
+    void doAction();
     void checkChanged();
 
 private:
     void installPackages();
     void removePackages(bool allow_deps = true);
+
+    void installDone();
+    void removeDone();
 
     KpkReviewChangesPrivate *d;
     KpkPackageModel *m_pkgModelMain;
@@ -80,6 +96,7 @@ private:
     QList<Package*> m_reqDepPackages;
 
     Client::Actions m_actions;
+    OperationModes m_flags;
 
 protected slots:
     virtual void slotButtonClicked(int button);
@@ -88,5 +105,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *event);
     virtual bool event(QEvent *event);
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KpkReviewChanges::OperationModes)
 
 #endif

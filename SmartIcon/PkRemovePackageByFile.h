@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,7 +18,34 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKVERSION_H
-#define KPKVERSION_H
-#define KPK_VERSION "0.5.2"
+#ifndef KPK_REMOVE_PACKAGE_BY_FILE_H
+#define KPK_REMOVE_PACKAGE_BY_FILE_H
+
+#include <KpkTransaction.h>
+#include <KpkAbstractIsRunning.h>
+
+#include <QPackageKit>
+
+using namespace PackageKit;
+
+class KpkRemovePackageByFile : public KpkAbstractIsRunning
+{
+Q_OBJECT
+public:
+    explicit KpkRemovePackageByFile(const QStringList &args, QObject *parent = 0);
+    ~KpkRemovePackageByFile();
+
+public slots:
+    void start();
+
+private slots:
+    void kTransactionFinished(KpkTransaction::ExitStatus status);
+    void addPackage(PackageKit::Package *package);
+
+private:
+    QList<Package*> m_foundPackages;
+    QHash <KpkTransaction *,QStringList> m_transactionFiles;
+    QStringList m_args;
+};
+
 #endif
