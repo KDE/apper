@@ -75,13 +75,12 @@ private:
     QTimer *m_timer;
     QHBoxLayout *m_layout;
     Behaviors m_flags;
+    Transaction *m_currTrans;
 
 private slots:
     void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
-    void statusChanged(PackageKit::Transaction::Status status);
-    void progressChanged(PackageKit::Transaction::ProgressInfo info);
-    void enableButtonCancel(bool);
+    void updateUi();
     void nextTransaction();
 };
 

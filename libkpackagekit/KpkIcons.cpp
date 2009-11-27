@@ -26,7 +26,6 @@
 
 bool KpkIcons::init = false;
 QHash<QString, KIcon> KpkIcons::cache = QHash<QString, KIcon>();
-//KpkIcons::cache = QHash<QString, KIcon>();
 
 KIcon KpkIcons::getIcon(const QString &name)
 {
@@ -34,8 +33,31 @@ KIcon KpkIcons::getIcon(const QString &name)
         KIconLoader::global()->addAppDir("kpackagekit");
         KpkIcons::init = true;
     }
-    if (!KpkIcons::cache.contains(name))
+    if (!KpkIcons::cache.contains(name)) {
         KpkIcons::cache[name] = KIcon(name);
+    }
+    return KpkIcons::cache[name];
+}
+
+KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
+{
+    if (!KpkIcons::init) {
+        KIconLoader::global()->addAppDir("kpackagekit");
+        KpkIcons::init = true;
+    }
+    if (!KpkIcons::cache.contains(name)) {
+        if (KIconLoader::global()->loadIcon(name,
+                                            KIconLoader::NoGroup,
+                                            KIconLoader::SizeLarge,
+                                            KIconLoader::DefaultState,
+                                            QStringList(),
+                                            NULL,
+                                            true).isNull()) {
+            KpkIcons::cache[name] = KIcon(defaultName);
+        } else {
+            KpkIcons::cache[name] = KIcon(name);
+        }
+    }
     return KpkIcons::cache[name];
 }
 

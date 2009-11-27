@@ -49,7 +49,7 @@ public:
     QList<Package*> selectedPackages() const;
     QList<Package*> packagesWithState(Package::State) const;
     void removePackage(Package *package);
-    Package * package(const QModelIndex &index) const;
+    Package *package(const QModelIndex &index) const;
     void clear();
     void uncheckAll();
     void checkAll();

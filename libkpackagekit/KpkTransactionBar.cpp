@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,14 +30,15 @@
 
 #include <KDebug>
 
-
 KpkTransactionBar::KpkTransactionBar(QWidget *parent)
     : QWidget(parent)
 {
     m_label = new QLabel(this);
-    m_label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    m_label->setSizePolicy(QSizePolicy::MinimumExpanding,
+                           QSizePolicy::Preferred);
     m_progress = new QProgressBar(this);
-    m_progress->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    m_progress->setSizePolicy(QSizePolicy::Preferred,
+                              QSizePolicy::Preferred);
     m_cancel = new KPushButton(i18n("Cancel"), this);
     m_timer = new QTimer(this);
 
@@ -47,7 +50,6 @@ KpkTransactionBar::KpkTransactionBar(QWidget *parent)
     setLayout(m_layout);
 
     connect(m_timer, SIGNAL(timeout()), this, SLOT(hide()));
-
 }
 
 KpkTransactionBar::~KpkTransactionBar()
@@ -64,7 +66,6 @@ void KpkTransactionBar::setBehaviors(KpkTransactionBar::Behaviors flags)
     }
     // hides the cancel button
     m_cancel->setVisible(!(m_flags & HideCancel));
-//  kDebug() << "Hide!" << m_flags;
 }
 
 KpkTransactionBar::Behaviors KpkTransactionBar::behaviors() const
@@ -74,47 +75,44 @@ KpkTransactionBar::Behaviors KpkTransactionBar::behaviors() const
 
 void KpkTransactionBar::nextTransaction()
 {
-    if (m_trans.size()==0)
+    if (m_trans.size() == 0) {
         return;
+    }
     m_progress->reset();
     m_progress->setMaximum(0);
     m_progress->setMinimum(0);
-    if (m_flags & AutoHide)
+    if (m_flags & AutoHide) {
         show();
+    }
     m_timer->stop();
     setPalette(QPalette());
     setAutoFillBackground(false);
-    Transaction* trans = m_trans.takeFirst();
+    m_currTrans = m_trans.takeFirst();
 
-    enableButtonCancel( trans->allowCancel() );
+    updateUi();
 
-    progressChanged(trans->progress());
+//     if (trans->status() == Transaction::UnknownStatus) {
+//        statusChanged(Transaction::StatusSetup);
+//     } else {
+//        statusChanged(trans->status());
+//     }
 
-    if (trans->status() == Transaction::UnknownStatus) {
-       statusChanged(Transaction::StatusSetup);
-    } else {
-       statusChanged(trans->status());
-    }
-
-    connect( trans, SIGNAL( finished(PackageKit::Transaction::ExitStatus, uint) ),
-        this, SLOT( finished(PackageKit::Transaction::ExitStatus, uint) ) );
-    connect( trans, SIGNAL( allowCancelChanged(bool) ),
-        this, SLOT( enableButtonCancel(bool) ) );
-    connect( trans, SIGNAL( errorCode(PackageKit::Client::ErrorType, const QString&) ),
-        this, SLOT( errorCode(PackageKit::Client::ErrorType, const QString&) ) );
-    connect( trans, SIGNAL( progressChanged(PackageKit::Transaction::ProgressInfo) ),
-        this, SLOT( progressChanged(PackageKit::Transaction::ProgressInfo) ) );
-    connect( trans, SIGNAL( statusChanged(PackageKit::Transaction::Status) ),
-        this, SLOT( statusChanged(PackageKit::Transaction::Status) ) );
+    connect(m_currTrans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+            this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
+    connect(m_currTrans, SIGNAL(changed()),
+            this, SLOT(updateUi()));
+    connect(m_currTrans, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
+            this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)) );
     connect(m_cancel, SIGNAL(clicked()),
-        trans, SLOT(cancel()));
+            m_currTrans, SLOT(cancel()));
 }
 
 void KpkTransactionBar::addTransaction(Transaction *trans)
 {
     m_trans.append(trans);
-    if (m_trans.size()==1)
+    if (m_trans.size() == 1) {
         nextTransaction();
+    }
 }
 
 void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
@@ -123,12 +121,18 @@ void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
     m_progress->setValue(100);
     QPalette colors(palette());
     switch (status) {
-        case Transaction::ExitSuccess:
-            KColorScheme::adjustBackground(colors, KColorScheme::PositiveBackground, QPalette::Window, KColorScheme::Window);
-            m_label->setText(i18n("Finished in %1.", KGlobal::locale()->prettyFormatDuration(runtime)));
-            break;
-        default:
-            KColorScheme::adjustBackground(colors, KColorScheme::NegativeBackground, QPalette::Window, KColorScheme::Window);
+    case Transaction::ExitSuccess:
+        KColorScheme::adjustBackground(colors,
+                                       KColorScheme::PositiveBackground,
+                                       QPalette::Window,
+                                       KColorScheme::Window);
+        m_label->setText(i18n("Finished in %1.", KGlobal::locale()->prettyFormatDuration(runtime)));
+        break;
+    default:
+        KColorScheme::adjustBackground(colors,
+                                       KColorScheme::NegativeBackground,
+                                       QPalette::Window,
+                                       KColorScheme::Window);
     }
     m_progress->setValue(100);
     setAutoFillBackground(true);
@@ -137,8 +141,9 @@ void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
     setAutoFillBackground(false);
     setPalette(QPalette());
     animation->start(500);
-    if (m_flags & AutoHide)
+    if (m_flags & AutoHide) {
         m_timer->start(2000);
+    }
     nextTransaction();
 }
 
@@ -148,23 +153,21 @@ void KpkTransactionBar::errorCode(Client::ErrorType type, const QString &details
     m_label->setText( KpkStrings::error(type) );
 }
 
-void KpkTransactionBar::progressChanged(Transaction::ProgressInfo info)
+void KpkTransactionBar::updateUi()
 {
-    if (info.percentage && info.percentage <= 100) {
+    // Progress
+    uint percentage = m_currTrans->percentage();
+    if (percentage && percentage <= 100) {
         m_progress->setMaximum(100);
-        m_progress->setValue(info.percentage);
+        m_progress->setValue(percentage);
     } else if (m_progress->maximum() != 0) {
         m_progress->setMaximum(0);
         m_progress->reset();
     }
-}
 
-void KpkTransactionBar::statusChanged(Transaction::Status status)
-{
-    m_label->setText( KpkStrings::status(status) );
-}
+    // Cancel
+    m_cancel->setEnabled(m_currTrans->allowCancel());
 
-void KpkTransactionBar::enableButtonCancel(bool cancel)
-{
-    m_cancel->setEnabled(cancel);
+    // Status
+    m_label->setText(KpkStrings::status(m_currTrans->status()));
 }

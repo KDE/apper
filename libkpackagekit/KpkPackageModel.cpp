@@ -168,8 +168,12 @@ int KpkPackageModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &parent) const
 {
+    Package *pkg;
+    // not grouped and parent invalid
+    // means a normal package
     if (!m_grouped && !parent.isValid()) {
-        return createIndex(row, column, 0);
+        pkg = m_packages.at(row);
+        return createIndex(row, column, pkg);
     } else if (!m_grouped) {
         return QModelIndex();
     }
@@ -180,8 +184,8 @@ QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &paren
 
     if (parent.isValid()) {
         Package::State group = m_groups.keys().at(parent.row());
-        Package* p = m_groups[group].at(row);
-        return createIndex(row, column, p);
+        pkg = m_groups[group].at(row);
+        return createIndex(row, column, pkg);
     } else {
         return createIndex(row, column, 0);
     }
@@ -219,10 +223,59 @@ bool KpkPackageModel::isGrouped() const
 //TODO: Make this not hideous.
 QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 {
-    if (m_grouped && !index.parent().isValid()) {
-        if (index.row() >= m_groups.size()) {
+    Package *pkg =  static_cast<Package*>(index.internalPointer());
+    if (pkg) {
+        // we're a package.
+//         if (index.row() >= m_packages.size()) {
+//             return QVariant();
+//         }
+
+        // we do this here cause it's the same code for column 1 and 2
+        if (role == CheckedRole) {
+            if (containsChecked(pkg)) {
+                return Qt::Checked;
+            }
+            return Qt::Unchecked;
+        }
+
+        //TODO: Change the background color depending on a package's state
+        switch (index.column()) {
+        case 0: //Package name column
+            switch (role) {
+            case NameRole:
+                return pkg->name() + " - " + pkg->version() + (pkg->arch().isNull() ? NULL : " (" + pkg->arch() + ')');
+            case IconRole:
+                if (containsChecked(pkg)) {
+                    return (pkg->state() == Package::StateInstalled) ?
+                        KpkIcons::getIcon("package-removed")
+                        : KpkIcons::getIcon("package-download");
+                }
+                return KpkIcons::packageIcon(pkg->state());;
+            case SummaryRole:
+                return pkg->summary();
+            case InstalledRole:
+                return pkg->state() == Package::StateInstalled;
+            case IdRole:
+                return pkg->id();
+            case GroupRole:
+                return false;
+            default:
+                return QVariant();
+            }
+        case 1: //Checkbox column
+            switch(role) {
+            case InstalledRole:
+                return pkg->state() == Package::StateInstalled;
+            default:
+                return QVariant();
+            }
+        default:
             return QVariant();
         }
+    } else {
+//         if (index.row() >= m_groups.size()) {
+//             return QVariant();
+//         }
         //Grouped, and the parent is invalid means this is a group
         Package::State group = m_groups.keys().at(index.row());
         int count = m_groups.value(group).size();
@@ -235,91 +288,36 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         }
         //TODO: Group descriptions
         switch(index.column()) {
-            case 0:
-                switch(role) {
-                    case NameRole:
-                        return KpkStrings::infoUpdate(group, count, nChecked);
-                    case IconRole:
-                        return KpkIcons::packageIcon(group);
-                    case GroupRole:
-                        return true;
-                    case StateRole:
-                        return group;
-                    default:
-                        return QVariant();
-                }
-            case 1:
-                switch(role) {
-                    case CheckedRole:
-                        if (m_groups[group].size() == nChecked) {
-                            return Qt::Checked;
-                        } else if (nChecked == 0) {
-                            return Qt::Unchecked;
-                        } else {
-                            return Qt::PartiallyChecked;
-                        }
-                    case InstalledRole:
-                        return group == Package::StateInstalled;
-                    default:
-                        return QVariant();
-                }
+        case 0:
+            switch(role) {
+            case NameRole:
+                return KpkStrings::infoUpdate(group, count, nChecked);
+            case IconRole:
+                return KpkIcons::packageIcon(group);
+            case GroupRole:
+                return true;
+            case StateRole:
+                return group;
             default:
                 return QVariant();
-        }
-    } else {
-        //Otherwise, we're either not grouped and a root, or we are grouped and not a root.
-        //Either way, we're a package.
-        if (index.row() >= m_packages.size()) {
-            return QVariant();
-        }
-        Package *p;
-        if (m_grouped) {
-            p = packagesWithState(m_groups.keys().at(index.parent().row())).at(index.row());
-        } else {
-            p = m_packages.at(index.row());
-        }
-
-        // we do this here cause it's the same code for column 1 and 2
-        if (role == CheckedRole) {
-            if (containsChecked(p)) {
-                return Qt::Checked;
             }
-            return Qt::Unchecked;
-        }
-
-        //TODO: Change the background color depending on a package's state
-        switch (index.column()) {
-            case 0: //Package name column
-                switch (role) {
-                    case NameRole:
-                        return p->name() + " - " + p->version() + (p->arch().isNull() ? NULL : " (" + p->arch() + ')');
-                    case IconRole:
-                        if (containsChecked(p)) {
-                            return (p->state() == Package::StateInstalled) ?
-                                KpkIcons::getIcon("package-removed")
-                                : KpkIcons::getIcon("package-download");
-                        }
-                        return KpkIcons::packageIcon(p->state());;
-                    case SummaryRole:
-                        return p->summary();
-                    case InstalledRole:
-                        return p->state() == Package::StateInstalled;
-                    case IdRole:
-                        return p->id();
-                    case GroupRole:
-                        return false;
-                    default:
-                        return QVariant();
+        case 1:
+            switch(role) {
+            case CheckedRole:
+                if (m_groups[group].size() == nChecked) {
+                    return Qt::Checked;
+                } else if (nChecked == 0) {
+                    return Qt::Unchecked;
+                } else {
+                    return Qt::PartiallyChecked;
                 }
-            case 1: //Checkbox column
-                switch(role) {
-                    case InstalledRole:
-                        return p->state() == Package::StateInstalled;
-                    default:
-                        return QVariant();
-                }
+            case InstalledRole:
+                return group == Package::StateInstalled;
             default:
                 return QVariant();
+            }
+        default:
+            return QVariant();
         }
     }
 }

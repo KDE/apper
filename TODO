@@ -1,5 +1,9 @@
 A quick list of things that need to be done.
 
+- Add DESKTOP env var to both distro upgrade
+
+- Review Changes needs to check *t
+
 - Find or create a Markdown Qt parser to HTML (update/package descriptions use Markdown)
   (Daniel)
 

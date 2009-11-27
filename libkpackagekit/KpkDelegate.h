@@ -53,6 +53,8 @@ public:
 private:
     KIcon m_addIcon;
     KIcon m_removeIcon;
+    KIcon m_pkgRemove;
+    KIcon m_pkgDownload;
 
     void paintColMain(QPainter *painter,
             const QStyleOptionViewItem &option, const QModelIndex &index) const;

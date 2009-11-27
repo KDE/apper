@@ -37,6 +37,7 @@ class KDE_EXPORT KpkIcons {
         static KIcon   packageIcon(Package::State state);
         static KIcon   restartIcon(Client::RestartType type);
         static KIcon   getIcon(const QString &name);
+        static KIcon   getIcon(const QString &name, const QString &defaultName);
 
     private:
         static QHash<QString, KIcon> cache;
