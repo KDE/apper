@@ -96,7 +96,7 @@ void PkSearchFile::searchFinished(PackageKit::Transaction::ExitStatus status, ui
             sendErrorFinished(NoPackagesFound, msg);
         }
     } else if (status == Transaction::ExitCancelled) {
-        sendErrorFinished(Cancelled, i18n("User canceled the instalation"));
+        sendErrorFinished(Cancelled, i18n("User canceled the installation"));
     } else {
         sendErrorFinished(InternalError, i18n("An unknown error happened"));
     }

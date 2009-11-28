@@ -60,9 +60,9 @@ void PkInstallFontconfigResources::start()
             }
         }
 
-        QString message = i18np("An additional font is required to view this document correctly."
+        QString message = i18np("An additional font is required to view this document correctly. "
                                 "Do you want to search for a suitable package now?",
-                                "Additional fonts are required to view this document correctly."
+                                "Additional fonts are required to view this document correctly. "
                                 "Do you want to search for suitable packages now?",
                                 m_resources.size());
 
