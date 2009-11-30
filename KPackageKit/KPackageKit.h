@@ -46,9 +46,7 @@ private slots:
 
 private:
     KpkMainUi *m_pkUi;
-//     KPageWidgetItem *m_addrmPWI;
-//     KPageWidgetItem *m_updatePWI;
-//     KPageWidgetItem *m_settingsPWI;
+    void invoke(const QString &method_name, const QStringList &args);
 
     int m_running;
     bool m_init;

@@ -26,18 +26,14 @@
 #include <KStandardDirs>
 #include <KConfig>
 #include <KConfigGroup>
+#include <KCModuleInfo>
 #include <KDebug>
 #include <QStringList>
-#include <KCModuleInfo>
+#include <QDBusConnection>
 
-#include "KpkInstallFiles.h"
-#include "KpkInstallMimeType.h"
-#include "KpkInstallPackageName.h"
-#include "KpkInstallProvideFile.h"
-#include "KpkRemovePackageByFile.h"
 #include "KpkBackendDetails.h"
 
-namespace kpackagekit {
+using namespace kpackagekit;
 
 KPackageKit::KPackageKit()
  : KUniqueApplication(),
@@ -64,9 +60,6 @@ void KPackageKit::kcmFinished()
     // kcm is finished we set to 0 to be able to quit
     m_pkUi->deleteLater();
     m_pkUi = 0;
-//     m_addrmPWI = 0;
-//     m_updatePWI = 0;
-//     m_settingsPWI = 0;
     appClose();
 }
 
@@ -83,14 +76,16 @@ int KPackageKit::newInstance()
     bool notSet = true;
     if (args->count()) {
         // grab the list of files
-        KUrl::List urls;
+        QStringList urls;
         for (int i = 0; i < args->count(); i++) {
-            urls << args->url(i);
+            urls << args->url(i).url();
         }
-        KpkInstallFiles *helper = new KpkInstallFiles(urls, this);
-        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
-        QTimer::singleShot(0, helper, SLOT(start()));
-        m_running++;
+
+        // TODO remote files are copied to /tmp
+        // what will happen if we call the other process to
+        // install and this very one closes? will the files
+        // in /tmp be deleted?
+        invoke("InstallPackageFiles" , urls);
         notSet = false;
     }
 
@@ -106,39 +101,22 @@ int KPackageKit::newInstance()
     }
 
     if (args->isSet("install-mime-type")) {
-        kDebug() << "install-mime-type!" << args->getOptionList("install-mime-type");
-        KpkInstallMimeType *helper;
-        helper = new KpkInstallMimeType(args->getOptionList("install-mime-type"), this);
-        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
-        QTimer::singleShot(0, helper, SLOT(start()));
-        m_running++;
+        invoke("InstallMimeTypes" , args->getOptionList("install-mime-type"));
         notSet = false;
     }
 
     if (args->isSet("install-package-name")) {
-        KpkInstallPackageName *helper;
-        helper = new KpkInstallPackageName(args->getOptionList("install-package-name"), this);
-        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
-        QTimer::singleShot(0, helper, SLOT(start()));
-        m_running++;
+        invoke("InstallPackageNames" , args->getOptionList("install-package-name"));
         notSet = false;
     }
 
     if (args->isSet("install-provide-file")) {
-        KpkInstallProvideFile *helper;
-        helper = new KpkInstallProvideFile(args->getOptionList("install-provide-file"), this);
-        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
-        QTimer::singleShot(0, helper, SLOT(start()));
-        m_running++;
+        invoke("InstallProvideFiles" , args->getOptionList("install-provide-file"));
         notSet = false;
     }
 
     if (args->isSet("remove-package-by-file")) {
-        KpkRemovePackageByFile *helper;
-        helper = new KpkRemovePackageByFile(args->getOptionList("remove-package-by-file"), this);
-        connect(helper, SIGNAL(close()), this, SLOT(decreaseAndKillRunning()));
-        QTimer::singleShot(0, helper, SLOT(start()));
-        m_running++;
+        invoke("RemovePackageByFiles" , args->getOptionList("remove-package-by-file"));
         notSet = false;
     }
 
@@ -194,6 +172,20 @@ void KPackageKit::showSettings()
     m_pkUi->activateWindow();
 }
 
+void KPackageKit::invoke(const QString &method_name, const QStringList &args)
+{
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
+                                             "/org/freedesktop/PackageKit",
+                                             "org.freedesktop.PackageKit.Modify",
+                                             method_name);
+    message << (uint) 0;
+    message << args;
+    message << QString();
+
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::NoBlock);
+
+    QTimer::singleShot(0, this, SLOT(appClose()));
 }
 
 #include "KPackageKit.moc"

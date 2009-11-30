@@ -3,11 +3,6 @@ find_package(KDE4Internal REQUIRED)
 set(kpackagekit_SRCS
     main.cpp
     KPackageKit.cpp
-    KpkInstallFiles.cpp
-    KpkInstallMimeType.cpp
-    KpkInstallPackageName.cpp
-    KpkInstallProvideFile.cpp
-    KpkRemovePackageByFile.cpp
     KpkBackendDetails.cpp
     KpkMainUi.cpp
 )

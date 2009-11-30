@@ -35,8 +35,7 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
                                              QWidget *parent)
  : KpkAbstractTask(xid, interaction, message, parent),
    m_packages(packages),
-   m_message(message),
-   m_alreadyInstalled(false)
+   m_message(message)
 {
 }
 

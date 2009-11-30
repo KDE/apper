@@ -36,8 +36,7 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
  : KpkAbstractTask(xid, interaction, message, parent),
    m_files(files),
    m_interaction(interaction),
-   m_message(message),
-   m_alreadyInstalled(false)
+   m_message(message)
 {
 }
 
