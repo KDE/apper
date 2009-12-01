@@ -53,3 +53,4 @@ install(FILES KPackageKitSmartIcon.notifyrc DESTINATION ${DATA_INSTALL_DIR}/KPac
 
 include(PkgConfigGetVar)
 dbus_add_activation_service(org.kde.KPackageKitSmartIcon.service.in)
+dbus_add_activation_service(org.freedesktop.PackageKit.service.in)
