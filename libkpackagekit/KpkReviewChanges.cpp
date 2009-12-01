@@ -130,7 +130,7 @@ int KpkReviewChanges::exec(OperationModes flags)
 
 void KpkReviewChanges::doAction()
 {
-    m_actions = m_client->getActions();
+    m_actions = m_client->actions();
     // check what packages are installed and marked to be removed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
         if (m_pkgModelMain->selectedPackages().at(i)->state() == Package::StateInstalled) {

@@ -55,15 +55,18 @@ private slots:
 
     void distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description);
 
-    void displayUpdates(KpkTransaction::ExitStatus status);
+    void getUpdates();
     void getUpdatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+
     void updatePackages();
+    void updatePackagesFinished(KpkTransaction::ExitStatus status);
 
     void updateColumnsWidth(bool force = false);
     void on_packageView_pressed(const QModelIndex &index);
 
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Client::ErrorType error, const QString &details);
+
 
 private:
     KpkPackageModel *m_pkg_model_updates;

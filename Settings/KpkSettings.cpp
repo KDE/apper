@@ -36,7 +36,7 @@ KpkSettings::KpkSettings(QWidget *parent)
 
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
     Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    m_actions = Client::instance()->getActions();
+    m_actions = Client::instance()->actions();
 
     if (!(m_actions & Client::ActionRefreshCache)) {
         intervalL->setEnabled(false);

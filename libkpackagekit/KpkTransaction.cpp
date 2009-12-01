@@ -58,6 +58,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
    m_showingError(false),
    m_flags(flags),
    m_exitStatus(Success),
+   m_status(Transaction::UnknownStatus),
    d(new KpkTransactionPrivate)
 {
     d->ui.setupUi(mainWidget());
@@ -71,11 +72,13 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     setButtonToolTip(KDialog::User1, i18n("Allows you to hide the window whilst keeping the transaction task running."));
     setEscapeButton(KDialog::User1);
     enableButtonCancel(false);
-    setDetailsWidget(d->ui.detailGroup);
+//     setDetailsWidget(d->ui.detailGroup);
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
     d->showDetails = transactionGroup.readEntry("ShowDetails", false);
-    setDetailsWidgetVisible(d->showDetails);
+//     setDetailsWidgetVisible(d->showDetails);
+    d->ui.detailGroup->setVisible(d->showDetails);
+
     // This MUST come after setDetailsWidgetVisible since
     // it keeps ajusting the size (which sucks btw)
     // This doesn't work, KDialog resizes when the details
@@ -243,25 +246,26 @@ void KpkTransaction::updateUi()
 
     // Status
     Transaction::Status status = m_trans->status();
-    d->ui.currentL->setText(KpkStrings::status(status));
+    if (m_status != status) {
+        m_status = status;
+        d->ui.currentL->setText(KpkStrings::status(status));
 
-    QMovie *movie;
-    // Grab the right icon name
-    QString icon(KpkIcons::statusAnimation(status));
-    movie = KIconLoader::global()->loadMovie(icon,
-                                             KIconLoader::NoGroup,
-                                             48,
-                                             this);
-    if (movie) {
-//         qDebug() << "OK "<< icon;
-        // If the movie is set we KIconLoader it,
-        // set it and start
-        d->ui.label->setMovie(movie);
-        movie->start();
-    } else {
-//         qDebug() << "NOT OK "<< icon;
-        // Else it's probably a static icon so try to load
-        d->ui.label->setPixmap(KpkIcons::getIcon(icon).pixmap(48,48));
+        QMovie *movie;
+        // Grab the right icon name
+        QString icon(KpkIcons::statusAnimation(status));
+        movie = KIconLoader::global()->loadMovie(icon,
+                                                KIconLoader::NoGroup,
+                                                48,
+                                                this);
+        if (movie) {
+            // If the movie is set we KIconLoader it,
+            // set it and start
+            d->ui.label->setMovie(movie);
+            movie->start();
+        } else {
+            // Else it's probably a static icon so try to load
+            d->ui.label->setPixmap(KpkIcons::getIcon(icon).pixmap(48,48));
+        }
     }
 
     // Allow cancel
@@ -332,6 +336,8 @@ void KpkTransaction::slotButtonClicked(int button)
         break;
     case KDialog::Details :
         d->showDetails = !d->showDetails;
+        d->ui.detailGroup->setVisible(d->showDetails);
+        break;
     default : // Should be only details
         KDialog::slotButtonClicked(button);
     }

@@ -63,7 +63,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     packageView->viewport()->setAttribute(Qt::WA_Hover);
 
     // check to see if the backend support these actions
-    m_actions = m_client->getActions();
+    m_actions = m_client->actions();
     // Connect this signal anyway so users that have backend that
     // do not support install or remove can be informed properly
     connect(m_pkg_model_main, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
@@ -115,7 +115,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     groupsCB->setModel(m_groupsModel);
 
     //initialize the groups
-    Client::Groups groups = m_client->getGroups();
+    Client::Groups groups = m_client->groups();
     // Add Text search entry
     QStandardItem *groupItem;
     m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("Text search")));
@@ -147,7 +147,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     }
 
     // install the backend filters
-    filterMenu(m_client->getFilters());
+    filterMenu(m_client->filters());
     filtersTB->setIcon(m_filterIcon);
 
     // set focus on the search lineEdit
@@ -266,7 +266,7 @@ KpkAddRm::~KpkAddRm()
     filterMenuGroup.writeEntry("ViewInGroups", m_actionViewInGroups->isChecked());
 
     // This entry does not depend on the backend it's ok to call this pointer
-    if (m_client->getFilters() & Client::FilterNewest) {
+    if (m_client->filters() & Client::FilterNewest) {
         filterMenuGroup.writeEntry("FilterNewest",
                                    (bool) filters() & Client::FilterNewest);
     }

@@ -79,7 +79,7 @@ void PkInstallCatalogs::start()
         QString arch = parts.at(2);
 
         QStringList rxActions;
-        Client::Actions actions = Client::instance()->getActions();
+        Client::Actions actions = Client::instance()->actions();
         if (actions & Client::ActionResolve) {
             rxActions << "InstallPackages";
         }

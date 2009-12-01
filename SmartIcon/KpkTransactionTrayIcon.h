@@ -48,14 +48,13 @@ private slots:
     void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
     void activated(QSystemTrayIcon::ActivationReason reason);
     void triggered(QAction *action);
-    void currentStatusChanged(PackageKit::Transaction::Status status);
-    void currentProgressChanged(PackageKit::Transaction::ProgressInfo);
     void createTransactionDialog(Transaction *t);
     void transactionDialogClosed();
     void message(PackageKit::Client::MessageType type, const QString &message);
     void requireRestart(PackageKit::Client::RestartType type, Package *pkg);
     void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
     void restartActivated(uint action = 1);
+    void transactionChanged();
     void logout();
 
     void refreshCache();

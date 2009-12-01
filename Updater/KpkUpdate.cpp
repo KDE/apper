@@ -60,9 +60,11 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 
     // Create a new client
     m_client = Client::instance();
+    connect(m_client, SIGNAL(updatesChanged()),
+            this, SLOT(getUpdates()));
 
     // check to see what roles the backend
-    m_actions = m_client->getActions();
+    m_actions = m_client->actions();
 
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
@@ -102,7 +104,7 @@ void KpkUpdate::on_selectAllPB_clicked()
 
 void KpkUpdate::load()
 {
-    displayUpdates(KpkTransaction::Success);
+    getUpdates();
 }
 
 void KpkUpdate::applyUpdates()
@@ -184,7 +186,7 @@ void KpkUpdate::updatePackages()
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
         frm->setPackages(packages);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
+                this, SLOT(updatePackagesFinished(KpkTransaction::ExitStatus)));
         frm->exec();
     }
 }
@@ -197,52 +199,53 @@ void KpkUpdate::refresh()
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
-        connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-                 this, SLOT(displayUpdates(KpkTransaction::ExitStatus)));
         frm->show();
     }
 }
 
-void KpkUpdate::displayUpdates(KpkTransaction::ExitStatus status)
+void KpkUpdate::getUpdates()
+{
+    // contract to delete all update details widgets
+    pkg_delegate->contractAll();
+    // clears the model
+    m_pkg_model_updates->clear();
+    m_pkg_model_updates->uncheckAll();
+    m_updatesT = m_client->getUpdates();
+    if (m_updatesT->error()) {
+        KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
+    } else {
+        transactionBar->addTransaction(m_updatesT);
+        connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
+                m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
+        connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
+                this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint) ));
+    }
+
+    // Clean the distribution upgrades area
+    QLayoutItem *child;
+    while ((child = verticalLayout->takeAt(0)) != 0) {
+        delete child->widget();
+        delete child;
+    }
+    distroUpgradesSA->hide();
+    line->hide();
+
+    // Check for distribution Upgrades
+    Transaction *t = m_client->getDistroUpgrades();
+    if (!t->error()) {
+        transactionBar->addTransaction(t);
+        connect(t, SIGNAL(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)),
+                this, SLOT(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)));
+    }
+}
+
+void KpkUpdate::updatePackagesFinished(KpkTransaction::ExitStatus status)
 {
     checkEnableUpdateButton();
     KpkTransaction *trans = (KpkTransaction *) sender();
-    if (status == KpkTransaction::Success) {
-        // contract to delete all update details widgets
-        pkg_delegate->contractAll();
-        // clears the model
-        m_pkg_model_updates->clear();
-        m_pkg_model_updates->uncheckAll();
-        m_updatesT = m_client->getUpdates();
-        if (m_updatesT->error()) {
-            KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
-        } else {
-            transactionBar->addTransaction(m_updatesT);
-            connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
-                    m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
-            connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-                    this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
-            connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint) ) );
-        }
-
-        // Clean the distribution upgrades area
-        QLayoutItem *child;
-        while ((child = verticalLayout->takeAt(0)) != 0) {
-            delete child->widget();
-            delete child;
-        }
-        distroUpgradesSA->hide();
-        line->hide();
-
-        // Check for distribution Upgrades
-        Transaction *t = m_client->getDistroUpgrades();
-        if (!t->error()) {
-            transactionBar->addTransaction(t);
-            connect(t, SIGNAL(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)),
-                    this, SLOT(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)));
-        }
-    } else if (status == KpkTransaction::ReQueue) {
+    if (status == KpkTransaction::ReQueue) {
         SET_PROXY
         Transaction *t = m_client->updatePackages(trans->onlyTrusted(), trans->packages());
         if (t->error()) {

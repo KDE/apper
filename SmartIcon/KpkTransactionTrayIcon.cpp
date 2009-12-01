@@ -60,7 +60,7 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
 
     // Create a new daemon
     m_client = Client::instance();
-    m_act = Client::instance()->getActions();
+    m_act = Client::instance()->actions();
 
     connect(m_client, SIGNAL(transactionListChanged(const QList<PackageKit::Transaction*> &)),
             this, SLOT(transactionListChanged(const QList<PackageKit::Transaction*> &)));
@@ -210,12 +210,10 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
 void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *transaction)
 {
     m_currentTransaction = transaction;
-    m_smartSTI->setIcon(KpkIcons::statusIcon(m_currentTransaction->status()));
-    currentProgressChanged(m_currentTransaction->progress());
-    connect(m_currentTransaction, SIGNAL(statusChanged(PackageKit::Transaction::Status)),
-            this, SLOT(currentStatusChanged(PackageKit::Transaction::Status)));
-    connect(m_currentTransaction, SIGNAL(progressChanged(PackageKit::Transaction::ProgressInfo)),
-            this, SLOT(currentProgressChanged(PackageKit::Transaction::ProgressInfo)));
+    // update icon
+    transactionChanged();
+    connect(m_currentTransaction, SIGNAL(changed()),
+            this, SLOT(transactionChanged()));
     connect(m_currentTransaction, SIGNAL(message(PackageKit::Client::MessageType, const QString &)),
             this, SLOT(message(PackageKit::Client::MessageType, const QString &)));
     connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Client::RestartType, Package *)),
@@ -288,24 +286,14 @@ void KpkTransactionTrayIcon::finished(PackageKit::Transaction::ExitStatus status
     }
 }
 
-void KpkTransactionTrayIcon::currentProgressChanged(PackageKit::Transaction::ProgressInfo info)
+void KpkTransactionTrayIcon::transactionChanged()
 {
+    uint percentage            = m_currentTransaction->percentage();
+    Transaction::Status status = m_currentTransaction->status();
     QString toolTip;
-    if (info.percentage && info.percentage <= 100) {
-        toolTip = i18n("%1% - %2", info.percentage, KpkStrings::status(m_currentTransaction->status()));
-    } else {
-        toolTip = i18n("%1", KpkStrings::status(m_currentTransaction->status()));
-    }
-    m_smartSTI->setToolTip(toolTip);
-}
 
-void KpkTransactionTrayIcon::currentStatusChanged(PackageKit::Transaction::Status status)
-{
-    QString toolTip;
-    PackageKit::Transaction::ProgressInfo info = m_currentTransaction->progress();
-
-    if (info.percentage && info.percentage <= 100) {
-        toolTip = i18n("%1% - %2", info.percentage, KpkStrings::status(status));
+    if (percentage && percentage <= 100) {
+        toolTip = i18n("%1% - %2", percentage, KpkStrings::status(status));
     } else {
         toolTip = i18n("%1", KpkStrings::status(status));
     }

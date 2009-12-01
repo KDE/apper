@@ -66,7 +66,7 @@ void KPackageKitD::init()
     m_qtimer->disconnect();
     connect(m_qtimer, SIGNAL(timeout()), this, SLOT(read()));
 
-    Client::Actions act = m_client->getActions();
+    Client::Actions act = m_client->actions();
 
     // check to see when the next check update will happen
     // if more that 15 minutes, call show updates

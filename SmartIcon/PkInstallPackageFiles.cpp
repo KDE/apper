@@ -114,7 +114,7 @@ void PkInstallPackageFiles::start()
                                                  installBt);
         }
         if (ret == KMessageBox::Yes) {
-            if (Client::instance()->getActions() & Client::ActionSimulateInstallFiles &&
+            if (Client::instance()->actions() & Client::ActionSimulateInstallFiles &&
                 showConfirmDeps()) {
                 // TODO
                 Transaction *t;

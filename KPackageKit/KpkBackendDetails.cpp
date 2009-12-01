@@ -31,12 +31,12 @@ KpkBackendDetails::KpkBackendDetails(QWidget *parent)
     setWindowIcon(KIcon::KIcon("help-about"));
 
     // GENERAL - Setup backend name and author
-    Client::BackendDetail bkDetail = Client::instance()->getBackendDetail();
-    nameL->setText(bkDetail.name);
-    authorL->setText(bkDetail.author);
+    nameL->setText(Client::instance()->backendName());
+    descriptionL->setText(Client::instance()->backendDescription());
+    authorL->setText(Client::instance()->backendAuthor());
 
     // METHODS - Setup backend supported methods
-    Client::Actions actions = Client::instance()->getActions();
+    Client::Actions actions = Client::instance()->actions();
     getUpdatesCB->setChecked(actions & Client::ActionGetUpdates);
     refreshCacheCB->setChecked(actions & Client::ActionRefreshCache);
     updateSystemCB->setChecked(actions & Client::ActionUpdateSystem);
@@ -68,7 +68,7 @@ KpkBackendDetails::KpkBackendDetails(QWidget *parent)
     simulateUpdatePackagesCB->setChecked(actions & Client::ActionSimulateUpdatePackages);
 
     // FILTERS - Setup filters
-    Client::Filters filters = Client::instance()->getFilters();
+    Client::Filters filters = Client::instance()->filters();
     installedCB->setChecked(filters & Client::FilterInstalled);
     guiCB->setChecked(filters & Client::FilterGui);
 
