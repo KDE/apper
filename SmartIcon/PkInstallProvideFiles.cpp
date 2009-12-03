@@ -59,8 +59,8 @@ void PkInstallProvideFiles::start()
                           "A program wants to install files",
                           m_args.size());
         } else {
-            title = i18np("%1 wants to install a file",
-                          "%1 wants to install files",
+            title = i18np("%2 wants to install a file",
+                          "%2 wants to install files",
                           m_args.size(),
                           parentTitle);
         }

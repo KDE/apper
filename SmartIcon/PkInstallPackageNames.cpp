@@ -61,8 +61,8 @@ void PkInstallPackageNames::start()
                           "A program wants to install packages",
                           m_packages.size());
         } else {
-            title = i18np("%1 wants to install a package",
-                          "%1 wants to install packages",
+            title = i18np("%2 wants to install a package",
+                          "%2 wants to install packages",
                           m_packages.size(),
                           parentTitle);
         }

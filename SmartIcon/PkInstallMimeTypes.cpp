@@ -58,10 +58,10 @@ void PkInstallMimeTypes::start()
                         "A program requires new mime types",
                         m_mimeTypes.size());
         } else {
-            title = i18np("%1 requires a new mime type",
-                        "%1 requires new mime types",
-                        parentTitle,
-                        m_mimeTypes.size());
+            title = i18np("%2 requires a new mime type",
+                        "%2 requires new mime types",
+                        m_mimeTypes.size(),
+                        parentTitle);
         }
         QString msg = "<h3>" + title + "</h3>" + message;
         KGuiItem searchBt = KStandardGuiItem::yes();
@@ -75,7 +75,7 @@ void PkInstallMimeTypes::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = Client::instance()->whatProvides(Client::ProvidesMimetype,
-                                                          m_mimeTypes.first(),
+                                                          m_mimeTypes,
                                                           Client::FilterNotInstalled |
                                                           Client::FilterArch |
                                                           Client::FilterNewest);

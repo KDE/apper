@@ -44,26 +44,28 @@ PkInstallGStreamerResources::~PkInstallGStreamerResources()
 
 void PkInstallGStreamerResources::start()
 {
-    kDebug() << m_resources.first();
     int ret = KMessageBox::Yes;
+    QStringList niceNames;
+    QStringList search;
     if (showConfirmSearch()) {
-        QRegExp rx_en("|gstreamer0.10(decoder");
-        QRegExp rx_dc("|gstreamer0.10(encoder");
         bool encoder = false;
         bool decoder = false;
-        if (m_resources.indexOf(rx_en) != -1) {
-            encoder = true;
-        }
-        if (m_resources.indexOf(rx_dc) != -1) {
-            decoder = true;
+        foreach (const QString &codec, m_resources) {
+            if (codec.contains("|gstreamer0.10(decoder")) {
+                encoder = true;
+            } else if (codec.contains("|gstreamer0.10(encoder")) {
+                decoder = true;
+            }
+            niceNames << codec.section('|', 0, 0);
+            search << codec.section('|', 1, -1);
         }
 
         QString message = i18np("The following plugin is required: <ul><li>%2</li></ul>"
                                 "Do you want to search for this now?",
                                 "The following plugins are required: <ul><li>%2</li></ul>"
                                 "Do you want to search for these now?",
-                                m_resources.size(),
-                                m_resources.join("</li><li>"));
+                                niceNames.size(),
+                                niceNames.join("</li><li>"));
 
         QString title;
         // this will come from DBus interface
@@ -117,7 +119,7 @@ void PkInstallGStreamerResources::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = Client::instance()->whatProvides(Client::ProvidesCodec,
-                                                          m_resources.first(),
+                                                          search,
                                                           Client::FilterNotInstalled |
                                                           Client::FilterArch |
                                                           Client::FilterNewest);

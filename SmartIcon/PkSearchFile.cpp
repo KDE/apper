@@ -55,7 +55,7 @@ void PkSearchFile::start()
                                                     Client::FilterNewest);
     if (t->error()) {
         if (showWarning()) {
-            KMessageBox::sorry(0,
+            KMessageBox::sorry(this,
                                KpkStrings::daemonError(t->error()),
                                i18n("Failed to start search file transaction"));
         }
@@ -89,16 +89,13 @@ void PkSearchFile::searchFinished(PackageKit::Transaction::ExitStatus status, ui
             sendMessageFinished(reply);
         } else {
             QString msg(i18n("The file name could not be found in any software source"));
-            
-            KMessageBox::sorry(0,
+            KMessageBox::sorry(this,
                                msg,
                                i18n("Could not find %1", m_fileName));
             sendErrorFinished(NoPackagesFound, msg);
         }
-    } else if (status == Transaction::ExitCancelled) {
-        sendErrorFinished(Cancelled, i18n("User canceled the installation"));
     } else {
-        sendErrorFinished(InternalError, i18n("An unknown error happened"));
+        sendErrorFinished(InternalError, "An unknown error happened");
     }
 }
 

@@ -52,7 +52,8 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     gridLayout_2->addWidget(toolBar = new QToolBar);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    Client::instance()->setHints("locale=" + locale);
 
     // Create a new daemon
     m_client = Client::instance();

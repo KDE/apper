@@ -40,7 +40,19 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
    m_updateIcon(0),
    m_distroUpgrade(0)
 {
-    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    m_pkInterface = new PkInterface(this);
+    connect(m_pkInterface, SIGNAL(close()),
+            this, SLOT(prepareToClose()));
+
+    m_interface = new KpkInterface(this);
+    // connect the update signal from DBus to our update and distro classes
+    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
+            m_updateIcon, SLOT(refreshAndUpdate(bool)));
+    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
+            m_distroUpgrade, SLOT(checkDistroUpgrades()));
+
+    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    Client::instance()->setHints("locale=" + locale);
 
     // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);
@@ -64,13 +76,6 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     connect(m_distroUpgrade, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
-    m_interface = new KpkInterface(this);
-    // connect the update signal from DBus to our update and distro classes
-    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
-            m_updateIcon, SLOT(refreshAndUpdate(bool)));
-    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
-            m_distroUpgrade, SLOT(checkDistroUpgrades()));
-
     m_transWatcher = new KpkTransactionWatcher(this);
     connect(m_transWatcher, SIGNAL(close()),
             this, SLOT(prepareToClose()));
@@ -83,10 +88,6 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     // do not watch a transaction that is being
     connect(m_trayIcon, SIGNAL(removeTransactionWatcher(const QString &)),
             m_transWatcher, SLOT(removeTransactionWatcher(const QString &)));
-
-    m_pkInterface = new PkInterface(this);
-    connect(m_pkInterface, SIGNAL(close()),
-            this, SLOT(prepareToClose()));
 
     this->prepareToClose();
 }

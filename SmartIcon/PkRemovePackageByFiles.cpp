@@ -54,10 +54,10 @@ void PkRemovePackageByFiles::start()
                         "A program wants to remove files",
                         m_files.size());
         } else {
-            title = i18np("%1 wants to remove a file",
-                        "%1 wants to remove files",
-                        parentTitle,
-                        m_files.size());
+            title = i18np("%2 wants to remove a file",
+                        "%2 wants to remove files",
+                        m_files.size(),
+                        parentTitle);
         }
 
         QString message = i18np("The following file is going to be removed:",

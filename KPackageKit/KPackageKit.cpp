@@ -183,7 +183,9 @@ void KPackageKit::invoke(const QString &method_name, const QStringList &args)
     message << args;
     message << QString();
 
-    QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::NoBlock);
+    // This call must block otherwise this application closes before
+    // smarticon is activated
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::Block);
 
     QTimer::singleShot(0, this, SLOT(appClose()));
 }

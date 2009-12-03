@@ -35,7 +35,8 @@ KpkSettings::KpkSettings(QWidget *parent)
     setupUi(this);
 
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
-    Client::instance()->setLocale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    Client::instance()->setHints("locale=" + locale);
     m_actions = Client::instance()->actions();
 
     if (!(m_actions & Client::ActionRefreshCache)) {

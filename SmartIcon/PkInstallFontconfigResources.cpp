@@ -91,7 +91,7 @@ void PkInstallFontconfigResources::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = Client::instance()->whatProvides(Client::ProvidesFont,
-                                                          m_resources.first(),
+                                                          m_resources,
                                                           Client::FilterNotInstalled |
                                                           Client::FilterArch |
                                                           Client::FilterNewest);
