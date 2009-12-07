@@ -2,8 +2,6 @@ A quick list of things that need to be done.
 
 - Add DESKTOP env var to both distro upgrade
 
-- Review Changes needs to check *t
-
 - Find or create a Markdown Qt parser to HTML (update/package descriptions use Markdown)
   (Daniel)
 
@@ -12,9 +10,6 @@ A quick list of things that need to be done.
 
 - Push KPK into KDE.
   (Daniel)
-
-- Fix indentation everywhere to be 4 spaces :)
-  (Trever)
 
 - Add KPackageKit to Ohloh, after official inclusion into KDE
   (Trever)
@@ -31,14 +26,5 @@ A quick list of things that need to be done.
 - Keep a list of changes to be made that gets updated as AddRm selects packages
   (Trever)
 
-- Implement the DBUS api to install files, codecs, etc that packagekit-gnome does
-  (Daniel)
-
 - Implement and enforce hughsie's law
   (Trever)
-
-- Fix error handling on repo Settings
-  (Daniel)
-
-- Fix duplicate calls to User1 in transaction due to finished() signal
-  (Daniel)

@@ -57,7 +57,6 @@ private slots:
     void on_actionFindName_triggered();
     void on_actionFindDescription_triggered();
     void on_actionFindFile_triggered();
-    void setCurrentActionEnabled(bool state);
 
     void on_groupsCB_currentIndexChanged(int index);
     void on_packageView_pressed(const QModelIndex &index);
@@ -67,12 +66,14 @@ private slots:
     void errorCode(PackageKit::Client::ErrorType error, const QString &detail);
 
     void checkChanged();
+    void changed();
 
     void packageViewSetRootIsDecorated(bool value);
 
 private:
-    QMenu *m_findMenu;
+    void setCurrentActionEnabled(bool state);
 
+    QMenu *m_findMenu;
     QAction *m_actionViewInGroups;
 
     QToolBar *toolBar;

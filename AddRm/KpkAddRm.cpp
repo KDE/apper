@@ -400,9 +400,13 @@ void KpkAddRm::connectTransaction(Transaction *transaction)
             this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
     connect(transaction, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
             this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
-    connect(transaction, SIGNAL(allowCancelChanged(bool)),
-            this, SLOT(setCurrentActionEnabled(bool)));
     setCurrentActionEnabled(transaction->allowCancel());
+}
+
+void KpkAddRm::changed()
+{
+    Transaction *trans = qobject_cast<Transaction*>(sender());
+    setCurrentActionEnabled(trans->allowCancel());
 }
 
 void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &details)

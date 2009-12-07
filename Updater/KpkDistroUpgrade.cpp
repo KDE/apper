@@ -92,6 +92,9 @@ void KpkDistroUpgrade::startDistroUpgrade()
         m_distroUpgradeDialog->progressBar()->setMaximum(0); //Makes it a busy indicator
         m_distroUpgradeDialog->progressBar()->setMinimum(0);
         m_distroUpgradeDialog->show();
+        QStringList env = QProcess::systemEnvironment();
+        env << "DESKTOP=kde";
+        m_distroUpgradeProcess->setEnvironment(env);
         m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
     }
 }

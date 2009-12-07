@@ -92,7 +92,9 @@ void KpkDistroUpgrade::handleDistroUpgradeAction(uint action)
                     this, SLOT(distroUpgradeError(QProcess::ProcessError)));
             connect (m_distroUpgradeProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
                     this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus)));
-
+            QStringList env = QProcess::systemEnvironment();
+            env << "DESKTOP=kde";
+            m_distroUpgradeProcess->setEnvironment(env);
             m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
 //             suppressSleep(true);
             break;

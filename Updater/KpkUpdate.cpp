@@ -142,6 +142,7 @@ void KpkUpdate::applyUpdates()
     } else {
         updatePackages();
     }
+    QTimer::singleShot(0, this, SLOT(checkEnableUpdateButton()));
 }
 
 void KpkUpdate::getUpdatesFinished(Transaction::ExitStatus status, uint runtime)

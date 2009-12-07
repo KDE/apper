@@ -72,11 +72,11 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     setButtonToolTip(KDialog::User1, i18n("Allows you to hide the window whilst keeping the transaction task running."));
     setEscapeButton(KDialog::User1);
     enableButtonCancel(false);
-//     setDetailsWidget(d->ui.detailGroup);
+    setDetailsWidget(d->ui.detailGroup);
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
     d->showDetails = transactionGroup.readEntry("ShowDetails", false);
-//     setDetailsWidgetVisible(d->showDetails);
+    setDetailsWidgetVisible(d->showDetails);
     d->ui.detailGroup->setVisible(d->showDetails);
 
     // This MUST come after setDetailsWidgetVisible since
@@ -336,8 +336,8 @@ void KpkTransaction::slotButtonClicked(int button)
         break;
     case KDialog::Details :
         d->showDetails = !d->showDetails;
-        d->ui.detailGroup->setVisible(d->showDetails);
-        break;
+//         d->ui.detailGroup->setVisible(d->showDetails);
+//         break;
     default : // Should be only details
         KDialog::slotButtonClicked(button);
     }

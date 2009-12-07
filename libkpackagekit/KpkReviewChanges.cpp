@@ -157,21 +157,27 @@ void KpkReviewChanges::checkTask()
                 !(m_flags & HideConfirmDeps)) {
                 m_reqDepPackages = m_remPackages;
                 // Create the requirements transaction and it's model
-                m_removePkgModel = new KpkSimulateModel(this);
                 m_transactionReq = m_client->simulateRemovePackages(m_reqDepPackages);
-                connect(m_transactionReq, SIGNAL(package(PackageKit::Package *)),
-                        m_removePkgModel, SLOT(addPackage(PackageKit::Package *)));
-                connect(m_transactionReq,
-                        SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                        this,
-                        SLOT(simRemFinished(PackageKit::Transaction::ExitStatus, uint)));
-                // Create a Transaction dialog to don't upset the user
-                KpkTransaction *kTrans = new KpkTransaction(m_transactionReq,
-                                                            KpkTransaction::CloseOnFinish
-                                                            | KpkTransaction::Modal,
-                                                            this);
-                if (!(m_flags & HideProgress)) {
-                    kTrans->show();
+                if (m_transactionReq->error()) {
+                    KMessageBox::sorry(this,
+                                       KpkStrings::daemonError(m_transactionReq->error()),
+                                       i18n("Failed to simulate package removal"));
+                    removeDone();
+                } else {
+                    m_removePkgModel = new KpkSimulateModel(this);
+                    connect(m_transactionReq, SIGNAL(package(PackageKit::Package *)),
+                            m_removePkgModel, SLOT(addPackage(PackageKit::Package *)));
+                    connect(m_transactionReq,
+                            SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                            this, SLOT(simRemFinished(PackageKit::Transaction::ExitStatus, uint)));
+                    // Create a Transaction dialog to don't upset the user
+                    KpkTransaction *kTrans = new KpkTransaction(m_transactionReq,
+                                                                KpkTransaction::CloseOnFinish
+                                                                | KpkTransaction::Modal,
+                                                                this);
+                    if (!(m_flags & HideProgress)) {
+                        kTrans->show();
+                    }
                 }
             } else {
                 // As we can't check for requires don't allow deps removal
@@ -188,21 +194,28 @@ void KpkReviewChanges::checkTask()
                 !(m_flags & HideConfirmDeps)) {
                 m_reqDepPackages = m_addPackages;
                 // Create the depends transaction and it's model
-                m_installPkgModel = new KpkSimulateModel(this);
                 m_transactionDep = m_client->simulateInstallPackages(m_reqDepPackages);
-                connect(m_transactionDep, SIGNAL(package(PackageKit::Package *)),
-                        m_installPkgModel, SLOT(addPackage(PackageKit::Package *)));
-                connect(m_transactionDep,
-                        SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                        this,
-                        SLOT(simInstFinished(PackageKit::Transaction::ExitStatus, uint)));
-                // Create a Transaction dialog to don't upset the user
-                KpkTransaction *kTrans = new KpkTransaction(m_transactionDep,
-                                                            KpkTransaction::CloseOnFinish
-                                                            | KpkTransaction::Modal,
-                                                            this);
-                if (!(m_flags & HideProgress)) {
-                    kTrans->show();
+                if (m_transactionDep->error()) {
+                    KMessageBox::sorry(this,
+                                       KpkStrings::daemonError(m_transactionDep->error()),
+                                       i18n("Failed to simulate package install"));
+                    installDone();
+                } else {
+                    m_installPkgModel = new KpkSimulateModel(this);
+                    connect(m_transactionDep, SIGNAL(package(PackageKit::Package *)),
+                            m_installPkgModel, SLOT(addPackage(PackageKit::Package *)));
+                    connect(m_transactionDep,
+                            SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                            this,
+                            SLOT(simInstFinished(PackageKit::Transaction::ExitStatus, uint)));
+                    // Create a Transaction dialog to don't upset the user
+                    KpkTransaction *kTrans = new KpkTransaction(m_transactionDep,
+                                                                KpkTransaction::CloseOnFinish
+                                                                | KpkTransaction::Modal,
+                                                                this);
+                    if (!(m_flags & HideProgress)) {
+                        kTrans->show();
+                    }
                 }
             } else {
                 installPackages();

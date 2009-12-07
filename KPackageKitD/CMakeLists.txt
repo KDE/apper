@@ -1,4 +1,5 @@
-set(kded_kpackagekitd_SRCS kpackagekitd.cpp)
+set(kded_kpackagekitd_SRCS
+    kpackagekitd.cpp)
 
 kde4_add_plugin(kded_kpackagekitd ${kded_kpackagekitd_SRCS})
 
