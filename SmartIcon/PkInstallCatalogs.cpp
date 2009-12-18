@@ -194,9 +194,9 @@ bool PkInstallCatalogs::installProvides(const QStringList &provides)
 bool PkInstallCatalogs::installFiles(const QStringList &files)
 {
     kDebug() << files;
-    Transaction *t = Client::instance()->searchFile(files,
-                                                    Client::FilterArch |
-                                                    Client::FilterNewest);
+    Transaction *t = Client::instance()->searchFiles(files,
+                                                     Client::FilterArch |
+                                                     Client::FilterNewest);
     return runTransaction(t);
 }
 

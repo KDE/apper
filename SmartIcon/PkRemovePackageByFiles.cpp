@@ -79,8 +79,8 @@ void PkRemovePackageByFiles::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->searchFile(m_files,
-                                                        Client::FilterInstalled);
+        Transaction *t = Client::instance()->searchFiles(m_files,
+                                                         Client::FilterInstalled);
         if (t->error()) {
             QString msg(i18n("Failed to start search file transaction"));
             if (showWarning()) {

@@ -97,7 +97,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     if (index.data(KpkPackageModel::CheckedRole).toInt() == Qt::Checked) {
         iconMode = QIcon::Selected;
     } else {
-        iconMode = QIcon::Normal;
+        iconMode = QIcon::Active;
     }
 
     QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
