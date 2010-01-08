@@ -51,7 +51,7 @@ void PkSearchFile::start()
         return;
     }
 
-    Transaction *t = Client::instance()->searchFile(m_fileName,
+    Transaction *t = Client::instance()->searchFiles(m_fileName,
                                                     Client::FilterNewest);
     if (t->error()) {
         if (showWarning()) {

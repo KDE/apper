@@ -76,7 +76,7 @@ void PkInstallProvideFiles::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->searchFile(m_args.first(),
+        Transaction *t = Client::instance()->searchFiles(m_args.first(),
                                                         Client::FilterArch |
                                                         Client::FilterNewest);
         if (t->error()) {

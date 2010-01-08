@@ -364,13 +364,13 @@ void KpkAddRm::search()
     } else {
         // search
         if (m_searchAction == Client::ActionSearchName) {
-            m_pkClient_main = m_client->searchName(m_searchString, m_searchFilters );
+            m_pkClient_main = m_client->searchNames(m_searchString, m_searchFilters );
         } else if (m_searchAction == Client::ActionSearchDetails) {
             m_pkClient_main = m_client->searchDetails(m_searchString, m_searchFilters);
         } else if (m_searchAction == Client::ActionSearchFile) {
-            m_pkClient_main = m_client->searchFile(m_searchString, m_searchFilters);
+            m_pkClient_main = m_client->searchFiles(m_searchString, m_searchFilters);
         } else if (m_searchAction == Client::ActionSearchGroup) {
-            m_pkClient_main = m_client->searchGroup(m_searchGroup, m_searchFilters);
+            m_pkClient_main = m_client->searchGroups(m_searchGroup, m_searchFilters);
         } else {
             kWarning() << "Search type not implemented yet";
             return;

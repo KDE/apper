@@ -30,6 +30,7 @@
 #include <KDebug>
 #include <QStringList>
 #include <QDBusConnection>
+#include <QDBusMessage>
 
 #include "KpkBackendDetails.h"
 
