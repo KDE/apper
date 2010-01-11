@@ -168,6 +168,9 @@ int KpkPackageModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &parent) const
 {
+    if (row <= 0)
+        return QModelIndex();
+    
     Package *pkg;
     // not grouped and parent invalid
     // means a normal package
