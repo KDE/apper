@@ -59,7 +59,7 @@ void KpkMainUi::showAll()
     showSettings();
     showUpdates();
     if (!m_addrmPWI) {
-        m_addrmPWI = addModule(KCModuleInfo::KCModuleInfo("kpk_addrm.desktop"));
+        m_addrmPWI = addModule(KCModuleInfo("kpk_addrm.desktop"));
     }
     setCurrentPage(m_addrmPWI);
 }
@@ -67,7 +67,7 @@ void KpkMainUi::showAll()
 void KpkMainUi::showUpdates()
 {
     if (!m_updatePWI) {
-        m_updatePWI = addModule(KCModuleInfo::KCModuleInfo("kpk_update.desktop"));
+        m_updatePWI = addModule(KCModuleInfo("kpk_update.desktop"));
     }
     setCurrentPage(m_updatePWI);
 }
@@ -75,7 +75,7 @@ void KpkMainUi::showUpdates()
 void KpkMainUi::showSettings()
 {
     if (!m_settingsPWI) {
-        m_settingsPWI = addModule(KCModuleInfo::KCModuleInfo("kpk_settings.desktop"));
+        m_settingsPWI = addModule(KCModuleInfo("kpk_settings.desktop"));
     }
     setCurrentPage(m_settingsPWI);
 }

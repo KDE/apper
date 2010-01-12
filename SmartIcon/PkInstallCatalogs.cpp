@@ -60,7 +60,7 @@ void PkInstallCatalogs::start()
                       m_files.size());
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Parse the catalog search and install it", "Install"));
-        searchBt.setIcon(KIcon::KIcon("edit-find"));
+        searchBt.setIcon(KIcon("edit-find"));
         ret = KMessageBox::questionYesNo(this,
                                          message,
                                          title,

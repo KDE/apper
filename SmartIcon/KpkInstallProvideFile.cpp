@@ -66,7 +66,7 @@ void KpkInstallProvideFile::start()
     QString msg = "<h3>" + title + "</h3>" + message;
     KGuiItem searchBt = KStandardGuiItem::yes();
     searchBt.setText(i18nc("Search for a package that provides these files and install it" ,"Install"));
-    searchBt.setIcon(KIcon::KIcon("edit-find"));
+    searchBt.setIcon(KIcon("edit-find"));
     int ret;
     ret = KMessageBox::questionYesNo(0,
                                      msg,

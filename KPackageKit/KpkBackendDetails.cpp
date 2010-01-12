@@ -28,7 +28,7 @@ KpkBackendDetails::KpkBackendDetails(QWidget *parent)
 {
     setupUi(mainWidget());
     setButtons(KDialog::Close);
-    setWindowIcon(KIcon::KIcon("help-about"));
+    setWindowIcon(KIcon("help-about"));
 
     // GENERAL - Setup backend name and author
     nameL->setText(Client::instance()->backendName());

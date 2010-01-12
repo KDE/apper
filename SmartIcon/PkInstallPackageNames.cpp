@@ -69,7 +69,7 @@ void PkInstallPackageNames::start()
         QString msg = "<h3>" + title + "</h3>" + message;
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Search for a package and install it", "Install"));
-        searchBt.setIcon(KIcon::KIcon("edit-find"));
+        searchBt.setIcon(KIcon("edit-find"));
         ret = KMessageBox::questionYesNo(this,
                                          msg,
                                          title,

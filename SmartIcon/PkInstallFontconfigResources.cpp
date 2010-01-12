@@ -81,7 +81,7 @@ void PkInstallFontconfigResources::start()
         QString msg = "<h3>" + title + "</h3>" + message;
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Search for packages" ,"Search"));
-        searchBt.setIcon(KIcon::KIcon("edit-find"));
+        searchBt.setIcon(KIcon("edit-find"));
 
         ret = KMessageBox::questionYesNo(0,
                                         msg,

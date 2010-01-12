@@ -74,7 +74,7 @@ void KpkUpdateIcon::showSettings()
     QProcess::execute("kpackagekit", QStringList() << "--settings");
 //     KCMultiDialog* settings = new KCMultiDialog();
 //     settings->setWindowIcon( KIcon("applications-other") );
-//     settings->addModule( KCModuleInfo::KCModuleInfo("kpk_settings.desktop") );
+//     settings->addModule( KCModuleInfo("kpk_settings.desktop") );
 //     connect(settings, SIGNAL( finished() ),
 //              settings, SLOT( deleteLater() ));
 //     settings->show();
@@ -105,7 +105,7 @@ void KpkUpdateIcon::showUpdates(QSystemTrayIcon::ActivationReason reason)
 //         if (m_updateView==0) {
 //             m_updateView = new KCMultiDialog();
 //             m_updateView->setWindowIcon( KIcon("applications-other") );
-//             m_updateView->addModule( KCModuleInfo::KCModuleInfo("kpk_update.desktop") );
+//             m_updateView->addModule( KCModuleInfo("kpk_update.desktop") );
 //             connect(m_updateView, SIGNAL( finished(int) ),
 //                      this, SLOT( updaterClosed(int) ));
 //             m_updateView->raise();
