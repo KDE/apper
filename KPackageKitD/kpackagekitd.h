@@ -24,9 +24,6 @@
 #include <KDEDModule>
 
 #include <QTimer>
-#include <QPackageKit>
-
-using namespace PackageKit;
 
 class KPackageKitD : public KDEDModule
 {
@@ -40,15 +37,18 @@ private slots:
     void init();
     void read();
 
-    void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
+    void transactionListChanged(const QStringList &tids);
 
 private:
     void update();
     void refreshAndUpdate();
     bool systemIsReady();
+    uint getTimeSinceRefreshCache() const;
+    bool canRefreshCache();
 
+    bool m_actRefreshCacheChecked;
+    bool m_canRefreshCache;
     QTimer *m_qtimer;
-    Client *m_client;
 };
 
 #endif

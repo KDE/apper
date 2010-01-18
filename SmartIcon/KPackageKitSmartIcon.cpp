@@ -44,13 +44,6 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     connect(m_pkInterface, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
-    m_interface = new KpkInterface(this);
-    // connect the update signal from DBus to our update and distro classes
-    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
-            m_updateIcon, SLOT(refreshAndUpdate(bool)));
-    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
-            m_distroUpgrade, SLOT(checkDistroUpgrades()));
-
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Client::instance()->setHints("locale=" + locale);
 
@@ -75,6 +68,13 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     m_distroUpgrade = new KpkDistroUpgrade(this);
     connect(m_distroUpgrade, SIGNAL(close()),
             this, SLOT(prepareToClose()));
+
+    m_interface = new KpkInterface(this);
+    // connect the update signal from DBus to our update and distro classes
+    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
+            m_updateIcon, SLOT(refreshAndUpdate(bool)));
+    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
+            m_distroUpgrade, SLOT(checkDistroUpgrades()));
 
     m_transWatcher = new KpkTransactionWatcher(this);
     connect(m_transWatcher, SIGNAL(close()),

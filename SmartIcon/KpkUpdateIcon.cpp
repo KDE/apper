@@ -211,12 +211,9 @@ void KpkUpdateIcon::notifyUpdates()
     }
 
     m_updateNotify->setText(text);
+
     QStringList actions;
-//     m_icon->setToolTip(text);
-//     i18np("%1 update available", "%1 updates available", m_updateList.size()));
-//     m_icon->show();
     actions << i18n("Review and update");
-    actions << i18n("Not now");
     actions << i18n("Do not ask again");
     m_updateNotify->setActions(actions);
     m_updateNotify->sendEvent();
@@ -341,8 +338,6 @@ void KpkUpdateIcon::handleUpdateAction(uint action)
             showUpdates();
             break;
         case 2:
-            break;
-        case 3:
             KConfig config("KPackageKit");
             KConfigGroup smartIconGroup(&config, "Notify");
             smartIconGroup.writeEntry("notifyUpdates", 0);
