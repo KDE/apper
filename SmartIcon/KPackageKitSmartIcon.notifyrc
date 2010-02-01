@@ -213,6 +213,7 @@ Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
 Name=A distribution upgrade is available
+Name[bg]=Налично е обновление на дистрибуцията
 Name[ca]=Hi ha disponible una actualització de la distribució
 Name[ca@valencia]=Hi ha disponible una actualització de la distribució
 Name[cs]=Je dostupná aktualizace distribuce
@@ -237,6 +238,7 @@ Action=Sound|Popup
 
 [Event/DistroUpgradeFinished]
 Name=The distribution upgrade completed
+Name[bg]=Обновяването на дистрибуцията приключи
 Name[ca]=S'ha completat l'actualització de la distribució
 Name[ca@valencia]=S'ha completat l'actualització de la distribució
 Name[cs]=Aktualizace distribuce dokončena
@@ -261,6 +263,7 @@ Action=Sound|Popup
 
 [Event/DistroUpgradeError]
 Name=The distribution upgrade completed with an error
+Name[bg]=Имаше грешка при обновяване на дистрибуцията
 Name[ca]=S'ha completat l'actualització de la distribució amb un error
 Name[ca@valencia]=S'ha completat l'actualització de la distribució amb un error
 Name[cs]=Aktualizace distribuce dokončena s chybou
