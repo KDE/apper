@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -114,7 +114,7 @@ void PkInstallPackageFiles::start()
                                                  installBt);
         }
         if (ret == KMessageBox::Yes) {
-            if (Client::instance()->actions() & Client::ActionSimulateInstallFiles &&
+            if (Client::instance()->actions() & Enum::RoleSimulateInstallFiles &&
                 showConfirmDeps()) {
                 // TODO
                 Transaction *t;
@@ -161,10 +161,10 @@ void PkInstallPackageFiles::start()
     }
 }
 
-void PkInstallPackageFiles::simulateFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void PkInstallPackageFiles::simulateFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (m_installFilesModel->rowCount() > 0) {
             KpkRequirements *frm = new KpkRequirements(m_installFilesModel);
             if (frm->exec() == QDialog::Accepted) {

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -40,17 +40,17 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    Package::State currentState() const;
-    void setCurrentState(Package::State currentState);
-    int countState(Package::State state);
+    Enum::Info currentInfo() const;
+    void setCurrentInfo(Enum::Info currentInfo);
+    int countInfo(Enum::Info info);
     void clear();
 
 public slots:
     void addPackage(PackageKit::Package *package);
 
 private:
-    QHash<Package::State, QList<Package*> > m_packages;
-    Package::State m_currentState;
+    QHash<Enum::Info, QList<Package*> > m_packages;
+    Enum::Info m_currentInfo;
 };
 
 #endif

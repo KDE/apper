@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKPACKAGEDETAILS_H
-#define KPKPACKAGEDETAILS_H
+#ifndef KPK_PACKAGE_DETAILS_H
+#define KPK_PACKAGE_DETAILS_H
 
 #include <QWidget>
 #include <QPackageKit>
@@ -28,27 +28,26 @@
 #include <QPlainTextEdit>
 #include <QListView>
 
-#include <KpkSimplePackageModel.h>
-
 #include "ui_KpkPackageDetails.h"
 
 using namespace PackageKit;
 
+class KpkSimplePackageModel;
 class KpkPackageDetails : public QWidget, Ui::KpkPackageDetails
 {
 Q_OBJECT
 public:
-    KpkPackageDetails(PackageKit::Package *package, const Client::Actions &actions, QWidget *parent = 0);
+    KpkPackageDetails(PackageKit::Package *package, const Enum::Roles &roles, QWidget *parent = 0);
     ~KpkPackageDetails();
 
 private slots:
     void description(PackageKit::Package *package);
     void files(PackageKit::Package *package, const QStringList &files);
 
-    void getDetailsFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void getFilesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void getRequiresFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void getDetailsFinished(PackageKit::Enum::Exit status, uint runtime);
+    void getFilesFinished(PackageKit::Enum::Exit status, uint runtime);
+    void getDependsFinished(PackageKit::Enum::Exit status, uint runtime);
+    void getRequiresFinished(PackageKit::Enum::Exit status, uint runtime);
 
     void on_descriptionTB_clicked();
     void on_fileListTB_clicked();

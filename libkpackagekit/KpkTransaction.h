@@ -75,17 +75,17 @@ private:
     bool m_showingError; //This might replace the above
     Behaviors m_flags;
     ExitStatus m_exitStatus;
-    Transaction::Status m_status;
+    Enum::Status m_status;
     KpkTransactionPrivate *d;
 
 private slots:
     void finishedDialog();
-    void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void errorCode(PackageKit::Client::ErrorType error, const QString &details);
+    void finished(PackageKit::Enum::Exit status, uint runtime);
+    void errorCode(PackageKit::Enum::Error error, const QString &details);
     void currPackage(PackageKit::Package *);
     void updateUi();
     void eulaRequired(PackageKit::Client::EulaInfo info);
-    void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
+    void mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text);
     void repoSignatureRequired(PackageKit::Client::SignatureInfo info);
 
     void setExitStatus(KpkTransaction::ExitStatus status);

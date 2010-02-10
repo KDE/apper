@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,6 +21,7 @@
 #include "KpkUpdateDetails.h"
 
 #include <KpkStrings.h>
+#include <KpkPackageModel.h>
 
 #include <KDebug>
 #include <KMessageBox>
@@ -30,8 +31,8 @@ KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent
 {
     setupUi(this);
 
-    // only the model package has the right state
-    state = package->state();
+    // only the model package has the right m_info
+    m_info = package->info();
     Transaction *t = Client::instance()->getUpdateDetail(package);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
@@ -55,15 +56,15 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     description += "<table><tbody>";
 
     // update type (ie Security Update)
-    if (state == Package::UnknownState) {
-        state = Package::StateNormal;
+    if (m_info == Enum::UnknownInfo) {
+        m_info = Enum::InfoNormal;
     }
     description += "<tr><td align=\"right\"><b>" + i18n("Type") + ":</b></td><td>"
-                   + KpkStrings::info(state)
+                   + KpkStrings::info(m_info)
                    + "</td></tr>";
 
-    // state
-    if (info.state != Client::UnknownUpdateState) {
+    // m_info
+    if (info.state != Enum::UnknownUpdateState) {
         description += "<tr><td align=\"right\"><b>" + i18nc("State of the upgrade (ie testing, unstable..)", "State") + ":</b></td><td>"
                     + KpkStrings::updateState(info.state)
                     + "</td></tr>";
@@ -145,7 +146,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     }
 
     // Notice (about the need for a reboot)
-    if (info.restart == Client::RestartSession || info.restart == Client::RestartSystem) {
+    if (info.restart == Enum::RestartSession || info.restart == Enum::RestartSystem) {
         description += "<tr><td align=\"right\"><b>" + i18n("Notice") + ":</b></td><td>"
                     + KpkStrings::restartType(info.restart)
                     + "</td></tr>";
@@ -177,7 +178,7 @@ QString KpkUpdateDetails::getLinkList(const QString &links) const
     return ret;
 }
 
-void KpkUpdateDetails::updateDetailFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkUpdateDetails::updateDetailFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(status)
     Q_UNUSED(runtime)

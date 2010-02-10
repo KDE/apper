@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 200 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,21 +22,21 @@
 
 #include <KDebug>
 
-int KpkImportance::restartImportance(Client::RestartType type)
+int KpkImportance::restartImportance(Enum::Restart type)
 {
     switch (type) {
-    case Client::UnknownRestartType :
-    case Client::RestartNone :
+    case Enum::UnknownRestart :
+    case Enum::RestartNone :
         return 0;
-    case Client::RestartApplication :
+    case Enum::RestartApplication :
         return 1;
-    case Client::RestartSession :
+    case Enum::RestartSession :
         return 2;
-    case Client::RestartSecuritySession :
+    case Enum::RestartSecuritySession :
         return 3;
-    case Client::RestartSystem :
+    case Enum::RestartSystem :
         return 4;
-    case Client::RestartSecuritySystem :
+    case Enum::RestartSecuritySystem :
         return 5;
     }
     kWarning() << "restart type unrecognised: " << type;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -43,8 +43,7 @@ public slots:
     void start();
 
 private slots:
-    void searchFinished(PackageKit::Transaction::ExitStatus status,
-                        uint runtime);
+    void searchFinished(PackageKit::Enum::Exit status, uint runtime);
     void addPackage(PackageKit::Package *package);
 
 private:

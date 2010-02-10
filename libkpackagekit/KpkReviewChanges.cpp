@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -26,6 +26,7 @@
 #include <KDebug>
 
 #include "KpkStrings.h"
+#include "KpkEnum.h"
 #include "KpkRequirements.h"
 #include "ui_KpkReviewChanges.h"
 
@@ -64,7 +65,7 @@ KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *par
     int countInstall = 0;
     foreach (Package *package, packages) {
         // If the package is installed we are going to remove it
-        if (package->state() == Package::StateInstalled) {
+        if (package->info() == Enum::InfoInstalled) {
             countRemove++;
         } else {
             countInstall++;
@@ -133,14 +134,14 @@ void KpkReviewChanges::doAction()
     m_actions = m_client->actions();
     // check what packages are installed and marked to be removed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
-        if (m_pkgModelMain->selectedPackages().at(i)->state() == Package::StateInstalled) {
+        if (m_pkgModelMain->selectedPackages().at(i)->info() == Enum::InfoInstalled) {
             m_remPackages << m_pkgModelMain->selectedPackages().takeAt(i);
         }
     }
 
     // check what packages are available and marked to be installed
     for (int i = 0; i < m_pkgModelMain->selectedPackages().size(); ++i) {
-        if (m_pkgModelMain->selectedPackages().at(i)->state() == Package::StateAvailable) {
+        if (m_pkgModelMain->selectedPackages().at(i)->info() == Enum::InfoAvailable) {
             m_addPackages << m_pkgModelMain->selectedPackages().takeAt(i);
         }
     }
@@ -152,8 +153,8 @@ void KpkReviewChanges::checkTask()
 {
     if (!m_remPackages.isEmpty()) {
         kDebug() << "task rm if";
-        if (m_actions & Client::ActionRemovePackages) {
-            if (m_actions & Client::ActionSimulateRemovePackages &&
+        if (m_actions & Enum::RoleRemovePackages) {
+            if (m_actions & Enum::RoleSimulateRemovePackages &&
                 !(m_flags & HideConfirmDeps)) {
                 m_reqDepPackages = m_remPackages;
                 // Create the requirements transaction and it's model
@@ -168,8 +169,8 @@ void KpkReviewChanges::checkTask()
                     connect(m_transactionReq, SIGNAL(package(PackageKit::Package *)),
                             m_removePkgModel, SLOT(addPackage(PackageKit::Package *)));
                     connect(m_transactionReq,
-                            SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                            this, SLOT(simRemFinished(PackageKit::Transaction::ExitStatus, uint)));
+                            SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
+                            this, SLOT(simRemFinished(PackageKit::Enum::ExitStatus, uint)));
                     // Create a Transaction dialog to don't upset the user
                     KpkTransaction *kTrans = new KpkTransaction(m_transactionReq,
                                                                 KpkTransaction::CloseOnFinish
@@ -189,8 +190,8 @@ void KpkReviewChanges::checkTask()
         }
     } else if (!m_addPackages.isEmpty()) {
         kDebug() << "task add else";
-        if (m_actions & Client::ActionInstallPackages) {
-            if (m_actions & Client::ActionSimulateInstallPackages &&
+        if (m_actions & Enum::RoleInstallPackages) {
+            if (m_actions & Enum::RoleSimulateInstallPackages &&
                 !(m_flags & HideConfirmDeps)) {
                 m_reqDepPackages = m_addPackages;
                 // Create the depends transaction and it's model
@@ -205,9 +206,9 @@ void KpkReviewChanges::checkTask()
                     connect(m_transactionDep, SIGNAL(package(PackageKit::Package *)),
                             m_installPkgModel, SLOT(addPackage(PackageKit::Package *)));
                     connect(m_transactionDep,
-                            SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                            SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
                             this,
-                            SLOT(simInstFinished(PackageKit::Transaction::ExitStatus, uint)));
+                            SLOT(simInstFinished(PackageKit::Enum::ExitStatus, uint)));
                     // Create a Transaction dialog to don't upset the user
                     KpkTransaction *kTrans = new KpkTransaction(m_transactionDep,
                                                                 KpkTransaction::CloseOnFinish
@@ -230,12 +231,12 @@ void KpkReviewChanges::checkTask()
     }
 }
 
-void KpkReviewChanges::simInstFinished(PackageKit::Transaction::ExitStatus status,
+void KpkReviewChanges::simInstFinished(PackageKit::Enum::Exit status,
                                        uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug();
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (m_installPkgModel->rowCount() > 0) {
             KpkRequirements *frm = new KpkRequirements(m_installPkgModel, this);
             if (frm->exec() == QDialog::Accepted) {
@@ -252,11 +253,11 @@ void KpkReviewChanges::simInstFinished(PackageKit::Transaction::ExitStatus statu
     }
 }
 
-void KpkReviewChanges::simRemFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkReviewChanges::simRemFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug();
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (m_removePkgModel->rowCount() > 0) {
             KpkRequirements *frm = new KpkRequirements(m_removePkgModel, this);
             if (frm->exec() == QDialog::Accepted) {
@@ -288,9 +289,9 @@ void KpkReviewChanges::installPackages()
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         if (m_flags & ReturnOnlyWhenFinished) {
             connect(t,
-                    SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                    SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
                     this,
-                    SLOT(ensureInstallFinished(PackageKit::Transaction::ExitStatus, uint)));
+                    SLOT(ensureInstallFinished(PackageKit::Enum::ExitStatus, uint)));
         } else {
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                     this, SLOT(addFinished(KpkTransaction::ExitStatus)));
@@ -317,9 +318,9 @@ void KpkReviewChanges::removePackages(bool allowDeps)
         frm->setAllowDeps(allowDeps);
         if (m_flags & ReturnOnlyWhenFinished) {
             connect(t,
-                    SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                    SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
                     this,
-                    SLOT(ensureRemoveFinished(PackageKit::Transaction::ExitStatus, uint)));
+                    SLOT(ensureRemoveFinished(PackageKit::Enum::ExitStatus, uint)));
         } else {
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                     this, SLOT(remFinished(KpkTransaction::ExitStatus)));
@@ -371,24 +372,24 @@ void KpkReviewChanges::remFinished(KpkTransaction::ExitStatus status)
     }
 }
 
-void KpkReviewChanges::ensureRemoveFinished(PackageKit::Transaction::ExitStatus status,
+void KpkReviewChanges::ensureRemoveFinished(PackageKit::Enum::Exit status,
                                             uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug();
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         removeDone();
     } else {
         slotButtonClicked(KDialog::Cancel);
     }
 }
 
-void KpkReviewChanges::ensureInstallFinished(PackageKit::Transaction::ExitStatus status,
+void KpkReviewChanges::ensureInstallFinished(PackageKit::Enum::Exit status,
                                              uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug();
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         installDone();
     } else {
         slotButtonClicked(KDialog::Cancel);

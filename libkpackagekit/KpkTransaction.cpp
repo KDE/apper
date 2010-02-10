@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -58,7 +58,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
    m_showingError(false),
    m_flags(flags),
    m_exitStatus(Success),
-   m_status(Transaction::UnknownStatus),
+   m_status(Enum::UnknownStatus),
    d(new KpkTransactionPrivate)
 {
     d->ui.setupUi(mainWidget());
@@ -174,8 +174,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
 //        statusChanged(m_trans->status());
 //     }
 
-    if (m_trans->role() == Client::ActionRefreshCache ||
-        m_trans->role() == Client::ActionWhatProvides) {
+    if (m_trans->role() == Enum::RoleRefreshCache ||
+        m_trans->role() == Enum::RoleWhatProvides) {
         d->ui.packageL->hide();
         d->ui.descriptionL->hide();
     } else {
@@ -186,16 +186,16 @@ void KpkTransaction::setTransaction(Transaction *trans)
     // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
     connect(m_trans, SIGNAL(package(PackageKit::Package *)),
             this, SLOT(currPackage(PackageKit::Package *)));
-    connect(m_trans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
-    connect(m_trans, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-            this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+    connect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+    connect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     connect(m_trans, SIGNAL(changed()),
             this, SLOT(updateUi()));
     connect(m_trans, SIGNAL(eulaRequired(PackageKit::Client::EulaInfo)),
             this, SLOT(eulaRequired(PackageKit::Client::EulaInfo)));
-    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)),
-            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
+    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Enum::MediaType, const QString &, const QString &)),
+            this, SLOT(mediaChangeRequired(PackageKit::Enum::MediaType, const QString &, const QString &)));
     connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Client::SignatureInfo)),
             this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
     // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
@@ -205,17 +205,17 @@ void KpkTransaction::unsetTransaction()
 {
     disconnect(m_trans, SIGNAL(package(PackageKit::Package *)),
                this, SLOT(currPackage(PackageKit::Package *)));
-    disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-               this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
-    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-               this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+    disconnect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+               this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+               this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     disconnect(m_trans, SIGNAL(changed()),
                this, SLOT(updateUi()));
     disconnect(m_trans, SIGNAL(eulaRequired(PackageKit::Client::EulaInfo)),
                this, SLOT(eulaRequired(PackageKit::Client::EulaInfo)));
-    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,
+    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Enum::MediaType,
                                                    const QString &, const QString &)),
-               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
+               this, SLOT(mediaChangeRequired(PackageKit::Enum::MediaType, const QString &, const QString &)));
     disconnect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Client::SignatureInfo)),
                this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
 }
@@ -224,7 +224,7 @@ void KpkTransaction::updateUi()
 {
     uint percentage = m_trans->percentage();
     uint subpercentage = m_trans->subpercentage();
-    if (percentage && percentage <= 100) {
+    if (percentage <= 100) {
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(percentage);
     } else if (d->ui.progressBar->maximum() != 0) {
@@ -232,7 +232,7 @@ void KpkTransaction::updateUi()
         d->ui.progressBar->reset();
     }
 
-    if (subpercentage && subpercentage <= 100) {
+    if (subpercentage <= 100) {
         d->ui.subprogressBar->setMaximum(100);
         d->ui.subprogressBar->setValue(subpercentage);
     // Check if we didn't already set the maximum as this
@@ -245,7 +245,7 @@ void KpkTransaction::updateUi()
     d->ui.progressBar->setRemaining(m_trans->remainingTime());
 
     // Status
-    Transaction::Status status = m_trans->status();
+    Enum::Status status = m_trans->status();
     if (m_status != status) {
         m_status = status;
         d->ui.currentL->setText(KpkStrings::status(status));
@@ -345,25 +345,25 @@ void KpkTransaction::slotButtonClicked(int button)
 
 // Return value: if the error code suggests to try with only_trusted %FALSE
 
-static bool untrustedIsNeed(PackageKit::Client::ErrorType error)
+static bool untrustedIsNeed(Enum::Error error)
 {
     switch (error) {
-    case Client::ErrorGpgFailure:
-    case Client::ErrorBadGpgSignature:
-    case Client::ErrorMissingGpgSignature:
-    case Client::ErrorCannotInstallRepoUnsigned:
-    case Client::ErrorCannotUpdateRepoUnsigned:
+    case Enum::ErrorGpgFailure:
+    case Enum::ErrorBadGpgSignature:
+    case Enum::ErrorMissingGpgSignature:
+    case Enum::ErrorCannotInstallRepoUnsigned:
+    case Enum::ErrorCannotUpdateRepoUnsigned:
         return true;
     default:
         return false;
     }
 }
 
-void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QString &details)
+void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
 //     kDebug() << "errorCode: " << error << details;
     // obvious message, don't tell the user
-    if (error == Client::ErrorTransactionCancelled) {
+    if (error == Enum::ErrorTransactionCancelled) {
         return;
     }
 
@@ -390,8 +390,8 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
     }
 
     // check to see if we are already handlying these errors
-    if (error == Client::ErrorNoLicenseAgreement ||
-        error == Client::ErrorMediaChangeRequired)
+    if (error == Enum::ErrorNoLicenseAgreement ||
+        error == Enum::ErrorMediaChangeRequired)
     {
         if (m_handlingActionRequired) {
             return;
@@ -402,7 +402,7 @@ void KpkTransaction::errorCode(PackageKit::Client::ErrorType error, const QStrin
 //     if ( error == Client::BadGpgSignature || error Client::MissingGpgSignature)
 
     // ignoring these as gpk does
-    if (error == Client::ErrorTransactionCancelled || error == Client::ErrorProcessKill) {
+    if (error == Enum::ErrorTransactionCancelled || error == Enum::ErrorProcessKill) {
         return;
     }
 
@@ -442,7 +442,7 @@ void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
     emit kTransactionFinished(ReQueue);
 }
 
-void KpkTransaction::mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text)
+void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text)
 {
     Q_UNUSED(id)
     kDebug() << "mediaChangeRequired: " << id << text;
@@ -488,22 +488,22 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
     emit kTransactionFinished(ReQueue);
 }
 
-void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkTransaction::finished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
     d->finished = true;
     switch(status) {
-    case Transaction::ExitSuccess :
+    case Enum::ExitSuccess :
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
         emit kTransactionFinished(Success);
         break;
-    case Transaction::ExitCancelled :
+    case Enum::ExitCancelled :
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
         emit kTransactionFinished(Cancelled);
         break;
-    case Transaction::ExitFailed :
+    case Enum::ExitFailed :
         kDebug() << "Failed.";
         if (!m_handlingActionRequired) {
             d->ui.progressBar->setMaximum(0);
@@ -512,12 +512,12 @@ void KpkTransaction::finished(PackageKit::Transaction::ExitStatus status, uint r
             emit kTransactionFinished(Failed);
         }
         break;
-    case Transaction::ExitKeyRequired :
-    case Transaction::ExitEulaRequired :
-    case Transaction::ExitMediaChangeRequired :
-    case Transaction::ExitNeedUntrusted :
+    case Enum::ExitKeyRequired :
+    case Enum::ExitEulaRequired :
+    case Enum::ExitMediaChangeRequired :
+    case Enum::ExitNeedUntrusted :
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
-        d->ui.currentL->setText(KpkStrings::status(Transaction::StatusSetup));
+        d->ui.currentL->setText(KpkStrings::status(Enum::StatusSetup));
         if (!m_handlingActionRequired) {
             emit kTransactionFinished(Failed);
         }

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -91,18 +91,18 @@ void KpkTransactionBar::nextTransaction()
 
     updateUi();
 
-//     if (trans->status() == Transaction::UnknownStatus) {
-//        statusChanged(Transaction::StatusSetup);
+//     if (trans->status() == Enum::UnknownStatus) {
+//        statusChanged(Enum::StatusSetup);
 //     } else {
 //        statusChanged(trans->status());
 //     }
 
-    connect(m_currTrans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
+    connect(m_currTrans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     connect(m_currTrans, SIGNAL(changed()),
             this, SLOT(updateUi()));
-    connect(m_currTrans, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-            this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)) );
+    connect(m_currTrans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)) );
     connect(m_cancel, SIGNAL(clicked()),
             m_currTrans, SLOT(cancel()));
 }
@@ -115,13 +115,13 @@ void KpkTransactionBar::addTransaction(Transaction *trans)
     }
 }
 
-void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
+void KpkTransactionBar::finished(Enum::Exit status, uint runtime)
 {
     m_progress->setMaximum(100);
     m_progress->setValue(100);
     QPalette colors(palette());
     switch (status) {
-    case Transaction::ExitSuccess:
+    case Enum::ExitSuccess:
         KColorScheme::adjustBackground(colors,
                                        KColorScheme::PositiveBackground,
                                        QPalette::Window,
@@ -147,10 +147,10 @@ void KpkTransactionBar::finished(Transaction::ExitStatus status, uint runtime)
     nextTransaction();
 }
 
-void KpkTransactionBar::errorCode(Client::ErrorType type, const QString &details)
+void KpkTransactionBar::errorCode(Enum::Error error, const QString &details)
 {
     Q_UNUSED(details);
-    m_label->setText( KpkStrings::error(type) );
+    m_label->setText(KpkStrings::error(error));
 }
 
 void KpkTransactionBar::updateUi()

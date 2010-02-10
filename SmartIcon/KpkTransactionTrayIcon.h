@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -50,9 +50,9 @@ private slots:
     void triggered(QAction *action);
     void createTransactionDialog(Transaction *t);
     void transactionDialogClosed();
-    void message(PackageKit::Client::MessageType type, const QString &message);
-    void requireRestart(PackageKit::Client::RestartType type, Package *pkg);
-    void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void message(PackageKit::Enum::Message type, const QString &message);
+    void requireRestart(PackageKit::Enum::Restart type, Package *pkg);
+    void finished(PackageKit::Enum::Exit exit, uint runtime);
     void restartActivated(uint action = 1);
     void transactionChanged();
     void logout();
@@ -64,7 +64,7 @@ private:
     void updateMenu(const QList<PackageKit::Transaction*> &tids);
     void setCurrentTransaction(PackageKit::Transaction *transaction);
 
-    Client::Actions m_act;
+    Enum::Roles m_act;
     KSystemTrayIcon *m_smartSTI;
     Client *m_client;
     Transaction *m_pkClient_updates;
@@ -77,11 +77,11 @@ private:
     QAction *m_refreshCacheAction;
 
     // Message Container
-    QList<QPair<Client::MessageType, QString> > m_messages;
+    QList<QPair<Enum::Message, QString> > m_messages;
     QAction *m_messagesAction;
 
     // Restart menu entry
-    Client::RestartType m_restartType;
+    Enum::Restart m_restartType;
     QAction *m_restartAction;
     QStringList m_restartPackages;
 

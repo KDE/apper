@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,6 +28,7 @@
 #include <QColor>
 #include <QDBusConnection>
 
+#include <KpkPackageDetails.h>
 #include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
@@ -36,7 +37,7 @@
 
 #define UNIVERSAL_PADDING 6
 
-KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Client, Filter)
+KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 
 KpkAddRm::KpkAddRm(QWidget *parent)
  : QWidget(parent)
@@ -64,7 +65,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     packageView->viewport()->setAttribute(Qt::WA_Hover);
 
     // check to see if the backend support these actions
-    m_actions = m_client->actions();
+    m_roles = m_client->actions();
     // Connect this signal anyway so users that have backend that
     // do not support install or remove can be informed properly
     connect(m_pkg_model_main, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
@@ -76,17 +77,17 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     toolBar->addAction(m_genericActionK);
 
     // Add actions that the backend supports
-    if (m_actions & Client::ActionSearchName) {
+    if (m_roles & Enum::RoleSearchName) {
         m_findMenu->addAction(actionFindName);
         setCurrentAction(actionFindName);
     }
-    if (m_actions & Client::ActionSearchDetails) {
+    if (m_roles & Enum::RoleSearchDetails) {
         m_findMenu->addAction(actionFindDescription);
         if (!m_currentAction) {
             setCurrentAction(actionFindDescription);
         }
     }
-    if (m_actions & Client::ActionSearchFile) {
+    if (m_roles & Enum::RoleSearchFile) {
         m_findMenu->addAction(actionFindFile);
         if (!m_currentAction) {
             setCurrentAction(actionFindFile);
@@ -116,7 +117,7 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     groupsCB->setModel(m_groupsModel);
 
     //initialize the groups
-    Client::Groups groups = m_client->groups();
+    Enum::Groups groups = m_client->groups();
     // Add Text search entry
     QStandardItem *groupItem;
     m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("Text search")));
@@ -134,13 +135,13 @@ KpkAddRm::KpkAddRm(QWidget *parent)
         m_groupsModel->appendRow(groupItem = new QStandardItem(i18ncp("Groups of packages", "Group:", "Groups:", groups.size())));
         groupItem->setEnabled(false);
 
-        foreach (const Client::Group &group, groups) {
-            if (group != Client::UnknownGroup) {
+        foreach (const Enum::Group &group, groups) {
+            if (group != Enum::UnknownGroup) {
                 m_groupsModel->appendRow(groupItem = new QStandardItem(KpkStrings::groups(group)));
                 groupItem->setData(Group, Qt::UserRole);
                 groupItem->setData(group, Group);
                 groupItem->setIcon(KpkIcons::groupsIcon(group));
-                if (!(m_actions & Client::ActionSearchGroup)) {
+                if (!(m_roles & Enum::RoleSearchGroup)) {
                     groupItem->setSelectable(false);
                 }
             }
@@ -163,7 +164,7 @@ void KpkAddRm::genericActionKTriggered()
 
 void KpkAddRm::setCurrentAction(QAction *action)
 {
-    kDebug();
+    kDebug() << action;
     // just load the new action if it changes this
     // also ensures that our menu has more than one action
     if (m_currentAction != action) {
@@ -240,15 +241,15 @@ void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
             if (pkg_delegate->isExtended(index)) {
                 pkg_delegate->contractItem(index);
             } else {
-                pkg_delegate->extendItem(new KpkPackageDetails(p, m_actions), index);
+                pkg_delegate->extendItem(new KpkPackageDetails(p, m_roles), index);
             }
         }
     }
 }
 
-void KpkAddRm::errorCode(PackageKit::Client::ErrorType error, const QString &details)
+void KpkAddRm::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
-    if (error != Client::ErrorTransactionCancelled) {
+    if (error != Enum::ErrorTransactionCancelled) {
         KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify);
     }
 }
@@ -267,9 +268,9 @@ KpkAddRm::~KpkAddRm()
     filterMenuGroup.writeEntry("ViewInGroups", m_actionViewInGroups->isChecked());
 
     // This entry does not depend on the backend it's ok to call this pointer
-    if (m_client->filters() & Client::FilterNewest) {
+    if (m_client->filters() & Enum::FilterNewest) {
         filterMenuGroup.writeEntry("FilterNewest",
-                                   (bool) filters() & Client::FilterNewest);
+                                   (bool) filters() & Enum::FilterNewest);
     }
 }
 
@@ -281,7 +282,7 @@ void KpkAddRm::on_actionFindName_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchAction  = Client::ActionSearchName;
+        m_searchRole  = Enum::RoleSearchName;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // create the main transaction
@@ -297,7 +298,7 @@ void KpkAddRm::on_actionFindDescription_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchAction  = Client::ActionSearchDetails;
+        m_searchRole  = Enum::RoleSearchDetails;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // create the main transaction
@@ -313,7 +314,7 @@ void KpkAddRm::on_actionFindFile_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchAction  = Client::ActionSearchFile;
+        m_searchRole  = Enum::RoleSearchFile;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // create the main transaction
@@ -342,8 +343,8 @@ void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
             break;
         case Group :
             // cache the search
-            m_searchAction  = Client::ActionSearchGroup;
-            m_searchGroup   = (Client::Group) groupsCB->itemData(index, Group).toUInt();
+            m_searchRole  = Enum::RoleSearchGroup;
+            m_searchGroup   = (Enum::Group) groupsCB->itemData(index, Group).toUInt();
             m_searchFilters = filters();
             // create the main transaction
             search();
@@ -363,13 +364,13 @@ void KpkAddRm::search()
         return;
     } else {
         // search
-        if (m_searchAction == Client::ActionSearchName) {
+        if (m_searchRole == Enum::RoleSearchName) {
             m_pkClient_main = m_client->searchNames(m_searchString, m_searchFilters );
-        } else if (m_searchAction == Client::ActionSearchDetails) {
+        } else if (m_searchRole == Enum::RoleSearchDetails) {
             m_pkClient_main = m_client->searchDetails(m_searchString, m_searchFilters);
-        } else if (m_searchAction == Client::ActionSearchFile) {
+        } else if (m_searchRole == Enum::RoleSearchFile) {
             m_pkClient_main = m_client->searchFiles(m_searchString, m_searchFilters);
-        } else if (m_searchAction == Client::ActionSearchGroup) {
+        } else if (m_searchRole == Enum::RoleSearchGroup) {
             m_pkClient_main = m_client->searchGroups(m_searchGroup, m_searchFilters);
         } else {
             kWarning() << "Search type not implemented yet";
@@ -396,10 +397,10 @@ void KpkAddRm::connectTransaction(Transaction *transaction)
 {
     connect(transaction, SIGNAL(package(PackageKit::Package *)),
             m_pkg_model_main, SLOT(addPackage(PackageKit::Package *)));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
-    connect(transaction, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-            this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+    connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     setCurrentActionEnabled(transaction->allowCancel());
 }
 
@@ -409,7 +410,7 @@ void KpkAddRm::changed()
     setCurrentActionEnabled(trans->allowCancel());
 }
 
-void KpkAddRm::message(PackageKit::Client::MessageType message, const QString &details)
+void KpkAddRm::message(PackageKit::Enum::Message message, const QString &details)
 {
     qDebug() << "Error code: " << message << " two: " << details;
 }
@@ -432,7 +433,7 @@ void KpkAddRm::load()
     m_pkg_model_main->uncheckAll();
 }
 
-void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkAddRm::finished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
     Q_UNUSED(status)
@@ -444,7 +445,7 @@ void KpkAddRm::finished(PackageKit::Transaction::ExitStatus status, uint runtime
     m_mTransRuning = false;
 }
 
-void KpkAddRm::filterMenu(Client::Filters filters)
+void KpkAddRm::filterMenu(Enum::Filters filters)
 {
     m_filtersQM = new QMenu(this);
     filtersTB->setMenu(m_filtersQM);
@@ -453,7 +454,7 @@ void KpkAddRm::filterMenu(Client::Filters filters)
     KConfig config("KPackageKit");
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
-    if (filters & Client::FilterCollections || filters & Client::FilterNotCollections) {
+    if (filters & Enum::FilterCollections || filters & Enum::FilterNotCollections) {
         QMenu *menuCollections = new QMenu(i18n("Collections"), m_filtersQM);
         m_filtersQM->addMenu(menuCollections);
         QActionGroup *collectionGroup = new QActionGroup(menuCollections);
@@ -461,38 +462,38 @@ void KpkAddRm::filterMenu(Client::Filters filters)
 
         QAction *collectionTrue = new QAction(i18n("Only collections"), collectionGroup);
         collectionTrue->setCheckable(true);
-        m_filtersAction[collectionTrue] = Client::FilterCollections;
+        m_filtersAction[collectionTrue] = Enum::FilterCollections;
         collectionGroup->addAction(collectionTrue);
         menuCollections->addAction(collectionTrue);
         actions << collectionTrue;
 
         QAction *collectionFalse = new QAction(i18n("Exclude collections"), collectionGroup);
         collectionFalse->setCheckable(true);
-        m_filtersAction[collectionFalse] = Client::FilterNotCollections;
+        m_filtersAction[collectionFalse] = Enum::FilterNotCollections;
         collectionGroup->addAction(collectionFalse);
         menuCollections->addAction(collectionFalse);
         actions << collectionFalse;
     }
-    if (filters & Client::FilterInstalled || filters & Client::FilterNotInstalled) {
+    if (filters & Enum::FilterInstalled || filters & Enum::FilterNotInstalled) {
         // Installed
         QMenu *menuInstalled = new QMenu(i18n("Installed"), m_filtersQM);
         m_filtersQM->addMenu(menuInstalled);
         QActionGroup *installedGroup = new QActionGroup(menuInstalled);
         installedGroup->setExclusive(true);
 
-//             if (filters & Client::FilterInstalled) {
+//             if (filters & Enum::FilterInstalled) {
             QAction *installedTrue = new QAction(i18n("Only installed"), installedGroup);
             installedTrue->setCheckable(true);
-            m_filtersAction[installedTrue] = Client::FilterInstalled;
+            m_filtersAction[installedTrue] = Enum::FilterInstalled;
             installedGroup->addAction(installedTrue);
             menuInstalled->addAction(installedTrue);
             actions << installedTrue;
 //             }
 
-//             if (filters & Client::FilterNotInstalled) {
+//             if (filters & Enum::FilterNotInstalled) {
             QAction *installedFalse = new QAction(i18n("Only available"), installedGroup);
             installedFalse->setCheckable(true);
-            m_filtersAction[installedFalse] = Client::FilterNotInstalled;
+            m_filtersAction[installedFalse] = Enum::FilterNotInstalled;
             installedGroup->addAction(installedFalse);
             menuInstalled->addAction(installedFalse);
             actions << installedFalse;
@@ -505,26 +506,26 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         menuInstalled->addAction(installedNone);
         actions << installedNone;
     }
-    if (filters & Client::FilterDevelopment || filters & Client::FilterNotDevelopment) {
+    if (filters & Enum::FilterDevelopment || filters & Enum::FilterNotDevelopment) {
         // Development
         QMenu *menuDevelopment = new QMenu(i18n("Development"), m_filtersQM);
         m_filtersQM->addMenu(menuDevelopment);
         QActionGroup *developmentGroup = new QActionGroup(menuDevelopment);
         developmentGroup->setExclusive(true);
 
-//             if (filters & Client::FilterDevelopment) {
+//             if (filters & Enum::FilterDevelopment) {
             QAction *developmentTrue = new QAction(i18n("Only development"), developmentGroup);
             developmentTrue->setCheckable(true);
-            m_filtersAction[developmentTrue] = Client::FilterDevelopment;
+            m_filtersAction[developmentTrue] = Enum::FilterDevelopment;
             developmentGroup->addAction(developmentTrue);
             menuDevelopment->addAction(developmentTrue);
             actions << developmentTrue;
 //             }
 
-//             if (filters & Client::FilterNotDevelopment) {
+//             if (filters & Enum::FilterNotDevelopment) {
             QAction *developmentFalse = new QAction(i18n("Only end user files"), developmentGroup);
             developmentFalse->setCheckable(true);
-            m_filtersAction[developmentFalse] = Client::FilterNotDevelopment;
+            m_filtersAction[developmentFalse] = Enum::FilterNotDevelopment;
             developmentGroup->addAction(developmentFalse);
             menuDevelopment->addAction(developmentFalse);
             actions << developmentFalse;
@@ -537,26 +538,26 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         menuDevelopment->addAction(developmentNone);
         actions << developmentNone;
     }
-    if (filters & Client::FilterGui || filters & Client::FilterNotGui) {
+    if (filters & Enum::FilterGui || filters & Enum::FilterNotGui) {
         // Graphical
         QMenu *menuGui = new QMenu(i18n("Graphical"), m_filtersQM);
         m_filtersQM->addMenu(menuGui);
         QActionGroup *guiGroup = new QActionGroup(menuGui);
         guiGroup->setExclusive(true);
 
-//             if (filters & Client::FilterGui) {
+//             if (filters & Enum::FilterGui) {
             QAction *guiTrue = new QAction(i18n("Only graphical"), guiGroup);
             guiTrue->setCheckable(true);
-            m_filtersAction[guiTrue] = Client::FilterGui;
+            m_filtersAction[guiTrue] = Enum::FilterGui;
             guiGroup->addAction(guiTrue);
             menuGui->addAction(guiTrue);
             actions << guiTrue;
 //             }
 
-//             if (filters & Client::FilterNotGui) {
+//             if (filters & Enum::FilterNotGui) {
             QAction *guiFalse = new QAction(i18n("Only text"), guiGroup);
             guiFalse->setCheckable(true);
-            m_filtersAction[guiFalse] = Client::FilterNotGui;
+            m_filtersAction[guiFalse] = Enum::FilterNotGui;
             guiGroup->addAction(guiFalse);
             menuGui->addAction(guiFalse);
             actions << guiFalse;
@@ -569,26 +570,26 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         menuGui->addAction(guiNone);
         actions << guiNone;
     }
-    if (filters & Client::FilterFree || filters & Client::FilterNotFree) {
+    if (filters & Enum::FilterFree || filters & Enum::FilterNotFree) {
         // Free
         QMenu *menuFree = new QMenu(i18nc("Filter for free packages", "Free"), m_filtersQM);
         m_filtersQM->addMenu(menuFree);
         QActionGroup *freeGroup = new QActionGroup(menuFree);
         freeGroup->setExclusive(true);
 
-//             if (filters & Client::FilterFree) {
+//             if (filters & Enum::FilterFree) {
             QAction *freeTrue = new QAction(i18n("Only free software"), freeGroup);
             freeTrue->setCheckable(true);
-            m_filtersAction[freeTrue] = Client::FilterFree;
+            m_filtersAction[freeTrue] = Enum::FilterFree;
             freeGroup->addAction(freeTrue);
             menuFree->addAction(freeTrue);
             actions << freeTrue;
 //             }
 
-//             if (filters & Client::FilterNotFree) {
+//             if (filters & Enum::FilterNotFree) {
             QAction *freeFalse = new QAction(i18n("Only non-free software"), freeGroup);
             freeFalse->setCheckable(true);
-            m_filtersAction[freeFalse] = Client::FilterNotFree;
+            m_filtersAction[freeFalse] = Enum::FilterNotFree;
             freeGroup->addAction(freeFalse);
             menuFree->addAction(freeFalse);
             actions << freeFalse;
@@ -601,26 +602,26 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         menuFree->addAction(freeNone);
         actions << freeNone;
     }
-    if (filters & Client::FilterArch || filters & Client::FilterNotArch) {
+    if (filters & Enum::FilterArch || filters & Enum::FilterNotArch) {
         // Arch
         QMenu *menuArch = new QMenu(i18n("Architectures"), m_filtersQM);
         m_filtersQM->addMenu(menuArch);
         QActionGroup *archGroup = new QActionGroup(menuArch);
         archGroup->setExclusive(true);
 
-//             if (filters & Client::FilterArch) {
+//             if (filters & Enum::FilterArch) {
             QAction *archTrue = new QAction(i18n("Only native architectures"), archGroup);
             archTrue->setCheckable(true);
-            m_filtersAction[archTrue] = Client::FilterArch;
+            m_filtersAction[archTrue] = Enum::FilterArch;
             archGroup->addAction(archTrue);
             menuArch->addAction(archTrue);
             actions << archTrue;
 //             }
 
-//             if (filters & Client::FilterNotArch) {
+//             if (filters & Enum::FilterNotArch) {
             QAction *archFalse = new QAction(i18n("Only non-native architectures"), archGroup);
             archFalse->setCheckable(true);
-            m_filtersAction[archFalse] = Client::FilterNotArch;
+            m_filtersAction[archFalse] = Enum::FilterNotArch;
             archGroup->addAction(archFalse);
             menuArch->addAction(archFalse);
             actions << archFalse;
@@ -633,26 +634,26 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         menuArch->addAction(archNone);
         actions << archNone;
     }
-    if (filters & Client::FilterSource || filters & Client::FilterNotSource) {
+    if (filters & Enum::FilterSource || filters & Enum::FilterNotSource) {
         // Source
         QMenu *menuSource = new QMenu(i18nc("Filter for source packages", "Source"), m_filtersQM);
         m_filtersQM->addMenu(menuSource);
         QActionGroup *sourceGroup = new QActionGroup(menuSource);
         sourceGroup->setExclusive(true);
 
-//             if (filters & Client::FilterSource) {
+//             if (filters & Enum::FilterSource) {
             QAction *sourceTrue = new QAction(i18n("Only sourcecode"), sourceGroup);
             sourceTrue->setCheckable(true);
-            m_filtersAction[sourceTrue] = Client::FilterSource;
+            m_filtersAction[sourceTrue] = Enum::FilterSource;
             sourceGroup->addAction(sourceTrue);
             menuSource->addAction(sourceTrue);
             actions << sourceTrue;
 //             }
 
-//             if (filters & Client::FilterNotSource) {
+//             if (filters & Enum::FilterNotSource) {
             QAction *sourceFalse = new QAction(i18n("Only non-sourcecode"), sourceGroup);
             sourceFalse->setCheckable(true);
-            m_filtersAction[sourceFalse] = Client::FilterNotSource;
+            m_filtersAction[sourceFalse] = Enum::FilterNotSource;
             sourceGroup->addAction(sourceFalse);
             menuSource->addAction(sourceFalse);
             actions << sourceFalse;
@@ -665,23 +666,23 @@ void KpkAddRm::filterMenu(Client::Filters filters)
         menuSource->addAction(sourceNone);
         actions << sourceNone;
     }
-    if (filters & Client::FilterBasename) {
+    if (filters & Enum::FilterBasename) {
         m_filtersQM->addSeparator();
         QAction *basename = new QAction(i18n("Hide subpackages"), m_filtersQM);
         basename->setCheckable(true);
         basename->setToolTip( i18n("Only show one package, not subpackages") );
-        m_filtersAction[basename] = Client::FilterBasename;
+        m_filtersAction[basename] = Enum::FilterBasename;
         m_filtersQM->addAction(basename);
 
         actions << basename;
     }
-    if (filters & Client::FilterNewest) {
+    if (filters & Enum::FilterNewest) {
         m_filtersQM->addSeparator();
         QAction *newest = new QAction(i18n("Only newest packages"), m_filtersQM);
         newest->setCheckable(true);
         newest->setChecked(filterMenuGroup.readEntry("FilterNewest", true));
         newest->setToolTip( i18n("Only show the newest available package") );
-        m_filtersAction[newest] = Client::FilterNewest;
+        m_filtersAction[newest] = Enum::FilterNewest;
         m_filtersQM->addAction(newest);
 
         actions << newest;
@@ -712,9 +713,9 @@ void KpkAddRm::packageViewSetRootIsDecorated(bool value)
     packageView->setRootIsDecorated(value);
 }
 
-Client::Filters KpkAddRm::filters()
+Enum::Filters KpkAddRm::filters()
 {
-    Client::Filters filters;
+    Enum::Filters filters;
     bool filterSet = false;
     for (int i = 0 ; i < actions.size(); ++i) {
         if (actions.at(i)->isChecked()) {
@@ -725,7 +726,7 @@ Client::Filters KpkAddRm::filters()
         }
     }
     if (!filterSet) {
-        filters = Client::NoFilter;
+        filters = Enum::NoFilter;
     }
     return m_searchFilters = filters;
 }
@@ -745,7 +746,9 @@ bool KpkAddRm::event(QEvent *event)
                 QKeyEvent *ke = static_cast<QKeyEvent *>(event);
                 if (ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter) {
                     // special tab handling here
+                    kDebug() << "hmmm" << m_currentAction;
                     m_currentAction->trigger();
+                    kDebug() << "hmmm out" << m_currentAction;
                     return true;
                 }
             }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,7 +22,6 @@
 #define PK_INSTALL_PACKAGE_NAMES_H
 
 #include "KpkAbstractTask.h"
-#include <KpkTransaction.h>
 #include <QPackageKit>
 #include <QDBusMessage>
 
@@ -45,7 +44,7 @@ private slots:
     void start();
 
 private slots:
-    void resolveFinished(PackageKit::Transaction::ExitStatus, uint);
+    void resolveFinished(PackageKit::Enum::Exit, uint);
     void addPackage(PackageKit::Package *package);
 
 private:

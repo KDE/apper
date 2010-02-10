@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -40,9 +40,9 @@ public slots:
     void removeTransactionWatcher(const QString &tid);
 
 private slots:
-    void errorCode(PackageKit::Client::ErrorType, const QString&);
+    void errorCode(PackageKit::Enum::Error, const QString&);
     void errorActivated(uint action);
-    void finished(PackageKit::Transaction::ExitStatus status, uint time);
+    void finished(PackageKit::Enum::Exit exit, uint time);
     void showError();
 
 private:

@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2010 by Daniel Nicoletti                                *
+ *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,12 +32,12 @@ using namespace PackageKit;
 
 class KDE_EXPORT KpkIcons {
     public:
-        static KIcon   groupsIcon(Client::Group group);
-        static KIcon   statusIcon(PackageKit::Transaction::Status status);
-        static QString statusAnimation(PackageKit::Transaction::Status status);
-        static KIcon   actionIcon(Client::Action action);
-        static KIcon   packageIcon(Package::State state);
-        static KIcon   restartIcon(Client::RestartType type);
+        static KIcon   groupsIcon(Enum::Group group);
+        static KIcon   statusIcon(Enum::Status status);
+        static QString statusAnimation(Enum::Status status);
+        static KIcon   actionIcon(Enum::Role role);
+        static KIcon   packageIcon(Enum::Info state);
+        static KIcon   restartIcon(Enum::Restart type);
         static KIcon   getIcon(const QString &name);
         static KIcon   getIcon(const QString &name, const QString &defaultName);
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -74,11 +74,11 @@ void PkInstallMimeTypes::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->whatProvides(Client::ProvidesMimetype,
+        Transaction *t = Client::instance()->whatProvides(Enum::ProvidesMimetype,
                                                           m_mimeTypes,
-                                                          Client::FilterNotInstalled |
-                                                          Client::FilterArch |
-                                                          Client::FilterNewest);
+                                                          Enum::FilterNotInstalled |
+                                                          Enum::FilterArch |
+                                                          Enum::FilterNewest);
         if (t->error()) {
             if (showWarning()) {
                 KMessageBox::sorry(0,
@@ -101,11 +101,11 @@ void PkInstallMimeTypes::start()
     }
 }
 
-void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug() << "Finished.";
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (m_foundPackages.size()) {
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages);
             frm->setTitle(i18np("Application that can open this type of file",

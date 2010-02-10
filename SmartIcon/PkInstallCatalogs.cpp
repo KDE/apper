@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -79,16 +79,16 @@ void PkInstallCatalogs::start()
         QString arch = parts.at(2);
 
         QStringList rxActions;
-        Client::Actions actions = Client::instance()->actions();
-        if (actions & Client::ActionResolve) {
+        Enum::Roles actions = Client::instance()->actions();
+        if (actions & Enum::RoleResolve) {
             rxActions << "InstallPackages";
         }
 
-        if (actions & Client::ActionWhatProvides) {
+        if (actions & Enum::RoleWhatProvides) {
             rxActions << "InstallProvides";
         }
 
-        if (actions & Client::ActionSearchFile) {
+        if (actions & Enum::RoleSearchFile) {
             rxActions << "InstallFiles";
         }
 
@@ -176,18 +176,18 @@ bool PkInstallCatalogs::installPackages(const QStringList &packages)
 {
     kDebug() << packages;
     Transaction *t = Client::instance()->resolve(packages,
-                                                 Client::FilterArch |
-                                                 Client::FilterNewest);
+                                                 Enum::FilterArch |
+                                                 Enum::FilterNewest);
     return runTransaction(t);
 }
 
 bool PkInstallCatalogs::installProvides(const QStringList &provides)
 {
     kDebug() << provides;
-    Transaction *t = Client::instance()->whatProvides(Client::ProvidesAny,
+    Transaction *t = Client::instance()->whatProvides(Enum::ProvidesAny,
                                                       provides,
-                                                      Client::FilterArch |
-                                                      Client::FilterNewest);
+                                                      Enum::FilterArch |
+                                                      Enum::FilterNewest);
     return runTransaction(t);
 }
 
@@ -195,8 +195,8 @@ bool PkInstallCatalogs::installFiles(const QStringList &files)
 {
     kDebug() << files;
     Transaction *t = Client::instance()->searchFiles(files,
-                                                     Client::FilterArch |
-                                                     Client::FilterNewest);
+                                                     Enum::FilterArch |
+                                                     Enum::FilterNewest);
     return runTransaction(t);
 }
 
@@ -213,7 +213,7 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
         return false;
     } else {
         QEventLoop loop;
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 &loop, SLOT(quit()));
         connect(t, SIGNAL(package(PackageKit::Package *)),
                 this, SLOT(addPackage(PackageKit::Package *)));
@@ -229,7 +229,7 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
 
 void PkInstallCatalogs::addPackage(PackageKit::Package *package)
 {
-    if (package->state() != Package::StateInstalled) {
+    if (package->info() != Enum::InfoInstalled) {
         m_foundPackages.append(package);
     } else {
         m_alreadyInstalled << package->name();

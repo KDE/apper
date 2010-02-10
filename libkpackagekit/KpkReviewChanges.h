@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,12 +24,12 @@
 #include <KDialog>
 #include <KProgressDialog>
 
-#include <KpkDelegate.h>
-#include <KpkTransaction.h>
+#include <QPackageKit>
+
+#include "KpkDelegate.h"
+#include "KpkTransaction.h"
 #include "KpkPackageModel.h"
 #include "KpkSimulateModel.h"
-
-#include <QPackageKit>
 
 using namespace PackageKit;
 
@@ -61,11 +61,11 @@ private slots:
     void remFinished(KpkTransaction::ExitStatus);
     void addFinished(KpkTransaction::ExitStatus);
 
-    void simRemFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void simInstFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void simRemFinished(PackageKit::Enum::Exit status, uint runtime);
+    void simInstFinished(PackageKit::Enum::Exit status, uint runtime);
 
-    void ensureRemoveFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void ensureInstallFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void ensureRemoveFinished(PackageKit::Enum::Exit status, uint runtime);
+    void ensureInstallFinished(PackageKit::Enum::Exit status, uint runtime);
 
     void doAction();
     void checkChanged();
@@ -95,7 +95,7 @@ private:
     QList<Package*> m_addPackages;
     QList<Package*> m_reqDepPackages;
 
-    Client::Actions m_actions;
+    Enum::Roles m_actions;
     OperationModes m_flags;
 
 protected slots:

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKPACKAGEMODEL_H
-#define KPKPACKAGEMODEL_H
+#ifndef KPK_PACKAGE_MODEL_H
+#define KPK_PACKAGE_MODEL_H
 
 #include <QAbstractItemModel>
 #include <QAbstractItemView>
@@ -47,7 +47,7 @@ public:
 
     bool allSelected() const;
     QList<Package*> selectedPackages() const;
-    QList<Package*> packagesWithState(Package::State) const;
+    QList<Package*> packagesWithInfo(Enum::Info) const;
     void removePackage(Package *package);
     Package *package(const QModelIndex &index) const;
     void clear();
@@ -82,7 +82,7 @@ private:
     QAbstractItemView *m_packageView;
     QList<Package*> m_packages;
     QList<Package*> m_checkedPackages;
-    QMap<Package::State, QList<Package*> > m_groups;
+    QMap<Enum::Info, QList<Package*> > m_groups;
     bool  m_grouped;
 
 };

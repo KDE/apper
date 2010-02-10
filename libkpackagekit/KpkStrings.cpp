@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,118 +24,118 @@
 
 #include <KDebug>
 
-QString KpkStrings::status(PackageKit::Transaction::Status status)
+QString KpkStrings::status(PackageKit::Enum::Status status)
 {
     switch (status) {
-    case Transaction::UnknownStatus :
+    case Enum::UnknownStatus :
         return i18nc("This is when the transaction status is not known",
                      "Unknown state");
-    case Transaction::StatusSetup :
+    case Enum::StatusSetup :
         return i18nc("transaction state, the daemon is in the process of starting",
                      "Waiting for service to start");
-    case Transaction::StatusWait :
+    case Enum::StatusWait :
         return i18nc("transaction state, the transaction is waiting for another to complete",
                      "Waiting for other tasks");
-    case Transaction::StatusRunning :
+    case Enum::StatusRunning :
         return i18nc("transaction state, just started",
                      "Running task");
-    case Transaction::StatusQuery :
+    case Enum::StatusQuery :
         return i18nc("transaction state, is querying data",
                      "Querying");
-    case Transaction::StatusInfo :
+    case Enum::StatusInfo :
         return i18nc("transaction state, getting data from a server",
                      "Getting information");
-    case Transaction::StatusRemove :
+    case Enum::StatusRemove :
         return i18nc("transaction state, removing packages",
                      "Removing packages");
-    case Transaction::StatusDownload :
+    case Enum::StatusDownload :
         return i18nc("transaction state, downloading package files",
                      "Downloading packages");
-    case Transaction::StatusInstall :
+    case Enum::StatusInstall :
         return i18nc("transaction state, installing packages",
                      "Installing packages");
-    case Transaction::StatusRefreshCache :
+    case Enum::StatusRefreshCache :
         return i18nc("transaction state, refreshing internal lists",
                      "Refreshing software list");
-    case Transaction::StatusUpdate :
+    case Enum::StatusUpdate :
         return i18nc("transaction state, installing updates",
                      "Updating packages");
-    case Transaction::StatusCleanup :
+    case Enum::StatusCleanup :
         return i18nc("transaction state, removing old packages, and cleaning config files",
                      "Cleaning up packages");
-    case Transaction::StatusObsolete :
+    case Enum::StatusObsolete :
         return i18nc("transaction state, obsoleting old packages",
                      "Obsoleting packages");
-    case Transaction::StatusDepResolve :
+    case Enum::StatusDepResolve :
         return i18nc("transaction state, checking the transaction before we do it",
                      "Resolving dependencies");
-    case Transaction::StatusSigCheck :
+    case Enum::StatusSigCheck :
         return i18nc("transaction state, checking if we have all the security keys for the operation",
                      "Checking signatures");
-    case Transaction::StatusRollback :
+    case Enum::StatusRollback :
         return i18nc("transaction state, when we return to a previous system state",
                      "Rolling back");
-    case Transaction::StatusTestCommit :
+    case Enum::StatusTestCommit :
         return i18nc("transaction state, when we're doing a test transaction",
                      "Testing changes");
-    case Transaction::StatusCommit :
+    case Enum::StatusCommit :
         return i18nc("transaction state, when we're writing to the system package database",
                      "Committing changes");
-    case Transaction::StatusRequest :
+    case Enum::StatusRequest :
         return i18nc("transaction state, requesting data from a server",
                      "Requesting data");
-    case Transaction::StatusFinished :
+    case Enum::StatusFinished :
         return i18nc("transaction state, all done!",
                      "Finished");
-    case Transaction::StatusCancel :
+    case Enum::StatusCancel :
         return i18nc("transaction state, in the process of cancelling",
                      "Cancelling");
-    case Transaction::StatusDownloadRepository :
+    case Enum::StatusDownloadRepository :
         return i18nc("transaction state, downloading metadata",
                      "Downloading repository information");
-    case Transaction::StatusDownloadPackagelist :
+    case Enum::StatusDownloadPackagelist :
         return i18nc("transaction state, downloading metadata",
                      "Downloading list of packages");
-    case Transaction::StatusDownloadFilelist :
+    case Enum::StatusDownloadFilelist :
         return i18nc("transaction state, downloading metadata",
                      "Downloading file lists");
-    case Transaction::StatusDownloadChangelog :
+    case Enum::StatusDownloadChangelog :
         return i18nc("transaction state, downloading metadata",
                      "Downloading lists of changes");
-    case Transaction::StatusDownloadGroup :
+    case Enum::StatusDownloadGroup :
         return i18nc("transaction state, downloading metadata",
                      "Downloading groups");
-    case Transaction::StatusDownloadUpdateinfo :
+    case Enum::StatusDownloadUpdateinfo :
         return i18nc("transaction state, downloading metadata",
                      "Downloading update information");
-    case Transaction::StatusRepackaging :
+    case Enum::StatusRepackaging :
         return i18nc("transaction state, repackaging delta files",
                      "Repackaging files");
-    case Transaction::StatusLoadingCache :
+    case Enum::StatusLoadingCache :
         return i18nc("transaction state, loading databases",
                      "Loading cache");
-    case Transaction::StatusScanApplications :
+    case Enum::StatusScanApplications :
         return i18nc("transaction state, scanning for running processes",
                      "Scanning installed applications");
-    case Transaction::StatusGeneratePackageList :
+    case Enum::StatusGeneratePackageList :
         return i18nc("transaction state, generating a list of packages installed on the system",
                      "Generating package lists");
-    case Transaction::StatusWaitingForLock :
+    case Enum::StatusWaitingForLock :
         return i18nc("transaction state, when we're waiting for the native tools to exit",
                      "Waiting for package manager lock");
-    case Transaction::StatusWaitingForAuth :
+    case Enum::StatusWaitingForAuth :
         return i18nc("waiting for user to type in a password",
                      "Waiting for authentication");
-    case Transaction::StatusScanProcessList :
+    case Enum::StatusScanProcessList :
         return i18nc("we are updating the list of processes",
                      "Updating the list of running applications");
-    case Transaction::StatusCheckExecutableFiles :
+    case Enum::StatusCheckExecutableFiles :
         return i18nc("we are checking executable files in use",
                      "Checking for applications currently in use");
-    case Transaction::StatusCheckLibraries :
+    case Enum::StatusCheckLibraries :
         return i18nc("we are checking for libraries in use",
                      "Checking for libraries currently in use");
-    case Transaction::StatusCopyFiles :
+    case Enum::StatusCopyFiles :
         return i18nc("we are copying package files to prepare to install",
                      "Copying files");
     }
@@ -143,20 +143,20 @@ QString KpkStrings::status(PackageKit::Transaction::Status status)
     return QString();
 }
 
-QString KpkStrings::statusPast(PackageKit::Transaction::Status status)
+QString KpkStrings::statusPast(PackageKit::Enum::Status status)
 {
     switch (status) {
-    case Transaction::StatusDownload:
+    case Enum::StatusDownload:
         return i18nc("The action of the package, in past tense", "Downloaded");
-    case Transaction::StatusUpdate:
+    case Enum::StatusUpdate:
         return i18nc("The action of the package, in past tense", "Updated");
-    case Transaction::StatusInstall:
+    case Enum::StatusInstall:
         return i18nc("The action of the package, in past tense", "Installed");
-    case Transaction::StatusRemove:
+    case Enum::StatusRemove:
         return i18nc("The action of the package, in past tense", "Removed");
-    case Transaction::StatusCleanup:
+    case Enum::StatusCleanup:
         return i18nc("The action of the package, in past tense", "Cleaned Up");
-    case Transaction::StatusObsolete:
+    case Enum::StatusObsolete:
         return i18nc("The action of the package, in past tense", "Obsoleted");
     default : // In this case we don't want to map all enums
         kWarning() << "status unrecognised: " << status;
@@ -164,450 +164,450 @@ QString KpkStrings::statusPast(PackageKit::Transaction::Status status)
     }
 }
 
-QString KpkStrings::action(Client::Action action)
+QString KpkStrings::action(Enum::Role action)
 {
     switch (action) {
-    case Client::UnknownAction :
+    case Enum::UnknownRole :
         return i18nc("The role of the transaction, in present tense", "Unknown role type");
-    case Client::ActionGetDepends :
+    case Enum::RoleGetDepends :
         return i18nc("The role of the transaction, in present tense", "Getting dependencies");
-    case Client::ActionGetUpdateDetail :
+    case Enum::RoleGetUpdateDetail :
         return i18nc("The role of the transaction, in present tense", "Getting update detail");
-    case Client::ActionGetDetails :
+    case Enum::RoleGetDetails :
         return i18nc("The role of the transaction, in present tense", "Getting details");
-    case Client::ActionGetRequires :
+    case Enum::RoleGetRequires :
         return i18nc("The role of the transaction, in present tense", "Getting requires");
-    case Client::ActionGetUpdates :
+    case Enum::RoleGetUpdates :
         return i18nc("The role of the transaction, in present tense", "Getting updates");
-    case Client::ActionSearchDetails :
+    case Enum::RoleSearchDetails :
         return i18nc("The role of the transaction, in present tense", "Searching details");
-    case Client::ActionSearchFile :
+    case Enum::RoleSearchFile :
         return i18nc("The role of the transaction, in present tense", "Searching for file");
-    case Client::ActionSearchGroup :
+    case Enum::RoleSearchGroup :
         return i18nc("The role of the transaction, in present tense", "Searching groups");
-    case Client::ActionSearchName :
+    case Enum::RoleSearchName :
         return i18nc("The role of the transaction, in present tense", "Searching by package name");
-    case Client::ActionRemovePackages :
+    case Enum::RoleRemovePackages :
         return i18nc("The role of the transaction, in present tense", "Removing");
-    case Client::ActionInstallPackages :
+    case Enum::RoleInstallPackages :
         return i18nc("The role of the transaction, in present tense", "Installing");
-    case Client::ActionInstallFiles :
+    case Enum::RoleInstallFiles :
         return i18nc("The role of the transaction, in present tense", "Installing file");
-    case Client::ActionRefreshCache :
+    case Enum::RoleRefreshCache :
         return i18nc("The role of the transaction, in present tense", "Refreshing package cache");
-    case Client::ActionUpdatePackages :
+    case Enum::RoleUpdatePackages :
         return i18nc("The role of the transaction, in present tense", "Updating packages");
-    case Client::ActionUpdateSystem :
+    case Enum::RoleUpdateSystem :
         return i18nc("The role of the transaction, in present tense", "Updating system");
-    case Client::ActionCancel :
+    case Enum::RoleCancel :
         return i18nc("The role of the transaction, in present tense", "Canceling");
-    case Client::ActionRollback :
+    case Enum::RoleRollback :
         return i18nc("The role of the transaction, in present tense", "Rolling back");
-    case Client::ActionGetRepoList :
+    case Enum::RoleGetRepoList :
         return i18nc("The role of the transaction, in present tense", "Getting list of repositories");
-    case Client::ActionRepoEnable :
+    case Enum::RoleRepoEnable :
         return i18nc("The role of the transaction, in present tense", "Enabling repository");
-    case Client::ActionRepoSetData :
+    case Enum::RoleRepoSetData :
         return i18nc("The role of the transaction, in present tense", "Setting repository data");
-    case Client::ActionResolve :
+    case Enum::RoleResolve :
         return i18nc("The role of the transaction, in present tense", "Resolving");
-    case Client::ActionGetFiles :
+    case Enum::RoleGetFiles :
         return i18nc("The role of the transaction, in present tense", "Getting file list");
-    case Client::ActionWhatProvides :
+    case Enum::RoleWhatProvides :
         return i18nc("The role of the transaction, in present tense", "Getting what provides");
-    case Client::ActionInstallSignature :
+    case Enum::RoleInstallSignature :
         return i18nc("The role of the transaction, in present tense", "Installing signature");
-    case Client::ActionGetPackages :
+    case Enum::RoleGetPackages :
         return i18nc("The role of the transaction, in present tense", "Getting package lists");
-    case Client::ActionAcceptEula :
+    case Enum::RoleAcceptEula :
         return i18nc("The role of the transaction, in present tense", "Accepting EULA");
-    case Client::ActionDownloadPackages :
+    case Enum::RoleDownloadPackages :
         return i18nc("The role of the transaction, in present tense", "Downloading packages");
-    case Client::ActionGetDistroUpgrades :
+    case Enum::RoleGetDistroUpgrades :
         return i18nc("The role of the transaction, in present tense", "Getting distribution upgrade information");
-    case Client::ActionGetCategories :
+    case Enum::RoleGetCategories :
         return i18nc("The role of the transaction, in present tense", "Getting categories");
-    case Client::ActionGetOldTransactions :
+    case Enum::RoleGetOldTransactions :
         return i18nc("The role of the transaction, in present tense", "Getting old transactions");
-    case Client::ActionSimulateInstallFiles :
+    case Enum::RoleSimulateInstallFiles :
         return i18nc("The role of the transaction, in present tense", "Simulating the install of files");
-    case Client::ActionSimulateInstallPackages :
+    case Enum::RoleSimulateInstallPackages :
         return i18nc("The role of the transaction, in present tense", "Simulating the install");
-    case Client::ActionSimulateRemovePackages :
+    case Enum::RoleSimulateRemovePackages :
         return i18nc("The role of the transaction, in present tense", "Simulating the remove");
-    case Client::ActionSimulateUpdatePackages :
+    case Enum::RoleSimulateUpdatePackages :
         return i18nc("The role of the transaction, in present tense", "Simulating the update");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
 }
 
-QString KpkStrings::actionPast(Client::Action action)
+QString KpkStrings::actionPast(Enum::Role action)
 {
     switch (action) {
-    case Client::UnknownAction :
+    case Enum::UnknownRole :
         return i18nc("The role of the transaction, in past tense", "Unknown role type");
-    case Client::ActionGetDepends :
+    case Enum::RoleGetDepends :
         return i18nc("The role of the transaction, in past tense", "Got dependencies");
-    case Client::ActionGetUpdateDetail :
+    case Enum::RoleGetUpdateDetail :
         return i18nc("The role of the transaction, in past tense", "Got update detail");
-    case Client::ActionGetDetails :
+    case Enum::RoleGetDetails :
         return i18nc("The role of the transaction, in past tense", "Got details");
-    case Client::ActionGetRequires :
+    case Enum::RoleGetRequires :
         return i18nc("The role of the transaction, in past tense", "Got requires");
-    case Client::ActionGetUpdates :
+    case Enum::RoleGetUpdates :
         return i18nc("The role of the transaction, in past tense", "Got updates");
-    case Client::ActionSearchDetails :
+    case Enum::RoleSearchDetails :
         return i18nc("The role of the transaction, in past tense", "Searched for package details");
-    case Client::ActionSearchFile :
+    case Enum::RoleSearchFile :
         return i18nc("The role of the transaction, in past tense", "Searched for file");
-    case Client::ActionSearchGroup :
+    case Enum::RoleSearchGroup :
         return i18nc("The role of the transaction, in past tense", "Searched groups");
-    case Client::ActionSearchName :
+    case Enum::RoleSearchName :
         return i18nc("The role of the transaction, in past tense", "Searched for package name");
-    case Client::ActionRemovePackages :
+    case Enum::RoleRemovePackages :
         return i18nc("The role of the transaction, in past tense", "Removed packages");
-    case Client::ActionInstallPackages :
+    case Enum::RoleInstallPackages :
         return i18nc("The role of the transaction, in past tense", "Installed packages");
-    case Client::ActionInstallFiles :
+    case Enum::RoleInstallFiles :
         return i18nc("The role of the transaction, in past tense", "Installed local files");
-    case Client::ActionRefreshCache :
+    case Enum::RoleRefreshCache :
         return i18nc("The role of the transaction, in past tense", "Refreshed package cache");
-    case Client::ActionUpdatePackages :
+    case Enum::RoleUpdatePackages :
         return i18nc("The role of the transaction, in past tense", "Updated packages");
-    case Client::ActionUpdateSystem :
+    case Enum::RoleUpdateSystem :
         return i18nc("The role of the transaction, in past tense", "Updated system");
-    case Client::ActionCancel :
+    case Enum::RoleCancel :
         return i18nc("The role of the transaction, in past tense", "Canceled");
-    case Client::ActionRollback :
+    case Enum::RoleRollback :
         return i18nc("The role of the transaction, in past tense", "Rolled back");
-    case Client::ActionGetRepoList :
+    case Enum::RoleGetRepoList :
         return i18nc("The role of the transaction, in past tense", "Got list of repositories");
-    case Client::ActionRepoEnable :
+    case Enum::RoleRepoEnable :
         return i18nc("The role of the transaction, in past tense", "Enabled repository");
-    case Client::ActionRepoSetData :
+    case Enum::RoleRepoSetData :
         return i18nc("The role of the transaction, in past tense", "Set repository data");
-    case Client::ActionResolve :
+    case Enum::RoleResolve :
         return i18nc("The role of the transaction, in past tense", "Resolved");
-    case Client::ActionGetFiles :
+    case Enum::RoleGetFiles :
         return i18nc("The role of the transaction, in past tense", "Got file list");
-    case Client::ActionWhatProvides :
+    case Enum::RoleWhatProvides :
         return i18nc("The role of the transaction, in past tense", "Got what provides");
-    case Client::ActionInstallSignature :
+    case Enum::RoleInstallSignature :
         return i18nc("The role of the transaction, in past tense", "Installed signature");
-    case Client::ActionGetPackages :
+    case Enum::RoleGetPackages :
         return i18nc("The role of the transaction, in past tense", "Got package lists");
-    case Client::ActionAcceptEula :
+    case Enum::RoleAcceptEula :
         return i18nc("The role of the transaction, in past tense", "Accepted EULA");
-    case Client::ActionDownloadPackages :
+    case Enum::RoleDownloadPackages :
         return i18nc("The role of the transaction, in past tense", "Downloaded packages");
-    case Client::ActionGetDistroUpgrades :
+    case Enum::RoleGetDistroUpgrades :
         return i18nc("The role of the transaction, in past tense", "Got distribution upgrades");
-    case Client::ActionGetCategories :
+    case Enum::RoleGetCategories :
         return i18nc("The role of the transaction, in past tense", "Got categories");
-    case Client::ActionGetOldTransactions :
+    case Enum::RoleGetOldTransactions :
         return i18nc("The role of the transaction, in past tense", "Got old transactions");
-    case Client::ActionSimulateInstallFiles :
+    case Enum::RoleSimulateInstallFiles :
         return i18nc("The role of the transaction, in past tense", "Simulated the install of files");
-    case Client::ActionSimulateInstallPackages :
+    case Enum::RoleSimulateInstallPackages :
         return i18nc("The role of the transaction, in past tense", "Simulated the install");
-    case Client::ActionSimulateRemovePackages :
+    case Enum::RoleSimulateRemovePackages :
         return i18nc("The role of the transaction, in past tense", "Simulated the remove");
-    case Client::ActionSimulateUpdatePackages :
+    case Enum::RoleSimulateUpdatePackages :
         return i18nc("The role of the transaction, in past tense", "Simulated the update");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
 }
 
-QString KpkStrings::error(PackageKit::Client::ErrorType error)
+QString KpkStrings::error(PackageKit::Enum::Error error)
 {
     switch (error) {
-    case Client::ErrorNoNetwork :
+    case Enum::ErrorNoNetwork :
         return i18n("No network connection available");
-    case Client::ErrorNoCache :
+    case Enum::ErrorNoCache :
         return i18n("No package cache is available");
-    case Client::ErrorOom :
+    case Enum::ErrorOom :
         return i18n("Out of memory");
-    case Client::ErrorCreateThreadFailed :
+    case Enum::ErrorCreateThreadFailed :
         return i18n("Failed to create a thread");
-    case Client::ErrorNotSupported :
+    case Enum::ErrorNotSupported :
         return i18n("Not supported by this backend");
-    case Client::ErrorInternalError :
+    case Enum::ErrorInternalError :
         return i18n("An internal system error has occurred");
-    case Client::ErrorGpgFailure :
+    case Enum::ErrorGpgFailure :
         return i18n("A security trust relationship is not present");
-    case Client::ErrorPackageNotInstalled :
+    case Enum::ErrorPackageNotInstalled :
         return i18n("The package is not installed");
-    case Client::ErrorPackageNotFound :
+    case Enum::ErrorPackageNotFound :
         return i18n("The package was not found");
-    case Client::ErrorPackageAlreadyInstalled :
+    case Enum::ErrorPackageAlreadyInstalled :
         return i18n("The package is already installed");
-    case Client::ErrorPackageDownloadFailed :
+    case Enum::ErrorPackageDownloadFailed :
         return i18n("The package download failed");
-    case Client::ErrorGroupNotFound :
+    case Enum::ErrorGroupNotFound :
         return i18n("The group was not found");
-    case Client::ErrorGroupListInvalid :
+    case Enum::ErrorGroupListInvalid :
         return i18n("The group list was invalid");
-    case Client::ErrorDepResolutionFailed :
+    case Enum::ErrorDepResolutionFailed :
         return i18n("Dependency resolution failed");
-    case Client::ErrorFilterInvalid :
+    case Enum::ErrorFilterInvalid :
         return i18n("Search filter was invalid");
-    case Client::ErrorPackageIdInvalid :
+    case Enum::ErrorPackageIdInvalid :
         return i18n("The package identifier was not well formed");
-    case Client::ErrorTransactionError :
+    case Enum::ErrorTransactionError :
         return i18n("Transaction error");
-    case Client::ErrorRepoNotFound :
+    case Enum::ErrorRepoNotFound :
         return i18n("Repository name was not found");
-    case Client::ErrorCannotRemoveSystemPackage :
+    case Enum::ErrorCannotRemoveSystemPackage :
         return i18n("Could not remove a protected system package");
-    case Client::ErrorTransactionCancelled :
+    case Enum::ErrorTransactionCancelled :
         return i18n("The task was canceled");
-    case Client::ErrorProcessKill :
+    case Enum::ErrorProcessKill :
         return i18n("The task was forcibly canceled");
-    case Client::ErrorFailedConfigParsing :
+    case Enum::ErrorFailedConfigParsing :
         return i18n("Reading the config file failed");
-    case Client::ErrorCannotCancel :
+    case Enum::ErrorCannotCancel :
         return i18n("The task cannot be cancelled");
-    case Client::ErrorCannotInstallSourcePackage :
+    case Enum::ErrorCannotInstallSourcePackage :
         return i18n("Source packages cannot be installed");
-    case Client::ErrorNoLicenseAgreement :
+    case Enum::ErrorNoLicenseAgreement :
         return i18n("The license agreement failed");
-    case Client::ErrorFileConflicts :
+    case Enum::ErrorFileConflicts :
         return i18n("Local file conflict between packages");
-    case Client::ErrorPackageConflicts :
+    case Enum::ErrorPackageConflicts :
         return i18n("Packages are not compatible");
-    case Client::ErrorRepoNotAvailable :
+    case Enum::ErrorRepoNotAvailable :
         return i18n("Problem connecting to a software origin");
-    case Client::ErrorFailedInitialization :
+    case Enum::ErrorFailedInitialization :
         return i18n("Failed to initialize");
-    case Client::ErrorFailedFinalise :
+    case Enum::ErrorFailedFinalise :
         return i18n("Failed to finalize");
-    case Client::ErrorCannotGetLock :
+    case Enum::ErrorCannotGetLock :
         return i18n("Cannot get lock");
-    case Client::ErrorNoPackagesToUpdate :
+    case Enum::ErrorNoPackagesToUpdate :
         return i18n("No packages to update");
-    case Client::ErrorCannotWriteRepoConfig :
+    case Enum::ErrorCannotWriteRepoConfig :
         return i18n("Cannot write repository configuration");
-    case Client::ErrorLocalInstallFailed :
+    case Enum::ErrorLocalInstallFailed :
         return i18n("Local install failed");
-    case Client::ErrorBadGpgSignature :
+    case Enum::ErrorBadGpgSignature :
         return i18n("Bad GPG signature");
-    case Client::ErrorMissingGpgSignature :
+    case Enum::ErrorMissingGpgSignature :
         return i18n("Missing GPG signature");
-    case Client::ErrorRepoConfigurationError :
+    case Enum::ErrorRepoConfigurationError :
         return i18n("Repository configuration invalid");
-    case Client::ErrorInvalidPackageFile :
+    case Enum::ErrorInvalidPackageFile :
         return i18n("Invalid package file");
-    case Client::ErrorPackageInstallBlocked :
+    case Enum::ErrorPackageInstallBlocked :
         return i18n("Package install blocked");
-    case Client::ErrorPackageCorrupt :
+    case Enum::ErrorPackageCorrupt :
         return i18n("Package is corrupt");
-    case Client::ErrorAllPackagesAlreadyInstalled :
+    case Enum::ErrorAllPackagesAlreadyInstalled :
         return i18n("All packages are already installed");
-    case Client::ErrorFileNotFound :
+    case Enum::ErrorFileNotFound :
         return i18n("The specified file could not be found");
-    case Client::ErrorNoMoreMirrorsToTry :
+    case Enum::ErrorNoMoreMirrorsToTry :
         return i18n("No more mirrors are available");
-    case Client::ErrorNoDistroUpgradeData :
+    case Enum::ErrorNoDistroUpgradeData :
         return i18n("No distribution upgrade data is available");
-    case Client::ErrorIncompatibleArchitecture :
+    case Enum::ErrorIncompatibleArchitecture :
         return i18n("Package is incompatible with this system");
-    case Client::ErrorNoSpaceOnDevice :
+    case Enum::ErrorNoSpaceOnDevice :
         return i18n("No space is left on the disk");
-    case Client::ErrorMediaChangeRequired :
+    case Enum::ErrorMediaChangeRequired :
         return i18n("A media change is required");
-    case Client::ErrorNotAuthorized :
+    case Enum::ErrorNotAuthorized :
         return i18n("Authorization failed");
-    case Client::ErrorUpdateNotFound :
+    case Enum::ErrorUpdateNotFound :
         return i18n("Update not found");
-    case Client::ErrorCannotInstallRepoUnsigned :
+    case Enum::ErrorCannotInstallRepoUnsigned :
         return i18n("Cannot install from untrusted origin");
-    case Client::ErrorCannotUpdateRepoUnsigned :
+    case Enum::ErrorCannotUpdateRepoUnsigned :
         return i18n("Cannot update from untrusted origin");
-    case Client::ErrorCannotGetFilelist :
+    case Enum::ErrorCannotGetFilelist :
         return i18n("Cannot get the file list");
-    case Client::ErrorCannotGetRequires :
+    case Enum::ErrorCannotGetRequires :
         return i18n("Cannot get package requires");
-    case Client::ErrorCannotDisableRepository :
+    case Enum::ErrorCannotDisableRepository :
         return i18n("Cannot disable origin");
-    case Client::ErrorRestrictedDownload :
+    case Enum::ErrorRestrictedDownload :
         return i18n("The download failed");
-    case Client::ErrorPackageFailedToConfigure :
+    case Enum::ErrorPackageFailedToConfigure :
         return i18n("Package failed to configure");
-    case Client::ErrorPackageFailedToBuild :
+    case Enum::ErrorPackageFailedToBuild :
         return i18n("Package failed to build");
-    case Client::ErrorPackageFailedToInstall :
+    case Enum::ErrorPackageFailedToInstall :
         return i18n("Package failed to install");
-    case Client::ErrorPackageFailedToRemove :
+    case Enum::ErrorPackageFailedToRemove :
         return i18n("Package failed to be removed");
-    case Client::UnknownErrorType :
+    case Enum::UnknownError :
         return i18n("Unknown error");
     }
     kWarning() << "error unrecognised: " << error;
     return QString();
 }
 
-QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
+QString KpkStrings::errorMessage(PackageKit::Enum::Error error)
 {
     switch (error) {
-    case Client::ErrorNoNetwork :
+    case Enum::ErrorNoNetwork :
         return i18n("There is no network connection available.\n"
                     "Please check your connection settings and try again");
-    case Client::ErrorNoCache :
+    case Enum::ErrorNoCache :
         return i18n("The package list needs to be rebuilt.\n"
                     "This should have been done by the backend automatically.");
-    case Client::ErrorOom :
+    case Enum::ErrorOom :
         return i18n("The service that is responsible for handling user requests is out of memory.\n"
                     "Please close some programs or restart your computer.");
-    case Client::ErrorCreateThreadFailed :
+    case Enum::ErrorCreateThreadFailed :
         return i18n("A thread could not be created to service the user request.");
-    case Client::ErrorNotSupported :
+    case Enum::ErrorNotSupported :
         return i18n("The action is not supported by this backend.\n"
                     "Please report a bug as this should not have happened.");
-    case Client::ErrorInternalError :
+    case Enum::ErrorInternalError :
         return i18n("A problem that we were not expecting has occurred.\n"
                     "Please report this bug with the error description.");
-    case Client::ErrorGpgFailure :
+    case Enum::ErrorGpgFailure :
         return i18n("A security trust relationship could not be made with the software origin.\n"
                     "Please check your software signature settings.");
-    case Client::ErrorPackageNotInstalled :
+    case Enum::ErrorPackageNotInstalled :
         return i18n("The package that is trying to be removed or updated is not already installed.");
-    case Client::ErrorPackageNotFound :
+    case Enum::ErrorPackageNotFound :
         return i18n("The package that is being modified was not found on your system or in any software origin.");
-    case Client::ErrorPackageAlreadyInstalled :
+    case Enum::ErrorPackageAlreadyInstalled :
         return i18n("The package that is trying to be installed is already installed.");
-    case Client::ErrorPackageDownloadFailed :
+    case Enum::ErrorPackageDownloadFailed :
         return i18n("The package download failed.\n"
                     "Please check your network connectivity.");
-    case Client::ErrorGroupNotFound :
+    case Enum::ErrorGroupNotFound :
         return i18n("The group type was not found.\n"
                     "Please check your group list and try again.");
-    case Client::ErrorGroupListInvalid :
+    case Enum::ErrorGroupListInvalid :
         return i18n("The group list could not be loaded.\n"
                     "Refreshing your cache may help, although this is normally a software "
                     "origin error.");
-    case Client::ErrorDepResolutionFailed :
+    case Enum::ErrorDepResolutionFailed :
         return i18n("A package dependency could not be found.\n"
                     "More information is available in the detailed report.");
-    case Client::ErrorFilterInvalid :
+    case Enum::ErrorFilterInvalid :
         return i18n("The search filter was not correctly formed.");
-    case Client::ErrorPackageIdInvalid :
+    case Enum::ErrorPackageIdInvalid :
         return i18n("The package identifier was not well formed when sent to the system daemon.\n"
                     "This normally indicates an internal bug and should be reported.");
-    case Client::ErrorTransactionError :
+    case Enum::ErrorTransactionError :
         return i18n("An error occurred while running the transaction.\n"
                     "More information is available in the detailed report.");
-    case Client::ErrorRepoNotFound :
+    case Enum::ErrorRepoNotFound :
         return i18n("The remote software origin name was not found.\n"
                     "You may need to enable an item in Software Origins.");
-    case Client::ErrorCannotRemoveSystemPackage :
+    case Enum::ErrorCannotRemoveSystemPackage :
         return i18n("Removing a protected system package is not allowed.");
-    case Client::ErrorTransactionCancelled :
+    case Enum::ErrorTransactionCancelled :
         return i18n("The task was canceled successfully and no packages were changed.");
-    case Client::ErrorProcessKill :
+    case Enum::ErrorProcessKill :
         return i18n("The task was canceled successfully and no packages were changed.\n"
                     "The backend did not exit cleanly.");
-    case Client::ErrorFailedConfigParsing :
+    case Enum::ErrorFailedConfigParsing :
         return i18n("The native package configuration file could not be opened.\n"
                     "Please make sure your system's configuration is valid.");
-    case Client::ErrorCannotCancel :
+    case Enum::ErrorCannotCancel :
         return i18n("The task is not safe to be cancelled at this time.");
-    case Client::ErrorCannotInstallSourcePackage :
+    case Enum::ErrorCannotInstallSourcePackage :
         return i18n("Source packages are not normally installed this way.\n"
                     "Check the extension of the file you are trying to install.");
-    case Client::ErrorNoLicenseAgreement :
+    case Enum::ErrorNoLicenseAgreement :
         return i18n("The license agreement was not agreed to.\n"
                     "To use this software you have to accept the license.");
-    case Client::ErrorFileConflicts :
+    case Enum::ErrorFileConflicts :
         return i18n("Two packages provide the same file.\n"
                     "This is usually due to mixing packages for different software origins.");
-    case Client::ErrorPackageConflicts :
+    case Enum::ErrorPackageConflicts :
         return i18n("Multiple packages exist that are not compatible with each other.\n"
                     "This is usually due to mixing packages from different software origins.");
-    case Client::ErrorRepoNotAvailable :
+    case Enum::ErrorRepoNotAvailable :
         return i18n("There was a (possibly temporary) problem connecting to a software origins.\n"
                     "Please check the detailed error for further details.");
-    case Client::ErrorFailedInitialization :
+    case Enum::ErrorFailedInitialization :
         return i18n("Failed to initialize packaging backend.\n"
                     "This may occur if other packaging tools are being used simultaneously.");
-    case Client::ErrorFailedFinalise :
+    case Enum::ErrorFailedFinalise :
         return i18n("Failed to close down the backend instance.\n"
                     "This error can normally be ignored.");
-    case Client::ErrorCannotGetLock :
+    case Enum::ErrorCannotGetLock :
         return i18n("Cannot get the exclusive lock on the packaging backend.\n"
                     "Please close any other legacy packaging tools that may be open.");
-    case Client::ErrorNoPackagesToUpdate :
+    case Enum::ErrorNoPackagesToUpdate :
         return i18n("None of the selected packages could be updated.");
-    case Client::ErrorCannotWriteRepoConfig :
+    case Enum::ErrorCannotWriteRepoConfig :
         return i18n("The repository configuration could not be modified.");
-    case Client::ErrorLocalInstallFailed :
+    case Enum::ErrorLocalInstallFailed :
         return i18n("Installing the local file failed.\n"
                     "More information is available in the detailed report.");
-    case Client::ErrorBadGpgSignature :
+    case Enum::ErrorBadGpgSignature :
         return i18n("The package signature could not be verified.");
-    case Client::ErrorMissingGpgSignature :
+    case Enum::ErrorMissingGpgSignature :
         return i18n("The package signature was missing and this package is untrusted.\n"
                     "This package was not signed with a GPG key when created.");
-    case Client::ErrorRepoConfigurationError :
+    case Enum::ErrorRepoConfigurationError :
         return i18n("Repository configuration was invalid and could not be read.");
-    case Client::ErrorInvalidPackageFile :
+    case Enum::ErrorInvalidPackageFile :
         return i18n("The package you are attempting to install is not valid.\n"
                     "The package file could be corrupt, or not a proper package.");
-    case Client::ErrorPackageInstallBlocked :
+    case Enum::ErrorPackageInstallBlocked :
         return i18n("Installation of this package was prevented by your packaging system's configuration.");
-    case Client::ErrorPackageCorrupt :
+    case Enum::ErrorPackageCorrupt :
         return i18n("The package that was downloaded is corrupt and needs to be downloaded again.");
-    case Client::ErrorAllPackagesAlreadyInstalled :
+    case Enum::ErrorAllPackagesAlreadyInstalled :
         return i18n("All of the packages selected for install are already installed on the system.");
-    case Client::ErrorFileNotFound :
+    case Enum::ErrorFileNotFound :
         return i18n("The specified file could not be found on the system.\n"
                     "Check that the file still exists and has not been deleted.");
-    case Client::ErrorNoMoreMirrorsToTry :
+    case Enum::ErrorNoMoreMirrorsToTry :
         return i18n("Required data could not be found on any of the configured software origins.\n"
                     "There were no more download mirrors that could be tried.");
-    case Client::ErrorNoDistroUpgradeData :
+    case Enum::ErrorNoDistroUpgradeData :
         return i18n("Required upgrade data could not be found in any of the configured software origins.\n"
                     "The list of distribution upgrades will be unavailable.");
-    case Client::ErrorIncompatibleArchitecture :
+    case Enum::ErrorIncompatibleArchitecture :
         return i18n("The package that is trying to be installed is incompatible with this system.");
-    case Client::ErrorNoSpaceOnDevice :
+    case Enum::ErrorNoSpaceOnDevice :
         return i18n("There is insufficient space on the device.\n"
                     "Free some space on the system disk to perform this operation.");
-    case Client::ErrorMediaChangeRequired :
+    case Enum::ErrorMediaChangeRequired :
         return i18n("Additional media is required to complete the transaction.");
-    case Client::ErrorNotAuthorized :
+    case Enum::ErrorNotAuthorized :
         return i18n("You have failed to provide correct authentication.\n"
                     "Please check any passwords or account settings.");
-    case Client::ErrorUpdateNotFound :
+    case Enum::ErrorUpdateNotFound :
         return i18n("The specified update could not be found.\n"
                     "It could have already been installed or no longer available on the remote server.");
-    case Client::ErrorCannotInstallRepoUnsigned :
+    case Enum::ErrorCannotInstallRepoUnsigned :
         return i18n("The package could not be installed from untrusted origin.");
-    case Client::ErrorCannotUpdateRepoUnsigned :
+    case Enum::ErrorCannotUpdateRepoUnsigned :
         return i18n("The package could not be updated from untrusted origin.");
-    case Client::ErrorCannotGetFilelist :
+    case Enum::ErrorCannotGetFilelist :
         return i18n("The file list is not available for this package.");
-    case Client::ErrorCannotGetRequires :
+    case Enum::ErrorCannotGetRequires :
         return i18n("The information about what requires this package could not be obtained.");
-    case Client::ErrorCannotDisableRepository :
+    case Enum::ErrorCannotDisableRepository :
         return i18n("The specified software origin could not be disabled.");
-    case Client::ErrorRestrictedDownload :
+    case Enum::ErrorRestrictedDownload :
         return i18n("The download could not be done automatically and should be done manually.\n"
                     "More information is available in the detailed report.");
-    case Client::ErrorPackageFailedToConfigure :
+    case Enum::ErrorPackageFailedToConfigure :
         return i18n("One of the selected packages failed to configure correctly.\n"
                     "More information is available in the detailed report.");
-    case Client::ErrorPackageFailedToBuild :
+    case Enum::ErrorPackageFailedToBuild :
         return i18n("One of the selected packages failed to build correctly.\n"
                     "More information is available in the detailed report.");
-    case Client::ErrorPackageFailedToInstall :
+    case Enum::ErrorPackageFailedToInstall :
         return i18n("One of the selected packages failed to install correctly.\n"
                     "More information is available in the detailed report.");
-    case Client::ErrorPackageFailedToRemove :
+    case Enum::ErrorPackageFailedToRemove :
         return i18n("One of the selected packages failed to be removed correctly.\n"
                     "More information is available in the detailed report.");
-    case Client::UnknownErrorType :
+    case Enum::UnknownError :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
     }
@@ -615,108 +615,108 @@ QString KpkStrings::errorMessage(PackageKit::Client::ErrorType error)
     return QString();
 }
 
-QString KpkStrings::groups(Client::Group group)
+QString KpkStrings::groups(Enum::Group group)
 {
     switch (group) {
-    case Client::GroupAccessibility :
+    case Enum::GroupAccessibility :
         return i18nc("The group type", "Accessibility");
-    case Client::GroupAccessories :
+    case Enum::GroupAccessories :
         return i18nc("The group type", "Accessories");
-    case Client::GroupEducation :
+    case Enum::GroupEducation :
         return i18nc("The group type", "Education");
-    case Client::GroupGames :
+    case Enum::GroupGames :
         return i18nc("The group type", "Games");
-    case Client::GroupGraphics :
+    case Enum::GroupGraphics :
         return i18nc("The group type", "Graphics");
-    case Client::GroupInternet :
+    case Enum::GroupInternet :
         return i18nc("The group type", "Internet");
-    case Client::GroupOffice :
+    case Enum::GroupOffice :
         return i18nc("The group type", "Office");
-    case Client::GroupOther :
+    case Enum::GroupOther :
         return i18nc("The group type", "Other");
-    case Client::GroupProgramming :
+    case Enum::GroupProgramming :
         return i18nc("The group type", "Development");
-    case Client::GroupMultimedia :
+    case Enum::GroupMultimedia :
         return i18nc("The group type", "Multimedia");
-    case Client::GroupSystem :
+    case Enum::GroupSystem :
         return i18nc("The group type", "System");
-    case Client::GroupDesktopGnome :
+    case Enum::GroupDesktopGnome :
         return i18nc("The group type", "GNOME desktop");
-    case Client::GroupDesktopKde :
+    case Enum::GroupDesktopKde :
         return i18nc("The group type", "KDE desktop");
-    case Client::GroupDesktopXfce :
+    case Enum::GroupDesktopXfce :
         return i18nc("The group type", "XFCE desktop");
-    case Client::GroupDesktopOther :
+    case Enum::GroupDesktopOther :
         return i18nc("The group type", "Other desktops");
-    case Client::GroupPublishing :
+    case Enum::GroupPublishing :
         return i18nc("The group type", "Publishing");
-    case Client::GroupServers :
+    case Enum::GroupServers :
         return i18nc("The group type", "Servers");
-    case Client::GroupFonts :
+    case Enum::GroupFonts :
         return i18nc("The group type", "Fonts");
-    case Client::GroupAdminTools :
+    case Enum::GroupAdminTools :
         return i18nc("The group type", "Admin tools");
-    case Client::GroupLegacy :
+    case Enum::GroupLegacy :
         return i18nc("The group type", "Legacy");
-    case Client::GroupLocalization :
+    case Enum::GroupLocalization :
         return i18nc("The group type", "Localization");
-    case Client::GroupVirtualization :
+    case Enum::GroupVirtualization :
         return i18nc("The group type", "Virtualization");
-    case Client::GroupSecurity :
+    case Enum::GroupSecurity :
         return i18nc("The group type", "Security");
-    case Client::GroupPowerManagement :
+    case Enum::GroupPowerManagement :
         return i18nc("The group type", "Power management");
-    case Client::GroupCommunication :
+    case Enum::GroupCommunication :
         return i18nc("The group type", "Communication");
-    case Client::GroupNetwork :
+    case Enum::GroupNetwork :
         return i18nc("The group type", "Network");
-    case Client::GroupMaps :
+    case Enum::GroupMaps :
         return i18nc("The group type", "Maps");
-    case Client::GroupRepos :
+    case Enum::GroupRepos :
         return i18nc("The group type", "Software sources");
-    case Client::GroupScience :
+    case Enum::GroupScience :
         return i18nc("The group type", "Science");
-    case Client::GroupDocumentation :
+    case Enum::GroupDocumentation :
         return i18nc("The group type", "Documentation");
-    case Client::GroupElectronics :
+    case Enum::GroupElectronics :
         return i18nc("The group type", "Electronics");
-    case Client::GroupCollections ://TODO check this one
+    case Enum::GroupCollections ://TODO check this one
         return i18nc("The group type", "Package collections");
-    case Client::GroupVendor :
+    case Enum::GroupVendor :
         return i18nc("The group type", "Vendor");
-    case Client::GroupNewest :
+    case Enum::GroupNewest :
         return i18nc("The group type", "Newest packages");
-    case Client::UnknownGroup :
+    case Enum::UnknownGroup :
         return i18nc("The group type", "Unknown group");
     }
     kWarning() << "group unrecognised: " << group;
     return QString();
 }
 
-QString KpkStrings::info(Package::State state)
+QString KpkStrings::info(Enum::Info state)
 {
     switch (state) {
-    case Package::StateLow :
+    case Enum::InfoLow :
         return i18nc("The type of update", "Trivial update");
-    case Package::StateNormal :
+    case Enum::InfoNormal :
         return i18nc("The type of update", "Normal update");
-    case Package::StateImportant :
+    case Enum::InfoImportant :
         return i18nc("The type of update", "Important update");
-    case Package::StateSecurity :
+    case Enum::InfoSecurity :
         return i18nc("The type of update", "Security update");
-    case Package::StateBugfix :
+    case Enum::InfoBugfix :
         return i18nc("The type of update", "Bug fix update");
-    case Package::StateEnhancement :
+    case Enum::InfoEnhancement :
         return i18nc("The type of update", "Enhancement update");
-    case Package::StateBlocked :
+    case Enum::InfoBlocked :
         return i18nc("The type of update", "Blocked update");
-    case Package::StateInstalled :
-    case Package::StateCollectionInstalled :
+    case Enum::InfoInstalled :
+    case Enum::InfoCollectionInstalled :
         return i18nc("The type of update", "Installed");
-    case Package::StateAvailable :
-    case Package::StateCollectionAvailable :
+    case Enum::InfoAvailable :
+    case Enum::InfoCollectionAvailable :
         return i18nc("The type of update", "Available");
-    case Package::UnknownState :
+    case Enum::UnknownInfo :
         return i18nc("The type of update", "Unknown update");
     default : // In this case we don't want to map all enums
         kWarning() << "info unrecognised: " << state;
@@ -724,26 +724,26 @@ QString KpkStrings::info(Package::State state)
     }
 }
 
-QString KpkStrings::infoUpdate(Package::State state, int number)
+QString KpkStrings::infoUpdate(Enum::Info state, int number)
 {
     switch (state) {
-    case Package::StateLow :
+    case Enum::InfoLow :
         return i18np("1 trivial update", "%1 trivial updates", number);
-    case Package::StateNormal :
+    case Enum::InfoNormal :
         return i18ncp("Type of update, in the case it's just an update", "1 update", "%1 updates", number);
-    case Package::StateImportant :
+    case Enum::InfoImportant :
         return i18np("1 important update", "%1 important updates", number);
-    case Package::StateSecurity :
+    case Enum::InfoSecurity :
         return i18np("1 security update", "%1 security updates", number);
-    case Package::StateBugfix :
+    case Enum::InfoBugfix :
         return i18np("1 bug fix update", "%1 bug fix updates", number);
-    case Package::StateEnhancement :
+    case Enum::InfoEnhancement :
         return i18np("1 enhancement update", "%1 enhancement updates", number);
-    case Package::StateBlocked :
+    case Enum::InfoBlocked :
         return i18np("1 blocked update", "%1 blocked updates", number);
-    case Package::StateInstalled :
+    case Enum::InfoInstalled :
         return i18np("1 installed package", "%1 installed packages", number);
-    case Package::StateAvailable :
+    case Enum::InfoAvailable :
         return i18np("1 available package", "%1 available packages", number);
     default : // In this case we don't want to map all enums
         kWarning() << "update info unrecognised: " << state;
@@ -751,28 +751,28 @@ QString KpkStrings::infoUpdate(Package::State state, int number)
     }
 }
 
-QString KpkStrings::infoUpdate(Package::State state, int updates, int selected)
+QString KpkStrings::infoUpdate(Enum::Info state, int updates, int selected)
 {
     if (updates == selected) {
         switch (state) {
-        case Package::StateLow :
+        case Enum::InfoLow :
             return i18np("1 trivial update selected", "%1 trivial updates selected", updates);
-        case Package::StateNormal :
+        case Enum::InfoNormal :
             return i18ncp("Type of update, in the case it's just an update",
                           "1 update selected",
                           "%1 updates selected", updates);
-        case Package::StateImportant :
+        case Enum::InfoImportant :
             return i18np("1 important update selected", "%1 important updates selected", updates);
-        case Package::StateSecurity :
+        case Enum::InfoSecurity :
             return i18np("1 security update selected", "%1 security updates selected", updates);
-        case Package::StateBugfix :
+        case Enum::InfoBugfix :
             return i18np("1 bug fix update selected", "%1 bug fix updates selected", updates);
-        case Package::StateEnhancement :
+        case Enum::InfoEnhancement :
             return i18np("1 enhancement update selected", "%1 enhancement updates selected", updates);
-        case Package::StateInstalled :
+        case Enum::InfoInstalled :
             return i18np("1 installed package selected to be removed",
                          "%1 installed packages selected to be removed", updates);
-        case Package::StateAvailable :
+        case Enum::InfoAvailable :
             return i18np("1 available package selected to be installed",
                          "%1 available packages selected to be installed", updates);
         default : // In this case we don't want to map all enums
@@ -783,25 +783,25 @@ QString KpkStrings::infoUpdate(Package::State state, int updates, int selected)
         return infoUpdate(state, updates);
     } else {
         switch (state) {
-        case Package::StateLow :
+        case Enum::InfoLow :
             return i18np("%1 trivial update", "%1 trivial updates, %2 selected", updates, selected);
-        case Package::StateNormal :
+        case Enum::InfoNormal :
             return i18ncp("Type of update, in the case it's just an update",
                           "%1 update", "%1 updates, %2 selected", updates, selected);
-        case Package::StateImportant :
+        case Enum::InfoImportant :
             return i18np("%1 important update", "%1 important updates, %2 selected", updates, selected);
-        case Package::StateSecurity :
+        case Enum::InfoSecurity :
             return i18np("%1 security update", "%1 security updates, %2 selected", updates, selected);
-        case Package::StateBugfix :
+        case Enum::InfoBugfix :
             return i18np("%1 bug fix update", "%1 bug fix updates, %2 selected", updates, selected);
-        case Package::StateEnhancement :
+        case Enum::InfoEnhancement :
             return i18np("%1 enhancement update", "%1 enhancement updates, %2 selected", updates, selected);
-        case Package::StateBlocked :
+        case Enum::InfoBlocked :
             // Blocked updates aren't selectable
             return i18np("%1 blocked update", "%1 blocked updates", updates);
-        case Package::StateInstalled :
+        case Enum::InfoInstalled :
             return i18np("%1 installed package", "%1 installed packages, %2 selected to be removed", updates, selected);
-        case Package::StateAvailable :
+        case Enum::InfoAvailable :
             return i18np("%1 available package", "%1 available packages, %2 selected to be installed", updates, selected);
         default : // In this case we don't want to map all enums
             kWarning() << "update info unrecognised: " << state;
@@ -810,118 +810,118 @@ QString KpkStrings::infoUpdate(Package::State state, int updates, int selected)
     }
 }
 
-QString KpkStrings::restartTypeFuture(Client::RestartType value)
+QString KpkStrings::restartTypeFuture(Enum::Restart value)
 {
     switch (value) {
-    case Client::RestartNone :
+    case Enum::RestartNone :
         return i18n("No restart is necessary");
-    case Client::RestartApplication :
+    case Enum::RestartApplication :
         return i18n("You will be required to restart this application");
-    case Client::RestartSession :
+    case Enum::RestartSession :
         return i18n("You will be required to log out and back in");
-    case Client::RestartSystem :
+    case Enum::RestartSystem :
         return i18n("A restart will be required");
-    case Client::RestartSecuritySession :
+    case Enum::RestartSecuritySession :
         return i18n("You will be required to log out and back in due to a security update.");
-    case Client::RestartSecuritySystem :
+    case Enum::RestartSecuritySystem :
         return i18n("A restart will be required due to a security update.");
-    case Client::UnknownRestartType :
-        kWarning() << "restartTypeFuture(Client::UnknownRestartType)";
+    case Enum::UnknownRestart :
+        kWarning() << "restartTypeFuture(Enum::UnknownRestartType)";
         return QString();
     }
     kWarning() << "restart unrecognised: " << value;
     return QString();
 }
 
-QString KpkStrings::restartType(Client::RestartType value)
+QString KpkStrings::restartType(Enum::Restart value)
 {
     switch (value) {
-    case Client::RestartNone :
+    case Enum::RestartNone :
         return i18n("No restart is required");
-    case Client::RestartSystem :
+    case Enum::RestartSystem :
         return i18n("A restart is required");
-    case Client::RestartSession :
+    case Enum::RestartSession :
         return i18n("You need to log out and log back in");
-    case Client::RestartApplication :
+    case Enum::RestartApplication :
         return i18n("You need to restart the application");
-    case Client::RestartSecuritySession :
+    case Enum::RestartSecuritySession :
         return i18n("You need to log out and log back in to remain secure.");
-    case Client::RestartSecuritySystem :
+    case Enum::RestartSecuritySystem :
         return i18n("A restart is required to remain secure.");
-    case Client::UnknownRestartType :
-        kWarning() << "restartType(Client::UnknownRestartType)";
+    case Enum::UnknownRestart :
+        kWarning() << "restartType(Enum::UnknownRestartType)";
         return QString();
     }
     kWarning() << "restart unrecognised: " << value;
     return QString();
 }
 
-QString KpkStrings::updateState(Client::UpdateState value)
+QString KpkStrings::updateState(Enum::UpdateState value)
 {
     switch (value) {
-    case Client::UpdateStable :
+    case Enum::UpdateStateStable :
         return i18n("Stable");
-    case Client::UpdateUnstable :
+    case Enum::UpdateStateUnstable :
         return i18n("Unstable");
-    case Client::UpdateTesting :
+    case Enum::UpdateStateTesting :
         return i18n("Testing");
-    case Client::UnknownUpdateState :
-        kWarning() << "updateState(Client::UnknownUpdateState)";
+    case Enum::UnknownUpdateState :
+        kWarning() << "updateState(Enum::UnknownUpdateState)";
         return QString();
     }
     kWarning() << "value unrecognised: " << value;
     return QString();
 }
 
-QString KpkStrings::mediaMessage(Transaction::MediaType value, const QString &text)
+QString KpkStrings::mediaMessage(Enum::MediaType value, const QString &text)
 {
     switch (value) {
-    case Transaction::MediaCd :
+    case Enum::MediaTypeCd :
         return i18n("Please insert the CD labeled '%1', and press continue.", text);
-    case Transaction::MediaDvd :
+    case Enum::MediaTypeDvd :
         return i18n("Please insert the DVD labeled '%1', and press continue.", text);
-    case Transaction::MediaDisc :
+    case Enum::MediaTypeDisc :
         return i18n("Please insert the disc labeled '%1', and press continue.", text);
-    case Transaction::UnknownMediaType :
+    case Enum::UnknownMediaType :
         return i18n("Please insert the medium labeled '%1', and press continue.", text);
     }
     kWarning() << "value unrecognised: " << value;
     return i18n("Please insert the medium labeled '%1', and press continue.", text);
 }
 
-QString KpkStrings::message(PackageKit::Client::MessageType value)
+QString KpkStrings::message(PackageKit::Enum::Message value)
 {
     switch (value) {
-    case Client::MessageBrokenMirror :
+    case Enum::MessageBrokenMirror :
         return i18n("A mirror is possibly broken");
-    case Client::MessageConnectionRefused :
+    case Enum::MessageConnectionRefused :
         return i18n("The connection was refused");
-    case Client::MessageParameterInvalid :
+    case Enum::MessageParameterInvalid :
         return i18n("The parameter was invalid");
-    case Client::MessagePriorityInvalid :
+    case Enum::MessagePriorityInvalid :
         return i18n("The priority was invalid");
-    case Client::MessageBackendError :
+    case Enum::MessageBackendError :
         return i18n("Backend warning");
-    case Client::MessageDaemonError :
+    case Enum::MessageDaemonError :
         return i18n("Daemon warning");
-    case Client::MessageCacheBeingRebuilt :
+    case Enum::MessageCacheBeingRebuilt :
         return i18n("The package list cache is being rebuilt");
-    case Client::MessageUntrustedPackage :
+    case Enum::MessageUntrustedPackage :
         return i18n("An untrusted package was installed");
-    case Client::MessageNewerPackageExists :
+    case Enum::MessageNewerPackageExists :
         return i18n("A newer package exists");
-    case Client::MessageCouldNotFindPackage :
+    case Enum::MessageCouldNotFindPackage :
         return i18n("Could not find package");
-    case Client::MessageConfigFilesChanged :
+    case Enum::MessageConfigFilesChanged :
         return i18n("Configuration files were changed");
-    case Client::MessagePackageAlreadyInstalled :
+    case Enum::MessagePackageAlreadyInstalled :
         return i18n("Package is already installed");
-    case Client::MessageAutoremoveIgnored :
+    case Enum::MessageAutoremoveIgnored :
         return i18n("Automatic cleanup is being ignored");
-    case Client::MessageRepoMetadataDownloadFailed :
+    case Enum::MessageRepoMetadataDownloadFailed :
         return i18n("Software source download failed");
-    case Client::UnknownMessageType :
-        kWarning() << "message(Client::UnknownMessageType)";
+    case Enum::UnknownMessage :
+        kWarning() << "message(Enum::UnknownMessageType)";
         return QString();
     }
     kWarning() << "value unrecognised: " << value;

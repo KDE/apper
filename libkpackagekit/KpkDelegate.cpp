@@ -166,13 +166,13 @@ void KpkDelegate::paintColMain(QPainter *painter,
     // can try to get a better icon
     if (pkg) {
         if (pkg->iconPath().isEmpty()) {
-            if (pkg->state() == Package::StateInstalled) {
+            if (pkg->info() == Enum::InfoInstalled) {
                 icon = m_pkgRemove;
             } else {
                 icon = m_pkgDownload;
             }
         } else {
-            if (pkg->state() == Package::StateInstalled) {
+            if (pkg->info() == Enum::InfoInstalled) {
                 icon = KpkIcons::getIcon(pkg->iconPath(), "package-installed");
             } else {
                 icon = KpkIcons::getIcon(pkg->iconPath(), "kpk-refresh-cache");

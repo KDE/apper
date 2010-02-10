@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,13 +20,14 @@
 
 #include "KpkPackageDetails.h"
 
+#include <KpkSimplePackageModel.h>
 #include <KpkStrings.h>
 
 #include <KMessageBox>
 #include <QPlainTextEdit>
 #include <QTextDocument>
 
-KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client::Actions &actions, QWidget *parent)
+KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Enum::Roles &roles, QWidget *parent)
  : QWidget(parent),
    m_package(package),
    currentWidget(0),
@@ -37,9 +38,9 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
 {
     setupUi(this);
 
-    // we check to see if the actions are supported by the backend
+    // we check to see which roles are supported by the backend
     // if so we ask for information and create the containers
-    if (actions & Client::ActionGetDetails) {
+    if (roles & Enum::RoleGetDetails) {
         descriptionKTB = new KTextBrowser(this);
         descriptionTB->click();
 
@@ -47,7 +48,7 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
         descriptionTB->setEnabled(false);
     }
 
-    if (actions & Client::ActionGetFiles) {
+    if (roles & Enum::RoleGetFiles) {
         filesPTE = new QPlainTextEdit(this);
         filesPTE->setVisible(false);
         if (!currentWidget) {
@@ -57,7 +58,7 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
         fileListTB->setEnabled(false);
     }
 
-    if (actions & Client::ActionGetDepends) {
+    if (roles & Enum::RoleGetDepends) {
         dependsOnLV = new QListView(this);
         dependsOnLV->setVisible(false);
         dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
@@ -68,7 +69,7 @@ KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Client:
         dependsOnTB->setEnabled(false);
     }
 
-    if (actions & Client::ActionGetRequires) {
+    if (roles & Enum::RoleGetRequires) {
         requiredByLV = new QListView(this);
         requiredByLV->setVisible(false);
         requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
@@ -108,8 +109,8 @@ void KpkPackageDetails::getDetails(PackageKit::Package *p)
     } else {
         connect(t, SIGNAL(details(PackageKit::Package *)),
                 this, SLOT(description(PackageKit::Package *)));
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(getDetailsFinished(PackageKit::Transaction::ExitStatus, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(getDetailsFinished(PackageKit::Enum::Exit, uint)));
     }
 }
 
@@ -135,7 +136,7 @@ void KpkPackageDetails::description(PackageKit::Package *p)
                     + ":</b></td><td>" + details->license()
                     + "</td></tr>";
     }
-    if (details->group() != Client::UnknownGroup) {
+    if (details->group() != Enum::UnknownGroup) {
         description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
                     + KpkStrings::groups(details->group())
                     + "</td></tr>";
@@ -150,10 +151,10 @@ void KpkPackageDetails::description(PackageKit::Package *p)
     descriptionKTB->setHtml(description);
 }
 
-void KpkPackageDetails::getDetailsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkPackageDetails::getDetailsFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status != Transaction::ExitSuccess) {
+    if (status != Enum::ExitSuccess) {
         m_gettingOrGotDescription = false;
     }
 }
@@ -176,8 +177,8 @@ void KpkPackageDetails::getFiles(PackageKit::Package *p)
     } else {
         connect(t, SIGNAL(files(PackageKit::Package *, const QStringList &)),
                 this, SLOT(files(PackageKit::Package *, const QStringList &)));
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(getFilesFinished(PackageKit::Transaction::ExitStatus, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(getFilesFinished(PackageKit::Enum::Exit, uint)));
     }
 }
 
@@ -190,10 +191,10 @@ void KpkPackageDetails::files(PackageKit::Package *package, const QStringList &f
     }
 }
 
-void KpkPackageDetails::getFilesFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkPackageDetails::getFilesFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (filesPTE->document()->toPlainText().isEmpty()) {
             filesPTE->appendPlainText(i18n("No files were found."));
         }
@@ -214,22 +215,22 @@ void KpkPackageDetails::on_fileListTB_clicked()
 void KpkPackageDetails::getDepends(PackageKit::Package *p)
 {
     // create a transaction for the dependecies not recursive
-    Transaction *t = Client::instance()->getDepends(p, PackageKit::Client::NoFilter, false);
+    Transaction *t = Client::instance()->getDepends(p, PackageKit::Enum::NoFilter, false);
     m_pkg_model_dep->clear();
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         connect(t, SIGNAL(package(PackageKit::Package *)),
                 m_pkg_model_dep, SLOT(addPackage(PackageKit::Package *)));
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(getDependsFinished(PackageKit::Transaction::ExitStatus, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(getDependsFinished(PackageKit::Enum::Exit, uint)));
     }
 }
 
-void KpkPackageDetails::getDependsFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkPackageDetails::getDependsFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status != Transaction::ExitSuccess) {
+    if (status != Enum::ExitSuccess) {
         m_gettingOrGotDepends = false;
     }
 }
@@ -246,22 +247,22 @@ void KpkPackageDetails::on_dependsOnTB_clicked()
 void KpkPackageDetails::getRequires(PackageKit::Package *p)
 {
     // create a transaction for the requirements not recursive
-    Transaction *t = Client::instance()->getRequires(p, PackageKit::Client::NoFilter, false);
+    Transaction *t = Client::instance()->getRequires(p, PackageKit::Enum::NoFilter, false);
     m_pkg_model_req->clear();
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         connect(t, SIGNAL(package(PackageKit::Package *)),
                 m_pkg_model_req, SLOT(addPackage(PackageKit::Package *)));
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(getRequiresFinished(PackageKit::Transaction::ExitStatus, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(getRequiresFinished(PackageKit::Enum::Exit, uint)));
     }
 }
 
-void KpkPackageDetails::getRequiresFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkPackageDetails::getRequiresFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
-    if (status != Transaction::ExitSuccess) {
+    if (status != Enum::ExitSuccess) {
         m_gettingOrGotRequires = false;
     }
 }

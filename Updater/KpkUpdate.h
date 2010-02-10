@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,13 +18,14 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef PKUPDATE_H
-#define PKUPDATE_H
+#ifndef KPK_UPDATE_H
+#define KPK_UPDATE_H
 
 #include <QPackageKit>
 
-#include <KpkTransaction.h>
 #include <KUrlLabel>
+
+#include <KpkTransaction.h>
 
 #include "ui_KpkUpdate.h"
 
@@ -53,10 +54,10 @@ private slots:
     void on_refreshPB_clicked();
     void on_historyPB_clicked();
 
-    void distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description);
+    void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
 
     void getUpdates();
-    void getUpdatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void getUpdatesFinished(PackageKit::Enum::Exit status, uint runtime);
 
     void updatePackages();
     void updatePackagesFinished(KpkTransaction::ExitStatus status);
@@ -65,7 +66,7 @@ private slots:
     void on_packageView_pressed(const QModelIndex &index);
 
     void checkEnableUpdateButton();
-    void errorCode(PackageKit::Client::ErrorType error, const QString &details);
+    void errorCode(PackageKit::Enum::Error error, const QString &details);
 
 
 private:
@@ -74,7 +75,7 @@ private:
     KpkDelegate *pkg_delegate;
     Client *m_client;
     Transaction *m_updatesT;
-    Client::Actions m_actions;
+    Enum::Roles m_roles;
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);

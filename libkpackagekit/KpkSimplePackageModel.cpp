@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -35,7 +35,7 @@ void KpkSimplePackageModel::addPackage(PackageKit::Package *p)
 {
     QStandardItem *item = new QStandardItem;
     item->setText(p->name() + " - " + p->version() + (p->arch().isNull() ? NULL : " (" + p->arch() + ')'));
-    item->setIcon(KpkIcons::packageIcon(p->state()));
+    item->setIcon(KpkIcons::packageIcon(p->info()));
     item->setSelectable(false);
     item->setEditable(false);
     item->setToolTip(p->summary());
@@ -47,7 +47,7 @@ void KpkSimplePackageModel::addPackages(const QList<PackageKit::Package *> &pkgs
     QStandardItem *item = new QStandardItem;
     foreach (const PackageKit::Package *p, pkgs) {
         item->setText(p->name() + " - " + p->version() + (p->arch().isNull() ? NULL : " (" + p->arch() + ')'));
-        item->setIcon(KpkIcons::packageIcon(p->state()));
+        item->setIcon(KpkIcons::packageIcon(p->info()));
         item->setSelectable(false);
         item->setEditable(false);
         item->setToolTip(p->summary());

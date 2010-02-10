@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -78,8 +78,8 @@ void PkInstallPackageNames::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = Client::instance()->resolve(m_packages,
-                                                     Client::FilterArch |
-                                                     Client::FilterNewest);
+                                                     Enum::FilterArch |
+                                                     Enum::FilterNewest);
         if (t->error()) {
             QString msg(i18n("Failed to start resolve transaction"));
             if (showWarning()) {
@@ -104,12 +104,12 @@ void PkInstallPackageNames::start()
     }
 }
 
-void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::ExitStatus status,
+void PkInstallPackageNames::resolveFinished(PackageKit::Enum::Exit status,
                                             uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug() << "Finished.";
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (m_alreadyInstalled.size()) {
             if (showWarning()) {
                 KMessageBox::sorry(this,
@@ -147,7 +147,7 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::ExitStatus 
 
 void PkInstallPackageNames::addPackage(PackageKit::Package *package)
 {
-    if (package->state() != Package::StateInstalled) {
+    if (package->info() != Enum::InfoInstalled) {
         m_foundPackages.append(package);
     } else {
         m_alreadyInstalled << package->name();

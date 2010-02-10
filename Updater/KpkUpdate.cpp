@@ -65,7 +65,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
             this, SLOT(getUpdates()));
 
     // check to see what roles the backend
-    m_actions = m_client->actions();
+    m_roles = m_client->actions();
 
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
@@ -74,7 +74,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
 //That way, by default, users only see stable ones.
-void KpkUpdate::distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description)
+void KpkUpdate::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     if (verticalLayout->count()) {
@@ -111,7 +111,7 @@ void KpkUpdate::load()
 void KpkUpdate::applyUpdates()
 {
     // If the backend supports getRequires do it
-    if (m_actions & Client::ActionSimulateUpdatePackages) {
+    if (m_roles & Enum::RoleSimulateUpdatePackages) {
 
         PackageKit::Transaction *t;
         KpkSimulateModel *simulateModel = new KpkSimulateModel(this);
@@ -145,7 +145,7 @@ void KpkUpdate::applyUpdates()
     QTimer::singleShot(0, this, SLOT(checkEnableUpdateButton()));
 }
 
-void KpkUpdate::getUpdatesFinished(Transaction::ExitStatus status, uint runtime)
+void KpkUpdate::getUpdatesFinished(Enum::Exit status, uint runtime)
 {
     Q_UNUSED(status)
     Q_UNUSED(runtime)
@@ -157,13 +157,13 @@ void KpkUpdate::getUpdatesFinished(Transaction::ExitStatus status, uint runtime)
         int nonBlockedIndex = -1;
         if (m_pkg_model_updates->data(m_pkg_model_updates->index(0,0),
                                       KpkPackageModel::StateRole).toUInt()
-            == Package::StateBlocked) {
+            == Enum::InfoBlocked) {
             // We got a blocked update in index 0, so 1 is not blocked...
             nonBlockedIndex = 1;
         }
         if (m_pkg_model_updates->data(m_pkg_model_updates->index(1,0),
                                       KpkPackageModel::StateRole).toUInt()
-            == Package::StateBlocked) {
+            == Enum::InfoBlocked) {
             // We got a blocked update in index 1, so 0 is not blocked...
             nonBlockedIndex = 0;
         }
@@ -214,15 +214,16 @@ void KpkUpdate::getUpdates()
     m_pkg_model_updates->uncheckAll();
     m_updatesT = m_client->getUpdates();
     if (m_updatesT->error()) {
+        kDebug() << m_updatesT->error();
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
     } else {
         transactionBar->addTransaction(m_updatesT);
         connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
                 m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
-        connect(m_updatesT, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-                this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
-        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(getUpdatesFinished(PackageKit::Transaction::ExitStatus, uint) ));
+        connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+                this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+        connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(getUpdatesFinished(PackageKit::Enum::Exit, uint) ));
     }
 
     // Clean the distribution upgrades area
@@ -238,8 +239,8 @@ void KpkUpdate::getUpdates()
     Transaction *t = m_client->getDistroUpgrades();
     if (!t->error()) {
         transactionBar->addTransaction(t);
-        connect(t, SIGNAL(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)),
-                this, SLOT(distroUpgrade(PackageKit::Client::DistroUpgradeType, const QString &, const QString &)));
+        connect(t, SIGNAL(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)),
+                this, SLOT(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)));
     }
 }
 
@@ -269,7 +270,7 @@ void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
     if (index.column() == 0) {
         Package *p = m_pkg_model_updates->package(index);
         // check to see if the backend support
-        if (p && (m_actions & Client::ActionGetUpdateDetail)) {
+        if (p && (m_roles & Enum::RoleGetUpdateDetail)) {
             if (pkg_delegate->isExtended(index)) {
                 pkg_delegate->contractItem(index);
             } else {
@@ -307,7 +308,7 @@ bool KpkUpdate::event(QEvent *event)
     return QWidget::event(event);
 }
 
-void KpkUpdate::errorCode(PackageKit::Client::ErrorType error, const QString &details)
+void KpkUpdate::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
     KMessageBox::detailedSorry(this,
                                KpkStrings::errorMessage(error),

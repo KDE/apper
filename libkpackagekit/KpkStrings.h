@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -29,23 +29,23 @@ using namespace PackageKit;
 
 namespace KpkStrings
 {
-    KDE_EXPORT QString finished(PackageKit::Transaction::ExitStatus status);
-    KDE_EXPORT QString error(PackageKit::Client::ErrorType error);
-    KDE_EXPORT QString errorMessage(PackageKit::Client::ErrorType error);
-    KDE_EXPORT QString message(PackageKit::Client::MessageType type);
-    KDE_EXPORT QString status(PackageKit::Transaction::Status status);
-    KDE_EXPORT QString statusPast(PackageKit::Transaction::Status status);
-    KDE_EXPORT QString groups(Client::Group group);
-    KDE_EXPORT QString info(Package::State state);
-    KDE_EXPORT QString infoUpdate(Package::State state, int number);
-    KDE_EXPORT QString infoUpdate(Package::State state, int updates, int selected);
-    KDE_EXPORT QString updateState(Client::UpdateState value);
-    KDE_EXPORT QString restartType(Client::RestartType value);
-    KDE_EXPORT QString restartTypeFuture(Client::RestartType value);
-    KDE_EXPORT QString action(Client::Action action);
-    KDE_EXPORT QString actionPast(Client::Action action);
-    KDE_EXPORT QString mediaMessage(Transaction::MediaType value, const QString &text);
-    KDE_EXPORT QString daemonError(PackageKit::Client::DaemonError value);
+    KDE_EXPORT QString finished(Enum::Exit status);
+    KDE_EXPORT QString error(Enum::Error error);
+    KDE_EXPORT QString errorMessage(Enum::Error error);
+    KDE_EXPORT QString message(Enum::Message type);
+    KDE_EXPORT QString status(Enum::Status status);
+    KDE_EXPORT QString statusPast(Enum::Status status);
+    KDE_EXPORT QString groups(Enum::Group group);
+    KDE_EXPORT QString info(Enum::Info state);
+    KDE_EXPORT QString infoUpdate(Enum::Info state, int number);
+    KDE_EXPORT QString infoUpdate(Enum::Info state, int updates, int selected);
+    KDE_EXPORT QString updateState(Enum::UpdateState value);
+    KDE_EXPORT QString restartType(Enum::Restart value);
+    KDE_EXPORT QString restartTypeFuture(Enum::Restart value);
+    KDE_EXPORT QString action(Enum::Role action);
+    KDE_EXPORT QString actionPast(Enum::Role action);
+    KDE_EXPORT QString mediaMessage(Enum::MediaType value, const QString &text);
+    KDE_EXPORT QString daemonError(Client::DaemonError value);
 };
 
 #endif

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -118,11 +118,11 @@ void PkInstallGStreamerResources::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->whatProvides(Client::ProvidesCodec,
+        Transaction *t = Client::instance()->whatProvides(Enum::ProvidesCodec,
                                                           search,
-                                                          Client::FilterNotInstalled |
-                                                          Client::FilterArch |
-                                                          Client::FilterNewest);
+                                                          Enum::FilterNotInstalled |
+                                                          Enum::FilterArch |
+                                                          Enum::FilterNewest);
         if (t->error()) {
             QString msg(i18n("Failed to search for provides"));
             KMessageBox::sorry(0,
@@ -130,8 +130,8 @@ void PkInstallGStreamerResources::start()
                                msg);
             sendErrorFinished(InternalError, msg);
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SLOT(whatProvidesFinished(PackageKit::Transaction::ExitStatus, uint)));
+            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                    this, SLOT(whatProvidesFinished(PackageKit::Enum::Exit, uint)));
             connect(t, SIGNAL(package(PackageKit::Package *)),
                     this, SLOT(addPackage(PackageKit::Package *)));
             if (showProgress()) {
@@ -145,11 +145,11 @@ void PkInstallGStreamerResources::start()
     }
 }
 
-void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug() << "Finished.";
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (m_foundPackages.size()) {
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages);
             frm->setTitle(i18np("Do you want to install this package now?",

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -38,7 +38,7 @@ public slots:
     void checkDistroUpgrades();
 
 private slots:
-    void distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description);
+    void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
     void handleDistroUpgradeAction(uint action);
     void distroUpgradeError(QProcess::ProcessError error);
     void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -44,7 +44,7 @@ PkIsInstalled::~PkIsInstalled()
 void PkIsInstalled::start()
 {
     Transaction *t = Client::instance()->resolve(m_packageName,
-                                                 Client::FilterInstalled);
+                                                 Enum::FilterInstalled);
     if (t->error()) {
         if (showWarning()) {
             KMessageBox::sorry(0,
@@ -53,8 +53,8 @@ void PkIsInstalled::start()
         }
         sendErrorFinished(Failed, "Failed to start resolve transaction");
     } else {
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(searchFinished(PackageKit::Transaction::ExitStatus, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(searchFinished(PackageKit::Enum::Exit, uint)));
         connect(t, SIGNAL(package(PackageKit::Package *)),
                 this, SLOT(addPackage(PackageKit::Package *)));
         if (showProgress()) {
@@ -65,14 +65,14 @@ void PkIsInstalled::start()
     }
 }
 
-void PkIsInstalled::searchFinished(PackageKit::Transaction::ExitStatus status, uint)
+void PkIsInstalled::searchFinished(PackageKit::Enum::Exit status, uint)
 {
     kDebug();
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         QDBusMessage reply = m_message.createReply();
         reply << (bool) m_foundPackages.size();
         sendMessageFinished(reply);
-    } else if (status == Transaction::ExitCancelled) {
+    } else if (status == Enum::ExitCancelled) {
         sendErrorFinished(Cancelled, i18n("User canceled the transaction"));
     } else {
         sendErrorFinished(InternalError, i18n("An unknown error happened"));

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKMODELORIGIN_H
-#define KPKMODELORIGIN_H
+#ifndef KPK_MODEL_ORIGIN_H
+#define KPK_MODEL_ORIGIN_H
 
 #include <QPackageKit>
 #include <QAbstractListModel>

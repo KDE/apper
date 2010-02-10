@@ -23,7 +23,7 @@
 
 #include <KpkAbstractIsRunning.h>
 
-#include <QObject>
+// #include <QObject>
 #include <KSystemTrayIcon>
 #include <KCMultiDialog>
 #include <KNotification>
@@ -47,13 +47,13 @@ public slots:
 private slots:
     void update();
     void updateListed(PackageKit::Package*);
-    void updateCheckFinished(PackageKit::Transaction::ExitStatus, uint runtime);
+    void updateCheckFinished(PackageKit::Enum::Exit exit, uint runtime);
     void handleUpdateAction(uint action);
     void handleUpdateActionClosed();
     void notifyUpdates();
     void showSettings();
     void showUpdates(QSystemTrayIcon::ActivationReason = KSystemTrayIcon::Unknown);
-    void updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void updatesFinished(PackageKit::Enum::Exit exit, uint runtime);
 
 private:
     KSystemTrayIcon* m_icon;

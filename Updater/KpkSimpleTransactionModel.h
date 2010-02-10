@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,8 +22,6 @@
 #define KPK_SIMPLE_TRANSACTION_MODEL_H
 
 #include <QStandardItemModel>
-#include <KIcon>
-
 #include <QPackageKit>
 
 using namespace PackageKit;
@@ -42,7 +40,7 @@ public slots:
 
 private:
     QString getDetailsLocalized(const QString &data) const;
-    QString getTypeLine(const QStringList &lines, Transaction::Status status) const;
+    QString getTypeLine(const QStringList &lines, Enum::Status status) const;
 
     QList<PackageKit::Transaction *> m_transactions;
 };

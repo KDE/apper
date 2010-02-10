@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -95,17 +95,17 @@ QString KpkSimpleTransactionModel::getDetailsLocalized(const QString &data) cons
     QStringList ret;
 
     QString text;
-    text = getTypeLine(lines, Transaction::StatusInstall);
+    text = getTypeLine(lines, Enum::StatusInstall);
     if (!text.isNull()) {
         ret << text;
     }
 
-    text = getTypeLine(lines, Transaction::StatusRemove);
+    text = getTypeLine(lines, Enum::StatusRemove);
     if (!text.isNull()) {
         ret << text;
     }
 
-    text = getTypeLine(lines, Transaction::StatusUpdate);
+    text = getTypeLine(lines, Enum::StatusUpdate);
     if (!text.isNull()) {
         ret << text;
     }
@@ -113,24 +113,24 @@ QString KpkSimpleTransactionModel::getDetailsLocalized(const QString &data) cons
     return ret.join("\n");
 }
 
-QString KpkSimpleTransactionModel::getTypeLine(const QStringList &lines, Transaction::Status status) const
+QString KpkSimpleTransactionModel::getTypeLine(const QStringList &lines, Enum::Status status) const
 {
     QStringList text;
     foreach(const QString &line, lines) {
         QStringList sections = line.split('\t');
         if (sections.size() > 1) {
             switch (status) {
-                case Transaction::StatusInstall:
+                case Enum::StatusInstall:
                     if (sections.at(0) != "installing") {
                         continue;
                     }
                     break;
-                case Transaction::StatusRemove:
+                case Enum::StatusRemove:
                     if (sections.at(0) != "removing") {
                         continue;
                     }
                     break;
-                case Transaction::StatusUpdate:
+                case Enum::StatusUpdate:
                     if (sections.at(0) != "updating") {
                         continue;
                     }

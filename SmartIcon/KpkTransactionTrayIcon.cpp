@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -65,7 +65,7 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
     connect(m_client, SIGNAL(transactionListChanged(const QList<PackageKit::Transaction*> &)),
             this, SLOT(transactionListChanged(const QList<PackageKit::Transaction*> &)));
 
-    if (m_act & Client::ActionRefreshCache) {
+    if (m_act & Enum::RoleRefreshCache) {
         m_refreshCacheAction = new QAction(this);
         m_refreshCacheAction->setText(i18n("Refresh package list"));
         m_refreshCacheAction->setIcon(KIcon("view-refresh"));
@@ -85,7 +85,7 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
             m_smartSTI, SLOT(hide()));
 
     // initiate the restart type
-    m_restartType = Client::RestartNone;
+    m_restartType = Enum::RestartNone;
 
     m_restartAction = new QAction(this);
     connect(m_restartAction, SIGNAL(triggered(bool)),
@@ -175,14 +175,14 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
         setCurrentTransaction(tids.first());
     } else {
         if (m_messages.isEmpty() &&
-            m_restartType == Client::RestartNone)
+            m_restartType == Enum::RestartNone)
         {
             m_menu->hide();
             m_smartSTI->hide();
             emit close();
         } else {
             QString toolTip;
-            if (m_restartType != Client::RestartNone) {
+            if (m_restartType != Enum::RestartNone) {
                 toolTip.append(KpkStrings::restartType(m_restartType) + '\n');
                 toolTip.append(i18np("Package: %2",
                                      "Packages: %2",
@@ -216,22 +216,22 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
             this, SLOT(transactionChanged()));
     connect(m_currentTransaction, SIGNAL(message(PackageKit::Client::MessageType, const QString &)),
             this, SLOT(message(PackageKit::Client::MessageType, const QString &)));
-    connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Client::RestartType, Package *)),
-            this, SLOT(requireRestart(PackageKit::Client::RestartType, Package *)));
+    connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Enum::RestartType, Package *)),
+            this, SLOT(requireRestart(PackageKit::Enum::RestartType, Package *)));
     connect(m_currentTransaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
             this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
     m_smartSTI->show();
 }
 
-void KpkTransactionTrayIcon::finished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(status)
     Q_UNUSED(runtime)
 
     // check if the transaction emitted any require restart
-    if (m_restartType != Client::RestartNone) {
+    if (m_restartType != Enum::RestartNone) {
         increaseRunning();
-        Client::RestartType type = m_restartType;
+        Enum::Restart type = m_restartType;
 
         // Create the notification object
         KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
@@ -245,26 +245,26 @@ void KpkTransactionTrayIcon::finished(PackageKit::Transaction::ExitStatus status
 
         QStringList actions;
         switch (type) {
-        case Client::RestartSystem :
-        case Client::RestartSecuritySystem :
+        case Enum::RestartSystem :
+        case Enum::RestartSecuritySystem :
             actions << i18nc("Restart the computer", "Restart");
             actions << i18n("Not now");
             m_restartAction->setText(i18nc("Restart the computer", "Restart"));
             break;
-        case Client::RestartSession :
-        case Client::RestartSecuritySession :
+        case Enum::RestartSession :
+        case Enum::RestartSecuritySession :
             actions << i18n("Logout");
             actions << i18n("Not now");
             m_restartAction->setText(i18n("Logout"));
             break;
-        case Client::RestartApplication :
+        case Enum::RestartApplication :
             // What do we do in restart application?
             // we don't even know what application is
             // SHOULD we check for pkg and see the installed
             // files and try to match some running process?
             break;
-        case Client::RestartNone :
-        case Client::UnknownRestartType :
+        case Enum::RestartNone :
+        case Enum::UnknownRestart :
             // We do not set a restart type cause it will probably
             // be already none, if not we will still want that restart type.
             return;
@@ -282,14 +282,14 @@ void KpkTransactionTrayIcon::finished(PackageKit::Transaction::ExitStatus status
         notify->sendEvent();
 
         // Reset the restart type
-        m_restartType = Client::RestartNone;
+        m_restartType = Enum::RestartNone;
     }
 }
 
 void KpkTransactionTrayIcon::transactionChanged()
 {
     uint percentage            = m_currentTransaction->percentage();
-    Transaction::Status status = m_currentTransaction->status();
+    Enum::Status status = m_currentTransaction->status();
     QString toolTip;
 
     if (percentage && percentage <= 100) {
@@ -302,7 +302,7 @@ void KpkTransactionTrayIcon::transactionChanged()
     m_smartSTI->setIcon(KpkIcons::statusIcon(status));
 }
 
-void KpkTransactionTrayIcon::message(PackageKit::Client::MessageType type, const QString &message)
+void KpkTransactionTrayIcon::message(PackageKit::Enum::Message type, const QString &message)
 {
     m_messages.append(qMakePair(type, message));
 }
@@ -328,7 +328,7 @@ void KpkTransactionTrayIcon::showMessages()
 
         model->setHorizontalHeaderLabels(QStringList() << i18n("Message") << i18n("Details"));
         while (!m_messages.isEmpty()) {
-            QPair<Client::MessageType, QString> pair = m_messages.takeFirst();
+            QPair<Enum::Message, QString> pair = m_messages.takeFirst();
             model->appendRow(QList<QStandardItem *>()
                              << new QStandardItem(KpkStrings::message(pair.first))
                              << new QStandardItem(pair.second)
@@ -357,7 +357,7 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
         // as it was some times
         transactionAction->setData(t->tid());
 
-        if (t->role() == Client::ActionRefreshCache) {
+        if (t->role() == Enum::RoleRefreshCache) {
             refreshCache = false;
         }
 
@@ -372,7 +372,7 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
     if (refreshCache && m_refreshCacheAction) {
         m_menu->addAction(m_refreshCacheAction);
     }
-    if (m_restartType != Client::RestartNone) {
+    if (m_restartType != Enum::RestartNone) {
         m_menu->addAction(m_restartAction);
     }
     if (m_messages.size()) {
@@ -395,7 +395,7 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void KpkTransactionTrayIcon::requireRestart(PackageKit::Client::RestartType type, Package *pkg)
+void KpkTransactionTrayIcon::requireRestart(PackageKit::Enum::Restart type, Package *pkg)
 {
     int old = KpkImportance::restartImportance(m_restartType);
     int newer = KpkImportance::restartImportance(type);
@@ -430,11 +430,11 @@ void KpkTransactionTrayIcon::logout()
     // KWorkSpace::ShutdownConfirmYes = 1
     message << qVariantFromValue(1);
 
-    if (m_restartType == Client::RestartSystem) {
+    if (m_restartType == Enum::RestartSystem) {
         // The restart type was system
         // KWorkSpace::ShutdownTypeReboot = 1
         message << qVariantFromValue(1);
-    } else if (m_restartType == Client::RestartSession) {
+    } else if (m_restartType == Enum::RestartSession) {
         // The restart type was session
         // KWorkSpace::ShutdownTypeLogout = 3
         message << qVariantFromValue(3);
@@ -457,7 +457,7 @@ bool KpkTransactionTrayIcon::isRunning()
     return KpkAbstractIsRunning::isRunning() ||
            Client::instance()->getTransactions().size() ||
            m_messages.size() ||
-           m_restartType != Client::RestartNone;
+           m_restartType != Enum::RestartNone;
 }
 
 #include "KpkTransactionTrayIcon.moc"

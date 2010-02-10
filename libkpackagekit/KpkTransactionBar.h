@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2010 by Daniel Nicoletti                                *
+ *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -54,7 +56,6 @@ public:
         AutoHide = 2,
         HideCancel = 4,
     };
-
     Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
 
     /**
@@ -78,8 +79,8 @@ private:
     Transaction *m_currTrans;
 
 private slots:
-    void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void errorCode(PackageKit::Client::ErrorType error, const QString &details);
+    void finished(PackageKit::Enum::Exit status, uint runtime);
+    void errorCode(PackageKit::Enum::Error error, const QString &details);
     void updateUi();
     void nextTransaction();
 };

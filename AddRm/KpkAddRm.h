@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef PKADDRM_H
-#define PKADDRM_H
+#ifndef KPK_ADDRM_H
+#define KPK_ADDRM_H
 
 #include <QtGui/QtGui>
 #include <QtCore/QtCore>
@@ -29,7 +29,6 @@
 #include <KDebug>
 
 #include "KpkPackageModel.h"
-#include "KpkPackageDetails.h"
 #include <KpkDelegate.h>
 
 #include <QPackageKit>
@@ -61,9 +60,9 @@ private slots:
     void on_groupsCB_currentIndexChanged(int index);
     void on_packageView_pressed(const QModelIndex &index);
 
-    void finished(PackageKit::Transaction::ExitStatus status, uint runtime);
-    void message(PackageKit::Client::MessageType message, const QString &details);
-    void errorCode(PackageKit::Client::ErrorType error, const QString &detail);
+    void finished(PackageKit::Enum::Exit status, uint runtime);
+    void message(PackageKit::Enum::Message message, const QString &details);
+    void errorCode(PackageKit::Enum::Error error, const QString &detail);
 
     void checkChanged();
     void changed();
@@ -103,22 +102,22 @@ private:
 
     // We need to keep a list to build the filters string
     QList<QAction*> actions;
-    QHash<QAction *, Client::Filter> m_filtersAction;
-    void filterMenu(Client::Filters filters);
-    Client::Filters filters();
+    QHash<QAction *, Enum::Filter> m_filtersAction;
+    void filterMenu(Enum::Filters filters);
+    Enum::Filters filters();
 
     void updateColumnsWidth(bool force = false);
     void setActionCancel(bool enabled);
     void search();
     void connectTransaction(Transaction *transaction);
 
-    Client::Actions m_actions;
+    Enum::Roles m_roles;
 
     // Old search cache
-    Client::Action  m_searchAction;
-    QString         m_searchString;
-    Client::Group   m_searchGroup;
-    Client::Filters m_searchFilters;
+    Enum::Role    m_searchRole;
+    QString       m_searchString;
+    Enum::Group m_searchGroup;
+    Enum::Filters m_searchFilters;
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);

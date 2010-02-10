@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,7 +28,7 @@ using namespace PackageKit;
 
 KpkSimulateModel::KpkSimulateModel(QObject *parent)
 : QAbstractTableModel(parent),
-  m_currentState(Package::UnknownState)
+  m_currentInfo(Enum::UnknownInfo)
 {
 //     setSortRole(Qt::DisplayRole);
 }
@@ -36,12 +36,12 @@ KpkSimulateModel::KpkSimulateModel(QObject *parent)
 QVariant KpkSimulateModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() ||
-        m_currentState == Package::UnknownState ||
-        index.row() >= m_packages[m_currentState].size()) {
+        m_currentInfo == Enum::UnknownInfo ||
+        index.row() >= m_packages[m_currentInfo].size()) {
         return QVariant();
     }
 
-    Package *p = m_packages[m_currentState].at(index.row());
+    Package *p = m_packages[m_currentInfo].at(index.row());
     switch(index.column()) {
     case 0:
         switch (role) {
@@ -64,21 +64,21 @@ QVariant KpkSimulateModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-Package::State KpkSimulateModel::currentState() const
+Enum::Info KpkSimulateModel::currentInfo() const
 {
-    return m_currentState;
+    return m_currentInfo;
 }
 
-void KpkSimulateModel::setCurrentState(Package::State currentState)
+void KpkSimulateModel::setCurrentInfo(Enum::Info currentInfo)
 {
-    m_currentState = currentState;
+    m_currentInfo = currentInfo;
     reset();
 }
 
-int KpkSimulateModel::countState(Package::State state)
+int KpkSimulateModel::countInfo(Enum::Info info)
 {
-    if (m_packages.contains(state)) {
-        return m_packages[state].size();
+    if (m_packages.contains(info)) {
+        return m_packages[info].size();
     } else {
         return 0;
     }
@@ -86,27 +86,27 @@ int KpkSimulateModel::countState(Package::State state)
 
 void KpkSimulateModel::addPackage(PackageKit::Package *p)
 {
-    if (p->state() == Package::StateFinished) {
+    if (p->info() == Enum::InfoFinished) {
         return;
     }
-    if (m_currentState == Package::UnknownState) {
-        m_currentState = p->state();
+    if (m_currentInfo == Enum::UnknownInfo) {
+        m_currentInfo = p->info();
     }
-    m_packages[p->state()].append(p);
+    m_packages[p->info()].append(p);
 }
 
 int KpkSimulateModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && m_currentState == Package::UnknownState) {
+    if (parent.isValid() && m_currentInfo == Enum::UnknownInfo) {
         return 0;
     } else {
-        return m_packages[m_currentState].size();
+        return m_packages[m_currentInfo].size();
     }
 }
 
 int KpkSimulateModel::columnCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && m_currentState == Package::UnknownState) {
+    if (parent.isValid() && m_currentInfo == Enum::UnknownInfo) {
         return 0;
     } else {
         return 2;
@@ -130,6 +130,6 @@ QVariant KpkSimulateModel::headerData(int section, Qt::Orientation orientation, 
 void KpkSimulateModel::clear()
 {
     m_packages.clear();
-    m_currentState = Package::UnknownState;
+    m_currentInfo = Enum::UnknownInfo;
     reset();
 }

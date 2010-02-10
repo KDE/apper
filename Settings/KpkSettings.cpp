@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,7 +19,8 @@
  ***************************************************************************/
 
 #include "KpkSettings.h"
-#include "../libkpackagekit/KpkEnum.h"
+#include <KpkEnum.h>
+#include "KpkModelOrigin.h"
 
 #include <KDebug>
 #include <KConfig>
@@ -37,20 +38,20 @@ KpkSettings::KpkSettings(QWidget *parent)
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Client::instance()->setHints("locale=" + locale);
-    m_actions = Client::instance()->actions();
+    m_roles = Client::instance()->actions();
 
-    if (!(m_actions & Client::ActionRefreshCache)) {
+    if (!(m_roles & Enum::RoleRefreshCache)) {
         intervalL->setEnabled(false);
         intervalCB->setEnabled(false);
     }
 
     m_originModel = new KpkModelOrigin(this);
     originLW->setModel(m_originModel);
-    if (m_actions & Client::ActionGetRepoList) {
-        m_trasaction = Client::instance()->getRepoList(PackageKit::Client::FilterNotDevelopment);
+    if (m_roles & Enum::RoleGetRepoList) {
+        m_trasaction = Client::instance()->getRepoList(PackageKit::Enum::FilterNotDevelopment);
         connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
                 m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
-        connect(m_trasaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+        connect(m_trasaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 m_originModel, SLOT(finished()));
         connect(m_originModel, SIGNAL(stateChanged()), this, SLOT(checkChanges()));
     }
@@ -73,13 +74,14 @@ KpkSettings::KpkSettings(QWidget *parent)
     connect(autoCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
 }
 
+// TODO update the repo list connecting to repo changed signal
 void KpkSettings::on_showOriginsCB_stateChanged(int state)
 {
     m_trasaction = Client::instance()->getRepoList(
-        state == Qt::Checked ? Client::NoFilter : Client::FilterNotDevelopment );
+        state == Qt::Checked ? Enum::NoFilter : Enum::FilterNotDevelopment);
     connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
             m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
-    connect(m_trasaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+    connect(m_trasaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_originModel, SLOT(finished()));
     connect(m_originModel, SIGNAL(stateChanged()), this, SLOT(checkChanges()));
     transactionBar->addTransaction(m_trasaction);
@@ -99,7 +101,7 @@ void KpkSettings::checkChanges()
         autoCB->itemData(autoCB->currentIndex()).toUInt() !=
         (uint) checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault)
         ||
-        ((m_actions & Client::ActionGetRepoList) ? m_originModel->changed() : false)) {
+        ((m_roles & Enum::RoleGetRepoList) ? m_originModel->changed() : false)) {
         emit(changed(true));
     } else {
         emit(changed(false));
@@ -138,11 +140,11 @@ void KpkSettings::load()
     else
         autoCB->setCurrentIndex(ret);
 
-    if (m_actions & Client::ActionGetRepoList) {
-        m_trasaction = Client::instance()->getRepoList(PackageKit::Client::FilterNotDevelopment);
+    if (m_roles & Enum::RoleGetRepoList) {
+        m_trasaction = Client::instance()->getRepoList(PackageKit::Enum::FilterNotDevelopment);
         connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
                 m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
-        connect(m_trasaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+        connect(m_trasaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 m_originModel, SLOT(finished()));
         connect(m_originModel, SIGNAL(stateChanged()), this, SLOT(checkChanges()));
         transactionBar->addTransaction(m_trasaction);
@@ -160,7 +162,7 @@ void KpkSettings::save()
     checkUpdateGroup.writeEntry("interval", intervalCB->itemData(intervalCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("autoUpdate", autoCB->itemData(autoCB->currentIndex()).toUInt());
     // check to see if the backend support this
-    if (m_actions & Client::ActionGetRepoList) {
+    if (m_roles & Enum::RoleGetRepoList) {
         if ( !m_originModel->save() ) {
             KMessageBox::sorry(this,
                                i18n("You do not have the necessary privileges to perform this action."),

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -36,49 +36,49 @@ KpkBackendDetails::KpkBackendDetails(QWidget *parent)
     authorL->setText(Client::instance()->backendAuthor());
 
     // METHODS - Setup backend supported methods
-    Client::Actions actions = Client::instance()->actions();
-    getUpdatesCB->setChecked(actions & Client::ActionGetUpdates);
-    refreshCacheCB->setChecked(actions & Client::ActionRefreshCache);
-    updateSystemCB->setChecked(actions & Client::ActionUpdateSystem);
-    searchNameCB->setChecked(actions & Client::ActionSearchName);
-    searchDetailsCB->setChecked(actions & Client::ActionSearchDetails);
-    searchGroupCB->setChecked(actions & Client::ActionSearchGroup);
-    searchFileCB->setChecked(actions & Client::ActionSearchFile);
-    cancelCB->setChecked(actions & Client::ActionCancel);
-    resolveCB->setChecked(actions & Client::ActionResolve);
+    Enum::Roles actions = Client::instance()->actions();
+    getUpdatesCB->setChecked(actions & Enum::RoleGetUpdates);
+    refreshCacheCB->setChecked(actions & Enum::RoleRefreshCache);
+    updateSystemCB->setChecked(actions & Enum::RoleUpdateSystem);
+    searchNameCB->setChecked(actions & Enum::RoleSearchName);
+    searchDetailsCB->setChecked(actions & Enum::RoleSearchDetails);
+    searchGroupCB->setChecked(actions & Enum::RoleSearchGroup);
+    searchFileCB->setChecked(actions & Enum::RoleSearchFile);
+    cancelCB->setChecked(actions & Enum::RoleCancel);
+    resolveCB->setChecked(actions & Enum::RoleResolve);
 
-    updatePackageCB->setChecked(actions & Client::ActionUpdatePackages);
-    installPackageCB->setChecked(actions & Client::ActionInstallPackages);
-    removePackageCB->setChecked(actions & Client::ActionRemovePackages);
-    getDependsCB->setChecked(actions & Client::ActionGetDepends);
-    getRequiresCB->setChecked(actions & Client::ActionGetRequires);
-    getUpdateDetailCB->setChecked(actions & Client::ActionGetUpdateDetail);
-    getDescriptionCB->setChecked(actions & Client::ActionGetDetails);
-    getFilesCB->setChecked(actions & Client::ActionRefreshCache);
-    installFileCB->setChecked(actions & Client::ActionInstallFiles);
+    updatePackageCB->setChecked(actions & Enum::RoleUpdatePackages);
+    installPackageCB->setChecked(actions & Enum::RoleInstallPackages);
+    removePackageCB->setChecked(actions & Enum::RoleRemovePackages);
+    getDependsCB->setChecked(actions & Enum::RoleGetDepends);
+    getRequiresCB->setChecked(actions & Enum::RoleGetRequires);
+    getUpdateDetailCB->setChecked(actions & Enum::RoleGetUpdateDetail);
+    getDescriptionCB->setChecked(actions & Enum::RoleGetDetails);
+    getFilesCB->setChecked(actions & Enum::RoleRefreshCache);
+    installFileCB->setChecked(actions & Enum::RoleInstallFiles);
 
-    getRepositoryListCB->setChecked(actions & Client::ActionGetRepoList);
-    repositoryEnableCB->setChecked(actions & Client::ActionRepoEnable);
-    repositorySetEnableCB->setChecked(actions & Client::ActionRepoSetData);
-    whatProvidesCB->setChecked(actions & Client::ActionWhatProvides);
-    getPackagesCB->setChecked(actions & Client::ActionGetPackages);
-    simulateInstallFilesCB->setChecked(actions & Client::ActionSimulateInstallFiles);
-    simulateInstallPackagesCB->setChecked(actions & Client::ActionSimulateInstallPackages);
-    simulateRemovePackagesCB->setChecked(actions & Client::ActionSimulateRemovePackages);
-    simulateUpdatePackagesCB->setChecked(actions & Client::ActionSimulateUpdatePackages);
+    getRepositoryListCB->setChecked(actions & Enum::RoleGetRepoList);
+    repositoryEnableCB->setChecked(actions & Enum::RoleRepoEnable);
+    repositorySetEnableCB->setChecked(actions & Enum::RoleRepoSetData);
+    whatProvidesCB->setChecked(actions & Enum::RoleWhatProvides);
+    getPackagesCB->setChecked(actions & Enum::RoleGetPackages);
+    simulateInstallFilesCB->setChecked(actions & Enum::RoleSimulateInstallFiles);
+    simulateInstallPackagesCB->setChecked(actions & Enum::RoleSimulateInstallPackages);
+    simulateRemovePackagesCB->setChecked(actions & Enum::RoleSimulateRemovePackages);
+    simulateUpdatePackagesCB->setChecked(actions & Enum::RoleSimulateUpdatePackages);
 
     // FILTERS - Setup filters
-    Client::Filters filters = Client::instance()->filters();
-    installedCB->setChecked(filters & Client::FilterInstalled);
-    guiCB->setChecked(filters & Client::FilterGui);
+    Enum::Filters filters = Client::instance()->filters();
+    installedCB->setChecked(filters & Enum::FilterInstalled);
+    guiCB->setChecked(filters & Enum::FilterGui);
 
-    developmentCB->setChecked(filters & Client::FilterDevelopment);
-    freeCB->setChecked(filters & Client::FilterFree);
+    developmentCB->setChecked(filters & Enum::FilterDevelopment);
+    freeCB->setChecked(filters & Enum::FilterFree);
 
-    visibleCB->setChecked(filters & Client::FilterVisible);
-    supportedCB->setChecked(filters & Client::FilterSupported);
+    visibleCB->setChecked(filters & Enum::FilterVisible);
+    supportedCB->setChecked(filters & Enum::FilterSupported);
 
-    newestCB->setChecked(filters & Client::FilterNewest);
+    newestCB->setChecked(filters & Enum::FilterNewest);
 }
 
 #include "KpkBackendDetails.moc"

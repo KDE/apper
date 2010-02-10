@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -50,7 +50,7 @@ void KpkDistroUpgrade::checkDistroUpgrades()
     }
 }
 
-void KpkDistroUpgrade::distroUpgrade(PackageKit::Client::DistroUpgradeType type, const QString &name, const QString &description)
+void KpkDistroUpgrade::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     kDebug() << "Distro upgrade found!" << name << description;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -80,7 +80,7 @@ void PkRemovePackageByFiles::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = Client::instance()->searchFiles(m_files,
-                                                         Client::FilterInstalled);
+                                                         Enum::FilterInstalled);
         if (t->error()) {
             QString msg(i18n("Failed to start search file transaction"));
             if (showWarning()) {
@@ -105,12 +105,12 @@ void PkRemovePackageByFiles::start()
     }
 }
 
-void PkRemovePackageByFiles::searchFinished(PackageKit::Transaction::ExitStatus status,
+void PkRemovePackageByFiles::searchFinished(PackageKit::Enum::Exit status,
                                             uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug() << "Finished.";
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (m_foundPackages.size()) {
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this);
             frm->setTitle(i18np("The following package will be removed",

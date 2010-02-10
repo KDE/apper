@@ -1,7 +1,7 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -167,7 +167,7 @@ void KpkUpdateIcon::updateListed(PackageKit::Package *package)
 {
     // Blocked updates are not instalable updates so there is no
     // reason to show/count them
-    if (package->state() != Package::StateBlocked) {
+    if (package->info() != Enum::InfoBlocked) {
         m_updateList.append(package);
     }
 }
@@ -182,13 +182,13 @@ void KpkUpdateIcon::notifyUpdates()
         return;
     }
 
-    Package::State highState = Package::StateInstalled;
-    QHash<Package::State, QList<Package*> > packageGroups;
+    Enum::Info highState = Enum::InfoInstalled;
+    QHash<Enum::Info, QList<Package*> > packageGroups;
 
     foreach(Package *p, m_updateList) {
-        packageGroups[p->state()].append(p);
-        if (p->state() > highState) {
-            highState = p->state();
+        packageGroups[p->info()].append(p);
+        if (p->info() > highState) {
+            highState = p->info();
         }
     }
 
@@ -224,16 +224,16 @@ void KpkUpdateIcon::notifyUpdates()
     increaseRunning();
 }
 
-void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uint runtime)
+void KpkUpdateIcon::updateCheckFinished(PackageKit::Enum::Exit, uint runtime)
 {
     Q_UNUSED(runtime)
     if (m_updateList.size() > 0) {
 //         kDebug() << "Found " << m_updateList.size() << " updates";
-        Package::State highState = Package::StateInstalled;
+        Enum::Info highState = Enum::InfoInstalled;
         //FIXME: This assumes that PackageKit shares our priority ranking.
         foreach(Package *p, m_updateList) {
-            if (p->state() > highState) {
-                highState = p->state();
+            if (p->info() > highState) {
+                highState = p->info();
             }
         }
 //         m_icon->setIcon(KpkIcons::packageIcon(highState));
@@ -271,7 +271,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
                 // Defaults to security
                 QList<PackageKit::Package*> updateList;
                 foreach(PackageKit::Package *package, m_updateList) {
-                    if (package->state() == Package::StateSecurity) {
+                    if (package->info() == Enum::InfoSecurity) {
                         updateList.append(package);
                     }
                 }
@@ -305,14 +305,14 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Transaction::ExitStatus, uin
     decreaseRunning();
 }
 
-void KpkUpdateIcon::updatesFinished(PackageKit::Transaction::ExitStatus status, uint runtime)
+void KpkUpdateIcon::updatesFinished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
     // decrease first only because we want to check for updates again
     decreaseRunning();
     KNotification *notify = new KNotification("UpdatesComplete");
 //     suppressSleep(false);
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         KIcon icon("task-complete");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));

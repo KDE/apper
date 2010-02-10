@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -29,7 +29,7 @@
 #include <KMessageBox>
 #include <KDebug>
 
-Q_DECLARE_METATYPE(PackageKit::Client::ErrorType)
+Q_DECLARE_METATYPE(PackageKit::Enum::Error)
 
 KpkTransactionWatcher::KpkTransactionWatcher(QObject *parent)
  : KpkAbstractIsRunning(parent)
@@ -78,7 +78,7 @@ void KpkTransactionWatcher::removeTransactionWatcher(const QString &tid)
     }
 }
 
-void KpkTransactionWatcher::finished(PackageKit::Transaction::ExitStatus status, uint time)
+void KpkTransactionWatcher::finished(PackageKit::Enum::Exit status, uint time)
 {
     Q_UNUSED(status)
     Q_UNUSED(time)
@@ -86,7 +86,7 @@ void KpkTransactionWatcher::finished(PackageKit::Transaction::ExitStatus status,
     // TODO if the transaction took too long to finish warn the user
 }
 
-void KpkTransactionWatcher::errorCode(PackageKit::Client::ErrorType err, const QString &details)
+void KpkTransactionWatcher::errorCode(PackageKit::Enum::Error err, const QString &details)
 {
     increaseRunning();
     KNotification *notify;
@@ -130,9 +130,9 @@ void KpkTransactionWatcher::errorActivated(uint action)
 void KpkTransactionWatcher::showError()
 {
     increaseRunning();
-    PackageKit::Client::ErrorType error;
+    Enum::Error error;
     QString details;
-    error = sender()->property("ErrorType").value<PackageKit::Client::ErrorType>();
+    error = sender()->property("ErrorType").value<Enum::Error>();
     details = sender()->property("Details").toString();
     KMessageBox::detailedSorry(0,
                                KpkStrings::errorMessage(error),

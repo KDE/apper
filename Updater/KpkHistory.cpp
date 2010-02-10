@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -75,11 +75,9 @@ void KpkHistory::slotButtonClicked(int button)
     switch (button) {
         case KDialog::User2 :
             // TODO implement rollback
-            kDebug() << "Roolback";
             break;
         case KDialog::User1 :
             // Refresh transaction list
-            kDebug() << "Refresh transaction list";
             //TODO make sure this deletes the transaction since they are pointers
             m_transactionModel->clear();
             t = Client::instance()->getOldTransactions(0);
@@ -88,7 +86,7 @@ void KpkHistory::slotButtonClicked(int button)
             } else {
                 connect(t, SIGNAL(transaction(PackageKit::Transaction *)),
                         m_transactionModel, SLOT(addTransaction(PackageKit::Transaction *)));
-                connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                         this, SLOT(finished()));
             }
             break;
@@ -96,7 +94,7 @@ void KpkHistory::slotButtonClicked(int button)
             KDialog::slotButtonClicked(button);
     }
     QString text;
-    uint time = Client::instance()->getTimeSinceAction(Client::ActionRefreshCache) * 1000;
+    uint time = Client::instance()->getTimeSinceAction(Enum::RoleRefreshCache) * 1000;
     text = i18n("Time since last cache refresh: %1", KGlobal::locale()->prettyFormatDuration(time));
     timeCacheLabel->setText(text);
 }

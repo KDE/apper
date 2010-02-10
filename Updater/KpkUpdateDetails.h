@@ -23,8 +23,6 @@
 
 #include <QPackageKit>
 
-#include "KpkPackageModel.h"
-
 #include "ui_KpkUpdateDetails.h"
 
 using namespace PackageKit;
@@ -38,10 +36,10 @@ public:
 
 private slots:
     void updateDetail(PackageKit::Client::UpdateInfo info);
-    void updateDetailFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void updateDetailFinished(PackageKit::Enum::Exit status, uint runtime);
 
 private:
-    Package::State state;
+    Enum::Info m_info;
 
     QString getLinkList(const QString &links) const;
 };

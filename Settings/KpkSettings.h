@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,10 +24,10 @@
 #include <QPackageKit>
 
 #include "ui_KpkSettings.h"
-#include "KpkModelOrigin.h"
 
 using namespace PackageKit;
 
+class KpkModelOrigin;
 class KpkSettings : public QWidget, public Ui::KpkSettings
 {
 Q_OBJECT
@@ -50,7 +50,7 @@ private slots:
 private:
     Transaction *m_trasaction;
     KpkModelOrigin *m_originModel;
-    Client::Actions m_actions;
+    Enum::Roles m_roles;
 };
 
 #endif

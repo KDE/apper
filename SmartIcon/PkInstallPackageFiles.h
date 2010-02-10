@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,7 +21,6 @@
 #ifndef PK_INSTALL_PACKAGE_FILES_H
 #define PK_INSTALL_PACKAGE_FILES_H
 
-#include <KpkTransaction.h>
 #include "KpkAbstractTask.h"
 
 #include <QPackageKit>
@@ -45,7 +44,7 @@ public slots:
 
 private slots:
     void installFilesFinished(KpkTransaction::ExitStatus status);
-    void simulateFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void simulateFinished(PackageKit::Enum::Exit status, uint runtime);
 //     void installFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
 private:

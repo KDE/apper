@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -48,7 +48,7 @@
 #include <QPalette>
 #include <QStandardItemModel>
 
-Q_DECLARE_METATYPE(Package::State)
+Q_DECLARE_METATYPE(Enum::Info)
 
 #include <QPainter>
 #define LATERAL_MARGIN 4
@@ -247,55 +247,55 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
 
     // Populate the actionsModel
     QStandardItem *item;
-    if (int c = model->countState(Package::StateRemoving)) {
+    if (int c = model->countInfo(Enum::InfoRemoving)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to remove", "%1 packages to remove", c));
-        item->setIcon(KpkIcons::actionIcon(Client::ActionRemovePackages));
-        item->setData(QVariant::fromValue(Package::StateRemoving));
+        item->setIcon(KpkIcons::actionIcon(Enum::RoleRemovePackages));
+        item->setData(QVariant::fromValue(Enum::InfoRemoving));
         d->actionsModel->appendRow(item);
-        model->setCurrentState(Package::StateRemoving);
+        model->setCurrentInfo(Enum::InfoRemoving);
     }
 
-    if (int c = model->countState(Package::StateDowngrading)) {
+    if (int c = model->countInfo(Enum::InfoDowngrading)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
-        item->setIcon(KpkIcons::actionIcon(Client::ActionRemovePackages));
-        item->setData(QVariant::fromValue(Package::StateDowngrading));
-        if (model->currentState() == Package::UnknownState) {
-            model->setCurrentState(Package::StateDowngrading);
+        item->setIcon(KpkIcons::actionIcon(Enum::RoleRemovePackages));
+        item->setData(QVariant::fromValue(Enum::InfoDowngrading));
+        if (model->currentInfo() == Enum::UnknownInfo) {
+            model->setCurrentInfo(Enum::InfoDowngrading);
         }
         d->actionsModel->appendRow(item);
     }
 
-    if (int c = model->countState(Package::StateReinstalling)) {
+    if (int c = model->countInfo(Enum::InfoReinstalling)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to reinstall", "%1 packages to reinstall", c));
-        item->setIcon(KpkIcons::actionIcon(Client::ActionRemovePackages));
-        item->setData(QVariant::fromValue(Package::StateReinstalling));
-        if (model->currentState() == Package::UnknownState) {
-            model->setCurrentState(Package::StateReinstalling);
+        item->setIcon(KpkIcons::actionIcon(Enum::RoleRemovePackages));
+        item->setData(QVariant::fromValue(Enum::InfoReinstalling));
+        if (model->currentInfo() == Enum::UnknownInfo) {
+            model->setCurrentInfo(Enum::InfoReinstalling);
         }
         d->actionsModel->appendRow(item);
     }
 
-    if (int c = model->countState(Package::StateInstalling)) {
+    if (int c = model->countInfo(Enum::InfoInstalling)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to install", "%1 packages to install", c));
-        item->setIcon(KpkIcons::actionIcon(Client::ActionInstallPackages));
-        item->setData(QVariant::fromValue(Package::StateInstalling));
-        if (model->currentState() == Package::UnknownState) {
-            model->setCurrentState(Package::StateInstalling);
+        item->setIcon(KpkIcons::actionIcon(Enum::RoleInstallPackages));
+        item->setData(QVariant::fromValue(Enum::InfoInstalling));
+        if (model->currentInfo() == Enum::UnknownInfo) {
+            model->setCurrentInfo(Enum::InfoInstalling);
         }
         d->actionsModel->appendRow(item);
     }
 
-    if (int c = model->countState(Package::StateUpdating)) {
+    if (int c = model->countInfo(Enum::InfoUpdating)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to update", "%1 packages to update", c));
-        item->setIcon(KpkIcons::actionIcon(Client::ActionUpdatePackages));
-        item->setData(QVariant::fromValue(Package::StateUpdating));
-        if (model->currentState() == Package::UnknownState) {
-            model->setCurrentState(Package::StateUpdating);
+        item->setIcon(KpkIcons::actionIcon(Enum::RoleUpdatePackages));
+        item->setData(QVariant::fromValue(Enum::InfoUpdating));
+        if (model->currentInfo() == Enum::UnknownInfo) {
+            model->setCurrentInfo(Enum::InfoUpdating);
         }
         d->actionsModel->appendRow(item);
     }
@@ -317,8 +317,8 @@ KpkRequirements::~KpkRequirements()
 
 void KpkRequirements::actionClicked(const QModelIndex &index)
 {
-    Package::State state = index.data(Qt::UserRole+1).value<Package::State>();
-    static_cast<KpkSimulateModel*>(d->ui.packageView->model())->setCurrentState(state);
+    Enum::Info state = index.data(Qt::UserRole+1).value<Enum::Info>();
+    static_cast<KpkSimulateModel*>(d->ui.packageView->model())->setCurrentInfo(state);
     d->ui.packageView->resizeColumnToContents(0);
     d->ui.packageView->resizeColumnToContents(1);
 }

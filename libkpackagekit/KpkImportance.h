@@ -29,7 +29,7 @@ using namespace PackageKit;
 
 namespace KpkImportance
 {
-    KDE_EXPORT int restartImportance(Client::RestartType type);
+    KDE_EXPORT int restartImportance(Enum::Restart type);
 };
 
 #endif

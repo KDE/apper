@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -52,7 +52,7 @@ void PkSearchFile::start()
     }
 
     Transaction *t = Client::instance()->searchFiles(m_fileName,
-                                                    Client::FilterNewest);
+                                                     Enum::FilterNewest);
     if (t->error()) {
         if (showWarning()) {
             KMessageBox::sorry(this,
@@ -75,13 +75,13 @@ void PkSearchFile::start()
     }
 }
 
-void PkSearchFile::searchFinished(PackageKit::Transaction::ExitStatus status, uint)
+void PkSearchFile::searchFinished(PackageKit::Enum::Exit status, uint)
 {
     kDebug();
-    if (status == Transaction::ExitSuccess) {
+    if (status == Enum::ExitSuccess) {
         if (m_foundPackages.size()) {
             Package *pkg = m_foundPackages.first();
-            bool installed = pkg->state() == Package::StateInstalled;
+            bool installed = pkg->info() == Enum::InfoInstalled;
             QDBusMessage reply = m_message.createReply();
             reply << installed;
             reply << pkg->name();
