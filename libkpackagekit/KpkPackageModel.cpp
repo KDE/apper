@@ -103,25 +103,25 @@ void KpkPackageModel::sort(int column, Qt::SortOrder order)
             }
         }
     } else if (column == 1) {
-        if (order == Qt::DescendingOrder){
-            descendingSelectionSorter sort(m_checkedPackages);
-            qSort(m_packages.begin(), m_packages.end(), sort);
-
-            QMap<Enum::Info, QList<Package*> >::const_iterator i = m_groups.constBegin();
-            while (i != m_groups.constEnd()) {
-                qSort(m_groups[i.key()].begin(), m_groups[i.key()].end(), sort);
-                ++i;
-            }
-        } else {
-            ascendingSelectionSorter sort(m_checkedPackages);
-            qSort(m_packages.begin(), m_packages.end(), sort);
-
-            QMap<Enum::Info, QList<Package*> >::const_iterator i = m_groups.constBegin();
-            while (i != m_groups.constEnd()) {
-                qSort(m_groups[i.key()].begin(), m_groups[i.key()].end(), sort);
-                ++i;
-            }
-        }
+//         if (order == Qt::DescendingOrder){
+//             descendingSelectionSorter sort(m_checkedPackages);
+//             qSort(m_packages.begin(), m_packages.end(), sort);
+// 
+//             QMap<Enum::Info, QList<Package*> >::const_iterator i = m_groups.constBegin();
+//             while (i != m_groups.constEnd()) {
+//                 qSort(m_groups[i.key()].begin(), m_groups[i.key()].end(), sort);
+//                 ++i;
+//             }
+//         } else {
+//             ascendingSelectionSorter sort(m_checkedPackages);
+//             qSort(m_packages.begin(), m_packages.end(), sort);
+// 
+//             QMap<Enum::Info, QList<Package*> >::const_iterator i = m_groups.constBegin();
+//             while (i != m_groups.constEnd()) {
+//                 qSort(m_groups[i.key()].begin(), m_groups[i.key()].end(), sort);
+//                 ++i;
+//             }
+//         }
     }
     if (m_grouped) {
         for (int i = 0; i < rowCount(QModelIndex()); i++) {
@@ -229,11 +229,6 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
     Package *pkg =  static_cast<Package*>(index.internalPointer());
     if (pkg) {
-        // we're a package.
-//         if (index.row() >= m_packages.size()) {
-//             return QVariant();
-//         }
-
         // we do this here cause it's the same code for column 1 and 2
         if (role == CheckedRole) {
             if (containsChecked(pkg)) {
@@ -249,11 +244,6 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             case NameRole:
                 return pkg->name() + " - " + pkg->version() + (pkg->arch().isNull() ? NULL : " (" + pkg->arch() + ')');
             case IconRole:
-                if (containsChecked(pkg)) {
-                    return (pkg->info() == Enum::InfoInstalled) ?
-                        KpkIcons::getIcon("package-removed")
-                        : KpkIcons::getIcon("package-download");
-                }
                 return KpkIcons::packageIcon(pkg->info());;
             case SummaryRole:
                 return pkg->summary();
@@ -277,26 +267,17 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             return QVariant();
         }
     } else {
-//         if (index.row() >= m_groups.size()) {
-//             return QVariant();
-//         }
         //Grouped, and the parent is invalid means this is a group
-//         kDebug() << index.row() << m_groups.size();
         Enum::Info group = m_groups.keys().at(index.row());
-        int count = m_groups.value(group).size();
-        // we do this here cause it's the same code for column 1 and 2
-        int nChecked = 0;
-        foreach(Package *p, m_groups[group]) {
-            if (containsChecked(p)) {
-                nChecked++;
-            }
-        }
+
         //TODO: Group descriptions
         switch(index.column()) {
         case 0:
             switch(role) {
             case NameRole:
-                return KpkStrings::infoUpdate(group, count, nChecked);
+                return KpkStrings::infoUpdate(group,
+                                              m_groups.value(group).size(),
+                                              checkedGroupCount(group));
             case IconRole:
                 return KpkIcons::packageIcon(group);
             case GroupRole:
@@ -309,9 +290,9 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         case 1:
             switch(role) {
             case CheckedRole:
-                if (m_groups[group].size() == nChecked) {
+                if (m_groups[group].size() == checkedGroupCount(group)) {
                     return Qt::Checked;
-                } else if (nChecked == 0) {
+                } else if (checkedGroupCount(group) == 0) {
                     return Qt::Unchecked;
                 } else {
                     return Qt::PartiallyChecked;
@@ -327,17 +308,33 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     }
 }
 
+void KpkPackageModel::checkPackage(Package *package)
+{
+    m_checkedPackages[package->id()] = package;
+    m_checkedGroupCount[package->info()]++;
+}
+
+void KpkPackageModel::uncheckPackage(const Package *package)
+{
+    m_checkedPackages.take(package->id());
+    m_checkedGroupCount[package->info()]--;
+}
+
+int KpkPackageModel::checkedGroupCount(Enum::Info info) const
+{
+    return m_checkedGroupCount[info];
+}
+
 bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == CheckedRole) {
         Package *p = package(index);
         if (value.toBool()) {
             if (p || !m_grouped) {
-                if (p) {
-                    m_checkedPackages.append(p);
-                } else {
-                    m_checkedPackages.append(m_packages.at(index.row()));
+                if (!p) {
+                    p = m_packages.at(index.row());
                 }
+                checkPackage(p);
                 emit dataChanged(index, index);
                 // emit this so the package icon is also updated
                 emit dataChanged(index,
@@ -355,9 +352,7 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
             } else {
                 Enum::Info group = m_groups.keys().at(index.row());
                 foreach(Package *p, m_groups[group]) {
-                    if (!containsChecked(p)) {
-                        m_checkedPackages.append(p);
-                    }
+                    checkPackage(p);
                 }
                 emit dataChanged(this->index(0, 1, index),
                                  this->index(m_groups[group].size(),
@@ -369,7 +364,7 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
                 if (!p) {
                     p = m_packages.at(index.row());
                 }
-                removeChecked(p);
+                uncheckPackage(p);
                 emit dataChanged(index, index);
                 // emit this so the package icon is also updated
                 emit dataChanged(index,
@@ -386,8 +381,8 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
                 }
             } else {
                 Enum::Info group = m_groups.keys().at(index.row());
-                foreach(Package *p, m_groups[group]) {
-                    removeChecked(p);
+                foreach(const Package *p, m_groups[group]) {
+                    uncheckPackage(p);
                 }
                 emit dataChanged(this->index(0, 1, index),
                                  this->index(m_groups[group].size(),
@@ -400,32 +395,16 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
     return false;
 }
 
-// This class remove package is
-// in the checked list.
-// removeOne/removeAll can't be used since our
-// Packages are pointers
-void KpkPackageModel::removeChecked(Package *package)
-{
-    for (int i = 0; i < m_checkedPackages.size(); ++i) {
-        if (*m_checkedPackages.at(i) == package) {
-            m_checkedPackages.removeAt(i);
-            break;
-        }
-    }
-}
-
-// This class checks if the package is
+// This method checks if the package is
 // in the checked list.
 // contains() can't be used since our
 // Packages are pointers
 bool KpkPackageModel::containsChecked(Package *package) const
 {
-    for (int i = 0; i < m_checkedPackages.size(); ++i) {
-        if (*m_checkedPackages.at(i) == package) {
-            return true;
-        }
+    if (m_checkedPackages.isEmpty()) {
+        return false;
     }
-    return false;
+    return m_checkedPackages.contains(package->id());
 }
 
 Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
@@ -468,14 +447,13 @@ Package* KpkPackageModel::package(const QModelIndex &index) const
 void KpkPackageModel::addSelectedPackage(PackageKit::Package *package)
 {
     if (package->info() != Enum::InfoBlocked) {
-        m_checkedPackages << package;
+        checkPackage(package);
     }
     addPackage(package);
 }
 
 void KpkPackageModel::addPackage(PackageKit::Package *package)
 {
-    kDebug() << package->name();
     // check to see if the list of info has any package
     if (!m_grouped) {
         beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
@@ -527,6 +505,7 @@ void KpkPackageModel::clear()
 void KpkPackageModel::uncheckAll()
 {
     m_checkedPackages.clear();
+    m_checkedGroupCount.clear();
     emit dataChanged(createIndex(0, 1),
                      createIndex(m_groups.size(), 1));
     if (m_grouped) {
@@ -545,9 +524,10 @@ void KpkPackageModel::uncheckAll()
 void KpkPackageModel::checkAll()
 {
     m_checkedPackages.clear();
+    m_checkedGroupCount.clear();
     foreach(Package *package, m_packages) {
         if (package->info() != Enum::InfoBlocked) {
-            m_checkedPackages << package;
+            checkPackage(package);
         }
     }
     emit dataChanged(createIndex(0, 1),
@@ -567,7 +547,7 @@ void KpkPackageModel::checkAll()
 
 QList<Package*> KpkPackageModel::selectedPackages() const
 {
-    return QList<Package*>(m_checkedPackages);
+    return m_checkedPackages.values();
 }
 
 QList<Package*> KpkPackageModel::packagesWithInfo(Enum::Info info) const

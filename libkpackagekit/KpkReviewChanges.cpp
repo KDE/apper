@@ -169,8 +169,8 @@ void KpkReviewChanges::checkTask()
                     connect(m_transactionReq, SIGNAL(package(PackageKit::Package *)),
                             m_removePkgModel, SLOT(addPackage(PackageKit::Package *)));
                     connect(m_transactionReq,
-                            SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
-                            this, SLOT(simRemFinished(PackageKit::Enum::ExitStatus, uint)));
+                            SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                            this, SLOT(simRemFinished(PackageKit::Enum::Exit, uint)));
                     // Create a Transaction dialog to don't upset the user
                     KpkTransaction *kTrans = new KpkTransaction(m_transactionReq,
                                                                 KpkTransaction::CloseOnFinish
@@ -206,9 +206,9 @@ void KpkReviewChanges::checkTask()
                     connect(m_transactionDep, SIGNAL(package(PackageKit::Package *)),
                             m_installPkgModel, SLOT(addPackage(PackageKit::Package *)));
                     connect(m_transactionDep,
-                            SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
+                            SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                             this,
-                            SLOT(simInstFinished(PackageKit::Enum::ExitStatus, uint)));
+                            SLOT(simInstFinished(PackageKit::Enum::Exit, uint)));
                     // Create a Transaction dialog to don't upset the user
                     KpkTransaction *kTrans = new KpkTransaction(m_transactionDep,
                                                                 KpkTransaction::CloseOnFinish
@@ -289,9 +289,9 @@ void KpkReviewChanges::installPackages()
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
         if (m_flags & ReturnOnlyWhenFinished) {
             connect(t,
-                    SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
+                    SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                     this,
-                    SLOT(ensureInstallFinished(PackageKit::Enum::ExitStatus, uint)));
+                    SLOT(ensureInstallFinished(PackageKit::Enum::Exit, uint)));
         } else {
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                     this, SLOT(addFinished(KpkTransaction::ExitStatus)));
@@ -318,9 +318,9 @@ void KpkReviewChanges::removePackages(bool allowDeps)
         frm->setAllowDeps(allowDeps);
         if (m_flags & ReturnOnlyWhenFinished) {
             connect(t,
-                    SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
+                    SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                     this,
-                    SLOT(ensureRemoveFinished(PackageKit::Enum::ExitStatus, uint)));
+                    SLOT(ensureRemoveFinished(PackageKit::Enum::Exit, uint)));
         } else {
             connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                     this, SLOT(remFinished(KpkTransaction::ExitStatus)));

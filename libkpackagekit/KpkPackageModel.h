@@ -76,12 +76,16 @@ public slots:
     void setGrouped(bool g);
 
 private:
-    void removeChecked(Package *package);
     bool containsChecked(Package *package) const;
+    void checkPackage(Package *package);
+    void uncheckPackage(const Package *package);
+    int checkedGroupCount(Enum::Info info) const;
 
     QAbstractItemView *m_packageView;
     QList<Package*> m_packages;
-    QList<Package*> m_checkedPackages;
+    QHash<QString, Package*> m_checkedPackages;
+    QHash<Enum::Info, int> m_checkedGroupCount;
+//     QList<> m_checkedPackages;
     QMap<Enum::Info, QList<Package*> > m_groups;
     bool  m_grouped;
 
