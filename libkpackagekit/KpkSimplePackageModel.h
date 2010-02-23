@@ -36,8 +36,7 @@ public:
     KpkSimplePackageModel(QObject *parent = 0);
 
 public slots:
-    void addPackage(PackageKit::Package *package);
-    void addPackages(const QList<PackageKit::Package *> &pkgs);
+    void addPackage(QSharedPointer<PackageKit::Package> package);
 };
 
 #endif

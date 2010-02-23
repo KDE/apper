@@ -39,7 +39,7 @@ public:
     Ui::KpkReviewChanges ui;
 };
 
-KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *parent)
+KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages, QWidget *parent)
  : KDialog(parent),
    d(new KpkReviewChangesPrivate),
    m_flags(Default)
@@ -63,7 +63,7 @@ KpkReviewChanges::KpkReviewChanges(const QList<Package*> &packages, QWidget *par
     // better apply text and description text
     int countRemove  = 0;
     int countInstall = 0;
-    foreach (Package *package, packages) {
+    foreach (QSharedPointer<PackageKit::Package>package, packages) {
         // If the package is installed we are going to remove it
         if (package->info() == Enum::InfoInstalled) {
             countRemove++;
@@ -165,9 +165,9 @@ void KpkReviewChanges::checkTask()
                                        i18n("Failed to simulate package removal"));
                     removeDone();
                 } else {
-                    m_removePkgModel = new KpkSimulateModel(this);
-                    connect(m_transactionReq, SIGNAL(package(PackageKit::Package *)),
-                            m_removePkgModel, SLOT(addPackage(PackageKit::Package *)));
+                    m_removePkgModel = new KpkSimulateModel(this, m_reqDepPackages);
+                    connect(m_transactionReq, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                            m_removePkgModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
                     connect(m_transactionReq,
                             SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                             this, SLOT(simRemFinished(PackageKit::Enum::Exit, uint)));
@@ -202,9 +202,9 @@ void KpkReviewChanges::checkTask()
                                        i18n("Failed to simulate package install"));
                     installDone();
                 } else {
-                    m_installPkgModel = new KpkSimulateModel(this);
-                    connect(m_transactionDep, SIGNAL(package(PackageKit::Package *)),
-                            m_installPkgModel, SLOT(addPackage(PackageKit::Package *)));
+                    m_installPkgModel = new KpkSimulateModel(this, m_reqDepPackages);
+                    connect(m_transactionDep, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                            m_installPkgModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
                     connect(m_transactionDep,
                             SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                             this,

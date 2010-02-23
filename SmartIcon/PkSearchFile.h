@@ -45,10 +45,10 @@ private slots:
 
 private slots:
     void searchFinished(PackageKit::Enum::Exit, uint);
-    void addPackage(PackageKit::Package *package);
+    void addPackage(QSharedPointer<PackageKit::Package>package);
 
 private:
-    QList<Package*> m_foundPackages;
+    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
     QString         m_fileName;
     QDBusMessage    m_message;
 };

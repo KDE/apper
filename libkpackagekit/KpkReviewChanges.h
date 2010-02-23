@@ -39,7 +39,7 @@ class KDE_EXPORT KpkReviewChanges : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KpkReviewChanges(const QList<Package*> &packages, QWidget *parent = 0);
+    explicit KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages, QWidget *parent = 0);
     ~KpkReviewChanges();
 
     enum OperationMode {
@@ -91,9 +91,9 @@ private:
     void updateColumnsWidth(bool force = false);
     void checkTask();
 
-    QList<Package*> m_remPackages;
-    QList<Package*> m_addPackages;
-    QList<Package*> m_reqDepPackages;
+    QList<QSharedPointer<PackageKit::Package> > m_remPackages;
+    QList<QSharedPointer<PackageKit::Package> > m_addPackages;
+    QList<QSharedPointer<PackageKit::Package> > m_reqDepPackages;
 
     Enum::Roles m_actions;
     OperationModes m_flags;

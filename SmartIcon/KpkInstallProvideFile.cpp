@@ -82,8 +82,8 @@ void KpkInstallProvideFile::start()
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                     this, SLOT(kTransactionFinished(KpkTransaction::ExitStatus)));
-            connect(t, SIGNAL(package(PackageKit::Package *)),
-                    this, SLOT(addPackage(PackageKit::Package *)));
+            connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
+                    this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
             trans->show();
             // return to avoid the decreaseRunning()
             return;
@@ -121,7 +121,7 @@ void KpkInstallProvideFile::kTransactionFinished(KpkTransaction::ExitStatus stat
     decreaseRunning();
 }
 
-void KpkInstallProvideFile::addPackage(PackageKit::Package *package)
+void KpkInstallProvideFile::addPackage(PackageKit::QSharedPointer<PackageKit::Package>package)
 {
     if (package->state() != Package::StateInstalled) {
         m_foundPackages.append(package);

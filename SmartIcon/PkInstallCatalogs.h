@@ -45,7 +45,7 @@ private slots:
     void start();
 
 private slots:
-    void addPackage(PackageKit::Package *package);
+    void addPackage(QSharedPointer<PackageKit::Package>package);
 
 private:
     bool installPackages(const QStringList &packages);
@@ -53,7 +53,7 @@ private:
     bool installFiles(const QStringList &files);
     bool runTransaction(Transaction *trans);
 
-    QList<Package*> m_foundPackages;
+    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
     QStringList  m_files;
     QString      m_interaction;
     QDBusMessage m_message;

@@ -130,8 +130,8 @@ void PkInstallPackageFiles::start()
                     sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
                 } else {
                     m_installFilesModel = new KpkSimulateModel(this);
-                    connect(t, SIGNAL(package(PackageKit::Package *)),
-                            m_installFilesModel, SLOT(addPackage(PackageKit::Package *)));
+                    connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
+                            m_installFilesModel, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                             this, SLOT(simulateFinished(PackageKit::Transaction::ExitStatus, uint)));
                     if (showProgress()) {

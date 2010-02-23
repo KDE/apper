@@ -214,12 +214,12 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
     transactionChanged();
     connect(m_currentTransaction, SIGNAL(changed()),
             this, SLOT(transactionChanged()));
-    connect(m_currentTransaction, SIGNAL(message(PackageKit::Client::MessageType, const QString &)),
-            this, SLOT(message(PackageKit::Client::MessageType, const QString &)));
-    connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Enum::RestartType, Package *)),
-            this, SLOT(requireRestart(PackageKit::Enum::RestartType, Package *)));
-    connect(m_currentTransaction, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-            this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
+    connect(m_currentTransaction, SIGNAL(message(PackageKit::Enum::Message, const QString &)),
+            this, SLOT(message(PackageKit::Enum::Message, const QString &)));
+    connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)),
+            this, SLOT(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)));
+    connect(m_currentTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     m_smartSTI->show();
 }
 
@@ -395,7 +395,7 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void KpkTransactionTrayIcon::requireRestart(PackageKit::Enum::Restart type, Package *pkg)
+void KpkTransactionTrayIcon::requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package>pkg)
 {
     int old = KpkImportance::restartImportance(m_restartType);
     int newer = KpkImportance::restartImportance(type);

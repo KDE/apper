@@ -154,8 +154,8 @@ void KpkUpdateIcon::update()
     if (Qt::Checked == (Qt::CheckState) notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked)) {
         m_updateList.clear();
         Transaction *t = Client::instance()->getUpdates();
-        connect(t, SIGNAL(package(PackageKit::Package *)),
-                this, SLOT(updateListed(PackageKit::Package *)));
+        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                this, SLOT(updateListed(QSharedPointer<PackageKit::Package>)));
         connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                 this, SLOT(updateCheckFinished(PackageKit::Transaction::ExitStatus, uint)));
     } else {
@@ -163,7 +163,7 @@ void KpkUpdateIcon::update()
     }
 }
 
-void KpkUpdateIcon::updateListed(PackageKit::Package *package)
+void KpkUpdateIcon::updateListed(QSharedPointer<PackageKit::Package>package)
 {
     // Blocked updates are not instalable updates so there is no
     // reason to show/count them
@@ -183,9 +183,9 @@ void KpkUpdateIcon::notifyUpdates()
     }
 
     Enum::Info highState = Enum::InfoInstalled;
-    QHash<Enum::Info, QList<Package*> > packageGroups;
+    QHash<Enum::Info, QList<QSharedPointer<PackageKit::Package> > > packageGroups;
 
-    foreach(Package *p, m_updateList) {
+    foreach(QSharedPointer<PackageKit::Package>p, m_updateList) {
         packageGroups[p->info()].append(p);
         if (p->info() > highState) {
             highState = p->info();
@@ -231,7 +231,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Enum::Exit, uint runtime)
 //         kDebug() << "Found " << m_updateList.size() << " updates";
         Enum::Info highState = Enum::InfoInstalled;
         //FIXME: This assumes that PackageKit shares our priority ranking.
-        foreach(Package *p, m_updateList) {
+        foreach(QSharedPointer<PackageKit::Package>p, m_updateList) {
             if (p->info() > highState) {
                 highState = p->info();
             }
@@ -269,8 +269,8 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Enum::Exit, uint runtime)
                 }
             } else {
                 // Defaults to security
-                QList<PackageKit::Package*> updateList;
-                foreach(PackageKit::Package *package, m_updateList) {
+                QList<QSharedPointer<PackageKit::Package> > updateList;
+                foreach(QSharedPointer<PackageKit::Package>package, m_updateList) {
                     if (package->info() == Enum::InfoSecurity) {
                         updateList.append(package);
                     }

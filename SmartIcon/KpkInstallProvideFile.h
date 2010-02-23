@@ -40,10 +40,10 @@ public slots:
 
 private slots:
     void kTransactionFinished(KpkTransaction::ExitStatus status);
-    void addPackage(PackageKit::Package *package);
+    void addPackage(PackageKit::QSharedPointer<PackageKit::Package>package);
 
 private:
-    QList<Package*> m_foundPackages;
+    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
     QHash <KpkTransaction *,QStringList> m_transactionFiles;
     QStringList m_args;
     QString m_alreadyInstalled;

@@ -114,14 +114,15 @@ void KpkUpdate::applyUpdates()
     if (m_roles & Enum::RoleSimulateUpdatePackages) {
 
         PackageKit::Transaction *t;
-        KpkSimulateModel *simulateModel = new KpkSimulateModel(this);
-
-        t = m_client->simulateUpdatePackages(m_pkg_model_updates->selectedPackages());
+        QList<QSharedPointer<PackageKit::Package> > selectedPackages;
+        selectedPackages = m_pkg_model_updates->selectedPackages();
+        t = m_client->simulateUpdatePackages(selectedPackages);
         if (t->error()) {
                 KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-                connect(t, SIGNAL(package(PackageKit::Package *)),
-                        simulateModel, SLOT(addPackage(PackageKit::Package *)));
+                KpkSimulateModel *simulateModel = new KpkSimulateModel(this, selectedPackages);
+                connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                        simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
 
                 // Create a Transaction dialog to don't upset the user
                 QPointer<KpkTransaction> reqFinder = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
@@ -178,7 +179,7 @@ void KpkUpdate::getUpdatesFinished(Enum::Exit status, uint runtime)
 
 void KpkUpdate::updatePackages()
 {
-    QList<Package*> packages = m_pkg_model_updates->selectedPackages();
+    QList<QSharedPointer<PackageKit::Package> > packages = m_pkg_model_updates->selectedPackages();
 
     SET_PROXY
     Transaction *t = m_client->updatePackages(true, packages);
@@ -218,8 +219,8 @@ void KpkUpdate::getUpdates()
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
     } else {
         transactionBar->addTransaction(m_updatesT);
-        connect(m_updatesT, SIGNAL(package(PackageKit::Package *)),
-                m_pkg_model_updates, SLOT(addPackage(PackageKit::Package *)));
+        connect(m_updatesT, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                m_pkg_model_updates, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
                 this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
         connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
@@ -268,7 +269,7 @@ void KpkUpdate::on_refreshPB_clicked()
 void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
 {
     if (index.column() == 0) {
-        Package *p = m_pkg_model_updates->package(index);
+        QSharedPointer<PackageKit::Package>p = m_pkg_model_updates->package(index);
         // check to see if the backend support
         if (p && (m_roles & Enum::RoleGetUpdateDetail)) {
             if (pkg_delegate->isExtended(index)) {

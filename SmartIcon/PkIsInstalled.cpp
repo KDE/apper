@@ -55,8 +55,8 @@ void PkIsInstalled::start()
     } else {
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 this, SLOT(searchFinished(PackageKit::Enum::Exit, uint)));
-        connect(t, SIGNAL(package(PackageKit::Package *)),
-                this, SLOT(addPackage(PackageKit::Package *)));
+        connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
+                this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
         if (showProgress()) {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             trans->show();
@@ -79,7 +79,7 @@ void PkIsInstalled::searchFinished(PackageKit::Enum::Exit status, uint)
     }
 }
 
-void PkIsInstalled::addPackage(PackageKit::Package *package)
+void PkIsInstalled::addPackage(QSharedPointer<PackageKit::Package>package)
 {
     m_foundPackages.append(package);
 }

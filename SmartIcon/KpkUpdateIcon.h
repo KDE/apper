@@ -46,7 +46,7 @@ public slots:
 
 private slots:
     void update();
-    void updateListed(PackageKit::Package*);
+    void updateListed(QSharedPointer<PackageKit::Package>);
     void updateCheckFinished(PackageKit::Enum::Exit exit, uint runtime);
     void handleUpdateAction(uint action);
     void handleUpdateActionClosed();
@@ -58,7 +58,7 @@ private slots:
 private:
     KSystemTrayIcon* m_icon;
     KNotification *m_updateNotify;
-    QList<PackageKit::Package*> m_updateList;
+    QList<QSharedPointer<PackageKit::Package> > m_updateList;
 
 //     int m_inhibitCookie;
 //     void suppressSleep(bool enable);

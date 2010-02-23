@@ -45,10 +45,10 @@ private slots:
 
 private slots:
     void resolveFinished(PackageKit::Enum::Exit, uint);
-    void addPackage(PackageKit::Package *package);
+    void addPackage(QSharedPointer<PackageKit::Package>package);
 
 private:
-    QList<Package*> m_foundPackages;
+    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
     QStringList  m_packages;
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;

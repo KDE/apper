@@ -33,7 +33,8 @@ class KDE_EXPORT KpkSimulateModel : public QAbstractTableModel
 Q_OBJECT
 
 public:
-    KpkSimulateModel(QObject *parent = 0);
+    KpkSimulateModel(QObject *parent = 0,
+                     QList<QSharedPointer<PackageKit::Package> > skipPackages = QList<QSharedPointer<PackageKit::Package> >());
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -46,10 +47,11 @@ public:
     void clear();
 
 public slots:
-    void addPackage(PackageKit::Package *package);
+    void addPackage(QSharedPointer<PackageKit::Package> package);
 
 private:
-    QHash<Enum::Info, QList<Package*> > m_packages;
+    QHash<Enum::Info, QList<QSharedPointer<PackageKit::Package> > > m_packages;
+    QList<QSharedPointer<PackageKit::Package> > m_skipPackages;
     Enum::Info m_currentInfo;
 };
 

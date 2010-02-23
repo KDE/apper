@@ -26,7 +26,7 @@
 #include <KDebug>
 #include <KMessageBox>
 
-KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent)
+KpkUpdateDetails::KpkUpdateDetails(QSharedPointer<PackageKit::Package>package, QWidget *parent)
  : QWidget(parent)
 {
     setupUi(this);
@@ -39,8 +39,8 @@ KpkUpdateDetails::KpkUpdateDetails(PackageKit::Package *package, QWidget *parent
     } else {
         connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
                 this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(updateDetailFinished(PackageKit::Transaction::ExitStatus, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
+                this, SLOT(updateDetailFinished(PackageKit::Enum::ExitStatus, uint)));
     }
 }
 
@@ -92,7 +92,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     // Updates (lists of packages that are updated)
     if (info.updates.size()) {
         QStringList updates;
-        foreach (Package *p, info.updates) updates << p->name() + '-' + p->version();
+        foreach (QSharedPointer<PackageKit::Package>p, info.updates) updates << p->name() + '-' + p->version();
         description += "<tr><td align=\"right\"><b>" + i18n("Updates") + ":</b></td><td>"
                     + updates.join("<br />")
                     + "</td></tr>";
@@ -101,7 +101,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     // Obsoletes (lists of packages that are obsoleted)
     if (info.obsoletes.size()) {
         QStringList obsoletes;
-        foreach (Package *p, info.obsoletes) obsoletes << p->id() + '-' + p->version();
+        foreach (QSharedPointer<PackageKit::Package>p, info.obsoletes) obsoletes << p->id() + '-' + p->version();
         description += "<tr><td align=\"right\"><b>" + i18n("Obsoletes") + ":</b></td><td>"
                     + obsoletes.join("<br />")
                     + "</td></tr>";

@@ -65,8 +65,8 @@ void PkSearchFile::start()
         // which cancel the transaction in x seconds if it's not running yet
         connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                 this, SLOT(searchFinished(PackageKit::Transaction::ExitStatus, uint)));
-        connect(t, SIGNAL(package(PackageKit::Package *)),
-                this, SLOT(addPackage(PackageKit::Package *)));
+        connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
+                this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
         if (showProgress()) {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             trans->show();
@@ -80,7 +80,7 @@ void PkSearchFile::searchFinished(PackageKit::Enum::Exit status, uint)
     kDebug();
     if (status == Enum::ExitSuccess) {
         if (m_foundPackages.size()) {
-            Package *pkg = m_foundPackages.first();
+            QSharedPointer<PackageKit::Package>pkg = m_foundPackages.first();
             bool installed = pkg->info() == Enum::InfoInstalled;
             QDBusMessage reply = m_message.createReply();
             reply << installed;
@@ -99,7 +99,7 @@ void PkSearchFile::searchFinished(PackageKit::Enum::Exit status, uint)
     }
 }
 
-void PkSearchFile::addPackage(PackageKit::Package *package)
+void PkSearchFile::addPackage(QSharedPointer<PackageKit::Package>package)
 {
     m_foundPackages.append(package);
 }

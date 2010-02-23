@@ -31,7 +31,7 @@ KpkSimplePackageModel::KpkSimplePackageModel(QObject *parent)
     setSortRole(Qt::DisplayRole);
 }
 
-void KpkSimplePackageModel::addPackage(PackageKit::Package *p)
+void KpkSimplePackageModel::addPackage(QSharedPointer<PackageKit::Package> p)
 {
     QStandardItem *item = new QStandardItem;
     item->setText(p->name() + " - " + p->version() + (p->arch().isNull() ? NULL : " (" + p->arch() + ')'));
@@ -40,17 +40,4 @@ void KpkSimplePackageModel::addPackage(PackageKit::Package *p)
     item->setEditable(false);
     item->setToolTip(p->summary());
     appendRow(item);
-}
-
-void KpkSimplePackageModel::addPackages(const QList<PackageKit::Package *> &pkgs)
-{
-    QStandardItem *item = new QStandardItem;
-    foreach (const PackageKit::Package *p, pkgs) {
-        item->setText(p->name() + " - " + p->version() + (p->arch().isNull() ? NULL : " (" + p->arch() + ')'));
-        item->setIcon(KpkIcons::packageIcon(p->info()));
-        item->setSelectable(false);
-        item->setEditable(false);
-        item->setToolTip(p->summary());
-        appendRow(item);
-    }
 }

@@ -51,7 +51,7 @@ private slots:
     void createTransactionDialog(Transaction *t);
     void transactionDialogClosed();
     void message(PackageKit::Enum::Message type, const QString &message);
-    void requireRestart(PackageKit::Enum::Restart type, Package *pkg);
+    void requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package>pkg);
     void finished(PackageKit::Enum::Exit exit, uint runtime);
     void restartActivated(uint action = 1);
     void transactionChanged();

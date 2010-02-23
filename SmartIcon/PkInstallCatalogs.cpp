@@ -215,8 +215,8 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
         QEventLoop loop;
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 &loop, SLOT(quit()));
-        connect(t, SIGNAL(package(PackageKit::Package *)),
-                this, SLOT(addPackage(PackageKit::Package *)));
+        connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
+                this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
         if (showProgress()) {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             trans->show();
@@ -227,7 +227,7 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
     }
 }
 
-void PkInstallCatalogs::addPackage(PackageKit::Package *package)
+void PkInstallCatalogs::addPackage(QSharedPointer<PackageKit::Package>package)
 {
     if (package->info() != Enum::InfoInstalled) {
         m_foundPackages.append(package);

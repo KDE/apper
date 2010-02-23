@@ -236,7 +236,7 @@ void KpkAddRm::checkChanged()
 void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
 {
     if (index.column() == 0) {
-        Package *p = m_pkg_model_main->package(index);
+        QSharedPointer<PackageKit::Package>p = m_pkg_model_main->package(index);
         if (p) {
             if (pkg_delegate->isExtended(index)) {
                 pkg_delegate->contractItem(index);
@@ -337,7 +337,7 @@ void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
             pkg_delegate->contractAll();
             // cleans the models
             m_pkg_model_main->clear();
-            foreach (Package *pkg, m_pkg_model_main->selectedPackages()) {
+            foreach (QSharedPointer<PackageKit::Package>pkg, m_pkg_model_main->selectedPackages()) {
                 m_pkg_model_main->addPackage(pkg);
             }
             break;
@@ -395,8 +395,8 @@ void KpkAddRm::search()
 
 void KpkAddRm::connectTransaction(Transaction *transaction)
 {
-    connect(transaction, SIGNAL(package(PackageKit::Package *)),
-            m_pkg_model_main, SLOT(addPackage(PackageKit::Package *)));
+    connect(transaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+            m_pkg_model_main, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
     connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),

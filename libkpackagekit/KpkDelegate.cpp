@@ -90,7 +90,7 @@ void KpkDelegate::paintColMain(QPainter *painter,
     bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
 
     //grab the package from the index pointer
-    Package *pkg = static_cast<Package*>(index.internalPointer());
+    PackageKit::Package *pkg = static_cast<PackageKit::Package*>(index.internalPointer());
 
     // selects the mode to paint the icon based on the info field
     QIcon::Mode iconMode;

@@ -37,12 +37,12 @@ class KpkPackageDetails : public QWidget, Ui::KpkPackageDetails
 {
 Q_OBJECT
 public:
-    KpkPackageDetails(PackageKit::Package *package, const Enum::Roles &roles, QWidget *parent = 0);
+    KpkPackageDetails(QSharedPointer<PackageKit::Package>package, const Enum::Roles &roles, QWidget *parent = 0);
     ~KpkPackageDetails();
 
 private slots:
-    void description(PackageKit::Package *package);
-    void files(PackageKit::Package *package, const QStringList &files);
+    void description(QSharedPointer<PackageKit::Package>package);
+    void files(QSharedPointer<PackageKit::Package>package, const QStringList &files);
 
     void getDetailsFinished(PackageKit::Enum::Exit status, uint runtime);
     void getFilesFinished(PackageKit::Enum::Exit status, uint runtime);
@@ -55,7 +55,7 @@ private slots:
     void on_requiredByTB_clicked();
 
 private:
-    Package *m_package;
+    QSharedPointer<PackageKit::Package>m_package;
 
     KpkSimplePackageModel *m_pkg_model_dep;
     KpkSimplePackageModel *m_pkg_model_req;
@@ -73,10 +73,10 @@ private:
 
     void setCurrentWidget(QWidget *widget);
 
-    void getDetails(PackageKit::Package *p);
-    void getFiles(PackageKit::Package *p);
-    void getDepends(PackageKit::Package *p);
-    void getRequires(PackageKit::Package *p);
+    void getDetails(QSharedPointer<PackageKit::Package>p);
+    void getFiles(QSharedPointer<PackageKit::Package>p);
+    void getDepends(QSharedPointer<PackageKit::Package>p);
+    void getRequires(QSharedPointer<PackageKit::Package>p);
 };
 
 #endif

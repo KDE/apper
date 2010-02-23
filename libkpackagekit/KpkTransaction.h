@@ -50,10 +50,10 @@ public:
     QString tid() const;
     bool allowDeps() const;
     bool onlyTrusted() const;
-    QList<Package*> packages() const;
+    QList<QSharedPointer<PackageKit::Package> > packages() const;
 
     void setAllowDeps(bool allowDeps);
-    void setPackages(QList<Package*> packages);
+    void setPackages(QList<QSharedPointer<PackageKit::Package> > packages);
 
     typedef enum {
         Success,
@@ -82,7 +82,7 @@ private slots:
     void finishedDialog();
     void finished(PackageKit::Enum::Exit status, uint runtime);
     void errorCode(PackageKit::Enum::Error error, const QString &details);
-    void currPackage(PackageKit::Package *);
+    void currPackage(QSharedPointer<PackageKit::Package>);
     void updateUi();
     void eulaRequired(PackageKit::Client::EulaInfo info);
     void mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text);

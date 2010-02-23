@@ -26,8 +26,10 @@
 
 using namespace PackageKit;
 
-KpkSimulateModel::KpkSimulateModel(QObject *parent)
+KpkSimulateModel::KpkSimulateModel(QObject *parent,
+                                   QList<QSharedPointer<PackageKit::Package> > skipPackages)
 : QAbstractTableModel(parent),
+  m_skipPackages(skipPackages),
   m_currentInfo(Enum::UnknownInfo)
 {
 //     setSortRole(Qt::DisplayRole);
@@ -41,7 +43,7 @@ QVariant KpkSimulateModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    Package *p = m_packages[m_currentInfo].at(index.row());
+    QSharedPointer<PackageKit::Package>p = m_packages[m_currentInfo].at(index.row());
     switch(index.column()) {
     case 0:
         switch (role) {
@@ -84,11 +86,19 @@ int KpkSimulateModel::countInfo(Enum::Info info)
     }
 }
 
-void KpkSimulateModel::addPackage(PackageKit::Package *p)
+void KpkSimulateModel::addPackage(QSharedPointer<PackageKit::Package> p)
 {
     if (p->info() == Enum::InfoFinished) {
         return;
     }
+
+    foreach (const QSharedPointer<PackageKit::Package> pkg, m_skipPackages) {
+        if (pkg->id() == p->id()) {
+            // found a package to skip
+            return;
+        }
+    }
+
     if (m_currentInfo == Enum::UnknownInfo) {
         m_currentInfo = p->info();
     }

@@ -104,8 +104,8 @@ void PkInstallFontconfigResources::start()
         } else {
             connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
                     this, SLOT(whatProvidesFinished(PackageKit::Transaction::ExitStatus, uint)));
-            connect(t, SIGNAL(package(PackageKit::Package *)),
-                    this, SLOT(addPackage(PackageKit::Package *)));
+            connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
+                    this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
             if (showProgress()) {
                 KpkTransaction *trans;
                 trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
@@ -151,7 +151,7 @@ void PkInstallFontconfigResources::whatProvidesFinished(PackageKit::Enum::Exit s
     }
 }
 
-void PkInstallFontconfigResources::addPackage(PackageKit::Package *package)
+void PkInstallFontconfigResources::addPackage(QSharedPointer<PackageKit::Package>package)
 {
     m_foundPackages.append(package);
 }

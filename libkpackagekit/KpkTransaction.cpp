@@ -48,7 +48,7 @@ public:
     bool finished;
     bool allowDeps;
     bool onlyTrusted;
-    QList<Package*> packages;
+    QList<QSharedPointer<PackageKit::Package> > packages;
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
@@ -132,7 +132,7 @@ bool KpkTransaction::onlyTrusted() const
     return d->onlyTrusted;
 }
 
-QList<Package*> KpkTransaction::packages() const
+QList<QSharedPointer<PackageKit::Package> > KpkTransaction::packages() const
 {
     return d->packages;
 }
@@ -142,7 +142,7 @@ void KpkTransaction::setAllowDeps(bool allowDeps)
     d->allowDeps = allowDeps;
 }
 
-void KpkTransaction::setPackages(QList<Package*> packages)
+void KpkTransaction::setPackages(QList<QSharedPointer<PackageKit::Package> > packages)
 {
     d->packages = packages;
 }
@@ -184,8 +184,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
     }
 
     // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
-    connect(m_trans, SIGNAL(package(PackageKit::Package *)),
-            this, SLOT(currPackage(PackageKit::Package *)));
+    connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+            this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
     connect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     connect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -203,8 +203,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
 
 void KpkTransaction::unsetTransaction()
 {
-    disconnect(m_trans, SIGNAL(package(PackageKit::Package *)),
-               this, SLOT(currPackage(PackageKit::Package *)));
+    disconnect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+               this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     disconnect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -272,7 +272,7 @@ void KpkTransaction::updateUi()
     enableButtonCancel(m_trans->allowCancel());
 }
 
-void KpkTransaction::currPackage(Package *p)
+void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package>p)
 {
     if (!p->id().isEmpty()) {
         QString packageText(p->name());
@@ -302,7 +302,8 @@ void KpkTransaction::finishedDialog()
                                                  "/",
                                                  "org.kde.KPackageKitSmartIcon",
                                                  QLatin1String("WatchTransaction"));
-        message << qVariantFromValue(m_trans->tid());
+        // Use our own cached tid to avoid crashes
+        message << qVariantFromValue(d->tid);
         QDBusMessage reply = QDBusConnection::sessionBus().call(message);
         if (reply.type() != QDBusMessage::ReplyMessage) {
             kWarning() << "Message did not receive a reply";

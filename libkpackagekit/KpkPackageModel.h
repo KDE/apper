@@ -36,7 +36,7 @@ class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
 
 public:
     explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
-    explicit KpkPackageModel(const QList<Package*> &packages, QObject *parent = 0, QAbstractItemView *packageView = 0);
+    explicit KpkPackageModel(const QList<QSharedPointer<PackageKit::Package> > &packages, QObject *parent = 0, QAbstractItemView *packageView = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -46,10 +46,10 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     bool allSelected() const;
-    QList<Package*> selectedPackages() const;
-    QList<Package*> packagesWithInfo(Enum::Info) const;
-    void removePackage(Package *package);
-    Package *package(const QModelIndex &index) const;
+    QList<QSharedPointer<PackageKit::Package> > selectedPackages() const;
+    QList<QSharedPointer<PackageKit::Package> > packagesWithInfo(Enum::Info) const;
+    void removePackage(QSharedPointer<PackageKit::Package>package);
+    QSharedPointer<PackageKit::Package> package(const QModelIndex &index) const;
     void clear();
     void uncheckAll();
     void checkAll();
@@ -71,22 +71,22 @@ public:
     };
 
 public slots:
-    void addPackage(PackageKit::Package *package);
-    void addSelectedPackage(PackageKit::Package *package);
+    void addPackage(QSharedPointer<PackageKit::Package>package);
+    void addSelectedPackage(QSharedPointer<PackageKit::Package>package);
     void setGrouped(bool g);
 
 private:
-    bool containsChecked(Package *package) const;
-    void checkPackage(Package *package);
-    void uncheckPackage(const Package *package);
+    bool containsChecked(const QString &pid) const;
+    void checkPackage(QSharedPointer<PackageKit::Package>package);
+    void uncheckPackage(const QSharedPointer<PackageKit::Package>package);
     int checkedGroupCount(Enum::Info info) const;
 
     QAbstractItemView *m_packageView;
-    QList<Package*> m_packages;
-    QHash<QString, Package*> m_checkedPackages;
+    QList<QSharedPointer<PackageKit::Package> > m_packages;
+    QHash<QString, QSharedPointer<PackageKit::Package> > m_checkedPackages;
     QHash<Enum::Info, int> m_checkedGroupCount;
 //     QList<> m_checkedPackages;
-    QMap<Enum::Info, QList<Package*> > m_groups;
+    QMap<Enum::Info, QList<QSharedPointer<PackageKit::Package> > > m_groups;
     bool  m_grouped;
 
 };

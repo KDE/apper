@@ -27,7 +27,7 @@
 #include <QPlainTextEdit>
 #include <QTextDocument>
 
-KpkPackageDetails::KpkPackageDetails(PackageKit::Package *package, const Enum::Roles &roles, QWidget *parent)
+KpkPackageDetails::KpkPackageDetails(QSharedPointer<PackageKit::Package>package, const Enum::Roles &roles, QWidget *parent)
  : QWidget(parent),
    m_package(package),
    currentWidget(0),
@@ -100,21 +100,21 @@ void KpkPackageDetails::setCurrentWidget(QWidget *widget)
     gridLayout->addWidget(currentWidget = widget);
 }
 
-void KpkPackageDetails::getDetails(PackageKit::Package *p)
+void KpkPackageDetails::getDetails(QSharedPointer<PackageKit::Package>p)
 {
     // create the description transaction
     Transaction *t = Client::instance()->getDetails(p);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
-        connect(t, SIGNAL(details(PackageKit::Package *)),
-                this, SLOT(description(PackageKit::Package *)));
+        connect(t, SIGNAL(details(QSharedPointer<PackageKit::Package>)),
+                this, SLOT(description(QSharedPointer<PackageKit::Package>)));
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 this, SLOT(getDetailsFinished(PackageKit::Enum::Exit, uint)));
     }
 }
 
-void KpkPackageDetails::description(PackageKit::Package *p)
+void KpkPackageDetails::description(QSharedPointer<PackageKit::Package>p)
 {
     descriptionKTB->clear();
     //format and show description
@@ -168,21 +168,21 @@ void KpkPackageDetails::on_descriptionTB_clicked()
     }
 }
 
-void KpkPackageDetails::getFiles(PackageKit::Package *p)
+void KpkPackageDetails::getFiles(QSharedPointer<PackageKit::Package>p)
 {
     // create the files transaction
     Transaction *t = Client::instance()->getFiles(p);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
-        connect(t, SIGNAL(files(PackageKit::Package *, const QStringList &)),
-                this, SLOT(files(PackageKit::Package *, const QStringList &)));
+        connect(t, SIGNAL(files(QSharedPointer<PackageKit::Package>, const QStringList &)),
+                this, SLOT(files(QSharedPointer<PackageKit::Package>, const QStringList &)));
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 this, SLOT(getFilesFinished(PackageKit::Enum::Exit, uint)));
     }
 }
 
-void KpkPackageDetails::files(PackageKit::Package *package, const QStringList &files)
+void KpkPackageDetails::files(QSharedPointer<PackageKit::Package>package, const QStringList &files)
 {
     Q_UNUSED(package)
     filesPTE->clear();
@@ -212,7 +212,7 @@ void KpkPackageDetails::on_fileListTB_clicked()
     }
 }
 
-void KpkPackageDetails::getDepends(PackageKit::Package *p)
+void KpkPackageDetails::getDepends(QSharedPointer<PackageKit::Package>p)
 {
     // create a transaction for the dependecies not recursive
     Transaction *t = Client::instance()->getDepends(p, PackageKit::Enum::NoFilter, false);
@@ -220,8 +220,8 @@ void KpkPackageDetails::getDepends(PackageKit::Package *p)
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
-        connect(t, SIGNAL(package(PackageKit::Package *)),
-                m_pkg_model_dep, SLOT(addPackage(PackageKit::Package *)));
+        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                m_pkg_model_dep, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 this, SLOT(getDependsFinished(PackageKit::Enum::Exit, uint)));
     }
@@ -244,7 +244,7 @@ void KpkPackageDetails::on_dependsOnTB_clicked()
     }
 }
 
-void KpkPackageDetails::getRequires(PackageKit::Package *p)
+void KpkPackageDetails::getRequires(QSharedPointer<PackageKit::Package>p)
 {
     // create a transaction for the requirements not recursive
     Transaction *t = Client::instance()->getRequires(p, PackageKit::Enum::NoFilter, false);
@@ -252,8 +252,8 @@ void KpkPackageDetails::getRequires(PackageKit::Package *p)
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
-        connect(t, SIGNAL(package(PackageKit::Package *)),
-                m_pkg_model_req, SLOT(addPackage(PackageKit::Package *)));
+        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                m_pkg_model_req, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 this, SLOT(getRequiresFinished(PackageKit::Enum::Exit, uint)));
     }
