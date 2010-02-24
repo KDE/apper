@@ -65,7 +65,7 @@ public:
     KpkTransaction::ExitStatus exitStatus() const;
 
 signals:
-    void kTransactionFinished(KpkTransaction::ExitStatus status);
+    void requeue();
 
 private:
     void unsetTransaction();

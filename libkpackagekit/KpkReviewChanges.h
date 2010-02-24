@@ -58,8 +58,8 @@ public:
     int exec(OperationModes flags = 0);
 
 private slots:
-    void remFinished(KpkTransaction::ExitStatus);
-    void addFinished(KpkTransaction::ExitStatus);
+    void removeRequeue();
+    void installRequeue();
 
     void simRemFinished(PackageKit::Enum::Exit status, uint runtime);
     void simInstFinished(PackageKit::Enum::Exit status, uint runtime);

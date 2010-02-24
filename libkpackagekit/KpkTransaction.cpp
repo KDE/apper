@@ -95,8 +95,6 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
     // We need to track when the user close the dialog using the [X] button
     connect(this, SIGNAL(finished()), SLOT(finishedDialog()));
-    connect(this, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
-            SLOT(setExitStatus(KpkTransaction::ExitStatus)));
 
     // after ALL set, lets set the transaction
     setTransaction(m_trans);
@@ -104,6 +102,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
 KpkTransaction::~KpkTransaction()
 {
+    kDebug();
     KConfig config("KPackageKit");
     if (isButtonEnabled(KDialog::Details)) {
         KConfigGroup transactionGroup(&config, "Transaction");
@@ -149,6 +148,11 @@ void KpkTransaction::setPackages(QList<QSharedPointer<PackageKit::Package> > pac
 
 void KpkTransaction::setTransaction(Transaction *trans)
 {
+    if (!trans) {
+        // 0 pointer passed
+        return;
+    }
+
     m_trans = trans;
     d->tid = trans->tid();
     d->finished = false;
@@ -311,7 +315,7 @@ void KpkTransaction::finishedDialog()
         // Always disconnect BEFORE emitting finished
         unsetTransaction();
 
-        emit kTransactionFinished(Success);
+        setExitStatus(Success);
     }
 }
 
@@ -332,7 +336,7 @@ void KpkTransaction::slotButtonClicked(int button)
         kDebug() << "KDialog::Close";
         // Always disconnect BEFORE emitting finished
         unsetTransaction();
-        emit kTransactionFinished(Cancelled);
+        setExitStatus(Cancelled);
         done(KDialog::Close);
         break;
     case KDialog::Details :
@@ -379,10 +383,11 @@ void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &det
         if (ret == KMessageBox::Yes) {
             // Set only trusted to false, to do as the user asked
             d->onlyTrusted = false;
-            emit kTransactionFinished(ReQueue);
+            emit requeue();
+            setExitStatus(ReQueue);
             kDebug() << "Asking for a re-queue";
         } else {
-            emit kTransactionFinished(Cancelled);
+            setExitStatus(Cancelled);
             if (m_flags & CloseOnFinish)
                 done(QDialog::Rejected);
         }
@@ -440,7 +445,8 @@ void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
     delete frm;
 
     // Well try again, if fail will show the erroCode
-    emit kTransactionFinished(ReQueue);
+    emit requeue();
+    setExitStatus(ReQueue);
 }
 
 void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text)
@@ -458,7 +464,8 @@ void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const
 
     // if the user clicked continue we got yes
     if (ret == KMessageBox::Yes) {
-        emit kTransactionFinished(ReQueue);
+        emit requeue();
+        setExitStatus(ReQueue);
     } else {
         // when we receive an error we are done
         if (m_flags & CloseOnFinish) {
@@ -486,23 +493,25 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
     delete frm;
 
 //     kDebug() << "Requeue!";
-    emit kTransactionFinished(ReQueue);
+    emit requeue();
+    setExitStatus(ReQueue);
 }
 
 void KpkTransaction::finished(PackageKit::Enum::Exit status, uint runtime)
 {
+    kDebug();
     Q_UNUSED(runtime)
     d->finished = true;
     switch(status) {
     case Enum::ExitSuccess :
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
-        emit kTransactionFinished(Success);
+        setExitStatus(Success);
         break;
     case Enum::ExitCancelled :
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
-        emit kTransactionFinished(Cancelled);
+        setExitStatus(Cancelled);
         break;
     case Enum::ExitFailed :
         kDebug() << "Failed.";
@@ -510,7 +519,7 @@ void KpkTransaction::finished(PackageKit::Enum::Exit status, uint runtime)
             d->ui.progressBar->setMaximum(0);
             d->ui.progressBar->reset();
             kDebug() << "Yep, we failed.";
-            emit kTransactionFinished(Failed);
+            setExitStatus(Failed);
         }
         break;
     case Enum::ExitKeyRequired :
@@ -520,7 +529,7 @@ void KpkTransaction::finished(PackageKit::Enum::Exit status, uint runtime)
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
         d->ui.currentL->setText(KpkStrings::status(Enum::StatusSetup));
         if (!m_handlingActionRequired) {
-            emit kTransactionFinished(Failed);
+            setExitStatus(Failed);
         }
         break;
     default :
@@ -533,6 +542,7 @@ void KpkTransaction::finished(PackageKit::Enum::Exit status, uint runtime)
     // if we're not showing an error or don't have the
     // CloseOnFinish flag don't close the dialog
     if (m_flags & CloseOnFinish && !m_handlingActionRequired && !m_showingError) {
+        kDebug() << "done";
         done(QDialog::Rejected);
         deleteLater();
     }
