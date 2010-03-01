@@ -39,8 +39,8 @@ KpkUpdateDetails::KpkUpdateDetails(QSharedPointer<PackageKit::Package>package, Q
     } else {
         connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
                 this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
-        connect(t, SIGNAL(finished(PackageKit::Enum::ExitStatus, uint)),
-                this, SLOT(updateDetailFinished(PackageKit::Enum::ExitStatus, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(updateDetailFinished(PackageKit::Enum::Exit, uint)));
     }
 }
 
