@@ -64,6 +64,7 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
 KIcon KpkIcons::statusIcon(Enum::Status status)
 {
     switch (status) {
+    case Enum::LastStatus                 :
     case Enum::UnknownStatus              : return KpkIcons::getIcon("help-browser");
     case Enum::StatusCancel               :
     case Enum::StatusCleanup              : return KpkIcons::getIcon("kpk-clean-up");
@@ -149,6 +150,7 @@ QString KpkIcons::statusAnimation(PackageKit::Enum::Status status)
 KIcon KpkIcons::actionIcon(Enum::Role role)
 {
     switch (role) {
+    case Enum::LastRole                    :
     case Enum::UnknownRole                 : return KpkIcons::getIcon("applications-other");
     case Enum::RoleAcceptEula              : return KpkIcons::getIcon("package-info");
     case Enum::RoleCancel                  : return KpkIcons::getIcon("process-stop");
@@ -192,6 +194,7 @@ KIcon KpkIcons::actionIcon(Enum::Role role)
 KIcon KpkIcons::groupsIcon(Enum::Group group)
 {
     switch (group) {
+    case Enum::LastGroup            :
     case Enum::UnknownGroup         : return KpkIcons::getIcon("unknown");
     case Enum::GroupAccessibility   : return KpkIcons::getIcon("preferences-desktop-accessibility");
     case Enum::GroupAccessories     : return KpkIcons::getIcon("applications-accessories");
@@ -244,7 +247,7 @@ KIcon KpkIcons::packageIcon(Enum::Info info)
     case Enum::InfoBlocked     : return KpkIcons::getIcon("dialog-cancel");
     case Enum::InfoAvailable   : return KpkIcons::getIcon("package-download");
     case Enum::InfoInstalled   : return KpkIcons::getIcon("package-installed");
-    default                        : return KpkIcons::getIcon("package");
+    default                    : return KpkIcons::getIcon("package");
     }
 }
 
@@ -257,6 +260,7 @@ KIcon KpkIcons::restartIcon(Enum::Restart type)
     case Enum::RestartSession         : return KpkIcons::getIcon("system-log-out");
     case Enum::RestartApplication     : return KpkIcons::getIcon("process-stop");
     case Enum::RestartNone            :
+    case Enum::LastRestart            :
     case Enum::UnknownRestart         : KpkIcons::getIcon("");
     }
     return KpkIcons::getIcon("");

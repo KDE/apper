@@ -263,8 +263,7 @@ void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit status, uint runtim
             // SHOULD we check for pkg and see the installed
             // files and try to match some running process?
             break;
-        case Enum::RestartNone :
-        case Enum::UnknownRestart :
+        default :
             // We do not set a restart type cause it will probably
             // be already none, if not we will still want that restart type.
             return;

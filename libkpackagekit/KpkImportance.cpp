@@ -25,6 +25,7 @@
 int KpkImportance::restartImportance(Enum::Restart type)
 {
     switch (type) {
+    case Enum::LastRestart :
     case Enum::UnknownRestart :
     case Enum::RestartNone :
         return 0;

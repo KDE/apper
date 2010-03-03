@@ -27,6 +27,7 @@
 QString KpkStrings::status(PackageKit::Enum::Status status)
 {
     switch (status) {
+    case Enum::LastStatus :
     case Enum::UnknownStatus :
         return i18nc("This is when the transaction status is not known",
                      "Unknown state");
@@ -167,6 +168,7 @@ QString KpkStrings::statusPast(PackageKit::Enum::Status status)
 QString KpkStrings::action(Enum::Role action)
 {
     switch (action) {
+    case Enum::LastRole :
     case Enum::UnknownRole :
         return i18nc("The role of the transaction, in present tense", "Unknown role type");
     case Enum::RoleGetDepends :
@@ -245,6 +247,7 @@ QString KpkStrings::action(Enum::Role action)
 QString KpkStrings::actionPast(Enum::Role action)
 {
     switch (action) {
+    case Enum::LastRole :
     case Enum::UnknownRole :
         return i18nc("The role of the transaction, in past tense", "Unknown role type");
     case Enum::RoleGetDepends :
@@ -441,6 +444,11 @@ QString KpkStrings::error(PackageKit::Enum::Error error)
         return i18n("Package failed to install");
     case Enum::ErrorPackageFailedToRemove :
         return i18n("Package failed to be removed");
+    case Enum::ErrorUpdateFailedDueToRunningProcess :
+        return i18n("Update failed due to running process");
+    case Enum::ErrorPackageDatabaseChanged :
+        return i18n("The package database was changed");
+    case Enum::LastError :
     case Enum::UnknownError :
         return i18n("Unknown error");
     }
@@ -607,6 +615,12 @@ QString KpkStrings::errorMessage(PackageKit::Enum::Error error)
     case Enum::ErrorPackageFailedToRemove :
         return i18n("One of the selected packages failed to be removed correctly.\n"
                     "More information is available in the detailed report.");
+    case Enum::ErrorUpdateFailedDueToRunningProcess :
+        return i18n("A program is running that has to be closed before the update can proceed.\n"
+                    "More information is available in the detailed report.");
+    case Enum::ErrorPackageDatabaseChanged :
+        return i18n("The package database was changed while the request was running.");
+    case Enum::LastError :
     case Enum::UnknownError :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
@@ -686,6 +700,7 @@ QString KpkStrings::groups(Enum::Group group)
         return i18nc("The group type", "Vendor");
     case Enum::GroupNewest :
         return i18nc("The group type", "Newest packages");
+    case Enum::LastGroup :
     case Enum::UnknownGroup :
         return i18nc("The group type", "Unknown group");
     }
@@ -825,6 +840,7 @@ QString KpkStrings::restartTypeFuture(Enum::Restart value)
         return i18n("You will be required to log out and back in due to a security update.");
     case Enum::RestartSecuritySystem :
         return i18n("A restart will be required due to a security update.");
+    case Enum::LastRestart :
     case Enum::UnknownRestart :
         kWarning() << "restartTypeFuture(Enum::UnknownRestartType)";
         return QString();
@@ -848,6 +864,7 @@ QString KpkStrings::restartType(Enum::Restart value)
         return i18n("You need to log out and log back in to remain secure.");
     case Enum::RestartSecuritySystem :
         return i18n("A restart is required to remain secure.");
+    case Enum::LastRestart :
     case Enum::UnknownRestart :
         kWarning() << "restartType(Enum::UnknownRestartType)";
         return QString();
@@ -865,6 +882,7 @@ QString KpkStrings::updateState(Enum::UpdateState value)
         return i18n("Unstable");
     case Enum::UpdateStateTesting :
         return i18n("Testing");
+    case Enum::LastUpdateState :
     case Enum::UnknownUpdateState :
         kWarning() << "updateState(Enum::UnknownUpdateState)";
         return QString();
@@ -882,6 +900,7 @@ QString KpkStrings::mediaMessage(Enum::MediaType value, const QString &text)
         return i18n("Please insert the DVD labeled '%1', and press continue.", text);
     case Enum::MediaTypeDisc :
         return i18n("Please insert the disc labeled '%1', and press continue.", text);
+    case Enum::LastMediaType :
     case Enum::UnknownMediaType :
         return i18n("Please insert the medium labeled '%1', and press continue.", text);
     }
@@ -920,6 +939,9 @@ QString KpkStrings::message(PackageKit::Enum::Message value)
         return i18n("Automatic cleanup is being ignored");
     case Enum::MessageRepoMetadataDownloadFailed :
         return i18n("Software source download failed");
+    case Enum::MessageRepoForDevelopersOnly :
+        return i18n("This software source is for developers only");
+    case Enum::LastMessage :
     case Enum::UnknownMessage :
         kWarning() << "message(Enum::UnknownMessageType)";
         return QString();
@@ -951,6 +973,7 @@ QString KpkStrings::daemonError(PackageKit::Client::DaemonError value)
         return i18n("Could not talk to packagekitd.");
     case Client::NoError :
     case Client::ErrorFailed :
+    case Client::LastDaemonError :
     case Client::UnkownError :
         return i18n("An unknown error happened.");
     }
