@@ -287,7 +287,7 @@ void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit status, uint runtim
 
 void KpkTransactionTrayIcon::transactionChanged()
 {
-    uint percentage            = m_currentTransaction->percentage();
+    uint percentage     = m_currentTransaction->percentage();
     Enum::Status status = m_currentTransaction->status();
     QString toolTip;
 
@@ -394,7 +394,7 @@ void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void KpkTransactionTrayIcon::requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package>pkg)
+void KpkTransactionTrayIcon::requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package> pkg)
 {
     int old = KpkImportance::restartImportance(m_restartType);
     int newer = KpkImportance::restartImportance(type);

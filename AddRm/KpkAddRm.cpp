@@ -270,7 +270,7 @@ KpkAddRm::~KpkAddRm()
     // This entry does not depend on the backend it's ok to call this pointer
     if (m_client->filters() & Enum::FilterNewest) {
         filterMenuGroup.writeEntry("FilterNewest",
-                                   (bool) filters() & Enum::FilterNewest);
+                                   static_cast<bool>(filters() & Enum::FilterNewest));
     }
 }
 
@@ -282,7 +282,7 @@ void KpkAddRm::on_actionFindName_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchRole  = Enum::RoleSearchName;
+        m_searchRole    = Enum::RoleSearchName;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // create the main transaction
@@ -298,7 +298,7 @@ void KpkAddRm::on_actionFindDescription_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchRole  = Enum::RoleSearchDetails;
+        m_searchRole    = Enum::RoleSearchDetails;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // create the main transaction
@@ -314,7 +314,7 @@ void KpkAddRm::on_actionFindFile_triggered()
         m_pkClient_main->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchRole  = Enum::RoleSearchFile;
+        m_searchRole    = Enum::RoleSearchFile;
         m_searchString  = searchKLE->text();
         m_searchFilters = filters();
         // create the main transaction
@@ -325,7 +325,7 @@ void KpkAddRm::on_actionFindFile_triggered()
 void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
 {
     if (groupsCB->itemData(index, Qt::UserRole).isValid()) {
-        switch ((ItemType) groupsCB->itemData(index, Qt::UserRole).toUInt()) {
+        switch (static_cast<ItemType>(groupsCB->itemData(index, Qt::UserRole).toUInt())) {
         case AllPackages :
             // contract and delete and details widgets
             pkg_delegate->contractAll();
@@ -343,8 +343,8 @@ void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
             break;
         case Group :
             // cache the search
-            m_searchRole  = Enum::RoleSearchGroup;
-            m_searchGroup   = (Enum::Group) groupsCB->itemData(index, Group).toUInt();
+            m_searchRole    = Enum::RoleSearchGroup;
+            m_searchGroup   = static_cast<Enum::Group>(groupsCB->itemData(index, Group).toUInt());
             m_searchFilters = filters();
             // create the main transaction
             search();
@@ -358,7 +358,7 @@ void KpkAddRm::search()
     // if so refresh it and do nothing
     int index = groupsCB->currentIndex();
     if (groupsCB->itemData(index, Qt::UserRole).isValid() &&
-        ListOfChanges == (ItemType) groupsCB->itemData(index, Qt::UserRole).toUInt())
+        ListOfChanges == static_cast<ItemType>(groupsCB->itemData(index, Qt::UserRole).toUInt()))
     {
         on_groupsCB_currentIndexChanged(index);
         return;
@@ -670,7 +670,7 @@ void KpkAddRm::filterMenu(Enum::Filters filters)
         m_filtersQM->addSeparator();
         QAction *basename = new QAction(i18n("Hide subpackages"), m_filtersQM);
         basename->setCheckable(true);
-        basename->setToolTip( i18n("Only show one package, not subpackages") );
+        basename->setToolTip(i18n("Only show one package, not subpackages"));
         m_filtersAction[basename] = Enum::FilterBasename;
         m_filtersQM->addAction(basename);
 
@@ -681,7 +681,7 @@ void KpkAddRm::filterMenu(Enum::Filters filters)
         QAction *newest = new QAction(i18n("Only newest packages"), m_filtersQM);
         newest->setCheckable(true);
         newest->setChecked(filterMenuGroup.readEntry("FilterNewest", true));
-        newest->setToolTip( i18n("Only show the newest available package") );
+        newest->setToolTip(i18n("Only show the newest available package"));
         m_filtersAction[newest] = Enum::FilterNewest;
         m_filtersQM->addAction(newest);
 

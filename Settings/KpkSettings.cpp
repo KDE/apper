@@ -93,13 +93,13 @@ void KpkSettings::checkChanges()
     KConfigGroup notifyGroup( &config, "Notify" );
     KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
     if (notifyUpdatesCB->checkState() !=
-        (Qt::CheckState) notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked)
+        static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked))
         ||
         intervalCB->itemData(intervalCB->currentIndex()).toUInt() !=
-        (uint) checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault)
+        static_cast<uint>(checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault))
         ||
         autoCB->itemData(autoCB->currentIndex()).toUInt() !=
-        (uint) checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault)
+        static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault))
         ||
         ((m_roles & Enum::RoleGetRepoList) ? m_originModel->changed() : false)) {
         emit(changed(true));
@@ -118,8 +118,8 @@ void KpkSettings::load()
 {
     KConfig config("KPackageKit");
     KConfigGroup notifyGroup( &config, "Notify" );
-    notifyUpdatesCB->setCheckState((Qt::CheckState) notifyGroup.readEntry("notifyUpdates",
-        (int) Qt::Checked));
+    notifyUpdatesCB->setCheckState(static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates",
+        static_cast<int>(Qt::Checked))));
 
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     uint interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
@@ -157,8 +157,8 @@ void KpkSettings::save()
     KConfigGroup notifyGroup(&config, "Notify");
     // not used anymore
     notifyGroup.deleteEntry("notifyLongTasks");
-    notifyGroup.writeEntry("notifyUpdates", (int) notifyUpdatesCB->checkState());
-    KConfigGroup checkUpdateGroup( &config, "CheckUpdate");
+    notifyGroup.writeEntry("notifyUpdates", static_cast<int>(notifyUpdatesCB->checkState()));
+    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     checkUpdateGroup.writeEntry("interval", intervalCB->itemData(intervalCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("autoUpdate", autoCB->itemData(autoCB->currentIndex()).toUInt());
     // check to see if the backend support this

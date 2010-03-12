@@ -92,7 +92,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     // Updates (lists of packages that are updated)
     if (info.updates.size()) {
         QStringList updates;
-        foreach (QSharedPointer<PackageKit::Package>p, info.updates) updates << p->name() + '-' + p->version();
+        foreach (QSharedPointer<PackageKit::Package> p, info.updates) updates << p->name() + '-' + p->version();
         description += "<tr><td align=\"right\"><b>" + i18n("Updates") + ":</b></td><td>"
                     + updates.join("<br />")
                     + "</td></tr>";
@@ -101,7 +101,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     // Obsoletes (lists of packages that are obsoleted)
     if (info.obsoletes.size()) {
         QStringList obsoletes;
-        foreach (QSharedPointer<PackageKit::Package>p, info.obsoletes) obsoletes << p->id() + '-' + p->version();
+        foreach (QSharedPointer<PackageKit::Package> p, info.obsoletes) obsoletes << p->id() + '-' + p->version();
         description += "<tr><td align=\"right\"><b>" + i18n("Obsoletes") + ":</b></td><td>"
                     + obsoletes.join("<br />")
                     + "</td></tr>";

@@ -29,11 +29,11 @@
 KpkRepoSig::KpkRepoSig( PackageKit::Client::SignatureInfo info, bool modal, QWidget *parent )
  : KDialog(parent)
 {
-    setupUi( mainWidget() );
+    setupUi(mainWidget());
     setModal(modal);
 
-    setButtons( KDialog::Cancel | KDialog::Yes );
-    setCaption( i18n("Software signature is required") );
+    setButtons(KDialog::Cancel | KDialog::Yes);
+    setCaption(i18n("Software signature is required"));
 
     repoNameL->setText(info.repoId);
     sigUrlL->setText(info.keyUrl);

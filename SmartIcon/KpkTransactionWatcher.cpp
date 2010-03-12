@@ -42,7 +42,7 @@ KpkTransactionWatcher::~KpkTransactionWatcher()
 
 void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactive)
 {
-    foreach(Transaction *trans, m_hiddenTransactions) {
+    foreach(const Transaction *trans, m_hiddenTransactions) {
         if (trans->tid() == tid) {
             // Oops we are already watching this one
 //             kDebug() << "Oops we are already watching this one" << tid;

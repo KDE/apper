@@ -27,13 +27,13 @@
 KpkLicenseAgreement::KpkLicenseAgreement( PackageKit::Client::EulaInfo info, bool modal, QWidget *parent )
  : KDialog(parent)
 {
-    setupUi( mainWidget() );
+    setupUi(mainWidget());
     setModal(modal);
 
-    setButtons( KDialog::Cancel | KDialog::Yes );
-    setButtonText( KDialog::Yes, i18n("Accept Agreement") );
-    setCaption( i18n("License Agreement Required") );
-    title->setText( i18n("License required for %1 by %2", info.package->name(), info.vendorName) );
+    setButtons(KDialog::Cancel | KDialog::Yes);
+    setButtonText(KDialog::Yes, i18n("Accept Agreement"));
+    setCaption(i18n("License Agreement Required"));
+    title->setText(i18n("License required for %1 by %2", info.package->name(), info.vendorName));
 
     ktextbrowser->setText(info.licenseAgreement);
 }

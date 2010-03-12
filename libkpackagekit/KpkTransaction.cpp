@@ -388,8 +388,9 @@ void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &det
             kDebug() << "Asking for a re-queue";
         } else {
             setExitStatus(Cancelled);
-            if (m_flags & CloseOnFinish)
+            if (m_flags & CloseOnFinish) {
                 done(QDialog::Rejected);
+            }
         }
         m_handlingActionRequired = false;
         return;

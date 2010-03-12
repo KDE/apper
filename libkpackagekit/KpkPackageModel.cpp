@@ -525,7 +525,7 @@ void KpkPackageModel::checkAll()
 {
     m_checkedPackages.clear();
     m_checkedGroupCount.clear();
-    foreach(QSharedPointer<PackageKit::Package>package, m_packages) {
+    foreach(QSharedPointer<PackageKit::Package> package, m_packages) {
         if (package->info() != Enum::InfoBlocked) {
             checkPackage(package);
         }
@@ -557,7 +557,7 @@ QList<QSharedPointer<PackageKit::Package> > KpkPackageModel::packagesWithInfo(En
 
 bool KpkPackageModel::allSelected() const
 {
-    foreach(QSharedPointer<PackageKit::Package>p, m_packages) {
+    foreach(QSharedPointer<PackageKit::Package> p, m_packages) {
         if (p->info() != Enum::InfoBlocked && !containsChecked(p->id())) {
             return false;
         }

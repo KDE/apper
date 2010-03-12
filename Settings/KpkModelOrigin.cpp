@@ -44,7 +44,7 @@ QVariant KpkModelOrigin::data(const QModelIndex &index, int role) const
     }
 
     if (role == Qt::CheckStateRole) {
-        return m_actualState[ m_items.at( index.row() ).value(Qt::UserRole).toString() ];
+        return m_actualState[m_items.at(index.row()).value(Qt::UserRole).toString()];
     }
 
     return  QVariant();
@@ -96,7 +96,7 @@ void KpkModelOrigin::clearChanges()
 {
     for (int i = 0; i < m_items.size(); i++) {
         m_actualState[m_items.at(i).value(Qt::UserRole).toString()]
-            = (Qt::CheckState) m_items.at(i).value(Qt::CheckStateRole).toInt();
+            = static_cast<Qt::CheckState>(m_items.at(i).value(Qt::CheckStateRole).toInt());
     }
     emit layoutChanged();
 }
@@ -104,7 +104,7 @@ void KpkModelOrigin::clearChanges()
 bool KpkModelOrigin::changed() const
 {
     for (int i = 0; i < m_items.size(); i++) {
-        if ( m_items.at(i).value(Qt::CheckStateRole) != m_actualState.value( m_items.at(i).value(Qt::UserRole).toString() ) ) {
+        if (m_items.at(i).value(Qt::CheckStateRole) != m_actualState.value(m_items.at(i).value(Qt::UserRole).toString())) {
             return true;
         }
     }
@@ -117,7 +117,7 @@ bool KpkModelOrigin::save()
     for (int i = 0; i < m_items.size(); i++) {
         if (m_items.at(i).value(Qt::CheckStateRole) != m_actualState.value(m_items.at(i).value(Qt::UserRole).toString())) {
             repoId = m_items.at(i).value(Qt::UserRole).toString();
-            Transaction *t = m_client->repoEnable(repoId, (bool) m_actualState.value(repoId));
+            Transaction *t = m_client->repoEnable(repoId, static_cast<bool>(m_actualState.value(repoId)));
             if (t->error()) {
                 KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
                 return false;
@@ -131,7 +131,7 @@ bool KpkModelOrigin::setData(const QModelIndex &index, const QVariant &value, in
 {
     if (index.isValid() && role == Qt::CheckStateRole) {
         m_actualState[m_items.at(index.row()).value(Qt::UserRole).toString()]
-            = (Qt::CheckState) value.toUInt();
+            = static_cast<Qt::CheckState>(value.toUInt());
         emit stateChanged();
         return true;
     } else {

@@ -78,7 +78,6 @@ void KpkUpdate::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QStrin
 {
     Q_UNUSED(type)
     if (verticalLayout->count()) {
-
         QFrame *frame = new QFrame(this);
         frame->setFrameShape(QFrame::HLine);
         verticalLayout->insertWidget(0, frame);
@@ -269,7 +268,7 @@ void KpkUpdate::on_refreshPB_clicked()
 void KpkUpdate::on_packageView_pressed(const QModelIndex &index)
 {
     if (index.column() == 0) {
-        QSharedPointer<PackageKit::Package>p = m_pkg_model_updates->package(index);
+        QSharedPointer<PackageKit::Package> p = m_pkg_model_updates->package(index);
         // check to see if the backend support
         if (p && (m_roles & Enum::RoleGetUpdateDetail)) {
             if (pkg_delegate->isExtended(index)) {

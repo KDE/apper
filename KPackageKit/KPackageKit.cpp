@@ -86,7 +86,7 @@ int KPackageKit::newInstance()
         // what will happen if we call the other process to
         // install and this very one closes? will the files
         // in /tmp be deleted?
-        invoke("InstallPackageFiles" , urls);
+        invoke("InstallPackageFiles", urls);
         notSet = false;
     }
 
@@ -102,22 +102,22 @@ int KPackageKit::newInstance()
     }
 
     if (args->isSet("install-mime-type")) {
-        invoke("InstallMimeTypes" , args->getOptionList("install-mime-type"));
+        invoke("InstallMimeTypes", args->getOptionList("install-mime-type"));
         notSet = false;
     }
 
     if (args->isSet("install-package-name")) {
-        invoke("InstallPackageNames" , args->getOptionList("install-package-name"));
+        invoke("InstallPackageNames", args->getOptionList("install-package-name"));
         notSet = false;
     }
 
     if (args->isSet("install-provide-file")) {
-        invoke("InstallProvideFiles" , args->getOptionList("install-provide-file"));
+        invoke("InstallProvideFiles", args->getOptionList("install-provide-file"));
         notSet = false;
     }
 
     if (args->isSet("remove-package-by-file")) {
-        invoke("RemovePackageByFiles" , args->getOptionList("remove-package-by-file"));
+        invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
         notSet = false;
     }
 

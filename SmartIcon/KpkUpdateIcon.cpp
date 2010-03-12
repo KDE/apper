@@ -151,7 +151,7 @@ void KpkUpdateIcon::update()
 {
     KConfig config("KPackageKit");
     KConfigGroup notifyGroup(&config, "Notify");
-    if (Qt::Checked == (Qt::CheckState) notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked)) {
+    if (Qt::Checked == static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)))) {
         m_updateList.clear();
         Transaction *t = Client::instance()->getUpdates();
         connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
@@ -177,7 +177,7 @@ void KpkUpdateIcon::notifyUpdates()
 {
     KConfig config("KPackageKit");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    Qt::CheckState notifyUpdates = (Qt::CheckState) checkUpdateGroup.readEntry("notifyUpdates", (int) Qt::Checked);
+    Qt::CheckState notifyUpdates = static_cast<Qt::CheckState>(checkUpdateGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)));
     if (notifyUpdates == Qt::Unchecked) {
         return;
     }
@@ -185,7 +185,7 @@ void KpkUpdateIcon::notifyUpdates()
     Enum::Info highState = Enum::InfoInstalled;
     QHash<Enum::Info, QList<QSharedPointer<PackageKit::Package> > > packageGroups;
 
-    foreach(QSharedPointer<PackageKit::Package>p, m_updateList) {
+    foreach(QSharedPointer<PackageKit::Package> p, m_updateList) {
         packageGroups[p->info()].append(p);
         if (p->info() > highState) {
             highState = p->info();
@@ -241,7 +241,7 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Enum::Exit, uint runtime)
 //         m_icon->show();
         KConfig config("KPackageKit");
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-        uint updateType = (uint) checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault);
+        uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault));
         if (updateType == KpkEnum::None) {
             // update none
             notifyUpdates();
