@@ -33,7 +33,7 @@ class KDE_EXPORT KpkSimulateModel : public QAbstractTableModel
 Q_OBJECT
 
 public:
-    KpkSimulateModel(QObject *parent = 0,
+    explicit KpkSimulateModel(QObject *parent = 0,
                      QList<QSharedPointer<PackageKit::Package> > skipPackages = QList<QSharedPointer<PackageKit::Package> >());
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;

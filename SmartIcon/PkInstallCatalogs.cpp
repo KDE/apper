@@ -103,7 +103,7 @@ void PkInstallCatalogs::start()
             return;
         }
 
-        // matches at the beggining of line installPackages or InstallProvides or installFiles and capture it
+        // matches at the beginning of line installPackages or InstallProvides or installFiles and capture it
         // matches an optional set of parenthesis
         // matches *%1* and or *%2* and or *%3*
         // matches after '=' but ';' at the end
@@ -114,7 +114,7 @@ void PkInstallCatalogs::start()
 
         QStringList filesFailedToOpen;
         bool failed = false;
-        foreach (const QString file, m_files) {
+        foreach (const QString &file, m_files) {
             QFile catalog(file);
             if (catalog.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QTextStream in(&catalog);

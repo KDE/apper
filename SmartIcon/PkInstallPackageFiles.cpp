@@ -133,7 +133,7 @@ void PkInstallPackageFiles::start()
                     connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
                             m_installFilesModel, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
                     connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                            this, SLOT(simulateFinished(PackageKit::Transaction::ExitStatus, uint)));
+                            this, SLOT(simulateFinished(PackageKit::Transaction::ExitStatus)));
                     if (showProgress()) {
                         KpkTransaction *trans;
                         trans = new KpkTransaction(t,
@@ -161,12 +161,11 @@ void PkInstallPackageFiles::start()
     }
 }
 
-void PkInstallPackageFiles::simulateFinished(PackageKit::Enum::Exit status, uint runtime)
+void PkInstallPackageFiles::simulateFinished(PackageKit::Enum::Exit status)
 {
-    Q_UNUSED(runtime)
     if (status == Enum::ExitSuccess) {
         if (m_installFilesModel->rowCount() > 0) {
-            KpkRequirements *frm = new KpkRequirements(m_installFilesModel);
+            QPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
             if (frm->exec() == QDialog::Accepted) {
                 installFiles();
             } else {

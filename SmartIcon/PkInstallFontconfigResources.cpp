@@ -48,8 +48,8 @@ void PkInstallFontconfigResources::start()
     int ret = KMessageBox::Yes;
 
     if (showConfirmSearch()) {
-        foreach (const QString font, m_resources) {
-            if (!font.startsWith(":lang=")) {
+        foreach (const QString &font, m_resources) {
+            if (!font.startsWith(QLatin1String(":lang="))) {
                 sendErrorFinished(InternalError, QString("not recognised prefix: '%1'").arg(font));
                 return;
             }

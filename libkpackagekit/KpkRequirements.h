@@ -33,7 +33,7 @@ class KDE_EXPORT KpkRequirements : public KDialog
 {
     Q_OBJECT
 public:
-    KpkRequirements(KpkSimulateModel *model, QWidget *parent = 0);
+    explicit KpkRequirements(KpkSimulateModel *model, QWidget *parent = 0);
     ~KpkRequirements();
 
 private slots:

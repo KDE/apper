@@ -57,7 +57,7 @@ private slots:
     void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
 
     void getUpdates();
-    void getUpdatesFinished(PackageKit::Enum::Exit status, uint runtime);
+    void getUpdatesFinished(PackageKit::Enum::Exit status);
 
     void updatePackages();
     void updatePackagesFinished(KpkTransaction::ExitStatus status);

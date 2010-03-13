@@ -44,7 +44,7 @@ public slots:
 
 private slots:
     void installFilesFinished(KpkTransaction::ExitStatus status);
-    void simulateFinished(PackageKit::Enum::Exit status, uint runtime);
+    void simulateFinished(PackageKit::Enum::Exit status);
 //     void installFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
 
 private:

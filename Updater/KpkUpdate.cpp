@@ -145,10 +145,9 @@ void KpkUpdate::applyUpdates()
     QTimer::singleShot(0, this, SLOT(checkEnableUpdateButton()));
 }
 
-void KpkUpdate::getUpdatesFinished(Enum::Exit status, uint runtime)
+void KpkUpdate::getUpdatesFinished(Enum::Exit status)
 {
     Q_UNUSED(status)
-    Q_UNUSED(runtime)
 
     // If we just have one group let's expand it
     if (m_pkg_model_updates->rowCount() == 1) {
@@ -185,11 +184,12 @@ void KpkUpdate::updatePackages()
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
-        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
+        QPointer<KpkTransaction> frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
         frm->setPackages(packages);
         connect(frm, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
                 this, SLOT(updatePackagesFinished(KpkTransaction::ExitStatus)));
         frm->exec();
+        delete frm;
     }
 }
 
@@ -223,7 +223,7 @@ void KpkUpdate::getUpdates()
         connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
                 this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
         connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(getUpdatesFinished(PackageKit::Enum::Exit, uint) ));
+                this, SLOT(getUpdatesFinished(PackageKit::Enum::Exit)));
     }
 
     // Clean the distribution upgrades area
