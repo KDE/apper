@@ -63,10 +63,14 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
    d(new KpkTransactionPrivate)
 {
     d->ui.setupUi(mainWidget());
+    // hide these items here so the window get small
+    d->ui.packageL->hide();
+    d->ui.descriptionL->hide();
     d->finished = true; // for sanity we are finished till some transaction is set
     d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
 
     // Set Cancel and custom button hide
+    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     setButtons(KDialog::Cancel | KDialog::User1 | KDialog::Details);
     enableButton(KDialog::Details, false);
     setButtonText(KDialog::User1, i18n("Hide"));

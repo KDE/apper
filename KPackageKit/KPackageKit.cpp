@@ -30,6 +30,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KCModuleInfo>
+#include <KWindowSystem>
 #include <KDebug>
 #include <QStringList>
 #include <QDBusConnection>
@@ -147,7 +148,7 @@ void KPackageKit::showUi()
     // Show all
     m_pkUi->showAll();
     m_pkUi->show();
-    m_pkUi->activateWindow();
+    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void KPackageKit::showUpdates()
@@ -158,7 +159,7 @@ void KPackageKit::showUpdates()
     }
     m_pkUi->showUpdates();
     m_pkUi->show();
-    m_pkUi->activateWindow();
+    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void KPackageKit::showSettings()
@@ -169,7 +170,7 @@ void KPackageKit::showSettings()
     }
     m_pkUi->showSettings();
     m_pkUi->show();
-    m_pkUi->activateWindow();
+    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void KPackageKit::invoke(const QString &method_name, const QStringList &args)
