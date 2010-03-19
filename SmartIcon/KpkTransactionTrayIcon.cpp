@@ -27,12 +27,12 @@
 #include <KpkEnum.h>
 
 #include <QMenu>
-#include <QTimer>
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <KNotification>
 #include <KMessageBox>
 #include <KLocale>
+#include <KWindowSystem>
 
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -125,29 +125,22 @@ void KpkTransactionTrayIcon::triggered(QAction *action)
     // Check to see if we set a Transaction->tid() in action
     if (!action->data().isNull()) {
         // we need to find if the action clicked has already a dialog
-        QString tid = action->data().toString();
-        if (m_transDialogs.contains(tid)) {
-            m_transDialogs[tid]->raise();
-        } else {
-            // if we don't have a dialog already displaying
-            // our transaction let's create one
-            // BUT first we need to get the transaction pointer,
-            // since it might be already deleted if the transaction
-            // finished
-            foreach(Transaction *trans, Client::instance()->getTransactions()) {
-                if (trans->tid() == tid) {
-                    // found it let's create a dialog
-                    createTransactionDialog(trans);
-                    break;
-                }
-            }
-            // if we don't find just don't do anything
-        }
+        createTransactionDialog(action->data().value<Transaction *>());
     }
 }
 
 void KpkTransactionTrayIcon::createTransactionDialog(Transaction *t)
 {
+    // if we don't have a dialog already displaying
+    // our transaction let's create one
+    // BUT first we need to get the transaction pointer,
+    // since it might be already deleted if the transaction
+    // finished
+    if (m_transDialogs.contains(t->tid())) {
+        KWindowSystem::forceActiveWindow(m_transDialogs[t->tid()]->winId());
+        return;
+    }
+
     increaseRunning();
     // we need to close on finish otherwise smart-icon will timeout
     KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish, m_menu);
@@ -219,15 +212,12 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
     connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)),
             this, SLOT(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)));
     connect(m_currentTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+            this, SLOT(finished()));
     m_smartSTI->show();
 }
 
-void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit status, uint runtime)
+void KpkTransactionTrayIcon::finished()
 {
-    Q_UNUSED(status)
-    Q_UNUSED(runtime)
-
     // check if the transaction emitted any require restart
     if (m_restartType != Enum::RestartNone) {
         increaseRunning();
@@ -354,7 +344,7 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
         QAction *transactionAction = new QAction(this);
         // We use the tid since the pointer might get deleted
         // as it was some times
-        transactionAction->setData(t->tid());
+        transactionAction->setData(QVariant::fromValue(t));
 
         if (t->role() == Enum::RoleRefreshCache) {
             refreshCache = false;

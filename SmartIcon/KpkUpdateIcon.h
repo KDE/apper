@@ -47,13 +47,13 @@ public slots:
 private slots:
     void update();
     void updateListed(QSharedPointer<PackageKit::Package>);
-    void updateCheckFinished(PackageKit::Enum::Exit exit, uint runtime);
+    void updateCheckFinished();
     void handleUpdateAction(uint action);
     void handleUpdateActionClosed();
     void notifyUpdates();
     void showSettings();
     void showUpdates(QSystemTrayIcon::ActivationReason = KSystemTrayIcon::Unknown);
-    void updatesFinished(PackageKit::Enum::Exit exit, uint runtime);
+    void updatesFinished(PackageKit::Enum::Exit exit);
 
 private:
     KSystemTrayIcon* m_icon;

@@ -60,7 +60,6 @@ private slots:
     void on_packageView_pressed(const QModelIndex &index);
 
     void finished(PackageKit::Enum::Exit status, uint runtime);
-    void message(PackageKit::Enum::Message message, const QString &details);
     void errorCode(PackageKit::Enum::Error error, const QString &detail);
 
     void checkChanged();

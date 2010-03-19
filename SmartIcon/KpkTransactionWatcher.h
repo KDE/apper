@@ -42,7 +42,7 @@ public slots:
 private slots:
     void errorCode(PackageKit::Enum::Error, const QString&);
     void errorActivated(uint action);
-    void finished(PackageKit::Enum::Exit exit, uint time);
+    void finished();
     void showError();
 
 private:

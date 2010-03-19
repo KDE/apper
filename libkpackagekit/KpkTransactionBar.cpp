@@ -128,7 +128,9 @@ void KpkTransactionBar::finished(Enum::Exit status, uint runtime)
                                        KColorScheme::PositiveBackground,
                                        QPalette::Window,
                                        KColorScheme::Window);
-        m_label->setText(i18n("Finished in %1.", KGlobal::locale()->prettyFormatDuration(runtime)));
+        m_label->setText(i18nc("The time that the transaction took to complete",
+                               "Finished in %1.",
+                               KGlobal::locale()->prettyFormatDuration(runtime)));
         break;
     default:
         KColorScheme::adjustBackground(colors,

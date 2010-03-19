@@ -55,10 +55,10 @@ void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactiv
 //             kDebug() << "found it let's start watching" << tid;
             m_hiddenTransactions.append(trans);
             trans->setProperty("interactive", QVariant(interactive));
-            connect(trans, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SLOT(finished(PackageKit::Transaction::ExitStatus, uint)));
-            connect(trans, SIGNAL(errorCode(PackageKit::Client::ErrorType, const QString &)),
-                    this, SLOT(errorCode(PackageKit::Client::ErrorType, const QString &)));
+            connect(trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                    this, SLOT(finished()));
+            connect(trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+                    this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
             break;
         }
     }
@@ -72,16 +72,17 @@ void KpkTransactionWatcher::removeTransactionWatcher(const QString &tid)
 //             kDebug() << "found it let's remove" << tid;
             m_hiddenTransactions.removeOne(trans);
             // disconnect to not show any notification
-            trans->disconnect();
+            disconnect(trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                    this, SLOT(finished()));
+            disconnect(trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+                    this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
             break;
         }
     }
 }
 
-void KpkTransactionWatcher::finished(PackageKit::Enum::Exit status, uint time)
+void KpkTransactionWatcher::finished()
 {
-    Q_UNUSED(status)
-    Q_UNUSED(time)
     m_hiddenTransactions.removeOne(qobject_cast<Transaction*>(sender()));
     // TODO if the transaction took too long to finish warn the user
 }

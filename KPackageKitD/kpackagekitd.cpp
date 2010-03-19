@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "kpackagekitd.h"
-#include "../libkpackagekit/KpkEnum.h"
+#include <KpkEnum.h>
 
 #include <KGenericFactory>
 #include <KStandardDirs>
@@ -100,7 +100,7 @@ void KPackageKitD::init()
 void KPackageKitD::read()
 {
     KConfig config("KPackageKit");
-    KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
+    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     // default to one day, 86400 sec
     int interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
     int actRefreshCache = getTimeSinceRefreshCache();

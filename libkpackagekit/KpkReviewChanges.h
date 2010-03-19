@@ -22,7 +22,6 @@
 #define KPK_REVIEW_CHANGES_H
 
 #include <KDialog>
-#include <KProgressDialog>
 
 #include <QPackageKit>
 
@@ -56,14 +55,9 @@ public:
     int exec(OperationModes flags = 0);
 
 private slots:
-    void removeRequeue();
-    void installRequeue();
-
-    void simRemFinished(PackageKit::Enum::Exit status, uint runtime);
-    void simInstFinished(PackageKit::Enum::Exit status, uint runtime);
-
-    void ensureRemoveFinished(PackageKit::Enum::Exit status, uint runtime);
-    void ensureInstallFinished(PackageKit::Enum::Exit status, uint runtime);
+    void requeueTransaction();
+    void simulateFinished(PackageKit::Enum::Exit status);
+    void ensureTransactionFinished(PackageKit::Enum::Exit status);
 
     void doAction();
     void checkChanged();
@@ -71,29 +65,12 @@ private slots:
 private:
     void installPackages();
     void removePackages(bool allow_deps = true);
-
-    void installDone();
-    void removeDone();
-
-    KpkReviewChangesPrivate *d;
-    KpkPackageModel *m_pkgModelMain;
-    KpkSimulateModel *m_installPkgModel, *m_removePkgModel;
-    KpkDelegate *m_pkgDelegate;
-
-    Client *m_client;
-    Transaction *m_transactionReq;
-    Transaction *m_transactionDep;
-    QTimer m_notifyT;
-    int m_viewWidth;
+    void taskDone(PackageKit::Enum::Role role);
 
     void updateColumnsWidth(bool force = false);
     void checkTask();
 
-    QList<QSharedPointer<PackageKit::Package> > m_remPackages;
-    QList<QSharedPointer<PackageKit::Package> > m_addPackages;
-    QList<QSharedPointer<PackageKit::Package> > m_reqDepPackages;
-
-    Enum::Roles m_actions;
+    KpkReviewChangesPrivate *d;
     OperationModes m_flags;
 
 protected slots:

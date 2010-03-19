@@ -52,6 +52,8 @@ public:
     bool onlyTrusted() const;
     QList<QSharedPointer<PackageKit::Package> > packages() const;
 
+    Enum::Role role() const;
+
     void setAllowDeps(bool allowDeps);
     void setPackages(QList<QSharedPointer<PackageKit::Package> > packages);
 
@@ -80,7 +82,7 @@ private:
 
 private slots:
     void finishedDialog();
-    void finished(PackageKit::Enum::Exit status, uint runtime);
+    void finished(PackageKit::Enum::Exit status);
     void errorCode(PackageKit::Enum::Error error, const QString &details);
     void currPackage(QSharedPointer<PackageKit::Package>);
     void updateUi();

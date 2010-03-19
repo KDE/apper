@@ -48,6 +48,7 @@ public:
     bool finished;
     bool allowDeps;
     bool onlyTrusted;
+    Enum::Role role;
     QList<QSharedPointer<PackageKit::Package> > packages;
 };
 
@@ -131,6 +132,11 @@ bool KpkTransaction::onlyTrusted() const
     return d->onlyTrusted;
 }
 
+Enum::Role KpkTransaction::role() const
+{
+    return d->role;
+}
+
 QList<QSharedPointer<PackageKit::Package> > KpkTransaction::packages() const
 {
     return d->packages;
@@ -156,6 +162,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
     m_trans = trans;
     d->tid = trans->tid();
     d->finished = false;
+    d->role = m_trans->role();
 
     // sets the action icon to be the window icon
     setWindowIcon(KpkIcons::actionIcon(m_trans->role()));
@@ -168,15 +175,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
     d->ui.descriptionL->setText(QString());
     // Now sets the last package
     currPackage(m_trans->lastPackage());
-    // sets the current progress
+    // sets ui
     updateUi();
-    // sets the current status
-    // TODO
-//     if (m_trans->status() == Transaction::UnknownStatus) {
-//        statusChanged(Transaction::StatusSetup);
-//     } else {
-//        statusChanged(m_trans->status());
-//     }
 
     if (m_trans->role() == Enum::RoleRefreshCache ||
         m_trans->role() == Enum::RoleWhatProvides) {
@@ -191,7 +191,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
     connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
             this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
     connect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+            this, SLOT(finished(PackageKit::Enum::Exit)));
     connect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     connect(m_trans, SIGNAL(changed()),
@@ -498,10 +498,9 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
     setExitStatus(ReQueue);
 }
 
-void KpkTransaction::finished(PackageKit::Enum::Exit status, uint runtime)
+void KpkTransaction::finished(PackageKit::Enum::Exit status)
 {
     kDebug();
-    Q_UNUSED(runtime)
     d->finished = true;
     switch(status) {
     case Enum::ExitSuccess :

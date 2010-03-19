@@ -133,7 +133,7 @@ void KpkUpdateIcon::refreshAndUpdate(bool refresh)
                 notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
                 notify->sendEvent();
             } else {
-                connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
+                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                         this, SLOT(update()));
                 // don't be interactive to not upset an idle user
                 emit watchTransaction(t->tid(), false);
@@ -156,8 +156,8 @@ void KpkUpdateIcon::update()
         Transaction *t = Client::instance()->getUpdates();
         connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                 this, SLOT(updateListed(QSharedPointer<PackageKit::Package>)));
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(updateCheckFinished(PackageKit::Transaction::ExitStatus, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(updateCheckFinished()));
     } else {
         decreaseRunning();
     }
@@ -224,14 +224,13 @@ void KpkUpdateIcon::notifyUpdates()
     increaseRunning();
 }
 
-void KpkUpdateIcon::updateCheckFinished(PackageKit::Enum::Exit, uint runtime)
+void KpkUpdateIcon::updateCheckFinished()
 {
-    Q_UNUSED(runtime)
     if (m_updateList.size() > 0) {
 //         kDebug() << "Found " << m_updateList.size() << " updates";
         Enum::Info highState = Enum::InfoInstalled;
         //FIXME: This assumes that PackageKit shares our priority ranking.
-        foreach(QSharedPointer<PackageKit::Package>p, m_updateList) {
+        foreach(const QSharedPointer<PackageKit::Package> p, m_updateList) {
             if (p->info() > highState) {
                 highState = p->info();
             }
@@ -254,8 +253,8 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Enum::Exit, uint runtime)
                     // update all failed
                     notifyUpdates();
                 } else {
-                    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                            this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+                    connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                            this, SLOT(updatesFinished(PackageKit::Enum::Exit)));
                     // don't be interactive to not upset an idle user
                     emit watchTransaction(t->tid(), false);
                     //autoUpdatesInstalling(t);
@@ -283,8 +282,8 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Enum::Exit, uint runtime)
                         notifyUpdates();
                     } else {
 //                         suppressSleep(true);
-                        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                                this, SLOT(updatesFinished(PackageKit::Transaction::ExitStatus, uint)));
+                        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                                this, SLOT(updatesFinished(PackageKit::Enum::Exit)));
                         // don't be interactive to not upset an idle user
                         emit watchTransaction(t->tid(), false);
                         //autoUpdatesInstalling(t);
@@ -305,9 +304,8 @@ void KpkUpdateIcon::updateCheckFinished(PackageKit::Enum::Exit, uint runtime)
     decreaseRunning();
 }
 
-void KpkUpdateIcon::updatesFinished(PackageKit::Enum::Exit status, uint runtime)
+void KpkUpdateIcon::updatesFinished(PackageKit::Enum::Exit status)
 {
-    Q_UNUSED(runtime)
     // decrease first only because we want to check for updates again
     decreaseRunning();
     KNotification *notify = new KNotification("UpdatesComplete");

@@ -166,7 +166,6 @@ void KpkAddRm::genericActionKTriggered()
 
 void KpkAddRm::setCurrentAction(QAction *action)
 {
-    kDebug() << action;
     // just load the new action if it changes this
     // also ensures that our menu has more than one action
     if (m_currentAction != action) {
@@ -261,7 +260,6 @@ KpkAddRm::~KpkAddRm()
     KConfig config("KPackageKit");
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
-    kDebug() << "Saving settings";
     // For usability we will only save ViewInGroups settings and Newest filter,
     // - The user might get angry when he does not find any packages because he didn't
     //   see that a filter is set by config
@@ -278,7 +276,6 @@ KpkAddRm::~KpkAddRm()
 
 void KpkAddRm::on_actionFindName_triggered()
 {
-    kDebug();
     setCurrentAction(actionFindName);
     if (m_mTransRuning) {
         m_pkClient_main->cancel();
@@ -294,7 +291,6 @@ void KpkAddRm::on_actionFindName_triggered()
 
 void KpkAddRm::on_actionFindDescription_triggered()
 {
-    kDebug();
     setCurrentAction(actionFindDescription);
     if (m_mTransRuning) {
         m_pkClient_main->cancel();
@@ -310,7 +306,6 @@ void KpkAddRm::on_actionFindDescription_triggered()
 
 void KpkAddRm::on_actionFindFile_triggered()
 {
-    kDebug();
     setCurrentAction(actionFindFile);
     if (m_mTransRuning) {
         m_pkClient_main->cancel();
@@ -412,11 +407,6 @@ void KpkAddRm::changed()
     setCurrentActionEnabled(trans->allowCancel());
 }
 
-void KpkAddRm::message(PackageKit::Enum::Message message, const QString &details)
-{
-    qDebug() << "Error code: " << message << " two: " << details;
-}
-
 void KpkAddRm::save()
 {
     QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_pkg_model_main->selectedPackages(), this);
@@ -483,23 +473,19 @@ void KpkAddRm::filterMenu(Enum::Filters filters)
         QActionGroup *installedGroup = new QActionGroup(menuInstalled);
         installedGroup->setExclusive(true);
 
-//             if (filters & Enum::FilterInstalled) {
-            QAction *installedTrue = new QAction(i18n("Only installed"), installedGroup);
-            installedTrue->setCheckable(true);
-            m_filtersAction[installedTrue] = Enum::FilterInstalled;
-            installedGroup->addAction(installedTrue);
-            menuInstalled->addAction(installedTrue);
-            actions << installedTrue;
-//             }
+        QAction *installedTrue = new QAction(i18n("Only installed"), installedGroup);
+        installedTrue->setCheckable(true);
+        m_filtersAction[installedTrue] = Enum::FilterInstalled;
+        installedGroup->addAction(installedTrue);
+        menuInstalled->addAction(installedTrue);
+        actions << installedTrue;
 
-//             if (filters & Enum::FilterNotInstalled) {
-            QAction *installedFalse = new QAction(i18n("Only available"), installedGroup);
-            installedFalse->setCheckable(true);
-            m_filtersAction[installedFalse] = Enum::FilterNotInstalled;
-            installedGroup->addAction(installedFalse);
-            menuInstalled->addAction(installedFalse);
-            actions << installedFalse;
-//             }
+        QAction *installedFalse = new QAction(i18n("Only available"), installedGroup);
+        installedFalse->setCheckable(true);
+        m_filtersAction[installedFalse] = Enum::FilterNotInstalled;
+        installedGroup->addAction(installedFalse);
+        menuInstalled->addAction(installedFalse);
+        actions << installedFalse;
 
         QAction *installedNone = new QAction(i18n("No filter"), installedGroup);
         installedNone->setCheckable(true);
@@ -515,23 +501,19 @@ void KpkAddRm::filterMenu(Enum::Filters filters)
         QActionGroup *developmentGroup = new QActionGroup(menuDevelopment);
         developmentGroup->setExclusive(true);
 
-//             if (filters & Enum::FilterDevelopment) {
-            QAction *developmentTrue = new QAction(i18n("Only development"), developmentGroup);
-            developmentTrue->setCheckable(true);
-            m_filtersAction[developmentTrue] = Enum::FilterDevelopment;
-            developmentGroup->addAction(developmentTrue);
-            menuDevelopment->addAction(developmentTrue);
-            actions << developmentTrue;
-//             }
+        QAction *developmentTrue = new QAction(i18n("Only development"), developmentGroup);
+        developmentTrue->setCheckable(true);
+        m_filtersAction[developmentTrue] = Enum::FilterDevelopment;
+        developmentGroup->addAction(developmentTrue);
+        menuDevelopment->addAction(developmentTrue);
+        actions << developmentTrue;
 
-//             if (filters & Enum::FilterNotDevelopment) {
-            QAction *developmentFalse = new QAction(i18n("Only end user files"), developmentGroup);
-            developmentFalse->setCheckable(true);
-            m_filtersAction[developmentFalse] = Enum::FilterNotDevelopment;
-            developmentGroup->addAction(developmentFalse);
-            menuDevelopment->addAction(developmentFalse);
-            actions << developmentFalse;
-//             }
+        QAction *developmentFalse = new QAction(i18n("Only end user files"), developmentGroup);
+        developmentFalse->setCheckable(true);
+        m_filtersAction[developmentFalse] = Enum::FilterNotDevelopment;
+        developmentGroup->addAction(developmentFalse);
+        menuDevelopment->addAction(developmentFalse);
+        actions << developmentFalse;
 
         QAction *developmentNone = new QAction(i18n("No filter"), developmentGroup);
         developmentNone->setCheckable(true);
@@ -547,23 +529,19 @@ void KpkAddRm::filterMenu(Enum::Filters filters)
         QActionGroup *guiGroup = new QActionGroup(menuGui);
         guiGroup->setExclusive(true);
 
-//             if (filters & Enum::FilterGui) {
-            QAction *guiTrue = new QAction(i18n("Only graphical"), guiGroup);
-            guiTrue->setCheckable(true);
-            m_filtersAction[guiTrue] = Enum::FilterGui;
-            guiGroup->addAction(guiTrue);
-            menuGui->addAction(guiTrue);
-            actions << guiTrue;
-//             }
+        QAction *guiTrue = new QAction(i18n("Only graphical"), guiGroup);
+        guiTrue->setCheckable(true);
+        m_filtersAction[guiTrue] = Enum::FilterGui;
+        guiGroup->addAction(guiTrue);
+        menuGui->addAction(guiTrue);
+        actions << guiTrue;
 
-//             if (filters & Enum::FilterNotGui) {
-            QAction *guiFalse = new QAction(i18n("Only text"), guiGroup);
-            guiFalse->setCheckable(true);
-            m_filtersAction[guiFalse] = Enum::FilterNotGui;
-            guiGroup->addAction(guiFalse);
-            menuGui->addAction(guiFalse);
-            actions << guiFalse;
-//             }
+        QAction *guiFalse = new QAction(i18n("Only text"), guiGroup);
+        guiFalse->setCheckable(true);
+        m_filtersAction[guiFalse] = Enum::FilterNotGui;
+        guiGroup->addAction(guiFalse);
+        menuGui->addAction(guiFalse);
+        actions << guiFalse;
 
         QAction *guiNone = new QAction(i18n("No filter"), guiGroup);
         guiNone->setCheckable(true);
@@ -579,23 +557,19 @@ void KpkAddRm::filterMenu(Enum::Filters filters)
         QActionGroup *freeGroup = new QActionGroup(menuFree);
         freeGroup->setExclusive(true);
 
-//             if (filters & Enum::FilterFree) {
-            QAction *freeTrue = new QAction(i18n("Only free software"), freeGroup);
-            freeTrue->setCheckable(true);
-            m_filtersAction[freeTrue] = Enum::FilterFree;
-            freeGroup->addAction(freeTrue);
-            menuFree->addAction(freeTrue);
-            actions << freeTrue;
-//             }
+        QAction *freeTrue = new QAction(i18n("Only free software"), freeGroup);
+        freeTrue->setCheckable(true);
+        m_filtersAction[freeTrue] = Enum::FilterFree;
+        freeGroup->addAction(freeTrue);
+        menuFree->addAction(freeTrue);
+        actions << freeTrue;
 
-//             if (filters & Enum::FilterNotFree) {
-            QAction *freeFalse = new QAction(i18n("Only non-free software"), freeGroup);
-            freeFalse->setCheckable(true);
-            m_filtersAction[freeFalse] = Enum::FilterNotFree;
-            freeGroup->addAction(freeFalse);
-            menuFree->addAction(freeFalse);
-            actions << freeFalse;
-//             }
+        QAction *freeFalse = new QAction(i18n("Only non-free software"), freeGroup);
+        freeFalse->setCheckable(true);
+        m_filtersAction[freeFalse] = Enum::FilterNotFree;
+        freeGroup->addAction(freeFalse);
+        menuFree->addAction(freeFalse);
+        actions << freeFalse;
 
         QAction *freeNone = new QAction(i18n("No filter"), freeGroup);
         freeNone->setCheckable(true);
@@ -611,23 +585,19 @@ void KpkAddRm::filterMenu(Enum::Filters filters)
         QActionGroup *archGroup = new QActionGroup(menuArch);
         archGroup->setExclusive(true);
 
-//             if (filters & Enum::FilterArch) {
-            QAction *archTrue = new QAction(i18n("Only native architectures"), archGroup);
-            archTrue->setCheckable(true);
-            m_filtersAction[archTrue] = Enum::FilterArch;
-            archGroup->addAction(archTrue);
-            menuArch->addAction(archTrue);
-            actions << archTrue;
-//             }
+        QAction *archTrue = new QAction(i18n("Only native architectures"), archGroup);
+        archTrue->setCheckable(true);
+        m_filtersAction[archTrue] = Enum::FilterArch;
+        archGroup->addAction(archTrue);
+        menuArch->addAction(archTrue);
+        actions << archTrue;
 
-//             if (filters & Enum::FilterNotArch) {
-            QAction *archFalse = new QAction(i18n("Only non-native architectures"), archGroup);
-            archFalse->setCheckable(true);
-            m_filtersAction[archFalse] = Enum::FilterNotArch;
-            archGroup->addAction(archFalse);
-            menuArch->addAction(archFalse);
-            actions << archFalse;
-//             }
+        QAction *archFalse = new QAction(i18n("Only non-native architectures"), archGroup);
+        archFalse->setCheckable(true);
+        m_filtersAction[archFalse] = Enum::FilterNotArch;
+        archGroup->addAction(archFalse);
+        menuArch->addAction(archFalse);
+        actions << archFalse;
 
         QAction *archNone = new QAction(i18n("No filter"), archGroup);
         archNone->setCheckable(true);
@@ -643,23 +613,19 @@ void KpkAddRm::filterMenu(Enum::Filters filters)
         QActionGroup *sourceGroup = new QActionGroup(menuSource);
         sourceGroup->setExclusive(true);
 
-//             if (filters & Enum::FilterSource) {
-            QAction *sourceTrue = new QAction(i18n("Only sourcecode"), sourceGroup);
-            sourceTrue->setCheckable(true);
-            m_filtersAction[sourceTrue] = Enum::FilterSource;
-            sourceGroup->addAction(sourceTrue);
-            menuSource->addAction(sourceTrue);
-            actions << sourceTrue;
-//             }
+        QAction *sourceTrue = new QAction(i18n("Only sourcecode"), sourceGroup);
+        sourceTrue->setCheckable(true);
+        m_filtersAction[sourceTrue] = Enum::FilterSource;
+        sourceGroup->addAction(sourceTrue);
+        menuSource->addAction(sourceTrue);
+        actions << sourceTrue;
 
-//             if (filters & Enum::FilterNotSource) {
-            QAction *sourceFalse = new QAction(i18n("Only non-sourcecode"), sourceGroup);
-            sourceFalse->setCheckable(true);
-            m_filtersAction[sourceFalse] = Enum::FilterNotSource;
-            sourceGroup->addAction(sourceFalse);
-            menuSource->addAction(sourceFalse);
-            actions << sourceFalse;
-//             }
+        QAction *sourceFalse = new QAction(i18n("Only non-sourcecode"), sourceGroup);
+        sourceFalse->setCheckable(true);
+        m_filtersAction[sourceFalse] = Enum::FilterNotSource;
+        sourceGroup->addAction(sourceFalse);
+        menuSource->addAction(sourceFalse);
+        actions << sourceFalse;
 
         QAction *sourceNone = new QAction(i18n("No filter"), sourceGroup);
         sourceNone->setCheckable(true);
@@ -748,9 +714,7 @@ bool KpkAddRm::event(QEvent *event)
                 QKeyEvent *ke = static_cast<QKeyEvent *>(event);
                 if (ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter) {
                     // special tab handling here
-                    kDebug() << "hmmm" << m_currentAction;
                     m_currentAction->trigger();
-                    kDebug() << "hmmm out" << m_currentAction;
                     return true;
                 }
             }
