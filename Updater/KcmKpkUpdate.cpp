@@ -20,6 +20,8 @@
 
 #include "KcmKpkUpdate.h"
 
+#include "KpkUpdate.h"
+
 #include <KGenericFactory>
 #include <KAboutData>
 

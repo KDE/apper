@@ -22,7 +22,7 @@
 #define PK_INSTALL_PACKAGE_FILES_H
 
 #include "KpkAbstractTask.h"
-
+#include <KpkTransaction.h>
 #include <QPackageKit>
 
 using namespace PackageKit;

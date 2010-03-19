@@ -22,13 +22,10 @@
 #define KPKREQUIREMENTS_H
 
 #include <KDialog>
-
-#include "KpkSimulateModel.h"
-
-using namespace PackageKit;
+#include <QModelIndex>
 
 class KpkRequirementsPrivate;
-
+class KpkSimulateModel;
 class KDE_EXPORT KpkRequirements : public KDialog
 {
     Q_OBJECT

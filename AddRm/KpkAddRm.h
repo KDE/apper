@@ -21,21 +21,20 @@
 #ifndef KPK_ADDRM_H
 #define KPK_ADDRM_H
 
+#include "ui_KpkAddRm.h"
+
 #include <QtGui/QtGui>
 #include <QtCore/QtCore>
 
 #include <KIcon>
 #include <KToolBarPopupAction>
-#include <KDebug>
-
-#include "KpkPackageModel.h"
-#include <KpkDelegate.h>
 
 #include <QPackageKit>
-#include "ui_KpkAddRm.h"
 
 using namespace PackageKit;
 
+class KpkDelegate;
+class KpkPackageModel;
 class KpkAddRm : public QWidget, public Ui::KpkAddRm
 {
     Q_OBJECT

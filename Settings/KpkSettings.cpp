@@ -19,14 +19,16 @@
  ***************************************************************************/
 
 #include "KpkSettings.h"
-#include <KpkEnum.h>
+
 #include "KpkModelOrigin.h"
 
-#include <KDebug>
+#include <KpkEnum.h>
+#include <KpkTransactionBar.h>
+
 #include <KConfig>
 #include <KLocale>
 #include <KMessageBox>
-#include <KpkTransactionBar.h>
+#include <KDebug>
 
 using namespace PackageKit;
 
@@ -134,11 +136,12 @@ void KpkSettings::load()
 
     uint autoUpdate = checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault);
     ret = autoCB->findData(autoUpdate);
-    if (ret == -1)
+    if (ret == -1) {
         // this is if someone change the file by hand...
         autoCB->setCurrentIndex( autoCB->findData(KpkEnum::AutoUpdateDefault) );
-    else
+    } else {
         autoCB->setCurrentIndex(ret);
+    }
 
     if (m_roles & Enum::RoleGetRepoList) {
         m_trasaction = Client::instance()->getRepoList(PackageKit::Enum::FilterNotDevelopment);
@@ -163,7 +166,7 @@ void KpkSettings::save()
     checkUpdateGroup.writeEntry("autoUpdate", autoCB->itemData(autoCB->currentIndex()).toUInt());
     // check to see if the backend support this
     if (m_roles & Enum::RoleGetRepoList) {
-        if ( !m_originModel->save() ) {
+        if (!m_originModel->save()) {
             KMessageBox::sorry(this,
                                i18n("You do not have the necessary privileges to perform this action."),
                                i18n("Failed to set origin data"));

@@ -22,10 +22,8 @@
 #define KPACKAGEKIT_H
 
 #include <KUniqueApplication>
-#include "KpkMainUi.h"
 
-namespace kpackagekit {
-
+class KpkMainUi;
 class KPackageKit : public KUniqueApplication
 {
 Q_OBJECT
@@ -52,6 +50,5 @@ private:
     bool m_init;
 };
 
-}
 
 #endif

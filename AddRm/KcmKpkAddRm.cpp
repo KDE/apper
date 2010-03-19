@@ -20,6 +20,10 @@
 
 #include "KcmKpkAddRm.h"
 
+#include "KpkAddRm.h"
+
+#include "KpkPackageModel.h"
+
 #include <KGenericFactory>
 #include <KAboutData>
 

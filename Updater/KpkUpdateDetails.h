@@ -36,7 +36,7 @@ public:
 
 private slots:
     void updateDetail(PackageKit::Client::UpdateInfo info);
-    void updateDetailFinished(PackageKit::Enum::Exit status, uint runtime);
+    void updateDetailFinished();
 
 private:
     Enum::Info m_info;

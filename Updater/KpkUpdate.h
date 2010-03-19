@@ -47,7 +47,6 @@ signals:
 public slots:
     void load();
     void applyUpdates();
-    void refresh();
 
 private slots:
     void on_selectAllPB_clicked();

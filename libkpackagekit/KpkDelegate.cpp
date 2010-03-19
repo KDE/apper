@@ -225,12 +225,6 @@ void KpkDelegate::paintColMain(QPainter *painter,
 
     // Emblems icons
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    int emblemLeft = leftToRight ? (left + width - EMBLEM_ICON_SIZE) : left;
-    if (leftToRight) {
-        emblemLeft -= UNIVERSAL_PADDING + EMBLEM_ICON_SIZE;
-    } else {
-        emblemLeft += UNIVERSAL_PADDING + EMBLEM_ICON_SIZE;
-    }
     p.end();
 
     painter->drawPixmap(option.rect.topLeft(), pixmap);

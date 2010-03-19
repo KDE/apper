@@ -20,6 +20,9 @@
 
 #include "KpkHistory.h"
 
+#include "KpkTransactionFilterModel.h"
+#include "KpkSimpleTransactionModel.h"
+
 #include <KpkIcons.h>
 #include <KpkStrings.h>
 #include <QPackageKit>
@@ -78,7 +81,6 @@ void KpkHistory::slotButtonClicked(int button)
             break;
         case KDialog::User1 :
             // Refresh transaction list
-            //TODO make sure this deletes the transaction since they are pointers
             m_transactionModel->clear();
             t = Client::instance()->getOldTransactions(0);
             if (t->error()) {

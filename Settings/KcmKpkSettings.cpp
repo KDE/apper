@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "KcmKpkSettings.h"
+#include "KpkSettings.h"
 
 #include <KGenericFactory>
 #include <KAboutData>

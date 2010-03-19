@@ -20,6 +20,9 @@
 
 #include "KPackageKit.h"
 
+#include "KpkBackendDetails.h"
+#include "KpkMainUi.h"
+
 #include <KGlobal>
 #include <KStartupInfo>
 #include <KCmdLineArgs>
@@ -31,10 +34,6 @@
 #include <QStringList>
 #include <QDBusConnection>
 #include <QDBusMessage>
-
-#include "KpkBackendDetails.h"
-
-using namespace kpackagekit;
 
 KPackageKit::KPackageKit()
  : KUniqueApplication(),

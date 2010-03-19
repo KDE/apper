@@ -28,6 +28,11 @@
 #include "KpkStrings.h"
 #include "KpkEnum.h"
 #include "KpkRequirements.h"
+#include "KpkSimulateModel.h"
+#include "KpkPackageModel.h"
+#include "KpkTransaction.h"
+#include "KpkDelegate.h"
+
 #include "ui_KpkReviewChanges.h"
 
 #define UNIVERSAL_PADDING 6

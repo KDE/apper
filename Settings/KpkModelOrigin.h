@@ -22,11 +22,10 @@
 #define KPK_MODEL_ORIGIN_H
 
 #include <QPackageKit>
-#include <QAbstractListModel>
-#include <QHash>
 
 using namespace PackageKit;
 
+class QAbstractListModel;
 class KpkModelOrigin : public QAbstractListModel
 {
 Q_OBJECT

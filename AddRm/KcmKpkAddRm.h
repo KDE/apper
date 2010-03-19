@@ -23,8 +23,8 @@
 
 #include <KCModule>
 #include <QGridLayout>
-#include "KpkAddRm.h"
 
+class KpkAddRm;
 class KcmKpkAddRm : public KCModule
 {
 Q_OBJECT

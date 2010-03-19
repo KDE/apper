@@ -41,7 +41,8 @@
 #include "KpkRequirements.h"
 #include "ui_KpkRequirements.h"
 
-#include <KpkIcons.h>
+#include "KpkIcons.h"
+#include "KpkSimulateModel.h"
 
 #include <KDebug>
 

@@ -53,15 +53,15 @@ int main(int argc, char **argv)
     options.add("+[package]", ki18n("Package file to install"));
     KCmdLineArgs::addCmdLineOptions(options);
 
-    kpackagekit::KPackageKit::addCmdLineOptions();
+    KPackageKit::addCmdLineOptions();
 
-    if (!kpackagekit::KPackageKit::start())
+    if (!KPackageKit::start())
     {
         qDebug() << "KPackageKit is already running!";
         return 0;
     }
 
-    kpackagekit::KPackageKit app;
+    KPackageKit app;
 
     return app.exec();
 }

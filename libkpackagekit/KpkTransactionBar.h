@@ -29,7 +29,6 @@
 #include <QTimer>
 #include <QProgressBar>
 #include <QLabel>
-#include <QHBoxLayout>
 
 using namespace PackageKit;
 
@@ -74,7 +73,6 @@ private:
     QProgressBar *m_progress;
     KPushButton *m_cancel;
     QTimer *m_timer;
-    QHBoxLayout *m_layout;
     Behaviors m_flags;
     Transaction *m_currTrans;
 

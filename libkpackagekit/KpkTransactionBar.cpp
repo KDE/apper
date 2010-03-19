@@ -22,6 +22,8 @@
 
 #include "KpkTransactionBar.h"
 
+#include <QHBoxLayout>
+
 #include <KColorScheme>
 #include <KFadeWidgetEffect>
 #include <KpkStrings.h>
@@ -42,12 +44,12 @@ KpkTransactionBar::KpkTransactionBar(QWidget *parent)
     m_cancel = new KPushButton(i18n("Cancel"), this);
     m_timer = new QTimer(this);
 
-    m_layout = new QHBoxLayout(this);
-    m_layout->addWidget(m_progress);
-    m_layout->addWidget(m_cancel);
-    m_layout->addWidget(m_label);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->addWidget(m_progress);
+    layout->addWidget(m_cancel);
+    layout->addWidget(m_label);
 
-    setLayout(m_layout);
+    setLayout(layout);
 
     connect(m_timer, SIGNAL(timeout()), this, SLOT(hide()));
 }

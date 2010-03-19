@@ -21,7 +21,6 @@
 #include "KpkUpdateDetails.h"
 
 #include <KpkStrings.h>
-#include <KpkPackageModel.h>
 
 #include <KDebug>
 #include <KMessageBox>
@@ -40,13 +39,12 @@ KpkUpdateDetails::KpkUpdateDetails(QSharedPointer<PackageKit::Package>package, Q
         connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
                 this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(updateDetailFinished(PackageKit::Enum::Exit, uint)));
+                this, SLOT(updateDetailFinished()));
     }
 }
 
 KpkUpdateDetails::~KpkUpdateDetails()
 {
-//     kDebug() << "~KpkUpdateDetails()";
 }
 
 void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
@@ -178,10 +176,8 @@ QString KpkUpdateDetails::getLinkList(const QString &links) const
     return ret;
 }
 
-void KpkUpdateDetails::updateDetailFinished(PackageKit::Enum::Exit status, uint runtime)
+void KpkUpdateDetails::updateDetailFinished()
 {
-    Q_UNUSED(status)
-    Q_UNUSED(runtime)
     if (descriptionKTB->document()->toPlainText().isEmpty()) {
        descriptionKTB->setPlainText(i18n("No update description was found."));
     }

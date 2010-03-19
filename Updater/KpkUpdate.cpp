@@ -64,7 +64,7 @@ KpkUpdate::KpkUpdate(QWidget *parent)
     connect(m_client, SIGNAL(updatesChanged()),
             this, SLOT(getUpdates()));
 
-    // check to see what roles the backend
+    // check to see what roles the backend has
     m_roles = m_client->actions();
 
     // hide distro Upgrade container and line
@@ -111,11 +111,9 @@ void KpkUpdate::applyUpdates()
 {
     // If the backend supports getRequires do it
     if (m_roles & Enum::RoleSimulateUpdatePackages) {
-
-        PackageKit::Transaction *t;
         QList<QSharedPointer<PackageKit::Package> > selectedPackages;
         selectedPackages = m_pkg_model_updates->selectedPackages();
-        t = m_client->simulateUpdatePackages(selectedPackages);
+        Transaction *t = m_client->simulateUpdatePackages(selectedPackages);
         if (t->error()) {
                 KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
@@ -193,18 +191,6 @@ void KpkUpdate::updatePackages()
     }
 }
 
-void KpkUpdate::refresh()
-{
-    SET_PROXY
-    Transaction *t = m_client->refreshCache(true);
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-    } else {
-        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
-        frm->show();
-    }
-}
-
 void KpkUpdate::getUpdates()
 {
     // contract to delete all update details widgets
@@ -214,7 +200,6 @@ void KpkUpdate::getUpdates()
     m_pkg_model_updates->uncheckAll();
     m_updatesT = m_client->getUpdates();
     if (m_updatesT->error()) {
-        kDebug() << m_updatesT->error();
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
     } else {
         transactionBar->addTransaction(m_updatesT);
@@ -247,7 +232,7 @@ void KpkUpdate::getUpdates()
 void KpkUpdate::updatePackagesFinished(KpkTransaction::ExitStatus status)
 {
     checkEnableUpdateButton();
-    KpkTransaction *trans = (KpkTransaction *) sender();
+    KpkTransaction *trans = qobject_cast<KpkTransaction *>(sender());
     if (status == KpkTransaction::ReQueue) {
         SET_PROXY
         Transaction *t = m_client->updatePackages(trans->onlyTrusted(), trans->packages());
@@ -262,7 +247,14 @@ void KpkUpdate::updatePackagesFinished(KpkTransaction::ExitStatus status)
 
 void KpkUpdate::on_refreshPB_clicked()
 {
-    refresh();
+    SET_PROXY
+    Transaction *t = m_client->refreshCache(true);
+    if (t->error()) {
+        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+    } else {
+        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
+        frm->show();
+    }
 }
 
 void KpkUpdate::on_packageView_pressed(const QModelIndex &index)

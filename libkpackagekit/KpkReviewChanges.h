@@ -26,15 +26,13 @@
 
 #include <QPackageKit>
 
-#include "KpkDelegate.h"
-#include "KpkTransaction.h"
-#include "KpkPackageModel.h"
-#include "KpkSimulateModel.h"
-
 using namespace PackageKit;
 
+class KpkDelegate;
+class KpkTransaction;
+class KpkSimulateModel;
+class KpkPackageModel;
 class KpkReviewChangesPrivate;
-
 class KDE_EXPORT KpkReviewChanges : public KDialog
 {
     Q_OBJECT

@@ -21,15 +21,12 @@
 #ifndef KPK_HISTORY_H
 #define KPK_HISTORY_H
 
-#include <KDialog>
-#include <QSortFilterProxyModel>
-
-#include "KpkTransactionFilterModel.h"
-#include "KpkSimpleTransactionModel.h"
 #include "ui_KpkHistory.h"
 
-using namespace PackageKit;
+#include <KDialog>
 
+class KpkTransactionFilterModel;
+class KpkSimpleTransactionModel;
 class KpkHistory : public KDialog, Ui::KpkHistory
 {
     Q_OBJECT

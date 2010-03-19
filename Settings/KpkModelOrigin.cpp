@@ -20,8 +20,9 @@
 
 #include "KpkModelOrigin.h"
 
+#include <QAbstractListModel>
+
 #include <KpkStrings.h>
-#include <QVariant>
 
 #include <KDebug>
 #include <KMessageBox>
