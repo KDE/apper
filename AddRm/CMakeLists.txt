@@ -1,12 +1,13 @@
 set(kpk_addrm_SRCS
-    KcmKpkAddRm.cpp
-    KpkAddRm.cpp
+    KpkFiltersMenu.cpp
     KpkPackageDetails.cpp
+    KpkAddRm.cpp
+    KcmKpkAddRm.cpp
 )
 
 kde4_add_ui_files(kpk_addrm_SRCS
-    KpkAddRm.ui
     KpkPackageDetails.ui
+    KpkAddRm.ui
 )
 
 kde4_add_plugin(kcm_kpk_addrm ${kpk_addrm_SRCS})

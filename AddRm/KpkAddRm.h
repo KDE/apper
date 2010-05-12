@@ -35,6 +35,7 @@ using namespace PackageKit;
 
 class KpkDelegate;
 class KpkPackageModel;
+class KpkFiltersMenu;
 class KpkAddRm : public QWidget, public Ui::KpkAddRm
 {
     Q_OBJECT
@@ -71,7 +72,6 @@ private:
     void setCurrentActionEnabled(bool state);
 
     QMenu *m_findMenu;
-    QAction *m_actionViewInGroups;
 
     QToolBar *toolBar;
     KToolBarPopupAction *m_genericActionK;
@@ -98,11 +98,7 @@ private:
     KIcon m_cancelIcon;
     KIcon m_filterIcon;
 
-    // We need to keep a list to build the filters string
-    QList<QAction*> actions;
-    QHash<QAction *, Enum::Filter> m_filtersAction;
-    void filterMenu(Enum::Filters filters);
-    Enum::Filters filters();
+    KpkFiltersMenu *m_filtersMenu;
 
     void updateColumnsWidth(bool force = false);
     void setActionCancel(bool enabled);
@@ -120,7 +116,6 @@ private:
 protected:
     virtual void resizeEvent(QResizeEvent *event);
     virtual bool event(QEvent *event);
-
 };
 
 #endif
