@@ -214,7 +214,7 @@ void KpkTransaction::unsetTransaction()
     disconnect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-               this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+               this, SLOT(finished(PackageKit::Enum::Exit)));
     disconnect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
                this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     disconnect(m_trans, SIGNAL(changed()),

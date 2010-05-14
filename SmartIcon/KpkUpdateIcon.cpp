@@ -23,97 +23,38 @@
 #include "KpkUpdateIcon.h"
 
 #include <KpkIcons.h>
-#include <KpkStrings.h>
 #include <KpkEnum.h>
 #include <KpkMacros.h>
 
-#include <QMenu>
-#include <KStandardAction>
+#include <KLocale>
+#include <KNotification>
+#include <KConfigGroup>
 #include <KActionCollection>
-#include <KAction>
+#include <KMenu>
 
 #include <KDebug>
 
-#include <solid/powermanagement.h>
+#define SECURITY_ICON "tools-wizard"
+#define UPDATES_ICON "games-solve"
 
 using namespace PackageKit;
 
 KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
     : KpkAbstractIsRunning(parent),
-    m_updateNotify(0)
+      m_getingUpdates(false),
+      m_statusNotifierItem(0)
 {
-    // TODO this needs better thinking, it's not fine
-    // to open various kcm at the same time (only one is kept open)
-    // ALSO the default KSystemTrayIcon shows a quit that will QUIT
-    // our smart-icon which won't be good 
-//     m_icon = new KSystemTrayIcon("applications-other");
-//     connect(m_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-//             this, SLOT(showUpdates(QSystemTrayIcon::ActivationReason)));
-// //     m_updateView = 0;
-// 
-//     m_icon->actionCollection()->addAction(KStandardAction::Preferences,
-//                                           this, SLOT(showSettings()));
-//     m_icon->contextMenu()->addAction(m_icon->actionCollection()->action(KStandardAction::name(KStandardAction::Preferences)));
-
-//     int m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
-//     if (m_inhibitCookie == -1)
-//         kDebug() << "Sleep suppression denied!";
+    connect(Client::instance(), SIGNAL(updatesChanged()), this, SLOT(update()));
 }
 
 KpkUpdateIcon::~KpkUpdateIcon()
 {
-    // if we do not manually close it,
-    // it will be a useless notify when PERSISTENT
-    if (m_updateNotify) {
-        m_updateNotify->close();
-    }
+    removeStatusNotifierItem();
 }
 
 void KpkUpdateIcon::showSettings()
 {
     QProcess::execute("kpackagekit", QStringList() << "--settings");
-//     KCMultiDialog* settings = new KCMultiDialog();
-//     settings->setWindowIcon( KIcon("applications-other") );
-//     settings->addModule( KCModuleInfo("kpk_settings.desktop") );
-//     connect(settings, SIGNAL( finished() ),
-//              settings, SLOT( deleteLater() ));
-//     settings->show();
-}
-
-// void
-// KpkUpdateIcon::hideUpdates()
-// {
-//     if (m_updateView!=0) {
-//         m_updateView->deleteLater();
-//         m_updateView = 0;
-//     }
-// }
-
-// void
-// KpkUpdateIcon::updaterClosed(int exitCode)
-// {
-//     hideUpdates();
-//     if (exitCode == QDialog::Accepted) {
-//         m_icon->hide();
-//     }
-// }
-
-void KpkUpdateIcon::showUpdates(QSystemTrayIcon::ActivationReason reason)
-{
-    if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::Unknown) {
-        QProcess::execute("kpackagekit", QStringList() << "--updates");
-//         if (m_updateView==0) {
-//             m_updateView = new KCMultiDialog();
-//             m_updateView->setWindowIcon( KIcon("applications-other") );
-//             m_updateView->addModule( KCModuleInfo("kpk_update.desktop") );
-//             connect(m_updateView, SIGNAL( finished(int) ),
-//                      this, SLOT( updaterClosed(int) ));
-//             m_updateView->raise();
-//             m_updateView->show();
-//         } else {
-//             hideUpdates();
-//         }
-    }
 }
 
 // refresh the cache and try to update,
@@ -123,47 +64,48 @@ void KpkUpdateIcon::refreshAndUpdate(bool refresh)
 {
     // This is really necessary to don't bother the user with
     // tons of popups
-    if (!isRunning()) {
-        if (refresh) {
+    if (refresh) {
+        if (!isRunning()) {
             SET_PROXY
             Transaction *t = Client::instance()->refreshCache(true);
-            if (t->error()) {
-                KNotification *notify = new KNotification("TransactionError");
-                notify->setText(KpkStrings::daemonError(t->error()));
-                notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-                notify->sendEvent();
-            } else {
-                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                        this, SLOT(update()));
-                // don't be interactive to not upset an idle user
-                emit watchTransaction(t->tid(), false);
+            if (!t->error()) { // ignore if there is an error
+                // Be silent! don't bother the user if the cache couldn't be refreshed
+                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)), this, SLOT(update()));
                 increaseRunning();
-                return; // to not reach the signal below
             }
-        } else {
-            update();
-            increaseRunning();
         }
+    } else {
+        update();
     }
 }
 
 void KpkUpdateIcon::update()
 {
+    if (m_getingUpdates) {
+        return;
+    }
+
+    increaseRunning();
     KConfig config("KPackageKit");
     KConfigGroup notifyGroup(&config, "Notify");
     if (Qt::Checked == static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)))) {
         m_updateList.clear();
         Transaction *t = Client::instance()->getUpdates();
-        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                this, SLOT(updateListed(QSharedPointer<PackageKit::Package>)));
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(updateCheckFinished()));
+        if (!t->error()) {
+            m_getingUpdates = false;
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    this, SLOT(packageToUpdate(QSharedPointer<PackageKit::Package>)));
+            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                    this, SLOT(getUpdateFinished()));
+            return;
+        }
     } else {
-        decreaseRunning();
+        removeStatusNotifierItem();
     }
+    decreaseRunning();
 }
 
-void KpkUpdateIcon::updateListed(QSharedPointer<PackageKit::Package>package)
+void KpkUpdateIcon::packageToUpdate(QSharedPointer<PackageKit::Package> package)
 {
     // Blocked updates are not instalable updates so there is no
     // reason to show/count them
@@ -172,203 +114,144 @@ void KpkUpdateIcon::updateListed(QSharedPointer<PackageKit::Package>package)
     }
 }
 
-//TODO: Notification contexts depending on highest priority update. Eg, Security, BugFix, Feature, etc
-void KpkUpdateIcon::notifyUpdates()
+void KpkUpdateIcon::updateStatusNotifierIcon(bool security)
 {
     KConfig config("KPackageKit");
-    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    Qt::CheckState notifyUpdates = static_cast<Qt::CheckState>(checkUpdateGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)));
-    if (notifyUpdates == Qt::Unchecked) {
+    KConfigGroup checkUpdateGroup(&config, "Notify");
+    Qt::CheckState updateStatusNotifierIcon = static_cast<Qt::CheckState>(checkUpdateGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)));
+    if (updateStatusNotifierIcon == Qt::Unchecked) {
         return;
     }
 
-    Enum::Info highState = Enum::InfoInstalled;
-    QHash<Enum::Info, QList<QSharedPointer<PackageKit::Package> > > packageGroups;
+    QString iconName(security ? SECURITY_ICON : UPDATES_ICON);
 
-    foreach(QSharedPointer<PackageKit::Package> p, m_updateList) {
-        packageGroups[p->info()].append(p);
-        if (p->info() > highState) {
-            highState = p->info();
-        }
+    if (!m_statusNotifierItem) {
+        m_statusNotifierItem = new KStatusNotifierItem(this);
+        m_statusNotifierItem->setCategory(KStatusNotifierItem::SystemServices);
+        m_statusNotifierItem->setStatus(KStatusNotifierItem::Active);
+        // Remove the EXIT button
+        KActionCollection *actions = m_statusNotifierItem->actionCollection();
+        actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
+        // Setup a menu with some actions
+        KMenu *menu = new KMenu;
+        menu->addTitle(KIcon(iconName), i18n("KPackageKit"));
+        QAction *action;
+        action = menu->addAction(i18n("Show Updates View"));
+        connect(action, SIGNAL(triggered(bool)),
+                this, SLOT(showUpdates()));
+        action = menu->addAction(i18n("Configure"));
+        connect(action, SIGNAL(triggered(bool)),
+                this, SLOT(showSettings()));
+        menu->addSeparator();
+        action = menu->addAction(i18n("Hide"));
+        connect(action, SIGNAL(triggered(bool)),
+                this, SLOT(removeStatusNotifierItem()));
+        m_statusNotifierItem->setContextMenu(menu);
+        // Show updates on the left click
+        connect(m_statusNotifierItem, SIGNAL(activateRequested(bool, const QPoint &)),
+                this, SLOT(showUpdates()));
     }
-
-    KIcon icon = KpkIcons::packageIcon(highState);
-    m_updateNotify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
-    // use of QSize does the right thing
-    m_updateNotify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
 
     QString text;
-    text = i18n("You have %1", KpkStrings::infoUpdate(highState, packageGroups[highState].size()));
-    int i;
-    for (i = 0; i < 5 && i < packageGroups[highState].size(); i++) {
-        text.append("<br /><b>" + packageGroups[highState].at(i)->name() + "</b>" +
-                    (packageGroups[highState].at(i)->summary().isEmpty()
-                    ? "" : " - "+packageGroups[highState].at(i)->summary()));
-    }
-    i = m_updateList.size() - i;
-    if (i > 0) {
-        text.append(i18np("<br /><i>And another update</i>", "<br /><i>And %1 more updates</i>", i));
-    }
+    text = i18np("You have one update", "You have %1 updates", m_updateList.size());
+    m_statusNotifierItem->setToolTip(iconName, text, QString());
+    m_statusNotifierItem->setIconByName(iconName);
 
-    m_updateNotify->setText(text);
-
-    QStringList actions;
-    actions << i18n("Review and update");
-    actions << i18n("Do not ask again");
-    m_updateNotify->setActions(actions);
-    m_updateNotify->sendEvent();
-    connect(m_updateNotify, SIGNAL(activated(uint)),
-            this, SLOT(handleUpdateAction(uint)));
-    connect(m_updateNotify, SIGNAL(closed()),
-            this , SLOT(handleUpdateActionClosed()));
     increaseRunning();
 }
 
-void KpkUpdateIcon::updateCheckFinished()
+void KpkUpdateIcon::getUpdateFinished()
 {
-    if (m_updateList.size() > 0) {
-//         kDebug() << "Found " << m_updateList.size() << " updates";
-        Enum::Info highState = Enum::InfoInstalled;
-        //FIXME: This assumes that PackageKit shares our priority ranking.
+    m_getingUpdates = false;
+    decreaseRunning();
+    if (!m_updateList.isEmpty()) {
+        // Store all the security updates
+        QList<QSharedPointer<PackageKit::Package> > securityUpdateList;
         foreach(const QSharedPointer<PackageKit::Package> p, m_updateList) {
-            if (p->info() > highState) {
-                highState = p->info();
+            if (p->info() > Enum::InfoSecurity) {
+                securityUpdateList.append(p);
             }
         }
-//         m_icon->setIcon(KpkIcons::packageIcon(highState));
-//         m_icon->setToolTip("");
-//         m_icon->show();
+
         KConfig config("KPackageKit");
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
         uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault));
-        if (updateType == KpkEnum::None) {
-            // update none
-            notifyUpdates();
-        } else {
-            if (updateType == KpkEnum::All) {
-                // update all
-                SET_PROXY
-                Transaction* t = Client::instance()->updateSystem(true);
-                if (t->error()) {
-                    // update all failed
-                    notifyUpdates();
-                } else {
-                    connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                            this, SLOT(updatesFinished(PackageKit::Enum::Exit)));
-                    // don't be interactive to not upset an idle user
-                    emit watchTransaction(t->tid(), false);
-                    //autoUpdatesInstalling(t);
-                    KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
-                    autoInstallNotify->setText(i18n("Updates are being automatically installed."));
-                    // use of QSize does the right thing
-                    KIcon icon("plasmagik");
-                    autoInstallNotify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-                    autoInstallNotify->sendEvent();
-                    increaseRunning();
-                }
-            } else {
-                // Defaults to security
-                QList<QSharedPointer<PackageKit::Package> > updateList;
-                foreach(QSharedPointer<PackageKit::Package>package, m_updateList) {
-                    if (package->info() == Enum::InfoSecurity) {
-                        updateList.append(package);
-                    }
-                }
-                if (updateList.size() > 0) {
-                    SET_PROXY
-                    Transaction *t = Client::instance()->updatePackages(true, updateList);
-                    if (t->error()) {
-                        // security Trans failed.
-                        notifyUpdates();
-                    } else {
-//                         suppressSleep(true);
-                        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                                this, SLOT(updatesFinished(PackageKit::Enum::Exit)));
-                        // don't be interactive to not upset an idle user
-                        emit watchTransaction(t->tid(), false);
-                        //autoUpdatesInstalling(t);
-                        KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
-                        autoInstallNotify->setText(i18n("Security updates are being automatically installed."));
-                        // use of QSize does the right thing
-                        autoInstallNotify->setPixmap(KpkIcons::packageIcon(highState).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-                        autoInstallNotify->sendEvent();
-                        increaseRunning();
-                    }
-                } else {
-//                     kDebug() << "No security updates.";
-                    notifyUpdates();
-                }
+        if (updateType == KpkEnum::All) {
+            // update all
+            SET_PROXY
+            // TODO this might be evil
+            Transaction *t = Client::instance()->updateSystem(true);
+            if (!t->error()) {
+                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                        this, SLOT(autoUpdatesFinished(PackageKit::Enum::Exit)));
+                // don't be interactive to not upset an idle user
+                emit watchTransaction(t->tid(), false);
+                //autoUpdatesInstalling(t);
+                KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
+                autoInstallNotify->setText(i18n("Updates are being automatically installed."));
+                // use of QSize does the right thing
+                autoInstallNotify->setPixmap(KIcon("plasmagik").pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+                autoInstallNotify->sendEvent();
+                increaseRunning();
+                removeStatusNotifierItem();
+                return;
+            }
+        } else if (updateType == KpkEnum::Security && !securityUpdateList.isEmpty()) {
+            // Defaults to security
+            SET_PROXY
+            Transaction *t = Client::instance()->updatePackages(true, securityUpdateList);
+            if (!t->error()) {
+                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                        this, SLOT(autoUpdatesFinished(PackageKit::Enum::Exit)));
+                // don't be interactive to not upset an idle user
+                emit watchTransaction(t->tid(), false);
+                //autoUpdatesInstalling(t);
+                KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
+                autoInstallNotify->setText(i18n("Security updates are being automatically installed."));
+                // use of QSize does the right thing
+                autoInstallNotify->setPixmap(KIcon(SECURITY_ICON).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+                autoInstallNotify->sendEvent();
+                increaseRunning();
+                removeStatusNotifierItem();
+                return;
             }
         }
+        // all failed let's update our icon
+        updateStatusNotifierIcon(!securityUpdateList.isEmpty());
+    } else {
+        removeStatusNotifierItem();
     }
-    decreaseRunning();
 }
 
-void KpkUpdateIcon::updatesFinished(PackageKit::Enum::Exit status)
+void KpkUpdateIcon::autoUpdatesFinished(PackageKit::Enum::Exit status)
 {
     // decrease first only because we want to check for updates again
     decreaseRunning();
     KNotification *notify = new KNotification("UpdatesComplete");
-//     suppressSleep(false);
     if (status == Enum::ExitSuccess) {
         KIcon icon("task-complete");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
         notify->setText(i18n("System update was successful."));
         notify->sendEvent();
-        // check for updates to see if there are updates that
-        // couldn't be automatically installed
-        update();
     } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-        notify->setText(i18n("The software update failed.")); //TODO: Point the user to the logs, or give more detail.
+        notify->setText(i18n("The automated software update failed."));
         notify->sendEvent();
     }
 }
 
-void KpkUpdateIcon::handleUpdateAction(uint action)
+void KpkUpdateIcon::showUpdates()
 {
-//     kDebug() << "action" << action;
-    switch(action) {
-        case 1:
-            showUpdates();
-            break;
-        case 2:
-            KConfig config("KPackageKit");
-            KConfigGroup smartIconGroup(&config, "Notify");
-            smartIconGroup.writeEntry("notifyUpdates", 0);
-            // TODO emit goingToQuit
-//             m_icon->hide();
-            break;
+    QProcess::execute("kpackagekit", QStringList() << "--updates");
+}
+
+void KpkUpdateIcon::removeStatusNotifierItem()
+{
+    if (m_statusNotifierItem) {
+        m_statusNotifierItem->deleteLater();
+        m_statusNotifierItem = 0;
     }
-    // Manually calling close as the KNotification does not call it
-    // when using persistant
-    m_updateNotify->close();
 }
-
-void KpkUpdateIcon::handleUpdateActionClosed()
-{
-//     kDebug();
-    m_updateNotify = 0;
-    decreaseRunning();
-}
-
-// TODO move this to KpkSmartIcon to handle all hidden transactions
-// and create a static method to see if the role of the transaction is suficient
-// to suppressSleep
-// void KpkUpdateIcon::suppressSleep(bool enable)
-// {
-//     if (enable) {
-//         kDebug() << "Disabling powermanagement sleep";
-//         m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep( i18n("Installing updates.") );
-//         if (m_inhibitCookie == -1)
-//             kDebug() << "Sleep suppression denied!";
-//     } else {
-//         kDebug() << "Enable powermanagement sleep";
-//         if (m_inhibitCookie == -1)
-//             if ( ! Solid::PowerManagement::stopSuppressingSleep( m_inhibitCookie ))
-//                 kDebug() << "Enable failed: invalid cookie.";
-//     }
-// }

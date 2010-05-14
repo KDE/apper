@@ -23,8 +23,9 @@
 
 #include <KpkAbstractIsRunning.h>
 
+#include <QAction>
 #include <QPackageKit>
-#include <KSystemTrayIcon>
+#include <KStatusNotifierItem>
 
 using namespace PackageKit;
 
@@ -46,12 +47,12 @@ public slots:
 
 private slots:
     void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
-    void activated(QSystemTrayIcon::ActivationReason reason);
+    void activated();
     void triggered(QAction *action);
     void createTransactionDialog(Transaction *t);
     void transactionDialogClosed();
     void message(PackageKit::Enum::Message type, const QString &message);
-    void requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package>pkg);
+    void requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package> pkg);
     void finished();
     void restartActivated(uint action = 1);
     void transactionChanged();
@@ -59,16 +60,17 @@ private slots:
 
     void refreshCache();
     void showMessages();
+    void removeStatusNotifierItem();
 
 private:
     void updateMenu(const QList<PackageKit::Transaction*> &tids);
     void setCurrentTransaction(PackageKit::Transaction *transaction);
 
     Enum::Roles m_act;
-    KSystemTrayIcon *m_smartSTI;
+    KStatusNotifierItem *m_smartSTI;
     Client *m_client;
     Transaction *m_pkClient_updates;
-    QMenu *m_menu;
+    KMenu *m_menu;
     QHash<QString, KpkTransaction *> m_transDialogs;
 
     PackageKit::Transaction *m_currentTransaction;

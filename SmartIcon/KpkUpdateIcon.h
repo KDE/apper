@@ -23,11 +23,7 @@
 
 #include <KpkAbstractIsRunning.h>
 
-// #include <QObject>
-#include <KSystemTrayIcon>
-#include <KCMultiDialog>
-#include <KNotification>
-#include <QList>
+#include <KStatusNotifierItem>
 #include <QPackageKit>
 
 class KpkUpdateIcon : public KpkAbstractIsRunning
@@ -46,22 +42,20 @@ public slots:
 
 private slots:
     void update();
-    void updateListed(QSharedPointer<PackageKit::Package>);
-    void updateCheckFinished();
-    void handleUpdateAction(uint action);
-    void handleUpdateActionClosed();
-    void notifyUpdates();
+    void packageToUpdate(QSharedPointer<PackageKit::Package> package);
+    void getUpdateFinished();
+    void autoUpdatesFinished(PackageKit::Enum::Exit exit);
+
     void showSettings();
-    void showUpdates(QSystemTrayIcon::ActivationReason = KSystemTrayIcon::Unknown);
-    void updatesFinished(PackageKit::Enum::Exit exit);
+    void showUpdates();
+    void removeStatusNotifierItem();
 
 private:
-    KSystemTrayIcon* m_icon;
-    KNotification *m_updateNotify;
+    bool m_getingUpdates;
+    KStatusNotifierItem *m_statusNotifierItem;
     QList<QSharedPointer<PackageKit::Package> > m_updateList;
 
-//     int m_inhibitCookie;
-//     void suppressSleep(bool enable);
+    void updateStatusNotifierIcon(bool security);
 };
 
 #endif

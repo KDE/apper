@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPACKAGEKITSMARTICON_H
-#define KPACKAGEKITSMARTICON_H
+#ifndef KPACKAGEKIT_SMART_ICON_H
+#define KPACKAGEKIT_SMART_ICON_H
 
 #include <KUniqueApplication>
 #include <QTimer>
