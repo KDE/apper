@@ -26,12 +26,11 @@
 #include <KpkImportance.h>
 #include <KpkEnum.h>
 
-#include <KMenu>
+#include <QMenu>
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <KNotification>
 #include <KMessageBox>
-#include <KActionCollection>
 #include <KLocale>
 #include <KWindowSystem>
 
@@ -44,9 +43,21 @@ Q_DECLARE_METATYPE(Transaction*)
 
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
  : KpkAbstractIsRunning(parent),
-   m_smartSTI(0),
    m_refreshCacheAction(0)
 {
+    // Creates our smart icon
+    m_smartSTI = new KSystemTrayIcon("applications-other");
+    connect(m_smartSTI, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(activated(QSystemTrayIcon::ActivationReason)));
+
+    // Creates our transaction menu
+    m_menu = new QMenu(i18n("Transactions"));
+    connect(m_menu, SIGNAL(triggered(QAction *)),
+            this, SLOT(triggered(QAction *)));
+
+    // sets the contextMenu to our menu so we overwrite the KSystemTrayIcon one
+    m_smartSTI->setContextMenu(m_menu);
+
     // Create a new daemon
     m_client = Client::instance();
     m_act = Client::instance()->actions();
@@ -159,7 +170,8 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
         if (m_messages.isEmpty() &&
             m_restartType == Enum::RestartNone)
         {
-            removeStatusNotifierItem();
+            m_menu->hide();
+            m_smartSTI->hide();
             emit close();
         } else {
             QString toolTip;
@@ -169,21 +181,21 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
                                      "Packages: %2",
                                      m_restartPackages.size(),
                                      m_restartPackages.join(", ")));
-                m_smartSTI->setIconByPixmap(KpkIcons::restartIcon(m_restartType));
+                m_smartSTI->setIcon(KpkIcons::restartIcon(m_restartType));
             }
             if (m_messages.size()) {
                 if (!toolTip.isEmpty()) {
                     toolTip.append('\n');
                 } else {
                     // in case the restart icon is not set
-                    m_smartSTI->setIconByPixmap(KpkIcons::getIcon("kpk-important"));
+                    m_smartSTI->setIcon(KpkIcons::getIcon("kpk-important"));
                 }
                 toolTip.append(i18np("One message from the package manager",
                                      "%1 messages from the package manager",
                                      m_messages.size()));
 
             }
-            m_smartSTI->setToolTip(KpkIcons::restartIcon(m_restartType), toolTip, QString());
+            m_smartSTI->setToolTip(toolTip);
         }
     }
 }
@@ -191,29 +203,6 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
 void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *transaction)
 {
     m_currentTransaction = transaction;
-
-    // Creates the smart icon
-    if (!m_smartSTI) {
-        m_smartSTI = new KStatusNotifierItem(this);
-        m_smartSTI->setCategory(KStatusNotifierItem::SystemServices);
-        m_smartSTI->setStatus(KStatusNotifierItem::Active);
-
-        // Remove the EXIT button
-        KActionCollection *actions = m_smartSTI->actionCollection();
-        actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
-
-        // Creates our transaction menu
-        m_menu = new KMenu;
-        m_menu->addTitle(KIcon("applications-other"), i18n("Transactions"));
-        connect(m_menu, SIGNAL(triggered(QAction *)),
-                this, SLOT(triggered(QAction *)));
-
-        // Setup a menu with some actions
-        m_smartSTI->setContextMenu(m_menu);
-        connect(m_smartSTI, SIGNAL(activateRequested(bool, const QPoint &)),
-                this, SLOT(showUpdates()));
-    }
-
     // update icon
     transactionChanged();
     connect(m_currentTransaction, SIGNAL(changed()),
@@ -224,6 +213,7 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
             this, SLOT(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)));
     connect(m_currentTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished()));
+    m_smartSTI->show();
 }
 
 void KpkTransactionTrayIcon::finished()
@@ -297,8 +287,8 @@ void KpkTransactionTrayIcon::transactionChanged()
         toolTip = i18n("%1", KpkStrings::status(status));
     }
 
-    m_smartSTI->setToolTip(KpkStrings::action(m_currentTransaction->role()), toolTip, QString());
-    m_smartSTI->setIconByPixmap(KpkIcons::statusIcon(status));
+    m_smartSTI->setToolTip(toolTip);
+    m_smartSTI->setIcon(KpkIcons::statusIcon(status));
 }
 
 void KpkTransactionTrayIcon::message(PackageKit::Enum::Message type, const QString &message)
@@ -380,14 +370,17 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
     m_menu->addAction(m_hideAction);
 }
 
-void KpkTransactionTrayIcon::activated()
+void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
 {
-    QList<PackageKit::Transaction*> tids(m_client->getTransactions());
-    if (tids.size() || isRunning()) {
-        updateMenu(tids);
-        m_menu->exec(QCursor::pos());
-    } else {
-        removeStatusNotifierItem();
+    if (reason != QSystemTrayIcon::Context) {
+        QList<PackageKit::Transaction*> tids(m_client->getTransactions());
+        if (tids.size() || isRunning()) {
+            updateMenu(tids);
+            m_menu->exec(QCursor::pos());
+        } else {
+            m_menu->hide();
+            m_smartSTI->hide();
+        }
     }
 }
 
@@ -454,14 +447,6 @@ bool KpkTransactionTrayIcon::isRunning()
            Client::instance()->getTransactions().size() ||
            m_messages.size() ||
            m_restartType != Enum::RestartNone;
-}
-
-void KpkTransactionTrayIcon::removeStatusNotifierItem()
-{
-    if (m_smartSTI) {
-        m_smartSTI->deleteLater();
-        m_smartSTI = 0;
-    }
 }
 
 #include "KpkTransactionTrayIcon.moc"
