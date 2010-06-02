@@ -136,7 +136,7 @@ void KpkUpdateIcon::updateStatusNotifierIcon(bool security)
         KMenu *menu = new KMenu;
         menu->addTitle(KIcon(iconName), i18n("KPackageKit"));
         QAction *action;
-        action = menu->addAction(i18n("Show Updates View"));
+        action = menu->addAction(i18n("Review Updates"));
         connect(action, SIGNAL(triggered(bool)),
                 this, SLOT(showUpdates()));
         action = menu->addAction(i18n("Configure"));
