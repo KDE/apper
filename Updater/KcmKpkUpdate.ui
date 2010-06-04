@@ -28,9 +28,6 @@
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
-     <property name="autoScroll">
-      <bool>false</bool>
-     </property>
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
      </property>
