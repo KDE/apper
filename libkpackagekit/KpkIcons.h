@@ -34,6 +34,7 @@ class KDE_EXPORT KpkIcons {
     public:
         static KIcon   groupsIcon(Enum::Group group);
         static KIcon   statusIcon(Enum::Status status);
+        static QString statusIconName(Enum::Status status);
         static QString statusAnimation(Enum::Status status);
         static KIcon   actionIcon(Enum::Role role);
         static KIcon   packageIcon(Enum::Info state);

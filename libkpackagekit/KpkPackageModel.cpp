@@ -31,15 +31,15 @@ using namespace PackageKit;
 
 KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
-m_packageView(packageView),
-m_grouped(false)
+  m_packageView(packageView),
+  m_grouped(false)
 {
 }
 
 KpkPackageModel::KpkPackageModel(const QList<QSharedPointer<PackageKit::Package> > &packages, QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
-m_packageView(packageView),
-m_grouped(false)
+  m_packageView(packageView),
+  m_grouped(false)
 {
     foreach(QSharedPointer<PackageKit::Package> p, packages) {
         addPackage(p);
@@ -310,7 +310,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
 void KpkPackageModel::checkPackage(QSharedPointer<PackageKit::Package> package)
 {
-    if (!containsChecked(package->id())) {
+    if (package->info() != Enum::InfoBlocked && !containsChecked(package->id())) {
         m_checkedPackages[package->id()] = package;
         m_checkedGroupCount[package->info()]++;
     }
@@ -363,7 +363,7 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
                 }
             } else {
                 Enum::Info group = m_groups.keys().at(index.row());
-                foreach(QSharedPointer<PackageKit::Package>p, m_groups[group]) {
+                foreach(QSharedPointer<PackageKit::Package> p, m_groups[group]) {
                     checkPackage(p);
                 }
                 emit dataChanged(this->index(0, 1, index),
@@ -444,15 +444,13 @@ QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &
     }
 }
 
-void KpkPackageModel::addSelectedPackage(QSharedPointer<PackageKit::Package>package)
+void KpkPackageModel::addSelectedPackage(QSharedPointer<PackageKit::Package> package)
 {
-    if (package->info() != Enum::InfoBlocked) {
-        checkPackage(package);
-    }
+    checkPackage(package);
     addPackage(package);
 }
 
-void KpkPackageModel::addPackage(QSharedPointer<PackageKit::Package>package)
+void KpkPackageModel::addPackage(QSharedPointer<PackageKit::Package> package)
 {
     // check to see if the list of info has any package
     if (!m_grouped) {
@@ -487,7 +485,7 @@ void KpkPackageModel::addPackage(QSharedPointer<PackageKit::Package>package)
     }
 }
 
-void KpkPackageModel::removePackage(QSharedPointer<PackageKit::Package>package)
+void KpkPackageModel::removePackage(QSharedPointer<PackageKit::Package> package)
 {
     beginRemoveRows(QModelIndex(), m_packages.size() - 1, m_packages.size() - 1);
     m_packages.removeOne(package);
@@ -526,9 +524,7 @@ void KpkPackageModel::checkAll()
     m_checkedPackages.clear();
     m_checkedGroupCount.clear();
     foreach(QSharedPointer<PackageKit::Package> package, m_packages) {
-        if (package->info() != Enum::InfoBlocked) {
-            checkPackage(package);
-        }
+        checkPackage(package);
     }
     emit dataChanged(createIndex(0, 1),
                      createIndex(m_groups.size(), 1));

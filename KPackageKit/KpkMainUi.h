@@ -36,7 +36,7 @@ public:
     ~KpkMainUi();
 
     void showAll();
-    void showUpdates();
+    void showUpdates(bool selected);
     void showSettings();
 
 private:

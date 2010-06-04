@@ -57,17 +57,22 @@ void KpkMainUi::showAll()
 {
     // check to see if all are added
     showSettings();
-    showUpdates();
+    showUpdates(false);
     if (!m_addrmPWI) {
-        m_addrmPWI = addModule(KCModuleInfo("kpk_addrm.desktop"));
+        m_addrmPWI = addModule("kpk_addrm.desktop");
     }
     setCurrentPage(m_addrmPWI);
 }
 
-void KpkMainUi::showUpdates()
+void KpkMainUi::showUpdates(bool selected)
 {
     if (!m_updatePWI) {
-        m_updatePWI = addModule(KCModuleInfo("kpk_update.desktop"));
+        // the selected boolean is used to automatically select all updates
+        QStringList args;
+        if (selected) {
+            args << "selected";
+        }
+        m_updatePWI = addModule("kpk_update.desktop", args);
     }
     setCurrentPage(m_updatePWI);
 }
@@ -75,7 +80,7 @@ void KpkMainUi::showUpdates()
 void KpkMainUi::showSettings()
 {
     if (!m_settingsPWI) {
-        m_settingsPWI = addModule(KCModuleInfo("kpk_settings.desktop"));
+        m_settingsPWI = addModule("kpk_settings.desktop");
     }
     setCurrentPage(m_settingsPWI);
 }

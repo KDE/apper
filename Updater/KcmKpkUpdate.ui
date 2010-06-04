@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KpkUpdate</class>
- <widget class="QWidget" name="KpkUpdate">
+ <class>KcmKpkUpdate</class>
+ <widget class="QWidget" name="KcmKpkUpdate">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -63,22 +63,41 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="KpkTransactionBar" name="transactionBar" native="true"/>
-   </item>
    <item row="4" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
+      <widget class="KpkTransactionBar" name="transactionBar" native="true"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="KPushButton" name="selectAllPB">
        <property name="text">
-        <string>Select all updates</string>
+        <string>Select All Updates</string>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
       <widget class="KPushButton" name="refreshPB">
        <property name="text">
-        <string>Refresh</string>
+        <string>Check for new Updates</string>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -86,6 +105,9 @@
       <widget class="KPushButton" name="historyPB">
        <property name="text">
         <string>History</string>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

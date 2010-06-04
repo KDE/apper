@@ -61,50 +61,55 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
     return KpkIcons::cache[name];
 }
 
-KIcon KpkIcons::statusIcon(Enum::Status status)
+QString KpkIcons::statusIconName(Enum::Status status)
 {
     switch (status) {
     case Enum::LastStatus                 :
-    case Enum::UnknownStatus              : return KpkIcons::getIcon("help-browser");
+    case Enum::UnknownStatus              : return "help-browser";
     case Enum::StatusCancel               :
-    case Enum::StatusCleanup              : return KpkIcons::getIcon("kpk-clean-up");
-    case Enum::StatusCommit               : return KpkIcons::getIcon("package-setup");//TODO needs a better icon
-    case Enum::StatusDepResolve           : return KpkIcons::getIcon("package-info");
+    case Enum::StatusCleanup              : return "kpk-clean-up";
+    case Enum::StatusCommit               : return "package-setup";//TODO needs a better icon
+    case Enum::StatusDepResolve           : return "package-info";
     case Enum::StatusDownloadChangelog    :
     case Enum::StatusDownloadFilelist     :
     case Enum::StatusDownloadGroup        :
-    case Enum::StatusDownloadPackagelist  : return KpkIcons::getIcon("kpk-refresh-cache");
-    case Enum::StatusDownload             : return KpkIcons::getIcon("package-download");
+    case Enum::StatusDownloadPackagelist  : return "kpk-refresh-cache";
+    case Enum::StatusDownload             : return "package-download";
     case Enum::StatusDownloadRepository   :
-    case Enum::StatusDownloadUpdateinfo   : return KpkIcons::getIcon("kpk-refresh-cache");
-    case Enum::StatusFinished             : return KpkIcons::getIcon("kpk-clean-up");
-    case Enum::StatusGeneratePackageList  : return KpkIcons::getIcon("kpk-refresh-cache");
-    case Enum::StatusWaitingForLock       : return KpkIcons::getIcon("dialog-password");
-    case Enum::StatusWaitingForAuth       : return KpkIcons::getIcon("dialog-password");//IMPROVE ME
-    case Enum::StatusInfo                 : return KpkIcons::getIcon("package-info");
-    case Enum::StatusInstall              : return KpkIcons::getIcon("kpk-package-add");
-    case Enum::StatusLoadingCache         : return KpkIcons::getIcon("kpk-refresh-cache");
-    case Enum::StatusObsolete             : return KpkIcons::getIcon("kpk-clean-up");
-    case Enum::StatusQuery                : return KpkIcons::getIcon("package-search");
-    case Enum::StatusRefreshCache         : return KpkIcons::getIcon("kpk-refresh-cache");
-    case Enum::StatusRemove               : return KpkIcons::getIcon("package-removed");
-    case Enum::StatusRepackaging          : return KpkIcons::getIcon("kpk-clean-up");
-    case Enum::StatusRequest              : return KpkIcons::getIcon("package-search");
-    case Enum::StatusRollback             : return KpkIcons::getIcon("package-rollback");
-    case Enum::StatusRunning              : return KpkIcons::getIcon("package-setup");
-    case Enum::StatusScanApplications     : return KpkIcons::getIcon("package-search");
-    case Enum::StatusSetup                : return KpkIcons::getIcon("package-setup");
+    case Enum::StatusDownloadUpdateinfo   : return "kpk-refresh-cache";
+    case Enum::StatusFinished             : return "kpk-clean-up";
+    case Enum::StatusGeneratePackageList  : return "kpk-refresh-cache";
+    case Enum::StatusWaitingForLock       : return "dialog-password";
+    case Enum::StatusWaitingForAuth       : return "dialog-password";//IMPROVE ME
+    case Enum::StatusInfo                 : return "package-info";
+    case Enum::StatusInstall              : return "kpk-package-add";
+    case Enum::StatusLoadingCache         : return "kpk-refresh-cache";
+    case Enum::StatusObsolete             : return "kpk-clean-up";
+    case Enum::StatusQuery                : return "package-search";
+    case Enum::StatusRefreshCache         : return "kpk-refresh-cache";
+    case Enum::StatusRemove               : return "package-removed";
+    case Enum::StatusRepackaging          : return "kpk-clean-up";
+    case Enum::StatusRequest              : return "package-search";
+    case Enum::StatusRollback             : return "package-rollback";
+    case Enum::StatusRunning              : return "package-setup";
+    case Enum::StatusScanApplications     : return "package-search";
+    case Enum::StatusSetup                : return "package-setup";
     case Enum::StatusSigCheck             :
-    case Enum::StatusTestCommit           : return KpkIcons::getIcon("package-info");//TODO needs a better icon
-    case Enum::StatusUpdate               : return KpkIcons::getIcon("package-update");
-    case Enum::StatusWait                 : return KpkIcons::getIcon("package-wait");
-    case Enum::StatusScanProcessList      : return KpkIcons::getIcon("package-info");
-    case Enum::StatusCheckExecutableFiles : return KpkIcons::getIcon("package-info");
-    case Enum::StatusCheckLibraries       : return KpkIcons::getIcon("package-info");
-    case Enum::StatusCopyFiles            : return KpkIcons::getIcon("package-info");
+    case Enum::StatusTestCommit           : return "package-info";//TODO needs a better icon
+    case Enum::StatusUpdate               : return "package-update";
+    case Enum::StatusWait                 : return "package-wait";
+    case Enum::StatusScanProcessList      : return "package-info";
+    case Enum::StatusCheckExecutableFiles : return "package-info";
+    case Enum::StatusCheckLibraries       : return "package-info";
+    case Enum::StatusCopyFiles            : return "package-info";
     }
     kDebug() << "status icon unrecognised: " << status;
-    return KpkIcons::getIcon("help-browser");
+    return "help-browser";
+}
+
+KIcon KpkIcons::statusIcon(Enum::Status status)
+{
+    return KpkIcons::getIcon(KpkIcons::statusIconName(status));
 }
 
 QString KpkIcons::statusAnimation(PackageKit::Enum::Status status)
@@ -142,8 +147,8 @@ QString KpkIcons::statusAnimation(PackageKit::Enum::Status status)
     case Enum::StatusTestCommit          : return "pk-testing";
     case Enum::StatusUpdate              : return "pk-installing";
     case Enum::StatusWait                : return "pk-waiting";
-    default                                     : kDebug() << "status icon unrecognised: " << status;
-                                                  return "help-browser";
+    default                              : kDebug() << "status icon unrecognised: " << status;
+        return "help-browser";
     }
 }
 

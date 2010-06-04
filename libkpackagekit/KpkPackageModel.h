@@ -71,21 +71,20 @@ public:
     };
 
 public slots:
-    void addPackage(QSharedPointer<PackageKit::Package>package);
-    void addSelectedPackage(QSharedPointer<PackageKit::Package>package);
+    void addPackage(QSharedPointer<PackageKit::Package> package);
+    void addSelectedPackage(QSharedPointer<PackageKit::Package> package);
     void setGrouped(bool g);
 
 private:
     bool containsChecked(const QString &pid) const;
-    void checkPackage(QSharedPointer<PackageKit::Package>package);
-    void uncheckPackage(const QSharedPointer<PackageKit::Package>package);
+    void checkPackage(QSharedPointer<PackageKit::Package> package);
+    void uncheckPackage(const QSharedPointer<PackageKit::Package> package);
     int checkedGroupCount(Enum::Info info) const;
 
     QAbstractItemView *m_packageView;
     QList<QSharedPointer<PackageKit::Package> > m_packages;
     QHash<QString, QSharedPointer<PackageKit::Package> > m_checkedPackages;
     QHash<Enum::Info, int> m_checkedGroupCount;
-//     QList<> m_checkedPackages;
     QMap<Enum::Info, QList<QSharedPointer<PackageKit::Package> > > m_groups;
     bool  m_grouped;
 

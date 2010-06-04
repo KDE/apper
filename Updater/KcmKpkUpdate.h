@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,22 +22,59 @@
 #define KCM_KPK_UPDATE_H
 
 #include <KCModule>
-#include <QGridLayout>
 
-class KpkUpdate;
-class KcmKpkUpdate : public KCModule
+#include "ui_KcmKpkUpdate.h"
+
+using namespace PackageKit;
+
+class KpkPackageModel;
+class KpkDelegate;
+class KProgressDialog;
+class KcmKpkUpdate : public KCModule, Ui::KcmKpkUpdate
 {
 Q_OBJECT
 public:
     KcmKpkUpdate(QWidget *&parent, const QVariantList &args);
 
+signals:
+    void changed(bool);
+
 public slots:
     void load();
     void save();
 
+private slots:
+    void on_selectAllPB_clicked();
+    void on_refreshPB_clicked();
+    void on_historyPB_clicked();
+
+    void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
+
+    void getUpdates();
+    void getUpdatesFinished(PackageKit::Enum::Exit status);
+
+    void updatePackages();
+    void requeueUpdate();
+
+    void updateColumnsWidth(bool force = false);
+    void on_packageView_pressed(const QModelIndex &index);
+
+    void checkEnableUpdateButton();
+    void errorCode(PackageKit::Enum::Error error, const QString &details);
+
+
 private:
-    KpkUpdate *view;
-    QGridLayout *m_grid;
+    bool m_selected;
+    KpkPackageModel *m_pkg_model_updates;
+
+    KpkDelegate *pkg_delegate;
+    Client *m_client;
+    Transaction *m_updatesT;
+    Enum::Roles m_roles;
+
+protected:
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual bool event(QEvent *event);
 };
 
 #endif

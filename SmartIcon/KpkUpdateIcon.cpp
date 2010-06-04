@@ -34,8 +34,7 @@
 
 #include <KDebug>
 
-#define SECURITY_ICON "tools-wizard"
-#define UPDATES_ICON "games-solve"
+#define UPDATES_ICON "system-software-update"
 
 using namespace PackageKit;
 
@@ -116,14 +115,13 @@ void KpkUpdateIcon::packageToUpdate(QSharedPointer<PackageKit::Package> package)
 
 void KpkUpdateIcon::updateStatusNotifierIcon(bool security)
 {
+    Q_UNUSED(security)
     KConfig config("KPackageKit");
     KConfigGroup checkUpdateGroup(&config, "Notify");
     Qt::CheckState updateStatusNotifierIcon = static_cast<Qt::CheckState>(checkUpdateGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)));
     if (updateStatusNotifierIcon == Qt::Unchecked) {
         return;
     }
-
-    QString iconName(security ? SECURITY_ICON : UPDATES_ICON);
 
     if (!m_statusNotifierItem) {
         m_statusNotifierItem = new KStatusNotifierItem(this);
@@ -134,7 +132,7 @@ void KpkUpdateIcon::updateStatusNotifierIcon(bool security)
         actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
         // Setup a menu with some actions
         KMenu *menu = new KMenu;
-        menu->addTitle(KIcon(iconName), i18n("KPackageKit"));
+        menu->addTitle(KIcon(UPDATES_ICON), i18n("KPackageKit"));
         QAction *action;
         action = menu->addAction(i18n("Review Updates"));
         connect(action, SIGNAL(triggered(bool)),
@@ -154,8 +152,8 @@ void KpkUpdateIcon::updateStatusNotifierIcon(bool security)
 
     QString text;
     text = i18np("You have one update", "You have %1 updates", m_updateList.size());
-    m_statusNotifierItem->setToolTip(iconName, text, QString());
-    m_statusNotifierItem->setIconByName(iconName);
+    m_statusNotifierItem->setToolTip(UPDATES_ICON, text, QString());
+    m_statusNotifierItem->setIconByName(UPDATES_ICON);
 
     increaseRunning();
 }
@@ -209,7 +207,7 @@ void KpkUpdateIcon::getUpdateFinished()
                 KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
                 autoInstallNotify->setText(i18n("Security updates are being automatically installed."));
                 // use of QSize does the right thing
-                autoInstallNotify->setPixmap(KIcon(SECURITY_ICON).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+                autoInstallNotify->setPixmap(KIcon(UPDATES_ICON).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
                 autoInstallNotify->sendEvent();
                 increaseRunning();
                 removeStatusNotifierItem();

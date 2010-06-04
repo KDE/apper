@@ -29,6 +29,7 @@
 #include <KpkStrings.h>
 #include <KLocalizedString>
 #include <KLocale>
+#include <KPixmapSequence>
 
 #include <KDebug>
 
@@ -38,16 +39,21 @@ KpkTransactionBar::KpkTransactionBar(QWidget *parent)
     m_label = new QLabel(this);
     m_label->setSizePolicy(QSizePolicy::MinimumExpanding,
                            QSizePolicy::Preferred);
-    m_progress = new QProgressBar(this);
-    m_progress->setSizePolicy(QSizePolicy::Preferred,
-                              QSizePolicy::Preferred);
+    m_progress = new KPixmapSequenceWidget(this);
+    m_progress->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+//     m_progress->setSizePolicy(QSizePolicy::Preferred,
+//                               QSizePolicy::Preferred);
     m_cancel = new KPushButton(i18n("Cancel"), this);
+//     m_cancel->setFlat(true);
+    m_cancel->setIcon(KIcon("dialog-cancel"));
     m_timer = new QTimer(this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_progress);
-    layout->addWidget(m_cancel);
     layout->addWidget(m_label);
+    layout->addWidget(m_cancel);
+    layout->addStretch();
 
     setLayout(layout);
 
@@ -80,9 +86,7 @@ void KpkTransactionBar::nextTransaction()
     if (m_trans.size() == 0) {
         return;
     }
-    m_progress->reset();
-    m_progress->setMaximum(0);
-    m_progress->setMinimum(0);
+
     if (m_flags & AutoHide) {
         show();
     }
@@ -93,14 +97,8 @@ void KpkTransactionBar::nextTransaction()
 
     updateUi();
 
-//     if (trans->status() == Enum::UnknownStatus) {
-//        statusChanged(Enum::StatusSetup);
-//     } else {
-//        statusChanged(trans->status());
-//     }
-
     connect(m_currTrans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+            this, SLOT(finished(PackageKit::Enum::Exit)));
     connect(m_currTrans, SIGNAL(changed()),
             this, SLOT(updateUi()));
     connect(m_currTrans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -117,10 +115,8 @@ void KpkTransactionBar::addTransaction(Transaction *trans)
     }
 }
 
-void KpkTransactionBar::finished(Enum::Exit status, uint runtime)
+void KpkTransactionBar::finished(Enum::Exit status)
 {
-    m_progress->setMaximum(100);
-    m_progress->setValue(100);
     QPalette colors(palette());
     switch (status) {
     case Enum::ExitSuccess:
@@ -128,9 +124,7 @@ void KpkTransactionBar::finished(Enum::Exit status, uint runtime)
                                        KColorScheme::PositiveBackground,
                                        QPalette::Window,
                                        KColorScheme::Window);
-        m_label->setText(i18nc("The time that the transaction took to complete",
-                               "Finished in %1.",
-                               KGlobal::locale()->prettyFormatDuration(runtime)));
+        m_label->setText(i18nc("The transaction finished it's job", "Finished"));
         break;
     default:
         KColorScheme::adjustBackground(colors,
@@ -138,13 +132,13 @@ void KpkTransactionBar::finished(Enum::Exit status, uint runtime)
                                        QPalette::Window,
                                        KColorScheme::Window);
     }
-    m_progress->setValue(100);
-    setAutoFillBackground(true);
-    setPalette(colors);
-    KFadeWidgetEffect *animation = new KFadeWidgetEffect(this);
-    setAutoFillBackground(false);
-    setPalette(QPalette());
-    animation->start(500);
+
+//     setAutoFillBackground(true);
+//     setPalette(colors);
+//     KFadeWidgetEffect *animation = new KFadeWidgetEffect(this);
+//     setAutoFillBackground(false);
+//     setPalette(QPalette());
+//     animation->start(500);
     if (m_flags & AutoHide) {
         m_timer->start(2000);
     }
@@ -160,14 +154,14 @@ void KpkTransactionBar::errorCode(Enum::Error error, const QString &details)
 void KpkTransactionBar::updateUi()
 {
     // Progress
-    uint percentage = m_currTrans->percentage();
-    if (percentage && percentage <= 100) {
-        m_progress->setMaximum(100);
-        m_progress->setValue(percentage);
-    } else if (m_progress->maximum() != 0) {
-        m_progress->setMaximum(0);
-        m_progress->reset();
-    }
+//     uint percentage = m_currTrans->percentage();
+//     if (percentage && percentage <= 100) {
+// //         m_progress->setMaximum(100);
+// //         m_progress->setValue(percentage);
+//     } else if (m_progress->maximum() != 0) {
+// //         m_progress->setMaximum(0);
+// //         m_progress->reset();
+//     }
 
     // Cancel
     m_cancel->setEnabled(m_currTrans->allowCancel());

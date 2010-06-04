@@ -27,7 +27,7 @@
 #include <QWidget>
 #include <KPushButton>
 #include <QTimer>
-#include <QProgressBar>
+#include <kpixmapsequencewidget.h>
 #include <QLabel>
 
 using namespace PackageKit;
@@ -70,14 +70,14 @@ public:
 private:
     QList<Transaction*> m_trans;
     QLabel *m_label;
-    QProgressBar *m_progress;
+    KPixmapSequenceWidget *m_progress;
     KPushButton *m_cancel;
     QTimer *m_timer;
     Behaviors m_flags;
     Transaction *m_currTrans;
 
 private slots:
-    void finished(PackageKit::Enum::Exit status, uint runtime);
+    void finished(PackageKit::Enum::Exit status);
     void errorCode(PackageKit::Enum::Error error, const QString &details);
     void updateUi();
     void nextTransaction();

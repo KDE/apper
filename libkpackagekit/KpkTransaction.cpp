@@ -26,6 +26,7 @@
 #include <KDebug>
 
 #include <QMovie>
+#include <QPropertyAnimation>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 
@@ -64,25 +65,26 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 {
     d->ui.setupUi(mainWidget());
     // hide these items here so the window get small
-    d->ui.packageL->hide();
-    d->ui.descriptionL->hide();
+//     d->ui.packageL->hide();
+//     d->ui.descriptionL->hide();
     d->finished = true; // for sanity we are finished till some transaction is set
     d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
 
     // Set Cancel and custom button hide
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     setButtons(KDialog::Cancel | KDialog::User1 | KDialog::Details);
-    enableButton(KDialog::Details, false);
+//     enableButton(KDialog::Details, false);
     setButtonText(KDialog::User1, i18n("Hide"));
     setButtonToolTip(KDialog::User1, i18n("Allows you to hide the window whilst keeping the transaction task running."));
     setEscapeButton(KDialog::User1);
     enableButtonCancel(false);
-    setDetailsWidget(d->ui.detailGroup);
+    setDetailsWidget(d->ui.packageWidget);
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
     d->showDetails = transactionGroup.readEntry("ShowDetails", false);
-    setDetailsWidgetVisible(d->showDetails);
-    d->ui.detailGroup->setVisible(d->showDetails);
+//     setDetailsWidgetVisible(d->showDetails);
+    setDetailsWidgetVisible(false);
+//     d->ui.detailGroup->setVisible(d->showDetails);
 
     // This MUST come after setDetailsWidgetVisible since
     // it keeps ajusting the size (which sucks btw)
@@ -103,6 +105,9 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
     // after ALL set, lets set the transaction
     setTransaction(m_trans);
+
+//     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+//     setMaximumSize(QWIDGETSIZE_MAX, sizeHint().height());
 }
 
 KpkTransaction::~KpkTransaction()
@@ -175,20 +180,23 @@ void KpkTransaction::setTransaction(Transaction *trans)
     // check to see if we can cancel
     enableButtonCancel(m_trans->allowCancel());
     // clears the package label
-    d->ui.packageL->clear();
-    d->ui.descriptionL->setText(QString());
+//     d->ui.packageL->clear();
+    d->ui.descriptionL->clear();
     // Now sets the last package
     currPackage(m_trans->lastPackage());
     // sets ui
     updateUi();
 
-    if (m_trans->role() == Enum::RoleRefreshCache ||
-        m_trans->role() == Enum::RoleWhatProvides) {
-        d->ui.packageL->hide();
-        d->ui.descriptionL->hide();
+    // enable the Details button just on these roles
+    if (m_trans->role() == Enum::RoleInstallPackages ||
+        m_trans->role() == Enum::RoleInstallFiles ||
+        m_trans->role() == Enum::RoleRemovePackages ||
+        m_trans->role() == Enum::RoleUpdatePackages ||
+        m_trans->role() == Enum::RoleUpdateSystem) {
+//         enableButton(KDialog::Details, true);
     } else {
-        d->ui.packageL->show();
-        d->ui.descriptionL->show();
+//         d->ui.packageWidget->hide();
+//         enableButton(KDialog::Details, false);
     }
 
     // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
@@ -241,13 +249,13 @@ void KpkTransaction::updateUi()
     }
 
     if (subpercentage <= 100) {
-        d->ui.subprogressBar->setMaximum(100);
-        d->ui.subprogressBar->setValue(subpercentage);
+//         d->ui.subprogressBar->setMaximum(100);
+//         d->ui.subprogressBar->setValue(subpercentage);
     // Check if we didn't already set the maximum as this
     // causes a weird behavior when we keep reseting
-    } else if (d->ui.subprogressBar->maximum() != 0) {
-        d->ui.subprogressBar->setMaximum(0);
-        d->ui.subprogressBar->reset();
+//     } else if (d->ui.subprogressBar->maximum() != 0) {
+//         d->ui.subprogressBar->setMaximum(0);
+//         d->ui.subprogressBar->reset();
     }
 
     d->ui.progressBar->setRemaining(m_trans->remainingTime());
@@ -287,13 +295,13 @@ void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package>p)
         if (!p->version().isEmpty()) {
             packageText += ' ' + p->version();
         }
-        d->ui.packageL->setText(packageText);
+//         d->ui.packageL->setText(packageText);
         d->ui.descriptionL->setText(p->summary());
-        enableButton(KDialog::Details, true);
+//         enableButton(KDialog::Details, true);
     } else {
-        d->ui.packageL->clear();
+//         d->ui.packageL->clear();
         d->ui.descriptionL->setText(QString());
-        enableButton(KDialog::Details, false);
+//         enableButton(KDialog::Details, false);
         setDetailsWidgetVisible(false);
     }
 }
@@ -344,9 +352,57 @@ void KpkTransaction::slotButtonClicked(int button)
         done(KDialog::Close);
         break;
     case KDialog::Details :
+    {
+        if (d->showDetails) {
+            kDebug() <<  d->ui.packageWidget->sizeHint();
+
+            QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
+    //         QSize size = d->ui.packageWidget->size();
+    //         size.setHeight(0);
+            animation->setDuration(1000);
+            QSize siz = size();
+            animation->setStartValue(siz);
+            siz -= QSize(0, d->ui.packageWidget->size().height());
+    //         size.setSize(rect.size() + d->ui.packageWidget->size());
+    //         size.setHeight(d->ui.packageWidget->sizeHint().height());
+            animation->setEndValue(siz);
+            animation->setEasingCurve(QEasingCurve::OutInQuad);
+            animation->start();
+        } else {
+            QParallelAnimationGroup *group = new QParallelAnimationGroup;
+            kDebug() <<  d->ui.packageWidget->sizeHint();
+            d->ui.packageWidget->resize(QSize(0, 0));
+            d->ui.packageWidget->setVisible(true);
+            QPropertyAnimation *anim1 = new QPropertyAnimation(this, "size");
+            QPropertyAnimation *anim2 = new QPropertyAnimation(d->ui.packageWidget, "size");
+    //         QSize size = d->ui.packageWidget->size();
+    //         size.setHeight(0);
+            anim1->setDuration(1000);
+            anim2->setDuration(1000);
+            QSize siz = size();
+            QSize size2 = d->ui.packageWidget->sizeHint();
+            size2.setHeight(0);
+            anim1->setStartValue(siz);
+            anim2->setStartValue(size2);
+            siz += QSize(0, d->ui.packageWidget->sizeHint().height());
+            size2 += QSize(0, d->ui.packageWidget->sizeHint().height());
+    //         size.setSize(rect.size() + d->ui.packageWidget->size());
+    //         size.setHeight(d->ui.packageWidget->sizeHint().height());
+            anim1->setEndValue(siz);
+            anim2->setEndValue(size2);
+            anim1->setEasingCurve(QEasingCurve::InOutQuad);
+            anim2->setEasingCurve(QEasingCurve::InOutQuad);
+            group->addAnimation(anim1);
+            group->addAnimation(anim2);
+            group->start();
+        }
         d->showDetails = !d->showDetails;
+        
+
+        
 //         d->ui.detailGroup->setVisible(d->showDetails);
-//         break;
+    }
+        break;
     default : // Should be only details
         KDialog::slotButtonClicked(button);
     }
