@@ -36,6 +36,7 @@ Name[uk]=Служба KPackageKit
 Name[x-test]=xxKPackageKit Servicexx
 
 Comment=Tracks and Notify about Software Updates
+Comment[bg]=Следи и уведомява за обновления на програмите
 Comment[ca]=Segueix i comunica les actualitzacions de programari
 Comment[ca@valencia]=Segueix i comunica les actualitzacions de programari
 Comment[cs]=Sledovat a oznamovat aktualizace softwaru
