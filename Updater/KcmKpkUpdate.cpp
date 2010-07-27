@@ -25,6 +25,9 @@
 #include "KpkHistory.h"
 #include "KpkMacros.h"
 #include "KpkCheckableHeader.h"
+#include "KpkUpdatePackageModel.h"
+#include "KpkUpdateDelegate.h"
+
 #include <version.h>
 
 #include <KGenericFactory>
@@ -33,9 +36,7 @@
 #include <KpkIcons.h>
 #include <KpkTransactionBar.h>
 #include <KpkTransaction.h>
-#include <KpkPackageModel.h>
 #include <KpkSimulateModel.h>
-#include <KpkDelegate.h>
 #include <KpkRequirements.h>
 
 #include <KMessageBox>
@@ -61,10 +62,9 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     setButtons(Apply);
     KGlobal::locale()->insertCatalog("kpackagekit");
 
-    m_selected = !args.isEmpty();
+    m_selected = !args.isEmpty(); //TODO check if this is still needed
     setupUi(this);
 
-    selectAllPB->setIcon(KpkIcons::getIcon("package-update"));
     refreshPB->setIcon(KpkIcons::getIcon("view-refresh"));
     historyPB->setIcon(KpkIcons::getIcon("view-history"));
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
@@ -73,12 +73,14 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     Client::instance()->setHints("locale=" + locale);
 
     //initialize the model, delegate, client and  connect it's signals
-    KpkCheckableHeader *header = new KpkCheckableHeader(Qt::Horizontal, this);
-    header->setCheckState(Qt::PartiallyChecked);
-    packageView->setHeader(header);
-    packageView->setItemDelegate(pkg_delegate = new KpkDelegate(packageView));
-    packageView->setModel(m_pkg_model_updates = new KpkPackageModel(this, packageView));
-    m_pkg_model_updates->setGrouped(true);
+    m_header = new KpkCheckableHeader(Qt::Horizontal, this);
+    m_header->setCheckState(Qt::PartiallyChecked);
+    m_header->setResizeMode(QHeaderView::Stretch);
+    packageView->setHeader(m_header);
+    packageView->setItemDelegate(pkg_delegate = new KpkUpdateDelegate(packageView));
+    packageView->setModel(m_pkg_model_updates = new KpkUpdatePackageModel(this, packageView));
+//     m_pkg_model_updates->setGrouped(true);
+    connect(m_header, SIGNAL(toggled(bool)), m_pkg_model_updates, SLOT(setAllChecked(bool)));
     connect(m_pkg_model_updates, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkEnableUpdateButton()));
 
@@ -93,11 +95,6 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
     line->hide();
-
-    if (m_selected) {
-        selectAllPB->setVisible(false);
-//         delete horizontalSpacer;
-    }
 
 //     KPixmapSequenceWidget *foo = new KPixmapSequenceWidget(this);
 //     foo->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
@@ -125,12 +122,7 @@ void KcmKpkUpdate::checkEnableUpdateButton()
 {
     emit changed(m_pkg_model_updates->selectedPackages().size() > 0);
     // if we don't have any upates let's disable the button
-    selectAllPB->setEnabled(m_pkg_model_updates->rowCount() != 0);
-}
-
-void KcmKpkUpdate::on_selectAllPB_clicked()
-{
-    m_pkg_model_updates->checkAll();
+    m_header->setEnabled(m_pkg_model_updates->rowCount() != 0);
 }
 
 void KcmKpkUpdate::load()
@@ -184,13 +176,13 @@ void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
     } else if (m_pkg_model_updates->rowCount() == 2) {
         int nonBlockedIndex = -1;
         if (m_pkg_model_updates->data(m_pkg_model_updates->index(0,0),
-                                      KpkPackageModel::StateRole).toUInt()
+                                      KpkUpdatePackageModel::StateRole).toUInt()
             == Enum::InfoBlocked) {
             // We got a blocked update in index 0, so 1 is not blocked...
             nonBlockedIndex = 1;
         }
         if (m_pkg_model_updates->data(m_pkg_model_updates->index(1,0),
-                                      KpkPackageModel::StateRole).toUInt()
+                                      KpkUpdatePackageModel::StateRole).toUInt()
             == Enum::InfoBlocked) {
             // We got a blocked update in index 1, so 0 is not blocked...
             nonBlockedIndex = 0;
@@ -229,7 +221,7 @@ void KcmKpkUpdate::getUpdates()
     pkg_delegate->contractAll();
     // clears the model
     m_pkg_model_updates->clear();
-    m_pkg_model_updates->uncheckAll();
+    m_pkg_model_updates->setAllChecked(false);
     m_updatesT = m_client->getUpdates();
     if (m_updatesT->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
@@ -314,26 +306,26 @@ void KcmKpkUpdate::on_historyPB_clicked()
     delete frm;
 }
 
-void KcmKpkUpdate::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
-    updateColumnsWidth();
-}
+// void KcmKpkUpdate::resizeEvent(QResizeEvent *event)
+// {
+//     QWidget::resizeEvent(event);
+//     updateColumnsWidth();
+// }
 
-bool KcmKpkUpdate::event(QEvent *event)
-{
-    switch (event->type()) {
-        case QEvent::Paint:
-        case QEvent::PolishRequest:
-        case QEvent::Polish:
-            updateColumnsWidth(true);
-            break;
-        default:
-            break;
-    }
-
-    return QWidget::event(event);
-}
+// bool KcmKpkUpdate::event(QEvent *event)
+// {
+//     switch (event->type()) {
+//         case QEvent::Paint:
+//         case QEvent::PolishRequest:
+//         case QEvent::Polish:
+//             updateColumnsWidth(true);
+//             break;
+//         default:
+//             break;
+//     }
+//
+//     return QWidget::event(event);
+// }
 
 void KcmKpkUpdate::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
@@ -344,16 +336,16 @@ void KcmKpkUpdate::errorCode(PackageKit::Enum::Error error, const QString &detai
                                KMessageBox::Notify);
 }
 
-void KcmKpkUpdate::updateColumnsWidth(bool force)
-{
-    int m_viewWidth = packageView->viewport()->width();
-
-    if (force) {
-        m_viewWidth -= style()->pixelMetric(QStyle::PM_ScrollBarExtent) + UNIVERSAL_PADDING;
-    }
-
-    packageView->setColumnWidth(0, pkg_delegate->columnWidth(0, m_viewWidth));
-    packageView->setColumnWidth(1, pkg_delegate->columnWidth(1, m_viewWidth));
-}
+// void KcmKpkUpdate::updateColumnsWidth(bool force)
+// {
+//     int m_viewWidth = packageView->viewport()->width();
+//
+//     if (force) {
+//         m_viewWidth -= style()->pixelMetric(QStyle::PM_ScrollBarExtent) + UNIVERSAL_PADDING;
+//     }
+//
+//     packageView->setColumnWidth(0, pkg_delegate->columnWidth(0, m_viewWidth));
+//     packageView->setColumnWidth(1, pkg_delegate->columnWidth(1, m_viewWidth));
+// }
 
 #include "KcmKpkUpdate.moc"

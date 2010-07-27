@@ -4,8 +4,10 @@ set(kpk_update_SRCS
     KpkSimpleTransactionModel.cpp
     KpkHistory.cpp
     KpkTransactionFilterModel.cpp
-    KcmKpkUpdate.cpp
     KpkCheckableHeader.cpp
+    KpkUpdateDelegate.cpp
+    KpkUpdatePackageModel.cpp
+    KcmKpkUpdate.cpp
 )
 kde4_add_ui_files(kpk_update_SRCS
     KpkUpdateDetails.ui

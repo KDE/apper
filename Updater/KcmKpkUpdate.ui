@@ -28,6 +28,9 @@
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+     </property>
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
      </property>
@@ -38,24 +41,9 @@
       <enum>QAbstractItemView::ScrollPerPixel</enum>
      </property>
      <property name="rootIsDecorated">
-      <bool>true</bool>
-     </property>
-     <property name="itemsExpandable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="sortingEnabled">
-      <bool>true</bool>
-     </property>
-     <property name="animated">
-      <bool>false</bool>
-     </property>
-     <property name="allColumnsShowFocus">
-      <bool>false</bool>
-     </property>
-     <property name="headerHidden">
-      <bool>false</bool>
-     </property>
-     <property name="expandsOnDoubleClick">
       <bool>true</bool>
      </property>
     </widget>
@@ -77,16 +65,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="KPushButton" name="selectAllPB">
-       <property name="text">
-        <string>Select All Updates</string>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="KPushButton" name="refreshPB">

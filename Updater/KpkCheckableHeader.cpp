@@ -54,7 +54,7 @@ void KpkCheckableHeader::paintSection(QPainter *painter, const QRect &rect, int 
 
       QPoint pos = mapFromGlobal(QCursor::pos());
       QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
-      kDebug() << rect << pos;
+//       kDebug() << rect << pos;
       if (!(pos.x() > rect.width()) &&
           pos.y() < rect.height() &&
           pos.x() >= 0 && pos.y() >= 0) {
@@ -67,6 +67,21 @@ void KpkCheckableHeader::paintSection(QPainter *painter, const QRect &rect, int 
     }
 }
 
+QSize KpkCheckableHeader::sizeHint() const
+{
+    const QStyle *style = QApplication::style();
+    QStyleOptionButton option;
+    QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
+
+    QSize size = QHeaderView::sizeHint();
+//     kDebug() << size << rect;
+    if (size.height() < rect.height()) {
+        size.setHeight(rect.height() + 4);
+    }
+//     kDebug() << size;
+    return size;
+}
+
 void KpkCheckableHeader::mouseMoveEvent(QMouseEvent *event)
 {
     headerDataChanged(Qt::Horizontal, 0, 0);
@@ -77,7 +92,7 @@ void KpkCheckableHeader::leaveEvent(QEvent *event)
 {
     headerDataChanged(Qt::Horizontal, 0, 0);
     QHeaderView::leaveEvent(event);
-    kDebug();
+//     kDebug();
 }
 
 void KpkCheckableHeader::mousePressEvent(QMouseEvent *event)
@@ -91,6 +106,7 @@ void KpkCheckableHeader::mousePressEvent(QMouseEvent *event)
         } else {
             m_state = Qt::Checked;
         }
+        emit toggled(m_state);
         headerDataChanged(Qt::Horizontal, 0, 0);
     } else {
         QHeaderView::mousePressEvent(event);
@@ -100,6 +116,11 @@ void KpkCheckableHeader::mousePressEvent(QMouseEvent *event)
 void KpkCheckableHeader::setCheckState(Qt::CheckState state)
 {
     m_state = state;
+}
+
+void KpkCheckableHeader::setEnabled(bool enabled)
+{
+    m_enabled = enabled;
 }
 
 #include "KpkCheckableHeader.moc"

@@ -27,8 +27,9 @@
 
 using namespace PackageKit;
 
-class KpkPackageModel;
-class KpkDelegate;
+class KpkUpdatePackageModel;
+class KpkUpdateDelegate;
+class KpkCheckableHeader;
 class KProgressDialog;
 class KcmKpkUpdate : public KCModule, Ui::KcmKpkUpdate
 {
@@ -44,7 +45,6 @@ public slots:
     void save();
 
 private slots:
-    void on_selectAllPB_clicked();
     void on_refreshPB_clicked();
     void on_historyPB_clicked();
 
@@ -56,7 +56,7 @@ private slots:
     void updatePackages();
     void requeueUpdate();
 
-    void updateColumnsWidth(bool force = false);
+//     void updateColumnsWidth(bool force = false);
     void on_packageView_pressed(const QModelIndex &index);
 
     void checkEnableUpdateButton();
@@ -65,16 +65,16 @@ private slots:
 
 private:
     bool m_selected;
-    KpkPackageModel *m_pkg_model_updates;
-
-    KpkDelegate *pkg_delegate;
+    KpkUpdatePackageModel *m_pkg_model_updates;
+    KpkUpdateDelegate *pkg_delegate;
+    KpkCheckableHeader *m_header;
     Client *m_client;
     Transaction *m_updatesT;
     Enum::Roles m_roles;
 
-protected:
-    virtual void resizeEvent(QResizeEvent *event);
-    virtual bool event(QEvent *event);
+// protected:
+//     virtual void resizeEvent(QResizeEvent *event);
+//     virtual bool event(QEvent *event);
 };
 
 #endif

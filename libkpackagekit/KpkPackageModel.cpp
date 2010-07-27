@@ -274,6 +274,14 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         switch(index.column()) {
         case 0:
             switch(role) {
+            case CheckedRole:
+                if (m_groups[group].size() == checkedGroupCount(group)) {
+                    return Qt::Checked;
+                } else if (checkedGroupCount(group) == 0) {
+                    return Qt::Unchecked;
+                } else {
+                    return Qt::PartiallyChecked;
+                }
             case NameRole:
                 return KpkStrings::infoUpdate(group,
                                               m_groups.value(group).size(),
@@ -409,7 +417,7 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
 
 Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 {
-    if (index.column() == 1) {
+//     if (index.column() == 1) {
         if (package(index)) {
             if (package(index)->info() == Enum::InfoBlocked) {
                 return QAbstractItemModel::flags(index);
@@ -421,8 +429,8 @@ Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
         } else {
             return Qt::ItemIsUserCheckable | Qt::ItemIsTristate | QAbstractItemModel::flags(index);
         }
-    }
-    return QAbstractItemModel::flags(index);
+//     }
+//     return QAbstractItemModel::flags(index);
 }
 
 int KpkPackageModel::columnCount(const QModelIndex &parent) const

@@ -2,7 +2,23 @@ project(KPackageKit)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
+# Only for Debian based systems
+option(DEBCONF_SUPPORT "Build KPackageKit with debconf support" OFF)
+
 find_package(KDE4 REQUIRED)
+include (MacroLibrary)
+
+if (DEBCONF_SUPPORT)
+    # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
+    find_package(DebconfKDE REQUIRED)
+    macro_bool_to_01(DebconfKDE_FOUND HAVE_DEBCONFKDE)
+    macro_log_feature(DebconfKDE_FOUND "DebconfKDE" "The KDE frontend for debconf" "http://websvn.kde.org" FALSE "" "Library used for showing debconf questions.")
+    message(STATUS "DebconfKDE_FOUND " ${HAVE_DEBCONFKDE})
+endif (DEBCONF_SUPPORT)
+
+# Generate config.h
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 include(FindPkgConfig)
 pkg_check_modules(QPACKAGEKIT REQUIRED packagekit-qt>=0.6.3)

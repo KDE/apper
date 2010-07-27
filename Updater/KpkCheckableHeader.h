@@ -29,8 +29,14 @@ Q_OBJECT
 public:
     KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
 
+    QSize sizeHint() const;
+
 public slots:
     void setCheckState(Qt::CheckState state);
+    void setEnabled(bool enabled);
+
+signals:
+    void toggled(bool checked);
 
 protected:
     void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const;
@@ -40,6 +46,7 @@ protected:
 
 private:
     Qt::CheckState m_state;
+    bool m_enabled;
 };
 
 #endif
