@@ -24,6 +24,7 @@
 #include "KpkDistroUpgrade.h"
 #include "KpkHistory.h"
 #include "KpkMacros.h"
+#include "KpkCheckableHeader.h"
 #include <version.h>
 
 #include <KGenericFactory>
@@ -72,6 +73,9 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     Client::instance()->setHints("locale=" + locale);
 
     //initialize the model, delegate, client and  connect it's signals
+    KpkCheckableHeader *header = new KpkCheckableHeader(Qt::Horizontal, this);
+    header->setCheckState(Qt::PartiallyChecked);
+    packageView->setHeader(header);
     packageView->setItemDelegate(pkg_delegate = new KpkDelegate(packageView));
     packageView->setModel(m_pkg_model_updates = new KpkPackageModel(this, packageView));
     m_pkg_model_updates->setGrouped(true);
