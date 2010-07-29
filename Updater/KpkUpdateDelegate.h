@@ -39,24 +39,19 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    int columnWidth(int column, int viewWidth) const;
-
     bool editorEvent(QEvent *event,
                      QAbstractItemModel *model,
                      const QStyleOptionViewItem &option,
                      const QModelIndex &index);
 
-// public slots:
-//     void closeExpandableDetails(const QModelIndex &index = QModelIndex());
-//     void itemActivated(const QModelIndex &index);
+signals:
+    void showExtendItem(const QModelIndex &index);
 
 private:
-    KIcon m_addIcon;
-    KIcon m_removeIcon;
-    KIcon m_pkgRemove;
-    KIcon m_pkgDownload;
-
     int calcItemHeight(const QStyleOptionViewItem &option) const;
+
+    KIcon m_packageIcon;
+    int m_extendPixmapWidth;
 };
 
 #endif

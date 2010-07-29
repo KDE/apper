@@ -14,6 +14,7 @@ set(libkpk_SRCS
     KpkAbstractIsRunning.cpp
     KpkImportance.cpp
     KpkSimulateModel.cpp
+    KpkSearchableTreeView.cpp
 )
 
 kde4_add_ui_files(libkpk_SRCS

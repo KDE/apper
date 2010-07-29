@@ -57,7 +57,7 @@ private slots:
     void requeueUpdate();
 
 //     void updateColumnsWidth(bool force = false);
-    void on_packageView_pressed(const QModelIndex &index);
+    void showExtendItem(const QModelIndex &index);
 
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Enum::Error error, const QString &details);

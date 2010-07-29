@@ -26,6 +26,7 @@
 #include <KDebug>
 #include <KpkIcons.h>
 #include <KLocale>
+#include "KpkUpdateDelegate.h"
 
 using namespace PackageKit;
 
@@ -81,15 +82,8 @@ QModelIndex KpkUpdatePackageModel::index(int row, int column, const QModelIndex 
 
 QModelIndex KpkUpdatePackageModel::parent(const QModelIndex &index) const
 {
-    if (!index.isValid())
-        return QModelIndex();
-
-//     PackageKit::Package *p = static_cast<PackageKit::Package *>(index.internalPointer());
-//     if (p) {
-//         return createIndex(m_groups.keys().indexOf(p->info()), 0);
-//     } else {
-        return QModelIndex();
-//     }
+    Q_UNUSED(index)
+    return QModelIndex();
 }
 
 //TODO: Make this not hideous.
@@ -102,12 +96,16 @@ QVariant KpkUpdatePackageModel::data(const QModelIndex &index, int role) const
     PackageKit::Package *pkg = static_cast<PackageKit::Package*>(index.internalPointer());
     if (pkg) {
         switch (role) {
-        case NameRole:
-            return pkg->name() + " - " + pkg->version() + (pkg->arch().isNull() ? NULL : " (" + pkg->arch() + ')');
+        case Qt::DisplayRole:
+            if (property("kbd").toBool()) {
+                return pkg->name();
+            } else {
+                return QVariant();
+            }
         case IconRole:
             return KpkIcons::packageIcon(pkg->info());;
-        case SummaryRole:
-            return pkg->summary();
+        case SortRole:
+            return pkg->name() + ' ' + pkg->version() + ' ' + pkg->arch();
         case Qt::CheckStateRole:
             if (containsChecked(pkg->id())) {
                 return Qt::Checked;
@@ -115,6 +113,18 @@ QVariant KpkUpdatePackageModel::data(const QModelIndex &index, int role) const
             return Qt::Unchecked;
         case IdRole:
             return pkg->id();
+        case KExtendableItemDelegate::ShowExtensionIndicatorRole:
+            return true;
+        case NameRole:
+            return pkg->name();
+        case SummaryRole:
+            return pkg->summary();
+        case VersionRole:
+            return pkg->version();
+        case ArchRole:
+            return pkg->arch();
+        case IconPathRole:
+            return pkg->iconPath();
         default:
             return QVariant();
         }
@@ -235,11 +245,6 @@ void KpkUpdatePackageModel::setAllChecked(bool checked)
 QList<QSharedPointer<PackageKit::Package> > KpkUpdatePackageModel::selectedPackages() const
 {
     return m_checkedPackages.values();
-}
-
-QList<QSharedPointer<PackageKit::Package> > KpkUpdatePackageModel::packagesWithInfo(Enum::Info info) const
-{
-//     return m_groups[info];
 }
 
 bool KpkUpdatePackageModel::allSelected() const

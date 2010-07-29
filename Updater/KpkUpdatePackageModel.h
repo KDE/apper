@@ -46,7 +46,6 @@ public:
 
     bool allSelected() const;
     QList<QSharedPointer<PackageKit::Package> > selectedPackages() const;
-    QList<QSharedPointer<PackageKit::Package> > packagesWithInfo(Enum::Info) const;
     void removePackage(QSharedPointer<PackageKit::Package>package);
     QSharedPointer<PackageKit::Package> package(const QModelIndex &index) const;
     void clear();
@@ -57,10 +56,13 @@ public:
     bool isGrouped() const;
 
     enum {
-        NameRole = Qt::UserRole,
+        SortRole = Qt::UserRole,
+        NameRole,
         SummaryRole,
-        InstalledRole,
+        VersionRole,
+        ArchRole,
         IconRole,
+        IconPathRole,
         IdRole,
         StateRole
     };

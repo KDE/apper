@@ -18,37 +18,21 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_CHECKABLE_HEADER_H
-#define KPK_CHECKABLE_HEADER_H
+#include "KpkSearchableTreeView.h"
 
-#include <QHeaderView>
+#include <KDebug>
 
-class KpkCheckableHeader : public QHeaderView
+KpkSearchableTreeView::KpkSearchableTreeView(QWidget *parent)
+ : QTreeView(parent)
 {
-Q_OBJECT
-public:
-    KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
+}
 
-    QSize sizeHint() const;
+void KpkSearchableTreeView::keyboardSearch(const QString &search)
+{
+    // this hooks enable Qt::DisplayRole, search, and disable it
+    model()->setProperty("kbd", true);
+    QTreeView::keyboardSearch(search);
+    model()->setProperty("kbd", false);
+}
 
-public slots:
-    void setCheckState(Qt::CheckState state);
-    void setCheckBoxEnabled(bool enabled);
-
-signals:
-    void toggled(bool checked);
-
-protected:
-    void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const;
-    void mouseMoveEvent(QMouseEvent *event);
-    void leaveEvent(QEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-
-private:
-    bool insideCheckBox(const QRect &rect, const QPoint &pos) const;
-
-    Qt::CheckState m_state;
-    bool m_enabled;
-};
-
-#endif
+#include "KpkSearchableTreeView.moc"
