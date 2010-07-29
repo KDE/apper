@@ -22,6 +22,7 @@
 #define KPK_UPDATE_DETAILS_H
 
 #include <QPackageKit>
+#include <KPixmapSequenceOverlayPainter>
 
 #include "ui_KpkUpdateDetails.h"
 
@@ -40,6 +41,7 @@ private slots:
 
 private:
     Enum::Info m_info;
+    KPixmapSequenceOverlayPainter *m_busySeq;
 
     QString getLinkList(const QString &links) const;
 };

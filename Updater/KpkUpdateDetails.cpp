@@ -22,8 +22,10 @@
 
 #include <KpkStrings.h>
 
-#include <KDebug>
 #include <KMessageBox>
+#include <KPixmapSequence>
+
+#include <KDebug>
 
 KpkUpdateDetails::KpkUpdateDetails(QSharedPointer<PackageKit::Package>package, QWidget *parent)
  : QWidget(parent)
@@ -41,6 +43,12 @@ KpkUpdateDetails::KpkUpdateDetails(QSharedPointer<PackageKit::Package>package, Q
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 this, SLOT(updateDetailFinished()));
     }
+
+    m_busySeq = new KPixmapSequenceOverlayPainter(this);
+    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_busySeq->setWidget(descriptionKTB->viewport());
+    m_busySeq->start();
 }
 
 KpkUpdateDetails::~KpkUpdateDetails()
@@ -152,6 +160,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     description += "</table></tbody>";
     descriptionKTB->setHtml(description);
+    m_busySeq->stop();
 }
 
 QString KpkUpdateDetails::getLinkList(const QString &links) const

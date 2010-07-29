@@ -133,7 +133,7 @@ void KpkUpdateDelegate::paint(QPainter *painter,
 
     // Main icon
     QIcon icon;
-    
+
 
     if (pkgIconPath.isEmpty()) {
         icon = m_packageIcon;
@@ -175,24 +175,23 @@ void KpkUpdateDelegate::paint(QPainter *painter,
         pkgName = pkgName + " - " + pkgVersion + (pkgArch.isNull() ? NULL : " (" + pkgArch + ')');
     }
     // draw the top line
+    int topTextHeight = QFontInfo(local_option_title.font).pixelSize();
     p.setFont(local_option_title.font);
     p.drawText(leftCount,
-                top + UNIVERSAL_PADDING,
-                textWidth,
-                itemHeight / 2,
-                Qt::AlignBottom | Qt::AlignLeft,
-                pkgName);
+               top + UNIVERSAL_PADDING,
+               textWidth,
+               topTextHeight,
+               Qt::AlignVCenter | Qt::AlignLeft,
+               pkgName);
 
     // draw the bottom line
-    int topTextHeight = QFontInfo(local_option_title.font).pixelSize();
-
-    iconSize = (calcItemHeight(option) - 2 * UNIVERSAL_PADDING)/2;
+    iconSize = topTextHeight + UNIVERSAL_PADDING;
     updateIcon.paint(&p,
                      leftToRight ? leftCount : textWidth - iconSize,
-                     top + topTextHeight + 2 * UNIVERSAL_PADDING,
+                     top + topTextHeight + UNIVERSAL_PADDING,
                      iconSize,
                      iconSize,
-                     Qt::AlignCenter,
+                     Qt::AlignVCenter | Qt::AlignHCenter,
                      iconMode);
 
     // store the original opacity
@@ -202,11 +201,11 @@ void KpkUpdateDelegate::paint(QPainter *painter,
     }
 
     p.setFont(local_option_normal.font);
-    p.drawText(leftToRight ? leftCount + iconSize : left,
+    p.drawText(leftToRight ? leftCount + iconSize + UNIVERSAL_PADDING : left - UNIVERSAL_PADDING,
                top + topTextHeight + 2 * UNIVERSAL_PADDING,
                textWidth - iconSize,
-               itemHeight / 2,
-               Qt::AlignTop | Qt::AlignLeft,
+               QFontInfo(local_option_normal.font).pixelSize(),
+               Qt::AlignVCenter | Qt::AlignLeft,
                pkgSummary);
     p.setOpacity(opa);
 

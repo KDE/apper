@@ -20,6 +20,7 @@
 
 #include "KpkSearchableTreeView.h"
 
+#include <QSortFilterProxyModel>
 #include <KDebug>
 
 KpkSearchableTreeView::KpkSearchableTreeView(QWidget *parent)
@@ -30,9 +31,10 @@ KpkSearchableTreeView::KpkSearchableTreeView(QWidget *parent)
 void KpkSearchableTreeView::keyboardSearch(const QString &search)
 {
     // this hooks enable Qt::DisplayRole, search, and disable it
-    model()->setProperty("kbd", true);
+    QSortFilterProxyModel *proxy = qobject_cast<QSortFilterProxyModel*>(model());
+    proxy->sourceModel()->setProperty("kbd", true);
     QTreeView::keyboardSearch(search);
-    model()->setProperty("kbd", false);
+    proxy->sourceModel()->setProperty("kbd", false);
 }
 
 #include "KpkSearchableTreeView.moc"
