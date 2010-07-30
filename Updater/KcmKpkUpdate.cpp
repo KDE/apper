@@ -60,7 +60,7 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
     setAboutData(aboutData);
-    setButtons(Apply);
+//     setButtons(Apply);
     KGlobal::locale()->insertCatalog("kpackagekit");
 
     m_selected = !args.isEmpty();
@@ -84,11 +84,13 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortRole(KpkUpdatePackageModel::SortRole);
     packageView->setHeader(m_header);
-    packageView->setItemDelegate(pkg_delegate = new KpkUpdateDelegate(packageView));
+    packageView->setItemDelegate(m_delegate = new KpkUpdateDelegate(packageView));
     packageView->setModel(proxyModel);
     packageView->sortByColumn(0, Qt::AscendingOrder);
-    connect(pkg_delegate, SIGNAL(showExtendItem(const QModelIndex &)),
+    connect(m_delegate, SIGNAL(showExtendItem(const QModelIndex &)),
             this, SLOT(showExtendItem(const QModelIndex &)));
+    connect(m_header, SIGNAL(sectionClicked(int)),
+            this, SLOT(contractAll()));
     connect(m_header, SIGNAL(toggled(bool)),
             m_pkg_model_updates, SLOT(setAllChecked(bool)));
     connect(m_pkg_model_updates, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
@@ -105,9 +107,6 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
     line->hide();
-
-//     KPixmapSequenceWidget *foo = new KPixmapSequenceWidget(this);
-//     foo->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
 }
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
@@ -158,27 +157,27 @@ void KcmKpkUpdate::save()
         selectedPackages = m_pkg_model_updates->selectedPackages();
         Transaction *t = m_client->simulateUpdatePackages(selectedPackages);
         if (t->error()) {
-                KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+            KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-                KpkSimulateModel *simulateModel = new KpkSimulateModel(this, selectedPackages);
-                connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                        simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            KpkSimulateModel *simulateModel = new KpkSimulateModel(this, selectedPackages);
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
 
-                // Create a Transaction dialog to don't upset the user
-                QPointer<KpkTransaction> reqFinder = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-                reqFinder->exec();
-                if (reqFinder->exitStatus() == KpkTransaction::Success) {
-                    if (simulateModel->rowCount(QModelIndex()) > 0) {
-                        QPointer<KpkRequirements> rq = new KpkRequirements(simulateModel, this);
-                        if (rq->exec() == QDialog::Accepted) {
-                            updatePackages();
-                        }
-                        delete rq;
-                    } else {
+            // Create a Transaction dialog to don't upset the user
+            QPointer<KpkTransaction> reqFinder = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
+            reqFinder->exec();
+            if (reqFinder->exitStatus() == KpkTransaction::Success) {
+                if (simulateModel->rowCount() > 0) {
+                    QPointer<KpkRequirements> rq = new KpkRequirements(simulateModel, this);
+                    if (rq->exec() == QDialog::Accepted) {
                         updatePackages();
                     }
+                    delete rq;
+                } else {
+                    updatePackages();
                 }
-                delete reqFinder;
+            }
+            delete reqFinder;
         }
     } else {
         updatePackages();
@@ -214,7 +213,7 @@ void KcmKpkUpdate::updatePackages()
 void KcmKpkUpdate::getUpdates()
 {
     // contract to delete all update details widgets
-    pkg_delegate->contractAll();
+    m_delegate->contractAll();
 
     // clears the model
     m_pkg_model_updates->clear();
@@ -286,10 +285,10 @@ void KcmKpkUpdate::showExtendItem(const QModelIndex &index)
     QSharedPointer<PackageKit::Package> p = m_pkg_model_updates->package(index);
     // check to see if the backend support
     if (p && (m_roles & Enum::RoleGetUpdateDetail)) {
-        if (pkg_delegate->isExtended(index)) {
-            pkg_delegate->contractItem(index);
+        if (m_delegate->isExtended(index)) {
+            m_delegate->contractItem(index);
         } else {
-            pkg_delegate->extendItem(new KpkUpdateDetails(p), index);
+            m_delegate->extendItem(new KpkUpdateDetails(p), index);
         }
     }
 }
@@ -299,6 +298,13 @@ void KcmKpkUpdate::on_historyPB_clicked()
     QPointer<KpkHistory> frm = new KpkHistory(this);
     frm->exec();
     delete frm;
+}
+
+void KcmKpkUpdate::contractAll()
+{
+    // This is a HACK so that the extenders don't stay visible when
+    // the user sorts the view
+    m_delegate->contractAll();
 }
 
 void KcmKpkUpdate::errorCode(PackageKit::Enum::Error error, const QString &details)

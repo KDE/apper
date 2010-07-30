@@ -45,7 +45,7 @@ KcmKpkAddRm::KcmKpkAddRm(QWidget *parent, const QVariantList &args)
                                ki18n("(C) 2008-2009 Daniel Nicoletti"));
     KGlobal::locale()->insertCatalog("kpackagekit");
     setAboutData(aboutData);
-    setButtons(Apply);
+//     setButtons(Apply);
     m_grid = new QGridLayout(this);
     view = new KpkAddRm(this);
     connect(this, SIGNAL(s_load()), view, SLOT(load()));

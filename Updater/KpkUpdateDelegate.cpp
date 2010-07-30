@@ -20,10 +20,6 @@
 
 #include "KpkUpdateDelegate.h"
 
-// #include <cmath>
-
-// #include <QtCore/QtCore>
-
 #include <KDebug>
 #include <KIconLoader>
 #include "KpkUpdatePackageModel.h"
@@ -133,8 +129,6 @@ void KpkUpdateDelegate::paint(QPainter *painter,
 
     // Main icon
     QIcon icon;
-
-
     if (pkgIconPath.isEmpty()) {
         icon = m_packageIcon;
     } else {
@@ -178,9 +172,9 @@ void KpkUpdateDelegate::paint(QPainter *painter,
     int topTextHeight = QFontInfo(local_option_title.font).pixelSize();
     p.setFont(local_option_title.font);
     p.drawText(leftCount,
-               top + UNIVERSAL_PADDING,
+               top,
                textWidth,
-               topTextHeight,
+               topTextHeight + UNIVERSAL_PADDING,
                Qt::AlignVCenter | Qt::AlignLeft,
                pkgName);
 
@@ -202,10 +196,10 @@ void KpkUpdateDelegate::paint(QPainter *painter,
 
     p.setFont(local_option_normal.font);
     p.drawText(leftToRight ? leftCount + iconSize + UNIVERSAL_PADDING : left - UNIVERSAL_PADDING,
-               top + topTextHeight + 2 * UNIVERSAL_PADDING,
+               top + itemHeight / 2,
                textWidth - iconSize,
-               QFontInfo(local_option_normal.font).pixelSize(),
-               Qt::AlignVCenter | Qt::AlignLeft,
+               QFontInfo(local_option_normal.font).pixelSize() + UNIVERSAL_PADDING,
+               Qt::AlignTop | Qt::AlignLeft,
                pkgSummary);
     p.setOpacity(opa);
 

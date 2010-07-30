@@ -56,7 +56,7 @@ private slots:
     void updatePackages();
     void requeueUpdate();
 
-//     void updateColumnsWidth(bool force = false);
+    void contractAll();
     void showExtendItem(const QModelIndex &index);
 
     void checkEnableUpdateButton();
@@ -66,15 +66,11 @@ private slots:
 private:
     bool m_selected;
     KpkUpdatePackageModel *m_pkg_model_updates;
-    KpkUpdateDelegate *pkg_delegate;
+    KpkUpdateDelegate *m_delegate;
     KpkCheckableHeader *m_header;
     Client *m_client;
     Transaction *m_updatesT;
     Enum::Roles m_roles;
-
-// protected:
-//     virtual void resizeEvent(QResizeEvent *event);
-//     virtual bool event(QEvent *event);
 };
 
 #endif
