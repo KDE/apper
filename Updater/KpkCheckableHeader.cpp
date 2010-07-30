@@ -26,7 +26,7 @@
 
 #include <KDebug>
 
-#define UNIVERSAL_PADDING 5
+#define UNIVERSAL_PADDING 4
 
 KpkCheckableHeader::KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent)
  : QHeaderView(orientation, parent),
