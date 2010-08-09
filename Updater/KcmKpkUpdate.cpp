@@ -39,6 +39,7 @@
 #include <KpkSimulateModel.h>
 #include <KpkRequirements.h>
 #include <QSortFilterProxyModel>
+#include <QDBusConnection>
 
 #include <KMessageBox>
 #include <KDebug>
@@ -79,6 +80,7 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     m_header->setCheckBoxEnabled(false);
 
     m_pkg_model_updates = new KpkUpdatePackageModel(this, packageView);
+    m_pkg_model_updates->setCheckable(true);
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(m_pkg_model_updates);
     proxyModel->setDynamicSortFilter(true);
@@ -100,6 +102,13 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     m_client = Client::instance();
     connect(m_client, SIGNAL(updatesChanged()),
             this, SLOT(getUpdates()));
+
+    QDBusConnection::systemBus().connect(NULL,
+                                         "/org/freedesktop/PackageKit",
+                                         "org.freedesktop.PackageKit",
+                                         "UpdatesChanged",
+                                         this,
+                                         SLOT(getUpdates()));
 
     // check to see what roles the backend has
     m_roles = m_client->actions();
@@ -212,6 +221,7 @@ void KcmKpkUpdate::updatePackages()
 
 void KcmKpkUpdate::getUpdates()
 {
+    kDebug() << sender();
     // contract to delete all update details widgets
     m_delegate->contractAll();
 

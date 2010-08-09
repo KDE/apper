@@ -32,7 +32,8 @@ using namespace PackageKit;
 
 KpkUpdatePackageModel::KpkUpdatePackageModel(QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
-  m_packageView(packageView)
+  m_packageView(packageView),
+  m_checkable(false)
 {
 }
 
@@ -107,6 +108,10 @@ QVariant KpkUpdatePackageModel::data(const QModelIndex &index, int role) const
         case SortRole:
             return pkg->name() + ' ' + pkg->version() + ' ' + pkg->arch();
         case Qt::CheckStateRole:
+            if (!m_checkable) {
+                return QVariant();
+            }
+        case CheckStateRole:
             if (containsChecked(pkg->id())) {
                 return Qt::Checked;
             }
@@ -125,6 +130,8 @@ QVariant KpkUpdatePackageModel::data(const QModelIndex &index, int role) const
             return pkg->arch();
         case IconPathRole:
             return pkg->iconPath();
+        case InstalledRole:
+            return pkg->info() == Enum::InfoInstalled;
         default:
             return QVariant();
         }
@@ -216,7 +223,7 @@ void KpkUpdatePackageModel::addPackage(QSharedPointer<PackageKit::Package> packa
 void KpkUpdatePackageModel::removePackage(QSharedPointer<PackageKit::Package> package)
 {
     beginRemoveRows(QModelIndex(), m_packages.size() - 1, m_packages.size() - 1);
-    m_packages.removeOne(package);
+    m_packages.remove(m_packages.indexOf(package));
     endRemoveRows();
 }
 
@@ -255,4 +262,9 @@ bool KpkUpdatePackageModel::allSelected() const
         }
     }
     return true;
+}
+
+void KpkUpdatePackageModel::setCheckable(bool checkable)
+{
+    m_checkable = checkable;
 }

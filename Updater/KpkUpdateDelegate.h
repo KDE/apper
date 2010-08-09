@@ -27,6 +27,8 @@
 
 #include <KIcon>
 
+#include <QPackageKit>
+
 /**
  * Delegate for displaying the packages
  */
@@ -49,9 +51,15 @@ signals:
 
 private:
     int calcItemHeight(const QStyleOptionViewItem &option) const;
+    bool insideButton(const QRect &rect, const QPoint &pos) const;
 
     KIcon m_packageIcon;
-    int m_extendPixmapWidth;
+    KIcon m_installIcon;
+    KIcon m_removeIcon;
+    KIcon m_undoIcon;
+    int   m_extendPixmapWidth;
+    QSize m_buttonSize;
+    QSize m_buttonIconSize;
 };
 
 #endif

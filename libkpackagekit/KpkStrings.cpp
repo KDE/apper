@@ -647,7 +647,7 @@ QString KpkStrings::groups(Enum::Group group)
     case Enum::GroupOffice :
         return i18nc("The group type", "Office");
     case Enum::GroupOther :
-        return i18nc("The group type", "Other");
+        return i18nc("The group type", "Others");
     case Enum::GroupProgramming :
         return i18nc("The group type", "Development");
     case Enum::GroupMultimedia :

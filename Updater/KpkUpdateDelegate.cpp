@@ -22,6 +22,8 @@
 
 #include <KDebug>
 #include <KIconLoader>
+#include <KLocale>
+
 #include "KpkUpdatePackageModel.h"
 #include "KpkIcons.h"
 
@@ -32,10 +34,13 @@
 #define MAIN_ICON_SIZE 32
 
 KpkUpdateDelegate::KpkUpdateDelegate(QAbstractItemView *parent)
-  : KExtendableItemDelegate(parent)
-{
+  : KExtendableItemDelegate(parent),
     // loads it here to be faster when displaying items
-    m_packageIcon = KIcon("package");
+    m_packageIcon("package"),
+    m_installIcon("go-down"),
+    m_removeIcon("edit-delete"),
+    m_undoIcon("edit-undo")
+{
     // maybe rename or copy it to package-available
     if (QApplication::isRightToLeft()) {
         setExtendPixmap(SmallIcon("arrow-left"));
@@ -45,6 +50,18 @@ KpkUpdateDelegate::KpkUpdateDelegate(QAbstractItemView *parent)
     setContractPixmap(SmallIcon("arrow-down"));
     // store the size of the extend pixmap to know how much we should move
     m_extendPixmapWidth = SmallIcon("arrow-right").size().width();
+
+    QPushButton button, button2;
+    button.setText(i18n("Install"));
+    button.setIcon(m_installIcon);
+    button2.setText(i18n("Remove"));
+    button2.setIcon(m_removeIcon);
+    m_buttonSize = button.sizeHint();
+    int width = qMax(button.sizeHint().width(), button2.sizeHint().width());
+    button.setText(i18n("Unmark"));
+    width = qMax(width, button2.sizeHint().width());
+    m_buttonSize.setWidth(width);
+    m_buttonIconSize = button.iconSize();
 }
 
 void KpkUpdateDelegate::paint(QPainter *painter,
@@ -63,11 +80,14 @@ void KpkUpdateDelegate::paint(QPainter *painter,
     painter->restore();
 
     //grab the package from the index pointer
-    QString pkgName     = index.data(KpkUpdatePackageModel::NameRole).toString();
-    QString pkgSummary  = index.data(KpkUpdatePackageModel::SummaryRole).toString();
-    QString pkgVersion  = index.data(KpkUpdatePackageModel::VersionRole).toString();
-    QString pkgArch     = index.data(KpkUpdatePackageModel::ArchRole).toString();
-    QString pkgIconPath = index.data(KpkUpdatePackageModel::IconPathRole).toString();
+    QString pkgName      = index.data(KpkUpdatePackageModel::NameRole).toString();
+    QString pkgSummary   = index.data(KpkUpdatePackageModel::SummaryRole).toString();
+    QString pkgVersion   = index.data(KpkUpdatePackageModel::VersionRole).toString();
+    QString pkgArch      = index.data(KpkUpdatePackageModel::ArchRole).toString();
+    QString pkgIconPath  = index.data(KpkUpdatePackageModel::IconPathRole).toString();
+    bool    pkgInstalled = index.data(KpkUpdatePackageModel::InstalledRole).toBool();
+    bool    pkgChecked   = index.data(KpkUpdatePackageModel::CheckStateRole).toBool();
+    bool    pkgCheckable = !index.data(Qt::CheckStateRole).isNull();
 
     // update kind icon
     QIcon updateIcon = index.data(KpkUpdatePackageModel::IconRole).value<QIcon>();
@@ -75,37 +95,57 @@ void KpkUpdateDelegate::paint(QPainter *painter,
     // pain the background (checkbox and the extender)
     KExtendableItemDelegate::paint(painter, opt, index);
 
-    if (!leftToRight) {
-        opt.rect.setRight(option.rect.right() - m_extendPixmapWidth);
+    int leftCount;
+    if (leftToRight) {
+        opt.rect.setLeft(option.rect.left() + m_extendPixmapWidth + UNIVERSAL_PADDING);
+        leftCount = opt.rect.left();
     } else {
-        opt.rect.setLeft(option.rect.left() + m_extendPixmapWidth);
+        opt.rect.setRight(option.rect.right() - m_extendPixmapWidth - UNIVERSAL_PADDING);
+        leftCount = opt.rect.width();
     }
 
     int left = opt.rect.left();
-    int leftCount;
     int top = opt.rect.top();
     int width = opt.rect.width();
 
     QStyleOptionButton optBt;
-    optBt.rect = option.rect;
-    if (leftToRight) {
-        // Fisrt the left is increased by the universal pading
-        leftCount = left + UNIVERSAL_PADDING;
-        optBt.rect.setLeft(leftCount);
-        // add the checkbox element to the left count
-        leftCount += style->subElementRect(QStyle::SE_CheckBoxIndicator, &opt).width() + UNIVERSAL_PADDING;
+    optBt.rect = opt.rect;
+    if (pkgCheckable) {
+        optBt.rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &optBt);
     } else {
-        leftCount = left + (width - UNIVERSAL_PADDING);
-        optBt.rect.setRight(leftCount);
-        // now remove the element from the left count
-        leftCount -= style->subElementRect(QStyle::SE_CheckBoxIndicator, &opt).width() + UNIVERSAL_PADDING + MAIN_ICON_SIZE;
+        if (!leftToRight) {
+            optBt.rect.setLeft(leftCount - m_buttonSize.width());
+        }
+        // Calculate the top of the button which is the item height - the button height size divided by 2
+        // this give us a little value which is the top and bottom margin
+        optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
+        optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
+        if (option.state & QStyle::State_MouseOver) {
+//                 if ()
+            QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+            QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
+            kDebug() << optBt.rect << pos << insideButton(optBt.rect, pos);
+//             insideCheckBox(rect, pos);
+            optBt.state |= QStyle::State_MouseOver;
+        }
+        optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
+        optBt.iconSize = m_buttonIconSize;
+        if (pkgChecked) {
+            optBt.text = i18n("Unmark");
+            optBt.icon = m_undoIcon;
+        } else {
+            optBt.icon = pkgInstalled ? m_installIcon : m_removeIcon;
+            optBt.text = pkgInstalled ? i18n("Install") : i18n("Remove");
+        }
+        style->drawControl(QStyle::CE_PushButton, &optBt, painter);
     }
 
-    optBt.rect.setHeight(calcItemHeight(option));
-
-    // draw item data as CheckBox
-//     style->drawControl(QStyle::CE_CheckBox, &opt, painter);
-
+    // Count the button size
+    if (leftToRight) {
+        leftCount += optBt.rect.width() + UNIVERSAL_PADDING;
+    } else {
+        leftCount -= optBt.rect.width() + UNIVERSAL_PADDING + MAIN_ICON_SIZE;
+    }
 
     // selects the mode to paint the icon based on the info field
     QIcon::Mode iconMode = QIcon::Normal;
@@ -154,8 +194,6 @@ void KpkUpdateDelegate::paint(QPainter *painter,
         textWidth = leftCount - left;
         leftCount = left;
     }
-
-
 
 
     // Painting
@@ -258,13 +296,23 @@ int KpkUpdateDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
     return textHeight + 3 * UNIVERSAL_PADDING;
 }
 
+bool KpkUpdateDelegate::insideButton(const QRect &rect, const QPoint &pos) const
+{
+//     kDebug() << rect << pos;
+    if ((pos.x() >= rect.x() && (pos.x() <= rect.x() + rect.width())) &&
+        (pos.y() >= rect.y() && (pos.y() <= rect.y() + rect.height()))) {
+        return true;
+    }
+    return false;
+}
+
 bool KpkUpdateDelegate::editorEvent(QEvent *event,
                                     QAbstractItemModel *model,
                                     const QStyleOptionViewItem &option,
                                     const QModelIndex &index)
 {
     Q_UNUSED(option)
-    if (event->type() == QEvent::MouseButtonPress) {
+    if (event->type() == QEvent::MouseButtonRelease) {
         QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
         QPoint point = view->viewport()->mapFromGlobal(QCursor::pos());
 //         kDebug() << point << option.rect.left() << option;

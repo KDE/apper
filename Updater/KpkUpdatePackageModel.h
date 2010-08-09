@@ -50,10 +50,10 @@ public:
     QSharedPointer<PackageKit::Package> package(const QModelIndex &index) const;
     void clear();
 
+    void setCheckable(bool checkable);
+
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
-
-    bool isGrouped() const;
 
     enum {
         SortRole = Qt::UserRole,
@@ -64,7 +64,8 @@ public:
         IconRole,
         IconPathRole,
         IdRole,
-        StateRole
+        CheckStateRole,
+        InstalledRole
     };
 
 public slots:
@@ -78,9 +79,9 @@ private:
     void uncheckPackage(const QSharedPointer<PackageKit::Package> package);
 
     QAbstractItemView *m_packageView;
-    QList<QSharedPointer<PackageKit::Package> > m_packages;
+    QVector<QSharedPointer<PackageKit::Package> > m_packages;
     QHash<QString, QSharedPointer<PackageKit::Package> > m_checkedPackages;
-
+    bool m_checkable;
 };
 
 #endif

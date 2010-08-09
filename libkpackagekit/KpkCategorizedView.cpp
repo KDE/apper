@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009 by Rafael FernÃ¡ndez LÃ³pez <ereslibre@kde.org>      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -13,31 +12,32 @@
  *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU General Public License     *
- *   along with this program; see the file COPYING. If not, write to       *
- *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
- *   Boston, MA 02110-1301, USA.                                           *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA          *
  ***************************************************************************/
 
-#ifndef KPK_FILTERS_MENU_H
-#define KPK_FILTERS_MENU_H
+#include "KpkCategorizedView.h"
 
-#include <QMenu>
-#include <QPackageKit>
+#include <KFileItemDelegate>
 
-using namespace PackageKit;
-
-class KpkFiltersMenu : public QMenu
+KpkCategorizedView::KpkCategorizedView(QWidget *parent)
+    : KCategorizedView(parent)
 {
-Q_OBJECT
-public:
-    KpkFiltersMenu(Enum::Filters filters, QWidget *parent = 0);
-    ~KpkFiltersMenu();
+    setWordWrap(true);
+}
 
-    Enum::Filters filters() const;
-
-private:
-    QList<QAction*> m_actions;
-    QHash<QAction *, Enum::Filter> m_filtersAction;
-};
-
-#endif
+void KpkCategorizedView::setModel(QAbstractItemModel *model)
+{
+    KCategorizedView::setModel(model);
+    int maxWidth = -1;
+    int maxHeight = -1;
+    for (int i = 0; i < model->rowCount(); ++i) {
+        const QModelIndex index = model->index(i, modelColumn(), rootIndex());
+        const QSize size = sizeHintForIndex(index);
+        maxWidth = qMax(maxWidth, size.width());
+        maxHeight = qMax(maxHeight, size.height());
+    }
+    setGridSize(QSize(maxWidth, maxHeight ));
+    static_cast<KFileItemDelegate*>(itemDelegate())->setMaximumSize(QSize(maxWidth, maxHeight));
+}

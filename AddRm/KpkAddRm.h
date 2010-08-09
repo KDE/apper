@@ -43,6 +43,12 @@ public:
     KpkAddRm(QWidget *parent = 0);
     ~KpkAddRm();
 
+    enum ItemType {
+        AllPackages = Qt::UserRole + 1,
+        ListOfChanges,
+        Group
+    };
+
 signals:
     void changed(bool state);
 
@@ -53,11 +59,14 @@ public slots:
 private slots:
     void genericActionKTriggered();
 
+    void on_backTB_clicked();
+    void on_tabWidget_currentChanged(int index);
+
     void on_actionFindName_triggered();
     void on_actionFindDescription_triggered();
     void on_actionFindFile_triggered();
 
-    void on_groupsCB_currentIndexChanged(int index);
+    void on_homeView_activated(const QModelIndex &index);
     void on_packageView_pressed(const QModelIndex &index);
 
     void finished(PackageKit::Enum::Exit status, uint runtime);
@@ -70,47 +79,36 @@ private slots:
 
 private:
     void setCurrentActionEnabled(bool state);
-
-    QMenu *m_findMenu;
-
-    QToolBar *toolBar;
-    KToolBarPopupAction *m_genericActionK;
-    QAction *m_currentAction;
     void setCurrentAction(QAction *action);
     void setCurrentActionCancel(bool cancel);
-    bool m_mTransRuning;//main trans
-    KpkPackageModel *m_pkg_model_main;
-    KpkDelegate *pkg_delegate;
-
-    enum ItemType {
-        AllPackages = Qt::UserRole + 1,
-        ListOfChanges,
-        Group
-    };
-    QStandardItemModel *m_groupsModel;
-    QStandardItem *listOfChangesItem;
-
-    Client *m_client;
-    Transaction *m_pkClient_main;
-
-    QMenu *m_filtersQM;
-    KIcon m_findIcon;
-    KIcon m_cancelIcon;
-    KIcon m_filterIcon;
-
-    KpkFiltersMenu *m_filtersMenu;
 
     void updateColumnsWidth(bool force = false);
     void setActionCancel(bool enabled);
     void search();
     void connectTransaction(Transaction *transaction);
 
+    QStackedLayout *m_viewLayout;
+    KToolBarPopupAction *m_genericActionK;
+    QAction *m_currentAction;
+    bool m_mTransRuning;//main trans
+    QStandardItemModel *m_groupsModel;
+    KpkPackageModel    *m_packageModel;
+    KpkDelegate        *m_packageDelegate;
+    KpkPackageModel    *m_installedModel;
+
+    Client *m_client;
+    Transaction *m_pkClient_main;
+
+    KIcon m_findIcon;
+    KIcon m_cancelIcon;
+
+    KpkFiltersMenu *m_filtersMenu;
     Enum::Roles m_roles;
 
     // Old search cache
     Enum::Role    m_searchRole;
     QString       m_searchString;
-    Enum::Group m_searchGroup;
+    Enum::Group   m_searchGroup;
     Enum::Filters m_searchFilters;
 
 protected:

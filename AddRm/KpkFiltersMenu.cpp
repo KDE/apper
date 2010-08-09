@@ -240,19 +240,6 @@ KpkFiltersMenu::KpkFiltersMenu(Enum::Filters filters, QWidget *parent)
 
         m_actions << newest;
     }
-
-    addSeparator();
-
-    m_actionViewInGroups = new QAction(i18n("View in groups"), this);
-    m_actionViewInGroups->setCheckable(true);
-    addAction(m_actionViewInGroups);
-    m_actionViewInGroups->setToolTip(i18n("Display packages in groups according to status"));
-    if (filterMenuGroup.readEntry("ViewInGroups", false)) {
-        m_actionViewInGroups->setChecked(true);
-    }
-
-    connect(m_actionViewInGroups, SIGNAL(toggled(bool)),
-            this, SIGNAL(grouped(bool)));
 }
 
 KpkFiltersMenu::~KpkFiltersMenu()
@@ -276,11 +263,5 @@ Enum::Filters KpkFiltersMenu::filters() const
     }
     return filters;
 }
-
-bool KpkFiltersMenu::actionGrouped() const
-{
-    return m_actionViewInGroups->isChecked();
-}
-
 
 #include "KpkFiltersMenu.moc"

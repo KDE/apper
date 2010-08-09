@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009 by Rafael FernÃ¡ndez LÃ³pez <ereslibre@kde.org>      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -13,31 +12,22 @@
  *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU General Public License     *
- *   along with this program; see the file COPYING. If not, write to       *
- *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
- *   Boston, MA 02110-1301, USA.                                           *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA          *
  ***************************************************************************/
 
-#ifndef KPK_FILTERS_MENU_H
-#define KPK_FILTERS_MENU_H
+#ifndef KPK_CATEGORIZEDVIEW_H
+#define KPK_CATEGORIZEDVIEW_H
 
-#include <QMenu>
-#include <QPackageKit>
+#include <KCategorizedView>
 
-using namespace PackageKit;
-
-class KpkFiltersMenu : public QMenu
+class KDE_EXPORT KpkCategorizedView : public KCategorizedView
 {
-Q_OBJECT
 public:
-    KpkFiltersMenu(Enum::Filters filters, QWidget *parent = 0);
-    ~KpkFiltersMenu();
+    KpkCategorizedView(QWidget *parent = 0);
 
-    Enum::Filters filters() const;
-
-private:
-    QList<QAction*> m_actions;
-    QHash<QAction *, Enum::Filter> m_filtersAction;
+    virtual void setModel(QAbstractItemModel *model);
 };
 
 #endif

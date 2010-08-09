@@ -25,6 +25,9 @@
 #include <KLocale>
 #include <KStandardDirs>
 #include <KMessageBox>
+#include <KFileItemDelegate>
+#include "CategoryDrawer.h"
+#include <KCategorizedSortFilterProxyModel>
 
 #include <QPalette>
 #include <QColor>
@@ -43,59 +46,68 @@
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 
 KpkAddRm::KpkAddRm(QWidget *parent)
- : QWidget(parent)
- , m_currentAction(0)
- , m_mTransRuning(false)
- , m_findIcon("edit-find")
- , m_cancelIcon("dialog-cancel")
- , m_filterIcon("view-filter")
+ : QWidget(parent),
+   m_currentAction(0),
+   m_mTransRuning(false),
+   m_installedModel(0),
+   m_findIcon("edit-find"),
+   m_cancelIcon("dialog-cancel")
 {
-    setupUi( this );
-
-    // create our toolbar
-    gridLayout_2->addWidget(toolBar = new QToolBar);
-    toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-
-    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Client::instance()->setHints("locale=" + locale);
+    setupUi(this);
 
     // Create a new daemon
     m_client = Client::instance();
+    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    m_client->setHints("locale=" + locale);
+    // store the actions supported by the backend
+    m_roles = m_client->actions();
+
+
+    // Browse TAB
+    backTB->setIcon(KIcon("go-previous"));
+
+    // create our toolbar
+    QToolBar *toolBar = new QToolBar(this);
+    gridLayout_2->addWidget(toolBar);
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+
+    m_viewLayout = new QStackedLayout(stackedWidget);
+    m_viewLayout->addWidget(homeView);
+    m_viewLayout->addWidget(packageView);
+
 
     //initialize the model, delegate, client and  connect it's signals
-    packageView->setItemDelegate(pkg_delegate = new KpkDelegate(packageView));
-    packageView->setModel(m_pkg_model_main = new KpkPackageModel(this, packageView));
+    packageView->setItemDelegate(m_packageDelegate = new KpkDelegate(packageView));
+    packageView->setModel(m_packageModel = new KpkPackageModel(this, packageView));
     packageView->viewport()->setAttribute(Qt::WA_Hover);
 
-    // check to see if the backend support these actions
-    m_roles = m_client->actions();
     // Connect this signal anyway so users that have backend that
     // do not support install or remove can be informed properly
-    connect(m_pkg_model_main, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+    connect(m_packageModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkChanged()));
 
-    m_findMenu = new QMenu(this);
+    QMenu *findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method
     m_genericActionK = new KToolBarPopupAction(m_findIcon, i18n("Find"), this);
     toolBar->addAction(m_genericActionK);
 
     // Add actions that the backend supports
     if (m_roles & Enum::RoleSearchName) {
-        m_findMenu->addAction(actionFindName);
+        findMenu->addAction(actionFindName);
         setCurrentAction(actionFindName);
     }
-    if (m_roles & Enum::RoleSearchDetails) {
-        m_findMenu->addAction(actionFindDescription);
-        if (!m_currentAction) {
-            setCurrentAction(actionFindDescription);
-        }
-    }
-    if (m_roles & Enum::RoleSearchFile) {
-        m_findMenu->addAction(actionFindFile);
-        if (!m_currentAction) {
-            setCurrentAction(actionFindFile);
-        }
-    }
+//     if (m_roles & Enum::RoleSearchDetails) {
+//         findMenu->addAction(actionFindDescription);
+//         if (!m_currentAction) {
+//             setCurrentAction(actionFindDescription);
+//         }
+//     }
+//     if (m_roles & Enum::RoleSearchFile) {
+//         findMenu->addAction(actionFindFile);
+//         if (!m_currentAction) {
+//             setCurrentAction(actionFindFile);
+//         }
+//     }
 
     // If no action was set we can't use this search
     if (m_currentAction == 0) {
@@ -104,9 +116,9 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     } else {
         // Check to see if we need the KToolBarPopupAction
         setCurrentActionCancel(false);
-        if (m_findMenu->actions().size() > 1) {
+        if (findMenu->actions().size() > 1) {
             m_currentAction->setVisible(false);
-            m_genericActionK->setMenu(m_findMenu);
+            m_genericActionK->setMenu(findMenu);
         } else {
             m_currentAction->setVisible(true);
             toolBar->removeAction(m_genericActionK);
@@ -116,54 +128,55 @@ KpkAddRm::KpkAddRm(QWidget *parent)
                 this, SLOT(genericActionKTriggered()));
     }
 
+    // Create the groups model
     m_groupsModel = new QStandardItemModel(this);
-    groupsCB->setModel(m_groupsModel);
+
+    CategoryDrawer *drawer = new CategoryDrawer;
+    homeView->setSpacing(KDialog::spacingHint());
+    homeView->setCategoryDrawer(drawer);
+    homeView->viewport()->setAttribute(Qt::WA_Hover);
 
     //initialize the groups
     Enum::Groups groups = m_client->groups();
-    // Add Text search entry
     QStandardItem *groupItem;
-    m_groupsModel->appendRow(groupItem = new QStandardItem(i18n("Text search")));
-    groupItem->setData(AllPackages, Qt::UserRole);
-
-    m_groupsModel->appendRow(listOfChangesItem = new QStandardItem(i18n("List of changes")));
-    listOfChangesItem->setEnabled(false);
-    listOfChangesItem->setData(ListOfChanges, Qt::UserRole);
-
-    if (groups.size()) {
-        // An empty small item
-        m_groupsModel->appendRow(groupItem = new QStandardItem(QString()));
-        groupItem->setEnabled(false);
-        groupItem->setSizeHint(QSize(5, 5));
-        m_groupsModel->appendRow(groupItem = new QStandardItem(i18ncp("Groups of packages", "Group:", "Groups:", groups.size())));
-        groupItem->setEnabled(false);
-
-        foreach (const Enum::Group &group, groups) {
-            if (group != Enum::UnknownGroup) {
-                m_groupsModel->appendRow(groupItem = new QStandardItem(KpkStrings::groups(group)));
-                groupItem->setData(Group, Qt::UserRole);
-                groupItem->setData(group, Group);
-                groupItem->setIcon(KpkIcons::groupsIcon(group));
-                if (!(m_roles & Enum::RoleSearchGroup)) {
-                    groupItem->setSelectable(false);
-                }
+    foreach (const Enum::Group &group, groups) {
+        if (group != Enum::UnknownGroup) {
+            groupItem = new QStandardItem(KpkStrings::groups(group));
+            groupItem->setData(Group, Qt::UserRole);
+            groupItem->setData(group, Group);
+            groupItem->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+            groupItem->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
+            groupItem->setIcon(KpkIcons::groupsIcon(group));
+            if (!(m_roles & Enum::RoleSearchGroup)) {
+                groupItem->setSelectable(false);
             }
+            m_groupsModel->appendRow(groupItem);
         }
     }
+
+    KFileItemDelegate *delegate = new KFileItemDelegate(this);
+    delegate->setWrapMode(QTextOption::WordWrap);
+    homeView->setItemDelegate(delegate);
+
+    KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
+    proxy->setSourceModel(m_groupsModel);
+    proxy->setCategorizedModel(true);
+    proxy->sort(0);
+    homeView->setModel(proxy);
 
     // install the backend filters
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(m_client->filters(), this));
     connect(m_filtersMenu, SIGNAL(grouped(bool)),
-            m_pkg_model_main, SLOT(setGrouped(bool)));
-    connect(m_filtersMenu, SIGNAL(grouped(bool)),
             this, SLOT(packageViewSetRootIsDecorated(bool)));
-    m_pkg_model_main->setGrouped(m_filtersMenu->actionGrouped());
-    packageViewSetRootIsDecorated(m_filtersMenu->actionGrouped());
-    filtersTB->setIcon(m_filterIcon);
+    filtersTB->setIcon(KIcon("view-filter"));
 
     // set focus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
+
+    // INSTALLED TAB
+    installedView->setItemDelegate(new KpkDelegate(installedView));
+    tabWidget->setTabIcon(1, KIcon("drive-harddisk"));
 }
 
 void KpkAddRm::genericActionKTriggered()
@@ -232,24 +245,22 @@ void KpkAddRm::setCurrentActionCancel(bool cancel)
 
 void KpkAddRm::checkChanged()
 {
-    if (m_pkg_model_main->selectedPackages().size() > 0) {
+    if (m_packageModel->selectedPackages().size() > 0) {
       emit changed(true);
-      listOfChangesItem->setEnabled(true);
     } else {
       emit changed(false);
-      listOfChangesItem->setEnabled(false);
     }
 }
 
 void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
 {
     if (index.column() == 0) {
-        QSharedPointer<PackageKit::Package>p = m_pkg_model_main->package(index);
-        if (p) {
-            if (pkg_delegate->isExtended(index)) {
-                pkg_delegate->contractItem(index);
+        QSharedPointer<PackageKit::Package> package = m_packageModel->package(index);
+        if (package) {
+            if (m_packageDelegate->isExtended(index)) {
+                m_packageDelegate->contractItem(index);
             } else {
-                pkg_delegate->extendItem(new KpkPackageDetails(p, m_roles), index);
+                m_packageDelegate->extendItem(new KpkPackageDetails(package, m_roles), index);
             }
         }
     }
@@ -272,7 +283,7 @@ KpkAddRm::~KpkAddRm()
     //   see that a filter is set by config
 
     // This entry does not depend on the backend it's ok to call this pointer
-    filterMenuGroup.writeEntry("ViewInGroups", m_filtersMenu->actionGrouped());
+//     filterMenuGroup.writeEntry("ViewInGroups", m_filtersMenu->actionGrouped());
 
     // This entry does not depend on the backend it's ok to call this pointer
     if (m_client->filters() & Enum::FilterNewest) {
@@ -326,29 +337,29 @@ void KpkAddRm::on_actionFindFile_triggered()
     }
 }
 
-void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
+void KpkAddRm::on_homeView_activated(const QModelIndex &index)
 {
-    if (groupsCB->itemData(index, Qt::UserRole).isValid()) {
-        switch (static_cast<ItemType>(groupsCB->itemData(index, Qt::UserRole).toUInt())) {
+    if (index.data(Qt::UserRole).isValid()) {
+        switch (static_cast<ItemType>(index.data(Qt::UserRole).toUInt())) {
         case AllPackages :
             // contract and delete and details widgets
-            pkg_delegate->contractAll();
+            m_packageDelegate->contractAll();
             // cleans the models
-            m_pkg_model_main->clear();
+            m_packageModel->clear();
             break;
         case ListOfChanges :
             // contract and delete and details widgets
-            pkg_delegate->contractAll();
+            m_packageDelegate->contractAll();
             // cleans the models
-            m_pkg_model_main->clear();
-            foreach (QSharedPointer<PackageKit::Package>pkg, m_pkg_model_main->selectedPackages()) {
-                m_pkg_model_main->addPackage(pkg);
+            m_packageModel->clear();
+            foreach (QSharedPointer<PackageKit::Package>pkg, m_packageModel->selectedPackages()) {
+                m_packageModel->addPackage(pkg);
             }
             break;
         case Group :
             // cache the search
             m_searchRole    = Enum::RoleSearchGroup;
-            m_searchGroup   = static_cast<Enum::Group>(groupsCB->itemData(index, Group).toUInt());
+            m_searchGroup   = static_cast<Enum::Group>(index.data(Group).toUInt());
             m_searchFilters = m_filtersMenu->filters();
             // create the main transaction
             search();
@@ -356,20 +367,43 @@ void KpkAddRm::on_groupsCB_currentIndexChanged(int index)
     }
 }
 
+void KpkAddRm::on_backTB_clicked()
+{
+    m_viewLayout->setCurrentIndex(0);
+    backTB->setEnabled(false);
+}
+
+void KpkAddRm::on_tabWidget_currentChanged(int index)
+{
+    if (index == 1 && m_installedModel == 0) {
+        m_installedModel = new KpkPackageModel(this);
+        installedView->setModel(m_installedModel);
+        Transaction *trans = m_client->getPackages(Enum::FilterInstalled);
+        connect(trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                m_installedModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+    }
+}
+
 void KpkAddRm::search()
 {
+    m_viewLayout->setCurrentIndex(1);
+    backTB->setEnabled(true);
     // Check to see if "list of changes" is selected
     // if so refresh it and do nothing
-    int index = groupsCB->currentIndex();
-    if (groupsCB->itemData(index, Qt::UserRole).isValid() &&
-        ListOfChanges == static_cast<ItemType>(groupsCB->itemData(index, Qt::UserRole).toUInt()))
+    QModelIndex index;
+    if (!homeView->selectionModel()->selectedIndexes().isEmpty()) {
+        index = homeView->selectionModel()->selectedIndexes().first();
+    }
+
+    if (index.data(Qt::UserRole).isValid() &&
+        ListOfChanges == static_cast<ItemType>(index.data(Qt::UserRole).toUInt()))
     {
-        on_groupsCB_currentIndexChanged(index);
+        on_homeView_activated(index);
         return;
     } else {
         // search
         if (m_searchRole == Enum::RoleSearchName) {
-            m_pkClient_main = m_client->searchNames(m_searchString, m_searchFilters );
+            m_pkClient_main = m_client->searchNames(m_searchString, m_searchFilters);
         } else if (m_searchRole == Enum::RoleSearchDetails) {
             m_pkClient_main = m_client->searchDetails(m_searchString, m_searchFilters);
         } else if (m_searchRole == Enum::RoleSearchFile) {
@@ -388,11 +422,10 @@ void KpkAddRm::search()
     } else {
         setCurrentActionCancel(true);
         connectTransaction(m_pkClient_main);
-        transactionBar->addTransaction(m_pkClient_main);
         // contract and delete and details widgets
-        pkg_delegate->contractAll();
+        m_packageDelegate->contractAll();
         // cleans the models
-        m_pkg_model_main->clear();
+        m_packageModel->clear();
         m_mTransRuning = true;
     }
 }
@@ -400,12 +433,13 @@ void KpkAddRm::search()
 void KpkAddRm::connectTransaction(Transaction *transaction)
 {
     connect(transaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-            m_pkg_model_main, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            m_packageModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
     connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     setCurrentActionEnabled(transaction->allowCancel());
+    transactionBar->addTransaction(transaction);
 }
 
 void KpkAddRm::changed()
@@ -416,10 +450,10 @@ void KpkAddRm::changed()
 
 void KpkAddRm::save()
 {
-    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_pkg_model_main->selectedPackages(), this);
+    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_packageModel->selectedPackages(), this);
     frm->setTitle(i18n("Review Changes"));
     if (frm->exec() == QDialog::Accepted) {
-        m_pkg_model_main->uncheckAll();
+        m_packageModel->uncheckAll();
     } else {
         QTimer::singleShot(0, this, SLOT(checkChanged()));
     }
@@ -429,7 +463,7 @@ void KpkAddRm::save()
 
 void KpkAddRm::load()
 {
-    m_pkg_model_main->uncheckAll();
+    m_packageModel->uncheckAll();
 }
 
 void KpkAddRm::finished(PackageKit::Enum::Exit status, uint runtime)
@@ -447,7 +481,7 @@ void KpkAddRm::finished(PackageKit::Enum::Exit status, uint runtime)
 void KpkAddRm::packageViewSetRootIsDecorated(bool value)
 {
     // contract and delete and details widgets
-    pkg_delegate->contractAll();
+    m_packageDelegate->contractAll();
     packageView->setRootIsDecorated(value);
 }
 
@@ -490,8 +524,8 @@ void KpkAddRm::updateColumnsWidth(bool force)
         m_viewWidth -= style()->pixelMetric(QStyle::PM_ScrollBarExtent) + UNIVERSAL_PADDING;
     }
 
-    packageView->setColumnWidth(0, pkg_delegate->columnWidth(0, m_viewWidth));
-    packageView->setColumnWidth(1, pkg_delegate->columnWidth(1, m_viewWidth));
+    packageView->setColumnWidth(0, m_packageDelegate->columnWidth(0, m_viewWidth));
+    packageView->setColumnWidth(1, m_packageDelegate->columnWidth(1, m_viewWidth));
 }
 
 #include "KpkAddRm.moc"
