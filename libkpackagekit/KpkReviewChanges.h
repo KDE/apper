@@ -67,7 +67,7 @@ private:
     void removePackages(bool allow_deps = true);
     void taskDone(PackageKit::Enum::Role role);
 
-    void updateColumnsWidth(bool force = false);
+//     void updateColumnsWidth(bool force = false);
     void checkTask();
 
     KpkReviewChangesPrivate *d;
@@ -77,8 +77,8 @@ protected slots:
     virtual void slotButtonClicked(int button);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *event);
-    virtual bool event(QEvent *event);
+//     virtual void resizeEvent(QResizeEvent *event);
+//     virtual bool event(QEvent *event);
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KpkReviewChanges::OperationModes)

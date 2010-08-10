@@ -25,8 +25,6 @@
 #include "KpkHistory.h"
 #include "KpkMacros.h"
 #include "KpkCheckableHeader.h"
-#include "KpkUpdatePackageModel.h"
-#include "KpkUpdateDelegate.h"
 
 #include <version.h>
 
@@ -38,6 +36,8 @@
 #include <KpkTransaction.h>
 #include <KpkSimulateModel.h>
 #include <KpkRequirements.h>
+#include <KpkPackageModel.h>
+#include <KpkDelegate.h>
 #include <QSortFilterProxyModel>
 #include <QDBusConnection>
 
@@ -50,7 +50,8 @@ K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkUpdate>();)
 K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_update"))
 
 KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
-    : KCModule(KPackageKitFactory::componentData(), parent, args)
+    : KCModule(KPackageKitFactory::componentData(), parent, args),
+      m_updatesT(0)
 {
     KAboutData *aboutData;
     aboutData = new KAboutData("kpackagekit",
@@ -79,14 +80,14 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     m_header->setResizeMode(QHeaderView::Stretch);
     m_header->setCheckBoxEnabled(false);
 
-    m_pkg_model_updates = new KpkUpdatePackageModel(this, packageView);
-    m_pkg_model_updates->setCheckable(true);
+    m_updatesModel = new KpkPackageModel(this, packageView);
+    m_updatesModel->setCheckable(true);
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
-    proxyModel->setSourceModel(m_pkg_model_updates);
+    proxyModel->setSourceModel(m_updatesModel);
     proxyModel->setDynamicSortFilter(true);
-    proxyModel->setSortRole(KpkUpdatePackageModel::SortRole);
+    proxyModel->setSortRole(KpkPackageModel::SortRole);
     packageView->setHeader(m_header);
-    packageView->setItemDelegate(m_delegate = new KpkUpdateDelegate(packageView));
+    packageView->setItemDelegate(m_delegate = new KpkDelegate(packageView));
     packageView->setModel(proxyModel);
     packageView->sortByColumn(0, Qt::AscendingOrder);
     connect(m_delegate, SIGNAL(showExtendItem(const QModelIndex &)),
@@ -94,8 +95,8 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     connect(m_header, SIGNAL(sectionClicked(int)),
             this, SLOT(contractAll()));
     connect(m_header, SIGNAL(toggled(bool)),
-            m_pkg_model_updates, SLOT(setAllChecked(bool)));
-    connect(m_pkg_model_updates, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+            m_updatesModel, SLOT(setAllChecked(bool)));
+    connect(m_updatesModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkEnableUpdateButton()));
 
     // Create a new client
@@ -138,9 +139,9 @@ void KcmKpkUpdate::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QSt
 
 void KcmKpkUpdate::checkEnableUpdateButton()
 {
-    emit changed(m_pkg_model_updates->selectedPackages().size() > 0);
-    int selectedSize = m_pkg_model_updates->selectedPackages().size();
-    int updatesSize = m_pkg_model_updates->rowCount();
+    emit changed(m_updatesModel->selectedPackages().size() > 0);
+    int selectedSize = m_updatesModel->selectedPackages().size();
+    int updatesSize = m_updatesModel->rowCount();
     if (selectedSize == updatesSize) {
         m_header->setCheckState(Qt::Checked);
     } else if (selectedSize == 0) {
@@ -150,7 +151,7 @@ void KcmKpkUpdate::checkEnableUpdateButton()
     }
 
     // if we don't have any upates let's disable the button
-    m_header->setCheckBoxEnabled(m_pkg_model_updates->rowCount() != 0);
+    m_header->setCheckBoxEnabled(m_updatesModel->rowCount() != 0);
 }
 
 void KcmKpkUpdate::load()
@@ -163,7 +164,7 @@ void KcmKpkUpdate::save()
     // If the backend supports getRequires do it
     if (m_roles & Enum::RoleSimulateUpdatePackages) {
         QList<QSharedPointer<PackageKit::Package> > selectedPackages;
-        selectedPackages = m_pkg_model_updates->selectedPackages();
+        selectedPackages = m_updatesModel->selectedPackages();
         Transaction *t = m_client->simulateUpdatePackages(selectedPackages);
         if (t->error()) {
             KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
@@ -197,12 +198,13 @@ void KcmKpkUpdate::save()
 void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
 {
     Q_UNUSED(status)
+    m_updatesT = 0;
     checkEnableUpdateButton();
 }
 
 void KcmKpkUpdate::updatePackages()
 {
-    QList<QSharedPointer<PackageKit::Package> > packages = m_pkg_model_updates->selectedPackages();
+    QList<QSharedPointer<PackageKit::Package> > packages = m_updatesModel->selectedPackages();
 
     SET_PROXY
     Transaction *t = m_client->updatePackages(true, packages);
@@ -222,12 +224,17 @@ void KcmKpkUpdate::updatePackages()
 void KcmKpkUpdate::getUpdates()
 {
     kDebug() << sender();
+    if (m_updatesT) {
+        // There is a getUpdates running ignore this call
+        return;
+    }
+
     // contract to delete all update details widgets
     m_delegate->contractAll();
 
     // clears the model
-    m_pkg_model_updates->clear();
-    m_pkg_model_updates->setAllChecked(false);
+    m_updatesModel->clear();
+    m_updatesModel->setAllChecked(false);
     m_updatesT = m_client->getUpdates();
     if (m_updatesT->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
@@ -235,10 +242,10 @@ void KcmKpkUpdate::getUpdates()
         transactionBar->addTransaction(m_updatesT);
         if (m_selected) {
             connect(m_updatesT, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                m_pkg_model_updates, SLOT(addSelectedPackage(QSharedPointer<PackageKit::Package>)));
+                m_updatesModel, SLOT(addSelectedPackage(QSharedPointer<PackageKit::Package>)));
         } else {
             connect(m_updatesT, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                m_pkg_model_updates, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+                m_updatesModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         }
 
         connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -292,13 +299,13 @@ void KcmKpkUpdate::on_refreshPB_clicked()
 
 void KcmKpkUpdate::showExtendItem(const QModelIndex &index)
 {
-    QSharedPointer<PackageKit::Package> p = m_pkg_model_updates->package(index);
+    QSharedPointer<PackageKit::Package> package = m_updatesModel->package(index);
     // check to see if the backend support
-    if (p && (m_roles & Enum::RoleGetUpdateDetail)) {
+    if (package && (m_roles & Enum::RoleGetUpdateDetail)) {
         if (m_delegate->isExtended(index)) {
             m_delegate->contractItem(index);
         } else {
-            m_delegate->extendItem(new KpkUpdateDetails(p), index);
+            m_delegate->extendItem(new KpkUpdateDetails(package), index);
         }
     }
 }

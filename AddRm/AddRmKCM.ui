@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KpkAddRm</class>
- <widget class="QWidget" name="KpkAddRm">
+ <class>AddRmKCM</class>
+ <widget class="QWidget" name="AddRmKCM">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -144,26 +144,17 @@
        </item>
        <item row="2" column="1">
         <widget class="QTreeView" name="packageView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>2</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>300</width>
-           <height>0</height>
-          </size>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
          </property>
-         <property name="sizeIncrement">
-          <size>
-           <width>0</width>
-           <height>2</height>
-          </size>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
          </property>
-         <property name="locale">
-          <locale language="English" country="UnitedStates"/>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
          </property>
          <property name="verticalScrollMode">
           <enum>QAbstractItemView::ScrollPerPixel</enum>
@@ -171,20 +162,8 @@
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="itemsExpandable">
-          <bool>true</bool>
-         </property>
          <property name="sortingEnabled">
           <bool>true</bool>
-         </property>
-         <property name="animated">
-          <bool>false</bool>
-         </property>
-         <property name="headerHidden">
-          <bool>false</bool>
-         </property>
-         <property name="expandsOnDoubleClick">
-          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -203,26 +182,17 @@
        </property>
        <item row="0" column="0">
         <widget class="QTreeView" name="installedView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>2</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>300</width>
-           <height>0</height>
-          </size>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
          </property>
-         <property name="sizeIncrement">
-          <size>
-           <width>0</width>
-           <height>2</height>
-          </size>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
          </property>
-         <property name="locale">
-          <locale language="English" country="UnitedStates"/>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
          </property>
          <property name="verticalScrollMode">
           <enum>QAbstractItemView::ScrollPerPixel</enum>
@@ -230,20 +200,8 @@
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="itemsExpandable">
-          <bool>true</bool>
-         </property>
          <property name="sortingEnabled">
           <bool>true</bool>
-         </property>
-         <property name="animated">
-          <bool>false</bool>
-         </property>
-         <property name="headerHidden">
-          <bool>false</bool>
-         </property>
-         <property name="expandsOnDoubleClick">
-          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -258,27 +216,18 @@
         <number>0</number>
        </property>
        <item row="0" column="0">
-        <widget class="QTreeView" name="pendingView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>2</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+        <widget class="QTreeView" name="installedView_2">
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>300</width>
-           <height>0</height>
-          </size>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
          </property>
-         <property name="sizeIncrement">
-          <size>
-           <width>0</width>
-           <height>2</height>
-          </size>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
          </property>
-         <property name="locale">
-          <locale language="English" country="UnitedStates"/>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
          </property>
          <property name="verticalScrollMode">
           <enum>QAbstractItemView::ScrollPerPixel</enum>
@@ -286,20 +235,8 @@
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="itemsExpandable">
-          <bool>true</bool>
-         </property>
          <property name="sortingEnabled">
           <bool>true</bool>
-         </property>
-         <property name="animated">
-          <bool>false</bool>
-         </property>
-         <property name="headerHidden">
-          <bool>false</bool>
-         </property>
-         <property name="expandsOnDoubleClick">
-          <bool>false</bool>
          </property>
         </widget>
        </item>

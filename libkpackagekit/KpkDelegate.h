@@ -18,14 +18,16 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef KPKDELEGATE_H
-#define KPKDELEGATE_H
+#ifndef KPK_DELEGATE_H
+#define KPK_DELEGATE_H
 
 #include <QtCore/QtCore>
 #include <QtGui/QtGui>
 #include <KExtendableItemDelegate>
 
 #include <KIcon>
+
+#include <QPackageKit>
 
 /**
  * Delegate for displaying the packages
@@ -39,29 +41,29 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    int columnWidth(int column, int viewWidth) const;
-
     bool editorEvent(QEvent *event,
                      QAbstractItemModel *model,
                      const QStyleOptionViewItem &option,
                      const QModelIndex &index);
 
-// public slots:
-//     void closeExpandableDetails(const QModelIndex &index = QModelIndex());
-//     void itemActivated(const QModelIndex &index);
+signals:
+    void showExtendItem(const QModelIndex &index);
 
 private:
-    KIcon m_addIcon;
-    KIcon m_removeIcon;
-    KIcon m_pkgRemove;
-    KIcon m_pkgDownload;
-
-    void paintColMain(QPainter *painter,
-            const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    void paintColFav(QPainter *painter,
-            const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
     int calcItemHeight(const QStyleOptionViewItem &option) const;
+    bool insideButton(const QRect &rect, const QPoint &pos) const;
+
+    KIcon   m_packageIcon;
+    KIcon   m_installIcon;
+    QString m_installString;
+    KIcon   m_removeIcon;
+    QString m_removeString;
+    KIcon   m_undoIcon;
+    QString m_undoString;
+    KIcon   m_checkedIcon;
+    int     m_extendPixmapWidth;
+    QSize   m_buttonSize;
+    QSize   m_buttonIconSize;
 };
 
 #endif

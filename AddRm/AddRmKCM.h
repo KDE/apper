@@ -18,14 +18,15 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_ADDRM_H
-#define KPK_ADDRM_H
+#ifndef ADD_RM_KCM_U
+#define ADD_RM_KCM_U
 
 #include "ui_KpkAddRm.h"
 
 #include <QtGui/QtGui>
 #include <QtCore/QtCore>
 
+#include <KCModule>
 #include <KIcon>
 #include <KToolBarPopupAction>
 
@@ -33,15 +34,14 @@
 
 using namespace PackageKit;
 
-class KpkDelegate;
 class KpkPackageModel;
 class KpkFiltersMenu;
-class KpkAddRm : public QWidget, public Ui::KpkAddRm
+class AddRmKCM : public KCModule, public Ui::KpkAddRm
 {
     Q_OBJECT
 public:
-    KpkAddRm(QWidget *parent = 0);
-    ~KpkAddRm();
+    AddRmKCM(QWidget *parent, const QVariantList &args);
+    ~AddRmKCM();
 
     enum ItemType {
         AllPackages = Qt::UserRole + 1,
@@ -67,7 +67,7 @@ private slots:
     void on_actionFindFile_triggered();
 
     void on_homeView_activated(const QModelIndex &index);
-    void on_packageView_pressed(const QModelIndex &index);
+    void showExtendItem(const QModelIndex &index);
 
     void finished(PackageKit::Enum::Exit status, uint runtime);
     void errorCode(PackageKit::Enum::Error error, const QString &detail);
@@ -75,14 +75,11 @@ private slots:
     void checkChanged();
     void changed();
 
-    void packageViewSetRootIsDecorated(bool value);
-
 private:
     void setCurrentActionEnabled(bool state);
     void setCurrentAction(QAction *action);
     void setCurrentActionCancel(bool cancel);
 
-    void updateColumnsWidth(bool force = false);
     void setActionCancel(bool enabled);
     void search();
     void connectTransaction(Transaction *transaction);
@@ -93,8 +90,8 @@ private:
     bool m_mTransRuning;//main trans
     QStandardItemModel *m_groupsModel;
     KpkPackageModel    *m_packageModel;
-    KpkDelegate        *m_packageDelegate;
     KpkPackageModel    *m_installedModel;
+    bool m_databaseChanged;
 
     Client *m_client;
     Transaction *m_pkClient_main;
@@ -110,10 +107,6 @@ private:
     QString       m_searchString;
     Enum::Group   m_searchGroup;
     Enum::Filters m_searchFilters;
-
-protected:
-    virtual void resizeEvent(QResizeEvent *event);
-    virtual bool event(QEvent *event);
 };
 
 #endif

@@ -20,12 +20,10 @@
 
 #include "KpkDelegate.h"
 
-#include <cmath>
-
-#include <QtCore/QtCore>
-
 #include <KDebug>
 #include <KIconLoader>
+#include <KLocale>
+
 #include "KpkPackageModel.h"
 #include "KpkIcons.h"
 
@@ -34,114 +32,140 @@
 #define UNIVERSAL_PADDING 4
 #define FADE_LENGTH 16
 #define MAIN_ICON_SIZE 32
-#define DROPDOWN_PADDING 2
-// #define DROPDOWN_SEPARATOR_HEIGHT 32
 
 KpkDelegate::KpkDelegate(QAbstractItemView *parent)
-: KExtendableItemDelegate(parent), m_addIcon("go-down"), m_removeIcon("edit-delete")
+  : KExtendableItemDelegate(parent),
+    // loads it here to be faster when displaying items
+    m_packageIcon("package"),
+    m_installIcon("go-down"),
+    m_installString(i18n("Install")),
+    m_removeIcon("edit-delete"),
+    m_removeString(i18n("Remove")),
+    m_undoIcon("edit-undo"),
+    m_undoString(i18n("Unmark")),
+    m_checkedIcon("dialog-ok")
 {
-    m_pkgRemove = KpkIcons::getIcon("package-installed");
     // maybe rename or copy it to package-available
-    m_pkgDownload = KpkIcons::getIcon("kpk-refresh-cache");
-//     setExtendPixmap(SmallIcon("arrow-right"));
-//     setContractPixmap(SmallIcon("arrow-down"));
+    if (QApplication::isRightToLeft()) {
+        setExtendPixmap(SmallIcon("arrow-left"));
+    } else {
+        setExtendPixmap(SmallIcon("arrow-right"));
+    }
+    setContractPixmap(SmallIcon("arrow-down"));
+    // store the size of the extend pixmap to know how much we should move
+    m_extendPixmapWidth = SmallIcon("arrow-right").size().width();
+
+    QPushButton button, button2;
+    button.setText(m_installString);
+    button.setIcon(m_installIcon);
+    button2.setText(m_removeString);
+    button2.setIcon(m_removeIcon);
+    m_buttonSize = button.sizeHint();
+    int width = qMax(button.sizeHint().width(), button2.sizeHint().width());
+    button.setText(m_undoString);
+    width = qMax(width, button2.sizeHint().width());
+    m_buttonSize.setWidth(width);
+    m_buttonIconSize = button.iconSize();
 }
 
 void KpkDelegate::paint(QPainter *painter,
-        const QStyleOptionViewItem &option, const QModelIndex &index) const
+                              const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const
 {
-    if (!index.isValid()) return;
+    if (!index.isValid()) {
+        return;
+    }
+    bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
 
     QStyleOptionViewItemV4 opt(option);
     QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
+    painter->save();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
-    KExtendableItemDelegate::paint(painter, opt, index);
-    switch (index.column()) {
-    case 0:
-        paintColMain(painter, option, index);
-        break;
-    case 1:
-        paintColFav(painter, option, index);
-        break;
-    default:
-        kDebug() << "unexpected column";
-    }
-}
-
-int KpkDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
-{
-    // Painting main column
-    QStyleOptionViewItem local_option_title(option);
-    QStyleOptionViewItem local_option_normal(option);
-
-    local_option_normal.font.setPointSize(local_option_normal.font.pointSize() - 1);
-
-    int textHeight = QFontInfo(local_option_title.font).pixelSize() + QFontInfo(local_option_normal.font).pixelSize();
-    return qMax(textHeight, MAIN_ICON_SIZE) + 2 * UNIVERSAL_PADDING;
-}
-
-void KpkDelegate::paintColMain(QPainter *painter,
-        const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    int left = option.rect.left();
-    int leftCount;
-    int top = option.rect.top();
-    int width = option.rect.width();
-
-    bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
+    painter->restore();
 
     //grab the package from the index pointer
-    PackageKit::Package *pkg = static_cast<PackageKit::Package*>(index.internalPointer());
+    QString pkgName      = index.data(KpkPackageModel::NameRole).toString();
+    QString pkgSummary   = index.data(KpkPackageModel::SummaryRole).toString();
+    QString pkgVersion   = index.data(KpkPackageModel::VersionRole).toString();
+    QString pkgArch      = index.data(KpkPackageModel::ArchRole).toString();
+    QString pkgIconPath  = index.data(KpkPackageModel::IconPathRole).toString();
+    bool    pkgInstalled = index.data(KpkPackageModel::InstalledRole).toBool();
+    bool    pkgChecked   = index.data(KpkPackageModel::CheckStateRole).toBool();
+    bool    pkgCheckable = !index.data(Qt::CheckStateRole).isNull();
+
+    QIcon emblemIcon;
+    if (pkgCheckable) {
+        // update kind icon
+        emblemIcon = index.data(KpkPackageModel::IconRole).value<QIcon>();
+    } else {
+        emblemIcon = m_checkedIcon;
+    }
+
+    // pain the background (checkbox and the extender)
+    KExtendableItemDelegate::paint(painter, opt, index);
+
+    int leftCount;
+    if (leftToRight) {
+        opt.rect.setLeft(option.rect.left() + m_extendPixmapWidth + UNIVERSAL_PADDING);
+        leftCount = opt.rect.left() + UNIVERSAL_PADDING;
+    } else {
+        opt.rect.setRight(option.rect.right() - m_extendPixmapWidth - UNIVERSAL_PADDING);
+        leftCount = opt.rect.width() - (UNIVERSAL_PADDING + MAIN_ICON_SIZE);
+    }
+
+    int left = opt.rect.left();
+    int top = opt.rect.top();
+    int width = opt.rect.width();
+
+    QStyleOptionButton optBt;
+    optBt.rect = opt.rect;
+    if (pkgCheckable) {
+        optBt.rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &optBt);
+        // Count the checkbox size
+        if (leftToRight) {
+            leftCount += optBt.rect.width();
+        } else {
+            leftCount -= optBt.rect.width();
+        }
+    } else {
+        if (leftToRight) {
+            optBt.rect.setLeft(left + width - (m_buttonSize.width() + UNIVERSAL_PADDING));
+            width -= m_buttonSize.width() + UNIVERSAL_PADDING;
+        } else {
+            optBt.rect.setLeft(left + UNIVERSAL_PADDING);
+            left += m_buttonSize.width() + UNIVERSAL_PADDING;
+        }
+        // Calculate the top of the button which is the item height - the button height size divided by 2
+        // this give us a little value which is the top and bottom margin
+        optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
+        optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
+        if (option.state & QStyle::State_MouseOver) {
+//                 if ()
+//             QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+//             QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
+//             kDebug() << optBt.rect << pos << insideButton(optBt.rect, pos);
+//             insideCheckBox(rect, pos);
+            optBt.state |= QStyle::State_MouseOver;
+        }
+        optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
+        optBt.iconSize = m_buttonIconSize;
+        if (pkgChecked) {
+            optBt.text = m_undoString;
+            optBt.icon = m_undoIcon;
+        } else {
+            optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
+            optBt.text = pkgInstalled ? m_removeString : m_installString;
+        }
+        style->drawControl(QStyle::CE_PushButton, &optBt, painter);
+    }
+
+
 
     // selects the mode to paint the icon based on the info field
-    QIcon::Mode iconMode;
-    if (index.data(KpkPackageModel::CheckedRole).toInt() == Qt::Checked) {
-        iconMode = QIcon::Selected;
-    } else {
+    QIcon::Mode iconMode = QIcon::Normal;
+    if (option.state & QStyle::State_MouseOver) {
         iconMode = QIcon::Active;
     }
-
-    const QStyle *style = QApplication::style();
-    QStyleOptionButton opt;
-
-    switch (index.data(KpkPackageModel::CheckedRole).toInt()) {
-    case Qt::Unchecked :
-        opt.state |= QStyle::State_Off;
-        break;
-    case Qt::PartiallyChecked :
-        opt.state |= QStyle::State_NoChange;
-        break;
-    case Qt::Checked :
-        opt.state |= QStyle::State_On;
-        break;
-    }
-
-    if (option.state & QStyle::State_MouseOver) {
-        opt.state |= QStyle::State_MouseOver;
-    }
-
-//     QStyle::State_HasFocus
-
-    opt.state |= QStyle::State_Enabled;
-    opt.rect = option.rect;
-
-    if (leftToRight) {
-        // Fisrt the left is increased by the universal pading
-        leftCount = left + UNIVERSAL_PADDING;
-        opt.rect.setLeft(leftCount);
-        // add the checkbox element to the left count
-        leftCount += style->subElementRect(QStyle::SE_CheckBoxIndicator, &opt).width() + UNIVERSAL_PADDING;
-    } else {
-        leftCount = left + (width - UNIVERSAL_PADDING);
-        opt.rect.setRight(leftCount);
-        // now remove the element from the left count
-        leftCount -= style->subElementRect(QStyle::SE_CheckBoxIndicator, &opt).width() + UNIVERSAL_PADDING + MAIN_ICON_SIZE;
-    }
-
-    opt.rect.setHeight(calcItemHeight(option));
-
-    // draw item data as CheckBox
-    style->drawControl(QStyle::CE_CheckBox, &opt, painter);
 
     QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
     option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
@@ -159,122 +183,94 @@ void KpkDelegate::paintColMain(QPainter *painter,
 
     // Main icon
     QIcon icon;
-    // if we have a package that mean we
-    // can try to get a better icon
-    if (pkg) {
-        if (pkg->iconPath().isEmpty()) {
-            if (pkg->info() == Enum::InfoInstalled) {
-                icon = m_pkgRemove;
-            } else {
-                icon = m_pkgDownload;
-            }
-        } else {
-            if (pkg->info() == Enum::InfoInstalled) {
-                icon = KpkIcons::getIcon(pkg->iconPath(), "package-installed");
-            } else {
-                icon = KpkIcons::getIcon(pkg->iconPath(), "kpk-refresh-cache");
-            }
-        }
+    if (pkgIconPath.isEmpty()) {
+        icon = m_packageIcon;
     } else {
-        icon = index.data(KpkPackageModel::IconRole).value<QIcon>();
+        icon = KpkIcons::getIcon(pkgIconPath, "package");
     }
+
+    int iconSize = calcItemHeight(option) - 2 * UNIVERSAL_PADDING;
     icon.paint(&p,
                leftCount,
                top + UNIVERSAL_PADDING,
-               MAIN_ICON_SIZE,
-               MAIN_ICON_SIZE,
+               iconSize,
+               iconSize,
                Qt::AlignCenter,
                iconMode);
-/*
-    if (leftToRight) {
-        add the main icon
-        left += MAIN_ICON_SIZE + UNIVERSAL_PADDING;
-        More pading
-        left += UNIVERSAL_PADDING;
-    } else {
-        left -= MAIN_ICON_SIZE;
-        left -= UNIVERSAL_PADDING;
-        left = option.rect.left();
-    }*/
 
-
-int textInner;
+    int textWidth;
     if (leftToRight) {
         // add the main icon
-        leftCount += MAIN_ICON_SIZE + UNIVERSAL_PADDING;
-        textInner = width - (leftCount - left);
-        // More pading
-//         left += UNIVERSAL_PADDING;
+        leftCount += iconSize + UNIVERSAL_PADDING;
+        textWidth = width - (leftCount - left);
     } else {
         leftCount -= UNIVERSAL_PADDING;
-//         left -= MAIN_ICON_SIZE;
-//         left -= UNIVERSAL_PADDING;
-        textInner = width;
-        leftCount = 0;
+        textWidth = leftCount - left;
+        leftCount = left;
     }
-    
 
-    QLinearGradient gradient;
 
     // Painting
 
     // Text
-//     int textInner = 2 * UNIVERSAL_PADDING + MAIN_ICON_SIZE;
     const int itemHeight = calcItemHeight(option);
 
     p.setPen(foregroundColor);
-    if (pkg) {
-        p.setFont(local_option_title.font);
-        p.drawText(leftCount/* + (leftToRight ? textInner : 0)*/,
-                   top + 1,
-                   textInner,
-                   itemHeight / 2,
-                   Qt::AlignBottom | Qt::AlignLeft,
-                   pkg->summary());
-        QString pkgname;
-        qreal opa = p.opacity();
-        if (option.state & QStyle::State_MouseOver) {
-            pkgname = pkg->name() + " - " + pkg->version() + (pkg->arch().isNull() ? NULL : " (" + pkg->arch() + ')');
-        } else {
-            pkgname = pkg->name();
-            if (!(option.state & QStyle::State_Selected)) {
-                p.setOpacity(opa / 2.5);
-            }
-        }
+    // compose the top line
+    if (option.state & QStyle::State_MouseOver) {
+        pkgName = pkgName + " - " + pkgVersion + (pkgArch.isNull() ? NULL : " (" + pkgArch + ')');
+    }
+    // draw the top line
+    int topTextHeight = QFontInfo(local_option_title.font).pixelSize();
+    p.setFont(local_option_title.font);
+    p.drawText(leftCount,
+               top,
+               textWidth,
+               topTextHeight + UNIVERSAL_PADDING,
+               Qt::AlignVCenter | Qt::AlignLeft,
+               pkgName);
 
-        p.setFont(local_option_normal.font);
-        p.drawText(leftCount /*+ (leftToRight ? textInner : 0)*/ + 10,
-                   top + itemHeight / 2,
-                   textInner,
-                   itemHeight / 2,
-                   Qt::AlignTop | Qt::AlignLeft,
-                   pkgname);
-        p.setOpacity(opa);
-    } else {
-        QString title = index.data(KpkPackageModel::NameRole).toString();
-        p.setFont(local_option_title.font);
-        p.drawText(leftCount  /* + (leftToRight ? textInner : 0)*/,
-                   top,
-                   textInner,
-                   itemHeight,
-                   Qt::AlignVCenter | Qt::AlignLeft, title);
+    // draw the bottom line
+    iconSize = topTextHeight + UNIVERSAL_PADDING;
+    if (pkgCheckable || pkgInstalled) {
+        emblemIcon.paint(&p,
+                         leftToRight ? leftCount : (textWidth + left) - iconSize,
+                         top + topTextHeight + UNIVERSAL_PADDING,
+                         iconSize,
+                         iconSize,
+                         Qt::AlignVCenter | Qt::AlignHCenter,
+                         iconMode);
     }
 
+    // store the original opacity
+    qreal opa = p.opacity();
+    if (!(option.state & QStyle::State_MouseOver) && !(option.state & QStyle::State_Selected)) {
+        p.setOpacity(opa / 2.5);
+    }
 
+    p.setFont(local_option_normal.font);
+    p.drawText(leftToRight ? leftCount + iconSize + UNIVERSAL_PADDING : left - UNIVERSAL_PADDING,
+               top + itemHeight / 2,
+               textWidth - iconSize,
+               QFontInfo(local_option_normal.font).pixelSize() + UNIVERSAL_PADDING,
+               Qt::AlignTop | Qt::AlignLeft,
+               pkgSummary);
+    p.setOpacity(opa);
 
-    // Counting the number of emblems for this item
-    int emblemCount = 1;
-
-//     left = option.rect.left();
+    QLinearGradient gradient;
     // Gradient part of the background - fading of the text at the end
     if (leftToRight) {
-        gradient = QLinearGradient(left + width - UNIVERSAL_PADDING - FADE_LENGTH, 0,
-                left + width - UNIVERSAL_PADDING, 0);
+        gradient = QLinearGradient(left + width - UNIVERSAL_PADDING - FADE_LENGTH,
+                                   0,
+                                   left + width - UNIVERSAL_PADDING,
+                                   0);
         gradient.setColorAt(0, Qt::white);
         gradient.setColorAt(1, Qt::transparent);
     } else {
-        gradient = QLinearGradient(left + UNIVERSAL_PADDING, 0,
-                left + UNIVERSAL_PADDING + FADE_LENGTH, 0);
+        gradient = QLinearGradient(left + UNIVERSAL_PADDING,
+                                   0,
+                                   left + UNIVERSAL_PADDING + FADE_LENGTH,
+                                   0);
         gradient.setColorAt(0, Qt::transparent);
         gradient.setColorAt(1, Qt::white);
     }
@@ -285,164 +281,85 @@ int textInner;
 
     if (leftToRight) {
         gradient.setStart(left + width
-                - emblemCount * (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) - FADE_LENGTH, 0);
+                - (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) - FADE_LENGTH, 0);
         gradient.setFinalStop(left + width
-                - emblemCount * (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
+                - (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
     } else {
         gradient.setStart(left + UNIVERSAL_PADDING
-                + emblemCount * (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
+                + (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
         gradient.setFinalStop(left + UNIVERSAL_PADDING
-                + emblemCount * (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) + FADE_LENGTH, 0);
+                + (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) + FADE_LENGTH, 0);
     }
     paintRect.setHeight(UNIVERSAL_PADDING + MAIN_ICON_SIZE / 2);
     p.fillRect(paintRect, gradient);
-
-    // Emblems icons
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    int emblemLeft = leftToRight ? (left + width - EMBLEM_ICON_SIZE) : left;
-    if (leftToRight) {
-        emblemLeft -= UNIVERSAL_PADDING + EMBLEM_ICON_SIZE;
-    } else {
-        emblemLeft += UNIVERSAL_PADDING + EMBLEM_ICON_SIZE;
-    }
     p.end();
 
     painter->drawPixmap(option.rect.topLeft(), pixmap);
 }
 
-void KpkDelegate::paintColFav(QPainter *painter,
-                              const QStyleOptionViewItem &option,
-                              const QModelIndex &index) const
+int KpkDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
 {
-    int left = option.rect.left();
-    int top = option.rect.top();
-    int width = option.rect.width();
+    // Painting main column
+    QStyleOptionViewItem local_option_title(option);
+    QStyleOptionViewItem local_option_normal(option);
 
-    // Painting favorite icon column
+    local_option_normal.font.setPointSize(local_option_normal.font.pointSize() - 1);
 
-//     if (! (option.state & QStyle::State_MouseOver) && m_onFavoriteIconItem == item)
-//         m_onFavoriteIconItem = NULL;
-
-    if (!(index.flags() & Qt::ItemIsUserCheckable)) {
-        return;
-    }
-
-    QIcon::Mode iconMode;
-    switch (index.data(KpkPackageModel::CheckedRole).toInt()) {
-    case Qt::Unchecked :
-        iconMode = QIcon::Disabled;
-        break;
-    case Qt::PartiallyChecked :
-        iconMode = QIcon::Selected;
-        break;
-    case Qt::Checked :
-        iconMode = QIcon::Active;
-        break;
-    default :
-        iconMode = QIcon::Normal;
-    }
-//     kDebug() << index.column();
-
-//     const KIcon * icon = ( index.model()->data(index, PkAddRmModel::InstalledRole).toBool() )? & m_removeIcon : & m_addIcon;
-
-    if (index.data(KpkPackageModel::InstalledRole).toBool()) {
-        m_removeIcon.paint(painter,
-            left + width - FAV_ICON_SIZE - UNIVERSAL_PADDING, top + UNIVERSAL_PADDING,
-            FAV_ICON_SIZE, FAV_ICON_SIZE, Qt::AlignCenter, iconMode);
-    } else {
-        m_addIcon.paint(painter,
-                        left + width - FAV_ICON_SIZE - UNIVERSAL_PADDING,
-                        top + UNIVERSAL_PADDING,
-                        FAV_ICON_SIZE,
-                        FAV_ICON_SIZE,
-                        Qt::AlignCenter,
-                        iconMode);
-    }
-
-//     iconMode = QIcon::Active;
-//
-//     const KIcon * icon = (index.model()->data(index, KpkPackageModel::CheckedRole).toBool() )? & m_removeIcon : & m_addIcon;
-//
-//     if ( option.state & QStyle::State_MouseOver )
-//         icon->paint(painter,
-//                 left + width - EMBLEM_ICON_SIZE - UNIVERSAL_PADDING, top + UNIVERSAL_PADDING,
-//                 EMBLEM_ICON_SIZE, EMBLEM_ICON_SIZE, Qt::AlignCenter, iconMode);
+    int textHeight = QFontInfo(local_option_title.font).pixelSize() + QFontInfo(local_option_normal.font).pixelSize();
+    return textHeight + 3 * UNIVERSAL_PADDING;
 }
 
-// void PkDelegate::paintColRemove(QPainter *painter,
-//         const QStyleOptionViewItem &option, const KCategorizedItemsViewModels::AbstractItem * item) const
-// {
-// //     // Painting remove icon column
-// //     int running = item->running();
-// //     if (!running) {
-// //         return;
-// //     }
-// //
-// //     int left = option.rect.left();
-// //     int top = option.rect.top();
-// //     int width = option.rect.width();
-// //
-// //     QIcon::Mode iconMode = QIcon::Normal;
-// //     if (option.state & QStyle::State_MouseOver) {
-// //         iconMode = QIcon::Active;
-// //     }
-// //
-// //     m_removeIcon.paint(painter,
-// //             left + width - FAV_ICON_SIZE - UNIVERSAL_PADDING, top + UNIVERSAL_PADDING,
-// //             FAV_ICON_SIZE, FAV_ICON_SIZE, Qt::AlignCenter, iconMode);
-// //
-// //     if (running == 1) {
-// //         return;
-// //     }
-// //     //paint number
-// //     QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
-// //         option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
-// //     painter->setPen(foregroundColor);
-// //     painter->setFont(option.font);
-// //     painter->drawText(
-// //             left + UNIVERSAL_PADDING, //FIXME might be wrong
-// //             top + UNIVERSAL_PADDING + MAIN_ICON_SIZE / 2,
-// //             width - 2 * UNIVERSAL_PADDING, MAIN_ICON_SIZE / 2,
-// //             Qt::AlignCenter, QString::number(running));
-// }
+bool KpkDelegate::insideButton(const QRect &rect, const QPoint &pos) const
+{
+//     kDebug() << rect << pos;
+    if ((pos.x() >= rect.x() && (pos.x() <= rect.x() + rect.width())) &&
+        (pos.y() >= rect.y() && (pos.y() <= rect.y() + rect.height()))) {
+        return true;
+    }
+    return false;
+}
 
 bool KpkDelegate::editorEvent(QEvent *event,
-                              QAbstractItemModel *model,
-                              const QStyleOptionViewItem &option,
-                              const QModelIndex &index)
+                                    QAbstractItemModel *model,
+                                    const QStyleOptionViewItem &option,
+                                    const QModelIndex &index)
 {
     Q_UNUSED(option)
-    if (!(index.flags() & Qt::ItemIsUserCheckable)) {
-        return false;
+    if (event->type() == QEvent::MouseButtonRelease) {
+        QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+        QPoint point = view->viewport()->mapFromGlobal(QCursor::pos());
+//         kDebug() << point << option.rect.left() << option;
+//         kDebug() << view->visualRect(index);
+        QRect rect = view->visualRect(index);
+        if (QApplication::isRightToLeft()) {
+            if ((rect.width() - point.x()) <= m_extendPixmapWidth) {
+                emit showExtendItem(index);
+            }
+        } else {
+            if (point.x() <= m_extendPixmapWidth) {
+                emit showExtendItem(index);
+            }
+        }
     }
 
-    if (event->type() == QEvent::MouseButtonPress && index.column() == 1) {
-        return model->setData(index,
-                              !index.data(KpkPackageModel::CheckedRole).toBool(), KpkPackageModel::CheckedRole);
-//     else if ( event->type() == QEvent::KeyPress ) {
-//
-    }  else {
-        return false;
-//         return QItemDelegate::editorEvent(event, model, option, index);
+    // We need move the option rect left because KExtendableItemDelegate
+    // drew the extendPixmap
+    QStyleOptionViewItemV4 opt(option);
+    if (QApplication::isRightToLeft()) {
+        opt.rect.setRight(option.rect.right() - m_extendPixmapWidth);
+    } else {
+        opt.rect.setLeft(option.rect.left() + m_extendPixmapWidth);
     }
+    // When the exterder is shown the height get compromised,
+    // this makes sure the check box is always known
+    opt.rect.setHeight(calcItemHeight(option));
+    return KExtendableItemDelegate::editorEvent(event, model, opt, index);
 }
 
 QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
         const QModelIndex &index ) const
 {
-//     int width;
-//     if (index.column() == 0) {
-//         QStyleOptionViewItem local_option_title(option);
-//         QStyleOptionViewItem local_option_normal(option);
-//
-//         local_option_title.font.setBold(true);
-//         local_option_title.font.setPointSize(local_option_title.font.pointSize() + 2);
-//         QFontMetrics title(local_option_title.font);
-//         QFontMetrics normal(local_option_normal.font);
-//         width = qMax(title.width(index.data(KpkPackageModel::NameRole).toString()), normal.width(index.data(KpkPackageModel::SummaryRole).toString())) + MAIN_ICON_SIZE + FADE_LENGTH;
-//     } else {
-//         width = FAV_ICON_SIZE;
-//     }
     int width = (index.column() == 0) ? index.data(Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
     QSize ret(KExtendableItemDelegate::sizeHint(option, index));
     // remove the default size of the index
@@ -453,33 +370,5 @@ QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
 
     return ret;
 }
-
-int KpkDelegate::columnWidth (int column, int viewWidth) const
-{
-    if (column != 0) {
-        return FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
-    } else return viewWidth - /*2 **/ columnWidth(1, viewWidth);
-}
-
-// void KpkDelegate::itemActivated(const QModelIndex &index)
-// {
-//     const TransferTreeModel * transferTreeModel = static_cast <const TransferTreeModel *> (index.model());
-//
-//     if(!transferTreeModel->isTransferGroup(index) && Settings::showExpandableTransferDetails() && index.column() == 0) {
-//         if(!isExtended(index)) {
-//             TransferHandler *handler = static_cast <TransferHandler *> (index.internalPointer());
-//             QWidget *widget = getDetailsWidgetForTransfer(handler);
-//
-//             m_editingIndexes.append(index);
-//             extendItem(widget, index);
-//         }
-//         else {
-//             removeTransferObserver(index);
-//
-//             m_editingIndexes.removeAll(index);
-//             contractItem(index);
-//         }
-//     }
-// }
 
 #include "KpkDelegate.moc"

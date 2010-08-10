@@ -32,7 +32,6 @@ using namespace PackageKit;
 class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
 {
     Q_OBJECT
-    Q_PROPERTY(bool groupPackages READ isGrouped WRITE setGrouped)
 
 public:
     explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
@@ -47,47 +46,42 @@ public:
 
     bool allSelected() const;
     QList<QSharedPointer<PackageKit::Package> > selectedPackages() const;
-    QList<QSharedPointer<PackageKit::Package> > packagesWithInfo(Enum::Info) const;
     void removePackage(QSharedPointer<PackageKit::Package>package);
     QSharedPointer<PackageKit::Package> package(const QModelIndex &index) const;
     void clear();
-    void uncheckAll();
-    void checkAll();
+
+    void setCheckable(bool checkable);
+
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
-    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
-
-    bool isGrouped() const;
 
     enum {
-        NameRole = Qt::UserRole,
+        SortRole = Qt::UserRole,
+        NameRole,
         SummaryRole,
-        InstalledRole,
+        VersionRole,
+        ArchRole,
         IconRole,
+        IconPathRole,
         IdRole,
-        GroupRole,
-        CheckedRole,
-        StateRole
+        CheckStateRole,
+        InstalledRole
     };
 
 public slots:
     void addPackage(QSharedPointer<PackageKit::Package> package);
     void addSelectedPackage(QSharedPointer<PackageKit::Package> package);
-    void setGrouped(bool g);
+    void setAllChecked(bool checked);
 
 private:
     bool containsChecked(const QString &pid) const;
     void checkPackage(QSharedPointer<PackageKit::Package> package);
     void uncheckPackage(const QSharedPointer<PackageKit::Package> package);
-    int checkedGroupCount(Enum::Info info) const;
 
     QAbstractItemView *m_packageView;
-    QList<QSharedPointer<PackageKit::Package> > m_packages;
+    QVector<QSharedPointer<PackageKit::Package> > m_packages;
     QHash<QString, QSharedPointer<PackageKit::Package> > m_checkedPackages;
-    QHash<Enum::Info, int> m_checkedGroupCount;
-    QMap<Enum::Info, QList<QSharedPointer<PackageKit::Package> > > m_groups;
-    bool  m_grouped;
-
+    bool m_checkable;
 };
 
 #endif

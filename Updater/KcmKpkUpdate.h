@@ -27,8 +27,8 @@
 
 using namespace PackageKit;
 
-class KpkUpdatePackageModel;
-class KpkUpdateDelegate;
+class KpkPackageModel;
+class KpkDelegate;
 class KpkCheckableHeader;
 class KProgressDialog;
 class KcmKpkUpdate : public KCModule, Ui::KcmKpkUpdate
@@ -62,11 +62,10 @@ private slots:
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Enum::Error error, const QString &details);
 
-
 private:
     bool m_selected;
-    KpkUpdatePackageModel *m_pkg_model_updates;
-    KpkUpdateDelegate *m_delegate;
+    KpkPackageModel *m_updatesModel;
+    KpkDelegate *m_delegate;
     KpkCheckableHeader *m_header;
     Client *m_client;
     Transaction *m_updatesT;

@@ -745,7 +745,7 @@ QString KpkStrings::infoUpdate(Enum::Info state, int number)
     case Enum::InfoLow :
         return i18np("1 trivial update", "%1 trivial updates", number);
     case Enum::InfoNormal :
-        return i18ncp("Type of update, in the case it's just an update", "1 update", "%1 updates", number);
+        return i18ncp("Type of update, in the case it's just an update", "1 Update", "%1 Updates", number);
     case Enum::InfoImportant :
         return i18np("1 important update", "%1 important updates", number);
     case Enum::InfoSecurity :
@@ -774,8 +774,8 @@ QString KpkStrings::infoUpdate(Enum::Info state, int updates, int selected)
             return i18np("1 trivial update selected", "%1 trivial updates selected", updates);
         case Enum::InfoNormal :
             return i18ncp("Type of update, in the case it's just an update",
-                          "1 update selected",
-                          "%1 updates selected", updates);
+                          "1 Update Selected",
+                          "%1 Updates Selected", updates);
         case Enum::InfoImportant :
             return i18np("1 important update selected", "%1 important updates selected", updates);
         case Enum::InfoSecurity :
@@ -801,8 +801,8 @@ QString KpkStrings::infoUpdate(Enum::Info state, int updates, int selected)
         case Enum::InfoLow :
             return i18np("%1 trivial update", "%1 trivial updates, %2 selected", updates, selected);
         case Enum::InfoNormal :
-            return i18ncp("Type of update, in the case it's just an update",
-                          "%1 update", "%1 updates, %2 selected", updates, selected);
+            return i18nc("Type of update, in the case it's just an update",
+                         "%1 Updates, %2 Selected", updates, selected);
         case Enum::InfoImportant :
             return i18np("%1 important update", "%1 important updates, %2 selected", updates, selected);
         case Enum::InfoSecurity :

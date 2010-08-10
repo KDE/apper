@@ -18,7 +18,15 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkAddRm.h"
+#include "AddRmKCM.h"
+
+#include "KpkPackageModel.h"
+
+#include <KGenericFactory>
+#include <KAboutData>
+
+#include <version.h>
+
 #include "KpkFiltersMenu.h"
 #include "KpkPackageDetails.h"
 
@@ -45,14 +53,29 @@
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 
-KpkAddRm::KpkAddRm(QWidget *parent)
- : QWidget(parent),
+K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<AddRmKCM>();)
+K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_addrm"))
+
+AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
+ : KCModule(KPackageKitFactory::componentData(), parent, args),
    m_currentAction(0),
    m_mTransRuning(false),
    m_installedModel(0),
+   m_databaseChanged(true),
    m_findIcon("edit-find"),
    m_cancelIcon("dialog-cancel")
 {
+    KAboutData *aboutData;
+    aboutData = new KAboutData("kpackagekit",
+                               "kpackagekit",
+                               ki18n("Add and Remove Software"),
+                               KPK_VERSION,
+                               ki18n("KDE interface for managing software"),
+                               KAboutData::License_GPL,
+                               ki18n("(C) 2008-2010 Daniel Nicoletti"));
+    KGlobal::locale()->insertCatalog("kpackagekit");
+    setAboutData(aboutData);
+
     setupUi(this);
 
     // Create a new daemon
@@ -77,7 +100,10 @@ KpkAddRm::KpkAddRm(QWidget *parent)
 
 
     //initialize the model, delegate, client and  connect it's signals
-    packageView->setItemDelegate(m_packageDelegate = new KpkDelegate(packageView));
+    KpkDelegate *pkgDelegate = new KpkDelegate(packageView);
+    connect(pkgDelegate, SIGNAL(showExtendItem(const QModelIndex &)),
+            this, SLOT(showExtendItem(const QModelIndex &)));
+    packageView->setItemDelegate(pkgDelegate);
     packageView->setModel(m_packageModel = new KpkPackageModel(this, packageView));
     packageView->viewport()->setAttribute(Qt::WA_Hover);
 
@@ -96,18 +122,18 @@ KpkAddRm::KpkAddRm(QWidget *parent)
         findMenu->addAction(actionFindName);
         setCurrentAction(actionFindName);
     }
-//     if (m_roles & Enum::RoleSearchDetails) {
-//         findMenu->addAction(actionFindDescription);
-//         if (!m_currentAction) {
-//             setCurrentAction(actionFindDescription);
-//         }
-//     }
-//     if (m_roles & Enum::RoleSearchFile) {
-//         findMenu->addAction(actionFindFile);
-//         if (!m_currentAction) {
-//             setCurrentAction(actionFindFile);
-//         }
-//     }
+    if (m_roles & Enum::RoleSearchDetails) {
+        findMenu->addAction(actionFindDescription);
+        if (!m_currentAction) {
+            setCurrentAction(actionFindDescription);
+        }
+    }
+    if (m_roles & Enum::RoleSearchFile) {
+        findMenu->addAction(actionFindFile);
+        if (!m_currentAction) {
+            setCurrentAction(actionFindFile);
+        }
+    }
 
     // If no action was set we can't use this search
     if (m_currentAction == 0) {
@@ -166,8 +192,6 @@ KpkAddRm::KpkAddRm(QWidget *parent)
 
     // install the backend filters
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(m_client->filters(), this));
-    connect(m_filtersMenu, SIGNAL(grouped(bool)),
-            this, SLOT(packageViewSetRootIsDecorated(bool)));
     filtersTB->setIcon(KIcon("view-filter"));
 
     // set focus on the search lineEdit
@@ -175,16 +199,22 @@ KpkAddRm::KpkAddRm(QWidget *parent)
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
 
     // INSTALLED TAB
-    installedView->setItemDelegate(new KpkDelegate(installedView));
+    pkgDelegate = new KpkDelegate(installedView);
+    installedView->setItemDelegate(pkgDelegate);
+    connect(pkgDelegate, SIGNAL(showExtendItem(const QModelIndex &)),
+            this, SLOT(showExtendItem(const QModelIndex &)));
+    m_installedModel = new KpkPackageModel(this, installedView);
+    installedView->setModel(m_installedModel);
+    installedView->viewport()->setAttribute(Qt::WA_Hover);
     tabWidget->setTabIcon(1, KIcon("drive-harddisk"));
 }
 
-void KpkAddRm::genericActionKTriggered()
+void AddRmKCM::genericActionKTriggered()
 {
     m_currentAction->trigger();
 }
 
-void KpkAddRm::setCurrentAction(QAction *action)
+void AddRmKCM::setCurrentAction(QAction *action)
 {
     // just load the new action if it changes this
     // also ensures that our menu has more than one action
@@ -203,7 +233,7 @@ void KpkAddRm::setCurrentAction(QAction *action)
     }
 }
 
-void KpkAddRm::setCurrentActionEnabled(bool state)
+void AddRmKCM::setCurrentActionEnabled(bool state)
 {
     if (m_currentAction) {
         m_currentAction->setEnabled(state);
@@ -211,7 +241,7 @@ void KpkAddRm::setCurrentActionEnabled(bool state)
     m_genericActionK->setEnabled(state);
 }
 
-void KpkAddRm::setCurrentActionCancel(bool cancel)
+void AddRmKCM::setCurrentActionCancel(bool cancel)
 {
     if (cancel) {
         // every action should like cancel
@@ -243,37 +273,39 @@ void KpkAddRm::setCurrentActionCancel(bool cancel)
     }
 }
 
-void KpkAddRm::checkChanged()
+void AddRmKCM::checkChanged()
 {
     if (m_packageModel->selectedPackages().size() > 0) {
-      emit changed(true);
+        emit changed(true);
     } else {
-      emit changed(false);
+        emit changed(false);
     }
 }
 
-void KpkAddRm::on_packageView_pressed(const QModelIndex &index)
+void AddRmKCM::showExtendItem(const QModelIndex &index)
 {
     if (index.column() == 0) {
-        QSharedPointer<PackageKit::Package> package = m_packageModel->package(index);
+        KpkDelegate *delegate = qobject_cast<KpkDelegate*>(sender());
+        const KpkPackageModel *model = qobject_cast<const KpkPackageModel*>(index.model());
+        QSharedPointer<PackageKit::Package> package = model->package(index);
         if (package) {
-            if (m_packageDelegate->isExtended(index)) {
-                m_packageDelegate->contractItem(index);
+            if (delegate->isExtended(index)) {
+                delegate->contractItem(index);
             } else {
-                m_packageDelegate->extendItem(new KpkPackageDetails(package, m_roles), index);
+                delegate->extendItem(new KpkPackageDetails(package, m_roles), index);
             }
         }
     }
 }
 
-void KpkAddRm::errorCode(PackageKit::Enum::Error error, const QString &details)
+void AddRmKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
     if (error != Enum::ErrorTransactionCancelled) {
         KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify);
     }
 }
 
-KpkAddRm::~KpkAddRm()
+AddRmKCM::~AddRmKCM()
 {
     KConfig config("KPackageKit");
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
@@ -292,7 +324,7 @@ KpkAddRm::~KpkAddRm()
     }
 }
 
-void KpkAddRm::on_actionFindName_triggered()
+void AddRmKCM::on_actionFindName_triggered()
 {
     setCurrentAction(actionFindName);
     if (m_mTransRuning) {
@@ -307,7 +339,7 @@ void KpkAddRm::on_actionFindName_triggered()
     }
 }
 
-void KpkAddRm::on_actionFindDescription_triggered()
+void AddRmKCM::on_actionFindDescription_triggered()
 {
     setCurrentAction(actionFindDescription);
     if (m_mTransRuning) {
@@ -322,7 +354,7 @@ void KpkAddRm::on_actionFindDescription_triggered()
     }
 }
 
-void KpkAddRm::on_actionFindFile_triggered()
+void AddRmKCM::on_actionFindFile_triggered()
 {
     setCurrentAction(actionFindFile);
     if (m_mTransRuning) {
@@ -337,19 +369,20 @@ void KpkAddRm::on_actionFindFile_triggered()
     }
 }
 
-void KpkAddRm::on_homeView_activated(const QModelIndex &index)
+void AddRmKCM::on_homeView_activated(const QModelIndex &index)
 {
+    KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
     if (index.data(Qt::UserRole).isValid()) {
         switch (static_cast<ItemType>(index.data(Qt::UserRole).toUInt())) {
         case AllPackages :
             // contract and delete and details widgets
-            m_packageDelegate->contractAll();
+            delegate->contractAll();
             // cleans the models
             m_packageModel->clear();
             break;
         case ListOfChanges :
             // contract and delete and details widgets
-            m_packageDelegate->contractAll();
+            delegate->contractAll();
             // cleans the models
             m_packageModel->clear();
             foreach (QSharedPointer<PackageKit::Package>pkg, m_packageModel->selectedPackages()) {
@@ -367,24 +400,23 @@ void KpkAddRm::on_homeView_activated(const QModelIndex &index)
     }
 }
 
-void KpkAddRm::on_backTB_clicked()
+void AddRmKCM::on_backTB_clicked()
 {
     m_viewLayout->setCurrentIndex(0);
     backTB->setEnabled(false);
 }
 
-void KpkAddRm::on_tabWidget_currentChanged(int index)
+void AddRmKCM::on_tabWidget_currentChanged(int index)
 {
-    if (index == 1 && m_installedModel == 0) {
-        m_installedModel = new KpkPackageModel(this);
-        installedView->setModel(m_installedModel);
+    if (index == 1 && m_databaseChanged == true) {
+        m_databaseChanged = false;
         Transaction *trans = m_client->getPackages(Enum::FilterInstalled);
         connect(trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                 m_installedModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
     }
 }
 
-void KpkAddRm::search()
+void AddRmKCM::search()
 {
     m_viewLayout->setCurrentIndex(1);
     backTB->setEnabled(true);
@@ -423,14 +455,15 @@ void KpkAddRm::search()
         setCurrentActionCancel(true);
         connectTransaction(m_pkClient_main);
         // contract and delete and details widgets
-        m_packageDelegate->contractAll();
+        KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
+        delegate->contractAll();
         // cleans the models
         m_packageModel->clear();
         m_mTransRuning = true;
     }
 }
 
-void KpkAddRm::connectTransaction(Transaction *transaction)
+void AddRmKCM::connectTransaction(Transaction *transaction)
 {
     connect(transaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
             m_packageModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
@@ -442,18 +475,18 @@ void KpkAddRm::connectTransaction(Transaction *transaction)
     transactionBar->addTransaction(transaction);
 }
 
-void KpkAddRm::changed()
+void AddRmKCM::changed()
 {
     Transaction *trans = qobject_cast<Transaction*>(sender());
     setCurrentActionEnabled(trans->allowCancel());
 }
 
-void KpkAddRm::save()
+void AddRmKCM::save()
 {
     QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_packageModel->selectedPackages(), this);
     frm->setTitle(i18n("Review Changes"));
     if (frm->exec() == QDialog::Accepted) {
-        m_packageModel->uncheckAll();
+//         m_packageModel->uncheckAll();//TODO
     } else {
         QTimer::singleShot(0, this, SLOT(checkChanged()));
     }
@@ -461,12 +494,12 @@ void KpkAddRm::save()
     search();
 }
 
-void KpkAddRm::load()
+void AddRmKCM::load()
 {
-    m_packageModel->uncheckAll();
+//     m_packageModel->uncheckAll();
 }
 
-void KpkAddRm::finished(PackageKit::Enum::Exit status, uint runtime)
+void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
     Q_UNUSED(status)
@@ -478,54 +511,5 @@ void KpkAddRm::finished(PackageKit::Enum::Exit status, uint runtime)
     m_mTransRuning = false;
 }
 
-void KpkAddRm::packageViewSetRootIsDecorated(bool value)
-{
-    // contract and delete and details widgets
-    m_packageDelegate->contractAll();
-    packageView->setRootIsDecorated(value);
-}
+#include "AddRmKCM.moc"
 
-void KpkAddRm::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
-    updateColumnsWidth();
-}
-
-bool KpkAddRm::event(QEvent *event)
-{
-    switch (event->type()) {
-        case QEvent::KeyPress:
-            // use bracktes to don't cross initialization og keyEvent
-            {
-                QKeyEvent *ke = static_cast<QKeyEvent *>(event);
-                if (ke->key() == Qt::Key_Return || ke->key() == Qt::Key_Enter) {
-                    // special tab handling here
-                    m_currentAction->trigger();
-                    return true;
-                }
-            }
-            break;
-        case QEvent::Paint:
-        case QEvent::PolishRequest:
-        case QEvent::Polish:
-            updateColumnsWidth(true);
-            break;
-        default:
-            break;
-    }
-    return QWidget::event(event);
-}
-
-void KpkAddRm::updateColumnsWidth(bool force)
-{
-    int m_viewWidth = packageView->viewport()->width();
-
-    if (force) {
-        m_viewWidth -= style()->pixelMetric(QStyle::PM_ScrollBarExtent) + UNIVERSAL_PADDING;
-    }
-
-    packageView->setColumnWidth(0, m_packageDelegate->columnWidth(0, m_viewWidth));
-    packageView->setColumnWidth(1, m_packageDelegate->columnWidth(1, m_viewWidth));
-}
-
-#include "KpkAddRm.moc"
