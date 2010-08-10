@@ -38,8 +38,11 @@ KpkUpdateDelegate::KpkUpdateDelegate(QAbstractItemView *parent)
     // loads it here to be faster when displaying items
     m_packageIcon("package"),
     m_installIcon("go-down"),
+    m_installString(i18n("Install")),
     m_removeIcon("edit-delete"),
-    m_undoIcon("edit-undo")
+    m_removeString(i18n("Remove")),
+    m_undoIcon("edit-undo"),
+    m_undoString(i18n("Unmark"))
 {
     // maybe rename or copy it to package-available
     if (QApplication::isRightToLeft()) {
@@ -52,13 +55,13 @@ KpkUpdateDelegate::KpkUpdateDelegate(QAbstractItemView *parent)
     m_extendPixmapWidth = SmallIcon("arrow-right").size().width();
 
     QPushButton button, button2;
-    button.setText(i18n("Install"));
+    button.setText(m_installString);
     button.setIcon(m_installIcon);
-    button2.setText(i18n("Remove"));
+    button2.setText(m_removeString);
     button2.setIcon(m_removeIcon);
     m_buttonSize = button.sizeHint();
     int width = qMax(button.sizeHint().width(), button2.sizeHint().width());
-    button.setText(i18n("Unmark"));
+    button.setText(m_undoString);
     width = qMax(width, button2.sizeHint().width());
     m_buttonSize.setWidth(width);
     m_buttonIconSize = button.iconSize();
@@ -98,10 +101,10 @@ void KpkUpdateDelegate::paint(QPainter *painter,
     int leftCount;
     if (leftToRight) {
         opt.rect.setLeft(option.rect.left() + m_extendPixmapWidth + UNIVERSAL_PADDING);
-        leftCount = opt.rect.left();
+        leftCount = opt.rect.left() + UNIVERSAL_PADDING;
     } else {
         opt.rect.setRight(option.rect.right() - m_extendPixmapWidth - UNIVERSAL_PADDING);
-        leftCount = opt.rect.width();
+        leftCount = opt.rect.width() - (UNIVERSAL_PADDING + MAIN_ICON_SIZE);
     }
 
     int left = opt.rect.left();
@@ -112,9 +115,19 @@ void KpkUpdateDelegate::paint(QPainter *painter,
     optBt.rect = opt.rect;
     if (pkgCheckable) {
         optBt.rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &optBt);
+        // Count the checkbox size
+        if (leftToRight) {
+            leftCount += optBt.rect.width();
+        } else {
+            leftCount -= optBt.rect.width();
+        }
     } else {
-        if (!leftToRight) {
-            optBt.rect.setLeft(leftCount - m_buttonSize.width());
+        if (leftToRight) {
+            optBt.rect.setLeft(left + width - (m_buttonSize.width() + UNIVERSAL_PADDING));
+            width -= m_buttonSize.width() + UNIVERSAL_PADDING;
+        } else {
+            optBt.rect.setLeft(left + UNIVERSAL_PADDING);
+            left += m_buttonSize.width() + UNIVERSAL_PADDING;
         }
         // Calculate the top of the button which is the item height - the button height size divided by 2
         // this give us a little value which is the top and bottom margin
@@ -122,30 +135,25 @@ void KpkUpdateDelegate::paint(QPainter *painter,
         optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
         if (option.state & QStyle::State_MouseOver) {
 //                 if ()
-            QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-            QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
-            kDebug() << optBt.rect << pos << insideButton(optBt.rect, pos);
+//             QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+//             QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
+//             kDebug() << optBt.rect << pos << insideButton(optBt.rect, pos);
 //             insideCheckBox(rect, pos);
             optBt.state |= QStyle::State_MouseOver;
         }
         optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
         optBt.iconSize = m_buttonIconSize;
         if (pkgChecked) {
-            optBt.text = i18n("Unmark");
+            optBt.text = m_undoString;
             optBt.icon = m_undoIcon;
         } else {
             optBt.icon = pkgInstalled ? m_installIcon : m_removeIcon;
-            optBt.text = pkgInstalled ? i18n("Install") : i18n("Remove");
+            optBt.text = pkgInstalled ? m_installString : m_removeString;
         }
         style->drawControl(QStyle::CE_PushButton, &optBt, painter);
     }
 
-    // Count the button size
-    if (leftToRight) {
-        leftCount += optBt.rect.width() + UNIVERSAL_PADDING;
-    } else {
-        leftCount -= optBt.rect.width() + UNIVERSAL_PADDING + MAIN_ICON_SIZE;
-    }
+    
 
     // selects the mode to paint the icon based on the info field
     QIcon::Mode iconMode = QIcon::Normal;
@@ -219,7 +227,7 @@ void KpkUpdateDelegate::paint(QPainter *painter,
     // draw the bottom line
     iconSize = topTextHeight + UNIVERSAL_PADDING;
     updateIcon.paint(&p,
-                     leftToRight ? leftCount : textWidth - iconSize,
+                     leftToRight ? leftCount : (textWidth + left) - iconSize,
                      top + topTextHeight + UNIVERSAL_PADDING,
                      iconSize,
                      iconSize,
@@ -242,19 +250,19 @@ void KpkUpdateDelegate::paint(QPainter *painter,
     p.setOpacity(opa);
 
     QLinearGradient gradient;
-    // Counting the number of emblems for this item
-    int emblemCount = 1;
-
-//     left = option.rect.left();
     // Gradient part of the background - fading of the text at the end
     if (leftToRight) {
-        gradient = QLinearGradient(left + width - UNIVERSAL_PADDING - FADE_LENGTH, 0,
-                left + width - UNIVERSAL_PADDING, 0);
+        gradient = QLinearGradient(left + width - UNIVERSAL_PADDING - FADE_LENGTH,
+                                   0,
+                                   left + width - UNIVERSAL_PADDING,
+                                   0);
         gradient.setColorAt(0, Qt::white);
         gradient.setColorAt(1, Qt::transparent);
     } else {
-        gradient = QLinearGradient(left + UNIVERSAL_PADDING, 0,
-                left + UNIVERSAL_PADDING + FADE_LENGTH, 0);
+        gradient = QLinearGradient(left + UNIVERSAL_PADDING,
+                                   0,
+                                   left + UNIVERSAL_PADDING + FADE_LENGTH,
+                                   0);
         gradient.setColorAt(0, Qt::transparent);
         gradient.setColorAt(1, Qt::white);
     }
@@ -265,19 +273,17 @@ void KpkUpdateDelegate::paint(QPainter *painter,
 
     if (leftToRight) {
         gradient.setStart(left + width
-                - emblemCount * (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) - FADE_LENGTH, 0);
+                - (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) - FADE_LENGTH, 0);
         gradient.setFinalStop(left + width
-                - emblemCount * (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
+                - (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
     } else {
         gradient.setStart(left + UNIVERSAL_PADDING
-                + emblemCount * (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
+                + (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
         gradient.setFinalStop(left + UNIVERSAL_PADDING
-                + emblemCount * (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) + FADE_LENGTH, 0);
+                + (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) + FADE_LENGTH, 0);
     }
     paintRect.setHeight(UNIVERSAL_PADDING + MAIN_ICON_SIZE / 2);
     p.fillRect(paintRect, gradient);
-
-    // Emblems icons
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
     p.end();
 

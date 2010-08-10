@@ -53,13 +53,16 @@ private:
     int calcItemHeight(const QStyleOptionViewItem &option) const;
     bool insideButton(const QRect &rect, const QPoint &pos) const;
 
-    KIcon m_packageIcon;
-    KIcon m_installIcon;
-    KIcon m_removeIcon;
-    KIcon m_undoIcon;
-    int   m_extendPixmapWidth;
-    QSize m_buttonSize;
-    QSize m_buttonIconSize;
+    KIcon   m_packageIcon;
+    KIcon   m_installIcon;
+    QString m_installString;
+    KIcon   m_removeIcon;
+    QString m_removeString;
+    KIcon   m_undoIcon;
+    QString m_undoString;
+    int     m_extendPixmapWidth;
+    QSize   m_buttonSize;
+    QSize   m_buttonIconSize;
 };
 
 #endif
