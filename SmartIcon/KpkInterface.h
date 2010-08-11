@@ -22,6 +22,13 @@
 
 #include <QtDBus/QDBusContext>
 
+#include "config.h"
+
+#ifdef HAVE_DEBCONFKDE
+#include <DebconfGui.h>
+using namespace DebconfKde;
+#endif //HAVE_DEBCONFKDE
+
 class KpkInterface : public QObject, protected QDBusContext
 {
     Q_OBJECT
@@ -30,15 +37,24 @@ public:
     KpkInterface(QObject *parent = 0);
     ~KpkInterface();
 
-public slots:
     void WatchTransaction(const QString &tid);
     void RefreshCache();
     void RefreshAndUpdate();
     void Update();
+    void DebconfDialog(const QString &socket_path, uint xid_parent);
 
 signals:
     void watchTransaction(const QString &tid, bool interactive);
     void refreshAndUpdate(bool refresh);
+
+#ifdef HAVE_DEBCONFKDE
+#include <DebconfGui.h>
+private slots:
+    void debconfActivate();
+
+private:
+    QHash<QString, DebconfGui*> m_debconfGuis;
+#endif
 };
 
 

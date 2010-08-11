@@ -13,7 +13,7 @@ if (DEBCONF_SUPPORT)
     find_package(DebconfKDE REQUIRED)
     macro_bool_to_01(DebconfKDE_FOUND HAVE_DEBCONFKDE)
     macro_log_feature(DebconfKDE_FOUND "DebconfKDE" "The KDE frontend for debconf" "http://websvn.kde.org" FALSE "" "Library used for showing debconf questions.")
-    message(STATUS "DebconfKDE_FOUND " ${HAVE_DEBCONFKDE})
+    message(STATUS "Found DebconfKDE library dir: " ${DEBCONF_KDE_LIB})
 endif (DEBCONF_SUPPORT)
 
 # Generate config.h

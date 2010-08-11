@@ -1,8 +1,6 @@
 find_package(KDE4Internal REQUIRED)
 
 set(kpackagekit_smart_icon_SRCS
-    main.cpp
-    KPackageKitSmartIcon.cpp
     KpkTransactionTrayIcon.cpp
     KpkUpdateIcon.cpp
     KpkDistroUpgrade.cpp
@@ -20,6 +18,8 @@ set(kpackagekit_smart_icon_SRCS
     PkInstallProvideFiles.cpp
     PkInstallCatalogs.cpp
     PkRemovePackageByFiles.cpp
+    KPackageKitSmartIcon.cpp
+    main.cpp
 )
 
 qt4_add_dbus_adaptor(kpackagekit_smart_dbus_SRCS
@@ -44,6 +44,7 @@ target_link_libraries(kpackagekitsmarticon
     ${KDE4_KIO_LIBS}
     ${KDE4_SOLID_LIBS}
     ${QPACKAGEKIT_LIBRARIES}
+    ${DEBCONF_KDE_LIB}
     kpackagekitlib
 )
 

@@ -22,6 +22,7 @@
 
 #include <KLocale>
 #include <KMessageBox>
+#include <KPushButton>
 
 #include <KDebug>
 
@@ -54,7 +55,7 @@ public:
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
- : KDialog(parent),
+ : KDialog(parent, Qt::Window),
    m_trans(trans),
    m_handlingActionRequired(false),
    m_showingError(false),
@@ -70,20 +71,12 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     d->finished = true; // for sanity we are finished till some transaction is set
     d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
 
-    // Set Cancel and custom button hide
-    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-    setButtons(KDialog::Cancel | KDialog::User1 | KDialog::Details);
-//     enableButton(KDialog::Details, false);
-    setButtonText(KDialog::User1, i18n("Hide"));
-    setButtonToolTip(KDialog::User1, i18n("Allows you to hide the window whilst keeping the transaction task running."));
-    setEscapeButton(KDialog::User1);
-    enableButtonCancel(false);
-    setDetailsWidget(d->ui.packageWidget);
+//     setDetailsWidget(d->ui.packageWidget);
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
-    d->showDetails = transactionGroup.readEntry("ShowDetails", false);
+//     d->showDetails = transactionGroup.readEntry("ShowDetails", false);
 //     setDetailsWidgetVisible(d->showDetails);
-    setDetailsWidgetVisible(false);
+//     setDetailsWidgetVisible(false);
 //     d->ui.detailGroup->setVisible(d->showDetails);
 
     // This MUST come after setDetailsWidgetVisible since
@@ -173,19 +166,6 @@ void KpkTransaction::setTransaction(Transaction *trans)
     d->finished = false;
     d->role = m_trans->role();
 
-    // sets the action icon to be the window icon
-    setWindowIcon(KpkIcons::actionIcon(m_trans->role()));
-    // Sets the kind of transaction
-    setCaption(KpkStrings::action(m_trans->role()));
-    // check to see if we can cancel
-    enableButtonCancel(m_trans->allowCancel());
-    // clears the package label
-//     d->ui.packageL->clear();
-    d->ui.descriptionL->clear();
-    // Now sets the last package
-    currPackage(m_trans->lastPackage());
-    // sets ui
-    updateUi();
 
     // enable the Details button just on these roles
     if (m_trans->role() == Enum::RoleInstallPackages ||
@@ -193,11 +173,32 @@ void KpkTransaction::setTransaction(Transaction *trans)
         m_trans->role() == Enum::RoleRemovePackages ||
         m_trans->role() == Enum::RoleUpdatePackages ||
         m_trans->role() == Enum::RoleUpdateSystem) {
-//         enableButton(KDialog::Details, true);
+        setButtons(KDialog::Details | KDialog::User1 | KDialog::Cancel);
+        button(KDialog::Details)->setCheckable(true);
     } else {
-//         d->ui.packageWidget->hide();
-//         enableButton(KDialog::Details, false);
+        setButtons(KDialog::User1 | KDialog::Cancel);
     }
+    // Setup HIDE custom button
+    setButtonText(KDialog::User1, i18n("Hide"));
+    setButtonToolTip(KDialog::User1,
+                     i18n("Allows you to hide the window whilst keeping the transaction task running."));
+    setEscapeButton(KDialog::User1);
+    // check to see if we can cancel
+    enableButtonCancel(m_trans->allowCancel());
+
+    // sets the action icon to be the window icon
+    setWindowIcon(KpkIcons::actionIcon(m_trans->role()));
+    // Sets the kind of transaction
+    setCaption(KpkStrings::action(m_trans->role()));
+
+    // clears the package label
+//     d->ui.packageL->clear();
+//     d->ui.descriptionL->clear();
+    // Now sets the last package
+    currPackage(m_trans->lastPackage());
+    // sets ui
+    updateUi();
+
 
     // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
     connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
@@ -288,7 +289,7 @@ void KpkTransaction::updateUi()
     enableButtonCancel(m_trans->allowCancel());
 }
 
-void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package>p)
+void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package> p)
 {
     if (!p->id().isEmpty()) {
         QString packageText(p->name());
@@ -296,13 +297,13 @@ void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package>p)
             packageText += ' ' + p->version();
         }
 //         d->ui.packageL->setText(packageText);
-        d->ui.descriptionL->setText(p->summary());
+//         d->ui.descriptionL->setText(p->summary());
 //         enableButton(KDialog::Details, true);
     } else {
 //         d->ui.packageL->clear();
-        d->ui.descriptionL->setText(QString());
+//         d->ui.descriptionL->setText(QString());
 //         enableButton(KDialog::Details, false);
-        setDetailsWidgetVisible(false);
+//         setDetailsWidgetVisible(false);
     }
 }
 
@@ -353,53 +354,53 @@ void KpkTransaction::slotButtonClicked(int button)
         break;
     case KDialog::Details :
     {
-        if (d->showDetails) {
-            kDebug() <<  d->ui.packageWidget->sizeHint();
+//         if (d->showDetails) {
+//             kDebug() <<  d->ui.packageWidget->sizeHint();
+//
+//             QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
+//     //         QSize size = d->ui.packageWidget->size();
+//     //         size.setHeight(0);
+//             animation->setDuration(1000);
+//             QSize siz = size();
+//             animation->setStartValue(siz);
+//             siz -= QSize(0, d->ui.packageWidget->size().height());
+//     //         size.setSize(rect.size() + d->ui.packageWidget->size());
+//     //         size.setHeight(d->ui.packageWidget->sizeHint().height());
+//             animation->setEndValue(siz);
+//             animation->setEasingCurve(QEasingCurve::OutInQuad);
+//             animation->start();
+//         } else {
+//             QParallelAnimationGroup *group = new QParallelAnimationGroup;
+//             kDebug() <<  d->ui.packageWidget->sizeHint();
+//             d->ui.packageWidget->resize(QSize(0, 0));
+//             d->ui.packageWidget->setVisible(true);
+//             QPropertyAnimation *anim1 = new QPropertyAnimation(this, "size");
+//             QPropertyAnimation *anim2 = new QPropertyAnimation(d->ui.packageWidget, "size");
+//     //         QSize size = d->ui.packageWidget->size();
+//     //         size.setHeight(0);
+//             anim1->setDuration(1000);
+//             anim2->setDuration(1000);
+//             QSize siz = size();
+//             QSize size2 = d->ui.packageWidget->sizeHint();
+//             size2.setHeight(0);
+//             anim1->setStartValue(siz);
+//             anim2->setStartValue(size2);
+//             siz += QSize(0, d->ui.packageWidget->sizeHint().height());
+//             size2 += QSize(0, d->ui.packageWidget->sizeHint().height());
+//     //         size.setSize(rect.size() + d->ui.packageWidget->size());
+//     //         size.setHeight(d->ui.packageWidget->sizeHint().height());
+//             anim1->setEndValue(siz);
+//             anim2->setEndValue(size2);
+//             anim1->setEasingCurve(QEasingCurve::InOutQuad);
+//             anim2->setEasingCurve(QEasingCurve::InOutQuad);
+//             group->addAnimation(anim1);
+//             group->addAnimation(anim2);
+//             group->start();
+//         }
+//         d->showDetails = !d->showDetails;
 
-            QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
-    //         QSize size = d->ui.packageWidget->size();
-    //         size.setHeight(0);
-            animation->setDuration(1000);
-            QSize siz = size();
-            animation->setStartValue(siz);
-            siz -= QSize(0, d->ui.packageWidget->size().height());
-    //         size.setSize(rect.size() + d->ui.packageWidget->size());
-    //         size.setHeight(d->ui.packageWidget->sizeHint().height());
-            animation->setEndValue(siz);
-            animation->setEasingCurve(QEasingCurve::OutInQuad);
-            animation->start();
-        } else {
-            QParallelAnimationGroup *group = new QParallelAnimationGroup;
-            kDebug() <<  d->ui.packageWidget->sizeHint();
-            d->ui.packageWidget->resize(QSize(0, 0));
-            d->ui.packageWidget->setVisible(true);
-            QPropertyAnimation *anim1 = new QPropertyAnimation(this, "size");
-            QPropertyAnimation *anim2 = new QPropertyAnimation(d->ui.packageWidget, "size");
-    //         QSize size = d->ui.packageWidget->size();
-    //         size.setHeight(0);
-            anim1->setDuration(1000);
-            anim2->setDuration(1000);
-            QSize siz = size();
-            QSize size2 = d->ui.packageWidget->sizeHint();
-            size2.setHeight(0);
-            anim1->setStartValue(siz);
-            anim2->setStartValue(size2);
-            siz += QSize(0, d->ui.packageWidget->sizeHint().height());
-            size2 += QSize(0, d->ui.packageWidget->sizeHint().height());
-    //         size.setSize(rect.size() + d->ui.packageWidget->size());
-    //         size.setHeight(d->ui.packageWidget->sizeHint().height());
-            anim1->setEndValue(siz);
-            anim2->setEndValue(size2);
-            anim1->setEasingCurve(QEasingCurve::InOutQuad);
-            anim2->setEasingCurve(QEasingCurve::InOutQuad);
-            group->addAnimation(anim1);
-            group->addAnimation(anim2);
-            group->start();
-        }
-        d->showDetails = !d->showDetails;
-        
 
-        
+
 //         d->ui.detailGroup->setVisible(d->showDetails);
     }
         break;

@@ -11,5 +11,11 @@
        </method>
        <method name="RefreshAndUpdate" >
        </method>
+       <method name="DebconfDialog" >
+           <!-- IN: path to the DebconfDialog socket -->
+           <arg direction="in" type="s" name="socket_path" />
+           <!-- IN: xid of the Debconf Dialog parent -->
+           <arg direction="in" type="u" name="xid_parent">
+       </method>
    </interface>
 </node>

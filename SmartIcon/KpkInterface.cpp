@@ -28,6 +28,11 @@
 #include <KNotification>
 #include <QPackageKit>
 
+#ifdef HAVE_DEBCONFKDE
+#include <KDialog>
+#include <KWindowSystem>
+#endif
+
 #include <KDebug>
 
 using namespace PackageKit;
@@ -35,7 +40,7 @@ using namespace PackageKit;
 KpkInterface::KpkInterface(QObject *parent)
         : QObject(parent)
 {
-    qDebug() << "Creating Helper";
+    kDebug() << "Creating Helper";
     (void) new KPackageKitSmartIconAdaptor(this);
     if (!QDBusConnection::sessionBus().registerService("org.kde.KPackageKitSmartIcon")) {
         kDebug() << "another helper is already running";
@@ -50,6 +55,7 @@ KpkInterface::KpkInterface(QObject *parent)
 
 KpkInterface::~KpkInterface()
 {
+    kDebug();
 }
 
 void KpkInterface::WatchTransaction(const QString &tid)
@@ -63,9 +69,9 @@ void KpkInterface::RefreshCache()
     Transaction *t = Client::instance()->refreshCache(true);
     if (t->error()) {
         KNotification *notify = new KNotification("TransactionError", 0, KNotification::Persistent);
-            notify->setText(KpkStrings::daemonError(t->error()));
-            notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-            notify->sendEvent();
+        notify->setText(KpkStrings::daemonError(t->error()));
+        notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+        notify->sendEvent();
     } else {
         emit watchTransaction(t->tid(), true);
     }
@@ -83,3 +89,40 @@ void KpkInterface::RefreshAndUpdate()
     // This is to show updates and refresh the cache
     emit refreshAndUpdate(true);
 }
+
+void KpkInterface::DebconfDialog(const QString &socket_path, uint xid_parent)
+{
+    kDebug() << socket_path << xid_parent;
+#ifdef HAVE_DEBCONFKDE
+    DebconfGui *gui;
+    if (m_debconfGuis.contains(socket_path)) {
+        gui = m_debconfGuis[socket_path];
+    } else {
+        DebconfGui *gui = new DebconfGui(socket_path);
+        m_debconfGuis[socket_path] = gui;
+        connect(gui, SIGNAL(activated()), this, SLOT(debconfActivate()));
+    }
+    m_debconfGuis[socket_path]->setProperty("xid_parent", xid_parent);
+#else
+    Q_UNUSED(socket_path)
+    Q_UNUSED(xid_parent)
+    kDebug() << "Not compiled with Debconf support - ignoring";
+#endif //HAVE_DEBCONFKDE
+}
+
+#ifdef HAVE_DEBCONFKDE
+void KpkInterface::debconfActivate()
+{
+    DebconfGui *gui = qobject_cast<DebconfGui*>(sender());
+    uint xid_parent = gui->property("xid_parent").toUInt();
+    KDialog *dialog = new KDialog(gui);
+    connect(gui, SIGNAL(deactivated()), dialog, SLOT(deleteLater()));
+//     dialog->setCaption( "My title" );
+    dialog->setButtons(KDialog::None);
+    dialog->setMainWidget(gui);
+    KWindowSystem::setMainWindow(dialog, xid_parent);
+    dialog->show();
+}
+#endif
+
+#include "KpkInterface.moc"
