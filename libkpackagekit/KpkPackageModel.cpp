@@ -136,17 +136,23 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void KpkPackageModel::checkPackage(QSharedPointer<PackageKit::Package> package)
+void KpkPackageModel::checkPackage(const QSharedPointer<PackageKit::Package> &package)
 {
     if (package->info() != Enum::InfoBlocked && !containsChecked(package->id())) {
         m_checkedPackages[package->id()] = package;
+        if (sender() != 0) {
+            emit packageChecked(package);
+        }
     }
 }
 
-void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> package)
+void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> &package)
 {
     if (containsChecked(package->id())) {
         m_checkedPackages.remove(package->id());
+        if (sender() != 0) {
+            emit packageUnchecked(package);
+        }
     }
 }
 
@@ -217,12 +223,12 @@ void KpkPackageModel::addPackage(QSharedPointer<PackageKit::Package> package)
     endInsertRows();
 }
 
-void KpkPackageModel::removePackage(QSharedPointer<PackageKit::Package> package)
-{
-    beginRemoveRows(QModelIndex(), m_packages.size() - 1, m_packages.size() - 1);
-    m_packages.remove(m_packages.indexOf(package));
-    endRemoveRows();
-}
+// void KpkPackageModel::removePackage(QSharedPointer<PackageKit::Package> package)
+// {
+//     beginRemoveRows(QModelIndex(), m_packages.size() - 1, m_packages.size() - 1);
+//     m_packages.remove(m_packages.indexOf(package));
+//     endRemoveRows();
+// }
 
 void KpkPackageModel::clear()
 {

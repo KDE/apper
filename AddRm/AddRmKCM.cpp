@@ -104,12 +104,17 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     connect(pkgDelegate, SIGNAL(showExtendItem(const QModelIndex &)),
             this, SLOT(showExtendItem(const QModelIndex &)));
     packageView->setItemDelegate(pkgDelegate);
-    packageView->setModel(m_packageModel = new KpkPackageModel(this, packageView));
-    packageView->viewport()->setAttribute(Qt::WA_Hover);
+    packageView->setModel(m_browseModel = new KpkPackageModel(this, packageView));
+//     packageView->viewport()->setAttribute(Qt::WA_Hover);
+    packageView->viewport()->setAttribute(Qt::WA_MouseTracking);
+    packageView->viewport()->setMouseTracking(true);
+
+    packageView->setAttribute(Qt::WA_MouseTracking);
+    packageView->setMouseTracking(true);
 
     // Connect this signal anyway so users that have backend that
     // do not support install or remove can be informed properly
-    connect(m_packageModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+    connect(m_browseModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkChanged()));
 
     QMenu *findMenu = new QMenu(this);
@@ -207,6 +212,30 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     installedView->setModel(m_installedModel);
     installedView->viewport()->setAttribute(Qt::WA_Hover);
     tabWidget->setTabIcon(1, KIcon("drive-harddisk"));
+
+    // INSTALLED TAB
+    pkgDelegate = new KpkDelegate(changesView);
+    changesView->setItemDelegate(pkgDelegate);
+    connect(pkgDelegate, SIGNAL(showExtendItem(const QModelIndex &)),
+            this, SLOT(showExtendItem(const QModelIndex &)));
+    m_changesModel = new KpkPackageModel(this, changesView);
+    changesView->setModel(m_changesModel);
+
+    // Make the models talk to each other
+    connect(m_browseModel, SIGNAL(packageChecked(QSharedPointer<PackageKit::Package>)),
+            m_installedModel, SLOT(checkPackage(QSharedPointer<PackageKit::Package>)));
+    connect(m_installedModel, SIGNAL(packageChecked(QSharedPointer<PackageKit::Package>)),
+            m_browseModel, SLOT(checkPackage(QSharedPointer<PackageKit::Package>)));
+
+    connect(m_browseModel, SIGNAL(packageUnchecked(QSharedPointer<PackageKit::Package>)),
+            m_installedModel, SLOT(uncheckPackage(QSharedPointer<PackageKit::Package>)));
+    connect(m_installedModel, SIGNAL(packageUnchecked(QSharedPointer<PackageKit::Package>)),
+            m_browseModel, SLOT(uncheckPackage(QSharedPointer<PackageKit::Package>)));
+
+    connect(m_browseModel, SIGNAL(packageChecked(QSharedPointer<PackageKit::Package>)),
+            m_changesModel, SLOT(addSelectedPackage(QSharedPointer<PackageKit::Package>)));
+    connect(m_installedModel, SIGNAL(packageChecked(QSharedPointer<PackageKit::Package>)),
+            m_changesModel, SLOT(addSelectedPackage(QSharedPointer<PackageKit::Package>)));
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -275,7 +304,7 @@ void AddRmKCM::setCurrentActionCancel(bool cancel)
 
 void AddRmKCM::checkChanged()
 {
-    if (m_packageModel->selectedPackages().size() > 0) {
+    if (m_browseModel->selectedPackages().size() > 0) {
         emit changed(true);
     } else {
         emit changed(false);
@@ -378,15 +407,15 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
             // contract and delete and details widgets
             delegate->contractAll();
             // cleans the models
-            m_packageModel->clear();
+            m_browseModel->clear();
             break;
         case ListOfChanges :
             // contract and delete and details widgets
             delegate->contractAll();
             // cleans the models
-            m_packageModel->clear();
-            foreach (QSharedPointer<PackageKit::Package>pkg, m_packageModel->selectedPackages()) {
-                m_packageModel->addPackage(pkg);
+            m_browseModel->clear();
+            foreach (QSharedPointer<PackageKit::Package>pkg, m_browseModel->selectedPackages()) {
+                m_browseModel->addPackage(pkg);
             }
             break;
         case Group :
@@ -458,7 +487,7 @@ void AddRmKCM::search()
         KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
         delegate->contractAll();
         // cleans the models
-        m_packageModel->clear();
+        m_browseModel->clear();
         m_mTransRuning = true;
     }
 }
@@ -466,7 +495,7 @@ void AddRmKCM::search()
 void AddRmKCM::connectTransaction(Transaction *transaction)
 {
     connect(transaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-            m_packageModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            m_browseModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
     connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -483,10 +512,10 @@ void AddRmKCM::changed()
 
 void AddRmKCM::save()
 {
-    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_packageModel->selectedPackages(), this);
+    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_browseModel->selectedPackages(), this);
     frm->setTitle(i18n("Review Changes"));
     if (frm->exec() == QDialog::Accepted) {
-//         m_packageModel->uncheckAll();//TODO
+//         m_browseModel->uncheckAll();//TODO
     } else {
         QTimer::singleShot(0, this, SLOT(checkChanged()));
     }
@@ -496,7 +525,7 @@ void AddRmKCM::save()
 
 void AddRmKCM::load()
 {
-//     m_packageModel->uncheckAll();
+//     m_browseModel->uncheckAll();
 }
 
 void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)

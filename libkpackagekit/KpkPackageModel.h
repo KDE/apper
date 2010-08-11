@@ -46,7 +46,7 @@ public:
 
     bool allSelected() const;
     QList<QSharedPointer<PackageKit::Package> > selectedPackages() const;
-    void removePackage(QSharedPointer<PackageKit::Package>package);
+//     void removePackage(QSharedPointer<PackageKit::Package>package);
     QSharedPointer<PackageKit::Package> package(const QModelIndex &index) const;
     void clear();
 
@@ -73,10 +73,15 @@ public slots:
     void addSelectedPackage(QSharedPointer<PackageKit::Package> package);
     void setAllChecked(bool checked);
 
+    void checkPackage(const QSharedPointer<PackageKit::Package> &package);
+    void uncheckPackage(const QSharedPointer<PackageKit::Package> &package);
+
+signals:
+    void packageChecked(const QSharedPointer<PackageKit::Package> &package);
+    void packageUnchecked(const QSharedPointer<PackageKit::Package> &package);
+
 private:
     bool containsChecked(const QString &pid) const;
-    void checkPackage(QSharedPointer<PackageKit::Package> package);
-    void uncheckPackage(const QSharedPointer<PackageKit::Package> package);
 
     QAbstractItemView *m_packageView;
     QVector<QSharedPointer<PackageKit::Package> > m_packages;

@@ -216,7 +216,7 @@
         <number>0</number>
        </property>
        <item row="0" column="0">
-        <widget class="QTreeView" name="installedView_2">
+        <widget class="QTreeView" name="changesView">
          <property name="mouseTracking">
           <bool>true</bool>
          </property>

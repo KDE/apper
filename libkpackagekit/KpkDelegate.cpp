@@ -159,6 +159,9 @@ void KpkDelegate::paint(QPainter *painter,
         style->drawControl(QStyle::CE_PushButton, &optBt, painter);
     }
 
+QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+            QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
+//     kDebug() << pos;
 
 
     // selects the mode to paint the icon based on the info field
@@ -329,17 +332,34 @@ bool KpkDelegate::editorEvent(QEvent *event,
     if (event->type() == QEvent::MouseButtonRelease) {
         QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
         QPoint point = view->viewport()->mapFromGlobal(QCursor::pos());
+
+        bool leftToRight = QApplication::isLeftToRight();
+        QStyleOptionButton optBt;
+        optBt.rect = option.rect;
+        if (leftToRight) {
+            optBt.rect.setLeft(option.rect.left() + option.rect.width() - (m_buttonSize.width() + UNIVERSAL_PADDING));
+        } else {
+            optBt.rect.setLeft(option.rect.left() + UNIVERSAL_PADDING);
+        }
+        // Calculate the top of the button which is the item height - the button height size divided by 2
+        // this give us a little value which is the top and bottom margin
+        optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
+        optBt.rect.setSize(m_buttonSize);
+
 //         kDebug() << point << option.rect.left() << option;
 //         kDebug() << view->visualRect(index);
+        if (insideButton(optBt.rect, point)) {
+            return model->setData(index,
+                                  !index.data(KpkPackageModel::CheckStateRole).toBool(),
+                                  Qt::CheckStateRole);
+        }
         QRect rect = view->visualRect(index);
         if (QApplication::isRightToLeft()) {
             if ((rect.width() - point.x()) <= m_extendPixmapWidth) {
                 emit showExtendItem(index);
             }
-        } else {
-            if (point.x() <= m_extendPixmapWidth) {
-                emit showExtendItem(index);
-            }
+        } else if (point.x() <= m_extendPixmapWidth) {
+            emit showExtendItem(index);
         }
     }
 

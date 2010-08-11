@@ -36,7 +36,7 @@ using namespace PackageKit;
 
 class KpkPackageModel;
 class KpkFiltersMenu;
-class AddRmKCM : public KCModule, public Ui::AddRmKCM
+class AddRmKCM : public KCModule, Ui::AddRmKCM
 {
     Q_OBJECT
 public:
@@ -90,8 +90,9 @@ private:
     QAction *m_currentAction;
     bool m_mTransRuning;//main trans
     QStandardItemModel *m_groupsModel;
-    KpkPackageModel    *m_packageModel;
+    KpkPackageModel    *m_browseModel;
     KpkPackageModel    *m_installedModel;
+    KpkPackageModel    *m_changesModel;
     bool m_databaseChanged;
 
     Client *m_client;
