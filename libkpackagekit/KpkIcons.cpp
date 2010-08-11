@@ -205,10 +205,10 @@ KIcon KpkIcons::groupsIcon(Enum::Group group)
     case Enum::GroupAccessories     : return KpkIcons::getIcon("applications-accessories");
     case Enum::GroupAdminTools      : return KpkIcons::getIcon("dialog-password");
     case Enum::GroupCommunication   : return KpkIcons::getIcon("network-workgroup");//FIXME
-    case Enum::GroupDesktopGnome    : return KpkIcons::getIcon("user-desktop");//FIXME
+    case Enum::GroupDesktopGnome    : return KpkIcons::getIcon("kpk-desktop-gnome");
     case Enum::GroupDesktopKde      : return KpkIcons::getIcon("kde");
     case Enum::GroupDesktopOther    : return KpkIcons::getIcon("user-desktop");
-    case Enum::GroupDesktopXfce     : return KpkIcons::getIcon("user-desktop");//FIXME
+    case Enum::GroupDesktopXfce     : return KpkIcons::getIcon("kpk-desktop-xfce");
     case Enum::GroupDocumentation   : return KpkIcons::getIcon("accessories-dictionary");//FIXME
     case Enum::GroupEducation       : return KpkIcons::getIcon("applications-education");
     case Enum::GroupElectronics     : return KpkIcons::getIcon("media-flash");

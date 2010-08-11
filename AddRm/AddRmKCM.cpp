@@ -511,5 +511,15 @@ void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)
     m_mTransRuning = false;
 }
 
-#include "AddRmKCM.moc"
+void AddRmKCM::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Return ||
+        event->key() == Qt::Key_Enter) {
+        // special tab handling here
+        m_currentAction->trigger();
+        return;
+    }
+    KCModule::keyPressEvent(event);
+}
 
+#include "AddRmKCM.moc"

@@ -21,7 +21,7 @@
 #ifndef ADD_RM_KCM_U
 #define ADD_RM_KCM_U
 
-#include "ui_KpkAddRm.h"
+#include "ui_AddRmKCM.h"
 
 #include <QtGui/QtGui>
 #include <QtCore/QtCore>
@@ -36,7 +36,7 @@ using namespace PackageKit;
 
 class KpkPackageModel;
 class KpkFiltersMenu;
-class AddRmKCM : public KCModule, public Ui::KpkAddRm
+class AddRmKCM : public KCModule, public Ui::AddRmKCM
 {
     Q_OBJECT
 public:
@@ -83,6 +83,7 @@ private:
     void setActionCancel(bool enabled);
     void search();
     void connectTransaction(Transaction *transaction);
+    void keyPressEvent(QKeyEvent *event);
 
     QStackedLayout *m_viewLayout;
     KToolBarPopupAction *m_genericActionK;
