@@ -60,7 +60,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
  : KCModule(KPackageKitFactory::componentData(), parent, args),
    m_currentAction(0),
    m_mTransRuning(false),
-   m_installedModel(0),
    m_databaseChanged(true),
    m_findIcon("edit-find"),
    m_cancelIcon("dialog-cancel")
@@ -94,28 +93,10 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     gridLayout_2->addWidget(toolBar);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
+    // Create a stacked layout so only homeView or packageView are displayed
     m_viewLayout = new QStackedLayout(stackedWidget);
     m_viewLayout->addWidget(homeView);
     m_viewLayout->addWidget(packageView);
-
-
-    //initialize the model, delegate, client and  connect it's signals
-    KpkDelegate *pkgDelegate = new KpkDelegate(packageView);
-    connect(pkgDelegate, SIGNAL(showExtendItem(const QModelIndex &)),
-            this, SLOT(showExtendItem(const QModelIndex &)));
-    packageView->setItemDelegate(pkgDelegate);
-    packageView->setModel(m_browseModel = new KpkPackageModel(this, packageView));
-//     packageView->viewport()->setAttribute(Qt::WA_Hover);
-    packageView->viewport()->setAttribute(Qt::WA_MouseTracking);
-    packageView->viewport()->setMouseTracking(true);
-
-    packageView->setAttribute(Qt::WA_MouseTracking);
-    packageView->setMouseTracking(true);
-
-    // Connect this signal anyway so users that have backend that
-    // do not support install or remove can be informed properly
-    connect(m_browseModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
-            this, SLOT(checkChanged()));
 
     QMenu *findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method
@@ -173,8 +154,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     foreach (const Enum::Group &group, groups) {
         if (group != Enum::UnknownGroup) {
             groupItem = new QStandardItem(KpkStrings::groups(group));
-            groupItem->setData(Group, Qt::UserRole);
-            groupItem->setData(group, Group);
+            groupItem->setData(group);
             groupItem->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
             groupItem->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
             groupItem->setIcon(KpkIcons::groupsIcon(group));
@@ -201,39 +181,71 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
 
+    //initialize the model, delegate, client and  connect it's signals
+    setupView(&m_browseModel, packageView);
+
     // INSTALLED TAB
-    pkgDelegate = new KpkDelegate(installedView);
-    installedView->setItemDelegate(pkgDelegate);
-    connect(pkgDelegate, SIGNAL(showExtendItem(const QModelIndex &)),
-            this, SLOT(showExtendItem(const QModelIndex &)));
-    m_installedModel = new KpkPackageModel(this, installedView);
-    installedView->setModel(m_installedModel);
-    installedView->viewport()->setAttribute(Qt::WA_Hover);
+    setupView(&m_installedModel, installedView);
     tabWidget->setTabIcon(1, KIcon("drive-harddisk"));
 
-    // INSTALLED TAB
-    pkgDelegate = new KpkDelegate(changesView);
-    changesView->setItemDelegate(pkgDelegate);
-    connect(pkgDelegate, SIGNAL(showExtendItem(const QModelIndex &)),
-            this, SLOT(showExtendItem(const QModelIndex &)));
-    m_changesModel = new KpkPackageModel(this, changesView);
-    changesView->setModel(m_changesModel);
+    // CHANGES TAB
+    setupView(&m_changesModel, changesView);
+    // Connect this signal anyway so users that have backend that
+    // do not support install or remove can be informed properly
+    connect(m_changesModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+            this, SLOT(checkChanged()));
 
     // Make the models talk to each other
-    connect(m_browseModel, SIGNAL(packageChecked(QSharedPointer<PackageKit::Package>)),
-            m_installedModel, SLOT(checkPackage(QSharedPointer<PackageKit::Package>)));
-    connect(m_installedModel, SIGNAL(packageChecked(QSharedPointer<PackageKit::Package>)),
-            m_browseModel, SLOT(checkPackage(QSharedPointer<PackageKit::Package>)));
+    // packageCheced from browse model
+    connect(m_browseModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
+            m_installedModel, SLOT(checkPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_browseModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
+            m_changesModel, SLOT(addSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
 
-    connect(m_browseModel, SIGNAL(packageUnchecked(QSharedPointer<PackageKit::Package>)),
-            m_installedModel, SLOT(uncheckPackage(QSharedPointer<PackageKit::Package>)));
-    connect(m_installedModel, SIGNAL(packageUnchecked(QSharedPointer<PackageKit::Package>)),
-            m_browseModel, SLOT(uncheckPackage(QSharedPointer<PackageKit::Package>)));
+    // packageCheced from installed model
+    connect(m_installedModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
+            m_browseModel, SLOT(checkPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_installedModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
+            m_changesModel, SLOT(addSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
 
-    connect(m_browseModel, SIGNAL(packageChecked(QSharedPointer<PackageKit::Package>)),
-            m_changesModel, SLOT(addSelectedPackage(QSharedPointer<PackageKit::Package>)));
-    connect(m_installedModel, SIGNAL(packageChecked(QSharedPointer<PackageKit::Package>)),
-            m_changesModel, SLOT(addSelectedPackage(QSharedPointer<PackageKit::Package>)));
+    // packageUnchecked from browse model
+    connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_installedModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
+
+    // packageUnchecked from installed model
+    connect(m_installedModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_browseModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_installedModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
+
+    // packageUnchecked from changes model
+    connect(m_changesModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_browseModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_installedModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
+
+    // colapse package description when removing rows
+    connect(m_changesModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
+            this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
+}
+
+void AddRmKCM::setupView(KpkPackageModel **model, QTreeView *view)
+{
+    *model = new KpkPackageModel(this, view);
+    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(*model);
+    proxyModel->setDynamicSortFilter(true);
+    proxyModel->setSortRole(KpkPackageModel::SortRole);
+    view->setModel(proxyModel);
+    view->sortByColumn(0, Qt::AscendingOrder);
+    KpkDelegate *delegate = new KpkDelegate(view);
+    view->setItemDelegate(delegate);
+    connect(delegate, SIGNAL(showExtendItem(const QModelIndex &)),
+            this, SLOT(showExtendItem(const QModelIndex &)));
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -313,7 +325,10 @@ void AddRmKCM::showExtendItem(const QModelIndex &index)
 {
     if (index.column() == 0) {
         KpkDelegate *delegate = qobject_cast<KpkDelegate*>(sender());
-        const KpkPackageModel *model = qobject_cast<const KpkPackageModel*>(index.model());
+        const QSortFilterProxyModel *proxy;
+        const KpkPackageModel *model;
+        proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
+        model = qobject_cast<const KpkPackageModel*>(proxy->sourceModel());
         QSharedPointer<PackageKit::Package> package = model->package(index);
         if (package) {
             if (delegate->isExtended(index)) {
@@ -323,6 +338,17 @@ void AddRmKCM::showExtendItem(const QModelIndex &index)
             }
         }
     }
+}
+
+void AddRmKCM::rowsAboutToBeRemoved(const QModelIndex &index, int start, int end)
+{
+    Q_UNUSED(end)
+    Q_UNUSED(index)
+    // If the item is going to be removed and it's extend item is expanded
+    // we need to contract it in order to don't show it parent less
+    QModelIndex removingIndex = m_changesModel->index(start, 0);
+    KpkDelegate *delegate = qobject_cast<KpkDelegate*>(changesView->itemDelegate());
+    delegate->contractItem(removingIndex);
 }
 
 void AddRmKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
@@ -398,32 +424,13 @@ void AddRmKCM::on_actionFindFile_triggered()
 
 void AddRmKCM::on_homeView_activated(const QModelIndex &index)
 {
-    KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
-    if (index.data(Qt::UserRole).isValid()) {
-        switch (static_cast<ItemType>(index.data(Qt::UserRole).toUInt())) {
-        case AllPackages :
-            // contract and delete and details widgets
-            delegate->contractAll();
-            // cleans the models
-            m_browseModel->clear();
-            break;
-        case ListOfChanges :
-            // contract and delete and details widgets
-            delegate->contractAll();
-            // cleans the models
-            m_browseModel->clear();
-            foreach (QSharedPointer<PackageKit::Package>pkg, m_browseModel->selectedPackages()) {
-                m_browseModel->addPackage(pkg);
-            }
-            break;
-        case Group :
-            // cache the search
-            m_searchRole    = Enum::RoleSearchGroup;
-            m_searchGroup   = static_cast<Enum::Group>(index.data(Group).toUInt());
-            m_searchFilters = m_filtersMenu->filters();
-            // create the main transaction
-            search();
-        }
+    if (index.isValid()) {
+        // cache the search
+        m_searchRole    = Enum::RoleSearchGroup;
+        m_searchGroup   = static_cast<Enum::Group>(index.data().toUInt());
+        m_searchFilters = m_filtersMenu->filters();
+        // create the main transaction
+        search();
     }
 }
 
@@ -447,32 +454,19 @@ void AddRmKCM::search()
 {
     m_viewLayout->setCurrentIndex(1);
     backTB->setEnabled(true);
-    // Check to see if "list of changes" is selected
-    // if so refresh it and do nothing
-    QModelIndex index;
-    if (!homeView->selectionModel()->selectedIndexes().isEmpty()) {
-        index = homeView->selectionModel()->selectedIndexes().first();
-    }
 
-    if (index.data(Qt::UserRole).isValid() &&
-        ListOfChanges == static_cast<ItemType>(index.data(Qt::UserRole).toUInt()))
-    {
-        on_homeView_activated(index);
-        return;
+    // search
+    if (m_searchRole == Enum::RoleSearchName) {
+        m_pkClient_main = m_client->searchNames(m_searchString, m_searchFilters);
+    } else if (m_searchRole == Enum::RoleSearchDetails) {
+        m_pkClient_main = m_client->searchDetails(m_searchString, m_searchFilters);
+    } else if (m_searchRole == Enum::RoleSearchFile) {
+        m_pkClient_main = m_client->searchFiles(m_searchString, m_searchFilters);
+    } else if (m_searchRole == Enum::RoleSearchGroup) {
+        m_pkClient_main = m_client->searchGroups(m_searchGroup, m_searchFilters);
     } else {
-        // search
-        if (m_searchRole == Enum::RoleSearchName) {
-            m_pkClient_main = m_client->searchNames(m_searchString, m_searchFilters);
-        } else if (m_searchRole == Enum::RoleSearchDetails) {
-            m_pkClient_main = m_client->searchDetails(m_searchString, m_searchFilters);
-        } else if (m_searchRole == Enum::RoleSearchFile) {
-            m_pkClient_main = m_client->searchFiles(m_searchString, m_searchFilters);
-        } else if (m_searchRole == Enum::RoleSearchGroup) {
-            m_pkClient_main = m_client->searchGroups(m_searchGroup, m_searchFilters);
-        } else {
-            kWarning() << "Search type not implemented yet";
-            return;
-        }
+        kWarning() << "Search type not implemented yet";
+        return;
     }
 
     if (m_pkClient_main->error()) {
@@ -510,7 +504,7 @@ void AddRmKCM::changed()
 
 void AddRmKCM::save()
 {
-    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_browseModel->selectedPackages(), this);
+    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_changesModel->selectedPackages(), this);
     frm->setTitle(i18n("Review Changes"));
     if (frm->exec() == QDialog::Accepted) {
 //         m_browseModel->uncheckAll();//TODO

@@ -84,7 +84,6 @@ QModelIndex KpkPackageModel::parent(const QModelIndex &index) const
     return QModelIndex();
 }
 
-//TODO: Make this not hideous.
 QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -105,7 +104,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         case SortRole:
             return pkg->name() + ' ' + pkg->version() + ' ' + pkg->arch();
         case Qt::CheckStateRole:
-            if (!m_checkable) {
+            if (!m_checkable && !property("kbd").toBool()) {
                 return QVariant();
             }
         case CheckStateRole:
@@ -140,7 +139,7 @@ void KpkPackageModel::checkPackage(const QSharedPointer<PackageKit::Package> &pa
 {
     if (package->info() != Enum::InfoBlocked && !containsChecked(package->id())) {
         m_checkedPackages[package->id()] = package;
-        if (sender() != 0) {
+        if (sender() == 0) {
             emit packageChecked(package);
         }
     }
@@ -150,7 +149,7 @@ void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> &
 {
     if (containsChecked(package->id())) {
         m_checkedPackages.remove(package->id());
-        if (sender() != 0) {
+        if (sender() == 0) {
             emit packageUnchecked(package);
         }
     }
@@ -179,8 +178,8 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
         emit dataChanged(index, index);
         // emit this so the package icon is also updated
         emit dataChanged(index,
-                            index.sibling(index.row(),
-                            index.column() - 1));
+                         index.sibling(index.row(),
+                         index.column() - 1));
         return true;
     }
     return false;
@@ -205,15 +204,14 @@ QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &
     return m_packages.at(index.row());
 }
 
-void KpkPackageModel::addSelectedPackage(QSharedPointer<PackageKit::Package> package)
+void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
 {
     checkPackage(package);
     addPackage(package);
 }
 
-void KpkPackageModel::addPackage(QSharedPointer<PackageKit::Package> package)
+void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &package)
 {
-//     kDebug() << package->name();
     if (package->info() == Enum::InfoBlocked) {
         return;
     }
@@ -223,12 +221,26 @@ void KpkPackageModel::addPackage(QSharedPointer<PackageKit::Package> package)
     endInsertRows();
 }
 
-// void KpkPackageModel::removePackage(QSharedPointer<PackageKit::Package> package)
-// {
-//     beginRemoveRows(QModelIndex(), m_packages.size() - 1, m_packages.size() - 1);
-//     m_packages.remove(m_packages.indexOf(package));
-//     endRemoveRows();
-// }
+void KpkPackageModel::rmSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
+{
+    int index = m_packages.indexOf(package);
+    if (index == -1) {
+        // Sometimes it's -1 because the pointer changed
+        foreach (const QSharedPointer<PackageKit::Package> &pkg, m_packages) {
+            if (pkg->id() == package->id()) {
+                kDebug() << "found";
+                index = m_packages.indexOf(pkg);
+                break;
+            }
+        }
+    }
+
+    if (index >= 0) {
+        beginRemoveRows(QModelIndex(), index, index);
+        m_packages.remove(index);
+        endRemoveRows();
+    }
+}
 
 void KpkPackageModel::clear()
 {
@@ -259,8 +271,9 @@ QList<QSharedPointer<PackageKit::Package> > KpkPackageModel::selectedPackages() 
 
 bool KpkPackageModel::allSelected() const
 {
-    foreach(QSharedPointer<PackageKit::Package> p, m_packages) {
-        if (p->info() != Enum::InfoBlocked && !containsChecked(p->id())) {
+    foreach (const QSharedPointer<PackageKit::Package> &package, m_packages) {
+        if (package->info() != Enum::InfoBlocked &&
+            !containsChecked(package->id())) {
             return false;
         }
     }

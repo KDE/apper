@@ -32,6 +32,7 @@ public:
     KpkSearchableTreeView(QWidget *parent = 0);
 
     void keyboardSearch(const QString &search);
+    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif

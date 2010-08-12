@@ -43,12 +43,6 @@ public:
     AddRmKCM(QWidget *parent, const QVariantList &args);
     ~AddRmKCM();
 
-    enum ItemType {
-        AllPackages = Qt::UserRole + 1,
-        ListOfChanges,
-        Group
-    };
-
 signals:
     void changed(bool state);
 
@@ -68,6 +62,7 @@ private slots:
 
     void on_homeView_activated(const QModelIndex &index);
     void showExtendItem(const QModelIndex &index);
+    void rowsAboutToBeRemoved(const QModelIndex &index, int start, int end);
 
     void finished(PackageKit::Enum::Exit status, uint runtime);
     void errorCode(PackageKit::Enum::Error error, const QString &detail);
@@ -76,6 +71,7 @@ private slots:
     void changed();
 
 private:
+    void setupView(KpkPackageModel **model, QTreeView *view);
     void setCurrentActionEnabled(bool state);
     void setCurrentAction(QAction *action);
     void setCurrentActionCancel(bool cancel);

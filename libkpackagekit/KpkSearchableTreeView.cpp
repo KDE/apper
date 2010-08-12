@@ -37,4 +37,13 @@ void KpkSearchableTreeView::keyboardSearch(const QString &search)
     proxy->sourceModel()->setProperty("kbd", false);
 }
 
+void KpkSearchableTreeView::keyPressEvent(QKeyEvent *event)
+{
+    // this hooks enable Qt::CheckStateRole, handle the space key disable it
+    QSortFilterProxyModel *proxy = qobject_cast<QSortFilterProxyModel*>(model());
+    proxy->sourceModel()->setProperty("kbd", true);
+    QTreeView::keyPressEvent(event);
+    proxy->sourceModel()->setProperty("kbd", false);
+}
+
 #include "KpkSearchableTreeView.moc"
