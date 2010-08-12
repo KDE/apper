@@ -156,6 +156,8 @@ void KcmKpkUpdate::checkEnableUpdateButton()
 
 void KcmKpkUpdate::load()
 {
+    // set focus on the updates view
+    packageView->setFocus(Qt::OtherFocusReason);
     getUpdates();
 }
 
@@ -202,11 +204,25 @@ void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
     checkEnableUpdateButton();
 }
 
+#include <QDBusMessage>
 void KcmKpkUpdate::updatePackages()
 {
     QList<QSharedPointer<PackageKit::Package> > packages = m_updatesModel->selectedPackages();
 
     SET_PROXY
+//     QDBusMessage message;
+//         message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+//                                                  "/",
+//                                                  "org.kde.KPackageKitSmartIcon",
+//                                                  QLatin1String("SetupDebconfDialog"));
+//         // Use our own cached tid to avoid crashes
+//         message << qVariantFromValue(QString("/tmp/debkonf-sock"));
+//         message << qVariantFromValue(123);
+//         QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+//         if (reply.type() != QDBusMessage::ReplyMessage) {
+//             kWarning() << "Message did not receive a reply";
+//         }
+//         m_client->setHints("frontend-socket=/tmp/debkonf-sock");
     Transaction *t = m_client->updatePackages(true, packages);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));

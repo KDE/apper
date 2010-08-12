@@ -41,7 +41,7 @@ public:
     void RefreshCache();
     void RefreshAndUpdate();
     void Update();
-    void DebconfDialog(const QString &socket_path, uint xid_parent);
+    void SetupDebconfDialog(const QString &socketPath, uint xidParent);
 
 signals:
     void watchTransaction(const QString &tid, bool interactive);

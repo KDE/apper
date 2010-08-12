@@ -199,8 +199,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(m_client->filters(), this));
     filtersTB->setIcon(KIcon("view-filter"));
 
-    // set focus on the search lineEdit
-    searchKLE->setFocus(Qt::OtherFocusReason);
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
 
     // INSTALLED TAB
@@ -525,6 +523,8 @@ void AddRmKCM::save()
 
 void AddRmKCM::load()
 {
+    // set focus on the search lineEdit
+    searchKLE->setFocus(Qt::OtherFocusReason);
 //     m_browseModel->uncheckAll();
 }
 
@@ -542,8 +542,9 @@ void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)
 
 void AddRmKCM::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Return ||
-        event->key() == Qt::Key_Enter) {
+    if (searchKLE->hasFocus() &&
+        (event->key() == Qt::Key_Return ||
+         event->key() == Qt::Key_Enter)) {
         // special tab handling here
         m_currentAction->trigger();
         return;

@@ -24,6 +24,7 @@
 #include <KConfig>
 #include <KLocale>
 #include <KMessageBox>
+#include <KCModuleProxy>
 
 using namespace PackageKit;
 
@@ -62,6 +63,11 @@ void KpkMainUi::showAll()
         m_addrmPWI = addModule("kpk_addrm.desktop");
     }
     setCurrentPage(m_addrmPWI);
+
+//     KCModuleProxy *proxy = qobject_cast<KCModuleProxy*>(m_addrmPWI->widget());
+//     proxy->realModule()->setFocus(Qt::OtherFocusReason);
+//     m_addrmPWI->widget()->setFocus(Qt::OtherFocusReason);
+//     kDebug() << m_addrmPWI->widget();
 }
 
 void KpkMainUi::showUpdates(bool selected)
@@ -75,6 +81,7 @@ void KpkMainUi::showUpdates(bool selected)
         m_updatePWI = addModule("kpk_update.desktop", args);
     }
     setCurrentPage(m_updatePWI);
+//     m_updatePWI->widget()->setFocus(Qt::OtherFocusReason);
 }
 
 void KpkMainUi::showSettings()
@@ -83,6 +90,7 @@ void KpkMainUi::showSettings()
         m_settingsPWI = addModule("kpk_settings.desktop");
     }
     setCurrentPage(m_settingsPWI);
+//     m_settingsPWI->widget()->setFocus(Qt::OtherFocusReason);
 }
 
 #include "KpkMainUi.moc"

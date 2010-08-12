@@ -55,7 +55,7 @@ public:
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
- : KDialog(parent, Qt::Window),
+ : KDialog(parent),
    m_trans(trans),
    m_handlingActionRequired(false),
    m_showingError(false),

@@ -279,6 +279,16 @@
    <header>KpkCategorizedView.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>searchKLE</tabstop>
+  <tabstop>filtersTB</tabstop>
+  <tabstop>homeView</tabstop>
+  <tabstop>packageView</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>backTB</tabstop>
+  <tabstop>changesView</tabstop>
+  <tabstop>installedView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

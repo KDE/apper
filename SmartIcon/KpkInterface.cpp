@@ -90,22 +90,22 @@ void KpkInterface::RefreshAndUpdate()
     emit refreshAndUpdate(true);
 }
 
-void KpkInterface::DebconfDialog(const QString &socket_path, uint xid_parent)
+void KpkInterface::SetupDebconfDialog(const QString &socketPath, uint xidParent)
 {
-    kDebug() << socket_path << xid_parent;
+    kDebug() << socketPath << xidParent;
 #ifdef HAVE_DEBCONFKDE
     DebconfGui *gui;
-    if (m_debconfGuis.contains(socket_path)) {
-        gui = m_debconfGuis[socket_path];
+    if (m_debconfGuis.contains(socketPath)) {
+        gui = m_debconfGuis[socketPath];
     } else {
-        DebconfGui *gui = new DebconfGui(socket_path);
-        m_debconfGuis[socket_path] = gui;
+        gui = new DebconfGui(socketPath);
+        m_debconfGuis[socketPath] = gui;
         connect(gui, SIGNAL(activated()), this, SLOT(debconfActivate()));
     }
-    m_debconfGuis[socket_path]->setProperty("xid_parent", xid_parent);
+    gui->setProperty("xidParent", xidParent);
 #else
-    Q_UNUSED(socket_path)
-    Q_UNUSED(xid_parent)
+    Q_UNUSED(socketPath)
+    Q_UNUSED(xidParent)
     kDebug() << "Not compiled with Debconf support - ignoring";
 #endif //HAVE_DEBCONFKDE
 }
@@ -114,13 +114,13 @@ void KpkInterface::DebconfDialog(const QString &socket_path, uint xid_parent)
 void KpkInterface::debconfActivate()
 {
     DebconfGui *gui = qobject_cast<DebconfGui*>(sender());
-    uint xid_parent = gui->property("xid_parent").toUInt();
+    uint xidParent = gui->property("xidParent").toUInt();
     KDialog *dialog = new KDialog(gui);
     connect(gui, SIGNAL(deactivated()), dialog, SLOT(deleteLater()));
 //     dialog->setCaption( "My title" );
     dialog->setButtons(KDialog::None);
     dialog->setMainWidget(gui);
-    KWindowSystem::setMainWindow(dialog, xid_parent);
+    KWindowSystem::setMainWindow(dialog, xidParent);
     dialog->show();
 }
 #endif
