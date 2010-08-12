@@ -32,10 +32,21 @@ using namespace PackageKit;
 class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
 {
     Q_OBJECT
-
 public:
+    enum {
+        SortRole = Qt::UserRole,
+        NameRole,
+        SummaryRole,
+        VersionRole,
+        ArchRole,
+        IconRole,
+        IconPathRole,
+        IdRole,
+        CheckStateRole,
+        InstalledRole
+    };
+
     explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
-    explicit KpkPackageModel(const QList<QSharedPointer<PackageKit::Package> > &packages, QObject *parent = 0, QAbstractItemView *packageView = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -54,21 +65,10 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
 
-    enum {
-        SortRole = Qt::UserRole,
-        NameRole,
-        SummaryRole,
-        VersionRole,
-        ArchRole,
-        IconRole,
-        IconPathRole,
-        IdRole,
-        CheckStateRole,
-        InstalledRole
-    };
-
 public slots:
-    void addPackage(const QSharedPointer<PackageKit::Package> &package);
+    void addPackage(const QSharedPointer<PackageKit::Package> &package, bool selected = false);
+    void addPackages(const QList<QSharedPointer<PackageKit::Package> > &packages, bool selected = false);
+
     void addSelectedPackage(const QSharedPointer<PackageKit::Package> &package);
     void rmSelectedPackage(const QSharedPointer<PackageKit::Package> &package);
     void setAllChecked(bool checked);

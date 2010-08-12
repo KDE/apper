@@ -67,8 +67,8 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
 
     //initialize the model, delegate, client and  connect it's signals
     d->ui.packageView->setItemDelegate(d->pkgDelegate = new KpkDelegate(d->ui.packageView));
-    d->ui.packageView->setModel(d->mainPkgModel = new KpkPackageModel(packages, this, d->ui.packageView));
-//     d->mainPkgModel->checkAll();//TODO check this
+    d->ui.packageView->setModel(d->mainPkgModel = new KpkPackageModel(this, d->ui.packageView));
+    d->mainPkgModel->addPackages(packages, true);
     d->ui.packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     connect(d->mainPkgModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkChanged()));
@@ -80,7 +80,7 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
     // better apply text and description text
     int countRemove  = 0;
     int countInstall = 0;
-    foreach (QSharedPointer<PackageKit::Package>package, packages) {
+    foreach (const QSharedPointer<PackageKit::Package> &package, packages) {
         // If the package is installed we are going to remove it
         if (package->info() == Enum::InfoInstalled) {
             countRemove++;
@@ -137,7 +137,7 @@ int KpkReviewChanges::exec(OperationModes flags)
         // Starts the action without showing the dialog
         QTimer::singleShot(0, this, SLOT(doAction()));
     }
-
+kDebug();
     QEventLoop loop;
     connect(this, SIGNAL(finished(int)), &loop, SLOT(quit()));
     loop.exec();
@@ -433,7 +433,7 @@ void KpkReviewChanges::slotButtonClicked(int button)
 //     QWidget::resizeEvent(event);
 //     updateColumnsWidth();
 // }
-// 
+//
 // bool KpkReviewChanges::event(QEvent *event)
 // {
 //     switch (event->type()) {
@@ -444,18 +444,18 @@ void KpkReviewChanges::slotButtonClicked(int button)
 //         default:
 //             break;
 //     }
-// 
+//
 //     return QWidget::event(event);
 // }
-// 
+//
 // void KpkReviewChanges::updateColumnsWidth(bool force)
 // {
 //     int viewWidth = d->ui.packageView->viewport()->width();
-// 
+//
 //     if (force) {
 //         viewWidth -= style()->pixelMetric(QStyle::PM_ScrollBarExtent) + UNIVERSAL_PADDING;
 //     }
-// 
+//
 //     d->ui.packageView->setColumnWidth(0, d->pkgDelegate->columnWidth(0, viewWidth));
 //     d->ui.packageView->setColumnWidth(1, d->pkgDelegate->columnWidth(1, viewWidth));
 // }

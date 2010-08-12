@@ -37,8 +37,7 @@ namespace KpkStrings
     KDE_EXPORT QString statusPast(Enum::Status status);
     KDE_EXPORT QString groups(Enum::Group group);
     KDE_EXPORT QString info(Enum::Info state);
-    KDE_EXPORT QString infoUpdate(Enum::Info state, int number);
-    KDE_EXPORT QString infoUpdate(Enum::Info state, int updates, int selected);
+    KDE_EXPORT QString packageQuantity(bool updates, int packages, int selected);
     KDE_EXPORT QString updateState(Enum::UpdateState value);
     KDE_EXPORT QString restartType(Enum::Restart value);
     KDE_EXPORT QString restartTypeFuture(Enum::Restart value);

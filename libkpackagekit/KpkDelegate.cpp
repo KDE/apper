@@ -69,8 +69,8 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
 }
 
 void KpkDelegate::paint(QPainter *painter,
-                              const QStyleOptionViewItem &option,
-                              const QModelIndex &index) const
+                        const QStyleOptionViewItem &option,
+                        const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;

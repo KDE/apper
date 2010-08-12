@@ -209,7 +209,7 @@
      </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
-       <string>15 Pending Changes</string>
+       <string>No Change Pending</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
        <property name="margin">

@@ -37,13 +37,34 @@ KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView
 {
 }
 
-KpkPackageModel::KpkPackageModel(const QList<QSharedPointer<PackageKit::Package> > &packages, QObject *parent, QAbstractItemView *packageView)
-: QAbstractItemModel(parent),
-  m_packageView(packageView)
+void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &package,
+                                 bool selected)
 {
-    foreach(QSharedPointer<PackageKit::Package> p, packages) {
-        addPackage(p);
+    if (package->info() == Enum::InfoBlocked) {
+        return;
     }
+
+    if (selected) {
+        checkPackage(package);
+    }
+
+    // check to see if the list of info has any package
+    beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
+    m_packages.append(package);
+    endInsertRows();
+}
+
+void KpkPackageModel::addPackages(const QList<QSharedPointer<PackageKit::Package> > &packages,
+                                  bool selected)
+{
+    foreach(const QSharedPointer<PackageKit::Package> &package, packages) {
+        addPackage(package, selected);
+    }
+}
+
+void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
+{
+    addPackage(package, true);
 }
 
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -51,11 +72,13 @@ QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, i
     Q_UNUSED(orientation);
     if (role == Qt::DisplayRole && section == 0) {
         if (m_checkable) {
-            return KpkStrings::infoUpdate(Enum::InfoNormal,
-                                          m_packages.size(),
-                                          m_checkedPackages.size());
+            return KpkStrings::packageQuantity(true,
+                                               m_packages.size(),
+                                               m_checkedPackages.size());
         }
-        return i18np("1 Package", "%1 Packages", m_packages.size());
+        return KpkStrings::packageQuantity(false,
+                                           m_packages.size(),
+                                           0);
     }
     return QVariant();
 }
@@ -202,23 +225,6 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
 QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &index) const
 {
     return m_packages.at(index.row());
-}
-
-void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
-{
-    checkPackage(package);
-    addPackage(package);
-}
-
-void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &package)
-{
-    if (package->info() == Enum::InfoBlocked) {
-        return;
-    }
-    // check to see if the list of info has any package
-    beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
-    m_packages.append(package);
-    endInsertRows();
 }
 
 void KpkPackageModel::rmSelectedPackage(const QSharedPointer<PackageKit::Package> &package)

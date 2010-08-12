@@ -192,7 +192,9 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     setupView(&m_changesModel, changesView);
     // Connect this signal anyway so users that have backend that
     // do not support install or remove can be informed properly
-    connect(m_changesModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+    connect(m_changesModel, SIGNAL(rowsInserted(const QModelIndex, int, int)),
+            this, SLOT(checkChanged()));
+    connect(m_changesModel, SIGNAL(rowsRemoved(const QModelIndex, int, int)),
             this, SLOT(checkChanged()));
 
     // Make the models talk to each other
@@ -229,8 +231,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
             m_installedModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
 
     // colapse package description when removing rows
-    connect(m_changesModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
-            this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
+//     connect(m_changesModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
+//             this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
 }
 
 void AddRmKCM::setupView(KpkPackageModel **model, QTreeView *view)
@@ -242,10 +244,13 @@ void AddRmKCM::setupView(KpkPackageModel **model, QTreeView *view)
     proxyModel->setSortRole(KpkPackageModel::SortRole);
     view->setModel(proxyModel);
     view->sortByColumn(0, Qt::AscendingOrder);
+    view->header()->setDefaultAlignment(Qt::AlignCenter);
     KpkDelegate *delegate = new KpkDelegate(view);
     view->setItemDelegate(delegate);
     connect(delegate, SIGNAL(showExtendItem(const QModelIndex &)),
             this, SLOT(showExtendItem(const QModelIndex &)));
+    connect(proxyModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
+            this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -314,9 +319,12 @@ void AddRmKCM::setCurrentActionCancel(bool cancel)
 
 void AddRmKCM::checkChanged()
 {
-    if (m_browseModel->selectedPackages().size() > 0) {
+    int size = m_changesModel->rowCount();
+    if (size > 0) {
+        tabWidget->setTabText(2, i18np("1 Change Pending", "%1 Changes Pending", size));
         emit changed(true);
     } else {
+        tabWidget->setTabText(2, i18n("No Change Pending"));
         emit changed(false);
     }
 }
@@ -329,7 +337,8 @@ void AddRmKCM::showExtendItem(const QModelIndex &index)
         const KpkPackageModel *model;
         proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
         model = qobject_cast<const KpkPackageModel*>(proxy->sourceModel());
-        QSharedPointer<PackageKit::Package> package = model->package(index);
+        QModelIndex origIndex = proxy->mapToSource(index);
+        QSharedPointer<PackageKit::Package> package = model->package(origIndex);
         if (package) {
             if (delegate->isExtended(index)) {
                 delegate->contractItem(index);
@@ -346,7 +355,9 @@ void AddRmKCM::rowsAboutToBeRemoved(const QModelIndex &index, int start, int end
     Q_UNUSED(index)
     // If the item is going to be removed and it's extend item is expanded
     // we need to contract it in order to don't show it parent less
-    QModelIndex removingIndex = m_changesModel->index(start, 0);
+    QAbstractItemModel *model;
+    model = qobject_cast<QAbstractItemModel*>(sender());
+    QModelIndex removingIndex = model->index(start, 0);
     KpkDelegate *delegate = qobject_cast<KpkDelegate*>(changesView->itemDelegate());
     delegate->contractItem(removingIndex);
 }
@@ -447,6 +458,7 @@ void AddRmKCM::on_tabWidget_currentChanged(int index)
         Transaction *trans = m_client->getPackages(Enum::FilterInstalled);
         connect(trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                 m_installedModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+        connectTransaction(trans);
     }
 }
 

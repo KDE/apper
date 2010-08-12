@@ -142,10 +142,10 @@ void KcmKpkUpdate::checkEnableUpdateButton()
     emit changed(m_updatesModel->selectedPackages().size() > 0);
     int selectedSize = m_updatesModel->selectedPackages().size();
     int updatesSize = m_updatesModel->rowCount();
-    if (selectedSize == updatesSize) {
-        m_header->setCheckState(Qt::Checked);
-    } else if (selectedSize == 0) {
+    if (selectedSize == 0) {
         m_header->setCheckState(Qt::Unchecked);
+    } else if (selectedSize == updatesSize) {
+        m_header->setCheckState(Qt::Checked);
     } else {
         m_header->setCheckState(Qt::PartiallyChecked);
     }
@@ -315,7 +315,12 @@ void KcmKpkUpdate::on_refreshPB_clicked()
 
 void KcmKpkUpdate::showExtendItem(const QModelIndex &index)
 {
-    QSharedPointer<PackageKit::Package> package = m_updatesModel->package(index);
+    const QSortFilterProxyModel *proxy;
+    const KpkPackageModel *model;
+    proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
+    model = qobject_cast<const KpkPackageModel*>(proxy->sourceModel());
+    QModelIndex origIndex = proxy->mapToSource(index);
+    QSharedPointer<PackageKit::Package> package = model->package(origIndex);
     // check to see if the backend support
     if (package && (m_roles & Enum::RoleGetUpdateDetail)) {
         if (m_delegate->isExtended(index)) {

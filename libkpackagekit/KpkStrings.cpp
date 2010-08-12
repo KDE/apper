@@ -739,89 +739,25 @@ QString KpkStrings::info(Enum::Info state)
     }
 }
 
-QString KpkStrings::infoUpdate(Enum::Info state, int number)
+QString KpkStrings::packageQuantity(bool updates, int packages, int selected)
 {
-    switch (state) {
-    case Enum::InfoLow :
-        return i18np("1 trivial update", "%1 trivial updates", number);
-    case Enum::InfoNormal :
-        return i18ncp("Type of update, in the case it's just an update", "1 Update", "%1 Updates", number);
-    case Enum::InfoImportant :
-        return i18np("1 important update", "%1 important updates", number);
-    case Enum::InfoSecurity :
-        return i18np("1 security update", "%1 security updates", number);
-    case Enum::InfoBugfix :
-        return i18np("1 bug fix update", "%1 bug fix updates", number);
-    case Enum::InfoEnhancement :
-        return i18np("1 enhancement update", "%1 enhancement updates", number);
-    case Enum::InfoBlocked :
-        return i18np("1 blocked update", "%1 blocked updates", number);
-    case Enum::InfoInstalled :
-        return i18np("1 installed package", "%1 installed packages", number);
-    case Enum::InfoAvailable :
-        return i18np("1 available package", "%1 available packages", number);
-    default : // In this case we don't want to map all enums
-        kWarning() << "update info unrecognised: " << state;
-        return i18np("1 unknown update", "%1 unknown updates", number);
-    }
-}
-
-QString KpkStrings::infoUpdate(Enum::Info state, int updates, int selected)
-{
-    if (updates == selected) {
-        switch (state) {
-        case Enum::InfoLow :
-            return i18np("1 trivial update selected", "%1 trivial updates selected", updates);
-        case Enum::InfoNormal :
-            return i18ncp("Type of update, in the case it's just an update",
+    if (updates) {
+        if (packages == selected) {
+            return i18ncp("Some updates were selected on the view",
                           "1 Update Selected",
-                          "%1 Updates Selected", updates);
-        case Enum::InfoImportant :
-            return i18np("1 important update selected", "%1 important updates selected", updates);
-        case Enum::InfoSecurity :
-            return i18np("1 security update selected", "%1 security updates selected", updates);
-        case Enum::InfoBugfix :
-            return i18np("1 bug fix update selected", "%1 bug fix updates selected", updates);
-        case Enum::InfoEnhancement :
-            return i18np("1 enhancement update selected", "%1 enhancement updates selected", updates);
-        case Enum::InfoInstalled :
-            return i18np("1 installed package selected to be removed",
-                         "%1 installed packages selected to be removed", updates);
-        case Enum::InfoAvailable :
-            return i18np("1 available package selected to be installed",
-                         "%1 available packages selected to be installed", updates);
-        default : // In this case we don't want to map all enums
-            kWarning() << "update info unrecognised: " << state;
-            return i18np("1 unknown update", "%1 unknown updates", updates);
-        }
-    } else if (selected == 0) {
-        return infoUpdate(state, updates);
-    } else {
-        switch (state) {
-        case Enum::InfoLow :
-            return i18np("%1 trivial update", "%1 trivial updates, %2 selected", updates, selected);
-        case Enum::InfoNormal :
+                          "%1 Updates Selected", packages);
+        } else if (selected == 0) {
+            return i18ncp("Some updates are being shown on the screen",
+                          "1 Update", "%1 Updates",
+                          packages);
+        } else {
             return i18nc("Type of update, in the case it's just an update",
-                         "%1 Updates, %2 Selected", updates, selected);
-        case Enum::InfoImportant :
-            return i18np("%1 important update", "%1 important updates, %2 selected", updates, selected);
-        case Enum::InfoSecurity :
-            return i18np("%1 security update", "%1 security updates, %2 selected", updates, selected);
-        case Enum::InfoBugfix :
-            return i18np("%1 bug fix update", "%1 bug fix updates, %2 selected", updates, selected);
-        case Enum::InfoEnhancement :
-            return i18np("%1 enhancement update", "%1 enhancement updates, %2 selected", updates, selected);
-        case Enum::InfoBlocked :
-            // Blocked updates aren't selectable
-            return i18np("%1 blocked update", "%1 blocked updates", updates);
-        case Enum::InfoInstalled :
-            return i18np("%1 installed package", "%1 installed packages, %2 selected to be removed", updates, selected);
-        case Enum::InfoAvailable :
-            return i18np("%1 available package", "%1 available packages, %2 selected to be installed", updates, selected);
-        default : // In this case we don't want to map all enums
-            kWarning() << "update info unrecognised: " << state;
-            return i18np("%1 unknown update", "%1 unknown updates", updates);
+                         "%1 Updates, %2 Selected",
+                         packages,
+                         selected);
         }
+    } else {
+        return i18np("1 Package", "%1 Packages", packages);
     }
 }
 
