@@ -1,5 +1,6 @@
 set(libkpk_SRCS
     KpkDelegate.cpp
+    TransactionDelegate.cpp
     KpkTransaction.cpp
     KpkStrings.cpp
     KpkRepoSig.cpp

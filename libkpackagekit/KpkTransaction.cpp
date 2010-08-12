@@ -30,11 +30,14 @@
 #include <QPropertyAnimation>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
+#include <QtGui/QTreeView>
+#include <QtGui/QStandardItemModel>
 
 #include "KpkStrings.h"
 #include "KpkRepoSig.h"
 #include "KpkLicenseAgreement.h"
 #include "KpkIcons.h"
+#include "TransactionDelegate.h"
 
 #include "KpkProgressBar.h"
 
@@ -52,6 +55,7 @@ public:
     bool onlyTrusted;
     Enum::Role role;
     QList<QSharedPointer<PackageKit::Package> > packages;
+    QStandardItemModel model;
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
@@ -74,6 +78,16 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 //     setDetailsWidget(d->ui.packageWidget);
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
+
+    QTreeView *packageView = new QTreeView(this);
+//     packageView->hide();
+    packageView->setModel(&d->model);
+    packageView->setItemDelegate(new TransactionDelegate(this));
+    packageView->setRootIsDecorated(false);
+    packageView->setHeaderHidden(true);
+
+    kDebug() << layout();
+    d->ui.gridLayout->addWidget(packageView, 1, 0, 1, 2);
 //     d->showDetails = transactionGroup.readEntry("ShowDetails", false);
 //     setDetailsWidgetVisible(d->showDetails);
 //     setDetailsWidgetVisible(false);
@@ -165,6 +179,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
     d->tid = trans->tid();
     d->finished = false;
     d->role = m_trans->role();
+    d->model.clear();
 
 
     // enable the Details button just on these roles
@@ -249,7 +264,16 @@ void KpkTransaction::updateUi()
         d->ui.progressBar->reset();
     }
 
-    if (subpercentage <= 100) {
+//     if (subpercentage <= 100) {
+        QStandardItem *item;
+        item = d->model.item(d->model.rowCount() - 1);
+        if (item &&
+            item->data(Qt::UserRole).toUInt() != subpercentage) {
+            if (subpercentage == 101) {
+                subpercentage = 0;
+            }
+            item->setData(subpercentage, Qt::UserRole);
+        }
 //         d->ui.subprogressBar->setMaximum(100);
 //         d->ui.subprogressBar->setValue(subpercentage);
     // Check if we didn't already set the maximum as this
@@ -257,7 +281,7 @@ void KpkTransaction::updateUi()
 //     } else if (d->ui.subprogressBar->maximum() != 0) {
 //         d->ui.subprogressBar->setMaximum(0);
 //         d->ui.subprogressBar->reset();
-    }
+//     }
 
     d->ui.progressBar->setRemaining(m_trans->remainingTime());
 
@@ -296,14 +320,39 @@ void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package> p)
         if (!p->version().isEmpty()) {
             packageText += ' ' + p->version();
         }
+        QStandardItem *item;
+        QList<QStandardItem *> packages =  d->model.findItems(p->id(), Qt::MatchExactly |Qt::MatchCaseSensitive | Qt::MatchWrap, 0);
+        kDebug() << p->id() << p->info() << packages.size();
+        if (packages.size()) {
+            item = packages.last();
+            // if the item status (info) changed update it
+            if (item->data().toInt() != p->info()) {
+                kDebug() << p->info();
+                if (p->info() == Enum::InfoFinished) {
+                    item->setData(100, Qt::UserRole);
+                } else {
+                    item->setData(p->info());
+                }
+            }
+            // if the package progress changed update it
+//             if (item->data().toUInt() != p->info()) {
+//                 item->setData(p->info());
+//             }
+//             Qt::UserRole
+        } else {
+            QList<QStandardItem *> items;
+            // It's a new package create it and append it
+            item = new QStandardItem(p->id());
+            item->setData(p->info());
+            item->setData(0, Qt::UserRole);
+            items << item;
+            items << new QStandardItem(p->name());
+            items << new QStandardItem(p->summary());
+            d->model.appendRow(items);
+        }
 //         d->ui.packageL->setText(packageText);
 //         d->ui.descriptionL->setText(p->summary());
 //         enableButton(KDialog::Details, true);
-    } else {
-//         d->ui.packageL->clear();
-//         d->ui.descriptionL->setText(QString());
-//         enableButton(KDialog::Details, false);
-//         setDetailsWidgetVisible(false);
     }
 }
 

@@ -69,17 +69,6 @@ public:
 signals:
     void requeue();
 
-private:
-    void unsetTransaction();
-
-    Transaction *m_trans;
-    bool m_handlingActionRequired;
-    bool m_showingError; //This might replace the above
-    Behaviors m_flags;
-    ExitStatus m_exitStatus;
-    Enum::Status m_status;
-    KpkTransactionPrivate *d;
-
 private slots:
     void finishedDialog();
     void finished(PackageKit::Enum::Exit status);
@@ -91,6 +80,17 @@ private slots:
     void repoSignatureRequired(PackageKit::Client::SignatureInfo info);
 
     void setExitStatus(KpkTransaction::ExitStatus status);
+
+private:
+    void unsetTransaction();
+
+    Transaction *m_trans;
+    bool m_handlingActionRequired;
+    bool m_showingError; //This might replace the above
+    Behaviors m_flags;
+    ExitStatus m_exitStatus;
+    Enum::Status m_status;
+    KpkTransactionPrivate *d;
 
 protected slots:
     virtual void slotButtonClicked(int button);
