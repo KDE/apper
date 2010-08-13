@@ -27,7 +27,7 @@
 #include <QPlainTextEdit>
 #include <QTextDocument>
 
-KpkPackageDetails::KpkPackageDetails(QSharedPointer<PackageKit::Package>package, const Enum::Roles &roles, QWidget *parent)
+KpkPackageDetails::KpkPackageDetails(QSharedPointer<PackageKit::Package> package, const Enum::Roles &roles, QWidget *parent)
  : QWidget(parent),
    m_package(package),
    currentWidget(0),
@@ -100,7 +100,7 @@ void KpkPackageDetails::setCurrentWidget(QWidget *widget)
     gridLayout->addWidget(currentWidget = widget);
 }
 
-void KpkPackageDetails::getDetails(QSharedPointer<PackageKit::Package>p)
+void KpkPackageDetails::getDetails(QSharedPointer<PackageKit::Package> p)
 {
     // create the description transaction
     Transaction *t = Client::instance()->getDetails(p);
@@ -114,7 +114,7 @@ void KpkPackageDetails::getDetails(QSharedPointer<PackageKit::Package>p)
     }
 }
 
-void KpkPackageDetails::description(QSharedPointer<PackageKit::Package>p)
+void KpkPackageDetails::description(QSharedPointer<PackageKit::Package> p)
 {
     descriptionKTB->clear();
     //format and show description
@@ -168,7 +168,7 @@ void KpkPackageDetails::on_descriptionTB_clicked()
     }
 }
 
-void KpkPackageDetails::getFiles(QSharedPointer<PackageKit::Package>p)
+void KpkPackageDetails::getFiles(QSharedPointer<PackageKit::Package> p)
 {
     // create the files transaction
     Transaction *t = Client::instance()->getFiles(p);
@@ -182,7 +182,7 @@ void KpkPackageDetails::getFiles(QSharedPointer<PackageKit::Package>p)
     }
 }
 
-void KpkPackageDetails::files(QSharedPointer<PackageKit::Package>package, const QStringList &files)
+void KpkPackageDetails::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
 {
     Q_UNUSED(package)
     filesPTE->clear();
@@ -212,7 +212,7 @@ void KpkPackageDetails::on_fileListTB_clicked()
     }
 }
 
-void KpkPackageDetails::getDepends(QSharedPointer<PackageKit::Package>p)
+void KpkPackageDetails::getDepends(QSharedPointer<PackageKit::Package> p)
 {
     // create a transaction for the dependecies not recursive
     Transaction *t = Client::instance()->getDepends(p, PackageKit::Enum::NoFilter, false);
@@ -244,7 +244,7 @@ void KpkPackageDetails::on_dependsOnTB_clicked()
     }
 }
 
-void KpkPackageDetails::getRequires(QSharedPointer<PackageKit::Package>p)
+void KpkPackageDetails::getRequires(QSharedPointer<PackageKit::Package> p)
 {
     // create a transaction for the requirements not recursive
     Transaction *t = Client::instance()->getRequires(p, PackageKit::Enum::NoFilter, false);

@@ -28,9 +28,6 @@
 
 using namespace PackageKit;
 
-class KpkDelegate;
-class KpkSimulateModel;
-class KpkPackageModel;
 class KpkReviewChangesPrivate;
 class KDE_EXPORT KpkReviewChanges : public KDialog
 {
@@ -55,16 +52,15 @@ public:
     int exec(OperationModes flags = 0);
 
 private slots:
-    void requeueTransaction();
-    void simulateFinished(PackageKit::Enum::Exit status);
+    void installPackages();
+    void removePackages(bool allow_deps = true);
+
     void transactionFinished(KpkTransaction::ExitStatus status);
 
     void doAction();
     void checkChanged();
 
 private:
-    void installPackages();
-    void removePackages(bool allow_deps = true);
     void taskDone(PackageKit::Enum::Role role);
 
 //     void updateColumnsWidth(bool force = false);
