@@ -210,20 +210,28 @@ class KpkRequirementsPrivate
 {
 public:
     QStandardItemModel *actionsModel;
+    bool autoConfirm;
+    bool hideAutoConfirm;
+
     Ui::KpkRequirements ui;
 };
 
 KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
- : KDialog(parent), d(new KpkRequirementsPrivate)
+ : KDialog(parent),
+   d(new KpkRequirementsPrivate)
 {
     d->ui.setupUi(mainWidget());
+
+    d->autoConfirm = false;
+    d->hideAutoConfirm = false;
+
     setCaption(i18n("Additional changes"));
     setButtons(KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
     setModal(true);
     // restore size
-    setMinimumSize(QSize(450,200));
-    setInitialSize(QSize(450,200));
+    setMinimumSize(QSize(450,300));
+    setInitialSize(QSize(450,300));
     KConfig config("KPackageKit");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     restoreDialogSize(requirementsDialog);
@@ -255,6 +263,7 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
         item->setData(QVariant::fromValue(Enum::InfoRemoving));
         d->actionsModel->appendRow(item);
         model->setCurrentInfo(Enum::InfoRemoving);
+        d->hideAutoConfirm = true;
     }
 
     if (int c = model->countInfo(Enum::InfoDowngrading)) {
@@ -266,6 +275,7 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
             model->setCurrentInfo(Enum::InfoDowngrading);
         }
         d->actionsModel->appendRow(item);
+        d->hideAutoConfirm = true;
     }
 
     if (int c = model->countInfo(Enum::InfoReinstalling)) {
@@ -306,6 +316,14 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
     }
     d->ui.packageView->resizeColumnToContents(0);
     d->ui.packageView->resizeColumnToContents(1);
+
+    if (d->hideAutoConfirm) {
+        d->ui.confirmCB->setVisible(false);
+    } else {
+        // if the confirmCB is visible means that we can skip this
+        // dialog, but only if the user previusly set so
+        d->autoConfirm = requirementsDialog.readEntry("autoConfirm", false);
+    }
 }
 
 KpkRequirements::~KpkRequirements()
@@ -314,6 +332,20 @@ KpkRequirements::~KpkRequirements()
     KConfig config("KPackageKit");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     saveDialogSize(requirementsDialog);
+
+    if (!d->hideAutoConfirm) {
+        requirementsDialog.writeEntry("autoConfirm", d->ui.confirmCB->isChecked());
+    }
+    config.sync();
+}
+
+void KpkRequirements::show()
+{
+    if (d->autoConfirm) {
+        emit accepted();
+    } else{
+        KDialog::show();
+    }
 }
 
 void KpkRequirements::actionClicked(const QModelIndex &index)

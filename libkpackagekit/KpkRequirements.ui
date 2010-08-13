@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>344</height>
+    <width>473</width>
+    <height>359</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -69,6 +69,12 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="contextMenuPolicy">
            <enum>Qt::NoContextMenu</enum>
           </property>
@@ -99,6 +105,12 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
       </property>
@@ -118,6 +130,13 @@
        <bool>false</bool>
       </property>
      </widget>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="confirmCB">
+     <property name="text">
+      <string>Do not show this confirmation when installing or updating additional packages</string>
+     </property>
     </widget>
    </item>
   </layout>

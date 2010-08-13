@@ -60,6 +60,7 @@ public:
     QList<QSharedPointer<PackageKit::Package> > packages;
     QStringList files;
     QStandardItemModel model;
+    QTreeView *packageView;
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
@@ -73,25 +74,26 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
    d(new KpkTransactionPrivate)
 {
     d->ui.setupUi(mainWidget());
-    // hide these items here so the window get small
-//     d->ui.packageL->hide();
-//     d->ui.descriptionL->hide();
+
     d->finished = true; // for sanity we are finished till some transaction is set
     d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
+
+    setButtons(KDialog::Details | KDialog::User1 | KDialog::Cancel);
 
 //     setDetailsWidget(d->ui.packageWidget);
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
 
-    QTreeView *packageView = new QTreeView(this);
+    d->packageView = new QTreeView;
 //     packageView->hide();
-    packageView->setModel(&d->model);
-    packageView->setItemDelegate(new TransactionDelegate(this));
-    packageView->setRootIsDecorated(false);
-    packageView->setHeaderHidden(true);
+    d->packageView->setModel(&d->model);
+    d->packageView->setItemDelegate(new TransactionDelegate(this));
+    d->packageView->setRootIsDecorated(false);
+    d->packageView->setHeaderHidden(true);
 
-    d->ui.gridLayout->addWidget(packageView, 1, 0, 1, 2);
-//     d->showDetails = transactionGroup.readEntry("ShowDetails", false);
+
+//     d->packageView->hide();
+
 //     setDetailsWidgetVisible(d->showDetails);
 //     setDetailsWidgetVisible(false);
 //     d->ui.detailGroup->setVisible(d->showDetails);
@@ -122,7 +124,6 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
 KpkTransaction::~KpkTransaction()
 {
-    kDebug();
     KConfig config("KPackageKit");
     if (isButtonEnabled(KDialog::Details)) {
         KConfigGroup transactionGroup(&config, "Transaction");
@@ -194,20 +195,25 @@ void KpkTransaction::setTransaction(Transaction *trans)
     d->role = m_trans->role();
     d->model.clear();
 
-
+    KConfig config("KPackageKit");
+    KConfigGroup transactionGroup(&config, "Transaction");
     // enable the Details button just on these roles
     if (m_trans->role() == Enum::RoleInstallPackages ||
         m_trans->role() == Enum::RoleInstallFiles ||
         m_trans->role() == Enum::RoleRemovePackages ||
         m_trans->role() == Enum::RoleUpdatePackages ||
         m_trans->role() == Enum::RoleUpdateSystem) {
-        setButtons(KDialog::Details | KDialog::User1 | KDialog::Cancel);
-        button(KDialog::Details)->setCheckable(true);
-        // DISCONNECT THIS SIGNAL BEFORE CLOSING
+        // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                 this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
+        d->showDetails = transactionGroup.readEntry("ShowDetails", false);
+        d->packageView->hide();
+        d->ui.gridLayout->addWidget(d->packageView, 1, 0, 1, 2);
+        d->packageView->setVisible(d->showDetails);
+        enableButton(KDialog::Details, true);
     } else {
-        setButtons(KDialog::User1 | KDialog::Cancel);
+        enableButton(KDialog::Details, true);
+        d->ui.gridLayout->removeWidget(d->packageView);
     }
     // Setup HIDE custom button
     setButtonText(KDialog::User1, i18n("Hide"));
@@ -228,7 +234,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
     updateUi();
 
 
-    // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
+    // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
     connect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit)));
     connect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -241,7 +247,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
             this, SLOT(mediaChangeRequired(PackageKit::Enum::MediaType, const QString &, const QString &)));
     connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Client::SignatureInfo)),
             this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
-    // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
+    // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
 }
 
 void KpkTransaction::unsetTransaction()
@@ -424,17 +430,17 @@ void KpkTransaction::slotButtonClicked(int button)
 {
     switch(button) {
     case KDialog::Cancel :
-        kDebug() << "KDialog::Cancel";
+//         kDebug() << "KDialog::Cancel";
         m_trans->cancel();
         m_flags |= CloseOnFinish;
         break;
     case KDialog::User1 :
-        kDebug() << "KDialog::User1";
+//         kDebug() << "KDialog::User1";
         // when we're done finishedDialog() is called
         done(KDialog::User1);
         break;
     case KDialog::Close :
-        kDebug() << "KDialog::Close";
+//         kDebug() << "KDialog::Close";
         // Always disconnect BEFORE emitting finished
         unsetTransaction();
         setExitStatus(Cancelled);
@@ -442,49 +448,54 @@ void KpkTransaction::slotButtonClicked(int button)
         break;
     case KDialog::Details :
     {
-//         if (d->showDetails) {
+        QSize viewSize = d->packageView->size();
+        if (d->packageView->isVisible()) {
+            d->packageView->setVisible(false);
 //             kDebug() <<  d->ui.packageWidget->sizeHint();
 //
-//             QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
-//     //         QSize size = d->ui.packageWidget->size();
-//     //         size.setHeight(0);
-//             animation->setDuration(1000);
-//             QSize siz = size();
-//             animation->setStartValue(siz);
-//             siz -= QSize(0, d->ui.packageWidget->size().height());
-//     //         size.setSize(rect.size() + d->ui.packageWidget->size());
-//     //         size.setHeight(d->ui.packageWidget->sizeHint().height());
-//             animation->setEndValue(siz);
-//             animation->setEasingCurve(QEasingCurve::OutInQuad);
-//             animation->start();
-//         } else {
-//             QParallelAnimationGroup *group = new QParallelAnimationGroup;
-//             kDebug() <<  d->ui.packageWidget->sizeHint();
+            QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
+    //         QSize size = d->ui.packageWidget->size();
+    //         size.setHeight(0);
+            animation->setDuration(1000);
+            QSize windowSize = size();
+            animation->setStartValue(windowSize);
+            windowSize -= QSize(0, viewSize.height());
+    //         size.setSize(rect.size() + d->ui.packageWidget->size());
+    //         size.setHeight(d->ui.packageWidget->sizeHint().height());
+            animation->setEndValue(windowSize);
+            animation->setEasingCurve(QEasingCurve::OutInQuad);
+            animation->start();
+        } else {
+            d->packageView->setVisible(!d->packageView->isVisible());
+            kDebug() << d->packageView->dynamicPropertyNames();
+            QParallelAnimationGroup *group = new QParallelAnimationGroup;
+            kDebug() <<  d->packageView->size() << d->packageView->sizeHint();
 //             d->ui.packageWidget->resize(QSize(0, 0));
 //             d->ui.packageWidget->setVisible(true);
-//             QPropertyAnimation *anim1 = new QPropertyAnimation(this, "size");
-//             QPropertyAnimation *anim2 = new QPropertyAnimation(d->ui.packageWidget, "size");
-//     //         QSize size = d->ui.packageWidget->size();
-//     //         size.setHeight(0);
-//             anim1->setDuration(1000);
-//             anim2->setDuration(1000);
-//             QSize siz = size();
-//             QSize size2 = d->ui.packageWidget->sizeHint();
+            QPropertyAnimation *anim1 = new QPropertyAnimation(this, "size");
+            QPropertyAnimation *anim2 = new QPropertyAnimation(d->packageView, "visible");
+    //         QSize size = d->ui.packageWidget->size();
+    //         size.setHeight(0);
+            anim1->setDuration(1000);
+            anim2->setDuration(1);
+            QSize windowSize = size();
+            QSize size2 = d->packageView->sizeHint();
 //             size2.setHeight(0);
-//             anim1->setStartValue(siz);
-//             anim2->setStartValue(size2);
+            anim1->setStartValue(windowSize);
+            anim2->setStartValue(false);
 //             siz += QSize(0, d->ui.packageWidget->sizeHint().height());
 //             size2 += QSize(0, d->ui.packageWidget->sizeHint().height());
-//     //         size.setSize(rect.size() + d->ui.packageWidget->size());
-//     //         size.setHeight(d->ui.packageWidget->sizeHint().height());
-//             anim1->setEndValue(siz);
-//             anim2->setEndValue(size2);
-//             anim1->setEasingCurve(QEasingCurve::InOutQuad);
+            windowSize += QSize(0, d->packageView->size().height());
+    //         size.setSize(rect.size() + d->ui.packageWidget->size());
+    //         size.setHeight(d->ui.packageWidget->sizeHint().height());
+            anim1->setEndValue(windowSize);
+            anim2->setEndValue(true);
+            anim1->setEasingCurve(QEasingCurve::InOutQuad);
 //             anim2->setEasingCurve(QEasingCurve::InOutQuad);
-//             group->addAnimation(anim1);
-//             group->addAnimation(anim2);
-//             group->start();
-//         }
+            group->addAnimation(anim1);
+            group->addAnimation(anim2);
+            group->start();
+        }
 //         d->showDetails = !d->showDetails;
 
 
@@ -522,7 +533,6 @@ void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &det
     }
 
     if (untrustedIsNeed(error)) {
-        kDebug() << "Missing GPG!";
         m_handlingActionRequired = true;
         int ret = KMessageBox::warningYesNo(this,
                                             i18n("You are about to install unsigned packages can compromise your system, "
@@ -576,8 +586,6 @@ void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &det
 
 void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
 {
-    kDebug() << "eula by: " << info.vendorName;
-
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
         m_handlingActionRequired = false;
@@ -599,7 +607,6 @@ void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
 void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text)
 {
     Q_UNUSED(id)
-    kDebug() << "mediaChangeRequired: " << id << text;
 
     m_handlingActionRequired = true;
     int ret = KMessageBox::questionYesNo(this,
@@ -622,7 +629,6 @@ void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const
 
 void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo info)
 {
-    kDebug() << "signature by: " << info.keyId;
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
         m_handlingActionRequired = false;
@@ -643,7 +649,6 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
 
 void KpkTransaction::finished(PackageKit::Enum::Exit status)
 {
-    kDebug();
     d->finished = true;
     switch(status) {
     case Enum::ExitSuccess :
@@ -685,7 +690,7 @@ void KpkTransaction::finished(PackageKit::Enum::Exit status)
     // if we're not showing an error or don't have the
     // CloseOnFinish flag don't close the dialog
     if (m_flags & CloseOnFinish && !m_handlingActionRequired && !m_showingError) {
-        kDebug() << "done";
+        kDebug() << "CloseOnFinish && !m_handlingActionRequired && !m_showingError";
         done(QDialog::Rejected);
         deleteLater();
     }

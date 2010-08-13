@@ -35,6 +35,7 @@ void TransactionDelegate::paint(QPainter *painter,
                            const QStyleOptionViewItem &option,
                            const QModelIndex &index) const
 {
+    QStyledItemDelegate::paint(painter, option, index);
     if (index.column() == 0) {
         int progress = index.data(Qt::UserRole).toInt();
         Enum::Info info = static_cast<Enum::Info>(index.data(Qt::UserRole + 1).toInt());
@@ -55,8 +56,7 @@ void TransactionDelegate::paint(QPainter *painter,
 
         QApplication::style()->drawControl(QStyle::CE_ProgressBar,
                                         &progressBarOption, painter);
-    } else
-        QStyledItemDelegate::paint(painter, option, index);
+    }
 }
 
 #include "TransactionDelegate.moc"

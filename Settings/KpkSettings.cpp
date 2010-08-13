@@ -71,6 +71,7 @@ KpkSettings::KpkSettings(QWidget *parent)
     autoCB->addItem(i18n("All updates"),   KpkEnum::All);
     autoCB->addItem(i18nc("None updates will be automatically installed", "None"),          KpkEnum::None);
 
+    connect(autoConfirmCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(notifyUpdatesCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(intervalCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
     connect(autoCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
@@ -92,8 +93,10 @@ void KpkSettings::on_showOriginsCB_stateChanged(int state)
 void KpkSettings::checkChanges()
 {
     KConfig config("KPackageKit");
-    KConfigGroup notifyGroup( &config, "Notify" );
-    KConfigGroup checkUpdateGroup( &config, "CheckUpdate" );
+
+    KConfigGroup requirementsDialog(&config, "requirementsDialog");
+    KConfigGroup notifyGroup(&config, "Notify");
+    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     if (notifyUpdatesCB->checkState() !=
         static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked))
         ||
@@ -103,7 +106,9 @@ void KpkSettings::checkChanges()
         autoCB->itemData(autoCB->currentIndex()).toUInt() !=
         static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault))
         ||
-        ((m_roles & Enum::RoleGetRepoList) ? m_originModel->changed() : false)) {
+        ((m_roles & Enum::RoleGetRepoList) ? m_originModel->changed() : false)
+        ||
+        autoConfirmCB->isChecked() != !requirementsDialog.readEntry("autoConfirm", false)) {
         emit(changed(true));
     } else {
         emit(changed(false));
@@ -119,7 +124,11 @@ void KpkSettings::checkChanges()
 void KpkSettings::load()
 {
     KConfig config("KPackageKit");
-    KConfigGroup notifyGroup( &config, "Notify" );
+
+    KConfigGroup requirementsDialog(&config, "requirementsDialog");
+    autoConfirmCB->setChecked(!requirementsDialog.readEntry("autoConfirm", false));
+
+    KConfigGroup notifyGroup(&config, "Notify");
     notifyUpdatesCB->setCheckState(static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates",
         static_cast<int>(Qt::Checked))));
 
@@ -157,6 +166,10 @@ void KpkSettings::load()
 void KpkSettings::save()
 {
     KConfig config("KPackageKit");
+
+    KConfigGroup requirementsDialog(&config, "requirementsDialog");
+    requirementsDialog.writeEntry("autoConfirm", !autoConfirmCB->isChecked());
+
     KConfigGroup notifyGroup(&config, "Notify");
     // not used anymore
     notifyGroup.deleteEntry("notifyLongTasks");
@@ -178,6 +191,7 @@ void KpkSettings::save()
 
 void KpkSettings::defaults()
 {
+    autoConfirmCB->setChecked(true);
     notifyUpdatesCB->setCheckState(Qt::Checked);
     intervalCB->setCurrentIndex(intervalCB->findData(KpkEnum::TimeIntervalDefault));
     autoCB->setCurrentIndex(autoCB->findData(KpkEnum::AutoUpdateDefault) );

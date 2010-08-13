@@ -33,6 +33,9 @@ public:
     explicit KpkRequirements(KpkSimulateModel *model, QWidget *parent = 0);
     ~KpkRequirements();
 
+public slots:
+    void show();
+
 private slots:
     void actionClicked(const QModelIndex &index);
 
