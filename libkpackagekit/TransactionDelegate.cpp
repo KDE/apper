@@ -24,6 +24,8 @@
 
 #include "KpkStrings.h"
 
+using namespace PackageKit;
+
 TransactionDelegate::TransactionDelegate(QObject *parent)
  : QStyledItemDelegate(parent)
 {
@@ -35,14 +37,20 @@ void TransactionDelegate::paint(QPainter *painter,
 {
     if (index.column() == 0) {
         int progress = index.data(Qt::UserRole).toInt();
-        int info = index.data(Qt::UserRole + 1).toInt();
+        Enum::Info info = static_cast<Enum::Info>(index.data(Qt::UserRole + 1).toInt());
+        QString text;
+        if (progress == 100) {
+            text = KpkStrings::infoPast(info);
+        } else {
+            text = KpkStrings::infoPresent(info);
+        }
 
         QStyleOptionProgressBar progressBarOption;
         progressBarOption.rect = option.rect;
         progressBarOption.minimum = 0;
         progressBarOption.maximum = 100;
         progressBarOption.progress = progress;
-        progressBarOption.text = QString::number(progress) + "%";
+        progressBarOption.text = text;
         progressBarOption.textVisible = true;
 
         QApplication::style()->drawControl(QStyle::CE_ProgressBar,

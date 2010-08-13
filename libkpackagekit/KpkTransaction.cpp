@@ -33,6 +33,8 @@
 #include <QtGui/QTreeView>
 #include <QtGui/QStandardItemModel>
 
+#include "KpkMacros.h"
+#include "KpkEnum.h"
 #include "KpkStrings.h"
 #include "KpkRepoSig.h"
 #include "KpkLicenseAgreement.h"
@@ -49,12 +51,14 @@ public:
     Ui::KpkTransaction ui;
 
     QString tid;
+    QString lastPackageId;
     bool showDetails;
     bool finished;
     bool allowDeps;
     bool onlyTrusted;
     Enum::Role role;
     QList<QSharedPointer<PackageKit::Package> > packages;
+    QStringList files;
     QStandardItemModel model;
 };
 
@@ -86,7 +90,6 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     packageView->setRootIsDecorated(false);
     packageView->setHeaderHidden(true);
 
-    kDebug() << layout();
     d->ui.gridLayout->addWidget(packageView, 1, 0, 1, 2);
 //     d->showDetails = transactionGroup.readEntry("ShowDetails", false);
 //     setDetailsWidgetVisible(d->showDetails);
@@ -158,14 +161,24 @@ QList<QSharedPointer<PackageKit::Package> > KpkTransaction::packages() const
     return d->packages;
 }
 
+QStringList KpkTransaction::files() const
+{
+    return d->files;
+}
+
 void KpkTransaction::setAllowDeps(bool allowDeps)
 {
     d->allowDeps = allowDeps;
 }
 
-void KpkTransaction::setPackages(QList<QSharedPointer<PackageKit::Package> > packages)
+void KpkTransaction::setPackages(const QList<QSharedPointer<PackageKit::Package> > &packages)
 {
     d->packages = packages;
+}
+
+void KpkTransaction::setFiles(const QStringList &files)
+{
+    d->files = files;
 }
 
 void KpkTransaction::setTransaction(Transaction *trans)
@@ -190,6 +203,9 @@ void KpkTransaction::setTransaction(Transaction *trans)
         m_trans->role() == Enum::RoleUpdateSystem) {
         setButtons(KDialog::Details | KDialog::User1 | KDialog::Cancel);
         button(KDialog::Details)->setCheckable(true);
+        // DISCONNECT THIS SIGNAL BEFORE CLOSING
+        connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
     } else {
         setButtons(KDialog::User1 | KDialog::Cancel);
     }
@@ -202,13 +218,10 @@ void KpkTransaction::setTransaction(Transaction *trans)
     enableButtonCancel(m_trans->allowCancel());
 
     // sets the action icon to be the window icon
-    setWindowIcon(KpkIcons::actionIcon(m_trans->role()));
+    setWindowIcon(KpkIcons::actionIcon(d->role));
     // Sets the kind of transaction
-    setCaption(KpkStrings::action(m_trans->role()));
+    setCaption(KpkStrings::action(d->role));
 
-    // clears the package label
-//     d->ui.packageL->clear();
-//     d->ui.descriptionL->clear();
     // Now sets the last package
     currPackage(m_trans->lastPackage());
     // sets ui
@@ -216,8 +229,6 @@ void KpkTransaction::setTransaction(Transaction *trans)
 
 
     // DISCONNECT ALL THESE SIGNALS BEFORE CLOSING
-    connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-            this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
     connect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit)));
     connect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -252,6 +263,44 @@ void KpkTransaction::unsetTransaction()
                this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
 }
 
+void KpkTransaction::requeueTransaction()
+{
+    SET_PROXY
+    Transaction *trans;
+    Client *client = Client::instance();
+    switch (d->role) {
+    case Enum::RoleRemovePackages :
+        trans = client->removePackages(d->packages,
+                                       d->allowDeps,
+                                       AUTOREMOVE);
+        break;
+    case Enum::RoleInstallPackages :
+        trans = client->installPackages(d->onlyTrusted,
+                                        d->packages);
+        break;
+    case Enum::RoleInstallFiles :
+        trans = client->installFiles(d->files,
+                                     d->onlyTrusted);
+        break;
+    case Enum::RoleUpdatePackages :
+        trans = client->updatePackages(d->onlyTrusted,
+                                       d->packages);
+        break;
+    default :
+        setExitStatus(Failed);
+        return;
+    }
+
+    if (trans->error()) {
+        KMessageBox::sorry(this,
+                           KpkStrings::daemonError(trans->error()),
+                           KpkStrings::action(d->role));
+        setExitStatus(Failed);
+    } else {
+        setTransaction(trans);
+    }
+}
+
 void KpkTransaction::updateUi()
 {
     uint percentage = m_trans->percentage();
@@ -264,24 +313,21 @@ void KpkTransaction::updateUi()
         d->ui.progressBar->reset();
     }
 
-//     if (subpercentage <= 100) {
-        QStandardItem *item;
-        item = d->model.item(d->model.rowCount() - 1);
-        if (item &&
-            item->data(Qt::UserRole).toUInt() != subpercentage) {
-            if (subpercentage == 101) {
-                subpercentage = 0;
-            }
+    // TODO change PackageKit to emit the package progress on another signal.
+    QStandardItem *item;
+    QList<QStandardItem *> packages = d->model.findItems(d->lastPackageId);
+    item = d->model.item(d->model.rowCount() - 1);
+    if (!packages.isEmpty() &&
+        (item = packages.last()) &&
+        item->data(Qt::UserRole).toUInt() != subpercentage) {
+        // if the progress is unknown (101), make it empty
+        if (subpercentage == 101) {
+            subpercentage = 0;
+        }
+        if (subpercentage != 100) {
             item->setData(subpercentage, Qt::UserRole);
         }
-//         d->ui.subprogressBar->setMaximum(100);
-//         d->ui.subprogressBar->setValue(subpercentage);
-    // Check if we didn't already set the maximum as this
-    // causes a weird behavior when we keep reseting
-//     } else if (d->ui.subprogressBar->maximum() != 0) {
-//         d->ui.subprogressBar->setMaximum(0);
-//         d->ui.subprogressBar->reset();
-//     }
+    }
 
     d->ui.progressBar->setRemaining(m_trans->remainingTime());
 
@@ -316,29 +362,25 @@ void KpkTransaction::updateUi()
 void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package> p)
 {
     if (!p->id().isEmpty()) {
-        QString packageText(p->name());
-        if (!p->version().isEmpty()) {
-            packageText += ' ' + p->version();
-        }
+        d->lastPackageId = p->id();
+
         QStandardItem *item;
-        QList<QStandardItem *> packages =  d->model.findItems(p->id(), Qt::MatchExactly |Qt::MatchCaseSensitive | Qt::MatchWrap, 0);
-        kDebug() << p->id() << p->info() << packages.size();
-        if (packages.size()) {
-            item = packages.last();
+        QList<QStandardItem *> packages = d->model.findItems(p->id());
+//         kDebug() << p->id() << packages.size() << KpkStrings::infoPast(p->info());
+        // If there is alread some packages check to see if it has
+        // finished, if the progress is 100 create a new item for the next task
+        if (!packages.isEmpty() &&
+            (item = packages.last()) &&
+            item->data(Qt::UserRole).toInt() != 100) {
             // if the item status (info) changed update it
             if (item->data().toInt() != p->info()) {
-                kDebug() << p->info();
+                // If the package task has finished set progress to 100
                 if (p->info() == Enum::InfoFinished) {
                     item->setData(100, Qt::UserRole);
                 } else {
                     item->setData(p->info());
                 }
             }
-            // if the package progress changed update it
-//             if (item->data().toUInt() != p->info()) {
-//                 item->setData(p->info());
-//             }
-//             Qt::UserRole
         } else {
             QList<QStandardItem *> items;
             // It's a new package create it and append it
@@ -350,9 +392,6 @@ void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package> p)
             items << new QStandardItem(p->summary());
             d->model.appendRow(items);
         }
-//         d->ui.packageL->setText(packageText);
-//         d->ui.descriptionL->setText(p->summary());
-//         enableButton(KDialog::Details, true);
     }
 }
 
@@ -493,9 +532,7 @@ void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &det
         if (ret == KMessageBox::Yes) {
             // Set only trusted to false, to do as the user asked
             d->onlyTrusted = false;
-            emit requeue();
-            setExitStatus(ReQueue);
-            kDebug() << "Asking for a re-queue";
+            requeueTransaction();
         } else {
             setExitStatus(Cancelled);
             if (m_flags & CloseOnFinish) {
@@ -556,8 +593,7 @@ void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
     delete frm;
 
     // Well try again, if fail will show the erroCode
-    emit requeue();
-    setExitStatus(ReQueue);
+    requeueTransaction();
 }
 
 void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text)
@@ -575,8 +611,7 @@ void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const
 
     // if the user clicked continue we got yes
     if (ret == KMessageBox::Yes) {
-        emit requeue();
-        setExitStatus(ReQueue);
+        requeueTransaction();
     } else {
         // when we receive an error we are done
         if (m_flags & CloseOnFinish) {
@@ -603,9 +638,7 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
     }
     delete frm;
 
-//     kDebug() << "Requeue!";
-    emit requeue();
-    setExitStatus(ReQueue);
+    requeueTransaction();
 }
 
 void KpkTransaction::finished(PackageKit::Enum::Exit status)
@@ -666,6 +699,7 @@ KpkTransaction::ExitStatus KpkTransaction::exitStatus() const
 void KpkTransaction::setExitStatus(KpkTransaction::ExitStatus status)
 {
     m_exitStatus = status;
+    emit finished(status);
 }
 
 #include "KpkTransaction.moc"

@@ -195,40 +195,38 @@ void PkInstallPackageFiles::installFiles()
         sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
     } else {
         KpkTransaction *trans = new KpkTransaction(t);
+        trans->setFiles(m_files);
         // TODO we need to keep an eye here
 //         connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
 //                 this, SLOT(installFinished(PackageKit::Transaction::ExitStatus, uint)));
-        connect(trans, SIGNAL(kTransactionFinished(KpkTransaction::ExitStatus)),
+        connect(trans, SIGNAL(finished(KpkTransaction::ExitStatus)),
                 this, SLOT(installFilesFinished(KpkTransaction::ExitStatus)));
         trans->show();
-        m_transactionFiles[trans] = m_files;
     }
 }
 
 void PkInstallPackageFiles::installFilesFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
-    KpkTransaction *transaction = (KpkTransaction *) sender();
+    KpkTransaction *transaction = qobject_cast<KpkTransaction*>(sender());
     switch (status) {
     case KpkTransaction::Success :
         if (showFinished()) {
             KMessageBox::information(0,
                                      i18np("File was installed successfully",
                                            "Files were installed successfully",
-                                           m_transactionFiles[transaction].count()),
+                                           transaction->files().count()),
                                      i18np("File was installed successfully",
                                            "Files were installed successfully",
-                                           m_transactionFiles[transaction].count()));
+                                           transaction->files().count()));
         }
         finishTaskOk();
         // return to avoid the finished() since in the above it's already emmited
         return;
     case KpkTransaction::Cancelled :
-        m_transactionFiles.remove(transaction);
         sendErrorFinished(Cancelled, "Aborted");
         break;
     case KpkTransaction::Failed :
-        m_transactionFiles.remove(transaction);
         if (showWarning()) {
             KMessageBox::error(0,
                                i18n("An error occurred."),
@@ -236,12 +234,6 @@ void PkInstallPackageFiles::installFilesFinished(KpkTransaction::ExitStatus stat
         }
         sendErrorFinished(Failed, "An error occurred");
         break;
-    case KpkTransaction::ReQueue :
-        kDebug() << "ReQueue";
-        SET_PROXY
-        transaction->setTransaction(Client::instance()->installFiles(m_transactionFiles[transaction], false));
-        // return to avoid the finished()
-        return;
     }
 }
 

@@ -51,23 +51,24 @@ public:
     bool allowDeps() const;
     bool onlyTrusted() const;
     QList<QSharedPointer<PackageKit::Package> > packages() const;
+    QStringList files() const;
 
     Enum::Role role() const;
 
     void setAllowDeps(bool allowDeps);
-    void setPackages(QList<QSharedPointer<PackageKit::Package> > packages);
+    void setPackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
+    void setFiles(const QStringList &files);
 
     typedef enum {
         Success,
         Failed,
-        Cancelled,
-        ReQueue
+        Cancelled
     } ExitStatus;
 
     KpkTransaction::ExitStatus exitStatus() const;
 
 signals:
-    void requeue();
+    void finished(KpkTransaction::ExitStatus status);
 
 private slots:
     void finishedDialog();
@@ -83,6 +84,7 @@ private slots:
 
 private:
     void unsetTransaction();
+    void requeueTransaction();
 
     Transaction *m_trans;
     bool m_handlingActionRequired;

@@ -24,11 +24,11 @@
 #include <KDialog>
 
 #include <QPackageKit>
+#include "KpkTransaction.h"
 
 using namespace PackageKit;
 
 class KpkDelegate;
-class KpkTransaction;
 class KpkSimulateModel;
 class KpkPackageModel;
 class KpkReviewChangesPrivate;
@@ -57,7 +57,7 @@ public:
 private slots:
     void requeueTransaction();
     void simulateFinished(PackageKit::Enum::Exit status);
-    void ensureTransactionFinished(PackageKit::Enum::Exit status);
+    void transactionFinished(KpkTransaction::ExitStatus status);
 
     void doAction();
     void checkChanged();

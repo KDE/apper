@@ -49,7 +49,6 @@ private slots:
 
 private:
     void installFiles();
-    QHash <KpkTransaction *, QStringList> m_transactionFiles;
     KUrl::List m_urls;
     QStringList m_files;
 

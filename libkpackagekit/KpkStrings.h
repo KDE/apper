@@ -30,6 +30,8 @@ using namespace PackageKit;
 namespace KpkStrings
 {
     KDE_EXPORT QString finished(Enum::Exit status);
+    KDE_EXPORT QString infoPresent(Enum::Info info);
+    KDE_EXPORT QString infoPast(Enum::Info info);
     KDE_EXPORT QString error(Enum::Error error);
     KDE_EXPORT QString errorMessage(Enum::Error error);
     KDE_EXPORT QString message(Enum::Message type);

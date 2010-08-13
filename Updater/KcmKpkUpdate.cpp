@@ -227,13 +227,11 @@ void KcmKpkUpdate::updatePackages()
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
-        QPointer<KpkTransaction> frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
+        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
         frm->setPackages(packages);
-        connect(frm, SIGNAL(requeue()), this, SLOT(requeueUpdate()));
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        connect(frm, SIGNAL(finished(KpkTransaction::ExitStatus)),
                 this, SLOT(checkEnableUpdateButton()));
-        frm->exec();
-        delete frm;
+        frm->show();
     }
 }
 
@@ -285,19 +283,6 @@ void KcmKpkUpdate::getUpdates()
         transactionBar->addTransaction(t);
         connect(t, SIGNAL(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)),
                 this, SLOT(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)));
-    }
-}
-
-void KcmKpkUpdate::requeueUpdate()
-{
-    KpkTransaction *trans = qobject_cast<KpkTransaction *>(sender());
-    SET_PROXY
-    Transaction *t = m_client->updatePackages(trans->onlyTrusted(), trans->packages());
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-        trans->deleteLater();
-    } else {
-        trans->setTransaction(t);
     }
 }
 

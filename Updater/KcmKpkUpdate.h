@@ -54,7 +54,6 @@ private slots:
     void getUpdatesFinished(PackageKit::Enum::Exit status);
 
     void updatePackages();
-    void requeueUpdate();
 
     void contractAll();
     void showExtendItem(const QModelIndex &index);

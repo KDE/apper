@@ -160,7 +160,15 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
 void KpkPackageModel::checkPackage(const QSharedPointer<PackageKit::Package> &package)
 {
-    if (package->info() != Enum::InfoBlocked && !containsChecked(package->id())) {
+    if (containsChecked(package->id())) {
+        QSharedPointer<PackageKit::Package> p = m_checkedPackages[package->id()];
+        if (p->info() != package->info()) {
+            // We are trying to check a package
+            // that was checked to be installed and it was
+            // so uncheck it
+            uncheckPackage(package);
+        }
+    } else if (package->info() != Enum::InfoBlocked) {
         m_checkedPackages[package->id()] = package;
         if (sender() == 0) {
             emit packageChecked(package);

@@ -323,6 +323,60 @@ QString KpkStrings::actionPast(Enum::Role action)
     return QString();
 }
 
+QString KpkStrings::infoPresent(PackageKit::Enum::Info info)
+{
+    switch (info) {
+    case Enum::InfoDownloading :
+        return i18n("Downloading");
+    case Enum::InfoUpdating :
+        return i18n("Updating");
+    case Enum::InfoInstalling :
+        return i18n("Installing");
+    case Enum::InfoRemoving :
+        return i18n("Removing");
+    case Enum::InfoCleanup :
+        return i18n("Cleaning up");
+    case Enum::InfoObsoleting :
+        return i18n("Obsoleting");
+    case Enum::InfoReinstalling :
+        return i18n("Reinstalling");
+    case Enum::InfoPreparing :
+        return i18n("Preparing");
+    case Enum::InfoDecompressing :
+        return i18n("Decompressing");
+    default :
+        kWarning() << "info unrecognised: " << info;
+        return QString();
+    }
+}
+
+QString KpkStrings::infoPast(PackageKit::Enum::Info info)
+{
+    switch (info) {
+    case Enum::InfoDownloading :
+        return i18n("Downloaded");
+    case Enum::InfoUpdating :
+        return i18n("Updated");
+    case Enum::InfoInstalling :
+        return i18n("Installed");
+    case Enum::InfoRemoving :
+        return i18n("Removed");
+    case Enum::InfoCleanup :
+        return i18n("Cleaned up");
+    case Enum::InfoObsoleting :
+        return i18n("Obsoleted");
+    case Enum::InfoReinstalling :
+        return i18n("Reinstalled");
+    case Enum::InfoPreparing :
+        return i18n("Prepared");
+    case Enum::InfoDecompressing :
+        return i18n("Decompressed");
+    default :
+        kWarning() << "info unrecognised: " << info;
+        return QString();
+    }
+}
+
 QString KpkStrings::error(PackageKit::Enum::Error error)
 {
     switch (error) {

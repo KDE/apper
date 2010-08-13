@@ -214,11 +214,15 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
             m_installedModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
     connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_changesModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
             m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
 
     // packageUnchecked from installed model
     connect(m_installedModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
             m_browseModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_installedModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
+            m_changesModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
     connect(m_installedModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
             m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
 
@@ -518,13 +522,18 @@ void AddRmKCM::save()
 {
     QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_changesModel->selectedPackages(), this);
     frm->setTitle(i18n("Review Changes"));
-    if (frm->exec() == QDialog::Accepted) {
-//         m_browseModel->uncheckAll();//TODO
-    } else {
-        QTimer::singleShot(0, this, SLOT(checkChanged()));
+    frm->exec();
+
+    // This avoid crashing as the above function does not always quit it's event loop
+    if (!frm.isNull()) {
+        if (frm->result() == QDialog::Accepted) {
+    //         m_browseModel->uncheckAll();//TODO
+        } else {
+            QTimer::singleShot(0, this, SLOT(checkChanged()));
+        }
+        delete frm;
+        search();
     }
-    delete frm;
-    search();
 }
 
 void AddRmKCM::load()

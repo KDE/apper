@@ -21,6 +21,8 @@
 #ifndef KPKENUM_H
 #define KPKENUM_H
 
+#define AUTOREMOVE true
+
 namespace KpkEnum {
 
     typedef enum {
