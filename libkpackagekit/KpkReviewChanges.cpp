@@ -150,21 +150,13 @@ int KpkReviewChanges::exec(OperationModes flags)
 void KpkReviewChanges::doAction()
 {
     d->actions = d->client->actions();
-    // check what packages are installed and marked to be removed
-    for (int i = 0; i < d->mainPkgModel->selectedPackages().size(); ++i) {
-        if (d->mainPkgModel->selectedPackages().at(i)->info() == Enum::InfoInstalled) {
-            QSharedPointer<PackageKit::Package> p = d->mainPkgModel->selectedPackages().takeAt(i);
+    foreach (const QSharedPointer<PackageKit::Package> &p, d->mainPkgModel->selectedPackages()) {
+        if (p->info() == Enum::InfoInstalled) {
+            // check what packages are installed and marked to be removed
             d->remPackages << p;
-            kDebug() << "Package to install" << p->name() << p->id();
-        }
-    }
-
-    // check what packages are available and marked to be installed
-    for (int i = 0; i < d->mainPkgModel->selectedPackages().size(); ++i) {
-        if (d->mainPkgModel->selectedPackages().at(i)->info() == Enum::InfoAvailable) {
-            QSharedPointer<PackageKit::Package> p = d->mainPkgModel->selectedPackages().takeAt(i);
+        } else if (p->info() == Enum::InfoAvailable) {
+            // check what packages are available and marked to be installed
             d->addPackages << p;
-            kDebug() << "Package to install" << p->name() << p->id();
         }
     }
 

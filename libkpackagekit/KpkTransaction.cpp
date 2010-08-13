@@ -79,34 +79,17 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
 
     setButtons(KDialog::Details | KDialog::User1 | KDialog::Cancel);
+    enableButton(KDialog::Details, false);
+    button(KDialog::Details)->setCheckable(true);
 
-//     setDetailsWidget(d->ui.packageWidget);
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
 
     d->packageView = new QTreeView;
-//     packageView->hide();
     d->packageView->setModel(&d->model);
     d->packageView->setItemDelegate(new TransactionDelegate(this));
     d->packageView->setRootIsDecorated(false);
     d->packageView->setHeaderHidden(true);
-
-
-//     d->packageView->hide();
-
-//     setDetailsWidgetVisible(d->showDetails);
-//     setDetailsWidgetVisible(false);
-//     d->ui.detailGroup->setVisible(d->showDetails);
-
-    // This MUST come after setDetailsWidgetVisible since
-    // it keeps ajusting the size (which sucks btw)
-    // This doesn't work, KDialog resizes when the details
-    // button is clicked, maybe it should save the size
-    // before showing the details then when hiding it it would
-    // go back to the first size.
-//     setMinimumSize(QSize(400,120));
-//     KConfigGroup transactionDialog(&config, "TransactionDialog");
-//     restoreDialogSize(transactionDialog);
 
     if (m_flags & Modal) {
         setWindowModality(Qt::WindowModal);
@@ -118,8 +101,11 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     // after ALL set, lets set the transaction
     setTransaction(m_trans);
 
-//     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-//     setMaximumSize(QWIDGETSIZE_MAX, sizeHint().height());
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    setMaximumSize(QWIDGETSIZE_MAX, size().height());
+
+    KConfigGroup transactionDialog(&config, "TransactionDialog");
+    restoreDialogSize(transactionDialog);
 }
 
 KpkTransaction::~KpkTransaction()
@@ -127,59 +113,59 @@ KpkTransaction::~KpkTransaction()
     KConfig config("KPackageKit");
     if (isButtonEnabled(KDialog::Details)) {
         KConfigGroup transactionGroup(&config, "Transaction");
-        transactionGroup.writeEntry("ShowDetails", isDetailsWidgetVisible());
+        transactionGroup.writeEntry("ShowDetails", d->showDetails);
     }
-//     KConfigGroup transactionDialog(&config, "TransactionDialog");
-//     saveDialogSize(transactionDialog);
+    KConfigGroup transactionDialog(&config, "TransactionDialog");
+    saveDialogSize(transactionDialog);
 
     // DO NOT disconnect the transaction here,
     // it might not exist when this happen
+    delete d->packageView;
     delete d;
 }
 
-QString KpkTransaction::tid() const
+void KpkTransaction::slotButtonClicked(int bt)
 {
-    return d->tid;
-}
-
-bool KpkTransaction::allowDeps() const
-{
-    return d->allowDeps;
-}
-
-bool KpkTransaction::onlyTrusted() const
-{
-    return d->onlyTrusted;
-}
-
-Enum::Role KpkTransaction::role() const
-{
-    return d->role;
-}
-
-QList<QSharedPointer<PackageKit::Package> > KpkTransaction::packages() const
-{
-    return d->packages;
-}
-
-QStringList KpkTransaction::files() const
-{
-    return d->files;
-}
-
-void KpkTransaction::setAllowDeps(bool allowDeps)
-{
-    d->allowDeps = allowDeps;
-}
-
-void KpkTransaction::setPackages(const QList<QSharedPointer<PackageKit::Package> > &packages)
-{
-    d->packages = packages;
-}
-
-void KpkTransaction::setFiles(const QStringList &files)
-{
-    d->files = files;
+    switch(bt) {
+    case KDialog::Cancel :
+//         kDebug() << "KDialog::Cancel";
+        m_trans->cancel();
+        m_flags |= CloseOnFinish;
+        break;
+    case KDialog::User1 :
+//         kDebug() << "KDialog::User1";
+        // when we're done finishedDialog() is called
+        done(KDialog::User1);
+        break;
+    case KDialog::Close :
+//         kDebug() << "KDialog::Close";
+        // Always disconnect BEFORE emitting finished
+        unsetTransaction();
+        setExitStatus(Cancelled);
+        done(KDialog::Close);
+        break;
+    case KDialog::Details :
+    {
+        d->showDetails = !d->packageView->isVisible();
+        button(KDialog::Details)->setChecked(d->showDetails);
+        if (d->packageView->isVisible()) {
+            QSize windowSize = size();
+            windowSize -= QSize(0, d->packageView->size().height());
+            d->packageView->setVisible(false);
+            setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+            setMaximumSize(QWIDGETSIZE_MAX, windowSize.height());
+            d->ui.gridLayout->removeWidget(d->packageView);
+        } else {
+            setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+            setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+            d->ui.gridLayout->addWidget(d->packageView, 1, 0, 1, 2);
+            d->packageView->setVisible(true);
+        }
+    }
+        break;
+    default : // Should be only details
+        KDialog::slotButtonClicked(bt);
+    }
 }
 
 void KpkTransaction::setTransaction(Transaction *trans)
@@ -207,14 +193,19 @@ void KpkTransaction::setTransaction(Transaction *trans)
         connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                 this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
         d->showDetails = transactionGroup.readEntry("ShowDetails", false);
-        d->packageView->hide();
-        d->ui.gridLayout->addWidget(d->packageView, 1, 0, 1, 2);
-        d->packageView->setVisible(d->showDetails);
         enableButton(KDialog::Details, true);
+        if (d->showDetails != d->packageView->isVisible()) {
+            kDebug();
+            slotButtonClicked(KDialog::Details);
+        }
     } else {
-        enableButton(KDialog::Details, true);
-        d->ui.gridLayout->removeWidget(d->packageView);
+        if (d->packageView->isVisible()) {
+            slotButtonClicked(KDialog::Details);
+        }
+//         d->ui.gridLayout->removeWidget(d->packageView);
+        enableButton(KDialog::Details, false);
     }
+
     // Setup HIDE custom button
     setButtonText(KDialog::User1, i18n("Hide"));
     setButtonToolTip(KDialog::User1,
@@ -401,115 +392,7 @@ void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package> p)
     }
 }
 
-void KpkTransaction::finishedDialog()
-{
-    if (!d->finished) {
-        // We are going to hide the transaction,
-        // which can make the user even close System Settings or KPackageKit
-        // so we call the tray icon to keep watching the transaction so if the
-        // transaction receives some error we can display them
-        QDBusMessage message;
-        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                 "/",
-                                                 "org.kde.KPackageKitSmartIcon",
-                                                 QLatin1String("WatchTransaction"));
-        // Use our own cached tid to avoid crashes
-        message << qVariantFromValue(d->tid);
-        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-        if (reply.type() != QDBusMessage::ReplyMessage) {
-            kWarning() << "Message did not receive a reply";
-        }
-        // Always disconnect BEFORE emitting finished
-        unsetTransaction();
-
-        setExitStatus(Success);
-    }
-}
-
-void KpkTransaction::slotButtonClicked(int button)
-{
-    switch(button) {
-    case KDialog::Cancel :
-//         kDebug() << "KDialog::Cancel";
-        m_trans->cancel();
-        m_flags |= CloseOnFinish;
-        break;
-    case KDialog::User1 :
-//         kDebug() << "KDialog::User1";
-        // when we're done finishedDialog() is called
-        done(KDialog::User1);
-        break;
-    case KDialog::Close :
-//         kDebug() << "KDialog::Close";
-        // Always disconnect BEFORE emitting finished
-        unsetTransaction();
-        setExitStatus(Cancelled);
-        done(KDialog::Close);
-        break;
-    case KDialog::Details :
-    {
-        QSize viewSize = d->packageView->size();
-        if (d->packageView->isVisible()) {
-            d->packageView->setVisible(false);
-//             kDebug() <<  d->ui.packageWidget->sizeHint();
-//
-            QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
-    //         QSize size = d->ui.packageWidget->size();
-    //         size.setHeight(0);
-            animation->setDuration(1000);
-            QSize windowSize = size();
-            animation->setStartValue(windowSize);
-            windowSize -= QSize(0, viewSize.height());
-    //         size.setSize(rect.size() + d->ui.packageWidget->size());
-    //         size.setHeight(d->ui.packageWidget->sizeHint().height());
-            animation->setEndValue(windowSize);
-            animation->setEasingCurve(QEasingCurve::OutInQuad);
-            animation->start();
-        } else {
-            d->packageView->setVisible(!d->packageView->isVisible());
-            kDebug() << d->packageView->dynamicPropertyNames();
-            QParallelAnimationGroup *group = new QParallelAnimationGroup;
-            kDebug() <<  d->packageView->size() << d->packageView->sizeHint();
-//             d->ui.packageWidget->resize(QSize(0, 0));
-//             d->ui.packageWidget->setVisible(true);
-            QPropertyAnimation *anim1 = new QPropertyAnimation(this, "size");
-            QPropertyAnimation *anim2 = new QPropertyAnimation(d->packageView, "visible");
-    //         QSize size = d->ui.packageWidget->size();
-    //         size.setHeight(0);
-            anim1->setDuration(1000);
-            anim2->setDuration(1);
-            QSize windowSize = size();
-            QSize size2 = d->packageView->sizeHint();
-//             size2.setHeight(0);
-            anim1->setStartValue(windowSize);
-            anim2->setStartValue(false);
-//             siz += QSize(0, d->ui.packageWidget->sizeHint().height());
-//             size2 += QSize(0, d->ui.packageWidget->sizeHint().height());
-            windowSize += QSize(0, d->packageView->size().height());
-    //         size.setSize(rect.size() + d->ui.packageWidget->size());
-    //         size.setHeight(d->ui.packageWidget->sizeHint().height());
-            anim1->setEndValue(windowSize);
-            anim2->setEndValue(true);
-            anim1->setEasingCurve(QEasingCurve::InOutQuad);
-//             anim2->setEasingCurve(QEasingCurve::InOutQuad);
-            group->addAnimation(anim1);
-            group->addAnimation(anim2);
-            group->start();
-        }
-//         d->showDetails = !d->showDetails;
-
-
-
-//         d->ui.detailGroup->setVisible(d->showDetails);
-    }
-        break;
-    default : // Should be only details
-        KDialog::slotButtonClicked(button);
-    }
-}
-
 // Return value: if the error code suggests to try with only_trusted %FALSE
-
 static bool untrustedIsNeed(Enum::Error error)
 {
     switch (error) {
@@ -696,6 +579,31 @@ void KpkTransaction::finished(PackageKit::Enum::Exit status)
     }
 }
 
+void KpkTransaction::finishedDialog()
+{
+    if (!d->finished) {
+        // We are going to hide the transaction,
+        // which can make the user even close System Settings or KPackageKit
+        // so we call the tray icon to keep watching the transaction so if the
+        // transaction receives some error we can display them
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                                 "/",
+                                                 "org.kde.KPackageKitSmartIcon",
+                                                 QLatin1String("WatchTransaction"));
+        // Use our own cached tid to avoid crashes
+        message << qVariantFromValue(d->tid);
+        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+        if (reply.type() != QDBusMessage::ReplyMessage) {
+            kWarning() << "Message did not receive a reply";
+        }
+        // Always disconnect BEFORE emitting finished
+        unsetTransaction();
+
+        setExitStatus(Success);
+    }
+}
+
 KpkTransaction::ExitStatus KpkTransaction::exitStatus() const
 {
     return m_exitStatus;
@@ -705,6 +613,51 @@ void KpkTransaction::setExitStatus(KpkTransaction::ExitStatus status)
 {
     m_exitStatus = status;
     emit finished(status);
+}
+
+QString KpkTransaction::tid() const
+{
+    return d->tid;
+}
+
+bool KpkTransaction::allowDeps() const
+{
+    return d->allowDeps;
+}
+
+bool KpkTransaction::onlyTrusted() const
+{
+    return d->onlyTrusted;
+}
+
+Enum::Role KpkTransaction::role() const
+{
+    return d->role;
+}
+
+QList<QSharedPointer<PackageKit::Package> > KpkTransaction::packages() const
+{
+    return d->packages;
+}
+
+QStringList KpkTransaction::files() const
+{
+    return d->files;
+}
+
+void KpkTransaction::setAllowDeps(bool allowDeps)
+{
+    d->allowDeps = allowDeps;
+}
+
+void KpkTransaction::setPackages(const QList<QSharedPointer<PackageKit::Package> > &packages)
+{
+    d->packages = packages;
+}
+
+void KpkTransaction::setFiles(const QStringList &files)
+{
+    d->files = files;
 }
 
 #include "KpkTransaction.moc"
