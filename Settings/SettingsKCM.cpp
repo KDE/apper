@@ -18,23 +18,40 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkSettings.h"
+#include "SettingsKCM.h"
 
 #include "KpkModelOrigin.h"
 
 #include <KpkEnum.h>
 #include <KpkTransactionBar.h>
+#include <version.h>
 
 #include <KConfig>
 #include <KLocale>
 #include <KMessageBox>
+#include <KGenericFactory>
+#include <KAboutData>
+
 #include <KDebug>
 
 using namespace PackageKit;
 
-KpkSettings::KpkSettings(QWidget *parent)
-  : QWidget(parent), m_originModel(0)
+K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<SettingsKCM>();)
+K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_settings"))
+
+SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
+    : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
+    KAboutData *aboutData;
+    aboutData = new KAboutData("kpackagekit",
+                               "kpackagekit",
+                               ki18n("KPackageKit settings"),
+                               KPK_VERSION,
+                               ki18n("KPackageKit settings"),
+                               KAboutData::License_GPL,
+                               ki18n("(C) 2008-2010 Daniel Nicoletti"));
+    setAboutData(aboutData);
+    KGlobal::locale()->insertCatalog("kpackagekit");
     setupUi(this);
 
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
@@ -78,7 +95,7 @@ KpkSettings::KpkSettings(QWidget *parent)
 }
 
 // TODO update the repo list connecting to repo changed signal
-void KpkSettings::on_showOriginsCB_stateChanged(int state)
+void SettingsKCM::on_showOriginsCB_stateChanged(int state)
 {
     m_trasaction = Client::instance()->getRepoList(
         state == Qt::Checked ? Enum::NoFilter : Enum::FilterNotDevelopment);
@@ -90,7 +107,7 @@ void KpkSettings::on_showOriginsCB_stateChanged(int state)
     transactionBar->addTransaction(m_trasaction);
 }
 
-void KpkSettings::checkChanges()
+void SettingsKCM::checkChanges()
 {
     KConfig config("KPackageKit");
 
@@ -121,7 +138,7 @@ void KpkSettings::checkChanges()
     autoCB->setEnabled(enabled);
 }
 
-void KpkSettings::load()
+void SettingsKCM::load()
 {
     KConfig config("KPackageKit");
 
@@ -163,7 +180,7 @@ void KpkSettings::load()
     }
 }
 
-void KpkSettings::save()
+void SettingsKCM::save()
 {
     KConfig config("KPackageKit");
 
@@ -189,7 +206,7 @@ void KpkSettings::save()
     }
 }
 
-void KpkSettings::defaults()
+void SettingsKCM::defaults()
 {
     autoConfirmCB->setChecked(true);
     notifyUpdatesCB->setCheckState(Qt::Checked);
@@ -199,4 +216,4 @@ void KpkSettings::defaults()
     emit checkChanges();
 }
 
-#include "KpkSettings.moc"
+#include "SettingsKCM.moc"

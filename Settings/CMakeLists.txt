@@ -1,10 +1,9 @@
 set(kpk_settings_SRCS
-    KcmKpkSettings.cpp
-    KpkSettings.cpp
+    SettingsKCM.cpp
     KpkModelOrigin.cpp
 )
 kde4_add_ui_files(kpk_settings_SRCS
-    KpkSettings.ui
+    SettingsKCM.ui
 )
 
 kde4_add_plugin(kcm_kpk_settings ${kpk_settings_SRCS})

@@ -59,106 +59,113 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 {
     //format and show description
     QString description;
-    description += "<table><tbody>";
 
     // update type (ie Security Update)
-    if (m_info == Enum::UnknownInfo) {
-        m_info = Enum::InfoNormal;
-    }
-    description += "<tr><td align=\"right\"><b>" + i18n("Type") + ":</b></td><td>"
-                   + KpkStrings::info(m_info)
-                   + "</td></tr>";
-
-    // m_info
-    if (info.state != Enum::UnknownUpdateState) {
-        description += "<tr><td align=\"right\"><b>" + i18nc("State of the upgrade (ie testing, unstable..)", "State") + ":</b></td><td>"
-                    + KpkStrings::updateState(info.state)
-                    + "</td></tr>";
+    if (m_info == Enum::InfoEnhancement) {
+        description += i18n("This update will add new features and expand functionality.") + "<br/>";
+    } else if (m_info == Enum::InfoBugfix) {
+        description += i18n("This update will fix bugs and other non-critical problems.") + "<br/>";
+    } else if (m_info == Enum::InfoImportant) {
+        description += i18n("This update is important as it may solve critical problems.") + "<br/>";
+    } else if (m_info == Enum::InfoSecurity) {
+        description += i18n("This update is needed to fix a security vulnerability with this package.") + "<br/>";
+    } else if (m_info == Enum::InfoBlocked) {
+        description += i18n("This update is blocked.") + "<br/>";
     }
 
-    // Issued
-    if (!info.issued.toString().isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Issued") + ":</b></td><td>"
-                    + KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate)
-                    + "</td></tr>";
+    // Issued and Updated
+    if (!info.issued.toString().isEmpty() && !info.updated.toString().isEmpty()) {
+        description += i18n("This notification was issued on %1 and last updated on %2.",
+                            KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate),
+                            KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate))
+                       + "<br/>";
+    } else if (!info.issued.toString().isEmpty()) {
+        description += i18n("This notification was issued on %1.",
+                            KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate))
+                       + "<br/>";
     }
-
-    // Updated
-    if (!info.updated.toString().isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Updated") + ":</b></td><td>"
-                    + KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate)
-                    + "</td></tr>";
-    }
-
-    // New version (ie package version)
-    description += "<tr><td align=\"right\"><b>" + i18n("New version") + ":</b></td><td>" + info.package->name()
-                + '-' + info.package->version()
-                + "</td></tr>";
-
-    // Updates (lists of packages that are updated)
-    if (info.updates.size()) {
-        QStringList updates;
-        foreach (QSharedPointer<PackageKit::Package> p, info.updates) updates << p->name() + '-' + p->version();
-        description += "<tr><td align=\"right\"><b>" + i18n("Updates") + ":</b></td><td>"
-                    + updates.join("<br />")
-                    + "</td></tr>";
-    }
-
-    // Obsoletes (lists of packages that are obsoleted)
-    if (info.obsoletes.size()) {
-        QStringList obsoletes;
-        foreach (QSharedPointer<PackageKit::Package> p, info.obsoletes) obsoletes << p->id() + '-' + p->version();
-        description += "<tr><td align=\"right\"><b>" + i18n("Obsoletes") + ":</b></td><td>"
-                    + obsoletes.join("<br />")
-                    + "</td></tr>";
-    }
-
-    // Repository (this is the repository the package come from)
-    description += "<tr><td align=\"right\"><b>" + i18n("Repository") + ":</b></td><td>"
-                + info.package->data()
-                + "</td></tr>";
 
     // Description
     if (!info.updateText.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Description") + ":</b></td><td>"
-                    + info.updateText.replace('\n', "<br />")
-                    + "</td></tr>";
-    }
-
-    // ChangeLog
-    if (!info.changelog.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Changes") + ":</b></td><td>"
-                    + info.changelog.replace('\n', "<br />")
-                    + "</td></tr>";
+        description += info.updateText.replace('\n', "<br/>")
+                       + "<br/>";
     }
 
     // links
     //  Vendor
     if (!info.vendorUrl.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Vendor")
-                    + ":</b></td><td>" + getLinkList(info.vendorUrl) + "</td></tr>";
+        description += i18np("For more information about this update please visit this website:",
+                             "For more information about this update please visit these websites:",
+                             info.vendorUrl.split(';').size() % 2)
+                       + "<br/>" + getLinkList(info.vendorUrl) + "<br/>";
     }
 
     //  Bugzilla
     if (!info.bugzillaUrl.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Bugzilla")
-                    + ":</b></td><td>" + getLinkList(info.bugzillaUrl) + "</td></tr>";
+        description += i18np("For more information about bugs fixed by this update please visit this website:",
+                             "For more information about bugs fixed by this update please visit these websites:",
+                             info.bugzillaUrl .split(';').size() % 2)
+                       + "<br/>" + getLinkList(info.bugzillaUrl) + "<br/>";
     }
 
     //  CVE
     if (!info.cveUrl.isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("CVE")
-                    + ":</b></td><td>" + getLinkList(info.cveUrl) + "</td></tr>";
+        description += i18np("For more information about this security update please visit this website:",
+                             "For more information about this security update please visit these websites:",
+                             info.cveUrl .split(';').size() % 2)
+                       + "<br/>" + getLinkList(info.cveUrl) + "<br/>";
     }
 
     // Notice (about the need for a reboot)
-    if (info.restart == Enum::RestartSession || info.restart == Enum::RestartSystem) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Notice") + ":</b></td><td>"
-                    + KpkStrings::restartType(info.restart)
-                    + "</td></tr>";
+    if (info.restart == Enum::RestartSession) {
+        description += i18n("The computer will have to be restarted after the update for the changes to take effect.")
+                       + "<br/>";
+    } else if (info.restart == Enum::RestartSystem) {
+        description += i18n("You will need to log out and back in after the update for the changes to take effect.")
+                       + "<br/>";
     }
 
-    description += "</table></tbody>";
+    // State
+    if (info.state == Enum::UpdateStateUnstable) {
+        description += i18n("The classifaction of this update is unstable which means it is not designed for production use.")
+                       + "<br/>";
+    } else if (info.state == Enum::UpdateStateTesting) {
+        description += i18n("This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter.")
+                       + "<br/>";
+    }
+
+    // only show changelog if we didn't have any update text
+    if (info.updateText.isEmpty() && !info.changelog.isEmpty()) {
+        description += i18n("The developer logs will be shown as no description is available for this update:")
+                       + "<br/>";
+        description += info.changelog.replace('\n', "<br/>") + "<br/>";
+    }
+
+    // Updates (lists of packages that are updated)
+    if (info.updates.size()) {
+        description += "<b>" + i18n("Updates:") + "</b><br/>";
+        QStringList updates;
+        foreach (const QSharedPointer<PackageKit::Package> &p, info.updates) {
+             updates += QString::fromUtf8("\xE2\x80\xA2 ") + p->name() + " - " + p->version();
+        }
+        description += updates.join("<br/") + "</ul><br/>";
+    }
+
+    // Obsoletes (lists of packages that are obsoleted)
+    if (info.obsoletes.size()) {
+        description += "</b>" + i18n("Obsoletes:") + "</b><br/>";
+        QStringList obsoletes;
+        foreach (const QSharedPointer<PackageKit::Package> &p, info.obsoletes) {
+             obsoletes += QString::fromUtf8("\xE2\x80\xA2 ") + p->name() + " - " + p->version();
+        }
+        description += obsoletes.join("<br/") + "</ul><br/>";
+    }
+
+    // Repository (this is the repository the package comes from)
+    if (!info.package->data().isEmpty()) {
+         description += "<b>" + i18n("Repository:") + "</b> " + info.package->data() + "<br/>";
+    }
+
     descriptionKTB->setHtml(description);
     m_busySeq->stop();
 }
@@ -179,7 +186,7 @@ QString KpkUpdateDetails::getLinkList(const QString &links) const
         if (!ret.isEmpty()) {
             ret += "<br />";
         }
-        ret = "<a href=\"" + linkList.at(i) + "\">"
+        ret = "<a href=\"" + linkList.at(i) + QString::fromUtf8("\">\xE2\x80\xA2 ")
               + linkList.at(i + 1) + "</a>";
     }
     return ret;
@@ -188,7 +195,7 @@ QString KpkUpdateDetails::getLinkList(const QString &links) const
 void KpkUpdateDetails::updateDetailFinished()
 {
     if (descriptionKTB->document()->toPlainText().isEmpty()) {
-       descriptionKTB->setPlainText(i18n("No update description was found."));
+        descriptionKTB->setPlainText(i18n("No update description was found."));
     }
 }
 

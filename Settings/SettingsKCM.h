@@ -18,34 +18,35 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKSETTINGS_H
-#define KPKSETTINGS_H
+#ifndef SETTINGS_KCM_H
+#define SETTINGS_KCM_H
 
 #include <QPackageKit>
+#include <KCModule>
 
-#include "ui_KpkSettings.h"
+#include "ui_SettingsKCM.h"
 
 using namespace PackageKit;
 
 class KpkModelOrigin;
-class KpkSettings : public QWidget, public Ui::KpkSettings
+class SettingsKCM : public KCModule, public Ui::SettingsKCM
 {
 Q_OBJECT
 
 public:
-    KpkSettings(QWidget *parent = 0);
+    SettingsKCM(QWidget *parent, const QVariantList &args);
 
 public slots:
     void load();
     void save();
     void defaults();
-    void checkChanges();
 
 signals:
     void changed(bool state);
 
 private slots:
     void on_showOriginsCB_stateChanged(int state);
+    void checkChanges();
 
 private:
     Transaction *m_trasaction;
