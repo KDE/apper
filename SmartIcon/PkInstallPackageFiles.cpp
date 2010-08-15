@@ -53,7 +53,7 @@ void PkInstallPackageFiles::start()
     bool showFullPathNotFiles = false;
     for (int i = 0; i < m_urls.count(); i++) {
         if (QFileInfo(m_urls.at(i).path()).isFile()) {
-            qDebug() << "isFIle";
+            kDebug() << "isFIle";
             m_files << m_urls.at(i).path();
             // if the path of all the files is the same
             // why bothering the user showing a full path?
@@ -62,7 +62,7 @@ void PkInstallPackageFiles::start()
             }
             lastDirectory = m_urls.at(i).directory();
         } else {
-            qDebug() << "~isFIle";
+            kDebug() << "~isFIle";
             notFiles << m_urls.at(i).path();
             if (m_urls.at(i).directory() != lastDirectoryNotFiles) {
                 showFullPathNotFiles = true;
@@ -120,6 +120,8 @@ void PkInstallPackageFiles::start()
                 Transaction *t;
                 t = Client::instance()->simulateInstallFiles(m_files);
                 if (t->error()) {
+                    // Send the error FIRST otherwise 't' might get deleted
+                    sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
                     if (showWarning()) {
                         KMessageBox::sorry(0,
                                            KpkStrings::daemonError(t->error()),
@@ -127,19 +129,13 @@ void PkInstallPackageFiles::start()
                                                  "Failed to install files",
                                                  m_files.count()));
                     }
-                    sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
                 } else {
+                    transaction->setTransaction(t);
                     m_installFilesModel = new KpkSimulateModel(this);
-                    connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-                            m_installFilesModel, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
-                    connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                            this, SLOT(simulateFinished(PackageKit::Transaction::ExitStatus)));
+                    connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                            m_installFilesModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
                     if (showProgress()) {
-                        KpkTransaction *trans;
-                        trans = new KpkTransaction(t,
-                                                   KpkTransaction::CloseOnFinish |
-                                                   KpkTransaction::Modal);
-                        trans->show();
+                        transaction->show();
                     }
                 }
             } else {
@@ -161,25 +157,6 @@ void PkInstallPackageFiles::start()
     }
 }
 
-void PkInstallPackageFiles::simulateFinished(PackageKit::Enum::Exit status)
-{
-    if (status == Enum::ExitSuccess) {
-        if (m_installFilesModel->rowCount() > 0) {
-            QPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
-            if (frm->exec() == QDialog::Accepted) {
-                installFiles();
-            } else {
-                sendErrorFinished(Cancelled, "Aborted");
-            }
-            delete frm;
-        } else {
-            installFiles();
-        }
-    } else {
-        sendErrorFinished(Failed, "failed to simulate a package file install");
-    }
-}
-
 void PkInstallPackageFiles::installFiles()
 {
     SET_PROXY
@@ -194,46 +171,57 @@ void PkInstallPackageFiles::installFiles()
         }
         sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
     } else {
-        KpkTransaction *trans = new KpkTransaction(t);
-        trans->setFiles(m_files);
-        // TODO we need to keep an eye here
-//         connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-//                 this, SLOT(installFinished(PackageKit::Transaction::ExitStatus, uint)));
-        connect(trans, SIGNAL(finished(KpkTransaction::ExitStatus)),
-                this, SLOT(installFilesFinished(KpkTransaction::ExitStatus)));
-        trans->show();
+        transaction->setTransaction(t);
+        transaction->setFiles(m_files);
+        transaction->show();
     }
 }
 
-void PkInstallPackageFiles::installFilesFinished(KpkTransaction::ExitStatus status)
+void PkInstallPackageFiles::transactionFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
-    KpkTransaction *transaction = qobject_cast<KpkTransaction*>(sender());
-    switch (status) {
-    case KpkTransaction::Success :
-        if (showFinished()) {
-            KMessageBox::information(0,
-                                     i18np("File was installed successfully",
-                                           "Files were installed successfully",
-                                           transaction->files().count()),
-                                     i18np("File was installed successfully",
-                                           "Files were installed successfully",
-                                           transaction->files().count()));
+    if (transaction->role() == Enum::RoleSimulateInstallFiles) {
+        if (status == KpkTransaction::Success) {
+            if (m_installFilesModel->rowCount() > 0) {
+                QPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
+                if (frm->exec() == QDialog::Accepted) {
+                    installFiles();
+                } else {
+                    sendErrorFinished(Cancelled, "Aborted");
+                }
+                delete frm;
+            } else {
+                installFiles();
+            }
+        } else {
+            sendErrorFinished(Failed, transaction->errorDetails());
         }
-        finishTaskOk();
-        // return to avoid the finished() since in the above it's already emmited
-        return;
-    case KpkTransaction::Cancelled :
-        sendErrorFinished(Cancelled, "Aborted");
-        break;
-    case KpkTransaction::Failed :
-        if (showWarning()) {
-            KMessageBox::error(0,
-                               i18n("An error occurred."),
-                               i18n("KPackageKit Error"));
+    } else {
+        switch (status) {
+        case KpkTransaction::Success :
+            if (showFinished()) {
+                KMessageBox::information(0,
+                                        i18np("File was installed successfully",
+                                              "Files were installed successfully",
+                                              transaction->files().count()),
+                                        i18np("File was installed successfully",
+                                              "Files were installed successfully",
+                                              transaction->files().count()));
+            }
+            finishTaskOk();
+            break;
+        case KpkTransaction::Cancelled :
+            sendErrorFinished(Cancelled, "Aborted");
+            break;
+        case KpkTransaction::Failed :
+            if (showWarning()) {
+                KMessageBox::error(0,
+                                  transaction->errorDetails(),
+                                  i18n("KPackageKit Error"));
+            }
+            sendErrorFinished(Failed, transaction->errorDetails());
+            break;
         }
-        sendErrorFinished(Failed, "An error occurred");
-        break;
     }
 }
 

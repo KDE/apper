@@ -57,6 +57,8 @@ public:
     bool allowDeps;
     bool onlyTrusted;
     Enum::Role role;
+    Enum::Error error;
+    QString errorDetails;
     QList<QSharedPointer<PackageKit::Package> > packages;
     QStringList files;
     QStandardItemModel model;
@@ -179,6 +181,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
     d->tid = trans->tid();
     d->finished = false;
     d->role = m_trans->role();
+    d->error = Enum::UnknownError;
+    d->errorDetails.clear();
     d->model.clear();
 
     KConfig config("KPackageKit");
@@ -223,7 +227,6 @@ void KpkTransaction::setTransaction(Transaction *trans)
     currPackage(m_trans->lastPackage());
     // sets ui
     updateUi();
-
 
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
     connect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
@@ -409,7 +412,9 @@ static bool untrustedIsNeed(Enum::Error error)
 
 void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
-//     kDebug() << "errorCode: " << error << details;
+    kDebug() << "errorCode: " << error << details;
+    d->error = error;
+    d->errorDetails = details;
     // obvious message, don't tell the user
     if (error == Enum::ErrorTransactionCancelled) {
         return;
@@ -418,9 +423,9 @@ void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &det
     if (untrustedIsNeed(error)) {
         m_handlingActionRequired = true;
         int ret = KMessageBox::warningYesNo(this,
-                                            i18n("You are about to install unsigned packages can compromise your system, "
+                                            i18n("You are about to install unsigned packages that can compromise your system, "
                                             "as it is impossible to verify if the software came from a trusted "
-                                            "source.\n Are you sure you want to continue installation?"),
+                                            "source.\n\nAre you sure you want to proceed with the installation?"),
                                             i18n("Installing unsigned software"));
         if (ret == KMessageBox::Yes) {
             // Set only trusted to false, to do as the user asked
@@ -462,6 +467,8 @@ void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &det
     m_showingError = false;
 
     // when we receive an error we are done
+    setExitStatus(Failed);
+    // TODO maybe this should go in the above method
     if (m_flags & CloseOnFinish) {
         done(QDialog::Rejected);
     }
@@ -546,7 +553,7 @@ void KpkTransaction::finished(PackageKit::Enum::Exit status)
         break;
     case Enum::ExitFailed :
         kDebug() << "Failed.";
-        if (!m_handlingActionRequired) {
+        if (!m_handlingActionRequired && !m_showingError) {
             d->ui.progressBar->setMaximum(0);
             d->ui.progressBar->reset();
             kDebug() << "Yep, we failed.";
@@ -568,6 +575,7 @@ void KpkTransaction::finished(PackageKit::Enum::Exit status)
         d->ui.progressBar->setValue(100);
         kDebug() << "finished default" << status;
         KDialog::slotButtonClicked(KDialog::Close);
+        setExitStatus(Failed);
         break;
     }
     // if we're not showing an error or don't have the
@@ -633,6 +641,16 @@ bool KpkTransaction::onlyTrusted() const
 Enum::Role KpkTransaction::role() const
 {
     return d->role;
+}
+
+Enum::Error KpkTransaction::error() const
+{
+    return d->error;
+}
+
+QString KpkTransaction::errorDetails() const
+{
+    return d->errorDetails;
 }
 
 QList<QSharedPointer<PackageKit::Package> > KpkTransaction::packages() const

@@ -54,6 +54,8 @@ public:
     QStringList files() const;
 
     Enum::Role role() const;
+    Enum::Error error() const;
+    QString errorDetails() const;
 
     void setAllowDeps(bool allowDeps);
     void setPackages(const QList<QSharedPointer<PackageKit::Package> > &packages);

@@ -66,6 +66,9 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
         setExec(cmdline);
     }
 
+    transaction = new KpkTransaction(0);
+    connect(transaction, SIGNAL(finished(KpkTransaction::ExitStatus)),
+            this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
 }
 
 void KpkAbstractTask::setExec(const QString &exec)
@@ -139,6 +142,7 @@ uint KpkAbstractTask::getPidSession()
 
 KpkAbstractTask::~KpkAbstractTask()
 {
+    delete transaction;
 }
 
 void KpkAbstractTask::setParentWindow(QWidget *widget)
@@ -257,6 +261,10 @@ void KpkAbstractTask::parseInteraction(const QString &interaction)
             m_timeout = rx.cap(1).toUInt();
         }
     }
+}
+
+void KpkAbstractTask::transactionFinished(KpkTransaction::ExitStatus)
+{
 }
 
 void KpkAbstractTask::finishTaskOk()

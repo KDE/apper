@@ -23,6 +23,8 @@
 
 #include <kdemacros.h>
 #include <KpkReviewChanges.h>
+#include <KpkTransaction.h>
+
 #include <QDBusMessage>
 #include <QWidget>
 
@@ -88,11 +90,15 @@ private:
 private slots:
     virtual void start();
 
+protected slots:
+    virtual void transactionFinished(KpkTransaction::ExitStatus status);
+
 protected:
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);
     QString parentTitle;
+    KpkTransaction *transaction;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KpkAbstractTask::Interactions)

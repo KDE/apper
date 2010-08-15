@@ -22,7 +22,6 @@
 #define PK_INSTALL_PACKAGE_FILES_H
 
 #include "KpkAbstractTask.h"
-#include <KpkTransaction.h>
 #include <QPackageKit>
 
 using namespace PackageKit;
@@ -43,9 +42,7 @@ public slots:
     void start();
 
 private slots:
-    void installFilesFinished(KpkTransaction::ExitStatus status);
-    void simulateFinished(PackageKit::Enum::Exit status);
-//     void installFinished(PackageKit::Transaction::ExitStatus status, uint runtime);
+    void transactionFinished(KpkTransaction::ExitStatus status);
 
 private:
     void installFiles();
