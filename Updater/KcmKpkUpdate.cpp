@@ -172,6 +172,7 @@ void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
 void KcmKpkUpdate::save()
 {
     // If the backend supports getRequires do it
+    m_transDialog = 0;
     if (m_roles & Enum::RoleSimulateUpdatePackages) {
         QList<QSharedPointer<PackageKit::Package> > selectedPackages;
         selectedPackages = m_updatesModel->selectedPackages();
@@ -179,11 +180,12 @@ void KcmKpkUpdate::save()
         if (t->error()) {
             KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-            KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::Modal, this);
-            trans->setPackages(selectedPackages);
-            connect(trans, SIGNAL(finished(KpkTransaction::ExitStatus)),
+            m_transDialog = new KpkTransaction(0, KpkTransaction::Modal, this);
+            m_transDialog->setPackages(selectedPackages);
+            m_transDialog->setTransaction(t); // Set it after the packages so they get skiped
+            connect(m_transDialog, SIGNAL(finished(KpkTransaction::ExitStatus)),
                     this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
-            trans->show();
+            m_transDialog->show();
         }
     } else {
         updatePackages();
@@ -193,36 +195,35 @@ void KcmKpkUpdate::save()
 
 void KcmKpkUpdate::transactionFinished(KpkTransaction::ExitStatus status)
 {
-    KpkTransaction *trans = qobject_cast<KpkTransaction*>(sender());
     if (status == KpkTransaction::Success &&
-        trans->role() == Enum::RoleSimulateUpdatePackages) {
-          if (trans->simulateModel()->rowCount() > 0) {
-              QPointer<KpkRequirements> rq = new KpkRequirements(trans->simulateModel(),
-                                                                 this);
-              if (rq->exec() == QDialog::Accepted) {
-                  updatePackages(trans);
-              }
-              delete rq;
-          } else {
-              updatePackages(trans);
-          }
+        m_transDialog->role() == Enum::RoleSimulateUpdatePackages) {
+        if (m_transDialog->simulateModel()->rowCount() > 0) {
+            KpkRequirements *req = new KpkRequirements(m_transDialog->simulateModel(),
+                                                       m_transDialog);
+            connect(req, SIGNAL(accepted()), this, SLOT(updatePackages()));
+            connect(req, SIGNAL(rejected()), m_transDialog, SLOT(reject()));
+            req->show();
+        } else {
+            updatePackages();
+        }
     } else {
+        m_transDialog->deleteLater();
         checkEnableUpdateButton();
     }
 }
 
 #include <QDBusMessage>
-void KcmKpkUpdate::updatePackages(KpkTransaction *transaction)
+void KcmKpkUpdate::updatePackages()
 {
     QList<QSharedPointer<PackageKit::Package> > packages;
-    if (transaction) {
-        packages = transaction->packages();
+    if (m_transDialog) {
+        packages = m_transDialog->packages();
     } else {
         packages = m_updatesModel->selectedPackages();
-        transaction = new KpkTransaction(0, KpkTransaction::Modal, this);
-        connect(transaction, SIGNAL(finished(KpkTransaction::ExitStatus)),
+        m_transDialog = new KpkTransaction(0, KpkTransaction::Modal, this);
+        connect(m_transDialog, SIGNAL(finished(KpkTransaction::ExitStatus)),
                 this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
-        transaction->setPackages(packages);
+        m_transDialog->setPackages(packages); // Set Packages for requeue
     }
 
     SET_PROXY
@@ -243,8 +244,8 @@ void KcmKpkUpdate::updatePackages(KpkTransaction *transaction)
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
-        transaction->setTransaction(t);
-        transaction->show();
+        m_transDialog->setTransaction(t);
+        m_transDialog->show();
     }
 }
 

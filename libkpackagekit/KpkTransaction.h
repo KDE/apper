@@ -75,7 +75,7 @@ signals:
 
 private slots:
     void finishedDialog();
-    void finished(PackageKit::Enum::Exit status);
+    void transactionFinished(PackageKit::Enum::Exit status);
     void errorCode(PackageKit::Enum::Error error, const QString &details);
     void currPackage(QSharedPointer<PackageKit::Package>);
     void updateUi();

@@ -55,7 +55,7 @@ private slots:
     void getUpdates();
     void getUpdatesFinished(PackageKit::Enum::Exit status);
 
-    void updatePackages(KpkTransaction *transaction = 0);
+    void updatePackages();
     void transactionFinished(KpkTransaction::ExitStatus status);
 
     void contractAll();
@@ -69,6 +69,7 @@ private:
     KpkPackageModel *m_updatesModel;
     KpkDelegate *m_delegate;
     KpkCheckableHeader *m_header;
+    KpkTransaction *m_transDialog;
     Client *m_client;
     Transaction *m_updatesT;
     Enum::Roles m_roles;

@@ -249,7 +249,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
 
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
     connect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(finished(PackageKit::Enum::Exit)));
+            this, SLOT(transactionFinished(PackageKit::Enum::Exit)));
     connect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     connect(m_trans, SIGNAL(changed()),
@@ -268,7 +268,7 @@ void KpkTransaction::unsetTransaction()
     disconnect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-               this, SLOT(finished(PackageKit::Enum::Exit)));
+               this, SLOT(transactionFinished(PackageKit::Enum::Exit)));
     disconnect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
                this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     disconnect(m_trans, SIGNAL(changed()),
@@ -563,9 +563,10 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
     delete frm;
 }
 
-void KpkTransaction::finished(PackageKit::Enum::Exit status)
+void KpkTransaction::transactionFinished(PackageKit::Enum::Exit status)
 {
     Transaction *trans = qobject_cast<Transaction*>(sender());
+//     kDebug() << status;
     d->finished = true;
     switch(status) {
     case Enum::ExitSuccess :
@@ -582,7 +583,10 @@ void KpkTransaction::finished(PackageKit::Enum::Exit status)
     case Enum::ExitCancelled :
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
-        setExitStatus(Cancelled);
+        // Avoid crash in case we are showing an error
+        if (!m_showingError) {
+            setExitStatus(Cancelled);
+        }
         break;
     case Enum::ExitFailed :
         kDebug() << "Failed.";
