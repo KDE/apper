@@ -100,6 +100,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     d->packageView->setItemDelegate(new TransactionDelegate(this));
     d->packageView->setRootIsDecorated(false);
     d->packageView->setHeaderHidden(true);
+    d->packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     if (m_flags & Modal) {
         setWindowModality(Qt::WindowModal);

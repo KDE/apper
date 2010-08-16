@@ -59,10 +59,11 @@ K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_addrm"))
 AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
  : KCModule(KPackageKitFactory::componentData(), parent, args),
    m_currentAction(0),
-   m_mTransRuning(false),
    m_databaseChanged(true),
+   m_searchTransaction(0),
    m_findIcon("edit-find"),
-   m_cancelIcon("dialog-cancel")
+   m_cancelIcon("dialog-cancel"),
+   m_searchRole(Enum::UnknownRole)
 {
     KAboutData *aboutData;
     aboutData = new KAboutData("kpackagekit",
@@ -83,7 +84,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     m_client->setHints("locale=" + locale);
     // store the actions supported by the backend
     m_roles = m_client->actions();
-
 
     // Browse TAB
     backTB->setIcon(KIcon("go-previous"));
@@ -154,7 +154,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     foreach (const Enum::Group &group, groups) {
         if (group != Enum::UnknownGroup) {
             groupItem = new QStandardItem(KpkStrings::groups(group));
-            groupItem->setData(group);
+            groupItem->setData(group, Qt::UserRole);
             groupItem->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
             groupItem->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
             groupItem->setIcon(KpkIcons::groupsIcon(group));
@@ -186,7 +186,9 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     // INSTALLED TAB
     setupView(&m_installedModel, installedView);
-    tabWidget->setTabIcon(1, KIcon("drive-harddisk"));
+    tabWidget->setTabIcon(1, KIcon("dialog-ok"));
+    exportInstalledPB->setIcon(KIcon("document-export"));
+    importInstalledPB->setIcon(KIcon("document-import"));
 
     // CHANGES TAB
     setupView(&m_changesModel, changesView);
@@ -308,8 +310,8 @@ void AddRmKCM::setCurrentActionCancel(bool cancel)
         actionFindFile->setText(i18n("Find by f&ile name"));
         actionFindDescription->setText(i18n("Find by &description"));
         // Define actions icon
-        actionFindFile->setIcon(m_findIcon);
-        actionFindDescription->setIcon(m_findIcon);
+        actionFindFile->setIcon(KIcon("document-open"));
+        actionFindDescription->setIcon(KIcon("document-edit"));
         actionFindName->setIcon(m_findIcon);
         m_genericActionK->setIcon(m_findIcon);
         if (m_currentAction) {
@@ -396,8 +398,8 @@ AddRmKCM::~AddRmKCM()
 void AddRmKCM::on_actionFindName_triggered()
 {
     setCurrentAction(actionFindName);
-    if (m_mTransRuning) {
-        m_pkClient_main->cancel();
+    if (m_searchTransaction) {
+        m_searchTransaction->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchRole    = Enum::RoleSearchName;
@@ -411,8 +413,8 @@ void AddRmKCM::on_actionFindName_triggered()
 void AddRmKCM::on_actionFindDescription_triggered()
 {
     setCurrentAction(actionFindDescription);
-    if (m_mTransRuning) {
-        m_pkClient_main->cancel();
+    if (m_searchTransaction) {
+        m_searchTransaction->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchRole    = Enum::RoleSearchDetails;
@@ -426,8 +428,8 @@ void AddRmKCM::on_actionFindDescription_triggered()
 void AddRmKCM::on_actionFindFile_triggered()
 {
     setCurrentAction(actionFindFile);
-    if (m_mTransRuning) {
-        m_pkClient_main->cancel();
+    if (m_searchTransaction) {
+        m_searchTransaction->cancel();
     } else if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchRole    = Enum::RoleSearchFile;
@@ -443,7 +445,7 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
     if (index.isValid()) {
         // cache the search
         m_searchRole    = Enum::RoleSearchGroup;
-        m_searchGroup   = static_cast<Enum::Group>(index.data().toUInt());
+        m_searchGroup   = static_cast<Enum::Group>(index.data(Qt::UserRole).toUInt());
         m_searchFilters = m_filtersMenu->filters();
         // create the main transaction
         search();
@@ -454,12 +456,15 @@ void AddRmKCM::on_backTB_clicked()
 {
     m_viewLayout->setCurrentIndex(0);
     backTB->setEnabled(false);
+    // reset the search role
+    m_searchRole = Enum::UnknownRole;
 }
 
 void AddRmKCM::on_tabWidget_currentChanged(int index)
 {
     if (index == 1 && m_databaseChanged == true) {
         m_databaseChanged = false;
+        m_installedModel->clear();
         Transaction *trans = m_client->getPackages(Enum::FilterInstalled);
         connectTransaction(trans, m_installedModel);
     }
@@ -467,35 +472,38 @@ void AddRmKCM::on_tabWidget_currentChanged(int index)
 
 void AddRmKCM::search()
 {
-    m_viewLayout->setCurrentIndex(1);
-    backTB->setEnabled(true);
-
     // search
     if (m_searchRole == Enum::RoleSearchName) {
-        m_pkClient_main = m_client->searchNames(m_searchString, m_searchFilters);
+        m_searchTransaction = m_client->searchNames(m_searchString, m_searchFilters);
     } else if (m_searchRole == Enum::RoleSearchDetails) {
-        m_pkClient_main = m_client->searchDetails(m_searchString, m_searchFilters);
+        m_searchTransaction = m_client->searchDetails(m_searchString, m_searchFilters);
     } else if (m_searchRole == Enum::RoleSearchFile) {
-        m_pkClient_main = m_client->searchFiles(m_searchString, m_searchFilters);
+        m_searchTransaction = m_client->searchFiles(m_searchString, m_searchFilters);
     } else if (m_searchRole == Enum::RoleSearchGroup) {
-        m_pkClient_main = m_client->searchGroups(m_searchGroup, m_searchFilters);
+        m_searchTransaction = m_client->searchGroups(m_searchGroup, m_searchFilters);
     } else {
-        kWarning() << "Search type not implemented yet";
+        kDebug() << "Search type not defined yet";
         return;
     }
 
-    if (m_pkClient_main->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(m_pkClient_main->error()));
+    m_viewLayout->setCurrentIndex(1);
+    backTB->setEnabled(true);
+
+    if (m_searchTransaction->error()) {
+        KMessageBox::sorry(this, KpkStrings::daemonError(m_searchTransaction->error()));
         setCurrentActionEnabled(true);
+        m_searchTransaction = 0;
     } else {
         setCurrentActionCancel(true);
-        connectTransaction(m_pkClient_main, m_browseModel);
+        connectTransaction(m_searchTransaction, m_browseModel);
+        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+        setCurrentActionEnabled(m_searchTransaction->allowCancel());
         // contract and delete and details widgets
         KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
         delegate->contractAll();
         // cleans the models
         m_browseModel->clear();
-        m_mTransRuning = true;
     }
 }
 
@@ -503,11 +511,8 @@ void AddRmKCM::connectTransaction(Transaction *transaction, KpkPackageModel *mod
 {
     connect(transaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
             model, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
-    setCurrentActionEnabled(transaction->allowCancel());
     transactionBar->addTransaction(transaction);
 }
 
@@ -525,13 +530,13 @@ void AddRmKCM::save()
 
     // This avoid crashing as the above function does not always quit it's event loop
     if (!frm.isNull()) {
-        if (frm->result() == QDialog::Accepted) {
-    //         m_browseModel->uncheckAll();//TODO
-        } else {
-            QTimer::singleShot(0, this, SLOT(checkChanged()));
-        }
         delete frm;
+        // The database might have changed
+        m_changesModel->resolveSelected();
+        m_databaseChanged = true;
+        on_tabWidget_currentChanged(tabWidget->currentIndex());
         search();
+        QTimer::singleShot(0, this, SLOT(checkChanged()));
     }
 }
 
@@ -551,7 +556,7 @@ void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)
     // search methods
     setCurrentActionEnabled(m_currentAction);
     setCurrentActionCancel(false);
-    m_mTransRuning = false;
+    m_searchTransaction = 0;
 }
 
 void AddRmKCM::keyPressEvent(QKeyEvent *event)

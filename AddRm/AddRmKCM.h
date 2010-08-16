@@ -84,7 +84,6 @@ private:
     QStackedLayout *m_viewLayout;
     KToolBarPopupAction *m_genericActionK;
     QAction *m_currentAction;
-    bool m_mTransRuning;//main trans
     QStandardItemModel *m_groupsModel;
     KpkPackageModel    *m_browseModel;
     KpkPackageModel    *m_installedModel;
@@ -92,7 +91,7 @@ private:
     bool m_databaseChanged;
 
     Client *m_client;
-    Transaction *m_pkClient_main;
+    Transaction *m_searchTransaction;
 
     KIcon m_findIcon;
     KIcon m_cancelIcon;

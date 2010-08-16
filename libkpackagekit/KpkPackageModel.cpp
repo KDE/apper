@@ -67,6 +67,15 @@ void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Packag
     addPackage(package, true);
 }
 
+void KpkPackageModel::addResolvedPackage(const QSharedPointer<PackageKit::Package> &package)
+{
+    if (m_checkedPackages.contains(package->id())) {
+        if (package->info() != m_checkedPackages[package->id()]->info()) {
+            uncheckPackage(package, true);
+        }
+    }
+}
+
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
@@ -176,11 +185,11 @@ void KpkPackageModel::checkPackage(const QSharedPointer<PackageKit::Package> &pa
     }
 }
 
-void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> &package)
+void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> &package, bool forceEmit)
 {
     if (containsChecked(package->id())) {
         m_checkedPackages.remove(package->id());
-        if (sender() == 0) {
+        if (forceEmit || sender() == 0) {
             emit packageUnchecked(package);
         }
     }
@@ -260,6 +269,21 @@ void KpkPackageModel::clear()
 {
     m_packages.clear();
     reset();
+}
+
+void KpkPackageModel::resolveSelected()
+{
+    if (!m_checkedPackages.isEmpty()) {
+        Transaction *t;
+        // TODO fix packagekit-qt
+        QStringList packages;
+        foreach (const QSharedPointer<PackageKit::Package> &package, m_checkedPackages.values()) {
+            packages << package->id();
+        }
+        t = Client::instance()->resolve(packages);
+        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                this, SLOT(addResolvedPackage(const QSharedPointer<PackageKit::Package> &)));
+    }
 }
 
 void KpkPackageModel::setAllChecked(bool checked)

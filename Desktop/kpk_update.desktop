@@ -2,7 +2,7 @@
 Type=Service
 Categories=Qt;KDE;X-KDE-settings-hardware;
 Exec=kcmshell4 kpk_update
-Icon=security-high
+Icon=system-software-update
 
 X-KDE-Library=kcm_kpk_update
 X-KDE-ParentApp=kcontrol

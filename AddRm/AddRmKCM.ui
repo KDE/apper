@@ -180,7 +180,7 @@
        <property name="margin">
         <number>0</number>
        </property>
-       <item row="0" column="0">
+       <item row="1" column="0" colspan="3">
         <widget class="KpkSearchableTreeView" name="installedView">
          <property name="mouseTracking">
           <bool>true</bool>
@@ -204,6 +204,33 @@
           <bool>true</bool>
          </property>
         </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QPushButton" name="exportInstalledPB">
+         <property name="text">
+          <string>Export Installed Packages List to File</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="importInstalledPB">
+         <property name="text">
+          <string>Install Packages From a File List</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
