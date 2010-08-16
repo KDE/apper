@@ -149,7 +149,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     // State
     if (info.state == Enum::UpdateStateUnstable) {
         description += "<p>" + 
-                       i18n("The classifaction of this update is unstable which means it is not designed for production use.") +
+                       i18n("The classification of this update is unstable which means it is not designed for production use.") +
                        "</p>";
     } else if (info.state == Enum::UpdateStateTesting) {
         description += "<p>" + 
