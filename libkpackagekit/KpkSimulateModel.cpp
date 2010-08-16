@@ -88,7 +88,8 @@ int KpkSimulateModel::countInfo(Enum::Info info)
 
 void KpkSimulateModel::addPackage(QSharedPointer<PackageKit::Package> p)
 {
-    if (p->info() == Enum::InfoFinished) {
+    if (p->info() == Enum::InfoFinished ||
+        p->info() == Enum::InfoCleanup) {
         return;
     }
 

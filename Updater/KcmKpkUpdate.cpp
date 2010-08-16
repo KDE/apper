@@ -85,6 +85,7 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(m_updatesModel);
     proxyModel->setDynamicSortFilter(true);
+    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setSortRole(KpkPackageModel::SortRole);
     packageView->setHeader(m_header);
     packageView->setItemDelegate(m_delegate = new KpkDelegate(packageView));
@@ -161,6 +162,13 @@ void KcmKpkUpdate::load()
     getUpdates();
 }
 
+void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
+{
+    Q_UNUSED(status)
+    m_updatesT = 0;
+    checkEnableUpdateButton();
+}
+
 void KcmKpkUpdate::save()
 {
     // If the backend supports getRequires do it
@@ -171,25 +179,11 @@ void KcmKpkUpdate::save()
         if (t->error()) {
             KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-            KpkSimulateModel *simulateModel = new KpkSimulateModel(this, selectedPackages);
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-
-            // Create a Transaction dialog to don't upset the user
-            QPointer<KpkTransaction> reqFinder = new KpkTransaction(t, KpkTransaction::CloseOnFinish | KpkTransaction::Modal, this);
-            reqFinder->exec();
-            if (reqFinder->exitStatus() == KpkTransaction::Success) {
-                if (simulateModel->rowCount() > 0) {
-                    QPointer<KpkRequirements> rq = new KpkRequirements(simulateModel, this);
-                    if (rq->exec() == QDialog::Accepted) {
-                        updatePackages();
-                    }
-                    delete rq;
-                } else {
-                    updatePackages();
-                }
-            }
-            delete reqFinder;
+            KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::Modal, this);
+            trans->setPackages(selectedPackages);
+            connect(trans, SIGNAL(finished(KpkTransaction::ExitStatus)),
+                    this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
+            trans->show();
         }
     } else {
         updatePackages();
@@ -197,17 +191,39 @@ void KcmKpkUpdate::save()
     QTimer::singleShot(0, this, SLOT(checkEnableUpdateButton()));
 }
 
-void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
+void KcmKpkUpdate::transactionFinished(KpkTransaction::ExitStatus status)
 {
-    Q_UNUSED(status)
-    m_updatesT = 0;
-    checkEnableUpdateButton();
+    KpkTransaction *trans = qobject_cast<KpkTransaction*>(sender());
+    if (status == KpkTransaction::Success &&
+        trans->role() == Enum::RoleSimulateUpdatePackages) {
+          if (trans->simulateModel()->rowCount() > 0) {
+              QPointer<KpkRequirements> rq = new KpkRequirements(trans->simulateModel(),
+                                                                 this);
+              if (rq->exec() == QDialog::Accepted) {
+                  updatePackages(trans);
+              }
+              delete rq;
+          } else {
+              updatePackages(trans);
+          }
+    } else {
+        checkEnableUpdateButton();
+    }
 }
 
 #include <QDBusMessage>
-void KcmKpkUpdate::updatePackages()
+void KcmKpkUpdate::updatePackages(KpkTransaction *transaction)
 {
-    QList<QSharedPointer<PackageKit::Package> > packages = m_updatesModel->selectedPackages();
+    QList<QSharedPointer<PackageKit::Package> > packages;
+    if (transaction) {
+        packages = transaction->packages();
+    } else {
+        packages = m_updatesModel->selectedPackages();
+        transaction = new KpkTransaction(0, KpkTransaction::Modal, this);
+        connect(transaction, SIGNAL(finished(KpkTransaction::ExitStatus)),
+                this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
+        transaction->setPackages(packages);
+    }
 
     SET_PROXY
 //     QDBusMessage message;
@@ -227,11 +243,8 @@ void KcmKpkUpdate::updatePackages()
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
-        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
-        frm->setPackages(packages);
-        connect(frm, SIGNAL(finished(KpkTransaction::ExitStatus)),
-                this, SLOT(checkEnableUpdateButton()));
-        frm->show();
+        transaction->setTransaction(t);
+        transaction->show();
     }
 }
 

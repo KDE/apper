@@ -27,8 +27,8 @@
 
 using namespace PackageKit;
 
+class KpkSimulateModel;
 class KpkTransactionPrivate;
-
 class KDE_EXPORT KpkTransaction : public KDialog
 {
     Q_OBJECT
@@ -52,6 +52,7 @@ public:
     bool onlyTrusted() const;
     QList<QSharedPointer<PackageKit::Package> > packages() const;
     QStringList files() const;
+    KpkSimulateModel* simulateModel() const;
 
     Enum::Role role() const;
     Enum::Error error() const;

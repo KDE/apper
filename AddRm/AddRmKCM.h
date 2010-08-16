@@ -78,7 +78,7 @@ private:
 
     void setActionCancel(bool enabled);
     void search();
-    void connectTransaction(Transaction *transaction);
+    void connectTransaction(Transaction *transaction, KpkPackageModel *model);
     void keyPressEvent(QKeyEvent *event);
 
     QStackedLayout *m_viewLayout;

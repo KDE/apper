@@ -25,6 +25,8 @@
 
 #include "ui_KcmKpkUpdate.h"
 
+#include <KpkTransaction.h>
+
 using namespace PackageKit;
 
 class KpkPackageModel;
@@ -53,7 +55,8 @@ private slots:
     void getUpdates();
     void getUpdatesFinished(PackageKit::Enum::Exit status);
 
-    void updatePackages();
+    void updatePackages(KpkTransaction *transaction = 0);
+    void transactionFinished(KpkTransaction::ExitStatus status);
 
     void contractAll();
     void showExtendItem(const QModelIndex &index);

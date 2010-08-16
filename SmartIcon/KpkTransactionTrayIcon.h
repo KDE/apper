@@ -52,13 +52,13 @@ private slots:
     void transactionDialogClosed();
     void message(PackageKit::Enum::Message type, const QString &message);
     void requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package>pkg);
-    void finished();
-    void restartActivated(uint action = 1);
+    void finished(PackageKit::Enum::Exit exit);
     void transactionChanged();
     void logout();
 
     void refreshCache();
     void showMessages();
+    void hideIcon();
 
 private:
     void updateMenu(const QList<PackageKit::Transaction*> &tids);

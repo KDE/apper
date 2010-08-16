@@ -245,6 +245,7 @@ void AddRmKCM::setupView(KpkPackageModel **model, QTreeView *view)
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(*model);
     proxyModel->setDynamicSortFilter(true);
+    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setSortRole(KpkPackageModel::SortRole);
     view->setModel(proxyModel);
     view->sortByColumn(0, Qt::AscendingOrder);
@@ -460,9 +461,7 @@ void AddRmKCM::on_tabWidget_currentChanged(int index)
     if (index == 1 && m_databaseChanged == true) {
         m_databaseChanged = false;
         Transaction *trans = m_client->getPackages(Enum::FilterInstalled);
-        connect(trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                m_installedModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-        connectTransaction(trans);
+        connectTransaction(trans, m_installedModel);
     }
 }
 
@@ -490,7 +489,7 @@ void AddRmKCM::search()
         setCurrentActionEnabled(true);
     } else {
         setCurrentActionCancel(true);
-        connectTransaction(m_pkClient_main);
+        connectTransaction(m_pkClient_main, m_browseModel);
         // contract and delete and details widgets
         KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
         delegate->contractAll();
@@ -500,10 +499,10 @@ void AddRmKCM::search()
     }
 }
 
-void AddRmKCM::connectTransaction(Transaction *transaction)
+void AddRmKCM::connectTransaction(Transaction *transaction, KpkPackageModel *model)
 {
     connect(transaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-            m_browseModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            model, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
     connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),

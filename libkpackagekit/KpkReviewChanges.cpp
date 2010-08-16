@@ -176,8 +176,8 @@ void KpkReviewChanges::doAction()
 
 void KpkReviewChanges::checkTask()
 {
-    kDebug() << "AddPackages" << !d->addPackages.isEmpty()
-             << "RemovePackages" << !d->remPackages.isEmpty();
+//     kDebug() << "AddPackages" << !d->addPackages.isEmpty()
+//              << "RemovePackages" << !d->remPackages.isEmpty();
     if (!d->remPackages.isEmpty()) {
         if (d->actions & Enum::RoleRemovePackages) {
             if (d->actions & Enum::RoleSimulateRemovePackages/* &&
@@ -241,13 +241,13 @@ void KpkReviewChanges::installPackages()
     SET_PROXY
     Transaction *trans = d->client->installPackages(true, d->addPackages);
     if (trans->error()) {
-        kDebug() << "FAILED" << d->addPackages.size();
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
                            i18n("Failed to install package"));
         taskDone(Enum::RoleInstallPackages);
     } else {
         d->transactionDialog->setTransaction(trans);
+        d->transactionDialog->setPackages(d->addPackages);
     }
 }
 
@@ -256,7 +256,6 @@ void KpkReviewChanges::removePackages(bool allowDeps)
     SET_PROXY
     Transaction *trans = d->client->removePackages(d->remPackages, allowDeps, true);
     if (trans->error()) {
-        kDebug() << "FAILED" << d->remPackages.size();
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
                            i18n("Failed to remove package"));
@@ -264,6 +263,7 @@ void KpkReviewChanges::removePackages(bool allowDeps)
     } else {
         d->transactionDialog->setTransaction(trans);
         d->transactionDialog->setAllowDeps(allowDeps);
+        d->transactionDialog->setPackages(d->remPackages);
     }
 }
 
@@ -273,7 +273,6 @@ void KpkReviewChanges::transactionFinished(KpkTransaction::ExitStatus status)
     if (status == KpkTransaction::Success) {
         switch (trans->role()) {
         case Enum::RoleSimulateRemovePackages:
-            kDebug() << "RoleSimulateRemovePackages" << d->removePkgModel->rowCount();
             if (d->removePkgModel->rowCount() > 0) {
                 KpkRequirements *req = new KpkRequirements(d->removePkgModel,
                                                            d->transactionDialog);

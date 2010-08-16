@@ -41,6 +41,7 @@
 #include "KpkIcons.h"
 #include "TransactionDelegate.h"
 
+#include "KpkSimulateModel.h"
 #include "KpkProgressBar.h"
 
 #include "ui_KpkTransaction.h"
@@ -62,6 +63,7 @@ public:
     QList<QSharedPointer<PackageKit::Package> > packages;
     QStringList files;
     QStandardItemModel model;
+    KpkSimulateModel *simulateModel;
     QTreeView *packageView;
 };
 
@@ -79,10 +81,16 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
 
     d->finished = true; // for sanity we are finished till some transaction is set
     d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
+    d->simulateModel = 0;
 
     setButtons(KDialog::Details | KDialog::User1 | KDialog::Cancel);
     enableButton(KDialog::Details, false);
     button(KDialog::Details)->setCheckable(true);
+    // Setup HIDE custom button
+    setButtonText(KDialog::User1, i18n("Hide"));
+    setButtonToolTip(KDialog::User1,
+                     i18n("Allows you to hide the window whilst keeping the transaction task running."));
+    setEscapeButton(KDialog::User1);
 
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
@@ -178,9 +186,13 @@ void KpkTransaction::setTransaction(Transaction *trans)
     }
 
     m_trans = trans;
+    if (trans->role() != Enum::RoleInstallSignature &&
+        trans->role() != Enum::RoleAcceptEula) {
+        // We need to keep the original role for requeuing
+        d->role = trans->role();
+    }
     d->tid = trans->tid();
     d->finished = false;
-    d->role = m_trans->role();
     d->error = Enum::UnknownError;
     d->errorDetails.clear();
     d->model.clear();
@@ -199,10 +211,22 @@ void KpkTransaction::setTransaction(Transaction *trans)
         d->showDetails = transactionGroup.readEntry("ShowDetails", false);
         enableButton(KDialog::Details, true);
         if (d->showDetails != d->packageView->isVisible()) {
-            kDebug();
             slotButtonClicked(KDialog::Details);
         }
     } else {
+        if (m_trans->role() == Enum::RoleSimulateInstallPackages ||
+            m_trans->role() == Enum::RoleSimulateInstallFiles ||
+            m_trans->role() == Enum::RoleSimulateRemovePackages ||
+            m_trans->role() == Enum::RoleSimulateUpdatePackages) {
+            // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
+            if (!d->simulateModel) {
+                d->simulateModel = new KpkSimulateModel(this, d->packages);
+            }
+            d->simulateModel->clear();
+            connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    d->simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+        }
+
         if (d->packageView->isVisible()) {
             slotButtonClicked(KDialog::Details);
         }
@@ -210,18 +234,13 @@ void KpkTransaction::setTransaction(Transaction *trans)
         enableButton(KDialog::Details, false);
     }
 
-    // Setup HIDE custom button
-    setButtonText(KDialog::User1, i18n("Hide"));
-    setButtonToolTip(KDialog::User1,
-                     i18n("Allows you to hide the window whilst keeping the transaction task running."));
-    setEscapeButton(KDialog::User1);
     // check to see if we can cancel
     enableButtonCancel(m_trans->allowCancel());
 
     // sets the action icon to be the window icon
-    setWindowIcon(KpkIcons::actionIcon(d->role));
+    setWindowIcon(KpkIcons::actionIcon(m_trans->role()));
     // Sets the kind of transaction
-    setCaption(KpkStrings::action(d->role));
+    setCaption(KpkStrings::action(m_trans->role()));
 
     // Now sets the last package
     currPackage(m_trans->lastPackage());
@@ -294,7 +313,7 @@ void KpkTransaction::requeueTransaction()
     if (trans->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
-                           KpkStrings::action(d->role));
+                           KpkStrings::action(trans->role()));
         setExitStatus(Failed);
     } else {
         setTransaction(trans);
@@ -412,11 +431,13 @@ static bool untrustedIsNeed(Enum::Error error)
 
 void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
-    kDebug() << "errorCode: " << error << details;
+//     kDebug() << "errorCode: " << error << details;
     d->error = error;
     d->errorDetails = details;
     // obvious message, don't tell the user
-    if (error == Enum::ErrorTransactionCancelled) {
+    if (m_handlingActionRequired ||
+        error == Enum::ErrorTransactionCancelled ||
+        error == Enum::ErrorProcessKill) {
         return;
     }
 
@@ -450,14 +471,6 @@ void KpkTransaction::errorCode(PackageKit::Enum::Error error, const QString &det
         }
     }
 
-// this will be for files signature as seen in gpk
-//     if ( error == Client::BadGpgSignature || error Client::MissingGpgSignature)
-
-    // ignoring these as gpk does
-    if (error == Enum::ErrorTransactionCancelled || error == Enum::ErrorProcessKill) {
-        return;
-    }
-
     m_showingError = true;
     KMessageBox::detailedSorry(this,
                                KpkStrings::errorMessage(error),
@@ -485,13 +498,21 @@ void KpkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
     }
 
     QPointer<KpkLicenseAgreement> frm = new KpkLicenseAgreement(info, true, this);
-    if (frm->exec() == KDialog::Yes && Client::instance()->acceptEula(info)) {
+    if (frm->exec() == KDialog::Yes) {
+        m_handlingActionRequired = false;
+        Transaction *trans = Client::instance()->Client::instance()->acceptEula(info);
+        if (trans->error()) {
+            KMessageBox::sorry(this,
+                               KpkStrings::daemonError(trans->error()),
+                               i18n("Failed to accept EULA"));
+        } else {
+            setTransaction(trans);
+        }
+    } else {
+        setExitStatus(Cancelled);
         m_handlingActionRequired = false;
     }
     delete frm;
-
-    // Well try again, if fail will show the erroCode
-    requeueTransaction();
 }
 
 void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text)
@@ -510,10 +531,7 @@ void KpkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const
     if (ret == KMessageBox::Yes) {
         requeueTransaction();
     } else {
-        // when we receive an error we are done
-        if (m_flags & CloseOnFinish) {
-            done(QDialog::Rejected);
-        }
+        setExitStatus(Cancelled);
     }
 }
 
@@ -528,23 +546,38 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
     }
 
     QPointer<KpkRepoSig> frm = new KpkRepoSig(info, true, this);
-    if (frm->exec() == KDialog::Yes &&
-        Client::instance()->installSignature(info.type, info.keyId, info.package)) {
+    if (frm->exec() == KDialog::Yes) {
+        m_handlingActionRequired = false;
+        Transaction *trans = Client::instance()->installSignature(info.type, info.keyId, info.package);
+        if (trans->error()) {
+            KMessageBox::sorry(this,
+                               KpkStrings::daemonError(trans->error()),
+                               i18n("Failed to install signature"));
+        } else {
+            setTransaction(trans);
+        }
+    } else {
+        setExitStatus(Cancelled);
         m_handlingActionRequired = false;
     }
     delete frm;
-
-    requeueTransaction();
 }
 
 void KpkTransaction::finished(PackageKit::Enum::Exit status)
 {
+    Transaction *trans = qobject_cast<Transaction*>(sender());
     d->finished = true;
     switch(status) {
     case Enum::ExitSuccess :
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
-        setExitStatus(Success);
+        if (trans->role() != Enum::RoleInstallSignature &&
+            trans->role() != Enum::RoleAcceptEula) {
+            setExitStatus(Success);
+        } else {
+            d->finished = false;
+            requeueTransaction();
+        }
         break;
     case Enum::ExitCancelled :
         d->ui.progressBar->setMaximum(100);
@@ -661,6 +694,11 @@ QList<QSharedPointer<PackageKit::Package> > KpkTransaction::packages() const
 QStringList KpkTransaction::files() const
 {
     return d->files;
+}
+
+KpkSimulateModel* KpkTransaction::simulateModel() const
+{
+    return d->simulateModel;
 }
 
 void KpkTransaction::setAllowDeps(bool allowDeps)

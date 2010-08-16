@@ -315,12 +315,9 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
     d->ui.packageView->resizeColumnToContents(0);
     d->ui.packageView->resizeColumnToContents(1);
 
-    kDebug();
     if (d->hideAutoConfirm) {
-        kDebug() << 1;
         d->ui.confirmCB->setVisible(false);
     } else {
-        kDebug() << 2;
         // if the confirmCB is visible means that we can skip this
         // dialog, but only if the user previusly set so
         d->ui.confirmCB->setChecked(requirementsDialog.readEntry("autoConfirm", false));
@@ -335,10 +332,8 @@ KpkRequirements::~KpkRequirements()
     saveDialogSize(requirementsDialog);
 
     if (!d->hideAutoConfirm) {
-        kDebug();
         requirementsDialog.writeEntry("autoConfirm", d->ui.confirmCB->isChecked());
     }
-    kDebug();
     config.sync();
 }
 
