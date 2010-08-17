@@ -78,27 +78,25 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply | KDialog::Cancel);
 
-    // Count how many items will be installed and removed to set
-    // better apply text and description text
-    int countRemove  = 0;
-    int countInstall = 0;
-    foreach (const QSharedPointer<PackageKit::Package> &package, packages) {
-        // If the package is installed we are going to remove it
-        if (package->info() == Enum::InfoInstalled ||
-            package->info() == Enum::InfoCollectionInstalled) {
-            countRemove++;
-        } else {
-            countInstall++;
+    foreach (const QSharedPointer<PackageKit::Package> &p, packages) {
+        if (p->info() == Enum::InfoInstalled ||
+            p->info() == Enum::InfoCollectionInstalled) {
+            // check what packages are installed and marked to be removed
+            d->remPackages << p;
+        } else if (p->info() == Enum::InfoAvailable ||
+                   p->info() == Enum::InfoCollectionAvailable) {
+            // check what packages are available and marked to be installed
+            d->addPackages << p;
         }
     }
 
-    if (packages.size() == countInstall) {
+    if (packages.size() == d->addPackages.size()) {
         setText(i18np("The following package will be installed:",
-                      "The following packages will be installed:", countInstall));
+                      "The following packages will be installed:", d->addPackages.size()));
         setButtonText(KDialog::Apply, i18n("Install Now"));
-    } else if (packages.size() == countRemove) {
+    } else if (packages.size() == d->remPackages.size()) {
         setText(i18np("The following package will be removed:",
-                      "The following packages will be removed:", countRemove));
+                      "The following packages will be removed:", d->remPackages.size()));
         setButtonText(KDialog::Apply, i18n("Remove Now"));
     } else {
         setText(i18np("The following package will be removed and installed:",
@@ -115,6 +113,11 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
 
 KpkReviewChanges::~KpkReviewChanges()
 {
+    // Make sure the dialog is deleted in case we are not it's parent
+    if (d->transactionDialog) {
+        d->transactionDialog->deleteLater();
+    }
+
     // save size
     KConfig config("KPackageKit");
     KConfigGroup reviewChangesDialog(&config, "ReviewChangesDialog");
@@ -150,23 +153,18 @@ int KpkReviewChanges::exec(OperationModes flags)
 
 void KpkReviewChanges::doAction()
 {
-    d->actions = d->client->actions();
-    foreach (const QSharedPointer<PackageKit::Package> &p, d->mainPkgModel->selectedPackages()) {
-        if (p->info() == Enum::InfoInstalled ||
-            p->info() == Enum::InfoCollectionInstalled) {
-            // check what packages are installed and marked to be removed
-            d->remPackages << p;
-        } else if (p->info() == Enum::InfoAvailable ||
-                   p->info() == Enum::InfoCollectionAvailable) {
-            // check what packages are available and marked to be installed
-            d->addPackages << p;
-        }
+    // Fix up the parent when this class is not shown
+    QWidget *transParent = qobject_cast<QWidget*>(parent());
+    if (m_flags & ShowConfirmation) {
+        transParent = this;
     }
+
+    d->actions = d->client->actions();
 
     if (!d->addPackages.isEmpty() || !d->remPackages.isEmpty()) {
         d->transactionDialog = new KpkTransaction(0,
                                                   KpkTransaction::Modal,
-                                                  this);
+                                                  transParent);
         connect(d->transactionDialog, SIGNAL(finished(KpkTransaction::ExitStatus)),
                 this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
         d->transactionDialog->show();
