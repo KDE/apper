@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>503</width>
-    <height>469</height>
+    <width>520</width>
+    <height>505</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
@@ -25,7 +25,7 @@
      <property name="title">
       <string>About Backend</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
@@ -36,14 +36,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="nameL">
         <property name="text">
-         <string>backend name here</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Backend author:</string>
+         <string notr="true">backend name here</string>
         </property>
        </widget>
       </item>
@@ -54,17 +47,38 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="authorL">
-        <property name="text">
-         <string>backend author name here</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QLabel" name="descriptionL">
         <property name="text">
-         <string>backend description here</string>
+         <string notr="true">backend description here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Backend author:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="authorL">
+        <property name="text">
+         <string notr="true">backend author name here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Distribution ID:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="distroL">
+        <property name="text">
+         <string notr="true">distribution id here</string>
         </property>
        </widget>
       </item>
@@ -85,12 +99,6 @@
         <property name="text">
          <string>Installed</string>
         </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
        </widget>
       </item>
       <item row="0" column="1">
@@ -100,12 +108,6 @@
         </property>
         <property name="text">
          <string>Development</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -117,12 +119,6 @@
         <property name="text">
          <string>Package is visible</string>
         </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
        </widget>
       </item>
       <item row="0" column="3">
@@ -132,12 +128,6 @@
         </property>
         <property name="text">
          <string>Newest</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -149,12 +139,6 @@
         <property name="text">
          <string>GUI</string>
         </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
        </widget>
       </item>
       <item row="1" column="1">
@@ -165,12 +149,6 @@
         <property name="text">
          <string>Free software</string>
         </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
        </widget>
       </item>
       <item row="1" column="2">
@@ -180,12 +158,6 @@
         </property>
         <property name="text">
          <string>Supported</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -207,333 +179,187 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>GetUpdates</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Get Updates</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="updatePackageCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>UpdatePackage</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
+      <item row="0" column="3">
        <widget class="QCheckBox" name="getRepositoryListCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>GetRepositoryList</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Get Repository List</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QCheckBox" name="refreshCacheCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>RefreshCache</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Refresh Cache</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="installPackageCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>InstallPackage</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QCheckBox" name="repositoryEnableCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>RepositoryEnable</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QCheckBox" name="updateSystemCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>UpdateSystem</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Update System</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="removePackageCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>RemovePackage</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QCheckBox" name="repositorySetEnableCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>RepositorySetEnable</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QCheckBox" name="searchNameCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SearchName</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Search Name</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="2">
        <widget class="QCheckBox" name="getDependsCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>GetDepends</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Get Package Depends</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QCheckBox" name="whatProvidesCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>WhatProvides</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QCheckBox" name="searchDetailsCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SearchDetails</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Search Details</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="2">
        <widget class="QCheckBox" name="getRequiresCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>GetRequires</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Get Package Requires</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
-       <widget class="QCheckBox" name="getPackagesCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>GetPackages</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QCheckBox" name="searchGroupCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SearchGroup</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Search Group</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="6" column="2">
        <widget class="QCheckBox" name="getUpdateDetailCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>GetUpdateDetail</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Get Update Detail</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="0">
+      <item row="7" column="0">
        <widget class="QCheckBox" name="searchFileCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SearchFile</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Search File</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="7" column="2">
        <widget class="QCheckBox" name="getDescriptionCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>GetDescription</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Get Package Description</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="8" column="2">
+       <widget class="QCheckBox" name="getFilesCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Get Package Files</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="getDistroUpgradesCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Get Distro Upgrades</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="installPackageCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Install Packages</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="updatePackageCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Update Packages</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QCheckBox" name="removePackageCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Remove Packages</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="installFileCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Install FIles</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
        <widget class="QCheckBox" name="cancelCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
          <string>Cancel</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1">
-       <widget class="QCheckBox" name="getFilesCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>GetFiles</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -545,79 +371,85 @@
         <property name="text">
          <string>Resolve</string>
         </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
        </widget>
       </item>
-      <item row="8" column="1">
-       <widget class="QCheckBox" name="installFileCB">
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="repositoryEnableCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>InstallFIle</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
+         <string>Enable Repository</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="2">
+      <item row="2" column="3">
+       <widget class="QCheckBox" name="repositorySetEnableCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Set Repository Data</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QCheckBox" name="whatProvidesCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>What Provides</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QCheckBox" name="getPackagesCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Get Packages</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
        <widget class="QCheckBox" name="simulateInstallFilesCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SimulateInstallFiles</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
+         <string>Simulate Install Files</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="2">
+      <item row="6" column="3">
        <widget class="QCheckBox" name="simulateInstallPackagesCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SimulateInstallPackages</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
+         <string>Simulate Install Packages</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="2">
+      <item row="7" column="3">
        <widget class="QCheckBox" name="simulateRemovePackagesCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SimulateRemovePackages</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
+         <string>Simulate Remove Packages</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="2">
+      <item row="8" column="3">
        <widget class="QCheckBox" name="simulateUpdatePackagesCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SimulateUpdatePackages</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
+         <string>Simulate Update Packages</string>
         </property>
        </widget>
       </item>

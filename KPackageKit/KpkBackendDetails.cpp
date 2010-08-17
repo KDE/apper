@@ -34,10 +34,12 @@ KpkBackendDetails::KpkBackendDetails(QWidget *parent)
     nameL->setText(Client::instance()->backendName());
     descriptionL->setText(Client::instance()->backendDescription());
     authorL->setText(Client::instance()->backendAuthor());
+    distroL->setText(Client::instance()->distroId());
 
     // METHODS - Setup backend supported methods
     Enum::Roles actions = Client::instance()->actions();
     getUpdatesCB->setChecked(actions & Enum::RoleGetUpdates);
+    getDistroUpgradesCB->setChecked(actions & Enum::RoleGetDistroUpgrades);
     refreshCacheCB->setChecked(actions & Enum::RoleRefreshCache);
     updateSystemCB->setChecked(actions & Enum::RoleUpdateSystem);
     searchNameCB->setChecked(actions & Enum::RoleSearchName);

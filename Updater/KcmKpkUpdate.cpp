@@ -198,6 +198,7 @@ void KcmKpkUpdate::transactionFinished(KpkTransaction::ExitStatus status)
             updatePackages();
         }
     } else {
+        getUpdates();
         m_transDialog->deleteLater();
         checkEnableUpdateButton();
     }

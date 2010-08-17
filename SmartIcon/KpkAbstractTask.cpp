@@ -73,11 +73,10 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
 
 void KpkAbstractTask::setExec(const QString &exec)
 {
-    if (pathIsTrusted(exec)) {
+    if (!pathIsTrusted(exec)) {
         // TODO set the parent title
+        parentTitle = exec;
     }
-
-    parentTitle = exec;
 }
 
 bool KpkAbstractTask::pathIsTrusted(const QString &exec)
@@ -90,11 +89,16 @@ bool KpkAbstractTask::pathIsTrusted(const QString &exec)
 QString KpkAbstractTask::getCmdLine(uint pid)
 {
     QFile file(QString("/proc/%1/cmdline").arg(pid));
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&file);
-        QString line(in.readLine());
-        if (!line.contains("(deleted)")) {
-            return line;
+    QString line;
+    if (file.open(QFile::ReadOnly)) {
+        char buf[1024];
+        qint64 lineLength = file.readLine(buf, sizeof(buf));
+        if (lineLength != -1) {
+            // the line is available in buf
+            line = QString::fromLocal8Bit(buf);
+            if (!line.contains("(deleted)")) {
+                return line;
+            }
         }
     }
     return QString();
