@@ -24,7 +24,7 @@
        <number>2</number>
       </property>
       <item row="0" column="0" colspan="5">
-       <widget class="QWidget" name="widget" native="true">
+       <widget class="QWidget" name="stackedWidget" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -37,11 +37,6 @@
           <height>120</height>
          </size>
         </property>
-        <layout class="QGridLayout" name="gridLayout">
-         <property name="margin">
-          <number>0</number>
-         </property>
-        </layout>
        </widget>
       </item>
       <item row="1" column="0">

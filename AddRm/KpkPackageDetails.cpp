@@ -26,32 +26,39 @@
 #include <KMessageBox>
 #include <QPlainTextEdit>
 #include <QTextDocument>
+#include <KPixmapSequence>
 
-KpkPackageDetails::KpkPackageDetails(QSharedPointer<PackageKit::Package> package, const Enum::Roles &roles, QWidget *parent)
+Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
+
+KpkPackageDetails::KpkPackageDetails(const QSharedPointer<PackageKit::Package> &package,
+                                     const Enum::Roles &roles,
+                                     QWidget *parent)
  : QWidget(parent),
    m_package(package),
-   currentWidget(0),
-   m_gettingOrGotDescription(false),
-   m_gettingOrGotFiles(false),
-   m_gettingOrGotDepends(false),
-   m_gettingOrGotRequires(false)
+   m_busySeqDetails(0),
+   m_busySeqFiles(0),
+   m_busySeqDepends(0),
+   m_busySeqRequires(0)
 {
     setupUi(this);
+
+    // Create a stacked layout to put the views in
+    m_viewLayout = new QStackedLayout(stackedWidget);
 
     // we check to see which roles are supported by the backend
     // if so we ask for information and create the containers
     if (roles & Enum::RoleGetDetails) {
         descriptionKTB = new KTextBrowser(this);
+        m_viewLayout->addWidget(descriptionKTB);
         descriptionTB->click();
-
     } else {
         descriptionTB->setEnabled(false);
     }
 
     if (roles & Enum::RoleGetFiles) {
         filesPTE = new QPlainTextEdit(this);
-        filesPTE->setVisible(false);
-        if (!currentWidget) {
+        m_viewLayout->addWidget(filesPTE);
+        if (!m_viewLayout->count()) {
             fileListTB->click();
         }
     } else {
@@ -60,9 +67,9 @@ KpkPackageDetails::KpkPackageDetails(QSharedPointer<PackageKit::Package> package
 
     if (roles & Enum::RoleGetDepends) {
         dependsOnLV = new QListView(this);
-        dependsOnLV->setVisible(false);
         dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
-        if (!currentWidget) {
+        m_viewLayout->addWidget(dependsOnLV);
+        if (!m_viewLayout->count()) {
             dependsOnTB->click();
         }
     } else {
@@ -71,9 +78,9 @@ KpkPackageDetails::KpkPackageDetails(QSharedPointer<PackageKit::Package> package
 
     if (roles & Enum::RoleGetRequires) {
         requiredByLV = new QListView(this);
-        requiredByLV->setVisible(false);
         requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
-        if (!currentWidget) {
+        m_viewLayout->addWidget(requiredByLV);
+        if (!m_viewLayout->count()) {
             requiredByTB->click();
         }
     } else {
@@ -83,39 +90,30 @@ KpkPackageDetails::KpkPackageDetails(QSharedPointer<PackageKit::Package> package
 
 KpkPackageDetails::~KpkPackageDetails()
 {
-//     qDebug() << "~KpkPackageDetails()";
 }
 
-void KpkPackageDetails::setCurrentWidget(QWidget *widget)
+void KpkPackageDetails::setupSequence(Transaction *transaction,
+                                      KPixmapSequenceOverlayPainter **sequence,
+                                      QWidget *widget)
 {
-    // if a current widget is set remove it
-    if (currentWidget) {
-        gridLayout->removeWidget(currentWidget);
-        // hides the current widget
-        currentWidget->setVisible(false);
-    }
-    // make sure the widget is visible
-    widget->setVisible(true);
-    // add the widget to the layout
-    gridLayout->addWidget(currentWidget = widget);
-}
-
-void KpkPackageDetails::getDetails(QSharedPointer<PackageKit::Package> p)
-{
-    // create the description transaction
-    Transaction *t = Client::instance()->getDetails(p);
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-    } else {
-        connect(t, SIGNAL(details(QSharedPointer<PackageKit::Package>)),
-                this, SLOT(description(QSharedPointer<PackageKit::Package>)));
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(getDetailsFinished(PackageKit::Enum::Exit, uint)));
-    }
+    // setup the busy widget
+    KPixmapSequenceOverlayPainter *seq = new KPixmapSequenceOverlayPainter(this);
+    seq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    seq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    seq->setWidget(widget);
+    seq->start();
+    *sequence = seq;
+    transaction->setProperty("BusySequence", qVariantFromValue(&*sequence));
+    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(finished(PackageKit::Enum::Exit)));
 }
 
 void KpkPackageDetails::description(QSharedPointer<PackageKit::Package> p)
 {
+    if (m_busySeqDetails) {
+        m_busySeqDetails->stop();
+    }
+
     descriptionKTB->clear();
     //format and show description
     Package::Details *details = p->details();
@@ -151,128 +149,98 @@ void KpkPackageDetails::description(QSharedPointer<PackageKit::Package> p)
     descriptionKTB->setHtml(description);
 }
 
-void KpkPackageDetails::getDetailsFinished(PackageKit::Enum::Exit status, uint runtime)
+void KpkPackageDetails::finished(PackageKit::Enum::Exit status)
 {
-    Q_UNUSED(runtime)
+    KPixmapSequenceOverlayPainter **sequence;
+    sequence = sender()->property("BusySequence").value<KPixmapSequenceOverlayPainter**>();
+    delete *sequence;
     if (status != Enum::ExitSuccess) {
-        m_gettingOrGotDescription = false;
+        *sequence = 0;
     }
 }
 
 void KpkPackageDetails::on_descriptionTB_clicked()
 {
-    setCurrentWidget(descriptionKTB);
-    if (!m_gettingOrGotDescription) {
-        getDetails(m_package);
-        m_gettingOrGotDescription = true;
-    }
-}
+    m_viewLayout->setCurrentWidget(descriptionKTB);
+    if (!m_busySeqDetails) {
+        if (m_package->hasDetails()) {
+            description(m_package);
+            return;
+        }
 
-void KpkPackageDetails::getFiles(QSharedPointer<PackageKit::Package> p)
-{
-    // create the files transaction
-    Transaction *t = Client::instance()->getFiles(p);
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-    } else {
-        connect(t, SIGNAL(files(QSharedPointer<PackageKit::Package>, const QStringList &)),
-                this, SLOT(files(QSharedPointer<PackageKit::Package>, const QStringList &)));
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(getFilesFinished(PackageKit::Enum::Exit, uint)));
+        // create the description transaction
+        Transaction *t = Client::instance()->getDetails(m_package);
+        if (t->error()) {
+            KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+        } else {
+            setupSequence(t, &m_busySeqDetails, descriptionKTB->viewport());
+            connect(t, SIGNAL(details(QSharedPointer<PackageKit::Package>)),
+                    this, SLOT(description(QSharedPointer<PackageKit::Package>)));
+        }
     }
 }
 
 void KpkPackageDetails::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
 {
     Q_UNUSED(package)
+    m_busySeqFiles->stop();
     filesPTE->clear();
     for (int i = 0; i < files.size(); ++i) {
         filesPTE->appendPlainText(files.at(i));
     }
 }
 
-void KpkPackageDetails::getFilesFinished(PackageKit::Enum::Exit status, uint runtime)
-{
-    Q_UNUSED(runtime)
-    if (status == Enum::ExitSuccess) {
-        if (filesPTE->document()->toPlainText().isEmpty()) {
-            filesPTE->appendPlainText(i18n("No files were found."));
-        }
-    } else {
-        m_gettingOrGotFiles = false;
-    }
-}
-
 void KpkPackageDetails::on_fileListTB_clicked()
 {
-    setCurrentWidget(filesPTE);
-    if (!m_gettingOrGotFiles) {
-        getFiles(m_package);
-        m_gettingOrGotFiles = true;
-    }
-}
-
-void KpkPackageDetails::getDepends(QSharedPointer<PackageKit::Package> p)
-{
-    // create a transaction for the dependecies not recursive
-    Transaction *t = Client::instance()->getDepends(p, PackageKit::Enum::NoFilter, false);
-    m_pkg_model_dep->clear();
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-    } else {
-        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                m_pkg_model_dep, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(getDependsFinished(PackageKit::Enum::Exit, uint)));
-    }
-}
-
-void KpkPackageDetails::getDependsFinished(PackageKit::Enum::Exit status, uint runtime)
-{
-    Q_UNUSED(runtime)
-    if (status != Enum::ExitSuccess) {
-        m_gettingOrGotDepends = false;
+    m_viewLayout->setCurrentWidget(filesPTE);
+    if (!m_busySeqFiles) {
+        // create the files transaction
+        Transaction *t = Client::instance()->getFiles(m_package);
+        if (t->error()) {
+            KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+        } else {
+            setupSequence(t, &m_busySeqFiles, filesPTE->viewport());
+            connect(t, SIGNAL(files(QSharedPointer<PackageKit::Package>, const QStringList &)),
+                    this, SLOT(files(QSharedPointer<PackageKit::Package>, const QStringList &)));
+        }
     }
 }
 
 void KpkPackageDetails::on_dependsOnTB_clicked()
 {
-    setCurrentWidget(dependsOnLV);
-    if (!m_gettingOrGotDepends) {
-        getDepends(m_package);
-        m_gettingOrGotDepends = true;
-    }
-}
-
-void KpkPackageDetails::getRequires(QSharedPointer<PackageKit::Package> p)
-{
-    // create a transaction for the requirements not recursive
-    Transaction *t = Client::instance()->getRequires(p, PackageKit::Enum::NoFilter, false);
-    m_pkg_model_req->clear();
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-    } else {
-        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                m_pkg_model_req, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(getRequiresFinished(PackageKit::Enum::Exit, uint)));
-    }
-}
-
-void KpkPackageDetails::getRequiresFinished(PackageKit::Enum::Exit status, uint runtime)
-{
-    Q_UNUSED(runtime)
-    if (status != Enum::ExitSuccess) {
-        m_gettingOrGotRequires = false;
+    m_viewLayout->setCurrentWidget(dependsOnLV);
+    if (!m_busySeqDepends) {
+        // create a transaction for the dependecies not recursive
+        Transaction *t = Client::instance()->getDepends(m_package, PackageKit::Enum::NoFilter, false);
+        m_pkg_model_dep->clear();
+        if (t->error()) {
+            KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+        } else {
+            setupSequence(t, &m_busySeqDepends, dependsOnLV->viewport());
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    m_busySeqDepends, SLOT(stop()));
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    m_pkg_model_dep, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+        }
     }
 }
 
 void KpkPackageDetails::on_requiredByTB_clicked()
 {
-    setCurrentWidget(requiredByLV);
-    if (!m_gettingOrGotRequires) {
-        getRequires(m_package);
-        m_gettingOrGotRequires = true;
+    m_viewLayout->setCurrentWidget(requiredByLV);
+    if (!m_busySeqRequires) {
+         // create a transaction for the requirements not recursive
+        Transaction *t = Client::instance()->getRequires(m_package, PackageKit::Enum::NoFilter, false);
+        m_pkg_model_req->clear();
+        if (t->error()) {
+            KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+        } else {
+            setupSequence(t, &m_busySeqRequires, requiredByLV->viewport());
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    m_busySeqRequires, SLOT(stop()));
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    m_pkg_model_req, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+        }
     }
 }
 

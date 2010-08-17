@@ -102,15 +102,6 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
 
     // Create a new client
     m_client = Client::instance();
-    connect(m_client, SIGNAL(updatesChanged()),
-            this, SLOT(getUpdates()));
-
-    QDBusConnection::systemBus().connect(NULL,
-                                         "/org/freedesktop/PackageKit",
-                                         "org.freedesktop.PackageKit",
-                                         "UpdatesChanged",
-                                         this,
-                                         SLOT(getUpdates()));
 
     // check to see what roles the backend has
     m_roles = m_client->actions();
@@ -308,6 +299,8 @@ void KcmKpkUpdate::on_refreshPB_clicked()
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(getUpdates()));
         frm->show();
     }
 }

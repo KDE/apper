@@ -21,12 +21,14 @@
 #ifndef KPK_PACKAGE_DETAILS_H
 #define KPK_PACKAGE_DETAILS_H
 
-#include <QWidget>
 #include <QPackageKit>
 
 #include <KTextBrowser>
+#include <KPixmapSequenceOverlayPainter>
+#include <QWidget>
 #include <QPlainTextEdit>
 #include <QListView>
+#include <QStackedLayout>
 
 #include "ui_KpkPackageDetails.h"
 
@@ -37,17 +39,16 @@ class KpkPackageDetails : public QWidget, Ui::KpkPackageDetails
 {
 Q_OBJECT
 public:
-    KpkPackageDetails(QSharedPointer<PackageKit::Package>package, const Enum::Roles &roles, QWidget *parent = 0);
+    KpkPackageDetails(const QSharedPointer<PackageKit::Package> &package,
+                      const Enum::Roles &roles,
+                      QWidget *parent = 0);
     ~KpkPackageDetails();
 
 private slots:
-    void description(QSharedPointer<PackageKit::Package>package);
-    void files(QSharedPointer<PackageKit::Package>package, const QStringList &files);
+    void description(QSharedPointer<PackageKit::Package> package);
+    void files(QSharedPointer<PackageKit::Package> package, const QStringList &files);
 
-    void getDetailsFinished(PackageKit::Enum::Exit status, uint runtime);
-    void getFilesFinished(PackageKit::Enum::Exit status, uint runtime);
-    void getDependsFinished(PackageKit::Enum::Exit status, uint runtime);
-    void getRequiresFinished(PackageKit::Enum::Exit status, uint runtime);
+    void finished(PackageKit::Enum::Exit status);
 
     void on_descriptionTB_clicked();
     void on_fileListTB_clicked();
@@ -55,28 +56,25 @@ private slots:
     void on_requiredByTB_clicked();
 
 private:
-    QSharedPointer<PackageKit::Package>m_package;
+    QSharedPointer<PackageKit::Package> m_package;
 
     KpkSimplePackageModel *m_pkg_model_dep;
     KpkSimplePackageModel *m_pkg_model_req;
 
+    QStackedLayout *m_viewLayout;
     KTextBrowser   *descriptionKTB;
     QPlainTextEdit *filesPTE;
     QListView      *dependsOnLV;
     QListView      *requiredByLV;
-    QWidget        *currentWidget;
 
-    bool m_gettingOrGotDescription;
-    bool m_gettingOrGotFiles;
-    bool m_gettingOrGotDepends;
-    bool m_gettingOrGotRequires;
+    KPixmapSequenceOverlayPainter *m_busySeqDetails;
+    KPixmapSequenceOverlayPainter *m_busySeqFiles;
+    KPixmapSequenceOverlayPainter *m_busySeqDepends;
+    KPixmapSequenceOverlayPainter *m_busySeqRequires;
 
-    void setCurrentWidget(QWidget *widget);
-
-    void getDetails(QSharedPointer<PackageKit::Package>p);
-    void getFiles(QSharedPointer<PackageKit::Package>p);
-    void getDepends(QSharedPointer<PackageKit::Package>p);
-    void getRequires(QSharedPointer<PackageKit::Package>p);
+    void setupSequence(Transaction *transaction,
+                       KPixmapSequenceOverlayPainter **sequence,
+                       QWidget *widget);
 };
 
 #endif

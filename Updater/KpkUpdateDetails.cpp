@@ -27,7 +27,7 @@
 
 #include <KDebug>
 
-KpkUpdateDetails::KpkUpdateDetails(QSharedPointer<PackageKit::Package>package, QWidget *parent)
+KpkUpdateDetails::KpkUpdateDetails(QSharedPointer<PackageKit::Package> package, QWidget *parent)
  : QWidget(parent)
 {
     setupUi(this);
@@ -62,36 +62,36 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // update type (ie Security Update)
     if (m_info == Enum::InfoEnhancement) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("This update will add new features and expand functionality.") +
                        "</p>";
     } else if (m_info == Enum::InfoBugfix) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("This update will fix bugs and other non-critical problems.") +
                        "</p>";
     } else if (m_info == Enum::InfoImportant) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("This update is important as it may solve critical problems.") +
                        "</p>";
     } else if (m_info == Enum::InfoSecurity) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("This update is needed to fix a security vulnerability with this package.") +
                        "</p>";
     } else if (m_info == Enum::InfoBlocked) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("This update is blocked.") +
                        "</p>";
     }
 
     // Issued and Updated
     if (!info.issued.toString().isEmpty() && !info.updated.toString().isEmpty()) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("This notification was issued on %1 and last updated on %2.",
                             KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate),
                             KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate)) +
                        "</p>";
     } else if (!info.issued.toString().isEmpty()) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("This notification was issued on %1.",
                             KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate)) +
                        "</p>";
@@ -99,7 +99,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // Description
     if (!info.updateText.isEmpty()) {
-        description += "<p>" + 
+        description += "<p>" +
                        info.updateText.replace('\n', "<br/>") +
                        "</p>";
     }
@@ -107,7 +107,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     // links
     //  Vendor
     if (!info.vendorUrl.isEmpty()) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18np("For more information about this update please visit this website:",
                              "For more information about this update please visit these websites:",
                              info.vendorUrl.split(';').size() % 2) + "<br/>" +
@@ -117,7 +117,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     //  Bugzilla
     if (!info.bugzillaUrl.isEmpty()) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18np("For more information about bugs fixed by this update please visit this website:",
                              "For more information about bugs fixed by this update please visit these websites:",
                              info.bugzillaUrl .split(';').size() % 2) + "<br/>" +
@@ -127,7 +127,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     //  CVE
     if (!info.cveUrl.isEmpty()) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18np("For more information about this security update please visit this website:",
                              "For more information about this security update please visit these websites:",
                              info.cveUrl .split(';').size() % 2) + "<br/>" +
@@ -137,22 +137,22 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // Notice (about the need for a reboot)
     if (info.restart == Enum::RestartSession) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("The computer will have to be restarted after the update for the changes to take effect.") +
                        "</p>";
     } else if (info.restart == Enum::RestartSystem) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("You will need to log out and back in after the update for the changes to take effect.") +
                        "</p>";
     }
 
     // State
     if (info.state == Enum::UpdateStateUnstable) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("The classification of this update is unstable which means it is not designed for production use.") +
                        "</p>";
     } else if (info.state == Enum::UpdateStateTesting) {
-        description += "<p>" + 
+        description += "<p>" +
                        i18n("This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter.") +
                        "</p>";
     }
