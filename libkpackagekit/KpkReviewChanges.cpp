@@ -84,7 +84,8 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
     int countInstall = 0;
     foreach (const QSharedPointer<PackageKit::Package> &package, packages) {
         // If the package is installed we are going to remove it
-        if (package->info() == Enum::InfoInstalled) {
+        if (package->info() == Enum::InfoInstalled ||
+            package->info() == Enum::InfoCollectionInstalled) {
             countRemove++;
         } else {
             countInstall++;
@@ -151,10 +152,12 @@ void KpkReviewChanges::doAction()
 {
     d->actions = d->client->actions();
     foreach (const QSharedPointer<PackageKit::Package> &p, d->mainPkgModel->selectedPackages()) {
-        if (p->info() == Enum::InfoInstalled) {
+        if (p->info() == Enum::InfoInstalled ||
+            p->info() == Enum::InfoCollectionInstalled) {
             // check what packages are installed and marked to be removed
             d->remPackages << p;
-        } else if (p->info() == Enum::InfoAvailable) {
+        } else if (p->info() == Enum::InfoAvailable ||
+                   p->info() == Enum::InfoCollectionAvailable) {
             // check what packages are available and marked to be installed
             d->addPackages << p;
         }

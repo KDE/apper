@@ -43,7 +43,7 @@ public:
         IconPathRole,
         IdRole,
         CheckStateRole,
-        InstalledRole
+        InfoRole
     };
 
     explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);

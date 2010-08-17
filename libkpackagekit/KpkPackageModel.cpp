@@ -69,6 +69,7 @@ void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Packag
 
 void KpkPackageModel::addResolvedPackage(const QSharedPointer<PackageKit::Package> &package)
 {
+    kDebug() << package->id();
     if (m_checkedPackages.contains(package->id())) {
         if (package->info() != m_checkedPackages[package->id()]->info()) {
             uncheckPackage(package, true);
@@ -158,8 +159,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             return pkg->arch();
         case IconPathRole:
             return pkg->iconPath();
-        case InstalledRole:
-            return pkg->info() == Enum::InfoInstalled;
+        case InfoRole:
+            return pkg->info();
         default:
             return QVariant();
         }
@@ -251,7 +252,6 @@ void KpkPackageModel::rmSelectedPackage(const QSharedPointer<PackageKit::Package
         // Sometimes it's -1 because the pointer changed
         foreach (const QSharedPointer<PackageKit::Package> &pkg, m_packages) {
             if (pkg->id() == package->id()) {
-                kDebug() << "found";
                 index = m_packages.indexOf(pkg);
                 break;
             }
@@ -280,6 +280,7 @@ void KpkPackageModel::resolveSelected()
         foreach (const QSharedPointer<PackageKit::Package> &package, m_checkedPackages.values()) {
             packages << package->id();
         }
+        // TODO WHAT do I DO? yum backend doesn't reply to this...
         t = Client::instance()->resolve(packages);
         connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                 this, SLOT(addResolvedPackage(const QSharedPointer<PackageKit::Package> &)));

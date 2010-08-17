@@ -54,6 +54,7 @@ private:
     bool insideButton(const QRect &rect, const QPoint &pos) const;
 
     KIcon   m_packageIcon;
+    KIcon   m_collectionIcon;
     KIcon   m_installIcon;
     QString m_installString;
     KIcon   m_removeIcon;

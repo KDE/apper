@@ -219,7 +219,7 @@ KIcon KpkIcons::groupsIcon(Enum::Group group)
     case Enum::GroupLegacy          : return KpkIcons::getIcon("media-floppy");
     case Enum::GroupLocalization    : return KpkIcons::getIcon("applications-education-language");
     case Enum::GroupMaps            : return KpkIcons::getIcon("Maps");//FIXME
-    case Enum::GroupCollections     : return KpkIcons::getIcon("unknown");//FIXME
+    case Enum::GroupCollections     : return KpkIcons::getIcon("package-orign");
     case Enum::GroupMultimedia      : return KpkIcons::getIcon("applications-multimedia");
     case Enum::GroupNetwork         : return KpkIcons::getIcon("network-wired");
     case Enum::GroupOffice          : return KpkIcons::getIcon("applications-office");

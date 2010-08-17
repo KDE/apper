@@ -37,6 +37,7 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
   : KExtendableItemDelegate(parent),
     // loads it here to be faster when displaying items
     m_packageIcon("package"),
+    m_collectionIcon("package-orign"),
     m_installIcon("go-down"),
     m_installString(i18n("Install")),
     m_removeIcon("edit-delete"),
@@ -84,14 +85,20 @@ void KpkDelegate::paint(QPainter *painter,
     painter->restore();
 
     //grab the package from the index pointer
-    QString pkgName      = index.data(KpkPackageModel::NameRole).toString();
-    QString pkgSummary   = index.data(KpkPackageModel::SummaryRole).toString();
-    QString pkgVersion   = index.data(KpkPackageModel::VersionRole).toString();
-    QString pkgArch      = index.data(KpkPackageModel::ArchRole).toString();
-    QString pkgIconPath  = index.data(KpkPackageModel::IconPathRole).toString();
-    bool    pkgInstalled = index.data(KpkPackageModel::InstalledRole).toBool();
-    bool    pkgChecked   = index.data(KpkPackageModel::CheckStateRole).toBool();
-    bool    pkgCheckable = !index.data(Qt::CheckStateRole).isNull();
+    QString pkgName       = index.data(KpkPackageModel::NameRole).toString();
+    QString pkgSummary    = index.data(KpkPackageModel::SummaryRole).toString();
+    QString pkgVersion    = index.data(KpkPackageModel::VersionRole).toString();
+    QString pkgArch       = index.data(KpkPackageModel::ArchRole).toString();
+    QString pkgIconPath   = index.data(KpkPackageModel::IconPathRole).toString();
+    bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
+    bool    pkgCheckable  = !index.data(Qt::CheckStateRole).isNull();
+    Enum::Info info;
+    info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+    bool    pkgInstalled  = (info == Enum::InfoInstalled ||
+                            info == Enum::InfoCollectionInstalled);
+
+    bool    pkgCollection = (info == Enum::InfoCollectionInstalled ||
+                             info == Enum::InfoCollectionAvailable);
 
     QIcon emblemIcon;
     if (pkgCheckable) {
@@ -159,8 +166,8 @@ void KpkDelegate::paint(QPainter *painter,
         style->drawControl(QStyle::CE_PushButton, &optBt, painter);
     }
 
-QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-            QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
+// QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+//             QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
 //     kDebug() << pos;
 
 
@@ -187,7 +194,7 @@ QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
     // Main icon
     QIcon icon;
     if (pkgIconPath.isEmpty()) {
-        icon = m_packageIcon;
+        icon = pkgCollection ? m_collectionIcon : m_packageIcon;
     } else {
         icon = KpkIcons::getIcon(pkgIconPath, "package");
     }
@@ -220,7 +227,8 @@ QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
 
     p.setPen(foregroundColor);
     // compose the top line
-    if (option.state & QStyle::State_MouseOver) {
+    // Collections does not have version and arch
+    if (option.state & QStyle::State_MouseOver && !pkgCollection) {
         pkgName = pkgName + " - " + pkgVersion + (pkgArch.isNull() ? NULL : " (" + pkgArch + ')');
     }
     // draw the top line
