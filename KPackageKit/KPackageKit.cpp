@@ -116,6 +116,11 @@ int KPackageKit::newInstance()
         notSet = false;
     }
 
+    if (args->isSet("install-catalog")) {
+        invoke("InstallCatalogs", args->getOptionList("install-catalog"));
+        notSet = false;
+    }
+
     if (args->isSet("remove-package-by-file")) {
         invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
         notSet = false;

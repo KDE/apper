@@ -36,8 +36,20 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
  : KpkAbstractTask(xid, interaction, message, parent),
    m_files(files),
    m_interaction(interaction),
-   m_message(message)
+   m_message(message),
+   m_maxResolve(100)
 {
+    QFile file("/etc/PackageKit/PackageKit.conf");
+    QRegExp rx("\\s*MaximumItemsToResolve=(\\d+)", Qt::CaseSensitive);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            if (rx.indexIn(in.readLine()) != -1) {
+                m_maxResolve = rx.capturedTexts()[1].toInt();
+                break;
+            }
+        }
+    }
 }
 
 PkInstallCatalogs::~PkInstallCatalogs()
@@ -174,11 +186,18 @@ void PkInstallCatalogs::start()
 
 bool PkInstallCatalogs::installPackages(const QStringList &packages)
 {
-    kDebug() << packages;
-    Transaction *t = Client::instance()->resolve(packages,
-                                                 Enum::FilterArch |
-                                                 Enum::FilterNewest);
-    return runTransaction(t);
+    int count = 0;
+    while (count < packages.size()) {
+        kDebug() << packages.mid(count, m_maxResolve);
+        Transaction *t = Client::instance()->resolve(packages.mid(count, m_maxResolve),
+                                                     Enum::FilterArch |
+                                                     Enum::FilterNewest);
+        count += m_maxResolve;
+        if (!runTransaction(t)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool PkInstallCatalogs::installProvides(const QStringList &provides)
@@ -215,8 +234,8 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
         QEventLoop loop;
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 &loop, SLOT(quit()));
-        connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-                this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
+        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         if (showProgress()) {
             KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
             trans->show();
@@ -227,7 +246,7 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
     }
 }
 
-void PkInstallCatalogs::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkInstallCatalogs::addPackage(QSharedPointer<PackageKit::Package> package)
 {
     if (package->info() != Enum::InfoInstalled) {
         m_foundPackages.append(package);

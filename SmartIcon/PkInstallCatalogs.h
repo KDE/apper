@@ -58,6 +58,7 @@ private:
     QString      m_interaction;
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;
+    int          m_maxResolve;
 };
 
 #endif

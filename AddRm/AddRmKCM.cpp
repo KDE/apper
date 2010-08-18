@@ -34,6 +34,7 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KFileItemDelegate>
+#include <KFileDialog>
 #include "CategoryDrawer.h"
 #include <KCategorizedSortFilterProxyModel>
 
@@ -569,6 +570,27 @@ void AddRmKCM::keyPressEvent(QKeyEvent *event)
         return;
     }
     KCModule::keyPressEvent(event);
+}
+
+void AddRmKCM::on_exportInstalledPB_clicked()
+{
+    // We will assume the installed model
+    // is populated since the user is seeing it.
+    QString fileName;
+    fileName = KFileDialog::getSaveFileName(KUrl(), "*.catalog", this);
+
+    QFile file(fileName);
+    file.open(QIODevice::WriteOnly);
+    QTextStream out(&file);
+
+    out << "[PackageKit Catalog]\n\n";
+    out << "InstallPackages(" << m_client->distroId() << ")=";
+    QStringList packages;
+    for (int i = 0; i < m_installedModel->rowCount(); i++) {
+        packages << m_installedModel->data(m_installedModel->index(i, 0),
+                                           KpkPackageModel::NameRole).toString();
+    }
+    out << packages.join(";");
 }
 
 #include "AddRmKCM.moc"

@@ -70,6 +70,8 @@ private slots:
     void checkChanged();
     void changed();
 
+    void on_exportInstalledPB_clicked();
+
 private:
     void setupView(KpkPackageModel **model, QTreeView *view);
     void setCurrentActionEnabled(bool state);

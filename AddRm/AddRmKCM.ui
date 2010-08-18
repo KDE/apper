@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>513</width>
+    <width>530</width>
     <height>468</height>
    </rect>
   </property>
@@ -208,14 +208,14 @@
        <item row="0" column="0">
         <widget class="QPushButton" name="exportInstalledPB">
          <property name="text">
-          <string>Export Installed Packages List to File</string>
+          <string>Export Installed Package List...</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
         <widget class="QPushButton" name="importInstalledPB">
          <property name="text">
-          <string>Install Packages From a File List</string>
+          <string>Install Packages from List...</string>
          </property>
         </widget>
        </item>
