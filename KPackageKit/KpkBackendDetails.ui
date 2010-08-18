@@ -349,7 +349,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Install FIles</string>
+         <string>Install Files</string>
         </property>
        </widget>
       </item>
