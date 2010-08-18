@@ -66,8 +66,9 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
         setExec(cmdline);
     }
 
-    transaction = new KpkTransaction(0);
-    connect(transaction, SIGNAL(finished(KpkTransaction::ExitStatus)),
+    m_transaction = new KpkTransaction(0, KpkTransaction::Modal);
+    KWindowSystem::setMainWindow(m_transaction, m_xid);
+    connect(m_transaction, SIGNAL(finished(KpkTransaction::ExitStatus)),
             this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
 }
 
@@ -146,17 +147,17 @@ uint KpkAbstractTask::getPidSession()
 
 KpkAbstractTask::~KpkAbstractTask()
 {
-    delete transaction;
+    delete m_transaction;
 }
 
-void KpkAbstractTask::setParentWindow(QWidget *widget)
-{
-    if (m_xid != 0) {
-        KWindowSystem::setMainWindow(widget, m_xid);
-    } else {
-//         updateUserTimestamp(); // make it get focus unconditionally :-/
-    }
-}
+// void KpkAbstractTask::setParentWindow(QWidget *widget)
+// {
+//     if (m_xid != 0) {
+//         KWindowSystem::setMainWindow(widget, m_xid);
+//     } else {
+// //         updateUserTimestamp(); // make it get focus unconditionally :-/
+//     }
+// }
 
 void KpkAbstractTask::run()
 {
@@ -199,6 +200,16 @@ bool KpkAbstractTask::sendMessageFinished(const QDBusMessage &message)
 {
     emit finished();
     return QDBusConnection::sessionBus().send(message);
+}
+
+uint KpkAbstractTask::parentWId() const
+{
+    return m_xid;
+}
+
+KpkTransaction* KpkAbstractTask::kTransaction() const
+{
+    return m_transaction;
 }
 
 void KpkAbstractTask::parseInteraction(const QString &interaction)

@@ -47,25 +47,24 @@ void PkIsInstalled::start()
                                                  Enum::FilterInstalled);
     if (t->error()) {
         if (showWarning()) {
-            KMessageBox::sorry(0,
-                               KpkStrings::daemonError(t->error()),
-                               i18n("Failed to start resolve transaction"));
+            KMessageBox::sorryWId(parentWId(),
+                                  KpkStrings::daemonError(t->error()),
+                                  i18n("Failed to start resolve transaction"));
         }
         sendErrorFinished(Failed, "Failed to start resolve transaction");
     } else {
         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(searchFinished(PackageKit::Enum::Exit, uint)));
-        connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-                this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
+                this, SLOT(searchFinished(PackageKit::Enum::Exit)));
+        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         if (showProgress()) {
-            KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
-            trans->show();
-            setParentWindow(trans);
+            kTransaction()->setTransaction(t);
+            kTransaction()->show();
         }
     }
 }
 
-void PkIsInstalled::searchFinished(PackageKit::Enum::Exit status, uint)
+void PkIsInstalled::searchFinished(PackageKit::Enum::Exit status)
 {
     kDebug();
     if (status == Enum::ExitSuccess) {
@@ -79,7 +78,7 @@ void PkIsInstalled::searchFinished(PackageKit::Enum::Exit status, uint)
     }
 }
 
-void PkIsInstalled::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkIsInstalled::addPackage(QSharedPointer<PackageKit::Package> package)
 {
     m_foundPackages.append(package);
 }

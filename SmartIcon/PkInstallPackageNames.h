@@ -44,8 +44,8 @@ private slots:
     void start();
 
 private slots:
-    void resolveFinished(PackageKit::Enum::Exit, uint);
-    void addPackage(QSharedPointer<PackageKit::Package>package);
+    void resolveFinished(PackageKit::Enum::Exit);
+    void addPackage(QSharedPointer<PackageKit::Package> package);
 
 private:
     QList<QSharedPointer<PackageKit::Package> > m_foundPackages;

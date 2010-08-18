@@ -70,10 +70,7 @@ void PkInstallProvideFiles::start()
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Search for a package that provides these files and install it", "Install"));
         searchBt.setIcon(KIcon("edit-find"));
-        ret = KMessageBox::questionYesNo(0,
-                                         msg,
-                                         title,
-                                         searchBt);
+        ret = KMessageBox::questionYesNoWId(parentWId(), msg, title, searchBt);
     }
 
     if (ret == KMessageBox::Yes) {
@@ -82,21 +79,19 @@ void PkInstallProvideFiles::start()
                                                          Enum::FilterNewest);
         if (t->error()) {
             if (showWarning()) {
-                KMessageBox::sorry(0,
-                                   KpkStrings::daemonError(t->error()),
-                                   i18n("Failed to start search file transaction"));
+                KMessageBox::sorryWId(parentWId(),
+                                      KpkStrings::daemonError(t->error()),
+                                      i18n("Failed to start search file transaction"));
             }
             sendErrorFinished(Failed, "Failed to start search file transaction");
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SLOT(searchFinished(PackageKit::Transaction::ExitStatus, uint)));
-            connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
+            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                    this, SLOT(searchFinished(PackageKit::Enum::Exit)));
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
             if (showProgress()) {
-                KpkTransaction *trans;
-                trans = new KpkTransaction(t,
-                                           KpkTransaction::CloseOnFinish);
-                trans->show();
+                kTransaction()->setTransaction(t);
+                kTransaction()->show();
             }
         }
     } else {
@@ -104,20 +99,20 @@ void PkInstallProvideFiles::start()
     }
 }
 
-void PkInstallProvideFiles::searchFinished(PackageKit::Enum::Exit status, uint runtime)
+void PkInstallProvideFiles::searchFinished(PackageKit::Enum::Exit status)
 {
-    Q_UNUSED(runtime)
     if (status == Enum::ExitSuccess) {
         if (m_alreadyInstalled.size()) {
             if (showWarning()) {
-                KMessageBox::sorry(0,
-                                   i18n("The %1 package already provides this file",
-                                        m_alreadyInstalled),
-                                   i18n("Failed to install file"));
+                KMessageBox::sorryWId(parentWId(),
+                                      i18n("The %1 package already provides this file",
+                                           m_alreadyInstalled),
+                                      i18n("Failed to install file"));
             }
             sendErrorFinished(Failed, "already provided");
         } else if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages);
+            kTransaction()->hide();
+            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             frm->setTitle(i18np("The following package will be installed",
                                 "The following packages will be installed",
                                 m_foundPackages.size()));
@@ -128,11 +123,11 @@ void PkInstallProvideFiles::searchFinished(PackageKit::Enum::Exit status, uint r
             }
         } else {
             if (showWarning()) {
-                KMessageBox::sorry(0,
-                                   i18np("The file could not be found in any packages",
-                                         "The files could not be found in any packages",
-                                         m_args.size()),
-                                   i18n("Failed to find package"));
+                KMessageBox::sorryWId(parentWId(),
+                                      i18np("The file could not be found in any packages",
+                                            "The files could not be found in any packages",
+                                            m_args.size()),
+                                      i18n("Failed to find package"));
             }
             sendErrorFinished(NoPackagesFound, "no files found");
         }
@@ -141,7 +136,7 @@ void PkInstallProvideFiles::searchFinished(PackageKit::Enum::Exit status, uint r
     }
 }
 
-void PkInstallProvideFiles::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkInstallProvideFiles::addPackage(QSharedPointer<PackageKit::Package> package)
 {
     if (package->info() != Enum::InfoInstalled) {
         m_foundPackages.append(package);

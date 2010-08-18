@@ -79,14 +79,14 @@ void PkInstallPackageFiles::start()
             }
         }
         if (showWarning()) {
-            KMessageBox::errorList(0,
-                                    i18np("This item is not supported by your backend, "
-                                          "or it is not a file. ",
-                                          "These items are not supported by your "
-                                          "backend, or they are not files.",
-                                          notFiles.count()),
-                                   notFiles,
-                                   i18n("Impossible to install"));
+            KMessageBox::errorListWId(parentWId(),
+                                      i18np("This item is not supported by your backend, "
+                                            "or it is not a file. ",
+                                            "These items are not supported by your "
+                                            "backend, or they are not files.",
+                                            notFiles.count()),
+                                      notFiles,
+                                      i18n("Impossible to install"));
         }
         sendErrorFinished(Failed, "Files not supported by your backend or they are not files");
         return;
@@ -105,13 +105,13 @@ void PkInstallPackageFiles::start()
 
         int ret = KMessageBox::Yes;
         if (showConfirmSearch()) {
-            ret = KMessageBox::questionYesNoList(0,
-                                                 i18np("Do you want to install this file?",
-                                                       "Do you want to install these files?",
-                                                       displayFiles.count()),
-                                                 displayFiles,
-                                                 i18n("Install?"),
-                                                 installBt);
+            ret = KMessageBox::questionYesNoListWId(parentWId(),
+                                                    i18np("Do you want to install this file?",
+                                                          "Do you want to install these files?",
+                                                          displayFiles.count()),
+                                                    displayFiles,
+                                                    i18n("Install?"),
+                                                    installBt);
         }
         if (ret == KMessageBox::Yes) {
             if (Client::instance()->actions() & Enum::RoleSimulateInstallFiles &&
@@ -123,19 +123,19 @@ void PkInstallPackageFiles::start()
                     // Send the error FIRST otherwise 't' might get deleted
                     sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
                     if (showWarning()) {
-                        KMessageBox::sorry(0,
-                                           KpkStrings::daemonError(t->error()),
-                                           i18np("Failed to install file",
-                                                 "Failed to install files",
-                                                 m_files.count()));
+                        KMessageBox::sorryWId(parentWId(),
+                                              KpkStrings::daemonError(t->error()),
+                                              i18np("Failed to install file",
+                                                    "Failed to install files",
+                                                    m_files.count()));
                     }
                 } else {
-                    transaction->setTransaction(t);
+                    kTransaction()->setTransaction(t);
                     m_installFilesModel = new KpkSimulateModel(this);
                     connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                             m_installFilesModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
                     if (showProgress()) {
-                        transaction->show();
+                        kTransaction()->show();
                     }
                 }
             } else {
@@ -146,9 +146,7 @@ void PkInstallPackageFiles::start()
                                 "The files were not installed",
                                 displayFiles.count());
             if (showWarning()) {
-                KMessageBox::sorry(0,
-                                   msg,
-                                   msg);
+                KMessageBox::sorryWId(parentWId(), msg, msg);
             }
             sendErrorFinished(Cancelled, "Aborted");
         }
@@ -163,24 +161,24 @@ void PkInstallPackageFiles::installFiles()
     Transaction *t = Client::instance()->installFiles(m_files, true);
     if (t->error()) {
         if (showWarning()) {
-            KMessageBox::sorry(0,
-                               KpkStrings::daemonError(t->error()),
-                               i18np("Failed to install file",
-                                     "Failed to install files",
-                                     m_files.count()));
+            KMessageBox::sorryWId(parentWId(),
+                                  KpkStrings::daemonError(t->error()),
+                                  i18np("Failed to install file",
+                                        "Failed to install files",
+                                        m_files.count()));
         }
         sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
     } else {
-        transaction->setTransaction(t);
-        transaction->setFiles(m_files);
-        transaction->show();
+        kTransaction()->setTransaction(t);
+        kTransaction()->setFiles(m_files);
+        kTransaction()->show();
     }
 }
 
 void PkInstallPackageFiles::transactionFinished(KpkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
-    if (transaction->role() == Enum::RoleSimulateInstallFiles) {
+    if (kTransaction()->role() == Enum::RoleSimulateInstallFiles) {
         if (status == KpkTransaction::Success) {
             if (m_installFilesModel->rowCount() > 0) {
                 QPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
@@ -194,19 +192,19 @@ void PkInstallPackageFiles::transactionFinished(KpkTransaction::ExitStatus statu
                 installFiles();
             }
         } else {
-            sendErrorFinished(Failed, transaction->errorDetails());
+            sendErrorFinished(Failed, kTransaction()->errorDetails());
         }
     } else {
         switch (status) {
         case KpkTransaction::Success :
             if (showFinished()) {
-                KMessageBox::information(0,
-                                        i18np("File was installed successfully",
-                                              "Files were installed successfully",
-                                              transaction->files().count()),
-                                        i18np("File was installed successfully",
-                                              "Files were installed successfully",
-                                              transaction->files().count()));
+                KMessageBox::informationWId(parentWId(),
+                                            i18np("File was installed successfully",
+                                                  "Files were installed successfully",
+                                                  kTransaction()->files().count()),
+                                            i18np("File was installed successfully",
+                                                  "Files were installed successfully",
+                                                  kTransaction()->files().count()));
             }
             finishTaskOk();
             break;
@@ -215,11 +213,11 @@ void PkInstallPackageFiles::transactionFinished(KpkTransaction::ExitStatus statu
             break;
         case KpkTransaction::Failed :
             if (showWarning()) {
-                KMessageBox::error(0,
-                                  transaction->errorDetails(),
-                                  i18n("KPackageKit Error"));
+                KMessageBox::errorWId(parentWId(),
+                                      kTransaction()->errorDetails(),
+                                      i18n("KPackageKit Error"));
             }
-            sendErrorFinished(Failed, transaction->errorDetails());
+            sendErrorFinished(Failed, kTransaction()->errorDetails());
             break;
         }
     }

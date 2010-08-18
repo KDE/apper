@@ -71,10 +71,10 @@ void PkInstallPackageNames::start()
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Search for a package and install it", "Install"));
         searchBt.setIcon(KIcon("edit-find"));
-        ret = KMessageBox::questionYesNo(this,
-                                         msg,
-                                         title,
-                                         searchBt);
+        ret = KMessageBox::questionYesNoWId(parentWId(),
+                                            msg,
+                                            title,
+                                            searchBt);
     }
 
     if (ret == KMessageBox::Yes) {
@@ -84,20 +84,19 @@ void PkInstallPackageNames::start()
         if (t->error()) {
             QString msg(i18n("Failed to start resolve transaction"));
             if (showWarning()) {
-                KMessageBox::sorry(this,
-                                   KpkStrings::daemonError(t->error()),
-                                   msg);
+                KMessageBox::sorryWId(parentWId(),
+                                      KpkStrings::daemonError(t->error()),
+                                      msg);
             }
             sendErrorFinished(Failed, msg);
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SLOT(resolveFinished(PackageKit::Transaction::ExitStatus, uint)));
-            connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
+            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                    this, SLOT(resolveFinished(PackageKit::Enum::Exit)));
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
             if (showProgress()) {
-                KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
-                trans->show();
-                setParentWindow(trans);
+                kTransaction()->setTransaction(t);
+                kTransaction()->show();
             }
         }
     } else {
@@ -105,24 +104,23 @@ void PkInstallPackageNames::start()
     }
 }
 
-void PkInstallPackageNames::resolveFinished(PackageKit::Enum::Exit status,
-                                            uint runtime)
+void PkInstallPackageNames::resolveFinished(PackageKit::Enum::Exit status)
 {
-    Q_UNUSED(runtime)
     kDebug() << "Finished.";
     if (status == Enum::ExitSuccess) {
         if (m_alreadyInstalled.size()) {
             if (showWarning()) {
-                KMessageBox::sorry(this,
-                                   i18np("The package %2 is already installed",
-                                         "The packages %2 are already installed",
-                                         m_alreadyInstalled.size(),
-                                         m_alreadyInstalled.join(",")),
-                                   i18n("Failed to install packages"));
+                KMessageBox::sorryWId(parentWId(),
+                                      i18np("The package %2 is already installed",
+                                            "The packages %2 are already installed",
+                                            m_alreadyInstalled.size(),
+                                            m_alreadyInstalled.join(",")),
+                                      i18n("Failed to install packages"));
             }
             sendErrorFinished(Failed, "package already found");
         } else if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this);
+            kTransaction()->hide();
+            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             frm->setTitle(i18np("The following package will be installed",
                                 "The following packages will be installed",
                                 m_foundPackages.size()));
@@ -133,11 +131,11 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Enum::Exit status,
             }
         } else {
             if (showWarning()) {
-                KMessageBox::sorry(this,
-                                   i18np("The package could not be found in any software source",
-                                         "The packages could not be found in any software source",
-                                         m_packages.size()),
-                                   i18n("Could not find %1", m_packages.join(", ")));
+                KMessageBox::sorryWId(parentWId(),
+                                      i18np("The package could not be found in any software source",
+                                            "The packages could not be found in any software source",
+                                            m_packages.size()),
+                                      i18n("Could not find %1", m_packages.join(", ")));
             }
             sendErrorFinished(NoPackagesFound, "no package found");
         }
@@ -146,7 +144,7 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Enum::Exit status,
     }
 }
 
-void PkInstallPackageNames::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkInstallPackageNames::addPackage(QSharedPointer<PackageKit::Package> package)
 {
     if (package->info() != Enum::InfoInstalled) {
         m_foundPackages.append(package);

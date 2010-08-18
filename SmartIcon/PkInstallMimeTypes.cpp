@@ -68,10 +68,7 @@ void PkInstallMimeTypes::start()
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Search for a new mime type" ,"Search"));
         searchBt.setIcon(KIcon("edit-find"));
-        ret = KMessageBox::questionYesNo(0,
-                                        msg,
-                                        title,
-                                        searchBt);
+        ret = KMessageBox::questionYesNoWId(parentWId(), msg, title, searchBt);
     }
 
     if (ret == KMessageBox::Yes) {
@@ -82,19 +79,19 @@ void PkInstallMimeTypes::start()
                                                           Enum::FilterNewest);
         if (t->error()) {
             if (showWarning()) {
-                KMessageBox::sorry(0,
-                                   KpkStrings::daemonError(t->error()),
-                                   i18n("Failed to search for provides"));
+                KMessageBox::sorryWId(parentWId(),
+                                      KpkStrings::daemonError(t->error()),
+                                      i18n("Failed to search for provides"));
             }
             sendErrorFinished(Failed, "Failed to search for provides");
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                    this, SLOT(whatProvidesFinished(PackageKit::Transaction::ExitStatus, uint)));
-            connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
+            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                    this, SLOT(whatProvidesFinished(PackageKit::Enum::Exit)));
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
             if (showProgress()) {
-                KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
-                trans->show();
+                kTransaction()->setTransaction(t);
+                kTransaction()->show();
             }
         }
     } else {
@@ -102,13 +99,13 @@ void PkInstallMimeTypes::start()
     }
 }
 
-void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Enum::Exit status, uint runtime)
+void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Enum::Exit status)
 {
-    Q_UNUSED(runtime)
     kDebug() << "Finished.";
     if (status == Enum::ExitSuccess) {
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages);
+            kTransaction()->hide();
+            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             frm->setTitle(i18np("Application that can open this type of file",
                                 "Applications that can open this type of file", m_foundPackages.size()));
             if (frm->exec(operationModes()) == 0) {
@@ -118,10 +115,10 @@ void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Enum::Exit status, uin
             }
         } else {
             if (showWarning()) {
-                KMessageBox::sorry(0,
-                                   i18n("No new applications can be found "
-                                        "to handle this type of file"),
-                                   i18n("Failed to find software"));
+                KMessageBox::sorryWId(parentWId(),
+                                      i18n("No new applications can be found "
+                                           "to handle this type of file"),
+                                      i18n("Failed to find software"));
             }
             sendErrorFinished(NoPackagesFound, "nothing was found to handle mime type");
         }
@@ -130,7 +127,7 @@ void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Enum::Exit status, uin
     }
 }
 
-void PkInstallMimeTypes::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkInstallMimeTypes::addPackage(QSharedPointer<PackageKit::Package> package)
 {
     m_foundPackages.append(package);
 }

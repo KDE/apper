@@ -42,13 +42,13 @@ public slots:
     void start();
 
 private slots:
-    void searchFinished(PackageKit::Enum::Exit status, uint runtime);
-    void addPackage(QSharedPointer<PackageKit::Package>package);
+    void searchFinished(PackageKit::Enum::Exit status);
+    void addPackage(QSharedPointer<PackageKit::Package> package);
 
 private:
     QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
     QStringList m_args;
-    QString m_alreadyInstalled;
+    QString     m_alreadyInstalled;
 };
 
 #endif

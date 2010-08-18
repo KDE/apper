@@ -112,10 +112,7 @@ void PkInstallGStreamerResources::start()
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Search for packages" ,"Search"));
         searchBt.setIcon(KIcon("edit-find"));
-        ret = KMessageBox::questionYesNo(0,
-                                        msg,
-                                        title,
-                                        searchBt);
+        ret = KMessageBox::questionYesNoWId(parentWId(), msg, title, searchBt);
     }
 
     if (ret == KMessageBox::Yes) {
@@ -126,19 +123,16 @@ void PkInstallGStreamerResources::start()
                                                           Enum::FilterNewest);
         if (t->error()) {
             QString msg(i18n("Failed to search for provides"));
-            KMessageBox::sorry(0,
-                               KpkStrings::daemonError(t->error()),
-                               msg);
+            KMessageBox::sorryWId(parentWId(), KpkStrings::daemonError(t->error()), msg);
             sendErrorFinished(InternalError, msg);
         } else {
             connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                    this, SLOT(whatProvidesFinished(PackageKit::Enum::Exit, uint)));
-            connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
+                    this, SLOT(whatProvidesFinished(PackageKit::Enum::Exit)));
+            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
             if (showProgress()) {
-                KpkTransaction *trans;
-                trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
-                trans->show();
+                kTransaction()->setTransaction(t);
+                kTransaction()->show();
             }
         }
     } else {
@@ -146,13 +140,13 @@ void PkInstallGStreamerResources::start()
     }
 }
 
-void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Enum::Exit status, uint runtime)
+void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Enum::Exit status)
 {
-    Q_UNUSED(runtime)
     kDebug() << "Finished.";
     if (status == Enum::ExitSuccess) {
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages);
+            kTransaction()->hide();
+            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             frm->setTitle(i18np("Do you want to install this package now?",
                                 "Do you want to install these packages now?", m_foundPackages.size()));
             if (frm->exec(operationModes()) == 0) {
@@ -162,10 +156,10 @@ void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Enum::Exit st
             }
         } else {
             if (showWarning()) {
-                KMessageBox::sorry(0,
-                                   i18n("Could not find plugin "
-                                        "in any configured software source"),
-                                   i18n("Failed to search for plugin"));
+                KMessageBox::sorryWId(parentWId(),
+                                      i18n("Could not find plugin "
+                                           "in any configured software source"),
+                                      i18n("Failed to search for plugin"));
             }
             sendErrorFinished(NoPackagesFound, "failed to find codec");
         }
@@ -174,7 +168,7 @@ void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Enum::Exit st
     }
 }
 
-void PkInstallGStreamerResources::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkInstallGStreamerResources::addPackage(QSharedPointer<PackageKit::Package> package)
 {
     m_foundPackages.append(package);
 }

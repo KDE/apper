@@ -44,13 +44,13 @@ public slots:
     void start();
 
 private slots:
-    void whatProvidesFinished(PackageKit::Enum::Exit status, uint runtime);
-    void addPackage(QSharedPointer<PackageKit::Package>package);
+    void whatProvidesFinished(PackageKit::Enum::Exit status);
+    void addPackage(QSharedPointer<PackageKit::Package> package);
 
 private:
     QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
-    QStringList     m_resources;
-    QDBusMessage    m_message;
+    QStringList  m_resources;
+    QDBusMessage m_message;
 };
 
 #endif

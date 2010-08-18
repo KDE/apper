@@ -35,17 +35,17 @@ class PkInstallCatalogs : public KpkAbstractTask
 Q_OBJECT
 public:
     PkInstallCatalogs(uint xid,
-                          const QStringList &files,
-                          const QString &interaction,
-                          const QDBusMessage &message,
-                          QWidget *parent = 0);
+                      const QStringList &files,
+                      const QString &interaction,
+                      const QDBusMessage &message,
+                      QWidget *parent = 0);
     ~PkInstallCatalogs();
 
 private slots:
     void start();
 
 private slots:
-    void addPackage(QSharedPointer<PackageKit::Package>package);
+    void addPackage(QSharedPointer<PackageKit::Package> package);
 
 private:
     bool installPackages(const QStringList &packages);

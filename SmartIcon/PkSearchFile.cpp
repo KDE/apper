@@ -55,27 +55,26 @@ void PkSearchFile::start()
                                                      Enum::FilterNewest);
     if (t->error()) {
         if (showWarning()) {
-            KMessageBox::sorry(this,
-                               KpkStrings::daemonError(t->error()),
-                               i18n("Failed to start search file transaction"));
+            KMessageBox::sorryWId(parentWId(),
+                                  KpkStrings::daemonError(t->error()),
+                                  i18n("Failed to start search file transaction"));
         }
         sendErrorFinished(Failed, "Failed to start search file transaction");
     } else {
         // TODO add timeout support
         // which cancel the transaction in x seconds if it's not running yet
-        connect(t, SIGNAL(finished(PackageKit::Transaction::ExitStatus, uint)),
-                this, SLOT(searchFinished(PackageKit::Transaction::ExitStatus, uint)));
-        connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-                this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(searchFinished(PackageKit::Enum::Exit)));
+        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         if (showProgress()) {
-            KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
-            trans->show();
-            setParentWindow(trans);
+            kTransaction()->setTransaction(t);
+            kTransaction()->show();
         }
     }
 }
 
-void PkSearchFile::searchFinished(PackageKit::Enum::Exit status, uint)
+void PkSearchFile::searchFinished(PackageKit::Enum::Exit status)
 {
     kDebug();
     if (status == Enum::ExitSuccess) {
@@ -89,9 +88,9 @@ void PkSearchFile::searchFinished(PackageKit::Enum::Exit status, uint)
             sendMessageFinished(reply);
         } else {
             QString msg(i18n("The file name could not be found in any software source"));
-            KMessageBox::sorry(this,
-                               msg,
-                               i18n("Could not find %1", m_fileName));
+            KMessageBox::sorryWId(parentWId(),
+                                  msg,
+                                  i18n("Could not find %1", m_fileName));
             sendErrorFinished(NoPackagesFound, msg);
         }
     } else {

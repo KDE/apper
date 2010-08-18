@@ -39,6 +39,7 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
    m_message(message),
    m_maxResolve(100)
 {
+    kDebug() << xid;
     QFile file("/etc/PackageKit/PackageKit.conf");
     QRegExp rx("\\s*MaximumItemsToResolve=(\\d+)", Qt::CaseSensitive);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -73,10 +74,10 @@ void PkInstallCatalogs::start()
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Parse the catalog search and install it", "Install"));
         searchBt.setIcon(KIcon("edit-find"));
-        ret = KMessageBox::questionYesNo(this,
-                                         message,
-                                         title,
-                                         searchBt);
+        ret = KMessageBox::questionYesNoWId(parentWId(),
+                                            message,
+                                            title,
+                                            searchBt);
     }
 
     if (ret == KMessageBox::Yes) {
@@ -107,9 +108,9 @@ void PkInstallCatalogs::start()
         if (rxActions.isEmpty()) {
             if (showWarning()) {
                 // TODO display a nicer message informing of already installed ones
-                KMessageBox::sorry(this,
-                                i18n("Your backend does not support any of the needed methods to install a catalog"),
-                                i18n("Not supported"));
+                KMessageBox::sorryWId(parentWId(),
+                                      i18n("Your backend does not support any of the needed methods to install a catalog"),
+                                      i18n("Not supported"));
             }
             sendErrorFinished(Failed, "not supported by backend");
             return;
@@ -152,16 +153,17 @@ void PkInstallCatalogs::start()
 
         if (showWarning() && filesFailedToOpen.size()) {
             // TODO display a nicer message informing of already installed ones
-            KMessageBox::sorry(this,
-                               i18np("Catalog %2 failed to open",
-                                     "Catalogs %2 failed to open",
-                                     filesFailedToOpen.size(),
-                                     filesFailedToOpen.join(",")),
-                               i18n("Failed to open"));
+            KMessageBox::sorryWId(parentWId(),
+                                  i18np("Catalog %2 failed to open",
+                                        "Catalogs %2 failed to open",
+                                        filesFailedToOpen.size(),
+                                        filesFailedToOpen.join(",")),
+                                  i18n("Failed to open"));
         }
 
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this);
+            kTransaction()->hide();
+            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             frm->setTitle(i18np("The following package will be installed",
                                 "The following packages will be installed",
                                 m_foundPackages.size()));
@@ -173,9 +175,9 @@ void PkInstallCatalogs::start()
         } else {
             if (showWarning()) {
                 // TODO display a nicer message informing of already installed ones
-                KMessageBox::sorry(this,
-                                   i18n("No package was found to be installed"),
-                                   i18n("No package was found to be installed"));
+                KMessageBox::sorryWId(parentWId(),
+                                      i18n("No package was found to be installed"),
+                                      i18n("No package was found to be installed"));
             }
             sendErrorFinished(NoPackagesFound, "no package found");
         }
@@ -188,7 +190,7 @@ bool PkInstallCatalogs::installPackages(const QStringList &packages)
 {
     int count = 0;
     while (count < packages.size()) {
-        kDebug() << packages.mid(count, m_maxResolve);
+//         kDebug() << packages.mid(count, m_maxResolve);
         Transaction *t = Client::instance()->resolve(packages.mid(count, m_maxResolve),
                                                      Enum::FilterArch |
                                                      Enum::FilterNewest);
@@ -224,9 +226,9 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
     if (t->error()) {
         QString msg(i18n("Failed to start setup transaction"));
         if (showWarning()) {
-            KMessageBox::sorry(this,
-                                KpkStrings::daemonError(t->error()),
-                                msg);
+            KMessageBox::sorryWId(parentWId(),
+                                  KpkStrings::daemonError(t->error()),
+                                  msg);
         }
         sendErrorFinished(Failed, msg);
         return false;
@@ -237,9 +239,8 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
         connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                 this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         if (showProgress()) {
-            KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
-            trans->show();
-            setParentWindow(trans);
+            kTransaction()->setTransaction(t);
+            kTransaction()->show();
         }
         loop.exec();
         return true;

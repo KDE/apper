@@ -33,7 +33,9 @@ class KDE_EXPORT KpkReviewChanges : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages, QWidget *parent = 0);
+    explicit KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages,
+                              QWidget *parent = 0,
+                              uint parentWId = 0);
     ~KpkReviewChanges();
 
     enum OperationMode {

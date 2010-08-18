@@ -20,11 +20,12 @@
 
 #include "KpkReviewChanges.h"
 
-#include <KpkMacros.h>
 #include <KMessageBox>
+#include <KWindowSystem>
 
 #include <KDebug>
 
+#include <KpkMacros.h>
 #include "KpkStrings.h"
 #include "KpkEnum.h"
 #include "KpkRequirements.h"
@@ -53,11 +54,14 @@ public:
     QList<QSharedPointer<PackageKit::Package> > reqDepPackages;
 
     Enum::Roles actions;
+    uint parentWId;
 
     KpkTransaction *transactionDialog;
 };
 
-KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages, QWidget *parent)
+KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages,
+                                   QWidget *parent,
+                                   uint parentWId)
  : KDialog(parent),
    d(new KpkReviewChangesPrivate),
    m_flags(Default)
@@ -66,6 +70,11 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
 
     d->client = Client::instance();
     d->transactionDialog = 0;
+    d->parentWId = parentWId;
+
+    if (parentWId) {
+        KWindowSystem::setMainWindow(this, parentWId);
+    }
 
     //initialize the model, delegate, client and  connect it's signals
     d->ui.packageView->setItemDelegate(d->pkgDelegate = new KpkDelegate(d->ui.packageView));
@@ -77,6 +86,7 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
 
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply | KDialog::Cancel);
+    setWindowModality(Qt::WindowModal);
 
     foreach (const QSharedPointer<PackageKit::Package> &p, packages) {
         if (p->info() == Enum::InfoInstalled ||
@@ -167,6 +177,9 @@ void KpkReviewChanges::doAction()
                                                   transParent);
         connect(d->transactionDialog, SIGNAL(finished(KpkTransaction::ExitStatus)),
                 this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
+        if (d->parentWId) {
+            KWindowSystem::setMainWindow(d->transactionDialog, d->parentWId);
+        }
         d->transactionDialog->show();
 
         checkTask();

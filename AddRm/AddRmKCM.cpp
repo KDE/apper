@@ -41,6 +41,7 @@
 #include <QPalette>
 #include <QColor>
 #include <QDBusConnection>
+#include <QDBusMessage>
 
 #include <KpkReviewChanges.h>
 #include <KpkPackageModel.h>
@@ -578,6 +579,9 @@ void AddRmKCM::on_exportInstalledPB_clicked()
     // is populated since the user is seeing it.
     QString fileName;
     fileName = KFileDialog::getSaveFileName(KUrl(), "*.catalog", this);
+    if (fileName.isEmpty()) {
+        return;
+    }
 
     QFile file(fileName);
     file.open(QIODevice::WriteOnly);
@@ -591,6 +595,29 @@ void AddRmKCM::on_exportInstalledPB_clicked()
                                            KpkPackageModel::NameRole).toString();
     }
     out << packages.join(";");
+}
+
+void AddRmKCM::on_importInstalledPB_clicked()
+{
+    QString fileName;
+    fileName = KFileDialog::getOpenFileName(KUrl(), "*.catalog", this);
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    // send a DBus message to install this catalog
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
+                                             "/org/freedesktop/PackageKit",
+                                             "org.freedesktop.PackageKit.Modify",
+                                             "InstallCatalogs");
+    message << static_cast<uint>(effectiveWinId());
+    message << (QStringList() << fileName);
+    message << QString();
+
+    // This call must block otherwise this application closes before
+    // smarticon is activated
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::Block);
 }
 
 #include "AddRmKCM.moc"

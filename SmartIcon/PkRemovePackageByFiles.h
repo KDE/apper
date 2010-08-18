@@ -43,7 +43,7 @@ public slots:
     void start();
 
 private slots:
-    void searchFinished(PackageKit::Enum::Exit status, uint runtime);
+    void searchFinished(PackageKit::Enum::Exit status);
     void addPackage(QSharedPointer<PackageKit::Package> package);
 
 private:

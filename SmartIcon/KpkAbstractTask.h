@@ -67,11 +67,21 @@ public:
 
     KpkReviewChanges::OperationModes operationModes() const;
 
-    void setParentWindow(QWidget *widget);
     void run();
 
 signals:
     void finished();
+
+protected slots:
+    virtual void transactionFinished(KpkTransaction::ExitStatus status);
+
+protected:
+    void finishTaskOk();
+    void sendErrorFinished(DBusError error, const QString &msg);
+    bool sendMessageFinished(const QDBusMessage &message);
+    uint parentWId() const;
+    KpkTransaction* kTransaction() const;
+    QString parentTitle;
 
 private:
     uint m_xid;
@@ -79,6 +89,7 @@ private:
     QDBusMessage m_message;
     Interactions m_interactions;
     uint m_timeout;
+    KpkTransaction *m_transaction;
 
     void parseInteraction(const QString &interaction);
     uint getPidSystem();
@@ -89,16 +100,6 @@ private:
 
 private slots:
     virtual void start();
-
-protected slots:
-    virtual void transactionFinished(KpkTransaction::ExitStatus status);
-
-protected:
-    void finishTaskOk();
-    void sendErrorFinished(DBusError error, const QString &msg);
-    bool sendMessageFinished(const QDBusMessage &message);
-    QString parentTitle;
-    KpkTransaction *transaction;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KpkAbstractTask::Interactions)
