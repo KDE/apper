@@ -21,22 +21,15 @@
 #ifndef KPK_MODEL_ORIGIN_H
 #define KPK_MODEL_ORIGIN_H
 
-#include <QPackageKit>
+#include <QStandardItemModel>
 
-using namespace PackageKit;
-
-class QAbstractListModel;
-class KpkModelOrigin : public QAbstractListModel
+class KpkModelOrigin : public QStandardItemModel
 {
 Q_OBJECT
 public:
     KpkModelOrigin(QObject *parent = 0);
     ~KpkModelOrigin();
 
-    QVariant data(const QModelIndex &index, int role) const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-    int rowCount(const QModelIndex &index) const;
     bool changed() const;
     bool save();
     void clearChanges();
@@ -45,13 +38,7 @@ public slots:
     void addOriginItem(const QString &repo_id, const QString &details, bool enabled);
     void finished();
 
-signals:
-    void stateChanged();
-
 private:
-    Client *m_client;
-    QList< QHash<Qt::ItemDataRole, QVariant> > m_items;
-    QHash<QString, Qt::CheckState> m_actualState;
     bool m_finished;
 };
 

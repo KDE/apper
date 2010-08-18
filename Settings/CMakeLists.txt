@@ -1,6 +1,6 @@
 set(kpk_settings_SRCS
-    SettingsKCM.cpp
     KpkModelOrigin.cpp
+    SettingsKCM.cpp
 )
 kde4_add_ui_files(kpk_settings_SRCS
     SettingsKCM.ui

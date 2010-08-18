@@ -65,16 +65,14 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
     }
 
     m_originModel = new KpkModelOrigin(this);
-    originLW->setModel(m_originModel);
+    originTV->setModel(m_originModel);
+    originTV->header()->setDefaultAlignment(Qt::AlignCenter);
     if (m_roles & Enum::RoleGetRepoList) {
-        m_trasaction = Client::instance()->getRepoList(PackageKit::Enum::FilterNotDevelopment);
-        connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
-                m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
-        connect(m_trasaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                m_originModel, SLOT(finished()));
-        connect(m_originModel, SIGNAL(stateChanged()), this, SLOT(checkChanges()));
-    }
-    else {
+        // The data will be loaded when Load is called
+        connect(m_originModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+                this, SLOT(checkChanges()));
+    } else {
+        // Disables the group box
         originGB->setEnabled(false);
     }
 
@@ -97,13 +95,15 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
 // TODO update the repo list connecting to repo changed signal
 void SettingsKCM::on_showOriginsCB_stateChanged(int state)
 {
-    m_trasaction = Client::instance()->getRepoList(
-        state == Qt::Checked ? Enum::NoFilter : Enum::FilterNotDevelopment);
+    if (state == Qt::Checked) {
+        m_trasaction = Client::instance()->getRepoList(Enum::NoFilter);
+    } else {
+        m_trasaction = Client::instance()->getRepoList(Enum::FilterNotDevelopment);
+    }
     connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
             m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
     connect(m_trasaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_originModel, SLOT(finished()));
-    connect(m_originModel, SIGNAL(stateChanged()), this, SLOT(checkChanges()));
     transactionBar->addTransaction(m_trasaction);
 }
 
@@ -169,14 +169,9 @@ void SettingsKCM::load()
         autoCB->setCurrentIndex(ret);
     }
 
+    // Load origns list
     if (m_roles & Enum::RoleGetRepoList) {
-        m_trasaction = Client::instance()->getRepoList(PackageKit::Enum::FilterNotDevelopment);
-        connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
-                m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
-        connect(m_trasaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                m_originModel, SLOT(finished()));
-        connect(m_originModel, SIGNAL(stateChanged()), this, SLOT(checkChanges()));
-        transactionBar->addTransaction(m_trasaction);
+        on_showOriginsCB_stateChanged(Qt::Unchecked);
     }
 }
 

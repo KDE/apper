@@ -17,3 +17,6 @@ A quick list of things that need to be done.
   - Don't emit message while simulating
   - Emit trust needed when simulating install
   - We need to emit packages(UNTRUSTED) so the user knows which ones
+
+- Add a DBus interface to KpkTransactions so that when the user
+  clicks on the systray we don't get duplicated windows

@@ -20,17 +20,23 @@
 
 #include "KpkModelOrigin.h"
 
-#include <QAbstractListModel>
-
 #include <KpkStrings.h>
 
 #include <KDebug>
 #include <KMessageBox>
+#include <KLocale>
+
+#include <QPackageKit>
+
+using namespace PackageKit;
+
+Q_DECLARE_METATYPE(Qt::CheckState)
 
 KpkModelOrigin::KpkModelOrigin(QObject *parent)
- : QAbstractListModel(parent), m_finished(false)
+ : QStandardItemModel(parent),
+   m_finished(true)
 {
-    m_client = Client::instance();
+    setHorizontalHeaderLabels(QStringList() << i18n("Origin of Packages"));
 }
 
 
@@ -38,54 +44,21 @@ KpkModelOrigin::~KpkModelOrigin()
 {
 }
 
-QVariant KpkModelOrigin::data(const QModelIndex &index, int role) const
-{
-    if (role == Qt::DisplayRole) {
-        return m_items.at(index.row()).value(Qt::DisplayRole);
-    }
-
-    if (role == Qt::CheckStateRole) {
-        return m_actualState[m_items.at(index.row()).value(Qt::UserRole).toString()];
-    }
-
-    return  QVariant();
-}
-
-Qt::ItemFlags KpkModelOrigin::flags(const QModelIndex &index) const
-{
-    if (!index.isValid()) {
-        return Qt::ItemIsEnabled;
-    } else {
-        return Qt::ItemIsUserCheckable | QAbstractItemModel::flags(index);
-    }
-}
-
 void KpkModelOrigin::addOriginItem(const QString &repo_id, const QString &details, bool enabled)
 {
     if (m_finished) {
-        m_items.clear();
+        // if we received a finished signal this is a new query
+        QStandardItemModel::clear();
+        setHorizontalHeaderLabels(QStringList() << i18n("Origin of Packages"));
         m_finished = false;
-        layoutChanged();
     }
-    beginInsertRows(QModelIndex(), m_items.size(), m_items.size());
-    QHash<Qt::ItemDataRole, QVariant> hash;
-    hash[Qt::UserRole] = repo_id;
-    hash[Qt::DisplayRole] = details;
-    if (enabled) {
-        hash[Qt::CheckStateRole] = Qt::Checked;
-        if (!m_actualState.contains(repo_id)) {
-            m_actualState[repo_id] = Qt::Checked;
-        }
-    }
-    else {
-        hash[Qt::CheckStateRole] = Qt::Unchecked;
-        if (!m_actualState.contains(repo_id)) {
-            m_actualState[repo_id] = Qt::Unchecked;
-        }
-    }
-    m_items << hash;
-    emit stateChanged();
-    endInsertRows();
+    Qt::CheckState state = enabled ? Qt::Checked : Qt::Unchecked;
+    QStandardItem *item = new QStandardItem(details);
+    item->setCheckable(true);
+    item->setCheckState(state);
+    item->setData(repo_id, Qt::UserRole);
+    item->setData(qVariantFromValue(state));
+    appendRow(item);
 }
 
 void KpkModelOrigin::finished()
@@ -95,17 +68,19 @@ void KpkModelOrigin::finished()
 
 void KpkModelOrigin::clearChanges()
 {
-    for (int i = 0; i < m_items.size(); i++) {
-        m_actualState[m_items.at(i).value(Qt::UserRole).toString()]
-            = static_cast<Qt::CheckState>(m_items.at(i).value(Qt::CheckStateRole).toInt());
+    for (int i = 0; i < rowCount(); i++) {
+        QStandardItem *repo = item(i);
+        if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
+            repo->setCheckState(repo->data().value<Qt::CheckState>());
+        }
     }
-    emit layoutChanged();
 }
 
 bool KpkModelOrigin::changed() const
 {
-    for (int i = 0; i < m_items.size(); i++) {
-        if (m_items.at(i).value(Qt::CheckStateRole) != m_actualState.value(m_items.at(i).value(Qt::UserRole).toString())) {
+    for (int i = 0; i < rowCount(); i++) {
+        QStandardItem *repo = item(i);
+        if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
             return true;
         }
     }
@@ -114,11 +89,12 @@ bool KpkModelOrigin::changed() const
 
 bool KpkModelOrigin::save()
 {
-    QString repoId;
-    for (int i = 0; i < m_items.size(); i++) {
-        if (m_items.at(i).value(Qt::CheckStateRole) != m_actualState.value(m_items.at(i).value(Qt::UserRole).toString())) {
-            repoId = m_items.at(i).value(Qt::UserRole).toString();
-            Transaction *t = m_client->repoEnable(repoId, static_cast<bool>(m_actualState.value(repoId)));
+    for (int i = 0; i < rowCount(); i++) {
+        QStandardItem *repo = item(i);
+        if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
+            Transaction *t;
+            t = Client::instance()->repoEnable(repo->data(Qt::UserRole).toString(),
+                                               static_cast<bool>(repo->checkState()));
             if (t->error()) {
                 KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
                 return false;
@@ -128,20 +104,4 @@ bool KpkModelOrigin::save()
     return true;
 }
 
-bool KpkModelOrigin::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    if (index.isValid() && role == Qt::CheckStateRole) {
-        m_actualState[m_items.at(index.row()).value(Qt::UserRole).toString()]
-            = static_cast<Qt::CheckState>(value.toUInt());
-        emit stateChanged();
-        return true;
-    } else {
-        return false;
-    }
-}
-
-int KpkModelOrigin::rowCount(const QModelIndex &index) const
-{
-    Q_UNUSED(index);
-    return m_items.size();
-}
+#include "KpkModelOrigin.moc"
