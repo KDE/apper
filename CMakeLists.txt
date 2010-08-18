@@ -2,11 +2,16 @@ project(KPackageKit)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
+find_package(KDE4 REQUIRED)
+include (MacroLibrary)
+
 # Only for Debian based systems
 option(DEBCONF_SUPPORT "Build KPackageKit with debconf support" OFF)
 
-find_package(KDE4 REQUIRED)
-include (MacroLibrary)
+# Yum does not support this
+option(AUTOREMOVE "Build KPackageKit with auto remove enabled" ON)
+set(HAVE_AUTOREMOVE ${AUTOREMOVE})
+message(STATUS "Building KPackageKit with auto remove enabled: " ${AUTOREMOVE})
 
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h

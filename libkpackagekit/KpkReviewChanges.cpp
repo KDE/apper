@@ -187,7 +187,7 @@ void KpkReviewChanges::checkTask()
                 d->removePkgModel = new KpkSimulateModel(this, d->reqDepPackages);
                 // Create the requirements transaction and it's model
                 Transaction *trans;
-                trans = d->client->simulateRemovePackages(d->reqDepPackages, true);
+                trans = d->client->simulateRemovePackages(d->reqDepPackages, AUTOREMOVE);
                 if (trans->error()) {
                     KMessageBox::sorry(this,
                                        KpkStrings::daemonError(trans->error()),
@@ -255,7 +255,7 @@ void KpkReviewChanges::installPackages()
 void KpkReviewChanges::removePackages(bool allowDeps)
 {
     SET_PROXY
-    Transaction *trans = d->client->removePackages(d->remPackages, allowDeps, true);
+    Transaction *trans = d->client->removePackages(d->remPackages, allowDeps, AUTOREMOVE);
     if (trans->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),

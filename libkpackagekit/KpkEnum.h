@@ -21,7 +21,13 @@
 #ifndef KPKENUM_H
 #define KPKENUM_H
 
+#include "config.h"
+
+#ifdef HAVE_AUTOREMOVE
 #define AUTOREMOVE true
+#else
+#define AUTOREMOVE false
+#endif // HAVE_AUTOREMOVE
 
 namespace KpkEnum {
 
