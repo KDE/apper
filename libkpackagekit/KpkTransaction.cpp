@@ -31,7 +31,6 @@
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QTreeView>
-#include <QtGui/QStandardItemModel>
 
 #include "KpkMacros.h"
 #include "KpkEnum.h"
@@ -39,10 +38,9 @@
 #include "KpkRepoSig.h"
 #include "KpkLicenseAgreement.h"
 #include "KpkIcons.h"
-#include "TransactionDelegate.h"
+#include "ProgressView.h"
 
 #include "KpkSimulateModel.h"
-#include "KpkProgressBar.h"
 
 #include "ui_KpkTransaction.h"
 
@@ -52,7 +50,6 @@ public:
     Ui::KpkTransaction ui;
 
     QString tid;
-    QString lastPackageId;
     bool showDetails;
     bool finished;
     bool allowDeps;
@@ -62,9 +59,8 @@ public:
     QString errorDetails;
     QList<QSharedPointer<PackageKit::Package> > packages;
     QStringList files;
-    QStandardItemModel model;
     KpkSimulateModel *simulateModel;
-    QTreeView *packageView;
+    ProgressView *progressView;
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
@@ -95,12 +91,7 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
 
-    d->packageView = new QTreeView;
-    d->packageView->setModel(&d->model);
-    d->packageView->setItemDelegate(new TransactionDelegate(this));
-    d->packageView->setRootIsDecorated(false);
-    d->packageView->setHeaderHidden(true);
-    d->packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    d->progressView = new ProgressView;
 
     if (m_flags & Modal) {
         setWindowModality(Qt::WindowModal);
@@ -131,7 +122,7 @@ KpkTransaction::~KpkTransaction()
 
     // DO NOT disconnect the transaction here,
     // it might not exist when this happen
-    delete d->packageView;
+    delete d->progressView;
     delete d;
 }
 
@@ -157,20 +148,20 @@ void KpkTransaction::slotButtonClicked(int bt)
         break;
     case KDialog::Details :
     {
-        d->showDetails = !d->packageView->isVisible();
+        d->showDetails = !d->progressView->isVisible();
         button(KDialog::Details)->setChecked(d->showDetails);
-        if (d->packageView->isVisible()) {
+        if (d->progressView->isVisible()) {
             QSize windowSize = size();
-            windowSize -= QSize(0, d->packageView->size().height());
-            d->packageView->setVisible(false);
+            windowSize -= QSize(0, d->progressView->size().height());
+            d->progressView->setVisible(false);
             setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
             setMaximumSize(QWIDGETSIZE_MAX, windowSize.height());
-            d->ui.gridLayout->removeWidget(d->packageView);
+            d->ui.gridLayout->removeWidget(d->progressView);
         } else {
             setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
             setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-            d->ui.gridLayout->addWidget(d->packageView, 1, 0, 1, 2);
-            d->packageView->setVisible(true);
+            d->ui.gridLayout->addWidget(d->progressView, 1, 0, 1, 2);
+            d->progressView->setVisible(true);
         }
     }
         break;
@@ -196,7 +187,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
     d->finished = false;
     d->error = Enum::UnknownError;
     d->errorDetails.clear();
-    d->model.clear();
+    d->progressView->clear();
 
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
@@ -208,10 +199,10 @@ void KpkTransaction::setTransaction(Transaction *trans)
         m_trans->role() == Enum::RoleUpdateSystem) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
+                d->progressView, SLOT(currentPackage(QSharedPointer<PackageKit::Package>)));
         d->showDetails = transactionGroup.readEntry("ShowDetails", false);
         enableButton(KDialog::Details, true);
-        if (d->showDetails != d->packageView->isVisible()) {
+        if (d->showDetails != d->progressView->isVisible()) {
             slotButtonClicked(KDialog::Details);
         }
     } else {
@@ -228,10 +219,10 @@ void KpkTransaction::setTransaction(Transaction *trans)
                     d->simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         }
 
-        if (d->packageView->isVisible()) {
+        if (d->progressView->isVisible()) {
             slotButtonClicked(KDialog::Details);
         }
-//         d->ui.gridLayout->removeWidget(d->packageView);
+//         d->ui.gridLayout->removeWidget(d->progressView);
         enableButton(KDialog::Details, false);
     }
 
@@ -244,7 +235,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
     setCaption(KpkStrings::action(m_trans->role()));
 
     // Now sets the last package
-    currPackage(m_trans->lastPackage());
+    d->progressView->currentPackage(m_trans->lastPackage());
+
     // sets ui
     updateUi();
 
@@ -324,7 +316,6 @@ void KpkTransaction::requeueTransaction()
 void KpkTransaction::updateUi()
 {
     uint percentage = m_trans->percentage();
-    uint subpercentage = m_trans->subpercentage();
     if (percentage <= 100) {
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(percentage);
@@ -333,25 +324,10 @@ void KpkTransaction::updateUi()
         d->ui.progressBar->reset();
     }
 
-    // TODO change PackageKit to emit the package progress on another signal.
-    QStandardItem *item;
-    QList<QStandardItem *> packages = d->model.findItems(d->lastPackageId);
-    item = d->model.item(d->model.rowCount() - 1);
-    if (!packages.isEmpty() &&
-        (item = packages.last()) &&
-        item->data(Qt::UserRole).toUInt() != subpercentage) {
-        // if the progress is unknown (101), make it empty
-        if (subpercentage == 101) {
-            subpercentage = 0;
-        }
-        if (subpercentage != 100) {
-            item->setData(subpercentage, Qt::UserRole);
-        }
-    }
-
+    d->progressView->setSubProgress(m_trans->subpercentage());
     d->ui.progressBar->setRemaining(m_trans->remainingTime());
 
-    // Status
+    // Status & Speed
     Enum::Status status = m_trans->status();
     if (m_status != status) {
         m_status = status;
@@ -373,46 +349,16 @@ void KpkTransaction::updateUi()
             // Else it's probably a static icon so try to load
             d->ui.label->setPixmap(KpkIcons::getIcon(icon).pixmap(48,48));
         }
+    } else if (status == Enum::StatusDownload && m_trans->speed() != 0) {
+        uint speed = m_trans->speed();
+        if (speed) {
+            d->ui.currentL->setText(i18n("Downloading packages at %1/s",
+                                         KGlobal::locale()->formatByteSize(speed)));
+        }
     }
 
     // Allow cancel
     enableButtonCancel(m_trans->allowCancel());
-}
-
-void KpkTransaction::currPackage(QSharedPointer<PackageKit::Package> p)
-{
-    if (!p->id().isEmpty()) {
-        d->lastPackageId = p->id();
-
-        QStandardItem *item;
-        QList<QStandardItem *> packages = d->model.findItems(p->id());
-//         kDebug() << p->id() << packages.size() << KpkStrings::infoPast(p->info());
-        // If there is alread some packages check to see if it has
-        // finished, if the progress is 100 create a new item for the next task
-        if (!packages.isEmpty() &&
-            (item = packages.last()) &&
-            item->data(Qt::UserRole).toInt() != 100) {
-            // if the item status (info) changed update it
-            if (item->data().toInt() != p->info()) {
-                // If the package task has finished set progress to 100
-                if (p->info() == Enum::InfoFinished) {
-                    item->setData(100, Qt::UserRole);
-                } else {
-                    item->setData(p->info());
-                }
-            }
-        } else {
-            QList<QStandardItem *> items;
-            // It's a new package create it and append it
-            item = new QStandardItem(p->id());
-            item->setData(p->info());
-            item->setData(0, Qt::UserRole);
-            items << item;
-            items << new QStandardItem(p->name());
-            items << new QStandardItem(p->summary());
-            d->model.appendRow(items);
-        }
-    }
 }
 
 // Return value: if the error code suggests to try with only_trusted %FALSE
@@ -619,7 +565,7 @@ void KpkTransaction::transactionFinished(PackageKit::Enum::Exit status)
     // if we're not showing an error or don't have the
     // CloseOnFinish flag don't close the dialog
     if (m_flags & CloseOnFinish && !m_handlingActionRequired && !m_showingError) {
-        kDebug() << "CloseOnFinish && !m_handlingActionRequired && !m_showingError";
+//         kDebug() << "CloseOnFinish && !m_handlingActionRequired && !m_showingError";
         done(QDialog::Rejected);
         deleteLater();
     }

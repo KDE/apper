@@ -18,47 +18,50 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "TransactionDelegate.h"
-#include "ProgressView.h"
+#ifndef PROGRESS_VIEW_H
+#define PROGRESS_VIEW_H
 
-#include <QApplication>
+#include <QWidget>
+#include <QStandardItemModel>
+#include <QTreeView>
+#include <QLabel>
+#include <QAbstractSlider>
 
-#include "KpkStrings.h"
+#include <QPackageKit>
 
 using namespace PackageKit;
 
-TransactionDelegate::TransactionDelegate(QObject *parent)
- : QStyledItemDelegate(parent)
+class ProgressView: public QWidget
 {
-}
+    Q_OBJECT
+public:
+    typedef enum {
+        RoleInfo = Qt::UserRole + 1,
+        RoleFinished,
+        RoleProgress
+    } PackageRoles;
+    ProgressView(QWidget *parent = 0);
+    ~ProgressView();
 
-void TransactionDelegate::paint(QPainter *painter,
-                           const QStyleOptionViewItem &option,
-                           const QModelIndex &index) const
-{
-    QStyledItemDelegate::paint(painter, option, index);
-    if (index.column() == 0) {
-        bool finished = index.data(ProgressView::RoleFinished).toBool();
-        int  progress = index.data(ProgressView::RoleProgress).toInt();
-        Enum::Info info = static_cast<Enum::Info>(index.data(ProgressView::RoleInfo).toInt());
-        QString text;
-        if (finished) {
-            text = KpkStrings::infoPast(info);
-        } else {
-            text = KpkStrings::infoPresent(info);
-        }
+    void setSubProgress(int value);
+    void clear();
 
-        QStyleOptionProgressBar progressBarOption;
-        progressBarOption.rect = option.rect;
-        progressBarOption.minimum = 0;
-        progressBarOption.maximum = 100;
-        progressBarOption.progress = progress;
-        progressBarOption.text = text;
-        progressBarOption.textVisible = true;
+public slots:
+    void currentPackage(QSharedPointer<PackageKit::Package> package);
 
-        QApplication::style()->drawControl(QStyle::CE_ProgressBar,
-                                        &progressBarOption, painter);
-    }
-}
+private slots:
+    void followBottom(int value);
+    void rangeChanged(int min, int max);
 
-#include "TransactionDelegate.moc"
+private:
+    void itemFinished(QStandardItem *item);
+
+    QStandardItemModel *m_model;
+    QTreeView          *m_packageView;
+    QScrollBar         *m_scrollBar;
+    QLabel             *m_label;
+    QString             m_lastPackageId;
+    bool                m_keepScrollBarBottom;
+};
+
+#endif

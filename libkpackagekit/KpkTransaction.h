@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -77,7 +77,6 @@ private slots:
     void finishedDialog();
     void transactionFinished(PackageKit::Enum::Exit status);
     void errorCode(PackageKit::Enum::Error error, const QString &details);
-    void currPackage(QSharedPointer<PackageKit::Package>);
     void updateUi();
     void eulaRequired(PackageKit::Client::EulaInfo info);
     void mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text);

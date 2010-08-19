@@ -24,7 +24,7 @@
 #include <QStyledItemDelegate>
 #include <kdemacros.h>
 
-class KDE_EXPORT TransactionDelegate : public QStyledItemDelegate
+class TransactionDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
