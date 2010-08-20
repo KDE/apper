@@ -24,6 +24,7 @@
 #include <QScrollBar>
 
 #include <KLocale>
+#include <KConfigGroup>
 #include <KDebug>
 
 #include "TransactionDelegate.h"
@@ -39,6 +40,7 @@ ProgressView::ProgressView(QWidget *parent)
     m_packageView->setItemDelegate(new TransactionDelegate(this));
     m_packageView->setRootIsDecorated(false);
     m_packageView->setHeaderHidden(true);
+    m_packageView->setSelectionMode(QAbstractItemView::NoSelection);
     m_packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_packageView->verticalScrollBar()->value();
 
@@ -57,10 +59,18 @@ ProgressView::ProgressView(QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_packageView);
     layout->addWidget(m_label);
+
+    KConfig config("KPackageKit");
+    KConfigGroup transactionDialog(&config, "TransactionDialog");
+
+    resize(width(), transactionDialog.readEntry("detailsHeight", QWidget::height()));
 }
 
 ProgressView::~ProgressView()
 {
+    KConfig config("KPackageKit");
+    KConfigGroup transactionDialog(&config, "TransactionDialog");
+    transactionDialog.writeEntry("detailsHeight", height());
 }
 
 void ProgressView::setSubProgress(int value)
@@ -117,8 +127,15 @@ void ProgressView::currentPackage(QSharedPointer<PackageKit::Package> p)
             item->setData(0,         RoleProgress);
             item->setData(false,     RoleFinished);
             items << item;
-            items << new QStandardItem(p->name());
-            items << new QStandardItem(p->summary());
+
+            item = new QStandardItem(p->name());
+            item->setToolTip(p->name());
+            items << item;
+
+            item = new QStandardItem(p->summary());
+            item->setToolTip(p->summary());
+            items << item;
+
             m_model->appendRow(items);
         }
     }

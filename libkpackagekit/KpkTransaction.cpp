@@ -152,16 +152,19 @@ void KpkTransaction::slotButtonClicked(int bt)
         button(KDialog::Details)->setChecked(d->showDetails);
         if (d->progressView->isVisible()) {
             QSize windowSize = size();
-            windowSize -= QSize(0, d->progressView->size().height());
+            windowSize.rheight() -= d->progressView->height();
             d->progressView->setVisible(false);
             setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
             setMaximumSize(QWIDGETSIZE_MAX, windowSize.height());
             d->ui.gridLayout->removeWidget(d->progressView);
         } else {
+            QSize windowSize = size();
+            windowSize.rheight() += d->progressView->height();
             setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
             setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
             d->ui.gridLayout->addWidget(d->progressView, 1, 0, 1, 2);
             d->progressView->setVisible(true);
+            resize(windowSize);
         }
     }
         break;

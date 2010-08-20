@@ -72,6 +72,7 @@ private slots:
 
     void on_exportInstalledPB_clicked();
     void on_importInstalledPB_clicked();
+    void enableExportInstalledPB();
 
 private:
     void setupView(KpkPackageModel **model, QTreeView *view);

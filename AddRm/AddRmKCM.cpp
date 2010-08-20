@@ -465,10 +465,13 @@ void AddRmKCM::on_backTB_clicked()
 void AddRmKCM::on_tabWidget_currentChanged(int index)
 {
     if (index == 1 && m_databaseChanged == true) {
+        exportInstalledPB->setEnabled(false);
         m_databaseChanged = false;
         m_installedModel->clear();
         Transaction *trans = m_client->getPackages(Enum::FilterInstalled);
         connectTransaction(trans, m_installedModel);
+        connect(trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(enableExportInstalledPB()));
     }
 }
 
@@ -618,6 +621,11 @@ void AddRmKCM::on_importInstalledPB_clicked()
     // This call must block otherwise this application closes before
     // smarticon is activated
     QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::Block);
+}
+
+void AddRmKCM::enableExportInstalledPB()
+{
+    exportInstalledPB->setEnabled(true);
 }
 
 #include "AddRmKCM.moc"
