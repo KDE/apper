@@ -27,6 +27,7 @@
 
 #include <KLocale>
 #include <KMessageBox>
+#include <KMimeType>
 
 #include <KDebug>
 
@@ -47,27 +48,39 @@ PkInstallPackageFiles::~PkInstallPackageFiles()
 void PkInstallPackageFiles::start()
 {
     QStringList notFiles;
+    QStringList mimeTypes = Client::instance()->mimeTypes();
     QString lastDirectory = m_urls.at(0).directory();
     QString lastDirectoryNotFiles = m_urls.at(0).directory();
     bool showFullPath = false;
     bool showFullPathNotFiles = false;
     for (int i = 0; i < m_urls.count(); i++) {
+        bool supported = false;
         if (QFileInfo(m_urls.at(i).path()).isFile()) {
-            kDebug() << "isFIle";
-            m_files << m_urls.at(i).path();
-            // if the path of all the files is the same
-            // why bothering the user showing a full path?
-            if (m_urls.at(i).directory() != lastDirectory) {
-                showFullPath = true;
+            kDebug() << "isFIle" << m_urls.at(i);
+            KMimeType::Ptr mime = KMimeType::findByFileContent(m_urls.at(i).path());
+            foreach (const QString &mimeType, mimeTypes) {
+                if (mime->is(mimeType)) {
+                    kDebug() << "Found Supported Mime" << mimeType;
+                    supported = true;
+                    m_files << m_urls.at(i).path();
+                    // if the path of all the files is the same
+                    // why bothering the user showing a full path?
+                    if (m_urls.at(i).directory() != lastDirectory) {
+                        showFullPath = true;
+                    }
+                    lastDirectory = m_urls.at(i).directory();
+                    break;
+                }
             }
-            lastDirectory = m_urls.at(i).directory();
-        } else {
-            kDebug() << "~isFIle";
+        }
+
+        if (!supported) {
+            kDebug() << "~isFIle" << m_urls.at(i);
             notFiles << m_urls.at(i).path();
             if (m_urls.at(i).directory() != lastDirectoryNotFiles) {
                 showFullPathNotFiles = true;
             }
-            lastDirectoryNotFiles =m_urls.at(i).directory();
+            lastDirectoryNotFiles = m_urls.at(i).directory();
         }
     }
 
