@@ -5,6 +5,7 @@ Icon=applications-other
 X-KDE-ServiceTypes=SystemSettingsCategory
 X-KDE-System-Settings-Category=add-and-remove-software
 X-KDE-System-Settings-Parent-Category=computer-administration
+X-KDE-System-Settings-Parent-Category-V2=system-administration
 
 Name=Software Management
 Name[bg]=Управление на софтуер
