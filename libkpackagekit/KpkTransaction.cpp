@@ -32,6 +32,8 @@
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QTreeView>
 
+#include "config.h"
+
 #include "KpkMacros.h"
 #include "KpkEnum.h"
 #include "KpkStrings.h"
@@ -283,6 +285,9 @@ void KpkTransaction::requeueTransaction()
     SET_PROXY
     Transaction *trans;
     Client *client = Client::instance();
+    QString socket;
+    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
+    client->setHints("frontend-socket=" + socket);
     switch (d->role) {
     case Enum::RoleRemovePackages :
         trans = client->removePackages(d->packages,
@@ -668,6 +673,27 @@ void KpkTransaction::setPackages(const QList<QSharedPointer<PackageKit::Package>
 void KpkTransaction::setFiles(const QStringList &files)
 {
     d->files = files;
+}
+
+
+void KpkTransaction::setupDebconfDialog(const QString &tid)
+{
+#ifdef HAVE_DEBCONFKDE
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("SetupDebconfDialog"));
+    // Use our own cached tid to avoid crashes
+    message << qVariantFromValue(tid);
+    message << qVariantFromValue(static_cast<uint>(effectiveWinId()));
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+    if (reply.type() != QDBusMessage::ReplyMessage) {
+        kWarning() << "Message did not receive a reply";
+    }
+#else
+    Q_UNUSED(tid)
+#endif //HAVE_DEBCONFKDE
 }
 
 #include "KpkTransaction.moc"

@@ -12,8 +12,8 @@
        <method name="RefreshAndUpdate" >
        </method>
        <method name="SetupDebconfDialog" >
-           <arg type="s" name="socketPath" direction="in" />
-           <arg type="u" name="xidParent" direction="in" />
+           <arg type="s" name="socket_path" direction="in" />
+           <arg type="u" name="xid_parent" direction="in" />
        </method>
    </interface>
 </node>

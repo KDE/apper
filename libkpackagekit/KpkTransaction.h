@@ -61,6 +61,7 @@ public:
     void setAllowDeps(bool allowDeps);
     void setPackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
     void setFiles(const QStringList &files);
+    void setupDebconfDialog(const QString &tid);
 
     typedef enum {
         Success,

@@ -219,24 +219,15 @@ void KcmKpkUpdate::updatePackages()
     }
 
     SET_PROXY
-//     QDBusMessage message;
-//         message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-//                                                  "/",
-//                                                  "org.kde.KPackageKitSmartIcon",
-//                                                  QLatin1String("SetupDebconfDialog"));
-//         // Use our own cached tid to avoid crashes
-//         message << qVariantFromValue(QString("/tmp/debkonf-sock"));
-//         message << qVariantFromValue(123);
-//         QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-//         if (reply.type() != QDBusMessage::ReplyMessage) {
-//             kWarning() << "Message did not receive a reply";
-//         }
-//         m_client->setHints("frontend-socket=/tmp/debkonf-sock");
+    QString socket;
+    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
+    m_client->setHints("frontend-socket=" + socket);
     Transaction *t = m_client->updatePackages(true, packages);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
     } else {
         m_transDialog->setTransaction(t);
+        m_transDialog->setupDebconfDialog(socket);
         m_transDialog->show();
     }
 }

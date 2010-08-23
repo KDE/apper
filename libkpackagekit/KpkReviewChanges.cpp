@@ -253,6 +253,9 @@ void KpkReviewChanges::checkTask()
 void KpkReviewChanges::installPackages()
 {
     SET_PROXY
+    QString socket;
+    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
+    d->client->setHints("frontend-socket=" + socket);
     Transaction *trans = d->client->installPackages(true, d->addPackages);
     if (trans->error()) {
         KMessageBox::sorry(this,
@@ -261,6 +264,7 @@ void KpkReviewChanges::installPackages()
         taskDone(Enum::RoleInstallPackages);
     } else {
         d->transactionDialog->setTransaction(trans);
+        d->transactionDialog->setupDebconfDialog(socket);
         d->transactionDialog->setPackages(d->addPackages);
     }
 }
@@ -268,6 +272,9 @@ void KpkReviewChanges::installPackages()
 void KpkReviewChanges::removePackages(bool allowDeps)
 {
     SET_PROXY
+    QString socket;
+    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
+    d->client->setHints("frontend-socket=" + socket);
     Transaction *trans = d->client->removePackages(d->remPackages, allowDeps, AUTOREMOVE);
     if (trans->error()) {
         KMessageBox::sorry(this,
@@ -276,6 +283,7 @@ void KpkReviewChanges::removePackages(bool allowDeps)
         taskDone(Enum::RoleRemovePackages);
     } else {
         d->transactionDialog->setTransaction(trans);
+        d->transactionDialog->setupDebconfDialog(socket);
         d->transactionDialog->setAllowDeps(allowDeps);
         d->transactionDialog->setPackages(d->remPackages);
     }

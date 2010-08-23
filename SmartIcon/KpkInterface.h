@@ -41,14 +41,13 @@ public:
     void RefreshCache();
     void RefreshAndUpdate();
     void Update();
-    void SetupDebconfDialog(const QString &socketPath, uint xidParent);
+    void SetupDebconfDialog(const QString &socket_path, uint xid_parent);
 
 signals:
     void watchTransaction(const QString &tid, bool interactive);
     void refreshAndUpdate(bool refresh);
 
 #ifdef HAVE_DEBCONFKDE
-#include <DebconfGui.h>
 private slots:
     void debconfActivate();
 

@@ -60,6 +60,7 @@ KpkInterface::~KpkInterface()
 
 void KpkInterface::WatchTransaction(const QString &tid)
 {
+    kDebug() << tid;
     emit watchTransaction(tid, true);
 }
 
@@ -99,8 +100,11 @@ void KpkInterface::SetupDebconfDialog(const QString &socketPath, uint xidParent)
         gui = m_debconfGuis[socketPath];
     } else {
         gui = new DebconfGui(socketPath);
+        gui->setWindowModality(Qt::WindowModal);
+        gui->setWindowFlags(Qt::Dialog);
         m_debconfGuis[socketPath] = gui;
         connect(gui, SIGNAL(activated()), this, SLOT(debconfActivate()));
+        connect(gui, SIGNAL(deactivated()), gui, SLOT(hide()));
     }
     gui->setProperty("xidParent", xidParent);
 #else
@@ -113,15 +117,11 @@ void KpkInterface::SetupDebconfDialog(const QString &socketPath, uint xidParent)
 #ifdef HAVE_DEBCONFKDE
 void KpkInterface::debconfActivate()
 {
+    // Correct the parent
     DebconfGui *gui = qobject_cast<DebconfGui*>(sender());
-    uint xidParent = gui->property("xidParent").toUInt();
-    KDialog *dialog = new KDialog(gui);
-    connect(gui, SIGNAL(deactivated()), dialog, SLOT(deleteLater()));
-//     dialog->setCaption( "My title" );
-    dialog->setButtons(KDialog::None);
-    dialog->setMainWidget(gui);
-    KWindowSystem::setMainWindow(dialog, xidParent);
-    dialog->show();
+    uint xidParent  = gui->property("xidParent").toUInt();
+    KWindowSystem::setMainWindow(gui, xidParent);
+    gui->show();
 }
 #endif
 

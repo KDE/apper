@@ -171,6 +171,9 @@ void PkInstallPackageFiles::start()
 void PkInstallPackageFiles::installFiles()
 {
     SET_PROXY
+    QString socket;
+    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
+    Client::instance()->setHints("frontend-socket=" + socket);
     Transaction *t = Client::instance()->installFiles(m_files, true);
     if (t->error()) {
         if (showWarning()) {
@@ -183,6 +186,7 @@ void PkInstallPackageFiles::installFiles()
         sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
     } else {
         kTransaction()->setTransaction(t);
+        kTransaction()->setupDebconfDialog(socket);
         kTransaction()->setFiles(m_files);
         kTransaction()->show();
     }
