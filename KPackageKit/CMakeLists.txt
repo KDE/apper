@@ -1,10 +1,11 @@
 find_package(KDE4Internal REQUIRED)
 
 set(kpackagekit_SRCS
-    main.cpp
-    KPackageKit.cpp
-    KpkBackendDetails.cpp
+    kcmultidialog.cpp
     KpkMainUi.cpp
+    KpkBackendDetails.cpp
+    KPackageKit.cpp
+    main.cpp
 )
 
 kde4_add_ui_files(kpackagekit_SRCS
