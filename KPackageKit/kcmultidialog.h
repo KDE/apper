@@ -34,7 +34,7 @@ class KCMultiDialogPrivate;
  *
  * @author Matthias Elter <elter@kde.org>, Daniel Molkentin <molkentin@kde.org>
  */
-class KCMUTILS_EXPORT KCMultiDialog : public KPageDialog
+class KCMultiDialog : public KPageDialog
 {
   Q_OBJECT
     Q_DECLARE_PRIVATE(KCMultiDialog)
@@ -66,7 +66,7 @@ class KCMUTILS_EXPORT KCMultiDialog : public KPageDialog
      *
      * @returns The @see KPageWidgetItem associated with the new dialog page.
      **/
-    KPageWidgetItem* addModule( const QString& module, const QStringList& 
+    KPageWidgetItem* addModule( const QString& module, const QStringList&
                                 args = QStringList() );
 
     /**
@@ -84,7 +84,7 @@ class KCMUTILS_EXPORT KCMultiDialog : public KPageDialog
      *
      * @param args The arguments that should be given to the KCModule when it is created
      **/
-    KPageWidgetItem* addModule( const KCModuleInfo& moduleinfo, KPageWidgetItem *parent = 0, 
+    KPageWidgetItem* addModule( const KCModuleInfo& moduleinfo, KPageWidgetItem *parent = 0,
                                 const QStringList& args = QStringList() );
 
     /**
