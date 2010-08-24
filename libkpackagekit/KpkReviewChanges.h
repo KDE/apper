@@ -48,9 +48,7 @@ public:
     };
     Q_DECLARE_FLAGS(OperationModes, OperationMode)
 
-    void setTitle(const QString &title);
-    void setText(const QString &text);
-
+    void setMessage(const QString &msg);
     int exec(OperationModes flags = 0);
 
 private slots:
@@ -65,7 +63,6 @@ private slots:
 private:
     void taskDone(PackageKit::Enum::Role role);
 
-//     void updateColumnsWidth(bool force = false);
     void checkTask();
 
     KpkReviewChangesPrivate *d;
@@ -73,10 +70,6 @@ private:
 
 protected slots:
     virtual void slotButtonClicked(int button);
-
-protected:
-//     virtual void resizeEvent(QResizeEvent *event);
-//     virtual bool event(QEvent *event);
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KpkReviewChanges::OperationModes)

@@ -62,7 +62,6 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
     setAboutData(aboutData);
-//     setButtons(Apply);
     KGlobal::locale()->insertCatalog("kpackagekit");
 
     m_selected = !args.isEmpty();
@@ -204,7 +203,6 @@ void KcmKpkUpdate::transactionFinished(KpkTransaction::ExitStatus status)
     }
 }
 
-#include <QDBusMessage>
 void KcmKpkUpdate::updatePackages()
 {
     QList<QSharedPointer<PackageKit::Package> > packages;
@@ -234,7 +232,7 @@ void KcmKpkUpdate::updatePackages()
 
 void KcmKpkUpdate::getUpdates()
 {
-    kDebug() << sender();
+//     kDebug() << sender();
     if (m_updatesT) {
         // There is a getUpdates running ignore this call
         return;

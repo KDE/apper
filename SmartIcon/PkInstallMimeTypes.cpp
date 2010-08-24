@@ -106,8 +106,9 @@ void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Enum::Exit status)
         if (m_foundPackages.size()) {
             kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
-            frm->setTitle(i18np("Application that can open this type of file",
-                                "Applications that can open this type of file", m_foundPackages.size()));
+            frm->setMessage(i18np("Application that can open this type of file",
+                                  "Applications that can open this type of file",
+                                  m_foundPackages.size()));
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
             } else {

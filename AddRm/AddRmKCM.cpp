@@ -35,7 +35,6 @@
 #include <KMessageBox>
 #include <KFileItemDelegate>
 #include <KFileDialog>
-#include "CategoryDrawer.h"
 #include <KCategorizedSortFilterProxyModel>
 
 #include <QPalette>
@@ -145,9 +144,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     // Create the groups model
     m_groupsModel = new QStandardItemModel(this);
 
-    CategoryDrawer *drawer = new CategoryDrawer;
     homeView->setSpacing(KDialog::spacingHint());
-    homeView->setCategoryDrawer(drawer);
     homeView->viewport()->setAttribute(Qt::WA_Hover);
 
     //initialize the groups
@@ -193,7 +190,20 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     importInstalledPB->setIcon(KIcon("document-import"));
 
     // CHANGES TAB
-    setupView(&m_changesModel, changesView);
+    changesView->viewport()->setAttribute(Qt::WA_Hover);
+    m_changesModel = new KpkPackageModel(this, changesView);
+    KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
+    changedProxy->setSourceModel(m_changesModel);
+    changedProxy->setCategorizedModel(true);
+    changedProxy->sort(0);
+    changedProxy->setDynamicSortFilter(true);
+    changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    changedProxy->setSortRole(KpkPackageModel::SortRole);
+    changesView->setModel(changedProxy);
+    KpkDelegate *changesDelegate = new KpkDelegate(changesView);
+    changesDelegate->setExtendPixmapWidth(0);
+    changesView->setItemDelegate(changesDelegate);
+
     // Connect this signal anyway so users that have backend that
     // do not support install or remove can be informed properly
     connect(m_changesModel, SIGNAL(rowsInserted(const QModelIndex, int, int)),
@@ -530,7 +540,6 @@ void AddRmKCM::changed()
 void AddRmKCM::save()
 {
     QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_changesModel->selectedPackages(), this);
-    frm->setTitle(i18n("Review Changes"));
     frm->exec();
 
     // This avoid crashing as the above function does not always quit it's event loop

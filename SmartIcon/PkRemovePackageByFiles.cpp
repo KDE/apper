@@ -111,9 +111,6 @@ void PkRemovePackageByFiles::searchFinished(PackageKit::Enum::Exit status)
         if (m_foundPackages.size()) {
             kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
-            frm->setTitle(i18np("The following package will be removed",
-                                "The following packages will be removed",
-                                m_foundPackages.size()));
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
             } else {

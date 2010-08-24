@@ -1,6 +1,5 @@
 set(kpk_addrm_SRCS
     KpkFiltersMenu.cpp
-    CategoryDrawer.cpp
     KpkPackageDetails.cpp
     AddRmKCM.cpp
 )

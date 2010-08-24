@@ -43,7 +43,7 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     m_removeIcon("edit-delete"),
     m_removeString(i18n("Remove")),
     m_undoIcon("edit-undo"),
-    m_undoString(i18n("Unmark")),
+    m_undoString(i18n("Deselect")),
     m_checkedIcon("dialog-ok")
 {
     // maybe rename or copy it to package-available
@@ -95,7 +95,7 @@ void KpkDelegate::paint(QPainter *painter,
     Enum::Info info;
     info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
     bool    pkgInstalled  = (info == Enum::InfoInstalled ||
-                            info == Enum::InfoCollectionInstalled);
+                             info == Enum::InfoCollectionInstalled);
 
     bool    pkgCollection = (info == Enum::InfoCollectionInstalled ||
                              info == Enum::InfoCollectionAvailable);
@@ -109,7 +109,9 @@ void KpkDelegate::paint(QPainter *painter,
     }
 
     // pain the background (checkbox and the extender)
-    KExtendableItemDelegate::paint(painter, opt, index);
+    if (m_extendPixmapWidth) {
+        KExtendableItemDelegate::paint(painter, opt, index);
+    }
 
     int leftCount;
     if (leftToRight) {
@@ -383,6 +385,11 @@ bool KpkDelegate::editorEvent(QEvent *event,
     // this makes sure the check box is always known
     opt.rect.setHeight(calcItemHeight(option));
     return KExtendableItemDelegate::editorEvent(event, model, opt, index);
+}
+
+void KpkDelegate::setExtendPixmapWidth(int width)
+{
+    m_extendPixmapWidth = width;
 }
 
 QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,

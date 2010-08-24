@@ -45,6 +45,7 @@ public:
                      QAbstractItemModel *model,
                      const QStyleOptionViewItem &option,
                      const QModelIndex &index);
+    void setExtendPixmapWidth(int width);
 
 signals:
     void showExtendItem(const QModelIndex &index);

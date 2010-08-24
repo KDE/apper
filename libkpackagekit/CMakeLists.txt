@@ -1,4 +1,5 @@
 set(libkpk_SRCS
+    CategoryDrawer.cpp
     KpkDelegate.cpp
     TransactionDelegate.cpp
     ProgressView.cpp

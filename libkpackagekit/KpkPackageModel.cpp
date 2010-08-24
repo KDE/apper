@@ -27,6 +27,7 @@
 #include <KpkIcons.h>
 #include <KLocale>
 #include "KpkDelegate.h"
+#include <KCategorizedSortFilterProxyModel>
 
 using namespace PackageKit;
 
@@ -161,6 +162,20 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             return pkg->iconPath();
         case InfoRole:
             return pkg->info();
+        case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
+            if (pkg->info() == Enum::InfoInstalled ||
+                pkg->info() == Enum::InfoCollectionInstalled) {
+                return i18n("To be Removed");
+            } else {
+                return i18n("To be Installed");
+            }
+        case KCategorizedSortFilterProxyModel::CategorySortRole:
+            if (pkg->info() == Enum::InfoInstalled ||
+                pkg->info() == Enum::InfoCollectionInstalled) {
+                return 0;
+            } else {
+                return 1;
+            }
         default:
             return QVariant();
         }

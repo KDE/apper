@@ -22,6 +22,7 @@
 
 #include <KMessageBox>
 #include <KWindowSystem>
+#include <KCategorizedSortFilterProxyModel>
 
 #include <KDebug>
 
@@ -35,8 +36,6 @@
 #include "KpkDelegate.h"
 
 #include "ui_KpkReviewChanges.h"
-
-#define UNIVERSAL_PADDING 6
 
 class KpkReviewChangesPrivate
 {
@@ -77,10 +76,20 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
     }
 
     //initialize the model, delegate, client and  connect it's signals
-    d->ui.packageView->setItemDelegate(d->pkgDelegate = new KpkDelegate(d->ui.packageView));
-    d->ui.packageView->setModel(d->mainPkgModel = new KpkPackageModel(this, d->ui.packageView));
+    d->ui.packageView->viewport()->setAttribute(Qt::WA_Hover);
+    d->mainPkgModel = new KpkPackageModel(this, d->ui.packageView);
+    KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
+    changedProxy->setSourceModel(d->mainPkgModel);
+    changedProxy->setCategorizedModel(true);
+    changedProxy->sort(0);
+    changedProxy->setDynamicSortFilter(true);
+    changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    changedProxy->setSortRole(KpkPackageModel::SortRole);
+    d->ui.packageView->setModel(changedProxy);
+    d->pkgDelegate = new KpkDelegate(d->ui.packageView);
+    d->pkgDelegate->setExtendPixmapWidth(0);
+    d->ui.packageView->setItemDelegate(d->pkgDelegate);
     d->mainPkgModel->addPackages(packages, true);
-    d->ui.packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     connect(d->mainPkgModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkChanged()));
 
@@ -100,19 +109,10 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
         }
     }
 
-    if (packages.size() == d->addPackages.size()) {
-        setText(i18np("The following package will be installed:",
-                      "The following packages will be installed:", d->addPackages.size()));
-        setButtonText(KDialog::Apply, i18n("Install Now"));
-    } else if (packages.size() == d->remPackages.size()) {
-        setText(i18np("The following package will be removed:",
-                      "The following packages will be removed:", d->remPackages.size()));
-        setButtonText(KDialog::Apply, i18n("Remove Now"));
-    } else {
-        setText(i18np("The following package will be removed and installed:",
-                      "The following packages will be removed and installed:", packages.size()));
-        setButtonText(KDialog::Apply, i18n("Apply Now"));
-    }
+    setCaption(i18np("Review Change", "Review Changes", packages.size()));
+    setMessage(i18np("The following package was found",
+                     "The following packages were found",
+                     packages.size()));
 
     // restore size
     setMinimumSize(QSize(320,280));
@@ -134,14 +134,9 @@ KpkReviewChanges::~KpkReviewChanges()
     saveDialogSize(reviewChangesDialog);
 }
 
-void KpkReviewChanges::setTitle(const QString &title)
+void KpkReviewChanges::setMessage(const QString &msg)
 {
-    setCaption(title);
-}
-
-void KpkReviewChanges::setText(const QString &text)
-{
-    d->ui.label->setText(text);
+    d->ui.label->setText(msg);
 }
 
 int KpkReviewChanges::exec(OperationModes flags)
@@ -354,38 +349,6 @@ void KpkReviewChanges::slotButtonClicked(int button)
         KDialog::slotButtonClicked(button);
     }
 }
-
-// void KpkReviewChanges::resizeEvent(QResizeEvent *event)
-// {
-//     QWidget::resizeEvent(event);
-//     updateColumnsWidth();
-// }
-//
-// bool KpkReviewChanges::event(QEvent *event)
-// {
-//     switch (event->type()) {
-//         case QEvent::PolishRequest:
-//         case QEvent::Polish:
-//             updateColumnsWidth(true);
-//             break;
-//         default:
-//             break;
-//     }
-//
-//     return QWidget::event(event);
-// }
-//
-// void KpkReviewChanges::updateColumnsWidth(bool force)
-// {
-//     int viewWidth = d->ui.packageView->viewport()->width();
-//
-//     if (force) {
-//         viewWidth -= style()->pixelMetric(QStyle::PM_ScrollBarExtent) + UNIVERSAL_PADDING;
-//     }
-//
-//     d->ui.packageView->setColumnWidth(0, d->pkgDelegate->columnWidth(0, viewWidth));
-//     d->ui.packageView->setColumnWidth(1, d->pkgDelegate->columnWidth(1, viewWidth));
-// }
 
 void KpkReviewChanges::checkChanged()
 {

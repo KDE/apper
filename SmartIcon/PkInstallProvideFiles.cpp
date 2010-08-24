@@ -113,9 +113,6 @@ void PkInstallProvideFiles::searchFinished(PackageKit::Enum::Exit status)
         } else if (m_foundPackages.size()) {
             kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
-            frm->setTitle(i18np("The following package will be installed",
-                                "The following packages will be installed",
-                                m_foundPackages.size()));
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, "Transaction did not finish with success");
             } else {
