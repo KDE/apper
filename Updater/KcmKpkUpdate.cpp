@@ -149,13 +149,20 @@ void KcmKpkUpdate::load()
 {
     // set focus on the updates view
     packageView->setFocus(Qt::OtherFocusReason);
-    getUpdates();
+    // If the model already has some packages
+    // let's just clear the selection
+    if (m_updatesModel->rowCount()) {
+        m_updatesModel->setAllChecked(false);
+    } else {
+        getUpdates();
+    }
 }
 
 void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
 {
     Q_UNUSED(status)
     m_updatesT = 0;
+    m_updatesModel->clearSelectedNotPresent();
     checkEnableUpdateButton();
 }
 
@@ -243,7 +250,7 @@ void KcmKpkUpdate::getUpdates()
 
     // clears the model
     m_updatesModel->clear();
-    m_updatesModel->setAllChecked(false);
+//     m_updatesModel->setAllChecked(false);
     m_updatesT = m_client->getUpdates();
     if (m_updatesT->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));

@@ -558,7 +558,7 @@ void AddRmKCM::load()
 {
     // set focus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
-//     m_browseModel->uncheckAll();
+    m_changesModel->setAllChecked(false);
 }
 
 void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)

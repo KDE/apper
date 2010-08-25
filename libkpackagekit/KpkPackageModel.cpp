@@ -68,15 +68,15 @@ void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Packag
     addPackage(package, true);
 }
 
-void KpkPackageModel::addResolvedPackage(const QSharedPointer<PackageKit::Package> &package)
-{
-    kDebug() << package->id();
-    if (m_checkedPackages.contains(package->id())) {
-        if (package->info() != m_checkedPackages[package->id()]->info()) {
-            uncheckPackage(package, true);
-        }
-    }
-}
+// void KpkPackageModel::addResolvedPackage(const QSharedPointer<PackageKit::Package> &package)
+// {
+//     kDebug() << package->id();
+//     if (m_checkedPackages.contains(package->id())) {
+//         if (package->info() != m_checkedPackages[package->id()]->info()) {
+//             uncheckPackage(package, true);
+//         }
+//     }
+// }
 
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -208,6 +208,15 @@ void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> &
         if (forceEmit || sender() == 0) {
             emit packageUnchecked(package);
         }
+
+        for (int i = 0; i < m_packages.size(); ++i) {
+            if (m_packages.at(i)->id() == package->id()) {
+                emit dataChanged(createIndex(0, 0),
+                                 createIndex(i, 0));
+                break;
+            }
+
+        }
     }
 }
 
@@ -286,19 +295,39 @@ void KpkPackageModel::clear()
     reset();
 }
 
+void KpkPackageModel::clearSelectedNotPresent()
+{
+    QVector<QSharedPointer<PackageKit::Package> > uncheckPackages;
+    foreach (const QSharedPointer<PackageKit::Package> &package, m_checkedPackages.values()) {
+        bool found = false;
+        for (int i = 0; i < m_packages.size(); ++i) {
+            if (m_packages.at(i)->id() == package->id()) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            uncheckPackages << package;
+        }
+    }
+
+    for (int i = 0; i < uncheckPackages.size(); ++i) {
+        uncheckPackage(uncheckPackages.at(i));
+    }
+}
+
 void KpkPackageModel::resolveSelected()
 {
     if (!m_checkedPackages.isEmpty()) {
-        Transaction *t;
+//         Transaction *t;
         // TODO fix packagekit-qt
-        QStringList packages;
         foreach (const QSharedPointer<PackageKit::Package> &package, m_checkedPackages.values()) {
-            packages << package->id();
+            uncheckPackage(package, true);
         }
         // TODO WHAT do I DO? yum backend doesn't reply to this...
-        t = Client::instance()->resolve(packages);
-        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                this, SLOT(addResolvedPackage(const QSharedPointer<PackageKit::Package> &)));
+//         t = Client::instance()->resolve(packages);
+//         connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+//                 this, SLOT(addResolvedPackage(const QSharedPointer<PackageKit::Package> &)));
     }
 }
 
@@ -306,13 +335,15 @@ void KpkPackageModel::setAllChecked(bool checked)
 {
     if (checked) {
         m_checkedPackages.clear();
-        foreach(QSharedPointer<PackageKit::Package> package, m_packages) {
+        foreach(const QSharedPointer<PackageKit::Package> &package, m_packages) {
             checkPackage(package);
         }
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
     } else {
-        m_checkedPackages.clear();
+        foreach (const QSharedPointer<PackageKit::Package> &package, m_checkedPackages.values()) {
+            uncheckPackage(package, true);
+        }
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
     }
