@@ -56,6 +56,11 @@ KpkInterface::KpkInterface(QObject *parent)
 KpkInterface::~KpkInterface()
 {
     kDebug();
+#ifdef HAVE_DEBCONFKDE
+    foreach (DebconfGui *gui, m_debconfGuis.values()) {
+        delete gui;
+    }
+#endif //HAVE_DEBCONFKDE
 }
 
 void KpkInterface::WatchTransaction(const QString &tid)
