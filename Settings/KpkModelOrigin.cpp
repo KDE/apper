@@ -21,6 +21,7 @@
 #include "KpkModelOrigin.h"
 
 #include <KpkStrings.h>
+#include <KpkMacros.h>
 
 #include <KDebug>
 #include <KMessageBox>
@@ -89,6 +90,7 @@ bool KpkModelOrigin::changed() const
 
 bool KpkModelOrigin::save()
 {
+    bool changed = false;
     for (int i = 0; i < rowCount(); i++) {
         QStandardItem *repo = item(i);
         if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
@@ -99,7 +101,14 @@ bool KpkModelOrigin::save()
                 KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
                 return false;
             }
+            changed = true;
         }
+    }
+
+    // refresh the user cache if he or she enables/disables any of it
+    if (changed) {
+        SET_PROXY
+        Client::instance()->refreshCache(true);
     }
     return true;
 }
