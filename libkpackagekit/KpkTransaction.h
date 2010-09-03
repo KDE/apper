@@ -82,6 +82,7 @@ private slots:
     void eulaRequired(PackageKit::Client::EulaInfo info);
     void mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text);
     void repoSignatureRequired(PackageKit::Client::SignatureInfo info);
+    void files(QSharedPointer<PackageKit::Package> package, const QStringList &files);
 
     void setExitStatus(KpkTransaction::ExitStatus status);
 

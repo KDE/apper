@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKLICENSEAGREEMENT_H
-#define KPKLICENSEAGREEMENT_H
+#ifndef KPK_LICENSE_AGREEMENT_H
+#define KPK_LICENSE_AGREEMENT_H
 
 #include <KDialog>
 
@@ -28,11 +28,11 @@
 
 using namespace PackageKit;
 
-class KDE_EXPORT KpkLicenseAgreement : public KDialog, Ui::KpkLicenseAgreement
+class KpkLicenseAgreement : public KDialog, Ui::KpkLicenseAgreement
 {
     Q_OBJECT
 public:
-    explicit KpkLicenseAgreement( PackageKit::Client::EulaInfo info, bool modal = true, QWidget *parent=0);
+    explicit KpkLicenseAgreement(PackageKit::Client::EulaInfo info, bool modal = true, QWidget *parent = 0);
     ~KpkLicenseAgreement();
 };
 

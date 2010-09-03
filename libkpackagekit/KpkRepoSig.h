@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKREPOSIG_H
-#define KPKREPOSIG_H
+#ifndef KPK_REPO_SIG_H
+#define KPK_REPO_SIG_H
 
 #include <KDialog>
 
@@ -28,11 +28,11 @@
 
 using namespace PackageKit;
 
-class KDE_EXPORT KpkRepoSig : public KDialog, Ui::KpkRepoSig
+class KpkRepoSig : public KDialog, Ui::KpkRepoSig
 {
     Q_OBJECT
 public:
-    explicit KpkRepoSig( PackageKit::Client::SignatureInfo info, bool modal = true, QWidget *parent=0);
+    explicit KpkRepoSig(PackageKit::Client::SignatureInfo info, bool modal = true, QWidget *parent = 0);
     ~KpkRepoSig();
 };
 

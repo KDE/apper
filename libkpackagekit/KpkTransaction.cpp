@@ -23,6 +23,7 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KPushButton>
+#include <KService>
 
 #include <KDebug>
 
@@ -41,7 +42,7 @@
 #include "KpkLicenseAgreement.h"
 #include "KpkIcons.h"
 #include "ProgressView.h"
-
+#include "ApplicationLauncher.h"
 #include "KpkSimulateModel.h"
 
 #include "ui_KpkTransaction.h"
@@ -61,8 +62,17 @@ public:
     QString errorDetails;
     QList<QSharedPointer<PackageKit::Package> > packages;
     QStringList files;
+    QVector<KService*> applications;
     KpkSimulateModel *simulateModel;
     ProgressView *progressView;
+
+    void clearApplications()
+    {
+        while (!applications.isEmpty()) {
+            delete applications.at(0);
+            applications.remove(0);
+        }
+    }
 };
 
 KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *parent)
@@ -125,7 +135,8 @@ KpkTransaction::~KpkTransaction()
     // DO NOT disconnect the transaction here,
     // it might not exist when this happen
     delete d->progressView;
-    delete d;
+    d->clearApplications()
+;    delete d;
 }
 
 void KpkTransaction::slotButtonClicked(int bt)
@@ -184,7 +195,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
 
     m_trans = trans;
     if (trans->role() != Enum::RoleInstallSignature &&
-        trans->role() != Enum::RoleAcceptEula) {
+        trans->role() != Enum::RoleAcceptEula &&
+        trans->role() != Enum::RoleGetFiles) {
         // We need to keep the original role for requeuing
         d->role = trans->role();
     }
@@ -193,6 +205,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
     d->error = Enum::UnknownError;
     d->errorDetails.clear();
     d->progressView->clear();
+    d->clearApplications();
 
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
@@ -264,7 +277,7 @@ void KpkTransaction::setTransaction(Transaction *trans)
 void KpkTransaction::unsetTransaction()
 {
     disconnect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-               this, SLOT(currPackage(QSharedPointer<PackageKit::Package>)));
+               d->simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                this, SLOT(transactionFinished(PackageKit::Enum::Exit)));
     disconnect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -518,6 +531,19 @@ void KpkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo inf
     delete frm;
 }
 
+void KpkTransaction::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
+{
+    Q_UNUSED(package)
+    foreach (const QString &desktop, files.filter(".desktop")) {
+        // we create a new KService because findByDestopPath
+        // might fail because the Sycoca database is not up to date yet.
+        KService *service = new KService(desktop);
+        if (service->isApplication() && !service->noDisplay()) {
+            d->applications << service;
+        }
+    }
+}
+
 void KpkTransaction::transactionFinished(PackageKit::Enum::Exit status)
 {
     Transaction *trans = qobject_cast<Transaction*>(sender());
@@ -528,7 +554,30 @@ void KpkTransaction::transactionFinished(PackageKit::Enum::Exit status)
         d->ui.progressBar->setMaximum(100);
         d->ui.progressBar->setValue(100);
         if (trans->role() != Enum::RoleInstallSignature &&
-            trans->role() != Enum::RoleAcceptEula) {
+            trans->role() != Enum::RoleAcceptEula &&
+            trans->role() != Enum::RoleGetFiles) {
+            KConfig config("KPackageKit");
+            KConfigGroup transactionGroup(&config, "Transaction");
+            if ((trans->role() == Enum::RoleInstallPackages ||
+                 trans->role() == Enum::RoleInstallFiles) &&
+                transactionGroup.readEntry("ShowApplicationLauncher", true) &&
+                Client::instance()->actions() & Enum::RoleGetFiles) {
+                // Let's try to find some desktop files'
+                Transaction *transaction;
+                transaction = Client::instance()->getFiles(d->packages);
+                if (!transaction->error()) {
+                    setTransaction(transaction);
+                    connect(transaction, SIGNAL(files(QSharedPointer<PackageKit::Package>, const QStringList &)),
+                            this, SLOT(files(QSharedPointer<PackageKit::Package>, const QStringList &)));
+                    return; // avoid the exit code
+                }
+            }
+            setExitStatus(Success);
+        } else if (trans->role() == Enum::RoleGetFiles) {
+            if (!d->applications.isEmpty()) {
+                ApplicationLauncher *launcher = new ApplicationLauncher(d->applications, this);
+                launcher->exec();
+            }
             setExitStatus(Success);
         } else {
             d->finished = false;

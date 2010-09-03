@@ -24,7 +24,7 @@
 
 #include "KpkStrings.h"
 
-KpkLicenseAgreement::KpkLicenseAgreement( PackageKit::Client::EulaInfo info, bool modal, QWidget *parent )
+KpkLicenseAgreement::KpkLicenseAgreement(PackageKit::Client::EulaInfo info, bool modal, QWidget *parent)
  : KDialog(parent)
 {
     setupUi(mainWidget());
