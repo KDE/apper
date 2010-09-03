@@ -25,6 +25,8 @@
 #include <QAbstractItemView>
 #include <KIcon>
 
+#include "config.h"
+
 #include <QPackageKit>
 
 using namespace PackageKit;
@@ -43,7 +45,8 @@ public:
         IconPathRole,
         IdRole,
         CheckStateRole,
-        InfoRole
+        InfoRole,
+        ApplicationSortRole
     };
 
     explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
@@ -70,6 +73,10 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
 
+#ifdef HAVE_APPINSTALL
+    void setAppInstallData(QHash<QString, QStringList> *data, bool sortByApp);
+#endif //HAVE_APPINSTALL
+
 public slots:
     void addPackage(const QSharedPointer<PackageKit::Package> &package,
                     bool selected = false);
@@ -88,12 +95,27 @@ signals:
     void packageUnchecked(const QSharedPointer<PackageKit::Package> &package);
 
 private:
+    typedef struct {
+        QSharedPointer<Package> package;
+        int        application;
+        QString    name;
+        QString    version;
+        QString    icon;
+        QString    summary;
+        QString    arch;
+        QString    id;
+        Enum::Info info;
+    } InternalPackage;
     bool containsChecked(const QString &pid) const;
 
     QAbstractItemView *m_packageView;
-    QVector<QSharedPointer<PackageKit::Package> > m_packages;
+    QVector<InternalPackage> m_packages;
     QHash<QString, QSharedPointer<PackageKit::Package> > m_checkedPackages;
     bool m_checkable;
+#ifdef HAVE_APPINSTALL
+    QHash<QString, QStringList> *m_appInstall;
+    bool m_sortByApp;
+#endif //HAVE_APPINSTALL
 };
 
 #endif

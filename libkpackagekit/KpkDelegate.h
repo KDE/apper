@@ -46,6 +46,7 @@ public:
                      const QStyleOptionViewItem &option,
                      const QModelIndex &index);
     void setExtendPixmapWidth(int width);
+    void setViewport(QWidget *viewport);
 
 signals:
     void showExtendItem(const QModelIndex &index);
@@ -54,18 +55,19 @@ private:
     int calcItemHeight(const QStyleOptionViewItem &option) const;
     bool insideButton(const QRect &rect, const QPoint &pos) const;
 
-    KIcon   m_packageIcon;
-    KIcon   m_collectionIcon;
-    KIcon   m_installIcon;
-    QString m_installString;
-    KIcon   m_removeIcon;
-    QString m_removeString;
-    KIcon   m_undoIcon;
-    QString m_undoString;
-    KIcon   m_checkedIcon;
-    int     m_extendPixmapWidth;
-    QSize   m_buttonSize;
-    QSize   m_buttonIconSize;
+    QWidget *m_viewport;
+    KIcon    m_packageIcon;
+    KIcon    m_collectionIcon;
+    KIcon    m_installIcon;
+    QString  m_installString;
+    KIcon    m_removeIcon;
+    QString  m_removeString;
+    KIcon    m_undoIcon;
+    QString  m_undoString;
+    KIcon    m_checkedIcon;
+    int      m_extendPixmapWidth;
+    QSize    m_buttonSize;
+    QSize    m_buttonIconSize;
 };
 
 #endif

@@ -29,18 +29,22 @@
 
 #include "KpkFiltersMenu.h"
 #include "KpkPackageDetails.h"
+#include "BrowseView.h"
+#include "CategoryModel.h"
 
 #include <KLocale>
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KFileItemDelegate>
-#include <KFileDialog>
 #include <KCategorizedSortFilterProxyModel>
+#include <khtmlview.h>
+#include <khtml_part.h>
+// #include <KUrl>
 
 #include <QPalette>
 #include <QColor>
-#include <QDBusConnection>
-#include <QDBusMessage>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #include <KpkReviewChanges.h>
 #include <KpkPackageModel.h>
@@ -50,7 +54,10 @@
 
 #include <KDebug>
 
-#define UNIVERSAL_PADDING 6
+#define APP_PKG_NAME 0
+#define APP_NAME     1
+#define APP_SUMMARY  2
+#define APP_ICON     3
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 
@@ -60,7 +67,6 @@ K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_addrm"))
 AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
  : KCModule(KPackageKitFactory::componentData(), parent, args),
    m_currentAction(0),
-   m_databaseChanged(true),
    m_searchTransaction(0),
    m_findIcon("edit-find"),
    m_cancelIcon("dialog-cancel"),
@@ -79,6 +85,41 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     setupUi(this);
 
+#ifdef HAVE_APPINSTALL
+    // load all the data in memory since quering SQLITE is really slow
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "app-install");
+    db.setDatabaseName("/home/daniel/code/app-install/share/desktop.db");
+    db.open();
+    QSqlQuery query(db);
+    query.prepare(
+        "SELECT "
+            "a.package_name, "
+            "COALESCE(t.application_name, a.application_name), "
+            "COALESCE(t.application_summary, a.application_summary), "
+            "a.icon_name "
+        "FROM "
+            "applications a "
+        "LEFT JOIN "
+            "translations t "
+        "ON "
+            "a.application_id = t.application_id "
+          "AND "
+            "t.locale = :locale");
+    query.bindValue(":name", KGlobal::locale()->language());
+    QHash<QString, QStringList> *appInstall;
+    appInstall = new QHash<QString, QStringList>();
+    if (query.exec()) {
+        appInstall->reserve(query.size());
+        while (query.next()) {
+            appInstall->insertMulti(query.value(APP_PKG_NAME).toString(),
+                                    QStringList()
+                                        << query.value(APP_NAME).toString()
+                                        << query.value(APP_SUMMARY).toString()
+                                        << query.value(APP_ICON).toString());
+        }
+    }
+#endif //HAVE_APPINSTALL
+
     // Create a new daemon
     m_client = Client::instance();
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
@@ -94,10 +135,17 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     gridLayout_2->addWidget(toolBar);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
+    m_browseView = new BrowseView(this);
+    connect(m_browseView, SIGNAL(showExtendItem(const QModelIndex &)),
+            this, SLOT(showExtendItem(const QModelIndex &)));
+
     // Create a stacked layout so only homeView or packageView are displayed
     m_viewLayout = new QStackedLayout(stackedWidget);
+//     m_pkgDetails = new PackageDetails(this);
     m_viewLayout->addWidget(homeView);
-    m_viewLayout->addWidget(packageView);
+    m_viewLayout->addWidget(m_browseView);
+    m_viewLayout->addWidget(changesView);
+//     m_viewLayout->addWidget(m_pkgDetails);
 
     QMenu *findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method
@@ -142,27 +190,12 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     }
 
     // Create the groups model
-    m_groupsModel = new QStandardItemModel(this);
+    m_groupsModel = new CategoryModel(this);
 
     homeView->setSpacing(KDialog::spacingHint());
     homeView->viewport()->setAttribute(Qt::WA_Hover);
 
-    //initialize the groups
-    Enum::Groups groups = m_client->groups();
-    QStandardItem *groupItem;
-    foreach (const Enum::Group &group, groups) {
-        if (group != Enum::UnknownGroup) {
-            groupItem = new QStandardItem(KpkStrings::groups(group));
-            groupItem->setData(group, Qt::UserRole);
-            groupItem->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
-            groupItem->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
-            groupItem->setIcon(KpkIcons::groupsIcon(group));
-            if (!(m_roles & Enum::RoleSearchGroup)) {
-                groupItem->setSelectable(false);
-            }
-            m_groupsModel->appendRow(groupItem);
-        }
-    }
+    m_browseView->setCategoryModel(m_groupsModel);
 
     KFileItemDelegate *delegate = new KFileItemDelegate(this);
     delegate->setWrapMode(QTextOption::WordWrap);
@@ -181,13 +214,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
 
     //initialize the model, delegate, client and  connect it's signals
-    setupView(&m_browseModel, packageView);
-
-    // INSTALLED TAB
-    setupView(&m_installedModel, installedView);
-    tabWidget->setTabIcon(1, KIcon("dialog-ok"));
-    exportInstalledPB->setIcon(KIcon("document-export"));
-    importInstalledPB->setIcon(KIcon("document-import"));
+//     setupView(&m_browseModel, packageView);
+    m_browseModel = m_browseView->model();
 
     // CHANGES TAB
     changesView->viewport()->setAttribute(Qt::WA_Hover);
@@ -214,30 +242,12 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     // Make the models talk to each other
     // packageCheced from browse model
     connect(m_browseModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
-            m_installedModel, SLOT(checkPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_browseModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
-            m_changesModel, SLOT(addSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
-
-    // packageCheced from installed model
-    connect(m_installedModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
-            m_browseModel, SLOT(checkPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_installedModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
             m_changesModel, SLOT(addSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
 
     // packageUnchecked from browse model
     connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_installedModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
             m_changesModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
     connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
-
-    // packageUnchecked from installed model
-    connect(m_installedModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_browseModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_installedModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_changesModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_installedModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
             m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
 
     // packageUnchecked from changes model
@@ -245,20 +255,24 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
             m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
     connect(m_changesModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
             m_browseModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_changesModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_installedModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
 
     // colapse package description when removing rows
 //     connect(m_changesModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
 //             this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
+
+#ifdef HAVE_APPINSTALL
+    m_browseModel->setAppInstallData(appInstall, true);
+    m_changesModel->setAppInstallData(appInstall, false);
+#endif //HAVE_APPINSTALL
 }
 
 void AddRmKCM::setupView(KpkPackageModel **model, QTreeView *view)
 {
     *model = new KpkPackageModel(this, view);
-    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    KCategorizedSortFilterProxyModel *proxyModel = new KCategorizedSortFilterProxyModel(this);
     proxyModel->setSourceModel(*model);
     proxyModel->setDynamicSortFilter(true);
+    proxyModel->setCategorizedModel(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setSortRole(KpkPackageModel::SortRole);
     view->setModel(proxyModel);
@@ -340,10 +354,10 @@ void AddRmKCM::checkChanged()
 {
     int size = m_changesModel->rowCount();
     if (size > 0) {
-        tabWidget->setTabText(2, i18np("1 Change Pending", "%1 Changes Pending", size));
+//         tabWidget->setTabText(2, i18np("1 Change Pending", "%1 Changes Pending", size));
         emit changed(true);
     } else {
-        tabWidget->setTabText(2, i18n("No Change Pending"));
+//         tabWidget->setTabText(2, i18n("No Change Pending"));
         emit changed(false);
     }
 }
@@ -351,19 +365,13 @@ void AddRmKCM::checkChanged()
 void AddRmKCM::showExtendItem(const QModelIndex &index)
 {
     if (index.column() == 0) {
-        KpkDelegate *delegate = qobject_cast<KpkDelegate*>(sender());
-        const QSortFilterProxyModel *proxy;
-        const KpkPackageModel *model;
-        proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
-        model = qobject_cast<const KpkPackageModel*>(proxy->sourceModel());
-        QModelIndex origIndex = proxy->mapToSource(index);
-        QSharedPointer<PackageKit::Package> package = model->package(origIndex);
+        QSharedPointer<PackageKit::Package> package = m_browseModel->package(index);
         if (package) {
-            if (delegate->isExtended(index)) {
-                delegate->contractItem(index);
-            } else {
-                delegate->extendItem(new KpkPackageDetails(package, m_roles), index);
-            }
+//             m_viewLayout->setCurrentWidget(m_pkgDetails);
+//             m_pkgDetails->setPackage(package,
+//                                      index.data(KpkPackageModel::NameRole).toString(),
+//                                      index.data(KpkPackageModel::SummaryRole).toString(),
+//                                      index.data(KpkPackageModel::IconPathRole).toString());
         }
     }
 }
@@ -456,7 +464,7 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
 {
     if (index.isValid()) {
         // cache the search
-        m_searchRole    = Enum::RoleSearchGroup;
+        m_searchRole    = static_cast<Enum::Role>(index.data(CategoryModel::SearchRole).toUInt());
         m_searchGroup   = static_cast<Enum::Group>(index.data(Qt::UserRole).toUInt());
         m_searchFilters = m_filtersMenu->filters();
         // create the main transaction
@@ -472,34 +480,40 @@ void AddRmKCM::on_backTB_clicked()
     m_searchRole = Enum::UnknownRole;
 }
 
-void AddRmKCM::on_tabWidget_currentChanged(int index)
-{
-    if (index == 1 && m_databaseChanged == true) {
-        exportInstalledPB->setEnabled(false);
-        m_databaseChanged = false;
-        m_installedModel->clear();
-        Transaction *trans = m_client->getPackages(Enum::FilterInstalled);
-        connectTransaction(trans, m_installedModel);
-        connect(trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(enableExportInstalledPB()));
-    }
-}
-
 void AddRmKCM::search()
 {
+    m_browseView->hideCategory();
+
     // search
-    if (m_searchRole == Enum::RoleSearchName) {
+    switch (m_searchRole) {
+    case Enum::RoleSearchName:
         m_searchTransaction = m_client->searchNames(m_searchString, m_searchFilters);
-    } else if (m_searchRole == Enum::RoleSearchDetails) {
+        break;
+    case Enum::RoleSearchDetails:
         m_searchTransaction = m_client->searchDetails(m_searchString, m_searchFilters);
-    } else if (m_searchRole == Enum::RoleSearchFile) {
+        break;
+    case Enum::RoleSearchFile:
         m_searchTransaction = m_client->searchFiles(m_searchString, m_searchFilters);
-    } else if (m_searchRole == Enum::RoleSearchGroup) {
+        break;
+    case Enum::RoleSearchGroup:
         m_searchTransaction = m_client->searchGroups(m_searchGroup, m_searchFilters);
-    } else {
+        break;
+    case Enum::RoleGetPackages:
+        // we want all the installed ones
+        m_browseView->disableExportInstalledPB();
+        m_searchTransaction = m_client->getPackages(Enum::FilterInstalled);
+        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                m_browseView, SLOT(enableExportInstalledPB()));
+        break;
+    case Enum::RoleResolve:
+        m_browseView->setParentCategory(m_searchParentCategory);
+        m_searchTransaction = m_client->resolve(m_searchCategory, m_searchFilters);
+        break;
+    default:
         kDebug() << "Search type not defined yet";
         return;
     }
+    m_browseView->showInstalledPanel(m_searchRole == Enum::RoleGetPackages);
 
     m_viewLayout->setCurrentIndex(1);
     backTB->setEnabled(true);
@@ -515,8 +529,8 @@ void AddRmKCM::search()
                 this, SLOT(finished(PackageKit::Enum::Exit, uint)));
         setCurrentActionEnabled(m_searchTransaction->allowCancel());
         // contract and delete and details widgets
-        KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
-        delegate->contractAll();
+//         KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
+//         delegate->contractAll();
         // cleans the models
         m_browseModel->clear();
     }
@@ -547,8 +561,6 @@ void AddRmKCM::save()
         delete frm;
         // The database might have changed
         m_changesModel->resolveSelected();
-        m_databaseChanged = true;
-        on_tabWidget_currentChanged(tabWidget->currentIndex());
         search();
         QTimer::singleShot(0, this, SLOT(checkChanged()));
     }
@@ -583,58 +595,6 @@ void AddRmKCM::keyPressEvent(QKeyEvent *event)
         return;
     }
     KCModule::keyPressEvent(event);
-}
-
-void AddRmKCM::on_exportInstalledPB_clicked()
-{
-    // We will assume the installed model
-    // is populated since the user is seeing it.
-    QString fileName;
-    fileName = KFileDialog::getSaveFileName(KUrl(), "*.catalog", this);
-    if (fileName.isEmpty()) {
-        return;
-    }
-
-    QFile file(fileName);
-    file.open(QIODevice::WriteOnly);
-    QTextStream out(&file);
-
-    out << "[PackageKit Catalog]\n\n";
-    out << "InstallPackages(" << m_client->distroId() << ")=";
-    QStringList packages;
-    for (int i = 0; i < m_installedModel->rowCount(); i++) {
-        packages << m_installedModel->data(m_installedModel->index(i, 0),
-                                           KpkPackageModel::NameRole).toString();
-    }
-    out << packages.join(";");
-}
-
-void AddRmKCM::on_importInstalledPB_clicked()
-{
-    QString fileName;
-    fileName = KFileDialog::getOpenFileName(KUrl(), "*.catalog", this);
-    if (fileName.isEmpty()) {
-        return;
-    }
-
-    // send a DBus message to install this catalog
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
-                                             "/org/freedesktop/PackageKit",
-                                             "org.freedesktop.PackageKit.Modify",
-                                             "InstallCatalogs");
-    message << static_cast<uint>(effectiveWinId());
-    message << (QStringList() << fileName);
-    message << QString();
-
-    // This call must block otherwise this application closes before
-    // smarticon is activated
-    QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::Block);
-}
-
-void AddRmKCM::enableExportInstalledPB()
-{
-    exportInstalledPB->setEnabled(true);
 }
 
 #include "AddRmKCM.moc"

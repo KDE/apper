@@ -1,11 +1,14 @@
 set(kpk_addrm_SRCS
     KpkFiltersMenu.cpp
     KpkPackageDetails.cpp
+    CategoryModel.cpp
+    BrowseView.cpp
     AddRmKCM.cpp
 )
 
 kde4_add_ui_files(kpk_addrm_SRCS
     KpkPackageDetails.ui
+    BrowseView.ui
     AddRmKCM.ui
 )
 

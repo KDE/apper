@@ -1,6 +1,10 @@
 find_package(KDE4Internal REQUIRED)
 
 set(kpackagekit_SRCS
+    paged/kpageview_p.cpp
+    paged/kpageview.cpp
+    paged/kpagewidget.cpp
+    paged/kpagedialog.cpp
     kcmultidialog.cpp
     KpkMainUi.cpp
     KpkBackendDetails.cpp

@@ -33,7 +33,8 @@ class KCMultiDialogPrivate : public KPageDialogPrivate
     Q_DECLARE_PUBLIC(KCMultiDialog)
     protected:
         KCMultiDialogPrivate()
-            : currentModule(0)
+            : currentModule(0),
+              blocking(false)
         {
         }
 
@@ -59,6 +60,7 @@ class KCMultiDialogPrivate : public KPageDialogPrivate
         void apply();
         bool resolveChanges(KCModuleProxy *currentProxy);
         bool moduleSave(KCModuleProxy *module);
+        bool blocking;
 };
 
 #endif // KCMULTIDIALOG_P_H

@@ -35,6 +35,7 @@
 
 KpkDelegate::KpkDelegate(QAbstractItemView *parent)
   : KExtendableItemDelegate(parent),
+    m_viewport(parent->viewport()),
     // loads it here to be faster when displaying items
     m_packageIcon("package"),
     m_collectionIcon("package-orign"),
@@ -339,10 +340,10 @@ bool KpkDelegate::editorEvent(QEvent *event,
                                     const QModelIndex &index)
 {
     Q_UNUSED(option)
+
     if (event->type() == QEvent::MouseButtonRelease) {
         QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-        QPoint point = view->viewport()->mapFromGlobal(QCursor::pos());
-
+        QPoint point = m_viewport->mapFromGlobal(QCursor::pos());
         bool leftToRight = QApplication::isLeftToRight();
         QStyleOptionButton optBt;
         optBt.rect = option.rect;
@@ -390,6 +391,11 @@ bool KpkDelegate::editorEvent(QEvent *event,
 void KpkDelegate::setExtendPixmapWidth(int width)
 {
     m_extendPixmapWidth = width;
+}
+
+void KpkDelegate::setViewport(QWidget *viewport)
+{
+    m_viewport = viewport;
 }
 
 QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,

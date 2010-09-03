@@ -36,6 +36,7 @@ using namespace PackageKit;
 
 class KpkPackageModel;
 class KpkFiltersMenu;
+class BrowseView;
 class AddRmKCM : public KCModule, Ui::AddRmKCM
 {
     Q_OBJECT
@@ -54,7 +55,6 @@ private slots:
     void genericActionKTriggered();
 
     void on_backTB_clicked();
-    void on_tabWidget_currentChanged(int index);
 
     void on_actionFindName_triggered();
     void on_actionFindDescription_triggered();
@@ -69,10 +69,6 @@ private slots:
 
     void checkChanged();
     void changed();
-
-    void on_exportInstalledPB_clicked();
-    void on_importInstalledPB_clicked();
-    void enableExportInstalledPB();
 
 private:
     void setupView(KpkPackageModel **model, QTreeView *view);
@@ -89,10 +85,9 @@ private:
     KToolBarPopupAction *m_genericActionK;
     QAction *m_currentAction;
     QStandardItemModel *m_groupsModel;
+    BrowseView         *m_browseView;
     KpkPackageModel    *m_browseModel;
-    KpkPackageModel    *m_installedModel;
     KpkPackageModel    *m_changesModel;
-    bool m_databaseChanged;
 
     Client *m_client;
     Transaction *m_searchTransaction;
@@ -107,6 +102,8 @@ private:
     Enum::Role    m_searchRole;
     QString       m_searchString;
     Enum::Group   m_searchGroup;
+    QModelIndex   m_searchParentCategory;
+    QStringList   m_searchCategory;
     Enum::Filters m_searchFilters;
 };
 

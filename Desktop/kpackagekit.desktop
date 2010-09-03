@@ -5,7 +5,7 @@ Exec=kpackagekit -caption "%c" %i %F
 X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.KPackageKit
 
-Name=KPackageKit
+Name=AppGet
 Name[bg]=KPackageKit
 Name[ca]=KPackageKit
 Name[ca@valencia]=KPackageKit
@@ -64,7 +64,7 @@ GenericName[sv]=Programvaruhantering
 GenericName[tr]=Yazılım Yönetimi
 GenericName[uk]=Керування програмами
 GenericName[x-test]=xxSoftware Managementxx
-Comment=PackageKit interface for KDE
+Comment=Application to get and manage software
 Comment[bg]=Интерфейс на PackageKit за KDE
 Comment[ca]=Interfície del PackageKit per al KDE
 Comment[ca@valencia]=Interfície del PackageKit per al KDE

@@ -29,12 +29,17 @@
 #include "KpkDelegate.h"
 #include <KCategorizedSortFilterProxyModel>
 
+#define APP_NAME    0
+#define APP_SUMMARY 1
+#define APP_ICON    2
+
 using namespace PackageKit;
 
 KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
   m_packageView(packageView),
-  m_checkable(false)
+  m_checkable(false),
+  m_appInstall(0)
 {
 }
 
@@ -49,10 +54,47 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         checkPackage(package);
     }
 
-    // check to see if the list of info has any package
-    beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
-    m_packages.append(package);
-    endInsertRows();
+#ifdef HAVE_APPINSTALL
+    QList<QStringList> data;
+    if (m_appInstall) {
+        data = m_appInstall->values(package->name());
+    }
+
+    foreach (const QStringList &list, data) {
+        InternalPackage iPackage;
+        iPackage.package     = package;
+        iPackage.application = 0;
+        iPackage.name        = list.at(APP_NAME);
+        iPackage.summary     = list.at(APP_SUMMARY);
+        iPackage.icon        = list.at(APP_ICON).split('.')[0];
+        kDebug() << list.at(APP_ICON);
+        iPackage.version     = package->version();
+        iPackage.arch        = package->arch();
+        iPackage.info        = package->info();
+
+        // check to see if the list of info has any package
+        beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
+        m_packages.append(iPackage);
+        endInsertRows();
+    }
+
+    if (data.isEmpty()) {
+#endif //HAVE_APPINSTALL
+        InternalPackage iPackage;
+        iPackage.package     = package;
+        iPackage.application = 1;
+        iPackage.name        = package->name();
+        iPackage.summary     = package->summary();
+        iPackage.version     = package->version();
+        iPackage.arch        = package->arch();
+        iPackage.info        = package->info();
+
+        beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
+        m_packages.append(iPackage);
+        endInsertRows();
+#ifdef HAVE_APPINSTALL
+    }
+#endif //HAVE_APPINSTALL
 }
 
 void KpkPackageModel::addPackages(const QList<QSharedPointer<PackageKit::Package> > &packages,
@@ -106,7 +148,7 @@ QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &paren
 {
     // Check to see if the index isn't out of list
     if (!parent.isValid() && m_packages.size() > row) {
-        QSharedPointer<PackageKit::Package> pkg = m_packages.at(row);
+        QSharedPointer<PackageKit::Package> pkg = m_packages.at(row).package;
         return createIndex(row, column, pkg.data());
     }
     return QModelIndex();
@@ -124,76 +166,83 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    PackageKit::Package *pkg = static_cast<PackageKit::Package*>(index.internalPointer());
-    if (pkg) {
-        switch (role) {
-        case Qt::DisplayRole:
-            if (property("kbd").toBool()) {
-                return pkg->name();
-            } else {
-                return QVariant();
-            }
-        case IconRole:
-            return KpkIcons::packageIcon(pkg->info());;
-        case SortRole:
-            return pkg->name() + ' ' + pkg->version() + ' ' + pkg->arch();
-        case Qt::CheckStateRole:
-            if (!m_checkable && !property("kbd").toBool()) {
-                return QVariant();
-            }
-        case CheckStateRole:
-            if (containsChecked(pkg->id())) {
-                return Qt::Checked;
-            }
-            return Qt::Unchecked;
-        case IdRole:
-            return pkg->id();
-        case KExtendableItemDelegate::ShowExtensionIndicatorRole:
-            return true;
-        case NameRole:
-            return pkg->name();
-        case SummaryRole:
-            return pkg->summary();
-        case VersionRole:
-            return pkg->version();
-        case ArchRole:
-            return pkg->arch();
-        case IconPathRole:
-            return pkg->iconPath();
-        case InfoRole:
-            return pkg->info();
-        case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
-            if (pkg->info() == Enum::InfoInstalled ||
-                pkg->info() == Enum::InfoCollectionInstalled) {
-                return i18n("To be Removed");
-            } else {
-                return i18n("To be Installed");
-            }
-        case KCategorizedSortFilterProxyModel::CategorySortRole:
-            if (pkg->info() == Enum::InfoInstalled ||
-                pkg->info() == Enum::InfoCollectionInstalled) {
-                return 0;
-            } else {
-                return 1;
-            }
-        default:
+    InternalPackage package = m_packages.at(index.row());
+    switch (role) {
+    case Qt::DisplayRole:
+        if (property("kbd").toBool()) {
+            return package.name;
+        } else {
             return QVariant();
         }
+    case IconRole:
+        return KpkIcons::packageIcon(package.info);
+    case SortRole:
+        return package.name + ' ' + package.version + ' ' + package.arch;
+    case Qt::CheckStateRole:
+        if (!m_checkable && !property("kbd").toBool()) {
+            return QVariant();
+        }
+    case CheckStateRole:
+        if (containsChecked(package.id)) {
+            return Qt::Checked;
+        }
+        return Qt::Unchecked;
+    case IdRole:
+        return package.id;
+    case KExtendableItemDelegate::ShowExtensionIndicatorRole:
+        return true;
+    case NameRole:
+        return package.name;
+    case SummaryRole:
+        return package.summary;
+    case VersionRole:
+        return package.version;
+    case ArchRole:
+        return package.arch;
+    case IconPathRole:
+        if (package.icon.isNull()) {
+            QString icon = package.package->iconPath();
+            package.icon = icon.isNull() ? "" : icon;
+        }
+        return package.icon;
+    case InfoRole:
+        return package.info;
+    case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
+        if (package.info == Enum::InfoInstalled ||
+            package.info == Enum::InfoCollectionInstalled) {
+            return i18n("To be Removed");
+        } else {
+            return i18n("To be Installed");
+        }
+    case KCategorizedSortFilterProxyModel::CategorySortRole:
+#ifdef HAVE_APPINSTALL
+        if (m_sortByApp) {
+            return package.application;
+        }
+#endif //HAVE_APPINSTALL
+        if (package.info == Enum::InfoInstalled ||
+            package.info == Enum::InfoCollectionInstalled) {
+            return 0;
+        } else {
+            return 1;
+        }
+    case ApplicationSortRole:
+        if (package.application) {
+            return 0;
+        } else {
+            return 1;
+        }
+    default:
+        return QVariant();
     }
+
     return QVariant();
 }
 
 void KpkPackageModel::checkPackage(const QSharedPointer<PackageKit::Package> &package)
 {
-    if (containsChecked(package->id())) {
-        QSharedPointer<PackageKit::Package> p = m_checkedPackages[package->id()];
-        if (p->info() != package->info()) {
-            // We are trying to check a package
-            // that was checked to be installed and it was
-            // so uncheck it
-            uncheckPackage(package);
-        }
-    } else if (package->info() != Enum::InfoBlocked) {
+    kDebug() << sender();
+    if (!containsChecked(package->id()) && package->info() != Enum::InfoBlocked) {
         m_checkedPackages[package->id()] = package;
         if (sender() == 0) {
             emit packageChecked(package);
@@ -210,7 +259,7 @@ void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> &
         }
 
         for (int i = 0; i < m_packages.size(); ++i) {
-            if (m_packages.at(i)->id() == package->id()) {
+            if (m_packages.at(i).package->id() == package->id()) {
                 emit dataChanged(createIndex(0, 0),
                                  createIndex(i, 0));
                 break;
@@ -233,7 +282,7 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
     if (role == Qt::CheckStateRole) {
         QSharedPointer<PackageKit::Package> p = package(index);
         if (!p) {
-            p = m_packages.at(index.row());
+            p = m_packages.at(index.row()).package;
         }
         if (value.toBool()) {
             checkPackage(p);
@@ -266,26 +315,18 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
 
 QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &index) const
 {
-    return m_packages.at(index.row());
+    return m_packages.at(index.row()).package;
 }
 
 void KpkPackageModel::rmSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
 {
-    int index = m_packages.indexOf(package);
-    if (index == -1) {
-        // Sometimes it's -1 because the pointer changed
-        foreach (const QSharedPointer<PackageKit::Package> &pkg, m_packages) {
-            if (pkg->id() == package->id()) {
-                index = m_packages.indexOf(pkg);
-                break;
-            }
+    for (int i = 0; i < m_packages.size(); i++) {
+        if (m_packages.at(i).package->id() == package->id()) {
+            beginRemoveRows(QModelIndex(), i, i);
+            m_packages.remove(i);
+            endRemoveRows();
+            break;
         }
-    }
-
-    if (index >= 0) {
-        beginRemoveRows(QModelIndex(), index, index);
-        m_packages.remove(index);
-        endRemoveRows();
     }
 }
 
@@ -301,7 +342,7 @@ void KpkPackageModel::clearSelectedNotPresent()
     foreach (const QSharedPointer<PackageKit::Package> &package, m_checkedPackages.values()) {
         bool found = false;
         for (int i = 0; i < m_packages.size(); ++i) {
-            if (m_packages.at(i)->id() == package->id()) {
+            if (m_packages.at(i).package->id() == package->id()) {
                 found = true;
                 break;
             }
@@ -335,8 +376,8 @@ void KpkPackageModel::setAllChecked(bool checked)
 {
     if (checked) {
         m_checkedPackages.clear();
-        foreach(const QSharedPointer<PackageKit::Package> &package, m_packages) {
-            checkPackage(package);
+        for (int i = 0; i < m_packages.size(); i++) {
+            checkPackage(m_packages.at(i).package);
         }
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
@@ -356,9 +397,9 @@ QList<QSharedPointer<PackageKit::Package> > KpkPackageModel::selectedPackages() 
 
 bool KpkPackageModel::allSelected() const
 {
-    foreach (const QSharedPointer<PackageKit::Package> &package, m_packages) {
-        if (package->info() != Enum::InfoBlocked &&
-            !containsChecked(package->id())) {
+    foreach (const InternalPackage &package, m_packages) {
+        if (package.package->info() != Enum::InfoBlocked &&
+            !containsChecked(package.package->id())) {
             return false;
         }
     }
@@ -369,3 +410,12 @@ void KpkPackageModel::setCheckable(bool checkable)
 {
     m_checkable = checkable;
 }
+
+#ifdef HAVE_APPINSTALL
+void KpkPackageModel::setAppInstallData(QHash<QString, QStringList> *data, bool sortByApp)
+{
+    m_appInstall = data;
+    m_sortByApp = sortByApp;
+    layoutChanged();
+}
+#endif //HAVE_APPINSTALL

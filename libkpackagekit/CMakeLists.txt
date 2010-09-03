@@ -1,5 +1,5 @@
 set(libkpk_SRCS
-    ApplicationLauncher.cpp
+#     ApplicationLauncher.cpp
     CategoryDrawer.cpp
     KpkDelegate.cpp
     TransactionDelegate.cpp
@@ -23,7 +23,7 @@ set(libkpk_SRCS
 )
 
 kde4_add_ui_files(libkpk_SRCS
-    ApplicationLauncher.ui
+#     ApplicationLauncher.ui
     KpkTransaction.ui
     KpkRepoSig.ui
     KpkLicenseAgreement.ui

@@ -7,4 +7,7 @@
 // Define if your backend have autoremove feature.
 #cmakedefine HAVE_AUTOREMOVE
 
+// Define if app-install data is available.
+#cmakedefine HAVE_APPINSTALL
+
 #endif //CONFIG_H

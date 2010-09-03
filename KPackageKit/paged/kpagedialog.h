@@ -26,7 +26,7 @@
 #define KPAGEDIALOG_H
 
 #include <kdialog.h>
-#include <kpagewidget.h>
+#include "kpagewidget.h"
 
 class KPageDialogPrivate;
 
@@ -222,7 +222,7 @@ class KDEUI_EXPORT KPageDialog : public KDialog
 
     /**
      * Set the page widget of the dialog.
-     * 
+     *
      * @note the previous pageWidget will be deleted.
      *
      * @param widget The KPageWidget object will be reparented to this object, so you can create

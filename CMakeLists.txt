@@ -11,7 +11,12 @@ option(DEBCONF_SUPPORT "Build KPackageKit with debconf support" OFF)
 # Yum does not support this
 option(AUTOREMOVE "Build KPackageKit with auto remove enabled" ON)
 set(HAVE_AUTOREMOVE ${AUTOREMOVE})
-message(STATUS "Building KPackageKit with auto remove enabled: " ${AUTOREMOVE})
+message(STATUS "Building KPackageKit with auto remove: " ${AUTOREMOVE})
+
+# App Install, only Debian based support this for now
+option(APPINSTALL "Build KPackageKit with app install" OFF)
+set(HAVE_APPINSTALL ${APPINSTALL})
+message(STATUS "Building KPackageKit with app install: " ${APPINSTALL})
 
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
