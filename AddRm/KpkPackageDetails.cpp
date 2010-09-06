@@ -20,8 +20,10 @@
 
 #include "KpkPackageDetails.h"
 
+#include <KpkPackageModel.h>
 #include <KpkSimplePackageModel.h>
 #include <KpkStrings.h>
+#include <KpkIcons.h>
 
 #include <KMessageBox>
 #include <QPlainTextEdit>
@@ -31,6 +33,7 @@
 Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 
 KpkPackageDetails::KpkPackageDetails(const QSharedPointer<PackageKit::Package> &package,
+                                     const QModelIndex &index,
                                      const Enum::Roles &roles,
                                      QWidget *parent)
  : QWidget(parent),
@@ -41,6 +44,7 @@ KpkPackageDetails::KpkPackageDetails(const QSharedPointer<PackageKit::Package> &
    m_busySeqRequires(0)
 {
     setupUi(this);
+    stackedWidget->hide();
 
     // Create a stacked layout to put the views in
     m_viewLayout = new QStackedLayout(stackedWidget);
@@ -86,6 +90,19 @@ KpkPackageDetails::KpkPackageDetails(const QSharedPointer<PackageKit::Package> &
     } else {
         requiredByTB->setEnabled(false);
     }
+
+    nameL->setText(index.data(KpkPackageModel::NameRole).toString());
+    summaryL->setText(index.data(KpkPackageModel::SummaryRole).toString());
+    QString pkgIconPath   = index.data(KpkPackageModel::IconPathRole).toString();
+    
+    iconL->setPixmap(KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64));
+
+    installPB->setIcon(KIcon(KIcon("go-down")));
+
+    descriptionL->hide();
+    licenseL->hide();
+    sizeL->hide();
+    homepageL->hide();
 }
 
 KpkPackageDetails::~KpkPackageDetails()
@@ -114,39 +131,35 @@ void KpkPackageDetails::description(QSharedPointer<PackageKit::Package> p)
         m_busySeqDetails->stop();
     }
 
-    descriptionKTB->clear();
     //format and show description
     Package::Details *details = p->details();
-    QString description;
-    description += "<table><tbody>";
+
     if (!details->description().isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Details")
-                    + ":</b></td><td>" + details->description().replace('\n', "<br />")
-                    + "</td></tr>";
+        descriptionL->setText(details->description().replace('\n', "<br>"));
+        descriptionL->show();
     }
+
     if (!details->url().isEmpty()) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Home Page")
-                    + ":</b></td><td><a href=\"" + details->url() + "\">" + details->url()
-                    + "</a></td></tr>";
+        homepageL->setText("<a href=\"" + details->url() + "\">" +
+                           details->url() + "</a>");
+        homepageL->show();
     }
+
     if (!details->license().isEmpty() && details->license() != "unknown") {
-        description += "<tr><td align=\"right\"><b>" + i18n("License")
-                    + ":</b></td><td>" + details->license()
-                    + "</td></tr>";
+        licenseL->setText(details->license());
+        licenseL->show();
     }
+
     if (details->group() != Enum::UnknownGroup) {
-        description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
-                    + KpkStrings::groups(details->group())
-                    + "</td></tr>";
+//         description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
+//                     + KpkStrings::groups(details->group())
+//                     + "</td></tr>";
     }
 
     if (details->size() > 0) {
-        description += "<tr><td align=\"right\"><b>" + i18n("Size")
-                    + ":</b></td><td>" + KGlobal::locale()->formatByteSize(details->size())
-                    + "</td></tr>";
+        sizeL->setText(KGlobal::locale()->formatByteSize(details->size()));
+        sizeL->show();
     }
-    description += "</table></tbody>";
-    descriptionKTB->setHtml(description);
 }
 
 void KpkPackageDetails::finished(PackageKit::Enum::Exit status)

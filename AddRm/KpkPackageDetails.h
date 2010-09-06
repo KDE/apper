@@ -40,6 +40,7 @@ class KpkPackageDetails : public QWidget, Ui::KpkPackageDetails
 Q_OBJECT
 public:
     KpkPackageDetails(const QSharedPointer<PackageKit::Package> &package,
+                      const QModelIndex &index,
                       const Enum::Roles &roles,
                       QWidget *parent = 0);
     ~KpkPackageDetails();

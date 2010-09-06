@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>441</width>
     <height>300</height>
    </rect>
   </property>
@@ -167,18 +167,37 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QGraphicsView" name="graphicsView"/>
-   </item>
-   <item row="2" column="1">
-    <widget class="QScrollBar" name="verticalScrollBar">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+   <item row="2" column="0" colspan="2">
+    <widget class="KpkSearchableTreeView" name="packageView">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="expandsOnDoubleClick">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KpkSearchableTreeView</class>
+   <extends>QTreeView</extends>
+   <header>KpkSearchableTreeView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

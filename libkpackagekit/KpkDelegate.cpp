@@ -53,6 +53,7 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     } else {
         setExtendPixmap(SmallIcon("arrow-right"));
     }
+    setExtendPixmap(SmallIcon("help-about"));
     setContractPixmap(SmallIcon("arrow-down"));
     // store the size of the extend pixmap to know how much we should move
     m_extendPixmapWidth = SmallIcon("arrow-right").size().width();
@@ -159,6 +160,7 @@ void KpkDelegate::paint(QPainter *painter,
         }
         optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
         optBt.iconSize = m_buttonIconSize;
+        optBt.features = QStyleOptionButton::Flat;
         if (pkgChecked) {
             optBt.text = m_undoString;
             optBt.icon = m_undoIcon;

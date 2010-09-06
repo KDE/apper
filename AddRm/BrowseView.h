@@ -58,16 +58,16 @@ private slots:
 
 private:
     bool showPageHeader() const;
-    void updateSceneEvent();
+//     void updateSceneEvent();
 
     KpkPackageModel       *m_model;
     KpkSearchableTreeView *m_packageView;
-    QGraphicsProxyWidget  *m_proxyWidget;
-    QGraphicsScene        *m_scene;
+//     QGraphicsProxyWidget  *m_proxyWidget;
+//     QGraphicsScene        *m_scene;
 
-protected:
-    virtual void resizeEvent(QResizeEvent *event);
-    virtual bool event(QEvent *event);
+// protected:
+//     virtual void resizeEvent(QResizeEvent *event);
+//     virtual bool event(QEvent *event);
 };
 
 #endif

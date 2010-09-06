@@ -20,6 +20,8 @@
 
 #include "BrowseView.h"
 
+#include "KpkPackageDetails.h"
+
 #include <KpkPackageModel.h>
 #include <KpkDelegate.h>
 #include <KpkSearchableTreeView.h>
@@ -42,15 +44,15 @@ BrowseView::BrowseView(QWidget *parent)
 {
     setupUi(this);
 
-    m_packageView = new KpkSearchableTreeView;
-    m_packageView->setAlternatingRowColors(true);
-    m_packageView->setRootIsDecorated(false);
-    m_packageView->setSortingEnabled(true);
-    m_packageView->setFrameStyle(QFrame::NoFrame);
-    m_packageView->setVerticalScrollBar(verticalScrollBar);
+//     packageView = new KpkSearchableTreeView;
+//     packageView->setAlternatingRowColors(true);
+//     packageView->setRootIsDecorated(false);
+//     packageView->setSortingEnabled(true);
+//     packageView->setFrameStyle(QFrame::NoFrame);
+//     packageView->setVerticalScrollBar(verticalScrollBar);
 
 
-    m_model = new KpkPackageModel(this, m_packageView);
+    m_model = new KpkPackageModel(this, packageView);
     KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
     proxy->setSourceModel(m_model);
     proxy->setDynamicSortFilter(true);
@@ -58,16 +60,17 @@ BrowseView::BrowseView(QWidget *parent)
     proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxy->setSortRole(KpkPackageModel::SortRole);
 
-    m_packageView->setModel(proxy);
-    m_packageView->sortByColumn(0, Qt::AscendingOrder);
-    m_packageView->header()->setDefaultAlignment(Qt::AlignCenter);
+    packageView->setModel(proxy);
+    packageView->sortByColumn(0, Qt::AscendingOrder);
+    packageView->header()->setDefaultAlignment(Qt::AlignCenter);
 
 
-    m_scene = new QGraphicsScene(graphicsView);
-    m_proxyWidget = m_scene->addWidget(m_packageView);
-    KpkDelegate *delegate = new KpkDelegate(m_packageView);
-    delegate->setViewport(graphicsView->viewport());
-    m_packageView->setItemDelegate(delegate);
+//     m_scene = new QGraphicsScene(graphicsView);
+//     m_proxyWidget = m_scene->addWidget(packageView);
+    KpkDelegate *delegate = new KpkDelegate(packageView);
+//     delegate->setViewport(graphicsView->viewport());
+//     delegate->setContractPixmap(SmallIcon("help-about"));
+    packageView->setItemDelegate(delegate);
     connect(delegate, SIGNAL(showExtendItem(const QModelIndex &)),
             this, SLOT(showExtendItem(const QModelIndex &)));
     connect(proxy, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
@@ -76,8 +79,9 @@ BrowseView::BrowseView(QWidget *parent)
     exportInstalledPB->setIcon(KIcon("document-export"));
     importInstalledPB->setIcon(KIcon("document-import"));
 
+//     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
 
-
+// importInstalledPB->setGraphicsEffect(blurEffect);
 //     QGraphicsProxyWidget *opaItem = scene->addWidget(new QGroupBox);
 //     QGraphicsOpacityEffect *opaci = new QGraphicsOpacityEffect(this);
 //     opaItem->setGraphicsEffect(opaci);
@@ -93,7 +97,7 @@ BrowseView::BrowseView(QWidget *parent)
 
 // QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
 //     m_proxyWidget->setGraphicsEffect(blurEffect);
-    graphicsView->setScene(m_scene);
+//     graphicsView->setScene(m_scene);
 
 
 //     graphicsView->fitInView(m_proxyWidget, Qt::KeepAspectRatio);
@@ -116,33 +120,47 @@ KpkPackageModel* BrowseView::model() const
 void BrowseView::showExtendItem(const QModelIndex &index)
 {
     kDebug() << "foo;";
-    m_packageView->setMouseTracking(false);
+    packageView->setMouseTracking(false);
     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
     blurEffect->setBlurRadius(0);
+     packageView->viewport()->setGraphicsEffect(blurEffect);
+
     QPropertyAnimation *animation = new QPropertyAnimation(blurEffect, "blurRadius");
     animation->setDuration(1000);
     animation->setStartValue(qreal(0.5));
-    animation->setEndValue(qreal(5));
+    animation->setEndValue(qreal(10));
     animation->setEasingCurve(QEasingCurve::OutQuart);
-
     animation->start();
-    m_proxyWidget->setGraphicsEffect(blurEffect);
 
-    QGraphicsRectItem *itemBox = m_scene->addRect(QRectF(0, 0, 400, 800));
-    QGraphicsTextItem *itemText = new QGraphicsTextItem(index.data(KpkPackageModel::SummaryRole).toString(), itemBox);
-    QGraphicsItemGroup *group = m_scene->createItemGroup(QList<QGraphicsItem *>() << itemBox << itemText);
-    group->setPos(20, 20);
-    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
-    QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
-    shadow->setColor(QColor(Qt::blue));
-    shadow->setBlurRadius(10);
+
+    KpkPackageDetails *details = new KpkPackageDetails(m_model->package(index), index, Client::instance()->actions());
+    packageView->setLayout(new QGridLayout());
+    packageView->layout()->addWidget(details);
+// //     QTabWidget *tab = new QTabWidget;
+// //     tab->addTab(details, "details");
+    details->setAttribute(Qt::WA_NoSystemBackground, true);
+// //     QGraphicsProxyWidget *proxyWidget = m_scene->addWidget(details);
+// //     proxyWidget->setAttribute(Qt::WA_NoSystemBackground, true);
+// //     tab->setAutoFillBackground(false);
+// //     proxyWidget->setAutoFillBackground(false);
+// //     proxyWidget->setParent(m_proxyWidget);
+// 
+// //     QGraphicsRectItem *itemBox = m_scene->addRect(QRectF(0, 0, 400, 800));
+// //     QGraphicsTextItem *itemText = new QGraphicsTextItem(index.data(KpkPackageModel::SummaryRole).toString(), itemBox);
+// //     QGraphicsItemGroup *group = m_scene->createItemGroup(QList<QGraphicsItem *>() << itemBox << itemText);
+// //     group->setPos(20, 20);
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(details);
+// //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
+// //     shadow->setColor(QColor(Qt::blue));
+    shadow->setBlurRadius(15);
     shadow->setOffset(2);
-    shadow2->setColor(QColor(Qt::blue));
-    shadow2->setBlurRadius(15);
-    shadow2->setOffset(2);
-    itemText->setGraphicsEffect(shadow);
-    itemText->setTextWidth(350);
-    itemBox->setGraphicsEffect(shadow2);
+// //     shadow2->setColor(QColor(Qt::blue));
+// //     shadow2->setBlurRadius(15);
+// //     shadow2->setOffset(2);
+    details->setGraphicsEffect(shadow);
+//     details->show();
+// //     itemText->setTextWidth(350);
+// //     itemBox->setGraphicsEffect(shadow2);
 }
 
 void BrowseView::showInstalledPanel(bool visible)
@@ -234,31 +252,31 @@ void BrowseView::enableExportInstalledPB()
     exportInstalledPB->setEnabled(true);
 }
 
-void BrowseView::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
-    updateSceneEvent();
-}
+// void BrowseView::resizeEvent(QResizeEvent *event)
+// {
+//     QWidget::resizeEvent(event);
+//     updateSceneEvent();
+// }
 
-bool BrowseView::event(QEvent *event)
-{
-     switch (event->type()) {
-         case QEvent::Paint:
-         case QEvent::PolishRequest:
-         case QEvent::Polish:
-             updateSceneEvent();
-             break;
-         default:
-             break;
-     }
-
-     return QWidget::event(event);
-}
-
-void BrowseView::updateSceneEvent()
-{
-    graphicsView->setSceneRect(QRect(QPoint(0, 0), graphicsView->viewport()->size()));
-    m_packageView->resize(graphicsView->viewport()->size());
-}
+// bool BrowseView::event(QEvent *event)
+// {
+//      switch (event->type()) {
+//          case QEvent::Paint:
+//          case QEvent::PolishRequest:
+//          case QEvent::Polish:
+//              updateSceneEvent();
+//              break;
+//          default:
+//              break;
+//      }
+// 
+//      return QWidget::event(event);
+// }
+// 
+// void BrowseView::updateSceneEvent()
+// {
+//     graphicsView->setSceneRect(QRect(QPoint(0, 0), graphicsView->viewport()->size()));
+//     packageView->resize(graphicsView->viewport()->size());
+// }
 
 #include "BrowseView.moc"
