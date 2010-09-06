@@ -7,10 +7,10 @@ Icon=preferences-desktop-default-applications
 X-KDE-Library=kcm_kpk_addrm
 X-KDE-ParentApp=kcontrol
 X-KDE-ServiceTypes=KCModule,KCModuleInit
-X-KDE-System-Settings-Parent-Category=add-and-remove-software
+X-KDE-System-Settings-Parent-Category=manage-software
 X-KDE-Weight=1
 
-Name=Add and Remove Software
+Name=Get and Remove Software
 Name[bg]=Добавяне и премахване на програми
 Name[ca]=Afegeix i elimina programes
 Name[ca@valencia]=Afig i elimina programes

@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KcmKpkUpdate.h"
+#include "UpdateKCM.h"
 
 #include "KpkUpdateDetails.h"
 #include "KpkDistroUpgrade.h"
@@ -46,19 +46,19 @@
 
 #define UNIVERSAL_PADDING 6
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KcmKpkUpdate>();)
+K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<UpdateKCM>();)
 K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_update"))
 
-KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
+UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args),
       m_updatesT(0)
 {
     KAboutData *aboutData;
     aboutData = new KAboutData("kpackagekit",
                                "kpackagekit",
-                               ki18n("Software update"),
+                               ki18n("Update Software"),
                                KPK_VERSION,
-                               ki18n("KDE interface for updating software"),
+                               ki18n("Review and Update Software"),
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
     setAboutData(aboutData);
@@ -77,7 +77,7 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     //initialize the model, delegate, client and  connect it's signals
     m_header = new KpkCheckableHeader(Qt::Horizontal, this);
     m_header->setResizeMode(QHeaderView::Stretch);
-    m_header->setCheckBoxEnabled(false);
+    m_header->setCheckBoxVisible(false);
 
     m_updatesModel = new KpkPackageModel(this, packageView);
     m_updatesModel->setCheckable(true);
@@ -99,6 +99,8 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
     connect(m_updatesModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkEnableUpdateButton()));
 
+    connect(Client::instance(), SIGNAL(updatesChanged()), this, SLOT(getUpdates()));
+
     // Create a new client
     m_client = Client::instance();
 
@@ -112,7 +114,7 @@ KcmKpkUpdate::KcmKpkUpdate(QWidget *&parent, const QVariantList &args)
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
 //That way, by default, users only see stable ones.
-void KcmKpkUpdate::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description)
+void UpdateKCM::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     if (verticalLayout->count()) {
@@ -128,7 +130,7 @@ void KcmKpkUpdate::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QSt
     line->show();
 }
 
-void KcmKpkUpdate::checkEnableUpdateButton()
+void UpdateKCM::checkEnableUpdateButton()
 {
     emit changed(m_updatesModel->selectedPackages().size() > 0);
     int selectedSize = m_updatesModel->selectedPackages().size();
@@ -142,10 +144,10 @@ void KcmKpkUpdate::checkEnableUpdateButton()
     }
 
     // if we don't have any upates let's disable the button
-    m_header->setCheckBoxEnabled(m_updatesModel->rowCount() != 0);
+    m_header->setCheckBoxVisible(m_updatesModel->rowCount() != 0);
 }
 
-void KcmKpkUpdate::load()
+void UpdateKCM::load()
 {
     // set focus on the updates view
     packageView->setFocus(Qt::OtherFocusReason);
@@ -158,7 +160,7 @@ void KcmKpkUpdate::load()
     }
 }
 
-void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
+void UpdateKCM::getUpdatesFinished(Enum::Exit status)
 {
     Q_UNUSED(status)
     m_updatesT = 0;
@@ -166,7 +168,7 @@ void KcmKpkUpdate::getUpdatesFinished(Enum::Exit status)
     checkEnableUpdateButton();
 }
 
-void KcmKpkUpdate::save()
+void UpdateKCM::save()
 {
     // If the backend supports getRequires do it
     m_transDialog = 0;
@@ -190,7 +192,7 @@ void KcmKpkUpdate::save()
     QTimer::singleShot(0, this, SLOT(checkEnableUpdateButton()));
 }
 
-void KcmKpkUpdate::transactionFinished(KpkTransaction::ExitStatus status)
+void UpdateKCM::transactionFinished(KpkTransaction::ExitStatus status)
 {
     if (status == KpkTransaction::Success &&
         m_transDialog->role() == Enum::RoleSimulateUpdatePackages) {
@@ -210,7 +212,7 @@ void KcmKpkUpdate::transactionFinished(KpkTransaction::ExitStatus status)
     }
 }
 
-void KcmKpkUpdate::updatePackages()
+void UpdateKCM::updatePackages()
 {
     QList<QSharedPointer<PackageKit::Package> > packages;
     if (m_transDialog) {
@@ -237,9 +239,9 @@ void KcmKpkUpdate::updatePackages()
     }
 }
 
-void KcmKpkUpdate::getUpdates()
+void UpdateKCM::getUpdates()
 {
-//     kDebug() << sender();
+    kDebug() << sender();
     if (m_updatesT) {
         // There is a getUpdates running ignore this call
         return;
@@ -288,7 +290,7 @@ void KcmKpkUpdate::getUpdates()
     }
 }
 
-void KcmKpkUpdate::on_refreshPB_clicked()
+void UpdateKCM::on_refreshPB_clicked()
 {
     SET_PROXY
     Transaction *t = m_client->refreshCache(true);
@@ -302,7 +304,7 @@ void KcmKpkUpdate::on_refreshPB_clicked()
     }
 }
 
-void KcmKpkUpdate::showExtendItem(const QModelIndex &index)
+void UpdateKCM::showExtendItem(const QModelIndex &index)
 {
     const QSortFilterProxyModel *proxy;
     const KpkPackageModel *model;
@@ -320,21 +322,21 @@ void KcmKpkUpdate::showExtendItem(const QModelIndex &index)
     }
 }
 
-void KcmKpkUpdate::on_historyPB_clicked()
+void UpdateKCM::on_historyPB_clicked()
 {
     QPointer<KpkHistory> frm = new KpkHistory(this);
     frm->exec();
     delete frm;
 }
 
-void KcmKpkUpdate::contractAll()
+void UpdateKCM::contractAll()
 {
     // This is a HACK so that the extenders don't stay visible when
     // the user sorts the view
     m_delegate->contractAll();
 }
 
-void KcmKpkUpdate::errorCode(PackageKit::Enum::Error error, const QString &details)
+void UpdateKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
     KMessageBox::detailedSorry(this,
                                KpkStrings::errorMessage(error),
@@ -343,4 +345,4 @@ void KcmKpkUpdate::errorCode(PackageKit::Enum::Error error, const QString &detai
                                KMessageBox::Notify);
 }
 
-#include "KcmKpkUpdate.moc"
+#include "UpdateKCM.moc"

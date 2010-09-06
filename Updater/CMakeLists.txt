@@ -5,12 +5,12 @@ set(kpk_update_SRCS
     KpkHistory.cpp
     KpkTransactionFilterModel.cpp
     KpkCheckableHeader.cpp
-    KcmKpkUpdate.cpp
+    UpdateKCM.cpp
 )
 kde4_add_ui_files(kpk_update_SRCS
     KpkUpdateDetails.ui
     KpkHistory.ui
-    KcmKpkUpdate.ui
+    UpdateKCM.ui
 )
 
 kde4_add_plugin(kcm_kpk_update ${kpk_update_SRCS})

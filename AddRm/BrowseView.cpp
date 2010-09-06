@@ -63,8 +63,8 @@ BrowseView::BrowseView(QWidget *parent)
     m_packageView->header()->setDefaultAlignment(Qt::AlignCenter);
 
 
-    QGraphicsScene *scene = new QGraphicsScene(graphicsView);
-    m_proxyWidget = scene->addWidget(m_packageView);
+    m_scene = new QGraphicsScene(graphicsView);
+    m_proxyWidget = m_scene->addWidget(m_packageView);
     KpkDelegate *delegate = new KpkDelegate(m_packageView);
     delegate->setViewport(graphicsView->viewport());
     m_packageView->setItemDelegate(delegate);
@@ -93,7 +93,7 @@ BrowseView::BrowseView(QWidget *parent)
 
 // QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
 //     m_proxyWidget->setGraphicsEffect(blurEffect);
-    graphicsView->setScene(scene);
+    graphicsView->setScene(m_scene);
 
 
 //     graphicsView->fitInView(m_proxyWidget, Qt::KeepAspectRatio);
@@ -113,9 +113,10 @@ KpkPackageModel* BrowseView::model() const
     return m_model;
 }
 
-void BrowseView::showExtendItem(const QModelIndex &)
+void BrowseView::showExtendItem(const QModelIndex &index)
 {
     kDebug() << "foo;";
+    m_packageView->setMouseTracking(false);
     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
     blurEffect->setBlurRadius(0);
     QPropertyAnimation *animation = new QPropertyAnimation(blurEffect, "blurRadius");
@@ -126,6 +127,22 @@ void BrowseView::showExtendItem(const QModelIndex &)
 
     animation->start();
     m_proxyWidget->setGraphicsEffect(blurEffect);
+
+    QGraphicsRectItem *itemBox = m_scene->addRect(QRectF(0, 0, 400, 800));
+    QGraphicsTextItem *itemText = new QGraphicsTextItem(index.data(KpkPackageModel::SummaryRole).toString(), itemBox);
+    QGraphicsItemGroup *group = m_scene->createItemGroup(QList<QGraphicsItem *>() << itemBox << itemText);
+    group->setPos(20, 20);
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+    QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
+    shadow->setColor(QColor(Qt::blue));
+    shadow->setBlurRadius(10);
+    shadow->setOffset(2);
+    shadow2->setColor(QColor(Qt::blue));
+    shadow2->setBlurRadius(15);
+    shadow2->setOffset(2);
+    itemText->setGraphicsEffect(shadow);
+    itemText->setTextWidth(350);
+    itemBox->setGraphicsEffect(shadow2);
 }
 
 void BrowseView::showInstalledPanel(bool visible)

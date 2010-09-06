@@ -87,6 +87,7 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
     autoCB->addItem(i18nc("None updates will be automatically installed", "None"),          KpkEnum::None);
 
     connect(autoConfirmCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
+    connect(appLauncherCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(notifyUpdatesCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(intervalCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
     connect(autoCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
@@ -112,6 +113,7 @@ void SettingsKCM::checkChanges()
     KConfig config("KPackageKit");
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
+    KConfigGroup transaction(&config, "Transaction");
     KConfigGroup notifyGroup(&config, "Notify");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     if (notifyUpdatesCB->checkState() !=
@@ -125,7 +127,9 @@ void SettingsKCM::checkChanges()
         ||
         ((m_roles & Enum::RoleGetRepoList) ? m_originModel->changed() : false)
         ||
-        autoConfirmCB->isChecked() != !requirementsDialog.readEntry("autoConfirm", false)) {
+        autoConfirmCB->isChecked() != !requirementsDialog.readEntry("autoConfirm", false)
+        ||
+        appLauncherCB->isChecked() != transaction.readEntry("ShowApplicationLauncher", true)) {
         emit(changed(true));
     } else {
         emit(changed(false));
@@ -144,6 +148,9 @@ void SettingsKCM::load()
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     autoConfirmCB->setChecked(!requirementsDialog.readEntry("autoConfirm", false));
+
+    KConfigGroup transaction(&config, "Transaction");
+    appLauncherCB->setChecked(transaction.readEntry("ShowApplicationLauncher", true));
 
     KConfigGroup notifyGroup(&config, "Notify");
     notifyUpdatesCB->setCheckState(static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates",
@@ -182,6 +189,9 @@ void SettingsKCM::save()
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     requirementsDialog.writeEntry("autoConfirm", !autoConfirmCB->isChecked());
 
+    KConfigGroup transaction(&config, "Transaction");
+    transaction.writeEntry("ShowApplicationLauncher", appLauncherCB->isChecked());
+
     KConfigGroup notifyGroup(&config, "Notify");
     // not used anymore
     notifyGroup.deleteEntry("notifyLongTasks");
@@ -204,6 +214,7 @@ void SettingsKCM::save()
 void SettingsKCM::defaults()
 {
     autoConfirmCB->setChecked(true);
+    appLauncherCB->setChecked(true);
     notifyUpdatesCB->setCheckState(Qt::Checked);
     intervalCB->setCurrentIndex(intervalCB->findData(KpkEnum::TimeIntervalDefault));
     autoCB->setCurrentIndex(autoCB->findData(KpkEnum::AutoUpdateDefault) );

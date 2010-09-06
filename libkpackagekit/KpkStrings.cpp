@@ -796,7 +796,9 @@ QString KpkStrings::info(Enum::Info state)
 QString KpkStrings::packageQuantity(bool updates, int packages, int selected)
 {
     if (updates) {
-        if (packages == selected) {
+        if (packages == 0) {
+            return i18n("No Updates Available");
+        } else if (packages == selected) {
             return i18ncp("Some updates were selected on the view",
                           "1 Update Selected",
                           "%1 Updates Selected", packages);
@@ -811,6 +813,9 @@ QString KpkStrings::packageQuantity(bool updates, int packages, int selected)
                          selected);
         }
     } else {
+        if (packages == 0) {
+            return i18n("No Packages");
+        }
         return i18np("1 Package", "%1 Packages", packages);
     }
 }

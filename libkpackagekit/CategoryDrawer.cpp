@@ -26,6 +26,7 @@
 #include <QStyleOption>
 
 CategoryDrawer::CategoryDrawer()
+ : KCategoryDrawerV3(0)
 {
     setLeftMargin( 7 );
     setRightMargin( 7 );

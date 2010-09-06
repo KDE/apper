@@ -60,9 +60,10 @@ private:
     bool showPageHeader() const;
     void updateSceneEvent();
 
-    KpkPackageModel *m_model;
+    KpkPackageModel       *m_model;
     KpkSearchableTreeView *m_packageView;
-    QGraphicsProxyWidget *m_proxyWidget;
+    QGraphicsProxyWidget  *m_proxyWidget;
+    QGraphicsScene        *m_scene;
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);

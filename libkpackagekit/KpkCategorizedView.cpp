@@ -67,5 +67,3 @@ void KpkCategorizedView::keyPressEvent(QKeyEvent *event)
     KCategorizedView::keyPressEvent(event);
     proxy->sourceModel()->setProperty("kbd", false);
 }
-
-#include "KpkCategorizedView.moc"

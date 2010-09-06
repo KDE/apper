@@ -42,7 +42,7 @@
 #include "KpkLicenseAgreement.h"
 #include "KpkIcons.h"
 #include "ProgressView.h"
-// #include "ApplicationLauncher.h"
+#include "ApplicationLauncher.h"
 #include "KpkSimulateModel.h"
 
 #include "ui_KpkTransaction.h"
@@ -575,8 +575,8 @@ void KpkTransaction::transactionFinished(PackageKit::Enum::Exit status)
             setExitStatus(Success);
         } else if (trans->role() == Enum::RoleGetFiles) {
             if (!d->applications.isEmpty()) {
-//                 ApplicationLauncher *launcher = new ApplicationLauncher(d->applications, this);
-//                 launcher->exec();
+                ApplicationLauncher *launcher = new ApplicationLauncher(d->applications, this);
+                launcher->exec();
             }
             setExitStatus(Success);
         } else {

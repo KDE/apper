@@ -7,7 +7,7 @@ Icon=preferences-other
 X-KDE-Library=kcm_kpk_settings
 X-KDE-ParentApp=kcontrol
 X-KDE-ServiceTypes=KCModule,KCModuleInit
-X-KDE-System-Settings-Parent-Category=add-and-remove-software
+X-KDE-System-Settings-Parent-Category=manage-software
 X-KDE-Weight=3
 
 Name=Settings
@@ -42,7 +42,7 @@ Name[tr]=Ayarlar
 Name[uk]=Параметри
 Name[x-test]=xxSettingsxx
 
-Comment=KPackageKit Settings
+Comment=Software Management Settings
 Comment[bg]=Настройки на KPackageKit
 Comment[ca]=Arranjaments del KpackageKit
 Comment[ca@valencia]=Arranjaments del KpackageKit

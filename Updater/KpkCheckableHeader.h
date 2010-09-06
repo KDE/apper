@@ -33,7 +33,7 @@ public:
 
 public slots:
     void setCheckState(Qt::CheckState state);
-    void setCheckBoxEnabled(bool enabled);
+    void setCheckBoxVisible(bool visible);
 
 signals:
     void toggled(bool checked);
@@ -48,7 +48,7 @@ private:
     bool insideCheckBox(const QRect &rect, const QPoint &pos) const;
 
     Qt::CheckState m_state;
-    bool m_enabled;
+    bool m_visible;
 };
 
 #endif

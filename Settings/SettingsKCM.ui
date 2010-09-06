@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>468</width>
+    <width>473</width>
     <height>293</height>
    </rect>
   </property>
@@ -114,6 +114,13 @@
        <widget class="QCheckBox" name="autoConfirmCB">
         <property name="text">
          <string>Show confirmation dialog when installing or updating packages</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="appLauncherCB">
+        <property name="text">
+         <string>Show application launcher after installing new applications</string>
         </property>
        </widget>
       </item>

@@ -31,7 +31,7 @@
 KpkCheckableHeader::KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent)
  : QHeaderView(orientation, parent),
    m_state(Qt::Unchecked),
-   m_enabled(true)
+   m_visible(true)
 {
 }
 
@@ -41,49 +41,41 @@ void KpkCheckableHeader::paintSection(QPainter *painter, const QRect &rect, int 
     painter->save();
     QHeaderView::paintSection(painter, rect, logicalIndex);
     painter->restore();
-    if (logicalIndex == 0) {
-      QStyleOptionButton option;
-      option.state = QStyle::State_None;
-      option.rect = rect;
-      if (QApplication::isRightToLeft()) {
-          option.rect.setRight(rect.right() - UNIVERSAL_PADDING);
-      } else {
-          option.rect.setLeft(rect.left() + UNIVERSAL_PADDING);
-      }
-      option.rect.setLeft(rect.left() + UNIVERSAL_PADDING);
-      switch (m_state) {
+    if (logicalIndex == 0 && m_visible) {
+        QStyleOptionButton option;
+        option.state = QStyle::State_None;
+        option.rect = rect;
+        if (QApplication::isRightToLeft()) {
+            option.rect.setRight(rect.right() - UNIVERSAL_PADDING);
+        } else {
+            option.rect.setLeft(rect.left() + UNIVERSAL_PADDING);
+        }
+        option.rect.setLeft(rect.left() + UNIVERSAL_PADDING);
+        switch (m_state) {
         case Qt::Unchecked :
-          option.state |= QStyle::State_Off;
-          break;
+            option.state |= QStyle::State_Off;
+            break;
         case Qt::PartiallyChecked :
-          option.state |= QStyle::State_NoChange;
-          break;
+            option.state |= QStyle::State_NoChange;
+            break;
         case Qt::Checked :
-          option.state |= QStyle::State_On;
-          break;
-      }
+            option.state |= QStyle::State_On;
+            break;
+        }
 
-      // Drawn it disable is enabled is false
-      if (!m_enabled) {
-//           option.state &= ~QStyle::State_Enabled;
-//           option.state |= QStyle::State_Sunken;
-          option.state |= QStyle::State_Sunken;
-      } else{
-          QPoint pos = mapFromGlobal(QCursor::pos());
-          QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
+        // Get the cursor position to check if it has focus
+        QPoint pos = mapFromGlobal(QCursor::pos());
+        QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
 
-          if (insideCheckBox(rect, pos)) {
-              option.state |= QStyle::State_HasFocus;
-          }
-      }
-//       bool fooo = (option.state & QStyle::State_Enabled);
-//       kDebug() << fooo;
+        if (insideCheckBox(rect, pos)) {
+            option.state |= QStyle::State_HasFocus;
+        }
 
-      option.rect = option.rect;
-      // draw item data as CheckBox
-      painter->save();
-      style->drawControl(QStyle::CE_CheckBox, &option, painter);
-      painter->restore();
+        option.rect = option.rect;
+        // draw item data as CheckBox
+        painter->save();
+        style->drawControl(QStyle::CE_CheckBox, &option, painter);
+        painter->restore();
     }
 }
 
@@ -127,7 +119,7 @@ void KpkCheckableHeader::leaveEvent(QEvent *event)
 
 void KpkCheckableHeader::mousePressEvent(QMouseEvent *event)
 {
-    if (!m_enabled) {
+    if (!m_visible) {
         return;
     }
 
@@ -157,9 +149,9 @@ void KpkCheckableHeader::setCheckState(Qt::CheckState state)
     m_state = state;
 }
 
-void KpkCheckableHeader::setCheckBoxEnabled(bool enabled)
+void KpkCheckableHeader::setCheckBoxVisible(bool visible)
 {
-    m_enabled = enabled;
+    m_visible = visible;
     headerDataChanged(Qt::Horizontal, 0, 0);
 }
 

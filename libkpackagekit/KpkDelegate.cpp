@@ -344,6 +344,11 @@ bool KpkDelegate::editorEvent(QEvent *event,
     if (event->type() == QEvent::MouseButtonRelease) {
         QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
         QPoint point = m_viewport->mapFromGlobal(QCursor::pos());
+        QTreeView *tree = qobject_cast<QTreeView*>(parent());
+        if (tree) {
+            point.ry() -= tree->header()->size().height();
+        }
+
         bool leftToRight = QApplication::isLeftToRight();
         QStyleOptionButton optBt;
         optBt.rect = option.rect;
@@ -357,7 +362,7 @@ bool KpkDelegate::editorEvent(QEvent *event,
         optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
         optBt.rect.setSize(m_buttonSize);
 
-//         kDebug() << point << option.rect.left() << option;
+        kDebug() << point << option.rect.left() << option << insideButton(optBt.rect, point);
 //         kDebug() << view->visualRect(index);
         if (insideButton(optBt.rect, point)) {
             return model->setData(index,

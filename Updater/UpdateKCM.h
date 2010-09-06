@@ -18,12 +18,12 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KCM_KPK_UPDATE_H
-#define KCM_KPK_UPDATE_H
+#ifndef UPDATE_KCM_H
+#define UPDATE_KCM_H
 
 #include <KCModule>
 
-#include "ui_KcmKpkUpdate.h"
+#include "ui_UpdateKCM.h"
 
 #include <KpkTransaction.h>
 
@@ -33,11 +33,11 @@ class KpkPackageModel;
 class KpkDelegate;
 class KpkCheckableHeader;
 class KProgressDialog;
-class KcmKpkUpdate : public KCModule, Ui::KcmKpkUpdate
+class UpdateKCM : public KCModule, Ui::UpdateKCM
 {
 Q_OBJECT
 public:
-    KcmKpkUpdate(QWidget *&parent, const QVariantList &args);
+    UpdateKCM(QWidget *&parent, const QVariantList &args);
 
 signals:
     void changed(bool);

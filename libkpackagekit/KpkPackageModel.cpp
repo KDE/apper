@@ -38,8 +38,10 @@ using namespace PackageKit;
 KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
   m_packageView(packageView),
-  m_checkable(false),
-  m_appInstall(0)
+  m_checkable(false)
+#ifdef HAVE_APPINSTALL
+  , m_appInstall(0)
+#endif //HAVE_APPINSTALL
 {
 }
 
@@ -70,6 +72,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         kDebug() << list.at(APP_ICON);
         iPackage.version     = package->version();
         iPackage.arch        = package->arch();
+        iPackage.id          = package->id();
         iPackage.info        = package->info();
 
         // check to see if the list of info has any package
@@ -87,6 +90,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         iPackage.summary     = package->summary();
         iPackage.version     = package->version();
         iPackage.arch        = package->arch();
+        iPackage.id          = package->id();
         iPackage.info        = package->info();
 
         beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());

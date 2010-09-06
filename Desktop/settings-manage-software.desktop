@@ -3,7 +3,7 @@ Type=Service
 Icon=applications-other
 
 X-KDE-ServiceTypes=SystemSettingsCategory
-X-KDE-System-Settings-Category=add-and-remove-software
+X-KDE-System-Settings-Category=manage-software
 X-KDE-System-Settings-Parent-Category=computer-administration
 X-KDE-System-Settings-Parent-Category-V2=system-administration
 
@@ -37,7 +37,7 @@ Name[tr]=Yazılım Yönetimi
 Name[uk]=Керування програмами
 Name[x-test]=xxSoftware Managementxx
 
-Comment=Add and Remove Software
+Comment=Get, Remove and Update Software
 Comment[bg]=Добавяне и премахване на програми
 Comment[ca]=Afegeix i elimina programes
 Comment[ca@valencia]=Afig i elimina programes

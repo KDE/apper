@@ -7,7 +7,7 @@ Icon=system-software-update
 X-KDE-Library=kcm_kpk_update
 X-KDE-ParentApp=kcontrol
 X-KDE-ServiceTypes=KCModule,KCModuleInit
-X-KDE-System-Settings-Parent-Category=add-and-remove-software
+X-KDE-System-Settings-Parent-Category=manage-software
 X-KDE-Weight=2
 
 Name=Software Updates
@@ -40,7 +40,7 @@ Name[tr]=Yazılım Güncellemeleri
 Name[uk]=Оновлення програм
 Name[x-test]=xxSoftware Updatesxx
 
-Comment=Check and Install Updates
+Comment=Review and Update Software
 Comment[bg]=Проверка и инсталиране на обновления
 Comment[ca]=Comprova i instal·la actualitzacions
 Comment[ca@valencia]=Comprova i instal·la actualitzacions

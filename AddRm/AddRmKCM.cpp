@@ -136,8 +136,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     m_browseView = new BrowseView(this);
-    connect(m_browseView, SIGNAL(showExtendItem(const QModelIndex &)),
-            this, SLOT(showExtendItem(const QModelIndex &)));
+//     connect(m_browseView, SIGNAL(showExtendItem(const QModelIndex &)),
+//             this, SLOT(showExtendItem(const QModelIndex &)));
 
     // Create a stacked layout so only homeView or packageView are displayed
     m_viewLayout = new QStackedLayout(stackedWidget);
