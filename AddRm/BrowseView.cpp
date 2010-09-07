@@ -68,6 +68,7 @@ BrowseView::BrowseView(QWidget *parent)
 //     m_scene = new QGraphicsScene(graphicsView);
 //     m_proxyWidget = m_scene->addWidget(packageView);
     KpkDelegate *delegate = new KpkDelegate(packageView);
+    delegate->setExtendPixmapWidth(0);
 //     delegate->setViewport(graphicsView->viewport());
 //     delegate->setContractPixmap(SmallIcon("help-about"));
     packageView->setItemDelegate(delegate);
@@ -101,6 +102,7 @@ BrowseView::BrowseView(QWidget *parent)
 
 
 //     graphicsView->fitInView(m_proxyWidget, Qt::KeepAspectRatio);
+    packageDetails->hide();
 }
 
 BrowseView::~BrowseView()
@@ -117,50 +119,60 @@ KpkPackageModel* BrowseView::model() const
     return m_model;
 }
 
-void BrowseView::showExtendItem(const QModelIndex &index)
+void BrowseView::on_packageView_activated(const QModelIndex &index)
 {
-    kDebug() << "foo;";
-    packageView->setMouseTracking(false);
-    QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-    blurEffect->setBlurRadius(0);
-     packageView->viewport()->setGraphicsEffect(blurEffect);
-
-    QPropertyAnimation *animation = new QPropertyAnimation(blurEffect, "blurRadius");
-    animation->setDuration(1000);
-    animation->setStartValue(qreal(0.5));
-    animation->setEndValue(qreal(10));
-    animation->setEasingCurve(QEasingCurve::OutQuart);
-    animation->start();
-
-
-    KpkPackageDetails *details = new KpkPackageDetails(m_model->package(index), index, Client::instance()->actions());
-    packageView->setLayout(new QGridLayout());
-    packageView->layout()->addWidget(details);
-// //     QTabWidget *tab = new QTabWidget;
-// //     tab->addTab(details, "details");
-    details->setAttribute(Qt::WA_NoSystemBackground, true);
-// //     QGraphicsProxyWidget *proxyWidget = m_scene->addWidget(details);
-// //     proxyWidget->setAttribute(Qt::WA_NoSystemBackground, true);
-// //     tab->setAutoFillBackground(false);
-// //     proxyWidget->setAutoFillBackground(false);
-// //     proxyWidget->setParent(m_proxyWidget);
+//     packageDetails->show();
+//     kDebug() << "foo;";
+//     packageView->setMouseTracking(false);
+//     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
+//     blurEffect->setBlurRadius(0);
+//      packageView->viewport()->setGraphicsEffect(blurEffect);
 // 
-// //     QGraphicsRectItem *itemBox = m_scene->addRect(QRectF(0, 0, 400, 800));
-// //     QGraphicsTextItem *itemText = new QGraphicsTextItem(index.data(KpkPackageModel::SummaryRole).toString(), itemBox);
-// //     QGraphicsItemGroup *group = m_scene->createItemGroup(QList<QGraphicsItem *>() << itemBox << itemText);
-// //     group->setPos(20, 20);
-    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(details);
-// //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
-// //     shadow->setColor(QColor(Qt::blue));
-    shadow->setBlurRadius(15);
-    shadow->setOffset(2);
-// //     shadow2->setColor(QColor(Qt::blue));
-// //     shadow2->setBlurRadius(15);
-// //     shadow2->setOffset(2);
-    details->setGraphicsEffect(shadow);
-//     details->show();
-// //     itemText->setTextWidth(350);
-// //     itemBox->setGraphicsEffect(shadow2);
+//     QPropertyAnimation *animation = new QPropertyAnimation(blurEffect, "blurRadius");
+//     animation->setDuration(1000);
+//     animation->setStartValue(qreal(0.5));
+//     animation->setEndValue(qreal(10));
+//     animation->setEasingCurve(QEasingCurve::OutQuart);
+//     animation->start();
+
+    packageDetails->setPackage(m_model->package(index), index);
+//  QPropertyAnimation *animation = new QPropertyAnimation(packageDetails, "geometry");
+//  animation->setDuration(10000);
+//  animation->setStartValue(QRect(0, 0, 100, 30));
+//  animation->setEndValue(QRect(250, 250, 100, 30));
+// 
+//  animation->start();
+     packageDetails->show();
+
+
+//     KpkPackageDetails *details = new KpkPackageDetails(m_model->package(index), index, Client::instance()->actions());
+//     packageView->setLayout(new QGridLayout());
+//     packageView->layout()->addWidget(details);
+// // //     QTabWidget *tab = new QTabWidget;
+// // //     tab->addTab(details, "details");
+//     details->setAttribute(Qt::WA_NoSystemBackground, true);
+// // //     QGraphicsProxyWidget *proxyWidget = m_scene->addWidget(details);
+// // //     proxyWidget->setAttribute(Qt::WA_NoSystemBackground, true);
+// // //     tab->setAutoFillBackground(false);
+// // //     proxyWidget->setAutoFillBackground(false);
+// // //     proxyWidget->setParent(m_proxyWidget);
+// // 
+// // //     QGraphicsRectItem *itemBox = m_scene->addRect(QRectF(0, 0, 400, 800));
+// // //     QGraphicsTextItem *itemText = new QGraphicsTextItem(index.data(KpkPackageModel::SummaryRole).toString(), itemBox);
+// // //     QGraphicsItemGroup *group = m_scene->createItemGroup(QList<QGraphicsItem *>() << itemBox << itemText);
+// // //     group->setPos(20, 20);
+//     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(details);
+// // //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
+// // //     shadow->setColor(QColor(Qt::blue));
+//     shadow->setBlurRadius(15);
+//     shadow->setOffset(2);
+// // //     shadow2->setColor(QColor(Qt::blue));
+// // //     shadow2->setBlurRadius(15);
+// // //     shadow2->setOffset(2);
+//     details->setGraphicsEffect(shadow);
+// //     details->show();
+// // //     itemText->setTextWidth(350);
+// // //     itemBox->setGraphicsEffect(shadow2);
 }
 
 void BrowseView::showInstalledPanel(bool visible)

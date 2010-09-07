@@ -45,7 +45,7 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     m_removeString(i18n("Remove")),
     m_undoIcon("edit-undo"),
     m_undoString(i18n("Deselect")),
-    m_checkedIcon("dialog-ok")
+    m_checkedIcon("task-complete")
 {
     // maybe rename or copy it to package-available
     if (QApplication::isRightToLeft()) {
@@ -53,7 +53,6 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     } else {
         setExtendPixmap(SmallIcon("arrow-right"));
     }
-    setExtendPixmap(SmallIcon("help-about"));
     setContractPixmap(SmallIcon("arrow-down"));
     // store the size of the extend pixmap to know how much we should move
     m_extendPixmapWidth = SmallIcon("arrow-right").size().width();
@@ -138,7 +137,9 @@ void KpkDelegate::paint(QPainter *painter,
         } else {
             leftCount -= optBt.rect.width();
         }
-    } else {
+    } else  if ((option.state & QStyle::State_MouseOver) ||
+                (option.state & QStyle::State_Selected)
+    ) {
         if (leftToRight) {
             optBt.rect.setLeft(left + width - (m_buttonSize.width() + UNIVERSAL_PADDING));
             width -= m_buttonSize.width() + UNIVERSAL_PADDING;
@@ -160,7 +161,6 @@ void KpkDelegate::paint(QPainter *painter,
         }
         optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
         optBt.iconSize = m_buttonIconSize;
-        optBt.features = QStyleOptionButton::Flat;
         if (pkgChecked) {
             optBt.text = m_undoString;
             optBt.icon = m_undoIcon;
@@ -168,7 +168,12 @@ void KpkDelegate::paint(QPainter *painter,
             optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
             optBt.text = pkgInstalled ? m_removeString : m_installString;
         }
+        qreal opa = painter->opacity();
+        if ((option.state & QStyle::State_MouseOver) && !(option.state & QStyle::State_Selected)) {
+            painter->setOpacity(opa / 2);
+        }
         style->drawControl(QStyle::CE_PushButton, &optBt, painter);
+        painter->setOpacity(opa);
     }
 
 // QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());

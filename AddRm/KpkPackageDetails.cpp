@@ -30,83 +30,120 @@
 #include <QTextDocument>
 #include <KPixmapSequence>
 
+#include <KIO/Job>
+
+#include <QGraphicsDropShadowEffect>
+
 Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 
-KpkPackageDetails::KpkPackageDetails(const QSharedPointer<PackageKit::Package> &package,
-                                     const QModelIndex &index,
-                                     const Enum::Roles &roles,
-                                     QWidget *parent)
+KpkPackageDetails::KpkPackageDetails(QWidget *parent)
  : QWidget(parent),
-   m_package(package),
    m_busySeqDetails(0),
    m_busySeqFiles(0),
    m_busySeqDepends(0),
    m_busySeqRequires(0)
 {
     setupUi(this);
-    stackedWidget->hide();
+//     stackedWidget->hide();
 
+    Enum::Roles roles = Client::instance()->actions();
     // Create a stacked layout to put the views in
-    m_viewLayout = new QStackedLayout(stackedWidget);
+//     m_viewLayout = new QStackedLayout(stackedWidget);
 
     // we check to see which roles are supported by the backend
     // if so we ask for information and create the containers
-    if (roles & Enum::RoleGetDetails) {
-        descriptionKTB = new KTextBrowser(this);
-        m_viewLayout->addWidget(descriptionKTB);
-        descriptionTB->click();
-    } else {
-        descriptionTB->setEnabled(false);
-    }
+//     if (roles & Enum::RoleGetDetails) {
+//         descriptionKTB = new KTextBrowser(this);
+//         m_viewLayout->addWidget(descriptionKTB);
+// //         descriptionTB->click();
+//     } else {
+//         descriptionTB->setEnabled(false);
+//     }
+// 
+//     if (roles & Enum::RoleGetFiles) {
+//         filesPTE = new QPlainTextEdit(this);
+//         m_viewLayout->addWidget(filesPTE);
+//         if (!m_viewLayout->count()) {
+// //             fileListTB->click();
+//         }
+//     } else {
+//         fileListTB->setEnabled(false);
+//     }
+// 
+//     if (roles & Enum::RoleGetDepends) {
+//         dependsOnLV = new QListView(this);
+//         dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
+//         m_viewLayout->addWidget(dependsOnLV);
+//         if (!m_viewLayout->count()) {
+// //             dependsOnTB->click();
+//         }
+//     } else {
+//         dependsOnTB->setEnabled(false);
+//     }
+// 
+//     if (roles & Enum::RoleGetRequires) {
+//         requiredByLV = new QListView(this);
+//         requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
+//         m_viewLayout->addWidget(requiredByLV);
+//         if (!m_viewLayout->count()) {
+// //             requiredByTB->click();
+//         }
+//     } else {
+//         requiredByTB->setEnabled(false);
+//     }
 
-    if (roles & Enum::RoleGetFiles) {
-        filesPTE = new QPlainTextEdit(this);
-        m_viewLayout->addWidget(filesPTE);
-        if (!m_viewLayout->count()) {
-            fileListTB->click();
-        }
-    } else {
-        fileListTB->setEnabled(false);
-    }
 
-    if (roles & Enum::RoleGetDepends) {
-        dependsOnLV = new QListView(this);
-        dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
-        m_viewLayout->addWidget(dependsOnLV);
-        if (!m_viewLayout->count()) {
-            dependsOnTB->click();
-        }
-    } else {
-        dependsOnTB->setEnabled(false);
-    }
-
-    if (roles & Enum::RoleGetRequires) {
-        requiredByLV = new QListView(this);
-        requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
-        m_viewLayout->addWidget(requiredByLV);
-        if (!m_viewLayout->count()) {
-            requiredByTB->click();
-        }
-    } else {
-        requiredByTB->setEnabled(false);
-    }
-
-    nameL->setText(index.data(KpkPackageModel::NameRole).toString());
-    summaryL->setText(index.data(KpkPackageModel::SummaryRole).toString());
-    QString pkgIconPath   = index.data(KpkPackageModel::IconPathRole).toString();
-    
-    iconL->setPixmap(KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64));
-
-    installPB->setIcon(KIcon(KIcon("go-down")));
-
-    descriptionL->hide();
-    licenseL->hide();
-    sizeL->hide();
-    homepageL->hide();
+        QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(screenshotL);
+// //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
+// //     shadow->setColor(QColor(Qt::blue));
+    shadow->setBlurRadius(15);
+    shadow->setOffset(2);
+// //     shadow2->setColor(QColor(Qt::blue));
+// //     shadow2->setBlurRadius(15);
+// //     shadow2->setOffset(2);
+    screenshotL->setGraphicsEffect(shadow);
 }
 
 KpkPackageDetails::~KpkPackageDetails()
 {
+}
+
+void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &package,
+                                   const QModelIndex &index)
+{
+    m_package = package;
+
+    QString pkgName = index.data(KpkPackageModel::IdRole).toString().split(';')[0];
+//     summaryL->setText(index.data(KpkPackageModel::SummaryRole).toString());
+    QString pkgIconPath   = index.data(KpkPackageModel::IconPathRole).toString();
+
+    iconL->setPixmap(KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64));
+
+//     installPB->setIcon(KIcon(KIcon("go-down")));
+
+    descriptionL->hide();
+//     licenseL->hide();
+    sizeL->hide();
+    homepageL->hide();
+//     descriptionTB->click();
+    on_descriptionTB_clicked();
+
+    m_tempFile = new KTemporaryFile;
+    m_tempFile->setPrefix("appget");
+    m_tempFile->setSuffix(".png");
+    m_tempFile->open();
+
+    KIO::FileCopyJob *job = KIO::file_copy("http://screenshots.debian.net/thumbnail/" + pkgName,
+                               m_tempFile->fileName(), -1, KIO::Overwrite | KIO::HideProgressInfo);
+    connect(job, SIGNAL(result(KJob *)),
+            this, SLOT(resultJob(KJob *)));
+}
+
+void KpkPackageDetails::resultJob(KJob *job)
+{
+    if (!job->error()) {
+        screenshotL->setPixmap(QPixmap(m_tempFile->fileName()));
+    }
 }
 
 void KpkPackageDetails::setupSequence(Transaction *transaction,
@@ -146,8 +183,8 @@ void KpkPackageDetails::description(QSharedPointer<PackageKit::Package> p)
     }
 
     if (!details->license().isEmpty() && details->license() != "unknown") {
-        licenseL->setText(details->license());
-        licenseL->show();
+//         licenseL->setText(details->license());
+//         licenseL->show();
     }
 
     if (details->group() != Enum::UnknownGroup) {
@@ -174,7 +211,7 @@ void KpkPackageDetails::finished(PackageKit::Enum::Exit status)
 
 void KpkPackageDetails::on_descriptionTB_clicked()
 {
-    m_viewLayout->setCurrentWidget(descriptionKTB);
+//     m_viewLayout->setCurrentWidget(descriptionKTB);
     if (!m_busySeqDetails) {
         if (m_package->hasDetails()) {
             description(m_package);
@@ -186,7 +223,7 @@ void KpkPackageDetails::on_descriptionTB_clicked()
         if (t->error()) {
             KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-            setupSequence(t, &m_busySeqDetails, descriptionKTB->viewport());
+//             setupSequence(t, &m_busySeqDetails, descriptionKTB->viewport());
             connect(t, SIGNAL(details(QSharedPointer<PackageKit::Package>)),
                     this, SLOT(description(QSharedPointer<PackageKit::Package>)));
         }

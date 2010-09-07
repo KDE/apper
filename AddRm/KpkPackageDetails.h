@@ -25,6 +25,9 @@
 
 #include <KTextBrowser>
 #include <KPixmapSequenceOverlayPainter>
+#include <KTemporaryFile>
+#include <KJob>
+
 #include <QWidget>
 #include <QPlainTextEdit>
 #include <QListView>
@@ -39,11 +42,11 @@ class KpkPackageDetails : public QWidget, Ui::KpkPackageDetails
 {
 Q_OBJECT
 public:
-    KpkPackageDetails(const QSharedPointer<PackageKit::Package> &package,
-                      const QModelIndex &index,
-                      const Enum::Roles &roles,
-                      QWidget *parent = 0);
+    KpkPackageDetails(QWidget *parent = 0);
     ~KpkPackageDetails();
+
+    void setPackage(const QSharedPointer<PackageKit::Package> &package,
+                    const QModelIndex &index);
 
 private slots:
     void description(QSharedPointer<PackageKit::Package> package);
@@ -56,8 +59,11 @@ private slots:
     void on_dependsOnTB_clicked();
     void on_requiredByTB_clicked();
 
+    void resultJob(KJob *);
+
 private:
     QSharedPointer<PackageKit::Package> m_package;
+    KTemporaryFile *m_tempFile;
 
     KpkSimplePackageModel *m_pkg_model_dep;
     KpkSimplePackageModel *m_pkg_model_req;

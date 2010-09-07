@@ -49,7 +49,7 @@ public slots:
     void enableExportInstalledPB();
 
 private slots:
-    void showExtendItem(const QModelIndex &);
+    void on_packageView_activated(const QModelIndex &);
     void on_categoryMvLeft_clicked();
     void on_categoryMvRight_clicked();
 
