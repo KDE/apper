@@ -486,7 +486,7 @@ QPixmap pixmap(option.rect.size());
 
 int ApplicationsDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
 {
-    kDebug() << (m_buttonSize.height() + 2 * UNIVERSAL_PADDING);
+//     kDebug() << (m_buttonSize.height() + 2 * UNIVERSAL_PADDING);
     return m_buttonSize.height() + 2 * UNIVERSAL_PADDING;
     // Painting main column
     QStyleOptionViewItem local_option_title(option);

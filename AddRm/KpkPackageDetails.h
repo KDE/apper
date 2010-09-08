@@ -48,8 +48,10 @@ public:
     void setPackage(const QSharedPointer<PackageKit::Package> &package,
                     const QModelIndex &index);
 
+    void setDisplayDetails(bool display);
+
 private slots:
-    void description(QSharedPointer<PackageKit::Package> package);
+    void description(const QSharedPointer<PackageKit::Package> &package);
     void files(QSharedPointer<PackageKit::Package> package, const QStringList &files);
 
     void finished(PackageKit::Enum::Exit status);
@@ -60,6 +62,10 @@ private slots:
     void on_requiredByTB_clicked();
 
     void resultJob(KJob *);
+
+    void display();
+    void fadeOut();
+    void setupDescription();
 
 private:
     QSharedPointer<PackageKit::Package> m_package;
@@ -73,6 +79,17 @@ private:
     QPlainTextEdit *filesPTE;
     QListView      *dependsOnLV;
     QListView      *requiredByLV;
+    QPropertyAnimation *m_fadeDetails;
+    bool m_display;
+
+    // We need a copy of prety much every thing
+    // we have, so that we update only when we are
+    // totaly trasnparent this way the user
+    // does not see the ui flicker
+    bool m_hasDetails;
+    Transaction *m_transaction;
+    QString m_currentText;
+    QPixmap m_currentIcon;
 
     KPixmapSequenceOverlayPainter *m_busySeqDetails;
     KPixmapSequenceOverlayPainter *m_busySeqFiles;

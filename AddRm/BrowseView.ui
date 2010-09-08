@@ -215,7 +215,7 @@
   <customwidget>
    <class>KpkSearchableTreeView</class>
    <extends>QTreeView</extends>
-   <header>KpkSearchableTreeView.h</header>
+   <header location="global">KpkSearchableTreeView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

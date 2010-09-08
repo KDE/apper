@@ -54,6 +54,7 @@ BrowseView::BrowseView(QWidget *parent)
 //     packageView->setFrameStyle(QFrame::NoFrame);
 //     packageView->setVerticalScrollBar(verticalScrollBar);
 
+    m_details = new KpkPackageDetails;
 
     m_model = new KpkPackageModel(this, packageView);
     KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
@@ -116,6 +117,9 @@ BrowseView::BrowseView(QWidget *parent)
 
 BrowseView::~BrowseView()
 {
+    if (m_details) {
+        delete m_details;
+    }
 }
 
 bool BrowseView::showPageHeader() const
@@ -143,33 +147,33 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
 //     animation->setEndValue(qreal(10));
 //     animation->setEasingCurve(QEasingCurve::OutQuart);
 //     animation->start();
-m_oldDetails = m_details;
-m_details = new KpkPackageDetails;
+// m_oldDetails = m_details;
+// m_details = new KpkPackageDetails;
 m_details->setPackage(m_model->package(index), index);
 
-if (m_oldDetails && packageDetails->minimumSize().height() == 200) {
-    if (m_oldDetails->graphicsEffect()) {
-        QPropertyAnimation *anim1 = new QPropertyAnimation(m_oldDetails->graphicsEffect(), "opacity");
-        anim1->setDuration(1000);
-        anim1->setEndValue(qreal(0));
-        anim1->start();
-        connect(anim1, SIGNAL(finished()), m_oldDetails, SLOT(deleteLater()));
-        connect(anim1, SIGNAL(finished()), this, SLOT(animationFinished()));
-        return;
-    }
+if (packageDetails->minimumSize().height() == 200) {
+//     if (m_details->graphicsEffect()) {
+//         QPropertyAnimation *anim1 = new QPropertyAnimation(m_oldDetails->graphicsEffect(), "opacity");
+//         anim1->setDuration(1000);
+//         anim1->setEndValue(qreal(0));
+//         anim1->start();
+//         connect(anim1, SIGNAL(finished()), m_oldDetails, SLOT(deleteLater()));
+//         connect(anim1, SIGNAL(finished()), this, SLOT(animationFinished()));
+//         return;
+//     }
     return;
 }
 
-    m_details = new KpkPackageDetails;
-    m_details->setPackage(m_model->package(index), index);
+
+//     m_details->setPackage(m_model->package(index), index);
 
  QPropertyAnimation *anim1 = new QPropertyAnimation(packageDetails, "maximumSize");
- anim1->setDuration(1000);
+ anim1->setDuration(500);
  anim1->setEasingCurve(QEasingCurve::OutQuart);
  anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
  anim1->setEndValue(QSize(QWIDGETSIZE_MAX, 200));
   QPropertyAnimation *anim2 = new QPropertyAnimation(packageDetails, "minimumSize");
- anim2->setDuration(1000);
+ anim2->setDuration(500);
  anim2->setEasingCurve(QEasingCurve::OutQuart);
  anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
  anim2->setEndValue(QSize(QWIDGETSIZE_MAX, 200));
@@ -215,19 +219,8 @@ connect(group, SIGNAL(finished()), this, SLOT(animationFinished()));
 
 void BrowseView::animationFinished()
 {
-    if (m_oldDetails) {
-        delete m_oldDetails;
-        m_oldDetails = 0;
-    }
-    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(m_details);
-    effect->setOpacity(0);
-    m_details->setGraphicsEffect(effect);
     packageDetails->layout()->addWidget(m_details);
-     QPropertyAnimation *anim1 = new QPropertyAnimation(effect, "opacity");
- anim1->setDuration(1000);
- anim1->setStartValue(qreal(0));
- anim1->setEndValue(qreal(1));
- anim1->start();
+    m_details->setDisplayDetails(true);
 }
 
 void BrowseView::showInstalledPanel(bool visible)
