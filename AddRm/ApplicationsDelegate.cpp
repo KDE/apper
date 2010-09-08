@@ -83,12 +83,97 @@ void ApplicationsDelegate::paint(QPainter *painter,
 //             opt.rect.setLeft(24);
 // //         QString pkgName       = index.data(KpkPackageModel::NameRole).toString();
 //         }
-        
+
         QStyledItemDelegate::paint(painter, opt, index);
         return;
     } else if (index.column() == 1) {
+//         qreal opa = painter->opacity();
+//         painter->setOpacity(opa/2);
+//         QStyleOptionViewItemV4 opt(option);
+//         QStyledItemDelegate::paint(painter, opt, index);
+//         painter->setOpacity(opa);
+QPixmap pixmap(option.rect.size());
+    pixmap.fill(Qt::transparent);
+    QPainter p(&pixmap);
+    p.translate(-option.rect.topLeft());
+
+        bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
+
+
         QStyleOptionViewItemV4 opt(option);
-        QStyledItemDelegate::paint(painter, opt, index);
+        QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
+        painter->save();
+        style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
+        painter->restore();
+
+        int left = opt.rect.left();
+//         int top = opt.rect.top();
+        int width = opt.rect.width();
+
+        Enum::Info info;
+        info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+        QString pkgSummary    = index.data(KpkPackageModel::SummaryRole).toString();
+        bool    pkgInstalled  = (info == Enum::InfoInstalled ||
+                             info == Enum::InfoCollectionInstalled);
+
+        // store the original opacity
+        qreal opa = p.opacity();
+        QStyleOptionViewItem local_option_normal(option);
+        if (!pkgInstalled) {
+            p.setOpacity(opa / 2.5);
+            local_option_normal.font.setItalic(true);
+        }
+
+
+        p.setFont(local_option_normal.font);
+        p.drawText(opt.rect, Qt::AlignVCenter | Qt::AlignLeft, pkgSummary);
+//         p.drawText(leftToRight ? leftCount + iconSize + UNIVERSAL_PADDING : left - UNIVERSAL_PADDING,
+//                 top + itemHeight / 2,
+//                 textWidth - iconSize,
+//                 QFontInfo(local_option_normal.font).pixelSize() + UNIVERSAL_PADDING,
+//                 ,
+//                 pkgSummary);
+        p.setOpacity(opa);
+
+        QLinearGradient gradient;
+        // Gradient part of the background - fading of the text at the end
+        if (leftToRight) {
+            gradient = QLinearGradient(left + width - UNIVERSAL_PADDING - FADE_LENGTH,
+                                    0,
+                                    left + width - UNIVERSAL_PADDING,
+                                    0);
+            gradient.setColorAt(0, Qt::white);
+            gradient.setColorAt(1, Qt::transparent);
+        } else {
+            gradient = QLinearGradient(left + UNIVERSAL_PADDING,
+                                    0,
+                                    left + UNIVERSAL_PADDING + FADE_LENGTH,
+                                    0);
+            gradient.setColorAt(0, Qt::transparent);
+            gradient.setColorAt(1, Qt::white);
+        }
+
+        QRect paintRect = option.rect;
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.fillRect(paintRect, gradient);
+
+        if (leftToRight) {
+            gradient.setStart(left + width
+                    - (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) - FADE_LENGTH, 0);
+            gradient.setFinalStop(left + width
+                    - (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
+        } else {
+            gradient.setStart(left + UNIVERSAL_PADDING
+                    + (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
+            gradient.setFinalStop(left + UNIVERSAL_PADDING
+                    + (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) + FADE_LENGTH, 0);
+        }
+        paintRect.setHeight(UNIVERSAL_PADDING + MAIN_ICON_SIZE / 2);
+        p.fillRect(paintRect, gradient);
+        p.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        p.end();
+
+        painter->drawPixmap(option.rect.topLeft(), pixmap);
         return;
     } else if (index.column() == 2) {
         bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
@@ -107,7 +192,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         QStyleOptionButton optBt;
         optBt.rect = option.rect;
 
-        
+
         Enum::Info info;
         info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
         bool    pkgInstalled  = (info == Enum::InfoInstalled ||
@@ -516,7 +601,7 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
         return QStyledItemDelegate::sizeHint(option, index);
     } else {
     ret.rwidth()  += width;
-        
+
     }
     kDebug() << index << ret;
 

@@ -59,7 +59,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
 //     } else {
 //         descriptionTB->setEnabled(false);
 //     }
-// 
+//
 //     if (roles & Enum::RoleGetFiles) {
 //         filesPTE = new QPlainTextEdit(this);
 //         m_viewLayout->addWidget(filesPTE);
@@ -69,7 +69,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
 //     } else {
 //         fileListTB->setEnabled(false);
 //     }
-// 
+//
 //     if (roles & Enum::RoleGetDepends) {
 //         dependsOnLV = new QListView(this);
 //         dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
@@ -80,7 +80,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
 //     } else {
 //         dependsOnTB->setEnabled(false);
 //     }
-// 
+//
 //     if (roles & Enum::RoleGetRequires) {
 //         requiredByLV = new QListView(this);
 //         requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
@@ -93,15 +93,15 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
 //     }
 
 
-        QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(screenshotL);
-// //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
-// //     shadow->setColor(QColor(Qt::blue));
-    shadow->setBlurRadius(15);
-    shadow->setOffset(2);
-// //     shadow2->setColor(QColor(Qt::blue));
-// //     shadow2->setBlurRadius(15);
-// //     shadow2->setOffset(2);
-    screenshotL->setGraphicsEffect(shadow);
+//         QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(screenshotL);
+// // //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
+// // //     shadow->setColor(QColor(Qt::blue));
+//     shadow->setBlurRadius(15);
+//     shadow->setOffset(2);
+// // //     shadow2->setColor(QColor(Qt::blue));
+// // //     shadow2->setBlurRadius(15);
+// // //     shadow2->setOffset(2);
+//     screenshotL->setGraphicsEffect(shadow);
 }
 
 KpkPackageDetails::~KpkPackageDetails()

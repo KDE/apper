@@ -34,16 +34,22 @@ QHash<QString, KIcon> KpkIcons::cache = QHash<QString, KIcon>();
 
 KIcon KpkIcons::getIcon(const QString &name)
 {
+    kDebug() << 1 << name;
     if (!KpkIcons::init) {
-        kDebug();
         KIconLoader::global()->addAppDir("kpackagekit");
 //         KIconLoader::global()->addAppDir("appget");
-#ifdef HAVE_APPINSTALL
         KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
         KIconLoader::global()->reconfigure("kpackagekit", 0);
-#endif //HAVE_APPINSTALL
         KpkIcons::init = true;
-        kDebug() << name << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup);
+        kDebug() << "init" << 1;
+//         KIconLoader::global()->addAppDir("kpackagekit");
+// //         KIconLoader::global()->addAppDir("appget");
+// // #ifdef HAVE_APPINSTALL
+//         KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
+//         KIconLoader::global()->reconfigure("kpackagekit", 0);
+// // #endif //HAVE_APPINSTALL
+//         KpkIcons::init = true;
+//         kDebug() << name << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup);
     }
     if (!KpkIcons::cache.contains(name)) {
         KpkIcons::cache[name] = KIcon(name);
@@ -53,6 +59,7 @@ KIcon KpkIcons::getIcon(const QString &name)
 
 KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
 {
+    kDebug() << 2 << name << defaultName;
     if (!KpkIcons::init) {
         kDebug() << 2;
         KIconLoader::global()->addAppDir("kpackagekit");

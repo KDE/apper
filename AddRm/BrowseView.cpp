@@ -69,7 +69,7 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->header()->setStretchLastSection(false);
     packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
     packageView->header()->setResizeMode(1, QHeaderView::Stretch);
-    
+
 
 
 //     m_scene = new QGraphicsScene(graphicsView);
@@ -136,7 +136,7 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
 //     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
 //     blurEffect->setBlurRadius(0);
 //      packageView->viewport()->setGraphicsEffect(blurEffect);
-// 
+//
 //     QPropertyAnimation *animation = new QPropertyAnimation(blurEffect, "blurRadius");
 //     animation->setDuration(1000);
 //     animation->setStartValue(qreal(0.5));
@@ -162,16 +162,18 @@ if (m_oldDetails && packageDetails->minimumSize().height() == 200) {
 
     m_details = new KpkPackageDetails;
     m_details->setPackage(m_model->package(index), index);
- 
+
  QPropertyAnimation *anim1 = new QPropertyAnimation(packageDetails, "maximumSize");
  anim1->setDuration(1000);
+ anim1->setEasingCurve(QEasingCurve::OutQuart);
  anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
  anim1->setEndValue(QSize(QWIDGETSIZE_MAX, 200));
   QPropertyAnimation *anim2 = new QPropertyAnimation(packageDetails, "minimumSize");
  anim2->setDuration(1000);
+ anim2->setEasingCurve(QEasingCurve::OutQuart);
  anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
  anim2->setEndValue(QSize(QWIDGETSIZE_MAX, 200));
-// 
+//
 //  anim1->start();
 //      packageDetails->show();
 
@@ -192,7 +194,7 @@ connect(group, SIGNAL(finished()), this, SLOT(animationFinished()));
 // // //     tab->setAutoFillBackground(false);
 // // //     proxyWidget->setAutoFillBackground(false);
 // // //     proxyWidget->setParent(m_proxyWidget);
-// // 
+// //
 // // //     QGraphicsRectItem *itemBox = m_scene->addRect(QRectF(0, 0, 400, 800));
 // // //     QGraphicsTextItem *itemText = new QGraphicsTextItem(index.data(KpkPackageModel::SummaryRole).toString(), itemBox);
 // // //     QGraphicsItemGroup *group = m_scene->createItemGroup(QList<QGraphicsItem *>() << itemBox << itemText);
@@ -217,15 +219,15 @@ void BrowseView::animationFinished()
         delete m_oldDetails;
         m_oldDetails = 0;
     }
-//     QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(m_details);
-//     effect->setOpacity(0);
-//     m_details->setGraphicsEffect(effect);
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(m_details);
+    effect->setOpacity(0);
+    m_details->setGraphicsEffect(effect);
     packageDetails->layout()->addWidget(m_details);
-//      QPropertyAnimation *anim1 = new QPropertyAnimation(effect, "opacity");
-//  anim1->setDuration(1000);
-//  anim1->setStartValue(qreal(0));
-//  anim1->setEndValue(qreal(1));
-//  anim1->start();
+     QPropertyAnimation *anim1 = new QPropertyAnimation(effect, "opacity");
+ anim1->setDuration(1000);
+ anim1->setStartValue(qreal(0));
+ anim1->setEndValue(qreal(1));
+ anim1->start();
 }
 
 void BrowseView::showInstalledPanel(bool visible)
@@ -334,10 +336,10 @@ void BrowseView::enableExportInstalledPB()
 //          default:
 //              break;
 //      }
-// 
+//
 //      return QWidget::event(event);
 // }
-// 
+//
 // void BrowseView::updateSceneEvent()
 // {
 //     graphicsView->setSceneRect(QRect(QPoint(0, 0), graphicsView->viewport()->size()));
