@@ -32,12 +32,17 @@ Name[pt]=Gestão de Aplicações
 Name[pt_BR]=Gerenciamento de software
 Name[ro]=Gestiune programe
 Name[sk]=Správa softvéru
+Name[sl]=Upravljanje programov
 Name[sv]=Programvaruhantering
 Name[tr]=Yazılım Yönetimi
 Name[uk]=Керування програмами
 Name[x-test]=xxSoftware Managementxx
 
 Comment=Get, Remove and Update Software
+Comment[pt]=Obter, Remover e Actualizar Aplicações
+Comment[sl]=Dobite, odstranite in posodobite programe
+Comment[sv]=Hämta, ta bort och uppdatera programvara
+Comment[uk]=Встановлення, вилучення і оновлення програмного забезпечення
 Comment[x-test]=xxGet, Remove and Update Softwarexx
 
 X-KDE-Keywords=install,unistall,remove,software,applications,management,packages,packagekit,purge

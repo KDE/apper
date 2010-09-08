@@ -6,6 +6,10 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.KPackageKit
 
 Name=AppGet
+Name[pt]=AppGet
+Name[sl]=AppGet
+Name[sv]=Appget
+Name[uk]=AppGet
 Name[x-test]=xxAppGetxx
 GenericName=Software Management
 GenericName[bg]=Управление на софтуер
@@ -32,11 +36,16 @@ GenericName[pt]=Gestão de Aplicações
 GenericName[pt_BR]=Gerenciamento de software
 GenericName[ro]=Gestiune programe
 GenericName[sk]=Správa softvéru
+GenericName[sl]=Upravljanje programov
 GenericName[sv]=Programvaruhantering
 GenericName[tr]=Yazılım Yönetimi
 GenericName[uk]=Керування програмами
 GenericName[x-test]=xxSoftware Managementxx
 Comment=Application to get and manage software
+Comment[pt]=Uma aplicação para obter e gerir aplicações
+Comment[sl]=Program za pridobivanje in upravljanje programov
+Comment[sv]=Program för att hämta och hantera programvara
+Comment[uk]=Програма для звантаження і керування пакунками програмного забезпечення
 Comment[x-test]=xxApplication to get and manage softwarexx
 
 MimeType=application/x-deb;application/x-rpm;application/x-redhat-package-manager;application/x-servicepack;
