@@ -88,7 +88,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 #ifdef HAVE_APPINSTALL
     // load all the data in memory since quering SQLITE is really slow
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "app-install");
-    db.setDatabaseName("/home/daniel/code/app-install/share/desktop.db");
+    db.setDatabaseName("/home/daniel/code/os/app-install/share/desktop.db");
     db.open();
     QSqlQuery query(db);
     query.prepare(
@@ -109,7 +109,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     QHash<QString, QStringList> *appInstall;
     appInstall = new QHash<QString, QStringList>();
     if (query.exec()) {
-        appInstall->reserve(query.size());
         while (query.next()) {
             appInstall->insertMulti(query.value(APP_PKG_NAME).toString(),
                                     QStringList()

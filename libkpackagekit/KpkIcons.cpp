@@ -37,12 +37,13 @@ KIcon KpkIcons::getIcon(const QString &name)
     if (!KpkIcons::init) {
         kDebug();
         KIconLoader::global()->addAppDir("kpackagekit");
+//         KIconLoader::global()->addAppDir("appget");
 #ifdef HAVE_APPINSTALL
-        KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-install/icons/");
+        KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
         KIconLoader::global()->reconfigure("kpackagekit", 0);
-//         KIconLoader::global()->addAppDir("/usr/share/app-install/icons/");
 #endif //HAVE_APPINSTALL
         KpkIcons::init = true;
+        kDebug() << name << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup);
     }
     if (!KpkIcons::cache.contains(name)) {
         KpkIcons::cache[name] = KIcon(name);
@@ -55,12 +56,13 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
     if (!KpkIcons::init) {
         kDebug() << 2;
         KIconLoader::global()->addAppDir("kpackagekit");
-        KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-install/icons/");
-        KIconLoader::global()->reconfigure("kpackagekit", 0);
+        KIconLoader::global()->addAppDir("appget");
+        KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
+        KIconLoader::global()->reconfigure("appget", 0);
         KpkIcons::init = true;
     }
     if (!KpkIcons::cache.contains(name)) {
-//         kDebug() << KIconLoader::global()->iconPath("/usr/share/app-install/icons/" +name +".png", KIconLoader::User);
+        kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::User);
         QPixmap icon;
         icon = KIconLoader::global()->loadIcon(name,
                                             KIconLoader::NoGroup,
@@ -69,10 +71,10 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
                                             QStringList(),
                                             NULL,
                                             true);
-        if (icon.isNull()) {
+        if (icon.isNull() && !defaultName.isNull()) {
             KpkIcons::cache[name] = KIcon(defaultName);
         } else {
-            KpkIcons::cache[name] = KIcon(icon);
+            KpkIcons::cache[name].addPixmap(icon);
         }
     }
     return KpkIcons::cache[name];

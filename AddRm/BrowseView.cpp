@@ -21,9 +21,10 @@
 #include "BrowseView.h"
 
 #include "KpkPackageDetails.h"
+#include "ApplicationsDelegate.h"
 
 #include <KpkPackageModel.h>
-#include <KpkDelegate.h>
+// #include <KpkDelegate.h>
 #include <KpkSearchableTreeView.h>
 
 #include <QPackageKit>
@@ -40,7 +41,9 @@
 using namespace PackageKit;
 
 BrowseView::BrowseView(QWidget *parent)
- : QWidget(parent)
+ : QWidget(parent),
+   m_details(0),
+   m_oldDetails(0)
 {
     setupUi(this);
 
@@ -63,11 +66,15 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->setModel(proxy);
     packageView->sortByColumn(0, Qt::AscendingOrder);
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
+    packageView->header()->setStretchLastSection(false);
+    packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(1, QHeaderView::Stretch);
+    
 
 
 //     m_scene = new QGraphicsScene(graphicsView);
 //     m_proxyWidget = m_scene->addWidget(packageView);
-    KpkDelegate *delegate = new KpkDelegate(packageView);
+    ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     delegate->setExtendPixmapWidth(0);
 //     delegate->setViewport(graphicsView->viewport());
 //     delegate->setContractPixmap(SmallIcon("help-about"));
@@ -79,6 +86,8 @@ BrowseView::BrowseView(QWidget *parent)
 
     exportInstalledPB->setIcon(KIcon("document-export"));
     importInstalledPB->setIcon(KIcon("document-import"));
+
+
 
 //     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
 
@@ -102,7 +111,7 @@ BrowseView::BrowseView(QWidget *parent)
 
 
 //     graphicsView->fitInView(m_proxyWidget, Qt::KeepAspectRatio);
-    packageDetails->hide();
+//     packageDetails->hide();
 }
 
 BrowseView::~BrowseView()
@@ -134,16 +143,43 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
 //     animation->setEndValue(qreal(10));
 //     animation->setEasingCurve(QEasingCurve::OutQuart);
 //     animation->start();
+m_oldDetails = m_details;
+m_details = new KpkPackageDetails;
+m_details->setPackage(m_model->package(index), index);
 
-    packageDetails->setPackage(m_model->package(index), index);
-//  QPropertyAnimation *animation = new QPropertyAnimation(packageDetails, "geometry");
-//  animation->setDuration(10000);
-//  animation->setStartValue(QRect(0, 0, 100, 30));
-//  animation->setEndValue(QRect(250, 250, 100, 30));
+if (m_oldDetails && packageDetails->minimumSize().height() == 200) {
+    if (m_oldDetails->graphicsEffect()) {
+        QPropertyAnimation *anim1 = new QPropertyAnimation(m_oldDetails->graphicsEffect(), "opacity");
+        anim1->setDuration(1000);
+        anim1->setEndValue(qreal(0));
+        anim1->start();
+        connect(anim1, SIGNAL(finished()), m_oldDetails, SLOT(deleteLater()));
+        connect(anim1, SIGNAL(finished()), this, SLOT(animationFinished()));
+        return;
+    }
+    return;
+}
+
+    m_details = new KpkPackageDetails;
+    m_details->setPackage(m_model->package(index), index);
+ 
+ QPropertyAnimation *anim1 = new QPropertyAnimation(packageDetails, "maximumSize");
+ anim1->setDuration(1000);
+ anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
+ anim1->setEndValue(QSize(QWIDGETSIZE_MAX, 200));
+  QPropertyAnimation *anim2 = new QPropertyAnimation(packageDetails, "minimumSize");
+ anim2->setDuration(1000);
+ anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
+ anim2->setEndValue(QSize(QWIDGETSIZE_MAX, 200));
 // 
-//  animation->start();
-     packageDetails->show();
+//  anim1->start();
+//      packageDetails->show();
 
+QParallelAnimationGroup *group = new QParallelAnimationGroup;
+ group->addAnimation(anim1);
+ group->addAnimation(anim2);
+connect(group, SIGNAL(finished()), this, SLOT(animationFinished()));
+ group->start();
 
 //     KpkPackageDetails *details = new KpkPackageDetails(m_model->package(index), index, Client::instance()->actions());
 //     packageView->setLayout(new QGridLayout());
@@ -173,6 +209,23 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
 // //     details->show();
 // // //     itemText->setTextWidth(350);
 // // //     itemBox->setGraphicsEffect(shadow2);
+}
+
+void BrowseView::animationFinished()
+{
+    if (m_oldDetails) {
+        delete m_oldDetails;
+        m_oldDetails = 0;
+    }
+//     QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(m_details);
+//     effect->setOpacity(0);
+//     m_details->setGraphicsEffect(effect);
+    packageDetails->layout()->addWidget(m_details);
+//      QPropertyAnimation *anim1 = new QPropertyAnimation(effect, "opacity");
+//  anim1->setDuration(1000);
+//  anim1->setStartValue(qreal(0));
+//  anim1->setEndValue(qreal(1));
+//  anim1->start();
 }
 
 void BrowseView::showInstalledPanel(bool visible)

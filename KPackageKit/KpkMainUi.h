@@ -36,8 +36,8 @@ public:
     ~KpkMainUi();
 
     void showAll();
-    void showUpdates(bool selected);
-    void showSettings();
+    void showUpdates(bool selected, bool forceCurrentPage = true);
+    void showSettings(bool forceCurrentPage = true);
 
 private:
     KPageWidgetItem *m_addrmPWI;

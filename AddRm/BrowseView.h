@@ -26,6 +26,7 @@
 #include "ui_BrowseView.h"
 
 class KpkPackageModel;
+class KpkPackageDetails;
 class KpkSearchableTreeView;
 class BrowseView : public QWidget, Ui::BrowseView
 {
@@ -49,6 +50,7 @@ public slots:
     void enableExportInstalledPB();
 
 private slots:
+    void animationFinished();
     void on_packageView_activated(const QModelIndex &);
     void on_categoryMvLeft_clicked();
     void on_categoryMvRight_clicked();
@@ -59,6 +61,8 @@ private slots:
 private:
     bool showPageHeader() const;
 //     void updateSceneEvent();
+    KpkPackageDetails *m_details;
+    KpkPackageDetails *m_oldDetails;
 
     KpkPackageModel       *m_model;
     KpkSearchableTreeView *m_packageView;

@@ -33,6 +33,9 @@
 #define APP_SUMMARY 1
 #define APP_ICON    2
 
+#define ICON_SIZE 24
+#define OVERLAY_SIZE 16
+
 using namespace PackageKit;
 
 KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
@@ -43,6 +46,7 @@ KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView
   , m_appInstall(0)
 #endif //HAVE_APPINSTALL
 {
+    m_installedEmblem = KpkIcons::getIcon("app-installed", QString()).pixmap(16, 16);
 }
 
 void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &package,
@@ -171,13 +175,44 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     }
 
     InternalPackage package = m_packages.at(index.row());
-    switch (role) {
-    case Qt::DisplayRole:
-        if (property("kbd").toBool()) {
-            return package.name;
-        } else {
-            return QVariant();
+
+    if (index.column() == 0) {
+        switch (role) {
+        case Qt::DisplayRole:
+//             if (property("kbd").toBool()) {
+                return package.name;
+//             } else {
+//                 return QVariant();
+//             }
+        case Qt::DecorationRole:
+        {
+            QPixmap icon = QPixmap(42, ICON_SIZE);
+            icon.fill(Qt::transparent);
+            QPixmap pixmap = KpkIcons::getIcon(data(index, IconPathRole).toString(), QString()).pixmap(24, 24);
+            if (!pixmap.isNull()) {
+                QPainter painter(&icon);
+                painter.drawPixmap(QPoint(0, 0), pixmap);
+            }
+
+            if (package.info == Enum::InfoInstalled ||
+            package.info == Enum::InfoCollectionInstalled) {
+                QPainter painter(&icon);
+                QPoint startPoint;
+                // bottom right corner
+                startPoint = QPoint(42 - OVERLAY_SIZE,
+                                    4);
+                painter.drawPixmap(startPoint, m_installedEmblem);
+            }
+            return icon;
         }
+        }
+    } else if (index.column() == 1) {
+        if (role == Qt::DisplayRole) {
+            return package.summary;
+        }
+    }
+
+    switch (role) {
     case IconRole:
         return KpkIcons::packageIcon(package.info);
     case SortRole:
@@ -314,7 +349,7 @@ Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 int KpkPackageModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 1;
+    return 3;
 }
 
 QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &index) const

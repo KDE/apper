@@ -142,7 +142,7 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
 void KpkPackageDetails::resultJob(KJob *job)
 {
     if (!job->error()) {
-        screenshotL->setPixmap(QPixmap(m_tempFile->fileName()));
+        screenshotL->setPixmap(QPixmap(m_tempFile->fileName()).scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
 

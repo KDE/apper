@@ -1,6 +1,7 @@
 set(kpk_addrm_SRCS
     KpkFiltersMenu.cpp
     KpkPackageDetails.cpp
+    ApplicationsDelegate.cpp
     CategoryModel.cpp
     BrowseView.cpp
     AddRmKCM.cpp

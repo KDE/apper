@@ -108,6 +108,7 @@ private:
     } InternalPackage;
     bool containsChecked(const QString &pid) const;
 
+    QPixmap m_installedEmblem;
     QAbstractItemView *m_packageView;
     QVector<InternalPackage> m_packages;
     QHash<QString, QSharedPointer<PackageKit::Package> > m_checkedPackages;

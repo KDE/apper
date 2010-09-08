@@ -20,6 +20,7 @@
 
 #include "KpkMainUi.h"
 
+#include <QLayout>
 #include <KDebug>
 #include <KConfig>
 #include <KLocale>
@@ -43,6 +44,7 @@ KpkMainUi::KpkMainUi(QWidget *parent)
 
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply | KDialog::Help | KDialog::Default | KDialog::Reset);
+    layout()->setContentsMargins(0, 0, 0, 0);
 }
 
 KpkMainUi::~KpkMainUi()
@@ -57,15 +59,18 @@ KpkMainUi::~KpkMainUi()
 void KpkMainUi::showAll()
 {
     // check to see if all are added
-    showSettings();
-    showUpdates(false);
+    showSettings(false);
+    showUpdates(false, false);
     if (!m_addrmPWI) {
         m_addrmPWI = addModule("kpk_addrm.desktop");
     }
-    setCurrentPage(m_addrmPWI);
+
+    if (currentPage() != m_addrmPWI) {
+        setCurrentPage(m_addrmPWI);
+    }
 }
 
-void KpkMainUi::showUpdates(bool selected)
+void KpkMainUi::showUpdates(bool selected, bool forceCurrentPage)
 {
     if (!m_updatePWI) {
         // the selected boolean is used to automatically select all updates
@@ -75,15 +80,21 @@ void KpkMainUi::showUpdates(bool selected)
         }
         m_updatePWI = addModule("kpk_update.desktop", args);
     }
-    setCurrentPage(m_updatePWI);
+
+    if (forceCurrentPage && currentPage() != m_updatePWI) {
+        setCurrentPage(m_updatePWI);
+    }
 }
 
-void KpkMainUi::showSettings()
+void KpkMainUi::showSettings(bool forceCurrentPage)
 {
     if (!m_settingsPWI) {
         m_settingsPWI = addModule("kpk_settings.desktop");
     }
-    setCurrentPage(m_settingsPWI);
+
+    if (forceCurrentPage && currentPage() != m_settingsPWI) {
+        setCurrentPage(m_settingsPWI);
+    }
 }
 
 #include "KpkMainUi.moc"

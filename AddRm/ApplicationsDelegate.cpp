@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "KpkDelegate.h"
+#include "ApplicationsDelegate.h"
 
 #include <KDebug>
 #include <KIconLoader>
@@ -29,12 +29,12 @@
 
 #define FAV_ICON_SIZE 24
 #define EMBLEM_ICON_SIZE 8
-#define UNIVERSAL_PADDING 4
+#define UNIVERSAL_PADDING 2
 #define FADE_LENGTH 16
 #define MAIN_ICON_SIZE 32
 
-KpkDelegate::KpkDelegate(QAbstractItemView *parent)
-  : KExtendableItemDelegate(parent),
+ApplicationsDelegate::ApplicationsDelegate(QAbstractItemView *parent)
+  : QStyledItemDelegate(parent),
     m_viewport(parent->viewport()),
     // loads it here to be faster when displaying items
     m_packageIcon("package"),
@@ -48,12 +48,12 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     m_checkedIcon("dialog-ok")
 {
     // maybe rename or copy it to package-available
-    if (QApplication::isRightToLeft()) {
-        setExtendPixmap(SmallIcon("arrow-left"));
-    } else {
-        setExtendPixmap(SmallIcon("arrow-right"));
-    }
-    setContractPixmap(SmallIcon("arrow-down"));
+//     if (QApplication::isRightToLeft()) {
+//         setExtendPixmap(SmallIcon("arrow-left"));
+//     } else {
+//         setExtendPixmap(SmallIcon("arrow-right"));
+//     }
+//     setContractPixmap(SmallIcon("arrow-down"));
     // store the size of the extend pixmap to know how much we should move
     m_extendPixmapWidth = SmallIcon("arrow-right").size().width();
 
@@ -70,11 +70,89 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     m_buttonIconSize = button.iconSize();
 }
 
-void KpkDelegate::paint(QPainter *painter,
+void ApplicationsDelegate::paint(QPainter *painter,
                         const QStyleOptionViewItem &option,
                         const QModelIndex &index) const
 {
     if (!index.isValid()) {
+        return;
+    }
+    if (index.column() == 0) {
+        QStyleOptionViewItemV4 opt(option);
+//         if (index.data(Qt::DecorationRole).value<QIcon>().isNull()) {
+//             opt.rect.setLeft(24);
+// //         QString pkgName       = index.data(KpkPackageModel::NameRole).toString();
+//         }
+        
+        QStyledItemDelegate::paint(painter, opt, index);
+        return;
+    } else if (index.column() == 1) {
+        QStyleOptionViewItemV4 opt(option);
+        QStyledItemDelegate::paint(painter, opt, index);
+        return;
+    } else if (index.column() == 2) {
+        bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
+
+        if (!(option.state & QStyle::State_MouseOver) &&
+            !(option.state & QStyle::State_Selected) &&
+            !pkgChecked) {
+            QStyleOptionViewItemV4 opt(option);
+            QStyledItemDelegate::paint(painter, opt, index);
+            return;
+        }
+        QStyleOptionViewItemV4 opt(option);
+        QStyledItemDelegate::paint(painter, opt, index);
+        QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
+
+        QStyleOptionButton optBt;
+        optBt.rect = option.rect;
+
+        
+        Enum::Info info;
+        info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+        bool    pkgInstalled  = (info == Enum::InfoInstalled ||
+                                info == Enum::InfoCollectionInstalled);
+
+//         if (leftToRight) {
+//             optBt.rect.setLeft(left + width - (m_buttonSize.width() + UNIVERSAL_PADDING));
+//             width -= m_buttonSize.width() + UNIVERSAL_PADDING;
+//         } else {
+//             optBt.rect.setLeft(left + UNIVERSAL_PADDING);
+//             left += m_buttonSize.width() + UNIVERSAL_PADDING;
+//         }
+        // Calculate the top of the button which is the item height - the button height size divided by 2
+        // this give us a little value which is the top and bottom margin
+        optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
+        optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
+        if (option.state & QStyle::State_MouseOver) {
+//                 if ()
+//             QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+//             QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
+//             kDebug() << optBt.rect << pos << insideButton(optBt.rect, pos);
+//             insideCheckBox(rect, pos);
+            optBt.state |= QStyle::State_MouseOver;
+        }
+        if (option.state & QStyle::State_Selected) {
+            optBt.palette.setBrush(QPalette::ButtonText, optBt.palette.brush(QPalette::HighlightedText));
+//                 QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
+//     option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
+        }
+        optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
+        optBt.features = QStyleOptionButton::Flat;
+        optBt.iconSize = m_buttonIconSize;
+        if (pkgChecked) {
+            optBt.text = m_undoString;
+            optBt.icon = m_undoIcon;
+        } else {
+            optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
+            optBt.text = pkgInstalled ? m_removeString : m_installString;
+        }
+        qreal opa = painter->opacity();
+        if ((option.state & QStyle::State_MouseOver) && !(option.state & QStyle::State_Selected)) {
+            painter->setOpacity(opa / 2);
+        }
+        style->drawControl(QStyle::CE_PushButton, &optBt, painter);
+        painter->setOpacity(opa);
         return;
     }
     bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
@@ -110,9 +188,9 @@ void KpkDelegate::paint(QPainter *painter,
     }
 
     // pain the background (checkbox and the extender)
-    if (m_extendPixmapWidth) {
-        KExtendableItemDelegate::paint(painter, opt, index);
-    }
+//     if (m_extendPixmapWidth) {
+//         KExtendableItemDelegate::paint(painter, opt, index);
+//     }
 
     int leftCount;
     if (leftToRight) {
@@ -138,8 +216,7 @@ void KpkDelegate::paint(QPainter *painter,
             leftCount -= optBt.rect.width();
         }
     } else  if ((option.state & QStyle::State_MouseOver) ||
-                (option.state & QStyle::State_Selected)
-    ) {
+                (option.state & QStyle::State_Selected)) {
         if (leftToRight) {
             optBt.rect.setLeft(left + width - (m_buttonSize.width() + UNIVERSAL_PADDING));
             width -= m_buttonSize.width() + UNIVERSAL_PADDING;
@@ -159,6 +236,7 @@ void KpkDelegate::paint(QPainter *painter,
 //             insideCheckBox(rect, pos);
             optBt.state |= QStyle::State_MouseOver;
         }
+
         optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
         optBt.iconSize = m_buttonIconSize;
         if (pkgChecked) {
@@ -319,8 +397,10 @@ void KpkDelegate::paint(QPainter *painter,
     painter->drawPixmap(option.rect.topLeft(), pixmap);
 }
 
-int KpkDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
+int ApplicationsDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
 {
+    kDebug() << (m_buttonSize.height() + 2 * UNIVERSAL_PADDING);
+    return m_buttonSize.height() + 2 * UNIVERSAL_PADDING;
     // Painting main column
     QStyleOptionViewItem local_option_title(option);
     QStyleOptionViewItem local_option_normal(option);
@@ -331,7 +411,7 @@ int KpkDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
     return textHeight + 3 * UNIVERSAL_PADDING;
 }
 
-bool KpkDelegate::insideButton(const QRect &rect, const QPoint &pos) const
+bool ApplicationsDelegate::insideButton(const QRect &rect, const QPoint &pos) const
 {
 //     kDebug() << rect << pos;
     if ((pos.x() >= rect.x() && (pos.x() <= rect.x() + rect.width())) &&
@@ -341,7 +421,7 @@ bool KpkDelegate::insideButton(const QRect &rect, const QPoint &pos) const
     return false;
 }
 
-bool KpkDelegate::editorEvent(QEvent *event,
+bool ApplicationsDelegate::editorEvent(QEvent *event,
                                     QAbstractItemModel *model,
                                     const QStyleOptionViewItem &option,
                                     const QModelIndex &index)
@@ -397,31 +477,48 @@ bool KpkDelegate::editorEvent(QEvent *event,
     // When the exterder is shown the height get compromised,
     // this makes sure the check box is always known
     opt.rect.setHeight(calcItemHeight(option));
-    return KExtendableItemDelegate::editorEvent(event, model, opt, index);
+    return QStyledItemDelegate::editorEvent(event, model, opt, index);
 }
 
-void KpkDelegate::setExtendPixmapWidth(int width)
+void ApplicationsDelegate::setExtendPixmapWidth(int width)
 {
     m_extendPixmapWidth = width;
 }
 
-void KpkDelegate::setViewport(QWidget *viewport)
+void ApplicationsDelegate::setViewport(QWidget *viewport)
 {
     m_viewport = viewport;
 }
 
-QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
-        const QModelIndex &index ) const
+QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
+                                     const QModelIndex &index) const
 {
+    if (index.column() == 2) {
+        QSize size = m_buttonSize;
+        size.rheight() += 2 * UNIVERSAL_PADDING;
+        size.rwidth()  += 5 * UNIVERSAL_PADDING;
+//         kDebug() << size;
+        return size;
+    }else {
+        return QStyledItemDelegate::sizeHint(option, index);
+    }
     int width = (index.column() == 0) ? index.data(Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
-    QSize ret(KExtendableItemDelegate::sizeHint(option, index));
+    QSize ret(QStyledItemDelegate::sizeHint(option, index));
     // remove the default size of the index
     ret -= QStyledItemDelegate::sizeHint(option, index);
 
     ret.rheight() += calcItemHeight(option);
+    if (index.column() == 0) {
+//         ret.rwidth() = 300;
+// kDebug() << QStyledItemDelegate::sizeHint(option, index);
+        return QStyledItemDelegate::sizeHint(option, index);
+    } else {
     ret.rwidth()  += width;
+        
+    }
+    kDebug() << index << ret;
 
     return ret;
 }
 
-#include "KpkDelegate.moc"
+#include "ApplicationsDelegate.moc"
