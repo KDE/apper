@@ -33,10 +33,14 @@
 #include <QPainter>
 
 #include <KIO/Job>
+#include <KMenu>
 
 #include <KDebug>
 
 #include <QGraphicsDropShadowEffect>
+#include "GraphicsOpacityDropShadowEffect.h"
+
+#define BLUR_RADIUS 15
 
 Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 
@@ -46,8 +50,8 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
    m_busySeqFiles(0),
    m_busySeqDepends(0),
    m_busySeqRequires(0),
-   m_transaction(0),
    m_display(false),
+   m_transaction(0),
    m_hasDetails(false)
 {
     setupUi(this);
@@ -55,58 +59,81 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
 
     Enum::Roles roles = Client::instance()->actions();
     // Create a stacked layout to put the views in
-//     m_viewLayout = new QStackedLayout(stackedWidget);
+    m_viewLayout = new QStackedLayout(stackedWidget);
 
+    KMenu *menu = new KMenu(i18n("Display"), this);
+    QActionGroup *alignmentGroup = new QActionGroup(this);
+    QAction *action;
     // we check to see which roles are supported by the backend
     // if so we ask for information and create the containers
-//     if (roles & Enum::RoleGetDetails) {
+    if (roles & Enum::RoleGetDetails) {
+        action = menu->addAction("Details");
+        action->setCheckable(true);
+        alignmentGroup->addAction(action);
+        m_viewLayout->addWidget(descriptionW);
 //         descriptionKTB = new KTextBrowser(this);
 //         m_viewLayout->addWidget(descriptionKTB);
-// //         descriptionTB->click();
+//         descriptionTB->click();
 //     } else {
 //         descriptionTB->setEnabled(false);
-//     }
+    }
 //
-//     if (roles & Enum::RoleGetFiles) {
-//         filesPTE = new QPlainTextEdit(this);
-//         m_viewLayout->addWidget(filesPTE);
+    if (roles & Enum::RoleGetFiles) {
+        action = menu->addAction("File List");
+        action->setCheckable(true);
+        alignmentGroup->addAction(action);
+        filesPTE = new QPlainTextEdit(this);
+        m_viewLayout->addWidget(filesPTE);
 //         if (!m_viewLayout->count()) {
 // //             fileListTB->click();
 //         }
 //     } else {
 //         fileListTB->setEnabled(false);
-//     }
+    }
 //
-//     if (roles & Enum::RoleGetDepends) {
-//         dependsOnLV = new QListView(this);
-//         dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
+    if (roles & Enum::RoleGetDepends) {
+        action = menu->addAction("Depends On");
+        action->setCheckable(true);
+        alignmentGroup->addAction(action);
+        dependsOnLV = new QListView(this);
+        dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
 //         m_viewLayout->addWidget(dependsOnLV);
 //         if (!m_viewLayout->count()) {
 // //             dependsOnTB->click();
 //         }
 //     } else {
 //         dependsOnTB->setEnabled(false);
-//     }
+    }
 //
-//     if (roles & Enum::RoleGetRequires) {
-//         requiredByLV = new QListView(this);
-//         requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
-//         m_viewLayout->addWidget(requiredByLV);
+    if (roles & Enum::RoleGetRequires) {
+        action = menu->addAction("Required By");
+        action->setCheckable(true);
+        alignmentGroup->addAction(action);
+        requiredByLV = new QListView(this);
+        requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
+        m_viewLayout->addWidget(requiredByLV);
 //         if (!m_viewLayout->count()) {
 // //             requiredByTB->click();
 //         }
 //     } else {
 //         requiredByTB->setEnabled(false);
-//     }
+    }
+
+menuTB->setMenu(menu);
+
     m_busySeqDetails = new KPixmapSequenceOverlayPainter(this);
     m_busySeqDetails->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeqDetails->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_busySeqDetails->setWidget(this);
+    m_busySeqDetails->setWidget(stackedWidget);
 
 
-    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(scrollAreaWidgetContents);
+    // Setup the opacit effect that makes the descriptio transparent
+    // after finished it checks in display() to see if it shouldn't show
+    // up again. The property animation is always the same, the only different thing
+    // is the the Forward or Backward property
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(stackedWidget);
     effect->setOpacity(0);
-    scrollAreaWidgetContents->setGraphicsEffect(effect);
+    stackedWidget->setGraphicsEffect(effect);
     m_fadeDetails = new QPropertyAnimation(effect, "opacity");
     m_fadeDetails->setDuration(500);
     m_fadeDetails->setStartValue(qreal(0));
@@ -114,17 +141,27 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     connect(m_fadeDetails, SIGNAL(finished()), this, SLOT(display()));
 
 
+    // It's is impossible due to some limitation in Qt to set two effects on the same
+    // Widget
+    m_fadeScreenshot = new QPropertyAnimation(effect, "opacity");
 //
 
-    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(screenshotL);
+    GraphicsOpacityDropShadowEffect *shadow = new GraphicsOpacityDropShadowEffect(screenshotL);
+    shadow->setOpacity(0);
 // //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
 // //     shadow->setColor(QColor(Qt::blue));
-    shadow->setBlurRadius(15);
+    shadow->setBlurRadius(BLUR_RADIUS);
     shadow->setOffset(2);
 // //     shadow2->setColor(QColor(Qt::blue));
 // //     shadow2->setBlurRadius(15);
 // //     shadow2->setOffset(2);
     screenshotL->setGraphicsEffect(shadow);
+
+    m_fadeScreenshot = new QPropertyAnimation(shadow, "opacity");
+    m_fadeScreenshot->setDuration(500);
+    m_fadeScreenshot->setStartValue(qreal(0));
+    m_fadeScreenshot->setEndValue(qreal(1));
+    connect(m_fadeScreenshot, SIGNAL(finished()), this, SLOT(display()));
 
 }
 
@@ -147,8 +184,9 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
     } else if (m_display) {
         fadeOut();
     }
-    m_package = package;
-    m_hasDetails = false;
+    m_package       = package;
+    m_hasDetails    = false;
+//     m_hasScreenshot = false;
 
     QString pkgName     = index.data(KpkPackageModel::IdRole).toString().split(';')[0];
     QString pkgIconPath = index.data(KpkPackageModel::IconPathRole).toString();
@@ -160,6 +198,24 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
         disconnect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
                 this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
         m_transaction = 0;
+    }
+
+    //
+    m_currentScreenshot = "http://screenshots.debian.net/thumbnail/" + pkgName;
+    if (m_screenshotPath.contains(m_currentScreenshot)) {
+        kDebug() << "we have it so DISPLAY";
+        display();
+    } else{
+        m_tempFile = new KTemporaryFile;
+        m_tempFile->setPrefix("appget");
+        m_tempFile->setSuffix(".png");
+        m_tempFile->open();
+        KIO::FileCopyJob *job = KIO::file_copy(m_currentScreenshot,
+                                               m_tempFile->fileName(),
+                                               -1,
+                                               KIO::Overwrite | KIO::HideProgressInfo);
+        connect(job, SIGNAL(result(KJob *)),
+                this, SLOT(resultJob(KJob *)));
     }
 
     // Check to see if we don't already have package details
@@ -177,64 +233,23 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
         connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
                 this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
     }
-
-    m_tempFile = new KTemporaryFile;
-    m_tempFile->setPrefix("appget");
-    m_tempFile->setSuffix(".png");
-    m_tempFile->open();
-
-    KIO::FileCopyJob *job = KIO::file_copy("http://screenshots.debian.net/thumbnail/" + pkgName,
-                               m_tempFile->fileName(), -1, KIO::Overwrite | KIO::HideProgressInfo);
-    connect(job, SIGNAL(result(KJob *)),
-            this, SLOT(resultJob(KJob *)));
 }
 
 void KpkPackageDetails::resultJob(KJob *job)
 {
-    if (!job->error()) {
-//         QLabel label;
-//         label.setAttribute(Qt::WA_NoSystemBackground);
-// //         label.resize(180, 140);
-//         label.setPixmap(QPixmap(m_tempFile->fileName()).scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-//
-//         QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(screenshotL);
-// // // //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
-// // // //     shadow->setColor(QColor(Qt::blue));
-//         shadow->setBlurRadius(15);
-//         shadow->setOffset(2);
-// // // //     shadow2->setColor(QColor(Qt::blue));
-// // // //     shadow2->setBlurRadius(15);
-// // // //     shadow2->setOffset(2);
-//         label.setGraphicsEffect(shadow);
-// //         QPixmap pixmap;
-// //         pixmap.fill(Qt::transparent);
-// //         pixmap = QPixmap::grabWidget(&label, QRect(0, 0, 180, 140));
-// //
-// //         screenshotL->setPixmap(pixmap);
-//
-//
-//
-//
-//
-//         QPixmap pixmap = QPixmap(200, 160);
-//         pixmap.fill(Qt::transparent);
-// //         QPixmap pixmap = KpkIcons::getIcon(data(index, IconPathRole).toString(), QString()).pixmap(24, 24);
-// //         if (!pixmap.isNull()) {
-// //             QPainter painter(&icon);
-// //             painter.drawPixmap(QPoint(0, 0), pixmap);
-// //         }
-//
-//         QPainter painter(&pixmap);
-// //         QPoint startPoint;
-// //         // bottom right corner
-// //         startPoint = QPoint(42 - OVERLAY_SIZE,
-// //                             4);
-// //         painter.drawPixmap(0, 0, QPixmap::grabWidget(&label));
-// //         painter.drawPixmap(0, 0, QPixmap(m_tempFile->fileName()).scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-//     kDebug() <<  this->paintingActive();
-//         label.render(&pixmap);
-//         screenshotL->setPixmap(pixmap);
-        screenshotL->setPixmap(QPixmap(m_tempFile->fileName()).scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    kDebug();
+    KIO::FileCopyJob *fJob = qobject_cast<KIO::FileCopyJob*>(job);
+    if (!fJob->error()) {
+        kDebug() << fJob->srcUrl() << fJob->destUrl();
+        kDebug() << fJob->srcUrl().url() << fJob->destUrl().toLocalFile();
+
+
+        m_screenshotPath[fJob->srcUrl().url()] = fJob->destUrl().toLocalFile();
+//         m_currentScreenshot = QPixmap(m_tempFile->fileName()).scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+//         m_hasScreenshot = true;
+        kDebug() << "m_fadeScreenshot" << m_tempFile->fileName();
+
+        display();
     }
 }
 
@@ -246,11 +261,18 @@ void KpkPackageDetails::fadeOut()
         m_fadeDetails->setDirection(QAbstractAnimation::Backward);
         m_fadeDetails->start();
     }
+
+    // Fade out the screenshot only if needed
+    if (m_fadeScreenshot->currentValue().toReal() != 0) {
+        m_fadeScreenshot->setDirection(QAbstractAnimation::Backward);
+        m_fadeScreenshot->start();
+    }
 }
 
 void KpkPackageDetails::display()
 {
-    kDebug() << m_fadeDetails->currentValue().toReal() << m_hasDetails << m_display;
+    kDebug() << "m_fadeDetails" << m_fadeDetails->currentValue().toReal() << m_hasDetails << m_display;
+    kDebug() << "m_fadeScreenshot" << m_fadeScreenshot->currentValue().toReal() << m_screenshotPath.contains(m_currentScreenshot) << m_display;
     // If we shouldn't be showing fade out
     if (!m_display) {
         fadeOut();
@@ -263,6 +285,21 @@ void KpkPackageDetails::display()
             // Fade In
             m_fadeDetails->setDirection(QAbstractAnimation::Forward);
             m_fadeDetails->start();
+        }
+
+        // Check to see if we have a screen shot and if we are
+        // transparent, and make shure the details are going
+        // to be shown
+        if (m_fadeScreenshot->currentValue().toReal() == 0 &&
+            m_screenshotPath.contains(m_currentScreenshot) &&
+            m_fadeDetails->direction() == QAbstractAnimation::Forward) {
+            QPixmap pixmap;
+            pixmap = QPixmap(m_screenshotPath[m_currentScreenshot])
+                             .scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            screenshotL->setPixmap(pixmap);
+            // Fade In
+            m_fadeScreenshot->setDirection(QAbstractAnimation::Forward);
+            m_fadeScreenshot->start();
         }
     }
 }
@@ -337,42 +374,6 @@ void KpkPackageDetails::description(const QSharedPointer<PackageKit::Package> &p
     m_transaction = 0;
 
     display();
-
-//         //format and show description
-//     Package::Details *details = p->details();
-//
-//     if (!details->description().isEmpty()) {
-//         descriptionL->setText(details->description().replace('\n', "<br>"));
-//         descriptionL->show();
-//     }
-//
-//     if (!details->url().isEmpty()) {
-//         homepageL->setText("<a href=\"" + details->url() + "\">" +
-//                            details->url() + "</a>");
-//         homepageL->show();
-//     }
-//
-//     if (!details->license().isEmpty() && details->license() != "unknown") {
-// //         licenseL->setText(details->license());
-// //         licenseL->show();
-//     }
-//
-//     if (details->group() != Enum::UnknownGroup) {
-// //         description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
-// //                     + KpkStrings::groups(details->group())
-// //                     + "</td></tr>";
-//     }
-//
-//     if (details->size() > 0) {
-//         sizeL->setText(KGlobal::locale()->formatByteSize(details->size()));
-//         sizeL->show();
-//     }
-//
-//
-//
-//     if (m_display) {
-//         fadeIn();
-//     }
 }
 
 void KpkPackageDetails::finished(PackageKit::Enum::Exit status)

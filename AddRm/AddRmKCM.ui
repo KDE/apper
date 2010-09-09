@@ -26,7 +26,7 @@
    <property name="margin">
     <number>0</number>
    </property>
-   <item row="0" column="0" colspan="3">
+   <item row="0" column="0" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QToolButton" name="backTB">
@@ -110,16 +110,13 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0" colspan="3">
+   <item row="1" column="0" colspan="4">
     <widget class="QWidget" name="stackedWidget" native="true"/>
    </item>
-   <item row="2" column="0">
+   <item row="2" column="1" colspan="3">
     <widget class="KpkCategorizedView" name="homeView">
      <property name="mouseTracking">
       <bool>true</bool>
-     </property>
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <property name="textElideMode">
       <enum>Qt::ElideNone</enum>
@@ -132,13 +129,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="0">
     <widget class="KpkCategorizedView" name="changesView">
      <property name="mouseTracking">
       <bool>true</bool>
-     </property>
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
@@ -150,9 +144,6 @@
       <enum>QAbstractItemView::ScrollPerPixel</enum>
      </property>
     </widget>
-   </item>
-   <item row="3" column="0" colspan="3">
-    <widget class="KpkTransactionBar" name="transactionBar" native="true"/>
    </item>
   </layout>
   <action name="actionFindName">
@@ -176,12 +167,6 @@
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KpkTransactionBar</class>
-   <extends>QWidget</extends>
-   <header location="global">KpkTransactionBar.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>KpkCategorizedView</class>

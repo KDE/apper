@@ -79,22 +79,28 @@ private:
     QPlainTextEdit *filesPTE;
     QListView      *dependsOnLV;
     QListView      *requiredByLV;
+
+    KPixmapSequenceOverlayPainter *m_busySeqDetails;
+    KPixmapSequenceOverlayPainter *m_busySeqFiles;
+    KPixmapSequenceOverlayPainter *m_busySeqDepends;
+    KPixmapSequenceOverlayPainter *m_busySeqRequires;
+
     QPropertyAnimation *m_fadeDetails;
+    QPropertyAnimation *m_fadeScreenshot;
     bool m_display;
 
     // We need a copy of prety much every thing
     // we have, so that we update only when we are
     // totaly trasnparent this way the user
     // does not see the ui flicker
-    bool m_hasDetails;
     Transaction *m_transaction;
-    QString m_currentText;
-    QPixmap m_currentIcon;
+    bool         m_hasDetails;
+    QString      m_currentText;
+    QPixmap      m_currentIcon;
 
-    KPixmapSequenceOverlayPainter *m_busySeqDetails;
-    KPixmapSequenceOverlayPainter *m_busySeqFiles;
-    KPixmapSequenceOverlayPainter *m_busySeqDepends;
-    KPixmapSequenceOverlayPainter *m_busySeqRequires;
+    // KIO don't get the same file if it store
+    QString      m_currentScreenshot;
+    QHash<QString, QString> m_screenshotPath;
 
     void setupSequence(Transaction *transaction,
                        KPixmapSequenceOverlayPainter **sequence,

@@ -80,8 +80,9 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
                                ki18n("KDE interface for managing software"),
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
-    KGlobal::locale()->insertCatalog("kpackagekit");
     setAboutData(aboutData);
+    setButtons(KCModule::Help | Apply);
+    KGlobal::locale()->insertCatalog("kpackagekit");
 
     setupUi(this);
 
@@ -210,7 +211,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(m_client->filters(), this));
     filtersTB->setIcon(KIcon("view-filter"));
 
-    transactionBar->setBehaviors(KpkTransactionBar::AutoHide | KpkTransactionBar::HideCancel);
 
     //initialize the model, delegate, client and  connect it's signals
 //     setupView(&m_browseModel, packageView);
@@ -541,7 +541,6 @@ void AddRmKCM::connectTransaction(Transaction *transaction, KpkPackageModel *mod
             model, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
     connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
-    transactionBar->addTransaction(transaction);
 }
 
 void AddRmKCM::changed()

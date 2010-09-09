@@ -2,6 +2,7 @@ set(kpk_addrm_SRCS
     KpkFiltersMenu.cpp
     KpkPackageDetails.cpp
     ApplicationsDelegate.cpp
+    GraphicsOpacityDropShadowEffect.cpp
     CategoryModel.cpp
     BrowseView.cpp
     AddRmKCM.cpp
