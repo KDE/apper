@@ -11,7 +11,9 @@ X-KDE-System-Settings-Parent-Category=manage-software
 X-KDE-Weight=1
 
 Name=Get and Remove Software
+Name[hu]=Alkalmazások letöltése és eltávolítása
 Name[pt]=Obter e Remover Aplicações
+Name[pt_BR]=Obter e remover software
 Name[sl]=Dobite in odstranite programe
 Name[sv]=Hämta och ta bort programvara
 Name[uk]=Встановлення або вилучення програм
