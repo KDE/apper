@@ -61,6 +61,8 @@ private slots:
     void on_dependsOnTB_clicked();
     void on_requiredByTB_clicked();
 
+    void actionActivated(QAction *action);
+
     void resultJob(KJob *);
 
     void display();
@@ -68,6 +70,7 @@ private slots:
     void setupDescription();
 
 private:
+    QActionGroup *m_actionGroup;
     QSharedPointer<PackageKit::Package> m_package;
     KTemporaryFile *m_tempFile;
 

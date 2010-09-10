@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>702</width>
-    <height>242</height>
+    <height>258</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -85,13 +85,19 @@
         <x>10</x>
         <y>10</y>
         <width>506</width>
-        <height>234</height>
+        <height>200</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>420</width>
         <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>210</height>
        </size>
       </property>
       <property name="sizeIncrement">
@@ -115,20 +121,26 @@
          <x>0</x>
          <y>0</y>
          <width>506</width>
-         <height>234</height>
+         <height>200</height>
         </rect>
        </property>
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>410</width>
+         <height>200</height>
+        </size>
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0" rowspan="2">
          <widget class="QLabel" name="descriptionL">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -156,39 +168,10 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="homepageL">
-          <property name="text">
-           <string notr="true">Home Page</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-          <property name="margin">
-           <number>5</number>
-          </property>
-          <property name="openExternalLinks">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="pathL">
-          <property name="text">
-           <string notr="true">Find it in the menu:</string>
-          </property>
-          <property name="margin">
-           <number>5</number>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <widget class="QLabel" name="iconL">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -210,10 +193,29 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
-         <widget class="QLabel" name="sizeL">
+        <item row="2" column="0">
+         <widget class="QLabel" name="homepageL">
           <property name="text">
-           <string notr="true">Size</string>
+           <string notr="true">Home Page</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="margin">
+           <number>5</number>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="licenseL">
+          <property name="text">
+           <string>Licence:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -223,10 +225,20 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="licenseL">
+        <item row="5" column="0">
+         <widget class="QLabel" name="pathL">
           <property name="text">
-           <string>Licence:</string>
+           <string notr="true">Find it in the menu:</string>
+          </property>
+          <property name="margin">
+           <number>5</number>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="sizeL">
+          <property name="text">
+           <string notr="true">Size</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

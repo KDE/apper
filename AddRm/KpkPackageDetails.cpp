@@ -62,70 +62,62 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     m_viewLayout = new QStackedLayout(stackedWidget);
 
     KMenu *menu = new KMenu(i18n("Display"), this);
-    QActionGroup *alignmentGroup = new QActionGroup(this);
-    QAction *action;
+    m_actionGroup = new QActionGroup(this);
+    QAction *action = 0;
+
     // we check to see which roles are supported by the backend
     // if so we ask for information and create the containers
-    if (roles & Enum::RoleGetDetails) {
-        action = menu->addAction("Details");
-        action->setCheckable(true);
-        alignmentGroup->addAction(action);
-        m_viewLayout->addWidget(descriptionW);
-//         descriptionKTB = new KTextBrowser(this);
-//         m_viewLayout->addWidget(descriptionKTB);
-//         descriptionTB->click();
-//     } else {
-//         descriptionTB->setEnabled(false);
-    }
-//
     if (roles & Enum::RoleGetFiles) {
-        action = menu->addAction("File List");
+        action = menu->addAction(i18n("File List"));
         action->setCheckable(true);
-        alignmentGroup->addAction(action);
+        action->setData(Enum::RoleGetFiles);
+        m_actionGroup->addAction(action);
         filesPTE = new QPlainTextEdit(this);
         m_viewLayout->addWidget(filesPTE);
-//         if (!m_viewLayout->count()) {
-// //             fileListTB->click();
-//         }
-//     } else {
-//         fileListTB->setEnabled(false);
     }
-//
-    if (roles & Enum::RoleGetDepends) {
-        action = menu->addAction("Depends On");
-        action->setCheckable(true);
-        alignmentGroup->addAction(action);
-        dependsOnLV = new QListView(this);
-        dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
-//         m_viewLayout->addWidget(dependsOnLV);
-//         if (!m_viewLayout->count()) {
-// //             dependsOnTB->click();
-//         }
-//     } else {
-//         dependsOnTB->setEnabled(false);
-    }
-//
+
     if (roles & Enum::RoleGetRequires) {
-        action = menu->addAction("Required By");
+        action = menu->addAction(i18n("Required By"));
         action->setCheckable(true);
-        alignmentGroup->addAction(action);
+        action->setData(Enum::RoleGetRequires);
+        m_actionGroup->addAction(action);
         requiredByLV = new QListView(this);
         requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
         m_viewLayout->addWidget(requiredByLV);
-//         if (!m_viewLayout->count()) {
-// //             requiredByTB->click();
-//         }
-//     } else {
-//         requiredByTB->setEnabled(false);
     }
 
-menuTB->setMenu(menu);
+    if (roles & Enum::RoleGetDepends) {
+        action = menu->addAction(i18n("Depends On"));
+        action->setCheckable(true);
+        action->setData(Enum::RoleGetDepends);
+        m_actionGroup->addAction(action);
+        dependsOnLV = new QListView(this);
+        dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
+        m_viewLayout->addWidget(dependsOnLV);
+    }
+
+    if (roles & Enum::RoleGetDetails) {
+        action = menu->addAction(i18n("Details"));
+        action->setCheckable(true);
+        action->setData(Enum::RoleGetDetails);
+        m_actionGroup->addAction(action);
+        m_viewLayout->addWidget(descriptionW);
+        descriptionW->setWidgetResizable(true);
+        action->setChecked(true);
+    }
+
+    if (action){
+        action->setChecked(true);
+        connect(m_actionGroup, SIGNAL(triggered(QAction *)),
+                this, SLOT(actionActivated(QAction *)));
+        // Set the menu
+        menuTB->setMenu(menu);
+    }
 
     m_busySeqDetails = new KPixmapSequenceOverlayPainter(this);
     m_busySeqDetails->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeqDetails->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeqDetails->setWidget(stackedWidget);
-
 
     // Setup the opacit effect that makes the descriptio transparent
     // after finished it checks in display() to see if it shouldn't show
@@ -203,7 +195,6 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
     //
     m_currentScreenshot = "http://screenshots.debian.net/thumbnail/" + pkgName;
     if (m_screenshotPath.contains(m_currentScreenshot)) {
-        kDebug() << "we have it so DISPLAY";
         display();
     } else{
         m_tempFile = new KTemporaryFile;
@@ -218,14 +209,54 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
                 this, SLOT(resultJob(KJob *)));
     }
 
+    if (m_actionGroup->checkedAction()) {
+        actionActivated(m_actionGroup->checkedAction());
+    }
+
+    // create the description transaction
+//     m_transaction = Client::instance()->getDetails(m_package);
+//     if (m_transaction->error()) {
+//         KMessageBox::sorry(this, KpkStrings::daemonError(m_transaction->error()));
+//     } else {
+//         m_busySeqDetails->start();
+//         connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
+//                 this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
+//     }
+}
+
+void KpkPackageDetails::actionActivated(QAction *action)
+{
     // Check to see if we don't already have package details
-    if (m_package->hasDetails()) {
+    if (action->data().toUInt() == Enum::RoleGetDetails &&
+        m_package->hasDetails()) {
         description(m_package);
         return;
     }
 
-    // create the description transaction
-    m_transaction = Client::instance()->getDetails(m_package);
+    m_transaction = new Transaction(QString(), this);
+    switch (action->data().toUInt()) {
+    case Enum::RoleGetDetails:
+        connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
+                this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
+        m_transaction->getDetails(m_package);
+        break;
+    case Enum::RoleGetDepends:
+        connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+                m_pkg_model_dep, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        m_transaction->getDepends(m_package, PackageKit::Enum::NoFilter, false);
+        break;
+    case Enum::RoleGetRequires:
+        connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+                m_pkg_model_req, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        m_transaction->getRequires(m_package, PackageKit::Enum::NoFilter, false);
+        break;
+    case Enum::RoleGetFiles:
+        connect(m_transaction, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
+                this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
+        m_transaction->getFiles(m_package);
+        break;
+    }
+
     if (m_transaction->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_transaction->error()));
     } else {
@@ -322,6 +353,7 @@ void KpkPackageDetails::setupSequence(Transaction *transaction,
 
 void KpkPackageDetails::setupDescription()
 {
+    m_viewLayout->setCurrentWidget(descriptionW);
     //format and show description
     Package::Details *details = m_package->details();
 
@@ -329,7 +361,7 @@ void KpkPackageDetails::setupDescription()
         descriptionL->setText(details->description().replace('\n', "<br>"));
         descriptionL->show();
     } else {
-        descriptionL->hide();
+        descriptionL->clear();
     }
 
     if (!details->url().isEmpty()) {
@@ -337,14 +369,14 @@ void KpkPackageDetails::setupDescription()
                            details->url() + "</a>");
         homepageL->show();
     } else {
-        homepageL->hide();
+        homepageL->clear();
     }
 
     if (!details->license().isEmpty() && details->license() != "unknown") {
         licenseL->setText(details->license());
         licenseL->show();
     } else {
-        licenseL->hide();
+        licenseL->clear();
     }
 
 //     if (details->group() != Enum::UnknownGroup) {
@@ -357,7 +389,7 @@ void KpkPackageDetails::setupDescription()
         sizeL->setText(KGlobal::locale()->formatByteSize(details->size()));
         sizeL->show();
     } else {
-        sizeL->hide();
+        sizeL->clear();
     }
 
     iconL->setPixmap(m_currentIcon);
@@ -436,8 +468,8 @@ void KpkPackageDetails::on_fileListTB_clicked()
             KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
             setupSequence(t, &m_busySeqFiles, filesPTE->viewport());
-            connect(t, SIGNAL(files(QSharedPointer<PackageKit::Package>, const QStringList &)),
-                    this, SLOT(files(QSharedPointer<PackageKit::Package>, const QStringList &)));
+            connect(t, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
+                    this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
         }
     }
 }

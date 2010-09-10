@@ -134,6 +134,9 @@ KpkPackageModel* BrowseView::model() const
 
 void BrowseView::on_packageView_activated(const QModelIndex &index)
 {
+    if (index.column() == 2) {
+        return;
+    }
 //     packageDetails->show();
 //     kDebug() << "foo;";
 //     packageView->setMouseTracking(false);
@@ -151,7 +154,7 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
 // m_details = new KpkPackageDetails;
 m_details->setPackage(m_model->package(index), index);
 
-if (packageDetails->minimumSize().height() == 200) {
+if (packageDetails->minimumSize().height() == 210) {
 //     if (m_details->graphicsEffect()) {
 //         QPropertyAnimation *anim1 = new QPropertyAnimation(m_oldDetails->graphicsEffect(), "opacity");
 //         anim1->setDuration(1000);
@@ -171,12 +174,12 @@ if (packageDetails->minimumSize().height() == 200) {
  anim1->setDuration(500);
  anim1->setEasingCurve(QEasingCurve::OutQuart);
  anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
- anim1->setEndValue(QSize(QWIDGETSIZE_MAX, 200));
+ anim1->setEndValue(QSize(QWIDGETSIZE_MAX, 210));
   QPropertyAnimation *anim2 = new QPropertyAnimation(packageDetails, "minimumSize");
  anim2->setDuration(500);
  anim2->setEasingCurve(QEasingCurve::OutQuart);
  anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
- anim2->setEndValue(QSize(QWIDGETSIZE_MAX, 200));
+ anim2->setEndValue(QSize(QWIDGETSIZE_MAX, 210));
 //
 //  anim1->start();
 //      packageDetails->show();

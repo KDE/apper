@@ -124,9 +124,17 @@ QPixmap pixmap(option.rect.size());
             local_option_normal.font.setItalic(true);
         }
 
+        QColor foregroundColor;
+        if (option.state.testFlag(QStyle::State_Selected)) {
+            foregroundColor = option.palette.color(QPalette::HighlightedText);
+        } else {
+            foregroundColor = option.palette.color(QPalette::Text);
+        }
+
 
         p.setFont(local_option_normal.font);
-        p.drawText(opt.rect, Qt::AlignVCenter | Qt::AlignLeft, pkgSummary);
+        p.setPen(foregroundColor);
+        p.drawText(opt.rect, Qt::AlignVCenter | (leftToRight ? Qt::AlignLeft : Qt::AlignRight), pkgSummary);
 //         p.drawText(leftToRight ? leftCount + iconSize + UNIVERSAL_PADDING : left - UNIVERSAL_PADDING,
 //                 top + itemHeight / 2,
 //                 textWidth - iconSize,
@@ -192,7 +200,6 @@ QPixmap pixmap(option.rect.size());
         QStyleOptionButton optBt;
         optBt.rect = option.rect;
 
-
         Enum::Info info;
         info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
         bool    pkgInstalled  = (info == Enum::InfoInstalled ||
@@ -209,14 +216,7 @@ QPixmap pixmap(option.rect.size());
         // this give us a little value which is the top and bottom margin
         optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
         optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
-        if (option.state & QStyle::State_MouseOver) {
-//                 if ()
-//             QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-//             QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
-//             kDebug() << optBt.rect << pos << insideButton(optBt.rect, pos);
-//             insideCheckBox(rect, pos);
-            optBt.state |= QStyle::State_MouseOver;
-        }
+
         if (option.state & QStyle::State_Selected) {
             optBt.palette.setBrush(QPalette::ButtonText, optBt.palette.brush(QPalette::HighlightedText));
 //                 QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
@@ -226,14 +226,19 @@ QPixmap pixmap(option.rect.size());
         optBt.features = QStyleOptionButton::Flat;
         optBt.iconSize = m_buttonIconSize;
         if (pkgChecked) {
-            optBt.text = m_undoString;
-            optBt.icon = m_undoIcon;
+//             optBt.text = m_undoString;
+//             optBt.icon = m_undoIcon;
             optBt.state |= QStyle::State_Sunken | QStyle::State_Active | QStyle::State_Enabled;;
         } else {
-            optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
-            optBt.text = pkgInstalled ? m_removeString : m_installString;
+            if (option.state & QStyle::State_MouseOver) {
+                optBt.state |= QStyle::State_MouseOver;
+            }
+//             optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
+//             optBt.text = pkgInstalled ? m_removeString : m_installString;
             optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
         }
+        optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
+        optBt.text = pkgInstalled ? m_removeString : m_installString;
 //         qreal opa = painter->opacity();
 //         if ((option.state & QStyle::State_MouseOver) && !(option.state & QStyle::State_Selected)) {
 //             painter->setOpacity(opa / 2);
@@ -509,62 +514,17 @@ bool ApplicationsDelegate::insideButton(const QRect &rect, const QPoint &pos) co
 }
 
 bool ApplicationsDelegate::editorEvent(QEvent *event,
-                                    QAbstractItemModel *model,
-                                    const QStyleOptionViewItem &option,
-                                    const QModelIndex &index)
+                                       QAbstractItemModel *model,
+                                       const QStyleOptionViewItem &option,
+                                       const QModelIndex &index)
 {
-    Q_UNUSED(option)
-
-    if (event->type() == QEvent::MouseButtonRelease) {
-        QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-        QPoint point = m_viewport->mapFromGlobal(QCursor::pos());
-        QTreeView *tree = qobject_cast<QTreeView*>(parent());
-        if (tree) {
-            point.ry() -= tree->header()->size().height();
-        }
-
-        bool leftToRight = QApplication::isLeftToRight();
-        QStyleOptionButton optBt;
-        optBt.rect = option.rect;
-        if (leftToRight) {
-            optBt.rect.setLeft(option.rect.left() + option.rect.width() - (m_buttonSize.width() + UNIVERSAL_PADDING));
-        } else {
-            optBt.rect.setLeft(option.rect.left() + UNIVERSAL_PADDING);
-        }
-        // Calculate the top of the button which is the item height - the button height size divided by 2
-        // this give us a little value which is the top and bottom margin
-        optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
-        optBt.rect.setSize(m_buttonSize);
-
-        kDebug() << point << option.rect.left() << option << insideButton(optBt.rect, point);
-//         kDebug() << view->visualRect(index);
-        if (insideButton(optBt.rect, point)) {
-            return model->setData(index,
-                                  !index.data(KpkPackageModel::CheckStateRole).toBool(),
-                                  Qt::CheckStateRole);
-        }
-        QRect rect = view->visualRect(index);
-        if (QApplication::isRightToLeft()) {
-            if ((rect.width() - point.x()) <= m_extendPixmapWidth) {
-                emit showExtendItem(index);
-            }
-        } else if (point.x() <= m_extendPixmapWidth) {
-            emit showExtendItem(index);
-        }
+    if (index.column() == 2 &&
+        event->type() == QEvent::MouseButtonPress) {
+        model->setData(index,
+                       !index.data(KpkPackageModel::CheckStateRole).toBool(),
+                       Qt::CheckStateRole);
     }
-
-    // We need move the option rect left because KExtendableItemDelegate
-    // drew the extendPixmap
-    QStyleOptionViewItemV4 opt(option);
-    if (QApplication::isRightToLeft()) {
-        opt.rect.setRight(option.rect.right() - m_extendPixmapWidth);
-    } else {
-        opt.rect.setLeft(option.rect.left() + m_extendPixmapWidth);
-    }
-    // When the exterder is shown the height get compromised,
-    // this makes sure the check box is always known
-    opt.rect.setHeight(calcItemHeight(option));
-    return QStyledItemDelegate::editorEvent(event, model, opt, index);
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
 void ApplicationsDelegate::setExtendPixmapWidth(int width)
