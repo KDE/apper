@@ -6,6 +6,7 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.KPackageKit
 
 Name=AppGet
+Name[da]=AppGet
 Name[hu]=AppGet
 Name[pt]=AppGet
 Name[pt_BR]=AppGet
@@ -44,6 +45,7 @@ GenericName[tr]=Yazılım Yönetimi
 GenericName[uk]=Керування програмами
 GenericName[x-test]=xxSoftware Managementxx
 Comment=Application to get and manage software
+Comment[da]=Program til at hente og håndtere software
 Comment[hu]=Alkalmazás szoftverek beszerzéséhez és kezeléséhez
 Comment[pt]=Uma aplicação para obter e gerir aplicações
 Comment[pt_BR]=Aplicativo para obter e gerenciar software

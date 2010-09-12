@@ -39,6 +39,7 @@ Name[uk]=Керування програмами
 Name[x-test]=xxSoftware Managementxx
 
 Comment=Get, Remove and Update Software
+Comment[da]=Hent, fjern og opdatér software
 Comment[hu]=Szoftverek letöltése, eltávolítása és frissítése
 Comment[pt]=Obter, Remover e Actualizar Aplicações
 Comment[pt_BR]=Obter, remover e atualizar o software
