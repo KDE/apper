@@ -41,9 +41,7 @@
 using namespace PackageKit;
 
 BrowseView::BrowseView(QWidget *parent)
- : QWidget(parent),
-   m_details(0),
-   m_oldDetails(0)
+ : QWidget(parent)
 {
     setupUi(this);
 
@@ -54,17 +52,18 @@ BrowseView::BrowseView(QWidget *parent)
 //     packageView->setFrameStyle(QFrame::NoFrame);
 //     packageView->setVerticalScrollBar(verticalScrollBar);
 
-    m_details = new KpkPackageDetails;
+//     m_details = new KpkPackageDetails;
 
     m_model = new KpkPackageModel(this, packageView);
-    KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
-    proxy->setSourceModel(m_model);
-    proxy->setDynamicSortFilter(true);
-    proxy->setCategorizedModel(true);
-    proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-    proxy->setSortRole(KpkPackageModel::SortRole);
+    m_proxy = new KCategorizedSortFilterProxyModel(this);
+    m_proxy->setSourceModel(m_model);
+    m_proxy->setDynamicSortFilter(true);
+    m_proxy->setCategorizedModel(true);
+    m_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    m_proxy->setSortRole(KpkPackageModel::SortRole);
+    m_proxy->setFilterRole(KpkPackageModel::ApplicationFilterRole);
 
-    packageView->setModel(proxy);
+    packageView->setModel(m_proxy);
     packageView->sortByColumn(0, Qt::AscendingOrder);
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
     packageView->header()->setStretchLastSection(false);
@@ -82,12 +81,13 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->setItemDelegate(delegate);
     connect(delegate, SIGNAL(showExtendItem(const QModelIndex &)),
             this, SLOT(showExtendItem(const QModelIndex &)));
-    connect(proxy, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
+    connect(m_proxy, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
             this, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
 
     exportInstalledPB->setIcon(KIcon("document-export"));
     importInstalledPB->setIcon(KIcon("document-import"));
 
+//     packageDetails->layout()->setCon
 
 
 //     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
@@ -117,9 +117,6 @@ BrowseView::BrowseView(QWidget *parent)
 
 BrowseView::~BrowseView()
 {
-    if (m_details) {
-        delete m_details;
-    }
 }
 
 bool BrowseView::showPageHeader() const
@@ -152,7 +149,9 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
 //     animation->start();
 // m_oldDetails = m_details;
 // m_details = new KpkPackageDetails;
-m_details->setPackage(m_model->package(index), index);
+// proxy
+QModelIndex origIndex = m_proxy->mapToSource(index);
+packageDetails->setPackage(m_model->package(origIndex), origIndex);
 
 if (packageDetails->minimumSize().height() == 210) {
 //     if (m_details->graphicsEffect()) {
@@ -222,13 +221,18 @@ connect(group, SIGNAL(finished()), this, SLOT(animationFinished()));
 
 void BrowseView::animationFinished()
 {
-    packageDetails->layout()->addWidget(m_details);
-    m_details->setDisplayDetails(true);
+//     packageDetails->layout()->addWidget(m_details);
+    packageDetails->setDisplayDetails(true);
 }
 
 void BrowseView::showInstalledPanel(bool visible)
 {
     installedF->setVisible(visible);
+}
+
+KCategorizedSortFilterProxyModel* BrowseView::proxy() const
+{
+    return m_proxy;
 }
 
 void BrowseView::setCategoryModel(QAbstractItemModel *model)

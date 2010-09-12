@@ -27,6 +27,9 @@
 
 #include <KMessageBox>
 
+#include <KService>
+#include <KServiceGroup>
+#include <KDesktopFile>
 #include <KPixmapSequence>
 #include <QTextDocument>
 #include <QPlainTextEdit>
@@ -46,13 +49,11 @@ Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 
 KpkPackageDetails::KpkPackageDetails(QWidget *parent)
  : QWidget(parent),
-   m_busySeqDetails(0),
-   m_busySeqFiles(0),
-   m_busySeqDepends(0),
-   m_busySeqRequires(0),
+   m_busySeq(0),
    m_display(false),
    m_transaction(0),
-   m_hasDetails(false)
+   m_hasDetails(false),
+   m_hasFileList(false)
 {
     setupUi(this);
 //     stackedWidget->hide();
@@ -72,7 +73,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
         action->setCheckable(true);
         action->setData(Enum::RoleGetFiles);
         m_actionGroup->addAction(action);
-        filesPTE = new QPlainTextEdit(this);
+        filesPTE = new QPlainTextEdit(stackedWidget);
         m_viewLayout->addWidget(filesPTE);
     }
 
@@ -81,7 +82,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
         action->setCheckable(true);
         action->setData(Enum::RoleGetRequires);
         m_actionGroup->addAction(action);
-        requiredByLV = new QListView(this);
+        requiredByLV = new QListView(stackedWidget);
         requiredByLV->setModel(m_pkg_model_req = new KpkSimplePackageModel(this));
         m_viewLayout->addWidget(requiredByLV);
     }
@@ -91,13 +92,13 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
         action->setCheckable(true);
         action->setData(Enum::RoleGetDepends);
         m_actionGroup->addAction(action);
-        dependsOnLV = new QListView(this);
+        dependsOnLV = new QListView(stackedWidget);
         dependsOnLV->setModel(m_pkg_model_dep = new KpkSimplePackageModel(this));
         m_viewLayout->addWidget(dependsOnLV);
     }
 
     if (roles & Enum::RoleGetDetails) {
-        action = menu->addAction(i18n("Details"));
+        action = menu->addAction(i18n("Description"));
         action->setCheckable(true);
         action->setData(Enum::RoleGetDetails);
         m_actionGroup->addAction(action);
@@ -112,12 +113,13 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
                 this, SLOT(actionActivated(QAction *)));
         // Set the menu
         menuTB->setMenu(menu);
+        menuTB->setIcon(KIcon("list-add"));
     }
 
-    m_busySeqDetails = new KPixmapSequenceOverlayPainter(this);
-    m_busySeqDetails->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
-    m_busySeqDetails->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_busySeqDetails->setWidget(stackedWidget);
+    m_busySeq = new KPixmapSequenceOverlayPainter(this);
+    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_busySeq->setWidget(stackedWidget);
 
     // Setup the opacit effect that makes the descriptio transparent
     // after finished it checks in display() to see if it shouldn't show
@@ -125,28 +127,22 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     // is the the Forward or Backward property
     QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(stackedWidget);
     effect->setOpacity(0);
+    stackedWidget->setVisible(false);
     stackedWidget->setGraphicsEffect(effect);
-    m_fadeDetails = new QPropertyAnimation(effect, "opacity");
-    m_fadeDetails->setDuration(500);
-    m_fadeDetails->setStartValue(qreal(0));
-    m_fadeDetails->setEndValue(qreal(1));
-    connect(m_fadeDetails, SIGNAL(finished()), this, SLOT(display()));
+    m_fadeStacked = new QPropertyAnimation(effect, "opacity");
+    m_fadeStacked->setDuration(500);
+    m_fadeStacked->setStartValue(qreal(0));
+    m_fadeStacked->setEndValue(qreal(1));
+    connect(m_fadeStacked, SIGNAL(finished()), this, SLOT(display()));
 
 
     // It's is impossible due to some limitation in Qt to set two effects on the same
     // Widget
     m_fadeScreenshot = new QPropertyAnimation(effect, "opacity");
-//
-
     GraphicsOpacityDropShadowEffect *shadow = new GraphicsOpacityDropShadowEffect(screenshotL);
     shadow->setOpacity(0);
-// //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
-// //     shadow->setColor(QColor(Qt::blue));
     shadow->setBlurRadius(BLUR_RADIUS);
     shadow->setOffset(2);
-// //     shadow2->setColor(QColor(Qt::blue));
-// //     shadow2->setBlurRadius(15);
-// //     shadow2->setOffset(2);
     screenshotL->setGraphicsEffect(shadow);
 
     m_fadeScreenshot = new QPropertyAnimation(shadow, "opacity");
@@ -164,6 +160,9 @@ KpkPackageDetails::~KpkPackageDetails()
 void KpkPackageDetails::setDisplayDetails(bool value)
 {
     m_display = value;
+    if (value && !stackedWidget->isVisible()) {
+        stackedWidget->setVisible(true);
+    }
     display();
 }
 
@@ -174,23 +173,15 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
         m_package->id() == package->id()) {
         return;
     } else if (m_display) {
-        fadeOut();
+        fadeOut(KpkPackageDetails::FadeScreenshot | KpkPackageDetails::FadeStacked);
     }
     m_package       = package;
     m_hasDetails    = false;
-//     m_hasScreenshot = false;
+    m_hasFileList   = false;
 
     QString pkgName     = index.data(KpkPackageModel::IdRole).toString().split(';')[0];
     QString pkgIconPath = index.data(KpkPackageModel::IconPathRole).toString();
     m_currentIcon       = KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64);
-
-    // disconnect the transaction
-    // so that we don't get old descriptions
-    if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
-                this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
-        m_transaction = 0;
-    }
 
     //
     m_currentScreenshot = "http://screenshots.debian.net/thumbnail/" + pkgName;
@@ -218,7 +209,7 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
 //     if (m_transaction->error()) {
 //         KMessageBox::sorry(this, KpkStrings::daemonError(m_transaction->error()));
 //     } else {
-//         m_busySeqDetails->start();
+//         m_busySeq->start();
 //         connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
 //                 this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
 //     }
@@ -226,6 +217,25 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
 
 void KpkPackageDetails::actionActivated(QAction *action)
 {
+    kDebug() << action->data().toUInt();
+    // don't fade the screenshot
+    // if the package changed setPackage() fades both
+    fadeOut(FadeStacked);
+
+    // disconnect the transaction
+    // so that we don't get old data
+    if (m_transaction) {
+        disconnect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
+                   this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
+        disconnect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+                   m_pkg_model_dep, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        disconnect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+                   m_pkg_model_req, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        disconnect(m_transaction, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
+                   this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
+        m_transaction = 0;
+    }
+
     // Check to see if we don't already have package details
     if (action->data().toUInt() == Enum::RoleGetDetails &&
         m_package->hasDetails()) {
@@ -260,9 +270,7 @@ void KpkPackageDetails::actionActivated(QAction *action)
     if (m_transaction->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_transaction->error()));
     } else {
-        m_busySeqDetails->start();
-        connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
-                this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
+        m_busySeq->start();
     }
 }
 
@@ -271,30 +279,26 @@ void KpkPackageDetails::resultJob(KJob *job)
     kDebug();
     KIO::FileCopyJob *fJob = qobject_cast<KIO::FileCopyJob*>(job);
     if (!fJob->error()) {
-        kDebug() << fJob->srcUrl() << fJob->destUrl();
-        kDebug() << fJob->srcUrl().url() << fJob->destUrl().toLocalFile();
-
-
         m_screenshotPath[fJob->srcUrl().url()] = fJob->destUrl().toLocalFile();
-//         m_currentScreenshot = QPixmap(m_tempFile->fileName()).scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-//         m_hasScreenshot = true;
-        kDebug() << "m_fadeScreenshot" << m_tempFile->fileName();
-
         display();
     }
 }
 
-void KpkPackageDetails::fadeOut()
+void KpkPackageDetails::fadeOut(FadeWidgets widgets)
 {
-    kDebug();
+    if (widgets & FadeStacked)
+        kDebug() << "FadeStacked";
+    if (widgets & FadeScreenshot)
+        kDebug() << "FadeScreenshot";
+//     kDebug() << widgets & FadeStacked << widgets & FadeStacked;
     // Fade out only if needed
-    if (m_fadeDetails->currentValue().toReal() != 0) {
-        m_fadeDetails->setDirection(QAbstractAnimation::Backward);
-        m_fadeDetails->start();
+    if ((widgets & FadeStacked) && m_fadeStacked->currentValue().toReal() != 0) {
+        m_fadeStacked->setDirection(QAbstractAnimation::Backward);
+        m_fadeStacked->start();
     }
 
     // Fade out the screenshot only if needed
-    if (m_fadeScreenshot->currentValue().toReal() != 0) {
+    if ((widgets & FadeScreenshot) && m_fadeScreenshot->currentValue().toReal() != 0) {
         m_fadeScreenshot->setDirection(QAbstractAnimation::Backward);
         m_fadeScreenshot->start();
     }
@@ -302,20 +306,43 @@ void KpkPackageDetails::fadeOut()
 
 void KpkPackageDetails::display()
 {
-    kDebug() << "m_fadeDetails" << m_fadeDetails->currentValue().toReal() << m_hasDetails << m_display;
+    kDebug() << "m_fadeStacked" << m_fadeStacked->currentValue().toReal() << m_hasDetails << m_display;
     kDebug() << "m_fadeScreenshot" << m_fadeScreenshot->currentValue().toReal() << m_screenshotPath.contains(m_currentScreenshot) << m_display;
     // If we shouldn't be showing fade out
     if (!m_display) {
-        fadeOut();
+        fadeOut(FadeScreenshot | FadeStacked);
     } else {
-        // Check to see if we have details and if we are
-        // transparent
-        if (m_fadeDetails->currentValue().toReal() == 0 &&
-            m_hasDetails) {
-            setupDescription();
-            // Fade In
-            m_fadeDetails->setDirection(QAbstractAnimation::Forward);
-            m_fadeDetails->start();
+        // Check to see if the stacked widget is transparent
+        if (m_fadeStacked->currentValue().toReal() == 0 &&
+            m_actionGroup->checkedAction())
+        {
+            bool fadeIn = false;
+            switch (m_actionGroup->checkedAction()->data().toUInt()) {
+            case Enum::RoleGetDetails:
+                if (m_hasDetails) {
+                    setupDescription();
+                    fadeIn = true;
+                }
+                break;
+            case Enum::RoleGetDepends:
+                break;
+            case Enum::RoleGetRequires:
+                break;
+            case Enum::RoleGetFiles:
+                if (m_hasFileList) {
+                    m_viewLayout->setCurrentWidget(filesPTE);
+                    filesPTE->clear();
+                    filesPTE->insertPlainText(m_currentFileList.join("\n"));
+                    fadeIn = true;
+                }
+                break;
+            }
+
+            if (fadeIn) {
+                // Fade In
+                m_fadeStacked->setDirection(QAbstractAnimation::Forward);
+                m_fadeStacked->start();
+            }
         }
 
         // Check to see if we have a screen shot and if we are
@@ -323,7 +350,7 @@ void KpkPackageDetails::display()
         // to be shown
         if (m_fadeScreenshot->currentValue().toReal() == 0 &&
             m_screenshotPath.contains(m_currentScreenshot) &&
-            m_fadeDetails->direction() == QAbstractAnimation::Forward) {
+            m_fadeStacked->direction() == QAbstractAnimation::Forward) {
             QPixmap pixmap;
             pixmap = QPixmap(m_screenshotPath[m_currentScreenshot])
                              .scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -369,15 +396,44 @@ void KpkPackageDetails::setupDescription()
                            details->url() + "</a>");
         homepageL->show();
     } else {
-        homepageL->clear();
+        homepageL->hide();
     }
 
     if (!details->license().isEmpty() && details->license() != "unknown") {
         licenseL->setText(details->license());
         licenseL->show();
     } else {
-        licenseL->clear();
+        licenseL->hide();
     }
+
+    
+
+    KService::Ptr service = KService::serviceByDesktopName("Kolf");
+    QVector<QPair<QString, QString> > ret;
+    ret = locateApplication(QString(), service->menuId());
+    if (ret.isEmpty()) {
+        pathL->hide();
+    } else {
+        QString path;
+        path.append(QString("<img src=\"%1\"/>")
+                    .arg(KIconLoader::global()->iconPath("kde", KIconLoader::Small)));
+        path.append(QString(" %1 <img src=\"%2\"/>%3")
+                    .arg(QString::fromUtf8("‣"))
+                    .arg(KIconLoader::global()->iconPath("applications-other", KIconLoader::Small))
+                    .arg(i18n("Applications")));
+        for (int i = 0; i < ret.size(); i++) {
+            kDebug() << ret.at(i).first << ret.at(i).second << KIconLoader::global()->iconPath(ret.at(i).second, KIconLoader::Small);
+            path.append(QString(" %1 <img src=\"%2\"/>%3")
+                        .arg(QString::fromUtf8("‣"))
+                        .arg(KIconLoader::global()->iconPath(ret.at(i).second, KIconLoader::Small))
+                        .arg(ret.at(i).first));
+        }
+        kDebug() << path;
+        pathL->setText(path);
+    }
+//     KDesktopFile *desktop = new KDesktopFile(service->desktopEntryPath());
+//     kDebug() << service->isApplication() << service->noDisplay() << service->categories() << service->entryPath();
+//     kDebug() << desktop->desktopGroup()
 
 //     if (details->group() != Enum::UnknownGroup) {
 // //         description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
@@ -389,16 +445,78 @@ void KpkPackageDetails::setupDescription()
         sizeL->setText(KGlobal::locale()->formatByteSize(details->size()));
         sizeL->show();
     } else {
-        sizeL->clear();
+        sizeL->hide();
     }
 
     iconL->setPixmap(m_currentIcon);
 }
 
+QVector<QPair<QString, QString> > KpkPackageDetails::locateApplication(const QString &_relPath, const QString &menuId) const
+// void ApplicationModelPrivate::fillNode(const QString &_relPath, AppNode *node)
+{
+    QVector<QPair<QString, QString> > ret;
+    KServiceGroup::Ptr root = KServiceGroup::group(_relPath);
+
+    if (!root || !root->isValid()) {
+        return ret;
+    }
+
+    const KServiceGroup::List list = root->entries(false /* sorted */,
+                                                   true /* exclude no display entries */,
+                                                   false /* allow separators */);
+
+    for (KServiceGroup::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
+        const KSycocaEntry::Ptr p = (*it);
+
+        if (p->isType(KST_KService)) {
+            const KService::Ptr service = KService::Ptr::staticCast(p);
+
+            if (service->noDisplay()) {
+                continue;
+            }
+
+//             kDebug() << menuId << service->menuId();
+            if (service->menuId() == menuId) {
+                QPair<QString, QString> pair;
+                pair.first  = service->name();
+                pair.second = service->icon();
+                ret << pair;
+//                 kDebug() << "FOUND!";
+                return ret;
+            }
+        } else if (p->isType(KST_KServiceGroup)) {
+            const KServiceGroup::Ptr serviceGroup = KServiceGroup::Ptr::staticCast(p);
+
+            if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0) {
+                continue;
+            }
+
+            kDebug() << "Service group" << serviceGroup->entryPath() << serviceGroup->icon()
+            << serviceGroup->relPath() << serviceGroup->directoryEntryPath();
+
+            QVector<QPair<QString, QString> > found;
+            found = locateApplication(serviceGroup->relPath(), menuId);
+            if (!found.isEmpty()) {
+                QPair<QString, QString> pair;
+                pair.first  = serviceGroup->caption();
+                pair.second = serviceGroup->icon();
+                ret << pair;
+                ret << found;
+                return ret;
+            }
+        } else {
+            kWarning(250) << "KServiceGroup: Unexpected object in list!";
+            continue;
+        }
+    }
+
+    return ret;
+}
+
 void KpkPackageDetails::description(const QSharedPointer<PackageKit::Package> &package)
 {
-    if (m_busySeqDetails) {
-        m_busySeqDetails->stop();
+    if (m_busySeq) {
+        m_busySeq->stop();
     }
 
     m_package     = package;
@@ -421,7 +539,7 @@ void KpkPackageDetails::finished(PackageKit::Enum::Exit status)
 void KpkPackageDetails::on_descriptionTB_clicked()
 {
 //     m_viewLayout->setCurrentWidget(descriptionKTB);
-//     if (!m_busySeqDetails) {
+//     if (!m_busySeq) {
 //         // disconnect the transaction
 //         // so that we don't get old descriptions
 //         if (m_transaction) {
@@ -441,7 +559,7 @@ void KpkPackageDetails::on_descriptionTB_clicked()
 //         if (m_transaction->error()) {
 //             KMessageBox::sorry(this, KpkStrings::daemonError(m_transaction->error()));
 //         } else {
-//             setupSequence(m_transaction, &m_busySeqDetails, this);
+//             setupSequence(m_transaction, &m_busySeq, this);
 //             connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
 //                     this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
 //         }
@@ -451,65 +569,76 @@ void KpkPackageDetails::on_descriptionTB_clicked()
 void KpkPackageDetails::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
 {
     Q_UNUSED(package)
-    m_busySeqFiles->stop();
-    filesPTE->clear();
-    for (int i = 0; i < files.size(); ++i) {
-        filesPTE->appendPlainText(files.at(i));
+    kDebug();
+    if (m_busySeq) {
+        m_busySeq->stop();
     }
+
+    m_currentFileList = files;
+    m_hasFileList     = true;
+    m_transaction     = 0;
+
+    display();
+
+//     m_busySeqFiles->stop();
+//     filesPTE->clear();
+//     for (int i = 0; i < files.size(); ++i) {
+//         filesPTE->appendPlainText(files.at(i));
+//     }
 }
 
 void KpkPackageDetails::on_fileListTB_clicked()
 {
     m_viewLayout->setCurrentWidget(filesPTE);
-    if (!m_busySeqFiles) {
+//     if (!m_busySeqFiles) {
         // create the files transaction
         Transaction *t = Client::instance()->getFiles(m_package);
         if (t->error()) {
             KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-            setupSequence(t, &m_busySeqFiles, filesPTE->viewport());
+//             setupSequence(t, &m_busySeqFiles, filesPTE->viewport());
             connect(t, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
                     this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
         }
-    }
+//     }
 }
 
 void KpkPackageDetails::on_dependsOnTB_clicked()
 {
     m_viewLayout->setCurrentWidget(dependsOnLV);
-    if (!m_busySeqDepends) {
+//     if (!m_busySeqDepends) {
         // create a transaction for the dependecies not recursive
         Transaction *t = Client::instance()->getDepends(m_package, PackageKit::Enum::NoFilter, false);
         m_pkg_model_dep->clear();
         if (t->error()) {
             KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-            setupSequence(t, &m_busySeqDepends, dependsOnLV->viewport());
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    m_busySeqDepends, SLOT(stop()));
+//             setupSequence(t, &m_busySeqDepends, dependsOnLV->viewport());
+//             connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+//                     m_busySeqDepends, SLOT(stop()));
             connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                     m_pkg_model_dep, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         }
-    }
+//     }
 }
 
 void KpkPackageDetails::on_requiredByTB_clicked()
 {
     m_viewLayout->setCurrentWidget(requiredByLV);
-    if (!m_busySeqRequires) {
+//     if (!m_busySeqRequires) {
          // create a transaction for the requirements not recursive
         Transaction *t = Client::instance()->getRequires(m_package, PackageKit::Enum::NoFilter, false);
         m_pkg_model_req->clear();
         if (t->error()) {
             KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         } else {
-            setupSequence(t, &m_busySeqRequires, requiredByLV->viewport());
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    m_busySeqRequires, SLOT(stop()));
+//             setupSequence(t, &m_busySeqRequires, requiredByLV->viewport());
+//             connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+//                     m_busySeqRequires, SLOT(stop()));
             connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                     m_pkg_model_req, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
         }
-    }
+//     }
 }
 
 #include "KpkPackageDetails.moc"

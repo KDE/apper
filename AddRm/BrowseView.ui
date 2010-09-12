@@ -199,7 +199,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QWidget" name="packageDetails" native="true">
+    <widget class="KpkPackageDetails" name="packageDetails" native="true">
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -215,7 +215,13 @@
   <customwidget>
    <class>KpkSearchableTreeView</class>
    <extends>QTreeView</extends>
-   <header location="global">KpkSearchableTreeView.h</header>
+   <header>KpkSearchableTreeView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KpkPackageDetails</class>
+   <extends>QWidget</extends>
+   <header>KpkPackageDetails.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

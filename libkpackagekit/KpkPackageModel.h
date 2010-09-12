@@ -46,7 +46,7 @@ public:
         IdRole,
         CheckStateRole,
         InfoRole,
-        ApplicationSortRole
+        ApplicationFilterRole
     };
 
     explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
@@ -97,7 +97,7 @@ signals:
 private:
     typedef struct {
         QSharedPointer<Package> package;
-        int        application;
+        int        isPackage;
         QString    name;
         QString    version;
         QString    icon;

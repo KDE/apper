@@ -210,6 +210,9 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     // install the backend filters
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(m_client->filters(), this));
     filtersTB->setIcon(KIcon("view-filter"));
+    m_browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
+    connect(m_filtersMenu, SIGNAL(filterApplications(const QString &)),
+            m_browseView->proxy(), SLOT(setFilterFixedString(const QString &)));
 
 
     //initialize the model, delegate, client and  connect it's signals
@@ -397,21 +400,6 @@ void AddRmKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
 
 AddRmKCM::~AddRmKCM()
 {
-    KConfig config("KPackageKit");
-    KConfigGroup filterMenuGroup(&config, "FilterMenu");
-
-    // For usability we will only save ViewInGroups settings and Newest filter,
-    // - The user might get angry when he does not find any packages because he didn't
-    //   see that a filter is set by config
-
-    // This entry does not depend on the backend it's ok to call this pointer
-//     filterMenuGroup.writeEntry("ViewInGroups", m_filtersMenu->actionGrouped());
-
-    // This entry does not depend on the backend it's ok to call this pointer
-    if (m_client->filters() & Enum::FilterNewest) {
-        filterMenuGroup.writeEntry("FilterNewest",
-                                   static_cast<bool>(m_filtersMenu->filters() & Enum::FilterNewest));
-    }
 }
 
 void AddRmKCM::on_actionFindName_triggered()

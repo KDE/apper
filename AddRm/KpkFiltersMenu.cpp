@@ -24,6 +24,8 @@
 #include <KConfigGroup>
 #include <KLocale>
 
+#include "config.h"
+
 KpkFiltersMenu::KpkFiltersMenu(Enum::Filters filters, QWidget *parent)
  : QMenu(parent)
 {
@@ -240,10 +242,51 @@ KpkFiltersMenu::KpkFiltersMenu(Enum::Filters filters, QWidget *parent)
 
         m_actions << newest;
     }
+
+#ifdef HAVE_APPINSTALL
+    addSeparator();
+    m_applications = new QAction(i18n("Hide packages"), this);
+    m_applications->setCheckable(true);
+    m_applications->setChecked(filterMenuGroup.readEntry("HidePackages", false));
+    m_applications->setToolTip(i18n("Only show applications"));
+    addAction(m_applications);
+    connect(m_applications, SIGNAL(triggered(bool)),
+            this, SLOT(filterAppTriggered(bool)));
+#endif //HAVE_APPINSTALL
 }
 
 KpkFiltersMenu::~KpkFiltersMenu()
 {
+    KConfig config("KPackageKit");
+    KConfigGroup filterMenuGroup(&config, "FilterMenu");
+
+    // For usability we will only save ViewInGroups settings and Newest filter,
+    // - The user might get angry when he does not find any packages because he didn't
+    //   see that a filter is set by config
+
+    // This entry does not depend on the backend it's ok to call this pointer
+//     filterMenuGroup.writeEntry("ViewInGroups", m_filtersMenu->actionGrouped());
+
+    // This entry does not depend on the backend it's ok to call this pointer
+    filterMenuGroup.writeEntry("FilterNewest",
+                               static_cast<bool>(filters() & Enum::FilterNewest));
+#ifdef HAVE_APPINSTALL
+    filterMenuGroup.writeEntry("HidePackages", m_applications->isChecked());
+#endif //HAVE_APPINSTALL
+}
+
+QString KpkFiltersMenu::filterApplications() const
+{
+#ifdef HAVE_APPINSTALL
+    return m_applications->isChecked() ? "a" : QString();
+#else
+    return QString();
+#endif //HAVE_APPINSTALL
+}
+
+void KpkFiltersMenu::filterAppTriggered(bool checked)
+{
+    emit filterApplications(checked ? "a" : QString());
 }
 
 Enum::Filters KpkFiltersMenu::filters() const

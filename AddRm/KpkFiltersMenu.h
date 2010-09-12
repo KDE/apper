@@ -34,8 +34,16 @@ public:
     ~KpkFiltersMenu();
 
     Enum::Filters filters() const;
+    QString filterApplications() const;
+
+signals:
+    void filterApplications(const QString &filter);
+
+private slots:
+    void filterAppTriggered(bool checked);
 
 private:
+    QAction *m_applications;
     QList<QAction*> m_actions;
     QHash<QAction *, Enum::Filter> m_filtersAction;
 };

@@ -69,7 +69,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
     foreach (const QStringList &list, data) {
         InternalPackage iPackage;
         iPackage.package     = package;
-        iPackage.application = 0;
+        iPackage.isPackage   = 0;
         iPackage.name        = list.at(APP_NAME);
         iPackage.summary     = list.at(APP_SUMMARY);
         iPackage.icon        = list.at(APP_ICON).split('.')[0];
@@ -89,7 +89,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
 #endif //HAVE_APPINSTALL
         InternalPackage iPackage;
         iPackage.package     = package;
-        iPackage.application = 1;
+        iPackage.isPackage   = 1;
         iPackage.name        = package->name();
         iPackage.summary     = package->summary();
         iPackage.version     = package->version();
@@ -178,6 +178,9 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
     if (index.column() == 0) {
         switch (role) {
+        case ApplicationFilterRole:
+            // if we are an application return 'a', if package 'p'
+            return package.isPackage ? QString('p') : QString('a');
         case Qt::DisplayRole:
 //             if (property("kbd").toBool()) {
                 return package.name;
@@ -186,7 +189,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 //             }
         case Qt::DecorationRole:
         {
-            QPixmap icon = QPixmap(42, ICON_SIZE);
+            QPixmap icon = QPixmap(46, ICON_SIZE);
             icon.fill(Qt::transparent);
             QPixmap pixmap = KpkIcons::getIcon(data(index, IconPathRole).toString(), QString()).pixmap(24, 24);
             if (!pixmap.isNull()) {
@@ -195,11 +198,11 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             }
 
             if (package.info == Enum::InfoInstalled ||
-            package.info == Enum::InfoCollectionInstalled) {
+                package.info == Enum::InfoCollectionInstalled) {
                 QPainter painter(&icon);
                 QPoint startPoint;
                 // bottom right corner
-                startPoint = QPoint(42 - OVERLAY_SIZE,
+                startPoint = QPoint(46 - OVERLAY_SIZE,
                                     4);
                 painter.drawPixmap(startPoint, m_installedEmblem);
             }
@@ -241,7 +244,12 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     case IconPathRole:
         if (package.icon.isNull()) {
             QString icon = package.package->iconPath();
-            package.icon = icon.isNull() ? "" : icon;
+            if (icon.isNull()) {
+                package.icon = "";
+            } else {
+                package.isPackage = false;
+                package.icon = icon;
+            }
         }
         return package.icon;
     case InfoRole:
@@ -256,17 +264,11 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     case KCategorizedSortFilterProxyModel::CategorySortRole:
 #ifdef HAVE_APPINSTALL
         if (m_sortByApp) {
-            return package.application;
+            return package.isPackage;
         }
 #endif //HAVE_APPINSTALL
         if (package.info == Enum::InfoInstalled ||
             package.info == Enum::InfoCollectionInstalled) {
-            return 0;
-        } else {
-            return 1;
-        }
-    case ApplicationSortRole:
-        if (package.application) {
             return 0;
         } else {
             return 1;

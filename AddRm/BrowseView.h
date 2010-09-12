@@ -21,12 +21,12 @@
 #ifndef BROWSE_VIEW_H
 #define BROWSE_VIEW_H
 
-#include <KPageView>
+#include <KCategorizedSortFilterProxyModel>
 
 #include "ui_BrowseView.h"
 
 class KpkPackageModel;
-class KpkPackageDetails;
+
 class KpkSearchableTreeView;
 class BrowseView : public QWidget, Ui::BrowseView
 {
@@ -39,7 +39,8 @@ public:
     void setCategoryModel(QAbstractItemModel *model);
     void setParentCategory(const QModelIndex &index);
     void hideCategory();
-    KpkPackageModel* model() const;
+    KpkPackageModel*                  model() const;
+    KCategorizedSortFilterProxyModel* proxy() const;
 
     void disableExportInstalledPB();
 
@@ -61,11 +62,11 @@ private slots:
 private:
     bool showPageHeader() const;
 //     void updateSceneEvent();
-    KpkPackageDetails *m_details;
-    KpkPackageDetails *m_oldDetails;
 
-    KpkPackageModel       *m_model;
-    KpkSearchableTreeView *m_packageView;
+    KpkPackageModel                  *m_model;
+    KCategorizedSortFilterProxyModel *m_proxy;
+    KpkSearchableTreeView            *m_packageView;
+    
 //     QGraphicsProxyWidget  *m_proxyWidget;
 //     QGraphicsScene        *m_scene;
 

@@ -42,6 +42,12 @@ class KpkPackageDetails : public QWidget, Ui::KpkPackageDetails
 {
 Q_OBJECT
 public:
+    enum FadeWidget {
+        FadeNone       = 0x0,
+        FadeStacked    = 0x1,
+        FadeScreenshot = 0x2
+    };
+    Q_DECLARE_FLAGS(FadeWidgets, FadeWidget)
     KpkPackageDetails(QWidget *parent = 0);
     ~KpkPackageDetails();
 
@@ -49,6 +55,8 @@ public:
                     const QModelIndex &index);
 
     void setDisplayDetails(bool display);
+
+    QVector<QPair<QString, QString> > locateApplication(const QString &_relPath, const QString &menuId) const;
 
 private slots:
     void description(const QSharedPointer<PackageKit::Package> &package);
@@ -66,7 +74,7 @@ private slots:
     void resultJob(KJob *);
 
     void display();
-    void fadeOut();
+    void fadeOut(FadeWidgets widgets);
     void setupDescription();
 
 private:
@@ -83,25 +91,26 @@ private:
     QListView      *dependsOnLV;
     QListView      *requiredByLV;
 
-    KPixmapSequenceOverlayPainter *m_busySeqDetails;
-    KPixmapSequenceOverlayPainter *m_busySeqFiles;
-    KPixmapSequenceOverlayPainter *m_busySeqDepends;
-    KPixmapSequenceOverlayPainter *m_busySeqRequires;
+    KPixmapSequenceOverlayPainter *m_busySeq;
 
-    QPropertyAnimation *m_fadeDetails;
+    QPropertyAnimation *m_fadeStacked;
     QPropertyAnimation *m_fadeScreenshot;
     bool m_display;
 
     // We need a copy of prety much every thing
     // we have, so that we update only when we are
-    // totaly trasnparent this way the user
+    // totaly transparent this way the user
     // does not see the ui flicker
     Transaction *m_transaction;
     bool         m_hasDetails;
     QString      m_currentText;
     QPixmap      m_currentIcon;
 
-    // KIO don't get the same file if it store
+    // file list buffer
+    bool         m_hasFileList;
+    QStringList  m_currentFileList;
+
+    // Don't fetch the same data again
     QString      m_currentScreenshot;
     QHash<QString, QString> m_screenshotPath;
 
@@ -109,5 +118,7 @@ private:
                        KPixmapSequenceOverlayPainter **sequence,
                        QWidget *widget);
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KpkPackageDetails::FadeWidgets)
 
 #endif
