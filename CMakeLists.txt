@@ -31,7 +31,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 include(FindPkgConfig)
-pkg_check_modules(QPACKAGEKIT REQUIRED packagekit-qt>=0.6.3)
+pkg_check_modules(QPACKAGEKIT REQUIRED packagekit-qt>=0.6.8)
 include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS}
