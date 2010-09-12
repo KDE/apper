@@ -410,7 +410,9 @@ void KpkPackageDetails::setupDescription()
 
     KService::Ptr service = KService::serviceByDesktopName("Kolf");
     QVector<QPair<QString, QString> > ret;
-    ret = locateApplication(QString(), service->menuId());
+    if (service) {
+        ret = locateApplication(QString(), service->menuId());
+    }
     if (ret.isEmpty()) {
         pathL->hide();
     } else {
