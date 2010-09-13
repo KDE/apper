@@ -455,7 +455,7 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
     if (index.isValid()) {
         // cache the search
         m_searchRole    = static_cast<Enum::Role>(index.data(CategoryModel::SearchRole).toUInt());
-        m_searchGroup   = static_cast<Enum::Group>(index.data(Qt::UserRole).toUInt());
+        m_searchGroup   = static_cast<Enum::Group>(index.data(CategoryModel::GroupRole).toUInt());
         m_searchFilters = m_filtersMenu->filters();
         if (m_searchRole == Enum::RoleResolve) {
             m_searchString = index.data(CategoryModel::CategoryRole).toString();

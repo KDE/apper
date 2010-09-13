@@ -77,25 +77,15 @@ void ApplicationsDelegate::paint(QPainter *painter,
     if (!index.isValid()) {
         return;
     }
-    if (index.column() == 0) {
-        QStyleOptionViewItemV4 opt(option);
-//         if (index.data(Qt::DecorationRole).value<QIcon>().isNull()) {
-//             opt.rect.setLeft(24);
-// //         QString pkgName       = index.data(KpkPackageModel::NameRole).toString();
-//         }
 
-        QStyledItemDelegate::paint(painter, opt, index);
+    if (index.column() == 0) {
+        QStyledItemDelegate::paint(painter, option, index);
         return;
     } else if (index.column() == 1) {
-//         qreal opa = painter->opacity();
-//         painter->setOpacity(opa/2);
-//         QStyleOptionViewItemV4 opt(option);
-//         QStyledItemDelegate::paint(painter, opt, index);
-//         painter->setOpacity(opa);
-QPixmap pixmap(option.rect.size());
-    pixmap.fill(Qt::transparent);
-    QPainter p(&pixmap);
-    p.translate(-option.rect.topLeft());
+        QPixmap pixmap(option.rect.size());
+        pixmap.fill(Qt::transparent);
+        QPainter p(&pixmap);
+        p.translate(-option.rect.topLeft());
 
         bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
 
@@ -120,7 +110,6 @@ QPixmap pixmap(option.rect.size());
         qreal opa = p.opacity();
         QStyleOptionViewItem local_option_normal(option);
         if (!pkgInstalled) {
-            p.setOpacity(opa / 2.5);
             local_option_normal.font.setItalic(true);
         }
 
@@ -128,6 +117,9 @@ QPixmap pixmap(option.rect.size());
         if (option.state.testFlag(QStyle::State_Selected)) {
             foregroundColor = option.palette.color(QPalette::HighlightedText);
         } else {
+            if (!pkgInstalled) {
+                p.setOpacity(opa / 2.5);
+            }
             foregroundColor = option.palette.color(QPalette::Text);
         }
 
@@ -226,27 +218,22 @@ QPixmap pixmap(option.rect.size());
         optBt.features = QStyleOptionButton::Flat;
         optBt.iconSize = m_buttonIconSize;
         if (pkgChecked) {
-//             optBt.text = m_undoString;
-//             optBt.icon = m_undoIcon;
             optBt.state |= QStyle::State_Sunken | QStyle::State_Active | QStyle::State_Enabled;;
         } else {
             if (option.state & QStyle::State_MouseOver) {
                 optBt.state |= QStyle::State_MouseOver;
             }
-//             optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
-//             optBt.text = pkgInstalled ? m_removeString : m_installString;
             optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
         }
         optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
         optBt.text = pkgInstalled ? m_removeString : m_installString;
-//         qreal opa = painter->opacity();
-//         if ((option.state & QStyle::State_MouseOver) && !(option.state & QStyle::State_Selected)) {
-//             painter->setOpacity(opa / 2);
-//         }
+
         style->drawControl(QStyle::CE_PushButton, &optBt, painter);
-//         painter->setOpacity(opa);
         return;
     }
+
+
+
     bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
 
     QStyleOptionViewItemV4 opt(option);

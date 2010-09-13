@@ -210,6 +210,22 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             }
             return icon;
         }
+        case Qt::ForegroundRole:
+            if (package.info != Enum::InfoInstalled &&
+                package.info != Enum::InfoCollectionInstalled) {
+                QColor foregroundColor = QApplication::palette().color(QPalette::Text);
+                foregroundColor.setAlphaF(0.5);
+                return QBrush(foregroundColor);
+            }
+            break;
+        case Qt::FontRole:
+            if (package.info != Enum::InfoInstalled &&
+                package.info != Enum::InfoCollectionInstalled) {
+                QFont font;
+                font.setItalic(true);
+                return font;
+            }
+            break;
         }
     } else if (index.column() == 1) {
         if (role == Qt::DisplayRole) {
