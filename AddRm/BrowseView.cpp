@@ -31,6 +31,7 @@
 
 #include <KFileDialog>
 #include <KCategorizedSortFilterProxyModel>
+#include <KMenu>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -71,8 +72,8 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
     packageView->header()->setStretchLastSection(false);
     packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(1, QHeaderView::Stretch);
-
+    packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(2, QHeaderView::Stretch);
 
 
 //     m_scene = new QGraphicsScene(graphicsView);
@@ -116,10 +117,21 @@ BrowseView::BrowseView(QWidget *parent)
 
 //     graphicsView->fitInView(m_proxyWidget, Qt::KeepAspectRatio);
 //     packageDetails->hide();
+    KConfig config("KPackageKit");
+    KConfigGroup viewGroup(&config, "ViewGroup");
+    m_showPackageVersion = new QAction(i18n("Show Versions"), this);
+    m_showPackageVersion->setCheckable(true);
+    connect(m_showPackageVersion, SIGNAL(toggled(bool)),
+            this, SLOT(showVersions(bool)));
+    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", false));
+    showVersions(m_showPackageVersion->isChecked());
 }
 
 BrowseView::~BrowseView()
 {
+    KConfig config("KPackageKit");
+    KConfigGroup viewGroup(&config, "ViewGroup");
+    viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
 }
 
 bool BrowseView::showPageHeader() const
@@ -130,6 +142,19 @@ bool BrowseView::showPageHeader() const
 KpkPackageModel* BrowseView::model() const
 {
     return m_model;
+}
+
+void BrowseView::showVersions(bool enabled)
+{
+    packageView->header()->setSectionHidden(1, !enabled);
+}
+
+void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
+{
+    KMenu *menu = new KMenu(this);
+    menu->addAction(m_showPackageVersion);
+    menu->exec(mapToGlobal(pos));
+    delete menu;
 }
 
 void BrowseView::on_packageView_activated(const QModelIndex &index)

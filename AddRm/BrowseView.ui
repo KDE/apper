@@ -169,6 +169,9 @@
    </item>
    <item row="2" column="0">
     <widget class="KpkSearchableTreeView" name="packageView">
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
@@ -215,7 +218,7 @@
   <customwidget>
    <class>KpkSearchableTreeView</class>
    <extends>QTreeView</extends>
-   <header>KpkSearchableTreeView.h</header>
+   <header location="global">KpkSearchableTreeView.h</header>
   </customwidget>
   <customwidget>
    <class>KpkPackageDetails</class>

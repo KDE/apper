@@ -90,7 +90,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 #ifdef HAVE_APPINSTALL
     // load all the data in memory since quering SQLITE is really slow
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "app-install");
-    db.setDatabaseName("/home/daniel/code/os/app-install/share/desktop.db");
+    db.setDatabaseName(APPINSTALL_DB);
     db.open();
     QSqlQuery query(db);
     query.prepare(
@@ -144,11 +144,9 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     // Create a stacked layout so only homeView or packageView are displayed
     m_viewLayout = new QStackedLayout(stackedWidget);
-//     m_pkgDetails = new PackageDetails(this);
     m_viewLayout->addWidget(homeView);
     m_viewLayout->addWidget(m_browseView);
     m_viewLayout->addWidget(changesView);
-//     m_viewLayout->addWidget(m_pkgDetails);
 
     QMenu *findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method

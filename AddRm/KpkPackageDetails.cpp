@@ -234,7 +234,6 @@ void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &pa
 
 void KpkPackageDetails::actionActivated(QAction *action)
 {
-    kDebug() << action->data().toUInt();
     // don't fade the screenshot
     // if the package changed setPackage() fades both
     fadeOut(FadeStacked);
@@ -404,7 +403,6 @@ void KpkPackageDetails::display()
                 if (m_hasFileList) {
                     filesPTE->clear();
                     filesPTE->insertPlainText(m_currentFileList.join("\n"));
-                    kDebug() << m_currentFileList;
                     if (m_viewLayout->currentWidget() != filesPTE) {
                         m_viewLayout->setCurrentWidget(filesPTE);
                     }

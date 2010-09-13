@@ -18,6 +18,19 @@ option(APPINSTALL "Build KPackageKit with app install" OFF)
 set(HAVE_APPINSTALL ${APPINSTALL})
 message(STATUS "Building KPackageKit with app install: " ${APPINSTALL})
 
+if (APPINSTALL)
+# path to the sqlite app-install db
+set(APPINSTALL_DB ${CMAKE_INSTALL_PREFIX}/share/app-install/desktop.db)
+option(APPINSTALL_DB "App Install database path" ${APPINSTALL_DB})
+message(STATUS "App Install database path: " ${APPINSTALL_DB})
+
+# path to the categories.xml menus
+set(APPINSTALL_CATEGORIES_PATH ${CMAKE_INSTALL_PREFIX}/share/app-install)
+option(APPINSTALL_CATEGORIES "App Install database path" ${APPINSTALL_CATEGORIES_PATH})
+message(STATUS "App Install categories path: " ${APPINSTALL_CATEGORIES_PATH})
+install(FILES categories.xml DESTINATION ${APPINSTALL_CATEGORIES_PATH})
+endif (APPINSTALL)
+
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
     find_package(DebconfKDE REQUIRED)

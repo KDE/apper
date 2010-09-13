@@ -78,10 +78,10 @@ void ApplicationsDelegate::paint(QPainter *painter,
         return;
     }
 
-    if (index.column() == 0) {
+    if (index.column() == 0 || index.column() == 1) {
         QStyledItemDelegate::paint(painter, option, index);
         return;
-    } else if (index.column() == 1) {
+    } else if (index.column() == 2) {
         QPixmap pixmap(option.rect.size());
         pixmap.fill(Qt::transparent);
         QPainter p(&pixmap);
@@ -175,7 +175,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
 
         painter->drawPixmap(option.rect.topLeft(), pixmap);
         return;
-    } else if (index.column() == 2) {
+    } else if (index.column() == 3) {
         bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
 
         if (!(option.state & QStyle::State_MouseOver) &&

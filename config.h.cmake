@@ -10,4 +10,10 @@
 // Define if app-install data is available.
 #cmakedefine HAVE_APPINSTALL
 
+// Define the app-install database path.
+#cmakedefine APPINSTALL_DB "@APPINSTALL_DB@"
+
+// Define the app-install categories path.
+#cmakedefine APPINSTALL_CATEGORIES_PATH "@APPINSTALL_CATEGORIES_PATH@"
+
 #endif //CONFIG_H

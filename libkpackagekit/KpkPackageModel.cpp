@@ -229,6 +229,10 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         }
     } else if (index.column() == 1) {
         if (role == Qt::DisplayRole) {
+            return package.version;
+        }
+    } else if (index.column() == 2) {
+        if (role == Qt::DisplayRole) {
             return package.summary;
         }
     }
@@ -371,7 +375,7 @@ Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 int KpkPackageModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 3;
+    return 4;
 }
 
 QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &index) const

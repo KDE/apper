@@ -54,6 +54,8 @@ public slots:
 
 private slots:
     void animationFinished();
+    void showVersions(bool enabled);
+    void on_packageView_customContextMenuRequested(const QPoint &pos);
     void on_packageView_activated(const QModelIndex &);
     void on_categoryMvLeft_clicked();
     void on_categoryMvRight_clicked();
@@ -65,16 +67,10 @@ private:
     bool showPageHeader() const;
 //     void updateSceneEvent();
 
+    QAction *m_showPackageVersion;
     KpkPackageModel                  *m_model;
     KCategorizedSortFilterProxyModel *m_proxy;
     KpkSearchableTreeView            *m_packageView;
-    
-//     QGraphicsProxyWidget  *m_proxyWidget;
-//     QGraphicsScene        *m_scene;
-
-// protected:
-//     virtual void resizeEvent(QResizeEvent *event);
-//     virtual bool event(QEvent *event);
 };
 
 #endif
