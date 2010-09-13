@@ -546,8 +546,12 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
         size.rwidth()  += 5 * UNIVERSAL_PADDING;
 //         kDebug() << size;
         return size;
-    }else {
-        return QStyledItemDelegate::sizeHint(option, index);
+    } else {
+        QSize size = QStyledItemDelegate::sizeHint(option, index);
+        if (index.column() == 0) {
+            size.rwidth() += 2 * UNIVERSAL_PADDING;
+        }
+        return size;
     }
     int width = (index.column() == 0) ? index.data(Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
     QSize ret(QStyledItemDelegate::sizeHint(option, index));

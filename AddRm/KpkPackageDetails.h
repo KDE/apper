@@ -53,37 +53,25 @@ public:
 
     void setPackage(const QSharedPointer<PackageKit::Package> &package,
                     const QModelIndex &index);
-
     void setDisplayDetails(bool display);
 
-    QVector<QPair<QString, QString> > locateApplication(const QString &_relPath, const QString &menuId) const;
-
 private slots:
+    void actionActivated(QAction *action);
     void description(const QSharedPointer<PackageKit::Package> &package);
     void files(QSharedPointer<PackageKit::Package> package, const QStringList &files);
-
-    void finished(PackageKit::Enum::Exit status);
-
-    void on_descriptionTB_clicked();
-    void on_fileListTB_clicked();
-    void on_dependsOnTB_clicked();
-    void on_requiredByTB_clicked();
-
-    void actionActivated(QAction *action);
-
+    void finished();
     void resultJob(KJob *);
 
     void display();
-    void fadeOut(FadeWidgets widgets);
-    void setupDescription();
 
 private:
+    void fadeOut(FadeWidgets widgets);
+    void setupDescription();
+    QVector<QPair<QString, QString> > locateApplication(const QString &_relPath, const QString &menuId) const;
+
     QActionGroup *m_actionGroup;
     QSharedPointer<PackageKit::Package> m_package;
     KTemporaryFile *m_tempFile;
-
-    KpkSimplePackageModel *m_pkg_model_dep;
-    KpkSimplePackageModel *m_pkg_model_req;
 
     QStackedLayout *m_viewLayout;
     KTextBrowser   *descriptionKTB;
@@ -105,18 +93,23 @@ private:
     bool         m_hasDetails;
     QString      m_currentText;
     QPixmap      m_currentIcon;
+    QString      m_appId;
 
     // file list buffer
     bool         m_hasFileList;
     QStringList  m_currentFileList;
 
-    // Don't fetch the same data again
+    // GetDepends buffer
+    bool m_hasDepends;
+    KpkSimplePackageModel *m_dependsModel;
+
+    // GetRequires buffer
+    bool m_hasRequires;
+    KpkSimplePackageModel *m_requiresModel;
+
+    // Screen shot buffer
     QString      m_currentScreenshot;
     QHash<QString, QString> m_screenshotPath;
-
-    void setupSequence(Transaction *transaction,
-                       KPixmapSequenceOverlayPainter **sequence,
-                       QWidget *widget);
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KpkPackageDetails::FadeWidgets)

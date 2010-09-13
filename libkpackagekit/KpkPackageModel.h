@@ -46,6 +46,7 @@ public:
         IdRole,
         CheckStateRole,
         InfoRole,
+        ApplicationId,
         ApplicationFilterRole
     };
 
@@ -104,6 +105,7 @@ private:
         QString    summary;
         QString    arch;
         QString    id;
+        QString    appId;
         Enum::Info info;
     } InternalPackage;
     bool containsChecked(const QString &pid) const;

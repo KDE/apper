@@ -22,6 +22,7 @@
 #define CATEGORY_MODEL_H
 
 #include <QStandardItemModel>
+#include <QXmlStreamReader>
 
 class CategoryModel : public QStandardItemModel
 {
@@ -35,6 +36,12 @@ public:
     } Roles;
     CategoryModel(QObject *parent = 0);
     ~CategoryModel();
+
+private:
+    void fillWithStandardGroups();
+    void fillWithServiceGroups();
+    void parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent = 0);
+    QString parseCategories(QXmlStreamReader &xml, QStandardItem *item, const QString &join = QString());
 };
 
 #endif

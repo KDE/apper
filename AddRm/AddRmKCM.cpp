@@ -58,6 +58,7 @@
 #define APP_NAME     1
 #define APP_SUMMARY  2
 #define APP_ICON     3
+#define APP_ID       4
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 
@@ -97,7 +98,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
             "a.package_name, "
             "COALESCE(t.application_name, a.application_name), "
             "COALESCE(t.application_summary, a.application_summary), "
-            "a.icon_name "
+            "a.icon_name, "
+            "a.application_id "
         "FROM "
             "applications a "
         "LEFT JOIN "
@@ -115,7 +117,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
                                     QStringList()
                                         << query.value(APP_NAME).toString()
                                         << query.value(APP_SUMMARY).toString()
-                                        << query.value(APP_ICON).toString());
+                                        << query.value(APP_ICON).toString()
+                                        << query.value(APP_ID).toString());
         }
     }
 #endif //HAVE_APPINSTALL
@@ -136,8 +139,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     m_browseView = new BrowseView(this);
-//     connect(m_browseView, SIGNAL(showExtendItem(const QModelIndex &)),
-//             this, SLOT(showExtendItem(const QModelIndex &)));
+    connect(m_browseView, SIGNAL(categoryActivated(const QModelIndex &)),
+            this, SLOT(on_homeView_activated(const QModelIndex &)));
 
     // Create a stacked layout so only homeView or packageView are displayed
     m_viewLayout = new QStackedLayout(stackedWidget);
@@ -454,6 +457,16 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
         m_searchRole    = static_cast<Enum::Role>(index.data(CategoryModel::SearchRole).toUInt());
         m_searchGroup   = static_cast<Enum::Group>(index.data(Qt::UserRole).toUInt());
         m_searchFilters = m_filtersMenu->filters();
+        if (m_searchRole == Enum::RoleResolve) {
+            m_searchString = index.data(CategoryModel::CategoryRole).toString();
+            const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
+            // If the cast failed it's the index came from browseView
+            if (proxy) {
+                m_searchParentCategory = proxy->mapToSource(index);
+            } else {
+                m_searchParentCategory = index;
+            }
+        }
         // create the main transaction
         search();
     }
@@ -461,6 +474,11 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
 
 void AddRmKCM::on_backTB_clicked()
 {
+    if (m_viewLayout->currentWidget() == m_browseView) {
+        if (!m_browseView->goBack()) {
+            return;
+        }
+    }
     m_viewLayout->setCurrentIndex(0);
     backTB->setEnabled(false);
     // reset the search role
@@ -493,9 +511,22 @@ void AddRmKCM::search()
                 m_browseView, SLOT(enableExportInstalledPB()));
         break;
     case Enum::RoleResolve:
-        m_browseView->setParentCategory(m_searchParentCategory);
-        m_searchTransaction = m_client->resolve(m_searchCategory, m_searchFilters);
+    {
+        QSqlDatabase db = QSqlDatabase::database("app-install");
+        QSqlQuery query(db);
+        query.prepare("SELECT package_name FROM applications WHERE " + m_searchString);
+        QStringList packages;
+        if (query.exec()) {
+            while (query.next()) {
+                packages << query.value(0).toString();
+            }
+            m_browseView->setParentCategory(m_searchParentCategory);
+            m_searchTransaction = m_client->resolve(packages, m_searchFilters);
+        } else {
+            return;
+        }
         break;
+    }
     default:
         kDebug() << "Search type not defined yet";
         return;

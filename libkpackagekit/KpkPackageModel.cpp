@@ -32,6 +32,7 @@
 #define APP_NAME    0
 #define APP_SUMMARY 1
 #define APP_ICON    2
+#define APP_ID      3
 
 #define ICON_SIZE 24
 #define OVERLAY_SIZE 16
@@ -77,6 +78,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         iPackage.version     = package->version();
         iPackage.arch        = package->arch();
         iPackage.id          = package->id();
+        iPackage.appId       = list.at(APP_ID);
         iPackage.info        = package->info();
 
         // check to see if the list of info has any package
@@ -273,6 +275,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         } else {
             return 1;
         }
+    case ApplicationId:
+        return package.appId;
     default:
         return QVariant();
     }

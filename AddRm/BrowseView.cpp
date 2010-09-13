@@ -45,6 +45,9 @@ BrowseView::BrowseView(QWidget *parent)
 {
     setupUi(this);
 
+    connect(categoryView, SIGNAL(activated(const QModelIndex &)),
+            this, SIGNAL(categoryActivated(const QModelIndex &)));
+
 //     packageView = new KpkSearchableTreeView;
 //     packageView->setAlternatingRowColors(true);
 //     packageView->setRootIsDecorated(false);
@@ -243,8 +246,23 @@ void BrowseView::setCategoryModel(QAbstractItemModel *model)
 void BrowseView::setParentCategory(const QModelIndex &index)
 {
     categoryView->setRootIndex(index);
+    // Make sure the last item is not selected
+    categoryView->selectionModel()->clearSelection();
+    categoryView->horizontalScrollBar()->setValue(0);
+
     // Display the category view if the index has child items
     categoryF->setVisible(categoryView->model()->rowCount(index));
+}
+
+bool BrowseView::goBack()
+{
+    QModelIndex index = categoryView->rootIndex();
+    if (index.parent().isValid()) {
+        setParentCategory(index.parent());
+        emit categoryActivated(index.parent());
+        return false;
+    }
+    return true;
 }
 
 void BrowseView::hideCategory()

@@ -43,9 +43,11 @@ public:
     KCategorizedSortFilterProxyModel* proxy() const;
 
     void disableExportInstalledPB();
+    bool goBack();
 
 signals:
     void rowsAboutToBeRemoved(const QModelIndex &, int, int);
+    void categoryActivated(const QModelIndex &index);
 
 public slots:
     void enableExportInstalledPB();
