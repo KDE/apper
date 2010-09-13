@@ -90,7 +90,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 #ifdef HAVE_APPINSTALL
     // load all the data in memory since quering SQLITE is really slow
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "app-install");
-    db.setDatabaseName(APPINSTALL_DB);
+    db.setDatabaseName(AI_DB_PATH);
     db.open();
     QSqlQuery query(db);
     query.prepare(

@@ -86,7 +86,7 @@ void CategoryModel::fillWithStandardGroups()
 
 void CategoryModel::fillWithServiceGroups()
 {
-    QFile file(QString(APPINSTALL_CATEGORIES_PATH) + "/categories.xml");
+    QFile file(QString(AI_CATEGORIES_PATH) + "/categories.xml");
      if (!file.open(QIODevice::ReadOnly)) {
          kDebug() << "Failed to open file";
          return;

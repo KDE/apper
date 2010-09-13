@@ -11,9 +11,9 @@
 #cmakedefine HAVE_APPINSTALL
 
 // Define the app-install database path.
-#cmakedefine APPINSTALL_DB "@APPINSTALL_DB@"
+#cmakedefine AI_DB_PATH "@AI_DB_PATH@"
 
 // Define the app-install categories path.
-#cmakedefine APPINSTALL_CATEGORIES_PATH "@APPINSTALL_CATEGORIES_PATH@"
+#cmakedefine AI_CATEGORIES_PATH "@AI_CATEGORIES_PATH@"
 
 #endif //CONFIG_H
