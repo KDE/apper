@@ -505,7 +505,7 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
                                        const QStyleOptionViewItem &option,
                                        const QModelIndex &index)
 {
-    if (index.column() == 2 &&
+    if (index.column() == 3 &&
         event->type() == QEvent::MouseButtonPress) {
         model->setData(index,
                        !index.data(KpkPackageModel::CheckStateRole).toBool(),

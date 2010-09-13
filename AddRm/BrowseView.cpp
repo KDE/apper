@@ -21,10 +21,9 @@
 #include "BrowseView.h"
 
 #include "KpkPackageDetails.h"
-#include "ApplicationsDelegate.h"
 
+#include <ApplicationsDelegate.h>
 #include <KpkPackageModel.h>
-// #include <KpkDelegate.h>
 #include <KpkSearchableTreeView.h>
 
 #include <QPackageKit>

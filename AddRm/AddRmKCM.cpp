@@ -519,6 +519,8 @@ void AddRmKCM::search()
                 packages << query.value(0).toString();
             }
             m_browseView->setParentCategory(m_searchParentCategory);
+            // WARNING the resolve might fail if the backend
+            // has a low limit MaximumItemsToResolve
             m_searchTransaction = m_client->resolve(packages, m_searchFilters);
         } else {
             return;

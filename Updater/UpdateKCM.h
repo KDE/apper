@@ -30,7 +30,7 @@
 using namespace PackageKit;
 
 class KpkPackageModel;
-class KpkDelegate;
+class ApplicationsDelegate;
 class KpkCheckableHeader;
 class KProgressDialog;
 class UpdateKCM : public KCModule, Ui::UpdateKCM
@@ -65,14 +65,14 @@ private slots:
     void errorCode(PackageKit::Enum::Error error, const QString &details);
 
 private:
-    bool m_selected;
-    KpkPackageModel *m_updatesModel;
-    KpkDelegate *m_delegate;
-    KpkCheckableHeader *m_header;
-    KpkTransaction *m_transDialog;
-    Client *m_client;
-    Transaction *m_updatesT;
-    Enum::Roles m_roles;
+    bool                  m_selected;
+    KpkPackageModel      *m_updatesModel;
+    ApplicationsDelegate *m_delegate;
+    KpkCheckableHeader   *m_header;
+    KpkTransaction       *m_transDialog;
+    Client               *m_client;
+    Transaction          *m_updatesT;
+    Enum::Roles           m_roles;
 };
 
 #endif

@@ -180,6 +180,15 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
     if (index.column() == 0) {
         switch (role) {
+        case Qt::CheckStateRole:
+            if (!m_checkable && !property("kbd").toBool()) {
+                return QVariant();
+            }
+        case CheckStateRole:
+            if (containsChecked(package.id)) {
+                return Qt::Checked;
+            }
+            return Qt::Unchecked;
         case ApplicationFilterRole:
             // if we are an application return 'a', if package 'p'
             return package.isPackage ? QString('p') : QString('a');
@@ -207,6 +216,14 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 startPoint = QPoint(46 - OVERLAY_SIZE,
                                     4);
                 painter.drawPixmap(startPoint, m_installedEmblem);
+            } else if (m_checkable) {
+                QIcon emblemIcon = KpkIcons::packageIcon(package.info);
+                QPainter painter(&icon);
+                QPoint startPoint;
+                // bottom right corner
+                startPoint = QPoint(46 - OVERLAY_SIZE,
+                                    4);
+                painter.drawPixmap(startPoint, emblemIcon.pixmap(OVERLAY_SIZE, OVERLAY_SIZE));
             }
             return icon;
         }
@@ -242,10 +259,10 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         return KpkIcons::packageIcon(package.info);
     case SortRole:
         return package.name + ' ' + package.version + ' ' + package.arch;
-    case Qt::CheckStateRole:
-        if (!m_checkable && !property("kbd").toBool()) {
-            return QVariant();
-        }
+//     case Qt::CheckStateRole:
+//         if (!m_checkable && !property("kbd").toBool()) {
+//             return QVariant();
+//         }
     case CheckStateRole:
         if (containsChecked(package.id)) {
             return Qt::Checked;
@@ -366,7 +383,7 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
 
 Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 {
-    if (package(index)) {
+    if (index.column() == 0) {
         return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | QAbstractItemModel::flags(index);
     }
     return QAbstractItemModel::flags(index);
@@ -375,7 +392,12 @@ Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 int KpkPackageModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 4;
+    if (m_checkable) {
+        // when the model is checkable we have one less column
+        return 3;
+    } else {
+        return 4;
+    }
 }
 
 QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &index) const

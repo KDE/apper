@@ -1,5 +1,6 @@
 set(libkpk_SRCS
     ApplicationLauncher.cpp
+    ApplicationsDelegate.cpp
     CategoryDrawer.cpp
     KpkDelegate.cpp
     TransactionDelegate.cpp

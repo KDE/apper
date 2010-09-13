@@ -30,6 +30,8 @@
 
 #include <KGenericFactory>
 #include <KAboutData>
+
+#include <ApplicationsDelegate.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 #include <KpkTransactionBar.h>
@@ -38,6 +40,7 @@
 #include <KpkRequirements.h>
 #include <KpkPackageModel.h>
 #include <KpkDelegate.h>
+
 #include <QSortFilterProxyModel>
 #include <QDBusConnection>
 
@@ -77,8 +80,15 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
 
     //initialize the model, delegate, client and  connect it's signals
     m_header = new KpkCheckableHeader(Qt::Horizontal, this);
-    m_header->setResizeMode(QHeaderView::Stretch);
+    packageView->setHeader(m_header);
+//     m_header->setResizeMode(QHeaderView::Stretch);
     m_header->setCheckBoxVisible(false);
+//     packageView->sortByColumn(0, Qt::AscendingOrder);
+//     m_header->setDefaultAlignment(Qt::AlignCenter);
+    m_header->setStretchLastSection(true);
+    m_header->setResizeMode(0, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(1, QHeaderView::ResizeToContents);
+//     packageView->header()->setResizeMode(2, QHeaderView::Stretch);
 
     m_updatesModel = new KpkPackageModel(this, packageView);
     m_updatesModel->setCheckable(true);
@@ -87,8 +97,8 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setSortRole(KpkPackageModel::SortRole);
-    packageView->setHeader(m_header);
-    packageView->setItemDelegate(m_delegate = new KpkDelegate(packageView));
+//     packageView->setHeader(m_header);
+    packageView->setItemDelegate(m_delegate = new ApplicationsDelegate(packageView));
     packageView->setModel(proxyModel);
     packageView->sortByColumn(0, Qt::AscendingOrder);
     connect(m_delegate, SIGNAL(showExtendItem(const QModelIndex &)),
@@ -249,7 +259,7 @@ void UpdateKCM::getUpdates()
     }
 
     // contract to delete all update details widgets
-    m_delegate->contractAll();
+//     m_delegate->contractAll();
 
     // clears the model
     m_updatesModel->clear();
@@ -315,11 +325,11 @@ void UpdateKCM::showExtendItem(const QModelIndex &index)
     QSharedPointer<PackageKit::Package> package = model->package(origIndex);
     // check to see if the backend support
     if (package && (m_roles & Enum::RoleGetUpdateDetail)) {
-        if (m_delegate->isExtended(index)) {
-            m_delegate->contractItem(index);
-        } else {
-            m_delegate->extendItem(new KpkUpdateDetails(package), index);
-        }
+//         if (m_delegate->isExtended(index)) {
+//             m_delegate->contractItem(index);
+//         } else {
+//             m_delegate->extendItem(new KpkUpdateDetails(package), index);
+//         }
     }
 }
 
@@ -334,7 +344,7 @@ void UpdateKCM::contractAll()
 {
     // This is a HACK so that the extenders don't stay visible when
     // the user sorts the view
-    m_delegate->contractAll();
+//     m_delegate->contractAll();
 }
 
 void UpdateKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
