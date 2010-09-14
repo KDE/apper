@@ -94,9 +94,6 @@
    <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="KpkTransactionBar" name="transactionBar" native="true"/>
-     </item>
-     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -153,12 +150,6 @@
    <class>KpkSearchableTreeView</class>
    <extends>QTreeView</extends>
    <header>KpkSearchableTreeView.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KpkTransactionBar</class>
-   <extends>QWidget</extends>
-   <header location="global">KpkTransactionBar.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>KpkUpdateDetails</class>

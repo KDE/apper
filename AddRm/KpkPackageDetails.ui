@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
-    <height>274</height>
+    <width>725</width>
+    <height>238</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -44,9 +44,9 @@
      <widget class="QScrollArea" name="descriptionW">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>506</width>
+        <x>0</x>
+        <y>30</y>
+        <width>420</width>
         <height>200</height>
        </rect>
       </property>
@@ -82,7 +82,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>506</width>
+         <width>420</width>
          <height>200</height>
         </rect>
        </property>
@@ -101,6 +101,12 @@
        <layout class="QGridLayout" name="gridLayout">
         <item row="2" column="0">
          <widget class="QLabel" name="homepageL">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string notr="true">Home Page</string>
           </property>
@@ -120,6 +126,12 @@
         </item>
         <item row="2" column="1" colspan="2">
          <widget class="QLabel" name="licenseL">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Licence:</string>
           </property>
@@ -133,6 +145,12 @@
         </item>
         <item row="5" column="1" colspan="2">
          <widget class="QLabel" name="sizeL">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string notr="true">Size</string>
           </property>
@@ -212,11 +230,20 @@
         </item>
         <item row="5" column="0">
          <widget class="QLabel" name="pathL">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string notr="true">Find it in the menu:</string>
           </property>
           <property name="textFormat">
            <enum>Qt::RichText</enum>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
           <property name="margin">
            <number>5</number>

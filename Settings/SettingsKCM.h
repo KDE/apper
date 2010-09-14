@@ -23,6 +23,7 @@
 
 #include <QPackageKit>
 #include <KCModule>
+#include <KPixmapSequenceOverlayPainter>
 
 #include "ui_SettingsKCM.h"
 
@@ -46,10 +47,11 @@ signals:
 
 private slots:
     void on_showOriginsCB_stateChanged(int state);
+    void on_editOriginsPB_clicked();
     void checkChanges();
 
 private:
-    Transaction *m_trasaction;
+    KPixmapSequenceOverlayPainter *m_busySeq;
     KpkModelOrigin *m_originModel;
     Enum::Roles m_roles;
 };

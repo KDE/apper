@@ -485,13 +485,13 @@ void KpkPackageDetails::setupDescription()
         QString path;
         path.append(QString("<img width=\"16\" heigh=\"16\"src=\"%1\"/>")
                     .arg(KIconLoader::global()->iconPath("kde", KIconLoader::Small)));
-        path.append(QString(" %1 <img width=\"16\" heigh=\"16\" src=\"%2\"/> %3")
-                    .arg(QString::fromUtf8("‣"))
+        path.append(QString("&nbsp;%1 <img width=\"16\" heigh=\"16\" src=\"%2\"/>&nbsp;%3")
+                    .arg(QString::fromUtf8("➜"))
                     .arg(KIconLoader::global()->iconPath("applications-other", KIconLoader::Small))
                     .arg(i18n("Applications")));
         for (int i = 0; i < ret.size(); i++) {
-            path.append(QString(" %1 <img width=\"16\" heigh=\"16\" src=\"%2\"/> %3")
-                        .arg(QString::fromUtf8("‣"))
+            path.append(QString("&nbsp;%1&nbsp;<img width=\"16\" heigh=\"16\" src=\"%2\"/>&nbsp;%3")
+                        .arg(QString::fromUtf8("➜"))
                         .arg(KIconLoader::global()->iconPath(ret.at(i).second, KIconLoader::Small))
                         .arg(ret.at(i).first));
         }

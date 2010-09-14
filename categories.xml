@@ -226,6 +226,7 @@
         <Menu>
             <Name>Web Development</Name>
             <Icon>applications-internet</Icon>
+            <Directory>kde-development-webdevelopment.directory</Directory>
             <Categories>
                 <And>
                     <Category>WebDevelopment</Category>
@@ -285,7 +286,7 @@
         </Menu>
         <Menu>
             <Name>Electronics</Name>
-            <Icon>applications-electronics</Icon>
+            <Icon>cpu</Icon>
             <Categories><Category>Electronics</Category></Categories>
         </Menu>
         <Menu>
@@ -309,6 +310,7 @@
             <Name>Mathematics</Name>
             <Name xml:lang="th">คณิตศาสตร์</Name>
             <Icon>applications-mathematics</Icon>
+            <Directory>kde-edu-mathematics.directory</Directory>
             <Categories>
                 <Or>
                     <Category>DataVisualization</Category>
@@ -358,7 +360,7 @@
     <Menu>
         <Name>Games</Name>
         <Name xml:lang="th">เกม</Name>
-        <Directory>Game.directory</Directory>
+        <Directory>kde-games.directory</Directory>
         <Categories>
             <And>
                 <Category>Game</Category>
@@ -426,7 +428,7 @@
     <Menu>
         <Name>Graphics</Name>
         <Name xml:lang="th">กราฟิก</Name>
-        <Directory>Graphics.directory</Directory>
+        <Directory>kde-graphics.directory</Directory>
         <Categories>
             <And>
                 <Category>Graphics</Category>
@@ -444,12 +446,12 @@
         </Menu>
         <Menu>
             <Name>Painting &amp; Editing</Name>
-            <Icon>applications-painting</Icon>
+            <Icon>preferences-desktop-color</Icon>
             <Categories><And><Category>RasterGraphics</Category></And></Categories>
         </Menu>
         <Menu>
             <Name>Photography</Name>
-            <Icon>applications-photography</Icon>
+            <Icon>camera-photo</Icon>
             <Categories><And><Category>Photography</Category></And></Categories>
         </Menu>
         <Menu>
@@ -469,7 +471,7 @@
         </Menu>
         <Menu>
             <Name>Viewers</Name>
-            <Icon>applications-viewers</Icon>
+            <Icon>layer-visible-on</Icon>
             <Categories><And><Category>Viewer</Category></And></Categories>
         </Menu>
     </Menu>
@@ -477,7 +479,7 @@
 
     <Menu>
         <Name>Internet</Name>
-        <Directory>Network.directory</Directory>
+        <Directory>kde-internet.directory</Directory>
         <Categories>
             <And>
                 <Category>Network</Category>
@@ -490,13 +492,13 @@
         </Menu>
         <Menu>
             <Name>File Sharing</Name>
-            <Icon>applications-filesharing</Icon>
+            <Icon>preferences-system-network-sharing</Icon>
             <Categories><And><Category>FileTransfer</Category></And></Categories>
         </Menu>
         <Menu>
             <Name>Mail</Name>
             <Name xml:lang="th">เมล</Name>
-            <Icon>applications-mail</Icon>
+            <Icon>view-pim-mail</Icon>
             <Categories><And><Category>Email</Category></And></Categories>
         </Menu>
         <Menu>
@@ -509,7 +511,7 @@
 
     <Menu>
         <Name>Multimedia</Name>
-        <Directory>AudioVideo.directory</Directory>
+        <Directory>kde-multimedia.directory</Directory>
         <Categories>
             <And>
                 <Category>AudioVideo</Category>
@@ -520,7 +522,7 @@
 
     <Menu>
         <Name>Office</Name>
-        <Directory>Office.directory</Directory>
+        <Directory>kde-office.directory</Directory>
         <Categories>
             <And>
                 <Category>Office</Category>

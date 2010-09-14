@@ -130,15 +130,21 @@ void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Packag
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
-    if (role == Qt::DisplayRole && section == 0) {
-        if (m_checkable) {
-            return KpkStrings::packageQuantity(true,
-                                               m_packages.size(),
-                                               m_checkedPackages.size());
+    if (role == Qt::DisplayRole) {
+        if (section == 0) {
+            if (m_checkable) {
+                return KpkStrings::packageQuantity(true,
+                                                m_packages.size(),
+                                                m_checkedPackages.size());
+            }
+            return KpkStrings::packageQuantity(false,
+                                            m_packages.size(),
+                                            0);
+        } else if (section == 1) {
+            return i18n("Version");
+        } else if (section == 2) {
+            return i18n("Summary");
         }
-        return KpkStrings::packageQuantity(false,
-                                           m_packages.size(),
-                                           0);
     }
     return QVariant();
 }

@@ -29,13 +29,16 @@
 
 #include <KDebug>
 
+#define FINAL_HEIGHT 160
+
 KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
- : QWidget(parent)
+ : QWidget(parent),
+   m_show(false)
 {
     setupUi(this);
 
-    // only the model package has the right m_info
-//     m_info = package->info();
+    // only the model package has the right m_updateInfo
+//     m_updateInfo = package->info();
 //     Transaction *t = Client::instance()->getUpdateDetail(package);
 //     if (t->error()) {
 //         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
@@ -45,52 +48,115 @@ KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
 //         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
 //                 this, SLOT(updateDetailFinished()));
 //     }
-// 
-//     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-//     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
-//     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-//     m_busySeq->setWidget(descriptionKTB->viewport());
-//     m_busySeq->start();
+//
+    m_busySeq = new KPixmapSequenceOverlayPainter(this);
+    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_busySeq->setWidget(descriptionKTB->viewport());
 
-    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(this);
+    QWidget *actionsViewport = descriptionKTB->viewport();
+    QPalette palette = actionsViewport->palette();
+    palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
+    palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
+    actionsViewport->setPalette(palette);
+
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(descriptionKTB);
     effect->setOpacity(0);
-    descriptionKTB->setVisible(false);
-    setGraphicsEffect(effect);
+    descriptionKTB->setGraphicsEffect(effect);
     m_fadeDetails = new QPropertyAnimation(effect, "opacity");
     m_fadeDetails->setDuration(500);
     m_fadeDetails->setStartValue(qreal(0));
     m_fadeDetails->setEndValue(qreal(1));
     connect(m_fadeDetails, SIGNAL(finished()), this, SLOT(display()));
-    
+
+
+    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize");
+    anim1->setDuration(500);
+    anim1->setEasingCurve(QEasingCurve::OutQuart);
+    anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
+    anim1->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
+    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize");
+    anim2->setDuration(500);
+    anim2->setEasingCurve(QEasingCurve::OutQuart);
+    anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
+    anim2->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
+
+    m_expandPanel = new QParallelAnimationGroup;
+    m_expandPanel->addAnimation(anim1);
+    m_expandPanel->addAnimation(anim2);
+    connect(m_expandPanel, SIGNAL(finished()), this, SLOT(display()));
+
 }
 
 KpkUpdateDetails::~KpkUpdateDetails()
 {
 }
 
-void KpkUpdateDetails::setPackage(const QString &packageId)
+void KpkUpdateDetails::setPackage(const QString &packageId, Enum::Info updateInfo)
 {
-    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize");
-    anim1->setDuration(500);
-    anim1->setEasingCurve(QEasingCurve::OutQuart);
-    anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
-    anim1->setEndValue(QSize(QWIDGETSIZE_MAX, 210));
-    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize");
-    anim2->setDuration(500);
-    anim2->setEasingCurve(QEasingCurve::OutQuart);
-    anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
-    anim2->setEndValue(QSize(QWIDGETSIZE_MAX, 210));
-    //
-    //  anim1->start();
-    //      packageDetails->show();
+    if (m_packageId == packageId) {
+        return;
+    }
+    m_show       = true;
+    m_packageId  = packageId;
+    m_updateInfo = updateInfo;
+    m_currentDescription.clear();
 
-    QParallelAnimationGroup *group = new QParallelAnimationGroup;
-    group->addAnimation(anim1);
-    group->addAnimation(anim2);
-    connect(group, SIGNAL(finished()), this, SLOT(animationFinished()));
-    group->start();
+    QSharedPointer<Package> package = QSharedPointer<Package>(new Package(m_packageId,
+                                                                          Enum::UnknownInfo,
+                                                                          QString()));;
+    Transaction *transaction = new Transaction(QString());
+    connect(transaction, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
+            this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
+    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(display()));
+    transaction->getUpdateDetail(package);
+    if (transaction->error()) {
+        KMessageBox::sorry(this, KpkStrings::daemonError(transaction->error()));
+    } else {
+        if (maximumSize().height() == 0) {
+            // Expand the panel
+            m_expandPanel->setDirection(QAbstractAnimation::Forward);
+            m_expandPanel->start();
+        } else if (m_fadeDetails->currentValue().toReal() != 0) {
+            // Hide the old description
+            m_fadeDetails->setDirection(QAbstractAnimation::Backward);
+            m_fadeDetails->start();
+        }
+        m_busySeq->start();
+    }
+}
 
-//     m_package       = QSharedPointer<Package>(new Package(pkgId, info, QString()));;
+void KpkUpdateDetails::hide()
+{
+    m_show = false;
+    if (maximumSize().height() == FINAL_HEIGHT &&
+        m_fadeDetails->currentValue().toReal() == 1) {
+        m_fadeDetails->setDirection(QAbstractAnimation::Backward);
+        m_fadeDetails->start();
+    } else if (maximumSize().height() == FINAL_HEIGHT &&
+               m_fadeDetails->currentValue().toReal() == 0) {
+        m_expandPanel->setDirection(QAbstractAnimation::Backward);
+        m_expandPanel->start();
+    }
+}
+
+void KpkUpdateDetails::display()
+{
+    kDebug() << maximumSize().height() << m_currentDescription.isEmpty();
+    if (!m_show) {
+        hide();
+        return;
+    }
+
+    if (maximumSize().height() == FINAL_HEIGHT &&
+        !m_currentDescription.isEmpty() &&
+        m_fadeDetails->currentValue().toReal() == 0) {
+        descriptionKTB->setHtml(m_currentDescription);
+
+        m_fadeDetails->setDirection(QAbstractAnimation::Forward);
+        m_fadeDetails->start();
+    }
 }
 
 void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
@@ -99,23 +165,23 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     QString description;
 
     // update type (ie Security Update)
-    if (m_info == Enum::InfoEnhancement) {
+    if (m_updateInfo == Enum::InfoEnhancement) {
         description += "<p>" +
                        i18n("This update will add new features and expand functionality.") +
                        "</p>";
-    } else if (m_info == Enum::InfoBugfix) {
+    } else if (m_updateInfo == Enum::InfoBugfix) {
         description += "<p>" +
                        i18n("This update will fix bugs and other non-critical problems.") +
                        "</p>";
-    } else if (m_info == Enum::InfoImportant) {
+    } else if (m_updateInfo == Enum::InfoImportant) {
         description += "<p>" +
                        i18n("This update is important as it may solve critical problems.") +
                        "</p>";
-    } else if (m_info == Enum::InfoSecurity) {
+    } else if (m_updateInfo == Enum::InfoSecurity) {
         description += "<p>" +
                        i18n("This update is needed to fix a security vulnerability with this package.") +
                        "</p>";
-    } else if (m_info == Enum::InfoBlocked) {
+    } else if (m_updateInfo == Enum::InfoBlocked) {
         description += "<p>" +
                        i18n("This update is blocked.") +
                        "</p>";
@@ -229,7 +295,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
          description += "<p>" + i18n("Repository:") + ' ' + info.package->data() + "</p>";
     }
 
-    descriptionKTB->setHtml(description);
+    m_currentDescription = description;
     m_busySeq->stop();
 }
 

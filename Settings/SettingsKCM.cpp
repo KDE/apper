@@ -31,6 +31,8 @@
 #include <KMessageBox>
 #include <KGenericFactory>
 #include <KAboutData>
+#include <KPixmapSequence>
+#include <KProcess>
 
 #include <KDebug>
 
@@ -54,7 +56,6 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
     KGlobal::locale()->insertCatalog("kpackagekit");
     setupUi(this);
 
-    transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Client::instance()->setHints("locale=" + locale);
     m_roles = Client::instance()->actions();
@@ -91,21 +92,53 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
     connect(notifyUpdatesCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(intervalCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
     connect(autoCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
+
+    // Setup the busy cursor
+    m_busySeq = new KPixmapSequenceOverlayPainter(this);
+    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_busySeq->setWidget(originTV->viewport());
+}
+
+void SettingsKCM::on_editOriginsPB_clicked()
+{
+    KProcess *proc = new KProcess(this);
+    QStringList arguments;
+    QString cmd;
+    int winID = effectiveWinId();
+    cmd = "software-properties-kde --attach " + QString::number(winID);
+    arguments << "/usr/lib/kde4/libexec/kdesu" << QString(cmd);
+    proc->setProgram(arguments);
+//     find(winID)->/*setEnabled*/(false);
+    proc->start();
+    connect( proc, SIGNAL( finished(int, QProcess::ExitStatus) ),
+             this, SLOT( sourcesEditorFinished() ) );
 }
 
 // TODO update the repo list connecting to repo changed signal
 void SettingsKCM::on_showOriginsCB_stateChanged(int state)
 {
-    if (state == Qt::Checked) {
-        m_trasaction = Client::instance()->getRepoList(Enum::NoFilter);
-    } else {
-        m_trasaction = Client::instance()->getRepoList(Enum::FilterNotDevelopment);
-    }
-    connect(m_trasaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
+    Transaction *transaction = new Transaction(QString(), this);
+    connect(transaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
             m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
-    connect(m_trasaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_originModel, SLOT(finished()));
-    transactionBar->addTransaction(m_trasaction);
+    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            transaction, SLOT(deleteLater()));
+    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            m_busySeq, SLOT(stop()));
+
+    if (state == Qt::Checked) {
+        transaction->getRepoList(Enum::NoFilter);
+    } else {
+        transaction->getRepoList(Enum::FilterNotDevelopment);
+    }
+
+    if (transaction->error()) {
+        delete transaction;
+    } else {
+        m_busySeq->start();
+    }
 }
 
 void SettingsKCM::checkChanges()

@@ -71,6 +71,7 @@ private:
     ApplicationsDelegate *m_delegate;
     KpkCheckableHeader   *m_header;
     KpkTransaction       *m_transDialog;
+    KPixmapSequenceOverlayPainter *m_busySeq;
     Client               *m_client;
     Transaction          *m_updatesT;
     Enum::Roles           m_roles;

@@ -35,18 +35,24 @@ public:
     explicit KpkUpdateDetails(QWidget *parent = 0);
     ~KpkUpdateDetails();
 
-    void setPackage(const QString &packageId);
+    void setPackage(const QString &packageId, Enum::Info updateInfo);
+    void hide();
 
 private slots:
     void updateDetail(PackageKit::Client::UpdateInfo info);
     void updateDetailFinished();
+    void display();
 
 private:
-    Enum::Info m_info;
+    QString getLinkList(const QString &links) const;
+
+    bool m_show;
+    QString m_packageId;
+    QString m_currentDescription;
+    Enum::Info m_updateInfo;
     KPixmapSequenceOverlayPainter *m_busySeq;
     QPropertyAnimation *m_fadeDetails;
-
-    QString getLinkList(const QString &links) const;
+    QParallelAnimationGroup *m_expandPanel;
 };
 
 #endif

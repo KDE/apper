@@ -29,12 +29,12 @@
 #include <version.h>
 
 #include <KGenericFactory>
+#include <KPixmapSequence>
 #include <KAboutData>
 
 #include <ApplicationsDelegate.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
-#include <KpkTransactionBar.h>
 #include <KpkTransaction.h>
 #include <KpkSimulateModel.h>
 #include <KpkRequirements.h>
@@ -73,7 +73,6 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
 
     refreshPB->setIcon(KpkIcons::getIcon("view-refresh"));
     historyPB->setIcon(KpkIcons::getIcon("view-history"));
-    transactionBar->setBehaviors(KpkTransactionBar::AutoHide);
 
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Client::instance()->setHints("locale=" + locale);
@@ -82,6 +81,7 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     m_header = new KpkCheckableHeader(Qt::Horizontal, this);
     m_header->setCheckBoxVisible(false);
     packageView->setHeader(m_header);
+    packageView->setHeaderHidden(true);
 
     m_updatesModel = new KpkPackageModel(this, packageView);
     m_updatesModel->setCheckable(true);
@@ -109,6 +109,12 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     m_header->setResizeMode(1, QHeaderView::ResizeToContents);
     m_header->setStretchLastSection(true);
 
+    // Setup the busy cursor
+    m_busySeq = new KPixmapSequenceOverlayPainter(this);
+    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_busySeq->setWidget(packageView->viewport());
+
     // Create a new client
     m_client = Client::instance();
 
@@ -122,8 +128,9 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
 
 void UpdateKCM::on_packageView_activated(const QModelIndex &index)
 {
-    QString pkgId = index.data(KpkPackageModel::IdRole).toString();
-    updateDetails->setPackage(pkgId);
+    QString    pkgId   = index.data(KpkPackageModel::IdRole).toString();
+    Enum::Info pkgInfo = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+    updateDetails->setPackage(pkgId, pkgInfo);
 }
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
@@ -159,6 +166,7 @@ void UpdateKCM::checkEnableUpdateButton()
 
     // if we don't have any upates let's disable the button
     m_header->setCheckBoxVisible(m_updatesModel->rowCount() != 0);
+    packageView->setHeaderHidden(m_updatesModel->rowCount() == 0);
 }
 
 void UpdateKCM::load()
@@ -255,35 +263,37 @@ void UpdateKCM::updatePackages()
 
 void UpdateKCM::getUpdates()
 {
-    kDebug() << sender();
     if (m_updatesT) {
         // There is a getUpdates running ignore this call
         return;
     }
 
-    // contract to delete all update details widgets
-//     m_delegate->contractAll();
-
     // clears the model
+    packageView->setHeaderHidden(true);
     m_updatesModel->clear();
-//     m_updatesModel->setAllChecked(false);
-    m_updatesT = m_client->getUpdates();
+    updateDetails->hide();
+    m_updatesT = new Transaction(QString(), this);
+    m_updatesT->getUpdates();
+    if (m_selected) {
+        connect(m_updatesT, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+                m_updatesModel, SLOT(addSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
+    } else {
+        connect(m_updatesT, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+                m_updatesModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+    }
+
+    connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(getUpdatesFinished(PackageKit::Enum::Exit)));
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            m_busySeq, SLOT(stop()));
+
     if (m_updatesT->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
+        delete m_updatesT;
     } else {
-        transactionBar->addTransaction(m_updatesT);
-        if (m_selected) {
-            connect(m_updatesT, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                m_updatesModel, SLOT(addSelectedPackage(QSharedPointer<PackageKit::Package>)));
-        } else {
-            connect(m_updatesT, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                m_updatesModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-        }
-
-        connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-                this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
-        connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(getUpdatesFinished(PackageKit::Enum::Exit)));
+        m_busySeq->start();
     }
 
     // Clean the distribution upgrades area
@@ -296,24 +306,27 @@ void UpdateKCM::getUpdates()
     line->hide();
 
     // Check for distribution Upgrades
-    Transaction *t = m_client->getDistroUpgrades();
-    if (!t->error()) {
-        transactionBar->addTransaction(t);
-        connect(t, SIGNAL(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)),
-                this, SLOT(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)));
-    }
+    Transaction *t = new Transaction(QString(), this);
+    connect(t, SIGNAL(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)),
+            this, SLOT(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)));
+    t->getDistroUpgrades();
 }
 
 void UpdateKCM::on_refreshPB_clicked()
 {
     SET_PROXY
-    Transaction *t = m_client->refreshCache(true);
+    Transaction *t = new Transaction(QString(), this);
+    KpkTransaction *frm = new KpkTransaction(t,
+                                             KpkTransaction::Modal | KpkTransaction::CloseOnFinish,
+                                             this);
+    connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(getUpdates()));
+    t->refreshCache(true);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+        delete frm;
+        delete t;
     } else {
-        KpkTransaction *frm = new KpkTransaction(t, KpkTransaction::Modal | KpkTransaction::CloseOnFinish, this);
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(getUpdates()));
         frm->show();
     }
 }
