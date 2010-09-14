@@ -32,8 +32,10 @@ class KpkUpdateDetails : public QWidget, Ui::KpkUpdateDetails
 {
 Q_OBJECT
 public:
-    explicit KpkUpdateDetails(QSharedPointer<PackageKit::Package>package, QWidget *parent = 0);
+    explicit KpkUpdateDetails(QWidget *parent = 0);
     ~KpkUpdateDetails();
+
+    void setPackage(const QString &packageId);
 
 private slots:
     void updateDetail(PackageKit::Client::UpdateInfo info);
@@ -42,6 +44,7 @@ private slots:
 private:
     Enum::Info m_info;
     KPixmapSequenceOverlayPainter *m_busySeq;
+    QPropertyAnimation *m_fadeDetails;
 
     QString getLinkList(const QString &links) const;
 };

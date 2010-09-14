@@ -365,20 +365,6 @@ void AddRmKCM::checkChanged()
     }
 }
 
-void AddRmKCM::showExtendItem(const QModelIndex &index)
-{
-    if (index.column() == 0) {
-        QSharedPointer<PackageKit::Package> package = m_browseModel->package(index);
-        if (package) {
-//             m_viewLayout->setCurrentWidget(m_pkgDetails);
-//             m_pkgDetails->setPackage(package,
-//                                      index.data(KpkPackageModel::NameRole).toString(),
-//                                      index.data(KpkPackageModel::SummaryRole).toString(),
-//                                      index.data(KpkPackageModel::IconPathRole).toString());
-        }
-    }
-}
-
 void AddRmKCM::rowsAboutToBeRemoved(const QModelIndex &index, int start, int end)
 {
     Q_UNUSED(end)

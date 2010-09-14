@@ -42,7 +42,6 @@ public:
         VersionRole,
         ArchRole,
         IconRole,
-        IconPathRole,
         IdRole,
         CheckStateRole,
         InfoRole,
@@ -61,7 +60,6 @@ public:
 
     bool allSelected() const;
     QList<QSharedPointer<PackageKit::Package> > selectedPackages() const;
-    QSharedPointer<PackageKit::Package> package(const QModelIndex &index) const;
     void clear();
     /**
      * This removes all selected packages that are not in the model
@@ -89,7 +87,9 @@ public slots:
     void setAllChecked(bool checked);
 
     void checkPackage(const QSharedPointer<PackageKit::Package> &package);
-    void uncheckPackage(const QSharedPointer<PackageKit::Package> &package, bool forceEmit = false);
+    void uncheckPackage(const QSharedPointer<PackageKit::Package> &package,
+                        bool forceEmitUnchecked = false,
+                        bool emitDataChanged = true);
 
 signals:
     void packageChecked(const QSharedPointer<PackageKit::Package> &package);

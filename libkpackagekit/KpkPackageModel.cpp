@@ -155,8 +155,7 @@ QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &paren
 {
     // Check to see if the index isn't out of list
     if (!parent.isValid() && m_packages.size() > row) {
-        InternalPackage package = m_packages.at(row);
-        return createIndex(row, column, &package);
+        return createIndex(row, column);
     }
     return QModelIndex();
 }
@@ -199,7 +198,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         {
             QPixmap icon = QPixmap(46, ICON_SIZE);
             icon.fill(Qt::transparent);
-            QPixmap pixmap = KpkIcons::getIcon(data(index, IconPathRole).toString(), QString()).pixmap(24, 24);
+            QPixmap pixmap = KpkIcons::getIcon(package.icon, QString()).pixmap(24, 24);
             if (!pixmap.isNull()) {
                 QPainter painter(&icon);
                 painter.drawPixmap(QPoint(0, 0), pixmap);
@@ -224,22 +223,6 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             }
             return icon;
         }
-        case Qt::ForegroundRole:
-            if (package.info != Enum::InfoInstalled &&
-                package.info != Enum::InfoCollectionInstalled) {
-                QColor foregroundColor = QApplication::palette().color(QPalette::Text);
-                foregroundColor.setAlphaF(0.5);
-                return QBrush(foregroundColor);
-            }
-            break;
-        case Qt::FontRole:
-            if (package.info != Enum::InfoInstalled &&
-                package.info != Enum::InfoCollectionInstalled) {
-                QFont font;
-                font.setItalic(true);
-                return font;
-            }
-            break;
         }
     } else if (index.column() == 1) {
         if (role == Qt::DisplayRole) {
@@ -252,8 +235,24 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     }
 
     switch (role) {
+    case Qt::ForegroundRole:
+        if (package.info != Enum::InfoInstalled &&
+            package.info != Enum::InfoCollectionInstalled) {
+            QColor foregroundColor = QApplication::palette().color(QPalette::Text);
+            foregroundColor.setAlphaF(0.5);
+            return QBrush(foregroundColor);
+        }
+        break;
+    case Qt::FontRole:
+        if (package.info != Enum::InfoInstalled &&
+            package.info != Enum::InfoCollectionInstalled) {
+            QFont font;
+            font.setItalic(true);
+            return font;
+        }
+        break;
     case IconRole:
-        return KpkIcons::packageIcon(package.info);
+        return package.info;
     case SortRole:
         return package.name + ' ' + package.version + ' ' + package.arch;
 //     case Qt::CheckStateRole:
@@ -277,17 +276,6 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         return package.version;
     case ArchRole:
         return package.arch;
-    case IconPathRole:
-//         if (package.icon.isNull()) {
-//             QString icon = package.package.iconPath();
-//             if (icon.isNull()) {
-//                 package.icon = "";
-//             } else {
-//                 package.isPackage = false;
-//                 package.icon = icon;
-//             }
-//         }
-        return package.icon;
     case InfoRole:
         return package.info;
     case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
@@ -318,75 +306,23 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void KpkPackageModel::checkPackage(const QSharedPointer<PackageKit::Package> &package)
-{
-    kDebug() << sender();
-    if (!containsChecked(package->id()) && package->info() != Enum::InfoBlocked) {
-
-        InternalPackage iPackage;
-        iPackage.isPackage   = 1;
-        iPackage.name        = package->name();
-        iPackage.summary     = package->summary();
-        iPackage.version     = package->version();
-        iPackage.arch        = package->arch();
-        iPackage.id          = package->id();
-        iPackage.info        = package->info();
-
-        m_checkedPackages[package->id()] = iPackage;
-        if (sender() == 0) {
-            emit packageChecked(package);
-        }
-    }
-}
-
-void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> &package, bool forceEmit)
-{
-    if (containsChecked(package->id())) {
-        m_checkedPackages.remove(package->id());
-        if (forceEmit || sender() == 0) {
-            emit packageUnchecked(package);
-        }
-
-        QString pkgId = package->id();
-        for (int i = 0; i < m_packages.size(); ++i) {
-            if (m_packages.at(i).id == pkgId) {
-//                 emit dataChanged(createIndex(0, 0),
-//                                  createIndex(i, 0));
-                break;
-            }
-
-        }
-    }
-}
-
-bool KpkPackageModel::containsChecked(const QString &pid) const
-{
-    if (m_checkedPackages.isEmpty()) {
-        return false;
-    }
-    return m_checkedPackages.contains(pid);
-}
-
 bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role == Qt::CheckStateRole) {
-        QSharedPointer<PackageKit::Package> p = package(index);
-        if (!p) {
-//             p = m_packages.at(index.row())->package;
-            InternalPackage package = m_packages.at(index.row());
-            QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
-            p = pkg;
-        }
+    if (role == Qt::CheckStateRole && m_packages.size() > index.row()) {
+        InternalPackage package = m_packages.at(index.row());
+        QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
+
         if (value.toBool()) {
-            checkPackage(p);
+            checkPackage(pkg);
+            emit dataChanged(index, index);
         } else {
-            uncheckPackage(p);
+            uncheckPackage(pkg);
         }
-        emit dataChanged(index, index);
+
         // emit this so the package icon is also updated
-        emit dataChanged(index,
-                         index.sibling(index.row(),
-                         index.column() - 1));
+//         emit dataChanged(index,
+//                          index.sibling(index.row(),
+//                          index.column() - 1));
         return true;
     }
     return false;
@@ -411,13 +347,12 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
     }
 }
 
-QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &index) const
-{
-//     return m_packages.at(index.row())->package;
-    InternalPackage package = m_packages.at(index.row());
-    QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
-    return pkg;
-}
+// QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &index) const
+// {
+//     InternalPackage package = m_packages.at(index.row());
+//     QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
+//     return pkg;
+// }
 
 void KpkPackageModel::rmSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
 {
@@ -477,6 +412,61 @@ void KpkPackageModel::resolveSelected()
     }
 }
 
+void KpkPackageModel::checkPackage(const QSharedPointer<PackageKit::Package> &package)
+{
+//     kDebug() << sender();
+    if (!containsChecked(package->id()) && package->info() != Enum::InfoBlocked) {
+
+        InternalPackage iPackage;
+        iPackage.isPackage   = 1;
+        iPackage.name        = package->name();
+        iPackage.summary     = package->summary();
+        iPackage.version     = package->version();
+        iPackage.arch        = package->arch();
+        iPackage.id          = package->id();
+        iPackage.info        = package->info();
+
+        m_checkedPackages[package->id()] = iPackage;
+        if (sender() == 0) {
+            emit packageChecked(package);
+        }
+    }
+}
+
+void KpkPackageModel::uncheckPackage(const QSharedPointer<PackageKit::Package> &package,
+                                     bool forceEmitUnchecked,
+                                     bool emitDataChanged)
+{
+    QString pkgId = package->id();
+    if (containsChecked(pkgId)) {
+        m_checkedPackages.remove(pkgId);
+        if (forceEmitUnchecked || sender() == 0) {
+            emit packageUnchecked(package);
+        }
+
+        if (emitDataChanged) {
+            // This is a slow operation so in case the user
+            // is unchecking all of the packages there is
+            // no need to emit data changed for every item
+            for (int i = 0; i < m_packages.size(); ++i) {
+                if (m_packages.at(i).id == pkgId) {
+                    QModelIndex index = createIndex(i, 0);
+                    emit dataChanged(index, index);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+bool KpkPackageModel::containsChecked(const QString &pid) const
+{
+    if (m_checkedPackages.isEmpty()) {
+        return false;
+    }
+    return m_checkedPackages.contains(pid);
+}
+
 void KpkPackageModel::setAllChecked(bool checked)
 {
     if (checked) {
@@ -489,9 +479,10 @@ void KpkPackageModel::setAllChecked(bool checked)
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
     } else {
+        // This is a very slow operation, which in here we try to optimise
         foreach (const InternalPackage &package, m_checkedPackages.values()) {
             QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
-            uncheckPackage(pkg, true);
+            uncheckPackage(pkg, true, false);
         }
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
@@ -505,15 +496,13 @@ QList<QSharedPointer<PackageKit::Package> > KpkPackageModel::selectedPackages() 
         QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
         list << pkg;
     }
-//     QSharedPointer<Package> package
     return list;
 }
 
 bool KpkPackageModel::allSelected() const
 {
     foreach (const InternalPackage package, m_packages) {
-        if (package.info != Enum::InfoBlocked &&
-            !containsChecked(package.id)) {
+        if (!containsChecked(package.id)) {
             return false;
         }
     }

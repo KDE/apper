@@ -51,8 +51,7 @@ public:
     KpkPackageDetails(QWidget *parent = 0);
     ~KpkPackageDetails();
 
-    void setPackage(const QSharedPointer<PackageKit::Package> &package,
-                    const QModelIndex &index);
+    void setPackage(const QModelIndex &index);
     void setDisplayDetails(bool display);
 
 private slots:

@@ -81,7 +81,7 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     //initialize the model, delegate, client and  connect it's signals
     m_header = new KpkCheckableHeader(Qt::Horizontal, this);
     m_header->setCheckBoxVisible(false);
-    m_header->setStretchLastSection(true);
+    packageView->setHeader(m_header);
 
     m_updatesModel = new KpkPackageModel(this, packageView);
     m_updatesModel->setCheckable(true);
@@ -90,9 +90,10 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setSortRole(KpkPackageModel::SortRole);
-    packageView->setHeader(m_header);
-    packageView->setItemDelegate(m_delegate = new ApplicationsDelegate(packageView));
     packageView->setModel(proxyModel);
+
+    m_delegate = new ApplicationsDelegate(packageView);
+    packageView->setItemDelegate(m_delegate);
     packageView->sortByColumn(0, Qt::AscendingOrder);
     connect(m_delegate, SIGNAL(showExtendItem(const QModelIndex &)),
             this, SLOT(showExtendItem(const QModelIndex &)));
@@ -106,6 +107,7 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     // This must be set AFTER the model is set, otherwise it doesn't work
     m_header->setResizeMode(0, QHeaderView::ResizeToContents);
     m_header->setResizeMode(1, QHeaderView::ResizeToContents);
+    m_header->setStretchLastSection(true);
 
     // Create a new client
     m_client = Client::instance();
@@ -116,6 +118,12 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
     line->hide();
+}
+
+void UpdateKCM::on_packageView_activated(const QModelIndex &index)
+{
+    QString pkgId = index.data(KpkPackageModel::IdRole).toString();
+    updateDetails->setPackage(pkgId);
 }
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
@@ -317,15 +325,15 @@ void UpdateKCM::showExtendItem(const QModelIndex &index)
     proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
     model = qobject_cast<const KpkPackageModel*>(proxy->sourceModel());
     QModelIndex origIndex = proxy->mapToSource(index);
-    QSharedPointer<PackageKit::Package> package = model->package(origIndex);
+//     QSharedPointer<PackageKit::Package> package = model->package(origIndex);
     // check to see if the backend support
-    if (package && (m_roles & Enum::RoleGetUpdateDetail)) {
+//     if (package && (m_roles & Enum::RoleGetUpdateDetail)) {
 //         if (m_delegate->isExtended(index)) {
 //             m_delegate->contractItem(index);
 //         } else {
 //             m_delegate->extendItem(new KpkUpdateDetails(package), index);
 //         }
-    }
+//     }
 }
 
 void UpdateKCM::on_historyPB_clicked()

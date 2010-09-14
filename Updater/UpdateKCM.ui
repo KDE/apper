@@ -7,17 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>454</width>
-    <height>423</height>
+    <height>449</height>
    </rect>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="verticalSpacing">
+    <number>0</number>
+   </property>
    <property name="margin">
     <number>0</number>
    </property>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="KpkSearchableTreeView" name="packageView">
      <property name="mouseTracking">
       <bool>true</bool>
@@ -88,7 +91,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="KpkTransactionBar" name="transactionBar" native="true"/>
@@ -128,6 +131,16 @@
      </item>
     </layout>
    </item>
+   <item row="4" column="0">
+    <widget class="KpkUpdateDetails" name="updateDetails" native="true">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -137,15 +150,21 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
+   <class>KpkSearchableTreeView</class>
+   <extends>QTreeView</extends>
+   <header>KpkSearchableTreeView.h</header>
+  </customwidget>
+  <customwidget>
    <class>KpkTransactionBar</class>
    <extends>QWidget</extends>
    <header location="global">KpkTransactionBar.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KpkSearchableTreeView</class>
-   <extends>QTreeView</extends>
-   <header location="global">KpkSearchableTreeView.h</header>
+   <class>KpkUpdateDetails</class>
+   <extends>QWidget</extends>
+   <header>KpkUpdateDetails.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

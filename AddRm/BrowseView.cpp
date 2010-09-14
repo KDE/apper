@@ -169,7 +169,7 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
 // m_details = new KpkPackageDetails;
 // proxy
 QModelIndex origIndex = m_proxy->mapToSource(index);
-packageDetails->setPackage(m_model->package(origIndex), origIndex);
+packageDetails->setPackage(origIndex);
 
 if (packageDetails->minimumSize().height() == 210) {
 //     if (m_details->graphicsEffect()) {

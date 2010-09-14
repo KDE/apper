@@ -25,34 +25,72 @@
 #include <KMessageBox>
 #include <KPixmapSequence>
 
+#include <QGraphicsOpacityEffect>
+
 #include <KDebug>
 
-KpkUpdateDetails::KpkUpdateDetails(QSharedPointer<PackageKit::Package> package, QWidget *parent)
+KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
  : QWidget(parent)
 {
     setupUi(this);
 
     // only the model package has the right m_info
-    m_info = package->info();
-    Transaction *t = Client::instance()->getUpdateDetail(package);
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-    } else {
-        connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
-                this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(updateDetailFinished()));
-    }
+//     m_info = package->info();
+//     Transaction *t = Client::instance()->getUpdateDetail(package);
+//     if (t->error()) {
+//         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
+//     } else {
+//         connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
+//                 this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
+//         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+//                 this, SLOT(updateDetailFinished()));
+//     }
+// 
+//     m_busySeq = new KPixmapSequenceOverlayPainter(this);
+//     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+//     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+//     m_busySeq->setWidget(descriptionKTB->viewport());
+//     m_busySeq->start();
 
-    m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
-    m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_busySeq->setWidget(descriptionKTB->viewport());
-    m_busySeq->start();
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(this);
+    effect->setOpacity(0);
+    descriptionKTB->setVisible(false);
+    setGraphicsEffect(effect);
+    m_fadeDetails = new QPropertyAnimation(effect, "opacity");
+    m_fadeDetails->setDuration(500);
+    m_fadeDetails->setStartValue(qreal(0));
+    m_fadeDetails->setEndValue(qreal(1));
+    connect(m_fadeDetails, SIGNAL(finished()), this, SLOT(display()));
+    
 }
 
 KpkUpdateDetails::~KpkUpdateDetails()
 {
+}
+
+void KpkUpdateDetails::setPackage(const QString &packageId)
+{
+    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize");
+    anim1->setDuration(500);
+    anim1->setEasingCurve(QEasingCurve::OutQuart);
+    anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
+    anim1->setEndValue(QSize(QWIDGETSIZE_MAX, 210));
+    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize");
+    anim2->setDuration(500);
+    anim2->setEasingCurve(QEasingCurve::OutQuart);
+    anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
+    anim2->setEndValue(QSize(QWIDGETSIZE_MAX, 210));
+    //
+    //  anim1->start();
+    //      packageDetails->show();
+
+    QParallelAnimationGroup *group = new QParallelAnimationGroup;
+    group->addAnimation(anim1);
+    group->addAnimation(anim2);
+    connect(group, SIGNAL(finished()), this, SLOT(animationFinished()));
+    group->start();
+
+//     m_package       = QSharedPointer<Package>(new Package(pkgId, info, QString()));;
 }
 
 void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)

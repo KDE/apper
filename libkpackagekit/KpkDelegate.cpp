@@ -90,7 +90,7 @@ void KpkDelegate::paint(QPainter *painter,
     QString pkgSummary    = index.data(KpkPackageModel::SummaryRole).toString();
     QString pkgVersion    = index.data(KpkPackageModel::VersionRole).toString();
     QString pkgArch       = index.data(KpkPackageModel::ArchRole).toString();
-    QString pkgIconPath   = index.data(KpkPackageModel::IconPathRole).toString();
+//     QString pkgIconPath   = index.data(KpkPackageModel::IconPathRole).toString();
     bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
     bool    pkgCheckable  = !index.data(Qt::CheckStateRole).isNull();
     Enum::Info info;
@@ -203,11 +203,11 @@ void KpkDelegate::paint(QPainter *painter,
 
     // Main icon
     QIcon icon;
-    if (pkgIconPath.isEmpty()) {
+//     if (pkgIconPath.isEmpty()) {
         icon = pkgCollection ? m_collectionIcon : m_packageIcon;
-    } else {
-        icon = KpkIcons::getIcon(pkgIconPath, "package");
-    }
+//     } else {
+//         icon = KpkIcons::getIcon(pkgIconPath, "package");
+//     }
 
     int iconSize = calcItemHeight(option) - 2 * UNIVERSAL_PADDING;
     icon.paint(&p,

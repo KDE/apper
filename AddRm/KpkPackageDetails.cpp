@@ -190,23 +190,28 @@ void KpkPackageDetails::setDisplayDetails(bool value)
     display();
 }
 
-void KpkPackageDetails::setPackage(const QSharedPointer<PackageKit::Package> &package,
-                                   const QModelIndex &index)
+void KpkPackageDetails::setPackage(const QModelIndex &index)
 {
-    if (!m_package.isNull() &&
-        m_package->id() == package->id()) {
+    QString pkgId = index.data(KpkPackageModel::IdRole).toString();
+    QString appId = index.data(KpkPackageModel::ApplicationId).toString();
+
+    // if it's the same package and the same application, return
+    if (!m_package.isNull() && pkgId == m_package->id() && appId == m_appId) {
         return;
     } else if (m_display) {
         fadeOut(KpkPackageDetails::FadeScreenshot | KpkPackageDetails::FadeStacked);
     }
-    m_package       = package;
+
+    Enum::Info info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+
+    m_package       = QSharedPointer<Package>(new Package(pkgId, info, QString()));;
     m_hasDetails    = false;
     m_hasFileList   = false;
     m_hasRequires   = false;
     m_hasDepends    = false;
 
     QString pkgName     = index.data(KpkPackageModel::IdRole).toString().split(';')[0];
-    QString pkgIconPath = index.data(KpkPackageModel::IconPathRole).toString();
+    QString pkgIconPath = index.data(KpkPackageModel::IconRole).toString();
     m_appId             = index.data(KpkPackageModel::ApplicationId).toString();
     m_currentIcon       = KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64);
 
