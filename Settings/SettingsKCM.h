@@ -21,9 +21,10 @@
 #ifndef SETTINGS_KCM_H
 #define SETTINGS_KCM_H
 
-#include <QPackageKit>
 #include <KCModule>
 #include <KPixmapSequenceOverlayPainter>
+
+#include <QPackageKit>
 
 #include "ui_SettingsKCM.h"
 
@@ -53,7 +54,7 @@ private slots:
 private:
     KPixmapSequenceOverlayPainter *m_busySeq;
     KpkModelOrigin *m_originModel;
-    Enum::Roles m_roles;
+    Enum::Roles     m_roles;
 };
 
 #endif

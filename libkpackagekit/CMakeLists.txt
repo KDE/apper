@@ -12,7 +12,6 @@ set(libkpk_SRCS
     KpkPackageModel.cpp
     KpkSimplePackageModel.cpp
     KpkIcons.cpp
-    KpkTransactionBar.cpp
     KpkProgressBar.cpp
     KpkReviewChanges.cpp
     KpkRequirements.cpp

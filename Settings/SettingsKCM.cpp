@@ -23,7 +23,6 @@
 #include "KpkModelOrigin.h"
 
 #include <KpkEnum.h>
-#include <KpkTransactionBar.h>
 #include <version.h>
 
 #include <KConfig>
@@ -33,6 +32,9 @@
 #include <KAboutData>
 #include <KPixmapSequence>
 #include <KProcess>
+#include <QEventLoop>
+
+#include <config.h>
 
 #include <KDebug>
 
@@ -98,21 +100,32 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(originTV->viewport());
+
+#ifndef EDIT_ORIGNS_CMD
+    editOriginsPB->hide();
+#endif //EDIT_ORIGNS_CMD
 }
 
 void SettingsKCM::on_editOriginsPB_clicked()
 {
     KProcess *proc = new KProcess(this);
-    QStringList arguments;
     QString cmd;
-    int winID = effectiveWinId();
-    cmd = "software-properties-kde --attach " + QString::number(winID);
-    arguments << "/usr/lib/kde4/libexec/kdesu" << QString(cmd);
-    proc->setProgram(arguments);
-//     find(winID)->/*setEnabled*/(false);
+
+#ifdef EDIT_ORIGNS_CMD
+    cmd = EDIT_ORIGNS_CMD;
+#endif //EDIT_ORIGNS_CMD
+
+#ifdef EDIT_ORIGINS_ATTACH
+    cmd.append(" --attach " + QString::number(effectiveWinId()));
+#endif //EDIT_ORIGINS_ATTACH
+
+    proc->setShellCommand(cmd);
+
+    QEventLoop *loop = new QEventLoop(this);
+    connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
+            loop, SLOT(quit()));
     proc->start();
-    connect( proc, SIGNAL( finished(int, QProcess::ExitStatus) ),
-             this, SLOT( sourcesEditorFinished() ) );
+    loop->exec(QEventLoop::ExcludeUserInputEvents);
 }
 
 // TODO update the repo list connecting to repo changed signal

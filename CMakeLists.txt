@@ -39,6 +39,15 @@ if (DEBCONF_SUPPORT)
     message(STATUS "Building with Debconf support")
 endif (DEBCONF_SUPPORT)
 
+
+# command to edit the packages origins
+set(EDIT_ORIGNS_CMD "" CACHE STRING "Edit origins categories command")
+if (EDIT_ORIGNS_CMD)
+    message(STATUS "Edit origins categories command: " ${EDIT_ORIGNS_CMD})
+    option(EDIT_ORIGINS_ATTACH "Edit origins attach WID:" OFF)
+    message(STATUS "Edit origins attach WID: " ${EDIT_ORIGINS_ATTACH})
+endif (EDIT_ORIGNS_CMD)
+
 # Generate config.h
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
