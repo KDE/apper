@@ -80,15 +80,8 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
 
     //initialize the model, delegate, client and  connect it's signals
     m_header = new KpkCheckableHeader(Qt::Horizontal, this);
-    packageView->setHeader(m_header);
-//     m_header->setResizeMode(QHeaderView::Stretch);
     m_header->setCheckBoxVisible(false);
-//     packageView->sortByColumn(0, Qt::AscendingOrder);
-//     m_header->setDefaultAlignment(Qt::AlignCenter);
     m_header->setStretchLastSection(true);
-    m_header->setResizeMode(0, QHeaderView::ResizeToContents);
-    m_header->setResizeMode(1, QHeaderView::ResizeToContents);
-//     packageView->header()->setResizeMode(2, QHeaderView::Stretch);
 
     m_updatesModel = new KpkPackageModel(this, packageView);
     m_updatesModel->setCheckable(true);
@@ -97,7 +90,7 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setSortRole(KpkPackageModel::SortRole);
-//     packageView->setHeader(m_header);
+    packageView->setHeader(m_header);
     packageView->setItemDelegate(m_delegate = new ApplicationsDelegate(packageView));
     packageView->setModel(proxyModel);
     packageView->sortByColumn(0, Qt::AscendingOrder);
@@ -110,7 +103,9 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     connect(m_updatesModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkEnableUpdateButton()));
 
-    connect(Client::instance(), SIGNAL(updatesChanged()), this, SLOT(getUpdates()));
+    // This must be set AFTER the model is set, otherwise it doesn't work
+    m_header->setResizeMode(0, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(1, QHeaderView::ResizeToContents);
 
     // Create a new client
     m_client = Client::instance();

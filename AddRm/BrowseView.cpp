@@ -48,15 +48,6 @@ BrowseView::BrowseView(QWidget *parent)
     connect(categoryView, SIGNAL(activated(const QModelIndex &)),
             this, SIGNAL(categoryActivated(const QModelIndex &)));
 
-//     packageView = new KpkSearchableTreeView;
-//     packageView->setAlternatingRowColors(true);
-//     packageView->setRootIsDecorated(false);
-//     packageView->setSortingEnabled(true);
-//     packageView->setFrameStyle(QFrame::NoFrame);
-//     packageView->setVerticalScrollBar(verticalScrollBar);
-
-//     m_details = new KpkPackageDetails;
-
     m_model = new KpkPackageModel(this, packageView);
     m_proxy = new KCategorizedSortFilterProxyModel(this);
     m_proxy->setSourceModel(m_model);

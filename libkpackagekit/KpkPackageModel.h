@@ -97,8 +97,6 @@ signals:
 
 private:
     typedef struct {
-        QSharedPointer<Package> package;
-        int        isPackage;
         QString    name;
         QString    version;
         QString    icon;
@@ -106,6 +104,7 @@ private:
         QString    arch;
         QString    id;
         QString    appId;
+        int        isPackage;
         Enum::Info info;
     } InternalPackage;
     bool containsChecked(const QString &pid) const;
@@ -113,7 +112,7 @@ private:
     QPixmap m_installedEmblem;
     QAbstractItemView *m_packageView;
     QVector<InternalPackage> m_packages;
-    QHash<QString, QSharedPointer<PackageKit::Package> > m_checkedPackages;
+    QHash<QString, InternalPackage> m_checkedPackages;
     bool m_checkable;
 #ifdef HAVE_APPINSTALL
     QHash<QString, QStringList> *m_appInstall;
