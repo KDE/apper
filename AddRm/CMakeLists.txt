@@ -4,12 +4,16 @@ set(kpk_addrm_SRCS
     GraphicsOpacityDropShadowEffect.cpp
     CategoryModel.cpp
     BrowseView.cpp
+    TransactionModel.cpp
+    TransactionFilterModel.cpp
+    TransactionHistory.cpp
     AddRmKCM.cpp
 )
 
 kde4_add_ui_files(kpk_addrm_SRCS
     KpkPackageDetails.ui
     BrowseView.ui
+    TransactionHistory.ui
     AddRmKCM.ui
 )
 

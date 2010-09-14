@@ -143,7 +143,7 @@ void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
     KMenu *menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
-    menu->exec(mapToGlobal(pos));
+    menu->exec(packageView->mapToGlobal(pos));
     delete menu;
 }
 

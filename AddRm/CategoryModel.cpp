@@ -48,6 +48,13 @@ CategoryModel::CategoryModel(QObject *parent)
     item->setIcon(KIcon("dialog-ok"));
     appendRow(item);
 
+    item = new QStandardItem(i18n("History"));
+    item->setData(Enum::RoleGetOldTransactions, SearchRole);
+    item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+    item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
+    item->setIcon(KIcon("view-history"));
+    appendRow(item);
+
 #ifdef HAVE_APPINSTALL
     fillWithServiceGroups();
 #endif //HAVE_APPINSTALL

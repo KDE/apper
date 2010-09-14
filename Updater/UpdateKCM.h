@@ -38,6 +38,7 @@ class UpdateKCM : public KCModule, Ui::UpdateKCM
 Q_OBJECT
 public:
     UpdateKCM(QWidget *&parent, const QVariantList &args);
+    ~UpdateKCM();
 
 signals:
     void changed(bool);
@@ -47,8 +48,8 @@ public slots:
     void save();
 
 private slots:
-    void on_refreshPB_clicked();
-    void on_historyPB_clicked();
+    void refreshCache();
+    void on_packageView_customContextMenuRequested(const QPoint &pos);
 
     void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
 
@@ -65,11 +66,14 @@ private slots:
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Enum::Error error, const QString &details);
 
+    void showVersions(bool enabled);
+
 private:
     bool                  m_selected;
     KpkPackageModel      *m_updatesModel;
     ApplicationsDelegate *m_delegate;
     KpkCheckableHeader   *m_header;
+    QAction              *m_showPackageVersion;
     KpkTransaction       *m_transDialog;
     KPixmapSequenceOverlayPainter *m_busySeq;
     Client               *m_client;

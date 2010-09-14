@@ -31,6 +31,7 @@
 #include "KpkPackageDetails.h"
 #include "BrowseView.h"
 #include "CategoryModel.h"
+#include "TransactionHistory.h"
 
 #include <KLocale>
 #include <KStandardDirs>
@@ -443,13 +444,25 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
         m_searchFilters = m_filtersMenu->filters();
         if (m_searchRole == Enum::RoleResolve) {
             m_searchString = index.data(CategoryModel::CategoryRole).toString();
-            const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
+            const QSortFilterProxyModel *proxy;
+            proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
             // If the cast failed it's the index came from browseView
             if (proxy) {
                 m_searchParentCategory = proxy->mapToSource(index);
             } else {
                 m_searchParentCategory = index;
             }
+        } else if (m_searchRole == Enum::RoleGetOldTransactions) {
+            m_history = new TransactionHistory(this);
+            searchKLE->clear();
+            connect(searchKLE, SIGNAL(textChanged(const QString &)),
+                    m_history, SLOT(setFilterRegExp(const QString &)));
+            m_viewLayout->addWidget(m_history);
+            m_viewLayout->setCurrentWidget(m_history);
+            backTB->setEnabled(true);
+            filtersTB->setEnabled(false);
+            widget->setEnabled(false);
+            return;
         }
         // create the main transaction
         search();
@@ -462,6 +475,10 @@ void AddRmKCM::on_backTB_clicked()
         if (!m_browseView->goBack()) {
             return;
         }
+    } else if (m_viewLayout->currentWidget() == m_history) {
+        filtersTB->setEnabled(true);
+        widget->setEnabled(true);
+        delete m_history;
     }
     m_viewLayout->setCurrentIndex(0);
     backTB->setEnabled(false);
@@ -591,6 +608,7 @@ void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)
 void AddRmKCM::keyPressEvent(QKeyEvent *event)
 {
     if (searchKLE->hasFocus() &&
+        m_viewLayout->currentWidget() != m_history &&
         (event->key() == Qt::Key_Return ||
          event->key() == Qt::Key_Enter)) {
         // special tab handling here

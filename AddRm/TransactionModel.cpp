@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkSimpleTransactionModel.h"
+#include "TransactionModel.h"
 
 #include <KUser>
 #include <KGlobal>
@@ -30,14 +30,14 @@
 
 using namespace PackageKit;
 
-KpkSimpleTransactionModel::KpkSimpleTransactionModel(QObject *parent)
+TransactionModel::TransactionModel(QObject *parent)
 : QStandardItemModel(parent)
 {
     setSortRole(Qt::DisplayRole);
     clear();
 }
 
-void KpkSimpleTransactionModel::clear()
+void TransactionModel::clear()
 {
     QStandardItemModel::clear();
     while (m_transactions.size()) {
@@ -50,7 +50,7 @@ void KpkSimpleTransactionModel::clear()
     setHorizontalHeaderItem(4, new QStandardItem(i18n("Application")));
 }
 
-void KpkSimpleTransactionModel::addTransaction(PackageKit::Transaction *trans)
+void TransactionModel::addTransaction(PackageKit::Transaction *trans)
 {
     QStandardItem *dateI    = new QStandardItem;
     QStandardItem *roleI    = new QStandardItem;
@@ -89,7 +89,7 @@ void KpkSimpleTransactionModel::addTransaction(PackageKit::Transaction *trans)
     m_transactions << trans;
 }
 
-QString KpkSimpleTransactionModel::getDetailsLocalized(const QString &data) const
+QString TransactionModel::getDetailsLocalized(const QString &data) const
 {
     QStringList lines = data.split('\n');
     QStringList ret;
@@ -113,7 +113,7 @@ QString KpkSimpleTransactionModel::getDetailsLocalized(const QString &data) cons
     return ret.join("\n");
 }
 
-QString KpkSimpleTransactionModel::getTypeLine(const QStringList &lines, Enum::Status status) const
+QString TransactionModel::getTypeLine(const QStringList &lines, Enum::Status status) const
 {
     QStringList text;
     foreach(const QString &line, lines) {

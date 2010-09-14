@@ -18,31 +18,31 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_HISTORY_H
-#define KPK_HISTORY_H
+#include "TransactionFilterModel.h"
 
-#include "ui_KpkHistory.h"
+#include <QDateTime>
+#include <KDebug>
 
-#include <KDialog>
-
-class KpkTransactionFilterModel;
-class KpkSimpleTransactionModel;
-class KpkHistory : public KDialog, Ui::KpkHistory
+TransactionFilterModel::TransactionFilterModel(QObject *parent)
+  : QSortFilterProxyModel(parent)
 {
-    Q_OBJECT
-public:
-    KpkHistory(QWidget *parent = 0);
-    ~KpkHistory();
+}
 
-private slots:
-    void finished();
+TransactionFilterModel::~TransactionFilterModel()
+{
+}
 
-private:
-    KpkSimpleTransactionModel *m_transactionModel;
-    KpkTransactionFilterModel *m_proxyModel;
+bool TransactionFilterModel::lessThan(const QModelIndex &left,
+                                         const QModelIndex &right) const
+{
+    QVariant leftData = sourceModel()->data(left, Qt::UserRole);
+    QVariant rightData = sourceModel()->data(right, Qt::UserRole);
 
-protected slots:
-    virtual void slotButtonClicked(int button);
-};
+    if (leftData.type() == QVariant::DateTime) {
+        return leftData.toDateTime() < rightData.toDateTime();
+    } else {
+        return QSortFilterProxyModel::lessThan(left, right);
+    }
+}
 
-#endif
+#include "TransactionFilterModel.moc"

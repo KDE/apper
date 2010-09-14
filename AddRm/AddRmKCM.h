@@ -36,6 +36,7 @@ using namespace PackageKit;
 
 class KpkPackageModel;
 class KpkFiltersMenu;
+class TransactionHistory;
 class BrowseView;
 class AddRmKCM : public KCModule, Ui::AddRmKCM
 {
@@ -96,6 +97,8 @@ private:
 
     KpkFiltersMenu *m_filtersMenu;
     Enum::Roles m_roles;
+
+    TransactionHistory *m_history;
 
     // Old search cache
     Enum::Role    m_searchRole;

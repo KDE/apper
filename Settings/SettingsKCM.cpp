@@ -137,8 +137,6 @@ void SettingsKCM::on_showOriginsCB_stateChanged(int state)
     connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_originModel, SLOT(finished()));
     connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            transaction, SLOT(deleteLater()));
-    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_busySeq, SLOT(stop()));
 
     if (state == Qt::Checked) {
@@ -147,9 +145,7 @@ void SettingsKCM::on_showOriginsCB_stateChanged(int state)
         transaction->getRepoList(Enum::FilterNotDevelopment);
     }
 
-    if (transaction->error()) {
-        delete transaction;
-    } else {
+    if (!transaction->error()) {
         m_busySeq->start();
     }
 }

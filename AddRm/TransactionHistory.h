@@ -18,31 +18,30 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkTransactionFilterModel.h"
+#ifndef TRANSACTION_HISTORY_H
+#define TRANSACTION_HISTORY_H
 
-#include <QDateTime>
-#include <KDebug>
+#include "ui_TransactionHistory.h"
 
-KpkTransactionFilterModel::KpkTransactionFilterModel(QObject *parent)
-  : QSortFilterProxyModel(parent)
+class TransactionFilterModel;
+class TransactionModel;
+class TransactionHistory : public QWidget, Ui::TransactionHistory
 {
-}
+    Q_OBJECT
+public:
+    TransactionHistory(QWidget *parent = 0);
+    ~TransactionHistory();
 
-KpkTransactionFilterModel::~KpkTransactionFilterModel()
-{
-}
+public slots:
+    void setFilterRegExp(const QString &regexp);
 
-bool KpkTransactionFilterModel::lessThan(const QModelIndex &left,
-                                         const QModelIndex &right) const
-{
-    QVariant leftData = sourceModel()->data(left, Qt::UserRole);
-    QVariant rightData = sourceModel()->data(right, Qt::UserRole);
+private slots:
+    void on_treeView_customContextMenuRequested(const QPoint &pos);
+    void refreshList();
 
-    if (leftData.type() == QVariant::DateTime) {
-        return leftData.toDateTime() < rightData.toDateTime();
-    } else {
-        return QSortFilterProxyModel::lessThan(left, right);
-    }
-}
+private:
+    TransactionModel *m_transactionModel;
+    TransactionFilterModel *m_proxyModel;
+};
 
-#include "KpkTransactionFilterModel.moc"
+#endif

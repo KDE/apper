@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,20 +18,31 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKTRANSACTIONFILTERMODEL_H
-#define KPKTRANSACTIONFILTERMODEL_H
+#ifndef TRANSACTION_MODEL_H
+#define TRANSACTION_MODEL_H
 
-#include <QSortFilterProxyModel>
+#include <QStandardItemModel>
+#include <QPackageKit>
 
-class KpkTransactionFilterModel : public QSortFilterProxyModel
+using namespace PackageKit;
+
+class TransactionModel : public QStandardItemModel
 {
-    Q_OBJECT
-public:
-    KpkTransactionFilterModel(QObject *parent = 0);
-    ~KpkTransactionFilterModel();
+Q_OBJECT
 
-protected:
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+public:
+    TransactionModel(QObject *parent = 0);
+
+    void clear();
+
+public slots:
+    void addTransaction(PackageKit::Transaction *trans);
+
+private:
+    QString getDetailsLocalized(const QString &data) const;
+    QString getTypeLine(const QStringList &lines, Enum::Status status) const;
+
+    QList<PackageKit::Transaction *> m_transactions;
 };
 
 #endif

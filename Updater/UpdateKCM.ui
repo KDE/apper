@@ -20,7 +20,7 @@
    <property name="margin">
     <number>0</number>
    </property>
-   <item row="3" column="0">
+   <item row="2" column="0">
     <widget class="KpkSearchableTreeView" name="packageView">
      <property name="mouseTracking">
       <bool>true</bool>
@@ -91,44 +91,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="KPushButton" name="refreshPB">
-       <property name="text">
-        <string>Check for new Updates</string>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="KPushButton" name="historyPB">
-       <property name="text">
-        <string>History</string>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="4" column="0">
+   <item row="3" column="0">
     <widget class="KpkUpdateDetails" name="updateDetails" native="true">
      <property name="maximumSize">
       <size>
@@ -141,11 +104,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
   <customwidget>
    <class>KpkSearchableTreeView</class>
    <extends>QTreeView</extends>

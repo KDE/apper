@@ -22,12 +22,12 @@
 
 #include "KpkUpdateDetails.h"
 #include "KpkDistroUpgrade.h"
-#include "KpkHistory.h"
 #include "KpkMacros.h"
 #include "KpkCheckableHeader.h"
 
 #include <version.h>
 
+#include <KMenu>
 #include <KGenericFactory>
 #include <KPixmapSequence>
 #include <KAboutData>
@@ -70,9 +70,6 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
 
     m_selected = !args.isEmpty();
     setupUi(this);
-
-    refreshPB->setIcon(KpkIcons::getIcon("view-refresh"));
-    historyPB->setIcon(KpkIcons::getIcon("view-history"));
 
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Client::instance()->setHints("locale=" + locale);
@@ -124,6 +121,27 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
     line->hide();
+
+    KConfig config("KPackageKit");
+    KConfigGroup viewGroup(&config, "ViewGroup");
+    m_showPackageVersion = new QAction(i18n("Show Versions"), this);
+    m_showPackageVersion->setCheckable(true);
+    connect(m_showPackageVersion, SIGNAL(toggled(bool)),
+            this, SLOT(showVersions(bool)));
+    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", false));
+    showVersions(m_showPackageVersion->isChecked());
+}
+
+UpdateKCM::~UpdateKCM()
+{
+    KConfig config("KPackageKit");
+    KConfigGroup viewGroup(&config, "ViewGroup");
+    viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
+}
+
+void UpdateKCM::showVersions(bool enabled)
+{
+    packageView->header()->setSectionHidden(1, !enabled);
 }
 
 void UpdateKCM::on_packageView_activated(const QModelIndex &index)
@@ -291,7 +309,6 @@ void UpdateKCM::getUpdates()
 
     if (m_updatesT->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
-        delete m_updatesT;
     } else {
         m_busySeq->start();
     }
@@ -312,7 +329,7 @@ void UpdateKCM::getUpdates()
     t->getDistroUpgrades();
 }
 
-void UpdateKCM::on_refreshPB_clicked()
+void UpdateKCM::refreshCache()
 {
     SET_PROXY
     Transaction *t = new Transaction(QString(), this);
@@ -325,7 +342,6 @@ void UpdateKCM::on_refreshPB_clicked()
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         delete frm;
-        delete t;
     } else {
         frm->show();
     }
@@ -349,11 +365,17 @@ void UpdateKCM::showExtendItem(const QModelIndex &index)
 //     }
 }
 
-void UpdateKCM::on_historyPB_clicked()
+void UpdateKCM::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
-    QPointer<KpkHistory> frm = new KpkHistory(this);
-    frm->exec();
-    delete frm;
+    KMenu *menu = new KMenu(this);
+    menu->addAction(m_showPackageVersion);
+    QAction *action;
+    action = menu->addAction(i18n("Check for new Updates"));
+    action->setIcon(KIcon("view-refresh"));
+    connect(action, SIGNAL(triggered(bool)),
+            this, SLOT(refreshCache()));
+    menu->exec(packageView->mapToGlobal(pos));
+    delete menu;
 }
 
 void UpdateKCM::contractAll()
