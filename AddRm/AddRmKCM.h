@@ -71,25 +71,22 @@ private slots:
     void changed();
 
 private:
-    void setupView(KpkPackageModel **model, QTreeView *view);
     void setCurrentActionEnabled(bool state);
     void setCurrentAction(QAction *action);
     void setCurrentActionCancel(bool cancel);
 
     void setActionCancel(bool enabled);
     void search();
-    void connectTransaction(Transaction *transaction, KpkPackageModel *model);
     void keyPressEvent(QKeyEvent *event);
 
-    QStackedLayout *m_viewLayout;
+    QStackedLayout      *m_viewLayout;
     KToolBarPopupAction *m_genericActionK;
-    QAction *m_currentAction;
-    QStandardItemModel *m_groupsModel;
-    BrowseView         *m_browseView;
-    KpkPackageModel    *m_browseModel;
-    KpkPackageModel    *m_changesModel;
+    QAction             *m_currentAction;
+    QStandardItemModel  *m_groupsModel;
+    BrowseView          *m_browseView;
+    KpkPackageModel     *m_browseModel;
+    KpkPackageModel     *m_changesModel;
 
-    Client *m_client;
     Transaction *m_searchTransaction;
 
     KIcon m_findIcon;

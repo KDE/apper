@@ -72,7 +72,7 @@ void TransactionHistory::refreshList()
 {
     // Refresh transaction list
     m_transactionModel->clear();
-    Transaction *transaction = new Transaction(QString(), this);
+    Transaction *transaction = new Transaction(QString());
     connect(transaction, SIGNAL(transaction(PackageKit::Transaction *)),
             m_transactionModel, SLOT(addTransaction(PackageKit::Transaction *)));
     transaction->getOldTransactions(0);

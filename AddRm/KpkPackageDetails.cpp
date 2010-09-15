@@ -254,6 +254,8 @@ void KpkPackageDetails::actionActivated(QAction *action)
                    m_requiresModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
         disconnect(m_transaction, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
                    this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
+        disconnect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                   this, SLOT(finished()));
         m_transaction = 0;
     }
 
@@ -292,7 +294,9 @@ void KpkPackageDetails::actionActivated(QAction *action)
     }
 
     // we don't have the data
-    m_transaction = new Transaction(QString(), this);
+    m_transaction = new Transaction(QString());
+    connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(finished()));
     switch (role) {
     case Enum::RoleGetDetails:
         connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
@@ -306,8 +310,6 @@ void KpkPackageDetails::actionActivated(QAction *action)
         m_dependsModel = new KpkSimplePackageModel(this);
         connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 m_dependsModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
-        connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(finished()));
         m_transaction->getDepends(m_package, PackageKit::Enum::NoFilter, false);
         break;
     case Enum::RoleGetRequires:
@@ -317,8 +319,6 @@ void KpkPackageDetails::actionActivated(QAction *action)
         m_requiresModel = new KpkSimplePackageModel(this);
         connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 m_requiresModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
-        connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(finished()));
         m_transaction->getRequires(m_package, PackageKit::Enum::NoFilter, false);
         break;
     case Enum::RoleGetFiles:
@@ -407,7 +407,12 @@ void KpkPackageDetails::display()
             case Enum::RoleGetFiles:
                 if (m_hasFileList) {
                     filesPTE->clear();
-                    filesPTE->insertPlainText(m_currentFileList.join("\n"));
+                    if (m_currentFileList.isEmpty()) {
+                        filesPTE->appendPlainText(i18n("No files were found."));
+                    } else {
+                        filesPTE->insertPlainText(m_currentFileList.join("\n"));
+                    }
+
                     if (m_viewLayout->currentWidget() != filesPTE) {
                         m_viewLayout->setCurrentWidget(filesPTE);
                     }
@@ -473,7 +478,6 @@ void KpkPackageDetails::setupDescription()
 
     // Let's try to find the application's path in human user
     // readable easiest form :D
-    kDebug() << m_appId;
     KService::Ptr service = KService::serviceByDesktopName(m_appId);
     QVector<QPair<QString, QString> > ret;
     if (service) {
@@ -575,15 +579,7 @@ QVector<QPair<QString, QString> > KpkPackageDetails::locateApplication(const QSt
 
 void KpkPackageDetails::description(const QSharedPointer<PackageKit::Package> &package)
 {
-    if (m_busySeq) {
-        m_busySeq->stop();
-    }
-
     m_package     = package;
-    m_hasDetails  = true;
-    m_transaction = 0;
-
-    display();
 }
 
 void KpkPackageDetails::finished()
@@ -595,13 +591,18 @@ void KpkPackageDetails::finished()
 
     Transaction *transaction = qobject_cast<Transaction*>(sender());
     if (transaction) {
-        if (transaction->role() == Enum::RoleGetDepends) {
-            m_hasDepends = true;
+        if (transaction->role() == Enum::RoleGetDetails) {
+            m_hasDetails  = true;
+        } else if (transaction->role() == Enum::RoleGetFiles) {
+            m_hasFileList = true;
         } else if (transaction->role() == Enum::RoleGetRequires) {
             m_hasRequires = true;
+        } else if (transaction->role() == Enum::RoleGetDepends) {
+            m_hasDepends  = true;
         } else {
             return;
         }
+
         display();
     }
 }
@@ -609,16 +610,8 @@ void KpkPackageDetails::finished()
 void KpkPackageDetails::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
 {
     Q_UNUSED(package)
-    kDebug();
-    if (m_busySeq) {
-        m_busySeq->stop();
-    }
 
     m_currentFileList = files;
-    m_hasFileList     = true;
-    m_transaction     = 0;
-
-    display();
 }
 
 

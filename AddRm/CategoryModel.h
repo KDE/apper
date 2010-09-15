@@ -23,6 +23,9 @@
 
 #include <QStandardItemModel>
 #include <QXmlStreamReader>
+#include <QPackageKit>
+
+using namespace PackageKit;
 
 class CategoryModel : public QStandardItemModel
 {
@@ -42,6 +45,10 @@ private:
     void fillWithServiceGroups();
     void parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent = 0);
     QString parseCategories(QXmlStreamReader &xml, QStandardItem *item, const QString &join = QString());
+    template<class T> static int enumFromString(const QString& str, const char* enumName, const QString& prefix = QString());
+
+    Enum::Roles  m_roles;
+    Enum::Groups m_groups;
 };
 
 #endif

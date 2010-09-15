@@ -29,6 +29,7 @@
 #include <QPackageKit>
 
 #include <KFileDialog>
+#include <KPixmapSequence>
 #include <KCategorizedSortFilterProxyModel>
 #include <KMenu>
 
@@ -48,6 +49,11 @@ BrowseView::BrowseView(QWidget *parent)
     connect(categoryView, SIGNAL(activated(const QModelIndex &)),
             this, SIGNAL(categoryActivated(const QModelIndex &)));
 
+    m_busySeq = new KPixmapSequenceOverlayPainter(this);
+    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_busySeq->setWidget(packageView->viewport());
+
     m_model = new KpkPackageModel(this, packageView);
     m_proxy = new KCategorizedSortFilterProxyModel(this);
     m_proxy->setSourceModel(m_model);
@@ -65,48 +71,15 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
     packageView->header()->setResizeMode(2, QHeaderView::Stretch);
 
-
-//     m_scene = new QGraphicsScene(graphicsView);
-//     m_proxyWidget = m_scene->addWidget(packageView);
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     delegate->setExtendPixmapWidth(0);
-//     delegate->setViewport(graphicsView->viewport());
-//     delegate->setContractPixmap(SmallIcon("help-about"));
     packageView->setItemDelegate(delegate);
-    connect(delegate, SIGNAL(showExtendItem(const QModelIndex &)),
-            this, SLOT(showExtendItem(const QModelIndex &)));
     connect(m_proxy, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
             this, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
 
     exportInstalledPB->setIcon(KIcon("document-export"));
     importInstalledPB->setIcon(KIcon("document-import"));
 
-//     packageDetails->layout()->setCon
-
-
-//     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-
-// importInstalledPB->setGraphicsEffect(blurEffect);
-//     QGraphicsProxyWidget *opaItem = scene->addWidget(new QGroupBox);
-//     QGraphicsOpacityEffect *opaci = new QGraphicsOpacityEffect(this);
-//     opaItem->setGraphicsEffect(opaci);
-
-//     QPushButton *blurButton = new QPushButton("Blur");
-//     QGraphicsProxyWidget *blurItem = scene->addWidget(blurButton);
-//     blurItem->setPos(-blurButton->width()/2, -10-blurButton->height());
-
-//     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-//     blurButton->setGraphicsEffect(blurEffect); // button disapears
-//     blurItem->setGraphicsEffect(blurEffect); // works
-    //view.setGraphicsEffect(blurEffect); // works first, then does not work
-
-// QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-//     m_proxyWidget->setGraphicsEffect(blurEffect);
-//     graphicsView->setScene(m_scene);
-
-
-//     graphicsView->fitInView(m_proxyWidget, Qt::KeepAspectRatio);
-//     packageDetails->hide();
     KConfig config("KPackageKit");
     KConfigGroup viewGroup(&config, "ViewGroup");
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
@@ -149,7 +122,7 @@ void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
 
 void BrowseView::on_packageView_activated(const QModelIndex &index)
 {
-    if (index.column() == 2) {
+    if (index.column() == 3) {
         return;
     }
 //     packageDetails->show();

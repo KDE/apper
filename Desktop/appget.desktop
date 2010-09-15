@@ -3,7 +3,7 @@ Type=Application
 Icon=applications-other
 Exec=kpackagekit -caption "%c" %i %F
 X-DBUS-StartupType=Unique
-X-DBUS-ServiceName=org.kde.KPackageKit
+X-DBUS-ServiceName=org.kde.appget
 
 Name=AppGet
 Name[da]=AppGet

@@ -55,7 +55,7 @@
             </Categories>
         </Menu>
 
-        <Menu>
+<!--        <Menu>
             <Name>Haskell</Name>
             <Name xml:lang="th">Haskell</Name>
             <Icon>applications-haskell</Icon>
@@ -67,7 +67,7 @@
                     <SCSection>multiverse/haskell</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
         <Menu>
             <Name>IDEs</Name>
@@ -78,7 +78,7 @@
             </Categories>
         </Menu>
 
-        <Menu>
+<!--        <Menu>
             <Name>Java</Name>
             <Name xml:lang="th">Java</Name>
             <Icon>applications-java</Icon>
@@ -90,9 +90,9 @@
                     <SCSection>multiverse/java</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
-        <Menu>
+<!--        <Menu>
             <Name>Libraries</Name>
             <Name xml:lang="th">Libraries</Name>
             <Icon>applications-libraries</Icon>
@@ -104,9 +104,9 @@
                     <SCSection>multiverse/libdevel</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
-        <Menu>
+<!--        <Menu>
             <Name>Lisp</Name>
             <Name xml:lang="th">Lisp</Name>
             <Icon>applications-lisp</Icon>
@@ -118,7 +118,7 @@
                     <SCSection>multiverse/lisp</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
         <Menu>
             <Name>Localization</Name>
@@ -130,7 +130,7 @@
             </Categories>
         </Menu>
 
-        <Menu>
+<!--        <Menu>
             <Name>Mono/CLI</Name>
             <Icon>applications-monodevelopment</Icon>
             <Categories>
@@ -141,9 +141,9 @@
                     <SCSection>multiverse/cli-mono</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
-        <Menu>
+<!--        <Menu>
             <Name>OCaml</Name>
             <Name xml:lang="th">OCaml</Name>
             <Icon>applications-caml</Icon>
@@ -155,9 +155,9 @@
                     <SCSection>multiverse/ocaml</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
-        <Menu>
+<!--        <Menu>
             <Name>Perl</Name>
             <Name xml:lang="th">Perl</Name>
             <Icon>applications-perl</Icon>
@@ -169,7 +169,7 @@
                     <SCSection>multiverse/perl</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
         <Menu>
             <Name>Profiling</Name>
@@ -180,7 +180,7 @@
             </Categories>
         </Menu>
 
-        <Menu>
+<!--        <Menu>
             <Name>Python</Name>
             <Name xml:lang="th">Python</Name>
             <Icon>applications-python</Icon>
@@ -192,9 +192,9 @@
                     <SCSection>multiverse/python</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
-        <Menu>
+<!--        <Menu>
             <Name>Ruby</Name>
             <Name xml:lang="th">Ruby</Name>
             <Icon>applications-ruby</Icon>
@@ -206,7 +206,7 @@
                     <SCSection>multiverse/ruby</SCSection>
                 </Or>
             </Categories>
-        </Menu>
+        </Menu>-->
 
         <Menu>
             <Name>Version Control</Name>
@@ -214,10 +214,10 @@
             <Icon>applications-versioncontrol</Icon>
             <Categories>
                 <Or>
-                    <SCSection>vcs</SCSection>
+<!--                    <SCSection>vcs</SCSection>
                     <SCSection>restricted/vcs</SCSection>
                     <SCSection>universe/vcs</SCSection>
-                    <SCSection>multiverse/vcs</SCSection>
+                    <SCSection>multiverse/vcs</SCSection>-->
                     <Category>RevisionControl</Category>
                 </Or>
             </Categories>
@@ -316,14 +316,14 @@
                     <Category>DataVisualization</Category>
                     <Category>Math</Category>
                     <Category>NumericalAnalysis</Category>
-                    <SCSection>math</SCSection>
+<!--                    <SCSection>math</SCSection>
                     <SCSection>restricted/math</SCSection>
                     <SCSection>universe/math</SCSection>
                     <SCSection>multiverse/math</SCSection>
                     <SCSection>gnu-r</SCSection>
                     <SCSection>restricted/gnu-r</SCSection>
                     <SCSection>universe/gnu-r</SCSection>
-                    <SCSection>multiverse/gnu-r</SCSection>
+                    <SCSection>multiverse/gnu-r</SCSection>-->
                 </Or>
             </Categories>
         </Menu>
@@ -339,21 +339,7 @@
         <Name>Fonts</Name>
         <Name xml:lang="th">แบบอักษร</Name>
         <Icon>preferences-desktop-font</Icon>
-        <Categories>
-        <And>
-            <Or>
-                <SCPkgnameWildcard>ttf*</SCPkgnameWildcard>
-                <SCPkgnameWildcard>otf*</SCPkgnameWildcard>
-                <SCSection>fonts</SCSection>
-                <SCSection>restricted/fonts</SCSection>
-                <SCSection>universe/fonts</SCSection>
-                <SCSection>multiverse/fonts</SCSection>
-            </Or>
-            <Not>
-                <SCPkgname>ttfm</SCPkgname>
-            </Not>
-        </And>
-        </Categories>
+        <PkGroups>fonts</PkGroups>
     </Menu>
 
 

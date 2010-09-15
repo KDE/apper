@@ -29,13 +29,13 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about("AppGet",
+    KAboutData about("appget",
                      "kpackagekit", // DO NOT change this catalog unless you know it will not break translations!
                      ki18n("AppGet"),
                      KPK_VERSION,
                      ki18n("AppGet is an application to get and manage software"),
                      KAboutData::License_GPL,
-                     ki18n("(C) 2008-2009 Daniel Nicoletti"));
+                     ki18n("(C) 2008-2010 Daniel Nicoletti"));
 
     about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti85-pk@yahoo.com.br", "http://www.packagekit.org");
     about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"), "@");

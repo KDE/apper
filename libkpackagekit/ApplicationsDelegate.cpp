@@ -286,7 +286,7 @@ void ApplicationsDelegate::setViewport(QWidget *viewport)
 QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
                                      const QModelIndex &index) const
 {
-    if (index.column() == 2) {
+    if (index.column() == 3) {
         QSize size = m_buttonSize;
         size.rheight() += 2 * UNIVERSAL_PADDING;
         size.rwidth()  += 5 * UNIVERSAL_PADDING;
@@ -299,23 +299,6 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
         }
         return size;
     }
-    int width = (index.column() == 0) ? index.data(Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
-    QSize ret(QStyledItemDelegate::sizeHint(option, index));
-    // remove the default size of the index
-    ret -= QStyledItemDelegate::sizeHint(option, index);
-
-    ret.rheight() += calcItemHeight(option);
-    if (index.column() == 0) {
-//         ret.rwidth() = 300;
-// kDebug() << QStyledItemDelegate::sizeHint(option, index);
-        return QStyledItemDelegate::sizeHint(option, index);
-    } else {
-    ret.rwidth()  += width;
-
-    }
-    kDebug() << index << ret;
-
-    return ret;
 }
 
 #include "ApplicationsDelegate.moc"

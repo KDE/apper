@@ -47,11 +47,11 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
     KAboutData *aboutData;
-    aboutData = new KAboutData("kpackagekit",
+    aboutData = new KAboutData("appget",
                                "kpackagekit",
-                               ki18n("KPackageKit settings"),
+                               ki18n("AppGet settings"),
                                KPK_VERSION,
-                               ki18n("KPackageKit settings"),
+                               ki18n("AppGet settings"),
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
     setAboutData(aboutData);
@@ -131,7 +131,7 @@ void SettingsKCM::on_editOriginsPB_clicked()
 // TODO update the repo list connecting to repo changed signal
 void SettingsKCM::on_showOriginsCB_stateChanged(int state)
 {
-    Transaction *transaction = new Transaction(QString(), this);
+    Transaction *transaction = new Transaction(QString());
     connect(transaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
             m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
     connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),

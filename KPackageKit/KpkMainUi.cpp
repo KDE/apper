@@ -44,7 +44,6 @@ KpkMainUi::KpkMainUi(QWidget *parent)
 
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply | KDialog::Help | KDialog::Default | KDialog::Reset);
-    layout()->setContentsMargins(0, 0, 0, 0);
 }
 
 KpkMainUi::~KpkMainUi()
@@ -53,7 +52,6 @@ KpkMainUi::~KpkMainUi()
     KConfig config("KPackageKit");
     KConfigGroup kpackagekitMain(&config, "KpkMainUi");
     saveDialogSize(kpackagekitMain);
-    kDebug();
 }
 
 void KpkMainUi::showAll()

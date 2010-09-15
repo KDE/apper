@@ -67,10 +67,11 @@ private:
     bool showPageHeader() const;
 //     void updateSceneEvent();
 
-    QAction *m_showPackageVersion;
+    QAction                          *m_showPackageVersion;
     KpkPackageModel                  *m_model;
     KCategorizedSortFilterProxyModel *m_proxy;
     KpkSearchableTreeView            *m_packageView;
+    KPixmapSequenceOverlayPainter    *m_busySeq;
 };
 
 #endif

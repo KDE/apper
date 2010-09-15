@@ -75,9 +75,9 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
    m_searchRole(Enum::UnknownRole)
 {
     KAboutData *aboutData;
-    aboutData = new KAboutData("kpackagekit",
+    aboutData = new KAboutData("appget",
                                "kpackagekit",
-                               ki18n("Add and Remove Software"),
+                               ki18n("Get and Remove Software"),
                                KPK_VERSION,
                                ki18n("KDE interface for managing software"),
                                KAboutData::License_GPL,
@@ -124,12 +124,11 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     }
 #endif //HAVE_APPINSTALL
 
-    // Create a new daemon
-    m_client = Client::instance();
+    // Set the current locale
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    m_client->setHints("locale=" + locale);
+    Client::instance()->setHints("locale=" + locale);
     // store the actions supported by the backend
-    m_roles = m_client->actions();
+    m_roles = Client::instance()->actions();
 
     // Browse TAB
     backTB->setIcon(KIcon("go-previous"));
@@ -210,7 +209,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     homeView->setModel(proxy);
 
     // install the backend filters
-    filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(m_client->filters(), this));
+    filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(Client::instance()->filters(), this));
     filtersTB->setIcon(KIcon("view-filter"));
     m_browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(const QString &)),
@@ -218,7 +217,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
 
     //initialize the model, delegate, client and  connect it's signals
-//     setupView(&m_browseModel, packageView);
     m_browseModel = m_browseView->model();
 
     // CHANGES TAB
@@ -268,26 +266,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     m_browseModel->setAppInstallData(appInstall, true);
     m_changesModel->setAppInstallData(appInstall, false);
 #endif //HAVE_APPINSTALL
-}
-
-void AddRmKCM::setupView(KpkPackageModel **model, QTreeView *view)
-{
-    *model = new KpkPackageModel(this, view);
-    KCategorizedSortFilterProxyModel *proxyModel = new KCategorizedSortFilterProxyModel(this);
-    proxyModel->setSourceModel(*model);
-    proxyModel->setDynamicSortFilter(true);
-    proxyModel->setCategorizedModel(true);
-    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    proxyModel->setSortRole(KpkPackageModel::SortRole);
-    view->setModel(proxyModel);
-    view->sortByColumn(0, Qt::AscendingOrder);
-    view->header()->setDefaultAlignment(Qt::AlignCenter);
-    KpkDelegate *delegate = new KpkDelegate(view);
-    view->setItemDelegate(delegate);
-    connect(delegate, SIGNAL(showExtendItem(const QModelIndex &)),
-            this, SLOT(showExtendItem(const QModelIndex &)));
-    connect(proxyModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
-            this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -491,25 +469,32 @@ void AddRmKCM::search()
     m_browseView->hideCategory();
 
     // search
+    m_searchTransaction = new Transaction(QString());
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+    connect(m_searchTransaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+            m_browseModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+    connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     switch (m_searchRole) {
     case Enum::RoleSearchName:
-        m_searchTransaction = m_client->searchNames(m_searchString, m_searchFilters);
+        m_searchTransaction->searchNames(m_searchString, m_searchFilters);
         break;
     case Enum::RoleSearchDetails:
-        m_searchTransaction = m_client->searchDetails(m_searchString, m_searchFilters);
+        m_searchTransaction->searchDetails(m_searchString, m_searchFilters);
         break;
     case Enum::RoleSearchFile:
-        m_searchTransaction = m_client->searchFiles(m_searchString, m_searchFilters);
+        m_searchTransaction->searchFiles(m_searchString, m_searchFilters);
         break;
     case Enum::RoleSearchGroup:
-        m_searchTransaction = m_client->searchGroups(m_searchGroup, m_searchFilters);
+        m_searchTransaction->searchGroups(m_searchGroup, m_searchFilters);
         break;
     case Enum::RoleGetPackages:
         // we want all the installed ones
         m_browseView->disableExportInstalledPB();
-        m_searchTransaction = m_client->getPackages(Enum::FilterInstalled);
         connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                 m_browseView, SLOT(enableExportInstalledPB()));
+        m_searchTransaction->getPackages(Enum::FilterInstalled);
         break;
     case Enum::RoleResolve:
     {
@@ -524,7 +509,7 @@ void AddRmKCM::search()
             m_browseView->setParentCategory(m_searchParentCategory);
             // WARNING the resolve might fail if the backend
             // has a low limit MaximumItemsToResolve
-            m_searchTransaction = m_client->resolve(packages, m_searchFilters);
+            m_searchTransaction->resolve(packages, m_searchFilters);
         } else {
             return;
         }
@@ -545,24 +530,11 @@ void AddRmKCM::search()
         m_searchTransaction = 0;
     } else {
         setCurrentActionCancel(true);
-        connectTransaction(m_searchTransaction, m_browseModel);
-        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(finished(PackageKit::Enum::Exit, uint)));
         setCurrentActionEnabled(m_searchTransaction->allowCancel());
-        // contract and delete and details widgets
-//         KpkDelegate *delegate = qobject_cast<KpkDelegate*>(packageView->itemDelegate());
-//         delegate->contractAll();
+
         // cleans the models
         m_browseModel->clear();
     }
-}
-
-void AddRmKCM::connectTransaction(Transaction *transaction, KpkPackageModel *model)
-{
-    connect(transaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-            model, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-    connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
 }
 
 void AddRmKCM::changed()

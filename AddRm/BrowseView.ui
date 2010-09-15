@@ -209,7 +209,6 @@
        <height>0</height>
       </size>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3"/>
     </widget>
    </item>
   </layout>

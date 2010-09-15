@@ -258,7 +258,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         }
         break;
     case IconRole:
-        return package.info;
+        return package.icon;
     case SortRole:
         return package.name + ' ' + package.version + ' ' + package.arch;
 //     case Qt::CheckStateRole:

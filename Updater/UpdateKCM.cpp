@@ -57,7 +57,7 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
       m_updatesT(0)
 {
     KAboutData *aboutData;
-    aboutData = new KAboutData("kpackagekit",
+    aboutData = new KAboutData("appget",
                                "kpackagekit",
                                ki18n("Update Software"),
                                KPK_VERSION,
@@ -290,7 +290,7 @@ void UpdateKCM::getUpdates()
     packageView->setHeaderHidden(true);
     m_updatesModel->clear();
     updateDetails->hide();
-    m_updatesT = new Transaction(QString(), this);
+    m_updatesT = new Transaction(QString());
     m_updatesT->getUpdates();
     if (m_selected) {
         connect(m_updatesT, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
@@ -323,7 +323,7 @@ void UpdateKCM::getUpdates()
     line->hide();
 
     // Check for distribution Upgrades
-    Transaction *t = new Transaction(QString(), this);
+    Transaction *t = new Transaction(QString());
     connect(t, SIGNAL(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)),
             this, SLOT(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)));
     t->getDistroUpgrades();
@@ -332,7 +332,7 @@ void UpdateKCM::getUpdates()
 void UpdateKCM::refreshCache()
 {
     SET_PROXY
-    Transaction *t = new Transaction(QString(), this);
+    Transaction *t = new Transaction(QString());
     KpkTransaction *frm = new KpkTransaction(t,
                                              KpkTransaction::Modal | KpkTransaction::CloseOnFinish,
                                              this);
