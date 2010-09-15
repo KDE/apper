@@ -324,8 +324,10 @@ void KpkReviewChanges::transactionFinished(KpkTransaction::ExitStatus status)
 void KpkReviewChanges::taskDone(PackageKit::Enum::Role role)
 {
     if (role == Enum::RoleRemovePackages) {
+        emit successfullyRemoved();
         d->remPackages.clear();
     } else if (role == Enum::RoleInstallPackages) {
+        emit successfullyInstalled();
         d->addPackages.clear();
     }
     checkTask();

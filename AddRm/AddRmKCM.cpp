@@ -236,21 +236,27 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     // Connect this signal anyway so users that have backend that
     // do not support install or remove can be informed properly
-    connect(m_changesModel, SIGNAL(rowsInserted(const QModelIndex, int, int)),
-            this, SLOT(checkChanged()));
-    connect(m_changesModel, SIGNAL(rowsRemoved(const QModelIndex, int, int)),
-            this, SLOT(checkChanged()));
+//     connect(m_changesModel, SIGNAL(rowsInserted(const QModelIndex, int, int)),
+//             this, SLOT(checkChanged()));
+//     connect(m_changesModel, SIGNAL(rowsRemoved(const QModelIndex, int, int)),
+//             this, SLOT(checkChanged()));
+    connect(m_browseModel, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+    connect(m_browseModel, SIGNAL(changed(bool)), changesPB, SLOT(setEnabled(bool)));
+
+//     changesPB->setEnabled(true);
+// //         tabWidget->setTabText(2, i18np("1 Change Pending", "%1 Changes Pending", size));
+//         emit changed(true);
 
     // Make the models talk to each other
     // packageCheced from browse model
-    connect(m_browseModel, SIGNAL(packageChecked(const KpkPackageModel::InternalPackage &)),
-            m_changesModel, SLOT(addSelectedPackage(const KpkPackageModel::InternalPackage &)));
-
-    // packageUnchecked from browse model
-    connect(m_browseModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
-            m_changesModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
-    connect(m_browseModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
-            m_changesModel, SLOT(rmSelectedPackage(const KpkPackageModel::InternalPackage &)));
+//     connect(m_browseModel, SIGNAL(packageChecked(const KpkPackageModel::InternalPackage &)),
+//             m_changesModel, SLOT(addSelectedPackage(const KpkPackageModel::InternalPackage &)));
+// 
+//     // packageUnchecked from browse model
+//     connect(m_browseModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
+//             m_changesModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
+//     connect(m_browseModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
+//             m_changesModel, SLOT(rmSelectedPackage(const KpkPackageModel::InternalPackage &)));
 
     // packageUnchecked from changes model
     connect(m_changesModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
@@ -354,16 +360,9 @@ void AddRmKCM::setCurrentActionCancel(bool cancel)
 
 void AddRmKCM::checkChanged()
 {
-    int size = m_changesModel->rowCount();
-    if (size > 0) {
-        changesPB->setEnabled(true);
-//         tabWidget->setTabText(2, i18np("1 Change Pending", "%1 Changes Pending", size));
-        emit changed(true);
-    } else {
-        changesPB->setEnabled(false);
-//         tabWidget->setTabText(2, i18n("No Change Pending"));
-        emit changed(false);
-    }
+    bool value = m_browseModel->hasChanges();
+    changesPB->setEnabled(value);
+    emit changed(value);
 }
 
 void AddRmKCM::rowsAboutToBeRemoved(const QModelIndex &index, int start, int end)
@@ -488,6 +487,8 @@ void AddRmKCM::on_backTB_clicked()
 
 void AddRmKCM::on_changesPB_clicked()
 {
+    m_changesModel->clear();
+    m_changesModel->addPackages(m_browseModel->selectedPackages(), true);
     m_viewLayout->setCurrentWidget(changesView);
     backTB->setEnabled(false);
 }
@@ -573,14 +574,17 @@ void AddRmKCM::changed()
 
 void AddRmKCM::save()
 {
-    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_changesModel->selectedPackages(), this);
+    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_browseModel->selectedPackages(), this);
+    connect(frm, SIGNAL(successfullyInstalled()), m_browseModel, SLOT(uncheckAvailablePackages()));
+    connect(frm, SIGNAL(successfullyRemoved()), m_browseModel, SLOT(uncheckInstalledPackages()));
+
     frm->exec();
 
     // This avoid crashing as the above function does not always quit it's event loop
     if (!frm.isNull()) {
         delete frm;
         // The database might have changed
-        m_changesModel->resolveSelected();
+        m_browseModel->resolveSelected();
         search();
         QTimer::singleShot(0, this, SLOT(checkChanged()));
     }

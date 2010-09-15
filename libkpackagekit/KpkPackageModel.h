@@ -92,18 +92,20 @@ public slots:
                     bool selected = false);
     void addPackages(const QList<QSharedPointer<PackageKit::Package> > &packages,
                      bool selected = false);
-//     void addResolvedPackage(const QSharedPointer<PackageKit::Package> &package);
-    void addSelectedPackage(const KpkPackageModel::InternalPackage &package);
-    void rmSelectedPackage(const KpkPackageModel::InternalPackage &package);
-    void setAllChecked(bool checked);
 
+    void setAllChecked(bool checked);
     void checkPackage(const KpkPackageModel::InternalPackage &package,
                       bool emitDataChanged = true);
     void uncheckPackage(const KpkPackageModel::InternalPackage &package,
                         bool forceEmitUnchecked = false,
                         bool emitDataChanged = true);
+    bool hasChanges() const;
+
+    void uncheckInstalledPackages();
+    void uncheckAvailablePackages();
 
 signals:
+    void changed(bool value);
     void packageChecked(const KpkPackageModel::InternalPackage &package);
     void packageUnchecked(const KpkPackageModel::InternalPackage &package);
 

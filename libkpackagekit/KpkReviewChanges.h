@@ -51,6 +51,10 @@ public:
     void setMessage(const QString &msg);
     int exec(OperationModes flags = 0);
 
+signals:
+    void successfullyInstalled();
+    void successfullyRemoved();
+
 private slots:
     void installPackages();
     void removePackages(bool allow_deps = true);

@@ -117,28 +117,6 @@ void KpkPackageModel::addPackages(const QList<QSharedPointer<PackageKit::Package
     }
 }
 
-void KpkPackageModel::addSelectedPackage(const InternalPackage &package)
-{
-//     addPackage(package, true);
-//         if (selected) {
-        checkPackage(package, false);
-//     }
-
-    beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
-    m_packages.append(package);
-    endInsertRows();
-}
-
-// void KpkPackageModel::addResolvedPackage(const QSharedPointer<PackageKit::Package> &package)
-// {
-//     kDebug() << package.id();
-//     if (m_checkedPackages.contains(package.id())) {
-//         if (package.info() != m_checkedPackages[package.id()]->info()) {
-//             uncheckPackage(package, true);
-//         }
-//     }
-// }
-
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
@@ -327,20 +305,12 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == Qt::CheckStateRole && m_packages.size() > index.row()) {
-        InternalPackage package = m_packages.at(index.row());
-//         QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
-
         if (value.toBool()) {
-            checkPackage(package);
-//             emit dataChanged(index, index);
+            checkPackage(m_packages.at(index.row()));
         } else {
-            uncheckPackage(package);
+            uncheckPackage(m_packages.at(index.row()));
         }
 
-        // emit this so the package icon is also updated
-//         emit dataChanged(index,
-//                          index.sibling(index.row(),
-//                          index.column() - 1));
         return true;
     }
     return false;
@@ -365,25 +335,6 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
     }
 }
 
-// QSharedPointer<PackageKit::Package> KpkPackageModel::package(const QModelIndex &index) const
-// {
-//     InternalPackage package = m_packages.at(index.row());
-//     QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
-//     return pkg;
-// }
-
-void KpkPackageModel::rmSelectedPackage(const InternalPackage &package)
-{
-    QString pkgId = package.id;
-    for (int i = 0; i < m_packages.size(); i++) {
-        if (m_packages.at(i).id == pkgId) {
-            beginRemoveRows(QModelIndex(), i, i);
-            m_packages.remove(i);
-            endRemoveRows();
-        }
-    }
-}
-
 void KpkPackageModel::clear()
 {
     m_packages.clear();
@@ -394,7 +345,6 @@ void KpkPackageModel::clearSelectedNotPresent()
 {
     QVector<InternalPackage> uncheckPackages;
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
-//         QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
         bool found = false;
         QString pkgId = package.id;
         for (int i = 0; i < m_packages.size(); ++i) {
@@ -413,14 +363,31 @@ void KpkPackageModel::clearSelectedNotPresent()
         uncheckPackage(uncheckPackages.at(i));
     }
 }
+void KpkPackageModel::uncheckInstalledPackages()
+{
+    foreach (const InternalPackage &package, m_checkedPackages.values()) {
+        if (package.info == Enum::InfoInstalled ||
+            package.info == Enum::InfoCollectionInstalled) {
+            uncheckPackage(package, true);
+        }
+    }
+}
+
+void KpkPackageModel::uncheckAvailablePackages()
+{
+    foreach (const InternalPackage &package, m_checkedPackages.values()) {
+        if (package.info == Enum::InfoAvailable ||
+            package.info == Enum::InfoCollectionAvailable) {
+            uncheckPackage(package, true);
+        }
+    }
+}
 
 void KpkPackageModel::resolveSelected()
 {
     if (!m_checkedPackages.isEmpty()) {
-//         Transaction *t;
         // TODO fix packagekit-qt
         foreach (const InternalPackage &package, m_checkedPackages.values()) {
-//             QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
             uncheckPackage(package, true);
         }
         // TODO WHAT do I DO? yum backend doesn't reply to this...
@@ -430,25 +397,17 @@ void KpkPackageModel::resolveSelected()
     }
 }
 
+bool KpkPackageModel::hasChanges() const
+{
+    return !m_checkedPackages.isEmpty();
+}
+
 void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitDataChanged)
 {
 //     kDebug() << sender();
     QString pkgId = package.id;
     if (!containsChecked(pkgId)) {
-
-//         InternalPackage iPackage;
-//         iPackage.isPackage   = 1;
-//         iPackage.name        = package->name();
-//         iPackage.summary     = package->summary();
-//         iPackage.version     = package->version();
-//         iPackage.arch        = package->arch();
-//         iPackage.id          = pkgId;
-//         iPackage.info        = package->info();
-
         m_checkedPackages[pkgId] = package;
-//         if (sender() == 0) {
-//             emit packageChecked(package);
-//         }
 
         if (emitDataChanged) {
             // This is a slow operation so in case the user
@@ -461,6 +420,8 @@ void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitData
                 }
             }
         }
+
+        emit changed(!m_checkedPackages.isEmpty());
     }
 }
 
@@ -487,6 +448,8 @@ void KpkPackageModel::uncheckPackage(const InternalPackage &package,
                 }
             }
         }
+
+        emit changed(!m_checkedPackages.isEmpty());
     }
 }
 
@@ -504,7 +467,6 @@ void KpkPackageModel::setAllChecked(bool checked)
         m_checkedPackages.clear();
         for (int i = 0; i < m_packages.size(); i++) {
             InternalPackage package = m_packages.at(i);
-//             QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
             checkPackage(package, false);
         }
         emit dataChanged(createIndex(0, 0),
@@ -512,7 +474,6 @@ void KpkPackageModel::setAllChecked(bool checked)
     } else {
         // This is a very slow operation, which in here we try to optimise
         foreach (const InternalPackage &package, m_checkedPackages.values()) {
-//             QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
             uncheckPackage(package, true, false);
         }
         emit dataChanged(createIndex(0, 0),
