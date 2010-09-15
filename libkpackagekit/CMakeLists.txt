@@ -1,4 +1,6 @@
 set(libkpk_SRCS
+    KpkIcons.cpp
+    KpkStrings.cpp
     ApplicationLauncher.cpp
     ApplicationsDelegate.cpp
     CategoryDrawer.cpp
@@ -6,12 +8,10 @@ set(libkpk_SRCS
     TransactionDelegate.cpp
     ProgressView.cpp
     KpkTransaction.cpp
-    KpkStrings.cpp
     KpkRepoSig.cpp
     KpkLicenseAgreement.cpp
     KpkPackageModel.cpp
     KpkSimplePackageModel.cpp
-    KpkIcons.cpp
     KpkProgressBar.cpp
     KpkReviewChanges.cpp
     KpkRequirements.cpp

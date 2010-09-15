@@ -466,7 +466,7 @@ void AddRmKCM::on_backTB_clicked()
 
 void AddRmKCM::search()
 {
-    m_browseView->hideCategory();
+    m_browseView->cleanUi();
 
     // search
     m_searchTransaction = new Transaction(QString());

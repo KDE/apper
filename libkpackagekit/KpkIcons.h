@@ -43,6 +43,8 @@ class KDE_EXPORT KpkIcons {
         static KIcon   getIcon(const QString &name, const QString &defaultName);
 
     private:
+        static void configure();
+
         static QHash<QString, KIcon> cache;
         static bool init;
 };

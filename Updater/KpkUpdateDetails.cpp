@@ -37,18 +37,6 @@ KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
 {
     setupUi(this);
 
-    // only the model package has the right m_updateInfo
-//     m_updateInfo = package->info();
-//     Transaction *t = Client::instance()->getUpdateDetail(package);
-//     if (t->error()) {
-//         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-//     } else {
-//         connect(t, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
-//                 this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
-//         connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-//                 this, SLOT(updateDetailFinished()));
-//     }
-//
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -130,6 +118,7 @@ void KpkUpdateDetails::setPackage(const QString &packageId, Enum::Info updateInf
 void KpkUpdateDetails::hide()
 {
     m_show = false;
+    m_packageId.clear();
     if (maximumSize().height() == FINAL_HEIGHT &&
         m_fadeDetails->currentValue().toReal() == 1) {
         m_fadeDetails->setDirection(QAbstractAnimation::Backward);
@@ -143,7 +132,6 @@ void KpkUpdateDetails::hide()
 
 void KpkUpdateDetails::display()
 {
-    kDebug() << maximumSize().height() << m_currentDescription.isEmpty();
     if (!m_show) {
         hide();
         return;

@@ -38,12 +38,12 @@ public:
     void showInstalledPanel(bool visible);
     void setCategoryModel(QAbstractItemModel *model);
     void setParentCategory(const QModelIndex &index);
-    void hideCategory();
     KpkPackageModel*                  model() const;
     KCategorizedSortFilterProxyModel* proxy() const;
 
     void disableExportInstalledPB();
     bool goBack();
+    void cleanUi();
 
 signals:
     void rowsAboutToBeRemoved(const QModelIndex &, int, int);
@@ -53,7 +53,6 @@ public slots:
     void enableExportInstalledPB();
 
 private slots:
-    void animationFinished();
     void showVersions(bool enabled);
     void on_packageView_customContextMenuRequested(const QPoint &pos);
     void on_packageView_activated(const QModelIndex &);
@@ -65,7 +64,6 @@ private slots:
 
 private:
     bool showPageHeader() const;
-//     void updateSceneEvent();
 
     QAction                          *m_showPackageVersion;
     KpkPackageModel                  *m_model;

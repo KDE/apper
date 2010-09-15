@@ -52,7 +52,7 @@ public:
     ~KpkPackageDetails();
 
     void setPackage(const QModelIndex &index);
-    void setDisplayDetails(bool display);
+    void hide();
 
 private slots:
     void actionActivated(QAction *action);
@@ -78,6 +78,7 @@ private:
     QListView      *dependsOnLV;
     QListView      *requiredByLV;
 
+    QParallelAnimationGroup       *m_expandPanel;
     KPixmapSequenceOverlayPainter *m_busySeq;
 
     QPropertyAnimation *m_fadeStacked;
@@ -93,6 +94,7 @@ private:
     QString      m_currentText;
     QPixmap      m_currentIcon;
     QString      m_appId;
+    QString      m_packageId;
 
     // file list buffer
     bool         m_hasFileList;

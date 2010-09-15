@@ -44,6 +44,7 @@
 #include "GraphicsOpacityDropShadowEffect.h"
 
 #define BLUR_RADIUS 15
+#define FINAL_HEIGHT 210
 
 Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 
@@ -151,7 +152,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     // is the the Forward or Backward property
     QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(stackedWidget);
     effect->setOpacity(0);
-    stackedWidget->setVisible(false);
+//     stackedWidget->setVisible(false);
     stackedWidget->setGraphicsEffect(effect);
     m_fadeStacked = new QPropertyAnimation(effect, "opacity");
     m_fadeStacked->setDuration(500);
@@ -175,19 +176,26 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     m_fadeScreenshot->setEndValue(qreal(1));
     connect(m_fadeScreenshot, SIGNAL(finished()), this, SLOT(display()));
 
+    // This pannel expanding
+    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize");
+    anim1->setDuration(500);
+    anim1->setEasingCurve(QEasingCurve::OutQuart);
+    anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
+    anim1->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
+    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize");
+    anim2->setDuration(500);
+    anim2->setEasingCurve(QEasingCurve::OutQuart);
+    anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
+    anim2->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
+
+    m_expandPanel = new QParallelAnimationGroup;
+    m_expandPanel->addAnimation(anim1);
+    m_expandPanel->addAnimation(anim2);
+    connect(m_expandPanel, SIGNAL(finished()), this, SLOT(display()));
 }
 
 KpkPackageDetails::~KpkPackageDetails()
 {
-}
-
-void KpkPackageDetails::setDisplayDetails(bool value)
-{
-    m_display = value;
-    if (value && !stackedWidget->isVisible()) {
-        stackedWidget->setVisible(true);
-    }
-    display();
 }
 
 void KpkPackageDetails::setPackage(const QModelIndex &index)
@@ -196,27 +204,33 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
     QString appId = index.data(KpkPackageModel::ApplicationId).toString();
 
     // if it's the same package and the same application, return
-    if (!m_package.isNull() && pkgId == m_package->id() && appId == m_appId) {
+    if (pkgId == m_packageId && appId == m_appId) {
         return;
-    } else if (m_display) {
+    } else if (maximumSize().height() == 0) {
+        // Expand the panel
+        m_display = true;
+        m_expandPanel->setDirection(QAbstractAnimation::Forward);
+        m_expandPanel->start();
+    } else {
+        // Hide the old description
         fadeOut(KpkPackageDetails::FadeScreenshot | KpkPackageDetails::FadeStacked);
     }
 
+    m_packageId = pkgId;
+    m_appId     = appId;
     Enum::Info info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
 
-    m_package       = QSharedPointer<Package>(new Package(pkgId, info, QString()));;
+    m_package       = QSharedPointer<Package>(new Package(m_packageId, info, QString()));;
     m_hasDetails    = false;
     m_hasFileList   = false;
     m_hasRequires   = false;
     m_hasDepends    = false;
 
-    QString pkgName     = index.data(KpkPackageModel::IdRole).toString().split(';')[0];
     QString pkgIconPath = index.data(KpkPackageModel::IconRole).toString();
-    m_appId             = index.data(KpkPackageModel::ApplicationId).toString();
     m_currentIcon       = KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64);
 
     // TODO do not hard code...
-    m_currentScreenshot = "http://screenshots.debian.net/thumbnail/" + pkgName;
+    m_currentScreenshot = "http://screenshots.debian.net/thumbnail/" + m_package->name();
     if (m_screenshotPath.contains(m_currentScreenshot)) {
         display();
     } else{
@@ -345,6 +359,28 @@ void KpkPackageDetails::resultJob(KJob *job)
     }
 }
 
+void KpkPackageDetails::hide()
+{
+    m_display = false;
+    // Clean the old description otherwise if the user selects the same
+    // package the pannel won't expand
+    m_packageId.clear();
+    m_appId.clear();
+
+    if (maximumSize().height() == FINAL_HEIGHT) {
+        if (m_fadeStacked->currentValue().toReal() == 0 &&
+            m_fadeScreenshot->currentValue().toReal() == 0) {
+            // Screen shot and description faded let's shrink the pannel
+            kDebug() << "shrink";
+            m_expandPanel->setDirection(QAbstractAnimation::Backward);
+            m_expandPanel->start();
+        } else {
+            // Hide current description
+            fadeOut(KpkPackageDetails::FadeScreenshot | KpkPackageDetails::FadeStacked);
+        }
+    }
+}
+
 void KpkPackageDetails::fadeOut(FadeWidgets widgets)
 {
     // Fade out only if needed
@@ -362,10 +398,11 @@ void KpkPackageDetails::fadeOut(FadeWidgets widgets)
 
 void KpkPackageDetails::display()
 {
-    // If we shouldn't be showing fade out
+    // If we shouldn't be showing hide the pannel
     if (!m_display) {
-        fadeOut(FadeScreenshot | FadeStacked);
-    } else {
+        hide();
+        kDebug() << "hide";
+    } else if (maximumSize().height() == FINAL_HEIGHT) {
         // Check to see if the stacked widget is transparent
         if (m_fadeStacked->currentValue().toReal() == 0 &&
             m_actionGroup->checkedAction())
@@ -579,7 +616,7 @@ QVector<QPair<QString, QString> > KpkPackageDetails::locateApplication(const QSt
 
 void KpkPackageDetails::description(const QSharedPointer<PackageKit::Package> &package)
 {
-    m_package     = package;
+    m_package = package;
 }
 
 void KpkPackageDetails::finished()
@@ -587,7 +624,7 @@ void KpkPackageDetails::finished()
     if (m_busySeq) {
         m_busySeq->stop();
     }
-    m_transaction     = 0;
+    m_transaction = 0;
 
     Transaction *transaction = qobject_cast<Transaction*>(sender());
     if (transaction) {

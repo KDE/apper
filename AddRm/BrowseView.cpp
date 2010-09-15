@@ -86,7 +86,7 @@ BrowseView::BrowseView(QWidget *parent)
     m_showPackageVersion->setCheckable(true);
     connect(m_showPackageVersion, SIGNAL(toggled(bool)),
             this, SLOT(showVersions(bool)));
-    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", false));
+    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowApplicationVersions", false));
     showVersions(m_showPackageVersion->isChecked());
 }
 
@@ -94,7 +94,7 @@ BrowseView::~BrowseView()
 {
     KConfig config("KPackageKit");
     KConfigGroup viewGroup(&config, "ViewGroup");
-    viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
+    viewGroup.writeEntry("ShowApplicationVersions", m_showPackageVersion->isChecked());
 }
 
 bool BrowseView::showPageHeader() const
@@ -125,95 +125,9 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
     if (index.column() == 3) {
         return;
     }
-//     packageDetails->show();
-//     kDebug() << "foo;";
-//     packageView->setMouseTracking(false);
-//     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-//     blurEffect->setBlurRadius(0);
-//      packageView->viewport()->setGraphicsEffect(blurEffect);
-//
-//     QPropertyAnimation *animation = new QPropertyAnimation(blurEffect, "blurRadius");
-//     animation->setDuration(1000);
-//     animation->setStartValue(qreal(0.5));
-//     animation->setEndValue(qreal(10));
-//     animation->setEasingCurve(QEasingCurve::OutQuart);
-//     animation->start();
-// m_oldDetails = m_details;
-// m_details = new KpkPackageDetails;
-// proxy
-QModelIndex origIndex = m_proxy->mapToSource(index);
-packageDetails->setPackage(origIndex);
 
-if (packageDetails->minimumSize().height() == 210) {
-//     if (m_details->graphicsEffect()) {
-//         QPropertyAnimation *anim1 = new QPropertyAnimation(m_oldDetails->graphicsEffect(), "opacity");
-//         anim1->setDuration(1000);
-//         anim1->setEndValue(qreal(0));
-//         anim1->start();
-//         connect(anim1, SIGNAL(finished()), m_oldDetails, SLOT(deleteLater()));
-//         connect(anim1, SIGNAL(finished()), this, SLOT(animationFinished()));
-//         return;
-//     }
-    return;
-}
-
-
-//     m_details->setPackage(m_model->package(index), index);
-
- QPropertyAnimation *anim1 = new QPropertyAnimation(packageDetails, "maximumSize");
- anim1->setDuration(500);
- anim1->setEasingCurve(QEasingCurve::OutQuart);
- anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
- anim1->setEndValue(QSize(QWIDGETSIZE_MAX, 210));
-  QPropertyAnimation *anim2 = new QPropertyAnimation(packageDetails, "minimumSize");
- anim2->setDuration(500);
- anim2->setEasingCurve(QEasingCurve::OutQuart);
- anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
- anim2->setEndValue(QSize(QWIDGETSIZE_MAX, 210));
-//
-//  anim1->start();
-//      packageDetails->show();
-
-QParallelAnimationGroup *group = new QParallelAnimationGroup;
- group->addAnimation(anim1);
- group->addAnimation(anim2);
-connect(group, SIGNAL(finished()), this, SLOT(animationFinished()));
- group->start();
-
-//     KpkPackageDetails *details = new KpkPackageDetails(m_model->package(index), index, Client::instance()->actions());
-//     packageView->setLayout(new QGridLayout());
-//     packageView->layout()->addWidget(details);
-// // //     QTabWidget *tab = new QTabWidget;
-// // //     tab->addTab(details, "details");
-//     details->setAttribute(Qt::WA_NoSystemBackground, true);
-// // //     QGraphicsProxyWidget *proxyWidget = m_scene->addWidget(details);
-// // //     proxyWidget->setAttribute(Qt::WA_NoSystemBackground, true);
-// // //     tab->setAutoFillBackground(false);
-// // //     proxyWidget->setAutoFillBackground(false);
-// // //     proxyWidget->setParent(m_proxyWidget);
-// //
-// // //     QGraphicsRectItem *itemBox = m_scene->addRect(QRectF(0, 0, 400, 800));
-// // //     QGraphicsTextItem *itemText = new QGraphicsTextItem(index.data(KpkPackageModel::SummaryRole).toString(), itemBox);
-// // //     QGraphicsItemGroup *group = m_scene->createItemGroup(QList<QGraphicsItem *>() << itemBox << itemText);
-// // //     group->setPos(20, 20);
-//     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(details);
-// // //     QGraphicsDropShadowEffect *shadow2 = new QGraphicsDropShadowEffect(this);
-// // //     shadow->setColor(QColor(Qt::blue));
-//     shadow->setBlurRadius(15);
-//     shadow->setOffset(2);
-// // //     shadow2->setColor(QColor(Qt::blue));
-// // //     shadow2->setBlurRadius(15);
-// // //     shadow2->setOffset(2);
-//     details->setGraphicsEffect(shadow);
-// //     details->show();
-// // //     itemText->setTextWidth(350);
-// // //     itemBox->setGraphicsEffect(shadow2);
-}
-
-void BrowseView::animationFinished()
-{
-//     packageDetails->layout()->addWidget(m_details);
-    packageDetails->setDisplayDetails(true);
+    QModelIndex origIndex = m_proxy->mapToSource(index);
+    packageDetails->setPackage(origIndex);
 }
 
 void BrowseView::showInstalledPanel(bool visible)
@@ -244,6 +158,7 @@ void BrowseView::setParentCategory(const QModelIndex &index)
 
 bool BrowseView::goBack()
 {
+    packageDetails->hide();
     QModelIndex index = categoryView->rootIndex();
     if (index.parent().isValid()) {
         setParentCategory(index.parent());
@@ -251,11 +166,6 @@ bool BrowseView::goBack()
         return false;
     }
     return true;
-}
-
-void BrowseView::hideCategory()
-{
-    categoryF->setVisible(false);
 }
 
 void BrowseView::on_categoryMvLeft_clicked()
@@ -266,6 +176,12 @@ void BrowseView::on_categoryMvLeft_clicked()
 void BrowseView::on_categoryMvRight_clicked()
 {
     categoryView->horizontalScrollBar()->setValue(categoryView->horizontalScrollBar()->value() + 1);
+}
+
+void BrowseView::cleanUi()
+{
+    packageDetails->hide();
+    categoryF->setVisible(false);
 }
 
 void BrowseView::on_exportInstalledPB_clicked()
@@ -281,7 +197,6 @@ void BrowseView::on_exportInstalledPB_clicked()
     QFile file(fileName);
     file.open(QIODevice::WriteOnly);
     QTextStream out(&file);
-
     out << "[PackageKit Catalog]\n\n";
     out << "InstallPackages(" << Client::instance()->distroId() << ")=";
     QStringList packages;

@@ -32,25 +32,21 @@
 bool KpkIcons::init = false;
 QHash<QString, KIcon> KpkIcons::cache = QHash<QString, KIcon>();
 
+void KpkIcons::configure()
+{
+    KIconLoader::global()->addAppDir("kpackagekit");
+    KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
+    KIconLoader::global()->reconfigure("kpackagekit", 0);
+    KpkIcons::init = true;
+}
+
 KIcon KpkIcons::getIcon(const QString &name)
 {
 //     kDebug() << 1 << name;
     if (!KpkIcons::init) {
-        KIconLoader::global()->addAppDir("kpackagekit");
-//         KIconLoader::global()->addAppDir("appget");
-        KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
-        KIconLoader::global()->reconfigure("kpackagekit", 0);
-        KpkIcons::init = true;
-        kDebug() << "init" << 1;
-//         KIconLoader::global()->addAppDir("kpackagekit");
-// //         KIconLoader::global()->addAppDir("appget");
-// // #ifdef HAVE_APPINSTALL
-//         KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
-//         KIconLoader::global()->reconfigure("kpackagekit", 0);
-// // #endif //HAVE_APPINSTALL
-//         KpkIcons::init = true;
-//         kDebug() << name << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup);
+        KpkIcons::configure();
     }
+
     if (!KpkIcons::cache.contains(name)) {
         KpkIcons::cache[name] = KIcon(name);
     }
@@ -61,12 +57,7 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
 {
 //     kDebug() << 2 << name << defaultName;
     if (!KpkIcons::init) {
-        kDebug() << 2;
-        KIconLoader::global()->addAppDir("kpackagekit");
-        KIconLoader::global()->addAppDir("appget");
-        KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
-        KIconLoader::global()->reconfigure("appget", 0);
-        KpkIcons::init = true;
+        KpkIcons::configure();
     }
     if (!KpkIcons::cache.contains(name)) {
 //         kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::User);
