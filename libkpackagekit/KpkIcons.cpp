@@ -34,9 +34,9 @@ QHash<QString, KIcon> KpkIcons::cache = QHash<QString, KIcon>();
 
 void KpkIcons::configure()
 {
-    KIconLoader::global()->addAppDir("kpackagekit");
     KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
-    KIconLoader::global()->reconfigure("kpackagekit", 0);
+    KIconLoader::global()->reconfigure("appget", 0);
+    KIconLoader::global()->addAppDir("kpackagekit");
     KpkIcons::init = true;
 }
 
@@ -59,8 +59,9 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
     if (!KpkIcons::init) {
         KpkIcons::configure();
     }
+    return KIcon(name);
     if (!KpkIcons::cache.contains(name)) {
-//         kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::User);
+        kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup) << name;
         QPixmap icon;
         icon = KIconLoader::global()->loadIcon(name,
                                             KIconLoader::NoGroup,
@@ -70,8 +71,11 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
                                             NULL,
                                             true);
         if (icon.isNull() && !defaultName.isNull()) {
+                        kDebug() << "if" << name;
+
             KpkIcons::cache[name] = KIcon(defaultName);
         } else {
+            kDebug() << "else" << name;
             KpkIcons::cache[name].addPixmap(icon);
         }
     }
@@ -126,7 +130,7 @@ QString KpkIcons::statusIconName(Enum::Status status)
 
 KIcon KpkIcons::statusIcon(Enum::Status status)
 {
-    return KpkIcons::getIcon(KpkIcons::statusIconName(status));
+    return KIcon(KpkIcons::statusIconName(status));
 }
 
 QString KpkIcons::statusAnimation(PackageKit::Enum::Status status)
@@ -173,103 +177,103 @@ KIcon KpkIcons::actionIcon(Enum::Role role)
 {
     switch (role) {
     case Enum::LastRole                    :
-    case Enum::UnknownRole                 : return KpkIcons::getIcon("applications-other");
-    case Enum::RoleAcceptEula              : return KpkIcons::getIcon("package-info");
-    case Enum::RoleCancel                  : return KpkIcons::getIcon("process-stop");
-    case Enum::RoleDownloadPackages        : return KpkIcons::getIcon("package-download");
-    case Enum::RoleGetCategories           : return KpkIcons::getIcon("package-info");
-    case Enum::RoleGetDepends              : return KpkIcons::getIcon("package-info");
-    case Enum::RoleGetDetails              : return KpkIcons::getIcon("package-info");
-    case Enum::RoleGetDistroUpgrades       : return KpkIcons::getIcon("distro-upgrade");
-    case Enum::RoleGetFiles                : return KpkIcons::getIcon("package-search");
-    case Enum::RoleGetOldTransactions      : return KpkIcons::getIcon("package-info");
-    case Enum::RoleGetPackages             : return KpkIcons::getIcon("package-packages");
-    case Enum::RoleGetRepoList             : return KpkIcons::getIcon("package-orign");
-    case Enum::RoleGetRequires             : return KpkIcons::getIcon("package-info");
-    case Enum::RoleGetUpdateDetail         : return KpkIcons::getIcon("package-info");
-    case Enum::RoleGetUpdates              : return KpkIcons::getIcon("package-info");
-    case Enum::RoleInstallFiles            : return KpkIcons::getIcon("package-installed");
-    case Enum::RoleInstallPackages         : return KpkIcons::getIcon("package-installed");
-    case Enum::RoleInstallSignature        : return KpkIcons::getIcon("package-installed");
-    case Enum::RoleRefreshCache            : return KpkIcons::getIcon("kpk-refresh-cache");
-    case Enum::RoleRemovePackages          : return KpkIcons::getIcon("package-removed");
-    case Enum::RoleRepoEnable              : return KpkIcons::getIcon("package-orign");
-    case Enum::RoleRepoSetData             : return KpkIcons::getIcon("package-orign");
-    case Enum::RoleResolve                 : return KpkIcons::getIcon("package-search");
-    case Enum::RoleRollback                : return KpkIcons::getIcon("package-rollback");
-    case Enum::RoleSearchDetails           : return KpkIcons::getIcon("package-search");
-    case Enum::RoleSearchFile              : return KpkIcons::getIcon("package-search");
-    case Enum::RoleSearchGroup             : return KpkIcons::getIcon("package-search");
-    case Enum::RoleSearchName              : return KpkIcons::getIcon("package-search");
-    case Enum::RoleUpdatePackages          : return KpkIcons::getIcon("package-update");
-    case Enum::RoleUpdateSystem            : return KpkIcons::getIcon("distro-upgrade");//TODO
-    case Enum::RoleWhatProvides            : return KpkIcons::getIcon("package-search");
-    case Enum::RoleSimulateInstallFiles    : return KpkIcons::getIcon("package-installed");
-    case Enum::RoleSimulateInstallPackages : return KpkIcons::getIcon("package-installed");
-    case Enum::RoleSimulateRemovePackages  : return KpkIcons::getIcon("package-removed");
-    case Enum::RoleSimulateUpdatePackages  : return KpkIcons::getIcon("package-update'");
+    case Enum::UnknownRole                 : return KIcon("applications-other");
+    case Enum::RoleAcceptEula              : return KIcon("package-info");
+    case Enum::RoleCancel                  : return KIcon("process-stop");
+    case Enum::RoleDownloadPackages        : return KIcon("package-download");
+    case Enum::RoleGetCategories           : return KIcon("package-info");
+    case Enum::RoleGetDepends              : return KIcon("package-info");
+    case Enum::RoleGetDetails              : return KIcon("package-info");
+    case Enum::RoleGetDistroUpgrades       : return KIcon("distro-upgrade");
+    case Enum::RoleGetFiles                : return KIcon("package-search");
+    case Enum::RoleGetOldTransactions      : return KIcon("package-info");
+    case Enum::RoleGetPackages             : return KIcon("package-packages");
+    case Enum::RoleGetRepoList             : return KIcon("package-orign");
+    case Enum::RoleGetRequires             : return KIcon("package-info");
+    case Enum::RoleGetUpdateDetail         : return KIcon("package-info");
+    case Enum::RoleGetUpdates              : return KIcon("package-info");
+    case Enum::RoleInstallFiles            : return KIcon("package-installed");
+    case Enum::RoleInstallPackages         : return KIcon("package-installed");
+    case Enum::RoleInstallSignature        : return KIcon("package-installed");
+    case Enum::RoleRefreshCache            : return KIcon("kpk-refresh-cache");
+    case Enum::RoleRemovePackages          : return KIcon("package-removed");
+    case Enum::RoleRepoEnable              : return KIcon("package-orign");
+    case Enum::RoleRepoSetData             : return KIcon("package-orign");
+    case Enum::RoleResolve                 : return KIcon("package-search");
+    case Enum::RoleRollback                : return KIcon("package-rollback");
+    case Enum::RoleSearchDetails           : return KIcon("package-search");
+    case Enum::RoleSearchFile              : return KIcon("package-search");
+    case Enum::RoleSearchGroup             : return KIcon("package-search");
+    case Enum::RoleSearchName              : return KIcon("package-search");
+    case Enum::RoleUpdatePackages          : return KIcon("package-update");
+    case Enum::RoleUpdateSystem            : return KIcon("distro-upgrade");//TODO
+    case Enum::RoleWhatProvides            : return KIcon("package-search");
+    case Enum::RoleSimulateInstallFiles    : return KIcon("package-installed");
+    case Enum::RoleSimulateInstallPackages : return KIcon("package-installed");
+    case Enum::RoleSimulateRemovePackages  : return KIcon("package-removed");
+    case Enum::RoleSimulateUpdatePackages  : return KIcon("package-update'");
     }
     kDebug() << "action unrecognised: " << role;
-    return KpkIcons::getIcon("applications-other");
+    return KIcon("applications-other");
 }
 
 KIcon KpkIcons::groupsIcon(Enum::Group group)
 {
     switch (group) {
     case Enum::LastGroup            :
-    case Enum::UnknownGroup         : return KpkIcons::getIcon("unknown");
-    case Enum::GroupAccessibility   : return KpkIcons::getIcon("preferences-desktop-accessibility");
-    case Enum::GroupAccessories     : return KpkIcons::getIcon("applications-accessories");
-    case Enum::GroupAdminTools      : return KpkIcons::getIcon("dialog-password");
-    case Enum::GroupCommunication   : return KpkIcons::getIcon("network-workgroup");//FIXME
-    case Enum::GroupDesktopGnome    : return KpkIcons::getIcon("kpk-desktop-gnome");
-    case Enum::GroupDesktopKde      : return KpkIcons::getIcon("kde");
-    case Enum::GroupDesktopOther    : return KpkIcons::getIcon("user-desktop");
-    case Enum::GroupDesktopXfce     : return KpkIcons::getIcon("kpk-desktop-xfce");
-    case Enum::GroupDocumentation   : return KpkIcons::getIcon("accessories-dictionary");//FIXME
-    case Enum::GroupEducation       : return KpkIcons::getIcon("applications-education");
-    case Enum::GroupElectronics     : return KpkIcons::getIcon("media-flash");
-    case Enum::GroupFonts           : return KpkIcons::getIcon("preferences-desktop-font");
-    case Enum::GroupGames           : return KpkIcons::getIcon("applications-games");
-    case Enum::GroupGraphics        : return KpkIcons::getIcon("applications-graphics");
-    case Enum::GroupInternet        : return KpkIcons::getIcon("applications-internet");
-    case Enum::GroupLegacy          : return KpkIcons::getIcon("media-floppy");
-    case Enum::GroupLocalization    : return KpkIcons::getIcon("applications-education-language");
-    case Enum::GroupMaps            : return KpkIcons::getIcon("Maps");//FIXME
-    case Enum::GroupCollections     : return KpkIcons::getIcon("package-orign");
-    case Enum::GroupMultimedia      : return KpkIcons::getIcon("applications-multimedia");
-    case Enum::GroupNetwork         : return KpkIcons::getIcon("network-wired");
-    case Enum::GroupOffice          : return KpkIcons::getIcon("applications-office");
-    case Enum::GroupOther           : return KpkIcons::getIcon("applications-other");
-    case Enum::GroupPowerManagement : return KpkIcons::getIcon("battery");
-    case Enum::GroupProgramming     : return KpkIcons::getIcon("applications-development");
-    case Enum::GroupPublishing      : return KpkIcons::getIcon("accessories-text-editor");
-    case Enum::GroupRepos           : return KpkIcons::getIcon("application-x-compressed-tar");
-    case Enum::GroupScience         : return KpkIcons::getIcon("applications-science");
-    case Enum::GroupSecurity        : return KpkIcons::getIcon("security-high");
-    case Enum::GroupServers         : return KpkIcons::getIcon("network-server");
-    case Enum::GroupSystem          : return KpkIcons::getIcon("applications-system");
-    case Enum::GroupVirtualization  : return KpkIcons::getIcon("cpu");
-    case Enum::GroupVendor          : return KpkIcons::getIcon("application-certificate");
-    case Enum::GroupNewest          : return KpkIcons::getIcon("dialog-information");
+    case Enum::UnknownGroup         : return KIcon("unknown");
+    case Enum::GroupAccessibility   : return KIcon("preferences-desktop-accessibility");
+    case Enum::GroupAccessories     : return KIcon("applications-accessories");
+    case Enum::GroupAdminTools      : return KIcon("dialog-password");
+    case Enum::GroupCommunication   : return KIcon("network-workgroup");//FIXME
+    case Enum::GroupDesktopGnome    : return KIcon("kpk-desktop-gnome");
+    case Enum::GroupDesktopKde      : return KIcon("kde");
+    case Enum::GroupDesktopOther    : return KIcon("user-desktop");
+    case Enum::GroupDesktopXfce     : return KIcon("kpk-desktop-xfce");
+    case Enum::GroupDocumentation   : return KIcon("accessories-dictionary");//FIXME
+    case Enum::GroupEducation       : return KIcon("applications-education");
+    case Enum::GroupElectronics     : return KIcon("media-flash");
+    case Enum::GroupFonts           : return KIcon("preferences-desktop-font");
+    case Enum::GroupGames           : return KIcon("applications-games");
+    case Enum::GroupGraphics        : return KIcon("applications-graphics");
+    case Enum::GroupInternet        : return KIcon("applications-internet");
+    case Enum::GroupLegacy          : return KIcon("media-floppy");
+    case Enum::GroupLocalization    : return KIcon("applications-education-language");
+    case Enum::GroupMaps            : return KIcon("Maps");//FIXME
+    case Enum::GroupCollections     : return KIcon("package-orign");
+    case Enum::GroupMultimedia      : return KIcon("applications-multimedia");
+    case Enum::GroupNetwork         : return KIcon("network-wired");
+    case Enum::GroupOffice          : return KIcon("applications-office");
+    case Enum::GroupOther           : return KIcon("applications-other");
+    case Enum::GroupPowerManagement : return KIcon("battery");
+    case Enum::GroupProgramming     : return KIcon("applications-development");
+    case Enum::GroupPublishing      : return KIcon("accessories-text-editor");
+    case Enum::GroupRepos           : return KIcon("application-x-compressed-tar");
+    case Enum::GroupScience         : return KIcon("applications-science");
+    case Enum::GroupSecurity        : return KIcon("security-high");
+    case Enum::GroupServers         : return KIcon("network-server");
+    case Enum::GroupSystem          : return KIcon("applications-system");
+    case Enum::GroupVirtualization  : return KIcon("cpu");
+    case Enum::GroupVendor          : return KIcon("application-certificate");
+    case Enum::GroupNewest          : return KIcon("dialog-information");
     }
     kDebug() << "group unrecognised: " << group;
-    return KpkIcons::getIcon("unknown");
+    return KIcon("unknown");
 }
 
 KIcon KpkIcons::packageIcon(Enum::Info info)
 {
     switch (info) {
-    case Enum::InfoBugfix      : return KpkIcons::getIcon("script-error");
-    case Enum::InfoImportant   : return KpkIcons::getIcon("security-low");
-    case Enum::InfoLow         : return KpkIcons::getIcon("security-high");
-    case Enum::InfoEnhancement : return KpkIcons::getIcon("ktip");
-    case Enum::InfoSecurity    : return KpkIcons::getIcon("emblem-important");
-    case Enum::InfoNormal      : return KpkIcons::getIcon("security-medium");
-    case Enum::InfoBlocked     : return KpkIcons::getIcon("dialog-cancel");
-    case Enum::InfoAvailable   : return KpkIcons::getIcon("package-download");
-    case Enum::InfoInstalled   : return KpkIcons::getIcon("package-installed");
-    default                    : return KpkIcons::getIcon("package");
+    case Enum::InfoBugfix      : return KIcon("script-error");
+    case Enum::InfoImportant   : return KIcon("security-low");
+    case Enum::InfoLow         : return KIcon("security-high");
+    case Enum::InfoEnhancement : return KIcon("ktip");
+    case Enum::InfoSecurity    : return KIcon("emblem-important");
+    case Enum::InfoNormal      : return KIcon("security-medium");
+    case Enum::InfoBlocked     : return KIcon("dialog-cancel");
+    case Enum::InfoAvailable   : return KIcon("package-download");
+    case Enum::InfoInstalled   : return KIcon("package-installed");
+    default                    : return KIcon("package");
     }
 }
 
@@ -277,14 +281,14 @@ KIcon KpkIcons::restartIcon(Enum::Restart type)
 {
     switch (type) {
     case Enum::RestartSecuritySystem  :
-    case Enum::RestartSystem          : return KpkIcons::getIcon("system-reboot");
+    case Enum::RestartSystem          : return KIcon("system-reboot");
     case Enum::RestartSecuritySession :
-    case Enum::RestartSession         : return KpkIcons::getIcon("system-log-out");
-    case Enum::RestartApplication     : return KpkIcons::getIcon("process-stop");
+    case Enum::RestartSession         : return KIcon("system-log-out");
+    case Enum::RestartApplication     : return KIcon("process-stop");
     case Enum::RestartNone            :
     case Enum::LastRestart            :
-    case Enum::UnknownRestart         : KpkIcons::getIcon("");
+    case Enum::UnknownRestart         : KIcon("");
     }
-    return KpkIcons::getIcon("");
+    return KIcon("");
 }
 

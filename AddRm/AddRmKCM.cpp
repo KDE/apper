@@ -243,20 +243,20 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     // Make the models talk to each other
     // packageCheced from browse model
-    connect(m_browseModel, SIGNAL(packageChecked(const QSharedPointer<PackageKit::Package> &)),
-            m_changesModel, SLOT(addSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_browseModel, SIGNAL(packageChecked(const KpkPackageModel::InternalPackage &)),
+            m_changesModel, SLOT(addSelectedPackage(const KpkPackageModel::InternalPackage &)));
 
     // packageUnchecked from browse model
-    connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_changesModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_browseModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_browseModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
+            m_changesModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
+    connect(m_browseModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
+            m_changesModel, SLOT(rmSelectedPackage(const KpkPackageModel::InternalPackage &)));
 
     // packageUnchecked from changes model
-    connect(m_changesModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_changesModel, SLOT(rmSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_changesModel, SIGNAL(packageUnchecked(const QSharedPointer<PackageKit::Package> &)),
-            m_browseModel, SLOT(uncheckPackage(const QSharedPointer<PackageKit::Package> &)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
+            m_changesModel, SLOT(rmSelectedPackage(const KpkPackageModel::InternalPackage &)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
+            m_browseModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
 
     // colapse package description when removing rows
 //     connect(m_changesModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
@@ -266,6 +266,26 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     m_browseModel->setAppInstallData(appInstall, true);
     m_changesModel->setAppInstallData(appInstall, false);
 #endif //HAVE_APPINSTALL
+changesPB->setIcon(KIcon("edit-redo"));
+//     QTabBar *tabBar = new QTabBar(this);
+//     tabBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//     tabBar->setUsesScrollButtons(false);
+//     tabBar->setDocumentMode(true);
+//     tabBar->addTab("");
+//     tabBar->addTab("32 pending Changes");
+//     QWidget *foo = new QWidget;
+//     QHBoxLayout *layout = new QHBoxLayout;
+// foo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//     layout->addWidget(backTB);
+//     layout->addWidget(line);
+//     layout->addWidget(searchKLE);
+//     layout->addWidget(widget);
+//     layout->addWidget(line_2);
+//     layout->addWidget(filtersTB);
+//     layout->setContentsMargins(0, 0, 0, 0);
+//     foo->setLayout(layout);
+//     tabBar->setTabButton(0, QTabBar::LeftSide, foo);
+//     gridLayout->addWidget(tabBar, 0, 0);
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -336,9 +356,11 @@ void AddRmKCM::checkChanged()
 {
     int size = m_changesModel->rowCount();
     if (size > 0) {
+        changesPB->setEnabled(true);
 //         tabWidget->setTabText(2, i18np("1 Change Pending", "%1 Changes Pending", size));
         emit changed(true);
     } else {
+        changesPB->setEnabled(false);
 //         tabWidget->setTabText(2, i18n("No Change Pending"));
         emit changed(false);
     }
@@ -464,6 +486,12 @@ void AddRmKCM::on_backTB_clicked()
     m_searchRole = Enum::UnknownRole;
 }
 
+void AddRmKCM::on_changesPB_clicked()
+{
+    m_viewLayout->setCurrentWidget(changesView);
+    backTB->setEnabled(false);
+}
+
 void AddRmKCM::search()
 {
     m_browseView->cleanUi();
@@ -472,8 +500,8 @@ void AddRmKCM::search()
     m_searchTransaction = new Transaction(QString());
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit, uint)));
-    connect(m_searchTransaction, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-            m_browseModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+    connect(m_searchTransaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+            m_browseModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
     connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     switch (m_searchRole) {

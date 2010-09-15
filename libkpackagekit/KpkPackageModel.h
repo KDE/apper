@@ -48,6 +48,17 @@ public:
         ApplicationId,
         ApplicationFilterRole
     };
+    typedef struct {
+        QString    name;
+        QString    version;
+        QString    icon;
+        QString    summary;
+        QString    arch;
+        QString    id;
+        QString    appId;
+        int        isPackage;
+        Enum::Info info;
+    } InternalPackage;
 
     explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
 
@@ -82,38 +93,29 @@ public slots:
     void addPackages(const QList<QSharedPointer<PackageKit::Package> > &packages,
                      bool selected = false);
 //     void addResolvedPackage(const QSharedPointer<PackageKit::Package> &package);
-    void addSelectedPackage(const QSharedPointer<PackageKit::Package> &package);
-    void rmSelectedPackage(const QSharedPointer<PackageKit::Package> &package);
+    void addSelectedPackage(const KpkPackageModel::InternalPackage &package);
+    void rmSelectedPackage(const KpkPackageModel::InternalPackage &package);
     void setAllChecked(bool checked);
 
-    void checkPackage(const QSharedPointer<PackageKit::Package> &package);
-    void uncheckPackage(const QSharedPointer<PackageKit::Package> &package,
+    void checkPackage(const KpkPackageModel::InternalPackage &package,
+                      bool emitDataChanged = true);
+    void uncheckPackage(const KpkPackageModel::InternalPackage &package,
                         bool forceEmitUnchecked = false,
                         bool emitDataChanged = true);
 
 signals:
-    void packageChecked(const QSharedPointer<PackageKit::Package> &package);
-    void packageUnchecked(const QSharedPointer<PackageKit::Package> &package);
+    void packageChecked(const KpkPackageModel::InternalPackage &package);
+    void packageUnchecked(const KpkPackageModel::InternalPackage &package);
 
 private:
-    typedef struct {
-        QString    name;
-        QString    version;
-        QString    icon;
-        QString    summary;
-        QString    arch;
-        QString    id;
-        QString    appId;
-        int        isPackage;
-        Enum::Info info;
-    } InternalPackage;
     bool containsChecked(const QString &pid) const;
 
-    QPixmap m_installedEmblem;
-    QAbstractItemView *m_packageView;
-    QVector<InternalPackage> m_packages;
+    bool                            m_checkable;
+    QPixmap                         m_installedEmblem;
+    QAbstractItemView              *m_packageView;
+    QVector<InternalPackage>        m_packages;
     QHash<QString, InternalPackage> m_checkedPackages;
-    bool m_checkable;
+
 #ifdef HAVE_APPINSTALL
     QHash<QString, QStringList> *m_appInstall;
     bool m_sortByApp;

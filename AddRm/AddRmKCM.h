@@ -56,6 +56,7 @@ private slots:
     void genericActionKTriggered();
 
     void on_backTB_clicked();
+    void on_changesPB_clicked();
 
     void on_actionFindName_triggered();
     void on_actionFindDescription_triggered();
