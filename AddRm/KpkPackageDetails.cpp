@@ -231,6 +231,7 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
 
     QString pkgIconPath = index.data(KpkPackageModel::IconRole).toString();
     m_currentIcon       = KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64);
+    m_appName           = index.data(KpkPackageModel::NameRole).toString();
 
     // TODO do not hard code...
     m_currentScreenshot = "http://screenshots.debian.net/thumbnail/" + m_package->name();
@@ -259,6 +260,7 @@ void KpkPackageDetails::on_screenshotL_clicked()
     QString screenshot;
     screenshot = "http://screenshots.debian.net/screenshot/" + m_package->name();
     ScreenShotViewer *view = new ScreenShotViewer(screenshot);
+    view->setWindowTitle(m_appName);
     view->show();
 }
 

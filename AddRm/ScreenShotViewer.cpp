@@ -31,6 +31,8 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
 {
     setupUi(this);
 
+    setWindowIcon(KIcon("layer-visible-on"));
+
     KTemporaryFile *tempFile = new KTemporaryFile;
     tempFile->setPrefix("appgetfull");
     tempFile->setSuffix(".png");

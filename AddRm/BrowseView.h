@@ -40,6 +40,7 @@ public:
     void setParentCategory(const QModelIndex &index);
     KpkPackageModel*                  model() const;
     KCategorizedSortFilterProxyModel* proxy() const;
+    KPixmapSequenceOverlayPainter*    busyCursor() const;
 
     void disableExportInstalledPB();
     bool goBack();

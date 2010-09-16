@@ -234,29 +234,9 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     changesDelegate->setExtendPixmapWidth(0);
     changesView->setItemDelegate(changesDelegate);
 
-    // Connect this signal anyway so users that have backend that
-    // do not support install or remove can be informed properly
-//     connect(m_changesModel, SIGNAL(rowsInserted(const QModelIndex, int, int)),
-//             this, SLOT(checkChanged()));
-//     connect(m_changesModel, SIGNAL(rowsRemoved(const QModelIndex, int, int)),
-//             this, SLOT(checkChanged()));
+    // Connect this signal to keep track of changes
     connect(m_browseModel, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
     connect(m_browseModel, SIGNAL(changed(bool)), changesPB, SLOT(setEnabled(bool)));
-
-//     changesPB->setEnabled(true);
-// //         tabWidget->setTabText(2, i18np("1 Change Pending", "%1 Changes Pending", size));
-//         emit changed(true);
-
-    // Make the models talk to each other
-    // packageCheced from browse model
-//     connect(m_browseModel, SIGNAL(packageChecked(const KpkPackageModel::InternalPackage &)),
-//             m_changesModel, SLOT(addSelectedPackage(const KpkPackageModel::InternalPackage &)));
-// 
-//     // packageUnchecked from browse model
-//     connect(m_browseModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
-//             m_changesModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
-//     connect(m_browseModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
-//             m_changesModel, SLOT(rmSelectedPackage(const KpkPackageModel::InternalPackage &)));
 
     // packageUnchecked from changes model
     connect(m_changesModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
@@ -264,34 +244,12 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     connect(m_changesModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
             m_browseModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
 
-    // colapse package description when removing rows
-//     connect(m_changesModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
-//             this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
-
 #ifdef HAVE_APPINSTALL
     m_browseModel->setAppInstallData(appInstall, true);
     m_changesModel->setAppInstallData(appInstall, false);
 #endif //HAVE_APPINSTALL
-changesPB->setIcon(KIcon("edit-redo"));
-//     QTabBar *tabBar = new QTabBar(this);
-//     tabBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-//     tabBar->setUsesScrollButtons(false);
-//     tabBar->setDocumentMode(true);
-//     tabBar->addTab("");
-//     tabBar->addTab("32 pending Changes");
-//     QWidget *foo = new QWidget;
-//     QHBoxLayout *layout = new QHBoxLayout;
-// foo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-//     layout->addWidget(backTB);
-//     layout->addWidget(line);
-//     layout->addWidget(searchKLE);
-//     layout->addWidget(widget);
-//     layout->addWidget(line_2);
-//     layout->addWidget(filtersTB);
-//     layout->setContentsMargins(0, 0, 0, 0);
-//     foo->setLayout(layout);
-//     tabBar->setTabButton(0, QTabBar::LeftSide, foo);
-//     gridLayout->addWidget(tabBar, 0, 0);
+
+    changesPB->setIcon(KIcon("edit-redo"));
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -500,6 +458,8 @@ void AddRmKCM::search()
     // search
     m_searchTransaction = new Transaction(QString());
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            m_browseView->busyCursor(), SLOT(stop()));
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit, uint)));
     connect(m_searchTransaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
             m_browseModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
@@ -560,6 +520,7 @@ void AddRmKCM::search()
     } else {
         setCurrentActionCancel(true);
         setCurrentActionEnabled(m_searchTransaction->allowCancel());
+        m_browseView->busyCursor()->start();
 
         // cleans the models
         m_browseModel->clear();
@@ -593,7 +554,7 @@ void AddRmKCM::load()
 {
     // set focus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
-    m_changesModel->setAllChecked(false);
+    m_browseModel->setAllChecked(false);
 }
 
 void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)

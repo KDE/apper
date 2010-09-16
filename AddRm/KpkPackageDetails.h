@@ -70,6 +70,7 @@ private:
 
     QActionGroup *m_actionGroup;
     QSharedPointer<PackageKit::Package> m_package;
+    QString m_appName;
 
     QStackedLayout *m_viewLayout;
     KTextBrowser   *descriptionKTB;

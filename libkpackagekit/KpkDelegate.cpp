@@ -151,6 +151,7 @@ void KpkDelegate::paint(QPainter *painter,
         // this give us a little value which is the top and bottom margin
         optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
         optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
+        optBt.features = QStyleOptionButton::Flat;
         if (option.state & QStyle::State_MouseOver) {
 //                 if ()
 //             QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
@@ -168,12 +169,7 @@ void KpkDelegate::paint(QPainter *painter,
             optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
             optBt.text = pkgInstalled ? m_removeString : m_installString;
         }
-        qreal opa = painter->opacity();
-        if ((option.state & QStyle::State_MouseOver) && !(option.state & QStyle::State_Selected)) {
-            painter->setOpacity(opa / 2);
-        }
         style->drawControl(QStyle::CE_PushButton, &optBt, painter);
-        painter->setOpacity(opa);
     }
 
 // QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());

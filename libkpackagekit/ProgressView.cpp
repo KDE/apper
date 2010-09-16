@@ -22,6 +22,7 @@
 
 #include <QVBoxLayout>
 #include <QScrollBar>
+#include <QHeaderView>
 
 #include <KLocale>
 #include <KConfigGroup>
@@ -43,6 +44,8 @@ ProgressView::ProgressView(QWidget *parent)
     m_packageView->setSelectionMode(QAbstractItemView::NoSelection);
     m_packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_packageView->verticalScrollBar()->value();
+    m_packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+    m_packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
 
     m_scrollBar = m_packageView->verticalScrollBar();
     connect(m_scrollBar, SIGNAL(sliderMoved(int)),
@@ -97,7 +100,7 @@ void ProgressView::clear()
     m_model->clear();
 }
 
-void ProgressView::currentPackage(QSharedPointer<PackageKit::Package> p)
+void ProgressView::currentPackage(const QSharedPointer<PackageKit::Package> &p)
 {
     if (!p->id().isEmpty()) {
         m_lastPackageId = p->id();

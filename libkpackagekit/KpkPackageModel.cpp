@@ -335,6 +335,20 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
     }
 }
 
+void KpkPackageModel::rmSelectedPackage(const KpkPackageModel::InternalPackage &package)
+{
+    QString pkgId = package.id;
+    for (int i = 0; i < m_packages.size(); i++) {
+        if (m_packages.at(i).id == pkgId) {
+            beginRemoveRows(QModelIndex(), i, i);
+            m_packages.remove(i);
+            endRemoveRows();
+            i--; // we have to decrease the pointer otherwise
+                 // we will miss some packages
+        }
+    }
+}
+
 void KpkPackageModel::clear()
 {
     m_packages.clear();
@@ -390,7 +404,6 @@ bool KpkPackageModel::hasChanges() const
 
 void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitDataChanged)
 {
-//     kDebug() << sender();
     QString pkgId = package.id;
     if (!containsChecked(pkgId)) {
         m_checkedPackages[pkgId] = package;
@@ -419,7 +432,11 @@ void KpkPackageModel::uncheckPackage(const InternalPackage &package,
     if (containsChecked(pkgId)) {
         m_checkedPackages.remove(pkgId);
         if (forceEmitUnchecked || sender() == 0) {
-            emit packageUnchecked(package);
+            // The package might be removed by rmSelectedPackage
+            // If we don't copy it the browse model won't uncheck there
+            // right package
+            InternalPackage iPackage = package;
+            emit packageUnchecked(iPackage);
         }
 
         if (emitDataChanged) {
@@ -430,7 +447,6 @@ void KpkPackageModel::uncheckPackage(const InternalPackage &package,
                 if (m_packages.at(i).id == pkgId) {
                     QModelIndex index = createIndex(i, 0);
                     emit dataChanged(index, index);
-                    break;
                 }
             }
         }

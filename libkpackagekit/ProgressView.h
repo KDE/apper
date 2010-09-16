@@ -47,7 +47,7 @@ public:
     void clear();
 
 public slots:
-    void currentPackage(QSharedPointer<PackageKit::Package> package);
+    void currentPackage(const QSharedPointer<PackageKit::Package> &package);
 
 private slots:
     void followBottom(int value);

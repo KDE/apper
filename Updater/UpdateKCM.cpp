@@ -92,13 +92,11 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     m_delegate = new ApplicationsDelegate(packageView);
     packageView->setItemDelegate(m_delegate);
     packageView->sortByColumn(0, Qt::AscendingOrder);
-    connect(m_delegate, SIGNAL(showExtendItem(const QModelIndex &)),
-            this, SLOT(showExtendItem(const QModelIndex &)));
-    connect(m_header, SIGNAL(sectionClicked(int)),
-            this, SLOT(contractAll()));
     connect(m_header, SIGNAL(toggled(bool)),
             m_updatesModel, SLOT(setAllChecked(bool)));
-    connect(m_updatesModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+    connect(m_updatesModel, SIGNAL(changed(bool)),
+            this, SIGNAL(changed(bool)));
+    connect(m_updatesModel, SIGNAL(changed(bool)),
             this, SLOT(checkEnableUpdateButton()));
 
     // This must be set AFTER the model is set, otherwise it doesn't work
@@ -171,7 +169,6 @@ void UpdateKCM::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QStrin
 
 void UpdateKCM::checkEnableUpdateButton()
 {
-    emit changed(m_updatesModel->selectedPackages().size() > 0);
     int selectedSize = m_updatesModel->selectedPackages().size();
     int updatesSize = m_updatesModel->rowCount();
     if (selectedSize == 0) {
@@ -333,36 +330,19 @@ void UpdateKCM::refreshCache()
 {
     SET_PROXY
     Transaction *t = new Transaction(QString());
+    connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            this, SLOT(getUpdates()));
+    t->refreshCache(true);
+
     KpkTransaction *frm = new KpkTransaction(t,
                                              KpkTransaction::Modal | KpkTransaction::CloseOnFinish,
                                              this);
-    connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(getUpdates()));
-    t->refreshCache(true);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
         delete frm;
     } else {
         frm->show();
     }
-}
-
-void UpdateKCM::showExtendItem(const QModelIndex &index)
-{
-    const QSortFilterProxyModel *proxy;
-    const KpkPackageModel *model;
-    proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
-    model = qobject_cast<const KpkPackageModel*>(proxy->sourceModel());
-    QModelIndex origIndex = proxy->mapToSource(index);
-//     QSharedPointer<PackageKit::Package> package = model->package(origIndex);
-    // check to see if the backend support
-//     if (package && (m_roles & Enum::RoleGetUpdateDetail)) {
-//         if (m_delegate->isExtended(index)) {
-//             m_delegate->contractItem(index);
-//         } else {
-//             m_delegate->extendItem(new KpkUpdateDetails(package), index);
-//         }
-//     }
 }
 
 void UpdateKCM::on_packageView_customContextMenuRequested(const QPoint &pos)
@@ -376,13 +356,6 @@ void UpdateKCM::on_packageView_customContextMenuRequested(const QPoint &pos)
             this, SLOT(refreshCache()));
     menu->exec(packageView->mapToGlobal(pos));
     delete menu;
-}
-
-void UpdateKCM::contractAll()
-{
-    // This is a HACK so that the extenders don't stay visible when
-    // the user sorts the view
-//     m_delegate->contractAll();
 }
 
 void UpdateKCM::errorCode(PackageKit::Enum::Error error, const QString &details)

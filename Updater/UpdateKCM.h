@@ -59,8 +59,6 @@ private slots:
     void updatePackages();
     void transactionFinished(KpkTransaction::ExitStatus status);
 
-    void contractAll();
-    void showExtendItem(const QModelIndex &index);
     void on_packageView_activated(const QModelIndex &index);
 
     void checkEnableUpdateButton();

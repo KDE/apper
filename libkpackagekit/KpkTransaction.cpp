@@ -216,8 +216,8 @@ void KpkTransaction::setTransaction(Transaction *trans)
         m_trans->role() == Enum::RoleUpdatePackages ||
         m_trans->role() == Enum::RoleUpdateSystem) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
-        connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                d->progressView, SLOT(currentPackage(QSharedPointer<PackageKit::Package>)));
+        connect(m_trans, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+                d->progressView, SLOT(currentPackage(const QSharedPointer<PackageKit::Package> &)));
         d->showDetails = transactionGroup.readEntry("ShowDetails", false);
         enableButton(KDialog::Details, true);
         if (d->showDetails != d->progressView->isVisible()) {

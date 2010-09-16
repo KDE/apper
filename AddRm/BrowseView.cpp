@@ -140,6 +140,11 @@ KCategorizedSortFilterProxyModel* BrowseView::proxy() const
     return m_proxy;
 }
 
+KPixmapSequenceOverlayPainter* BrowseView::busyCursor() const
+{
+    return m_busySeq;
+}
+
 void BrowseView::setCategoryModel(QAbstractItemModel *model)
 {
     categoryView->setModel(model);
