@@ -47,7 +47,7 @@ KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView
   , m_appInstall(0)
 #endif //HAVE_APPINSTALL
 {
-    m_installedEmblem = KpkIcons::getIcon("app-installed", QString()).pixmap(16, 16);
+    m_installedEmblem = KpkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 //     m_installedEmblem = KIcon("app-installed").pixmap(16, 16);
 }
 
@@ -380,20 +380,6 @@ void KpkPackageModel::uncheckAvailablePackages()
             package.info == Enum::InfoCollectionAvailable) {
             uncheckPackage(package, true);
         }
-    }
-}
-
-void KpkPackageModel::resolveSelected()
-{
-    if (!m_checkedPackages.isEmpty()) {
-        // TODO fix packagekit-qt
-        foreach (const InternalPackage &package, m_checkedPackages.values()) {
-            uncheckPackage(package, true);
-        }
-        // TODO WHAT do I DO? yum backend doesn't reply to this...
-//         t = Client::instance()->resolve(packages);
-//         connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-//                 this, SLOT(addResolvedPackage(const QSharedPointer<PackageKit::Package> &)));
     }
 }
 

@@ -20,6 +20,8 @@
 
 #include "KpkPackageDetails.h"
 
+#include "ScreenShotViewer.h"
+
 #include <KpkPackageModel.h>
 #include <KpkSimplePackageModel.h>
 #include <KpkStrings.h>
@@ -30,6 +32,7 @@
 #include <KService>
 #include <KServiceGroup>
 #include <KDesktopFile>
+#include <KTemporaryFile>
 #include <KPixmapSequence>
 #include <QTextDocument>
 #include <QPlainTextEdit>
@@ -233,13 +236,13 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
     m_currentScreenshot = "http://screenshots.debian.net/thumbnail/" + m_package->name();
     if (m_screenshotPath.contains(m_currentScreenshot)) {
         display();
-    } else{
-        m_tempFile = new KTemporaryFile;
-        m_tempFile->setPrefix("appget");
-        m_tempFile->setSuffix(".png");
-        m_tempFile->open();
+    } else {
+        KTemporaryFile *tempFile = new KTemporaryFile;
+        tempFile->setPrefix("appget");
+        tempFile->setSuffix(".png");
+        tempFile->open();
         KIO::FileCopyJob *job = KIO::file_copy(m_currentScreenshot,
-                                               m_tempFile->fileName(),
+                                               tempFile->fileName(),
                                                -1,
                                                KIO::Overwrite | KIO::HideProgressInfo);
         connect(job, SIGNAL(result(KJob *)),
@@ -249,6 +252,14 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
     if (m_actionGroup->checkedAction()) {
         actionActivated(m_actionGroup->checkedAction());
     }
+}
+
+void KpkPackageDetails::on_screenshotL_clicked()
+{
+    QString screenshot;
+    screenshot = "http://screenshots.debian.net/screenshot/" + m_package->name();
+    ScreenShotViewer *view = new ScreenShotViewer(screenshot);
+    view->show();
 }
 
 void KpkPackageDetails::actionActivated(QAction *action)
@@ -391,6 +402,7 @@ void KpkPackageDetails::fadeOut(FadeWidgets widgets)
 
     // Fade out the screenshot only if needed
     if ((widgets & FadeScreenshot) && m_fadeScreenshot->currentValue().toReal() != 0) {
+        screenshotL->unsetCursor();
         m_fadeScreenshot->setDirection(QAbstractAnimation::Backward);
         m_fadeScreenshot->start();
     }
@@ -401,7 +413,6 @@ void KpkPackageDetails::display()
     // If we shouldn't be showing hide the pannel
     if (!m_display) {
         hide();
-        kDebug() << "hide";
     } else if (maximumSize().height() == FINAL_HEIGHT) {
         // Check to see if the stacked widget is transparent
         if (m_fadeStacked->currentValue().toReal() == 0 &&
@@ -475,6 +486,7 @@ void KpkPackageDetails::display()
             pixmap = QPixmap(m_screenshotPath[m_currentScreenshot])
                              .scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             screenshotL->setPixmap(pixmap);
+            screenshotL->setCursor(Qt::PointingHandCursor);
             // Fade In
             m_fadeScreenshot->setDirection(QAbstractAnimation::Forward);
             m_fadeScreenshot->start();

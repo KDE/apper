@@ -490,7 +490,7 @@ void AddRmKCM::on_changesPB_clicked()
     m_changesModel->clear();
     m_changesModel->addPackages(m_browseModel->selectedPackages(), true);
     m_viewLayout->setCurrentWidget(changesView);
-    backTB->setEnabled(false);
+    backTB->setEnabled(true);
 }
 
 void AddRmKCM::search()
@@ -583,8 +583,7 @@ void AddRmKCM::save()
     // This avoid crashing as the above function does not always quit it's event loop
     if (!frm.isNull()) {
         delete frm;
-        // The database might have changed
-        m_browseModel->resolveSelected();
+
         search();
         QTimer::singleShot(0, this, SLOT(checkChanged()));
     }

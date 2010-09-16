@@ -45,7 +45,7 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     m_removeString(i18n("Remove")),
     m_undoIcon("edit-undo"),
     m_undoString(i18n("Deselect")),
-    m_checkedIcon("dialog-ok")
+    m_checkedIcon("dialog-ok-apply")
 {
     // maybe rename or copy it to package-available
     if (QApplication::isRightToLeft()) {

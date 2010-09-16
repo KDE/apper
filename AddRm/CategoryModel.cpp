@@ -41,7 +41,7 @@ CategoryModel::CategoryModel(QObject *parent)
     item->setData(Enum::RoleGetPackages, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
-    item->setIcon(KIcon("dialog-ok"));
+    item->setIcon(KIcon("dialog-ok-apply"));
     appendRow(item);
 
     item = new QStandardItem(i18n("History"));

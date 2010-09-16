@@ -76,7 +76,6 @@ public:
      * This removes all selected packages that are not in the model
      */
     void clearSelectedNotPresent();
-    void resolveSelected();
 
     void setCheckable(bool checkable);
 

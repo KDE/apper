@@ -25,7 +25,6 @@
 
 #include <KTextBrowser>
 #include <KPixmapSequenceOverlayPainter>
-#include <KTemporaryFile>
 #include <KJob>
 
 #include <QWidget>
@@ -55,6 +54,7 @@ public:
     void hide();
 
 private slots:
+    void on_screenshotL_clicked();
     void actionActivated(QAction *action);
     void description(const QSharedPointer<PackageKit::Package> &package);
     void files(QSharedPointer<PackageKit::Package> package, const QStringList &files);
@@ -70,7 +70,6 @@ private:
 
     QActionGroup *m_actionGroup;
     QSharedPointer<PackageKit::Package> m_package;
-    KTemporaryFile *m_tempFile;
 
     QStackedLayout *m_viewLayout;
     KTextBrowser   *descriptionKTB;
