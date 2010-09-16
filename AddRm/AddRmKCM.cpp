@@ -75,7 +75,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
    m_searchRole(Enum::UnknownRole)
 {
     KAboutData *aboutData;
-    aboutData = new KAboutData("appget",
+    aboutData = new KAboutData("kpackagekit",
                                "kpackagekit",
                                ki18n("Get and Remove Software"),
                                KPK_VERSION,
@@ -96,28 +96,23 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     QSqlQuery query(db);
     query.prepare(
         "SELECT "
-            "a.package_name, "
-            "COALESCE(t.application_name, a.application_name), "
-            "COALESCE(t.application_summary, a.application_summary), "
-            "a.icon_name, "
-            "a.application_id "
+            "package_name, "
+            "application_name, "
+            "application_summary, "
+            "icon_name, "
+            "application_id "
         "FROM "
-            "applications a "
-        "LEFT JOIN "
-            "translations t "
-        "ON "
-            "a.application_id = t.application_id "
-          "AND "
-            "t.locale = :locale");
-    query.bindValue(":name", KGlobal::locale()->language());
+            "applications");
+//     query.bindValue(":name", KGlobal::locale()->language());
+    KGlobal::locale()->insertCatalog("app-install-data");
     QHash<QString, QStringList> *appInstall;
     appInstall = new QHash<QString, QStringList>();
     if (query.exec()) {
         while (query.next()) {
             appInstall->insertMulti(query.value(APP_PKG_NAME).toString(),
                                     QStringList()
-                                        << query.value(APP_NAME).toString()
-                                        << query.value(APP_SUMMARY).toString()
+                                        << i18n(query.value(APP_NAME).toString().toUtf8())
+                                        << i18n(query.value(APP_SUMMARY).toString().toUtf8())
                                         << query.value(APP_ICON).toString()
                                         << query.value(APP_ID).toString());
         }
@@ -457,6 +452,9 @@ void AddRmKCM::search()
 
     // search
     m_searchTransaction = new Transaction(QString());
+    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    m_searchTransaction->setHints("locale=" + locale);
+    kDebug() << locale;
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_browseView->busyCursor(), SLOT(stop()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),

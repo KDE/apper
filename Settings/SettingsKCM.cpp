@@ -47,11 +47,11 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
     KAboutData *aboutData;
-    aboutData = new KAboutData("appget",
+    aboutData = new KAboutData("kpackagekit",
                                "kpackagekit",
-                               ki18n("AppGet settings"),
+                               ki18n("KPackageKit settings"),
                                KPK_VERSION,
-                               ki18n("AppGet settings"),
+                               ki18n("KPackageKit settings"),
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
     setAboutData(aboutData);

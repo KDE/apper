@@ -57,7 +57,7 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
       m_updatesT(0)
 {
     KAboutData *aboutData;
-    aboutData = new KAboutData("appget",
+    aboutData = new KAboutData("kpackagekit",
                                "kpackagekit",
                                ki18n("Update Software"),
                                KPK_VERSION,

@@ -129,7 +129,7 @@ void KpkCheckableHeader::mousePressEvent(QMouseEvent *event)
     option.rect.setWidth(viewport()->width());
     QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
     QPoint pos = mapFromGlobal(QCursor::pos());
-    kDebug() << rect << pos;
+//     kDebug() << rect << pos;
 
     if (insideCheckBox(rect, pos)) {
         if (m_state == Qt::Checked) {

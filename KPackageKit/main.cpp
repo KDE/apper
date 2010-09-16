@@ -29,11 +29,11 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about("appget",
+    KAboutData about("kpackagekit",
                      "kpackagekit", // DO NOT change this catalog unless you know it will not break translations!
-                     ki18n("AppGet"),
+                     ki18n("KPackageKit"),
                      KPK_VERSION,
-                     ki18n("AppGet is an application to get and manage software"),
+                     ki18n("KPackageKit is an application to get and manage software"),
                      KAboutData::License_GPL,
                      ki18n("(C) 2008-2010 Daniel Nicoletti"));
 

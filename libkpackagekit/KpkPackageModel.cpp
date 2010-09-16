@@ -185,11 +185,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             // if we are an application return 'a', if package 'p'
             return package.isPackage ? QString('p') : QString('a');
         case Qt::DisplayRole:
-//             if (property("kbd").toBool()) {
-                return package.name;
-//             } else {
-//                 return QVariant();
-//             }
+            return package.name;
         case Qt::DecorationRole:
         {
             QPixmap icon = QPixmap(46, ICON_SIZE);
