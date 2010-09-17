@@ -17,10 +17,6 @@
 #cmakedefine AI_CATEGORIES_PATH "@AI_CATEGORIES_PATH@"
 
 // Define the edit origins command.
-#cmakedefine EDIT_ORIGNS_CMD "@EDIT_ORIGNS_CMD@"
-
-// Define if whe should attach the window ID to the command
-// line (--attach winID)
-#cmakedefine EDIT_ORIGINS_ATTACH
+#cmakedefine EDIT_ORIGNS_DESKTOP_NAME "@EDIT_ORIGNS_DESKTOP_NAME@"
 
 #endif //CONFIG_H

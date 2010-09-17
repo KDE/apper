@@ -101,31 +101,16 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(originTV->viewport());
 
-#ifndef EDIT_ORIGNS_CMD
+#ifndef EDIT_ORIGNS_DESKTOP_NAME
     editOriginsPB->hide();
-#endif //EDIT_ORIGNS_CMD
+#endif //EDIT_ORIGNS_DESKTOP_NAME
 }
-
+#include <KToolInvocation>
 void SettingsKCM::on_editOriginsPB_clicked()
 {
-    KProcess *proc = new KProcess(this);
-    QString cmd;
-
-#ifdef EDIT_ORIGNS_CMD
-    cmd = EDIT_ORIGNS_CMD;
-#endif //EDIT_ORIGNS_CMD
-
-#ifdef EDIT_ORIGINS_ATTACH
-    cmd.append(" --attach " + QString::number(effectiveWinId()));
-#endif //EDIT_ORIGINS_ATTACH
-
-    proc->setShellCommand(cmd);
-
-    QEventLoop *loop = new QEventLoop(this);
-    connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
-            loop, SLOT(quit()));
-    proc->start();
-    loop->exec(QEventLoop::ExcludeUserInputEvents);
+#ifdef EDIT_ORIGNS_DESKTOP_NAME
+    KToolInvocation::startServiceByDesktopName(EDIT_ORIGNS_DESKTOP_NAME);
+#endif //EDIT_ORIGNS_DESKTOP_NAME
 }
 
 // TODO update the repo list connecting to repo changed signal

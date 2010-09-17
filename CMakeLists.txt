@@ -41,12 +41,10 @@ endif (DEBCONF_SUPPORT)
 
 
 # command to edit the packages origins
-set(EDIT_ORIGNS_CMD "" CACHE STRING "Edit origins categories command")
-if (EDIT_ORIGNS_CMD)
-    message(STATUS "Edit origins categories command: " ${EDIT_ORIGNS_CMD})
-    option(EDIT_ORIGINS_ATTACH "Edit origins attach WID:" OFF)
-    message(STATUS "Edit origins attach WID: " ${EDIT_ORIGINS_ATTACH})
-endif (EDIT_ORIGNS_CMD)
+set(EDIT_ORIGNS_DESKTOP_NAME "" CACHE STRING "Edit origins desktop name")
+if (EDIT_ORIGNS_DESKTOP_NAME)
+    message(STATUS "Edit origins desktop name: " ${EDIT_ORIGNS_DESKTOP_NAME})
+endif (EDIT_ORIGNS_DESKTOP_NAME)
 
 # Generate config.h
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
