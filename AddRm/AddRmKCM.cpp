@@ -20,7 +20,6 @@
 
 #include "AddRmKCM.h"
 
-#include "KpkPackageModel.h"
 
 #include <KGenericFactory>
 #include <KAboutData>
@@ -38,20 +37,17 @@
 #include <KMessageBox>
 #include <KFileItemDelegate>
 #include <KCategorizedSortFilterProxyModel>
-#include <khtmlview.h>
-#include <khtml_part.h>
-// #include <KUrl>
 
 #include <QPalette>
 #include <QColor>
-#include <QSqlDatabase>
-#include <QSqlQuery>
 
+#include <KpkPackageModel.h>
 #include <KpkReviewChanges.h>
 #include <KpkPackageModel.h>
 #include <KpkDelegate.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
+#include <AppInstall.h>
 
 #include <KDebug>
 
@@ -87,37 +83,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     KGlobal::locale()->insertCatalog("kpackagekit");
 
     setupUi(this);
-
-#ifdef HAVE_APPINSTALL
-    // load all the data in memory since quering SQLITE is really slow
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "app-install");
-    db.setDatabaseName(AI_DB_PATH);
-    db.open();
-    QSqlQuery query(db);
-    query.prepare(
-        "SELECT "
-            "package_name, "
-            "application_name, "
-            "application_summary, "
-            "icon_name, "
-            "application_id "
-        "FROM "
-            "applications");
-//     query.bindValue(":name", KGlobal::locale()->language());
-    KGlobal::locale()->insertCatalog("app-install-data");
-    QHash<QString, QStringList> *appInstall;
-    appInstall = new QHash<QString, QStringList>();
-    if (query.exec()) {
-        while (query.next()) {
-            appInstall->insertMulti(query.value(APP_PKG_NAME).toString(),
-                                    QStringList()
-                                        << i18n(query.value(APP_NAME).toString().toUtf8())
-                                        << i18n(query.value(APP_SUMMARY).toString().toUtf8())
-                                        << query.value(APP_ICON).toString()
-                                        << query.value(APP_ID).toString());
-        }
-    }
-#endif //HAVE_APPINSTALL
 
     // Set the current locale
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
@@ -240,8 +205,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
             m_browseModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
 
 #ifdef HAVE_APPINSTALL
-    m_browseModel->setAppInstallData(appInstall, true);
-    m_changesModel->setAppInstallData(appInstall, false);
+//     m_browseModel->setAppInstallData(appInstall, true);
+//     m_changesModel->setAppInstallData(appInstall, false);
 #endif //HAVE_APPINSTALL
 
     changesPB->setIcon(KIcon("edit-redo"));
@@ -482,14 +447,8 @@ void AddRmKCM::search()
         break;
     case Enum::RoleResolve:
     {
-        QSqlDatabase db = QSqlDatabase::database("app-install");
-        QSqlQuery query(db);
-        query.prepare("SELECT package_name FROM applications WHERE " + m_searchString);
-        QStringList packages;
-        if (query.exec()) {
-            while (query.next()) {
-                packages << query.value(0).toString();
-            }
+        QStringList packages = AppInstall::instance()->pkgNamesFromWhere(m_searchString);
+        if (!packages.isEmpty()) {
             m_browseView->setParentCategory(m_searchParentCategory);
             // WARNING the resolve might fail if the backend
             // has a low limit MaximumItemsToResolve

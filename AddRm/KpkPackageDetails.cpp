@@ -26,6 +26,7 @@
 #include <KpkSimplePackageModel.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
+#include <AppInstall.h>
 
 #include <KMessageBox>
 
@@ -233,21 +234,22 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
     m_currentIcon       = KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64);
     m_appName           = index.data(KpkPackageModel::NameRole).toString();
 
-    // TODO do not hard code...
-    m_currentScreenshot = "http://screenshots.debian.net/thumbnail/" + m_package->name();
-    if (m_screenshotPath.contains(m_currentScreenshot)) {
-        display();
-    } else {
-        KTemporaryFile *tempFile = new KTemporaryFile;
-        tempFile->setPrefix("appget");
-        tempFile->setSuffix(".png");
-        tempFile->open();
-        KIO::FileCopyJob *job = KIO::file_copy(m_currentScreenshot,
-                                               tempFile->fileName(),
-                                               -1,
-                                               KIO::Overwrite | KIO::HideProgressInfo);
-        connect(job, SIGNAL(result(KJob *)),
-                this, SLOT(resultJob(KJob *)));
+    m_currentScreenshot = AppInstall::instance()->thumbnail(m_package->name());
+    if (!m_currentScreenshot.isEmpty()) {
+        if (m_screenshotPath.contains(m_currentScreenshot)) {
+            display();
+        } else {
+            KTemporaryFile *tempFile = new KTemporaryFile;
+            tempFile->setPrefix("appget");
+            tempFile->setSuffix(".png");
+            tempFile->open();
+            KIO::FileCopyJob *job = KIO::file_copy(m_currentScreenshot,
+                                                   tempFile->fileName(),
+                                                   -1,
+                                                   KIO::Overwrite | KIO::HideProgressInfo);
+            connect(job, SIGNAL(result(KJob *)),
+                    this, SLOT(resultJob(KJob *)));
+        }
     }
 
     if (m_actionGroup->checkedAction()) {
@@ -258,7 +260,10 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
 void KpkPackageDetails::on_screenshotL_clicked()
 {
     QString screenshot;
-    screenshot = "http://screenshots.debian.net/screenshot/" + m_package->name();
+    screenshot = AppInstall::instance()->screenshot(m_package->name());
+    if (screenshot.isEmpty()) {
+        return;
+    }
     ScreenShotViewer *view = new ScreenShotViewer(screenshot);
     view->setWindowTitle(m_appName);
     view->show();
@@ -384,7 +389,6 @@ void KpkPackageDetails::hide()
         if (m_fadeStacked->currentValue().toReal() == 0 &&
             m_fadeScreenshot->currentValue().toReal() == 0) {
             // Screen shot and description faded let's shrink the pannel
-            kDebug() << "shrink";
             m_expandPanel->setDirection(QAbstractAnimation::Backward);
             m_expandPanel->start();
         } else {

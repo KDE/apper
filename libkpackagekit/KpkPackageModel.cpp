@@ -21,12 +21,17 @@
  ***************************************************************************/
 
 #include "KpkPackageModel.h"
+
+#include "config.h"
+
+#include <AppInstall.h>
 #include <KpkStrings.h>
+#include <KpkDelegate.h>
+
 #include <KIconLoader>
 #include <KDebug>
 #include <KpkIcons.h>
 #include <KLocale>
-#include "KpkDelegate.h"
 #include <KCategorizedSortFilterProxyModel>
 
 #define APP_NAME    0
@@ -43,12 +48,14 @@ KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView
 : QAbstractItemModel(parent),
   m_checkable(false),
   m_packageView(packageView)
-#ifdef HAVE_APPINSTALL
-  , m_appInstall(0)
-#endif //HAVE_APPINSTALL
 {
     m_installedEmblem = KpkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
-//     m_installedEmblem = KIcon("app-installed").pixmap(16, 16);
+
+#ifdef HAVE_APPINSTALL
+    m_sortByApp = true;
+#else
+    m_sortByApp = false;
+#endif //HAVE_APPINSTALL
 }
 
 void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &package,
@@ -60,30 +67,36 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
 
 #ifdef HAVE_APPINSTALL
     QList<QStringList> data;
-    if (m_appInstall) {
-        data = m_appInstall->values(package->name());
-    }
+    if (!m_checkable) {
+        data = AppInstall::instance()->applications(package->name());
 
-    foreach (const QStringList &list, data) {
-        InternalPackage iPackage;
-        iPackage.isPackage   = 0;
-        iPackage.name        = list.at(APP_NAME);
-        iPackage.summary     = list.at(APP_SUMMARY);
-        iPackage.icon        = list.at(APP_ICON).split('.')[0];
-        iPackage.version     = package->version();
-        iPackage.arch        = package->arch();
-        iPackage.id          = package->id();
-        iPackage.appId       = list.at(APP_ID);
-        iPackage.info        = package->info();
+        foreach (const QStringList &list, data) {
+            InternalPackage iPackage;
+            iPackage.isPackage   = 0;
+            iPackage.name        = list.at(APP_NAME);
+            if (iPackage.name.isEmpty()) {
+                iPackage.name = package->name();
+            }
+            iPackage.summary     = list.at(APP_SUMMARY);
+            if (iPackage.summary.isEmpty()) {
+                iPackage.summary = package->summary();
+            }
+            iPackage.icon        = list.at(APP_ICON);
+            iPackage.version     = package->version();
+            iPackage.arch        = package->arch();
+            iPackage.id          = package->id();
+            iPackage.appId       = list.at(APP_ID);
+            iPackage.info        = package->info();
 
-        if (selected) {
-            checkPackage(iPackage, false);
+            if (selected) {
+                checkPackage(iPackage, false);
+            }
+
+            // check to see if the list of info has any package
+            beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
+            m_packages.append(iPackage);
+            endInsertRows();
         }
-
-        // check to see if the list of info has any package
-        beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
-        m_packages.append(iPackage);
-        endInsertRows();
     }
 
     if (data.isEmpty()) {
@@ -96,6 +109,9 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         iPackage.arch        = package->arch();
         iPackage.id          = package->id();
         iPackage.info        = package->info();
+#ifdef HAVE_APPINSTALL
+        iPackage.icon = AppInstall::instance()->genericIcon(package->name());
+#endif //HAVE_APPINSTALL
 
         if (selected) {
             checkPackage(iPackage, false);
@@ -508,12 +524,3 @@ void KpkPackageModel::setCheckable(bool checkable)
 {
     m_checkable = checkable;
 }
-
-#ifdef HAVE_APPINSTALL
-void KpkPackageModel::setAppInstallData(QHash<QString, QStringList> *data, bool sortByApp)
-{
-    m_appInstall = data;
-    m_sortByApp = sortByApp;
-    layoutChanged();
-}
-#endif //HAVE_APPINSTALL

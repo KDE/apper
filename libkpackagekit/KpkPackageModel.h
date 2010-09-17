@@ -25,8 +25,6 @@
 #include <QAbstractItemView>
 #include <KIcon>
 
-#include "config.h"
-
 #include <QPackageKit>
 
 using namespace PackageKit;
@@ -82,10 +80,6 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
 
-#ifdef HAVE_APPINSTALL
-    void setAppInstallData(QHash<QString, QStringList> *data, bool sortByApp);
-#endif //HAVE_APPINSTALL
-
 public slots:
     void addPackage(const QSharedPointer<PackageKit::Package> &package,
                     bool selected = false);
@@ -119,10 +113,7 @@ private:
     QVector<InternalPackage>        m_packages;
     QHash<QString, InternalPackage> m_checkedPackages;
 
-#ifdef HAVE_APPINSTALL
-    QHash<QString, QStringList> *m_appInstall;
     bool m_sortByApp;
-#endif //HAVE_APPINSTALL
 };
 
 #endif

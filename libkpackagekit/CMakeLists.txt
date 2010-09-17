@@ -1,4 +1,5 @@
 set(libkpk_SRCS
+    AppInstall.cpp
     KpkIcons.cpp
     KpkStrings.cpp
     ApplicationLauncher.cpp
