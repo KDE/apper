@@ -89,6 +89,7 @@ void CategoryModel::fillWithStandardGroups()
 
 void CategoryModel::fillWithServiceGroups()
 {
+#ifdef AI_CATEGORIES_PATH
     QFile file(QString(AI_CATEGORIES_PATH) + "/categories.xml");
      if (!file.open(QIODevice::ReadOnly)) {
          kDebug() << "Failed to open file";
@@ -107,6 +108,7 @@ void CategoryModel::fillWithServiceGroups()
             parseMenu(xml, QString());
         }
     }
+#endif //AI_CATEGORIES_PATH
 }
 
 void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent)

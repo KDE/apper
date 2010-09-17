@@ -91,6 +91,7 @@ public slots:
                     bool selected = false);
     void addPackages(const QList<QSharedPointer<PackageKit::Package> > &packages,
                      bool selected = false);
+    void addSelectedPackage(const QSharedPointer<PackageKit::Package> &package);
     void rmSelectedPackage(const KpkPackageModel::InternalPackage &package);
 
     void setAllChecked(bool checked);

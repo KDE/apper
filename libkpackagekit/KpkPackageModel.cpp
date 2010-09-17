@@ -117,6 +117,11 @@ void KpkPackageModel::addPackages(const QList<QSharedPointer<PackageKit::Package
     }
 }
 
+void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
+{
+    addPackage(package, true);
+}
+
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
