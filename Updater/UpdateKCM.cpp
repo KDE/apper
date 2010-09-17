@@ -95,8 +95,6 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     connect(m_header, SIGNAL(toggled(bool)),
             m_updatesModel, SLOT(setAllChecked(bool)));
     connect(m_updatesModel, SIGNAL(changed(bool)),
-            this, SIGNAL(changed(bool)));
-    connect(m_updatesModel, SIGNAL(changed(bool)),
             this, SLOT(checkEnableUpdateButton()));
 
     // This must be set AFTER the model is set, otherwise it doesn't work
@@ -169,6 +167,7 @@ void UpdateKCM::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QStrin
 
 void UpdateKCM::checkEnableUpdateButton()
 {
+    emit changed(m_updatesModel->hasChanges());
     int selectedSize = m_updatesModel->selectedPackages().size();
     int updatesSize = m_updatesModel->rowCount();
     if (selectedSize == 0) {

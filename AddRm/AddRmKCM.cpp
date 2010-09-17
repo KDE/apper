@@ -452,9 +452,6 @@ void AddRmKCM::search()
 
     // search
     m_searchTransaction = new Transaction(QString());
-    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    m_searchTransaction->setHints("locale=" + locale);
-    kDebug() << locale;
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_browseView->busyCursor(), SLOT(stop()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
@@ -506,22 +503,23 @@ void AddRmKCM::search()
         kDebug() << "Search type not defined yet";
         return;
     }
-    m_browseView->showInstalledPanel(m_searchRole == Enum::RoleGetPackages);
-
-    m_viewLayout->setCurrentIndex(1);
-    backTB->setEnabled(true);
 
     if (m_searchTransaction->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_searchTransaction->error()));
         setCurrentActionEnabled(true);
         m_searchTransaction = 0;
     } else {
-        setCurrentActionCancel(true);
-        setCurrentActionEnabled(m_searchTransaction->allowCancel());
-        m_browseView->busyCursor()->start();
-
         // cleans the models
         m_browseModel->clear();
+
+        m_browseView->showInstalledPanel(m_searchRole == Enum::RoleGetPackages);
+        m_browseView->busyCursor()->start();
+
+        backTB->setEnabled(true);
+        setCurrentActionCancel(true);
+        setCurrentActionEnabled(m_searchTransaction->allowCancel());
+
+        m_viewLayout->setCurrentIndex(1);
     }
 }
 

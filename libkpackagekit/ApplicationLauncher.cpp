@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2010 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -59,7 +59,7 @@ ApplicationLauncher::~ApplicationLauncher()
 
 void ApplicationLauncher::on_applicationsView_clicked(const QModelIndex &index)
 {
-    kDebug() << index.data(Qt::UserRole).toString();
+//     kDebug() << index.data(Qt::UserRole).toString();
     KToolInvocation::startServiceByDesktopPath(index.data(Qt::UserRole).toString());
 }
 
