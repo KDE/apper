@@ -154,6 +154,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                 categories = parseCategories(xml, item);
 //                 kDebug() << categories;
                 item->setData(categories, CategoryRole);
+                item->setData(Enum::RoleResolve, SearchRole);
             } else if (xml.name() == "Directory") {
                 if (!item) {
                     item = new QStandardItem;
@@ -180,6 +181,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
 
                 if (groupEnum != Enum::UnknownGroup &&
                     (m_groups.contains(groupEnum))) {
+                    item->setData(Enum::RoleSearchGroup, SearchRole);
                     item->setData(groupEnum, GroupRole);
                 }
             }
@@ -191,7 +193,6 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
 
     if (item &&
         (!item->data(GroupRole).isNull() || !item->data(CategoryRole).isNull())) {
-        item->setData(Enum::RoleResolve, SearchRole);
         item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
         item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
         if (parent) {
@@ -251,9 +252,15 @@ QString CategoryModel::parseCategories(QXmlStreamReader &xml, QStandardItem *ite
                 name = xml.readElementText();
                 if (!name.isEmpty()){
                     if (join == "Not") {
-                        ret << QString("categories NOT LIKE '%%1%'").arg(name);
+                        ret << QString("categories != '%1' AND "
+                                       "categories NOT GLOB '*;%1' AND "
+                                       "categories NOT GLOB '*;%1;*' AND "
+                                       "categories NOT GLOB '%1;*'").arg(name);
                     } else {
-                        ret << QString("categories LIKE '%%1%'").arg(name);
+                        ret << QString("categories = '%1' OR "
+                                       "categories GLOB '*;%1' OR "
+                                       "categories GLOB '*;%1;*' OR "
+                                       "categories GLOB '%1;*'").arg(name);
                     }
                 }
             }
