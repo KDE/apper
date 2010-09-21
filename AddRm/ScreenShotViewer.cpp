@@ -73,7 +73,7 @@ void ScreenShotViewer::resultJob(KJob *job)
 
         animation->start();
     } else {
-        screenshotL->setText(i18n("Could not found screen shot."));
+        screenshotL->setText(i18n("Could not find screen shot."));
     }
 }
 

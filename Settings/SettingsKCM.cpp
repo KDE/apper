@@ -87,7 +87,7 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
 
     autoCB->addItem(i18n("Security only"), KpkEnum::Security);
     autoCB->addItem(i18n("All updates"),   KpkEnum::All);
-    autoCB->addItem(i18nc("None updates will be automatically installed", "None"),          KpkEnum::None);
+    autoCB->addItem(i18nc("No updates will be automatically installed", "None"),          KpkEnum::None);
 
     connect(autoConfirmCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(appLauncherCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
