@@ -807,10 +807,9 @@ QString KpkStrings::packageQuantity(bool updates, int packages, int selected)
                           "1 Update", "%1 Updates",
                           packages);
         } else {
-            return i18nc("Type of update, in the case it's just an update",
-                         "%1 Updates, %2 Selected",
-                         packages,
-                         selected);
+            return i18nc("Type of update, in the case it's just an update", "%1, %2", 
+                         i18ncp("Part of: %1 Updates, %1 Selected", "%1 Update", "%1 Updates", packages), 
+                         i18ncp("Part of: %1 Updates, %1 Selected", "%1 Selected", "%1 Selected", selected));
         }
     } else {
         if (packages == 0) {
