@@ -46,6 +46,7 @@ using namespace PackageKit;
 
 KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
 : QAbstractItemModel(parent),
+  m_packageCount(0),
   m_checkable(false),
   m_packageView(packageView)
 {
@@ -91,11 +92,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
             if (selected) {
                 checkPackage(iPackage, false);
             }
-
-            // check to see if the list of info has any package
-            beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
             m_packages.append(iPackage);
-            endInsertRows();
         }
     }
 
@@ -116,10 +113,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         if (selected) {
             checkPackage(iPackage, false);
         }
-
-        beginInsertRows(QModelIndex(), m_packages.size(), m_packages.size());
         m_packages.append(iPackage);
-        endInsertRows();
 #ifdef HAVE_APPINSTALL
     }
 #endif //HAVE_APPINSTALL
@@ -141,7 +135,7 @@ void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Packag
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
-    if (role == Qt::DisplayRole) {
+    if (m_packageCount && role == Qt::DisplayRole) {
         if (section == 0) {
             if (m_checkable) {
                 return KpkStrings::packageQuantity(true,
@@ -165,13 +159,13 @@ int KpkPackageModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid()) {
         return 0;
     }
-    return m_packages.size();
+    return m_packageCount;
 }
 
 QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &parent) const
 {
     // Check to see if the index isn't out of list
-    if (!parent.isValid() && m_packages.size() > row) {
+    if (!parent.isValid() && m_packageCount > row) {
         return createIndex(row, column);
     }
     return QModelIndex();
@@ -368,6 +362,7 @@ void KpkPackageModel::rmSelectedPackage(const KpkPackageModel::InternalPackage &
 
 void KpkPackageModel::clear()
 {
+    m_packageCount = 0;
     m_packages.clear();
     reset();
 }
@@ -394,6 +389,7 @@ void KpkPackageModel::clearSelectedNotPresent()
         uncheckPackage(uncheckPackages.at(i));
     }
 }
+
 void KpkPackageModel::uncheckInstalledPackages()
 {
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
@@ -414,6 +410,22 @@ void KpkPackageModel::uncheckAvailablePackages()
     }
 }
 
+void KpkPackageModel::finished()
+{
+    // The whole structure is about to change
+    beginResetModel();
+    m_packageCount = m_packages.size();
+    endResetModel();
+
+    QTreeView *view = qobject_cast<QTreeView*>(m_packageView);
+    if (view) {
+        // This only works because 
+        view->resizeColumnToContents(0);
+        view->resizeColumnToContents(1);
+    }
+    emit changed(!m_checkedPackages.isEmpty());
+}
+
 bool KpkPackageModel::hasChanges() const
 {
     return !m_checkedPackages.isEmpty();
@@ -425,7 +437,7 @@ void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitData
     if (!containsChecked(pkgId)) {
         m_checkedPackages[pkgId] = package;
 
-        if (emitDataChanged) {
+        if (emitDataChanged && m_packageCount) {
             // This is a slow operation so in case the user
             // is unchecking all of the packages there is
             // no need to emit data changed for every item
@@ -437,7 +449,10 @@ void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitData
             }
         }
 
-        emit changed(!m_checkedPackages.isEmpty());
+        // The model might not be displayed yet
+        if (m_packageCount) {
+            emit changed(!m_checkedPackages.isEmpty());
+        }
     }
 }
 
@@ -468,7 +483,10 @@ void KpkPackageModel::uncheckPackage(const InternalPackage &package,
             }
         }
 
-        emit changed(!m_checkedPackages.isEmpty());
+        // The model might not be displayed yet
+        if (m_packageCount) {
+            emit changed(!m_checkedPackages.isEmpty());
+        }
     }
 }
 

@@ -47,7 +47,6 @@ public:
     void cleanUi();
 
 signals:
-    void rowsAboutToBeRemoved(const QModelIndex &, int, int);
     void categoryActivated(const QModelIndex &index);
 
 public slots:

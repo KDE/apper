@@ -283,19 +283,6 @@ void AddRmKCM::checkChanged()
     emit changed(value);
 }
 
-void AddRmKCM::rowsAboutToBeRemoved(const QModelIndex &index, int start, int end)
-{
-    Q_UNUSED(end)
-    Q_UNUSED(index)
-    // If the item is going to be removed and it's extend item is expanded
-    // we need to contract it in order to don't show it parent less
-    QAbstractItemModel *model;
-    model = qobject_cast<QAbstractItemModel*>(sender());
-    QModelIndex removingIndex = model->index(start, 0);
-    KpkDelegate *delegate = qobject_cast<KpkDelegate*>(changesView->itemDelegate());
-    delegate->contractItem(removingIndex);
-}
-
 void AddRmKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
     if (error != Enum::ErrorTransactionCancelled) {
@@ -310,9 +297,7 @@ AddRmKCM::~AddRmKCM()
 void AddRmKCM::on_actionFindName_triggered()
 {
     setCurrentAction(actionFindName);
-    if (m_searchTransaction) {
-        m_searchTransaction->cancel();
-    } else if (!searchKLE->text().isEmpty()) {
+    if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchRole    = Enum::RoleSearchName;
         m_searchString  = searchKLE->text();
@@ -325,9 +310,7 @@ void AddRmKCM::on_actionFindName_triggered()
 void AddRmKCM::on_actionFindDescription_triggered()
 {
     setCurrentAction(actionFindDescription);
-    if (m_searchTransaction) {
-        m_searchTransaction->cancel();
-    } else if (!searchKLE->text().isEmpty()) {
+    if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchRole    = Enum::RoleSearchDetails;
         m_searchString  = searchKLE->text();
@@ -340,9 +323,7 @@ void AddRmKCM::on_actionFindDescription_triggered()
 void AddRmKCM::on_actionFindFile_triggered()
 {
     setCurrentAction(actionFindFile);
-    if (m_searchTransaction) {
-        m_searchTransaction->cancel();
-    } else if (!searchKLE->text().isEmpty()) {
+    if (!searchKLE->text().isEmpty()) {
         // cache the search
         m_searchRole    = Enum::RoleSearchFile;
         m_searchString  = searchKLE->text();
@@ -415,12 +396,30 @@ void AddRmKCM::search()
 {
     m_browseView->cleanUi();
 
+    if (m_searchTransaction) {
+        // Disconnect everything so that the model don't store
+        // wrong data
+        m_searchTransaction->cancel();
+        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                   m_browseView->busyCursor(), SLOT(stop()));
+        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                   this, SLOT(finished()));
+        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                   m_browseModel, SLOT(finished()));
+        disconnect(m_searchTransaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
+                   m_browseModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
+                   this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+    }
+
     // search
     m_searchTransaction = new Transaction(QString());
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_browseView->busyCursor(), SLOT(stop()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(finished(PackageKit::Enum::Exit, uint)));
+            this, SLOT(finished()));
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            m_browseModel, SLOT(finished()));
     connect(m_searchTransaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
             m_browseModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
     connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
@@ -512,10 +511,8 @@ void AddRmKCM::load()
     m_browseModel->setAllChecked(false);
 }
 
-void AddRmKCM::finished(PackageKit::Enum::Exit status, uint runtime)
+void AddRmKCM::finished()
 {
-    Q_UNUSED(runtime)
-    Q_UNUSED(status)
     // if m_currentAction is false means that our
     // find button should be disable as there aren't any
     // search methods

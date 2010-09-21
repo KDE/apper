@@ -287,7 +287,6 @@ void UpdateKCM::getUpdates()
     m_updatesModel->clear();
     updateDetails->hide();
     m_updatesT = new Transaction(QString());
-    m_updatesT->getUpdates();
     if (m_selected) {
         connect(m_updatesT, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 m_updatesModel, SLOT(addSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
@@ -295,13 +294,16 @@ void UpdateKCM::getUpdates()
         connect(m_updatesT, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 m_updatesModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
     }
-
     connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(getUpdatesFinished(PackageKit::Enum::Exit)));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_busySeq, SLOT(stop()));
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            m_updatesModel, SLOT(finished()));
+    // get all updates
+    m_updatesT->getUpdates();
 
     if (m_updatesT->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));

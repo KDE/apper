@@ -30,8 +30,12 @@ ClickableLabel::ClickableLabel(QWidget *parent, Qt::WindowFlags f)
 
 void ClickableLabel::mousePressEvent(QMouseEvent *event)
 {
-    emit clicked();
-    event->accept();
+    if (cursor().shape() == Qt::PointingHandCursor) {
+        emit clicked();
+        event->accept();
+    } else {
+        QLabel::mousePressEvent(event);
+    }
 }
 
 #include "ClickableLabel.moc"

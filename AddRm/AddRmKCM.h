@@ -63,9 +63,8 @@ private slots:
     void on_actionFindFile_triggered();
 
     void on_homeView_activated(const QModelIndex &index);
-    void rowsAboutToBeRemoved(const QModelIndex &index, int start, int end);
 
-    void finished(PackageKit::Enum::Exit status, uint runtime);
+    void finished();
     void errorCode(PackageKit::Enum::Error error, const QString &detail);
 
     void checkChanged();

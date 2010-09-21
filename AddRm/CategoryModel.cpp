@@ -152,7 +152,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
 //                 kDebug() << "Found Categories           ";
                 QString categories;
                 categories = parseCategories(xml, item);
-//                 kDebug() << categories;
+                kDebug() << categories;
                 item->setData(categories, CategoryRole);
                 item->setData(Enum::RoleResolve, SearchRole);
             } else if (xml.name() == "Directory") {

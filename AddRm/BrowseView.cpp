@@ -67,15 +67,14 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->sortByColumn(0, Qt::AscendingOrder);
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
     packageView->header()->setStretchLastSection(false);
-    packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(0, QHeaderView::Fixed);
+    packageView->header()->setResizeMode(1, QHeaderView::Fixed);
     packageView->header()->setResizeMode(2, QHeaderView::Stretch);
 
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     delegate->setExtendPixmapWidth(0);
     packageView->setItemDelegate(delegate);
-    connect(m_proxy, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
-            this, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
+    packageView->setHeaderHidden(false);
 
     exportInstalledPB->setIcon(KIcon("document-export"));
     importInstalledPB->setIcon(KIcon("document-import"));

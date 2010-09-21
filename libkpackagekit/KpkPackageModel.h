@@ -99,6 +99,8 @@ public slots:
     void uncheckInstalledPackages();
     void uncheckAvailablePackages();
 
+    void finished();
+
 signals:
     void changed(bool value);
     void packageChecked(const KpkPackageModel::InternalPackage &package);
@@ -107,6 +109,7 @@ signals:
 private:
     bool containsChecked(const QString &pid) const;
 
+    int m_packageCount;
     bool                            m_checkable;
     QPixmap                         m_installedEmblem;
     QAbstractItemView              *m_packageView;
