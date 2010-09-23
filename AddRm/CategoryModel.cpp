@@ -38,6 +38,7 @@ CategoryModel::CategoryModel(QObject *parent)
 {
     QStandardItem *item;
     item = new QStandardItem(i18n("Installed Software"));
+    item->setDragEnabled(false);
     item->setData(Enum::RoleGetPackages, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
@@ -45,6 +46,7 @@ CategoryModel::CategoryModel(QObject *parent)
     appendRow(item);
 
     item = new QStandardItem(i18n("History"));
+    item->setDragEnabled(false);
     item->setData(Enum::RoleGetOldTransactions, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
@@ -74,6 +76,7 @@ void CategoryModel::fillWithStandardGroups()
     foreach (const Enum::Group &group, m_groups) {
         if (group != Enum::UnknownGroup) {
             item = new QStandardItem(KpkStrings::groups(group));
+            item->setDragEnabled(false);
             item->setData(Enum::RoleSearchGroup, SearchRole);
             item->setData(group, GroupRole);
             item->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
@@ -129,12 +132,14 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                 QString name = xml.readElementText();
                 if (!item) {
                     item = new QStandardItem(name);
+                    item->setDragEnabled(false);
                 } else if (item->text().isEmpty()) {
                     item->setText(name);
                 }
             } else if (xml.name() == "Icon") {
                 if (!item) {
                     item = new QStandardItem;
+                    item->setDragEnabled(false);
                 }
                 // only sets the icon if it wasn't set,
                 // the .directory might have a better one
@@ -147,6 +152,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
             } else if (xml.name() == "Categories") {
                 if (!item) {
                     item = new QStandardItem;
+                    item->setDragEnabled(false);
                 }
                 xml.readNext();
 //                 kDebug() << "Found Categories           ";
@@ -158,6 +164,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
             } else if (xml.name() == "Directory") {
                 if (!item) {
                     item = new QStandardItem;
+                    item->setDragEnabled(false);
                 }
                 QString directory = xml.readElementText();
 
@@ -175,6 +182,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
             } else if (xml.name() == "PkGroups") {
                 if (!item) {
                     item = new QStandardItem;
+                    item->setDragEnabled(false);
                 }
                 QString group = xml.readElementText();
                 Enum::Group groupEnum = static_cast<Enum::Group>(enumFromString<Enum>(group, "Group", "Group"));

@@ -40,6 +40,12 @@
      <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
      <property name="verticalScrollMode">
       <enum>QAbstractItemView::ScrollPerPixel</enum>
      </property>
@@ -107,7 +113,7 @@
   <customwidget>
    <class>KpkSearchableTreeView</class>
    <extends>QTreeView</extends>
-   <header>KpkSearchableTreeView.h</header>
+   <header location="global">KpkSearchableTreeView.h</header>
   </customwidget>
   <customwidget>
    <class>KpkUpdateDetails</class>
