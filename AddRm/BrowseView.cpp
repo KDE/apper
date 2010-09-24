@@ -192,7 +192,11 @@ void BrowseView::on_exportInstalledPB_clicked()
     // We will assume the installed model
     // is populated since the user is seeing it.
     QString fileName;
-    fileName = KFileDialog::getSaveFileName(KUrl(), "*.catalog", this);
+    fileName = KFileDialog::getSaveFileName(KUrl(),
+                                            "*.catalog",
+                                            this,
+                                            QString(),
+                                            KFileDialog::ConfirmOverwrite);
     if (fileName.isEmpty()) {
         return;
     }
@@ -205,7 +209,7 @@ void BrowseView::on_exportInstalledPB_clicked()
     QStringList packages;
     for (int i = 0; i < m_model->rowCount(); i++) {
         packages << m_model->data(m_model->index(i, 0),
-                                  KpkPackageModel::NameRole).toString();
+                                  KpkPackageModel::PackageName).toString();
     }
     out << packages.join(";");
 }
@@ -242,32 +246,5 @@ void BrowseView::enableExportInstalledPB()
 {
     exportInstalledPB->setEnabled(true);
 }
-
-// void BrowseView::resizeEvent(QResizeEvent *event)
-// {
-//     QWidget::resizeEvent(event);
-//     updateSceneEvent();
-// }
-
-// bool BrowseView::event(QEvent *event)
-// {
-//      switch (event->type()) {
-//          case QEvent::Paint:
-//          case QEvent::PolishRequest:
-//          case QEvent::Polish:
-//              updateSceneEvent();
-//              break;
-//          default:
-//              break;
-//      }
-//
-//      return QWidget::event(event);
-// }
-//
-// void BrowseView::updateSceneEvent()
-// {
-//     graphicsView->setSceneRect(QRect(QPoint(0, 0), graphicsView->viewport()->size()));
-//     packageView->resize(graphicsView->viewport()->size());
-// }
 
 #include "BrowseView.moc"

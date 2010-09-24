@@ -39,7 +39,7 @@
 #define APP_ICON    2
 #define APP_ID      3
 
-#define ICON_SIZE 24
+#define ICON_SIZE 22
 #define OVERLAY_SIZE 16
 
 using namespace PackageKit;
@@ -74,19 +74,19 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         foreach (const QStringList &list, data) {
             InternalPackage iPackage;
             iPackage.isPackage   = 0;
-            iPackage.name        = list.at(APP_NAME);
+            iPackage.name        = list.at(AppInstall::AppName);
             if (iPackage.name.isEmpty()) {
                 iPackage.name = package->name();
             }
-            iPackage.summary     = list.at(APP_SUMMARY);
+            iPackage.summary     = list.at(AppInstall::AppSummary);
             if (iPackage.summary.isEmpty()) {
                 iPackage.summary = package->summary();
             }
-            iPackage.icon        = list.at(APP_ICON);
+            iPackage.icon        = list.at(AppInstall::AppIcon);
             iPackage.version     = package->version();
             iPackage.arch        = package->arch();
             iPackage.id          = package->id();
-            iPackage.appId       = list.at(APP_ID);
+            iPackage.appId       = list.at(AppInstall::AppId);
             iPackage.info        = package->info();
 
             if (selected) {
@@ -203,12 +203,14 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             return package.name;
         case Qt::DecorationRole:
         {
-            QPixmap icon = QPixmap(46, ICON_SIZE);
+            QPixmap icon = QPixmap(44, ICON_SIZE);
             icon.fill(Qt::transparent);
-            QPixmap pixmap = KpkIcons::getIcon(package.icon, QString()).pixmap(24, 24);
-            if (!pixmap.isNull()) {
-                QPainter painter(&icon);
-                painter.drawPixmap(QPoint(0, 0), pixmap);
+            if (!package.icon.isEmpty()) {
+                QPixmap pixmap = KpkIcons::getIcon(package.icon, QString()).pixmap(ICON_SIZE, ICON_SIZE);
+                if (!pixmap.isNull()) {
+                    QPainter painter(&icon);
+                    painter.drawPixmap(QPoint(2, 0), pixmap);
+                }
             }
 
             if (package.info == Enum::InfoInstalled ||
@@ -216,7 +218,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 QPainter painter(&icon);
                 QPoint startPoint;
                 // bottom right corner
-                startPoint = QPoint(46 - OVERLAY_SIZE,
+                startPoint = QPoint(44 - OVERLAY_SIZE,
                                     4);
                 painter.drawPixmap(startPoint, m_installedEmblem);
             } else if (m_checkable) {
@@ -230,6 +232,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             }
             return icon;
         }
+        case PackageName:
+            return package.id.split(';')[0];
         }
     } else if (index.column() == 1) {
         if (role == Qt::DisplayRole) {
@@ -419,7 +423,7 @@ void KpkPackageModel::finished()
 
     QTreeView *view = qobject_cast<QTreeView*>(m_packageView);
     if (view) {
-        // This only works because 
+        // This only works because
         view->resizeColumnToContents(0);
         view->resizeColumnToContents(1);
     }

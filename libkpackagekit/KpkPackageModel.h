@@ -44,7 +44,8 @@ public:
         CheckStateRole,
         InfoRole,
         ApplicationId,
-        ApplicationFilterRole
+        ApplicationFilterRole,
+        PackageName,
     };
     typedef struct {
         QString    name;

@@ -158,7 +158,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
 //                 kDebug() << "Found Categories           ";
                 QString categories;
                 categories = parseCategories(xml, item);
-                kDebug() << categories;
+//                 kDebug() << categories;
                 item->setData(categories, CategoryRole);
                 item->setData(Enum::RoleResolve, SearchRole);
             } else if (xml.name() == "Directory") {
@@ -201,6 +201,12 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
 
     if (item &&
         (!item->data(GroupRole).isNull() || !item->data(CategoryRole).isNull())) {
+        if (item->data(CategoryRole).isNull()) {
+            // Set the group name to get it translated
+            Enum::Group group;
+            group = static_cast<Enum::Group>(item->data(GroupRole).toUInt());
+            item->setText(KpkStrings::groups(group));
+        }
         item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
         item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
         if (parent) {

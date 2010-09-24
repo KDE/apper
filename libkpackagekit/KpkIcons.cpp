@@ -60,8 +60,12 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
         KpkIcons::configure();
     }
 
+    if (name.isEmpty()) {
+        return KIcon();
+    }
+
     if (!KpkIcons::cache.contains(name)) {
-        kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup) << name;
+//         kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup) << name;
         QPixmap icon;
         icon = KIconLoader::global()->loadIcon(name,
                                             KIconLoader::NoGroup,
@@ -71,12 +75,10 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
                                             NULL,
                                             true);
         if (icon.isNull() && !defaultName.isNull()) {
-            kDebug() << "if" << name;
             KpkIcons::cache[name] = KIcon(defaultName);
         } else if (icon.isNull()) {
             return KIcon();
         } else {
-            kDebug() << "else" << name;
             KpkIcons::cache[name] = KIcon(name);
         }
     }

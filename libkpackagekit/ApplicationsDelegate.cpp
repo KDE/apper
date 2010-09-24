@@ -267,9 +267,9 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
         model->setData(index,
                        !index.data(KpkPackageModel::CheckStateRole).toBool(),
                        Qt::CheckStateRole);
-    } else if (event->type() == QEvent::KeyPress) {
+    }/* else if (event->type() == QEvent::KeyPress) {
         kDebug() << event->type();
-    }
+    }*/
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
@@ -290,12 +290,12 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
         QSize size = m_buttonSize;
         size.rheight() += 2 * UNIVERSAL_PADDING;
         size.rwidth()  += 5 * UNIVERSAL_PADDING;
-//         kDebug() << size;
         return size;
     } else {
         QSize size = QStyledItemDelegate::sizeHint(option, index);
         if (index.column() == 0) {
             size.rwidth() += 2 * UNIVERSAL_PADDING;
+            size.rheight() += 2 * UNIVERSAL_PADDING;
         }
         return size;
     }
