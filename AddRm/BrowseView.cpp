@@ -74,7 +74,6 @@ BrowseView::BrowseView(QWidget *parent)
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     delegate->setExtendPixmapWidth(0);
     packageView->setItemDelegate(delegate);
-    packageView->setHeaderHidden(false);
 
     exportInstalledPB->setIcon(KIcon("document-export"));
     importInstalledPB->setIcon(KIcon("document-import"));

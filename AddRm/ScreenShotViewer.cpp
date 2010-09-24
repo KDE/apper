@@ -20,6 +20,7 @@
 
 #include "ScreenShotViewer.h"
 
+#include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
 #include <KTemporaryFile>
@@ -64,14 +65,23 @@ void ScreenShotViewer::resultJob(KJob *job)
     if (!fJob->error()) {
         m_screenshot = QPixmap(fJob->destUrl().toLocalFile());
 
-        QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
-        animation->setDuration(500);
-        animation->setStartValue(size());
-        animation->setEndValue(m_screenshot.size());
-        animation->setEasingCurve(QEasingCurve::OutCubic);
-        connect(animation, SIGNAL(finished()), this, SLOT(fadeIn()));
+        QPropertyAnimation *anim1 = new QPropertyAnimation(this, "size");
+        anim1->setDuration(500);
+        anim1->setStartValue(size());
+        anim1->setEndValue(m_screenshot.size());
+        anim1->setEasingCurve(QEasingCurve::OutCubic);
 
-        animation->start();
+        QPropertyAnimation *anim2 = new QPropertyAnimation(screenshotL, "size");
+        anim2->setDuration(500);
+        anim2->setStartValue(screenshotL->size());
+        anim2->setEndValue(m_screenshot.size());
+        anim2->setEasingCurve(QEasingCurve::OutCubic);
+
+        QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
+        connect(group, SIGNAL(finished()), this, SLOT(fadeIn()));
+        group->addAnimation(anim1);
+        group->addAnimation(anim2);
+        group->start();
     } else {
         screenshotL->setText(i18n("Could not find screen shot."));
     }

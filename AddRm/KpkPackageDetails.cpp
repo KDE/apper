@@ -231,7 +231,7 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
     m_hasDepends    = false;
 
     QString pkgIconPath = index.data(KpkPackageModel::IconRole).toString();
-    m_currentIcon       = KpkIcons::getIcon(pkgIconPath, "package").pixmap(64, 64);
+    m_currentIcon       = KpkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
     m_appName           = index.data(KpkPackageModel::NameRole).toString();
 
     m_currentScreenshot = AppInstall::instance()->thumbnail(m_package->name());
@@ -571,7 +571,11 @@ void KpkPackageDetails::setupDescription()
         sizeL->hide();
     }
 
-    iconL->setPixmap(m_currentIcon);
+    if (m_currentIcon.isNull()) {
+        iconL->clear();
+    } else {
+        iconL->setPixmap(m_currentIcon);
+    }
 }
 
 QVector<QPair<QString, QString> > KpkPackageDetails::locateApplication(const QString &_relPath, const QString &menuId) const
