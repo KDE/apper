@@ -47,12 +47,14 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
    m_refreshCacheAction(0)
 {
     // Creates our smart icon
-    m_smartSTI = new KSystemTrayIcon("applications-other");
+    m_smartSTI = new KStatusNotifierItem(this);
+    m_smartSTI->setCategory(KStatusNotifierItem::SystemServices);
+    m_smartSTI->setStatus(KStatusNotifierItem::Active);
     connect(m_smartSTI, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(activated(QSystemTrayIcon::ActivationReason)));
 
     // Creates our transaction menu
-    m_menu = new QMenu(i18n("Transactions"));
+    m_menu = new KMenu(i18n("Transactions"));
     connect(m_menu, SIGNAL(triggered(QAction *)),
             this, SLOT(triggered(QAction *)));
 
@@ -172,7 +174,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
             m_restartType == Enum::RestartNone)
         {
             m_menu->hide();
-            m_smartSTI->hide();
+//             m_smartSTI->hide();
             emit close();
         } else {
             QString toolTip;
@@ -182,21 +184,21 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
                                      "Packages: %2",
                                      m_restartPackages.size(),
                                      m_restartPackages.join(", ")));
-                m_smartSTI->setIcon(KpkIcons::restartIcon(m_restartType));
+//                 m_smartSTI->setIcon(KpkIcons::restartIcon(m_restartType));
             }
             if (m_messages.size()) {
                 if (!toolTip.isEmpty()) {
                     toolTip.append('\n');
                 } else {
                     // in case the restart icon is not set
-                    m_smartSTI->setIcon(KpkIcons::getIcon("kpk-important"));
+//                     m_smartSTI->setIcon(Kpk0Icons::getIcon("kpk-important"));
                 }
                 toolTip.append(i18np("One message from the package manager",
                                      "%1 messages from the package manager",
                                      m_messages.size()));
 
             }
-            m_smartSTI->setToolTip(toolTip);
+//             m_smartSTI->setToolTip(toolTip);
         }
     }
 }
@@ -223,7 +225,7 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
     }
     connect(m_currentTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit)));
-    m_smartSTI->show();
+//     m_smartSTI->show();
 }
 
 void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit exit)
@@ -285,14 +287,18 @@ void KpkTransactionTrayIcon::transactionChanged()
     Enum::Status status = m_currentTransaction->status();
     QString toolTip;
 
+    m_smartSTI->setToolTipTitle(KpkStrings::action(m_currentTransaction->role()));
     if (percentage && percentage <= 100) {
         toolTip = i18n("%1% - %2", percentage, KpkStrings::status(status));
     } else {
         toolTip = i18n("%1", KpkStrings::status(status));
     }
 
-    m_smartSTI->setToolTip(toolTip);
-    m_smartSTI->setIcon(KpkIcons::statusIcon(status));
+//     m_smartSTI->setToolTip(toolTip);
+kDebug() << KpkIcons::statusIconName(status);
+    KpkIcons::getIcon(KpkIcons::statusIconName(status));
+//     m_smartSTI->setIconByName("app-installed");
+    m_smartSTI->setIconByPixmap(KpkIcons::getIcon("package-wait"));
 }
 
 void KpkTransactionTrayIcon::message(PackageKit::Enum::Message type, const QString &message)
@@ -374,19 +380,19 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
     m_menu->addAction(m_hideAction);
 }
 
-void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
-{
-    if (reason != QSystemTrayIcon::Context) {
-        QList<PackageKit::Transaction*> tids(m_client->getTransactions());
-        if (tids.size() || isRunning()) {
-            updateMenu(tids);
-            m_menu->exec(QCursor::pos());
-        } else {
-            m_menu->hide();
-            m_smartSTI->hide();
-        }
-    }
-}
+// void KpkTransactionTrayIcon::activated(QSystemTrayIcon::ActivationReason reason)
+// {
+//     if (reason != QSystemTrayIcon::Context) {
+//         QList<PackageKit::Transaction*> tids(m_client->getTransactions());
+//         if (tids.size() || isRunning()) {
+//             updateMenu(tids);
+//             m_menu->exec(QCursor::pos());
+//         } else {
+//             m_menu->hide();
+//             m_smartSTI->hide();
+//         }
+//     }
+// }
 
 void KpkTransactionTrayIcon::requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package> pkg)
 {
@@ -445,7 +451,7 @@ void KpkTransactionTrayIcon::logout()
 void KpkTransactionTrayIcon::hideIcon()
 {
     // Reset things as the user don't want to see it
-    m_smartSTI->hide();
+//     m_smartSTI->hide();
     m_messages.clear();
     m_restartType = Enum::RestartNone;
 }
