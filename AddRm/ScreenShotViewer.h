@@ -25,9 +25,11 @@
 #include <KPixmapSequenceOverlayPainter>
 #include <KJob>
 
-#include "ui_ScreenShotViewer.h"
+#include <QScrollArea>
+#include <QPixmap>
 
-class ScreenShotViewer : public QWidget, Ui::ScreenShotViewer
+class ClickableLabel;
+class ScreenShotViewer : public QScrollArea
 {
 Q_OBJECT
 public:
@@ -40,7 +42,8 @@ private slots:
 
 private:
     KPixmapSequenceOverlayPainter *m_busySeq;
-    QPixmap m_screenshot;
+    QPixmap         m_screenshot;
+    ClickableLabel *m_screenshotL;
 };
 
 #endif

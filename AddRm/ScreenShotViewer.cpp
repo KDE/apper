@@ -27,11 +27,23 @@
 #include <KPixmapSequence>
 #include <KIO/Job>
 
-ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
- : QWidget(parent)
-{
-    setupUi(this);
+#include <KIcon>
+#include <KLocale>
 
+#include "ClickableLabel.h"
+
+ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
+ : QScrollArea(parent)
+{
+    m_screenshotL = new ClickableLabel(this);
+    m_screenshotL->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    m_screenshotL->resize(250, 200);
+    resize(250, 200);
+
+    setFrameShape(NoFrame);
+    setFrameShadow(Plain);
+    setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    setWidget(m_screenshotL);
     setWindowIcon(KIcon("layer-visible-on"));
 
     KTemporaryFile *tempFile = new KTemporaryFile;
@@ -48,10 +60,10 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_busySeq->setWidget(screenshotL);
+    m_busySeq->setWidget(m_screenshotL);
     m_busySeq->start();
 
-    connect(screenshotL, SIGNAL(clicked()), this, SLOT(deleteLater()));
+    connect(m_screenshotL, SIGNAL(clicked()), this, SLOT(deleteLater()));
 }
 
 ScreenShotViewer::~ScreenShotViewer()
@@ -71,32 +83,24 @@ void ScreenShotViewer::resultJob(KJob *job)
         anim1->setEndValue(m_screenshot.size());
         anim1->setEasingCurve(QEasingCurve::OutCubic);
 
-        QPropertyAnimation *anim2 = new QPropertyAnimation(screenshotL, "size");
-        anim2->setDuration(500);
-        anim2->setStartValue(screenshotL->size());
-        anim2->setEndValue(m_screenshot.size());
-        anim2->setEasingCurve(QEasingCurve::OutCubic);
-
-        QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
-        connect(group, SIGNAL(finished()), this, SLOT(fadeIn()));
-        group->addAnimation(anim1);
-        group->addAnimation(anim2);
-        group->start();
+        connect(anim1, SIGNAL(finished()), this, SLOT(fadeIn()));
+        anim1->start();
     } else {
-        screenshotL->setText(i18n("Could not find screen shot."));
+        m_screenshotL->setText(i18n("Could not find screen shot."));
     }
 }
 
 void ScreenShotViewer::fadeIn()
 {
-    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(screenshotL);
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(m_screenshotL);
     effect->setOpacity(0);
     QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
     anim->setDuration(500);
     anim->setStartValue(qreal(0));
     anim->setEndValue(qreal(1));
-    screenshotL->setGraphicsEffect(effect);
-    screenshotL->setPixmap(m_screenshot);
+    m_screenshotL->setGraphicsEffect(effect);
+    m_screenshotL->setPixmap(m_screenshot);
+    m_screenshotL->adjustSize();
 
     anim->start();
 }
