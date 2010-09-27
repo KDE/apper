@@ -538,7 +538,10 @@ void KpkTransaction::files(QSharedPointer<PackageKit::Package> package, const QS
         // we create a new KService because findByDestopPath
         // might fail because the Sycoca database is not up to date yet.
         KService *service = new KService(desktop);
-        if (service->isApplication() && !service->noDisplay()) {
+        if (service->isApplication() &&
+           !service->noDisplay() &&
+           !service->exec().isEmpty())
+        {
             d->applications << service;
         }
     }
