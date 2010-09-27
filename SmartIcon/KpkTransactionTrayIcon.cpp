@@ -20,6 +20,8 @@
 
 #include "KpkTransactionTrayIcon.h"
 
+#include "TransactionTrayIcon.h"
+
 #include <KpkStrings.h>
 #include <KpkTransaction.h>
 #include <KpkIcons.h>
@@ -39,28 +41,13 @@
 
 #include <KDebug>
 
-Q_DECLARE_METATYPE(Transaction*)
 Q_DECLARE_METATYPE(Enum::Restart)
 
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
  : KpkAbstractIsRunning(parent),
-   m_refreshCacheAction(0)
+   m_refreshCacheAction(0),
+   m_trayIcon(0)
 {
-    // Creates our smart icon
-    m_smartSTI = new KStatusNotifierItem(this);
-    m_smartSTI->setCategory(KStatusNotifierItem::SystemServices);
-    m_smartSTI->setStatus(KStatusNotifierItem::Active);
-    connect(m_smartSTI, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(activated(QSystemTrayIcon::ActivationReason)));
-
-    // Creates our transaction menu
-    m_menu = new KMenu(i18n("Transactions"));
-    connect(m_menu, SIGNAL(triggered(QAction *)),
-            this, SLOT(triggered(QAction *)));
-
-    // sets the contextMenu to our menu so we overwrite the KSystemTrayIcon one
-    m_smartSTI->setContextMenu(m_menu);
-
     // Create a new daemon
     m_client = Client::instance();
     m_act = Client::instance()->actions();
@@ -97,10 +84,6 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
 
 KpkTransactionTrayIcon::~KpkTransactionTrayIcon()
 {
-    // this is a QObject that want's a QWidget as parent!?
-    m_smartSTI->deleteLater();
-    // This is a QWidget
-    m_menu->deleteLater();
 }
 
 void KpkTransactionTrayIcon::checkTransactionList()
@@ -128,7 +111,10 @@ void KpkTransactionTrayIcon::triggered(QAction *action)
     // Check to see if we set a Transaction->tid() in action
     if (!action->data().isNull()) {
         // we need to find if the action clicked has already a dialog
-        createTransactionDialog(action->data().value<Transaction *>());
+        Transaction *t = new Transaction(action->data().toString());
+        if (!t->error()) {
+            createTransactionDialog(t);
+        }
     }
 }
 
@@ -173,32 +159,41 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
         if (m_messages.isEmpty() &&
             m_restartType == Enum::RestartNone)
         {
-            m_menu->hide();
-//             m_smartSTI->hide();
+            // TODO check if a menu being shown
+            // will hide
+            hideIcon();
             emit close();
         } else {
             QString toolTip;
+            QString iconName;
+            QIcon icon;
             if (m_restartType != Enum::RestartNone) {
                 toolTip.append(KpkStrings::restartType(m_restartType) + '\n');
                 toolTip.append(i18np("Package: %2",
                                      "Packages: %2",
                                      m_restartPackages.size(),
                                      m_restartPackages.join(", ")));
-//                 m_smartSTI->setIcon(KpkIcons::restartIcon(m_restartType));
+                iconName = KpkIcons::restartIconName(m_restartType);
             }
             if (m_messages.size()) {
                 if (!toolTip.isEmpty()) {
                     toolTip.append('\n');
                 } else {
                     // in case the restart icon is not set
-//                     m_smartSTI->setIcon(Kpk0Icons::getIcon("kpk-important"));
+                    icon = KpkIcons::getPreloadedIcon("kpk-important");
                 }
                 toolTip.append(i18np("One message from the package manager",
                                      "%1 messages from the package manager",
                                      m_messages.size()));
 
             }
-//             m_smartSTI->setToolTip(toolTip);
+
+            if (iconName.isEmpty()) {
+                m_trayIcon->setIconByPixmap(icon);
+            } else {
+                m_trayIcon->setIconByName(iconName);
+            }
+            m_trayIcon->setToolTipSubTitle(toolTip);
         }
     }
 }
@@ -225,7 +220,6 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
     }
     connect(m_currentTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit)));
-//     m_smartSTI->show();
 }
 
 void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit exit)
@@ -283,22 +277,56 @@ void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit exit)
 
 void KpkTransactionTrayIcon::transactionChanged()
 {
-    uint percentage     = m_currentTransaction->percentage();
-    Enum::Status status = m_currentTransaction->status();
-    QString toolTip;
+    if (m_trayIcon == 0) {
+        // Creates our smart icon
+        m_trayIcon = new TransactionTrayIcon(this);
+        connect(m_trayIcon->contextMenu(), SIGNAL(aboutToShow()),
+                this, SLOT(fillMenu()));
 
-    m_smartSTI->setToolTipTitle(KpkStrings::action(m_currentTransaction->role()));
-    if (percentage && percentage <= 100) {
-        toolTip = i18n("%1% - %2", percentage, KpkStrings::status(status));
-    } else {
-        toolTip = i18n("%1", KpkStrings::status(status));
+        // Creates our transaction menu
+        m_menu = new KMenu(i18n("Transactions"));
+        connect(m_menu, SIGNAL(triggered(QAction *)),
+                this, SLOT(triggered(QAction *)));
+
+        // sets the contextMenu to our menu so we overwrite the KSystemTrayIcon one
+//         m_trayIcon->setContextMenu(m_menu);
+
+        // Clear old data
+        m_currentRole     = Enum::UnknownRole;
+        m_currentStatus   = Enum::UnknownStatus;
+        m_currentProgress = 0;
     }
 
-//     m_smartSTI->setToolTip(toolTip);
-kDebug() << KpkIcons::statusIconName(status);
-    KpkIcons::getIcon(KpkIcons::statusIconName(status));
-//     m_smartSTI->setIconByName("app-installed");
-    m_smartSTI->setIconByPixmap(KpkIcons::getIcon("package-wait"));
+    uint         percentage = m_currentTransaction->percentage();
+    Enum::Status status     = m_currentTransaction->status();
+    Enum::Role   role       = m_currentTransaction->role();
+    QString      toolTip;
+
+    if (m_currentRole != role) {
+        m_currentRole = role;
+        m_trayIcon->setToolTipTitle(KpkStrings::action(role));
+        QString iconName = KpkIcons::actionIconName(role);
+        m_trayIcon->setToolTipIconByPixmap(KpkIcons::getPreloadedIcon(iconName));
+    }
+
+    if (status != m_currentStatus) {
+        // Do not store status here
+        // so we can compare on the next 'if'
+        QString iconName = KpkIcons::statusIconName(status);
+        kDebug() << iconName << KpkIcons::getPreloadedIcon(iconName).isNull() << KpkIcons::getPreloadedIcon(iconName).availableSizes();
+        m_trayIcon->setIconByPixmap(KpkIcons::getPreloadedIcon(iconName));
+    }
+
+    if (percentage != m_currentProgress || status != m_currentStatus) {
+        m_currentProgress = percentage;
+        m_currentStatus   = status;
+        if (percentage && percentage <= 100) {
+            toolTip = i18n("%1% - %2", percentage, KpkStrings::status(status));
+        } else {
+            toolTip = i18n("%1", KpkStrings::status(status));
+        }
+        m_trayIcon->setToolTipSubTitle(toolTip);
+    }
 }
 
 void KpkTransactionTrayIcon::message(PackageKit::Enum::Message type, const QString &message)
@@ -343,6 +371,45 @@ void KpkTransactionTrayIcon::showMessages()
     }
 }
 
+void KpkTransactionTrayIcon::fillMenu()
+{
+    KMenu *contextMenu = qobject_cast<KMenu*>(sender());
+    QString text;
+    bool refreshCache = true;
+
+    contextMenu->clear();
+
+    QList<PackageKit::Transaction*> tids(m_client->getTransactions());
+    foreach (Transaction *t, tids) {
+        QAction *transactionAction = new QAction(this);
+        // We use the tid since the pointer might get deleted
+        // as it was some times
+        transactionAction->setData(t->tid());
+
+        if (t->role() == Enum::RoleRefreshCache) {
+            refreshCache = false;
+        }
+
+        text = KpkStrings::action(t->role())
+               + " (" + KpkStrings::status(t->status()) + ')';
+        transactionAction->setText(text);
+        transactionAction->setIcon(KpkIcons::statusIcon(t->status()));
+        contextMenu->addAction(transactionAction);
+    }
+
+    contextMenu->addSeparator();
+    if (refreshCache && m_refreshCacheAction) {
+        contextMenu->addAction(m_refreshCacheAction);
+    }
+    if (m_restartType != Enum::RestartNone) {
+        contextMenu->addAction(m_restartAction);
+    }
+    if (m_messages.size()) {
+        contextMenu->addAction(m_messagesAction);
+    }
+    contextMenu->addAction(m_hideAction);
+}
+
 void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &tids)
 {
     QString text;
@@ -354,7 +421,7 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
         QAction *transactionAction = new QAction(this);
         // We use the tid since the pointer might get deleted
         // as it was some times
-        transactionAction->setData(QVariant::fromValue(t));
+        transactionAction->setData(t->tid());
 
         if (t->role() == Enum::RoleRefreshCache) {
             refreshCache = false;
@@ -389,7 +456,7 @@ void KpkTransactionTrayIcon::updateMenu(const QList<PackageKit::Transaction*> &t
 //             m_menu->exec(QCursor::pos());
 //         } else {
 //             m_menu->hide();
-//             m_smartSTI->hide();
+//             m_trayIcon->hide();
 //         }
 //     }
 // }
@@ -451,7 +518,8 @@ void KpkTransactionTrayIcon::logout()
 void KpkTransactionTrayIcon::hideIcon()
 {
     // Reset things as the user don't want to see it
-//     m_smartSTI->hide();
+    m_trayIcon->deleteLater();
+    m_trayIcon = 0;
     m_messages.clear();
     m_restartType = Enum::RestartNone;
 }

@@ -33,14 +33,17 @@ using namespace PackageKit;
 class KDE_EXPORT KpkIcons {
     public:
         static KIcon   groupsIcon(Enum::Group group);
-        static KIcon   statusIcon(Enum::Status status);
         static QString statusIconName(Enum::Status status);
+        static KIcon   statusIcon(Enum::Status status);
         static QString statusAnimation(Enum::Status status);
+        static QString actionIconName(Enum::Role role);
         static KIcon   actionIcon(Enum::Role role);
         static KIcon   packageIcon(Enum::Info state);
+        static QString restartIconName(Enum::Restart type);
         static KIcon   restartIcon(Enum::Restart type);
         static KIcon   getIcon(const QString &name);
         static KIcon   getIcon(const QString &name, const QString &defaultName);
+        static QIcon   getPreloadedIcon(const QString &name);
 
     private:
         static void configure();

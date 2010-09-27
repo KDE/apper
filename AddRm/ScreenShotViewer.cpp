@@ -36,6 +36,7 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
  : QScrollArea(parent)
 {
     m_screenshotL = new ClickableLabel(this);
+    m_screenshotL->setCursor(Qt::PointingHandCursor);
     m_screenshotL->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     m_screenshotL->resize(250, 200);
     resize(250, 200);

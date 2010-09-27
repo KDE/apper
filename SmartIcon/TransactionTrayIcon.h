@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2010 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,37 +18,28 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KPackageKitSmartIcon.h"
-#include <version.h>
+#ifndef TRANSACTION_TRAY_ICON_H
+#define TRANSACTION_TRAY_ICON_H
 
-#include <KDebug>
-#include <KConfig>
-#include <KLocale>
-#include <KAboutData>
-#include <KCmdLineArgs>
+#include <KStatusNotifierItem>
 
-int main(int argc, char **argv)
+class QAction;
+
+class TransactionTrayIcon : public KStatusNotifierItem
 {
-    KAboutData about("KPackageKitSmartIcon",
-                     "kpackagekit",
-                     ki18n("KPackageKit"),
-                     KPK_VERSION,
-                     ki18n("KPackageKit Tray Icon"),
-                     KAboutData::License_GPL,
-                     ki18n("(C) 2008-2010 Daniel Nicoletti"));
+Q_OBJECT
+public:
+    TransactionTrayIcon(QObject *parent = 0);
+    ~TransactionTrayIcon();
 
-    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti85-pk@yahoo.com.br", "http://www.packagekit.org" );
-    about.addAuthor(ki18n("Trever Fischer"), KLocalizedString(), "wm161@wm161.net", "http://wm161.net");
+    void connectToLauncher(const QString &destName);
 
-    about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"),"@");
+public slots:
+    void openQueue(QAction *action);
+    void openDefaultQueue();
 
-    KCmdLineArgs::init(argc, argv, &about);
+private:
+    QString m_destName;
+};
 
-    if (!kpackagekit::KPackageKit_Smart_Icon::start()) {
-        //kDebug() << "KPackageKit-Smart-Icon is already running!";
-        return 0;
-    }
-
-    kpackagekit::KPackageKit_Smart_Icon app;
-    return app.exec();
-}
+#endif

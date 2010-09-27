@@ -25,11 +25,11 @@
 
 #include <QPackageKit>
 #include <KMenu>
-#include <KStatusNotifierItem>
 
 using namespace PackageKit;
 
 class KpkTransaction;
+class TransactionTrayIcon;
 class KpkTransactionTrayIcon : public KpkAbstractIsRunning
 {
 Q_OBJECT
@@ -60,13 +60,14 @@ private slots:
     void refreshCache();
     void showMessages();
     void hideIcon();
+    void fillMenu();
 
 private:
     void updateMenu(const QList<PackageKit::Transaction*> &tids);
     void setCurrentTransaction(PackageKit::Transaction *transaction);
 
     Enum::Roles m_act;
-    KStatusNotifierItem *m_smartSTI;
+    TransactionTrayIcon *m_trayIcon;
     Client *m_client;
     Transaction *m_pkClient_updates;
     KMenu *m_menu;
@@ -88,6 +89,10 @@ private:
 
     // Hide this icon action
     QAction *m_hideAction;
+
+    Enum::Status m_currentStatus;
+    Enum::Role   m_currentRole;
+    uint         m_currentProgress;
 };
 
 #endif
