@@ -313,7 +313,7 @@ QIcon KpkIcons::getPreloadedIcon(const QString &name)
         KpkIcons::configure();
     }
 
-kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup);
+// kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup);
     QIcon icon;
     icon.addPixmap(KIcon(name).pixmap(48, 48));
     return icon;

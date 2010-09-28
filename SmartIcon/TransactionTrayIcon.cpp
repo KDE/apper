@@ -23,9 +23,11 @@
 #include <KMenu>
 #include <KLocale>
 #include <KActionCollection>
+#include <KDebug>
 
-#include <QtDBus/QDBusMessage>
-#include <QtDBus/QDBusConnection>
+#include <QPackageKit>
+
+using namespace PackageKit;
 
 TransactionTrayIcon::TransactionTrayIcon(QObject *parent)
  : KStatusNotifierItem(parent)
@@ -37,34 +39,23 @@ TransactionTrayIcon::TransactionTrayIcon(QObject *parent)
     KActionCollection *actions = actionCollection();
     actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
     connect(contextMenu(), SIGNAL(triggered(QAction *)),
-            this, SLOT(openQueue(QAction *)));
-    connect(this, SIGNAL(activateRequested(bool, const QPoint &)), this, SLOT(openDefaultQueue()));
+            this, SLOT(actionActivated(QAction *)));
+    setAssociatedWidget(contextMenu());
 }
 
 TransactionTrayIcon::~TransactionTrayIcon()
 {
 }
 
-void TransactionTrayIcon::connectToLauncher(const QString &destName)
+void TransactionTrayIcon::actionActivated(QAction *action)
 {
-    m_destName = destName;
-}
-
-void TransactionTrayIcon::openDefaultQueue()
-{
-    QAction action(this);
-    action.setData(m_destName);
-    openQueue(&action);
-}
-
-void TransactionTrayIcon::openQueue(QAction *action)
-{
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.PrintQueue",
-                                             "/",
-                                             "org.kde.PrintQueue",
-                                             QLatin1String("ShowQueue"));
-    // Use our own cached tid to avoid crashes
-    message << qVariantFromValue(action->data().toString());
-    QDBusConnection::sessionBus().call(message);
+    kDebug();
+    // Check to see if there is transaction id in action
+    if (!action->data().isNull()) {
+        // we need to find if the action clicked has already a dialog
+        Transaction *t = new Transaction(action->data().toString());
+        if (!t->error()) {
+            emit transactionActivated(t);
+        }
+    }
 }

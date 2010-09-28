@@ -24,7 +24,8 @@
 #include <KpkAbstractIsRunning.h>
 
 #include <QPackageKit>
-#include <KMenu>
+
+#include <QAction>
 
 using namespace PackageKit;
 
@@ -47,9 +48,7 @@ public slots:
 
 private slots:
     void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
-//     void activated(QSystemTrayIcon::ActivationReason reason);
-    void triggered(QAction *action);
-    void createTransactionDialog(Transaction *t);
+    void createTransactionDialog(PackageKit::Transaction *t);
     void transactionDialogClosed();
     void message(PackageKit::Enum::Message type, const QString &message);
     void requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package>pkg);
@@ -66,17 +65,17 @@ private:
     void updateMenu(const QList<PackageKit::Transaction*> &tids);
     void setCurrentTransaction(PackageKit::Transaction *transaction);
 
-    Enum::Roles m_act;
     TransactionTrayIcon *m_trayIcon;
-    Client *m_client;
-    Transaction *m_pkClient_updates;
-    KMenu *m_menu;
+    Client              *m_client;
     QHash<QString, KpkTransaction *> m_transDialogs;
 
-    PackageKit::Transaction *m_currentTransaction;
+    Transaction *m_currentTransaction;
 
     // Refresh Cache menu entry
     QAction *m_refreshCacheAction;
+
+    // Hide this icon action
+    QAction *m_hideAction;
 
     // Message Container
     QList<QPair<Enum::Message, QString> > m_messages;
@@ -84,15 +83,13 @@ private:
 
     // Restart menu entry
     Enum::Restart m_restartType;
-    QAction *m_restartAction;
-    QStringList m_restartPackages;
+    QAction      *m_restartAction;
+    QStringList   m_restartPackages;
 
-    // Hide this icon action
-    QAction *m_hideAction;
-
-    Enum::Status m_currentStatus;
-    Enum::Role   m_currentRole;
-    uint         m_currentProgress;
+    // Cache data for tooltip
+    Enum::Status  m_currentStatus;
+    Enum::Role    m_currentRole;
+    uint          m_currentProgress;
 };
 
 #endif

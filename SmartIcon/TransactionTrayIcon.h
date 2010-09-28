@@ -25,6 +25,10 @@
 
 class QAction;
 
+namespace PackageKit {
+    class Transaction;
+}
+
 class TransactionTrayIcon : public KStatusNotifierItem
 {
 Q_OBJECT
@@ -32,14 +36,11 @@ public:
     TransactionTrayIcon(QObject *parent = 0);
     ~TransactionTrayIcon();
 
-    void connectToLauncher(const QString &destName);
+signals:
+    void transactionActivated(PackageKit::Transaction *transaction);
 
 public slots:
-    void openQueue(QAction *action);
-    void openDefaultQueue();
-
-private:
-    QString m_destName;
+    void actionActivated(QAction *action);
 };
 
 #endif
