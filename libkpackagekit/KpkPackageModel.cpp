@@ -20,9 +20,9 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkPackageModel.h"
+#include <config.h>
 
-#include "config.h"
+#include "KpkPackageModel.h"
 
 #include <AppInstall.h>
 #include <KpkStrings.h>
@@ -513,7 +513,7 @@ void KpkPackageModel::setAllChecked(bool checked)
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
     } else {
-        // This is a very slow operation, which in here we try to optimise
+        // This is a very slow operation, which in here we try to optimize
         foreach (const InternalPackage &package, m_checkedPackages.values()) {
             uncheckPackage(package, true, false);
         }
@@ -534,7 +534,7 @@ QList<QSharedPointer<PackageKit::Package> > KpkPackageModel::selectedPackages() 
 
 bool KpkPackageModel::allSelected() const
 {
-    foreach (const InternalPackage package, m_packages) {
+    foreach (const InternalPackage &package, m_packages) {
         if (!containsChecked(package.id)) {
             return false;
         }

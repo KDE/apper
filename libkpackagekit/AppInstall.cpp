@@ -18,9 +18,9 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "AppInstall.h"
+#include <config.h>
 
-#include "config.h"
+#include "AppInstall.h"
 
 #include <QApplication>
 #include <QSqlDatabase>

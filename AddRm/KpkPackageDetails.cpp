@@ -483,7 +483,7 @@ void KpkPackageDetails::display()
         }
 
         // Check to see if we have a screen shot and if we are
-        // transparent, and make shure the details are going
+        // transparent, and make sure the details are going
         // to be shown
         if (m_fadeScreenshot->currentValue().toReal() == 0 &&
             m_screenshotPath.contains(m_currentScreenshot) &&

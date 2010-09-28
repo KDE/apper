@@ -30,7 +30,7 @@ class KpkFiltersMenu : public QMenu
 {
 Q_OBJECT
 public:
-    KpkFiltersMenu(Enum::Filters filters, QWidget *parent = 0);
+    explicit KpkFiltersMenu(Enum::Filters filters, QWidget *parent = 0);
     ~KpkFiltersMenu();
 
     Enum::Filters filters() const;

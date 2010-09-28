@@ -22,7 +22,7 @@
 
 #include <QtDBus/QDBusContext>
 
-#include "config.h"
+#include <config.h>
 
 #ifdef HAVE_DEBCONFKDE
 #include <DebconfGui.h>

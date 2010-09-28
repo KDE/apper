@@ -27,7 +27,7 @@ class KpkCheckableHeader : public QHeaderView
 {
 Q_OBJECT
 public:
-    KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
+    explicit KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
 
     QSize sizeHint() const;
 

@@ -33,7 +33,7 @@ class ScreenShotViewer : public QScrollArea
 {
 Q_OBJECT
 public:
-    ScreenShotViewer(const QString &url, QWidget *parent = 0);
+    explicit ScreenShotViewer(const QString &url, QWidget *parent = 0);
     ~ScreenShotViewer();
 
 private slots:

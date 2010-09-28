@@ -43,7 +43,6 @@
 
 #include <KpkPackageModel.h>
 #include <KpkReviewChanges.h>
-#include <KpkPackageModel.h>
 #include <KpkDelegate.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>

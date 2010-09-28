@@ -18,13 +18,13 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
+#include <config.h>
+
 #include "KpkFiltersMenu.h"
 
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocale>
-
-#include "config.h"
 
 KpkFiltersMenu::KpkFiltersMenu(Enum::Filters filters, QWidget *parent)
  : QMenu(parent)

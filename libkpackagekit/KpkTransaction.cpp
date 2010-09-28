@@ -18,6 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
+#include <config.h>
+
 #include "KpkTransaction.h"
 
 #include <KLocale>
@@ -32,8 +34,6 @@
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QTreeView>
-
-#include "config.h"
 
 #include "KpkMacros.h"
 #include "KpkEnum.h"

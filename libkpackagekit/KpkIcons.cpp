@@ -20,9 +20,9 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkIcons.h"
+#include <config.h>
 
-#include "config.h"
+#include "KpkIcons.h"
 
 #include <KIconLoader>
 #include <KStandardDirs>

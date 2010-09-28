@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "KpkInterface.h"
+
 #include "kpackagekitsmarticonadaptor.h"
 
 #include <QtDBus/QDBusConnection>
@@ -57,7 +58,7 @@ KpkInterface::~KpkInterface()
 {
     kDebug();
 #ifdef HAVE_DEBCONFKDE
-    foreach (DebconfGui *gui, m_debconfGuis.values()) {
+    foreach (const DebconfGui *gui, m_debconfGuis.values()) {
         delete gui;
     }
 #endif //HAVE_DEBCONFKDE
