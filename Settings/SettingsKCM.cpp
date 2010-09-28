@@ -56,6 +56,7 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
     setAboutData(aboutData);
     KGlobal::locale()->insertCatalog("kpackagekit");
+    setButtons(Default | Apply);
     setupUi(this);
 
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());

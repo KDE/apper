@@ -78,7 +78,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
     setAboutData(aboutData);
-    setButtons(KCModule::Help | Apply);
+    setButtons(Apply);
     KGlobal::locale()->insertCatalog("kpackagekit");
 
     setupUi(this);
