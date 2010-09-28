@@ -29,8 +29,7 @@
 #include <KpkEnum.h>
 
 #include <KMenu>
-#include <QTreeView>
-#include <QStandardItemModel>
+#include <KTextBrowser>
 #include <KNotification>
 #include <KMessageBox>
 #include <KLocale>
@@ -46,7 +45,8 @@ Q_DECLARE_METATYPE(Enum::Restart)
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
  : KpkAbstractIsRunning(parent),
    m_trayIcon(0),
-   m_refreshCacheAction(0)
+   m_refreshCacheAction(0),
+   m_messagesCount(0)
 {
     // Create a new daemon
     m_client = Client::instance();
@@ -143,7 +143,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
     if (tids.size()) {
         setCurrentTransaction(tids.first());
     } else {
-        if (m_messages.isEmpty() &&
+        if (m_messagesCount == 0 &&
             m_restartType == Enum::RestartNone)
         {
             // TODO check if a menu being shown
@@ -162,7 +162,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
                                      m_restartPackages.join(", ")));
                 iconName = KpkIcons::restartIconName(m_restartType);
             }
-            if (m_messages.size()) {
+            if (m_messagesCount) {
                 if (!toolTip.isEmpty()) {
                     toolTip.append('\n');
                 } else {
@@ -171,7 +171,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
                 }
                 toolTip.append(i18np("One message from the package manager",
                                      "%1 messages from the package manager",
-                                     m_messages.size()));
+                                     m_messagesCount));
 
             }
 
@@ -319,38 +319,33 @@ void KpkTransactionTrayIcon::transactionChanged()
 
 void KpkTransactionTrayIcon::message(PackageKit::Enum::Message type, const QString &message)
 {
-    m_messages.append(qMakePair(type, message));
+    m_messagesCount++;
+    m_messages.append("<p><h3>");
+    m_messages.append(QDateTime::currentDateTime().toString("hh:mm:ss"));
+    m_messages.append(" - ");
+    m_messages.append(KpkStrings::message(type));
+    m_messages.append("</h3>");
+    m_messages.append(message);
+    m_messages.append("</p>");
 }
 
 void KpkTransactionTrayIcon::showMessages()
 {
-    if (!m_messages.isEmpty()) {
+    if (m_messagesCount) {
         increaseRunning();
         KDialog *dialog = new KDialog;
         dialog->setCaption(i18n("Package Manager Messages"));
         dialog->setButtons(KDialog::Close);
 
-        QTreeView *tree = new QTreeView(dialog);
-        tree->setRootIsDecorated(false);
-        tree->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        tree->setTextElideMode(Qt::ElideNone);
-        tree->setAlternatingRowColors(true);
-        dialog->setMainWidget(tree);
+        KTextBrowser *browser = new KTextBrowser(dialog);
+        browser->setOpenExternalLinks(true);
+        browser->setHtml(m_messages);
+        dialog->setMainWidget(browser);
         dialog->setWindowIcon(KIcon("view-pim-notes"));
+        dialog->setInitialSize(QSize(600, 400));
+        m_messagesCount = 0;
+        m_messages.clear();
 
-        QStandardItemModel *model = new QStandardItemModel(this);
-        tree->setModel(model);
-
-        model->setHorizontalHeaderLabels(QStringList() << i18n("Message") << i18n("Details"));
-        while (!m_messages.isEmpty()) {
-            QPair<Enum::Message, QString> pair = m_messages.takeFirst();
-            model->appendRow(QList<QStandardItem *>()
-                             << new QStandardItem(KpkStrings::message(pair.first))
-                             << new QStandardItem(pair.second)
-                            );
-        }
-        tree->resizeColumnToContents(0);
-        tree->resizeColumnToContents(1);
         connect(dialog, SIGNAL(finished()), this, SLOT(decreaseRunning()));
         // We call this so that the icon can hide if there
         // are no more messages and transactions running
@@ -400,7 +395,7 @@ void KpkTransactionTrayIcon::fillMenu()
     if (m_restartType != Enum::RestartNone) {
         contextMenu->addAction(m_restartAction);
     }
-    if (m_messages.size()) {
+    if (m_messagesCount) {
         contextMenu->addAction(m_messagesAction);
     }
     contextMenu->addAction(m_hideAction);
@@ -466,6 +461,7 @@ void KpkTransactionTrayIcon::hideIcon()
     m_trayIcon->deleteLater();
     m_trayIcon = 0;
     m_messages.clear();
+    m_messagesCount = 0;
     m_restartType = Enum::RestartNone;
 }
 
@@ -473,7 +469,7 @@ bool KpkTransactionTrayIcon::isRunning()
 {
     return KpkAbstractIsRunning::isRunning() ||
            !Client::instance()->getTransactionList().isEmpty() ||
-           !m_messages.isEmpty() ||
+           m_messagesCount ||
            m_restartType != Enum::RestartNone;
 }
 

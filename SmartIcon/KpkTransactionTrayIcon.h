@@ -78,7 +78,8 @@ private:
     QAction *m_hideAction;
 
     // Message Container
-    QList<QPair<Enum::Message, QString> > m_messages;
+    int      m_messagesCount;
+    QString  m_messages;
     QAction *m_messagesAction;
 
     // Restart menu entry
