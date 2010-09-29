@@ -38,7 +38,8 @@ public:
     typedef enum {
         RoleInfo = Qt::UserRole + 1,
         RoleFinished,
-        RoleProgress
+        RoleProgress,
+        RoleId
     } PackageRoles;
     ProgressView(QWidget *parent = 0);
     ~ProgressView();
@@ -55,6 +56,7 @@ private slots:
 
 private:
     void itemFinished(QStandardItem *item);
+    QList<QStandardItem *> findItems(const QString &packageId);
 
     QStandardItemModel *m_model;
     QTreeView          *m_packageView;

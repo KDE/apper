@@ -29,6 +29,7 @@ Q_OBJECT
 public:
     explicit KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
 
+    int sectionSizeHint(int logicalIndex) const;
     QSize sizeHint() const;
 
 public slots:

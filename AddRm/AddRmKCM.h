@@ -23,8 +23,8 @@
 
 #include "ui_AddRmKCM.h"
 
-#include <QtGui/QtGui>
-#include <QtCore/QtCore>
+#include <QtGui/QStackedLayout>
+#include <QtGui/QStandardItemModel>
 
 #include <KCModule>
 #include <KIcon>

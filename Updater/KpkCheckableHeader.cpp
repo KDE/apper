@@ -71,7 +71,6 @@ void KpkCheckableHeader::paintSection(QPainter *painter, const QRect &rect, int 
             option.state |= QStyle::State_HasFocus;
         }
 
-        option.rect = option.rect;
         // draw item data as CheckBox
         painter->save();
         style->drawControl(QStyle::CE_CheckBox, &option, painter);

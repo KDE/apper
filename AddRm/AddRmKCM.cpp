@@ -20,14 +20,12 @@
 
 #include "AddRmKCM.h"
 
-
 #include <KGenericFactory>
 #include <KAboutData>
 
 #include <version.h>
 
 #include "KpkFiltersMenu.h"
-#include "KpkPackageDetails.h"
 #include "BrowseView.h"
 #include "CategoryModel.h"
 #include "TransactionHistory.h"
@@ -38,9 +36,6 @@
 #include <KFileItemDelegate>
 #include <KCategorizedSortFilterProxyModel>
 
-#include <QPalette>
-#include <QColor>
-
 #include <KpkPackageModel.h>
 #include <KpkReviewChanges.h>
 #include <KpkDelegate.h>
@@ -49,12 +44,6 @@
 #include <AppInstall.h>
 
 #include <KDebug>
-
-#define APP_PKG_NAME 0
-#define APP_NAME     1
-#define APP_SUMMARY  2
-#define APP_ICON     3
-#define APP_ID       4
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 
@@ -202,11 +191,6 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
             m_changesModel, SLOT(rmSelectedPackage(const KpkPackageModel::InternalPackage &)));
     connect(m_changesModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
             m_browseModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
-
-#ifdef HAVE_APPINSTALL
-//     m_browseModel->setAppInstallData(appInstall, true);
-//     m_changesModel->setAppInstallData(appInstall, false);
-#endif //HAVE_APPINSTALL
 
     changesPB->setIcon(KIcon("edit-redo"));
 }

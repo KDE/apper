@@ -34,8 +34,7 @@ QHash<QString, KIcon> KpkIcons::cache = QHash<QString, KIcon>();
 
 void KpkIcons::configure()
 {
-    KGlobal::dirs()->addResourceDir("pixmap", "/usr/share/app-install/icons/");
-    KIconLoader::global()->addAppDir("kpackagekit");
+    KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-install/icons/");
     KIconLoader::global()->reconfigure("kpackagekit", 0);
     KpkIcons::init = true;
 }
@@ -47,10 +46,7 @@ KIcon KpkIcons::getIcon(const QString &name)
         KpkIcons::configure();
     }
 
-    if (!KpkIcons::cache.contains(name)) {
-        KpkIcons::cache[name] = KIcon(name);
-    }
-    return KpkIcons::cache[name];
+    return KIcon(name);
 }
 
 KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
@@ -64,60 +60,53 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
         return KIcon();
     }
 
-    if (!KpkIcons::cache.contains(name)) {
-//         kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup) << name;
-        QPixmap icon;
-        icon = KIconLoader::global()->loadIcon(name,
-                                            KIconLoader::NoGroup,
-                                            KIconLoader::SizeLarge,
-                                            KIconLoader::DefaultState,
-                                            QStringList(),
-                                            NULL,
-                                            true);
-        if (icon.isNull() && !defaultName.isNull()) {
-            KpkIcons::cache[name] = KIcon(defaultName);
-        } else if (icon.isNull()) {
-            return KIcon();
-        } else {
-            KpkIcons::cache[name] = KIcon(name);
-        }
+    bool isNull;
+    isNull = KIconLoader::global()->iconPath(name, KIconLoader::NoGroup, true).isEmpty();
+
+    if (isNull && !defaultName.isNull()) {
+        return KIcon(defaultName);
+    } else if (isNull) {
+        return KIcon();
     }
-    return KpkIcons::cache[name];
+    return KIcon(name);
 }
 
 QString KpkIcons::statusIconName(Enum::Status status)
 {
+    if (!KpkIcons::init) {
+        KpkIcons::configure();
+    }
     switch (status) {
     case Enum::LastStatus                 :
     case Enum::UnknownStatus              : return "help-browser";
     case Enum::StatusCancel               :
-    case Enum::StatusCleanup              : return "kpk-clean-up";
-    case Enum::StatusCommit               : return "package-setup";//TODO needs a better icon
+    case Enum::StatusCleanup              : return "package-clean-up";
+    case Enum::StatusCommit               : return "package-working";//TODO needs a better icon
     case Enum::StatusDepResolve           : return "package-info";
     case Enum::StatusDownloadChangelog    :
     case Enum::StatusDownloadFilelist     :
     case Enum::StatusDownloadGroup        :
-    case Enum::StatusDownloadPackagelist  : return "kpk-refresh-cache";
+    case Enum::StatusDownloadPackagelist  : return "refresh-cache";
     case Enum::StatusDownload             : return "package-download";
     case Enum::StatusDownloadRepository   :
-    case Enum::StatusDownloadUpdateinfo   : return "kpk-refresh-cache";
-    case Enum::StatusFinished             : return "kpk-clean-up";
-    case Enum::StatusGeneratePackageList  : return "kpk-refresh-cache";
+    case Enum::StatusDownloadUpdateinfo   : return "refresh-cache";
+    case Enum::StatusFinished             : return "package-clean-up";
+    case Enum::StatusGeneratePackageList  : return "refresh-cache";
     case Enum::StatusWaitingForLock       : return "dialog-password";
     case Enum::StatusWaitingForAuth       : return "dialog-password";//IMPROVE ME
     case Enum::StatusInfo                 : return "package-info";
     case Enum::StatusInstall              : return "kpk-package-add";
-    case Enum::StatusLoadingCache         : return "kpk-refresh-cache";
-    case Enum::StatusObsolete             : return "kpk-clean-up";
-    case Enum::StatusQuery                : return "package-search";
-    case Enum::StatusRefreshCache         : return "kpk-refresh-cache";
+    case Enum::StatusLoadingCache         : return "refresh-cache";
+    case Enum::StatusObsolete             : return "package-clean-up";
+    case Enum::StatusQuery                : return "search-package";
+    case Enum::StatusRefreshCache         : return "refresh-cache";
     case Enum::StatusRemove               : return "package-removed";
-    case Enum::StatusRepackaging          : return "kpk-clean-up";
-    case Enum::StatusRequest              : return "package-search";
+    case Enum::StatusRepackaging          : return "package-clean-up";
+    case Enum::StatusRequest              : return "search-package";
     case Enum::StatusRollback             : return "package-rollback";
-    case Enum::StatusRunning              : return "package-setup";
-    case Enum::StatusScanApplications     : return "package-search";
-    case Enum::StatusSetup                : return "package-setup";
+    case Enum::StatusRunning              : return "package-working";
+    case Enum::StatusScanApplications     : return "search-package";
+    case Enum::StatusSetup                : return "package-working";
     case Enum::StatusSigCheck             :
     case Enum::StatusTestCommit           : return "package-info";//TODO needs a better icon
     case Enum::StatusUpdate               : return "package-update";
@@ -138,6 +127,9 @@ KIcon KpkIcons::statusIcon(Enum::Status status)
 
 QString KpkIcons::statusAnimation(PackageKit::Enum::Status status)
 {
+    if (!KpkIcons::init) {
+        KpkIcons::configure();
+    }
     switch (status) {
     case Enum::UnknownStatus             : return "help-browser";
     case Enum::StatusCancel              :
@@ -178,6 +170,9 @@ QString KpkIcons::statusAnimation(PackageKit::Enum::Status status)
 
 QString KpkIcons::actionIconName(Enum::Role role)
 {
+    if (!KpkIcons::init) {
+        KpkIcons::configure();
+    }
     switch (role) {
     case Enum::LastRole                    :
     case Enum::UnknownRole                 : return "applications-other";
@@ -188,7 +183,7 @@ QString KpkIcons::actionIconName(Enum::Role role)
     case Enum::RoleGetDepends              : return "package-info";
     case Enum::RoleGetDetails              : return "package-info";
     case Enum::RoleGetDistroUpgrades       : return "distro-upgrade";
-    case Enum::RoleGetFiles                : return "package-search";
+    case Enum::RoleGetFiles                : return "search-package";
     case Enum::RoleGetOldTransactions      : return "package-info";
     case Enum::RoleGetPackages             : return "package-packages";
     case Enum::RoleGetRepoList             : return "package-orign";
@@ -198,19 +193,19 @@ QString KpkIcons::actionIconName(Enum::Role role)
     case Enum::RoleInstallFiles            : return "package-installed";
     case Enum::RoleInstallPackages         : return "package-installed";
     case Enum::RoleInstallSignature        : return "package-installed";
-    case Enum::RoleRefreshCache            : return "kpk-refresh-cache";
+    case Enum::RoleRefreshCache            : return "refresh-cache";
     case Enum::RoleRemovePackages          : return "package-removed";
     case Enum::RoleRepoEnable              : return "package-orign";
     case Enum::RoleRepoSetData             : return "package-orign";
-    case Enum::RoleResolve                 : return "package-search";
+    case Enum::RoleResolve                 : return "search-package";
     case Enum::RoleRollback                : return "package-rollback";
-    case Enum::RoleSearchDetails           : return "package-search";
-    case Enum::RoleSearchFile              : return "package-search";
-    case Enum::RoleSearchGroup             : return "package-search";
-    case Enum::RoleSearchName              : return "package-search";
+    case Enum::RoleSearchDetails           : return "search-package";
+    case Enum::RoleSearchFile              : return "search-package";
+    case Enum::RoleSearchGroup             : return "search-package";
+    case Enum::RoleSearchName              : return "search-package";
     case Enum::RoleUpdatePackages          : return "package-update";
     case Enum::RoleUpdateSystem            : return "distro-upgrade";//TODO
-    case Enum::RoleWhatProvides            : return "package-search";
+    case Enum::RoleWhatProvides            : return "search-package";
     case Enum::RoleSimulateInstallFiles    : return "package-installed";
     case Enum::RoleSimulateInstallPackages : return "package-installed";
     case Enum::RoleSimulateRemovePackages  : return "package-removed";
@@ -227,6 +222,9 @@ KIcon KpkIcons::actionIcon(Enum::Role role)
 
 KIcon KpkIcons::groupsIcon(Enum::Group group)
 {
+    if (!KpkIcons::init) {
+        KpkIcons::configure();
+    }
     switch (group) {
     case Enum::LastGroup            :
     case Enum::UnknownGroup         : return KIcon("unknown");
@@ -271,6 +269,9 @@ KIcon KpkIcons::groupsIcon(Enum::Group group)
 
 KIcon KpkIcons::packageIcon(Enum::Info info)
 {
+    if (!KpkIcons::init) {
+        KpkIcons::configure();
+    }
     switch (info) {
     case Enum::InfoBugfix      : return KIcon("script-error");
     case Enum::InfoImportant   : return KIcon("security-low");
@@ -287,6 +288,9 @@ KIcon KpkIcons::packageIcon(Enum::Info info)
 
 QString KpkIcons::restartIconName(Enum::Restart type)
 {
+    if (!KpkIcons::init) {
+        KpkIcons::configure();
+    }
     // These names MUST be standard icons, otherwise KStatusNotifierItem
     // will not be able to load them
     switch (type) {
@@ -313,7 +317,7 @@ QIcon KpkIcons::getPreloadedIcon(const QString &name)
         KpkIcons::configure();
     }
 
-// kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup);
+    kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup, true);
     QIcon icon;
     icon.addPixmap(KIcon(name).pixmap(48, 48));
     return icon;

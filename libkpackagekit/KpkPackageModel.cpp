@@ -125,6 +125,7 @@ void KpkPackageModel::addPackages(const QList<QSharedPointer<PackageKit::Package
     foreach(const QSharedPointer<PackageKit::Package> &package, packages) {
         addPackage(package, selected);
     }
+    finished();
 }
 
 void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
@@ -326,6 +327,8 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
             uncheckPackage(m_packages.at(index.row()));
         }
 
+        emit changed(!m_checkedPackages.isEmpty());
+
         return true;
     }
     return false;
@@ -441,7 +444,8 @@ void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitData
     if (!containsChecked(pkgId)) {
         m_checkedPackages[pkgId] = package;
 
-        if (emitDataChanged && m_packageCount) {
+        // A checkable model does not have duplicated entries
+        if (emitDataChanged && m_packageCount && !m_checkable) {
             // This is a slow operation so in case the user
             // is unchecking all of the packages there is
             // no need to emit data changed for every item
@@ -451,11 +455,11 @@ void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitData
                     emit dataChanged(index, index);
                 }
             }
-        }
 
-        // The model might not be displayed yet
-        if (m_packageCount) {
-            emit changed(!m_checkedPackages.isEmpty());
+            // The model might not be displayed yet
+            if (m_packageCount) {
+                emit changed(!m_checkedPackages.isEmpty());
+            }
         }
     }
 }
@@ -475,7 +479,7 @@ void KpkPackageModel::uncheckPackage(const InternalPackage &package,
             emit packageUnchecked(iPackage);
         }
 
-        if (emitDataChanged) {
+        if (emitDataChanged && !m_checkable) {
             // This is a slow operation so in case the user
             // is unchecking all of the packages there is
             // no need to emit data changed for every item
@@ -485,11 +489,11 @@ void KpkPackageModel::uncheckPackage(const InternalPackage &package,
                     emit dataChanged(index, index);
                 }
             }
-        }
 
-        // The model might not be displayed yet
-        if (m_packageCount) {
-            emit changed(!m_checkedPackages.isEmpty());
+            // The model might not be displayed yet
+            if (m_packageCount) {
+                emit changed(!m_checkedPackages.isEmpty());
+            }
         }
     }
 }
@@ -520,6 +524,7 @@ void KpkPackageModel::setAllChecked(bool checked)
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
     }
+    emit changed(!m_checkedPackages.isEmpty());
 }
 
 QList<QSharedPointer<PackageKit::Package> > KpkPackageModel::selectedPackages() const

@@ -25,6 +25,8 @@
 
 #include "KpkStrings.h"
 
+#define UNIVERSAL_PADDING 2
+
 using namespace PackageKit;
 
 TransactionDelegate::TransactionDelegate(QObject *parent)
@@ -38,15 +40,8 @@ void TransactionDelegate::paint(QPainter *painter,
 {
     QStyledItemDelegate::paint(painter, option, index);
     if (index.column() == 0) {
-        bool finished = index.data(ProgressView::RoleFinished).toBool();
         int  progress = index.data(ProgressView::RoleProgress).toInt();
-        Enum::Info info = static_cast<Enum::Info>(index.data(ProgressView::RoleInfo).toInt());
-        QString text;
-        if (finished) {
-            text = KpkStrings::infoPast(info);
-        } else {
-            text = KpkStrings::infoPresent(info);
-        }
+        QString text  = index.data(Qt::DisplayRole).toString();
 
         QStyleOptionProgressBar progressBarOption;
         progressBarOption.rect = option.rect;
@@ -59,6 +54,26 @@ void TransactionDelegate::paint(QPainter *painter,
         QApplication::style()->drawControl(QStyle::CE_ProgressBar,
                                         &progressBarOption, painter);
     }
+}
+
+static int minWidth = 0;
+
+QSize TransactionDelegate::sizeHint(const QStyleOptionViewItem &option,
+                                    const QModelIndex &index) const
+{
+    QSize size = QStyledItemDelegate::sizeHint(option, index);
+    size.rheight() += 2 * UNIVERSAL_PADDING;
+    size.rwidth()  += 2 * UNIVERSAL_PADDING;
+    // The first collumn keeps resizing
+    // this avoids it being smaller
+    if (index.column() == 0) {
+        if (size.width() < minWidth) {
+            size.setWidth(minWidth);
+        } else {
+            minWidth = size.width();
+        }
+    }
+    return size;
 }
 
 #include "TransactionDelegate.moc"

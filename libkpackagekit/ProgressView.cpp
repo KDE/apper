@@ -28,6 +28,8 @@
 #include <KConfigGroup>
 #include <KDebug>
 
+#include <KpkStrings.h>
+
 #include "TransactionDelegate.h"
 
 ProgressView::ProgressView(QWidget *parent)
@@ -43,9 +45,7 @@ ProgressView::ProgressView(QWidget *parent)
     m_packageView->setHeaderHidden(true);
     m_packageView->setSelectionMode(QAbstractItemView::NoSelection);
     m_packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    m_packageView->verticalScrollBar()->value();
-    m_packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-    m_packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+//     m_packageView->verticalScrollBar()->value();
 
     m_scrollBar = m_packageView->verticalScrollBar();
     connect(m_scrollBar, SIGNAL(sliderMoved(int)),
@@ -80,7 +80,7 @@ void ProgressView::setSubProgress(int value)
 {
     // TODO change PackageKit to emit the package progress on another signal.
     QStandardItem *item;
-    QList<QStandardItem *> packages = m_model->findItems(m_lastPackageId);
+    QList<QStandardItem *> packages = findItems(m_lastPackageId);
     item = m_model->item(m_model->rowCount() - 1);
     if (!packages.isEmpty() &&
         (item = packages.last()) &&
@@ -98,6 +98,10 @@ void ProgressView::setSubProgress(int value)
 void ProgressView::clear()
 {
     m_model->clear();
+    m_model->setColumnCount(3);
+    m_packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+    m_packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    m_packageView->header()->setStretchLastSection(true);
 }
 
 void ProgressView::currentPackage(const QSharedPointer<PackageKit::Package> &p)
@@ -106,7 +110,7 @@ void ProgressView::currentPackage(const QSharedPointer<PackageKit::Package> &p)
         m_lastPackageId = p->id();
 
         QStandardItem *item;
-        QList<QStandardItem *> packages = m_model->findItems(p->id());
+        QList<QStandardItem *> packages = findItems(p->id());
         // If there is alread some packages check to see if it has
         // finished, if the progress is 100 create a new item for the next task
         if (!packages.isEmpty() &&
@@ -120,15 +124,18 @@ void ProgressView::currentPackage(const QSharedPointer<PackageKit::Package> &p)
                     itemFinished(item);
                 } else {
                     item->setData(p->info(), RoleInfo);
+                    item->setText(KpkStrings::infoPresent(p->info()));
                 }
             }
         } else {
             QList<QStandardItem *> items;
             // It's a new package create it and append it
-            item = new QStandardItem(p->id());
+            item = new QStandardItem;
+            item->setText(KpkStrings::infoPresent(p->info()));
             item->setData(p->info(), RoleInfo);
             item->setData(0,         RoleProgress);
             item->setData(false,     RoleFinished);
+            item->setData(p->id(),   RoleId);
             items << item;
 
             item = new QStandardItem(p->name());
@@ -176,6 +183,8 @@ void ProgressView::itemFinished(QStandardItem *item)
         m_model->insertRow(0, items);
     }
 
+    Enum::Info info = static_cast<Enum::Info>(item->data(ProgressView::RoleInfo).toInt());
+    item->setText(KpkStrings::infoPast(info));
     item->setData(100,  RoleProgress);
     item->setData(true, RoleFinished);
 }
@@ -193,6 +202,17 @@ void ProgressView::rangeChanged(int min, int max)
     if (m_keepScrollBarBottom && m_scrollBar->value() != max) {
         m_scrollBar->setValue(max);
     }
+}
+
+QList<QStandardItem *> ProgressView::findItems(const QString &packageId)
+{
+    QList<QStandardItem *> items;
+    for (int i = 0; i < m_model->rowCount(); i++) {
+        if (m_model->item(i)->data(RoleId).toString() == packageId) {
+            items << m_model->item(i);
+        }
+    }
+    return items;
 }
 
 #include "ProgressView.moc"
