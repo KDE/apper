@@ -93,6 +93,7 @@ void CategoryModel::fillWithStandardGroups()
 void CategoryModel::fillWithServiceGroups()
 {
 #ifdef AI_CATEGORIES_PATH
+    KGlobal::locale()->insertCatalog("gnome-menus");
     QFile file(QString(AI_CATEGORIES_PATH) + "/categories.xml");
      if (!file.open(QIODevice::ReadOnly)) {
          kDebug() << "Failed to open file";
@@ -131,10 +132,10 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
             } else if (xml.name() == "Name") {
                 QString name = xml.readElementText();
                 if (!item) {
-                    item = new QStandardItem(name);
+                    item = new QStandardItem(i18n(name.toUtf8()));
                     item->setDragEnabled(false);
                 } else if (item->text().isEmpty()) {
-                    item->setText(name);
+                    item->setText(i18n(name.toUtf8()));
                 }
             } else if (xml.name() == "Icon") {
                 if (!item) {
