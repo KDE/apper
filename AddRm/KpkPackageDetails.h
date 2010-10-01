@@ -51,6 +51,7 @@ public:
     ~KpkPackageDetails();
 
     void setPackage(const QModelIndex &index);
+    void hidePackageVersion(bool hide);
     void hide();
 
 private slots:
@@ -84,6 +85,7 @@ private:
     QPropertyAnimation *m_fadeStacked;
     QPropertyAnimation *m_fadeScreenshot;
     bool m_display;
+    bool m_hideVersion;
 
     // We need a copy of prety much every thing
     // we have, so that we update only when we are

@@ -108,6 +108,7 @@ KpkPackageModel* BrowseView::model() const
 void BrowseView::showVersions(bool enabled)
 {
     packageView->header()->setSectionHidden(1, !enabled);
+    packageDetails->hidePackageVersion(enabled);
 }
 
 void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)

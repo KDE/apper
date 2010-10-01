@@ -44,7 +44,6 @@
 
 #include <KDebug>
 
-#include <QGraphicsDropShadowEffect>
 #include "GraphicsOpacityDropShadowEffect.h"
 
 #define BLUR_RADIUS 15
@@ -56,6 +55,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
  : QWidget(parent),
    m_busySeq(0),
    m_display(false),
+   m_hideVersion(false),
    m_transaction(0),
    m_hasDetails(false),
    m_hasFileList(false),
@@ -172,6 +172,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     shadow->setOpacity(0);
     shadow->setBlurRadius(BLUR_RADIUS);
     shadow->setOffset(2);
+    shadow->setColor(QApplication::palette().dark().color());
     screenshotL->setGraphicsEffect(shadow);
 
     m_fadeScreenshot = new QPropertyAnimation(shadow, "opacity");
@@ -267,6 +268,11 @@ void KpkPackageDetails::on_screenshotL_clicked()
     ScreenShotViewer *view = new ScreenShotViewer(screenshot);
     view->setWindowTitle(m_appName);
     view->show();
+}
+
+void KpkPackageDetails::hidePackageVersion(bool hide)
+{
+    m_hideVersion = hide;
 }
 
 void KpkPackageDetails::actionActivated(QAction *action)
@@ -525,7 +531,15 @@ void KpkPackageDetails::setupDescription()
     }
 
     if (!details->license().isEmpty() && details->license() != "unknown") {
-        licenseL->setText(details->license());
+        // We have a license, check if we have and should show show package version
+        if (!m_hideVersion && !m_package->version().isEmpty()) {
+            licenseL->setText(m_package->version() + " - " + details->license());
+        } else {
+            licenseL->setText(details->license());
+        }
+        licenseL->show();
+    } else if (!m_hideVersion) {
+        licenseL->setText(m_package->version());
         licenseL->show();
     } else {
         licenseL->hide();

@@ -320,7 +320,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
 bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role == Qt::CheckStateRole && m_packages.size() > index.row()) {
+    if (role == Qt::CheckStateRole && m_packageCount > index.row()) {
         if (value.toBool()) {
             checkPackage(m_packages.at(index.row()));
         } else {
