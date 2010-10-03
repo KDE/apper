@@ -40,7 +40,7 @@ KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_busySeq->setWidget(descriptionKTB->viewport());
+    m_busySeq->setWidget(this);
 
     QWidget *actionsViewport = descriptionKTB->viewport();
     QPalette palette = actionsViewport->palette();
