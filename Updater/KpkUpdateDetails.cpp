@@ -179,13 +179,13 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     if (!info.issued.toString().isEmpty() && !info.updated.toString().isEmpty()) {
         description += "<p>" +
                        i18n("This notification was issued on %1 and last updated on %2.",
-                            KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate),
-                            KGlobal::locale()->formatDate(info.updated.date(), KLocale::ShortDate)) +
+                            KGlobal::locale()->formatDateTime(info.issued, KLocale::ShortDate),
+                            KGlobal::locale()->formatDateTime(info.updated, KLocale::ShortDate)) +
                        "</p>";
     } else if (!info.issued.toString().isEmpty()) {
         description += "<p>" +
                        i18n("This notification was issued on %1.",
-                            KGlobal::locale()->formatDate(info.issued.date(), KLocale::ShortDate)) +
+                            KGlobal::locale()->formatDateTime(info.issued, KLocale::ShortDate)) +
                        "</p>";
     }
 
