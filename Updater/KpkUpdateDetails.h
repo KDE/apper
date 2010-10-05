@@ -48,6 +48,7 @@ private:
 
     bool m_show;
     QString m_packageId;
+    Transaction *m_transaction;
     QString m_currentDescription;
     Enum::Info m_updateInfo;
     KPixmapSequenceOverlayPainter *m_busySeq;

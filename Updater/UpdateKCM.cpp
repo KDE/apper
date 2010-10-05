@@ -126,6 +126,10 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
             this, SLOT(showVersions(bool)));
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", false));
     showVersions(m_showPackageVersion->isChecked());
+
+    checkUpdatesPB->setIcon(KIcon("view-refresh"));
+    connect(checkUpdatesPB, SIGNAL(clicked(bool)),
+            this, SLOT(refreshCache()));
 }
 
 UpdateKCM::~UpdateKCM()

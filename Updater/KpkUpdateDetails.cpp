@@ -33,7 +33,8 @@
 
 KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
  : QWidget(parent),
-   m_show(false)
+   m_show(false),
+   m_transaction(0)
 {
     setupUi(this);
 
@@ -89,18 +90,24 @@ void KpkUpdateDetails::setPackage(const QString &packageId, Enum::Info updateInf
     m_packageId  = packageId;
     m_updateInfo = updateInfo;
     m_currentDescription.clear();
+    if (m_transaction) {
+        disconnect(m_transaction, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
+                   this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
+        disconnect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                   this, SLOT(display()));
+    }
 
     QSharedPointer<Package> package = QSharedPointer<Package>(new Package(m_packageId,
                                                                           Enum::UnknownInfo,
                                                                           QString()));;
-    Transaction *transaction = new Transaction(QString());
-    connect(transaction, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
+    m_transaction = new Transaction(QString());
+    connect(m_transaction, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
             this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
-    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(display()));
-    transaction->getUpdateDetail(package);
-    if (transaction->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(transaction->error()));
+    m_transaction->getUpdateDetail(package);
+    if (m_transaction->error()) {
+        KMessageBox::sorry(this, KpkStrings::daemonError(m_transaction->error()));
     } else {
         if (maximumSize().height() == 0) {
             // Expand the panel
@@ -191,9 +198,11 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // Description
     if (!info.updateText.isEmpty()) {
-        description += "<p>" +
-                       info.updateText.replace('\n', "<br/>") +
-                       "</p>";
+        QString updateText = info.updateText;
+        updateText.replace('\n', "<br/>");
+        description += "<p><pre>" +
+                       updateText +
+                       "</pre></p>";
     }
 
     // links
@@ -228,11 +237,11 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     }
 
     // Notice (about the need for a reboot)
-    if (info.restart == Enum::RestartSession) {
+    if (info.restart == Enum::RestartSystem) {
         description += "<p>" +
                        i18n("The computer will have to be restarted after the update for the changes to take effect.") +
                        "</p>";
-    } else if (info.restart == Enum::RestartSystem) {
+    } else if (info.restart == Enum::RestartSession) {
         description += "<p>" +
                        i18n("You will need to log out and back in after the update for the changes to take effect.") +
                        "</p>";
@@ -251,11 +260,13 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // only show changelog if we didn't have any update text
     if (info.updateText.isEmpty() && !info.changelog.isEmpty()) {
+        QString changelog = info.changelog;
+        changelog.replace('\n', "<br/>");
         description += "<p>" +
                        i18n("The developer logs will be shown as no description is available for this update:") +
-                       "<br/>" +
-                       info.changelog.replace('\n', "<br/>") +
-                       "</p>";
+                       "<br/><pre>" +
+                       changelog +
+                       "</pre></p>";
     }
 
     // Updates (lists of packages that are updated)
@@ -285,6 +296,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     m_currentDescription = description;
     m_busySeq->stop();
+    m_transaction = 0;
 }
 
 QString KpkUpdateDetails::getLinkList(const QString &links) const
@@ -303,8 +315,8 @@ QString KpkUpdateDetails::getLinkList(const QString &links) const
         if (!ret.isEmpty()) {
             ret += "<br/>";
         }
-        ret = QString::fromUtf8(" \xE2\x80\xA2 <a href=\"") + linkList.at(i) + "\">"
-              + linkList.at(i + 1) + "</a>";
+        ret += QString::fromUtf8(" \xE2\x80\xA2 <a href=\"") + linkList.at(i) + "\">"
+               + linkList.at(i + 1) + "</a>";
     }
     return ret;
 }
