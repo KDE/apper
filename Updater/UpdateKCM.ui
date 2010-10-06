@@ -97,7 +97,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="5" column="0" colspan="2">
     <widget class="KpkUpdateDetails" name="updateDetails" native="true">
      <property name="maximumSize">
       <size>
@@ -109,12 +109,6 @@
    </item>
    <item row="3" column="0">
     <widget class="QPushButton" name="checkUpdatesPB">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="text">
       <string>Check for new Updates</string>
      </property>
