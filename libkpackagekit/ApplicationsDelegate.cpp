@@ -118,7 +118,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
             foregroundColor = option.palette.color(QPalette::HighlightedText);
         } else {
             if (!pkgInstalled) {
-                p.setOpacity(opa / 2.5);
+                p.setOpacity(0.75);
             }
             foregroundColor = option.palette.color(QPalette::Text);
         }

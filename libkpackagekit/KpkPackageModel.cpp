@@ -251,7 +251,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         if (package.info != Enum::InfoInstalled &&
             package.info != Enum::InfoCollectionInstalled) {
             QColor foregroundColor = QApplication::palette().color(QPalette::Text);
-            foregroundColor.setAlphaF(0.5);
+            foregroundColor.setAlphaF(0.75);
             return QBrush(foregroundColor);
         }
         break;
