@@ -45,7 +45,7 @@ namespace KpkEnum {
             Weekly  =  604800,
             Monthly = 2628000
     } TimeInterval;
-    const int TimeIntervalDefault = Weekly;
+    const int TimeIntervalDefault = Daily;
 
 }
 

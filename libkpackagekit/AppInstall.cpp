@@ -124,6 +124,7 @@ QString AppInstall::thumbnail(const QString &pkgName) const
 #ifdef HAVE_APPINSTALL
     return "http://screenshots.debian.net/thumbnail/" + pkgName;
 #else
+    Q_UNUSED(pkgName)
     return QString();
 #endif //HAVE_APPINSTALL
 }
@@ -133,6 +134,7 @@ QString AppInstall::screenshot(const QString &pkgName) const
 #ifdef HAVE_APPINSTALL
     return "http://screenshots.debian.net/screenshot/" + pkgName;
 #else
+    Q_UNUSED(pkgName)
     return QString();
 #endif //HAVE_APPINSTALL
 }

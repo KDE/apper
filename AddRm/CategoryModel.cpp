@@ -59,11 +59,9 @@ CategoryModel::CategoryModel(QObject *parent)
 
 #ifdef HAVE_APPINSTALL
     fillWithServiceGroups();
+#else
+    fillWithStandardGroups();
 #endif //HAVE_APPINSTALL
-
-    if (rowCount() == 1) {
-        fillWithStandardGroups();
-    }
 }
 
 CategoryModel::~CategoryModel()
