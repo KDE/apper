@@ -26,6 +26,8 @@
 #include <KStatusNotifierItem>
 #include <QPackageKit>
 
+using namespace PackageKit;
+
 class KpkUpdateIcon : public KpkAbstractIsRunning
 {
 Q_OBJECT
@@ -51,7 +53,7 @@ private slots:
     void removeStatusNotifierItem();
 
 private:
-    bool m_getingUpdates;
+    Transaction *m_getUpdatesT;
     KStatusNotifierItem *m_statusNotifierItem;
     QList<QSharedPointer<PackageKit::Package> > m_updateList;
 

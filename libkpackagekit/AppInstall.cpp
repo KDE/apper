@@ -26,7 +26,6 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QVariant>
-#include <QVariant>
 
 #include <KLocale>
 #include <KGlobal>

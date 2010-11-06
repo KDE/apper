@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef APPLICATION_LAUCHER_H
-#define APPLICATION_LAUCHER_H
+#ifndef APPLICATION_LAUNCHER_H
+#define APPLICATION_LAUNCHER_H
 
 #include <QDialog>
 #include <KService>

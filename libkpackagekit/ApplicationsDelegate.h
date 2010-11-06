@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef KPK_DELEGATE_H
-#define KPK_DELEGATE_H
+#ifndef APPLICATION_DELEGATE_H
+#define APPLICATION_DELEGATE_H
 
 #include <QtCore/QtCore>
 #include <QtGui/QtGui>

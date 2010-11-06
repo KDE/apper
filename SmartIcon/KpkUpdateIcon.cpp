@@ -40,7 +40,7 @@ using namespace PackageKit;
 
 KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
     : KpkAbstractIsRunning(parent),
-      m_getingUpdates(false),
+      m_getUpdatesT(0),
       m_statusNotifierItem(0)
 {
     connect(Client::instance(), SIGNAL(updatesChanged()), this, SLOT(update()));
@@ -80,7 +80,7 @@ void KpkUpdateIcon::refreshAndUpdate(bool refresh)
 
 void KpkUpdateIcon::update()
 {
-    if (m_getingUpdates) {
+    if (m_getUpdatesT) {
         return;
     }
 
@@ -89,12 +89,14 @@ void KpkUpdateIcon::update()
     KConfigGroup notifyGroup(&config, "Notify");
     if (Qt::Checked == static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)))) {
         m_updateList.clear();
-        Transaction *t = Client::instance()->getUpdates();
-        if (!t->error()) {
-            m_getingUpdates = false;
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+        m_getUpdatesT = new Transaction(QString(), this);
+        m_getUpdatesT->getUpdates();
+        if (m_getUpdatesT->error()) {
+            m_getUpdatesT = 0;
+        } else {
+            connect(m_getUpdatesT, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                     this, SLOT(packageToUpdate(QSharedPointer<PackageKit::Package>)));
-            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                     this, SLOT(getUpdateFinished()));
             return;
         }
@@ -160,7 +162,7 @@ void KpkUpdateIcon::updateStatusNotifierIcon(bool security)
 
 void KpkUpdateIcon::getUpdateFinished()
 {
-    m_getingUpdates = false;
+    m_getUpdatesT = 0;
     decreaseRunning();
     if (!m_updateList.isEmpty()) {
         // Store all the security updates

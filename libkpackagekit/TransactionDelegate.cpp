@@ -64,7 +64,7 @@ QSize TransactionDelegate::sizeHint(const QStyleOptionViewItem &option,
     QSize size = QStyledItemDelegate::sizeHint(option, index);
     size.rheight() += 2 * UNIVERSAL_PADDING;
     size.rwidth()  += 2 * UNIVERSAL_PADDING;
-    // The first collumn keeps resizing
+    // The first column keeps resizing
     // this avoids it being smaller
     if (index.column() == 0) {
         if (size.width() < minWidth) {
