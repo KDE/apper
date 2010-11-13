@@ -58,7 +58,9 @@ BrowseView::BrowseView(QWidget *parent)
     m_proxy = new KCategorizedSortFilterProxyModel(this);
     m_proxy->setSourceModel(m_model);
     m_proxy->setDynamicSortFilter(true);
+#ifdef HAVE_APPINSTALL
     m_proxy->setCategorizedModel(true);
+#endif //HAVE_APPINSTALL
     m_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxy->setSortRole(KpkPackageModel::SortRole);
     m_proxy->setFilterRole(KpkPackageModel::ApplicationFilterRole);

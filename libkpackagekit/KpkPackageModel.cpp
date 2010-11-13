@@ -51,12 +51,6 @@ KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView
   m_packageView(packageView)
 {
     m_installedEmblem = KpkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
-
-#ifdef HAVE_APPINSTALL
-    m_sortByApp = true;
-#else
-    m_sortByApp = false;
-#endif //HAVE_APPINSTALL
 }
 
 void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &package,
@@ -301,9 +295,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         }
     case KCategorizedSortFilterProxyModel::CategorySortRole:
 #ifdef HAVE_APPINSTALL
-        if (m_sortByApp) {
-            return package.isPackage;
-        }
+        return package.isPackage;
 #endif //HAVE_APPINSTALL
         if (package.info == Enum::InfoInstalled ||
             package.info == Enum::InfoCollectionInstalled) {

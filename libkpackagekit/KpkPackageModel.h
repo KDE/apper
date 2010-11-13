@@ -116,8 +116,6 @@ private:
     QAbstractItemView              *m_packageView;
     QVector<InternalPackage>        m_packages;
     QHash<QString, InternalPackage> m_checkedPackages;
-
-    bool m_sortByApp;
 };
 
 #endif
