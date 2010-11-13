@@ -249,7 +249,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 QPainter painter(&icon);
                 QPoint startPoint;
                 // bottom right corner
-                startPoint = QPoint(46 - OVERLAY_SIZE,
+                startPoint = QPoint(44 - OVERLAY_SIZE,
                                     4);
                 painter.drawPixmap(startPoint, emblemIcon.pixmap(OVERLAY_SIZE, OVERLAY_SIZE));
             }
