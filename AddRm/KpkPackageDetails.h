@@ -55,6 +55,9 @@ public:
     void hidePackageArch(bool hide);
     void hide();
 
+signals:
+    void ensureVisible(const QModelIndex &index);
+
 private slots:
     void on_screenshotL_clicked();
     void actionActivated(QAction *action);
@@ -71,6 +74,7 @@ private:
     QVector<QPair<QString, QString> > locateApplication(const QString &_relPath, const QString &menuId) const;
 
     QActionGroup *m_actionGroup;
+    QModelIndex   m_index;
     QSharedPointer<PackageKit::Package> m_package;
     QString m_appName;
 

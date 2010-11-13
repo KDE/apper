@@ -222,6 +222,7 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
         fadeOut(KpkPackageDetails::FadeScreenshot | KpkPackageDetails::FadeStacked);
     }
 
+    m_index     = index;
     m_packageId = pkgId;
     m_appId     = appId;
     Enum::Info info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
@@ -432,6 +433,8 @@ void KpkPackageDetails::display()
     if (!m_display) {
         hide();
     } else if (maximumSize().height() == FINAL_HEIGHT) {
+        emit ensureVisible(m_index);
+
         // Check to see if the stacked widget is transparent
         if (m_fadeStacked->currentValue().toReal() == 0 &&
             m_actionGroup->checkedAction())

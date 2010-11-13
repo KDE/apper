@@ -94,6 +94,10 @@ BrowseView::BrowseView(QWidget *parent)
             this, SLOT(showArchs(bool)));
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowApplicationVersions", false));
     showArchs(m_showPackageArch->isChecked());
+
+    // Ensure the index is visible when the packageDetails appears
+    connect(packageDetails, SIGNAL(ensureVisible(const QModelIndex &)),
+            this, SLOT(ensureVisible(const QModelIndex &)));
 }
 
 BrowseView::~BrowseView()
@@ -143,6 +147,12 @@ void BrowseView::on_packageView_activated(const QModelIndex &index)
 
     QModelIndex origIndex = m_proxy->mapToSource(index);
     packageDetails->setPackage(origIndex);
+}
+
+void BrowseView::ensureVisible(const QModelIndex &index)
+{
+    QModelIndex proxIndex = m_proxy->mapFromSource(index);
+    packageView->scrollTo(proxIndex);
 }
 
 void BrowseView::showInstalledPanel(bool visible)

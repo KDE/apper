@@ -57,6 +57,7 @@ private slots:
     void showArchs(bool enabled);
     void on_packageView_customContextMenuRequested(const QPoint &pos);
     void on_packageView_activated(const QModelIndex &);
+    void ensureVisible(const QModelIndex &index);
     void on_categoryMvLeft_clicked();
     void on_categoryMvRight_clicked();
 
