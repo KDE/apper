@@ -24,7 +24,6 @@
 
 #include <ApplicationsDelegate.h>
 #include <KpkPackageModel.h>
-#include <KpkSearchableTreeView.h>
 
 #include <QPackageKit>
 

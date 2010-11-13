@@ -19,7 +19,6 @@ set(libkpk_SRCS
     KpkAbstractIsRunning.cpp
     KpkImportance.cpp
     KpkSimulateModel.cpp
-    KpkSearchableTreeView.cpp
     KpkCategorizedView.cpp
 )
 

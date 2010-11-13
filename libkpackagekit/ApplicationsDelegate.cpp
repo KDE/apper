@@ -79,7 +79,11 @@ void ApplicationsDelegate::paint(QPainter *painter,
     }
 
     if (index.column() == 0 || index.column() == 1 || index.column() == 2) {
-        QStyledItemDelegate::paint(painter, option, index);
+        QStyleOptionViewItemV4 opt(option);
+        if (opt.state & QStyle::State_HasFocus) {
+            opt.state ^= QStyle::State_HasFocus;
+        }
+        QStyledItemDelegate::paint(painter, opt, index);
         return;
     } else if (index.column() == 3) {
         QPixmap pixmap(option.rect.size());
@@ -262,15 +266,47 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
                                        const QStyleOptionViewItem &option,
                                        const QModelIndex &index)
 {
+    bool setData = false;
     if (index.column() == 4 &&
         event->type() == QEvent::MouseButtonPress) {
-        model->setData(index,
+        setData = true;
+    }
+
+    const QWidget *widget = 0;
+    if (const QStyleOptionViewItemV4 *v4 = qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option)) {
+        widget = v4->widget;
+    }
+
+    QStyle *style = widget ? widget->style() : QApplication::style();
+
+    // make sure that we have the right event type
+    if ((event->type() == QEvent::MouseButtonRelease)
+        || (event->type() == QEvent::MouseButtonDblClick)) {
+        QStyleOptionViewItemV4 viewOpt(option);
+        initStyleOption(&viewOpt, index);
+        QRect checkRect = style->subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &viewOpt, widget);
+        QMouseEvent *me = static_cast<QMouseEvent*>(event);
+        if (me->button() != Qt::LeftButton || !checkRect.contains(me->pos()))
+            return false;
+
+        // eat the double click events inside the check rect
+        if (event->type() == QEvent::MouseButtonDblClick)
+            return true;
+
+        setData = true;
+    } else if (event->type() == QEvent::KeyPress) {
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Space
+         || static_cast<QKeyEvent*>(event)->key() == Qt::Key_Select) {
+            setData = true;
+        }
+    }
+
+    if (setData) {
+        return model->setData(index,
                        !index.data(KpkPackageModel::CheckStateRole).toBool(),
                        Qt::CheckStateRole);
-    }/* else if (event->type() == QEvent::KeyPress) {
-        kDebug() << event->type();
-    }*/
-    return QStyledItemDelegate::editorEvent(event, model, option, index);
+    }
+    return false;
 }
 
 void ApplicationsDelegate::setExtendPixmapWidth(int width)

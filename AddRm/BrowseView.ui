@@ -171,7 +171,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="KpkSearchableTreeView" name="packageView">
+    <widget class="QTreeView" name="packageView">
      <property name="contextMenuPolicy">
       <enum>Qt::CustomContextMenu</enum>
      </property>
@@ -217,11 +217,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KpkSearchableTreeView</class>
-   <extends>QTreeView</extends>
-   <header location="global">KpkSearchableTreeView.h</header>
-  </customwidget>
   <customwidget>
    <class>KpkPackageDetails</class>
    <extends>QWidget</extends>

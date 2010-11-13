@@ -211,7 +211,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     if (index.column() == 0) {
         switch (role) {
         case Qt::CheckStateRole:
-            if (!m_checkable && !property("kbd").toBool()) {
+            if (!m_checkable) {
                 return QVariant();
             }
         case CheckStateRole:
@@ -293,10 +293,6 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         return package.icon;
     case SortRole:
         return package.name + ' ' + package.version + ' ' + package.arch;
-//     case Qt::CheckStateRole:
-//         if (!m_checkable && !property("kbd").toBool()) {
-//             return QVariant();
-//         }
     case CheckStateRole:
         if (containsChecked(package.id)) {
             return Qt::Checked;
