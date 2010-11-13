@@ -34,6 +34,11 @@
 #include <KLocale>
 #include <KCategorizedSortFilterProxyModel>
 
+#ifndef HAVE_APPINSTALL
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#endif
+
 #define APP_NAME    0
 #define APP_SUMMARY 1
 #define APP_ICON    2
@@ -93,7 +98,6 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
     if (data.isEmpty()) {
 #endif //HAVE_APPINSTALL
         InternalPackage iPackage;
-        iPackage.isPackage   = 1;
         iPackage.name        = package->name();
         iPackage.summary     = package->summary();
         iPackage.version     = package->version();
@@ -104,6 +108,22 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         iPackage.icon = AppInstall::instance()->genericIcon(package->name());
 #else
         iPackage.icon = package->iconPath();
+        if (iPackage.icon.isEmpty()) {
+            iPackage.isPackage = 1;
+        } else {
+            iPackage.isPackage = 0;
+            QSqlDatabase db = QSqlDatabase::database();
+            QSqlQuery query(db);
+            query.prepare("SELECT filename FROM cache WHERE package = :name");
+            query.bindValue(":name", iPackage.name);
+            if (query.exec()) {
+                if (query.next()) {
+                    QString filename = query.value(0).toString();
+                    filename.remove(QRegExp(".desktop$")).remove(QRegExp("^/.*/"));
+                    iPackage.appId = filename;
+                }
+            }
+        }
 #endif //HAVE_APPINSTALL
 
         if (selected) {
@@ -132,6 +152,10 @@ void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Packag
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
+    if (!m_checkable) {
+        return QVariant();
+    }
+
     if (m_packageCount && role == Qt::DisplayRole) {
         if (section == 0) {
             if (m_checkable) {
@@ -145,6 +169,8 @@ QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, i
         } else if (section == 1) {
             return i18n("Version");
         } else if (section == 2) {
+            return i18n("Architecture");
+        } else if (section == 3) {
             return i18n("Summary");
         }
     }
@@ -238,6 +264,10 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         }
     } else if (index.column() == 2) {
         if (role == Qt::DisplayRole) {
+            return package.arch;
+        }
+    } else if (index.column() == 3) {
+        if (role == Qt::DisplayRole) {
             return package.summary;
         }
     }
@@ -294,15 +324,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             return i18n("To be Installed");
         }
     case KCategorizedSortFilterProxyModel::CategorySortRole:
-#ifdef HAVE_APPINSTALL
         return package.isPackage;
-#endif //HAVE_APPINSTALL
-        if (package.info == Enum::InfoInstalled ||
-            package.info == Enum::InfoCollectionInstalled) {
-            return 0;
-        } else {
-            return 1;
-        }
     case ApplicationId:
         return package.appId;
     default:
@@ -341,9 +363,9 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
     Q_UNUSED(parent);
     if (m_checkable) {
         // when the model is checkable we have one less column
-        return 3;
-    } else {
         return 4;
+    } else {
+        return 5;
     }
 }
 

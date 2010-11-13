@@ -58,9 +58,7 @@ BrowseView::BrowseView(QWidget *parent)
     m_proxy = new KCategorizedSortFilterProxyModel(this);
     m_proxy->setSourceModel(m_model);
     m_proxy->setDynamicSortFilter(true);
-#ifdef HAVE_APPINSTALL
     m_proxy->setCategorizedModel(true);
-#endif //HAVE_APPINSTALL
     m_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxy->setSortRole(KpkPackageModel::SortRole);
     m_proxy->setFilterRole(KpkPackageModel::ApplicationFilterRole);
@@ -69,9 +67,11 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->sortByColumn(0, Qt::AscendingOrder);
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
     packageView->header()->setStretchLastSection(false);
-    packageView->header()->setResizeMode(0, QHeaderView::Fixed);
-    packageView->header()->setResizeMode(1, QHeaderView::Fixed);
-    packageView->header()->setResizeMode(2, QHeaderView::Stretch);
+    packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(3, QHeaderView::Stretch);
+    packageView->header()->setResizeMode(4, QHeaderView::ResizeToContents);
 
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     delegate->setExtendPixmapWidth(0);
@@ -88,6 +88,13 @@ BrowseView::BrowseView(QWidget *parent)
             this, SLOT(showVersions(bool)));
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowApplicationVersions", false));
     showVersions(m_showPackageVersion->isChecked());
+    // Arch
+    m_showPackageArch = new QAction(i18n("Show Architectures"), this);
+    m_showPackageArch->setCheckable(true);
+    connect(m_showPackageArch, SIGNAL(toggled(bool)),
+            this, SLOT(showArchs(bool)));
+    m_showPackageArch->setChecked(viewGroup.readEntry("ShowApplicationVersions", false));
+    showArchs(m_showPackageArch->isChecked());
 }
 
 BrowseView::~BrowseView()
@@ -95,6 +102,7 @@ BrowseView::~BrowseView()
     KConfig config("KPackageKit");
     KConfigGroup viewGroup(&config, "ViewGroup");
     viewGroup.writeEntry("ShowApplicationVersions", m_showPackageVersion->isChecked());
+    viewGroup.writeEntry("ShowApplicationArchitectures", m_showPackageArch->isChecked());
 }
 
 bool BrowseView::showPageHeader() const
@@ -113,17 +121,24 @@ void BrowseView::showVersions(bool enabled)
     packageDetails->hidePackageVersion(enabled);
 }
 
+void BrowseView::showArchs(bool enabled)
+{
+    packageView->header()->setSectionHidden(2, !enabled);
+    packageDetails->hidePackageArch(enabled);
+}
+
 void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
     KMenu *menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
+    menu->addAction(m_showPackageArch);
     menu->exec(packageView->mapToGlobal(pos));
     delete menu;
 }
 
 void BrowseView::on_packageView_activated(const QModelIndex &index)
 {
-    if (index.column() == 3) {
+    if (index.column() == 4) {
         return;
     }
 

@@ -165,34 +165,7 @@ KpkFiltersMenu::KpkFiltersMenu(Enum::Filters filters, QWidget *parent)
         menuFree->addAction(freeNone);
         m_actions << freeNone;
     }
-    if (filters & Enum::FilterArch || filters & Enum::FilterNotArch) {
-        // Arch
-        QMenu *menuArch = new QMenu(i18n("Architectures"), this);
-        addMenu(menuArch);
-        QActionGroup *archGroup = new QActionGroup(menuArch);
-        archGroup->setExclusive(true);
 
-        QAction *archTrue = new QAction(i18n("Only native architectures"), archGroup);
-        archTrue->setCheckable(true);
-        m_filtersAction[archTrue] = Enum::FilterArch;
-        archGroup->addAction(archTrue);
-        menuArch->addAction(archTrue);
-        m_actions << archTrue;
-
-        QAction *archFalse = new QAction(i18n("Only non-native architectures"), archGroup);
-        archFalse->setCheckable(true);
-        m_filtersAction[archFalse] = Enum::FilterNotArch;
-        archGroup->addAction(archFalse);
-        menuArch->addAction(archFalse);
-        m_actions << archFalse;
-
-        QAction *archNone = new QAction(i18n("No filter"), archGroup);
-        archNone->setCheckable(true);
-        archNone->setChecked(true);
-        archGroup->addAction(archNone);
-        menuArch->addAction(archNone);
-        m_actions << archNone;
-    }
     if (filters & Enum::FilterSource || filters & Enum::FilterNotSource) {
         // Source
         QMenu *menuSource = new QMenu(i18nc("Filter for source packages", "Source"), this);
@@ -221,9 +194,15 @@ KpkFiltersMenu::KpkFiltersMenu(Enum::Filters filters, QWidget *parent)
         menuSource->addAction(sourceNone);
         m_actions << sourceNone;
     }
-    if (filters & Enum::FilterBasename) {
+
+    if (filters & Enum::FilterBasename ||
+        filters & Enum::FilterNewest ||
+        filters & Enum::FilterArch) {
         addSeparator();
-        QAction *basename = new QAction(i18n("Hide subpackages"), this);
+    }
+
+    if (filters & Enum::FilterBasename) {
+        QAction *basename = new QAction(i18n("Hide Subpackages"), this);
         basename->setCheckable(true);
         basename->setToolTip(i18n("Only show one package, not subpackages"));
         m_filtersAction[basename] = Enum::FilterBasename;
@@ -232,8 +211,7 @@ KpkFiltersMenu::KpkFiltersMenu(Enum::Filters filters, QWidget *parent)
         m_actions << basename;
     }
     if (filters & Enum::FilterNewest) {
-        addSeparator();
-        QAction *newest = new QAction(i18n("Only newest packages"), this);
+        QAction *newest = new QAction(i18n("Only Newest Packages"), this);
         newest->setCheckable(true);
         newest->setChecked(filterMenuGroup.readEntry("FilterNewest", true));
         newest->setToolTip(i18n("Only show the newest available package"));
@@ -242,13 +220,23 @@ KpkFiltersMenu::KpkFiltersMenu(Enum::Filters filters, QWidget *parent)
 
         m_actions << newest;
     }
+    if (filters & Enum::FilterArch) {
+        QAction *native = new QAction(i18n("Only Native Packages"), this);
+        native->setCheckable(true);
+        native->setChecked(filterMenuGroup.readEntry("FilterNative", true));
+        native->setToolTip(i18n("Only show packages matching the machine architecture"));
+        m_filtersAction[native] = Enum::FilterArch;
+        addAction(native);
+
+        m_actions << native;
+    }
 
 #ifdef HAVE_APPINSTALL
     addSeparator();
-    m_applications = new QAction(i18n("Hide packages"), this);
+    m_applications = new QAction(i18n("Only Show Applications"), this);
     m_applications->setCheckable(true);
     m_applications->setChecked(filterMenuGroup.readEntry("HidePackages", false));
-    m_applications->setToolTip(i18n("Only show applications"));
+    m_applications->setToolTip(i18n("Hide packages that are not applications"));
     addAction(m_applications);
     connect(m_applications, SIGNAL(triggered(bool)),
             this, SLOT(filterAppTriggered(bool)));
@@ -270,6 +258,9 @@ KpkFiltersMenu::~KpkFiltersMenu()
     // This entry does not depend on the backend it's ok to call this pointer
     filterMenuGroup.writeEntry("FilterNewest",
                                static_cast<bool>(filters() & Enum::FilterNewest));
+    // This entry does not depend on the backend it's ok to call this pointer
+    filterMenuGroup.writeEntry("FilterNative",
+                               static_cast<bool>(filters() & Enum::FilterArch));
 #ifdef HAVE_APPINSTALL
     filterMenuGroup.writeEntry("HidePackages", m_applications->isChecked());
 #endif //HAVE_APPINSTALL

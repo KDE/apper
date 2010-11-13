@@ -127,6 +127,14 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", false));
     showVersions(m_showPackageVersion->isChecked());
 
+    // Arch
+    m_showPackageArch = new QAction(i18n("Show Architectures"), this);
+    m_showPackageArch->setCheckable(true);
+    connect(m_showPackageArch, SIGNAL(toggled(bool)),
+            this, SLOT(showArchs(bool)));
+    m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
+    showArchs(m_showPackageArch->isChecked());
+
     checkUpdatesPB->setIcon(KIcon("view-refresh"));
     connect(checkUpdatesPB, SIGNAL(clicked(bool)),
             this, SLOT(refreshCache()));
@@ -137,11 +145,17 @@ UpdateKCM::~UpdateKCM()
     KConfig config("KPackageKit");
     KConfigGroup viewGroup(&config, "ViewGroup");
     viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
+    viewGroup.writeEntry("ShowArchs", m_showPackageArch->isChecked());
 }
 
 void UpdateKCM::showVersions(bool enabled)
 {
     packageView->header()->setSectionHidden(1, !enabled);
+}
+
+void UpdateKCM::showArchs(bool enabled)
+{
+    packageView->header()->setSectionHidden(2, !enabled);
 }
 
 void UpdateKCM::on_packageView_activated(const QModelIndex &index)
@@ -354,6 +368,7 @@ void UpdateKCM::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
     KMenu *menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
+    menu->addAction(m_showPackageArch);
     QAction *action;
     action = menu->addAction(i18n("Check for new Updates"));
     action->setIcon(KIcon("view-refresh"));

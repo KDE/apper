@@ -65,6 +65,7 @@ private slots:
     void errorCode(PackageKit::Enum::Error error, const QString &details);
 
     void showVersions(bool enabled);
+    void showArchs(bool enabled);
 
 private:
     bool                  m_selected;
@@ -72,6 +73,7 @@ private:
     ApplicationsDelegate *m_delegate;
     KpkCheckableHeader   *m_header;
     QAction              *m_showPackageVersion;
+    QAction              *m_showPackageArch;
     KpkTransaction       *m_transDialog;
     KPixmapSequenceOverlayPainter *m_busySeq;
     Client               *m_client;

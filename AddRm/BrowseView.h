@@ -54,6 +54,7 @@ public slots:
 
 private slots:
     void showVersions(bool enabled);
+    void showArchs(bool enabled);
     void on_packageView_customContextMenuRequested(const QPoint &pos);
     void on_packageView_activated(const QModelIndex &);
     void on_categoryMvLeft_clicked();
@@ -66,6 +67,7 @@ private:
     bool showPageHeader() const;
 
     QAction                          *m_showPackageVersion;
+    QAction                          *m_showPackageArch;
     KpkPackageModel                  *m_model;
     KCategorizedSortFilterProxyModel *m_proxy;
     KpkSearchableTreeView            *m_packageView;

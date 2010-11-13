@@ -56,6 +56,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
    m_busySeq(0),
    m_display(false),
    m_hideVersion(false),
+   m_hideArch(false),
    m_transaction(0),
    m_hasDetails(false),
    m_hasFileList(false),
@@ -273,6 +274,11 @@ void KpkPackageDetails::on_screenshotL_clicked()
 void KpkPackageDetails::hidePackageVersion(bool hide)
 {
     m_hideVersion = hide;
+}
+
+void KpkPackageDetails::hidePackageArch(bool hide)
+{
+    m_hideArch = hide;
 }
 
 void KpkPackageDetails::actionActivated(QAction *action)
@@ -530,21 +536,6 @@ void KpkPackageDetails::setupDescription()
         homepageL->hide();
     }
 
-    if (!details->license().isEmpty() && details->license() != "unknown") {
-        // We have a license, check if we have and should show show package version
-        if (!m_hideVersion && !m_package->version().isEmpty()) {
-            licenseL->setText(m_package->version() + " - " + details->license());
-        } else {
-            licenseL->setText(details->license());
-        }
-        licenseL->show();
-    } else if (!m_hideVersion) {
-        licenseL->setText(m_package->version());
-        licenseL->show();
-    } else {
-        licenseL->hide();
-    }
-
     // Let's try to find the application's path in human user
     // readable easiest form :D
     KService::Ptr service = KService::serviceByDesktopName(m_appId);
@@ -578,9 +569,31 @@ void KpkPackageDetails::setupDescription()
 // //                     + "</td></tr>";
 //     }
 
+    if (!details->license().isEmpty() && details->license() != "unknown") {
+        // We have a license, check if we have and should show show package version
+        if (!m_hideVersion && !m_package->version().isEmpty()) {
+            licenseL->setText(m_package->version() + " - " + details->license());
+        } else {
+            licenseL->setText(details->license());
+        }
+        licenseL->show();
+    } else if (!m_hideVersion) {
+        licenseL->setText(m_package->version());
+        licenseL->show();
+    } else {
+        licenseL->hide();
+    }
+
     if (details->size() > 0) {
-        sizeL->setText(KGlobal::locale()->formatByteSize(details->size()));
+        QString size = KGlobal::locale()->formatByteSize(details->size());
+        if (!m_hideArch && !m_package->arch().isEmpty()) {
+            sizeL->setText(size + " (" + m_package->arch() + ')');
+        } else {
+            sizeL->setText(size);
+        }
         sizeL->show();
+    } else if (!m_hideArch && !m_package->arch().isEmpty()) {
+        sizeL->setText(m_package->arch());
     } else {
         sizeL->hide();
     }

@@ -78,10 +78,10 @@ void ApplicationsDelegate::paint(QPainter *painter,
         return;
     }
 
-    if (index.column() == 0 || index.column() == 1) {
+    if (index.column() == 0 || index.column() == 1 || index.column() == 2) {
         QStyledItemDelegate::paint(painter, option, index);
         return;
-    } else if (index.column() == 2) {
+    } else if (index.column() == 3) {
         QPixmap pixmap(option.rect.size());
         pixmap.fill(Qt::transparent);
         QPainter p(&pixmap);
@@ -175,7 +175,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
 
         painter->drawPixmap(option.rect.topLeft(), pixmap);
         return;
-    } else if (index.column() == 3) {
+    } else if (index.column() == 4) {
         bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
 
         if (!(option.state & QStyle::State_MouseOver) &&
@@ -262,7 +262,7 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
                                        const QStyleOptionViewItem &option,
                                        const QModelIndex &index)
 {
-    if (index.column() == 3 &&
+    if (index.column() == 4 &&
         event->type() == QEvent::MouseButtonPress) {
         model->setData(index,
                        !index.data(KpkPackageModel::CheckStateRole).toBool(),
@@ -286,17 +286,15 @@ void ApplicationsDelegate::setViewport(QWidget *viewport)
 QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
                                      const QModelIndex &index) const
 {
-    if (index.column() == 3) {
+    if (index.column() == 4) {
         QSize size = m_buttonSize;
         size.rheight() += 2 * UNIVERSAL_PADDING;
-        size.rwidth()  += 5 * UNIVERSAL_PADDING;
+        size.rwidth()  += 2 * UNIVERSAL_PADDING;
         return size;
     } else {
         QSize size = QStyledItemDelegate::sizeHint(option, index);
-        if (index.column() == 0) {
-            size.rwidth() += 2 * UNIVERSAL_PADDING;
-            size.rheight() += 2 * UNIVERSAL_PADDING;
-        }
+        size.rwidth() += 2 * UNIVERSAL_PADDING;
+        size.rheight() += 2 * UNIVERSAL_PADDING;
         return size;
     }
 }
