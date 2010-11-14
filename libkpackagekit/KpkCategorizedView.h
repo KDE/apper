@@ -24,13 +24,11 @@
 
 class KDE_EXPORT KpkCategorizedView : public KCategorizedView
 {
+    Q_OBJECT
 public:
     KpkCategorizedView(QWidget *parent = 0);
 
     virtual void setModel(QAbstractItemModel *model);
-
-    void keyboardSearch(const QString &search);
-    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif

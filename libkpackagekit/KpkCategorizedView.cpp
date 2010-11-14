@@ -23,6 +23,7 @@
 
 #include <KFileItemDelegate>
 #include <QSortFilterProxyModel>
+#include <KDebug>
 
 KpkCategorizedView::KpkCategorizedView(QWidget *parent)
     : KCategorizedView(parent)
@@ -34,9 +35,10 @@ KpkCategorizedView::KpkCategorizedView(QWidget *parent)
 
 void KpkCategorizedView::setModel(QAbstractItemModel *model)
 {
-    KFileItemDelegate *delegate = qobject_cast<KFileItemDelegate*>(itemDelegate());
     KCategorizedView::setModel(model);
-    if (delegate) {
+    //     KFileItemDelegate *delegate = qobject_cast<KFileItemDelegate*>(itemDelegate());
+//     kDebug() << delegate->maximumSize();
+//     if (delegate) {
         int maxWidth = -1;
         int maxHeight = -1;
         for (int i = 0; i < model->rowCount(); ++i) {
@@ -44,26 +46,10 @@ void KpkCategorizedView::setModel(QAbstractItemModel *model)
             const QSize size = sizeHintForIndex(index);
             maxWidth = qMax(maxWidth, size.width());
             maxHeight = qMax(maxHeight, size.height());
+//             kDebug() << size << index.data(Qt::DisplayRole);
         }
+//          kDebug() << maxWidth << maxHeight;
         setGridSize(QSize(maxWidth, maxHeight ));
-        delegate->setMaximumSize(QSize(maxWidth, maxHeight));
-    }
-}
-
-void KpkCategorizedView::keyboardSearch(const QString &search)
-{
-    // this hooks enable Qt::DisplayRole, search, and disable it
-    QSortFilterProxyModel *proxy = qobject_cast<QSortFilterProxyModel*>(model());
-    proxy->sourceModel()->setProperty("kbd", true);
-    KCategorizedView::keyboardSearch(search);
-    proxy->sourceModel()->setProperty("kbd", false);
-}
-
-void KpkCategorizedView::keyPressEvent(QKeyEvent *event)
-{
-    // this hooks enable Qt::CheckStateRole, handle the space key disable it
-    QSortFilterProxyModel *proxy = qobject_cast<QSortFilterProxyModel*>(model());
-    proxy->sourceModel()->setProperty("kbd", true);
-    KCategorizedView::keyPressEvent(event);
-    proxy->sourceModel()->setProperty("kbd", false);
+//         delegate->setMaximumSize(QSize(maxWidth, maxHeight));
+// //     }
 }

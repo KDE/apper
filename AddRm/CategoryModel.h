@@ -40,9 +40,23 @@ public:
     CategoryModel(QObject *parent = 0);
     ~CategoryModel();
 
+public slots:
+    void setRoot();
+
+signals:
+    void finished();
+
+private slots:
+    void category(const QString &parentId,
+                  const QString &categoryId,
+                  const QString &name,
+                  const QString &summary,
+                  const QString &icon);
+
 private:
     void fillWithStandardGroups();
     void fillWithServiceGroups();
+    QStandardItem* findCategory(const QString &categoryId, const QModelIndex &parent = QModelIndex()) const;
     void parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent = 0);
     QString parseCategories(QXmlStreamReader &xml, QStandardItem *item, const QString &join = QString());
     template<class T> static int enumFromString(const QString& str, const char* enumName, const QString& prefix = QString());

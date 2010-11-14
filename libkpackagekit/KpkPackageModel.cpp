@@ -241,16 +241,14 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 QPainter painter(&icon);
                 QPoint startPoint;
                 // bottom right corner
-                startPoint = QPoint(44 - OVERLAY_SIZE,
-                                    4);
+                startPoint = QPoint(44 - OVERLAY_SIZE, 4);
                 painter.drawPixmap(startPoint, m_installedEmblem);
             } else if (m_checkable) {
                 QIcon emblemIcon = KpkIcons::packageIcon(package.info);
                 QPainter painter(&icon);
                 QPoint startPoint;
                 // bottom right corner
-                startPoint = QPoint(44 - OVERLAY_SIZE,
-                                    4);
+                startPoint = QPoint(44 - OVERLAY_SIZE, 4);
                 painter.drawPixmap(startPoint, emblemIcon.pixmap(OVERLAY_SIZE, OVERLAY_SIZE));
             }
             return icon;

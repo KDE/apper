@@ -59,13 +59,84 @@ CategoryModel::CategoryModel(QObject *parent)
 
 #ifdef HAVE_APPINSTALL
     fillWithServiceGroups();
+    QTimer::singleShot(0, this, SIGNAL(finished()));
 #else
-    fillWithStandardGroups();
+    if (m_roles & Enum::RoleGetCategories
+     && Client::instance()->getTransactionList().isEmpty()) {
+        Transaction *trans = new Transaction(QString(), this);
+        connect(trans, SIGNAL(category(const QString &, const QString &, const QString &, const QString &, const QString &)),
+                this, SLOT(category(const QString &, const QString &, const QString &, const QString &, const QString &)));
+        connect(trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SIGNAL(finished()));
+        trans->getCategories();
+        if (trans->error()) {
+            fillWithStandardGroups();
+            QTimer::singleShot(0, this, SIGNAL(finished()));
+        }
+    } else {
+        fillWithStandardGroups();
+        QTimer::singleShot(0, this, SIGNAL(finished()));
+    }
 #endif //HAVE_APPINSTALL
 }
 
 CategoryModel::~CategoryModel()
 {
+}
+
+void CategoryModel::category(const QString &parentId,
+                             const QString &categoryId,
+                             const QString &name,
+                             const QString &summary,
+                             const QString &icon)
+{
+    kDebug() << parentId << categoryId << name << summary << icon;
+    QStandardItem *item = new QStandardItem(name);
+    item->setDragEnabled(false);
+    item->setData(Enum::RoleSearchGroup, SearchRole);
+    item->setData(categoryId, GroupRole);
+    item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+    item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
+    item->setToolTip(summary);
+    item->setIcon(KIcon("/usr/share/pixmaps/comps/" + icon + ".png"));
+
+    if (parentId.isEmpty()) {
+        appendRow(item);
+    } else {
+        QStandardItem *parent = findCategory(parentId);
+        if (parent) {
+//             item->setData(parent->text(),
+//                           KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+//             item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
+            parent->appendRow(item);
+        } else {
+            appendRow(item);
+        }
+    }
+}
+
+void CategoryModel::setRoot()
+{
+    emit layoutChanged();
+}
+
+QStandardItem* CategoryModel::findCategory(const QString &categoryId, const QModelIndex &parent) const
+{
+    QStandardItem *ret = 0;
+    for (int i = 0; i < rowCount(parent); i++) {
+        QModelIndex group = index(i, 0, parent);
+        if (group.data(SearchRole).toUInt() == Enum::RoleSearchGroup
+         && group.data(GroupRole).toString() == categoryId) {
+            ret = itemFromIndex(group);
+        } else if (hasChildren(group)) {
+            ret = findCategory(categoryId, group);
+        }
+
+        if (ret) {
+            break;
+        }
+    }
+    return ret;
 }
 
 void CategoryModel::fillWithStandardGroups()

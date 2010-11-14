@@ -38,6 +38,7 @@ class KpkPackageModel;
 class KpkFiltersMenu;
 class TransactionHistory;
 class BrowseView;
+class CategoryModel;
 class AddRmKCM : public KCModule, Ui::AddRmKCM
 {
     Q_OBJECT
@@ -53,6 +54,7 @@ public slots:
     void save();
 
 private slots:
+    void setupHomeModel();
     void genericActionKTriggered();
 
     void on_backTB_clicked();
@@ -82,7 +84,7 @@ private:
     QStackedLayout      *m_viewLayout;
     KToolBarPopupAction *m_genericActionK;
     QAction             *m_currentAction;
-    QStandardItemModel  *m_groupsModel;
+    CategoryModel       *m_groupsModel;
     BrowseView          *m_browseView;
     KpkPackageModel     *m_browseModel;
     KpkPackageModel     *m_changesModel;
@@ -100,6 +102,7 @@ private:
     // Old search cache
     Enum::Role    m_searchRole;
     QString       m_searchString;
+    QString       m_searchGroupCategory;
     Enum::Group   m_searchGroup;
     QModelIndex   m_searchParentCategory;
     QStringList   m_searchCategory;

@@ -140,21 +140,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     // Create the groups model
     m_groupsModel = new CategoryModel(this);
-
-    homeView->setSpacing(KDialog::spacingHint());
-    homeView->viewport()->setAttribute(Qt::WA_Hover);
-
-    m_browseView->setCategoryModel(m_groupsModel);
-
-    KFileItemDelegate *delegate = new KFileItemDelegate(this);
-    delegate->setWrapMode(QTextOption::WordWrap);
-    homeView->setItemDelegate(delegate);
-
-    KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
-    proxy->setSourceModel(m_groupsModel);
-    proxy->setCategorizedModel(true);
-    proxy->sort(0);
-    homeView->setModel(proxy);
+    connect(m_groupsModel, SIGNAL(finished()),
+            this, SLOT(setupHomeModel()));
 
     // install the backend filters
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(Client::instance()->filters(), this));
@@ -193,6 +180,24 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
             m_browseModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
 
     changesPB->setIcon(KIcon("edit-redo"));
+}
+
+void AddRmKCM::setupHomeModel()
+{
+    homeView->setSpacing(KDialog::spacingHint());
+    homeView->viewport()->setAttribute(Qt::WA_Hover);
+
+    m_browseView->setCategoryModel(m_groupsModel);
+
+    KFileItemDelegate *delegate = new KFileItemDelegate(this);
+    delegate->setWrapMode(QTextOption::WordWrap);
+    homeView->setItemDelegate(delegate);
+
+    KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
+    proxy->setSourceModel(m_groupsModel);
+    proxy->setCategorizedModel(true);
+    proxy->sort(0);
+    homeView->setModel(proxy);
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -319,19 +324,26 @@ void AddRmKCM::on_actionFindFile_triggered()
 void AddRmKCM::on_homeView_activated(const QModelIndex &index)
 {
     if (index.isValid()) {
+        const QSortFilterProxyModel *proxy;
+        proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
+        // If the cast failed it's the index came from browseView
+        if (proxy) {
+            m_searchParentCategory = proxy->mapToSource(index);
+        } else {
+            m_searchParentCategory = index;
+        }
+
         // cache the search
         m_searchRole    = static_cast<Enum::Role>(index.data(CategoryModel::SearchRole).toUInt());
-        m_searchGroup   = static_cast<Enum::Group>(index.data(CategoryModel::GroupRole).toUInt());
         m_searchFilters = m_filtersMenu->filters();
         if (m_searchRole == Enum::RoleResolve) {
             m_searchString = index.data(CategoryModel::CategoryRole).toString();
-            const QSortFilterProxyModel *proxy;
-            proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
-            // If the cast failed it's the index came from browseView
-            if (proxy) {
-                m_searchParentCategory = proxy->mapToSource(index);
+        } else if (m_searchRole == Enum::RoleSearchGroup) {
+            if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
+                m_searchGroupCategory = index.data(CategoryModel::GroupRole).toString();
             } else {
-                m_searchParentCategory = index;
+                m_searchGroupCategory.clear();
+                m_searchGroup = static_cast<Enum::Group>(index.data(CategoryModel::GroupRole).toUInt());
             }
         } else if (m_searchRole == Enum::RoleGetOldTransactions) {
             m_history = new TransactionHistory(this);
@@ -418,7 +430,15 @@ void AddRmKCM::search()
         m_searchTransaction->searchFiles(m_searchString, m_searchFilters);
         break;
     case Enum::RoleSearchGroup:
-        m_searchTransaction->searchGroups(m_searchGroup, m_searchFilters);
+        if (m_searchGroupCategory.isEmpty()) {
+            m_searchTransaction->searchGroups(m_searchGroup, m_searchFilters);
+        } else {
+            m_browseView->setParentCategory(m_searchParentCategory);
+            if (m_searchGroupCategory.startsWith('@')) {
+                m_searchTransaction->searchGroups(m_searchGroupCategory, m_searchFilters);
+            }
+            // else the transaction is useless
+        }
         break;
     case Enum::RoleGetPackages:
         // we want all the installed ones
