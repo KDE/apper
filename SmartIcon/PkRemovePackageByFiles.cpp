@@ -79,8 +79,12 @@ void PkRemovePackageByFiles::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->searchFiles(m_files,
-                                                         Enum::FilterInstalled);
+        Transaction *t = new Transaction(QString());
+        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(searchFinished(PackageKit::Enum::Exit)));
+        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
+                this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+        t->searchFiles(m_files, Enum::FilterInstalled);
         if (t->error()) {
             QString msg(i18n("Failed to start search file transaction"));
             if (showWarning()) {
@@ -90,10 +94,6 @@ void PkRemovePackageByFiles::start()
             }
             sendErrorFinished(Failed, "Failed to search for package");
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                    this, SLOT(resolveFinished(PackageKit::Enum::Exit)));
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
             if (showProgress()) {
                 kTransaction()->setTransaction(t);
                 kTransaction()->show();
