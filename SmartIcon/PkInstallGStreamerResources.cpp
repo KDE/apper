@@ -51,11 +51,13 @@ void PkInstallGStreamerResources::start()
     if (showConfirmSearch()) {
         bool encoder = false;
         bool decoder = false;
+        // Resources are strings like "ID3 tag|gstreamer0.10(decoder-application/x-id3)()(64bit)"
         foreach (const QString &codec, m_resources) {
+            kDebug() << codec;
             if (codec.contains("|gstreamer0.10(decoder")) {
-                encoder = true;
-            } else if (codec.contains("|gstreamer0.10(encoder")) {
                 decoder = true;
+            } else if (codec.contains("|gstreamer0.10(encoder")) {
+                encoder = true;
             }
             niceNames << codec.section('|', 0, 0);
             search << codec.section('|', 1, -1);

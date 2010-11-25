@@ -20,6 +20,8 @@
 
 #include "AddRmKCM.h"
 
+#include <config.h>
+
 #include <KGenericFactory>
 #include <KAboutData>
 
@@ -434,9 +436,11 @@ void AddRmKCM::search()
             m_searchTransaction->searchGroups(m_searchGroup, m_searchFilters);
         } else {
             m_browseView->setParentCategory(m_searchParentCategory);
+#ifndef HAVE_APPINSTALL
             if (m_searchGroupCategory.startsWith('@')) {
                 m_searchTransaction->searchGroups(m_searchGroupCategory, m_searchFilters);
             }
+#endif //HAVE_APPINSTALL
             // else the transaction is useless
         }
         break;

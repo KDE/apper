@@ -74,8 +74,11 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
 
 void KpkAbstractTask::setExec(const QString &exec)
 {
-    if (!pathIsTrusted(exec)) {
-        // TODO set the parent title
+    if (pathIsTrusted(exec)) {
+        // Get from X11 the window title
+        KWindowInfo info = KWindowSystem::windowInfo(m_xid, NET::WMVisibleName);
+        parentTitle = info.visibleName();
+    } else {
         parentTitle = exec;
     }
 }
@@ -84,7 +87,9 @@ bool KpkAbstractTask::pathIsTrusted(const QString &exec)
 {
     // special case the plugin helper -- it's trusted
     return exec == "/usr/libexec/gst-install-plugins-helper" ||
-           exec == "/usr/libexec/pk-gstreamer-install";
+           exec == "/usr/libexec/pk-gstreamer-install" ||
+           exec == "/usr/bin/gstreamer-codec-install" ||
+           exec == "/usr/lib/packagekit/pk-gstreamer-install";
 }
 
 QString KpkAbstractTask::getCmdLine(uint pid)
