@@ -71,7 +71,6 @@ void PkRemovePackageByFiles::start()
         KGuiItem searchBt = KStandardGuiItem::yes();
         searchBt.setText(i18nc("Search for a package and remove", "Search"));
         searchBt.setIcon(KIcon("edit-find"));
-        int ret;
         ret = KMessageBox::questionYesNoWId(parentWId(),
                                             msg,
                                             title,
