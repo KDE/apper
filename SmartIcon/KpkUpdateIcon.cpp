@@ -66,11 +66,16 @@ void KpkUpdateIcon::refreshAndUpdate(bool refresh)
     if (refresh) {
         if (!isRunning()) {
             SET_PROXY
-            Transaction *t = Client::instance()->refreshCache(true);
-            if (!t->error()) { // ignore if there is an error
-                // Be silent! don't bother the user if the cache couldn't be refreshed
-                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)), this, SLOT(update()));
+            Transaction *t = new Transaction(QString());
+            t->refreshCache(true);
+            if (!t->error()) {
                 increaseRunning();
+                // ignore if there is an error
+                // Be silent! don't bother the user if the cache couldn't be refreshed
+                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                        this, SLOT(update()));
+                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                        this, SLOT(decreaseRunning()));
             }
         }
     } else {
@@ -179,8 +184,8 @@ void KpkUpdateIcon::getUpdateFinished()
         if (updateType == KpkEnum::All) {
             // update all
             SET_PROXY
-            // TODO this might be evil
-            Transaction *t = Client::instance()->updateSystem(true);
+            Transaction *t = new Transaction(QString());
+            t->updatePackages(true, m_updateList);
             if (!t->error()) {
                 connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                         this, SLOT(autoUpdatesFinished(PackageKit::Enum::Exit)));
@@ -199,7 +204,8 @@ void KpkUpdateIcon::getUpdateFinished()
         } else if (updateType == KpkEnum::Security && !securityUpdateList.isEmpty()) {
             // Defaults to security
             SET_PROXY
-            Transaction *t = Client::instance()->updatePackages(true, securityUpdateList);
+            Transaction *t = new Transaction(QString());
+            t->updatePackages(true, securityUpdateList);
             if (!t->error()) {
                 connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                         this, SLOT(autoUpdatesFinished(PackageKit::Enum::Exit)));
