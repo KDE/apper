@@ -26,10 +26,11 @@
 #include <KMessageBox>
 #include <KPushButton>
 #include <KService>
+#include <KPixmapSequence>
+#include <KPixmapSequenceOverlayPainter>
 
 #include <KDebug>
 
-#include <QMovie>
 #include <QPropertyAnimation>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -65,6 +66,7 @@ public:
     QVector<KService*> applications;
     KpkSimulateModel *simulateModel;
     ProgressView *progressView;
+    KPixmapSequenceOverlayPainter *busySeq;
 
     void clearApplications()
     {
@@ -86,6 +88,11 @@ KpkTransaction::KpkTransaction(Transaction *trans, Behaviors flags, QWidget *par
    d(new KpkTransactionPrivate)
 {
     d->ui.setupUi(mainWidget());
+
+    d->busySeq = new KPixmapSequenceOverlayPainter(this);
+    d->busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    d->busySeq->setWidget(d->ui.label);
+    d->ui.label->clear();
 
     d->finished = true; // for sanity we are finished till some transaction is set
     d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
@@ -354,21 +361,12 @@ void KpkTransaction::updateUi()
         m_status = status;
         d->ui.currentL->setText(KpkStrings::status(status));
 
-        QMovie *movie;
-        // Grab the right icon name
-        QString icon(KpkIcons::statusAnimation(status));
-        movie = KIconLoader::global()->loadMovie(icon,
-                                                KIconLoader::NoGroup,
-                                                48,
-                                                this);
-        if (movie) {
-            // If the movie is set we KIconLoader it,
-            // set it and start
-            d->ui.label->setMovie(movie);
-            movie->start();
-        } else {
-            // Else it's probably a static icon so try to load
-            d->ui.label->setPixmap(KpkIcons::getIcon(icon).pixmap(48,48));
+//         kDebug() << KIconLoader::global()->iconPath(KpkIcons::statusAnimation(status), -KIconLoader::SizeLarge);
+        KPixmapSequence sequence = KPixmapSequence(KpkIcons::statusAnimation(status),
+                                                   KIconLoader::SizeLarge);
+        if (sequence.isValid()) {
+            d->busySeq->setSequence(sequence);
+            d->busySeq->start();
         }
     } else if (status == Enum::StatusDownload && m_trans->speed() != 0) {
         uint speed = m_trans->speed();

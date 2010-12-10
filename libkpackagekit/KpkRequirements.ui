@@ -90,6 +90,12 @@
           <property name="selectionMode">
            <enum>QAbstractItemView::SingleSelection</enum>
           </property>
+          <property name="iconSize">
+           <size>
+            <width>48</width>
+            <height>48</height>
+           </size>
+          </property>
           <property name="resizeMode">
            <enum>QListView::Adjust</enum>
           </property>

@@ -163,6 +163,8 @@ QString KpkIcons::statusAnimation(PackageKit::Enum::Status status)
     case Enum::StatusTestCommit          : return "pk-testing";
     case Enum::StatusUpdate              : return "pk-installing";
     case Enum::StatusWait                : return "pk-waiting";
+    case Enum::StatusWaitingForAuth      : return "dialog-password";
+    case Enum::StatusScanProcessList     : return "utilities-system-monitor";
     default                              : kDebug() << "status icon unrecognised: " << status;
         return "help-browser";
     }

@@ -267,7 +267,7 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
     if (int c = model->countInfo(Enum::InfoDowngrading)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
-        item->setIcon(KpkIcons::actionIcon(Enum::RoleRemovePackages));
+        item->setIcon(KpkIcons::actionIcon(Enum::RoleRollback));
         item->setData(QVariant::fromValue(Enum::InfoDowngrading));
         if (model->currentInfo() == Enum::UnknownInfo) {
             model->setCurrentInfo(Enum::InfoDowngrading);
@@ -289,8 +289,10 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
 
     if (int c = model->countInfo(Enum::InfoInstalling)) {
         item = new QStandardItem;
+//         item->setIconSize(QSize(48, 48));
         item->setText(i18np("1 package to install", "%1 packages to install", c));
-        item->setIcon(KpkIcons::actionIcon(Enum::RoleInstallPackages));
+        item->setIcon(KpkIcons::actionIcon(Enum::RoleInstallPackages).pixmap(48.48));
+        kDebug() << KIconLoader::global()->iconPath(KpkIcons::actionIconName(Enum::RoleInstallPackages), KIconLoader::NoGroup, true);
         item->setData(QVariant::fromValue(Enum::InfoInstalling));
         if (model->currentInfo() == Enum::UnknownInfo) {
             model->setCurrentInfo(Enum::InfoInstalling);
