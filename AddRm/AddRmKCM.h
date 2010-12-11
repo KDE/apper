@@ -23,7 +23,6 @@
 
 #include "ui_AddRmKCM.h"
 
-#include <QtGui/QStackedLayout>
 #include <QtGui/QStandardItemModel>
 
 #include <KCModule>
@@ -37,7 +36,6 @@ using namespace PackageKit;
 class KpkPackageModel;
 class KpkFiltersMenu;
 class TransactionHistory;
-class BrowseView;
 class CategoryModel;
 class AddRmKCM : public KCModule, Ui::AddRmKCM
 {
@@ -81,11 +79,9 @@ private:
     void search();
     void keyPressEvent(QKeyEvent *event);
 
-    QStackedLayout      *m_viewLayout;
     KToolBarPopupAction *m_genericActionK;
     QAction             *m_currentAction;
     CategoryModel       *m_groupsModel;
-    BrowseView          *m_browseView;
     KpkPackageModel     *m_browseModel;
     KpkPackageModel     *m_changesModel;
 

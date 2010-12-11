@@ -88,15 +88,8 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     gridLayout_2->addWidget(toolBar);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    m_browseView = new BrowseView(this);
-    connect(m_browseView, SIGNAL(categoryActivated(const QModelIndex &)),
+    connect(browseView, SIGNAL(categoryActivated(const QModelIndex &)),
             this, SLOT(on_homeView_activated(const QModelIndex &)));
-
-    // Create a stacked layout so only homeView or packageView are displayed
-    m_viewLayout = new QStackedLayout(stackedWidget);
-    m_viewLayout->addWidget(homeView);
-    m_viewLayout->addWidget(m_browseView);
-    m_viewLayout->addWidget(changesView);
 
     QMenu *findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method
@@ -148,13 +141,13 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     // install the backend filters
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(Client::instance()->filters(), this));
     filtersTB->setIcon(KIcon("view-filter"));
-    m_browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
+    browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(const QString &)),
-            m_browseView->proxy(), SLOT(setFilterFixedString(const QString &)));
+            browseView->proxy(), SLOT(setFilterFixedString(const QString &)));
 
 
     //initialize the model, delegate, client and  connect it's signals
-    m_browseModel = m_browseView->model();
+    m_browseModel = browseView->model();
 
     // CHANGES TAB
     changesView->viewport()->setAttribute(Qt::WA_Hover);
@@ -189,7 +182,7 @@ void AddRmKCM::setupHomeModel()
     homeView->setSpacing(KDialog::spacingHint());
     homeView->viewport()->setAttribute(Qt::WA_Hover);
 
-    m_browseView->setCategoryModel(m_groupsModel);
+    browseView->setCategoryModel(m_groupsModel);
 
     KFileItemDelegate *delegate = new KFileItemDelegate(this);
     delegate->setWrapMode(QTextOption::WordWrap);
@@ -352,8 +345,8 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
             searchKLE->clear();
             connect(searchKLE, SIGNAL(textChanged(const QString &)),
                     m_history, SLOT(setFilterRegExp(const QString &)));
-            m_viewLayout->addWidget(m_history);
-            m_viewLayout->setCurrentWidget(m_history);
+            stackedWidget->addWidget(m_history);
+            stackedWidget->setCurrentWidget(m_history);
             backTB->setEnabled(true);
             filtersTB->setEnabled(false);
             widget->setEnabled(false);
@@ -366,16 +359,16 @@ void AddRmKCM::on_homeView_activated(const QModelIndex &index)
 
 void AddRmKCM::on_backTB_clicked()
 {
-    if (m_viewLayout->currentWidget() == m_browseView) {
-        if (!m_browseView->goBack()) {
+    if (stackedWidget->currentWidget() == pageBrowse) {
+        if (!browseView->goBack()) {
             return;
         }
-    } else if (m_viewLayout->currentWidget() == m_history) {
+    } else if (stackedWidget->currentWidget() == m_history) {
         filtersTB->setEnabled(true);
         widget->setEnabled(true);
         delete m_history;
     }
-    m_viewLayout->setCurrentIndex(0);
+    stackedWidget->setCurrentIndex(0);
     backTB->setEnabled(false);
     // reset the search role
     m_searchRole = Enum::UnknownRole;
@@ -385,20 +378,20 @@ void AddRmKCM::on_changesPB_clicked()
 {
     m_changesModel->clear();
     m_changesModel->addPackages(m_browseModel->selectedPackages(), true);
-    m_viewLayout->setCurrentWidget(changesView);
+    stackedWidget->setCurrentWidget(pageChanges);
     backTB->setEnabled(true);
 }
 
 void AddRmKCM::search()
 {
-    m_browseView->cleanUi();
+    browseView->cleanUi();
 
     if (m_searchTransaction) {
         // Disconnect everything so that the model don't store
         // wrong data
         m_searchTransaction->cancel();
         disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                   m_browseView->busyCursor(), SLOT(stop()));
+                   browseView->busyCursor(), SLOT(stop()));
         disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
                    this, SLOT(finished()));
         disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
@@ -412,7 +405,7 @@ void AddRmKCM::search()
     // search
     m_searchTransaction = new Transaction(QString());
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            m_browseView->busyCursor(), SLOT(stop()));
+            browseView->busyCursor(), SLOT(stop()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
@@ -435,7 +428,7 @@ void AddRmKCM::search()
         if (m_searchGroupCategory.isEmpty()) {
             m_searchTransaction->searchGroups(m_searchGroup, m_searchFilters);
         } else {
-            m_browseView->setParentCategory(m_searchParentCategory);
+            browseView->setParentCategory(m_searchParentCategory);
 #ifndef HAVE_APPINSTALL
             if (m_searchGroupCategory.startsWith('@')) {
                 m_searchTransaction->searchGroups(m_searchGroupCategory, m_searchFilters);
@@ -446,16 +439,16 @@ void AddRmKCM::search()
         break;
     case Enum::RoleGetPackages:
         // we want all the installed ones
-        m_browseView->disableExportInstalledPB();
+        browseView->disableExportInstalledPB();
         connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                m_browseView, SLOT(enableExportInstalledPB()));
+                browseView, SLOT(enableExportInstalledPB()));
         m_searchTransaction->getPackages(Enum::FilterInstalled);
         break;
     case Enum::RoleResolve:
     {
         QStringList packages = AppInstall::instance()->pkgNamesFromWhere(m_searchString);
         if (!packages.isEmpty()) {
-            m_browseView->setParentCategory(m_searchParentCategory);
+            browseView->setParentCategory(m_searchParentCategory);
             // WARNING the resolve might fail if the backend
             // has a low limit MaximumItemsToResolve
             m_searchTransaction->resolve(packages, m_searchFilters);
@@ -477,14 +470,14 @@ void AddRmKCM::search()
         // cleans the models
         m_browseModel->clear();
 
-        m_browseView->showInstalledPanel(m_searchRole == Enum::RoleGetPackages);
-        m_browseView->busyCursor()->start();
+        browseView->showInstalledPanel(m_searchRole == Enum::RoleGetPackages);
+        browseView->busyCursor()->start();
 
         backTB->setEnabled(true);
         setCurrentActionCancel(true);
         setCurrentActionEnabled(m_searchTransaction->allowCancel());
 
-        m_viewLayout->setCurrentIndex(1);
+        stackedWidget->setCurrentIndex(1);
     }
 }
 
@@ -531,7 +524,7 @@ void AddRmKCM::finished()
 void AddRmKCM::keyPressEvent(QKeyEvent *event)
 {
     if (searchKLE->hasFocus() &&
-        m_viewLayout->currentWidget() != m_history &&
+        stackedWidget->currentWidget() != m_history &&
         (event->key() == Qt::Key_Return ||
          event->key() == Qt::Key_Enter)) {
         // special tab handling here
