@@ -133,6 +133,7 @@ KpkReviewChanges::~KpkReviewChanges()
     KConfig config("KPackageKit");
     KConfigGroup reviewChangesDialog(&config, "ReviewChangesDialog");
     saveDialogSize(reviewChangesDialog);
+    delete d;
 }
 
 void KpkReviewChanges::setMessage(const QString &msg)

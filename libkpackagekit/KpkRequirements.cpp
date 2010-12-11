@@ -337,6 +337,7 @@ KpkRequirements::~KpkRequirements()
         requirementsDialog.writeEntry("autoConfirm", d->ui.confirmCB->isChecked());
     }
     config.sync();
+    delete d;
 }
 
 void KpkRequirements::show()
