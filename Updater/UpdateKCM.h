@@ -32,7 +32,6 @@ using namespace PackageKit;
 class KpkPackageModel;
 class ApplicationsDelegate;
 class KpkCheckableHeader;
-class KProgressDialog;
 class UpdateKCM : public KCModule, Ui::UpdateKCM
 {
 Q_OBJECT

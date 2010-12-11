@@ -26,8 +26,6 @@
 #include <QPackageKit>
 #include <QDBusMessage>
 
-class KpkTransaction;
-
 using namespace PackageKit;
 
 class PkSearchFile : public KpkAbstractTask
