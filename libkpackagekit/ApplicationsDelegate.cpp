@@ -29,7 +29,7 @@
 
 #define FAV_ICON_SIZE 24
 #define EMBLEM_ICON_SIZE 8
-#define UNIVERSAL_PADDING 2
+#define UNIVERSAL_PADDING 4
 #define FADE_LENGTH 16
 #define MAIN_ICON_SIZE 32
 
@@ -45,18 +45,9 @@ ApplicationsDelegate::ApplicationsDelegate(QAbstractItemView *parent)
     m_removeString(i18n("Remove")),
     m_undoIcon("edit-undo"),
     m_undoString(i18n("Deselect")),
-    m_checkedIcon("dialog-ok")
+    m_checkedIcon("dialog-ok"),
+    m_checkable(false)
 {
-    // maybe rename or copy it to package-available
-//     if (QApplication::isRightToLeft()) {
-//         setExtendPixmap(SmallIcon("arrow-left"));
-//     } else {
-//         setExtendPixmap(SmallIcon("arrow-right"));
-//     }
-//     setContractPixmap(SmallIcon("arrow-down"));
-    // store the size of the extend pixmap to know how much we should move
-    m_extendPixmapWidth = SmallIcon("arrow-right").size().width();
-
     QPushButton button, button2;
     button.setText(m_installString);
     button.setIcon(m_installIcon);
@@ -208,9 +199,12 @@ void ApplicationsDelegate::paint(QPainter *painter,
 //             optBt.rect.setLeft(left + UNIVERSAL_PADDING);
 //             left += m_buttonSize.width() + UNIVERSAL_PADDING;
 //         }
+        
+        // Button height
+        int btHeight = m_buttonSize.height() + 2 * UNIVERSAL_PADDING;
         // Calculate the top of the button which is the item height - the button height size divided by 2
         // this give us a little value which is the top and bottom margin
-        optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
+        optBt.rect.setTop(optBt.rect.top() + ((btHeight - m_buttonSize.height()) / 2));
         optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
 
         if (option.state & QStyle::State_Selected) {
@@ -235,20 +229,6 @@ void ApplicationsDelegate::paint(QPainter *painter,
         style->drawControl(QStyle::CE_PushButton, &optBt, painter);
         return;
     }
-}
-
-int ApplicationsDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
-{
-//     kDebug() << (m_buttonSize.height() + 2 * UNIVERSAL_PADDING);
-    return m_buttonSize.height() + 2 * UNIVERSAL_PADDING;
-    // Painting main column
-    QStyleOptionViewItem local_option_title(option);
-    QStyleOptionViewItem local_option_normal(option);
-
-    local_option_normal.font.setPointSize(local_option_normal.font.pointSize() - 1);
-
-    int textHeight = QFontInfo(local_option_title.font).pixelSize() + QFontInfo(local_option_normal.font).pixelSize();
-    return textHeight + 3 * UNIVERSAL_PADDING;
 }
 
 bool ApplicationsDelegate::insideButton(const QRect &rect, const QPoint &pos) const
@@ -309,30 +289,40 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
     return false;
 }
 
-void ApplicationsDelegate::setExtendPixmapWidth(int width)
+void ApplicationsDelegate::setCheckable(bool checkable)
 {
-    m_extendPixmapWidth = width;
-}
-
-void ApplicationsDelegate::setViewport(QWidget *viewport)
-{
-    m_viewport = viewport;
+    m_checkable = checkable;
 }
 
 QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
                                      const QModelIndex &index) const
 {
+    QSize size;
     if (index.column() == 4) {
-        QSize size = m_buttonSize;
+        size = m_buttonSize;
         size.rheight() += 2 * UNIVERSAL_PADDING;
         size.rwidth()  += 2 * UNIVERSAL_PADDING;
-        return size;
     } else {
-        QSize size = QStyledItemDelegate::sizeHint(option, index);
-        size.rwidth() += 2 * UNIVERSAL_PADDING;
-        size.rheight() += 2 * UNIVERSAL_PADDING;
-        return size;
+        QFontMetrics metric = QFontMetrics(option.font);
+        // Button size is always bigger than text (since it has text in it
+        size.setHeight(m_buttonSize.height() + 2 * UNIVERSAL_PADDING);
+        size.setWidth(metric.width(index.data().toString()));
+        if (index.column() == 0) {
+            if (m_checkable) {
+                const QStyle *style = QApplication::style();
+                QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
+                // Adds the icon size AND the checkbox size
+                // [ x ] (icon) Text
+                size.rwidth() += 4 * UNIVERSAL_PADDING + 44 + rect.width();
+            } else {
+                // Adds the icon size
+                size.rwidth() += 3 * UNIVERSAL_PADDING + 44;
+            }
+        } else {
+            size.rwidth() += 2 * UNIVERSAL_PADDING;
+        }
     }
+    return size;
 }
 
 #include "ApplicationsDelegate.moc"

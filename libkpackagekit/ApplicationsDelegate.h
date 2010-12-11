@@ -45,14 +45,9 @@ public:
                      QAbstractItemModel *model,
                      const QStyleOptionViewItem &option,
                      const QModelIndex &index);
-    void setExtendPixmapWidth(int width);
-    void setViewport(QWidget *viewport);
-
-signals:
-    void showExtendItem(const QModelIndex &index);
+    void setCheckable(bool checkable);
 
 private:
-    int calcItemHeight(const QStyleOptionViewItem &option) const;
     bool insideButton(const QRect &rect, const QPoint &pos) const;
 
     QWidget *m_viewport;
@@ -65,9 +60,9 @@ private:
     KIcon    m_undoIcon;
     QString  m_undoString;
     KIcon    m_checkedIcon;
-    int      m_extendPixmapWidth;
     QSize    m_buttonSize;
     QSize    m_buttonIconSize;
+    bool     m_checkable;
 };
 
 #endif

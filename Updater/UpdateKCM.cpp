@@ -90,6 +90,7 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     packageView->setModel(proxyModel);
 
     m_delegate = new ApplicationsDelegate(packageView);
+    m_delegate->setCheckable(true);
     packageView->setItemDelegate(m_delegate);
     packageView->sortByColumn(0, Qt::AscendingOrder);
     connect(m_header, SIGNAL(toggled(bool)),

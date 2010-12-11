@@ -406,8 +406,7 @@ void KpkDelegate::setViewport(QWidget *viewport)
     m_viewport = viewport;
 }
 
-QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option,
-        const QModelIndex &index ) const
+QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     int width = (index.column() == 0) ? index.data(Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
     QSize ret(KExtendableItemDelegate::sizeHint(option, index));

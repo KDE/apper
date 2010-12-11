@@ -73,7 +73,6 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->header()->setResizeMode(4, QHeaderView::ResizeToContents);
 
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
-    delegate->setExtendPixmapWidth(0);
     packageView->setItemDelegate(delegate);
 
     exportInstalledPB->setIcon(KIcon("document-export"));
