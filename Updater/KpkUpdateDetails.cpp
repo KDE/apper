@@ -38,6 +38,8 @@ KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
 {
     setupUi(this);
 
+    connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
+
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
