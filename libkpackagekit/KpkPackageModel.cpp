@@ -72,7 +72,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
 
         foreach (const QStringList &list, data) {
             InternalPackage iPackage;
-            iPackage.isPackage   = 0;
+            iPackage.isPackage   = false;
             iPackage.name        = list.at(AppInstall::AppName);
             if (iPackage.name.isEmpty()) {
                 iPackage.name = package->name();
@@ -109,9 +109,9 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
 #else
         iPackage.icon = package->iconPath();
         if (iPackage.icon.isEmpty()) {
-            iPackage.isPackage = 1;
+            iPackage.isPackage = true;
         } else {
-            iPackage.isPackage = 0;
+            iPackage.isPackage = false;
             QSqlDatabase db = QSqlDatabase::database();
             QSqlQuery query(db);
             query.prepare("SELECT filename FROM cache WHERE package = :name");
@@ -298,8 +298,6 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         return Qt::Unchecked;
     case IdRole:
         return package.id;
-    case KExtendableItemDelegate::ShowExtensionIndicatorRole:
-        return true;
     case NameRole:
         return package.name;
     case SummaryRole:
@@ -318,7 +316,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
             return i18n("To be Installed");
         }
     case KCategorizedSortFilterProxyModel::CategorySortRole:
-        return package.isPackage;
+        // USING 0 here seems to let things unsorted
+        return package.isPackage ? 2 : 1; // Packages comes after aplications
     case ApplicationId:
         return package.appId;
     default:

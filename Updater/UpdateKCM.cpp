@@ -159,7 +159,7 @@ void UpdateKCM::showArchs(bool enabled)
     packageView->header()->setSectionHidden(2, !enabled);
 }
 
-void UpdateKCM::on_packageView_activated(const QModelIndex &index)
+void UpdateKCM::on_packageView_clicked(const QModelIndex &index)
 {
     QString    pkgId   = index.data(KpkPackageModel::IdRole).toString();
     Enum::Info pkgInfo = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());

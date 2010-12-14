@@ -55,7 +55,7 @@ public:
         QString    arch;
         QString    id;
         QString    appId;
-        int        isPackage;
+        bool       isPackage;
         Enum::Info info;
     } InternalPackage;
 

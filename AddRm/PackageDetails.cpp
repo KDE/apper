@@ -18,12 +18,12 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkPackageDetails.h"
+#include "PackageDetails.h"
 
 #include "ScreenShotViewer.h"
 
 #include <KpkPackageModel.h>
-#include <KpkSimplePackageModel.h>
+#include <KpkPackageModel.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 #include <AppInstall.h>
@@ -37,6 +37,7 @@
 #include <KPixmapSequence>
 #include <QTextDocument>
 #include <QPlainTextEdit>
+#include <QScrollBar>
 #include <QPainter>
 
 #include <KIO/Job>
@@ -51,7 +52,7 @@
 
 Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 
-KpkPackageDetails::KpkPackageDetails(QWidget *parent)
+PackageDetails::PackageDetails(QWidget *parent)
  : QWidget(parent),
    m_busySeq(0),
    m_display(false),
@@ -59,16 +60,12 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
    m_hideArch(false),
    m_transaction(0),
    m_hasDetails(false),
-   m_hasFileList(false),
-   m_dependsModel(0),
-   m_requiresModel(0)
+   m_hasFileList(false)
 {
     setupUi(this);
+    connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 
     Enum::Roles roles = Client::instance()->actions();
-    // Create a stacked layout to put the views in
-    m_viewLayout = new QStackedLayout(stackedWidget);
-
     KMenu *menu = new KMenu(i18n("Display"), this);
     m_actionGroup = new QActionGroup(this);
     QAction *action = 0;
@@ -80,7 +77,6 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
         action->setCheckable(true);
         action->setData(Enum::RoleGetDetails);
         m_actionGroup->addAction(action);
-        m_viewLayout->addWidget(descriptionW);
         descriptionW->setWidgetResizable(true);
     }
 
@@ -89,15 +85,25 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
         action->setCheckable(true);
         action->setData(Enum::RoleGetDepends);
         m_actionGroup->addAction(action);
-        dependsOnLV = new QListView(stackedWidget);
-        dependsOnLV->setFrameShape(QFrame::NoFrame);
         // Sets a transparent background
         QWidget *actionsViewport = dependsOnLV->viewport();
         QPalette palette = actionsViewport->palette();
         palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
         palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
         actionsViewport->setPalette(palette);
-        m_viewLayout->addWidget(dependsOnLV);
+
+        m_dependsModel = new KpkPackageModel(this);
+        m_dependsProxy = new QSortFilterProxyModel(this);
+        m_dependsProxy->setDynamicSortFilter(true);
+        m_dependsProxy->setSortRole(KpkPackageModel::SortRole);
+        m_dependsProxy->setSourceModel(m_dependsModel);
+        dependsOnLV->setModel(m_dependsProxy);
+        dependsOnLV->sortByColumn(0, Qt::AscendingOrder);
+        dependsOnLV->header()->setDefaultAlignment(Qt::AlignCenter);
+        dependsOnLV->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+        dependsOnLV->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+        dependsOnLV->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+        dependsOnLV->header()->hideSection(4);
     }
 
     if (roles & Enum::RoleGetRequires) {
@@ -105,15 +111,25 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
         action->setCheckable(true);
         action->setData(Enum::RoleGetRequires);
         m_actionGroup->addAction(action);
-        requiredByLV = new QListView(stackedWidget);
-        requiredByLV->setFrameShape(QFrame::NoFrame);
         // Sets a transparent background
         QWidget *actionsViewport = requiredByLV->viewport();
         QPalette palette = actionsViewport->palette();
         palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
         palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
         actionsViewport->setPalette(palette);
-        m_viewLayout->addWidget(requiredByLV);
+
+        m_requiresModel = new KpkPackageModel(this);
+        m_requiresProxy = new QSortFilterProxyModel(this);
+        m_requiresProxy->setDynamicSortFilter(true);
+        m_requiresProxy->setSortRole(KpkPackageModel::SortRole);
+        m_requiresProxy->setSourceModel(m_requiresModel);
+        requiredByLV->setModel(m_requiresProxy);
+        requiredByLV->sortByColumn(0, Qt::AscendingOrder);
+        requiredByLV->header()->setDefaultAlignment(Qt::AlignCenter);
+        requiredByLV->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+        requiredByLV->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+        requiredByLV->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+        requiredByLV->header()->hideSection(4);
     }
 
     if (roles & Enum::RoleGetFiles) {
@@ -121,16 +137,12 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
         action->setCheckable(true);
         action->setData(Enum::RoleGetFiles);
         m_actionGroup->addAction(action);
-        filesPTE = new QPlainTextEdit(stackedWidget);
-        filesPTE->setFrameShape(QFrame::NoFrame);
-        filesPTE->setReadOnly(true);
         // Sets a transparent background
         QWidget *actionsViewport = filesPTE->viewport();
         QPalette palette = actionsViewport->palette();
         palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
         palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
         actionsViewport->setPalette(palette);
-        m_viewLayout->addWidget(filesPTE);
     }
 
     // Check to se if we have any action
@@ -157,14 +169,12 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     // is the the Forward or Backward property
     QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(stackedWidget);
     effect->setOpacity(0);
-//     stackedWidget->setVisible(false);
     stackedWidget->setGraphicsEffect(effect);
     m_fadeStacked = new QPropertyAnimation(effect, "opacity");
     m_fadeStacked->setDuration(500);
     m_fadeStacked->setStartValue(qreal(0));
     m_fadeStacked->setEndValue(qreal(1));
     connect(m_fadeStacked, SIGNAL(finished()), this, SLOT(display()));
-
 
     // It's is impossible due to some limitation in Qt to set two effects on the same
     // Widget
@@ -200,11 +210,11 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     connect(m_expandPanel, SIGNAL(finished()), this, SLOT(display()));
 }
 
-KpkPackageDetails::~KpkPackageDetails()
+PackageDetails::~PackageDetails()
 {
 }
 
-void KpkPackageDetails::setPackage(const QModelIndex &index)
+void PackageDetails::setPackage(const QModelIndex &index)
 {
     QString pkgId = index.data(KpkPackageModel::IdRole).toString();
     QString appId = index.data(KpkPackageModel::ApplicationId).toString();
@@ -219,7 +229,7 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
         m_expandPanel->start();
     } else {
         // Hide the old description
-        fadeOut(KpkPackageDetails::FadeScreenshot | KpkPackageDetails::FadeStacked);
+        fadeOut(PackageDetails::FadeScreenshot | PackageDetails::FadeStacked);
     }
 
     m_index     = index;
@@ -260,7 +270,7 @@ void KpkPackageDetails::setPackage(const QModelIndex &index)
     }
 }
 
-void KpkPackageDetails::on_screenshotL_clicked()
+void PackageDetails::on_screenshotL_clicked()
 {
     QString screenshot;
     screenshot = AppInstall::instance()->screenshot(m_package->name());
@@ -272,17 +282,17 @@ void KpkPackageDetails::on_screenshotL_clicked()
     view->show();
 }
 
-void KpkPackageDetails::hidePackageVersion(bool hide)
+void PackageDetails::hidePackageVersion(bool hide)
 {
     m_hideVersion = hide;
 }
 
-void KpkPackageDetails::hidePackageArch(bool hide)
+void PackageDetails::hidePackageArch(bool hide)
 {
     m_hideArch = hide;
 }
 
-void KpkPackageDetails::actionActivated(QAction *action)
+void PackageDetails::actionActivated(QAction *action)
 {
     // don't fade the screenshot
     // if the package changed setPackage() fades both
@@ -349,21 +359,19 @@ void KpkPackageDetails::actionActivated(QAction *action)
         m_transaction->getDetails(m_package);
         break;
     case Enum::RoleGetDepends:
-        if (m_dependsModel) {
-            delete m_dependsModel;
-        }
-        m_dependsModel = new KpkSimplePackageModel(this);
+        m_dependsModel->clear();
         connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 m_dependsModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                m_dependsModel, SLOT(finished()));
         m_transaction->getDepends(m_package, PackageKit::Enum::NoFilter, false);
         break;
     case Enum::RoleGetRequires:
-        if (m_requiresModel) {
-            delete m_requiresModel;
-        }
-        m_requiresModel = new KpkSimplePackageModel(this);
+        m_requiresModel->clear();
         connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 m_requiresModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                m_requiresModel, SLOT(finished()));
         m_transaction->getRequires(m_package, PackageKit::Enum::NoFilter, false);
         break;
     case Enum::RoleGetFiles:
@@ -380,7 +388,7 @@ void KpkPackageDetails::actionActivated(QAction *action)
     }
 }
 
-void KpkPackageDetails::resultJob(KJob *job)
+void PackageDetails::resultJob(KJob *job)
 {
     kDebug();
     KIO::FileCopyJob *fJob = qobject_cast<KIO::FileCopyJob*>(job);
@@ -390,7 +398,7 @@ void KpkPackageDetails::resultJob(KJob *job)
     }
 }
 
-void KpkPackageDetails::hide()
+void PackageDetails::hide()
 {
     m_display = false;
     // Clean the old description otherwise if the user selects the same
@@ -406,12 +414,12 @@ void KpkPackageDetails::hide()
             m_expandPanel->start();
         } else {
             // Hide current description
-            fadeOut(KpkPackageDetails::FadeScreenshot | KpkPackageDetails::FadeStacked);
+            fadeOut(PackageDetails::FadeScreenshot | PackageDetails::FadeStacked);
         }
     }
 }
 
-void KpkPackageDetails::fadeOut(FadeWidgets widgets)
+void PackageDetails::fadeOut(FadeWidgets widgets)
 {
     // Fade out only if needed
     if ((widgets & FadeStacked) && m_fadeStacked->currentValue().toReal() != 0) {
@@ -427,7 +435,7 @@ void KpkPackageDetails::fadeOut(FadeWidgets widgets)
     }
 }
 
-void KpkPackageDetails::display()
+void PackageDetails::display()
 {
     // If we shouldn't be showing hide the pannel
     if (!m_display) {
@@ -449,26 +457,16 @@ void KpkPackageDetails::display()
                 break;
             case Enum::RoleGetDepends:
                 if (m_hasDepends) {
-                    QAbstractItemModel *currentModel = dependsOnLV->model();
-                    if (currentModel != m_dependsModel) {
-                        dependsOnLV->setModel(m_dependsModel);
-                        delete currentModel;
-                    }
-                    if (m_viewLayout->currentWidget() != dependsOnLV) {
-                        m_viewLayout->setCurrentWidget(dependsOnLV);
+                    if (stackedWidget->currentWidget() != pageDepends) {
+                        stackedWidget->setCurrentWidget(pageDepends);
                     }
                     fadeIn = true;
                 }
                 break;
             case Enum::RoleGetRequires:
                 if (m_hasRequires) {
-                    QAbstractItemModel *currentModel = requiredByLV->model();
-                    if (currentModel != m_requiresModel) {
-                        requiredByLV->setModel(m_requiresModel);
-                        delete currentModel;
-                    }
-                    if (m_viewLayout->currentWidget() != requiredByLV) {
-                        m_viewLayout->setCurrentWidget(requiredByLV);
+                    if (stackedWidget->currentWidget() != pageRequired) {
+                        stackedWidget->setCurrentWidget(pageRequired);
                     }
                     fadeIn = true;
                 }
@@ -477,14 +475,15 @@ void KpkPackageDetails::display()
                 if (m_hasFileList) {
                     filesPTE->clear();
                     if (m_currentFileList.isEmpty()) {
-                        filesPTE->appendPlainText(i18n("No files were found."));
+                        filesPTE->insertPlainText(i18n("No files were found."));
                     } else {
                         filesPTE->insertPlainText(m_currentFileList.join("\n"));
                     }
 
-                    if (m_viewLayout->currentWidget() != filesPTE) {
-                        m_viewLayout->setCurrentWidget(filesPTE);
+                    if (stackedWidget->currentWidget() != pageFiles) {
+                        stackedWidget->setCurrentWidget(pageFiles);
                     }
+                    filesPTE->verticalScrollBar()->setValue(0);
                     fadeIn = true;
                 }
                 break;
@@ -515,10 +514,10 @@ void KpkPackageDetails::display()
     }
 }
 
-void KpkPackageDetails::setupDescription()
+void PackageDetails::setupDescription()
 {
-    if (m_viewLayout->currentWidget() != descriptionW) {
-        m_viewLayout->setCurrentWidget(descriptionW);
+    if (stackedWidget->currentWidget() != pageDescription) {
+        stackedWidget->setCurrentWidget(pageDescription);
     }
 
     //format and show description
@@ -608,7 +607,7 @@ void KpkPackageDetails::setupDescription()
     }
 }
 
-QVector<QPair<QString, QString> > KpkPackageDetails::locateApplication(const QString &_relPath, const QString &menuId) const
+QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QString &_relPath, const QString &menuId) const
 {
     QVector<QPair<QString, QString> > ret;
     KServiceGroup::Ptr root = KServiceGroup::group(_relPath);
@@ -666,12 +665,12 @@ QVector<QPair<QString, QString> > KpkPackageDetails::locateApplication(const QSt
     return ret;
 }
 
-void KpkPackageDetails::description(const QSharedPointer<PackageKit::Package> &package)
+void PackageDetails::description(const QSharedPointer<PackageKit::Package> &package)
 {
     m_package = package;
 }
 
-void KpkPackageDetails::finished()
+void PackageDetails::finished()
 {
     if (m_busySeq) {
         m_busySeq->stop();
@@ -696,7 +695,7 @@ void KpkPackageDetails::finished()
     }
 }
 
-void KpkPackageDetails::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
+void PackageDetails::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
 {
     Q_UNUSED(package)
 
@@ -704,4 +703,4 @@ void KpkPackageDetails::files(QSharedPointer<PackageKit::Package> package, const
 }
 
 
-#include "KpkPackageDetails.moc"
+#include "PackageDetails.moc"
