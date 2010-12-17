@@ -435,6 +435,7 @@ void KpkPackageModel::finished()
 
     QTreeView *view = qobject_cast<QTreeView*>(m_packageView);
     if (view) {
+      kDebug() << m_packageCount;
         // This only works because
         view->resizeColumnToContents(0);
         view->resizeColumnToContents(1);

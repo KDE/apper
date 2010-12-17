@@ -30,9 +30,13 @@ using namespace PackageKit;
 
 class KpkUpdateIcon : public KpkAbstractIsRunning
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    typedef enum{
+        Normal,
+        Important,
+        Security
+    } UpdateType;
     KpkUpdateIcon(QObject *parent = 0);
     ~KpkUpdateIcon();
 
@@ -57,7 +61,7 @@ private:
     KStatusNotifierItem *m_statusNotifierItem;
     QList<QSharedPointer<PackageKit::Package> > m_updateList;
 
-    void updateStatusNotifierIcon(bool security);
+    void updateStatusNotifierIcon(UpdateType type);
 };
 
 #endif
