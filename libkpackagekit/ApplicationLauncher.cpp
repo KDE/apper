@@ -30,8 +30,8 @@ ApplicationLauncher::ApplicationLauncher(const QVector<KService*> &applications,
 {
     setupUi(this);
 
-    label->setText(i18np("The following application was just installed, click on it to launch:",
-                         "The following applications where just installed, click on them to launch:",
+    label->setText(i18np("The following application was just installed. Click on it to launch:",
+                         "The following applications were just installed. Click on them to launch:",
                          applications.size()));
 
     QStandardItemModel *model = new QStandardItemModel(this);

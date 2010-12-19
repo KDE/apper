@@ -58,7 +58,7 @@ private slots:
     void updatePackages();
     void transactionFinished(KpkTransaction::ExitStatus status);
 
-    void on_packageView_activated(const QModelIndex &index);
+    void on_packageView_clicked(const QModelIndex &index);
 
     void checkEnableUpdateButton();
     void errorCode(PackageKit::Enum::Error error, const QString &details);

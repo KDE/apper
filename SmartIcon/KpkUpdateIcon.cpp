@@ -120,13 +120,12 @@ void KpkUpdateIcon::packageToUpdate(QSharedPointer<PackageKit::Package> package)
     }
 }
 
-void KpkUpdateIcon::updateStatusNotifierIcon(bool security)
+void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
 {
-    Q_UNUSED(security)
     KConfig config("KPackageKit");
     KConfigGroup checkUpdateGroup(&config, "Notify");
-    Qt::CheckState updateStatusNotifierIcon = static_cast<Qt::CheckState>(checkUpdateGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)));
-    if (updateStatusNotifierIcon == Qt::Unchecked) {
+    Qt::CheckState iconEnabled = static_cast<Qt::CheckState>(checkUpdateGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)));
+    if (iconEnabled == Qt::Unchecked) {
         return;
     }
 
@@ -160,7 +159,15 @@ void KpkUpdateIcon::updateStatusNotifierIcon(bool security)
     QString text;
     text = i18np("You have one update", "You have %1 updates", m_updateList.size());
     m_statusNotifierItem->setToolTip(UPDATES_ICON, text, QString());
-    m_statusNotifierItem->setIconByName(UPDATES_ICON);
+    QString icon;
+    if (type == Important) {
+        icon = "kpackagekit-important";
+    } else if (type == Security) {
+        icon = "kpackagekit-security";
+    } else {
+        icon = "kpackagekit-updates";
+    }
+    m_statusNotifierItem->setIconByName(icon);
 
     increaseRunning();
 }
@@ -171,10 +178,14 @@ void KpkUpdateIcon::getUpdateFinished()
     decreaseRunning();
     if (!m_updateList.isEmpty()) {
         // Store all the security updates
+        UpdateType type = Normal;
         QList<QSharedPointer<PackageKit::Package> > securityUpdateList;
         foreach(const QSharedPointer<PackageKit::Package> p, m_updateList) {
-            if (p->info() > Enum::InfoSecurity) {
+            if (p->info() == Enum::InfoSecurity) {
                 securityUpdateList.append(p);
+                type = Security;
+            } else if (type == Normal && p->info() == Enum::InfoImportant) {
+                type = Important;
             }
         }
 
@@ -223,7 +234,7 @@ void KpkUpdateIcon::getUpdateFinished()
             }
         }
         // all failed let's update our icon
-        updateStatusNotifierIcon(!securityUpdateList.isEmpty());
+        updateStatusNotifierIcon(type);
     } else {
         removeStatusNotifierItem();
     }

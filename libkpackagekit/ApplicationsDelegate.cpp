@@ -27,18 +27,13 @@
 #include "KpkPackageModel.h"
 #include "KpkIcons.h"
 
-#define FAV_ICON_SIZE 24
-#define EMBLEM_ICON_SIZE 8
 #define UNIVERSAL_PADDING 4
 #define FADE_LENGTH 16
-#define MAIN_ICON_SIZE 32
 
 ApplicationsDelegate::ApplicationsDelegate(QAbstractItemView *parent)
   : QStyledItemDelegate(parent),
     m_viewport(parent->viewport()),
     // loads it here to be faster when displaying items
-    m_packageIcon("package"),
-    m_collectionIcon("package-orign"),
     m_installIcon("go-down"),
     m_installString(i18n("Install")),
     m_removeIcon("edit-delete"),
@@ -69,6 +64,8 @@ void ApplicationsDelegate::paint(QPainter *painter,
         return;
     }
 
+    // Button height
+    int btHeight = m_buttonSize.height() + UNIVERSAL_PADDING;
     if (index.column() == 0 || index.column() == 1 || index.column() == 2) {
         QStyleOptionViewItemV4 opt(option);
         if (opt.state & QStyle::State_HasFocus) {
@@ -154,16 +151,16 @@ void ApplicationsDelegate::paint(QPainter *painter,
 
         if (leftToRight) {
             gradient.setStart(left + width
-                    - (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) - FADE_LENGTH, 0);
+                    - (UNIVERSAL_PADDING) - FADE_LENGTH, 0);
             gradient.setFinalStop(left + width
-                    - (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
+                    - (UNIVERSAL_PADDING), 0);
         } else {
             gradient.setStart(left + UNIVERSAL_PADDING
-                    + (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE), 0);
+                    + (UNIVERSAL_PADDING ), 0);
             gradient.setFinalStop(left + UNIVERSAL_PADDING
-                    + (UNIVERSAL_PADDING + EMBLEM_ICON_SIZE) + FADE_LENGTH, 0);
+                    + (UNIVERSAL_PADDING) + FADE_LENGTH, 0);
         }
-        paintRect.setHeight(UNIVERSAL_PADDING + MAIN_ICON_SIZE / 2);
+        paintRect.setHeight(btHeight);
         p.fillRect(paintRect, gradient);
         p.setCompositionMode(QPainter::CompositionMode_SourceOver);
         p.end();
@@ -199,11 +196,10 @@ void ApplicationsDelegate::paint(QPainter *painter,
 //             optBt.rect.setLeft(left + UNIVERSAL_PADDING);
 //             left += m_buttonSize.width() + UNIVERSAL_PADDING;
 //         }
-        
-        // Button height
-        int btHeight = m_buttonSize.height() + 2 * UNIVERSAL_PADDING;
+
         // Calculate the top of the button which is the item height - the button height size divided by 2
         // this give us a little value which is the top and bottom margin
+        optBt.rect.setLeft(optBt.rect.left() + UNIVERSAL_PADDING / 2);
         optBt.rect.setTop(optBt.rect.top() + ((btHeight - m_buttonSize.height()) / 2));
         optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
 
@@ -301,12 +297,12 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
 //     kDebug() << index;
     if (index.column() == 4) {
         size = m_buttonSize;
-        size.rheight() += 2 * UNIVERSAL_PADDING;
-        size.rwidth()  += 2 * UNIVERSAL_PADDING;
+        size.rheight() += UNIVERSAL_PADDING;
+        size.rwidth()  += UNIVERSAL_PADDING;
     } else {
         QFontMetrics metric = QFontMetrics(option.font);
         // Button size is always bigger than text (since it has text in it
-        size.setHeight(m_buttonSize.height() + 2 * UNIVERSAL_PADDING);
+        size.setHeight(m_buttonSize.height() + UNIVERSAL_PADDING);
         size.setWidth(metric.width(index.data().toString()));
         if (index.column() == 0) {
             if (m_checkable) {

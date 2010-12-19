@@ -18,26 +18,23 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_PACKAGE_DETAILS_H
-#define KPK_PACKAGE_DETAILS_H
+#ifndef PACKAGE_DETAILS_H
+#define PACKAGE_DETAILS_H
 
 #include <QPackageKit>
 
-#include <KTextBrowser>
 #include <KPixmapSequenceOverlayPainter>
 #include <KJob>
 
 #include <QWidget>
-#include <QPlainTextEdit>
-#include <QListView>
-#include <QStackedLayout>
+#include <QSortFilterProxyModel>
 
-#include "ui_KpkPackageDetails.h"
+#include "ui_PackageDetails.h"
 
 using namespace PackageKit;
 
-class KpkSimplePackageModel;
-class KpkPackageDetails : public QWidget, Ui::KpkPackageDetails
+class KpkPackageModel;
+class PackageDetails : public QWidget, Ui::PackageDetails
 {
 Q_OBJECT
 public:
@@ -47,12 +44,14 @@ public:
         FadeScreenshot = 0x2
     };
     Q_DECLARE_FLAGS(FadeWidgets, FadeWidget)
-    KpkPackageDetails(QWidget *parent = 0);
-    ~KpkPackageDetails();
+    PackageDetails(QWidget *parent = 0);
+    ~PackageDetails();
 
     void setPackage(const QModelIndex &index);
     void hidePackageVersion(bool hide);
     void hidePackageArch(bool hide);
+
+public slots:
     void hide();
 
 signals:
@@ -77,12 +76,6 @@ private:
     QModelIndex   m_index;
     QSharedPointer<PackageKit::Package> m_package;
     QString m_appName;
-
-    QStackedLayout *m_viewLayout;
-    KTextBrowser   *descriptionKTB;
-    QPlainTextEdit *filesPTE;
-    QListView      *dependsOnLV;
-    QListView      *requiredByLV;
 
     QParallelAnimationGroup       *m_expandPanel;
     KPixmapSequenceOverlayPainter *m_busySeq;
@@ -110,17 +103,19 @@ private:
 
     // GetDepends buffer
     bool m_hasDepends;
-    KpkSimplePackageModel *m_dependsModel;
+    KpkPackageModel *m_dependsModel;
+    QSortFilterProxyModel *m_dependsProxy;
 
     // GetRequires buffer
     bool m_hasRequires;
-    KpkSimplePackageModel *m_requiresModel;
+    KpkPackageModel *m_requiresModel;
+    QSortFilterProxyModel *m_requiresProxy;
 
     // Screen shot buffer
     QString      m_currentScreenshot;
     QHash<QString, QString> m_screenshotPath;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KpkPackageDetails::FadeWidgets)
+Q_DECLARE_OPERATORS_FOR_FLAGS(PackageDetails::FadeWidgets)
 
 #endif

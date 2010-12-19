@@ -276,11 +276,11 @@ KIcon KpkIcons::packageIcon(Enum::Info info)
     }
     switch (info) {
     case Enum::InfoBugfix      : return KIcon("script-error");
+    case Enum::InfoEnhancement : return KIcon("ktip");
     case Enum::InfoImportant   : return KIcon("security-low");
     case Enum::InfoLow         : return KIcon("security-high");
-    case Enum::InfoEnhancement : return KIcon("ktip");
-    case Enum::InfoSecurity    : return KIcon("emblem-important");
-    case Enum::InfoNormal      : return KIcon("security-medium");
+    case Enum::InfoSecurity    : return KIcon("security-medium");
+    case Enum::InfoNormal      : return KIcon("emblem-new");
     case Enum::InfoBlocked     : return KIcon("dialog-cancel");
     case Enum::InfoAvailable   : return KIcon("package-download");
     case Enum::InfoInstalled   : return KIcon("package-installed");

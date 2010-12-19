@@ -62,7 +62,7 @@ private slots:
     void on_actionFindDescription_triggered();
     void on_actionFindFile_triggered();
 
-    void on_homeView_activated(const QModelIndex &index);
+    void on_homeView_clicked(const QModelIndex &index);
 
     void finished();
     void errorCode(PackageKit::Enum::Error error, const QString &detail);

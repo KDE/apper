@@ -89,7 +89,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     connect(browseView, SIGNAL(categoryActivated(const QModelIndex &)),
-            this, SLOT(on_homeView_activated(const QModelIndex &)));
+            this, SLOT(on_homeView_clicked(const QModelIndex &)));
 
     QMenu *findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method
@@ -316,7 +316,7 @@ void AddRmKCM::on_actionFindFile_triggered()
     }
 }
 
-void AddRmKCM::on_homeView_activated(const QModelIndex &index)
+void AddRmKCM::on_homeView_clicked(const QModelIndex &index)
 {
     if (index.isValid()) {
         const QSortFilterProxyModel *proxy;

@@ -2,7 +2,7 @@ set(kpk_addrm_SRCS
     KpkFiltersMenu.cpp
     ClickableLabel.cpp
     ScreenShotViewer.cpp
-    KpkPackageDetails.cpp
+    PackageDetails.cpp
     GraphicsOpacityDropShadowEffect.cpp
     CategoryModel.cpp
     BrowseView.cpp
@@ -13,7 +13,7 @@ set(kpk_addrm_SRCS
 )
 
 kde4_add_ui_files(kpk_addrm_SRCS
-    KpkPackageDetails.ui
+    PackageDetails.ui
     BrowseView.ui
     TransactionHistory.ui
     AddRmKCM.ui

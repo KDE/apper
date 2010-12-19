@@ -36,6 +36,8 @@ public:
     ~KpkUpdateDetails();
 
     void setPackage(const QString &packageId, Enum::Info updateInfo);
+
+public slots:
     void hide();
 
 private slots:

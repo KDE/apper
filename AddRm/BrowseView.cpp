@@ -20,7 +20,7 @@
 
 #include "BrowseView.h"
 
-#include "KpkPackageDetails.h"
+#include "PackageDetails.h"
 
 #include <ApplicationsDelegate.h>
 #include <KpkPackageModel.h>
@@ -45,7 +45,7 @@ BrowseView::BrowseView(QWidget *parent)
 {
     setupUi(this);
 
-    connect(categoryView, SIGNAL(activated(const QModelIndex &)),
+    connect(categoryView, SIGNAL(clicked(const QModelIndex &)),
             this, SIGNAL(categoryActivated(const QModelIndex &)));
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
@@ -138,7 +138,7 @@ void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
     delete menu;
 }
 
-void BrowseView::on_packageView_activated(const QModelIndex &index)
+void BrowseView::on_packageView_clicked(const QModelIndex &index)
 {
     if (index.column() == 4) {
         return;

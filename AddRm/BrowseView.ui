@@ -205,7 +205,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="KpkPackageDetails" name="packageDetails" native="true">
+    <widget class="PackageDetails" name="packageDetails" native="true">
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -218,9 +218,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KpkPackageDetails</class>
+   <class>PackageDetails</class>
    <extends>QWidget</extends>
-   <header>KpkPackageDetails.h</header>
+   <header>PackageDetails.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
