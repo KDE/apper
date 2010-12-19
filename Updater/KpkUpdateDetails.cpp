@@ -52,25 +52,25 @@ KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
     QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(descriptionKTB);
     effect->setOpacity(0);
     descriptionKTB->setGraphicsEffect(effect);
-    m_fadeDetails = new QPropertyAnimation(effect, "opacity");
+    m_fadeDetails = new QPropertyAnimation(effect, "opacity", this);
     m_fadeDetails->setDuration(500);
     m_fadeDetails->setStartValue(qreal(0));
     m_fadeDetails->setEndValue(qreal(1));
     connect(m_fadeDetails, SIGNAL(finished()), this, SLOT(display()));
 
 
-    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize");
+    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize", this);
     anim1->setDuration(500);
     anim1->setEasingCurve(QEasingCurve::OutQuart);
     anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
     anim1->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
-    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize");
+    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize", this);
     anim2->setDuration(500);
     anim2->setEasingCurve(QEasingCurve::OutQuart);
     anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
     anim2->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
 
-    m_expandPanel = new QParallelAnimationGroup;
+    m_expandPanel = new QParallelAnimationGroup(this);
     m_expandPanel->addAnimation(anim1);
     m_expandPanel->addAnimation(anim2);
     connect(m_expandPanel, SIGNAL(finished()), this, SLOT(display()));

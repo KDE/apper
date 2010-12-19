@@ -80,7 +80,7 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     packageView->setHeader(m_header);
     packageView->setHeaderHidden(true);
 
-    m_updatesModel = new KpkPackageModel(this, packageView);
+    m_updatesModel = new KpkPackageModel(this);
     m_updatesModel->setCheckable(true);
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(m_updatesModel);

@@ -59,7 +59,7 @@ public:
         Enum::Info info;
     } InternalPackage;
 
-    explicit KpkPackageModel(QObject *parent = 0, QAbstractItemView *packageView = 0);
+    explicit KpkPackageModel(QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -113,7 +113,6 @@ private:
     int m_packageCount;
     bool                            m_checkable;
     QPixmap                         m_installedEmblem;
-    QAbstractItemView              *m_packageView;
     QVector<InternalPackage>        m_packages;
     QHash<QString, InternalPackage> m_checkedPackages;
 };

@@ -49,11 +49,10 @@
 
 using namespace PackageKit;
 
-KpkPackageModel::KpkPackageModel(QObject *parent, QAbstractItemView *packageView)
+KpkPackageModel::KpkPackageModel(QObject *parent)
 : QAbstractItemModel(parent),
   m_packageCount(0),
-  m_checkable(false),
-  m_packageView(packageView)
+  m_checkable(false)
 {
     m_installedEmblem = KpkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 }
@@ -151,12 +150,13 @@ void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Packag
 
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    Q_UNUSED(orientation);
-    if (!m_checkable) {
-        return QVariant();
+    Q_UNUSED(orientation);   
+    if (!m_checkable && role == Qt::DisplayRole) {
+        // the architecture text is too long
+        return QString();
     }
 
-    if (m_packageCount && role == Qt::DisplayRole) {
+    if (/*m_packageCount && */role == Qt::DisplayRole) {
         if (section == 0) {
             if (m_checkable) {
                 return KpkStrings::packageQuantity(true,
@@ -187,6 +187,7 @@ int KpkPackageModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &parent) const
 {
+//   kDebug() << parent.isValid() << m_packageCount << row << column;
     // Check to see if the index isn't out of list
     if (!parent.isValid() && m_packageCount > row) {
         return createIndex(row, column);
@@ -434,12 +435,6 @@ void KpkPackageModel::finished()
     m_packageCount = m_packages.size();
     endResetModel();
 
-    QTreeView *view = qobject_cast<QTreeView*>(m_packageView);
-    if (view) {
-        // This only works because
-        view->resizeColumnToContents(0);
-        view->resizeColumnToContents(1);
-    }
     emit changed(!m_checkedPackages.isEmpty());
 }
 

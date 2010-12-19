@@ -53,7 +53,7 @@ BrowseView::BrowseView(QWidget *parent)
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(packageView->viewport());
 
-    m_model = new KpkPackageModel(this, packageView);
+    m_model = new KpkPackageModel(this);
     m_proxy = new KCategorizedSortFilterProxyModel(this);
     m_proxy->setSourceModel(m_model);
     m_proxy->setDynamicSortFilter(true);

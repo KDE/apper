@@ -159,7 +159,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     effect->setOpacity(0);
 //     stackedWidget->setVisible(false);
     stackedWidget->setGraphicsEffect(effect);
-    m_fadeStacked = new QPropertyAnimation(effect, "opacity");
+    m_fadeStacked = new QPropertyAnimation(effect, "opacity", this);
     m_fadeStacked->setDuration(500);
     m_fadeStacked->setStartValue(qreal(0));
     m_fadeStacked->setEndValue(qreal(1));
@@ -168,7 +168,7 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
 
     // It's is impossible due to some limitation in Qt to set two effects on the same
     // Widget
-    m_fadeScreenshot = new QPropertyAnimation(effect, "opacity");
+    m_fadeScreenshot = new QPropertyAnimation(effect, "opacity", this);
     GraphicsOpacityDropShadowEffect *shadow = new GraphicsOpacityDropShadowEffect(screenshotL);
     shadow->setOpacity(0);
     shadow->setBlurRadius(BLUR_RADIUS);
@@ -176,25 +176,25 @@ KpkPackageDetails::KpkPackageDetails(QWidget *parent)
     shadow->setColor(QApplication::palette().dark().color());
     screenshotL->setGraphicsEffect(shadow);
 
-    m_fadeScreenshot = new QPropertyAnimation(shadow, "opacity");
+    m_fadeScreenshot = new QPropertyAnimation(shadow, "opacity", this);
     m_fadeScreenshot->setDuration(500);
     m_fadeScreenshot->setStartValue(qreal(0));
     m_fadeScreenshot->setEndValue(qreal(1));
     connect(m_fadeScreenshot, SIGNAL(finished()), this, SLOT(display()));
 
     // This pannel expanding
-    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize");
+    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize", this);
     anim1->setDuration(500);
     anim1->setEasingCurve(QEasingCurve::OutQuart);
     anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
     anim1->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
-    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize");
+    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize", this);
     anim2->setDuration(500);
     anim2->setEasingCurve(QEasingCurve::OutQuart);
     anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
     anim2->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
 
-    m_expandPanel = new QParallelAnimationGroup;
+    m_expandPanel = new QParallelAnimationGroup(this);
     m_expandPanel->addAnimation(anim1);
     m_expandPanel->addAnimation(anim2);
     connect(m_expandPanel, SIGNAL(finished()), this, SLOT(display()));

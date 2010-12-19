@@ -25,8 +25,8 @@
 #include <QApplication>
 #include <QStyleOption>
 
-CategoryDrawer::CategoryDrawer()
- : KCategoryDrawerV2(0)
+CategoryDrawer::CategoryDrawer(KCategorizedView *view)
+ : KCategoryDrawerV3(view)
 {
     setLeftMargin( 7 );
     setRightMargin( 7 );

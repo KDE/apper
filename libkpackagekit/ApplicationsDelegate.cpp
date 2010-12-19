@@ -298,6 +298,7 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
                                      const QModelIndex &index) const
 {
     QSize size;
+//     kDebug() << index;
     if (index.column() == 4) {
         size = m_buttonSize;
         size.rheight() += 2 * UNIVERSAL_PADDING;

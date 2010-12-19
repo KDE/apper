@@ -77,7 +77,7 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
 
     //initialize the model, delegate, client and  connect it's signals
     d->ui.packageView->viewport()->setAttribute(Qt::WA_Hover);
-    d->mainPkgModel = new KpkPackageModel(this, d->ui.packageView);
+    d->mainPkgModel = new KpkPackageModel(this);
     KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
     changedProxy->setSourceModel(d->mainPkgModel);
     changedProxy->setCategorizedModel(true);

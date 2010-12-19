@@ -151,7 +151,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     // CHANGES TAB
     changesView->viewport()->setAttribute(Qt::WA_Hover);
-    m_changesModel = new KpkPackageModel(this, changesView);
+    m_changesModel = new KpkPackageModel(this);
     KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
     changedProxy->setSourceModel(m_changesModel);
     changedProxy->setCategorizedModel(true);
