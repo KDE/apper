@@ -135,6 +135,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
     // Create the groups model
     m_groupsModel = new CategoryModel(this);
+    browseView->setCategoryModel(m_groupsModel);
     connect(m_groupsModel, SIGNAL(finished()),
             this, SLOT(setupHomeModel()));
 
@@ -182,7 +183,7 @@ void AddRmKCM::setupHomeModel()
     homeView->setSpacing(KDialog::spacingHint());
     homeView->viewport()->setAttribute(Qt::WA_Hover);
 
-    browseView->setCategoryModel(m_groupsModel);
+//     browseView->setCategoryModel(m_groupsModel);
 
     KFileItemDelegate *delegate = new KFileItemDelegate(this);
     delegate->setWrapMode(QTextOption::WordWrap);

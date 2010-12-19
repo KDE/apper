@@ -59,7 +59,6 @@ CategoryModel::CategoryModel(QObject *parent)
 
 #ifdef HAVE_APPINSTALL
     fillWithServiceGroups();
-    QTimer::singleShot(0, this, SIGNAL(finished()));
 #else
     if (m_roles & Enum::RoleGetCategories
      && Client::instance()->getTransactionList().isEmpty()) {
@@ -71,13 +70,12 @@ CategoryModel::CategoryModel(QObject *parent)
         trans->getCategories();
         if (trans->error()) {
             fillWithStandardGroups();
-            QTimer::singleShot(0, this, SIGNAL(finished()));
         }
     } else {
         fillWithStandardGroups();
-        QTimer::singleShot(0, this, SIGNAL(finished()));
     }
 #endif //HAVE_APPINSTALL
+    QTimer::singleShot(0, this, SIGNAL(finished()));
 }
 
 CategoryModel::~CategoryModel()
@@ -113,11 +111,9 @@ void CategoryModel::category(const QString &parentId,
             appendRow(item);
         }
     }
-}
-
-void CategoryModel::setRoot()
-{
-    emit layoutChanged();
+    
+    // This is a MUST since the spacing needs to be fixed
+    emit finished();
 }
 
 QStandardItem* CategoryModel::findCategory(const QString &categoryId, const QModelIndex &parent) const
@@ -157,6 +153,8 @@ void CategoryModel::fillWithStandardGroups()
             appendRow(item);
         }
     }
+
+    emit finished();
 }
 
 void CategoryModel::fillWithServiceGroups()

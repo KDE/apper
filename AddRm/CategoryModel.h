@@ -40,9 +40,6 @@ public:
     CategoryModel(QObject *parent = 0);
     ~CategoryModel();
 
-public slots:
-    void setRoot();
-
 signals:
     void finished();
 
