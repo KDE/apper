@@ -159,14 +159,14 @@ void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
     QString text;
     text = i18np("You have one update", "You have %1 updates", m_updateList.size());
     m_statusNotifierItem->setToolTip(UPDATES_ICON, text, QString());
-    QString icon;
-    if (type == Important) {
-        icon = "kpackagekit-important";
-    } else if (type == Security) {
-        icon = "kpackagekit-security";
-    } else {
-        icon = "kpackagekit-updates";
-    }
+    QString icon = UPDATES_ICON;
+//     if (type == Important) {
+//         icon = "kpackagekit-important";
+//     } else if (type == Security) {
+//         icon = "kpackagekit-security";
+//     } else {
+//         icon = "kpackagekit-updates";
+//     }
     m_statusNotifierItem->setIconByName(icon);
 
     increaseRunning();
