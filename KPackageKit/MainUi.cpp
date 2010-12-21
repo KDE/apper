@@ -57,10 +57,10 @@ MainUi::~MainUi()
 void MainUi::showAll()
 {
     // check to see if all are added
-    showSettings(false);
-    showUpdates(false, false);
+//     showSettings(false);
+//     showUpdates(false, false);
     if (!m_addrmPWI) {
-        m_addrmPWI = addModule("kpk_addrm.desktop");
+        m_addrmPWI = addModule("kcm_apper");
     }
 
     if (currentPage() != m_addrmPWI) {

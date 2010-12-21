@@ -7,7 +7,7 @@ Icon=preferences-other
 X-KDE-Library=kcm_kpk_settings
 X-KDE-ParentApp=kcontrol
 X-KDE-ServiceTypes=KCModule,KCModuleInit
-X-KDE-System-Settings-Parent-Category=manage-software
+# X-KDE-System-Settings-Parent-Category=manage-software
 X-KDE-Weight=3
 
 Name=Settings

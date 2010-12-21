@@ -54,6 +54,7 @@ K_EXPORT_PLUGIN(KPackageKitFactory("kcm_apper"))
 ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args)
  : KCModule(KPackageKitFactory::componentData(), parent, args),
    m_currentAction(0),
+   m_groupsProxyModel(0),
    m_searchTransaction(0),
    m_findIcon("edit-find"),
    m_cancelIcon("dialog-cancel"),

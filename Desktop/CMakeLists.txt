@@ -1,5 +1,5 @@
 
-install( FILES settings-manage-software.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
+install( FILES kcm_apper.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES kpk_addrm.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES kpk_settings.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES kpk_update.desktop DESTINATION ${SERVICES_INSTALL_DIR} )

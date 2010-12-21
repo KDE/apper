@@ -66,7 +66,7 @@ include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libkpackagekit)
 
 add_subdirectory(libkpackagekit)
-add_subdirectory(AddRm)
+add_subdirectory(ApperKCM)
 add_subdirectory(Settings)
 add_subdirectory(Updater)
 add_subdirectory(KPackageKit)

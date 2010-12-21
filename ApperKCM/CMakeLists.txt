@@ -9,18 +9,18 @@ set(kpk_addrm_SRCS
     TransactionModel.cpp
     TransactionFilterModel.cpp
     TransactionHistory.cpp
-    AddRmKCM.cpp
+    ApperKCM.cpp
 )
 
 kde4_add_ui_files(kpk_addrm_SRCS
     PackageDetails.ui
     BrowseView.ui
     TransactionHistory.ui
-    AddRmKCM.ui
+    ApperKCM.ui
 )
 
-kde4_add_plugin(kcm_apper ${kpk_addrm_SRCS})
-target_link_libraries(kcm_apper
+kde4_add_plugin(apper ${kpk_addrm_SRCS})
+target_link_libraries(apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KUTILS_LIBS}
@@ -28,4 +28,4 @@ target_link_libraries(kcm_apper
     kpackagekitlib
 )
 
-install(TARGETS kcm_apper DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS apper DESTINATION ${PLUGIN_INSTALL_DIR} )
