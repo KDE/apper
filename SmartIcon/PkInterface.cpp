@@ -35,6 +35,7 @@
 #include "PkInstallProvideFiles.h"
 #include "PkInstallCatalogs.h"
 #include "PkRemovePackageByFiles.h"
+#include "PkInstallPrinterDrivers.h"
 
 #include "PkIsInstalled.h"
 #include "PkSearchFile.h"
@@ -144,6 +145,17 @@ void PkInterface::RemovePackageByFiles(uint xid, const QStringList &files, const
     setDelayedReply(true);
     PkRemovePackageByFiles *task;
     task = new PkRemovePackageByFiles(xid, files, interaction, message());
+    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    task->run();
+}
+
+void PkInterface::InstallPrinterDrivers(uint xid, const QStringList &resources, const QString &interaction)
+{
+    increaseRunning();
+    kDebug() << xid << resources << interaction;
+    setDelayedReply(true);
+    PkInstallPrinterDrivers *task;
+    task = new PkInstallPrinterDrivers(xid, resources, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
     task->run();
 }

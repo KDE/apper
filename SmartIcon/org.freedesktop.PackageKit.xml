@@ -450,6 +450,48 @@
         </doc:doc>
       </arg>
     </method>
+
+    <method name="InstallPrinterDrivers">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Installs printer drivers from a configured software source.
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+      <arg type="u" name="xid" direction="in">                                                                                                                                  
+        <doc:doc>                                                                                                                                                               
+          <doc:summary>                                                                                                                                                         
+            <doc:para>                                                                                                                                                          
+              The X window handle ID, used for focus stealing prevention and setting modality.                                                                                  
+            </doc:para>                                                                                                                                                         
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="as" name="resources" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              An array of printer model descriptors in IEEE 1284
+              Device ID format,
+              e.g. <doc:tt>MFG:Hewlett-Packard;MDL:HP LaserJet
+              6MP;</doc:tt>.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="s" name="interaction" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              An optional interaction mode, e.g.
+              <doc:tt>show-confirm-search,show-confirm-deps,show-confirm-install,show-progress,show-finished,show-warning</doc:tt>
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+    </method>
   </interface>
 </node>
 
