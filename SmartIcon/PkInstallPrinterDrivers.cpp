@@ -53,9 +53,9 @@ void PkInstallPrinterDrivers::start()
         QStringList fields = deviceid.split(';');
         foreach (const QString &field, fields) {
             QString keyvalue = field.trimmed();
-            if (keyvalue.startsWith("MFG:")) {
+            if (keyvalue.startsWith(QLatin1String("MFG:"))) {
                 mfg = keyvalue.mid(4);
-            } else if (keyvalue.startsWith("MDL:")) {
+            } else if (keyvalue.startsWith(QLatin1String("MDL:"))) {
                 mdl = keyvalue.mid(4);
             }
         }
@@ -119,7 +119,7 @@ void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Enum::Exit status
     }
 }
 
-void PkInstallPrinterDrivers::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkInstallPrinterDrivers::addPackage(QSharedPointer<PackageKit::Package> package)
 {
     m_foundPackages.append(package);
 }

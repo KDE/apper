@@ -122,6 +122,7 @@ void KpkUpdateIcon::packageToUpdate(QSharedPointer<PackageKit::Package> package)
 
 void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
 {
+    Q_UNUSED(type)
     KConfig config("KPackageKit");
     KConfigGroup checkUpdateGroup(&config, "Notify");
     Qt::CheckState iconEnabled = static_cast<Qt::CheckState>(checkUpdateGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)));
