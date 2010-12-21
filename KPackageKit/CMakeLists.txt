@@ -1,7 +1,6 @@
 find_package(KDE4Internal REQUIRED)
 
 set(kpackagekit_SRCS
-    kcmultidialog.cpp
     KpkMainUi.cpp
     KpkBackendDetails.cpp
     KPackageKit.cpp

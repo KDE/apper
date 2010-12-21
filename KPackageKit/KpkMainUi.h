@@ -23,7 +23,7 @@
 
 #include <QPackageKit>
 
-#include "kcmultidialog.h"
+#include <KCMultiDialog>
 
 using namespace PackageKit;
 
