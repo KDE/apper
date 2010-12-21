@@ -28,6 +28,7 @@
 #include <KCModule>
 #include <KIcon>
 #include <KToolBarPopupAction>
+#include <KCategorizedSortFilterProxyModel>
 
 #include <QPackageKit>
 
@@ -82,6 +83,7 @@ private:
     KToolBarPopupAction *m_genericActionK;
     QAction             *m_currentAction;
     CategoryModel       *m_groupsModel;
+    KCategorizedSortFilterProxyModel *m_groupsProxyModel;
     KpkPackageModel     *m_browseModel;
     KpkPackageModel     *m_changesModel;
 

@@ -82,6 +82,36 @@ CategoryModel::~CategoryModel()
 {
 }
 
+QModelIndex CategoryModel::index(int row, int column, const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return QStandardItemModel::index(row, column, m_rootIndex);
+}
+
+int CategoryModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return QStandardItemModel::rowCount(m_rootIndex);
+}
+
+void CategoryModel::setRootIndex(const QModelIndex &index)
+{
+    m_rootIndex = index;
+    reset();
+    emit finished();
+}
+
+bool CategoryModel::setParentIndex()
+{
+    if (m_rootIndex.isValid()) {
+        setRootIndex(m_rootIndex.parent());
+        // Return the future parent so that Back button can be disabled
+        return m_rootIndex.parent().isValid();
+    }
+    // if there is no higher level return false
+    return false;
+}
+
 void CategoryModel::category(const QString &parentId,
                              const QString &categoryId,
                              const QString &name,
@@ -94,7 +124,7 @@ void CategoryModel::category(const QString &parentId,
     item->setData(Enum::RoleSearchGroup, SearchRole);
     item->setData(categoryId, GroupRole);
     item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
-    item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
+    item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
     item->setToolTip(summary);
     item->setIcon(KIcon("/usr/share/pixmaps/comps/" + icon + ".png"));
 
@@ -103,9 +133,9 @@ void CategoryModel::category(const QString &parentId,
     } else {
         QStandardItem *parent = findCategory(parentId);
         if (parent) {
-//             item->setData(parent->text(),
-//                           KCategorizedSortFilterProxyModel::CategoryDisplayRole);
-//             item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
+            item->setData(parent->text(),
+                          KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+            item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
             parent->appendRow(item);
         } else {
             appendRow(item);
@@ -276,7 +306,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
             item->setText(KpkStrings::groups(group));
         }
         item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
-        item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
+        item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
         if (parent) {
             parent->appendRow(item);
         } else {

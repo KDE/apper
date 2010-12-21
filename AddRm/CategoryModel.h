@@ -40,6 +40,11 @@ public:
     CategoryModel(QObject *parent = 0);
     ~CategoryModel();
 
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    void setRootIndex(const QModelIndex &index);
+    bool setParentIndex();
+
 signals:
     void finished();
 
@@ -60,6 +65,7 @@ private:
 
     Enum::Roles  m_roles;
     Enum::Groups m_groups;
+    QModelIndex  m_rootIndex;
 };
 
 #endif

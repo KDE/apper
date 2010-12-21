@@ -36,7 +36,6 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KFileItemDelegate>
-#include <KCategorizedSortFilterProxyModel>
 
 #include <KpkPackageModel.h>
 #include <KpkReviewChanges.h>
@@ -138,6 +137,12 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
     browseView->setCategoryModel(m_groupsModel);
     connect(m_groupsModel, SIGNAL(finished()),
             this, SLOT(setupHomeModel()));
+    homeView->setSpacing(KDialog::spacingHint());
+    homeView->viewport()->setAttribute(Qt::WA_Hover);
+
+    KFileItemDelegate *delegate = new KFileItemDelegate(this);
+    delegate->setWrapMode(QTextOption::WordWrap);
+    homeView->setItemDelegate(delegate);
 
     // install the backend filters
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(Client::instance()->filters(), this));
@@ -180,20 +185,27 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
 
 void AddRmKCM::setupHomeModel()
 {
-    homeView->setSpacing(KDialog::spacingHint());
-    homeView->viewport()->setAttribute(Qt::WA_Hover);
-
+    KCategorizedSortFilterProxyModel *oldProxy = m_groupsProxyModel;
+    m_groupsProxyModel = new KCategorizedSortFilterProxyModel(this);
+    m_groupsProxyModel->setSourceModel(m_groupsModel);
+    m_groupsProxyModel->setCategorizedModel(true);
+    m_groupsProxyModel->sort(0);
+    homeView->setModel(m_groupsProxyModel);
+    delete oldProxy;
+//     homeView->setSpacing(KDialog::spacingHint());
+//     homeView->viewport()->setAttribute(Qt::WA_Hover);
+// 
 //     browseView->setCategoryModel(m_groupsModel);
-
-    KFileItemDelegate *delegate = new KFileItemDelegate(this);
-    delegate->setWrapMode(QTextOption::WordWrap);
-    homeView->setItemDelegate(delegate);
-
-    KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
-    proxy->setSourceModel(m_groupsModel);
-    proxy->setCategorizedModel(true);
-    proxy->sort(0);
-    homeView->setModel(proxy);
+// 
+//     KFileItemDelegate *delegate = new KFileItemDelegate(this);
+//     delegate->setWrapMode(QTextOption::WordWrap);
+//     homeView->setItemDelegate(delegate);
+// 
+//     KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
+//     proxy->setSourceModel(m_groupsModel);
+//     proxy->setCategorizedModel(true);
+//     proxy->sort(0);
+//     homeView->setModel(proxy);
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -336,7 +348,14 @@ void AddRmKCM::on_homeView_clicked(const QModelIndex &index)
             m_searchString = index.data(CategoryModel::CategoryRole).toString();
         } else if (m_searchRole == Enum::RoleSearchGroup) {
             if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
-                m_searchGroupCategory = index.data(CategoryModel::GroupRole).toString();
+                QString category = index.data(CategoryModel::GroupRole).toString();
+                if (category.startsWith('@')) {
+                    m_searchGroupCategory = category;
+                } else {
+                    m_groupsModel->setRootIndex(m_searchParentCategory);
+                    backTB->setEnabled(true);
+                    return;
+                }
             } else {
                 m_searchGroupCategory.clear();
                 m_searchGroup = static_cast<Enum::Group>(index.data(CategoryModel::GroupRole).toUInt());
@@ -368,6 +387,12 @@ void AddRmKCM::on_backTB_clicked()
         filtersTB->setEnabled(true);
         widget->setEnabled(true);
         delete m_history;
+    } else if (stackedWidget->currentWidget() == pageHome) {
+        if (m_groupsModel->setParentIndex()) {
+            // if we are able to set a new parent item
+            // do not disable back button
+            return;
+        }
     }
     stackedWidget->setCurrentIndex(0);
     backTB->setEnabled(false);
