@@ -44,6 +44,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     void setRootIndex(const QModelIndex &index);
     bool setParentIndex();
+    bool hasParent() const;
 
 signals:
     void finished();

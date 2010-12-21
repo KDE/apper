@@ -21,6 +21,7 @@
 #include "BrowseView.h"
 
 #include "PackageDetails.h"
+#include "CategoryModel.h"
 
 #include <ApplicationsDelegate.h>
 #include <KpkPackageModel.h>
@@ -190,8 +191,16 @@ bool BrowseView::goBack()
     packageDetails->hide();
     QModelIndex index = categoryView->rootIndex();
     if (index.parent().isValid()) {
-        setParentCategory(index.parent());
-        emit categoryActivated(index.parent());
+        index = index.parent();
+        // if it's valid we need to know if it wasn't a  PK root category
+        if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
+            QString category = index.data(CategoryModel::GroupRole).toString();
+            if (!category.startsWith('@')) {
+                return true;
+            }
+        }
+        setParentCategory(index);
+        emit categoryActivated(index);
         return false;
     }
     return true;

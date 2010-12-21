@@ -59,6 +59,21 @@ CategoryModel::CategoryModel(QObject *parent)
 
 #ifdef HAVE_APPINSTALL
     fillWithServiceGroups();
+//         category("",
+//                              "servers",
+//                              "Servers",
+//                              "const QString &summary",
+//                              "computer");
+//     category("servers",
+//                              "@coomputer",
+//                              "Lighttpd",
+//                              "const QString &summary",
+//                              "emblem-new");
+//     category("servers",
+//                              "@coomputer2",
+//                              "Apache",
+//                              "const QString &summary",
+//                              "dialog-cancel");
 #else
     if (m_roles & Enum::RoleGetCategories
      && Client::instance()->getTransactionList().isEmpty()) {
@@ -84,13 +99,17 @@ CategoryModel::~CategoryModel()
 
 QModelIndex CategoryModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
+    if (parent.isValid()) {
+        return QStandardItemModel::index(row, column, parent);
+    }
     return QStandardItemModel::index(row, column, m_rootIndex);
 }
 
 int CategoryModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
+    if (parent.isValid()) {
+        return QStandardItemModel::rowCount(parent);
+    }
     return QStandardItemModel::rowCount(m_rootIndex);
 }
 
@@ -110,6 +129,11 @@ bool CategoryModel::setParentIndex()
     }
     // if there is no higher level return false
     return false;
+}
+
+bool CategoryModel::hasParent() const
+{
+    return m_rootIndex.isValid();
 }
 
 void CategoryModel::category(const QString &parentId,

@@ -192,20 +192,6 @@ void AddRmKCM::setupHomeModel()
     m_groupsProxyModel->sort(0);
     homeView->setModel(m_groupsProxyModel);
     delete oldProxy;
-//     homeView->setSpacing(KDialog::spacingHint());
-//     homeView->viewport()->setAttribute(Qt::WA_Hover);
-// 
-//     browseView->setCategoryModel(m_groupsModel);
-// 
-//     KFileItemDelegate *delegate = new KFileItemDelegate(this);
-//     delegate->setWrapMode(QTextOption::WordWrap);
-//     homeView->setItemDelegate(delegate);
-// 
-//     KCategorizedSortFilterProxyModel *proxy = new KCategorizedSortFilterProxyModel(this);
-//     proxy->setSourceModel(m_groupsModel);
-//     proxy->setCategorizedModel(true);
-//     proxy->sort(0);
-//     homeView->setModel(proxy);
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -379,9 +365,12 @@ void AddRmKCM::on_homeView_clicked(const QModelIndex &index)
 
 void AddRmKCM::on_backTB_clicked()
 {
+    bool canGoBack = false;
     if (stackedWidget->currentWidget() == pageBrowse) {
         if (!browseView->goBack()) {
             return;
+        } else if (m_groupsModel->hasParent()) {
+            canGoBack = true;
         }
     } else if (stackedWidget->currentWidget() == m_history) {
         filtersTB->setEnabled(true);
@@ -394,8 +383,9 @@ void AddRmKCM::on_backTB_clicked()
             return;
         }
     }
+
     stackedWidget->setCurrentIndex(0);
-    backTB->setEnabled(false);
+    backTB->setEnabled(canGoBack);
     // reset the search role
     m_searchRole = Enum::UnknownRole;
 }
