@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KPackageKit.h"
+#include "Apper.h"
 #include <version.h>
 
 #include <KDebug>
@@ -29,11 +29,11 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about("kpackagekit",
-                     "kpackagekit", // DO NOT change this catalog unless you know it will not break translations!
-                     ki18n("KPackageKit"),
+    KAboutData about("apper",
+                     "apper", // DO NOT change this catalog unless you know it will not break translations!
+                     ki18n("Apper"),
                      KPK_VERSION,
-                     ki18n("KPackageKit is an application to get and manage software"),
+                     ki18n("Apper is an Application to Get and Manage Software"),
                      KAboutData::License_GPL,
                      ki18n("(C) 2008-2010 Daniel Nicoletti"));
 
@@ -54,15 +54,15 @@ int main(int argc, char **argv)
     options.add("+[package]", ki18n("Package file to install"));
     KCmdLineArgs::addCmdLineOptions(options);
 
-    KPackageKit::addCmdLineOptions();
+    Apper::addCmdLineOptions();
 
-    if (!KPackageKit::start())
+    if (!Apper::start())
     {
-        qDebug() << "KPackageKit is already running!";
+        qDebug() << "Apper is already running!";
         return 0;
     }
 
-    KPackageKit app;
+    Apper app;
 
     return app.exec();
 }

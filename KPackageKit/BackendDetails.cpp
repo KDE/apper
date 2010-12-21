@@ -18,12 +18,12 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkBackendDetails.h"
+#include "BackendDetails.h"
 #include <KIcon>
 
 using namespace PackageKit;
 
-KpkBackendDetails::KpkBackendDetails(QWidget *parent)
+BackendDetails::BackendDetails(QWidget *parent)
   : KDialog(parent)
 {
     setupUi(mainWidget());
@@ -83,4 +83,4 @@ KpkBackendDetails::KpkBackendDetails(QWidget *parent)
     newestCB->setChecked(filters & Enum::FilterNewest);
 }
 
-#include "KpkBackendDetails.moc"
+#include "BackendDetails.moc"

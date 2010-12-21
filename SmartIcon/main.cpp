@@ -29,11 +29,11 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about("KPackageKitSmartIcon",
-                     "kpackagekit",
-                     ki18n("KPackageKit"),
+    KAboutData about("ApperSmartIcon",
+                     "apper",
+                     ki18n("Apper"),
                      KPK_VERSION,
-                     ki18n("KPackageKit Tray Icon"),
+                     ki18n("Apper Tray Icon"),
                      KAboutData::License_GPL,
                      ki18n("(C) 2008-2010 Daniel Nicoletti"));
 

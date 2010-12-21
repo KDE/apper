@@ -19,12 +19,13 @@ kde4_add_ui_files(kpk_addrm_SRCS
     AddRmKCM.ui
 )
 
-kde4_add_plugin(kcm_kpk_addrm ${kpk_addrm_SRCS})
-target_link_libraries(kcm_kpk_addrm
+kde4_add_plugin(kcm_apper ${kpk_addrm_SRCS})
+target_link_libraries(kcm_apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
+    ${KDE4_KUTILS_LIBS}
     ${QPACKAGEKIT_LIBRARIES}
     kpackagekitlib
 )
 
-install(TARGETS kcm_kpk_addrm  DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kcm_apper DESTINATION ${PLUGIN_INSTALL_DIR} )

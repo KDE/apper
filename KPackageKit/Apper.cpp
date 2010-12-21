@@ -18,10 +18,10 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KPackageKit.h"
+#include "Apper.h"
 
-#include "KpkBackendDetails.h"
-#include "KpkMainUi.h"
+#include "BackendDetails.h"
+#include "MainUi.h"
 
 #include <KGlobal>
 #include <KStartupInfo>
@@ -36,7 +36,7 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 
-KPackageKit::KPackageKit()
+Apper::Apper()
  : KUniqueApplication(),
    m_pkUi(0),
    m_running(0)
@@ -44,11 +44,11 @@ KPackageKit::KPackageKit()
     setQuitOnLastWindowClosed(false);
 }
 
-KPackageKit::~KPackageKit()
+Apper::~Apper()
 {
 }
 
-void KPackageKit::appClose()
+void Apper::appClose()
 {
     //check whether we can close
     if (!m_running && !m_pkUi) {
@@ -56,7 +56,7 @@ void KPackageKit::appClose()
     }
 }
 
-void KPackageKit::kcmFinished()
+void Apper::kcmFinished()
 {
     // kcm is finished we set to 0 to be able to quit
     m_pkUi->deleteLater();
@@ -64,14 +64,14 @@ void KPackageKit::kcmFinished()
     appClose();
 }
 
-void KPackageKit::decreaseAndKillRunning()
+void Apper::decreaseAndKillRunning()
 {
     m_running--;
     sender()->deleteLater();
     appClose();
 }
 
-int KPackageKit::newInstance()
+int Apper::newInstance()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     bool notSet = true;
@@ -127,8 +127,8 @@ int KPackageKit::newInstance()
     }
 
     if (args->isSet("backend-details")) {
-        KpkBackendDetails *helper;
-        helper = new KpkBackendDetails;
+        BackendDetails *helper;
+        helper = new BackendDetails;
         connect(helper, SIGNAL(finished()), this, SLOT(decreaseAndKillRunning()));
         QTimer::singleShot(0, helper, SLOT(show()));
         m_running++;
@@ -144,10 +144,10 @@ int KPackageKit::newInstance()
     return 0;
 }
 
-void KPackageKit::showUi()
+void Apper::showUi()
 {
     if (!m_pkUi) {
-        m_pkUi = new KpkMainUi();
+        m_pkUi = new MainUi();
         connect(m_pkUi, SIGNAL(finished()), this, SLOT (kcmFinished()));
     }
     // Show all
@@ -156,10 +156,10 @@ void KPackageKit::showUi()
     KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
-void KPackageKit::showUpdates()
+void Apper::showUpdates()
 {
     if (!m_pkUi) {
-        m_pkUi = new KpkMainUi();
+        m_pkUi = new MainUi();
         connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
     }
     m_pkUi->showUpdates(true);
@@ -167,10 +167,10 @@ void KPackageKit::showUpdates()
     KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
-void KPackageKit::showSettings()
+void Apper::showSettings()
 {
     if (!m_pkUi) {
-        m_pkUi = new KpkMainUi();
+        m_pkUi = new MainUi();
         connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
     }
     m_pkUi->showSettings();
@@ -178,7 +178,7 @@ void KPackageKit::showSettings()
     KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
-void KPackageKit::invoke(const QString &method_name, const QStringList &args)
+void Apper::invoke(const QString &method_name, const QStringList &args)
 {
     QDBusMessage message;
     message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
@@ -196,4 +196,4 @@ void KPackageKit::invoke(const QString &method_name, const QStringList &args)
     QTimer::singleShot(0, this, SLOT(appClose()));
 }
 
-#include "KPackageKit.moc"
+#include "Apper.moc"

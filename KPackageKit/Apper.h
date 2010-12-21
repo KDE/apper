@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,22 +18,37 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_BACKEND_DETAILS_H
-#define KPK_BACKEND_DETAILS_H
+#ifndef APPER_H
+#define APPER_H
 
-#include <QPackageKit>
-#include <KDialog>
+#include <KUniqueApplication>
 
-#include "ui_KpkBackendDetails.h"
-
-using namespace PackageKit;
-
-class KpkBackendDetails : public KDialog, public Ui::KpkBackendDetails
+class MainUi;
+class Apper : public KUniqueApplication
 {
 Q_OBJECT
 
 public:
-    KpkBackendDetails(QWidget *parent = 0);
+    Apper();
+    virtual ~Apper();
+
+    virtual int newInstance();
+
+private slots:
+    void appClose();
+    void kcmFinished();
+    void decreaseAndKillRunning();
+    void showUi();
+    void showUpdates();
+    void showSettings();
+
+private:
+    MainUi *m_pkUi;
+    void invoke(const QString &method_name, const QStringList &args);
+
+    int m_running;
+    bool m_init;
 };
+
 
 #endif

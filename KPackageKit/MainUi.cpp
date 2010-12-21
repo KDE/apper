@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkMainUi.h"
+#include "MainUi.h"
 
 #include <QLayout>
 #include <KDebug>
@@ -29,7 +29,7 @@
 
 using namespace PackageKit;
 
-KpkMainUi::KpkMainUi(QWidget *parent)
+MainUi::MainUi(QWidget *parent)
   : KCMultiDialog(parent),
     m_addrmPWI(0),
     m_updatePWI(0),
@@ -39,22 +39,22 @@ KpkMainUi::KpkMainUi(QWidget *parent)
     setWindowIcon(KIcon("applications-other"));
 
     KConfig config("KPackageKit");
-    KConfigGroup kpackagekitMain(&config, "KpkMainUi");
+    KConfigGroup kpackagekitMain(&config, "MainUi");
     restoreDialogSize(kpackagekitMain);
 
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply | KDialog::Help | KDialog::Default | KDialog::Reset);
 }
 
-KpkMainUi::~KpkMainUi()
+MainUi::~MainUi()
 {
     // save size
     KConfig config("KPackageKit");
-    KConfigGroup kpackagekitMain(&config, "KpkMainUi");
+    KConfigGroup kpackagekitMain(&config, "MainUi");
     saveDialogSize(kpackagekitMain);
 }
 
-void KpkMainUi::showAll()
+void MainUi::showAll()
 {
     // check to see if all are added
     showSettings(false);
@@ -68,7 +68,7 @@ void KpkMainUi::showAll()
     }
 }
 
-void KpkMainUi::showUpdates(bool selected, bool forceCurrentPage)
+void MainUi::showUpdates(bool selected, bool forceCurrentPage)
 {
     if (!m_updatePWI) {
         // the selected boolean is used to automatically select all updates
@@ -84,7 +84,7 @@ void KpkMainUi::showUpdates(bool selected, bool forceCurrentPage)
     }
 }
 
-void KpkMainUi::showSettings(bool forceCurrentPage)
+void MainUi::showSettings(bool forceCurrentPage)
 {
     if (!m_settingsPWI) {
         m_settingsPWI = addModule("kpk_settings.desktop");
@@ -95,4 +95,4 @@ void KpkMainUi::showSettings(bool forceCurrentPage)
     }
 }
 
-#include "KpkMainUi.moc"
+#include "MainUi.moc"

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,37 +18,31 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPACKAGEKIT_H
-#define KPACKAGEKIT_H
+#ifndef MAIN_UI_H
+#define MAIN_UI_H
 
-#include <KUniqueApplication>
+#include <QPackageKit>
 
-class KpkMainUi;
-class KPackageKit : public KUniqueApplication
+#include <KCMultiDialog>
+
+using namespace PackageKit;
+
+class MainUi : public KCMultiDialog
 {
 Q_OBJECT
 
 public:
-    KPackageKit();
-    virtual ~KPackageKit();
+    MainUi(QWidget *parent = 0);
+    ~MainUi();
 
-    virtual int newInstance();
-
-private slots:
-    void appClose();
-    void kcmFinished();
-    void decreaseAndKillRunning();
-    void showUi();
-    void showUpdates();
-    void showSettings();
+    void showAll();
+    void showUpdates(bool selected, bool forceCurrentPage = true);
+    void showSettings(bool forceCurrentPage = true);
 
 private:
-    KpkMainUi *m_pkUi;
-    void invoke(const QString &method_name, const QStringList &args);
-
-    int m_running;
-    bool m_init;
+    KPageWidgetItem *m_addrmPWI;
+    KPageWidgetItem *m_updatePWI;
+    KPageWidgetItem *m_settingsPWI;
 };
-
 
 #endif

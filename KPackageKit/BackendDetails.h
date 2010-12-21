@@ -18,31 +18,22 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_MAIN_UI_H
-#define KPK_MAIN_UI_H
+#ifndef BACKEND_DETAILS_H
+#define BACKEND_DETAILS_H
 
 #include <QPackageKit>
+#include <KDialog>
 
-#include <KCMultiDialog>
+#include "ui_BackendDetails.h"
 
 using namespace PackageKit;
 
-class KpkMainUi : public KCMultiDialog
+class BackendDetails : public KDialog, public Ui::BackendDetails
 {
 Q_OBJECT
 
 public:
-    KpkMainUi(QWidget *parent = 0);
-    ~KpkMainUi();
-
-    void showAll();
-    void showUpdates(bool selected, bool forceCurrentPage = true);
-    void showSettings(bool forceCurrentPage = true);
-
-private:
-    KPageWidgetItem *m_addrmPWI;
-    KPageWidgetItem *m_updatePWI;
-    KPageWidgetItem *m_settingsPWI;
+    BackendDetails(QWidget *parent = 0);
 };
 
 #endif

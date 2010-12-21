@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "AddRmKCM.h"
+#include "ApperKCM.h"
 
 #include <config.h>
 
@@ -48,10 +48,10 @@
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<AddRmKCM>();)
-K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_addrm"))
+K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<ApperKCM>();)
+K_EXPORT_PLUGIN(KPackageKitFactory("kcm_apper"))
 
-AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
+ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args)
  : KCModule(KPackageKitFactory::componentData(), parent, args),
    m_currentAction(0),
    m_searchTransaction(0),
@@ -60,9 +60,9 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
    m_searchRole(Enum::UnknownRole)
 {
     KAboutData *aboutData;
-    aboutData = new KAboutData("kpackagekit",
-                               "kpackagekit",
-                               ki18n("Get and Remove Software"),
+    aboutData = new KAboutData("apper",
+                               "apper",
+                               ki18n("Application Manager"),
                                KPK_VERSION,
                                ki18n("KDE interface for managing software"),
                                KAboutData::License_GPL,
@@ -181,9 +181,15 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
             m_browseModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
 
     changesPB->setIcon(KIcon("edit-redo"));
+
+    m_updatesProxy = new KCModuleProxy("kpk_update", this);
+    stackedWidget->addWidget(m_updatesProxy);
+
+    m_settingsProxy = new KCModuleProxy("kpk_settings", this);
+    stackedWidget->addWidget(m_settingsProxy);
 }
 
-void AddRmKCM::setupHomeModel()
+void ApperKCM::setupHomeModel()
 {
     KCategorizedSortFilterProxyModel *oldProxy = m_groupsProxyModel;
     m_groupsProxyModel = new KCategorizedSortFilterProxyModel(this);
@@ -194,12 +200,12 @@ void AddRmKCM::setupHomeModel()
     delete oldProxy;
 }
 
-void AddRmKCM::genericActionKTriggered()
+void ApperKCM::genericActionKTriggered()
 {
     m_currentAction->trigger();
 }
 
-void AddRmKCM::setCurrentAction(QAction *action)
+void ApperKCM::setCurrentAction(QAction *action)
 {
     // just load the new action if it changes this
     // also ensures that our menu has more than one action
@@ -218,7 +224,7 @@ void AddRmKCM::setCurrentAction(QAction *action)
     }
 }
 
-void AddRmKCM::setCurrentActionEnabled(bool state)
+void ApperKCM::setCurrentActionEnabled(bool state)
 {
     if (m_currentAction) {
         m_currentAction->setEnabled(state);
@@ -226,7 +232,7 @@ void AddRmKCM::setCurrentActionEnabled(bool state)
     m_genericActionK->setEnabled(state);
 }
 
-void AddRmKCM::setCurrentActionCancel(bool cancel)
+void ApperKCM::setCurrentActionCancel(bool cancel)
 {
     if (cancel) {
         // every action should like cancel
@@ -258,25 +264,25 @@ void AddRmKCM::setCurrentActionCancel(bool cancel)
     }
 }
 
-void AddRmKCM::checkChanged()
+void ApperKCM::checkChanged()
 {
     bool value = m_browseModel->hasChanges();
     changesPB->setEnabled(value);
     emit changed(value);
 }
 
-void AddRmKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
+void ApperKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
     if (error != Enum::ErrorTransactionCancelled) {
         KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify);
     }
 }
 
-AddRmKCM::~AddRmKCM()
+ApperKCM::~ApperKCM()
 {
 }
 
-void AddRmKCM::on_actionFindName_triggered()
+void ApperKCM::on_actionFindName_triggered()
 {
     setCurrentAction(actionFindName);
     if (!searchKLE->text().isEmpty()) {
@@ -289,7 +295,7 @@ void AddRmKCM::on_actionFindName_triggered()
     }
 }
 
-void AddRmKCM::on_actionFindDescription_triggered()
+void ApperKCM::on_actionFindDescription_triggered()
 {
     setCurrentAction(actionFindDescription);
     if (!searchKLE->text().isEmpty()) {
@@ -302,7 +308,7 @@ void AddRmKCM::on_actionFindDescription_triggered()
     }
 }
 
-void AddRmKCM::on_actionFindFile_triggered()
+void ApperKCM::on_actionFindFile_triggered()
 {
     setCurrentAction(actionFindFile);
     if (!searchKLE->text().isEmpty()) {
@@ -315,7 +321,7 @@ void AddRmKCM::on_actionFindFile_triggered()
     }
 }
 
-void AddRmKCM::on_homeView_clicked(const QModelIndex &index)
+void ApperKCM::on_homeView_clicked(const QModelIndex &index)
 {
     if (index.isValid()) {
         const QSortFilterProxyModel *proxy;
@@ -357,13 +363,25 @@ void AddRmKCM::on_homeView_clicked(const QModelIndex &index)
             filtersTB->setEnabled(false);
             widget->setEnabled(false);
             return;
+        } else if (m_searchRole == Enum::RoleGetUpdates) {
+            stackedWidget->setCurrentWidget(m_updatesProxy);
+            backTB->setEnabled(true);
+            filtersTB->setEnabled(false);
+            widget->setEnabled(false);
+            return;
+        } else if (m_searchRole == Enum::RoleGetRepoList) {
+            stackedWidget->setCurrentWidget(m_settingsProxy);
+            backTB->setEnabled(true);
+            filtersTB->setEnabled(false);
+            widget->setEnabled(false);
+            return;
         }
         // create the main transaction
         search();
     }
 }
 
-void AddRmKCM::on_backTB_clicked()
+void ApperKCM::on_backTB_clicked()
 {
     bool canGoBack = false;
     if (stackedWidget->currentWidget() == pageBrowse) {
@@ -390,7 +408,7 @@ void AddRmKCM::on_backTB_clicked()
     m_searchRole = Enum::UnknownRole;
 }
 
-void AddRmKCM::on_changesPB_clicked()
+void ApperKCM::on_changesPB_clicked()
 {
     m_changesModel->clear();
     m_changesModel->addPackages(m_browseModel->selectedPackages(), true);
@@ -398,7 +416,7 @@ void AddRmKCM::on_changesPB_clicked()
     backTB->setEnabled(true);
 }
 
-void AddRmKCM::search()
+void ApperKCM::search()
 {
     browseView->cleanUi();
 
@@ -497,13 +515,13 @@ void AddRmKCM::search()
     }
 }
 
-void AddRmKCM::changed()
+void ApperKCM::changed()
 {
     Transaction *trans = qobject_cast<Transaction*>(sender());
     setCurrentActionEnabled(trans->allowCancel());
 }
 
-void AddRmKCM::save()
+void ApperKCM::save()
 {
     QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_browseModel->selectedPackages(), this);
     connect(frm, SIGNAL(successfullyInstalled()), m_browseModel, SLOT(uncheckAvailablePackages()));
@@ -520,14 +538,14 @@ void AddRmKCM::save()
     }
 }
 
-void AddRmKCM::load()
+void ApperKCM::load()
 {
     // set focus on the search lineEdit
     searchKLE->setFocus(Qt::OtherFocusReason);
     m_browseModel->setAllChecked(false);
 }
 
-void AddRmKCM::finished()
+void ApperKCM::finished()
 {
     // if m_currentAction is false means that our
     // find button should be disable as there aren't any
@@ -537,7 +555,7 @@ void AddRmKCM::finished()
     m_searchTransaction = 0;
 }
 
-void AddRmKCM::keyPressEvent(QKeyEvent *event)
+void ApperKCM::keyPressEvent(QKeyEvent *event)
 {
     if (searchKLE->hasFocus() &&
         stackedWidget->currentWidget() != m_history &&
@@ -550,4 +568,4 @@ void AddRmKCM::keyPressEvent(QKeyEvent *event)
     KCModule::keyPressEvent(event);
 }
 
-#include "AddRmKCM.moc"
+#include "ApperKCM.moc"

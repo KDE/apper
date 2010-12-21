@@ -36,7 +36,7 @@
 #define FIVE_MIN 360000
 
 K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KPackageKitD>();)
-K_EXPORT_PLUGIN(KPackageKitFactory("kpackagekitd"))
+K_EXPORT_PLUGIN(KPackageKitFactory("apperd"))
 
 KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant> &)
     : KDEDModule(parent),

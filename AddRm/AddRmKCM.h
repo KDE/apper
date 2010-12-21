@@ -18,14 +18,15 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef ADD_RM_KCM_U
-#define ADD_RM_KCM_U
+#ifndef APPER_KCM_U
+#define APPER_KCM_U
 
-#include "ui_AddRmKCM.h"
+#include "ui_ApperKCM.h"
 
 #include <QtGui/QStandardItemModel>
 
 #include <KCModule>
+#include <KCModuleProxy>
 #include <KIcon>
 #include <KToolBarPopupAction>
 #include <KCategorizedSortFilterProxyModel>
@@ -38,12 +39,12 @@ class KpkPackageModel;
 class KpkFiltersMenu;
 class TransactionHistory;
 class CategoryModel;
-class AddRmKCM : public KCModule, Ui::AddRmKCM
+class ApperKCM : public KCModule, Ui::ApperKCM
 {
     Q_OBJECT
 public:
-    AddRmKCM(QWidget *parent, const QVariantList &args);
-    ~AddRmKCM();
+    ApperKCM(QWidget *parent, const QVariantList &args);
+    ~ApperKCM();
 
 signals:
     void changed(bool state);
@@ -86,6 +87,8 @@ private:
     KCategorizedSortFilterProxyModel *m_groupsProxyModel;
     KpkPackageModel     *m_browseModel;
     KpkPackageModel     *m_changesModel;
+    KCModuleProxy       *m_updatesProxy;
+    KCModuleProxy       *m_settingsProxy;
 
     Transaction *m_searchTransaction;
 

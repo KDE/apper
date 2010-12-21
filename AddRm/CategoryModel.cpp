@@ -53,6 +53,22 @@ CategoryModel::CategoryModel(QObject *parent)
     item->setIcon(KIcon("view-history"));
     appendRow(item);
 
+    item = new QStandardItem(i18n("Updates"));
+    item->setDragEnabled(false);
+    item->setData(Enum::RoleGetUpdates, SearchRole);
+    item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+    item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
+    item->setIcon(KIcon("system-software-update"));
+    appendRow(item);
+
+    item = new QStandardItem(i18n("Settings"));
+    item->setDragEnabled(false);
+    item->setData(Enum::RoleGetRepoList, SearchRole);
+    item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+    item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
+    item->setIcon(KIcon("preferences-other"));
+    appendRow(item);
+
     // Get the groups
     m_groups = Client::instance()->groups();
     m_roles  = Client::instance()->actions();
