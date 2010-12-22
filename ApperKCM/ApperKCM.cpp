@@ -403,7 +403,7 @@ void ApperKCM::on_backTB_clicked()
         }
     }
 
-    stackedWidget->setCurrentIndex(0);
+    stackedWidget->setCurrentWidget(pageHome);
     backTB->setEnabled(canGoBack);
     // reset the search role
     m_searchRole = Enum::UnknownRole;
@@ -512,7 +512,7 @@ void ApperKCM::search()
         setCurrentActionCancel(true);
         setCurrentActionEnabled(m_searchTransaction->allowCancel());
 
-        stackedWidget->setCurrentIndex(1);
+        stackedWidget->setCurrentWidget(pageBrowse);
     }
 }
 
