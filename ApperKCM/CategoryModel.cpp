@@ -181,7 +181,7 @@ void CategoryModel::category(const QString &parentId,
             appendRow(item);
         }
     }
-    
+
     // This is a MUST since the spacing needs to be fixed
     emit finished();
 }

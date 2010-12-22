@@ -342,7 +342,8 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
         } else if (m_searchRole == Enum::RoleSearchGroup) {
             if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
                 QString category = index.data(CategoryModel::GroupRole).toString();
-                if (category.startsWith('@')) {
+                if (category.startsWith('@') ||
+                    (category.startsWith(QLatin1String("repo:")) && category.size() > 5)) {
                     m_searchGroupCategory = category;
                 } else {
                     m_groupsModel->setRootIndex(m_searchParentCategory);
@@ -465,7 +466,8 @@ void ApperKCM::search()
         } else {
             browseView->setParentCategory(m_searchParentCategory);
 #ifndef HAVE_APPINSTALL
-            if (m_searchGroupCategory.startsWith('@')) {
+            if (m_searchGroupCategory.startsWith('@') ||
+                m_searchGroupCategory.startsWith(QLatin1String("repo:"))) {
                 m_searchTransaction->searchGroups(m_searchGroupCategory, m_searchFilters);
             }
 #endif //HAVE_APPINSTALL
