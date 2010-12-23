@@ -379,9 +379,10 @@ void KpkPackageModel::rmSelectedPackage(const KpkPackageModel::InternalPackage &
 
 void KpkPackageModel::clear()
 {
+    beginRemoveRows(QModelIndex(), 0, m_packageCount);
     m_packageCount = 0;
     m_packages.clear();
-    reset();
+    endRemoveRows();
 }
 
 void KpkPackageModel::clearSelectedNotPresent()
@@ -430,9 +431,9 @@ void KpkPackageModel::uncheckAvailablePackages()
 void KpkPackageModel::finished()
 {
     // The whole structure is about to change
-    beginResetModel();
+    beginInsertRows(QModelIndex(), 0, m_packages.size() - 1);
     m_packageCount = m_packages.size();
-    endResetModel();
+    endInsertRows();
 
     emit changed(!m_checkedPackages.isEmpty());
 }
