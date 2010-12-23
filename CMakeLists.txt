@@ -51,7 +51,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 include(FindPkgConfig)
-pkg_check_modules(QPACKAGEKIT REQUIRED packagekit-qt>=0.6.8)
+set(QPACKAGEKIT_MIN_VERSION 0.6.11)
+pkg_check_modules(QPACKAGEKIT REQUIRED packagekit-qt>=${QPACKAGEKIT_MIN_VERSION})
+macro_log_feature(QPACKAGEKIT_FOUND "packagekit-qt" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
 include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS}
