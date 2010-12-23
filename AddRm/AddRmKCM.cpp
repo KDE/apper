@@ -58,6 +58,7 @@ AddRmKCM::AddRmKCM(QWidget *parent, const QVariantList &args)
    m_searchTransaction(0),
    m_findIcon("edit-find"),
    m_cancelIcon("dialog-cancel"),
+   m_history(0),
    m_searchRole(Enum::UnknownRole)
 {
     KAboutData *aboutData;
@@ -192,7 +193,7 @@ void AddRmKCM::setupHomeModel()
     m_groupsProxyModel->setCategorizedModel(true);
     m_groupsProxyModel->sort(0);
     homeView->setModel(m_groupsProxyModel);
-    delete oldProxy;
+    oldProxy->deleteLater();
 }
 
 void AddRmKCM::genericActionKTriggered()
@@ -377,7 +378,7 @@ void AddRmKCM::on_backTB_clicked()
     } else if (stackedWidget->currentWidget() == m_history) {
         filtersTB->setEnabled(true);
         widget->setEnabled(true);
-        delete m_history;
+        m_history->deleteLater();
     } else if (stackedWidget->currentWidget() == pageHome) {
         if (m_groupsModel->setParentIndex()) {
             // if we are able to set a new parent item
@@ -516,7 +517,7 @@ void AddRmKCM::save()
 
     // This avoid crashing as the above function does not always quit it's event loop
     if (!frm.isNull()) {
-        delete frm;
+        frm->deleteLater();
 
         search();
         QTimer::singleShot(0, this, SLOT(checkChanged()));
