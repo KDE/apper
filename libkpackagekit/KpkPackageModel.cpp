@@ -105,6 +105,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         iPackage.info        = package->info();
 #ifdef HAVE_APPINSTALL
         iPackage.icon = AppInstall::instance()->genericIcon(package->name());
+        iPackage.isPackage = true;
 #else
         iPackage.icon = package->iconPath();
         if (iPackage.icon.isEmpty()) {
