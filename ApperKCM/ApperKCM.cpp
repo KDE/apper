@@ -199,7 +199,9 @@ void ApperKCM::setupHomeModel()
     m_groupsProxyModel->setCategorizedModel(true);
     m_groupsProxyModel->sort(0);
     homeView->setModel(m_groupsProxyModel);
-    oldProxy->deleteLater();
+    if (oldProxy) {
+        oldProxy->deleteLater();
+    }
 }
 
 void ApperKCM::genericActionKTriggered()
