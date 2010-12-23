@@ -399,6 +399,7 @@ void ApperKCM::on_backTB_clicked()
         filtersTB->setEnabled(true);
         widget->setEnabled(true);
         m_history->deleteLater();
+        m_history = 0;
     } else if (stackedWidget->currentWidget() == pageHome) {
         if (m_groupsModel->setParentIndex()) {
             // if we are able to set a new parent item
