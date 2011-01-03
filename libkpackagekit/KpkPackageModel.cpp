@@ -96,6 +96,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
 
     if (data.isEmpty()) {
 #endif //HAVE_APPINSTALL
+
         InternalPackage iPackage;
         iPackage.name        = package->name();
         iPackage.summary     = package->summary();
@@ -103,8 +104,10 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
         iPackage.arch        = package->arch();
         iPackage.id          = package->id();
         iPackage.info        = package->info();
+
 #ifdef HAVE_APPINSTALL
         iPackage.icon = AppInstall::instance()->genericIcon(package->name());
+        iPackage.isPackage = true;
 #else
         iPackage.icon = package->iconPath();
         if (iPackage.icon.isEmpty()) {
@@ -129,6 +132,7 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
             checkPackage(iPackage, false);
         }
         m_packages.append(iPackage);
+
 #ifdef HAVE_APPINSTALL
     }
 #endif //HAVE_APPINSTALL
@@ -318,7 +322,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         }
     case KCategorizedSortFilterProxyModel::CategorySortRole:
         // USING 0 here seems to let things unsorted
-        return package.isPackage ? 2 : 1; // Packages comes after aplications
+        return package.isPackage ? 1 : 0; // Packages comes after aplications
     case ApplicationId:
         return package.appId;
     default:
