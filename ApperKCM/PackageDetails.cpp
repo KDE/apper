@@ -520,6 +520,19 @@ void PackageDetails::setupDescription()
         stackedWidget->setCurrentWidget(pageDescription);
     }
 
+    if (!m_package->hasDetails()) {
+        // Oops we don't have any details
+        descriptionL->setText(i18n("Could not fetch software details"));
+        descriptionL->show();
+
+        // Hide stuff so we don't display outdated data
+        homepageL->hide();
+        pathL->hide();
+        licenseL->hide();
+        sizeL->hide();
+        iconL->clear();
+    }
+
     //format and show description
     Package::Details *details = m_package->details();
 
