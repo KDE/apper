@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2010-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,28 +18,38 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_MODEL_ORIGIN_H
-#define KPK_MODEL_ORIGIN_H
+#ifndef CHECKABLE_HEADER_H
+#define CHECKABLE_HEADER_H
 
-#include <QStandardItemModel>
+#include <QHeaderView>
 
-class KpkModelOrigin : public QStandardItemModel
+class CheckableHeader : public QHeaderView
 {
 Q_OBJECT
 public:
-    KpkModelOrigin(QObject *parent = 0);
-    ~KpkModelOrigin();
+    explicit CheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
 
-    bool changed() const;
-    bool save();
-    void clearChanges();
+    int sectionSizeHint(int logicalIndex) const;
+    QSize sizeHint() const;
 
 public slots:
-    void addOriginItem(const QString &repo_id, const QString &details, bool enabled);
-    void finished();
+    void setCheckState(Qt::CheckState state);
+    void setCheckBoxVisible(bool visible);
+
+signals:
+    void toggled(bool checked);
+
+protected:
+    void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const;
+    void mouseMoveEvent(QMouseEvent *event);
+    void leaveEvent(QEvent *event);
+    void mousePressEvent(QMouseEvent *event);
 
 private:
-    bool m_finished;
+    bool insideCheckBox(const QRect &rect, const QPoint &pos) const;
+
+    Qt::CheckState m_state;
+    bool m_visible;
 };
 
 #endif

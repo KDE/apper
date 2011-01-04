@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkModelOrigin.h"
+#include "OriginModel.h"
 
 #include <KpkStrings.h>
 #include <KpkMacros.h>
@@ -33,19 +33,19 @@ using namespace PackageKit;
 
 Q_DECLARE_METATYPE(Qt::CheckState)
 
-KpkModelOrigin::KpkModelOrigin(QObject *parent)
- : QStandardItemModel(parent),
-   m_finished(true)
+OriginModel::OriginModel(QObject *parent) :
+    QStandardItemModel(parent),
+    m_finished(true)
 {
     setHorizontalHeaderLabels(QStringList() << i18n("Origin of Packages"));
 }
 
 
-KpkModelOrigin::~KpkModelOrigin()
+OriginModel::~OriginModel()
 {
 }
 
-void KpkModelOrigin::addOriginItem(const QString &repo_id, const QString &details, bool enabled)
+void OriginModel::addOriginItem(const QString &repo_id, const QString &details, bool enabled)
 {
     if (m_finished) {
         // if we received a finished signal this is a new query
@@ -53,6 +53,7 @@ void KpkModelOrigin::addOriginItem(const QString &repo_id, const QString &detail
         setHorizontalHeaderLabels(QStringList() << i18n("Origin of Packages"));
         m_finished = false;
     }
+
     Qt::CheckState state = enabled ? Qt::Checked : Qt::Unchecked;
     QStandardItem *item = new QStandardItem(details);
     item->setCheckable(true);
@@ -62,14 +63,14 @@ void KpkModelOrigin::addOriginItem(const QString &repo_id, const QString &detail
     appendRow(item);
 }
 
-void KpkModelOrigin::finished()
+void OriginModel::finished()
 {
     m_finished = true;
 }
 
-void KpkModelOrigin::clearChanges()
+void OriginModel::clearChanges()
 {
-    for (int i = 0; i < rowCount(); i++) {
+    for (int i = 0; i < rowCount(); ++i) {
         QStandardItem *repo = item(i);
         if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
             repo->setCheckState(repo->data().value<Qt::CheckState>());
@@ -77,9 +78,9 @@ void KpkModelOrigin::clearChanges()
     }
 }
 
-bool KpkModelOrigin::changed() const
+bool OriginModel::changed() const
 {
-    for (int i = 0; i < rowCount(); i++) {
+    for (int i = 0; i < rowCount(); ++i) {
         QStandardItem *repo = item(i);
         if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
             return true;
@@ -88,10 +89,10 @@ bool KpkModelOrigin::changed() const
     return false;
 }
 
-bool KpkModelOrigin::save()
+bool OriginModel::save()
 {
     bool changed = false;
-    for (int i = 0; i < rowCount(); i++) {
+    for (int i = 0; i < rowCount(); ++i) {
         QStandardItem *repo = item(i);
         if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
             Transaction *t;
@@ -113,4 +114,4 @@ bool KpkModelOrigin::save()
     return true;
 }
 
-#include "KpkModelOrigin.moc"
+#include "OriginModel.moc"

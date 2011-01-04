@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,12 +18,12 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "UpdateKCM.h"
+#include "Updater.h"
 
-#include "KpkUpdateDetails.h"
-#include "KpkDistroUpgrade.h"
+#include "UpdateDetails.h"
+#include "DistroUpgrade.h"
+#include "CheckableHeader.h"
 #include "KpkMacros.h"
-#include "KpkCheckableHeader.h"
 
 #include <version.h>
 
@@ -49,33 +49,31 @@
 
 #define UNIVERSAL_PADDING 6
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<UpdateKCM>();)
-K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_update"))
-
-UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
-    : KCModule(KPackageKitFactory::componentData(), parent, args),
-      m_updatesT(0)
+Updater::Updater(QWidget *parent) :
+    QWidget(parent),
+    m_updatesT(0)
 {
-    KAboutData *aboutData;
-    aboutData = new KAboutData("apper",
-                               "apper",
-                               ki18n("Update Software"),
-                               KPK_VERSION,
-                               ki18n("Review and Update Software"),
-                               KAboutData::License_GPL,
-                               ki18n("(C) 2008-2010 Daniel Nicoletti"));
-    setAboutData(aboutData);
-    setButtons(Apply);
-    KGlobal::locale()->insertCatalog("kpackagekit");
+//     KAboutData *aboutData;
+//     aboutData = new KAboutData("apper",
+//                                "apper",
+//                                ki18n("Update Software"),
+//                                KPK_VERSION,
+//                                ki18n("Review and Update Software"),
+//                                KAboutData::License_GPL,
+//                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
+//     setAboutData(aboutData);
+//     setButtons(Apply);
+//     KGlobal::locale()->insertCatalog("kpackagekit");
 
-    m_selected = !args.isEmpty();
+//     m_selected = !args.isEmpty();
+    m_selected = true;
     setupUi(this);
 
-    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Client::instance()->setHints("locale=" + locale);
+//     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+//     Client::instance()->setHints("locale=" + locale);
 
     //initialize the model, delegate, client and  connect it's signals
-    m_header = new KpkCheckableHeader(Qt::Horizontal, this);
+    m_header = new CheckableHeader(Qt::Horizontal, this);
     m_header->setCheckBoxVisible(false);
     packageView->setHeader(m_header);
     packageView->setHeaderHidden(true);
@@ -136,17 +134,17 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
     showArchs(m_showPackageArch->isChecked());
 
-    if (!m_selected) {
-        // If this not all items shlou
-        checkUpdatesPB->hide();
-    } else {
-        checkUpdatesPB->setIcon(KIcon("view-refresh"));
-        connect(checkUpdatesPB, SIGNAL(clicked(bool)),
-                this, SLOT(refreshCache()));
-    }
+//     if (!m_selected) {
+//         // If this not all items shlou
+//         checkUpdatesPB->hide();
+//     } else {
+//         checkUpdatesPB->setIcon(KIcon("view-refresh"));
+//         connect(checkUpdatesPB, SIGNAL(clicked(bool)),
+//                 this, SLOT(refreshCache()));
+//     }
 }
 
-UpdateKCM::~UpdateKCM()
+Updater::~Updater()
 {
     KConfig config("KPackageKit");
     KConfigGroup viewGroup(&config, "ViewGroup");
@@ -154,17 +152,17 @@ UpdateKCM::~UpdateKCM()
     viewGroup.writeEntry("ShowArchs", m_showPackageArch->isChecked());
 }
 
-void UpdateKCM::showVersions(bool enabled)
+void Updater::showVersions(bool enabled)
 {
     packageView->header()->setSectionHidden(1, !enabled);
 }
 
-void UpdateKCM::showArchs(bool enabled)
+void Updater::showArchs(bool enabled)
 {
     packageView->header()->setSectionHidden(2, !enabled);
 }
 
-void UpdateKCM::on_packageView_clicked(const QModelIndex &index)
+void Updater::on_packageView_clicked(const QModelIndex &index)
 {
     QString    pkgId   = index.data(KpkPackageModel::IdRole).toString();
     Enum::Info pkgInfo = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
@@ -173,7 +171,7 @@ void UpdateKCM::on_packageView_clicked(const QModelIndex &index)
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
 //That way, by default, users only see stable ones.
-void UpdateKCM::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description)
+void Updater::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     if (verticalLayout->count()) {
@@ -181,7 +179,7 @@ void UpdateKCM::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QStrin
         frame->setFrameShape(QFrame::HLine);
         verticalLayout->insertWidget(0, frame);
     }
-    KpkDistroUpgrade *distro = new KpkDistroUpgrade(this);
+    DistroUpgrade *distro = new DistroUpgrade(this);
     verticalLayout->insertWidget(0, distro);
     distro->setComment(description);
     distro->setName(name);
@@ -189,7 +187,7 @@ void UpdateKCM::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QStrin
     line->show();
 }
 
-void UpdateKCM::checkEnableUpdateButton()
+void Updater::checkEnableUpdateButton()
 {
     emit changed(m_updatesModel->hasChanges());
     int selectedSize = m_updatesModel->selectedPackages().size();
@@ -207,7 +205,7 @@ void UpdateKCM::checkEnableUpdateButton()
     packageView->setHeaderHidden(m_updatesModel->rowCount() == 0);
 }
 
-void UpdateKCM::load()
+void Updater::load()
 {
     // set focus on the updates view
     packageView->setFocus(Qt::OtherFocusReason);
@@ -220,7 +218,7 @@ void UpdateKCM::load()
     }
 }
 
-void UpdateKCM::getUpdatesFinished(Enum::Exit status)
+void Updater::getUpdatesFinished(Enum::Exit status)
 {
     Q_UNUSED(status)
     m_updatesT = 0;
@@ -228,7 +226,7 @@ void UpdateKCM::getUpdatesFinished(Enum::Exit status)
     checkEnableUpdateButton();
 }
 
-void UpdateKCM::save()
+void Updater::save()
 {
     // If the backend supports getRequires do it
     m_transDialog = 0;
@@ -252,7 +250,7 @@ void UpdateKCM::save()
     QTimer::singleShot(0, this, SLOT(checkEnableUpdateButton()));
 }
 
-void UpdateKCM::transactionFinished(KpkTransaction::ExitStatus status)
+void Updater::transactionFinished(KpkTransaction::ExitStatus status)
 {
     if (status == KpkTransaction::Success &&
         m_transDialog->role() == Enum::RoleSimulateUpdatePackages) {
@@ -272,7 +270,7 @@ void UpdateKCM::transactionFinished(KpkTransaction::ExitStatus status)
     }
 }
 
-void UpdateKCM::updatePackages()
+void Updater::updatePackages()
 {
     QList<QSharedPointer<PackageKit::Package> > packages;
     if (m_transDialog) {
@@ -299,7 +297,7 @@ void UpdateKCM::updatePackages()
     }
 }
 
-void UpdateKCM::getUpdates()
+void Updater::getUpdates()
 {
     if (m_updatesT) {
         // There is a getUpdates running ignore this call
@@ -351,7 +349,7 @@ void UpdateKCM::getUpdates()
     t->getDistroUpgrades();
 }
 
-void UpdateKCM::refreshCache()
+void Updater::refreshCache()
 {
     SET_PROXY
     Transaction *t = new Transaction(QString());
@@ -370,7 +368,7 @@ void UpdateKCM::refreshCache()
     }
 }
 
-void UpdateKCM::on_packageView_customContextMenuRequested(const QPoint &pos)
+void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
     KMenu *menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
@@ -384,7 +382,7 @@ void UpdateKCM::on_packageView_customContextMenuRequested(const QPoint &pos)
     delete menu;
 }
 
-void UpdateKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
+void Updater::errorCode(PackageKit::Enum::Error error, const QString &details)
 {
     KMessageBox::detailedSorry(this,
                                KpkStrings::errorMessage(error),
@@ -393,4 +391,4 @@ void UpdateKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
                                KMessageBox::Notify);
 }
 
-#include "UpdateKCM.moc"
+#include "Updater.moc"

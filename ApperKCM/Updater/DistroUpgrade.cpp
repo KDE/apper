@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,9 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkDistroUpgrade.h"
+#include "DistroUpgrade.h"
 
-#include <KpkStrings.h>
 #include <KpkIcons.h>
 
 #include <KLocale>
@@ -33,31 +32,25 @@
 
 #include <KDebug>
 
-KpkDistroUpgrade::KpkDistroUpgrade(QWidget *parent)
+DistroUpgrade::DistroUpgrade(QWidget *parent)
  : KTitleWidget(parent)
 {
-//     QPalette titleColors(palette());
-// //     FIXME: This is a bug in kdelibs. The background color doesn't get changed.
-//     KColorScheme::adjustBackground(titleColors, KColorScheme::PositiveBackground);
-//     setPalette(titleColors);
-
     // only the model package has the right state
     setText(i18n("Distribution upgrade available"));
     setPixmap(KpkIcons::getIcon("distro-upgrade"));
     setWidget(m_distroUpgradeUL = new KUrlLabel(this));
 
-    connect(m_distroUpgradeUL, SIGNAL(leftClickedUrl()),
-            SLOT(startDistroUpgrade()));
+    connect(m_distroUpgradeUL, SIGNAL(leftClickedUrl()), SLOT(startDistroUpgrade()));
 }
 
-void KpkDistroUpgrade::setName(const QString &name)
+void DistroUpgrade::setName(const QString &name)
 {
     m_distroUpgradeUL->setText(i18n("Upgrade to %1", name));
     m_distroUpgradeUL->setUrl(i18n("Upgrade to %1", name));
     m_distroUpgradeUL->setToolTip(i18n("Click to upgrade to %1", name));
 }
 
-void KpkDistroUpgrade::startDistroUpgrade()
+void DistroUpgrade::startDistroUpgrade()
 {
     QList<Solid::Device> powerPlugs = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter);
     bool pluggedIn = true;
@@ -99,7 +92,7 @@ void KpkDistroUpgrade::startDistroUpgrade()
     }
 }
 
-void KpkDistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
         KMessageBox::information(this, i18n("Distribution upgrade complete."));
@@ -113,7 +106,7 @@ void KpkDistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus 
     m_distroUpgradeDialog = 0;
 }
 
-void KpkDistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
+void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
 {
     QString text;
     switch(error) {
@@ -132,9 +125,9 @@ void KpkDistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
     }
 }
 
-KpkDistroUpgrade::~KpkDistroUpgrade()
+DistroUpgrade::~DistroUpgrade()
 {
-    kDebug() << "~KpkDistroUpgrade()";
+    kDebug() << "~DistroUpgrade()";
 }
 
-#include "KpkDistroUpgrade.moc"
+#include "DistroUpgrade.moc"

@@ -31,7 +31,8 @@
 #include "BrowseView.h"
 #include "CategoryModel.h"
 #include "TransactionHistory.h"
-#include "Settings/SettingsKCM.h"
+#include "Settings/Settings.h"
+#include "Updater/Updater.h"
 
 #include <KLocale>
 #include <KStandardDirs>
@@ -185,13 +186,13 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args)
 
     changesPB->setIcon(KIcon("edit-redo"));
 
-    m_updatesProxy = new KCModuleProxy("kpk_update", this);
-    stackedWidget->addWidget(m_updatesProxy);
+    m_updaterPage = new Updater(this);
+    stackedWidget->addWidget(m_updaterPage);
     checkUpdatesPB->setIcon(KIcon("view-refresh"));
     connect(checkUpdatesPB, SIGNAL(clicked(bool)),
             this, SLOT(refreshCache()));
 
-    m_settingsPage = new SettingsKCM(this);
+    m_settingsPage = new Settings(this);
     stackedWidget->addWidget(m_settingsPage);
 }
 
@@ -373,9 +374,9 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
             widget->setEnabled(false);
             return;
         } else if (m_searchRole == Enum::RoleGetUpdates) {
-            connect(m_updatesProxy, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+            connect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
             emit changed(false);
-            stackedWidget->setCurrentWidget(m_updatesProxy);
+            stackedWidget->setCurrentWidget(m_updaterPage);
             stackedWidgetBar->setCurrentIndex(1);
             backTB->setEnabled(true);
             filtersTB->setEnabled(false);
@@ -417,17 +418,17 @@ void ApperKCM::on_backTB_clicked()
             // do not disable back button
             return;
         }
-    } else if (stackedWidget->currentWidget() == m_updatesProxy) {
-        if (m_updatesProxy->changed()) {
-            kDebug() << "FOO";
-        }
+    } else if (stackedWidget->currentWidget() == m_updaterPage) {
+//         if (m_updaterPage->changed()) {
+//             kDebug() << "FOO";
+//         }
         stackedWidgetBar->setCurrentIndex(0);
-        disconnect(m_updatesProxy, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+        disconnect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
     } else if (stackedWidget->currentWidget() == m_settingsPage) {
-        if (m_updatesProxy->changed()) {
-            kDebug() << "BAR";
-        }
+//         if (m_updaterPage->changed()) {
+//             kDebug() << "BAR";
+//         }
         stackedWidgetBar->show();
         disconnect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
@@ -555,9 +556,9 @@ void ApperKCM::changed()
 
 void ApperKCM::save()
 {
-    kDebug() << stackedWidget->currentWidget() << m_updatesProxy << m_settingsPage;
-    if (stackedWidget->currentWidget() == m_updatesProxy) {
-        m_updatesProxy->save();
+    kDebug() << stackedWidget->currentWidget() << m_updaterPage << m_settingsPage;
+    if (stackedWidget->currentWidget() == m_updaterPage) {
+        m_updaterPage->save();
     } else if (stackedWidget->currentWidget() == m_settingsPage) {
         m_settingsPage->save();
     } else {

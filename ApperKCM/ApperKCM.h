@@ -39,7 +39,8 @@ class KpkPackageModel;
 class KpkFiltersMenu;
 class TransactionHistory;
 class CategoryModel;
-class SettingsKCM;
+class Settings;
+class Updater;
 class ApperKCM : public KCModule, Ui::ApperKCM
 {
     Q_OBJECT
@@ -88,8 +89,8 @@ private:
     KCategorizedSortFilterProxyModel *m_groupsProxyModel;
     KpkPackageModel     *m_browseModel;
     KpkPackageModel     *m_changesModel;
-    KCModuleProxy       *m_updatesProxy;
-    SettingsKCM         *m_settingsPage;
+    Settings            *m_settingsPage;
+    Updater             *m_updaterPage;
 
     Transaction *m_searchTransaction;
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,28 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_UPDATE_DETAILS_H
-#define KPK_UPDATE_DETAILS_H
+#ifndef ORIGIN_MODEL_H
+#define ORIGIN_MODEL_H
 
-#include <QPackageKit>
-#include <KPixmapSequenceOverlayPainter>
+#include <QStandardItemModel>
 
-#include "ui_KpkUpdateDetails.h"
-
-using namespace PackageKit;
-
-class KpkUpdateDetails : public QWidget, Ui::KpkUpdateDetails
+class OriginModel : public QStandardItemModel
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit KpkUpdateDetails(QWidget *parent = 0);
-    ~KpkUpdateDetails();
+    OriginModel(QObject *parent = 0);
+    ~OriginModel();
 
-    void setPackage(const QString &packageId, Enum::Info updateInfo);
+    bool changed() const;
+    bool save();
+    void clearChanges();
 
 public slots:
-    void hide();
-
-private slots:
-    void updateDetail(PackageKit::Client::UpdateInfo info);
-    void updateDetailFinished();
-    void display();
+    void addOriginItem(const QString &repo_id, const QString &details, bool enabled);
+    void finished();
 
 private:
-    QString getLinkList(const QString &links) const;
-
-    bool m_show;
-    QString m_packageId;
-    Transaction *m_transaction;
-    QString m_currentDescription;
-    Enum::Info m_updateInfo;
-    KPixmapSequenceOverlayPainter *m_busySeq;
-    QPropertyAnimation *m_fadeDetails;
-    QParallelAnimationGroup *m_expandPanel;
+    bool m_finished;
 };
 
 #endif

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Daniel Nicoletti                                *
+ *   Copyright (C) 2010-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkCheckableHeader.h"
+#include "CheckableHeader.h"
 
 #include <QPainter>
 #include <QApplication>
@@ -28,14 +28,14 @@
 
 #define UNIVERSAL_PADDING 3
 
-KpkCheckableHeader::KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent)
+CheckableHeader::CheckableHeader(Qt::Orientation orientation, QWidget *parent)
  : QHeaderView(orientation, parent),
    m_state(Qt::Unchecked),
    m_visible(true)
 {
 }
 
-void KpkCheckableHeader::paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const
+void CheckableHeader::paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const
 {
     const QStyle *style = QApplication::style();
     painter->save();
@@ -78,7 +78,7 @@ void KpkCheckableHeader::paintSection(QPainter *painter, const QRect &rect, int 
     }
 }
 
-bool KpkCheckableHeader::insideCheckBox(const QRect &rect, const QPoint &pos) const
+bool CheckableHeader::insideCheckBox(const QRect &rect, const QPoint &pos) const
 {
 //     kDebug() << rect << pos;
     if ((pos.x() >= rect.x() && (pos.x() <= rect.x() + rect.width())) &&
@@ -88,7 +88,7 @@ bool KpkCheckableHeader::insideCheckBox(const QRect &rect, const QPoint &pos) co
     return false;
 }
 
-QSize KpkCheckableHeader::sizeHint() const
+QSize CheckableHeader::sizeHint() const
 {
     const QStyle *style = QApplication::style();
     QStyleOptionButton option;
@@ -103,20 +103,20 @@ QSize KpkCheckableHeader::sizeHint() const
     return size;
 }
 
-void KpkCheckableHeader::mouseMoveEvent(QMouseEvent *event)
+void CheckableHeader::mouseMoveEvent(QMouseEvent *event)
 {
     headerDataChanged(Qt::Horizontal, 0, 0);
     QHeaderView::mouseMoveEvent(event);
 }
 
-void KpkCheckableHeader::leaveEvent(QEvent *event)
+void CheckableHeader::leaveEvent(QEvent *event)
 {
     headerDataChanged(Qt::Horizontal, 0, 0);
     QHeaderView::leaveEvent(event);
 //     kDebug();
 }
 
-void KpkCheckableHeader::mousePressEvent(QMouseEvent *event)
+void CheckableHeader::mousePressEvent(QMouseEvent *event)
 {
     if (!m_visible) {
         return;
@@ -143,15 +143,15 @@ void KpkCheckableHeader::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void KpkCheckableHeader::setCheckState(Qt::CheckState state)
+void CheckableHeader::setCheckState(Qt::CheckState state)
 {
     m_state = state;
 }
 
-void KpkCheckableHeader::setCheckBoxVisible(bool visible)
+void CheckableHeader::setCheckBoxVisible(bool visible)
 {
     m_visible = visible;
     headerDataChanged(Qt::Horizontal, 0, 0);
 }
 
-#include "KpkCheckableHeader.moc"
+#include "CheckableHeader.moc"

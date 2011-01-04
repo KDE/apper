@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,21 +18,15 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "SettingsKCM.h"
+#include "Settings.h"
 
-#include "KpkModelOrigin.h"
+#include "OriginModel.h"
 
 #include <KpkEnum.h>
-#include <version.h>
 
-#include <KConfig>
-#include <KLocale>
 #include <KMessageBox>
-#include <KGenericFactory>
-#include <KAboutData>
 #include <KPixmapSequence>
-#include <KProcess>
-#include <QEventLoop>
+#include <KToolInvocation>
 
 #include <config.h>
 
@@ -40,25 +34,13 @@
 
 using namespace PackageKit;
 
-SettingsKCM::SettingsKCM(QWidget *parent) :
-    loaded(false)
-//     : KCModule(KPackageKitFactory::componentData(), parent, args)
+Settings::Settings(QWidget *parent) :
+    QWidget(parent),
+    m_loaded(false)
 {
-//     KAboutData *aboutData;
-//     aboutData = new KAboutData("apper",
-//                                "apper",
-//                                ki18n("Application Manager Settings"),
-//                                KPK_VERSION,
-//                                ki18n("Apper settings"),
-//                                KAboutData::License_GPL,
-//                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
-//     setAboutData(aboutData);
-//     KGlobal::locale()->insertCatalog("kpackagekit");
 //     setButtons(KCModule::Default | KCModule::Apply);
     setupUi(this);
 
-    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Client::instance()->setHints("locale=" + locale);
     m_roles = Client::instance()->actions();
 
     if (!(m_roles & Enum::RoleRefreshCache)) {
@@ -66,7 +48,7 @@ SettingsKCM::SettingsKCM(QWidget *parent) :
         intervalCB->setEnabled(false);
     }
 
-    m_originModel = new KpkModelOrigin(this);
+    m_originModel = new OriginModel(this);
     originTV->setModel(m_originModel);
     originTV->header()->setDefaultAlignment(Qt::AlignCenter);
     if (m_roles & Enum::RoleGetRepoList) {
@@ -105,8 +87,8 @@ SettingsKCM::SettingsKCM(QWidget *parent) :
     editOriginsPB->hide();
 #endif //EDIT_ORIGNS_DESKTOP_NAME
 }
-#include <KToolInvocation>
-void SettingsKCM::on_editOriginsPB_clicked()
+
+void Settings::on_editOriginsPB_clicked()
 {
 #ifdef EDIT_ORIGNS_DESKTOP_NAME
     KToolInvocation::startServiceByDesktopName(EDIT_ORIGNS_DESKTOP_NAME);
@@ -114,7 +96,7 @@ void SettingsKCM::on_editOriginsPB_clicked()
 }
 
 // TODO update the repo list connecting to repo changed signal
-void SettingsKCM::on_showOriginsCB_stateChanged(int state)
+void Settings::on_showOriginsCB_stateChanged(int state)
 {
     Transaction *transaction = new Transaction(QString());
     connect(transaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
@@ -135,7 +117,7 @@ void SettingsKCM::on_showOriginsCB_stateChanged(int state)
     }
 }
 
-void SettingsKCM::checkChanges()
+void Settings::checkChanges()
 {
     KConfig config("KPackageKit");
 
@@ -169,12 +151,12 @@ void SettingsKCM::checkChanges()
     autoCB->setEnabled(enabled);
 }
 
-void SettingsKCM::load()
+void Settings::load()
 {
-    if (loaded) {
+    if (m_loaded) {
         return;
     }
-    loaded = true;
+    m_loaded = true;
 
     KConfig config("KPackageKit");
 
@@ -214,7 +196,7 @@ void SettingsKCM::load()
     }
 }
 
-void SettingsKCM::save()
+void Settings::save()
 {
     KConfig config("KPackageKit");
 
@@ -243,7 +225,7 @@ void SettingsKCM::save()
     }
 }
 
-void SettingsKCM::defaults()
+void Settings::defaults()
 {
     autoConfirmCB->setChecked(true);
     appLauncherCB->setChecked(true);
@@ -254,4 +236,4 @@ void SettingsKCM::defaults()
     emit checkChanges();
 }
 
-#include "SettingsKCM.moc"
+#include "Settings.moc"

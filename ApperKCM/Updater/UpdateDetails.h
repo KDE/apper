@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,37 +18,44 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_DISTRO_UPGRADE_H
-#define KPK_DISTRO_UPGRADE_H
+#ifndef UPDATE_DETAILS_H
+#define UPDATE_DETAILS_H
 
 #include <QPackageKit>
+#include <KPixmapSequenceOverlayPainter>
 
-#include <KTitleWidget>
-#include <KUrlLabel>
-#include <KProgressDialog>
+#include "ui_UpdateDetails.h"
 
 using namespace PackageKit;
 
-class KpkDistroUpgrade : public KTitleWidget
+class UpdateDetails : public QWidget, Ui::UpdateDetails
 {
 Q_OBJECT
 public:
-    KpkDistroUpgrade(QWidget *parent = 0);
-    ~KpkDistroUpgrade();
+    explicit UpdateDetails(QWidget *parent = 0);
+    ~UpdateDetails();
 
-    void setName(const QString &name);
+    void setPackage(const QString &packageId, Enum::Info updateInfo);
+
+public slots:
+    void hide();
 
 private slots:
-    void startDistroUpgrade();
-//     void distroUpgrade(PackageKit::Client::UpgradeType type, const QString& name, const QString& description);
-
-    void distroUpgradeError(QProcess::ProcessError);
-    void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void updateDetail(PackageKit::Client::UpdateInfo info);
+    void updateDetailFinished();
+    void display();
 
 private:
-    KUrlLabel *m_distroUpgradeUL;
-    QProcess *m_distroUpgradeProcess;
-    KProgressDialog *m_distroUpgradeDialog;
+    QString getLinkList(const QString &links) const;
+
+    bool m_show;
+    QString m_packageId;
+    Transaction *m_transaction;
+    QString m_currentDescription;
+    Enum::Info m_updateInfo;
+    KPixmapSequenceOverlayPainter *m_busySeq;
+    QPropertyAnimation *m_fadeDetails;
+    QParallelAnimationGroup *m_expandPanel;
 };
 
 #endif

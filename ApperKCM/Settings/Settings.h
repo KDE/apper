@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,38 +18,43 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_CHECKABLE_HEADER_H
-#define KPK_CHECKABLE_HEADER_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
-#include <QHeaderView>
+#include "ui_Settings.h"
 
-class KpkCheckableHeader : public QHeaderView
+#include <QWidget>
+#include <KPixmapSequenceOverlayPainter>
+
+#include <QPackageKit>
+
+using namespace PackageKit;
+
+class OriginModel;
+class Settings : public QWidget, public Ui::Settings
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit KpkCheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
-
-    int sectionSizeHint(int logicalIndex) const;
-    QSize sizeHint() const;
+    Settings(QWidget *parent);
 
 public slots:
-    void setCheckState(Qt::CheckState state);
-    void setCheckBoxVisible(bool visible);
+    void load();
+    void save();
+    void defaults();
 
 signals:
-    void toggled(bool checked);
+    void changed(bool state);
 
-protected:
-    void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const;
-    void mouseMoveEvent(QMouseEvent *event);
-    void leaveEvent(QEvent *event);
-    void mousePressEvent(QMouseEvent *event);
+private slots:
+    void on_showOriginsCB_stateChanged(int state);
+    void on_editOriginsPB_clicked();
+    void checkChanges();
 
 private:
-    bool insideCheckBox(const QRect &rect, const QPoint &pos) const;
-
-    Qt::CheckState m_state;
-    bool m_visible;
+    KPixmapSequenceOverlayPainter *m_busySeq;
+    OriginModel *m_originModel;
+    Enum::Roles  m_roles;
+    bool         m_loaded;
 };
 
 #endif

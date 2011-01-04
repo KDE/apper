@@ -1,6 +1,10 @@
 set(kpk_addrm_SRCS
-    Settings/SettingsKCM.cpp
-    Settings/KpkModelOrigin.cpp
+    Settings/Settings.cpp
+    Settings/OriginModel.cpp
+    Updater/UpdateDetails.cpp
+    Updater/DistroUpgrade.cpp
+    Updater/CheckableHeader.cpp
+    Updater/Updater.cpp
     KpkFiltersMenu.cpp
     ClickableLabel.cpp
     ScreenShotViewer.cpp
@@ -15,7 +19,9 @@ set(kpk_addrm_SRCS
 )
 
 kde4_add_ui_files(kpk_addrm_SRCS
-    Settings/SettingsKCM.ui
+    Settings/Settings.ui
+    Updater/UpdateDetails.ui
+    Updater/Updater.ui
     PackageDetails.ui
     BrowseView.ui
     TransactionHistory.ui
@@ -28,6 +34,7 @@ target_link_libraries(apper
     ${KDE4_KIO_LIBS}
     ${KDE4_KUTILS_LIBS}
     ${QPACKAGEKIT_LIBRARIES}
+    ${KDE4_SOLID_LIBS}
     kpackagekitlib
 )
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,12 +18,10 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef UPDATE_KCM_H
-#define UPDATE_KCM_H
+#ifndef UPDATER_H
+#define UPDATER_H
 
-#include <KCModule>
-
-#include "ui_UpdateKCM.h"
+#include "ui_Updater.h"
 
 #include <KpkTransaction.h>
 
@@ -31,13 +29,13 @@ using namespace PackageKit;
 
 class KpkPackageModel;
 class ApplicationsDelegate;
-class KpkCheckableHeader;
-class UpdateKCM : public KCModule, Ui::UpdateKCM
+class CheckableHeader;
+class Updater : public QWidget, Ui::Updater
 {
 Q_OBJECT
 public:
-    UpdateKCM(QWidget *&parent, const QVariantList &args);
-    ~UpdateKCM();
+    Updater(QWidget *parent);
+    ~Updater();
 
 signals:
     void changed(bool);
@@ -70,7 +68,7 @@ private:
     bool                  m_selected;
     KpkPackageModel      *m_updatesModel;
     ApplicationsDelegate *m_delegate;
-    KpkCheckableHeader   *m_header;
+    CheckableHeader      *m_header;
     QAction              *m_showPackageVersion;
     QAction              *m_showPackageArch;
     KpkTransaction       *m_transDialog;

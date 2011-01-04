@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,43 +18,34 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef SETTINGS_KCM_H
-#define SETTINGS_KCM_H
+#ifndef DISTRO_UPGRADE_H
+#define DISTRO_UPGRADE_H
 
-#include <KCModule>
-#include <KPixmapSequenceOverlayPainter>
+#include <QProcess>
 
-#include <QPackageKit>
+#include <KTitleWidget>
+#include <KUrlLabel>
+#include <KProgressDialog>
 
-#include "ui_SettingsKCM.h"
-
-using namespace PackageKit;
-
-class KpkModelOrigin;
-class SettingsKCM : public QWidget, public Ui::SettingsKCM
+class DistroUpgrade : public KTitleWidget
 {
     Q_OBJECT
 public:
-    SettingsKCM(QWidget *parent);
+    DistroUpgrade(QWidget *parent = 0);
+    ~DistroUpgrade();
 
-public slots:
-    void load();
-    void save();
-    void defaults();
-
-signals:
-    void changed(bool state);
+    void setName(const QString &name);
 
 private slots:
-    void on_showOriginsCB_stateChanged(int state);
-    void on_editOriginsPB_clicked();
-    void checkChanges();
+    void startDistroUpgrade();
+
+    void distroUpgradeError(QProcess::ProcessError);
+    void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
-    KPixmapSequenceOverlayPainter *m_busySeq;
-    KpkModelOrigin *m_originModel;
-    Enum::Roles     m_roles;
-    bool loaded;
+    KUrlLabel *m_distroUpgradeUL;
+    QProcess *m_distroUpgradeProcess;
+    KProgressDialog *m_distroUpgradeDialog;
 };
 
 #endif

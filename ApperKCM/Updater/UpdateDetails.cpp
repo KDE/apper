@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkUpdateDetails.h"
+#include "UpdateDetails.h"
 
 #include <KpkStrings.h>
 
@@ -31,7 +31,7 @@
 
 #define FINAL_HEIGHT 160
 
-KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
+UpdateDetails::UpdateDetails(QWidget *parent)
  : QWidget(parent),
    m_show(false),
    m_transaction(0)
@@ -79,11 +79,11 @@ KpkUpdateDetails::KpkUpdateDetails(QWidget *parent)
 
 }
 
-KpkUpdateDetails::~KpkUpdateDetails()
+UpdateDetails::~UpdateDetails()
 {
 }
 
-void KpkUpdateDetails::setPackage(const QString &packageId, Enum::Info updateInfo)
+void UpdateDetails::setPackage(const QString &packageId, Enum::Info updateInfo)
 {
     if (m_packageId == packageId) {
         return;
@@ -124,7 +124,7 @@ void KpkUpdateDetails::setPackage(const QString &packageId, Enum::Info updateInf
     }
 }
 
-void KpkUpdateDetails::hide()
+void UpdateDetails::hide()
 {
     m_show = false;
     m_packageId.clear();
@@ -139,7 +139,7 @@ void KpkUpdateDetails::hide()
     }
 }
 
-void KpkUpdateDetails::display()
+void UpdateDetails::display()
 {
     if (!m_show) {
         hide();
@@ -156,7 +156,7 @@ void KpkUpdateDetails::display()
     }
 }
 
-void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
+void UpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 {
     //format and show description
     QString description;
@@ -301,7 +301,7 @@ void KpkUpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     m_transaction = 0;
 }
 
-QString KpkUpdateDetails::getLinkList(const QString &links) const
+QString UpdateDetails::getLinkList(const QString &links) const
 {
     QStringList linkList = links.split(';');
     int length = linkList.size();
@@ -323,11 +323,11 @@ QString KpkUpdateDetails::getLinkList(const QString &links) const
     return ret;
 }
 
-void KpkUpdateDetails::updateDetailFinished()
+void UpdateDetails::updateDetailFinished()
 {
     if (descriptionKTB->document()->toPlainText().isEmpty()) {
         descriptionKTB->setPlainText(i18n("No update description was found."));
     }
 }
 
-#include "KpkUpdateDetails.moc"
+#include "UpdateDetails.moc"
