@@ -136,9 +136,14 @@ UpdateKCM::UpdateKCM(QWidget *&parent, const QVariantList &args)
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
     showArchs(m_showPackageArch->isChecked());
 
-    checkUpdatesPB->setIcon(KIcon("view-refresh"));
-    connect(checkUpdatesPB, SIGNAL(clicked(bool)),
-            this, SLOT(refreshCache()));
+    if (!m_selected) {
+        // If this not all items shlou
+        checkUpdatesPB->hide();
+    } else {
+        checkUpdatesPB->setIcon(KIcon("view-refresh"));
+        connect(checkUpdatesPB, SIGNAL(clicked(bool)),
+                this, SLOT(refreshCache()));
+    }
 }
 
 UpdateKCM::~UpdateKCM()

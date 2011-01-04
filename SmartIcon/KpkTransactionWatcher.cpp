@@ -49,9 +49,11 @@ void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactiv
             return;
         }
     }
-    foreach(Transaction *trans, Client::instance()->getTransactions()) {
-        if (trans->tid() == tid) {
+
+    foreach(const QString transId, Client::instance()->getTransactionList()) {
+        if (transId == tid) {
             // found it let's start watching
+            Transaction *trans = new Transaction(transId);
 //             kDebug() << "found it let's start watching" << tid;
             m_hiddenTransactions.append(trans);
             trans->setProperty("interactive", QVariant(interactive));

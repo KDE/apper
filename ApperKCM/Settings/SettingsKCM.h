@@ -31,12 +31,11 @@
 using namespace PackageKit;
 
 class KpkModelOrigin;
-class SettingsKCM : public KCModule, public Ui::SettingsKCM
+class SettingsKCM : public QWidget, public Ui::SettingsKCM
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
-    SettingsKCM(QWidget *parent, const QVariantList &args);
+    SettingsKCM(QWidget *parent);
 
 public slots:
     void load();
@@ -55,6 +54,7 @@ private:
     KPixmapSequenceOverlayPainter *m_busySeq;
     KpkModelOrigin *m_originModel;
     Enum::Roles     m_roles;
+    bool loaded;
 };
 
 #endif

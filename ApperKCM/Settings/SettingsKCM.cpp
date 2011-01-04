@@ -40,23 +40,21 @@
 
 using namespace PackageKit;
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<SettingsKCM>();)
-K_EXPORT_PLUGIN(KPackageKitFactory("kcm_kpk_settings"))
-
-SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
-    : KCModule(KPackageKitFactory::componentData(), parent, args)
+SettingsKCM::SettingsKCM(QWidget *parent) :
+    loaded(false)
+//     : KCModule(KPackageKitFactory::componentData(), parent, args)
 {
-    KAboutData *aboutData;
-    aboutData = new KAboutData("apper",
-                               "apper",
-                               ki18n("Application Manager Settings"),
-                               KPK_VERSION,
-                               ki18n("Apper settings"),
-                               KAboutData::License_GPL,
-                               ki18n("(C) 2008-2010 Daniel Nicoletti"));
-    setAboutData(aboutData);
-    KGlobal::locale()->insertCatalog("kpackagekit");
-    setButtons(Default | Apply);
+//     KAboutData *aboutData;
+//     aboutData = new KAboutData("apper",
+//                                "apper",
+//                                ki18n("Application Manager Settings"),
+//                                KPK_VERSION,
+//                                ki18n("Apper settings"),
+//                                KAboutData::License_GPL,
+//                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
+//     setAboutData(aboutData);
+//     KGlobal::locale()->insertCatalog("kpackagekit");
+//     setButtons(KCModule::Default | KCModule::Apply);
     setupUi(this);
 
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
@@ -77,7 +75,8 @@ SettingsKCM::SettingsKCM(QWidget *parent, const QVariantList &args)
                 this, SLOT(checkChanges()));
     } else {
         // Disables the group box
-        originGB->setEnabled(false);
+        originTV->setEnabled(false);
+        showOriginsCB->setEnabled(false);
     }
 
     intervalCB->addItem(i18nc("Hourly refresh the package cache", "Hourly"),  KpkEnum::Hourly);
@@ -172,6 +171,11 @@ void SettingsKCM::checkChanges()
 
 void SettingsKCM::load()
 {
+    if (loaded) {
+        return;
+    }
+    loaded = true;
+
     KConfig config("KPackageKit");
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");

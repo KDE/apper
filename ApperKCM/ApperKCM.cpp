@@ -31,6 +31,7 @@
 #include "BrowseView.h"
 #include "CategoryModel.h"
 #include "TransactionHistory.h"
+#include "Settings/SettingsKCM.h"
 
 #include <KLocale>
 #include <KStandardDirs>
@@ -186,9 +187,12 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args)
 
     m_updatesProxy = new KCModuleProxy("kpk_update", this);
     stackedWidget->addWidget(m_updatesProxy);
+    checkUpdatesPB->setIcon(KIcon("view-refresh"));
+    connect(checkUpdatesPB, SIGNAL(clicked(bool)),
+            this, SLOT(refreshCache()));
 
-    m_settingsProxy = new KCModuleProxy("kpk_settings", this);
-    stackedWidget->addWidget(m_settingsProxy);
+    m_settingsPage = new SettingsKCM(this);
+    stackedWidget->addWidget(m_settingsPage);
 }
 
 void ApperKCM::setupHomeModel()
@@ -369,13 +373,20 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
             widget->setEnabled(false);
             return;
         } else if (m_searchRole == Enum::RoleGetUpdates) {
+            connect(m_updatesProxy, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+            emit changed(false);
             stackedWidget->setCurrentWidget(m_updatesProxy);
+            stackedWidgetBar->setCurrentIndex(1);
             backTB->setEnabled(true);
             filtersTB->setEnabled(false);
             widget->setEnabled(false);
             return;
         } else if (m_searchRole == Enum::RoleGetRepoList) {
-            stackedWidget->setCurrentWidget(m_settingsProxy);
+            connect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+            emit changed(false);
+            stackedWidget->setCurrentWidget(m_settingsPage);
+            m_settingsPage->load();
+            stackedWidgetBar->hide();
             backTB->setEnabled(true);
             filtersTB->setEnabled(false);
             widget->setEnabled(false);
@@ -406,6 +417,20 @@ void ApperKCM::on_backTB_clicked()
             // do not disable back button
             return;
         }
+    } else if (stackedWidget->currentWidget() == m_updatesProxy) {
+        if (m_updatesProxy->changed()) {
+            kDebug() << "FOO";
+        }
+        stackedWidgetBar->setCurrentIndex(0);
+        disconnect(m_updatesProxy, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+        checkChanged();
+    } else if (stackedWidget->currentWidget() == m_settingsPage) {
+        if (m_updatesProxy->changed()) {
+            kDebug() << "BAR";
+        }
+        stackedWidgetBar->show();
+        disconnect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+        checkChanged();
     }
 
     stackedWidget->setCurrentWidget(pageHome);
@@ -530,18 +555,25 @@ void ApperKCM::changed()
 
 void ApperKCM::save()
 {
-    QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_browseModel->selectedPackages(), this);
-    connect(frm, SIGNAL(successfullyInstalled()), m_browseModel, SLOT(uncheckAvailablePackages()));
-    connect(frm, SIGNAL(successfullyRemoved()), m_browseModel, SLOT(uncheckInstalledPackages()));
+    kDebug() << stackedWidget->currentWidget() << m_updatesProxy << m_settingsPage;
+    if (stackedWidget->currentWidget() == m_updatesProxy) {
+        m_updatesProxy->save();
+    } else if (stackedWidget->currentWidget() == m_settingsPage) {
+        m_settingsPage->save();
+    } else {
+        QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_browseModel->selectedPackages(), this);
+        connect(frm, SIGNAL(successfullyInstalled()), m_browseModel, SLOT(uncheckAvailablePackages()));
+        connect(frm, SIGNAL(successfullyRemoved()), m_browseModel, SLOT(uncheckInstalledPackages()));
 
-    frm->exec();
+        frm->exec();
 
-    // This avoid crashing as the above function does not always quit it's event loop
-    if (!frm.isNull()) {
-        frm->deleteLater();
+        // This avoid crashing as the above function does not always quit it's event loop
+        if (!frm.isNull()) {
+            frm->deleteLater();
 
-        search();
-        QTimer::singleShot(0, this, SLOT(checkChanged()));
+            search();
+            QTimer::singleShot(0, this, SLOT(checkChanged()));
+        }
     }
 }
 
