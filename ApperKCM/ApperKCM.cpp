@@ -53,15 +53,17 @@ KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<ApperKCM>();)
 K_EXPORT_PLUGIN(KPackageKitFactory("kcm_apper"))
 
-ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args)
- : KCModule(KPackageKitFactory::componentData(), parent, args),
-   m_currentAction(0),
-   m_groupsProxyModel(0),
-   m_searchTransaction(0),
-   m_findIcon("edit-find"),
-   m_cancelIcon("dialog-cancel"),
-   m_history(0),
-   m_searchRole(Enum::UnknownRole)
+ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
+    KCModule(KPackageKitFactory::componentData(), parent, args),
+    m_currentAction(0),
+    m_groupsProxyModel(0),
+    m_settingsPage(0),
+    m_updaterPage(0),
+    m_searchTransaction(0),
+    m_findIcon("edit-find"),
+    m_cancelIcon("dialog-cancel"),
+    m_history(0),
+    m_searchRole(Enum::UnknownRole)
 {
     KAboutData *aboutData;
     aboutData = new KAboutData("apper",
@@ -185,15 +187,6 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args)
             m_browseModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
 
     changesPB->setIcon(KIcon("edit-redo"));
-
-    m_updaterPage = new Updater(this);
-    stackedWidget->addWidget(m_updaterPage);
-    checkUpdatesPB->setIcon(KIcon("view-refresh"));
-    connect(checkUpdatesPB, SIGNAL(clicked(bool)),
-            this, SLOT(refreshCache()));
-
-    m_settingsPage = new Settings(this);
-    stackedWidget->addWidget(m_settingsPage);
 }
 
 void ApperKCM::setupHomeModel()
@@ -374,27 +367,77 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
             widget->setEnabled(false);
             return;
         } else if (m_searchRole == Enum::RoleGetUpdates) {
+            if (m_updaterPage == 0) {
+                m_updaterPage = new Updater(this);
+                stackedWidget->addWidget(m_updaterPage);
+                checkUpdatesPB->setIcon(KIcon("view-refresh"));
+                connect(checkUpdatesPB, SIGNAL(clicked(bool)),
+                        m_updaterPage, SLOT(refreshCache()));
+            }
+
+            if (!canChangePage(m_browseModel->hasChanges())) {
+                return;
+            }
+
             connect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
             emit changed(false);
             stackedWidget->setCurrentWidget(m_updaterPage);
+            m_updaterPage->load();
             stackedWidgetBar->setCurrentIndex(1);
             backTB->setEnabled(true);
-            filtersTB->setEnabled(false);
-            widget->setEnabled(false);
             return;
         } else if (m_searchRole == Enum::RoleGetRepoList) {
+            if (m_settingsPage == 0) {
+                m_settingsPage = new Settings(this);
+                stackedWidget->addWidget(m_settingsPage);
+                m_settingsPage->load();
+            }
+
+            if (!canChangePage(m_browseModel->hasChanges())) {
+                return;
+            }
+
             connect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+            setButtons(KCModule::Default | KCModule::Apply);
+            emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
             emit changed(false);
             stackedWidget->setCurrentWidget(m_settingsPage);
             m_settingsPage->load();
-            stackedWidgetBar->hide();
+            stackedWidgetBar->setCurrentIndex(2);
             backTB->setEnabled(true);
-            filtersTB->setEnabled(false);
-            widget->setEnabled(false);
             return;
         }
         // create the main transaction
         search();
+    }
+}
+
+bool ApperKCM::canChangePage(bool changed)
+{
+    if (!changed) {
+        return true;
+    }
+
+    const int queryUser = KMessageBox::warningYesNoCancel(
+        this,
+        i18n("The settings of the current module have changed.\n"
+             "Do you want to apply the changes or discard them?"),
+        i18n("Apply Settings"),
+        KStandardGuiItem::apply(),
+        KStandardGuiItem::discard(),
+        KStandardGuiItem::cancel());
+
+    switch (queryUser) {
+    case KMessageBox::Yes:
+        save();
+        return true;
+    case KMessageBox::No:
+        load();
+        return true;
+    case KMessageBox::Cancel:
+        return false;
+    default:
+        return false;
     }
 }
 
@@ -419,21 +462,24 @@ void ApperKCM::on_backTB_clicked()
             return;
         }
     } else if (stackedWidget->currentWidget() == m_updaterPage) {
-//         if (m_updaterPage->changed()) {
-//             kDebug() << "FOO";
-//         }
+        if (!canChangePage(m_updaterPage->hasChanges())) {
+            return;
+        }
         stackedWidgetBar->setCurrentIndex(0);
         disconnect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
     } else if (stackedWidget->currentWidget() == m_settingsPage) {
-//         if (m_updaterPage->changed()) {
-//             kDebug() << "BAR";
-//         }
-        stackedWidgetBar->show();
+        if (!canChangePage(m_settingsPage->hasChanges())) {
+            return;
+        }
+        setButtons(Apply);
+        emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
+        stackedWidgetBar->setCurrentIndex(0);
         disconnect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
     }
 
+    homeView->selectionModel()->clear();
     stackedWidget->setCurrentWidget(pageHome);
     backTB->setEnabled(canGoBack);
     // reset the search role
@@ -580,9 +626,22 @@ void ApperKCM::save()
 
 void ApperKCM::load()
 {
-    // set focus on the search lineEdit
-    searchKLE->setFocus(Qt::OtherFocusReason);
-    m_browseModel->setAllChecked(false);
+    if (stackedWidget->currentWidget() == m_updaterPage) {
+        m_updaterPage->load();
+    } else if (stackedWidget->currentWidget() == m_settingsPage) {
+        m_settingsPage->load();
+    } else {
+        // set focus on the search lineEdit
+        searchKLE->setFocus(Qt::OtherFocusReason);
+        m_browseModel->setAllChecked(false);
+    }
+}
+
+void ApperKCM::defaults()
+{
+    if (stackedWidget->currentWidget() == m_settingsPage) {
+        m_settingsPage->defaults();
+    }
 }
 
 void ApperKCM::finished()

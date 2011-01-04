@@ -53,24 +53,9 @@ Updater::Updater(QWidget *parent) :
     QWidget(parent),
     m_updatesT(0)
 {
-//     KAboutData *aboutData;
-//     aboutData = new KAboutData("apper",
-//                                "apper",
-//                                ki18n("Update Software"),
-//                                KPK_VERSION,
-//                                ki18n("Review and Update Software"),
-//                                KAboutData::License_GPL,
-//                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
-//     setAboutData(aboutData);
-//     setButtons(Apply);
-//     KGlobal::locale()->insertCatalog("kpackagekit");
-
 //     m_selected = !args.isEmpty();
-    m_selected = true;
+    m_selected = false;
     setupUi(this);
-
-//     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-//     Client::instance()->setHints("locale=" + locale);
 
     //initialize the model, delegate, client and  connect it's signals
     m_header = new CheckableHeader(Qt::Horizontal, this);
@@ -133,15 +118,6 @@ Updater::Updater(QWidget *parent) :
             this, SLOT(showArchs(bool)));
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
     showArchs(m_showPackageArch->isChecked());
-
-//     if (!m_selected) {
-//         // If this not all items shlou
-//         checkUpdatesPB->hide();
-//     } else {
-//         checkUpdatesPB->setIcon(KIcon("view-refresh"));
-//         connect(checkUpdatesPB, SIGNAL(clicked(bool)),
-//                 this, SLOT(refreshCache()));
-//     }
 }
 
 Updater::~Updater()
@@ -187,9 +163,14 @@ void Updater::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString 
     line->show();
 }
 
+bool Updater::hasChanges() const
+{
+    return m_updatesModel->hasChanges();
+}
+
 void Updater::checkEnableUpdateButton()
 {
-    emit changed(m_updatesModel->hasChanges());
+    emit changed(hasChanges());
     int selectedSize = m_updatesModel->selectedPackages().size();
     int updatesSize = m_updatesModel->rowCount();
     if (selectedSize == 0) {

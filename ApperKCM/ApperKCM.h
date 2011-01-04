@@ -54,6 +54,7 @@ signals:
 public slots:
     void load();
     void save();
+    void defaults();
 
 private slots:
     void setupHomeModel();
@@ -75,6 +76,7 @@ private slots:
     void changed();
 
 private:
+    bool canChangePage(bool changed);
     void setCurrentActionEnabled(bool state);
     void setCurrentAction(QAction *action);
     void setCurrentActionCancel(bool cancel);

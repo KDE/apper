@@ -36,6 +36,9 @@ class Settings : public QWidget, public Ui::Settings
     Q_OBJECT
 public:
     Settings(QWidget *parent);
+    ~Settings();
+
+    bool hasChanges() const;
 
 public slots:
     void load();
@@ -54,7 +57,6 @@ private:
     KPixmapSequenceOverlayPainter *m_busySeq;
     OriginModel *m_originModel;
     Enum::Roles  m_roles;
-    bool         m_loaded;
 };
 
 #endif

@@ -35,10 +35,8 @@
 using namespace PackageKit;
 
 Settings::Settings(QWidget *parent) :
-    QWidget(parent),
-    m_loaded(false)
+    QWidget(parent)
 {
-//     setButtons(KCModule::Default | KCModule::Apply);
     setupUi(this);
 
     m_roles = Client::instance()->actions();
@@ -88,6 +86,10 @@ Settings::Settings(QWidget *parent) :
 #endif //EDIT_ORIGNS_DESKTOP_NAME
 }
 
+Settings::~Settings()
+{
+}
+
 void Settings::on_editOriginsPB_clicked()
 {
 #ifdef EDIT_ORIGNS_DESKTOP_NAME
@@ -117,7 +119,7 @@ void Settings::on_showOriginsCB_stateChanged(int state)
     }
 }
 
-void Settings::checkChanges()
+bool Settings::hasChanges() const
 {
     KConfig config("KPackageKit");
 
@@ -139,10 +141,15 @@ void Settings::checkChanges()
         autoConfirmCB->isChecked() != !requirementsDialog.readEntry("autoConfirm", false)
         ||
         appLauncherCB->isChecked() != transaction.readEntry("ShowApplicationLauncher", true)) {
-        emit(changed(true));
+        return true;
     } else {
-        emit(changed(false));
+        return false;
     }
+}
+
+void Settings::checkChanges()
+{
+    emit changed(hasChanges());
 
     // Check if interval update is never
     bool enabled = intervalCB->itemData(intervalCB->currentIndex()).toUInt() != KpkEnum::Never;
@@ -153,11 +160,6 @@ void Settings::checkChanges()
 
 void Settings::load()
 {
-    if (m_loaded) {
-        return;
-    }
-    m_loaded = true;
-
     KConfig config("KPackageKit");
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
@@ -233,7 +235,7 @@ void Settings::defaults()
     intervalCB->setCurrentIndex(intervalCB->findData(KpkEnum::TimeIntervalDefault));
     autoCB->setCurrentIndex(autoCB->findData(KpkEnum::AutoUpdateDefault) );
     m_originModel->clearChanges();
-    emit checkChanges();
+    checkChanges();
 }
 
 #include "Settings.moc"

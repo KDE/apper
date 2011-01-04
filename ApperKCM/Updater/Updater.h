@@ -37,15 +37,17 @@ public:
     Updater(QWidget *parent);
     ~Updater();
 
+    bool hasChanges() const;
+
 signals:
     void changed(bool);
 
 public slots:
     void load();
     void save();
+    void refreshCache();
 
 private slots:
-    void refreshCache();
     void on_packageView_customContextMenuRequested(const QPoint &pos);
 
     void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
