@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>473</width>
-    <height>297</height>
+    <width>498</width>
+    <height>415</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,13 +32,16 @@
       <string>Update Settings</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
       <property name="topMargin">
        <number>0</number>
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="intervalL">
         <property name="text">
-         <string>Check for updates:</string>
+         <string>Check:</string>
         </property>
         <property name="buddy">
          <cstring>intervalCB</cstring>
@@ -46,13 +49,27 @@
        </widget>
       </item>
       <item row="0" column="1">
+       <widget class="QCheckBox" name="checkUpdatesMobileCB">
+        <property name="text">
+         <string>when on a mobile broadband network connection</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="KComboBox" name="intervalCB">
         <property name="currentIndex">
          <number>-1</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="3" column="0" colspan="2">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
        <widget class="QLabel" name="autoInsL">
         <property name="enabled">
          <bool>true</bool>
@@ -65,7 +82,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="installUpdatesMobileCB">
+        <property name="text">
+         <string>when on a mobile broadband network connection</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
        <widget class="KComboBox" name="autoCB">
         <property name="enabled">
          <bool>true</bool>
@@ -88,29 +112,17 @@
         </property>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="4">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Global Behavior</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="autoConfirmCB">
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="checkUpdatesBatteryCB">
         <property name="text">
-         <string>Show confirmation dialog when installing or updating packages</string>
+         <string>when running on battery</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="appLauncherCB">
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="installUpdatesBatteryCB">
         <property name="text">
-         <string>Show application launcher after installing new applications</string>
+         <string>when running on battery</string>
         </property>
        </widget>
       </item>
@@ -166,6 +178,20 @@
      </property>
     </spacer>
    </item>
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="autoConfirmCB">
+     <property name="text">
+      <string>Show confirmation dialog when installing or updating packages</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="appLauncherCB">
+     <property name="text">
+      <string>Show application launcher after installing new applications</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -175,11 +201,6 @@
    <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>intervalCB</tabstop>
-  <tabstop>autoCB</tabstop>
-  <tabstop>notifyUpdatesCB</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -28,6 +28,9 @@
 #include <KPixmapSequence>
 #include <KToolInvocation>
 
+#include <solid/device.h>
+#include <solid/predicate.h>
+
 #include <config.h>
 
 #include <KDebug>
@@ -73,7 +76,11 @@ Settings::Settings(QWidget *parent) :
     connect(appLauncherCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(notifyUpdatesCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(intervalCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
+    connect(checkUpdatesBatteryCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
+    connect(checkUpdatesMobileCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(autoCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
+    connect(installUpdatesBatteryCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
+    connect(installUpdatesMobileCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
 
     // Setup the busy cursor
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
@@ -127,14 +134,21 @@ bool Settings::hasChanges() const
     KConfigGroup transaction(&config, "Transaction");
     KConfigGroup notifyGroup(&config, "Notify");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    if (notifyUpdatesCB->checkState() !=
-        static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates", (int) Qt::Checked))
+    if (notifyUpdatesCB->isChecked() != notifyGroup.readEntry("notifyUpdates", true)
         ||
         intervalCB->itemData(intervalCB->currentIndex()).toUInt() !=
         static_cast<uint>(checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault))
         ||
+        checkUpdatesBatteryCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnBattery", false)
+        ||
+        checkUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnMobile", false)
+        ||    
         autoCB->itemData(autoCB->currentIndex()).toUInt() !=
         static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault))
+        ||
+        installUpdatesBatteryCB->isChecked()  != checkUpdateGroup.readEntry("installUpdatesOnBattery", false)
+        ||
+        installUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry("installUpdatesOnMobile", false)
         ||
         ((m_roles & Enum::RoleGetRepoList) ? m_originModel->changed() : false)
         ||
@@ -153,9 +167,17 @@ void Settings::checkChanges()
 
     // Check if interval update is never
     bool enabled = intervalCB->itemData(intervalCB->currentIndex()).toUInt() != KpkEnum::Never;
-    autoInsL->setEnabled(enabled);
+    checkUpdatesBatteryCB->setEnabled(enabled);
+    checkUpdatesMobileCB->setEnabled(enabled);
     notifyUpdatesCB->setEnabled(enabled);
+
+    autoInsL->setEnabled(enabled);
     autoCB->setEnabled(enabled);
+    if (enabled) {
+        enabled = autoCB->itemData(autoCB->currentIndex()).toUInt() != KpkEnum::None;
+    }
+    installUpdatesMobileCB->setEnabled(enabled);
+    installUpdatesBatteryCB->setEnabled(enabled);
 }
 
 void Settings::load()
@@ -169,8 +191,7 @@ void Settings::load()
     appLauncherCB->setChecked(transaction.readEntry("ShowApplicationLauncher", true));
 
     KConfigGroup notifyGroup(&config, "Notify");
-    notifyUpdatesCB->setCheckState(static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates",
-        static_cast<int>(Qt::Checked))));
+    notifyUpdatesCB->setChecked(notifyGroup.readEntry("notifyUpdates", true));
 
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     uint interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
@@ -182,6 +203,8 @@ void Settings::load()
     } else {
         intervalCB->setCurrentIndex(ret);
     }
+    checkUpdatesBatteryCB->setChecked(checkUpdateGroup.readEntry("checkUpdatesOnBattery", false));
+    checkUpdatesMobileCB->setChecked(checkUpdateGroup.readEntry("checkUpdatesOnMobile", false));
 
     uint autoUpdate = checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault);
     ret = autoCB->findData(autoUpdate);
@@ -191,10 +214,19 @@ void Settings::load()
     } else {
         autoCB->setCurrentIndex(ret);
     }
+    installUpdatesBatteryCB->setChecked(checkUpdateGroup.readEntry("installUpdatesOnBattery", false));
+    installUpdatesMobileCB->setChecked(checkUpdateGroup.readEntry("installUpdatesOnMobile", false));
 
     // Load origns list
     if (m_roles & Enum::RoleGetRepoList) {
         on_showOriginsCB_stateChanged(Qt::Unchecked);
+    }
+    
+    // hide battery options if we are on a desktop computer
+    const QList<Solid::Device> listBattery = Solid::Device::listFromType(Solid::DeviceInterface::Battery, QString());
+    if (listBattery.isEmpty()) {
+        checkUpdatesBatteryCB->hide();
+        installUpdatesBatteryCB->hide();
     }
 }
 
@@ -211,10 +243,16 @@ void Settings::save()
     KConfigGroup notifyGroup(&config, "Notify");
     // not used anymore
     notifyGroup.deleteEntry("notifyLongTasks");
-    notifyGroup.writeEntry("notifyUpdates", static_cast<int>(notifyUpdatesCB->checkState()));
+    notifyGroup.writeEntry("notifyUpdates", notifyUpdatesCB->isChecked());
+
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     checkUpdateGroup.writeEntry("interval", intervalCB->itemData(intervalCB->currentIndex()).toUInt());
+    checkUpdateGroup.writeEntry("checkUpdatesOnBattery", checkUpdatesBatteryCB->isChecked());
+    checkUpdateGroup.writeEntry("checkUpdatesOnMobile", checkUpdatesMobileCB->isChecked());
+
     checkUpdateGroup.writeEntry("autoUpdate", autoCB->itemData(autoCB->currentIndex()).toUInt());
+    checkUpdateGroup.writeEntry("installUpdatesOnBattery", installUpdatesBatteryCB->isChecked());
+    checkUpdateGroup.writeEntry("installUpdatesOnMobile", installUpdatesMobileCB->isChecked());
     // check to see if the backend support this
     if (m_roles & Enum::RoleGetRepoList) {
         if (!m_originModel->save()) {
