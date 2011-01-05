@@ -28,8 +28,7 @@
 #include <KPixmapSequence>
 #include <KToolInvocation>
 
-#include <solid/device.h>
-#include <solid/predicate.h>
+#include <Solid/Device>
 
 #include <config.h>
 

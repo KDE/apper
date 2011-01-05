@@ -32,6 +32,8 @@
 #include <KActionCollection>
 #include <KMenu>
 
+#include <Solid/PowerManagement>
+
 #include <KDebug>
 
 #define UPDATES_ICON "system-software-update"
@@ -63,8 +65,12 @@ void KpkUpdateIcon::refreshAndUpdate(bool refresh)
 {
     // This is really necessary to don't bother the user with
     // tons of popups
-//     Solid::PowerManagement::appShouldConserveResources()
     if (refresh) {
+        if (!systemIsReady(true)) {
+            kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
+            return;
+        }
+
         if (!isRunning()) {
             SET_PROXY
             Transaction *t = new Transaction(QString());
@@ -89,11 +95,16 @@ void KpkUpdateIcon::update()
     if (m_getUpdatesT) {
         return;
     }
+    
+    if (!systemIsReady(true)) {
+        kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
+        return;
+    }
 
     increaseRunning();
     KConfig config("KPackageKit");
     KConfigGroup notifyGroup(&config, "Notify");
-    if (Qt::Checked == static_cast<Qt::CheckState>(notifyGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)))) {
+    if (notifyGroup.readEntry("notifyUpdates", true)) {
         m_updateList.clear();
         m_getUpdatesT = new Transaction(QString(), this);
         m_getUpdatesT->getUpdates();
@@ -123,11 +134,10 @@ void KpkUpdateIcon::packageToUpdate(QSharedPointer<PackageKit::Package> package)
 
 void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
 {
-    Q_UNUSED(type)
     KConfig config("KPackageKit");
     KConfigGroup checkUpdateGroup(&config, "Notify");
-    Qt::CheckState iconEnabled = static_cast<Qt::CheckState>(checkUpdateGroup.readEntry("notifyUpdates", static_cast<int>(Qt::Checked)));
-    if (iconEnabled == Qt::Unchecked) {
+    bool iconEnabled = checkUpdateGroup.readEntry("notifyUpdates", true);
+    if (!iconEnabled) {
         return;
     }
 
@@ -161,14 +171,14 @@ void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
     QString text;
     text = i18np("You have one update", "You have %1 updates", m_updateList.size());
     m_statusNotifierItem->setToolTip(UPDATES_ICON, text, QString());
-    QString icon = UPDATES_ICON;
-//     if (type == Important) {
-//         icon = "kpackagekit-important";
-//     } else if (type == Security) {
-//         icon = "kpackagekit-security";
-//     } else {
-//         icon = "kpackagekit-updates";
-//     }
+    QString icon;
+    if (type == Important) {
+        icon = "kpackagekit-important";
+    } else if (type == Security) {
+        icon = "kpackagekit-security";
+    } else {
+        icon = "kpackagekit-updates";
+    }
     m_statusNotifierItem->setIconByName(icon);
 
     increaseRunning();
@@ -274,3 +284,42 @@ void KpkUpdateIcon::removeStatusNotifierItem()
         m_statusNotifierItem = 0;
     }
 }
+
+bool KpkUpdateIcon::systemIsReady(bool checkUpdates)
+{
+    Enum::Network networkState = Client::instance()->networkState();
+
+    // test whether network is connected
+    if (networkState == Enum::NetworkOffline || networkState == Enum::UnknownNetwork) {
+        return false;
+    }
+
+    KConfig config("KPackageKit");
+    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
+    bool ignoreBattery;
+    if (checkUpdates) {
+        ignoreBattery = checkUpdateGroup.readEntry("checkUpdatesOnBattery", false);
+    } else {
+        ignoreBattery = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
+    }
+
+    // check how applications should behave (e.g. on battery power)
+    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
+        return false;
+    }
+    
+    bool ignoreMobile;
+    if (checkUpdates) {
+        ignoreMobile = checkUpdateGroup.readEntry("checkUpdatesOnMobile", false);
+    } else {
+        ignoreMobile = checkUpdateGroup.readEntry("installUpdatesOnMobile", false);
+    }
+
+    // check how applications should behave (e.g. on battery power)
+    if (!ignoreMobile && networkState == Enum::NetworkMobile) {
+        return false;
+    } 
+
+    return true;
+}
+

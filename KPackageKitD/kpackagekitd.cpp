@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,8 +30,6 @@
 #include <QtDBus/QDBusReply>
 
 #include <limits.h>
-#include <Solid/Networking>
-#include <Solid/PowerManagement>
 
 #define FIVE_MIN 360000
 
@@ -119,22 +117,6 @@ void KPackageKitD::read()
     }
 }
 
-bool KPackageKitD::systemIsReady()
-{
-    // test whether network is connected
-    if (Solid::Networking::status() != Solid::Networking::Connected  &&
-        Solid::Networking::status() != Solid::Networking::Unknown) {
-        return false;
-    }
-
-    // check how applications should behave (e.g. on battery power)
-    if (Solid::PowerManagement::appShouldConserveResources()) {
-        return false;
-    }
-
-    return true;
-}
-
 void KPackageKitD::transactionListChanged(const QStringList &tids)
 {
     if (tids.size()) {
@@ -151,29 +133,24 @@ void KPackageKitD::transactionListChanged(const QStringList &tids)
 
 void KPackageKitD::refreshAndUpdate()
 {
-    // check whether system is ready for an update
-    if (systemIsReady()) {
-        QDBusMessage message;
-        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                 "/",
-                                                 "org.kde.KPackageKitSmartIcon",
-                                                QLatin1String("RefreshAndUpdate"));
-        QDBusConnection::sessionBus().call(message);
-    }
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("RefreshAndUpdate"));
+    QDBusConnection::sessionBus().call(message);
+
     m_qtimer->start(FIVE_MIN);
 }
 
 void KPackageKitD::update()
 {
-    // check whether system is ready for an update
-    if (systemIsReady()) {
-        QDBusMessage message;
-        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                 "/",
-                                                 "org.kde.KPackageKitSmartIcon",
-                                                QLatin1String("Update"));
-        QDBusConnection::sessionBus().call(message);
-    }
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+                                             "/",
+                                             "org.kde.KPackageKitSmartIcon",
+                                             QLatin1String("Update"));
+    QDBusConnection::sessionBus().call(message);
 }
 
 uint KPackageKitD::getTimeSinceRefreshCache() const

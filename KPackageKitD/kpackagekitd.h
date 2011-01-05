@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -42,7 +42,6 @@ private slots:
 private:
     void update();
     void refreshAndUpdate();
-    bool systemIsReady();
     uint getTimeSinceRefreshCache() const;
     bool canRefreshCache();
 

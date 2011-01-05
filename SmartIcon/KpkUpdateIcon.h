@@ -57,6 +57,8 @@ private slots:
     void removeStatusNotifierItem();
 
 private:
+    bool systemIsReady(bool checkUpdates);
+
     Transaction *m_getUpdatesT;
     KStatusNotifierItem *m_statusNotifierItem;
     QList<QSharedPointer<PackageKit::Package> > m_updateList;
