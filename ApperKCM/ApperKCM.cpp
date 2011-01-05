@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -367,53 +367,31 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
             widget->setEnabled(false);
             return;
         } else if (m_searchRole == Enum::RoleGetUpdates) {
-            if (m_updaterPage == 0) {
-                m_updaterPage = new Updater(this);
-                stackedWidget->addWidget(m_updaterPage);
-                checkUpdatesPB->setIcon(KIcon("view-refresh"));
-                connect(checkUpdatesPB, SIGNAL(clicked(bool)),
-                        m_updaterPage, SLOT(refreshCache()));
-            }
-
-            if (!canChangePage(m_browseModel->hasChanges())) {
-                return;
-            }
-
-            connect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-            emit changed(false);
-            stackedWidget->setCurrentWidget(m_updaterPage);
-            m_updaterPage->load();
-            stackedWidgetBar->setCurrentIndex(1);
-            backTB->setEnabled(true);
+            setPage("updates");
             return;
         } else if (m_searchRole == Enum::RoleGetRepoList) {
-            if (m_settingsPage == 0) {
-                m_settingsPage = new Settings(this);
-                stackedWidget->addWidget(m_settingsPage);
-                m_settingsPage->load();
-            }
-
-            if (!canChangePage(m_browseModel->hasChanges())) {
-                return;
-            }
-
-            connect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-            setButtons(KCModule::Default | KCModule::Apply);
-            emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
-            emit changed(false);
-            stackedWidget->setCurrentWidget(m_settingsPage);
-            m_settingsPage->load();
-            stackedWidgetBar->setCurrentIndex(2);
-            backTB->setEnabled(true);
+            setPage("settings");
             return;
         }
+
         // create the main transaction
         search();
     }
 }
 
-bool ApperKCM::canChangePage(bool changed)
+bool ApperKCM::canChangePage()
 {
+    bool changed;
+    // Check if we can change the current page
+    if (stackedWidget->currentWidget() == m_updaterPage) {
+        changed = m_updaterPage->hasChanges();
+    } else if (stackedWidget->currentWidget() == m_settingsPage) {
+        changed = m_settingsPage->hasChanges();
+    } else {
+        changed = m_browseModel->hasChanges();
+    }
+
+    // if there are no changes don't ask the user
     if (!changed) {
         return true;
     }
@@ -441,6 +419,62 @@ bool ApperKCM::canChangePage(bool changed)
     }
 }
 
+QString ApperKCM::page() const
+{
+    return QString();
+}
+
+void ApperKCM::setPage(const QString &page)
+{
+    if (page == "settings") {
+        if (stackedWidget->currentWidget() != m_settingsPage) {
+            if (!canChangePage()) {
+                return;
+            }
+
+            if (m_settingsPage == 0) {
+                m_settingsPage = new Settings(this);
+                stackedWidget->addWidget(m_settingsPage);
+                m_settingsPage->load();
+            }
+            connect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+            setButtons(KCModule::Default | KCModule::Apply);
+            emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
+            emit changed(false);
+            stackedWidget->setCurrentWidget(m_settingsPage);
+            m_settingsPage->load();
+            stackedWidgetBar->setCurrentIndex(2);
+            backTB->setEnabled(true);
+        }
+    } else if (page == "updates") {
+        if (stackedWidget->currentWidget() != m_updaterPage) {
+            if (!canChangePage()) {
+                return;
+            }
+
+            if (m_updaterPage == 0) {
+                m_updaterPage = new Updater(this);
+                stackedWidget->addWidget(m_updaterPage);
+                checkUpdatesPB->setIcon(KIcon("view-refresh"));
+                connect(checkUpdatesPB, SIGNAL(clicked(bool)),
+                        m_updaterPage, SLOT(refreshCache()));
+            }
+
+            connect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+            emit changed(false);
+            stackedWidget->setCurrentWidget(m_updaterPage);
+            m_updaterPage->load();
+            stackedWidgetBar->setCurrentIndex(1);
+            backTB->setEnabled(true);
+        }
+    } else if (page == "home") {
+        if (stackedWidget->currentWidget() == m_updaterPage ||
+            stackedWidget->currentWidget() == m_settingsPage) {
+            on_backTB_clicked();
+        }
+    }
+}
+
 void ApperKCM::on_backTB_clicked()
 {
     bool canGoBack = false;
@@ -462,14 +496,14 @@ void ApperKCM::on_backTB_clicked()
             return;
         }
     } else if (stackedWidget->currentWidget() == m_updaterPage) {
-        if (!canChangePage(m_updaterPage->hasChanges())) {
+        if (!canChangePage()) {
             return;
         }
         stackedWidgetBar->setCurrentIndex(0);
         disconnect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
     } else if (stackedWidget->currentWidget() == m_settingsPage) {
-        if (!canChangePage(m_settingsPage->hasChanges())) {
+        if (!canChangePage()) {
             return;
         }
         setButtons(Apply);

@@ -69,9 +69,7 @@ include_directories(${CMAKE_SOURCE_DIR}
 
 add_subdirectory(libkpackagekit)
 add_subdirectory(ApperKCM)
-# add_subdirectory(Settings)
-# add_subdirectory(Updater)
-add_subdirectory(KPackageKit)
+add_subdirectory(Apper)
 add_subdirectory(SmartIcon)
 add_subdirectory(KPackageKitD)
 add_subdirectory(Desktop)

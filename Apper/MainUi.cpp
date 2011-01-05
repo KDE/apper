@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,20 +20,15 @@
 
 #include "MainUi.h"
 
-#include <QLayout>
 #include <KDebug>
 #include <KConfig>
-#include <KLocale>
-#include <KMessageBox>
 #include <KCModuleProxy>
 
 using namespace PackageKit;
 
 MainUi::MainUi(QWidget *parent)
   : KCMultiDialog(parent),
-    m_addrmPWI(0),
-    m_updatePWI(0),
-    m_settingsPWI(0)
+    m_apperModule(0)
 {
     setCaption(QString());
     setWindowIcon(KIcon("applications-other"));
@@ -43,7 +38,13 @@ MainUi::MainUi(QWidget *parent)
     restoreDialogSize(kpackagekitMain);
 
     // Set Apply and Cancel buttons
-    setButtons(KDialog::Apply | KDialog::Help | KDialog::Default | KDialog::Reset);
+    setButtons(KDialog::Apply /*| KDialog::Help*/ | KDialog::Default | KDialog::Reset);
+
+    KPageWidgetItem *page = addModule("kcm_apper.desktop");
+    KCModuleProxy *proxy = static_cast<KCModuleProxy*>(page->widget());
+    if (proxy) {
+        m_apperModule = proxy->realModule();
+    }
 }
 
 MainUi::~MainUi()
@@ -56,43 +57,17 @@ MainUi::~MainUi()
 
 void MainUi::showAll()
 {
-    // check to see if all are added
-//     showSettings(false);
-//     showUpdates(false, false);
-    if (!m_addrmPWI) {
-        m_addrmPWI = addModule("kcm_apper");
-    }
-
-    if (currentPage() != m_addrmPWI) {
-        setCurrentPage(m_addrmPWI);
-    }
+    m_apperModule->setProperty("page", "home");
 }
 
 void MainUi::showUpdates(bool selected, bool forceCurrentPage)
 {
-    if (!m_updatePWI) {
-        // the selected boolean is used to automatically select all updates
-        QStringList args;
-        if (selected) {
-            args << "selected";
-        }
-        m_updatePWI = addModule("kpk_update.desktop", args);
-    }
-
-    if (forceCurrentPage && currentPage() != m_updatePWI) {
-        setCurrentPage(m_updatePWI);
-    }
+    m_apperModule->setProperty("page", "updates");
 }
 
 void MainUi::showSettings(bool forceCurrentPage)
 {
-    if (!m_settingsPWI) {
-        m_settingsPWI = addModule("kpk_settings.desktop");
-    }
-
-    if (forceCurrentPage && currentPage() != m_settingsPWI) {
-        setCurrentPage(m_settingsPWI);
-    }
+    m_apperModule->setProperty("page", "settings");
 }
 
 #include "MainUi.moc"

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -23,7 +23,6 @@
 
 #include <KDebug>
 #include <KConfig>
-#include <KLocale>
 #include <KAboutData>
 #include <KCmdLineArgs>
 
@@ -35,7 +34,7 @@ int main(int argc, char **argv)
                      KPK_VERSION,
                      ki18n("Apper is an Application to Get and Manage Software"),
                      KAboutData::License_GPL,
-                     ki18n("(C) 2008-2010 Daniel Nicoletti"));
+                     ki18n("(C) 2008-2011 Daniel Nicoletti"));
 
     about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti85-pk@yahoo.com.br", "http://www.packagekit.org");
     about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"), "@");

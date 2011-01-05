@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -44,9 +44,13 @@ class Updater;
 class ApperKCM : public KCModule, Ui::ApperKCM
 {
     Q_OBJECT
+    Q_PROPERTY(QString page READ page WRITE setPage USER true)
 public:
     ApperKCM(QWidget *parent, const QVariantList &args);
     ~ApperKCM();
+    
+    QString page() const;
+    void setPage(const QString &page);
 
 signals:
     void changed(bool state);
@@ -76,7 +80,7 @@ private slots:
     void changed();
 
 private:
-    bool canChangePage(bool changed);
+    bool canChangePage();
     void setCurrentActionEnabled(bool state);
     void setCurrentAction(QAction *action);
     void setCurrentActionCancel(bool cancel);

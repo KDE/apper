@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,13 +24,13 @@
 #include <QPackageKit>
 
 #include <KCMultiDialog>
+#include <KCModuleProxy>
 
 using namespace PackageKit;
 
 class MainUi : public KCMultiDialog
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     MainUi(QWidget *parent = 0);
     ~MainUi();
@@ -40,9 +40,7 @@ public:
     void showSettings(bool forceCurrentPage = true);
 
 private:
-    KPageWidgetItem *m_addrmPWI;
-    KPageWidgetItem *m_updatePWI;
-    KPageWidgetItem *m_settingsPWI;
+    KCModule *m_apperModule;
 };
 
 #endif

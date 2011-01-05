@@ -1,18 +1,18 @@
 find_package(KDE4Internal REQUIRED)
 
-set(kpackagekit_SRCS
+set(apper_SRCS
     MainUi.cpp
     BackendDetails.cpp
     Apper.cpp
     main.cpp
 )
 
-kde4_add_ui_files(kpackagekit_SRCS
+kde4_add_ui_files(apper_SRCS
     BackendDetails.ui
 )
 
 kde4_add_executable(apper
-    ${kpackagekit_SRCS}
+    ${apper_SRCS}
 )
 
 target_link_libraries(apper

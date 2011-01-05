@@ -53,7 +53,7 @@ KpkUpdateIcon::~KpkUpdateIcon()
 
 void KpkUpdateIcon::showSettings()
 {
-    QProcess::execute("kpackagekit", QStringList() << "--settings");
+    QProcess::execute("apper", QStringList() << "--settings");
 }
 
 // refresh the cache and try to update,
@@ -63,6 +63,7 @@ void KpkUpdateIcon::refreshAndUpdate(bool refresh)
 {
     // This is really necessary to don't bother the user with
     // tons of popups
+//     Solid::PowerManagement::appShouldConserveResources()
     if (refresh) {
         if (!isRunning()) {
             SET_PROXY
@@ -263,7 +264,7 @@ void KpkUpdateIcon::autoUpdatesFinished(PackageKit::Enum::Exit status)
 
 void KpkUpdateIcon::showUpdates()
 {
-    QProcess::execute("kpackagekit", QStringList() << "--updates");
+    QProcess::execute("apper", QStringList() << "--updates");
 }
 
 void KpkUpdateIcon::removeStatusNotifierItem()
