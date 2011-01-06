@@ -44,7 +44,8 @@ signals:
     void watchTransaction(const QString &tid, bool interactive);
 
 public slots:
-    void refreshAndUpdate(bool refresh);
+    void refreshAndUpdate(bool doRefresh);
+    void refresh(bool update = false);
 
 private slots:
     void update();

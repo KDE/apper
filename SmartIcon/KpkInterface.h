@@ -46,6 +46,7 @@ public:
 signals:
     void watchTransaction(const QString &tid, bool interactive);
     void refreshAndUpdate(bool refresh);
+    void refresh();
 
 #ifdef HAVE_DEBCONFKDE
 private slots:

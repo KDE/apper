@@ -22,6 +22,7 @@
 
 #include "KpkUpdateIcon.h"
 
+#include <KpkStrings.h>
 #include <KpkIcons.h>
 #include <KpkEnum.h>
 #include <KpkMacros.h>
@@ -58,33 +59,46 @@ void KpkUpdateIcon::showSettings()
     QProcess::execute("apper", QStringList() << "--settings");
 }
 
+void KpkUpdateIcon::refresh(bool update)
+{
+    if (!systemIsReady(true)) {
+        kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
+        return;
+    }
+
+    if (!isRunning()) {
+        SET_PROXY
+        Transaction *t = new Transaction(QString());
+        t->refreshCache(true);
+        if (!t->error()) {
+            increaseRunning();
+            // ignore if there is an error
+            // Be silent! don't bother the user if the cache couldn't be refreshed
+            if (update) {
+                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                        this, SLOT(update()));
+            }
+            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                    this, SLOT(decreaseRunning()));
+        } else {
+            KNotification *notify = new KNotification("TransactionError", 0);
+            notify->setText(KpkStrings::daemonError(t->error()));
+            notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+            notify->sendEvent();
+        }
+    }
+}
+    
 // refresh the cache and try to update,
 // if it can't automatically update show
 // a notification about updates available
-void KpkUpdateIcon::refreshAndUpdate(bool refresh)
+void KpkUpdateIcon::refreshAndUpdate(bool doRefresh)
 {
     // This is really necessary to don't bother the user with
     // tons of popups
-    if (refresh) {
-        if (!systemIsReady(true)) {
-            kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
-            return;
-        }
-
-        if (!isRunning()) {
-            SET_PROXY
-            Transaction *t = new Transaction(QString());
-            t->refreshCache(true);
-            if (!t->error()) {
-                increaseRunning();
-                // ignore if there is an error
-                // Be silent! don't bother the user if the cache couldn't be refreshed
-                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                        this, SLOT(update()));
-                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                        this, SLOT(decreaseRunning()));
-            }
-        }
+    if (doRefresh) {
+        // Force an update after refresh cache
+        refresh(true);
     } else {
         update();
     }
@@ -95,16 +109,17 @@ void KpkUpdateIcon::update()
     if (m_getUpdatesT) {
         return;
     }
-    
-    if (!systemIsReady(true)) {
-        kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
-        return;
-    }
 
     increaseRunning();
     KConfig config("KPackageKit");
     KConfigGroup notifyGroup(&config, "Notify");
-    if (notifyGroup.readEntry("notifyUpdates", true)) {
+    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
+    
+    bool notifyUpdate = notifyGroup.readEntry("notifyUpdates", true);
+    uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault));
+
+    // get updates if we should display a notification or automatic update the system
+    if (notifyUpdate || updateType == KpkEnum::All || updateType == KpkEnum::Security) {
         m_updateList.clear();
         m_getUpdatesT = new Transaction(QString(), this);
         m_getUpdatesT->getUpdates();
@@ -204,7 +219,12 @@ void KpkUpdateIcon::getUpdateFinished()
         KConfig config("KPackageKit");
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
         uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault));
-        if (updateType == KpkEnum::All) {
+        bool systemReady = systemIsReady(true);
+        if (!systemReady && (updateType == KpkEnum::All || (updateType == KpkEnum::Security && !securityUpdateList.isEmpty()))) {
+            kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
+        }
+
+        if (systemReady && updateType == KpkEnum::All) {
             // update all
             SET_PROXY
             Transaction *t = new Transaction(QString());
@@ -220,11 +240,12 @@ void KpkUpdateIcon::getUpdateFinished()
                 // use of QSize does the right thing
                 autoInstallNotify->setPixmap(KIcon("plasmagik").pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
                 autoInstallNotify->sendEvent();
+
                 increaseRunning();
                 removeStatusNotifierItem();
                 return;
             }
-        } else if (updateType == KpkEnum::Security && !securityUpdateList.isEmpty()) {
+        } else if (systemReady && updateType == KpkEnum::Security && !securityUpdateList.isEmpty()) {
             // Defaults to security
             SET_PROXY
             Transaction *t = new Transaction(QString());
@@ -240,11 +261,13 @@ void KpkUpdateIcon::getUpdateFinished()
                 // use of QSize does the right thing
                 autoInstallNotify->setPixmap(KIcon(UPDATES_ICON).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
                 autoInstallNotify->sendEvent();
+
                 increaseRunning();
                 removeStatusNotifierItem();
                 return;
             }
         }
+
         // all failed let's update our icon
         updateStatusNotifierIcon(type);
     } else {
@@ -263,6 +286,9 @@ void KpkUpdateIcon::autoUpdatesFinished(PackageKit::Enum::Exit status)
         notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
         notify->setText(i18n("System update was successful."));
         notify->sendEvent();
+        
+        // run get-updates again so that not auto-installed updates can be displayed
+        update();
     } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing

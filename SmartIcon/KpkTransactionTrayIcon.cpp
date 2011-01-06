@@ -458,7 +458,9 @@ void KpkTransactionTrayIcon::logout()
 void KpkTransactionTrayIcon::hideIcon()
 {
     // Reset things as the user don't want to see it
-    m_trayIcon->deleteLater();
+    if (m_trayIcon) {
+        m_trayIcon->deleteLater();
+    }
     m_trayIcon = 0;
     m_messages.clear();
     m_messagesCount = 0;

@@ -75,6 +75,8 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
             m_updateIcon, SLOT(refreshAndUpdate(bool)));
     connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
             m_distroUpgrade, SLOT(checkDistroUpgrades()));
+    connect(m_interface, SIGNAL(refresh()),
+            m_updateIcon, SLOT(refresh()));
 
     m_transWatcher = new KpkTransactionWatcher(this);
     connect(m_transWatcher, SIGNAL(close()),

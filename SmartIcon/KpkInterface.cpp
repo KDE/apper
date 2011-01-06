@@ -22,7 +22,6 @@
 #include "kpackagekitsmarticonadaptor.h"
 
 #include <QtDBus/QDBusConnection>
-#include <KpkStrings.h>
 #include <KpkIcons.h>
 #include <KpkMacros.h>
 #include <KIcon>
@@ -72,16 +71,7 @@ void KpkInterface::WatchTransaction(const QString &tid)
 
 void KpkInterface::RefreshCache()
 {
-    SET_PROXY
-    Transaction *t = Client::instance()->refreshCache(true);
-    if (t->error()) {
-        KNotification *notify = new KNotification("TransactionError", 0, KNotification::Persistent);
-        notify->setText(KpkStrings::daemonError(t->error()));
-        notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-        notify->sendEvent();
-    } else {
-        emit watchTransaction(t->tid(), true);
-    }
+    emit refresh();
 }
 
 void KpkInterface::Update()
