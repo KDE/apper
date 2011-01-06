@@ -1,3 +1,4 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Type=Service
 Exec=kcmshell4 apper
@@ -5,7 +6,7 @@ Icon=applications-other
 
 X-KDE-Library=apper
 X-KDE-ParentApp=kcontrol
-X-KDE-ServiceTypes=SystemSettingsCategory
+X-KDE-ServiceTypes=KCModule
 X-KDE-System-Settings-Category=manage-software
 X-KDE-System-Settings-Parent-Category=computer-administration
 X-KDE-System-Settings-Parent-Category-V2=system-administration

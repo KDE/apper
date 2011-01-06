@@ -1,11 +1,12 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Type=Application
 Icon=applications-other
-Exec=kpackagekit -caption "%c" %i %F
+Exec=apper -caption "%c" %i %F
 X-DBUS-StartupType=Unique
-X-DBUS-ServiceName=org.kde.kpackagekit
+X-DBUS-ServiceName=org.kde.apper
 
-Name=KPackageKit
+Name=Apper
 Name[bg]=KPackageKit
 Name[ca]=KPackageKit
 Name[ca@valencia]=KPackageKit
