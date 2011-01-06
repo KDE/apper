@@ -35,6 +35,7 @@
 #include <KLocale>
 #include <KWindowSystem>
 
+#include <Solid/PowerManagement>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 
@@ -46,7 +47,8 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
  : KpkAbstractIsRunning(parent),
    m_trayIcon(0),
    m_refreshCacheAction(0),
-   m_messagesCount(0)
+   m_messagesCount(0),
+   m_inhibitCookie(-1)
 {
     // Create a new daemon
     m_client = Client::instance();
@@ -143,6 +145,9 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
     if (tids.size()) {
         setCurrentTransaction(tids.first());
     } else {
+        // release any cookie that we might have
+        suppressSleep(false);
+
         if (m_messagesCount == 0 &&
             m_restartType == Enum::RestartNone)
         {
@@ -209,15 +214,19 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
     // AVOID showing messages and restart requires when
     // the user was just simulating an instalation
     // TODO fix yum backend
-    if (transaction->role() == Enum::RoleInstallPackages ||
-        transaction->role() == Enum::RoleInstallFiles ||
-        transaction->role() == Enum::RoleRemovePackages ||
-        transaction->role() == Enum::RoleUpdatePackages ||
-        transaction->role() == Enum::RoleUpdateSystem) {
+    Enum::Role role = transaction->role();
+    if (role == Enum::RoleInstallPackages ||
+        role == Enum::RoleInstallFiles    ||
+        role == Enum::RoleRemovePackages  ||
+        role == Enum::RoleUpdatePackages  ||
+        role == Enum::RoleUpdateSystem) {
         connect(m_currentTransaction, SIGNAL(message(PackageKit::Enum::Message, const QString &)),
                 this, SLOT(message(PackageKit::Enum::Message, const QString &)));
         connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)),
                 this, SLOT(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)));
+
+        // Don't let the system sleep while doing some sensible actions
+        suppressSleep(true, KpkStrings::action(role));
     }
     connect(m_currentTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(finished(PackageKit::Enum::Exit)));
@@ -473,6 +482,27 @@ bool KpkTransactionTrayIcon::isRunning()
            !Client::instance()->getTransactionList().isEmpty() ||
            m_messagesCount ||
            m_restartType != Enum::RestartNone;
+}
+
+    
+void KpkTransactionTrayIcon::suppressSleep(bool enable, const QString &reason)
+{
+    if (enable) {
+        if (m_inhibitCookie == -1) {
+            kDebug() << "Disabling powermanagement sleep";
+            m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep(reason);
+            if (m_inhibitCookie == -1) {
+                kDebug() << "Sleep suppression denied!";
+            }
+        }
+    } else {
+        kDebug() << "Enabling powermanagement sleep";
+        if (m_inhibitCookie == -1) {
+            if ( ! Solid::PowerManagement::stopSuppressingSleep(m_inhibitCookie)) {
+                kDebug() << "Enable failed: invalid cookie.";
+            }
+        }
+    }
 }
 
 #include "KpkTransactionTrayIcon.moc"

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -62,6 +62,7 @@ private slots:
     void fillMenu();
 
 private:
+    void suppressSleep(bool enable, const QString &reason = QString());
     void updateMenu(const QList<PackageKit::Transaction*> &tids);
     void setCurrentTransaction(PackageKit::Transaction *transaction);
 
@@ -91,6 +92,9 @@ private:
     Enum::Status  m_currentStatus;
     Enum::Role    m_currentRole;
     uint          m_currentProgress;
+    
+    // cookie to suppress sleep
+    int           m_inhibitCookie;
 };
 
 #endif
