@@ -44,6 +44,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void leaveEvent(QEvent *event);
     void mousePressEvent(QMouseEvent *event);
+    QSize sectionSizeFromContents(int logicalIndex) const;
 
 private:
     bool insideCheckBox(const QRect &rect, const QPoint &pos) const;

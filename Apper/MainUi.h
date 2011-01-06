@@ -36,8 +36,8 @@ public:
     ~MainUi();
 
     void showAll();
-    void showUpdates(bool selected, bool forceCurrentPage = true);
-    void showSettings(bool forceCurrentPage = true);
+    void showUpdates(bool selected);
+    void showSettings();
 
 private:
     KCModule *m_apperModule;

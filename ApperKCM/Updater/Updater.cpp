@@ -39,7 +39,6 @@
 #include <KpkSimulateModel.h>
 #include <KpkRequirements.h>
 #include <KpkPackageModel.h>
-#include <KpkDelegate.h>
 
 #include <QSortFilterProxyModel>
 #include <QDBusConnection>
@@ -47,14 +46,11 @@
 #include <KMessageBox>
 #include <KDebug>
 
-#define UNIVERSAL_PADDING 6
-
 Updater::Updater(QWidget *parent) :
     QWidget(parent),
+    m_selected(false),
     m_updatesT(0)
 {
-//     m_selected = !args.isEmpty();
-    m_selected = false;
     setupUi(this);
 
     //initialize the model, delegate, client and  connect it's signals
@@ -126,6 +122,11 @@ Updater::~Updater()
     KConfigGroup viewGroup(&config, "ViewGroup");
     viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
     viewGroup.writeEntry("ShowArchs", m_showPackageArch->isChecked());
+}
+
+void Updater::setSelected(bool selected)
+{
+    m_selected = selected;
 }
 
 void Updater::showVersions(bool enabled)

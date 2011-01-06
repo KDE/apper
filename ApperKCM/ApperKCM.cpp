@@ -446,7 +446,7 @@ void ApperKCM::setPage(const QString &page)
             stackedWidgetBar->setCurrentIndex(2);
             backTB->setEnabled(true);
         }
-    } else if (page == "updates") {
+    } else if (page == "updates" || page == "updatesSelected") {
         if (stackedWidget->currentWidget() != m_updaterPage) {
             if (!canChangePage()) {
                 return;
@@ -463,6 +463,7 @@ void ApperKCM::setPage(const QString &page)
             connect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
             emit changed(false);
             stackedWidget->setCurrentWidget(m_updaterPage);
+            m_updaterPage->setSelected(page == "updatesSelected");
             m_updaterPage->load();
             stackedWidgetBar->setCurrentIndex(1);
             backTB->setEnabled(true);

@@ -38,6 +38,7 @@ public:
     ~Updater();
 
     bool hasChanges() const;
+    void setSelected(bool selected);
 
 signals:
     void changed(bool);

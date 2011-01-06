@@ -41,6 +41,7 @@ void CheckableHeader::paintSection(QPainter *painter, const QRect &rect, int log
     painter->save();
     QHeaderView::paintSection(painter, rect, logicalIndex);
     painter->restore();
+
     if (logicalIndex == 0 && m_visible) {
         QStyleOptionButton option;
         option.state = QStyle::State_None;
@@ -99,7 +100,27 @@ QSize CheckableHeader::sizeHint() const
     if (size.height() < (rect.height() + 2 * UNIVERSAL_PADDING)) {
         size.setHeight(rect.height() + 2 * UNIVERSAL_PADDING);
     }
-//     kDebug() << size;
+
+    return size;
+}
+
+QSize CheckableHeader::sectionSizeFromContents(int logicalIndex) const
+{
+    QSize size = QHeaderView::sectionSizeFromContents(logicalIndex);
+    if (logicalIndex == 0) {      
+        const QStyle *style = QApplication::style();
+        QStyleOptionButton option;
+        QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
+        
+        QString text = model()->headerData(0, Qt::Horizontal).toString();
+        QFontMetrics metric = QFontMetrics(QFont());
+        int textSize = metric.width(text);
+        
+        int minimunSize = textSize + 2 * (rect.width() + 2 * (UNIVERSAL_PADDING + 1));
+        if (size.width() < minimunSize) {
+            size.setWidth(minimunSize);
+        }
+    }
     return size;
 }
 

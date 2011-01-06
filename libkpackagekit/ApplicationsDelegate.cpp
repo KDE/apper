@@ -310,7 +310,7 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
                 QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
                 // Adds the icon size AND the checkbox size
                 // [ x ] (icon) Text
-                size.rwidth() += 4 * UNIVERSAL_PADDING + 44 + rect.width();
+                size.rwidth() += 4 * UNIVERSAL_PADDING + 46 + rect.width();
             } else {
                 // Adds the icon size
                 size.rwidth() += 3 * UNIVERSAL_PADDING + 44;

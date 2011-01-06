@@ -60,12 +60,16 @@ void MainUi::showAll()
     m_apperModule->setProperty("page", "home");
 }
 
-void MainUi::showUpdates(bool selected, bool forceCurrentPage)
+void MainUi::showUpdates(bool selected)
 {
-    m_apperModule->setProperty("page", "updates");
+    if (selected) {   
+        m_apperModule->setProperty("page", "updatesSelected");
+    } else {
+        m_apperModule->setProperty("page", "updates");
+    }
 }
 
-void MainUi::showSettings(bool forceCurrentPage)
+void MainUi::showSettings()
 {
     m_apperModule->setProperty("page", "settings");
 }
