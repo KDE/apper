@@ -7,6 +7,10 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper
+Name[pt]=Apper
+Name[pt_BR]=Apper
+Name[uk]=Apper
+Name[x-test]=xxApperxx
 GenericName=Software Management
 GenericName[bg]=Управление на софтуер
 GenericName[ca]=Gestor de programari
