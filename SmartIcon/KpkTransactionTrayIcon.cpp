@@ -23,7 +23,7 @@
 #include "TransactionTrayIcon.h"
 
 #include <KpkStrings.h>
-#include <KpkTransaction.h>
+#include <PkTransactionDialog.h>
 #include <KpkIcons.h>
 #include <KpkImportance.h>
 #include <KpkEnum.h>
@@ -121,7 +121,7 @@ void KpkTransactionTrayIcon::createTransactionDialog(PackageKit::Transaction *t)
 
     increaseRunning();
     // we need to close on finish otherwise smart-icon will timeout
-    KpkTransaction *trans = new KpkTransaction(t, KpkTransaction::CloseOnFinish);
+    PkTransactionDialog *trans = new PkTransactionDialog(t, PkTransactionDialog::CloseOnFinish);
     // Connect to finished since the transaction may fail
     // due to GPG or EULA and we can't handle this here..
     connect(trans, SIGNAL(finished()),
@@ -133,8 +133,8 @@ void KpkTransactionTrayIcon::createTransactionDialog(PackageKit::Transaction *t)
 
 void KpkTransactionTrayIcon::transactionDialogClosed()
 {
-    KpkTransaction *trans = qobject_cast<KpkTransaction*>(sender());
-    m_transDialogs.remove(trans->tid());
+    PkTransactionDialog *trans = qobject_cast<PkTransactionDialog*>(sender());
+    m_transDialogs.remove(trans->transaction()->tid());
     // DO NOT delete the kpkTransaction it might have errors to print
     decreaseRunning();
 }

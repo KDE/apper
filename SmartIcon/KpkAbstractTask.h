@@ -23,7 +23,7 @@
 
 #include <kdemacros.h>
 #include <KpkReviewChanges.h>
-#include <KpkTransaction.h>
+#include <PkTransactionDialog.h>
 
 #include <QDBusMessage>
 #include <QWidget>
@@ -73,14 +73,14 @@ signals:
     void finished();
 
 protected slots:
-    virtual void transactionFinished(KpkTransaction::ExitStatus status);
+    virtual void transactionFinished(PkTransaction::ExitStatus status);
 
 protected:
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);
     uint parentWId() const;
-    KpkTransaction* kTransaction() const;
+    PkTransactionDialog* kTransaction() const;
     QString parentTitle;
 
 private:
@@ -89,7 +89,7 @@ private:
     QDBusMessage m_message;
     Interactions m_interactions;
     uint m_timeout;
-    KpkTransaction *m_transaction;
+    PkTransactionDialog *m_transaction;
 
     void parseInteraction(const QString &interaction);
     uint getPidSystem();

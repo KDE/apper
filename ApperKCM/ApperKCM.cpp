@@ -48,6 +48,10 @@
 
 #include <KDebug>
 
+#define BAR_SEARCH 0
+#define BAR_UPDATE 1
+#define BAR_TITLE  2
+
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
 
 K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<ApperKCM>();)
@@ -443,7 +447,8 @@ void ApperKCM::setPage(const QString &page)
             emit changed(false);
             stackedWidget->setCurrentWidget(m_settingsPage);
             m_settingsPage->load();
-            stackedWidgetBar->setCurrentIndex(2);
+            stackedWidgetBar->setCurrentIndex(BAR_TITLE);
+            titleL->clear();
             backTB->setEnabled(true);
         }
     } else if (page == "updates" || page == "updatesSelected") {
@@ -465,7 +470,7 @@ void ApperKCM::setPage(const QString &page)
             stackedWidget->setCurrentWidget(m_updaterPage);
             m_updaterPage->setSelected(page == "updatesSelected");
             m_updaterPage->load();
-            stackedWidgetBar->setCurrentIndex(1);
+            stackedWidgetBar->setCurrentIndex(BAR_UPDATE);
             backTB->setEnabled(true);
         }
     } else if (page == "home") {
@@ -500,7 +505,7 @@ void ApperKCM::on_backTB_clicked()
         if (!canChangePage()) {
             return;
         }
-        stackedWidgetBar->setCurrentIndex(0);
+        stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
         disconnect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
     } else if (stackedWidget->currentWidget() == m_settingsPage) {
@@ -509,7 +514,7 @@ void ApperKCM::on_backTB_clicked()
         }
         setButtons(Apply);
         emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
-        stackedWidgetBar->setCurrentIndex(0);
+        stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
         disconnect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
     }
@@ -635,27 +640,98 @@ void ApperKCM::changed()
     setCurrentActionEnabled(trans->allowCancel());
 }
 
+void ApperKCM::updatePackages(PkTransaction *transaction)
+{
+    kDebug();
+    backTB->setEnabled(false);
+    stackedWidget->addWidget(transaction);
+    stackedWidgetBar->setCurrentIndex(BAR_TITLE);
+    connect(transaction, SIGNAL(titleChanged(const QString &)),
+            titleL, SLOT(setText(const QString &)));
+}
+
 void ApperKCM::save()
 {
     kDebug() << stackedWidget->currentWidget() << m_updaterPage << m_settingsPage;
-    if (stackedWidget->currentWidget() == m_updaterPage) {
-        m_updaterPage->save();
-    } else if (stackedWidget->currentWidget() == m_settingsPage) {
+
+    QWidget *currentWidget = stackedWidget->currentWidget();
+    if (currentWidget == m_settingsPage) {
         m_settingsPage->save();
     } else {
-        QPointer<KpkReviewChanges> frm = new KpkReviewChanges(m_browseModel->selectedPackages(), this);
-        connect(frm, SIGNAL(successfullyInstalled()), m_browseModel, SLOT(uncheckAvailablePackages()));
-        connect(frm, SIGNAL(successfullyRemoved()), m_browseModel, SLOT(uncheckInstalledPackages()));
+        PkTransaction *transaction = new PkTransaction(0, this);
+        stackedWidget->addWidget(transaction);
+        stackedWidget->setCurrentWidget(transaction);
+        int oldBar = stackedWidgetBar->currentIndex();
+        stackedWidgetBar->setCurrentIndex(BAR_TITLE);
+        backTB->setEnabled(false);
+        connect(transaction, SIGNAL(titleChanged(const QString &)),
+                titleL, SLOT(setText(const QString &)));
+        emit changed(false);
 
-        frm->exec();
+        QEventLoop loop;
+        connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
+        if (currentWidget == m_updaterPage) {
+            transaction->updatePackages(m_updaterPage->packagesToUpdate());
+            
+            // wait for the end of transaction
+            if (!transaction->isFinished()) {
+                loop.exec();
+            }
+        } else {
+            // install then remove packages
+            QList<QSharedPointer<PackageKit::Package> > removePackages;
+            QList<QSharedPointer<PackageKit::Package> > installPackages;
+            foreach (const QSharedPointer<PackageKit::Package> &p, m_browseModel->selectedPackages()) {
+                if (p->info() == Enum::InfoInstalled ||
+                    p->info() == Enum::InfoCollectionInstalled) {
+                    // check what packages are installed and marked to be removed
+                    removePackages << p;
+                } else if (p->info() == Enum::InfoAvailable ||
+                           p->info() == Enum::InfoCollectionAvailable) {
+                    // check what packages are available and marked to be installed
+                    installPackages << p;
+                }
+            }
 
-        // This avoid crashing as the above function does not always quit it's event loop
-        if (!frm.isNull()) {
-            frm->deleteLater();
+            if (!installPackages.isEmpty()) {
+                transaction->installPackages(installPackages);
 
-            search();
-            QTimer::singleShot(0, this, SLOT(checkChanged()));
+                // wait for the end of transaction
+                if (!transaction->isFinished()) {
+                    loop.exec();
+                }
+                
+                if (transaction->exitStatus() == PkTransaction::Success) {
+                    m_browseModel->uncheckAvailablePackages();
+                }
+            }
+            
+            if (!removePackages.isEmpty()) {
+                transaction->removePackages(removePackages);
+
+                // wait for the end of transaction
+                if (!transaction->isFinished()) {
+                    loop.exec();
+                }
+
+                if (transaction->exitStatus() == PkTransaction::Success) {
+                    m_browseModel->uncheckInstalledPackages();
+                }
+            }
         }
+        
+        // Finished setup old stuff
+        backTB->setEnabled(true);
+        stackedWidget->setCurrentWidget(currentWidget);
+        stackedWidgetBar->setCurrentIndex(oldBar);
+        transaction->deleteLater();
+        if (currentWidget == m_updaterPage) {
+            m_updaterPage->getUpdates();
+        } else {
+            // install then remove packages
+            search();
+        }
+        QTimer::singleShot(0, this, SLOT(checkChanged()));
     }
 }
 

@@ -21,7 +21,6 @@
 #ifndef PROGRESS_VIEW_H
 #define PROGRESS_VIEW_H
 
-#include <QWidget>
 #include <QStandardItemModel>
 #include <QTreeView>
 #include <QLabel>
@@ -31,7 +30,7 @@
 
 using namespace PackageKit;
 
-class ProgressView: public QWidget
+class ProgressView: public QTreeView
 {
     Q_OBJECT
 public:
@@ -59,9 +58,7 @@ private:
     QList<QStandardItem *> findItems(const QString &packageId);
 
     QStandardItemModel *m_model;
-    QTreeView          *m_packageView;
     QScrollBar         *m_scrollBar;
-    QLabel             *m_label;
     QString             m_lastPackageId;
     bool                m_keepScrollBarBottom;
 };

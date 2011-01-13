@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,36 +18,56 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef PK_INSTALL_MIME_TYPE_H
-#define PK_INSTALL_MIME_TYPE_H
+#ifndef PK_TRANSACTION_DIALOG_H
+#define PK_TRANSACTION_DIALOG_H
 
-#include "KpkAbstractTask.h"
+#include <KDialog>
+#include "PkTransaction.h"
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
-class PkInstallMimeTypes : public KpkAbstractTask
+class KpkSimulateModel;
+class PkTransactionDialogPrivate;
+class KDE_EXPORT PkTransactionDialog : public KDialog
 {
-Q_OBJECT
+    Q_OBJECT
+    Q_ENUMS(ExitStatus)
 public:
-    PkInstallMimeTypes(uint xid,
-                       const QStringList &mime_types,
-                       const QString &interaction,
-                       const QDBusMessage &message,
-                       QWidget *parent = 0);
-    ~PkInstallMimeTypes();
+    enum BehaviorFlag {
+        Modal = 1,
+        CloseOnFinish = 2
+    };
+    Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
 
-public slots:
-    void start();
+    explicit PkTransactionDialog(Transaction *trans, Behaviors flags = 0, QWidget *parent = 0);
+    ~PkTransactionDialog();
+
+    void setTransaction(Transaction *trans);
+    PkTransaction* transaction() const;
+
+    KpkSimulateModel* simulateModel() const;
+
+    void setFiles(const QStringList &files);
+
+    PkTransaction::ExitStatus exitStatus() const;
+
+signals:
+    void finished(PkTransaction::ExitStatus status);
 
 private slots:
-    void whatProvidesFinished(PackageKit::Enum::Exit status);
-    void addPackage(QSharedPointer<PackageKit::Package> package);
+    void finishedDialog(PkTransaction::ExitStatus status);
 
 private:
-    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
-    QStringList m_mimeTypes;
+    PkTransaction *m_ui;
+    Behaviors m_flags;
+    PkTransactionDialogPrivate *d;
+
+protected slots:
+    virtual void slotButtonClicked(int button);
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(PkTransactionDialog::Behaviors)
 
 #endif

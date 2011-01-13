@@ -23,6 +23,8 @@
 
 #include "ui_ApperKCM.h"
 
+#include <PkTransaction.h>
+
 #include <QtGui/QStandardItemModel>
 
 #include <KCModule>
@@ -78,6 +80,8 @@ private slots:
 
     void checkChanged();
     void changed();
+    
+    void updatePackages(PkTransaction *transaction);
 
 private:
     bool canChangePage();

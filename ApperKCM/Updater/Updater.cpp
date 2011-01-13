@@ -35,7 +35,6 @@
 #include <ApplicationsDelegate.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
-#include <KpkTransaction.h>
 #include <KpkSimulateModel.h>
 #include <KpkRequirements.h>
 #include <KpkPackageModel.h>
@@ -200,83 +199,16 @@ void Updater::load()
     }
 }
 
-void Updater::getUpdatesFinished(Enum::Exit status)
+void Updater::getUpdatesFinished()
 {
-    Q_UNUSED(status)
     m_updatesT = 0;
     m_updatesModel->clearSelectedNotPresent();
     checkEnableUpdateButton();
 }
 
-void Updater::save()
+QList<QSharedPointer<PackageKit::Package> > Updater::packagesToUpdate() const
 {
-    // If the backend supports getRequires do it
-    m_transDialog = 0;
-    if (m_roles & Enum::RoleSimulateUpdatePackages) {
-        QList<QSharedPointer<PackageKit::Package> > selectedPackages;
-        selectedPackages = m_updatesModel->selectedPackages();
-        Transaction *t = m_client->simulateUpdatePackages(selectedPackages);
-        if (t->error()) {
-            KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-        } else {
-            m_transDialog = new KpkTransaction(0, KpkTransaction::Modal, this);
-            m_transDialog->setPackages(selectedPackages);
-            m_transDialog->setTransaction(t); // Set it after the packages so they get skiped
-            connect(m_transDialog, SIGNAL(finished(KpkTransaction::ExitStatus)),
-                    this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
-            m_transDialog->show();
-        }
-    } else {
-        updatePackages();
-    }
-    QTimer::singleShot(0, this, SLOT(checkEnableUpdateButton()));
-}
-
-void Updater::transactionFinished(KpkTransaction::ExitStatus status)
-{
-    if (status == KpkTransaction::Success &&
-        m_transDialog->role() == Enum::RoleSimulateUpdatePackages) {
-        if (m_transDialog->simulateModel()->rowCount() > 0) {
-            KpkRequirements *req = new KpkRequirements(m_transDialog->simulateModel(),
-                                                       m_transDialog);
-            connect(req, SIGNAL(accepted()), this, SLOT(updatePackages()));
-            connect(req, SIGNAL(rejected()), m_transDialog, SLOT(reject()));
-            req->show();
-        } else {
-            updatePackages();
-        }
-    } else {
-        getUpdates();
-        m_transDialog->deleteLater();
-        checkEnableUpdateButton();
-    }
-}
-
-void Updater::updatePackages()
-{
-    QList<QSharedPointer<PackageKit::Package> > packages;
-    if (m_transDialog) {
-        packages = m_transDialog->packages();
-    } else {
-        packages = m_updatesModel->selectedPackages();
-        m_transDialog = new KpkTransaction(0, KpkTransaction::Modal, this);
-        connect(m_transDialog, SIGNAL(finished(KpkTransaction::ExitStatus)),
-                this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
-        m_transDialog->setPackages(packages); // Set Packages for requeue
-    }
-
-    SET_PROXY
-    QString socket;
-    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    m_client->setHints("frontend-socket=" + socket);
-    Transaction *t = m_client->updatePackages(true, packages);
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-    } else {
-        m_transDialog->setTransaction(t);
-        m_transDialog->setupDebconfDialog(socket);
-        m_transDialog->show();
-    }
+    return m_updatesModel->selectedPackages();
 }
 
 void Updater::getUpdates()
@@ -301,7 +233,7 @@ void Updater::getUpdates()
     connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(getUpdatesFinished(PackageKit::Enum::Exit)));
+            this, SLOT(getUpdatesFinished()));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             m_busySeq, SLOT(stop()));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
@@ -339,8 +271,8 @@ void Updater::refreshCache()
             this, SLOT(getUpdates()));
     t->refreshCache(true);
 
-    KpkTransaction *frm = new KpkTransaction(t,
-                                             KpkTransaction::Modal | KpkTransaction::CloseOnFinish,
+    PkTransactionDialog *frm = new PkTransactionDialog(t,
+                                             PkTransactionDialog::Modal | PkTransactionDialog::CloseOnFinish,
                                              this);
     if (t->error()) {
         KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));

@@ -8,7 +8,8 @@ set(libkpk_SRCS
     KpkDelegate.cpp
     TransactionDelegate.cpp
     ProgressView.cpp
-    KpkTransaction.cpp
+    PkTransaction.cpp
+    PkTransactionDialog.cpp
     KpkRepoSig.cpp
     KpkLicenseAgreement.cpp
     KpkPackageModel.cpp
@@ -24,7 +25,7 @@ set(libkpk_SRCS
 
 kde4_add_ui_files(libkpk_SRCS
     ApplicationLauncher.ui
-    KpkTransaction.ui
+    PkTransaction.ui
     KpkRepoSig.ui
     KpkLicenseAgreement.ui
     KpkReviewChanges.ui

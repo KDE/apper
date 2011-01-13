@@ -23,7 +23,7 @@
 
 #include "ui_Updater.h"
 
-#include <KpkTransaction.h>
+#include <PkTransactionDialog.h>
 
 using namespace PackageKit;
 
@@ -39,25 +39,22 @@ public:
 
     bool hasChanges() const;
     void setSelected(bool selected);
+    QList<QSharedPointer<PackageKit::Package> > packagesToUpdate() const;
 
 signals:
     void changed(bool);
 
 public slots:
     void load();
-    void save();
     void refreshCache();
+    void getUpdates();
 
 private slots:
     void on_packageView_customContextMenuRequested(const QPoint &pos);
 
     void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
 
-    void getUpdates();
-    void getUpdatesFinished(PackageKit::Enum::Exit status);
-
-    void updatePackages();
-    void transactionFinished(KpkTransaction::ExitStatus status);
+    void getUpdatesFinished();
 
     void on_packageView_clicked(const QModelIndex &index);
 
@@ -74,7 +71,7 @@ private:
     CheckableHeader      *m_header;
     QAction              *m_showPackageVersion;
     QAction              *m_showPackageArch;
-    KpkTransaction       *m_transDialog;
+    PkTransactionDialog       *m_transDialog;
     KPixmapSequenceOverlayPainter *m_busySeq;
     Client               *m_client;
     Transaction          *m_updatesT;

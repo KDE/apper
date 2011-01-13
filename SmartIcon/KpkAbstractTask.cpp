@@ -66,10 +66,10 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
         setExec(cmdline);
     }
 
-    m_transaction = new KpkTransaction(0, KpkTransaction::Modal);
+    m_transaction = new PkTransactionDialog(0, PkTransactionDialog::Modal);
     KWindowSystem::setMainWindow(m_transaction, m_xid);
-    connect(m_transaction, SIGNAL(finished(KpkTransaction::ExitStatus)),
-            this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
+    connect(m_transaction, SIGNAL(finished(PkTransactionDialog::ExitStatus)),
+            this, SLOT(transactionFinished(PkTransactionDialog::ExitStatus)));
 }
 
 void KpkAbstractTask::setExec(const QString &exec)
@@ -212,7 +212,7 @@ uint KpkAbstractTask::parentWId() const
     return m_xid;
 }
 
-KpkTransaction* KpkAbstractTask::kTransaction() const
+PkTransactionDialog* KpkAbstractTask::kTransaction() const
 {
     return m_transaction;
 }
@@ -283,7 +283,7 @@ void KpkAbstractTask::parseInteraction(const QString &interaction)
     }
 }
 
-void KpkAbstractTask::transactionFinished(KpkTransaction::ExitStatus)
+void KpkAbstractTask::transactionFinished(PkTransaction::ExitStatus)
 {
 }
 

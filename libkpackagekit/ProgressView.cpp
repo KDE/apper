@@ -33,35 +33,26 @@
 #include "TransactionDelegate.h"
 
 ProgressView::ProgressView(QWidget *parent)
- : QWidget(parent),
+ : QTreeView(parent),
    m_keepScrollBarBottom(true)
 {
     m_model = new QStandardItemModel(this);
 
-    m_packageView = new QTreeView(this);
-    m_packageView->setModel(m_model);
-    m_packageView->setItemDelegate(new TransactionDelegate(this));
-    m_packageView->setRootIsDecorated(false);
-    m_packageView->setHeaderHidden(true);
-    m_packageView->setSelectionMode(QAbstractItemView::NoSelection);
-    m_packageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-//     m_packageView->verticalScrollBar()->value();
+    setModel(m_model);
+    setItemDelegate(new TransactionDelegate(this));
+    setRootIsDecorated(false);
+    setHeaderHidden(true);
+    setSelectionMode(QAbstractItemView::NoSelection);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+//     verticalScrollBar()->value();
 
-    m_scrollBar = m_packageView->verticalScrollBar();
+    m_scrollBar = verticalScrollBar();
     connect(m_scrollBar, SIGNAL(sliderMoved(int)),
             this, SLOT(followBottom(int)));
     connect(m_scrollBar, SIGNAL(valueChanged(int)),
             this, SLOT(followBottom(int)));
     connect(m_scrollBar, SIGNAL(rangeChanged(int, int)),
             this, SLOT(rangeChanged(int, int)));
-
-    m_label = new QLabel(this);
-    m_label->hide();
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(m_packageView);
-    layout->addWidget(m_label);
 
     KConfig config("KPackageKit");
     KConfigGroup transactionDialog(&config, "TransactionDialog");
@@ -99,9 +90,9 @@ void ProgressView::clear()
 {
     m_model->clear();
     m_model->setColumnCount(3);
-    m_packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-    m_packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-    m_packageView->header()->setStretchLastSection(true);
+    header()->setResizeMode(0, QHeaderView::ResizeToContents);
+    header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    header()->setStretchLastSection(true);
 }
 
 void ProgressView::currentPackage(const QSharedPointer<PackageKit::Package> &p)

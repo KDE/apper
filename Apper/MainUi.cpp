@@ -20,6 +20,7 @@
 
 #include "MainUi.h"
 
+#include <QLayout>
 #include <KDebug>
 #include <KConfig>
 #include <KCModuleProxy>

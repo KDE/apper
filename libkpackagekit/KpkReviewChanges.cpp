@@ -32,7 +32,7 @@
 #include "KpkRequirements.h"
 #include "KpkSimulateModel.h"
 #include "KpkPackageModel.h"
-#include "KpkTransaction.h"
+#include "PkTransactionDialog.h"
 #include "KpkDelegate.h"
 
 #include "ui_KpkReviewChanges.h"
@@ -50,12 +50,11 @@ public:
 
     QList<QSharedPointer<PackageKit::Package> > remPackages;
     QList<QSharedPointer<PackageKit::Package> > addPackages;
-    QList<QSharedPointer<PackageKit::Package> > reqDepPackages;
 
     Enum::Roles actions;
     uint parentWId;
 
-    KpkTransaction *transactionDialog;
+    PkTransactionDialog *transactionDialog;
 };
 
 KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages,
@@ -169,11 +168,11 @@ void KpkReviewChanges::doAction()
     d->actions = d->client->actions();
 
     if (!d->addPackages.isEmpty() || !d->remPackages.isEmpty()) {
-        d->transactionDialog = new KpkTransaction(0,
-                                                  KpkTransaction::Modal,
+        d->transactionDialog = new PkTransactionDialog(0,
+                                                  PkTransactionDialog::Modal,
                                                   transParent);
-        connect(d->transactionDialog, SIGNAL(finished(KpkTransaction::ExitStatus)),
-                this, SLOT(transactionFinished(KpkTransaction::ExitStatus)));
+        connect(d->transactionDialog, SIGNAL(finished(PkTransaction::ExitStatus)),
+                this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
         if (d->parentWId) {
             KWindowSystem::setMainWindow(d->transactionDialog, d->parentWId);
         }
@@ -187,143 +186,30 @@ void KpkReviewChanges::doAction()
 
 void KpkReviewChanges::checkTask()
 {
-//     kDebug() << "AddPackages" << !d->addPackages.isEmpty()
-//              << "RemovePackages" << !d->remPackages.isEmpty();
     if (!d->remPackages.isEmpty()) {
-        if (d->actions & Enum::RoleRemovePackages) {
-            if (d->actions & Enum::RoleSimulateRemovePackages/* &&
-                !(m_flags & HideConfirmDeps)*/) { //TODO we need admin to lock this down
-                d->reqDepPackages = d->remPackages;
-                d->removePkgModel = new KpkSimulateModel(this, d->reqDepPackages);
-                // Create the requirements transaction and it's model
-                Transaction *trans;
-                trans = d->client->simulateRemovePackages(d->reqDepPackages, AUTOREMOVE);
-                if (trans->error()) {
-                    KMessageBox::sorry(this,
-                                       KpkStrings::daemonError(trans->error()),
-                                       i18n("Failed to simulate package removal"));
-                    taskDone(Enum::RoleRemovePackages);
-                } else {
-                    d->transactionDialog->setTransaction(trans);
-                    connect(trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                            d->removePkgModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-                }
-            } else {
-                // As we can't check for requires don't allow deps removal
-                removePackages(false);
-            }
-        } else {
-            KMessageBox::error(this, i18n("The current backend does not support removing packages."), i18n("KPackageKit Error"));
-            taskDone(Enum::RoleRemovePackages);
-        }
+        d->transactionDialog->transaction()->removePackages(d->remPackages);
     } else if (!d->addPackages.isEmpty()) {
-        if (d->actions & Enum::RoleInstallPackages) {
-            if (d->actions & Enum::RoleSimulateInstallPackages &&
-                !(m_flags & HideConfirmDeps)) {
-                d->reqDepPackages = d->addPackages;
-                d->installPkgModel = new KpkSimulateModel(this, d->reqDepPackages);
-                // Create the depends transaction and it's model
-                Transaction *trans;
-                trans = d->client->simulateInstallPackages(d->reqDepPackages);
-                if (trans->error()) {
-                    KMessageBox::sorry(this,
-                                       KpkStrings::daemonError(trans->error()),
-                                       i18n("Failed to simulate package install"));
-                    taskDone(Enum::RoleInstallPackages);
-                } else {
-                    d->transactionDialog->setTransaction(trans);
-                    connect(trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                            d->installPkgModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-                }
-            } else {
-                installPackages();
-            }
-        } else {
-            KMessageBox::error(this, i18n("Current backend does not support installing packages."), i18n("KPackageKit Error"));
-            taskDone(Enum::RoleInstallPackages);
-        }
+        d->transactionDialog->transaction()->installPackages(d->addPackages);
     } else {
         slotButtonClicked(KDialog::Ok);
     }
 }
 
-void KpkReviewChanges::installPackages()
+void KpkReviewChanges::transactionFinished(PkTransaction::ExitStatus status)
 {
-    SET_PROXY
-    QString socket;
-    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    d->client->setHints("frontend-socket=" + socket);
-    Transaction *trans = d->client->installPackages(true, d->addPackages);
-    if (trans->error()) {
-        KMessageBox::sorry(this,
-                           KpkStrings::daemonError(trans->error()),
-                           i18n("Failed to install package"));
-        taskDone(Enum::RoleInstallPackages);
-    } else {
-        d->transactionDialog->setTransaction(trans);
-        d->transactionDialog->setupDebconfDialog(socket);
-        d->transactionDialog->setPackages(d->addPackages);
-    }
-}
-
-void KpkReviewChanges::removePackages(bool allowDeps)
-{
-    SET_PROXY
-    QString socket;
-    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    d->client->setHints("frontend-socket=" + socket);
-    Transaction *trans = d->client->removePackages(d->remPackages, allowDeps, AUTOREMOVE);
-    if (trans->error()) {
-        KMessageBox::sorry(this,
-                           KpkStrings::daemonError(trans->error()),
-                           i18n("Failed to remove package"));
-        taskDone(Enum::RoleRemovePackages);
-    } else {
-        d->transactionDialog->setTransaction(trans);
-        d->transactionDialog->setupDebconfDialog(socket);
-        d->transactionDialog->setAllowDeps(allowDeps);
-        d->transactionDialog->setPackages(d->remPackages);
-    }
-}
-
-void KpkReviewChanges::transactionFinished(KpkTransaction::ExitStatus status)
-{
-    KpkTransaction *trans = qobject_cast<KpkTransaction*>(sender());
-    if (status == KpkTransaction::Success) {
-        switch (trans->role()) {
-        case Enum::RoleSimulateRemovePackages:
-            if (d->removePkgModel->rowCount() > 0) {
-                KpkRequirements *req = new KpkRequirements(d->removePkgModel,
-                                                           d->transactionDialog);
-                connect(req, SIGNAL(accepted()), this, SLOT(removePackages()));
-                connect(req, SIGNAL(rejected()), this, SLOT(reject()));
-                req->show();
-            } else {
-                // As there was no requires don't allow deps removal
-                removePackages(false);
-            }
-            break;
-        case Enum::RoleSimulateInstallPackages:
-            if (d->installPkgModel->rowCount() > 0) {
-                KpkRequirements *req = new KpkRequirements(d->installPkgModel,
-                                                           d->transactionDialog);
-                connect(req, SIGNAL(accepted()), this, SLOT(installPackages()));
-                connect(req, SIGNAL(rejected()), this, SLOT(reject()));
-                req->show();
-            } else {
-                installPackages();
-            }
-            break;
+    PkTransactionDialog *trans = qobject_cast<PkTransactionDialog*>(sender());
+    if (status == PkTransaction::Success) {
+        switch (trans->transaction()->role()) {
         case Enum::RoleRemovePackages:
             emit successfullyRemoved();
-            taskDone(trans->role());
+            taskDone(trans->transaction()->role());
             break;
         case Enum::RoleInstallPackages:
             emit successfullyInstalled();
-            taskDone(trans->role());
+            taskDone(trans->transaction()->role());
             break;
         default:
-            kWarning() << "Role not Handled" << trans->role();
+            kWarning() << "Role not Handled" << trans->transaction()->role();
             break;
         }
     } else {

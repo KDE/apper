@@ -21,7 +21,6 @@
 #include "PkInstallFontconfigResources.h"
 
 #include <KpkReviewChanges.h>
-#include <KpkTransaction.h>
 #include <KpkStrings.h>
 
 #include <KLocale>

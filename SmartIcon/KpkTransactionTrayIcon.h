@@ -29,7 +29,7 @@
 
 using namespace PackageKit;
 
-class KpkTransaction;
+class PkTransactionDialog;
 class TransactionTrayIcon;
 class KpkTransactionTrayIcon : public KpkAbstractIsRunning
 {
@@ -68,7 +68,7 @@ private:
 
     TransactionTrayIcon *m_trayIcon;
     Client              *m_client;
-    QHash<QString, KpkTransaction *> m_transDialogs;
+    QHash<QString, PkTransactionDialog *> m_transDialogs;
 
     Transaction *m_currentTransaction;
 

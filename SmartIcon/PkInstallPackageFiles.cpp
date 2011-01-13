@@ -170,6 +170,7 @@ void PkInstallPackageFiles::start()
 
 void PkInstallPackageFiles::installFiles()
 {
+    //TODO move to PkTransaction
     SET_PROXY
     QString socket;
     socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
@@ -186,17 +187,17 @@ void PkInstallPackageFiles::installFiles()
         sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
     } else {
         kTransaction()->setTransaction(t);
-        kTransaction()->setupDebconfDialog(socket);
+//         kTransaction()->setupDebconfDialog(socket);
         kTransaction()->setFiles(m_files);
         kTransaction()->show();
     }
 }
 
-void PkInstallPackageFiles::transactionFinished(KpkTransaction::ExitStatus status)
+void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
-    if (kTransaction()->role() == Enum::RoleSimulateInstallFiles) {
-        if (status == KpkTransaction::Success) {
+    if (kTransaction()->transaction()->role() == Enum::RoleSimulateInstallFiles) {
+        if (status == PkTransaction::Success) {
             if (m_installFilesModel->rowCount() > 0) {
                 QPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
                 if (frm->exec() == QDialog::Accepted) {
@@ -209,32 +210,32 @@ void PkInstallPackageFiles::transactionFinished(KpkTransaction::ExitStatus statu
                 installFiles();
             }
         } else {
-            sendErrorFinished(Failed, kTransaction()->errorDetails());
+            sendErrorFinished(Failed, kTransaction()->transaction()->errorDetails());
         }
     } else {
         switch (status) {
-        case KpkTransaction::Success :
+        case PkTransaction::Success :
             if (showFinished()) {
                 KMessageBox::informationWId(parentWId(),
                                             i18np("File was installed successfully",
                                                   "Files were installed successfully",
-                                                  kTransaction()->files().count()),
+                                                  kTransaction()->transaction()->files().count()),
                                             i18np("File was installed successfully",
                                                   "Files were installed successfully",
-                                                  kTransaction()->files().count()));
+                                                  kTransaction()->transaction()->files().count()));
             }
             finishTaskOk();
             break;
-        case KpkTransaction::Cancelled :
+        case PkTransaction::Cancelled :
             sendErrorFinished(Cancelled, "Aborted");
             break;
-        case KpkTransaction::Failed :
+        case PkTransaction::Failed :
             if (showWarning()) {
                 KMessageBox::errorWId(parentWId(),
-                                      kTransaction()->errorDetails(),
+                                      kTransaction()->transaction()->errorDetails(),
                                       i18n("KPackageKit Error"));
             }
-            sendErrorFinished(Failed, kTransaction()->errorDetails());
+            sendErrorFinished(Failed, kTransaction()->transaction()->errorDetails());
             break;
         }
     }

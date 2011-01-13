@@ -24,7 +24,7 @@
 #include <KDialog>
 
 #include <QPackageKit>
-#include "KpkTransaction.h"
+#include "PkTransactionDialog.h"
 
 using namespace PackageKit;
 
@@ -56,10 +56,7 @@ signals:
     void successfullyRemoved();
 
 private slots:
-    void installPackages();
-    void removePackages(bool allow_deps = true);
-
-    void transactionFinished(KpkTransaction::ExitStatus status);
+    void transactionFinished(PkTransaction::ExitStatus status);
 
     void doAction();
     void checkChanged();

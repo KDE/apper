@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,30 +18,33 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_TRANSACTION_H
-#define KPK_TRANSACTION_H
+#ifndef PK_TRANSACTION_H
+#define PK_TRANSACTION_H
 
-#include <KDialog>
+#include <QWidget>
+#include <kdemacros.h>
 
 #include <QPackageKit>
 
 using namespace PackageKit;
 
+namespace Ui {
+    class PkTransaction;
+}
+
 class KpkSimulateModel;
-class KpkTransactionPrivate;
-class KDE_EXPORT KpkTransaction : public KDialog
+class PkTransactionPrivate;
+class KDE_EXPORT PkTransaction : public QWidget
 {
     Q_OBJECT
     Q_ENUMS(ExitStatus)
 public:
-    enum BehaviorFlag {
-        Modal = 1,
-        CloseOnFinish = 2
-    };
-    Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
-
-    explicit KpkTransaction(Transaction *trans, Behaviors flags = 0, QWidget *parent = 0);
-    ~KpkTransaction();
+    explicit PkTransaction(Transaction *trans, QWidget *parent = 0);
+    ~PkTransaction();
+    
+    void installPackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
+    void removePackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
+    void updatePackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
 
     void setTransaction(Transaction *trans);
     // Do not create a method to retrieve the internal pointer
@@ -69,13 +72,22 @@ public:
         Cancelled
     } ExitStatus;
 
-    KpkTransaction::ExitStatus exitStatus() const;
+    PkTransaction::ExitStatus exitStatus() const;
+    bool isFinished() const;
 
 signals:
-    void finished(KpkTransaction::ExitStatus status);
+    void finished(PkTransaction::ExitStatus status);
+    void allowCancel(bool enable);
+    void titleChanged(const QString &title);
+
+public slots:
+    void cancel();
 
 private slots:
-    void finishedDialog();
+    void installPackages();
+    void removePackages(bool allow_deps = true);
+    void updatePackages();
+
     void transactionFinished(PackageKit::Enum::Exit status);
     void errorCode(PackageKit::Enum::Error error, const QString &details);
     void updateUi();
@@ -84,7 +96,8 @@ private slots:
     void repoSignatureRequired(PackageKit::Client::SignatureInfo info);
     void files(QSharedPointer<PackageKit::Package> package, const QStringList &files);
 
-    void setExitStatus(KpkTransaction::ExitStatus status);
+    void setExitStatus(PkTransaction::ExitStatus status);
+    void reject();
 
 private:
     void unsetTransaction();
@@ -93,15 +106,13 @@ private:
     Transaction *m_trans;
     bool m_handlingActionRequired;
     bool m_showingError; //This might replace the above
-    Behaviors m_flags;
     ExitStatus m_exitStatus;
     Enum::Status m_status;
-    KpkTransactionPrivate *d;
+    Ui::PkTransaction *ui;
+    PkTransactionPrivate *d;
 
 protected slots:
     virtual void slotButtonClicked(int button);
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KpkTransaction::Behaviors)
 
 #endif

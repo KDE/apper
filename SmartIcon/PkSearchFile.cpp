@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,8 +19,6 @@
  ***************************************************************************/
 
 #include "PkSearchFile.h"
-
-#include <KpkTransaction.h>
 
 #include <KpkStrings.h>
 
