@@ -7,6 +7,7 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper
+Name[fr]=Apper
 Name[hu]=Apper
 Name[pt]=Apper
 Name[pt_BR]=Apper
@@ -50,6 +51,7 @@ Comment[da]=Program til at hente og håndtere software
 Comment[de]=Anwendung zum Beziehen und Verwalten der Software
 Comment[en_GB]=Application to get and manage software
 Comment[es]=Aplicación para obtener y gestionar software
+Comment[fr]=Application pour obtenir et gérer des logiciels
 Comment[hu]=Alkalmazás szoftverek beszerzéséhez és kezeléséhez
 Comment[nds]=Warktüüch för't Halen un Opfrischen vun Programmen
 Comment[pa]=ਸਾਫਟਵੇਅਰ ਲੈਣ ਤੇ ਉਨ੍ਹਾਂ ਦੇ ਪਰਬੰਧ ਲਈ ਐਪਲੀਕੇਸ਼ਨ
