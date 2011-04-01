@@ -375,6 +375,7 @@ void PackageDetails::actionActivated(QAction *action)
         m_transaction->getRequires(m_package, PackageKit::Enum::NoFilter, false);
         break;
     case Enum::RoleGetFiles:
+        m_currentFileList.clear();
         connect(m_transaction, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
                 this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
         m_transaction->getFiles(m_package);
