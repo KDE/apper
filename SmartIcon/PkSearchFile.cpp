@@ -49,8 +49,8 @@ void PkSearchFile::start()
         return;
     }
 
-    Transaction *t = Client::instance()->searchFiles(m_fileName,
-                                                     Enum::FilterNewest);
+    Transaction *t = new Transaction(this);
+    t->searchFiles(m_fileName, Transaction::FilterNewest);
     if (t->error()) {
         if (showWarning()) {
             KMessageBox::sorryWId(parentWId(),
@@ -61,10 +61,10 @@ void PkSearchFile::start()
     } else {
         // TODO add timeout support
         // which cancel the transaction in x seconds if it's not running yet
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(searchFinished(PackageKit::Enum::Exit)));
-        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
+        connect(t, SIGNAL(package(const Package &)),
+                this, SLOT(addPackage(const Package &)));
         if (showProgress()) {
             kTransaction()->setTransaction(t);
             kTransaction()->show();
@@ -72,16 +72,16 @@ void PkSearchFile::start()
     }
 }
 
-void PkSearchFile::searchFinished(PackageKit::Enum::Exit status)
+void PkSearchFile::searchFinished(PackageKit::Transaction::Exit status)
 {
     kDebug();
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            QSharedPointer<PackageKit::Package>pkg = m_foundPackages.first();
-            bool installed = pkg->info() == Enum::InfoInstalled;
+            const Package &pkg = m_foundPackages.first();
+            bool installed = pkg.info() == Package::InfoInstalled;
             QDBusMessage reply = m_message.createReply();
             reply << installed;
-            reply << pkg->name();
+            reply << pkg.name();
             kDebug() << reply;
             sendMessageFinished(reply);
         } else {
@@ -96,7 +96,7 @@ void PkSearchFile::searchFinished(PackageKit::Enum::Exit status)
     }
 }
 
-void PkSearchFile::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkSearchFile::addPackage(const Package &package)
 {
     m_foundPackages.append(package);
 }

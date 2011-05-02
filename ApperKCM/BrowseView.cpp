@@ -26,7 +26,7 @@
 #include <ApplicationsDelegate.h>
 #include <KpkPackageModel.h>
 
-#include <QPackageKit>
+#include <Daemon>
 
 #include <KFileDialog>
 #include <KPixmapSequence>
@@ -240,7 +240,7 @@ void BrowseView::on_exportInstalledPB_clicked()
     file.open(QIODevice::WriteOnly);
     QTextStream out(&file);
     out << "[PackageKit Catalog]\n\n";
-    out << "InstallPackages(" << Client::instance()->distroId() << ")=";
+    out << "InstallPackages(" << Daemon::distroId() << ")=";
     QStringList packages;
     for (int i = 0; i < m_model->rowCount(); i++) {
         packages << m_model->data(m_model->index(i, 0),

@@ -22,22 +22,22 @@
 
 #include <KDebug>
 
-int KpkImportance::restartImportance(Enum::Restart type)
+int KpkImportance::restartImportance(Package::Restart type)
 {
     switch (type) {
-    case Enum::LastRestart :
-    case Enum::UnknownRestart :
-    case Enum::RestartNone :
+    case Package::LastRestart :
+    case Package::UnknownRestart :
+    case Package::RestartNone :
         return 0;
-    case Enum::RestartApplication :
+    case Package::RestartApplication :
         return 1;
-    case Enum::RestartSession :
+    case Package::RestartSession :
         return 2;
-    case Enum::RestartSecuritySession :
+    case Package::RestartSecuritySession :
         return 3;
-    case Enum::RestartSystem :
+    case Package::RestartSystem :
         return 4;
-    case Enum::RestartSecuritySystem :
+    case Package::RestartSecuritySystem :
         return 5;
     }
     kWarning() << "restart type unrecognised: " << type;

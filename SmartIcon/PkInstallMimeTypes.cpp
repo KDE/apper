@@ -29,10 +29,10 @@
 #include <KDebug>
 
 PkInstallMimeTypes::PkInstallMimeTypes(uint xid,
-                                     const QStringList &mime_types,
-                                     const QString &interaction,
-                                     const QDBusMessage &message,
-                                     QWidget *parent)
+                                      const QStringList &mime_types,
+                                      const QString &interaction,
+                                      const QDBusMessage &message,
+                                      QWidget *parent)
  : KpkAbstractTask(xid, interaction, message, parent),
    m_mimeTypes(mime_types)
 {
@@ -71,11 +71,12 @@ void PkInstallMimeTypes::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->whatProvides(Enum::ProvidesMimetype,
-                                                          m_mimeTypes,
-                                                          Enum::FilterNotInstalled |
-                                                          Enum::FilterArch |
-                                                          Enum::FilterNewest);
+        Transaction *t = new Transaction(this);
+        t->whatProvides(Transaction::ProvidesMimetype,
+                        m_mimeTypes,
+                        Transaction::FilterNotInstalled |
+                        Transaction::FilterArch |
+                        Transaction::FilterNewest);
         if (t->error()) {
             if (showWarning()) {
                 KMessageBox::sorryWId(parentWId(),
@@ -84,10 +85,10 @@ void PkInstallMimeTypes::start()
             }
             sendErrorFinished(Failed, "Failed to search for provides");
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                    this, SLOT(whatProvidesFinished(PackageKit::Enum::Exit)));
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                    this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
+            connect(t, SIGNAL(package(const Package &)),
+                    this, SLOT(addPackage(const Package &)));
             if (showProgress()) {
                 kTransaction()->setTransaction(t);
                 kTransaction()->show();
@@ -98,10 +99,10 @@ void PkInstallMimeTypes::start()
     }
 }
 
-void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Enum::Exit status)
+void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Transaction::Exit status)
 {
     kDebug() << "Finished.";
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
             kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
@@ -127,7 +128,7 @@ void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Enum::Exit status)
     }
 }
 
-void PkInstallMimeTypes::addPackage(QSharedPointer<PackageKit::Package> package)
+void PkInstallMimeTypes::addPackage(const Package &package)
 {
     m_foundPackages.append(package);
 }

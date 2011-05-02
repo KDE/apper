@@ -45,6 +45,8 @@
 #include <KMessageBox>
 #include <KDebug>
 
+#include <Daemon>
+
 Updater::Updater(QWidget *parent) :
     QWidget(parent),
     m_selected(false),
@@ -87,11 +89,8 @@ Updater::Updater(QWidget *parent) :
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(packageView->viewport());
 
-    // Create a new client
-    m_client = Client::instance();
-
     // check to see what roles the backend has
-    m_roles = m_client->actions();
+    m_roles = Daemon::actions();
 
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
@@ -141,13 +140,13 @@ void Updater::showArchs(bool enabled)
 void Updater::on_packageView_clicked(const QModelIndex &index)
 {
     QString    pkgId   = index.data(KpkPackageModel::IdRole).toString();
-    Enum::Info pkgInfo = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+    Package::Info pkgInfo = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
     updateDetails->setPackage(pkgId, pkgInfo);
 }
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
 //That way, by default, users only see stable ones.
-void Updater::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description)
+void Updater::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     if (verticalLayout->count()) {
@@ -206,7 +205,7 @@ void Updater::getUpdatesFinished()
     checkEnableUpdateButton();
 }
 
-QList<QSharedPointer<PackageKit::Package> > Updater::packagesToUpdate() const
+QList<Package> Updater::packagesToUpdate() const
 {
     return m_updatesModel->selectedPackages();
 }
@@ -222,21 +221,21 @@ void Updater::getUpdates()
     packageView->setHeaderHidden(true);
     m_updatesModel->clear();
     updateDetails->hide();
-    m_updatesT = new Transaction(QString());
+    m_updatesT = new Transaction(this);
     if (m_selected) {
-        connect(m_updatesT, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-                m_updatesModel, SLOT(addSelectedPackage(const QSharedPointer<PackageKit::Package> &)));
+        connect(m_updatesT, SIGNAL(package(const Package &)),
+                m_updatesModel, SLOT(addSelectedPackage(const Package &)));
     } else {
-        connect(m_updatesT, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-                m_updatesModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        connect(m_updatesT, SIGNAL(package(const Package &)),
+                m_updatesModel, SLOT(addPackage(const Package &)));
     }
-    connect(m_updatesT, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(getUpdatesFinished()));
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_busySeq, SLOT(stop()));
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_updatesModel, SLOT(finished()));
     // get all updates
     m_updatesT->getUpdates();
@@ -257,17 +256,17 @@ void Updater::getUpdates()
     line->hide();
 
     // Check for distribution Upgrades
-    Transaction *t = new Transaction(QString());
-    connect(t, SIGNAL(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)),
-            this, SLOT(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)));
+    Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)),
+            this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)));
     t->getDistroUpgrades();
 }
 
 void Updater::refreshCache()
 {
     SET_PROXY
-    Transaction *t = new Transaction(QString());
-    connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(getUpdates()));
     t->refreshCache(true);
 
@@ -296,7 +295,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     delete menu;
 }
 
-void Updater::errorCode(PackageKit::Enum::Error error, const QString &details)
+void Updater::errorCode(PackageKit::Transaction::Error error, const QString &details)
 {
     KMessageBox::detailedSorry(this,
                                KpkStrings::errorMessage(error),

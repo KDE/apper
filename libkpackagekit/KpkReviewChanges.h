@@ -23,7 +23,8 @@
 
 #include <KDialog>
 
-#include <QPackageKit>
+#include <Transaction>
+
 #include "PkTransactionDialog.h"
 
 using namespace PackageKit;
@@ -33,7 +34,7 @@ class KDE_EXPORT KpkReviewChanges : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages,
+    explicit KpkReviewChanges(const QList<Package> &packages,
                               QWidget *parent = 0,
                               uint parentWId = 0);
     ~KpkReviewChanges();
@@ -62,7 +63,7 @@ private slots:
     void checkChanged();
 
 private:
-    void taskDone(PackageKit::Enum::Role role);
+    void taskDone(Transaction::Role role);
 
     void checkTask();
 

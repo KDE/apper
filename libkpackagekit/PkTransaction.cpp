@@ -36,6 +36,8 @@
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QTreeView>
 
+#include <Daemon>
+
 #include "KpkMacros.h"
 #include "KpkEnum.h"
 #include "KpkStrings.h"
@@ -57,10 +59,10 @@ public:
     bool finished;
     bool allowDeps;
     bool onlyTrusted;
-    Enum::Role role;
-    Enum::Error error;
+    Transaction::Role role;
+    Transaction::Error error;
     QString errorDetails;
-    QList<QSharedPointer<PackageKit::Package> > packages;
+    QList<Package> packages;
     QStringList files;
     QVector<KService*> applications;
     KpkSimulateModel *simulateModel;
@@ -81,7 +83,7 @@ PkTransaction::PkTransaction(Transaction *trans, QWidget *parent)
    m_handlingActionRequired(false),
    m_showingError(false),
    m_exitStatus(Success),
-   m_status(Enum::UnknownStatus),
+   m_status(Transaction::UnknownStatus),
    ui(new Ui::PkTransaction),
    d(new PkTransactionPrivate)
 {
@@ -162,22 +164,22 @@ void PkTransaction::hideCancelButton()
     ui->cancelButton->hide();
 }
 
-void PkTransaction::installPackages(const QList<QSharedPointer<PackageKit::Package> > &packages)
+void PkTransaction::installPackages(const QList<Package> &packages)
 {
-    if (Client::instance()->actions() & Enum::RoleInstallPackages) {
-        if (Client::instance()->actions() & Enum::RoleSimulateInstallPackages/* &&
+    if (Daemon::actions() & Transaction::RoleInstallPackages) {
+        if (Daemon::actions() & Transaction::RoleSimulateInstallPackages/* &&
             !(m_flags & HideConfirmDeps)*/) {
             d->packages      = packages;
             d->simulateModel = new KpkSimulateModel(this, d->packages);
 
             // Create the depends transaction and it's model
-            Transaction *trans = new Transaction(QString());
+            Transaction *trans = new Transaction(this);
             trans->simulateInstallPackages(d->packages);
             if (trans->error()) {
                 KMessageBox::sorry(this,
                                    KpkStrings::daemonError(trans->error()),
                                    i18n("Failed to simulate package install"));
-//                 taskDone(Enum::RoleInstallPackages);
+//                 taskDone(Transaction::RoleInstallPackages);
             } else {
                 setTransaction(trans);
             }
@@ -186,26 +188,26 @@ void PkTransaction::installPackages(const QList<QSharedPointer<PackageKit::Packa
         }
     } else {
         KMessageBox::error(this, i18n("Current backend does not support installing packages."), i18n("Error"));
-//         taskDone(Enum::RoleInstallPackages);
+//         taskDone(Transaction::RoleInstallPackages);
     }
 }
 
-void PkTransaction::removePackages(const QList<QSharedPointer<PackageKit::Package> > &packages)
+void PkTransaction::removePackages(const QList<Package> &packages)
 {
-    if (Client::instance()->actions() & Enum::RoleRemovePackages) {
-        if (Client::instance()->actions() & Enum::RoleSimulateRemovePackages/* &&
+    if (Daemon::actions() & Transaction::RoleRemovePackages) {
+        if (Daemon::actions() & Transaction::RoleSimulateRemovePackages/* &&
             !(m_flags & HideConfirmDeps)*/) { //TODO we need admin to lock this down
             d->packages      = packages;
             d->simulateModel = new KpkSimulateModel(this, d->packages);
 
             // Create the requirements transaction and it's model
-            Transaction *trans = new Transaction(QString());
+            Transaction *trans = new Transaction(this);
             trans->simulateRemovePackages(d->packages, AUTOREMOVE);
             if (trans->error()) {
                 KMessageBox::sorry(this,
                                    KpkStrings::daemonError(trans->error()),
                                    i18n("Failed to simulate package removal"));
-//                 taskDone(Enum::RoleRemovePackages);
+//                 taskDone(Transaction::RoleRemovePackages);
             } else {
                 setTransaction(trans);
             }
@@ -215,18 +217,18 @@ void PkTransaction::removePackages(const QList<QSharedPointer<PackageKit::Packag
         }
     } else {
         KMessageBox::error(this, i18n("The current backend does not support removing packages."), i18n("Error"));
-//         taskDone(Enum::RoleRemovePackages);
+//         taskDone(Transaction::RoleRemovePackages);
     }
 }
 
-void PkTransaction::updatePackages(const QList<QSharedPointer<PackageKit::Package> > &packages)
+void PkTransaction::updatePackages(const QList<Package> &packages)
 {
-    if (Client::instance()->actions() & Enum::RoleRemovePackages) {
-        if (Client::instance()->actions() & Enum::RoleSimulateUpdatePackages) {
+    if (Daemon::actions() & Transaction::RoleRemovePackages) {
+        if (Daemon::actions() & Transaction::RoleSimulateUpdatePackages) {
             d->packages      = packages;
             d->simulateModel = new KpkSimulateModel(this, d->packages);
 
-            Transaction *trans = new Transaction(QString());
+            Transaction *trans = new Transaction(this);
             trans->simulateUpdatePackages(d->packages);
             if (trans->error()) {
                 KMessageBox::sorry(this, KpkStrings::daemonError(trans->error()),
@@ -246,14 +248,14 @@ void PkTransaction::installPackages()
 {
     SET_PROXY
     QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    Transaction *trans = new Transaction(QString());
+    Transaction *trans = new Transaction(this);
     trans->setHints("frontend-socket=" + socket);
-    trans->installPackages(true, d->packages);
+    trans->installPackages(d->packages, this);
     if (trans->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
                            i18n("Failed to install package"));
-//         taskDone(Enum::RoleInstallPackages);
+//         taskDone(Transaction::RoleInstallPackages);
     } else {
         setTransaction(trans);
         setupDebconfDialog(socket);
@@ -265,14 +267,14 @@ void PkTransaction::removePackages(bool allow_deps)
 {
     SET_PROXY
     QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    Transaction *trans = new Transaction(QString());
+    Transaction *trans = new Transaction(this);
     trans->setHints("frontend-socket=" + socket);
     trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE);
     if (trans->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
                            i18n("Failed to remove package"));
-//         taskDone(Enum::RoleRemovePackages);
+//         taskDone(Transaction::RoleRemovePackages);
     } else {
         setTransaction(trans);
         setupDebconfDialog(socket);
@@ -285,14 +287,14 @@ void PkTransaction::updatePackages()
 {
     SET_PROXY
     QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    Transaction *trans = new Transaction(QString());
+    Transaction *trans = new Transaction(this);
     trans->setHints("frontend-socket=" + socket);
-    trans->updatePackages(true, d->packages);
+    trans->updatePackages(d->packages, true);
     if (trans->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
                            i18n("Failed to update package"));
-//         taskDone(Enum::RoleRemovePackages);
+//         taskDone(Transaction::RoleRemovePackages);
     } else {
         setTransaction(trans);
         setupDebconfDialog(socket);
@@ -361,15 +363,15 @@ void PkTransaction::setTransaction(Transaction *trans)
     }
 
     m_trans = trans;
-    if (trans->role() != Enum::RoleInstallSignature &&
-        trans->role() != Enum::RoleAcceptEula &&
-        trans->role() != Enum::RoleGetFiles) {
+    if (trans->role() != Transaction::RoleInstallSignature &&
+        trans->role() != Transaction::RoleAcceptEula &&
+        trans->role() != Transaction::RoleGetFiles) {
         // We need to keep the original role for requeuing
         d->role = trans->role();
     }
     d->tid = trans->tid();
     d->finished = false;
-    d->error = Enum::UnknownError;
+    d->error = Transaction::UnknownError;
     d->errorDetails.clear();
     ui->progressView->clear();
     d->clearApplications();
@@ -377,11 +379,11 @@ void PkTransaction::setTransaction(Transaction *trans)
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
     // enable the Details button just on these roles
-    if (m_trans->role() == Enum::RoleInstallPackages ||
-        m_trans->role() == Enum::RoleInstallFiles ||
-        m_trans->role() == Enum::RoleRemovePackages ||
-        m_trans->role() == Enum::RoleUpdatePackages ||
-        m_trans->role() == Enum::RoleUpdateSystem) {
+    if (m_trans->role() == Transaction::RoleInstallPackages ||
+        m_trans->role() == Transaction::RoleInstallFiles ||
+        m_trans->role() == Transaction::RoleRemovePackages ||
+        m_trans->role() == Transaction::RoleUpdatePackages ||
+        m_trans->role() == Transaction::RoleUpdateSystem) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         connect(m_trans, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 ui->progressView, SLOT(currentPackage(const QSharedPointer<PackageKit::Package> &)));
@@ -394,10 +396,10 @@ void PkTransaction::setTransaction(Transaction *trans)
         d->simulateModel->deleteLater();
         d->simulateModel = 0;
     } else {
-        if (m_trans->role() == Enum::RoleSimulateInstallPackages ||
-            m_trans->role() == Enum::RoleSimulateInstallFiles ||
-            m_trans->role() == Enum::RoleSimulateRemovePackages ||
-            m_trans->role() == Enum::RoleSimulateUpdatePackages) {
+        if (m_trans->role() == Transaction::RoleSimulateInstallPackages ||
+            m_trans->role() == Transaction::RoleSimulateInstallFiles ||
+            m_trans->role() == Transaction::RoleSimulateRemovePackages ||
+            m_trans->role() == Transaction::RoleSimulateUpdatePackages) {
             // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
             if (!d->simulateModel) {
                 d->simulateModel = new KpkSimulateModel(this, d->packages);
@@ -428,18 +430,18 @@ void PkTransaction::setTransaction(Transaction *trans)
     updateUi();
 
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
-    connect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(transactionFinished(PackageKit::Enum::Exit)));
-    connect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+    connect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
+    connect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
     connect(m_trans, SIGNAL(changed()),
             this, SLOT(updateUi()));
-    connect(m_trans, SIGNAL(eulaRequired(PackageKit::Client::EulaInfo)),
-            this, SLOT(eulaRequired(PackageKit::Client::EulaInfo)));
-    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Enum::MediaType, const QString &, const QString &)),
-            this, SLOT(mediaChangeRequired(PackageKit::Enum::MediaType, const QString &, const QString &)));
-    connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Client::SignatureInfo)),
-            this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
+    connect(m_trans, SIGNAL(eulaRequired(PackageKit::Eula)),
+            this, SLOT(eulaRequired(PackageKit::Eula)));
+    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)),
+            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
+    connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Signature)),
+            this, SLOT(repoSignatureRequired(PackageKit::Signature)));
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
 }
 
@@ -447,40 +449,39 @@ void PkTransaction::unsetTransaction()
 {
     disconnect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                d->simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-    disconnect(m_trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-               this, SLOT(transactionFinished(PackageKit::Enum::Exit)));
-    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-               this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+    disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+               this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
+    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+               this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
     disconnect(m_trans, SIGNAL(changed()),
                this, SLOT(updateUi()));
-    disconnect(m_trans, SIGNAL(eulaRequired(PackageKit::Client::EulaInfo)),
-               this, SLOT(eulaRequired(PackageKit::Client::EulaInfo)));
-    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Enum::MediaType, const QString &, const QString &)),
-               this, SLOT(mediaChangeRequired(PackageKit::Enum::MediaType, const QString &, const QString &)));
-    disconnect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Client::SignatureInfo)),
-               this, SLOT(repoSignatureRequired(PackageKit::Client::SignatureInfo)));
+    disconnect(m_trans, SIGNAL(eulaRequired(PackageKit::Eula)),
+               this, SLOT(eulaRequired(PackageKit::Eula)));
+    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)),
+               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
+    disconnect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Signature)),
+               this, SLOT(repoSignatureRequired(PackageKit::Signature)));
 }
 
 void PkTransaction::requeueTransaction()
 {
     SET_PROXY
-    Transaction *trans = new Transaction(QString());
-    Client *client = Client::instance();
+    Transaction *trans = new Transaction(this);
     QString socket;
     socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    client->setHints("frontend-socket=" + socket);
+    trans->setHints("frontend-socket=" + socket);
     switch (d->role) {
-    case Enum::RoleRemovePackages :
+    case Transaction::RoleRemovePackages :
         trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE);
         break;
-    case Enum::RoleInstallPackages :
-        trans->installPackages(d->onlyTrusted, d->packages);
+    case Transaction::RoleInstallPackages :
+        trans->installPackages(d->packages, d->onlyTrusted);
         break;
-    case Enum::RoleInstallFiles :
+    case Transaction::RoleInstallFiles :
         trans->installFiles(d->files, d->onlyTrusted);
         break;
-    case Enum::RoleUpdatePackages :
-        trans->updatePackages(d->onlyTrusted, d->packages);
+    case Transaction::RoleUpdatePackages :
+        trans->updatePackages(d->packages, d->onlyTrusted);
         break;
     default :
         setExitStatus(Failed);
@@ -512,7 +513,7 @@ void PkTransaction::updateUi()
     ui->progressBar->setRemaining(m_trans->remainingTime());
 
     // Status & Speed
-    Enum::Status status = m_trans->status();
+    Transaction::Status status = m_trans->status();
     if (m_status != status) {
         m_status = status;
         ui->currentL->setText(KpkStrings::status(status));
@@ -524,7 +525,7 @@ void PkTransaction::updateUi()
             d->busySeq->setSequence(sequence);
             d->busySeq->start();
         }
-    } else if (status == Enum::StatusDownload && m_trans->speed() != 0) {
+    } else if (status == Transaction::StatusDownload && m_trans->speed() != 0) {
         uint speed = m_trans->speed();
         if (speed) {
             ui->currentL->setText(i18n("Downloading packages at %1/s",
@@ -539,29 +540,29 @@ void PkTransaction::updateUi()
 }
 
 // Return value: if the error code suggests to try with only_trusted %FALSE
-static bool untrustedIsNeed(Enum::Error error)
+static bool untrustedIsNeed(Transaction::Error error)
 {
     switch (error) {
-    case Enum::ErrorGpgFailure:
-    case Enum::ErrorBadGpgSignature:
-    case Enum::ErrorMissingGpgSignature:
-    case Enum::ErrorCannotInstallRepoUnsigned:
-    case Enum::ErrorCannotUpdateRepoUnsigned:
+    case Transaction::ErrorGpgFailure:
+    case Transaction::ErrorBadGpgSignature:
+    case Transaction::ErrorMissingGpgSignature:
+    case Transaction::ErrorCannotInstallRepoUnsigned:
+    case Transaction::ErrorCannotUpdateRepoUnsigned:
         return true;
     default:
         return false;
     }
 }
 
-void PkTransaction::errorCode(PackageKit::Enum::Error error, const QString &details)
+void PkTransaction::errorCode(Transaction::Error error, const QString &details)
 {
 //     kDebug() << "errorCode: " << error << details;
     d->error = error;
     d->errorDetails = details;
     // obvious message, don't tell the user
     if (m_handlingActionRequired ||
-        error == Enum::ErrorTransactionCancelled ||
-        error == Enum::ErrorProcessKill) {
+        error == Transaction::ErrorTransactionCancelled ||
+        error == Transaction::ErrorProcessKill) {
         return;
     }
 
@@ -587,8 +588,8 @@ void PkTransaction::errorCode(PackageKit::Enum::Error error, const QString &deta
     }
 
     // check to see if we are already handlying these errors
-    if (error == Enum::ErrorNoLicenseAgreement ||
-        error == Enum::ErrorMediaChangeRequired)
+    if (error == Transaction::ErrorNoLicenseAgreement ||
+        error == Transaction::ErrorMediaChangeRequired)
     {
         if (m_handlingActionRequired) {
             return;
@@ -611,7 +612,7 @@ void PkTransaction::errorCode(PackageKit::Enum::Error error, const QString &deta
 //     }
 }
 
-void PkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
+void PkTransaction::eulaRequired(PackageKit::Eula info)
 {
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
@@ -624,7 +625,8 @@ void PkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
     QPointer<KpkLicenseAgreement> frm = new KpkLicenseAgreement(info, true, this);
     if (frm->exec() == KDialog::Yes) {
         m_handlingActionRequired = false;
-        Transaction *trans = Client::instance()->Client::instance()->acceptEula(info);
+        Transaction *trans = new Transaction(this);
+        trans->acceptEula(info.id);
         if (trans->error()) {
             KMessageBox::sorry(this,
                                KpkStrings::daemonError(trans->error()),
@@ -639,7 +641,7 @@ void PkTransaction::eulaRequired(PackageKit::Client::EulaInfo info)
     delete frm;
 }
 
-void PkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text)
+void PkTransaction::mediaChangeRequired(Transaction::MediaType type, const QString &id, const QString &text)
 {
     Q_UNUSED(id)
 
@@ -659,7 +661,7 @@ void PkTransaction::mediaChangeRequired(PackageKit::Enum::MediaType type, const 
     }
 }
 
-void PkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo info)
+void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
 {
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
@@ -673,7 +675,7 @@ void PkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo info
     frm->exec();
     if (frm && frm->result() == KDialog::Yes) {
         m_handlingActionRequired = false;
-        Transaction *trans = new Transaction(QString());
+        Transaction *trans = new Transaction(this);
         trans->installSignature(info.type, info.keyId, info.package);
         if (trans->error()) {
             KMessageBox::sorry(this,
@@ -689,7 +691,7 @@ void PkTransaction::repoSignatureRequired(PackageKit::Client::SignatureInfo info
     delete frm;
 }
 
-void PkTransaction::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
+void PkTransaction::files(const Package &package, const QStringList &files)
 {
     Q_UNUSED(package)
     foreach (const QString &desktop, files.filter(".desktop")) {
@@ -705,16 +707,16 @@ void PkTransaction::files(QSharedPointer<PackageKit::Package> package, const QSt
     }
 }
 
-void PkTransaction::transactionFinished(PackageKit::Enum::Exit status)
+void PkTransaction::transactionFinished(Transaction::Exit status)
 {
     Transaction *trans = qobject_cast<Transaction*>(sender());
-    Enum::Role role = trans->role();
+    Transaction::Role role = trans->role();
     KpkRequirements *requires = 0;
 
 //     kDebug() << status;
     d->finished = true;
     switch(status) {
-    case Enum::ExitSuccess :
+    case Transaction::ExitSuccess :
         ui->progressBar->setMaximum(100);
         ui->progressBar->setValue(100);
 
@@ -727,14 +729,14 @@ void PkTransaction::transactionFinished(PackageKit::Enum::Exit status)
             }
 
             switch (role) {
-            case Enum::RoleSimulateInstallPackages:
+            case Transaction::RoleSimulateInstallPackages:
                 if (requires) {
                     connect(requires, SIGNAL(accepted()), this, SLOT(installPackages()));
                 } else {
                     installPackages();
                 }
                 return;
-            case Enum::RoleSimulateRemovePackages:
+            case Transaction::RoleSimulateRemovePackages:
                 if (requires) {
                     connect(requires, SIGNAL(accepted()), this, SLOT(removePackages()));
                 } else {
@@ -742,14 +744,14 @@ void PkTransaction::transactionFinished(PackageKit::Enum::Exit status)
                     removePackages(false);
                 }
                 return;
-            case Enum::RoleSimulateUpdatePackages:
+            case Transaction::RoleSimulateUpdatePackages:
                 if (requires) {
                     connect(requires, SIGNAL(accepted()), this, SLOT(updatePackages()));
                 } else {
                     updatePackages();
                 }
                 return;
-            case Enum::RoleSimulateInstallFiles:
+            case Transaction::RoleSimulateInstallFiles:
                 // TODO
                 return;
             default:
@@ -757,17 +759,17 @@ void PkTransaction::transactionFinished(PackageKit::Enum::Exit status)
             }
         }
 
-        if (role != Enum::RoleInstallSignature &&
-            role != Enum::RoleAcceptEula &&
-            role != Enum::RoleGetFiles) {
+        if (role != Transaction::RoleInstallSignature &&
+            role != Transaction::RoleAcceptEula &&
+            role != Transaction::RoleGetFiles) {
             KConfig config("KPackageKit");
             KConfigGroup transactionGroup(&config, "Transaction");
-            if ((role == Enum::RoleInstallPackages ||
-                 role == Enum::RoleInstallFiles) &&
+            if ((role == Transaction::RoleInstallPackages ||
+                 role == Transaction::RoleInstallFiles) &&
                 transactionGroup.readEntry("ShowApplicationLauncher", true) &&
-                Client::instance()->actions() & Enum::RoleGetFiles) {
+                Daemon::actions() & Transaction::RoleGetFiles) {
                 // Let's try to find some desktop files'
-                Transaction *transaction = new Transaction(QString());
+                Transaction *transaction = new Transaction(this);
                 transaction->getFiles(d->packages);
                 if (!transaction->error()) {
                     setTransaction(transaction);
@@ -777,7 +779,7 @@ void PkTransaction::transactionFinished(PackageKit::Enum::Exit status)
                 }
             }
             setExitStatus(Success);
-        } else if (role == Enum::RoleGetFiles) {
+        } else if (role == Transaction::RoleGetFiles) {
             if (!d->applications.isEmpty()) {
                 ApplicationLauncher *launcher = new ApplicationLauncher(d->applications, this);
                 launcher->exec();
@@ -788,7 +790,7 @@ void PkTransaction::transactionFinished(PackageKit::Enum::Exit status)
             requeueTransaction();
         }
         break;
-    case Enum::ExitCancelled :
+    case Transaction::ExitCancelled :
         ui->progressBar->setMaximum(100);
         ui->progressBar->setValue(100);
         // Avoid crash in case we are showing an error
@@ -796,7 +798,7 @@ void PkTransaction::transactionFinished(PackageKit::Enum::Exit status)
             setExitStatus(Cancelled);
         }
         break;
-    case Enum::ExitFailed :
+    case Transaction::ExitFailed :
         kDebug() << "Failed.";
         if (!m_handlingActionRequired && !m_showingError) {
             ui->progressBar->setMaximum(0);
@@ -805,12 +807,12 @@ void PkTransaction::transactionFinished(PackageKit::Enum::Exit status)
             setExitStatus(Failed);
         }
         break;
-    case Enum::ExitKeyRequired :
-    case Enum::ExitEulaRequired :
-    case Enum::ExitMediaChangeRequired :
-    case Enum::ExitNeedUntrusted :
+    case Transaction::ExitKeyRequired :
+    case Transaction::ExitEulaRequired :
+    case Transaction::ExitMediaChangeRequired :
+    case Transaction::ExitNeedUntrusted :
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
-        ui->currentL->setText(KpkStrings::status(Enum::StatusSetup));
+        ui->currentL->setText(KpkStrings::status(Transaction::StatusSetup));
         if (!m_handlingActionRequired) {
             setExitStatus(Failed);
         }
@@ -871,12 +873,12 @@ bool PkTransaction::onlyTrusted() const
     return d->onlyTrusted;
 }
 
-Enum::Role PkTransaction::role() const
+Transaction::Role PkTransaction::role() const
 {
     return d->role;
 }
 
-Enum::Error PkTransaction::error() const
+Transaction::Error PkTransaction::error() const
 {
     return d->error;
 }
@@ -886,7 +888,7 @@ QString PkTransaction::errorDetails() const
     return d->errorDetails;
 }
 
-QList<QSharedPointer<PackageKit::Package> > PkTransaction::packages() const
+QList<Package> PkTransaction::packages() const
 {
     return d->packages;
 }
@@ -906,7 +908,7 @@ void PkTransaction::setAllowDeps(bool allowDeps)
     d->allowDeps = allowDeps;
 }
 
-void PkTransaction::setPackages(const QList<QSharedPointer<PackageKit::Package> > &packages)
+void PkTransaction::setPackages(const QList<Package> &packages)
 {
     d->packages = packages;
 }

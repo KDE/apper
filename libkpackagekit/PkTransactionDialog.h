@@ -24,8 +24,6 @@
 #include <KDialog>
 #include "PkTransaction.h"
 
-#include <QPackageKit>
-
 using namespace PackageKit;
 
 class KpkSimulateModel;

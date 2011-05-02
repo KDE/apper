@@ -23,8 +23,9 @@
 
 #include <KDialog>
 
+#include <Signature>
+
 #include "ui_KpkRepoSig.h"
-#include <QPackageKit>
 
 using namespace PackageKit;
 
@@ -32,7 +33,7 @@ class KpkRepoSig : public KDialog, Ui::KpkRepoSig
 {
     Q_OBJECT
 public:
-    explicit KpkRepoSig(PackageKit::Client::SignatureInfo info, bool modal = true, QWidget *parent = 0);
+    explicit KpkRepoSig(const Signature &info, bool modal = true, QWidget *parent = 0);
     ~KpkRepoSig();
 };
 

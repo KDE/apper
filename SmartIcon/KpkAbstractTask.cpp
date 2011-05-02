@@ -19,18 +19,19 @@
  ***************************************************************************/
 
 #include "KpkAbstractTask.h"
-#include <QPackageKit>
 
 #include <limits.h>
 #include <QtDBus/QDBusConnection>
-
 #include <QTimer>
 #include <QStringList>
+#include <QFile>
 
 #include <KWindowSystem>
 #include <KLocale>
 
 #include <KDebug>
+
+#include <Daemon>
 
 using namespace PackageKit;
 
@@ -42,7 +43,7 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
     setWindowIcon(KIcon("applications-other"));
     connect(this, SIGNAL(finished()), SLOT(deleteLater()));
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Client::instance()->setHints("locale=" + locale);
+    Daemon::setHints("locale=" + locale);
 
     // Defaults to always
     m_interactions = ConfirmSearch

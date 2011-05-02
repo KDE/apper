@@ -24,9 +24,11 @@
 
 #include <KDebug>
 
+#include <Signature>
+
 #include "KpkStrings.h"
 
-KpkRepoSig::KpkRepoSig(PackageKit::Client::SignatureInfo info, bool modal, QWidget *parent)
+KpkRepoSig::KpkRepoSig(const Signature &info, bool modal, QWidget *parent)
  : KDialog(parent)
 {
     setupUi(mainWidget());

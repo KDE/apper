@@ -22,7 +22,7 @@
 #define KPK_FILTERS_MENU_H
 
 #include <QMenu>
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -30,10 +30,10 @@ class KpkFiltersMenu : public QMenu
 {
 Q_OBJECT
 public:
-    explicit KpkFiltersMenu(Enum::Filters filters, QWidget *parent = 0);
+    explicit KpkFiltersMenu(Transaction::Filters filters, QWidget *parent = 0);
     ~KpkFiltersMenu();
 
-    Enum::Filters filters() const;
+    Transaction::Filters filters() const;
     QString filterApplications() const;
 
 signals:
@@ -45,7 +45,7 @@ private slots:
 private:
     QAction *m_applications;
     QList<QAction*> m_actions;
-    QHash<QAction *, Enum::Filter> m_filtersAction;
+    QHash<QAction *, Transaction::Filter> m_filtersAction;
 };
 
 #endif

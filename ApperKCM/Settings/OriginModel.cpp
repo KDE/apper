@@ -27,7 +27,7 @@
 #include <KMessageBox>
 #include <KLocale>
 
-#include <QPackageKit>
+#include <Daemon>
 
 using namespace PackageKit;
 
@@ -95,9 +95,9 @@ bool OriginModel::save()
     for (int i = 0; i < rowCount(); ++i) {
         QStandardItem *repo = item(i);
         if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
-            Transaction *t;
-            t = Client::instance()->repoEnable(repo->data(Qt::UserRole).toString(),
-                                               static_cast<bool>(repo->checkState()));
+            Transaction *t = new Transaction(this);
+            t->repoEnable(repo->data(Qt::UserRole).toString(),
+                          static_cast<bool>(repo->checkState()));
             if (t->error()) {
                 KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
                 return false;
@@ -109,7 +109,8 @@ bool OriginModel::save()
     // refresh the user cache if he or she enables/disables any of it
     if (changed) {
         SET_PROXY
-        Client::instance()->refreshCache(true);
+        Transaction *t = new Transaction(this);
+        t->refreshCache(true);
     }
     return true;
 }

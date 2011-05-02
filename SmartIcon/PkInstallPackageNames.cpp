@@ -77,9 +77,8 @@ void PkInstallPackageNames::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->resolve(m_packages,
-                                                     Enum::FilterArch |
-                                                     Enum::FilterNewest);
+        Transaction *t = new Transaction(this);
+        t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
         if (t->error()) {
             QString msg(i18n("Failed to start resolve transaction"));
             if (showWarning()) {
@@ -89,10 +88,10 @@ void PkInstallPackageNames::start()
             }
             sendErrorFinished(Failed, msg);
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                    this, SLOT(resolveFinished(PackageKit::Enum::Exit)));
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                    this, SLOT(resolveFinished(PackageKit::Transaction::Exit)));
+            connect(t, SIGNAL(package(const Package &)),
+                    this, SLOT(addPackage(const Package &)));
             if (showProgress()) {
                 kTransaction()->setTransaction(t);
                 kTransaction()->show();
@@ -103,10 +102,10 @@ void PkInstallPackageNames::start()
     }
 }
 
-void PkInstallPackageNames::resolveFinished(PackageKit::Enum::Exit status)
+void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::Exit status)
 {
     kDebug() << "Finished.";
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         if (m_alreadyInstalled.size()) {
             if (showWarning()) {
                 KMessageBox::sorryWId(parentWId(),
@@ -140,12 +139,12 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Enum::Exit status)
     }
 }
 
-void PkInstallPackageNames::addPackage(QSharedPointer<PackageKit::Package> package)
+void PkInstallPackageNames::addPackage(const Package &package)
 {
-    if (package->info() != Enum::InfoInstalled) {
+    if (package.info() != Package::InfoInstalled) {
         m_foundPackages.append(package);
     } else {
-        m_alreadyInstalled << package->name();
+        m_alreadyInstalled << package.name();
     }
 }
 

@@ -24,7 +24,8 @@
 #include <KpkAbstractIsRunning.h>
 
 #include <KStatusNotifierItem>
-#include <QPackageKit>
+
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -49,9 +50,9 @@ public slots:
 
 private slots:
     void update();
-    void packageToUpdate(QSharedPointer<PackageKit::Package> package);
+    void packageToUpdate(const Package &package);
     void getUpdateFinished();
-    void autoUpdatesFinished(PackageKit::Enum::Exit exit);
+    void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
 
     void showSettings();
     void showUpdates();
@@ -62,7 +63,7 @@ private:
 
     Transaction *m_getUpdatesT;
     KStatusNotifierItem *m_statusNotifierItem;
-    QList<QSharedPointer<PackageKit::Package> > m_updateList;
+    QList<Package> m_updateList;
 
     void updateStatusNotifierIcon(UpdateType type);
 };

@@ -25,10 +25,10 @@
 
 #define SET_PROXY                                                         \
     if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) { \
-        Client::instance()->setProxy(KProtocolManager::proxyFor("http"),  \
-                                     KProtocolManager::proxyFor("ftp"));  \
+        Daemon::setProxy(KProtocolManager::proxyFor("http"),  \
+                         KProtocolManager::proxyFor("ftp"));  \
     } else {                                                              \
-        Client::instance()->setProxy(QString(), QString());               \
+        Daemon::setProxy(QString(), QString());               \
     }
 
 #endif

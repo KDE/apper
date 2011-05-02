@@ -71,224 +71,225 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
     return KIcon(name);
 }
 
-QString KpkIcons::statusIconName(Enum::Status status)
+QString KpkIcons::statusIconName(Transaction::Status status)
 {
     if (!KpkIcons::init) {
         KpkIcons::configure();
     }
     switch (status) {
-    case Enum::LastStatus                 :
-    case Enum::UnknownStatus              : return "help-browser";
-    case Enum::StatusCancel               :
-    case Enum::StatusCleanup              : return "package-clean-up";
-    case Enum::StatusCommit               : return "package-working";//TODO needs a better icon
-    case Enum::StatusDepResolve           : return "package-info";
-    case Enum::StatusDownloadChangelog    :
-    case Enum::StatusDownloadFilelist     :
-    case Enum::StatusDownloadGroup        :
-    case Enum::StatusDownloadPackagelist  : return "refresh-cache";
-    case Enum::StatusDownload             : return "package-download";
-    case Enum::StatusDownloadRepository   :
-    case Enum::StatusDownloadUpdateinfo   : return "refresh-cache";
-    case Enum::StatusFinished             : return "package-clean-up";
-    case Enum::StatusGeneratePackageList  : return "refresh-cache";
-    case Enum::StatusWaitingForLock       : return "dialog-password";
-    case Enum::StatusWaitingForAuth       : return "dialog-password";//IMPROVE ME
-    case Enum::StatusInfo                 : return "package-info";
-    case Enum::StatusInstall              : return "kpk-package-add";
-    case Enum::StatusLoadingCache         : return "refresh-cache";
-    case Enum::StatusObsolete             : return "package-clean-up";
-    case Enum::StatusQuery                : return "search-package";
-    case Enum::StatusRefreshCache         : return "refresh-cache";
-    case Enum::StatusRemove               : return "package-removed";
-    case Enum::StatusRepackaging          : return "package-clean-up";
-    case Enum::StatusRequest              : return "search-package";
-    case Enum::StatusRollback             : return "package-rollback";
-    case Enum::StatusRunning              : return "package-working";
-    case Enum::StatusScanApplications     : return "search-package";
-    case Enum::StatusSetup                : return "package-working";
-    case Enum::StatusSigCheck             :
-    case Enum::StatusTestCommit           : return "package-info";//TODO needs a better icon
-    case Enum::StatusUpdate               : return "package-update";
-    case Enum::StatusWait                 : return "package-wait";
-    case Enum::StatusScanProcessList      : return "package-info";
-    case Enum::StatusCheckExecutableFiles : return "package-info";
-    case Enum::StatusCheckLibraries       : return "package-info";
-    case Enum::StatusCopyFiles            : return "package-info";
+    case Transaction::LastStatus                 :
+    case Transaction::UnknownStatus              : return "help-browser";
+    case Transaction::StatusCancel               :
+    case Transaction::StatusCleanup              : return "package-clean-up";
+    case Transaction::StatusCommit               : return "package-working";//TODO needs a better icon
+    case Transaction::StatusDepResolve           : return "package-info";
+    case Transaction::StatusDownloadChangelog    :
+    case Transaction::StatusDownloadFilelist     :
+    case Transaction::StatusDownloadGroup        :
+    case Transaction::StatusDownloadPackagelist  : return "refresh-cache";
+    case Transaction::StatusDownload             : return "package-download";
+    case Transaction::StatusDownloadRepository   :
+    case Transaction::StatusDownloadUpdateinfo   : return "refresh-cache";
+    case Transaction::StatusFinished             : return "package-clean-up";
+    case Transaction::StatusGeneratePackageList  : return "refresh-cache";
+    case Transaction::StatusWaitingForLock       : return "dialog-password";
+    case Transaction::StatusWaitingForAuth       : return "dialog-password";//IMPROVE ME
+    case Transaction::StatusInfo                 : return "package-info";
+    case Transaction::StatusInstall              : return "kpk-package-add";
+    case Transaction::StatusLoadingCache         : return "refresh-cache";
+    case Transaction::StatusObsolete             : return "package-clean-up";
+    case Transaction::StatusQuery                : return "search-package";
+    case Transaction::StatusRefreshCache         : return "refresh-cache";
+    case Transaction::StatusRemove               : return "package-removed";
+    case Transaction::StatusRepackaging          : return "package-clean-up";
+    case Transaction::StatusRequest              : return "search-package";
+    case Transaction::StatusRollback             : return "package-rollback";
+    case Transaction::StatusRunning              : return "package-working";
+    case Transaction::StatusScanApplications     : return "search-package";
+    case Transaction::StatusSetup                : return "package-working";
+    case Transaction::StatusSigCheck             :
+    case Transaction::StatusTestCommit           : return "package-info";//TODO needs a better icon
+    case Transaction::StatusUpdate               : return "package-update";
+    case Transaction::StatusWait                 : return "package-wait";
+    case Transaction::StatusScanProcessList      : return "package-info";
+    case Transaction::StatusCheckExecutableFiles : return "package-info";
+    case Transaction::StatusCheckLibraries       : return "package-info";
+    case Transaction::StatusCopyFiles            : return "package-info";
     }
     kDebug() << "status icon unrecognised: " << status;
     return "help-browser";
 }
 
-KIcon KpkIcons::statusIcon(Enum::Status status)
+KIcon KpkIcons::statusIcon(Transaction::Status status)
 {
     return KIcon(KpkIcons::statusIconName(status));
 }
 
-QString KpkIcons::statusAnimation(PackageKit::Enum::Status status)
+QString KpkIcons::statusAnimation(Transaction::Status status)
 {
     if (!KpkIcons::init) {
         KpkIcons::configure();
     }
     switch (status) {
-    case Enum::UnknownStatus             : return "help-browser";
-    case Enum::StatusCancel              :
-    case Enum::StatusCleanup             : return "pk-cleaning-up";
-    case Enum::StatusCommit              :
-    case Enum::StatusDepResolve          : return "pk-testing";
-    case Enum::StatusDownloadChangelog   :
-    case Enum::StatusDownloadFilelist    :
-    case Enum::StatusDownloadGroup       :
-    case Enum::StatusDownloadPackagelist : return "pk-refresh-cache";
-    case Enum::StatusDownload            : return "pk-downloading";
-    case Enum::StatusDownloadRepository  :
-    case Enum::StatusDownloadUpdateinfo  : return "pk-refresh-cache";
-    case Enum::StatusFinished            : return "pk-cleaning-up";
-    case Enum::StatusGeneratePackageList : return "pk-searching";
-    case Enum::StatusWaitingForLock      : return "pk-waiting";
-    case Enum::StatusInfo                : return "package-working";
-    case Enum::StatusInstall             : return "pk-installing";
-    case Enum::StatusLoadingCache        : return "pk-refresh-cache";
-    case Enum::StatusObsolete            : return "pk-cleaning-up";
-    case Enum::StatusQuery               : return "pk-searching";
-    case Enum::StatusRefreshCache        : return "pk-refresh-cache";
-    case Enum::StatusRemove              : return "package-removed";//TODO do the animation
-    case Enum::StatusRepackaging         : return "pk-searching";
-    case Enum::StatusRequest             : return "process-working";
-    case Enum::StatusRollback            : return "package-removed";
-    case Enum::StatusRunning             : return "pk-testing";
-    case Enum::StatusScanApplications    : return "pk-searching";
-    case Enum::StatusSetup               : return "pk-searching";
-    case Enum::StatusSigCheck            : return "package-info";
-    case Enum::StatusTestCommit          : return "pk-testing";
-    case Enum::StatusUpdate              : return "pk-installing";
-    case Enum::StatusWait                : return "pk-waiting";
-    case Enum::StatusWaitingForAuth      : return "dialog-password";
-    case Enum::StatusScanProcessList     : return "utilities-system-monitor";
+    case Transaction::UnknownStatus             : return "help-browser";
+    case Transaction::StatusCancel              :
+    case Transaction::StatusCleanup             : return "pk-cleaning-up";
+    case Transaction::StatusCommit              :
+    case Transaction::StatusDepResolve          : return "pk-testing";
+    case Transaction::StatusDownloadChangelog   :
+    case Transaction::StatusDownloadFilelist    :
+    case Transaction::StatusDownloadGroup       :
+    case Transaction::StatusDownloadPackagelist : return "pk-refresh-cache";
+    case Transaction::StatusDownload            : return "pk-downloading";
+    case Transaction::StatusDownloadRepository  :
+    case Transaction::StatusDownloadUpdateinfo  : return "pk-refresh-cache";
+    case Transaction::StatusFinished            : return "pk-cleaning-up";
+    case Transaction::StatusGeneratePackageList : return "pk-searching";
+    case Transaction::StatusWaitingForLock      : return "pk-waiting";
+    case Transaction::StatusInfo                : return "package-working";
+    case Transaction::StatusInstall             : return "pk-installing";
+    case Transaction::StatusLoadingCache        : return "pk-refresh-cache";
+    case Transaction::StatusObsolete            : return "pk-cleaning-up";
+    case Transaction::StatusQuery               : return "pk-searching";
+    case Transaction::StatusRefreshCache        : return "pk-refresh-cache";
+    case Transaction::StatusRemove              : return "package-removed";//TODO do the animation
+    case Transaction::StatusRepackaging         : return "pk-searching";
+    case Transaction::StatusRequest             : return "process-working";
+    case Transaction::StatusRollback            : return "package-removed";
+    case Transaction::StatusRunning             : return "pk-testing";
+    case Transaction::StatusScanApplications    : return "pk-searching";
+    case Transaction::StatusSetup               : return "pk-searching";
+    case Transaction::StatusSigCheck            : return "package-info";
+    case Transaction::StatusTestCommit          : return "pk-testing";
+    case Transaction::StatusUpdate              : return "pk-installing";
+    case Transaction::StatusWait                : return "pk-waiting";
+    case Transaction::StatusWaitingForAuth      : return "dialog-password";
+    case Transaction::StatusScanProcessList     : return "utilities-system-monitor";
     default                              : kDebug() << "status icon unrecognised: " << status;
         return "help-browser";
     }
 }
 
-QString KpkIcons::actionIconName(Enum::Role role)
+QString KpkIcons::actionIconName(Transaction::Role role)
 {
     if (!KpkIcons::init) {
         KpkIcons::configure();
     }
     switch (role) {
-    case Enum::LastRole                    :
-    case Enum::UnknownRole                 : return "applications-other";
-    case Enum::RoleAcceptEula              : return "package-info";
-    case Enum::RoleCancel                  : return "process-stop";
-    case Enum::RoleDownloadPackages        : return "package-download";
-    case Enum::RoleGetCategories           : return "package-info";
-    case Enum::RoleGetDepends              : return "package-info";
-    case Enum::RoleGetDetails              : return "package-info";
-    case Enum::RoleGetDistroUpgrades       : return "distro-upgrade";
-    case Enum::RoleGetFiles                : return "search-package";
-    case Enum::RoleGetOldTransactions      : return "package-info";
-    case Enum::RoleGetPackages             : return "package-packages";
-    case Enum::RoleGetRepoList             : return "package-orign";
-    case Enum::RoleGetRequires             : return "package-info";
-    case Enum::RoleGetUpdateDetail         : return "package-info";
-    case Enum::RoleGetUpdates              : return "package-info";
-    case Enum::RoleInstallFiles            : return "package-installed";
-    case Enum::RoleInstallPackages         : return "package-installed";
-    case Enum::RoleInstallSignature        : return "package-installed";
-    case Enum::RoleRefreshCache            : return "refresh-cache";
-    case Enum::RoleRemovePackages          : return "package-removed";
-    case Enum::RoleRepoEnable              : return "package-orign";
-    case Enum::RoleRepoSetData             : return "package-orign";
-    case Enum::RoleResolve                 : return "search-package";
-    case Enum::RoleRollback                : return "package-rollback";
-    case Enum::RoleSearchDetails           : return "search-package";
-    case Enum::RoleSearchFile              : return "search-package";
-    case Enum::RoleSearchGroup             : return "search-package";
-    case Enum::RoleSearchName              : return "search-package";
-    case Enum::RoleUpdatePackages          : return "package-update";
-    case Enum::RoleUpdateSystem            : return "distro-upgrade";//TODO
-    case Enum::RoleWhatProvides            : return "search-package";
-    case Enum::RoleSimulateInstallFiles    : return "package-installed";
-    case Enum::RoleSimulateInstallPackages : return "package-installed";
-    case Enum::RoleSimulateRemovePackages  : return "package-removed";
-    case Enum::RoleSimulateUpdatePackages  : return "package-update'";
+    case Transaction::LastRole                    :
+    case Transaction::UnknownRole                 : return "applications-other";
+    case Transaction::RoleAcceptEula              : return "package-info";
+    case Transaction::RoleCancel                  : return "process-stop";
+    case Transaction::RoleDownloadPackages        : return "package-download";
+    case Transaction::RoleGetCategories           : return "package-info";
+    case Transaction::RoleGetDepends              : return "package-info";
+    case Transaction::RoleGetDetails              : return "package-info";
+    case Transaction::RoleGetDistroUpgrades       : return "distro-upgrade";
+    case Transaction::RoleGetFiles                : return "search-package";
+    case Transaction::RoleGetOldTransactions      : return "package-info";
+    case Transaction::RoleGetPackages             : return "package-packages";
+    case Transaction::RoleGetRepoList             : return "package-orign";
+    case Transaction::RoleGetRequires             : return "package-info";
+    case Transaction::RoleGetUpdateDetail         : return "package-info";
+    case Transaction::RoleGetUpdates              : return "package-info";
+    case Transaction::RoleInstallFiles            : return "package-installed";
+    case Transaction::RoleInstallPackages         : return "package-installed";
+    case Transaction::RoleInstallSignature        : return "package-installed";
+    case Transaction::RoleRefreshCache            : return "refresh-cache";
+    case Transaction::RoleRemovePackages          : return "package-removed";
+    case Transaction::RoleRepoEnable              : return "package-orign";
+    case Transaction::RoleRepoSetData             : return "package-orign";
+    case Transaction::RoleResolve                 : return "search-package";
+    case Transaction::RoleRollback                : return "package-rollback";
+    case Transaction::RoleSearchDetails           : return "search-package";
+    case Transaction::RoleSearchFile              : return "search-package";
+    case Transaction::RoleSearchGroup             : return "search-package";
+    case Transaction::RoleSearchName              : return "search-package";
+    case Transaction::RoleUpdatePackages          : return "package-update";
+    case Transaction::RoleUpdateSystem            : return "distro-upgrade";//TODO
+    case Transaction::RoleUpgradeSystem           : return "distro-upgrade";//TODO
+    case Transaction::RoleWhatProvides            : return "search-package";
+    case Transaction::RoleSimulateInstallFiles    : return "package-installed";
+    case Transaction::RoleSimulateInstallPackages : return "package-installed";
+    case Transaction::RoleSimulateRemovePackages  : return "package-removed";
+    case Transaction::RoleSimulateUpdatePackages  : return "package-update'";
     }
     kDebug() << "action unrecognised: " << role;
     return "applications-other";
 }
 
-KIcon KpkIcons::actionIcon(Enum::Role role)
+KIcon KpkIcons::actionIcon(Transaction::Role role)
 {
     return KIcon(actionIconName(role));
 }
 
-KIcon KpkIcons::groupsIcon(Enum::Group group)
+KIcon KpkIcons::groupsIcon(Package::Group group)
 {
     if (!KpkIcons::init) {
         KpkIcons::configure();
     }
     switch (group) {
-    case Enum::LastGroup            :
-    case Enum::UnknownGroup         : return KIcon("unknown");
-    case Enum::GroupAccessibility   : return KIcon("preferences-desktop-accessibility");
-    case Enum::GroupAccessories     : return KIcon("applications-accessories");
-    case Enum::GroupAdminTools      : return KIcon("dialog-password");
-    case Enum::GroupCommunication   : return KIcon("network-workgroup");//FIXME
-    case Enum::GroupDesktopGnome    : return KIcon("kpk-desktop-gnome");
-    case Enum::GroupDesktopKde      : return KIcon("kde");
-    case Enum::GroupDesktopOther    : return KIcon("user-desktop");
-    case Enum::GroupDesktopXfce     : return KIcon("kpk-desktop-xfce");
-    case Enum::GroupDocumentation   : return KIcon("accessories-dictionary");//FIXME
-    case Enum::GroupEducation       : return KIcon("applications-education");
-    case Enum::GroupElectronics     : return KIcon("media-flash");
-    case Enum::GroupFonts           : return KIcon("preferences-desktop-font");
-    case Enum::GroupGames           : return KIcon("applications-games");
-    case Enum::GroupGraphics        : return KIcon("applications-graphics");
-    case Enum::GroupInternet        : return KIcon("applications-internet");
-    case Enum::GroupLegacy          : return KIcon("media-floppy");
-    case Enum::GroupLocalization    : return KIcon("applications-education-language");
-    case Enum::GroupMaps            : return KIcon("Maps");//FIXME
-    case Enum::GroupCollections     : return KIcon("package-orign");
-    case Enum::GroupMultimedia      : return KIcon("applications-multimedia");
-    case Enum::GroupNetwork         : return KIcon("network-wired");
-    case Enum::GroupOffice          : return KIcon("applications-office");
-    case Enum::GroupOther           : return KIcon("applications-other");
-    case Enum::GroupPowerManagement : return KIcon("battery");
-    case Enum::GroupProgramming     : return KIcon("applications-development");
-    case Enum::GroupPublishing      : return KIcon("accessories-text-editor");
-    case Enum::GroupRepos           : return KIcon("application-x-compressed-tar");
-    case Enum::GroupScience         : return KIcon("applications-science");
-    case Enum::GroupSecurity        : return KIcon("security-high");
-    case Enum::GroupServers         : return KIcon("network-server");
-    case Enum::GroupSystem          : return KIcon("applications-system");
-    case Enum::GroupVirtualization  : return KIcon("cpu");
-    case Enum::GroupVendor          : return KIcon("application-certificate");
-    case Enum::GroupNewest          : return KIcon("dialog-information");
+    case Package::LastGroup            :
+    case Package::UnknownGroup         : return KIcon("unknown");
+    case Package::GroupAccessibility   : return KIcon("preferences-desktop-accessibility");
+    case Package::GroupAccessories     : return KIcon("applications-accessories");
+    case Package::GroupAdminTools      : return KIcon("dialog-password");
+    case Package::GroupCommunication   : return KIcon("network-workgroup");//FIXME
+    case Package::GroupDesktopGnome    : return KIcon("kpk-desktop-gnome");
+    case Package::GroupDesktopKde      : return KIcon("kde");
+    case Package::GroupDesktopOther    : return KIcon("user-desktop");
+    case Package::GroupDesktopXfce     : return KIcon("kpk-desktop-xfce");
+    case Package::GroupDocumentation   : return KIcon("accessories-dictionary");//FIXME
+    case Package::GroupEducation       : return KIcon("applications-education");
+    case Package::GroupElectronics     : return KIcon("media-flash");
+    case Package::GroupFonts           : return KIcon("preferences-desktop-font");
+    case Package::GroupGames           : return KIcon("applications-games");
+    case Package::GroupGraphics        : return KIcon("applications-graphics");
+    case Package::GroupInternet        : return KIcon("applications-internet");
+    case Package::GroupLegacy          : return KIcon("media-floppy");
+    case Package::GroupLocalization    : return KIcon("applications-education-language");
+    case Package::GroupMaps            : return KIcon("Maps");//FIXME
+    case Package::GroupCollections     : return KIcon("package-orign");
+    case Package::GroupMultimedia      : return KIcon("applications-multimedia");
+    case Package::GroupNetwork         : return KIcon("network-wired");
+    case Package::GroupOffice          : return KIcon("applications-office");
+    case Package::GroupOther           : return KIcon("applications-other");
+    case Package::GroupPowerManagement : return KIcon("battery");
+    case Package::GroupProgramming     : return KIcon("applications-development");
+    case Package::GroupPublishing      : return KIcon("accessories-text-editor");
+    case Package::GroupRepos           : return KIcon("application-x-compressed-tar");
+    case Package::GroupScience         : return KIcon("applications-science");
+    case Package::GroupSecurity        : return KIcon("security-high");
+    case Package::GroupServers         : return KIcon("network-server");
+    case Package::GroupSystem          : return KIcon("applications-system");
+    case Package::GroupVirtualization  : return KIcon("cpu");
+    case Package::GroupVendor          : return KIcon("application-certificate");
+    case Package::GroupNewest          : return KIcon("dialog-information");
     }
     kDebug() << "group unrecognised: " << group;
     return KIcon("unknown");
 }
 
-KIcon KpkIcons::packageIcon(Enum::Info info)
+KIcon KpkIcons::packageIcon(Package::Info info)
 {
     if (!KpkIcons::init) {
         KpkIcons::configure();
     }
     switch (info) {
-    case Enum::InfoBugfix      : return KIcon("script-error");
-    case Enum::InfoEnhancement : return KIcon("ktip");
-    case Enum::InfoImportant   : return KIcon("security-low");
-    case Enum::InfoLow         : return KIcon("security-high");
-    case Enum::InfoSecurity    : return KIcon("security-medium");
-    case Enum::InfoNormal      : return KIcon("emblem-new");
-    case Enum::InfoBlocked     : return KIcon("dialog-cancel");
-    case Enum::InfoAvailable   : return KIcon("package-download");
-    case Enum::InfoInstalled   : return KIcon("package-installed");
+    case Package::InfoBugfix      : return KIcon("script-error");
+    case Package::InfoEnhancement : return KIcon("ktip");
+    case Package::InfoImportant   : return KIcon("security-low");
+    case Package::InfoLow         : return KIcon("security-high");
+    case Package::InfoSecurity    : return KIcon("security-medium");
+    case Package::InfoNormal      : return KIcon("emblem-new");
+    case Package::InfoBlocked     : return KIcon("dialog-cancel");
+    case Package::InfoAvailable   : return KIcon("package-download");
+    case Package::InfoInstalled   : return KIcon("package-installed");
     default                    : return KIcon("package");
     }
 }
 
-QString KpkIcons::restartIconName(Enum::Restart type)
+QString KpkIcons::restartIconName(Package::Restart type)
 {
     if (!KpkIcons::init) {
         KpkIcons::configure();
@@ -296,19 +297,19 @@ QString KpkIcons::restartIconName(Enum::Restart type)
     // These names MUST be standard icons, otherwise KStatusNotifierItem
     // will not be able to load them
     switch (type) {
-    case Enum::RestartSecuritySystem  :
-    case Enum::RestartSystem          : return "system-reboot";
-    case Enum::RestartSecuritySession :
-    case Enum::RestartSession         : return "system-log-out";
-    case Enum::RestartApplication     : return "process-stop";
-    case Enum::RestartNone            :
-    case Enum::LastRestart            :
-    case Enum::UnknownRestart         : break;
+    case Package::RestartSecuritySystem  :
+    case Package::RestartSystem          : return "system-reboot";
+    case Package::RestartSecuritySession :
+    case Package::RestartSession         : return "system-log-out";
+    case Package::RestartApplication     : return "process-stop";
+    case Package::RestartNone            :
+    case Package::LastRestart            :
+    case Package::UnknownRestart         : break;
     }
     return "";
 }
 
-KIcon KpkIcons::restartIcon(Enum::Restart type)
+KIcon KpkIcons::restartIcon(Package::Restart type)
 {
     return KpkIcons::getIcon(restartIconName(type));
 }

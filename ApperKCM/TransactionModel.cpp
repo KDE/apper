@@ -95,17 +95,17 @@ QString TransactionModel::getDetailsLocalized(const QString &data) const
     QStringList ret;
 
     QString text;
-    text = getTypeLine(lines, Enum::StatusInstall);
+    text = getTypeLine(lines, Transaction::StatusInstall);
     if (!text.isNull()) {
         ret << text;
     }
 
-    text = getTypeLine(lines, Enum::StatusRemove);
+    text = getTypeLine(lines, Transaction::StatusRemove);
     if (!text.isNull()) {
         ret << text;
     }
 
-    text = getTypeLine(lines, Enum::StatusUpdate);
+    text = getTypeLine(lines, Transaction::StatusUpdate);
     if (!text.isNull()) {
         ret << text;
     }
@@ -113,24 +113,24 @@ QString TransactionModel::getDetailsLocalized(const QString &data) const
     return ret.join("\n");
 }
 
-QString TransactionModel::getTypeLine(const QStringList &lines, Enum::Status status) const
+QString TransactionModel::getTypeLine(const QStringList &lines, Transaction::Status status) const
 {
     QStringList text;
     foreach(const QString &line, lines) {
         QStringList sections = line.split('\t');
         if (sections.size() > 1) {
             switch (status) {
-                case Enum::StatusInstall:
+                case Transaction::StatusInstall:
                     if (sections.at(0) != "installing") {
                         continue;
                     }
                     break;
-                case Enum::StatusRemove:
+                case Transaction::StatusRemove:
                     if (sections.at(0) != "removing") {
                         continue;
                     }
                     break;
-                case Enum::StatusUpdate:
+                case Transaction::StatusUpdate:
                     if (sections.at(0) != "updating") {
                         continue;
                     }

@@ -25,7 +25,6 @@
 #include <KpkMacros.h>
 #include <KIcon>
 #include <KNotification>
-#include <QPackageKit>
 
 #include "PkInstallPackageNames.h"
 #include "PkInstallMimeTypes.h"

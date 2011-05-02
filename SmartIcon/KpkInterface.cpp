@@ -26,7 +26,6 @@
 #include <KpkMacros.h>
 #include <KIcon>
 #include <KNotification>
-#include <QPackageKit>
 
 #ifdef HAVE_DEBCONFKDE
 #include <KDialog>

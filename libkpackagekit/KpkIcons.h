@@ -23,7 +23,8 @@
 #ifndef KPKICONS_H
 #define KPKICONS_H
 
-#include <QPackageKit>
+#include <Package>
+#include <Transaction>
 #include <KIcon>
 
 #define KPK_ICON_SIZE 64
@@ -32,15 +33,15 @@ using namespace PackageKit;
 
 class KDE_EXPORT KpkIcons {
     public:
-        static KIcon   groupsIcon(Enum::Group group);
-        static QString statusIconName(Enum::Status status);
-        static KIcon   statusIcon(Enum::Status status);
-        static QString statusAnimation(Enum::Status status);
-        static QString actionIconName(Enum::Role role);
-        static KIcon   actionIcon(Enum::Role role);
-        static KIcon   packageIcon(Enum::Info state);
-        static QString restartIconName(Enum::Restart type);
-        static KIcon   restartIcon(Enum::Restart type);
+        static KIcon   groupsIcon(Package::Group group);
+        static QString statusIconName(Transaction::Status status);
+        static KIcon   statusIcon(Transaction::Status status);
+        static QString statusAnimation(Transaction::Status status);
+        static QString actionIconName(Transaction::Role role);
+        static KIcon   actionIcon(Transaction::Role role);
+        static KIcon   packageIcon(Package::Info state);
+        static QString restartIconName(Package::Restart type);
+        static KIcon   restartIcon(Package::Restart type);
         static KIcon   getIcon(const QString &name);
         static KIcon   getIcon(const QString &name, const QString &defaultName);
         static QIcon   getPreloadedIcon(const QString &name);

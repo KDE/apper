@@ -23,13 +23,13 @@
 
 #include <kdemacros.h>
 
-#include <QPackageKit>
+#include <Package>
 
 using namespace PackageKit;
 
 namespace KpkImportance
 {
-    KDE_EXPORT int restartImportance(Enum::Restart type);
+    KDE_EXPORT int restartImportance(Package::Restart type);
 };
 
 #endif

@@ -20,6 +20,8 @@
 
 #include "KpkTransactionWatcher.h"
 
+#include <QTimer>
+
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 #include <KLocale>
@@ -29,7 +31,9 @@
 #include <KMessageBox>
 #include <KDebug>
 
-Q_DECLARE_METATYPE(PackageKit::Enum::Error)
+#include <Daemon>
+
+Q_DECLARE_METATYPE(PackageKit::Transaction::Error)
 
 KpkTransactionWatcher::KpkTransactionWatcher(QObject *parent)
  : KpkAbstractIsRunning(parent)
@@ -50,10 +54,10 @@ void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactiv
         }
     }
 
-    foreach(const QString transId, Client::instance()->getTransactionList()) {
+    foreach(const QString transId, Daemon::getTransactions()) {
         if (transId == tid) {
             // found it let's start watching
-            Transaction *trans = new Transaction(transId);
+            Transaction *trans = new Transaction(transId, this);
 //             kDebug() << "found it let's start watching" << tid;
             m_hiddenTransactions.append(trans);
             trans->setProperty("interactive", QVariant(interactive));
@@ -89,7 +93,7 @@ void KpkTransactionWatcher::finished()
     // TODO if the transaction took too long to finish warn the user
 }
 
-void KpkTransactionWatcher::errorCode(PackageKit::Enum::Error err, const QString &details)
+void KpkTransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QString &details)
 {
     increaseRunning();
     KNotification *notify;
@@ -133,9 +137,9 @@ void KpkTransactionWatcher::errorActivated(uint action)
 void KpkTransactionWatcher::showError()
 {
     increaseRunning();
-    Enum::Error error;
+    Transaction::Error error;
     QString details;
-    error = sender()->property("ErrorType").value<Enum::Error>();
+    error = sender()->property("ErrorType").value<Transaction::Error>();
     details = sender()->property("Details").toString();
     KMessageBox::detailedSorry(0,
                                KpkStrings::errorMessage(error),

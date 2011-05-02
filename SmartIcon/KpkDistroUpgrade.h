@@ -23,7 +23,9 @@
 
 #include <KpkAbstractIsRunning.h>
 
-#include <QPackageKit>
+#include <QProcess>
+
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -38,7 +40,7 @@ public slots:
     void checkDistroUpgrades();
 
 private slots:
-    void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
+    void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);
     void handleDistroUpgradeAction(uint action);
     void distroUpgradeError(QProcess::ProcessError error);
     void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);

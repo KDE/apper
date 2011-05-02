@@ -25,6 +25,8 @@
 
 #include <PkTransactionDialog.h>
 
+#include <Transaction>
+
 using namespace PackageKit;
 
 class KpkPackageModel;
@@ -39,7 +41,7 @@ public:
 
     bool hasChanges() const;
     void setSelected(bool selected);
-    QList<QSharedPointer<PackageKit::Package> > packagesToUpdate() const;
+    QList<Package> packagesToUpdate() const;
 
 signals:
     void changed(bool);
@@ -52,14 +54,14 @@ public slots:
 private slots:
     void on_packageView_customContextMenuRequested(const QPoint &pos);
 
-    void distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description);
+    void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);
 
     void getUpdatesFinished();
 
     void on_packageView_clicked(const QModelIndex &index);
 
     void checkEnableUpdateButton();
-    void errorCode(PackageKit::Enum::Error error, const QString &details);
+    void errorCode(PackageKit::Transaction::Error error, const QString &details);
 
     void showVersions(bool enabled);
     void showArchs(bool enabled);
@@ -73,9 +75,8 @@ private:
     QAction              *m_showPackageArch;
     PkTransactionDialog       *m_transDialog;
     KPixmapSequenceOverlayPainter *m_busySeq;
-    Client               *m_client;
     Transaction          *m_updatesT;
-    Enum::Roles           m_roles;
+    Transaction::Roles           m_roles;
 };
 
 #endif

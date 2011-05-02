@@ -21,12 +21,20 @@
 #ifndef UPDATE_DETAILS_H
 #define UPDATE_DETAILS_H
 
-#include <QPackageKit>
+#include <Package>
+
 #include <KPixmapSequenceOverlayPainter>
+
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
 
 #include "ui_UpdateDetails.h"
 
 using namespace PackageKit;
+
+namespace PackageKit {
+    class Transaction;
+}
 
 class UpdateDetails : public QWidget, Ui::UpdateDetails
 {
@@ -35,13 +43,13 @@ public:
     explicit UpdateDetails(QWidget *parent = 0);
     ~UpdateDetails();
 
-    void setPackage(const QString &packageId, Enum::Info updateInfo);
+    void setPackage(const QString &packageId, Package::Info updateInfo);
 
 public slots:
     void hide();
 
 private slots:
-    void updateDetail(PackageKit::Client::UpdateInfo info);
+    void updateDetail(const Package &package);
     void updateDetailFinished();
     void display();
 
@@ -52,7 +60,7 @@ private:
     QString m_packageId;
     Transaction *m_transaction;
     QString m_currentDescription;
-    Enum::Info m_updateInfo;
+    Package::Info m_updateInfo;
     KPixmapSequenceOverlayPainter *m_busySeq;
     QPropertyAnimation *m_fadeDetails;
     QParallelAnimationGroup *m_expandPanel;

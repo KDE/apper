@@ -24,6 +24,8 @@
 #include <KIconLoader>
 #include <KLocale>
 
+#include <Package>
+
 #include "KpkPackageModel.h"
 #include "KpkIcons.h"
 
@@ -92,11 +94,11 @@ void ApplicationsDelegate::paint(QPainter *painter,
 //         int top = opt.rect.top();
         int width = opt.rect.width();
 
-        Enum::Info info;
-        info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+        Package::Info info;
+        info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
         QString pkgSummary    = index.data(KpkPackageModel::SummaryRole).toString();
-        bool    pkgInstalled  = (info == Enum::InfoInstalled ||
-                             info == Enum::InfoCollectionInstalled);
+        bool    pkgInstalled  = (info == Package::InfoInstalled ||
+                                 info == Package::InfoCollectionInstalled);
 
         // store the original opacity
         qreal opa = p.opacity();
@@ -184,10 +186,10 @@ void ApplicationsDelegate::paint(QPainter *painter,
         QStyleOptionButton optBt;
         optBt.rect = option.rect;
 
-        Enum::Info info;
-        info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
-        bool    pkgInstalled  = (info == Enum::InfoInstalled ||
-                                info == Enum::InfoCollectionInstalled);
+        Package::Info info;
+        info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+        bool    pkgInstalled  = (info == Package::InfoInstalled ||
+                                 info == Package::InfoCollectionInstalled);
 
 //         if (leftToRight) {
 //             optBt.rect.setLeft(left + width - (m_buttonSize.width() + UNIVERSAL_PADDING));

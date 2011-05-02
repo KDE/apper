@@ -24,6 +24,8 @@
 #include <KIconLoader>
 #include <KLocale>
 
+#include <Package>
+
 #include "KpkPackageModel.h"
 #include "KpkIcons.h"
 
@@ -93,13 +95,13 @@ void KpkDelegate::paint(QPainter *painter,
 //     QString pkgIconPath   = index.data(KpkPackageModel::IconPathRole).toString();
     bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
     bool    pkgCheckable  = !index.data(Qt::CheckStateRole).isNull();
-    Enum::Info info;
-    info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
-    bool    pkgInstalled  = (info == Enum::InfoInstalled ||
-                             info == Enum::InfoCollectionInstalled);
+    Package::Info info;
+    info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+    bool    pkgInstalled  = (info == Package::InfoInstalled ||
+                             info == Package::InfoCollectionInstalled);
 
-    bool    pkgCollection = (info == Enum::InfoCollectionInstalled ||
-                             info == Enum::InfoCollectionAvailable);
+    bool    pkgCollection = (info == Package::InfoCollectionInstalled ||
+                             info == Package::InfoCollectionAvailable);
 
     QIcon emblemIcon;
     if (pkgCheckable) {

@@ -52,8 +52,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
 
 include(FindPkgConfig)
 set(QPACKAGEKIT_MIN_VERSION 0.6.11)
-pkg_check_modules(QPACKAGEKIT REQUIRED packagekit-qt>=${QPACKAGEKIT_MIN_VERSION})
-macro_log_feature(QPACKAGEKIT_FOUND "packagekit-qt" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
+pkg_check_modules(QPACKAGEKIT2 REQUIRED packagekit-qt2>=${QPACKAGEKIT_MIN_VERSION})
+macro_log_feature(QPACKAGEKIT2_FOUND "packagekit-qt2" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
 include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS}
@@ -63,8 +63,8 @@ include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${KDE4_INCLUDES}
-    ${QPACKAGEKIT_INCLUDE_DIRS}
-    ${QPACKAGEKIT_INCLUDEDIR}/PackageKit/packagekit-qt
+    ${QPACKAGEKIT2_INCLUDE_DIRS}
+    ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2
     ${CMAKE_CURRENT_SOURCE_DIR}/libkpackagekit)
 
 add_subdirectory(libkpackagekit)

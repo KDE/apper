@@ -20,6 +20,10 @@
 
 #include "CategoryModel.h"
 
+#include <QMetaEnum>
+#include <QFile>
+#include <QTimer>
+
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 
@@ -31,6 +35,8 @@
 
 #include <KDebug>
 
+#include <Daemon>
+
 #include <config.h>
 
 CategoryModel::CategoryModel(QObject *parent)
@@ -39,7 +45,7 @@ CategoryModel::CategoryModel(QObject *parent)
     QStandardItem *item;
     item = new QStandardItem(i18n("Installed Software"));
     item->setDragEnabled(false);
-    item->setData(Enum::RoleGetPackages, SearchRole);
+    item->setData(Transaction::RoleGetPackages, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
     item->setIcon(KIcon("dialog-ok-apply"));
@@ -47,7 +53,7 @@ CategoryModel::CategoryModel(QObject *parent)
 
     item = new QStandardItem(i18n("History"));
     item->setDragEnabled(false);
-    item->setData(Enum::RoleGetOldTransactions, SearchRole);
+    item->setData(Transaction::RoleGetOldTransactions, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
     item->setIcon(KIcon("view-history"));
@@ -55,7 +61,7 @@ CategoryModel::CategoryModel(QObject *parent)
 
     item = new QStandardItem(i18n("Updates"));
     item->setDragEnabled(false);
-    item->setData(Enum::RoleGetUpdates, SearchRole);
+    item->setData(Transaction::RoleGetUpdates, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
     item->setIcon(KIcon("system-software-update"));
@@ -63,15 +69,15 @@ CategoryModel::CategoryModel(QObject *parent)
 
     item = new QStandardItem(i18n("Settings"));
     item->setDragEnabled(false);
-    item->setData(Enum::RoleGetRepoList, SearchRole);
+    item->setData(Transaction::RoleGetRepoList, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
     item->setIcon(KIcon("preferences-other"));
     appendRow(item);
 
     // Get the groups
-    m_groups = Client::instance()->groups();
-    m_roles  = Client::instance()->actions();
+    m_groups = Daemon::groups();
+    m_roles  = Daemon::actions();
 
 #ifdef HAVE_APPINSTALL
     fillWithServiceGroups();
@@ -91,12 +97,12 @@ CategoryModel::CategoryModel(QObject *parent)
 //                              "const QString &summary",
 //                              "dialog-cancel");
 #else
-    if (m_roles & Enum::RoleGetCategories
+    if (m_roles & Transaction::RoleGetCategories
      && Client::instance()->getTransactionList().isEmpty()) {
         Transaction *trans = new Transaction(QString(), this);
         connect(trans, SIGNAL(category(const QString &, const QString &, const QString &, const QString &, const QString &)),
                 this, SLOT(category(const QString &, const QString &, const QString &, const QString &, const QString &)));
-        connect(trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        connect(trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 this, SIGNAL(finished()));
         trans->getCategories();
         if (trans->error()) {
@@ -161,7 +167,7 @@ void CategoryModel::category(const QString &parentId,
     kDebug() << parentId << categoryId << name << summary << icon;
     QStandardItem *item = new QStandardItem(name);
     item->setDragEnabled(false);
-    item->setData(Enum::RoleSearchGroup, SearchRole);
+    item->setData(Transaction::RoleSearchGroup, SearchRole);
     item->setData(categoryId, GroupRole);
     item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
@@ -191,7 +197,7 @@ QStandardItem* CategoryModel::findCategory(const QString &categoryId, const QMod
     QStandardItem *ret = 0;
     for (int i = 0; i < rowCount(parent); i++) {
         QModelIndex group = index(i, 0, parent);
-        if (group.data(SearchRole).toUInt() == Enum::RoleSearchGroup
+        if (group.data(SearchRole).toUInt() == Transaction::RoleSearchGroup
          && group.data(GroupRole).toString() == categoryId) {
             ret = itemFromIndex(group);
         } else if (hasChildren(group)) {
@@ -208,16 +214,16 @@ QStandardItem* CategoryModel::findCategory(const QString &categoryId, const QMod
 void CategoryModel::fillWithStandardGroups()
 {
     QStandardItem *item;
-    foreach (const Enum::Group &group, m_groups) {
-        if (group != Enum::UnknownGroup) {
+    foreach (const Package::Group &group, m_groups) {
+        if (group != Package::UnknownGroup) {
             item = new QStandardItem(KpkStrings::groups(group));
             item->setDragEnabled(false);
-            item->setData(Enum::RoleSearchGroup, SearchRole);
+            item->setData(Transaction::RoleSearchGroup, SearchRole);
             item->setData(group, GroupRole);
             item->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
             item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
             item->setIcon(KpkIcons::groupsIcon(group));
-            if (!(m_roles & Enum::RoleSearchGroup)) {
+            if (!(m_roles & Transaction::RoleSearchGroup)) {
                 item->setSelectable(false);
             }
             appendRow(item);
@@ -298,7 +304,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                 categories = parseCategories(xml, item);
 //                 kDebug() << categories;
                 item->setData(categories, CategoryRole);
-                item->setData(Enum::RoleResolve, SearchRole);
+                item->setData(Transaction::RoleResolve, SearchRole);
             } else if (xml.name() == "Directory") {
                 if (!item) {
                     item = new QStandardItem;
@@ -323,11 +329,11 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                     item->setDragEnabled(false);
                 }
                 QString group = xml.readElementText();
-                Enum::Group groupEnum = static_cast<Enum::Group>(enumFromString<Enum>(group, "Group", "Group"));
+                Package::Group groupEnum = static_cast<Package::Group>(enumFromString<Package>(group, "Group", "Group"));
 
-                if (groupEnum != Enum::UnknownGroup &&
+                if (groupEnum != Package::UnknownGroup &&
                     (m_groups.contains(groupEnum))) {
-                    item->setData(Enum::RoleSearchGroup, SearchRole);
+                    item->setData(Transaction::RoleSearchGroup, SearchRole);
                     item->setData(groupEnum, GroupRole);
                 }
             }
@@ -341,8 +347,8 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
         (!item->data(GroupRole).isNull() || !item->data(CategoryRole).isNull())) {
         if (item->data(CategoryRole).isNull()) {
             // Set the group name to get it translated
-            Enum::Group group;
-            group = static_cast<Enum::Group>(item->data(GroupRole).toUInt());
+            Package::Group group;
+            group = static_cast<Package::Group>(item->data(GroupRole).toUInt());
             item->setText(KpkStrings::groups(group));
         }
         item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);

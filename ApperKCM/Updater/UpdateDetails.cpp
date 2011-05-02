@@ -25,7 +25,10 @@
 #include <KMessageBox>
 #include <KPixmapSequence>
 
+#include <QAbstractAnimation>
 #include <QGraphicsOpacityEffect>
+
+#include <Transaction>
 
 #include <KDebug>
 
@@ -83,7 +86,7 @@ UpdateDetails::~UpdateDetails()
 {
 }
 
-void UpdateDetails::setPackage(const QString &packageId, Enum::Info updateInfo)
+void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInfo)
 {
     if (m_packageId == packageId) {
         return;
@@ -93,19 +96,17 @@ void UpdateDetails::setPackage(const QString &packageId, Enum::Info updateInfo)
     m_updateInfo = updateInfo;
     m_currentDescription.clear();
     if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
-                   this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
-        disconnect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        disconnect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
+                   this, SLOT(updateDetail(const PackageKit::Package &)));
+        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    this, SLOT(display()));
     }
 
-    QSharedPointer<Package> package = QSharedPointer<Package>(new Package(m_packageId,
-                                                                          Enum::UnknownInfo,
-                                                                          QString()));;
-    m_transaction = new Transaction(QString());
-    connect(m_transaction, SIGNAL(updateDetail(PackageKit::Client::UpdateInfo)),
-            this, SLOT(updateDetail(PackageKit::Client::UpdateInfo)));
-    connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    Package package(m_packageId, Package::UnknownInfo, QString());
+    m_transaction = new Transaction(this);
+    connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
+            this, SLOT(updateDetail(const PackageKit::Package &)));
+    connect(m_transaction, SIGNAL(finished(PackageKit::Transction::Exit, uint)),
             this, SLOT(display()));
     m_transaction->getUpdateDetail(package);
     if (m_transaction->error()) {
@@ -156,51 +157,51 @@ void UpdateDetails::display()
     }
 }
 
-void UpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
+void UpdateDetails::updateDetail(const Package &package)
 {
     //format and show description
     QString description;
 
     // update type (ie Security Update)
-    if (m_updateInfo == Enum::InfoEnhancement) {
+    if (m_updateInfo == Package::InfoEnhancement) {
         description += "<p>" +
                        i18n("This update will add new features and expand functionality.") +
                        "</p>";
-    } else if (m_updateInfo == Enum::InfoBugfix) {
+    } else if (m_updateInfo == Package::InfoBugfix) {
         description += "<p>" +
                        i18n("This update will fix bugs and other non-critical problems.") +
                        "</p>";
-    } else if (m_updateInfo == Enum::InfoImportant) {
+    } else if (m_updateInfo == Package::InfoImportant) {
         description += "<p>" +
                        i18n("This update is important as it may solve critical problems.") +
                        "</p>";
-    } else if (m_updateInfo == Enum::InfoSecurity) {
+    } else if (m_updateInfo == Package::InfoSecurity) {
         description += "<p>" +
                        i18n("This update is needed to fix a security vulnerability with this package.") +
                        "</p>";
-    } else if (m_updateInfo == Enum::InfoBlocked) {
+    } else if (m_updateInfo == Package::InfoBlocked) {
         description += "<p>" +
                        i18n("This update is blocked.") +
                        "</p>";
     }
 
     // Issued and Updated
-    if (!info.issued.toString().isEmpty() && !info.updated.toString().isEmpty()) {
+    if (!package.issued().toString().isEmpty() && !package.updated().toString().isEmpty()) {
         description += "<p>" +
                        i18n("This notification was issued on %1 and last updated on %2.",
-                            KGlobal::locale()->formatDateTime(info.issued, KLocale::ShortDate),
-                            KGlobal::locale()->formatDateTime(info.updated, KLocale::ShortDate)) +
+                            KGlobal::locale()->formatDateTime(package.issued(), KLocale::ShortDate),
+                            KGlobal::locale()->formatDateTime(package.updated(), KLocale::ShortDate)) +
                        "</p>";
-    } else if (!info.issued.toString().isEmpty()) {
+    } else if (!package.issued().toString().isEmpty()) {
         description += "<p>" +
                        i18n("This notification was issued on %1.",
-                            KGlobal::locale()->formatDateTime(info.issued, KLocale::ShortDate)) +
+                            KGlobal::locale()->formatDateTime(package.issued(), KLocale::ShortDate)) +
                        "</p>";
     }
 
     // Description
-    if (!info.updateText.isEmpty()) {
-        QString updateText = info.updateText;
+    if (!package.updateText().isEmpty()) {
+        QString updateText = package.updateText();
         updateText.replace('\n', "<br/>");
         description += "<p><pre>" +
                        updateText +
@@ -209,60 +210,60 @@ void UpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
 
     // links
     //  Vendor
-    if (!info.vendorUrl.isEmpty()) {
+    if (!package.vendorUrl().isEmpty()) {
         description += "<p>" +
                        i18np("For more information about this update please visit this website:",
                              "For more information about this update please visit these websites:",
-                             info.vendorUrl.split(';').size() % 2) + "<br/>" +
-                       getLinkList(info.vendorUrl) +
+                             package.vendorUrl().split(';').size() % 2) + "<br/>" +
+                       getLinkList(package.vendorUrl()) +
                        "</p>";
     }
 
     //  Bugzilla
-    if (!info.bugzillaUrl.isEmpty()) {
+    if (!package.bugzillaUrl().isEmpty()) {
         description += "<p>" +
                        i18np("For more information about bugs fixed by this update please visit this website:",
                              "For more information about bugs fixed by this update please visit these websites:",
-                             info.bugzillaUrl .split(';').size() % 2) + "<br/>" +
-                       getLinkList(info.bugzillaUrl) +
+                             package.bugzillaUrl().split(';').size() % 2) + "<br/>" +
+                       getLinkList(package.bugzillaUrl()) +
                        "</p>";
     }
 
     //  CVE
-    if (!info.cveUrl.isEmpty()) {
+    if (!package.cveUrl().isEmpty()) {
         description += "<p>" +
                        i18np("For more information about this security update please visit this website:",
                              "For more information about this security update please visit these websites:",
-                             info.cveUrl .split(';').size() % 2) + "<br/>" +
-                       getLinkList(info.cveUrl) +
+                             package.cveUrl().split(';').size() % 2) + "<br/>" +
+                       getLinkList(package.cveUrl()) +
                        "</p>";
     }
 
     // Notice (about the need for a reboot)
-    if (info.restart == Enum::RestartSystem) {
+    if (package.restart() == Package::RestartSystem) {
         description += "<p>" +
                        i18n("The computer will have to be restarted after the update for the changes to take effect.") +
                        "</p>";
-    } else if (info.restart == Enum::RestartSession) {
+    } else if (package.restart() == Package::RestartSession) {
         description += "<p>" +
                        i18n("You will need to log out and back in after the update for the changes to take effect.") +
                        "</p>";
     }
 
     // State
-    if (info.state == Enum::UpdateStateUnstable) {
+    if (package.state() == Package::UpdateStateUnstable) {
         description += "<p>" +
                        i18n("The classification of this update is unstable which means it is not designed for production use.") +
                        "</p>";
-    } else if (info.state == Enum::UpdateStateTesting) {
+    } else if (package.state() == Package::UpdateStateTesting) {
         description += "<p>" +
                        i18n("This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter.") +
                        "</p>";
     }
 
     // only show changelog if we didn't have any update text
-    if (info.updateText.isEmpty() && !info.changelog.isEmpty()) {
-        QString changelog = info.changelog;
+    if (package.updateText().isEmpty() && !package.changelog().isEmpty()) {
+        QString changelog = package.changelog();
         changelog.replace('\n', "<br/>");
         description += "<p>" +
                        i18n("The developer logs will be shown as no description is available for this update:") +
@@ -272,28 +273,28 @@ void UpdateDetails::updateDetail(PackageKit::Client::UpdateInfo info)
     }
 
     // Updates (lists of packages that are updated)
-    if (info.updates.size()) {
+    if (package.updates().size()) {
         description += "<p>" + i18n("Updates:") + "<br/>";
         QStringList updates;
-        foreach (const QSharedPointer<PackageKit::Package> &p, info.updates) {
-             updates += QString::fromUtf8("\xE2\x80\xA2 ") + p->name() + " - " + p->version();
+        foreach (const Package &p, package.updates()) {
+             updates += QString::fromUtf8("\xE2\x80\xA2 ") + p.name() + " - " + p.version();
         }
         description += updates.join("<br/>") + "</p>";
     }
 
     // Obsoletes (lists of packages that are obsoleted)
-    if (info.obsoletes.size()) {
+    if (package.obsoletes().size()) {
         description += "<p></b>" + i18n("Obsoletes:") + "</b><br/>";
         QStringList obsoletes;
-        foreach (const QSharedPointer<PackageKit::Package> &p, info.obsoletes) {
-             obsoletes += QString::fromUtf8("\xE2\x80\xA2 ") + p->name() + " - " + p->version();
+        foreach (const Package &p, package.obsoletes()) {
+             obsoletes += QString::fromUtf8("\xE2\x80\xA2 ") + p.name() + " - " + p.version();
         }
         description += obsoletes.join("<br>/") + "</p>";
     }
 
     // Repository (this is the repository the package comes from)
-    if (!info.package->data().isEmpty()) {
-         description += "<p>" + i18n("Repository:") + ' ' + info.package->data() + "</p>";
+    if (!package.data().isEmpty()) {
+         description += "<p>" + i18n("Repository:") + ' ' + package.data() + "</p>";
     }
 
     m_currentDescription = description;

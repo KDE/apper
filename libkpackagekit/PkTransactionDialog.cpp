@@ -36,6 +36,8 @@
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QTreeView>
 
+#include <Transaction>
+
 #include "KpkMacros.h"
 #include "KpkEnum.h"
 #include "KpkStrings.h"
@@ -56,10 +58,10 @@ public:
     bool finished;
     bool allowDeps;
     bool onlyTrusted;
-    Enum::Role role;
-    Enum::Error error;
+    Transaction::Role role;
+    Transaction::Error error;
     QString errorDetails;
-    QList<QSharedPointer<PackageKit::Package> > packages;
+    QList<Package> packages;
     QStringList files;
     KpkSimulateModel *simulateModel;
     ProgressView *progressView;

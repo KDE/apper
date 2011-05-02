@@ -39,18 +39,19 @@ KpkDistroUpgrade::~KpkDistroUpgrade()
 void KpkDistroUpgrade::checkDistroUpgrades()
 {
     if (!isRunning()) {
-        Transaction *t = Client::instance()->getDistroUpgrades();
+        Transaction *t = new Transaction(this);
+        t->getDistroUpgrades();
         if (!t->error()) {
-            connect(t, SIGNAL(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)),
-                    this, SLOT(distroUpgrade(PackageKit::Enum::DistroUpgrade, const QString &, const QString &)));
-            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)),
+                    this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)));
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(decreaseRunning()));
             increaseRunning();
         }
     }
 }
 
-void KpkDistroUpgrade::distroUpgrade(PackageKit::Enum::DistroUpgrade type, const QString &name, const QString &description)
+void KpkDistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     kDebug() << "Distro upgrade found!" << name << description;

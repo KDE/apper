@@ -24,7 +24,7 @@
 #include <QStandardItemModel>
 #include <KIcon>
 
-#include <QPackageKit>
+#include <Package>
 
 using namespace PackageKit;
 

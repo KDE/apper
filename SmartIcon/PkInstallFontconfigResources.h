@@ -25,7 +25,7 @@
 
 #include <QDBusMessage>
 
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -44,11 +44,11 @@ public slots:
     void start();
 
 private slots:
-    void whatProvidesFinished(PackageKit::Enum::Exit status);
-    void addPackage(QSharedPointer<PackageKit::Package> package);
+    void whatProvidesFinished(PackageKit::Transaction::Exit status);
+    void addPackage(const Package &package);
 
 private:
-    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
+    QList<Package> m_foundPackages;
     QStringList  m_resources;
     QDBusMessage m_message;
 };

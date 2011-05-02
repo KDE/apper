@@ -23,7 +23,7 @@
 
 #include "KpkAbstractTask.h"
 
-#include <QPackageKit>
+#include <Transaction>
 #include <QDBusMessage>
 
 using namespace PackageKit;
@@ -42,11 +42,11 @@ private slots:
     void start();
 
 private slots:
-    void searchFinished(PackageKit::Enum::Exit);
-    void addPackage(QSharedPointer<PackageKit::Package> package);
+    void searchFinished(PackageKit::Transaction::Exit);
+    void addPackage(const Package &package);
 
 private:
-    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
+    QList<Package> m_foundPackages;
     QString      m_packageName;
     QDBusMessage m_message;
 };

@@ -35,6 +35,7 @@
 #include <QStringList>
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QTimer>
 
 Apper::Apper()
  : KUniqueApplication(),

@@ -95,13 +95,13 @@ void ProgressView::clear()
     header()->setStretchLastSection(true);
 }
 
-void ProgressView::currentPackage(const QSharedPointer<PackageKit::Package> &p)
+void ProgressView::currentPackage(const Package &p)
 {
-    if (!p->id().isEmpty()) {
-        m_lastPackageId = p->id();
+    if (!p.id().isEmpty()) {
+        m_lastPackageId = p.id();
 
         QStandardItem *item;
-        QList<QStandardItem *> packages = findItems(p->id());
+        QList<QStandardItem *> packages = findItems(p.id());
         // If there is alread some packages check to see if it has
         // finished, if the progress is 100 create a new item for the next task
         if (!packages.isEmpty() &&
@@ -109,32 +109,32 @@ void ProgressView::currentPackage(const QSharedPointer<PackageKit::Package> &p)
             item->data(RoleFinished).toBool() == false)
         {
             // if the item status (info) changed update it
-            if (item->data(RoleInfo).toInt() != p->info()) {
+            if (item->data(RoleInfo).toInt() != p.info()) {
                 // If the package task has finished set progress to 100
-                if (p->info() == Enum::InfoFinished) {
+                if (p.info() == Package::InfoFinished) {
                     itemFinished(item);
                 } else {
-                    item->setData(p->info(), RoleInfo);
-                    item->setText(KpkStrings::infoPresent(p->info()));
+                    item->setData(p.info(), RoleInfo);
+                    item->setText(KpkStrings::infoPresent(p.info()));
                 }
             }
         } else {
             QList<QStandardItem *> items;
             // It's a new package create it and append it
             item = new QStandardItem;
-            item->setText(KpkStrings::infoPresent(p->info()));
-            item->setData(p->info(), RoleInfo);
-            item->setData(0,         RoleProgress);
-            item->setData(false,     RoleFinished);
-            item->setData(p->id(),   RoleId);
+            item->setText(KpkStrings::infoPresent(p.info()));
+            item->setData(p.info(), RoleInfo);
+            item->setData(0,        RoleProgress);
+            item->setData(false,    RoleFinished);
+            item->setData(p.id(),   RoleId);
             items << item;
 
-            item = new QStandardItem(p->name());
-            item->setToolTip(p->name());
+            item = new QStandardItem(p.name());
+            item->setToolTip(p.name());
             items << item;
 
-            item = new QStandardItem(p->summary());
-            item->setToolTip(p->summary());
+            item = new QStandardItem(p.summary());
+            item->setToolTip(p.summary());
             items << item;
 
             m_model->appendRow(items);
@@ -174,7 +174,7 @@ void ProgressView::itemFinished(QStandardItem *item)
         m_model->insertRow(0, items);
     }
 
-    Enum::Info info = static_cast<Enum::Info>(item->data(ProgressView::RoleInfo).toInt());
+    Package::Info info = static_cast<Package::Info>(item->data(ProgressView::RoleInfo).toInt());
     item->setText(KpkStrings::infoPast(info));
     item->setData(100,  RoleProgress);
     item->setData(true, RoleFinished);

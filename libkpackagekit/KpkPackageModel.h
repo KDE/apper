@@ -25,7 +25,7 @@
 #include <QAbstractItemView>
 #include <KIcon>
 
-#include <QPackageKit>
+#include <Package>
 
 using namespace PackageKit;
 
@@ -56,7 +56,7 @@ public:
         QString    id;
         QString    appId;
         bool       isPackage;
-        Enum::Info info;
+        Package::Info info;
     } InternalPackage;
 
     explicit KpkPackageModel(QObject *parent = 0);
@@ -69,7 +69,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     bool allSelected() const;
-    QList<QSharedPointer<PackageKit::Package> > selectedPackages() const;
+    QList<Package> selectedPackages() const;
     void clear();
     /**
      * This removes all selected packages that are not in the model
@@ -82,11 +82,11 @@ public:
     QModelIndex parent(const QModelIndex &index) const;
 
 public slots:
-    void addPackage(const QSharedPointer<PackageKit::Package> &package,
+    void addPackage(const Package &package,
                     bool selected = false);
-    void addPackages(const QList<QSharedPointer<PackageKit::Package> > &packages,
+    void addPackages(const QList<Package> &packages,
                      bool selected = false);
-    void addSelectedPackage(const QSharedPointer<PackageKit::Package> &package);
+    void addSelectedPackage(const Package &package);
     void rmSelectedPackage(const KpkPackageModel::InternalPackage &package);
 
     void setAllChecked(bool checked);

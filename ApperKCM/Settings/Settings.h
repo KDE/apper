@@ -26,7 +26,7 @@
 #include <QWidget>
 #include <KPixmapSequenceOverlayPainter>
 
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -56,7 +56,7 @@ private slots:
 private:
     KPixmapSequenceOverlayPainter *m_busySeq;
     OriginModel *m_originModel;
-    Enum::Roles  m_roles;
+    Transaction::Roles  m_roles;
 };
 
 #endif

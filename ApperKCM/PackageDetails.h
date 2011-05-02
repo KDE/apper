@@ -21,13 +21,15 @@
 #ifndef PACKAGE_DETAILS_H
 #define PACKAGE_DETAILS_H
 
-#include <QPackageKit>
+#include <Transaction>
 
 #include <KPixmapSequenceOverlayPainter>
 #include <KJob>
 
 #include <QWidget>
 #include <QSortFilterProxyModel>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
 
 #include "ui_PackageDetails.h"
 
@@ -60,8 +62,8 @@ signals:
 private slots:
     void on_screenshotL_clicked();
     void actionActivated(QAction *action);
-    void description(const QSharedPointer<PackageKit::Package> &package);
-    void files(QSharedPointer<PackageKit::Package> package, const QStringList &files);
+    void description(const PackageKit::Package &package);
+    void files(const Package &package, const QStringList &files);
     void finished();
     void resultJob(KJob *);
 
@@ -74,8 +76,8 @@ private:
 
     QActionGroup *m_actionGroup;
     QModelIndex   m_index;
-    QSharedPointer<PackageKit::Package> m_package;
-    QString m_appName;
+    Package       m_package;
+    QString       m_appName;
 
     QParallelAnimationGroup       *m_expandPanel;
     KPixmapSequenceOverlayPainter *m_busySeq;

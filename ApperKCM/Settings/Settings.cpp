@@ -24,11 +24,15 @@
 
 #include <KpkEnum.h>
 
+#include <QTimer>
+
 #include <KMessageBox>
 #include <KPixmapSequence>
 #include <KToolInvocation>
 
 #include <Solid/Device>
+
+#include <Daemon>
 
 #include <config.h>
 
@@ -41,9 +45,9 @@ Settings::Settings(QWidget *parent) :
 {
     setupUi(this);
 
-    m_roles = Client::instance()->actions();
+    m_roles = Daemon::actions();
 
-    if (!(m_roles & Enum::RoleRefreshCache)) {
+    if (!(m_roles & Transaction::RoleRefreshCache)) {
         intervalL->setEnabled(false);
         intervalCB->setEnabled(false);
     }
@@ -51,7 +55,7 @@ Settings::Settings(QWidget *parent) :
     m_originModel = new OriginModel(this);
     originTV->setModel(m_originModel);
     originTV->header()->setDefaultAlignment(Qt::AlignCenter);
-    if (m_roles & Enum::RoleGetRepoList) {
+    if (m_roles & Transaction::RoleGetRepoList) {
         // The data will be loaded when Load is called
         connect(m_originModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
                 this, SLOT(checkChanges()));
@@ -106,18 +110,18 @@ void Settings::on_editOriginsPB_clicked()
 // TODO update the repo list connecting to repo changed signal
 void Settings::on_showOriginsCB_stateChanged(int state)
 {
-    Transaction *transaction = new Transaction(QString());
+    Transaction *transaction = new Transaction(this);
     connect(transaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
             m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
-    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_originModel, SLOT(finished()));
-    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_busySeq, SLOT(stop()));
 
     if (state == Qt::Checked) {
-        transaction->getRepoList(Enum::NoFilter);
+        transaction->getRepoList(Transaction::FilterNone);
     } else {
-        transaction->getRepoList(Enum::FilterNotDevelopment);
+        transaction->getRepoList(Transaction::FilterNotDevel);
     }
 
     if (!transaction->error()) {
@@ -149,15 +153,14 @@ bool Settings::hasChanges() const
         ||
         installUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry("installUpdatesOnMobile", false)
         ||
-        ((m_roles & Enum::RoleGetRepoList) ? m_originModel->changed() : false)
+        ((m_roles & Transaction::RoleGetRepoList) ? m_originModel->changed() : false)
         ||
         autoConfirmCB->isChecked() != !requirementsDialog.readEntry("autoConfirm", false)
         ||
         appLauncherCB->isChecked() != transaction.readEntry("ShowApplicationLauncher", true)) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 void Settings::checkChanges()
@@ -217,10 +220,10 @@ void Settings::load()
     installUpdatesMobileCB->setChecked(checkUpdateGroup.readEntry("installUpdatesOnMobile", false));
 
     // Load origns list
-    if (m_roles & Enum::RoleGetRepoList) {
+    if (m_roles & Transaction::RoleGetRepoList) {
         on_showOriginsCB_stateChanged(Qt::Unchecked);
     }
-    
+
     // hide battery options if we are on a desktop computer
     const QList<Solid::Device> listBattery = Solid::Device::listFromType(Solid::DeviceInterface::Battery, QString());
     if (listBattery.isEmpty()) {
@@ -253,7 +256,7 @@ void Settings::save()
     checkUpdateGroup.writeEntry("installUpdatesOnBattery", installUpdatesBatteryCB->isChecked());
     checkUpdateGroup.writeEntry("installUpdatesOnMobile", installUpdatesMobileCB->isChecked());
     // check to see if the backend support this
-    if (m_roles & Enum::RoleGetRepoList) {
+    if (m_roles & Transaction::RoleGetRepoList) {
         if (!m_originModel->save()) {
             KMessageBox::sorry(this,
                                i18n("You do not have the necessary privileges to perform this action."),

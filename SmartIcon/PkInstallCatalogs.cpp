@@ -28,6 +28,11 @@
 
 #include <KDebug>
 
+#include <QEventLoop>
+#include <QFile>
+
+#include <Daemon>
+
 PkInstallCatalogs::PkInstallCatalogs(uint xid,
                                      const QStringList &files,
                                      const QString &interaction,
@@ -81,7 +86,7 @@ void PkInstallCatalogs::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        QString distroId = Client::instance()->distroId();
+        QString distroId = Daemon::distroId();
         QStringList parts = distroId.split(';');
         if (parts.size() != 3) {
             sendErrorFinished(Failed, "invalid distribution id, please fill a bug against you distribution backend");
@@ -92,16 +97,16 @@ void PkInstallCatalogs::start()
         QString arch = parts.at(2);
 
         QStringList rxActions;
-        Enum::Roles actions = Client::instance()->actions();
-        if (actions & Enum::RoleResolve) {
+        Transaction::Roles actions = Daemon::actions();
+        if (actions & Transaction::RoleResolve) {
             rxActions << "InstallPackages";
         }
 
-        if (actions & Enum::RoleWhatProvides) {
+        if (actions & Transaction::RoleWhatProvides) {
             rxActions << "InstallProvides";
         }
 
-        if (actions & Enum::RoleSearchFile) {
+        if (actions & Transaction::RoleSearchFile) {
             rxActions << "InstallFiles";
         }
 
@@ -188,9 +193,9 @@ bool PkInstallCatalogs::installPackages(const QStringList &packages)
     int count = 0;
     while (count < packages.size()) {
 //         kDebug() << packages.mid(count, m_maxResolve);
-        Transaction *t = Client::instance()->resolve(packages.mid(count, m_maxResolve),
-                                                     Enum::FilterArch |
-                                                     Enum::FilterNewest);
+        Transaction *t = new Transaction(this);
+        t->resolve(packages.mid(count, m_maxResolve),
+                   Transaction::FilterArch | Transaction::FilterNewest);
         count += m_maxResolve;
         if (!runTransaction(t)) {
             return false;
@@ -202,19 +207,19 @@ bool PkInstallCatalogs::installPackages(const QStringList &packages)
 bool PkInstallCatalogs::installProvides(const QStringList &provides)
 {
     kDebug() << provides;
-    Transaction *t = Client::instance()->whatProvides(Enum::ProvidesAny,
-                                                      provides,
-                                                      Enum::FilterArch |
-                                                      Enum::FilterNewest);
+    Transaction *t = new Transaction(this);
+    t->whatProvides(Transaction::ProvidesAny,
+                    provides,
+                    Transaction::FilterArch | Transaction::FilterNewest);
     return runTransaction(t);
 }
 
 bool PkInstallCatalogs::installFiles(const QStringList &files)
 {
     kDebug() << files;
-    Transaction *t = Client::instance()->searchFiles(files,
-                                                     Enum::FilterArch |
-                                                     Enum::FilterNewest);
+    Transaction *t = new Transaction(this);
+    t->searchFiles(files,
+                   Transaction::FilterArch | Transaction::FilterNewest);
     return runTransaction(t);
 }
 
@@ -231,10 +236,10 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
         return false;
     } else {
         QEventLoop loop;
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 &loop, SLOT(quit()));
-        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+        connect(t, SIGNAL(package(const Package &)),
+                this, SLOT(addPackage(const Package &)));
         if (showProgress()) {
             kTransaction()->setTransaction(t);
             kTransaction()->show();
@@ -244,12 +249,12 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
     }
 }
 
-void PkInstallCatalogs::addPackage(QSharedPointer<PackageKit::Package> package)
+void PkInstallCatalogs::addPackage(const Package &package)
 {
-    if (package->info() != Enum::InfoInstalled) {
+    if (package.info() != Package::InfoInstalled) {
         m_foundPackages.append(package);
     } else {
-        m_alreadyInstalled << package->name();
+        m_alreadyInstalled << package.name();
     }
 }
 

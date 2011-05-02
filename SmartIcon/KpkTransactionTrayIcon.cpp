@@ -43,7 +43,9 @@
 
 #include <KDebug>
 
-Q_DECLARE_METATYPE(Enum::Restart)
+#include <Daemon>
+
+Q_DECLARE_METATYPE(Package::Restart)
 
 KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
  : KpkAbstractIsRunning(parent),
@@ -53,13 +55,12 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
    m_inhibitCookie(-1)
 {
     // Create a new daemon
-    m_client = Client::instance();
     m_tracker = new KUiServerJobTracker(this);
 
-    connect(m_client, SIGNAL(transactionListChanged(const QList<PackageKit::Transaction*> &)),
-            this, SLOT(transactionListChanged(const QList<PackageKit::Transaction*> &)));
+    connect(Daemon::global(), SIGNAL(transactionListChanged(const QStringList &tids)),
+            this, SLOT(transactionListChanged(const QStringList &tids)));
 
-    if (Client::instance()->actions() & Enum::RoleRefreshCache) {
+    if (Daemon::actions() & Transaction::RoleRefreshCache) {
         m_refreshCacheAction = new QAction(this);
         m_refreshCacheAction->setText(i18n("Refresh package list"));
         m_refreshCacheAction->setIcon(KIcon("view-refresh"));
@@ -79,7 +80,7 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
             this, SLOT(hideIcon()));
 
     // initiate the restart type
-    m_restartType = Enum::RestartNone;
+    m_restartType = Package::RestartNone;
 
     m_restartAction = new QAction(this);
     connect(m_restartAction, SIGNAL(triggered(bool)),
@@ -96,14 +97,15 @@ void KpkTransactionTrayIcon::checkTransactionList()
 {
     // here the menu can be checked whether or not is visible
     // it's only called here so a just started app can show the current transactions
-    transactionListChanged(m_client->getTransactionObjectList());
+    transactionListChanged(Daemon::getTransactions());
 }
 
 void KpkTransactionTrayIcon::refreshCache()
 {
     increaseRunning();
     // in this case refreshCache action must be clicked
-    Transaction *t = m_client->refreshCache(true);
+    Transaction *t = new Transaction(this);
+    t->refreshCache(true);
     if (t->error()) {
         KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
     } else {
@@ -144,32 +146,32 @@ void KpkTransactionTrayIcon::transactionDialogClosed()
     decreaseRunning();
 }
 
-void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Transaction*> &tids)
+void KpkTransactionTrayIcon::transactionListChanged(const QStringList &tids)
 {
     kDebug() << tids.size();
     if (tids.size()) {
 //         setCurrentTransaction(tids.first());
-        
-        foreach (Transaction *t, tids) {
-            Enum::Role role = t->role();
+        QList<Transaction*> tidsObj = Daemon::getTransactionsObj(this);
+        foreach (Transaction *t, tidsObj) {
+            Transaction::Role role = t->role();
             if (!m_tids.contains(t->tid()) &&
-                (role == Enum::RoleInstallPackages ||
-                role == Enum::RoleInstallFiles    ||
-                role == Enum::RoleRemovePackages  ||
-                role == Enum::RoleUpdatePackages  ||
-                role == Enum::RoleUpdateSystem    ||
-                role == Enum::RoleRefreshCache)) {
+                (role == Transaction::RoleInstallPackages ||
+                 role == Transaction::RoleInstallFiles    ||
+                 role == Transaction::RoleRemovePackages  ||
+                 role == Transaction::RoleUpdatePackages  ||
+                 role == Transaction::RoleUpdateSystem    ||
+                 role == Transaction::RoleRefreshCache)) {
                 TransactionJob *job = new TransactionJob(t, this);
                 job->start();
                 m_tracker->registerJob(job);
                 m_tids << t->tid();
             }
         }
-        
-        foreach (const QString tid, m_tids) {
+
+        foreach (const QString &tid, m_tids) {
             bool found = false;
-            foreach (Transaction *t, tids) {
-                if (t->tid() == tid) {
+            foreach (const QString &currentTid, tids) {
+                if (currentTid == tid) {
                     found = true;
                     break;
                 }
@@ -184,7 +186,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
         m_tids.clear();
 
         if (m_messagesCount == 0 &&
-            m_restartType == Enum::RestartNone)
+            m_restartType == Package::RestartNone)
         {
             // TODO check if a menu being shown
             // will hide
@@ -194,7 +196,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
             QString toolTip;
             QString iconName;
             QIcon icon;
-            if (m_restartType != Enum::RestartNone) {
+            if (m_restartType != Package::RestartNone) {
                 toolTip.append(KpkStrings::restartType(m_restartType) + '\n');
                 toolTip.append(i18np("Package: %2",
                                      "Packages: %2",
@@ -239,8 +241,8 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
                 this, SLOT(createTransactionDialog(PackageKit::Transaction *)));
 
         // Clear old data
-        m_currentRole     = Enum::UnknownRole;
-        m_currentStatus   = Enum::UnknownStatus;
+        m_currentRole     = Transaction::UnknownRole;
+        m_currentStatus   = Transaction::UnknownStatus;
         m_currentProgress = 0;
     }
 
@@ -249,33 +251,33 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
     // AVOID showing messages and restart requires when
     // the user was just simulating an instalation
     // TODO fix yum backend
-    Enum::Role role = transaction->role();
-    if (role == Enum::RoleInstallPackages ||
-        role == Enum::RoleInstallFiles    ||
-        role == Enum::RoleRemovePackages  ||
-        role == Enum::RoleUpdatePackages  ||
-        role == Enum::RoleUpdateSystem) {
-        connect(m_currentTransaction, SIGNAL(message(PackageKit::Enum::Message, const QString &)),
-                this, SLOT(message(PackageKit::Enum::Message, const QString &)));
-        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)),
-                this, SLOT(requireRestart(PackageKit::Enum::Restart, QSharedPointer<PackageKit::Package>)));
+    Transaction::Role role = transaction->role();
+    if (role == Transaction::RoleInstallPackages ||
+        role == Transaction::RoleInstallFiles    ||
+        role == Transaction::RoleRemovePackages  ||
+        role == Transaction::RoleUpdatePackages  ||
+        role == Transaction::RoleUpdateSystem) {
+        connect(m_currentTransaction, SIGNAL(message(PackageKit::Transaction::Message, const QString &)),
+                this, SLOT(message(PackageKit::Transaction::Message, const QString &)));
+        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Package::Restart, QSharedPointer<PackageKit::Package>)),
+                this, SLOT(requireRestart(PackageKit::Package::Restart, QSharedPointer<PackageKit::Package>)));
 
         // Don't let the system sleep while doing some sensible actions
         suppressSleep(true, KpkStrings::action(role));
     }
-    connect(m_currentTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(finished(PackageKit::Enum::Exit)));
+    connect(m_currentTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(finished(PackageKit::Transaction::Exit)));
 
     // update the icon
     transactionChanged();
 }
 
-void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit exit)
+void KpkTransactionTrayIcon::finished(PackageKit::Transaction::Exit exit)
 {
     // check if the transaction emitted any require restart
     Transaction *transaction = qobject_cast<Transaction*>(sender());
-    if (exit == Enum::ExitSuccess && !transaction->property("restartType").isNull()) {
-        Enum::Restart type = transaction->property("restartType").value<Enum::Restart>();
+    if (exit == Transaction::ExitSuccess && !transaction->property("restartType").isNull()) {
+        Package::Restart type = transaction->property("restartType").value<Package::Restart>();
 
         // Create the notification object
         KNotification *notify = new KNotification("RestartRequired");
@@ -288,15 +290,15 @@ void KpkTransactionTrayIcon::finished(PackageKit::Enum::Exit exit)
         }
 
         switch (type) {
-        case Enum::RestartSystem :
-        case Enum::RestartSecuritySystem :
+        case Package::RestartSystem :
+        case Package::RestartSecuritySystem :
             m_restartAction->setText(i18nc("Restart the computer", "Restart"));
             break;
-        case Enum::RestartSession :
-        case Enum::RestartSecuritySession :
+        case Package::RestartSession :
+        case Package::RestartSecuritySession :
             m_restartAction->setText(i18n("Logout"));
             break;
-        case Enum::RestartApplication :
+        case Package::RestartApplication :
             // What do we do in restart application?
             // we don't even know what application is
             // SHOULD we check for pkg and see the installed
@@ -330,8 +332,8 @@ void KpkTransactionTrayIcon::transactionChanged()
     }
 
     uint         percentage = m_currentTransaction->percentage();
-    Enum::Status status     = m_currentTransaction->status();
-    Enum::Role   role       = m_currentTransaction->role();
+    Transaction::Status status     = m_currentTransaction->status();
+    Transaction::Role   role       = m_currentTransaction->role();
     QString      toolTip;
 
     if (m_currentRole != role) {
@@ -361,7 +363,7 @@ void KpkTransactionTrayIcon::transactionChanged()
     }
 }
 
-void KpkTransactionTrayIcon::message(PackageKit::Enum::Message type, const QString &message)
+void KpkTransactionTrayIcon::message(PackageKit::Transaction::Message type, const QString &message)
 {
     m_messagesCount++;
     m_messages.append("<p><h3>");
@@ -412,7 +414,7 @@ void KpkTransactionTrayIcon::fillMenu()
 
     contextMenu->clear();
 
-    QList<PackageKit::Transaction*> tids = m_client->getTransactionObjectList();
+    QList<PackageKit::Transaction*> tids = Daemon::getTransactionsObj(this);
 
     contextMenu->addTitle(KIcon("applications-other"), i18n("Transactions"));
     foreach (Transaction *t, tids) {
@@ -421,7 +423,7 @@ void KpkTransactionTrayIcon::fillMenu()
         // as it was some times
         transactionAction->setData(t->tid());
 
-        if (t->role() == Enum::RoleRefreshCache) {
+        if (t->role() == Transaction::RoleRefreshCache) {
             refreshCache = false;
         }
 
@@ -436,7 +438,7 @@ void KpkTransactionTrayIcon::fillMenu()
     if (refreshCache && m_refreshCacheAction) {
         contextMenu->addAction(m_refreshCacheAction);
     }
-    if (m_restartType != Enum::RestartNone) {
+    if (m_restartType != Package::RestartNone) {
         contextMenu->addAction(m_restartAction);
     }
     if (m_messagesCount) {
@@ -445,13 +447,13 @@ void KpkTransactionTrayIcon::fillMenu()
     contextMenu->addAction(m_hideAction);
 }
 
-void KpkTransactionTrayIcon::requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package> pkg)
+void KpkTransactionTrayIcon::requireRestart(PackageKit::Package::Restart type, const Package &pkg)
 {
     Transaction *transaction = qobject_cast<Transaction*>(sender());
     if (transaction->property("restartType").isNull()) {
         transaction->setProperty("restartType", qVariantFromValue(type));
     } else {
-        Enum::Restart oldType = transaction->property("restartType").value<Enum::Restart>();
+        Package::Restart oldType = transaction->property("restartType").value<Package::Restart>();
         int old = KpkImportance::restartImportance(oldType);
         int newer = KpkImportance::restartImportance(type);
         // Check to see which one is more important
@@ -460,8 +462,8 @@ void KpkTransactionTrayIcon::requireRestart(PackageKit::Enum::Restart type, QSha
         }
     }
 
-    if (!pkg->name().isEmpty()) {
-        m_restartPackages << pkg->name();
+    if (!pkg.name().isEmpty()) {
+        m_restartPackages << pkg.name();
     }
 }
 
@@ -477,11 +479,11 @@ void KpkTransactionTrayIcon::logout()
     // KWorkSpace::ShutdownConfirmYes = 1
     message << qVariantFromValue(1);
 
-    if (m_restartType == Enum::RestartSystem) {
+    if (m_restartType == Package::RestartSystem) {
         // The restart type was system
         // KWorkSpace::ShutdownTypeReboot = 1
         message << qVariantFromValue(1);
-    } else if (m_restartType == Enum::RestartSession) {
+    } else if (m_restartType == Package::RestartSession) {
         // The restart type was session
         // KWorkSpace::ShutdownTypeLogout = 3
         message << qVariantFromValue(3);
@@ -508,18 +510,17 @@ void KpkTransactionTrayIcon::hideIcon()
     m_trayIcon = 0;
     m_messages.clear();
     m_messagesCount = 0;
-    m_restartType = Enum::RestartNone;
+    m_restartType = Package::RestartNone;
 }
 
 bool KpkTransactionTrayIcon::isRunning()
 {
     return KpkAbstractIsRunning::isRunning() ||
-           !Client::instance()->getTransactionList().isEmpty() ||
+           !Daemon::getTransactions().isEmpty() ||
            m_messagesCount ||
-           m_restartType != Enum::RestartNone;
+           m_restartType != Package::RestartNone;
 }
 
-    
 void KpkTransactionTrayIcon::suppressSleep(bool enable, const QString &reason)
 {
     if (enable) {

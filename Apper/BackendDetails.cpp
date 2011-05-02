@@ -17,9 +17,11 @@
  *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
-
 #include "BackendDetails.h"
+
 #include <KIcon>
+
+#include <Daemon>
 
 using namespace PackageKit;
 
@@ -31,56 +33,56 @@ BackendDetails::BackendDetails(QWidget *parent)
     setWindowIcon(KIcon("help-about"));
 
     // GENERAL - Setup backend name and author
-    nameL->setText(Client::instance()->backendName());
-    descriptionL->setText(Client::instance()->backendDescription());
-    authorL->setText(Client::instance()->backendAuthor());
-    distroL->setText(Client::instance()->distroId());
+    nameL->setText(Daemon::backendName());
+    descriptionL->setText(Daemon::backendDescription());
+    authorL->setText(Daemon::backendAuthor());
+    distroL->setText(Daemon::distroId());
 
     // METHODS - Setup backend supported methods
-    Enum::Roles actions = Client::instance()->actions();
-    getUpdatesCB->setChecked(actions & Enum::RoleGetUpdates);
-    getDistroUpgradesCB->setChecked(actions & Enum::RoleGetDistroUpgrades);
-    refreshCacheCB->setChecked(actions & Enum::RoleRefreshCache);
-    updateSystemCB->setChecked(actions & Enum::RoleUpdateSystem);
-    searchNameCB->setChecked(actions & Enum::RoleSearchName);
-    searchDetailsCB->setChecked(actions & Enum::RoleSearchDetails);
-    searchGroupCB->setChecked(actions & Enum::RoleSearchGroup);
-    searchFileCB->setChecked(actions & Enum::RoleSearchFile);
-    cancelCB->setChecked(actions & Enum::RoleCancel);
-    resolveCB->setChecked(actions & Enum::RoleResolve);
+    Transaction::Roles actions = Daemon::actions();
+    getUpdatesCB->setChecked(actions & Transaction::RoleGetUpdates);
+    getDistroUpgradesCB->setChecked(actions & Transaction::RoleGetDistroUpgrades);
+    refreshCacheCB->setChecked(actions & Transaction::RoleRefreshCache);
+    updateSystemCB->setChecked(actions & Transaction::RoleUpdateSystem);
+    searchNameCB->setChecked(actions & Transaction::RoleSearchName);
+    searchDetailsCB->setChecked(actions & Transaction::RoleSearchDetails);
+    searchGroupCB->setChecked(actions & Transaction::RoleSearchGroup);
+    searchFileCB->setChecked(actions & Transaction::RoleSearchFile);
+    cancelCB->setChecked(actions & Transaction::RoleCancel);
+    resolveCB->setChecked(actions & Transaction::RoleResolve);
 
-    updatePackageCB->setChecked(actions & Enum::RoleUpdatePackages);
-    installPackageCB->setChecked(actions & Enum::RoleInstallPackages);
-    removePackageCB->setChecked(actions & Enum::RoleRemovePackages);
-    getDependsCB->setChecked(actions & Enum::RoleGetDepends);
-    getRequiresCB->setChecked(actions & Enum::RoleGetRequires);
-    getUpdateDetailCB->setChecked(actions & Enum::RoleGetUpdateDetail);
-    getDescriptionCB->setChecked(actions & Enum::RoleGetDetails);
-    getFilesCB->setChecked(actions & Enum::RoleRefreshCache);
-    installFileCB->setChecked(actions & Enum::RoleInstallFiles);
+    updatePackageCB->setChecked(actions & Transaction::RoleUpdatePackages);
+    installPackageCB->setChecked(actions & Transaction::RoleInstallPackages);
+    removePackageCB->setChecked(actions & Transaction::RoleRemovePackages);
+    getDependsCB->setChecked(actions & Transaction::RoleGetDepends);
+    getRequiresCB->setChecked(actions & Transaction::RoleGetRequires);
+    getUpdateDetailCB->setChecked(actions & Transaction::RoleGetUpdateDetail);
+    getDescriptionCB->setChecked(actions & Transaction::RoleGetDetails);
+    getFilesCB->setChecked(actions & Transaction::RoleRefreshCache);
+    installFileCB->setChecked(actions & Transaction::RoleInstallFiles);
 
-    getRepositoryListCB->setChecked(actions & Enum::RoleGetRepoList);
-    repositoryEnableCB->setChecked(actions & Enum::RoleRepoEnable);
-    repositorySetEnableCB->setChecked(actions & Enum::RoleRepoSetData);
-    whatProvidesCB->setChecked(actions & Enum::RoleWhatProvides);
-    getPackagesCB->setChecked(actions & Enum::RoleGetPackages);
-    simulateInstallFilesCB->setChecked(actions & Enum::RoleSimulateInstallFiles);
-    simulateInstallPackagesCB->setChecked(actions & Enum::RoleSimulateInstallPackages);
-    simulateRemovePackagesCB->setChecked(actions & Enum::RoleSimulateRemovePackages);
-    simulateUpdatePackagesCB->setChecked(actions & Enum::RoleSimulateUpdatePackages);
+    getRepositoryListCB->setChecked(actions & Transaction::RoleGetRepoList);
+    repositoryEnableCB->setChecked(actions & Transaction::RoleRepoEnable);
+    repositorySetEnableCB->setChecked(actions & Transaction::RoleRepoSetData);
+    whatProvidesCB->setChecked(actions & Transaction::RoleWhatProvides);
+    getPackagesCB->setChecked(actions & Transaction::RoleGetPackages);
+    simulateInstallFilesCB->setChecked(actions & Transaction::RoleSimulateInstallFiles);
+    simulateInstallPackagesCB->setChecked(actions & Transaction::RoleSimulateInstallPackages);
+    simulateRemovePackagesCB->setChecked(actions & Transaction::RoleSimulateRemovePackages);
+    simulateUpdatePackagesCB->setChecked(actions & Transaction::RoleSimulateUpdatePackages);
 
     // FILTERS - Setup filters
-    Enum::Filters filters = Client::instance()->filters();
-    installedCB->setChecked(filters & Enum::FilterInstalled);
-    guiCB->setChecked(filters & Enum::FilterGui);
+    Transaction::Filters filters = Daemon::filters();
+    installedCB->setChecked(filters & Transaction::FilterInstalled);
+    guiCB->setChecked(filters & Transaction::FilterGui);
 
-    developmentCB->setChecked(filters & Enum::FilterDevelopment);
-    freeCB->setChecked(filters & Enum::FilterFree);
+    developmentCB->setChecked(filters & Transaction::FilterDevel);
+    freeCB->setChecked(filters & Transaction::FilterFree);
 
-    visibleCB->setChecked(filters & Enum::FilterVisible);
-    supportedCB->setChecked(filters & Enum::FilterSupported);
+    visibleCB->setChecked(filters & Transaction::FilterVisible);
+    supportedCB->setChecked(filters & Transaction::FilterSupported);
 
-    newestCB->setChecked(filters & Enum::FilterNewest);
+    newestCB->setChecked(filters & Transaction::FilterNewest);
 }
 
 #include "BackendDetails.moc"

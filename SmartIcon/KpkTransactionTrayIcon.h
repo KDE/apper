@@ -26,7 +26,7 @@
 #include <kuiserverjobtracker.h>
 #include <kwidgetjobtracker.h>
 
-#include <QPackageKit>
+#include <Transaction>
 
 #include <QAction>
 
@@ -50,12 +50,12 @@ public slots:
     void checkTransactionList();
 
 private slots:
-    void transactionListChanged(const QList<PackageKit::Transaction*> &tids);
+    void transactionListChanged(const QStringList &tids);
     void createTransactionDialog(PackageKit::Transaction *t);
     void transactionDialogClosed();
-    void message(PackageKit::Enum::Message type, const QString &message);
-    void requireRestart(PackageKit::Enum::Restart type, QSharedPointer<PackageKit::Package>pkg);
-    void finished(PackageKit::Enum::Exit exit);
+    void message(PackageKit::Transaction::Message type, const QString &message);
+    void requireRestart(PackageKit::Package::Restart type, const Package &pkg);
+    void finished(PackageKit::Transaction::Exit exit);
     void transactionChanged();
     void logout();
 
@@ -70,7 +70,6 @@ private:
     void setCurrentTransaction(PackageKit::Transaction *transaction);
 
     TransactionTrayIcon *m_trayIcon;
-    Client              *m_client;
     QHash<QString, PkTransactionDialog *> m_transDialogs;
 
     Transaction *m_currentTransaction;
@@ -87,15 +86,15 @@ private:
     QAction *m_messagesAction;
 
     // Restart menu entry
-    Enum::Restart m_restartType;
+    Package::Restart m_restartType;
     QAction      *m_restartAction;
     QStringList   m_restartPackages;
 
     // Cache data for tooltip
-    Enum::Status  m_currentStatus;
-    Enum::Role    m_currentRole;
+    Transaction::Status  m_currentStatus;
+    Transaction::Role    m_currentRole;
     uint          m_currentProgress;
-    
+
     // cookie to suppress sleep
     int           m_inhibitCookie;
     QStringList   m_tids;

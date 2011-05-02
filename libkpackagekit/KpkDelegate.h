@@ -27,8 +27,6 @@
 
 #include <KIcon>
 
-#include <QPackageKit>
-
 /**
  * Delegate for displaying the packages
  */

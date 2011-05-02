@@ -22,14 +22,16 @@
 #define PK_INSTALL_PACKAGE_NAMES_H
 
 #include "KpkAbstractTask.h"
-#include <QPackageKit>
+
 #include <QDBusMessage>
+
+#include <Transaction>
 
 using namespace PackageKit;
 
 class PkInstallPackageNames : public KpkAbstractTask
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     PkInstallPackageNames(uint xid,
                           const QStringList &packages,
@@ -42,11 +44,11 @@ private slots:
     void start();
 
 private slots:
-    void resolveFinished(PackageKit::Enum::Exit);
-    void addPackage(QSharedPointer<PackageKit::Package> package);
+    void resolveFinished(PackageKit::Transaction::Exit);
+    void addPackage(const Package &package);
 
 private:
-    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
+    QList<Package> m_foundPackages;
     QStringList  m_packages;
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;

@@ -73,9 +73,8 @@ void PkInstallProvideFiles::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->searchFiles(m_args.first(),
-                                                         Enum::FilterArch |
-                                                         Enum::FilterNewest);
+        Transaction *t = new Transaction(this);
+        t->searchFiles(m_args.first(), Transaction::FilterArch | Transaction::FilterNewest);
         if (t->error()) {
             if (showWarning()) {
                 KMessageBox::sorryWId(parentWId(),
@@ -84,10 +83,10 @@ void PkInstallProvideFiles::start()
             }
             sendErrorFinished(Failed, "Failed to start search file transaction");
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                    this, SLOT(searchFinished(PackageKit::Enum::Exit)));
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                    this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
+            connect(t, SIGNAL(package(const Package &)),
+                    this, SLOT(addPackage(const Package &)));
             if (showProgress()) {
                 kTransaction()->setTransaction(t);
                 kTransaction()->show();
@@ -98,9 +97,9 @@ void PkInstallProvideFiles::start()
     }
 }
 
-void PkInstallProvideFiles::searchFinished(PackageKit::Enum::Exit status)
+void PkInstallProvideFiles::searchFinished(PackageKit::Transaction::Exit status)
 {
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         if (m_alreadyInstalled.size()) {
             if (showWarning()) {
                 KMessageBox::sorryWId(parentWId(),
@@ -132,12 +131,12 @@ void PkInstallProvideFiles::searchFinished(PackageKit::Enum::Exit status)
     }
 }
 
-void PkInstallProvideFiles::addPackage(QSharedPointer<PackageKit::Package> package)
+void PkInstallProvideFiles::addPackage(const Package &package)
 {
-    if (package->info() != Enum::InfoInstalled) {
+    if (package.info() != Package::InfoInstalled) {
         m_foundPackages.append(package);
     } else {
-        m_alreadyInstalled = package->name();
+        m_alreadyInstalled = package.name();
     }
 }
 

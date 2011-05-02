@@ -26,7 +26,7 @@
 #include <QLabel>
 #include <QAbstractSlider>
 
-#include <QPackageKit>
+#include <Package>
 
 using namespace PackageKit;
 
@@ -47,7 +47,7 @@ public:
     void clear();
 
 public slots:
-    void currentPackage(const QSharedPointer<PackageKit::Package> &package);
+    void currentPackage(const Package &package);
 
 private slots:
     void followBottom(int value);

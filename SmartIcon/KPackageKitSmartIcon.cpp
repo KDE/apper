@@ -30,6 +30,8 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 
+#include <Daemon>
+
 #define MINUTE 600000
 
 using namespace kpackagekit;
@@ -45,7 +47,7 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
             this, SLOT(prepareToClose()));
 
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Client::instance()->setHints("locale=" + locale);
+    Daemon::setHints("locale=" + locale);
 
     // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);

@@ -30,8 +30,8 @@
 
 class KpkAbstractTask : public QWidget
 {
-Q_OBJECT
-Q_ENUMS(Errors)
+    Q_OBJECT
+    Q_ENUMS(Errors)
 public:
     KpkAbstractTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent = 0);
     ~KpkAbstractTask();

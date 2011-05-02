@@ -21,12 +21,9 @@
 #ifndef BACKEND_DETAILS_H
 #define BACKEND_DETAILS_H
 
-#include <QPackageKit>
 #include <KDialog>
 
 #include "ui_BackendDetails.h"
-
-using namespace PackageKit;
 
 class BackendDetails : public KDialog, public Ui::BackendDetails
 {

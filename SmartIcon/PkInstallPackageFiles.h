@@ -23,9 +23,6 @@
 
 #include "KpkAbstractTask.h"
 #include "PkTransactionDialog.h"
-#include <QPackageKit>
-
-using namespace PackageKit;
 
 class KpkSimulateModel;
 class PkInstallPackageFiles : public KpkAbstractTask

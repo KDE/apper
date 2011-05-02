@@ -23,7 +23,7 @@
 
 #include <KpkAbstractIsRunning.h>
 
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -40,7 +40,7 @@ public slots:
     void removeTransactionWatcher(const QString &tid);
 
 private slots:
-    void errorCode(PackageKit::Enum::Error, const QString&);
+    void errorCode(PackageKit::Transaction::Error, const QString &);
     void errorActivated(uint action);
     void finished();
     void showError();

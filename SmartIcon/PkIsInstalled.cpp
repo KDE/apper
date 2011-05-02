@@ -42,8 +42,8 @@ PkIsInstalled::~PkIsInstalled()
 
 void PkIsInstalled::start()
 {
-    Transaction *t = Client::instance()->resolve(m_packageName,
-                                                 Enum::FilterInstalled);
+    Transaction *t = new Transaction(this);
+    t->resolve(m_packageName, Transaction::FilterInstalled);
     if (t->error()) {
         if (showWarning()) {
             KMessageBox::sorryWId(parentWId(),
@@ -52,10 +52,10 @@ void PkIsInstalled::start()
         }
         sendErrorFinished(Failed, "Failed to start resolve transaction");
     } else {
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(searchFinished(PackageKit::Enum::Exit)));
-        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
+        connect(t, SIGNAL(package(const Package &)),
+                this, SLOT(addPackage(const Package &)));
         if (showProgress()) {
             kTransaction()->setTransaction(t);
             kTransaction()->show();
@@ -63,21 +63,21 @@ void PkIsInstalled::start()
     }
 }
 
-void PkIsInstalled::searchFinished(PackageKit::Enum::Exit status)
+void PkIsInstalled::searchFinished(PackageKit::Transaction::Exit status)
 {
     kDebug();
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         QDBusMessage reply = m_message.createReply();
         reply << (bool) m_foundPackages.size();
         sendMessageFinished(reply);
-    } else if (status == Enum::ExitCancelled) {
+    } else if (status == Transaction::ExitCancelled) {
         sendErrorFinished(Cancelled, i18n("User canceled the transaction"));
     } else {
         sendErrorFinished(InternalError, i18n("An unknown error happened"));
     }
 }
 
-void PkIsInstalled::addPackage(QSharedPointer<PackageKit::Package> package)
+void PkIsInstalled::addPackage(const Package &package)
 {
     m_foundPackages.append(package);
 }

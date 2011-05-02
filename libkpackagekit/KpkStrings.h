@@ -23,30 +23,30 @@
 
 #include <kdemacros.h>
 
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
 namespace KpkStrings
 {
-    KDE_EXPORT QString finished(Enum::Exit status);
-    KDE_EXPORT QString infoPresent(Enum::Info info);
-    KDE_EXPORT QString infoPast(Enum::Info info);
-    KDE_EXPORT QString error(Enum::Error error);
-    KDE_EXPORT QString errorMessage(Enum::Error error);
-    KDE_EXPORT QString message(Enum::Message type);
-    KDE_EXPORT QString status(Enum::Status status);
-    KDE_EXPORT QString statusPast(Enum::Status status);
-    KDE_EXPORT QString groups(Enum::Group group);
-    KDE_EXPORT QString info(Enum::Info state);
+    KDE_EXPORT QString finished(Transaction::Exit status);
+    KDE_EXPORT QString infoPresent(Package::Info info);
+    KDE_EXPORT QString infoPast(Package::Info info);
+    KDE_EXPORT QString error(Transaction::Error error);
+    KDE_EXPORT QString errorMessage(Transaction::Error error);
+    KDE_EXPORT QString message(Transaction::Message type);
+    KDE_EXPORT QString status(Transaction::Status status);
+    KDE_EXPORT QString statusPast(Transaction::Status status);
+    KDE_EXPORT QString groups(Package::Group group);
+    KDE_EXPORT QString info(Package::Info state);
     KDE_EXPORT QString packageQuantity(bool updates, int packages, int selected);
-    KDE_EXPORT QString updateState(Enum::UpdateState value);
-    KDE_EXPORT QString restartType(Enum::Restart value);
-    KDE_EXPORT QString restartTypeFuture(Enum::Restart value);
-    KDE_EXPORT QString action(Enum::Role action);
-    KDE_EXPORT QString actionPast(Enum::Role action);
-    KDE_EXPORT QString mediaMessage(Enum::MediaType value, const QString &text);
-    KDE_EXPORT QString daemonError(Client::DaemonError value);
+    KDE_EXPORT QString updateState(Package::UpdateState value);
+    KDE_EXPORT QString restartType(Package::Restart value);
+    KDE_EXPORT QString restartTypeFuture(Package::Restart value);
+    KDE_EXPORT QString action(Transaction::Role action);
+    KDE_EXPORT QString actionPast(Transaction::Role action);
+    KDE_EXPORT QString mediaMessage(Transaction::MediaType value, const QString &text);
+    KDE_EXPORT QString daemonError(Transaction::InternalError value);
 };
 
 #endif

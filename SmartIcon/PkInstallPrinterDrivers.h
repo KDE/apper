@@ -23,13 +23,13 @@
 
 #include "KpkAbstractTask.h"
 
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
 class PkInstallPrinterDrivers : public KpkAbstractTask
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     PkInstallPrinterDrivers(uint xid,
                            const QStringList &resources,
@@ -42,12 +42,12 @@ public slots:
     void start();
 
 private slots:
-    void whatProvidesFinished(PackageKit::Enum::Exit status, uint runtime);
-    void addPackage(QSharedPointer<PackageKit::Package>package);
+    void whatProvidesFinished(PackageKit::Transaction::Exit status, uint runtime);
+    void addPackage(const Package &package);
 
 private:
-    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
-    QStringList     m_resources;
+    QList<Package> m_foundPackages;
+    QStringList    m_resources;
 };
 
 #endif

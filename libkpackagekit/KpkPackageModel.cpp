@@ -57,35 +57,34 @@ KpkPackageModel::KpkPackageModel(QObject *parent)
     m_installedEmblem = KpkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 }
 
-void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &package,
-                                 bool selected)
+void KpkPackageModel::addPackage(const Package &package, bool selected)
 {
-    if (package->info() == Enum::InfoBlocked) {
+    if (package.info() == Package::InfoBlocked) {
         return;
     }
 
 #ifdef HAVE_APPINSTALL
     QList<QStringList> data;
     if (!m_checkable) {
-        data = AppInstall::instance()->applications(package->name());
+        data = AppInstall::instance()->applications(package.name());
 
         foreach (const QStringList &list, data) {
             InternalPackage iPackage;
             iPackage.isPackage   = false;
             iPackage.name        = list.at(AppInstall::AppName);
             if (iPackage.name.isEmpty()) {
-                iPackage.name = package->name();
+                iPackage.name = package.name();
             }
             iPackage.summary     = list.at(AppInstall::AppSummary);
             if (iPackage.summary.isEmpty()) {
-                iPackage.summary = package->summary();
+                iPackage.summary = package.summary();
             }
             iPackage.icon        = list.at(AppInstall::AppIcon);
-            iPackage.version     = package->version();
-            iPackage.arch        = package->arch();
-            iPackage.id          = package->id();
+            iPackage.version     = package.version();
+            iPackage.arch        = package.arch();
+            iPackage.id          = package.id();
             iPackage.appId       = list.at(AppInstall::AppId);
-            iPackage.info        = package->info();
+            iPackage.info        = package.info();
 
             if (selected) {
                 checkPackage(iPackage, false);
@@ -98,15 +97,15 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
 #endif //HAVE_APPINSTALL
 
         InternalPackage iPackage;
-        iPackage.name        = package->name();
-        iPackage.summary     = package->summary();
-        iPackage.version     = package->version();
-        iPackage.arch        = package->arch();
-        iPackage.id          = package->id();
-        iPackage.info        = package->info();
+        iPackage.name        = package.name();
+        iPackage.summary     = package.summary();
+        iPackage.version     = package.version();
+        iPackage.arch        = package.arch();
+        iPackage.id          = package.id();
+        iPackage.info        = package.info();
 
 #ifdef HAVE_APPINSTALL
-        iPackage.icon = AppInstall::instance()->genericIcon(package->name());
+        iPackage.icon = AppInstall::instance()->genericIcon(package.name());
         iPackage.isPackage = true;
 #else
         iPackage.icon = package->iconPath();
@@ -138,16 +137,16 @@ void KpkPackageModel::addPackage(const QSharedPointer<PackageKit::Package> &pack
 #endif //HAVE_APPINSTALL
 }
 
-void KpkPackageModel::addPackages(const QList<QSharedPointer<PackageKit::Package> > &packages,
+void KpkPackageModel::addPackages(const QList<Package> &packages,
                                   bool selected)
 {
-    foreach(const QSharedPointer<PackageKit::Package> &package, packages) {
+    foreach(const Package &package, packages) {
         addPackage(package, selected);
     }
     finished();
 }
 
-void KpkPackageModel::addSelectedPackage(const QSharedPointer<PackageKit::Package> &package)
+void KpkPackageModel::addSelectedPackage(const Package &package)
 {
     addPackage(package, true);
 }
@@ -241,8 +240,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
                 }
             }
 
-            if (package.info == Enum::InfoInstalled ||
-                package.info == Enum::InfoCollectionInstalled) {
+            if (package.info == Package::InfoInstalled ||
+                package.info == Package::InfoCollectionInstalled) {
                 QPainter painter(&icon);
                 QPoint startPoint;
                 // bottom right corner
@@ -277,16 +276,16 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case Qt::ForegroundRole:
-        if (package.info != Enum::InfoInstalled &&
-            package.info != Enum::InfoCollectionInstalled) {
+        if (package.info != Package::InfoInstalled &&
+            package.info != Package::InfoCollectionInstalled) {
             QColor foregroundColor = QApplication::palette().color(QPalette::Text);
             foregroundColor.setAlphaF(0.75);
             return QBrush(foregroundColor);
         }
         break;
     case Qt::FontRole:
-        if (package.info != Enum::InfoInstalled &&
-            package.info != Enum::InfoCollectionInstalled) {
+        if (package.info != Package::InfoInstalled &&
+            package.info != Package::InfoCollectionInstalled) {
             QFont font;
             font.setItalic(true);
             return font;
@@ -314,8 +313,8 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     case InfoRole:
         return package.info;
     case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
-        if (package.info == Enum::InfoInstalled ||
-            package.info == Enum::InfoCollectionInstalled) {
+        if (package.info == Package::InfoInstalled ||
+            package.info == Package::InfoCollectionInstalled) {
             return i18n("To be Removed");
         } else {
             return i18n("To be Installed");
@@ -415,8 +414,8 @@ void KpkPackageModel::clearSelectedNotPresent()
 void KpkPackageModel::uncheckInstalledPackages()
 {
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
-        if (package.info == Enum::InfoInstalled ||
-            package.info == Enum::InfoCollectionInstalled) {
+        if (package.info == Package::InfoInstalled ||
+            package.info == Package::InfoCollectionInstalled) {
             uncheckPackage(package, true);
         }
     }
@@ -425,8 +424,8 @@ void KpkPackageModel::uncheckInstalledPackages()
 void KpkPackageModel::uncheckAvailablePackages()
 {
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
-        if (package.info == Enum::InfoAvailable ||
-            package.info == Enum::InfoCollectionAvailable) {
+        if (package.info == Package::InfoAvailable ||
+            package.info == Package::InfoCollectionAvailable) {
             uncheckPackage(package, true);
         }
     }
@@ -536,12 +535,11 @@ void KpkPackageModel::setAllChecked(bool checked)
     emit changed(!m_checkedPackages.isEmpty());
 }
 
-QList<QSharedPointer<PackageKit::Package> > KpkPackageModel::selectedPackages() const
+QList<Package> KpkPackageModel::selectedPackages() const
 {
-    QList<QSharedPointer<PackageKit::Package> > list;
+    QList<Package> list;
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
-        QSharedPointer<Package> pkg = QSharedPointer<Package>(new Package(package.id, package.info, package.summary));
-        list << pkg;
+        list << Package(package.id, package.info, package.summary);
     }
     return list;
 }

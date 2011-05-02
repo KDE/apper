@@ -31,6 +31,12 @@
 
 #include <KDebug>
 
+#include <QWeakPointer>
+#include <QFileInfo>
+#include <QCoreApplication>
+
+#include <Daemon>
+
 PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
                                              const QStringList &files,
                                              const QString &interaction,
@@ -48,7 +54,7 @@ PkInstallPackageFiles::~PkInstallPackageFiles()
 void PkInstallPackageFiles::start()
 {
     QStringList notFiles;
-    QStringList mimeTypes = Client::instance()->mimeTypes();
+    QStringList mimeTypes = Daemon::mimeTypes();
     QString lastDirectory = m_urls.at(0).directory();
     QString lastDirectoryNotFiles = m_urls.at(0).directory();
     bool showFullPath = false;
@@ -127,11 +133,11 @@ void PkInstallPackageFiles::start()
                                                     installBt);
         }
         if (ret == KMessageBox::Yes) {
-            if (Client::instance()->actions() & Enum::RoleSimulateInstallFiles &&
+            if (Daemon::actions() & Transaction::RoleSimulateInstallFiles &&
                 showConfirmDeps()) {
                 // TODO
-                Transaction *t;
-                t = Client::instance()->simulateInstallFiles(m_files);
+                Transaction *t = new Transaction(this);
+                t->simulateInstallFiles(m_files);
                 if (t->error()) {
                     // Send the error FIRST otherwise 't' might get deleted
                     sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
@@ -174,8 +180,9 @@ void PkInstallPackageFiles::installFiles()
     SET_PROXY
     QString socket;
     socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    Client::instance()->setHints("frontend-socket=" + socket);
-    Transaction *t = Client::instance()->installFiles(m_files, true);
+    Transaction *t = new Transaction(this);
+    t->setHints("frontend-socket=" + socket);
+    t->installFiles(m_files, true);
     if (t->error()) {
         if (showWarning()) {
             KMessageBox::sorryWId(parentWId(),
@@ -196,16 +203,16 @@ void PkInstallPackageFiles::installFiles()
 void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status)
 {
     kDebug() << "Finished.";
-    if (kTransaction()->transaction()->role() == Enum::RoleSimulateInstallFiles) {
+    if (kTransaction()->transaction()->role() == Transaction::RoleSimulateInstallFiles) {
         if (status == PkTransaction::Success) {
             if (m_installFilesModel->rowCount() > 0) {
-                QPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
-                if (frm->exec() == QDialog::Accepted) {
+                QWeakPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
+                if (frm.data()->exec() == QDialog::Accepted) {
                     installFiles();
                 } else {
                     sendErrorFinished(Cancelled, "Aborted");
                 }
-                delete frm;
+                frm.data()->deleteLater();
             } else {
                 installFiles();
             }

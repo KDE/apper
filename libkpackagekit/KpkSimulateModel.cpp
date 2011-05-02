@@ -26,11 +26,10 @@
 
 using namespace PackageKit;
 
-KpkSimulateModel::KpkSimulateModel(QObject *parent,
-                                   QList<QSharedPointer<PackageKit::Package> > skipPackages)
+KpkSimulateModel::KpkSimulateModel(QObject *parent, QList<Package> skipPackages)
 : QAbstractTableModel(parent),
   m_skipPackages(skipPackages),
-  m_currentInfo(Enum::UnknownInfo)
+  m_currentInfo(Package::UnknownInfo)
 {
 //     setSortRole(Qt::DisplayRole);
 }
@@ -38,46 +37,46 @@ KpkSimulateModel::KpkSimulateModel(QObject *parent,
 QVariant KpkSimulateModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() ||
-        m_currentInfo == Enum::UnknownInfo ||
+        m_currentInfo == Package::UnknownInfo ||
         index.row() >= m_packages[m_currentInfo].size()) {
         return QVariant();
     }
 
-    QSharedPointer<PackageKit::Package>p = m_packages[m_currentInfo].at(index.row());
+    Package p = m_packages[m_currentInfo].at(index.row());
     switch(index.column()) {
     case 0:
         switch (role) {
         case Qt::DisplayRole:
-            return p->name();
+            return p.name();
         case Qt::DecorationRole:
             return KpkIcons::getIcon("package");
         case Qt::ToolTipRole:
-            return p->summary();
+            return p.summary();
         default:
             return QVariant();
         }
         break;
     case 1:
         if (role == Qt::DisplayRole) {
-            return p->version();
+            return p.version();
         }
         break;
     }
     return QVariant();
 }
 
-Enum::Info KpkSimulateModel::currentInfo() const
+Package::Info KpkSimulateModel::currentInfo() const
 {
     return m_currentInfo;
 }
 
-void KpkSimulateModel::setCurrentInfo(Enum::Info currentInfo)
+void KpkSimulateModel::setCurrentInfo(Package::Info currentInfo)
 {
     m_currentInfo = currentInfo;
     reset();
 }
 
-int KpkSimulateModel::countInfo(Enum::Info info)
+int KpkSimulateModel::countInfo(Package::Info info)
 {
     if (m_packages.contains(info)) {
         return m_packages[info].size();
@@ -86,29 +85,29 @@ int KpkSimulateModel::countInfo(Enum::Info info)
     }
 }
 
-void KpkSimulateModel::addPackage(QSharedPointer<PackageKit::Package> p)
+void KpkSimulateModel::addPackage(const Package &p)
 {
-    if (p->info() == Enum::InfoFinished ||
-        p->info() == Enum::InfoCleanup) {
+    if (p.info() == Package::InfoFinished ||
+        p.info() == Package::InfoCleanup) {
         return;
     }
 
-    foreach (const QSharedPointer<PackageKit::Package> pkg, m_skipPackages) {
-        if (pkg->id() == p->id()) {
+    foreach (const Package pkg, m_skipPackages) {
+        if (pkg.id() == p.id()) {
             // found a package to skip
             return;
         }
     }
 
-    if (m_currentInfo == Enum::UnknownInfo) {
-        m_currentInfo = p->info();
+    if (m_currentInfo == Package::UnknownInfo) {
+        m_currentInfo = p.info();
     }
-    m_packages[p->info()].append(p);
+    m_packages[p.info()].append(p);
 }
 
 int KpkSimulateModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && m_currentInfo == Enum::UnknownInfo) {
+    if (parent.isValid() && m_currentInfo == Package::UnknownInfo) {
         return 0;
     } else {
         return m_packages[m_currentInfo].size();
@@ -117,7 +116,7 @@ int KpkSimulateModel::rowCount(const QModelIndex &parent) const
 
 int KpkSimulateModel::columnCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && m_currentInfo == Enum::UnknownInfo) {
+    if (parent.isValid() && m_currentInfo == Package::UnknownInfo) {
         return 0;
     } else {
         return 2;
@@ -141,6 +140,6 @@ QVariant KpkSimulateModel::headerData(int section, Qt::Orientation orientation, 
 void KpkSimulateModel::clear()
 {
     m_packages.clear();
-    m_currentInfo = Enum::UnknownInfo;
+    m_currentInfo = Package::UnknownInfo;
     reset();
 }

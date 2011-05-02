@@ -25,7 +25,8 @@
 
 #include <KpkIcons.h>
 #include <KpkStrings.h>
-#include <QPackageKit>
+
+#include <Daemon>
 
 #include <KMenu>
 #include <KMessageBox>
@@ -72,7 +73,7 @@ void TransactionHistory::refreshList()
 {
     // Refresh transaction list
     m_transactionModel->clear();
-    Transaction *transaction = new Transaction(QString());
+    Transaction *transaction = new Transaction(this);
     connect(transaction, SIGNAL(transaction(PackageKit::Transaction *)),
             m_transactionModel, SLOT(addTransaction(PackageKit::Transaction *)));
     transaction->getOldTransactions(0);
@@ -82,7 +83,7 @@ void TransactionHistory::refreshList()
 
     // Refresh time
     QString text;
-    uint time = Client::instance()->getTimeSinceAction(Enum::RoleRefreshCache) * 1000;
+    uint time = Daemon::getTimeSinceAction(Transaction::RoleRefreshCache) * 1000;
     text = i18n("Time since last cache refresh: %1", KGlobal::locale()->prettyFormatDuration(time));
     timeCacheLabel->setText(text);
 }

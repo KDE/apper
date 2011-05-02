@@ -24,7 +24,8 @@
 #include <KDialog>
 
 #include "ui_KpkLicenseAgreement.h"
-#include <QPackageKit>
+
+#include <Eula>
 
 using namespace PackageKit;
 
@@ -32,7 +33,7 @@ class KpkLicenseAgreement : public KDialog, Ui::KpkLicenseAgreement
 {
     Q_OBJECT
 public:
-    explicit KpkLicenseAgreement(PackageKit::Client::EulaInfo info, bool modal = true, QWidget *parent = 0);
+    explicit KpkLicenseAgreement(Eula eula, bool modal = true, QWidget *parent = 0);
     ~KpkLicenseAgreement();
 };
 

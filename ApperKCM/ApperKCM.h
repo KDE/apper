@@ -33,7 +33,7 @@
 #include <KToolBarPopupAction>
 #include <KCategorizedSortFilterProxyModel>
 
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -76,11 +76,11 @@ private slots:
     void on_homeView_clicked(const QModelIndex &index);
 
     void finished();
-    void errorCode(PackageKit::Enum::Error error, const QString &detail);
+    void errorCode(PackageKit::Transaction::Error error, const QString &detail);
 
     void checkChanged();
     void changed();
-    
+
     void updatePackages(PkTransaction *transaction);
 
 protected:
@@ -111,18 +111,18 @@ private:
     KIcon m_cancelIcon;
 
     KpkFiltersMenu *m_filtersMenu;
-    Enum::Roles m_roles;
+    Transaction::Roles m_roles;
 
     TransactionHistory *m_history;
 
     // Old search cache
-    Enum::Role    m_searchRole;
+    Transaction::Role    m_searchRole;
     QString       m_searchString;
     QString       m_searchGroupCategory;
-    Enum::Group   m_searchGroup;
+    Package::Group   m_searchGroup;
     QModelIndex   m_searchParentCategory;
     QStringList   m_searchCategory;
-    Enum::Filters m_searchFilters;
+    Transaction::Filters m_searchFilters;
 };
 
 #endif

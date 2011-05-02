@@ -80,11 +80,11 @@ void PkRemovePackageByFiles::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = new Transaction(QString());
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(searchFinished(PackageKit::Enum::Exit)));
-        connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
-        t->searchFiles(m_files, Enum::FilterInstalled);
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
+        connect(t, SIGNAL(package(const Package &)),
+                this, SLOT(addPackage(const Package &)));
+        t->searchFiles(m_files, Transaction::FilterInstalled);
         if (t->error()) {
             QString msg(i18n("Failed to start search file transaction"));
             if (showWarning()) {
@@ -104,10 +104,10 @@ void PkRemovePackageByFiles::start()
     }
 }
 
-void PkRemovePackageByFiles::searchFinished(PackageKit::Enum::Exit status)
+void PkRemovePackageByFiles::searchFinished(PackageKit::Transaction::Exit status)
 {
     kDebug() << "Finished.";
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
             kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
@@ -132,7 +132,7 @@ void PkRemovePackageByFiles::searchFinished(PackageKit::Enum::Exit status)
     }
 }
 
-void PkRemovePackageByFiles::addPackage(QSharedPointer<PackageKit::Package> package)
+void PkRemovePackageByFiles::addPackage(const Package &package)
 {
     m_foundPackages.append(package);
 }

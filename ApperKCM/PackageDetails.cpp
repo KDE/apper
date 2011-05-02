@@ -39,11 +39,14 @@
 #include <QPlainTextEdit>
 #include <QScrollBar>
 #include <QPainter>
+#include <QAbstractAnimation>
 
 #include <KIO/Job>
 #include <KMenu>
 
 #include <KDebug>
+
+#include <Daemon>
 
 #include "GraphicsOpacityDropShadowEffect.h"
 
@@ -65,25 +68,25 @@ PackageDetails::PackageDetails(QWidget *parent)
     setupUi(this);
     connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 
-    Enum::Roles roles = Client::instance()->actions();
+    Transaction::Roles roles = Daemon::actions();
     KMenu *menu = new KMenu(i18n("Display"), this);
     m_actionGroup = new QActionGroup(this);
     QAction *action = 0;
 
     // we check to see which roles are supported by the backend
     // if so we ask for information and create the containers
-    if (roles & Enum::RoleGetDetails) {
+    if (roles & Transaction::RoleGetDetails) {
         action = menu->addAction(i18n("Description"));
         action->setCheckable(true);
-        action->setData(Enum::RoleGetDetails);
+        action->setData(Transaction::RoleGetDetails);
         m_actionGroup->addAction(action);
         descriptionW->setWidgetResizable(true);
     }
 
-    if (roles & Enum::RoleGetDepends) {
+    if (roles & Transaction::RoleGetDepends) {
         action = menu->addAction(i18n("Depends On"));
         action->setCheckable(true);
-        action->setData(Enum::RoleGetDepends);
+        action->setData(Transaction::RoleGetDepends);
         m_actionGroup->addAction(action);
         // Sets a transparent background
         QWidget *actionsViewport = dependsOnLV->viewport();
@@ -106,10 +109,10 @@ PackageDetails::PackageDetails(QWidget *parent)
         dependsOnLV->header()->hideSection(4);
     }
 
-    if (roles & Enum::RoleGetRequires) {
+    if (roles & Transaction::RoleGetRequires) {
         action = menu->addAction(i18n("Required By"));
         action->setCheckable(true);
-        action->setData(Enum::RoleGetRequires);
+        action->setData(Transaction::RoleGetRequires);
         m_actionGroup->addAction(action);
         // Sets a transparent background
         QWidget *actionsViewport = requiredByLV->viewport();
@@ -132,10 +135,10 @@ PackageDetails::PackageDetails(QWidget *parent)
         requiredByLV->header()->hideSection(4);
     }
 
-    if (roles & Enum::RoleGetFiles) {
+    if (roles & Transaction::RoleGetFiles) {
         action = menu->addAction(i18n("File List"));
         action->setCheckable(true);
-        action->setData(Enum::RoleGetFiles);
+        action->setData(Transaction::RoleGetFiles);
         m_actionGroup->addAction(action);
         // Sets a transparent background
         QWidget *actionsViewport = filesPTE->viewport();
@@ -235,9 +238,9 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_index     = index;
     m_packageId = pkgId;
     m_appId     = appId;
-    Enum::Info info = static_cast<Enum::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+    Package::Info info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
 
-    m_package       = QSharedPointer<Package>(new Package(m_packageId, info, QString()));;
+    m_package       = Package(m_packageId, info, QString());
     m_hasDetails    = false;
     m_hasFileList   = false;
     m_hasRequires   = false;
@@ -247,7 +250,7 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_currentIcon       = KpkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
     m_appName           = index.data(KpkPackageModel::NameRole).toString();
 
-    m_currentScreenshot = AppInstall::instance()->thumbnail(m_package->name());
+    m_currentScreenshot = AppInstall::instance()->thumbnail(m_package.name());
     if (!m_currentScreenshot.isEmpty()) {
         if (m_screenshotPath.contains(m_currentScreenshot)) {
             display();
@@ -273,7 +276,7 @@ void PackageDetails::setPackage(const QModelIndex &index)
 void PackageDetails::on_screenshotL_clicked()
 {
     QString screenshot;
-    screenshot = AppInstall::instance()->screenshot(m_package->name());
+    screenshot = AppInstall::instance()->screenshot(m_package.name());
     if (screenshot.isEmpty()) {
         return;
     }
@@ -309,38 +312,38 @@ void PackageDetails::actionActivated(QAction *action)
                    m_requiresModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
         disconnect(m_transaction, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
                    this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
-        disconnect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    this, SLOT(finished()));
         m_transaction = 0;
     }
 
     // Check to see if we don't already have the required data
     uint role = action->data().toUInt();
-    if (role == Enum::RoleGetDetails &&
-        m_package->hasDetails()) {
+    if (role == Transaction::RoleGetDetails &&
+        m_package.hasDetails()) {
         description(m_package);
         return;
     }
     switch (role) {
-    case Enum::RoleGetDetails:
-        if (m_package->hasDetails()) {
+    case Transaction::RoleGetDetails:
+        if (m_package.hasDetails()) {
             description(m_package);
             return;
         }
         break;
-    case Enum::RoleGetDepends:
+    case Transaction::RoleGetDepends:
         if (m_hasDepends) {
             display();
             return;
         }
         break;
-    case Enum::RoleGetRequires:
+    case Transaction::RoleGetRequires:
         if (m_hasRequires) {
             display();
             return;
         }
         break;
-    case Enum::RoleGetFiles:
+    case Transaction::RoleGetFiles:
         if (m_hasFileList) {
             display();
             return;
@@ -349,32 +352,32 @@ void PackageDetails::actionActivated(QAction *action)
     }
 
     // we don't have the data
-    m_transaction = new Transaction(QString());
-    connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    m_transaction = new Transaction(this);
+    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(finished()));
     switch (role) {
-    case Enum::RoleGetDetails:
+    case Transaction::RoleGetDetails:
         connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
                 this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
         m_transaction->getDetails(m_package);
         break;
-    case Enum::RoleGetDepends:
+    case Transaction::RoleGetDepends:
         m_dependsModel->clear();
         connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 m_dependsModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
-        connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 m_dependsModel, SLOT(finished()));
-        m_transaction->getDepends(m_package, PackageKit::Enum::NoFilter, false);
+        m_transaction->getDepends(m_package, Transaction::FilterNone, false);
         break;
-    case Enum::RoleGetRequires:
+    case Transaction::RoleGetRequires:
         m_requiresModel->clear();
         connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
                 m_requiresModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
-        connect(m_transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 m_requiresModel, SLOT(finished()));
-        m_transaction->getRequires(m_package, PackageKit::Enum::NoFilter, false);
+        m_transaction->getRequires(m_package, Transaction::FilterNone, false);
         break;
-    case Enum::RoleGetFiles:
+    case Transaction::RoleGetFiles:
         m_currentFileList.clear();
         connect(m_transaction, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
                 this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
@@ -450,13 +453,13 @@ void PackageDetails::display()
         {
             bool fadeIn = false;
             switch (m_actionGroup->checkedAction()->data().toUInt()) {
-            case Enum::RoleGetDetails:
+            case Transaction::RoleGetDetails:
                 if (m_hasDetails) {
                     setupDescription();
                     fadeIn = true;
                 }
                 break;
-            case Enum::RoleGetDepends:
+            case Transaction::RoleGetDepends:
                 if (m_hasDepends) {
                     if (stackedWidget->currentWidget() != pageDepends) {
                         stackedWidget->setCurrentWidget(pageDepends);
@@ -464,7 +467,7 @@ void PackageDetails::display()
                     fadeIn = true;
                 }
                 break;
-            case Enum::RoleGetRequires:
+            case Transaction::RoleGetRequires:
                 if (m_hasRequires) {
                     if (stackedWidget->currentWidget() != pageRequired) {
                         stackedWidget->setCurrentWidget(pageRequired);
@@ -472,7 +475,7 @@ void PackageDetails::display()
                     fadeIn = true;
                 }
                 break;
-            case Enum::RoleGetFiles:
+            case Transaction::RoleGetFiles:
                 if (m_hasFileList) {
                     filesPTE->clear();
                     if (m_currentFileList.isEmpty()) {
@@ -521,7 +524,7 @@ void PackageDetails::setupDescription()
         stackedWidget->setCurrentWidget(pageDescription);
     }
 
-    if (!m_package->hasDetails()) {
+    if (!m_package.hasDetails()) {
         // Oops we don't have any details
         descriptionL->setText(i18n("Could not fetch software details"));
         descriptionL->show();
@@ -534,19 +537,16 @@ void PackageDetails::setupDescription()
         iconL->clear();
     }
 
-    //format and show description
-    Package::Details *details = m_package->details();
-
-    if (!details->description().isEmpty()) {
-        descriptionL->setText(details->description().replace('\n', "<br>"));
+    if (!m_package.description().isEmpty()) {
+        descriptionL->setText(m_package.description().replace('\n', "<br>"));
         descriptionL->show();
     } else {
         descriptionL->clear();
     }
 
-    if (!details->url().isEmpty()) {
-        homepageL->setText("<a href=\"" + details->url() + "\">" +
-                           details->url() + "</a>");
+    if (!m_package.url().isEmpty()) {
+        homepageL->setText("<a href=\"" + m_package.url() + "\">" +
+                           m_package.url() + "</a>");
         homepageL->show();
     } else {
         homepageL->hide();
@@ -579,37 +579,37 @@ void PackageDetails::setupDescription()
         pathL->show();
     }
 
-//     if (details->group() != Enum::UnknownGroup) {
+//     if (details->group() != Package::UnknownGroup) {
 // //         description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
 // //                     + KpkStrings::groups(details->group())
 // //                     + "</td></tr>";
 //     }
 
-    if (!details->license().isEmpty() && details->license() != "unknown") {
+    if (!m_package.license().isEmpty() && m_package.license() != "unknown") {
         // We have a license, check if we have and should show show package version
-        if (!m_hideVersion && !m_package->version().isEmpty()) {
-            licenseL->setText(m_package->version() + " - " + details->license());
+        if (!m_hideVersion && !m_package.version().isEmpty()) {
+            licenseL->setText(m_package.version() + " - " + m_package.license());
         } else {
-            licenseL->setText(details->license());
+            licenseL->setText(m_package.license());
         }
         licenseL->show();
     } else if (!m_hideVersion) {
-        licenseL->setText(m_package->version());
+        licenseL->setText(m_package.version());
         licenseL->show();
     } else {
         licenseL->hide();
     }
 
-    if (details->size() > 0) {
-        QString size = KGlobal::locale()->formatByteSize(details->size());
-        if (!m_hideArch && !m_package->arch().isEmpty()) {
-            sizeL->setText(size + " (" + m_package->arch() + ')');
+    if (m_package.size() > 0) {
+        QString size = KGlobal::locale()->formatByteSize(m_package.size());
+        if (!m_hideArch && !m_package.arch().isEmpty()) {
+            sizeL->setText(size + " (" + m_package.arch() + ')');
         } else {
             sizeL->setText(size);
         }
         sizeL->show();
-    } else if (!m_hideArch && !m_package->arch().isEmpty()) {
-        sizeL->setText(m_package->arch());
+    } else if (!m_hideArch && !m_package.arch().isEmpty()) {
+        sizeL->setText(m_package.arch());
     } else {
         sizeL->hide();
     }
@@ -679,7 +679,7 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
     return ret;
 }
 
-void PackageDetails::description(const QSharedPointer<PackageKit::Package> &package)
+void PackageDetails::description(const Package &package)
 {
     m_package = package;
 }
@@ -693,13 +693,13 @@ void PackageDetails::finished()
 
     Transaction *transaction = qobject_cast<Transaction*>(sender());
     if (transaction) {
-        if (transaction->role() == Enum::RoleGetDetails) {
+        if (transaction->role() == Transaction::RoleGetDetails) {
             m_hasDetails  = true;
-        } else if (transaction->role() == Enum::RoleGetFiles) {
+        } else if (transaction->role() == Transaction::RoleGetFiles) {
             m_hasFileList = true;
-        } else if (transaction->role() == Enum::RoleGetRequires) {
+        } else if (transaction->role() == Transaction::RoleGetRequires) {
             m_hasRequires = true;
-        } else if (transaction->role() == Enum::RoleGetDepends) {
+        } else if (transaction->role() == Transaction::RoleGetDepends) {
             m_hasDepends  = true;
         } else {
             return;
@@ -709,7 +709,7 @@ void PackageDetails::finished()
     }
 }
 
-void PackageDetails::files(QSharedPointer<PackageKit::Package> package, const QStringList &files)
+void PackageDetails::files(const Package &package, const QStringList &files)
 {
     Q_UNUSED(package)
 

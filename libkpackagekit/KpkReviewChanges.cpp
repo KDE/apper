@@ -26,7 +26,9 @@
 
 #include <KDebug>
 
-#include <KpkMacros.h>
+#include <Daemon>
+
+#include "KpkMacros.h"
 #include "KpkStrings.h"
 #include "KpkEnum.h"
 #include "KpkRequirements.h"
@@ -46,18 +48,16 @@ public:
     KpkSimulateModel *installPkgModel, *removePkgModel;
     KpkDelegate *pkgDelegate;
 
-    Client *client;
+    QList<Package> remPackages;
+    QList<Package> addPackages;
 
-    QList<QSharedPointer<PackageKit::Package> > remPackages;
-    QList<QSharedPointer<PackageKit::Package> > addPackages;
-
-    Enum::Roles actions;
+    Transaction::Roles actions;
     uint parentWId;
 
     PkTransactionDialog *transactionDialog;
 };
 
-KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Package> > &packages,
+KpkReviewChanges::KpkReviewChanges(const QList<Package> &packages,
                                    QWidget *parent,
                                    uint parentWId)
  : KDialog(parent),
@@ -66,7 +66,6 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
 {
     d->ui.setupUi(mainWidget());
 
-    d->client = Client::instance();
     d->transactionDialog = 0;
     d->parentWId = parentWId;
 
@@ -97,13 +96,13 @@ KpkReviewChanges::KpkReviewChanges(const QList<QSharedPointer<PackageKit::Packag
     setButtons(KDialog::Apply | KDialog::Cancel);
     setWindowModality(Qt::WindowModal);
 
-    foreach (const QSharedPointer<PackageKit::Package> &p, packages) {
-        if (p->info() == Enum::InfoInstalled ||
-            p->info() == Enum::InfoCollectionInstalled) {
+    foreach (const Package &p, packages) {
+        if (p.info() == Package::InfoInstalled ||
+            p.info() == Package::InfoCollectionInstalled) {
             // check what packages are installed and marked to be removed
             d->remPackages << p;
-        } else if (p->info() == Enum::InfoAvailable ||
-                   p->info() == Enum::InfoCollectionAvailable) {
+        } else if (p.info() == Package::InfoAvailable ||
+                   p.info() == Package::InfoCollectionAvailable) {
             // check what packages are available and marked to be installed
             d->addPackages << p;
         }
@@ -165,7 +164,7 @@ void KpkReviewChanges::doAction()
         transParent = this;
     }
 
-    d->actions = d->client->actions();
+    d->actions = Daemon::actions();
 
     if (!d->addPackages.isEmpty() || !d->remPackages.isEmpty()) {
         d->transactionDialog = new PkTransactionDialog(0,
@@ -200,11 +199,11 @@ void KpkReviewChanges::transactionFinished(PkTransaction::ExitStatus status)
     PkTransactionDialog *trans = qobject_cast<PkTransactionDialog*>(sender());
     if (status == PkTransaction::Success) {
         switch (trans->transaction()->role()) {
-        case Enum::RoleRemovePackages:
+        case Transaction::RoleRemovePackages:
             emit successfullyRemoved();
             taskDone(trans->transaction()->role());
             break;
-        case Enum::RoleInstallPackages:
+        case Transaction::RoleInstallPackages:
             emit successfullyInstalled();
             taskDone(trans->transaction()->role());
             break;
@@ -217,11 +216,11 @@ void KpkReviewChanges::transactionFinished(PkTransaction::ExitStatus status)
     }
 }
 
-void KpkReviewChanges::taskDone(PackageKit::Enum::Role role)
+void KpkReviewChanges::taskDone(Transaction::Role role)
 {
-    if (role == Enum::RoleRemovePackages) {
+    if (role == Transaction::RoleRemovePackages) {
         d->remPackages.clear();
-    } else if (role == Enum::RoleInstallPackages) {
+    } else if (role == Transaction::RoleInstallPackages) {
         d->addPackages.clear();
     }
     checkTask();

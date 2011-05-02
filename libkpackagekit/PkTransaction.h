@@ -24,7 +24,7 @@
 #include <QWidget>
 #include <kdemacros.h>
 
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -41,12 +41,12 @@ class KDE_EXPORT PkTransaction : public QWidget
 public:
     explicit PkTransaction(Transaction *trans, QWidget *parent = 0);
     ~PkTransaction();
-    
+
     void hideCancelButton();
-    
-    void installPackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
-    void removePackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
-    void updatePackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
+
+    void installPackages(const QList<Package> &packages);
+    void removePackages(const QList<Package> &packages);
+    void updatePackages(const QList<Package> &packages);
 
     void setTransaction(Transaction *trans);
     // Do not create a method to retrieve the internal pointer
@@ -55,16 +55,16 @@ public:
     QString tid() const;
     bool allowDeps() const;
     bool onlyTrusted() const;
-    QList<QSharedPointer<PackageKit::Package> > packages() const;
+    QList<Package> packages() const;
     QStringList files() const;
     KpkSimulateModel* simulateModel() const;
 
-    Enum::Role role() const;
-    Enum::Error error() const;
+    Transaction::Role role() const;
+    Transaction::Error error() const;
     QString errorDetails() const;
 
     void setAllowDeps(bool allowDeps);
-    void setPackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
+    void setPackages(const QList<Package> &packages);
     void setFiles(const QStringList &files);
     void setupDebconfDialog(const QString &tid);
 
@@ -90,13 +90,13 @@ private slots:
     void removePackages(bool allow_deps = true);
     void updatePackages();
 
-    void transactionFinished(PackageKit::Enum::Exit status);
-    void errorCode(PackageKit::Enum::Error error, const QString &details);
+    void transactionFinished(Transaction::Exit status);
+    void errorCode(Transaction::Error error, const QString &details);
     void updateUi();
-    void eulaRequired(PackageKit::Client::EulaInfo info);
-    void mediaChangeRequired(PackageKit::Enum::MediaType type, const QString &id, const QString &text);
-    void repoSignatureRequired(PackageKit::Client::SignatureInfo info);
-    void files(QSharedPointer<PackageKit::Package> package, const QStringList &files);
+    void eulaRequired(Eula info);
+    void mediaChangeRequired(Transaction::MediaType type, const QString &id, const QString &text);
+    void repoSignatureRequired(Signature info);
+    void files(const Package &package, const QStringList &files);
 
     void setExitStatus(PkTransaction::ExitStatus status);
     void reject();
@@ -109,7 +109,7 @@ private:
     bool m_handlingActionRequired;
     bool m_showingError; //This might replace the above
     ExitStatus m_exitStatus;
-    Enum::Status m_status;
+    Transaction::Status m_status;
     Ui::PkTransaction *ui;
     PkTransactionPrivate *d;
 

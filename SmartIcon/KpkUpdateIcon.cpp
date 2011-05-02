@@ -38,6 +38,8 @@
 
 #include <KDebug>
 
+#include <Daemon>
+
 #define UPDATES_ICON "system-software-update"
 
 using namespace PackageKit;
@@ -47,7 +49,7 @@ KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
       m_getUpdatesT(0),
       m_statusNotifierItem(0)
 {
-    connect(Client::instance(), SIGNAL(updatesChanged()), this, SLOT(update()));
+    connect(Daemon::global(), SIGNAL(updatesChanged()), this, SLOT(update()));
 }
 
 KpkUpdateIcon::~KpkUpdateIcon()
@@ -76,10 +78,10 @@ void KpkUpdateIcon::refresh(bool update)
             // ignore if there is an error
             // Be silent! don't bother the user if the cache couldn't be refreshed
             if (update) {
-                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                         this, SLOT(update()));
             }
-            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(decreaseRunning()));
         } else {
             KNotification *notify = new KNotification("TransactionError", 0);
@@ -129,7 +131,7 @@ void KpkUpdateIcon::update()
         } else {
             connect(m_getUpdatesT, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
                     this, SLOT(packageToUpdate(QSharedPointer<PackageKit::Package>)));
-            connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(getUpdateFinished()));
             return;
         }
@@ -139,11 +141,11 @@ void KpkUpdateIcon::update()
     decreaseRunning();
 }
 
-void KpkUpdateIcon::packageToUpdate(QSharedPointer<PackageKit::Package> package)
+void KpkUpdateIcon::packageToUpdate(const Package &package)
 {
     // Blocked updates are not instalable updates so there is no
     // reason to show/count them
-    if (package->info() != Enum::InfoBlocked) {
+    if (package.info() != Package::InfoBlocked) {
         m_updateList.append(package);
     }
 }
@@ -208,12 +210,12 @@ void KpkUpdateIcon::getUpdateFinished()
     if (!m_updateList.isEmpty()) {
         // Store all the security updates
         UpdateType type = Normal;
-        QList<QSharedPointer<PackageKit::Package> > securityUpdateList;
-        foreach(const QSharedPointer<PackageKit::Package> p, m_updateList) {
-            if (p->info() == Enum::InfoSecurity) {
+        QList<Package> securityUpdateList;
+        foreach(const Package &p, m_updateList) {
+            if (p.info() == Package::InfoSecurity) {
                 securityUpdateList.append(p);
                 type = Security;
-            } else if (type == Normal && p->info() == Enum::InfoImportant) {
+            } else if (type == Normal && p.info() == Package::InfoImportant) {
                 type = Important;
             }
         }
@@ -229,11 +231,11 @@ void KpkUpdateIcon::getUpdateFinished()
         if (systemReady && updateType == KpkEnum::All) {
             // update all
             SET_PROXY
-            Transaction *t = new Transaction(QString());
-            t->updatePackages(true, m_updateList);
+            Transaction *t = new Transaction(this);
+            t->updatePackages(m_updateList, true);
             if (!t->error()) {
-                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                        this, SLOT(autoUpdatesFinished(PackageKit::Enum::Exit)));
+                connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                        this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
                 // don't be interactive to not upset an idle user
                 emit watchTransaction(t->tid(), false);
                 //autoUpdatesInstalling(t);
@@ -250,11 +252,11 @@ void KpkUpdateIcon::getUpdateFinished()
         } else if (systemReady && updateType == KpkEnum::Security && !securityUpdateList.isEmpty()) {
             // Defaults to security
             SET_PROXY
-            Transaction *t = new Transaction(QString());
-            t->updatePackages(true, securityUpdateList);
+            Transaction *t = new Transaction(this);
+            t->updatePackages(securityUpdateList, true);
             if (!t->error()) {
-                connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                        this, SLOT(autoUpdatesFinished(PackageKit::Enum::Exit)));
+                connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                        this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
                 // don't be interactive to not upset an idle user
                 emit watchTransaction(t->tid(), false);
                 //autoUpdatesInstalling(t);
@@ -277,12 +279,12 @@ void KpkUpdateIcon::getUpdateFinished()
     }
 }
 
-void KpkUpdateIcon::autoUpdatesFinished(PackageKit::Enum::Exit status)
+void KpkUpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
 {
     // decrease first only because we want to check for updates again
     decreaseRunning();
     KNotification *notify = new KNotification("UpdatesComplete");
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         KIcon icon("task-complete");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
@@ -315,10 +317,10 @@ void KpkUpdateIcon::removeStatusNotifierItem()
 
 bool KpkUpdateIcon::systemIsReady(bool checkUpdates)
 {
-    Enum::Network networkState = Client::instance()->networkState();
+    Daemon::Network networkState = Daemon::networkState();
 
     // test whether network is connected
-    if (networkState == Enum::NetworkOffline || networkState == Enum::UnknownNetwork) {
+    if (networkState == Daemon::NetworkOffline || networkState == Daemon::UnknownNetwork) {
         return false;
     }
 
@@ -344,7 +346,7 @@ bool KpkUpdateIcon::systemIsReady(bool checkUpdates)
     }
 
     // check how applications should behave (e.g. on battery power)
-    if (!ignoreMobile && networkState == Enum::NetworkMobile) {
+    if (!ignoreMobile && networkState == Daemon::NetworkMobile) {
         return false;
     } 
 

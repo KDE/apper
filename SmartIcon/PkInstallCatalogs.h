@@ -23,7 +23,7 @@
 
 #include "KpkAbstractTask.h"
 
-#include <QPackageKit>
+#include <Package>
 #include <QDBusMessage>
 
 using namespace PackageKit;
@@ -43,7 +43,7 @@ private slots:
     void start();
 
 private slots:
-    void addPackage(QSharedPointer<PackageKit::Package> package);
+    void addPackage(const Package &package);
 
 private:
     bool installPackages(const QStringList &packages);
@@ -51,7 +51,7 @@ private:
     bool installFiles(const QStringList &files);
     bool runTransaction(Transaction *trans);
 
-    QList<QSharedPointer<PackageKit::Package> > m_foundPackages;
+    QList<Package> m_foundPackages;
     QStringList  m_files;
     QString      m_interaction;
     QDBusMessage m_message;

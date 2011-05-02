@@ -23,7 +23,9 @@
 
 #include <QStandardItemModel>
 #include <QXmlStreamReader>
-#include <QPackageKit>
+
+#include <Transaction>
+#include <Package>
 
 using namespace PackageKit;
 
@@ -64,8 +66,8 @@ private:
     QString parseCategories(QXmlStreamReader &xml, QStandardItem *item, const QString &join = QString());
     template<class T> static int enumFromString(const QString& str, const char* enumName, const QString& prefix = QString());
 
-    Enum::Roles  m_roles;
-    Enum::Groups m_groups;
+    Transaction::Roles  m_roles;
+    Package::Groups m_groups;
     QModelIndex  m_rootIndex;
 };
 

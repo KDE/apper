@@ -87,11 +87,12 @@ void PkInstallFontconfigResources::start()
     }
 
     if (ret == KMessageBox::Yes) {
-        Transaction *t = Client::instance()->whatProvides(Enum::ProvidesFont,
-                                                          m_resources,
-                                                          Enum::FilterNotInstalled |
-                                                          Enum::FilterArch |
-                                                          Enum::FilterNewest);
+        Transaction *t = new Transaction(this);
+        t->whatProvides(Transaction::ProvidesFont,
+                        m_resources,
+                        Transaction::FilterNotInstalled |
+                        Transaction::FilterArch |
+                        Transaction::FilterNewest);
         if (t->error()) {
             QString msg(i18n("Failed to search for provides"));
             KMessageBox::sorryWId(parentWId(),
@@ -99,10 +100,10 @@ void PkInstallFontconfigResources::start()
                                   msg);
             sendErrorFinished(InternalError, msg);
         } else {
-            connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                    this, SLOT(whatProvidesFinished(PackageKit::Enum::Exit)));
-            connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                    this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
+            connect(t, SIGNAL(package(const Package &)),
+                    this, SLOT(addPackage(const Package &)));
             if (showProgress()) {
                 kTransaction()->setTransaction(t);
                 kTransaction()->show();
@@ -113,10 +114,10 @@ void PkInstallFontconfigResources::start()
     }
 }
 
-void PkInstallFontconfigResources::whatProvidesFinished(PackageKit::Enum::Exit status)
+void PkInstallFontconfigResources::whatProvidesFinished(PackageKit::Transaction::Exit status)
 {
     kDebug() << "Finished.";
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
             kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
@@ -147,7 +148,7 @@ void PkInstallFontconfigResources::whatProvidesFinished(PackageKit::Enum::Exit s
     }
 }
 
-void PkInstallFontconfigResources::addPackage(QSharedPointer<PackageKit::Package>package)
+void PkInstallFontconfigResources::addPackage(const Package &package)
 {
     m_foundPackages.append(package);
 }

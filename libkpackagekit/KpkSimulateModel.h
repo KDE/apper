@@ -24,7 +24,7 @@
 #include <QAbstractTableModel>
 #include <KIcon>
 
-#include <QPackageKit>
+#include <Package>
 
 using namespace PackageKit;
 
@@ -34,25 +34,25 @@ Q_OBJECT
 
 public:
     explicit KpkSimulateModel(QObject *parent = 0,
-                     QList<QSharedPointer<PackageKit::Package> > skipPackages = QList<QSharedPointer<PackageKit::Package> >());
+                              QList<Package> skipPackages = QList<Package>());
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    Enum::Info currentInfo() const;
-    void setCurrentInfo(Enum::Info currentInfo);
-    int countInfo(Enum::Info info);
+    Package::Info currentInfo() const;
+    void setCurrentInfo(Package::Info currentInfo);
+    int countInfo(Package::Info info);
     void clear();
 
 public slots:
-    void addPackage(QSharedPointer<PackageKit::Package> package);
+    void addPackage(const Package &package);
 
 private:
-    QHash<Enum::Info, QList<QSharedPointer<PackageKit::Package> > > m_packages;
-    QList<QSharedPointer<PackageKit::Package> > m_skipPackages;
-    Enum::Info m_currentInfo;
+    QHash<Package::Info, QList<Package> > m_packages;
+    QList<Package> m_skipPackages;
+    Package::Info m_currentInfo;
 };
 
 #endif

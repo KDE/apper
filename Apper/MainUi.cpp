@@ -25,8 +25,6 @@
 #include <KConfig>
 #include <KCModuleProxy>
 
-using namespace PackageKit;
-
 MainUi::MainUi(QWidget *parent)
   : KCMultiDialog(parent),
     m_apperModule(0)

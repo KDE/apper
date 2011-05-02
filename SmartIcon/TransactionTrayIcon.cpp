@@ -25,7 +25,7 @@
 #include <KActionCollection>
 #include <KDebug>
 
-#include <QPackageKit>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -53,7 +53,7 @@ void TransactionTrayIcon::actionActivated(QAction *action)
     // Check to see if there is transaction id in action
     if (!action->data().isNull()) {
         // we need to find if the action clicked has already a dialog
-        Transaction *t = new Transaction(action->data().toString());
+        Transaction *t = new Transaction(action->data().toString(), this);
         if (!t->error()) {
             emit transactionActivated(t);
         }

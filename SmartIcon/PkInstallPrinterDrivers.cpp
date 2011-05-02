@@ -69,11 +69,11 @@ void PkInstallPrinterDrivers::start()
     }
 
     Transaction *t = new Transaction(QString());
-    t->whatProvides(Enum::ProvidesPostscriptDriver,
+    t->whatProvides(Transaction::ProvidesPostscriptDriver,
                     search,
-                    Enum::FilterNotInstalled | Enum::FilterArch |  Enum::FilterNewest);
-    connect(t, SIGNAL(package(PackageKit::QSharedPointer<PackageKit::Package>)),
-               this, SLOT(addPackage(PackageKit::QSharedPointer<PackageKit::Package>)));
+                    Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
+    connect(t, SIGNAL(package(PackageKit::const Package &)),
+               this, SLOT(addPackage(PackageKit::const Package &)));
     if (t->error()) {
         QString msg(i18n("Failed to search for provides"));
         KMessageBox::sorryWId(parentWId(),
@@ -81,8 +81,8 @@ void PkInstallPrinterDrivers::start()
                               msg);
         sendErrorFinished(InternalError, msg);
     } else {
-        connect(t, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(whatProvidesFinished(PackageKit::Enum::Exit, uint)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit, uint)));
 
         if (showProgress()) {
             kTransaction()->setTransaction(t);
@@ -91,11 +91,11 @@ void PkInstallPrinterDrivers::start()
     }
 }
 
-void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Enum::Exit status, uint runtime)
+void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
     Q_UNUSED(runtime)
     kDebug() << "Finished.";
-    if (status == Enum::ExitSuccess) {
+    if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
             kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
@@ -118,7 +118,7 @@ void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Enum::Exit status
     }
 }
 
-void PkInstallPrinterDrivers::addPackage(QSharedPointer<PackageKit::Package> package)
+void PkInstallPrinterDrivers::addPackage(const Package &package)
 {
     m_foundPackages.append(package);
 }

@@ -48,11 +48,13 @@
 
 #include <KDebug>
 
+#include <Daemon>
+
 #define BAR_SEARCH 0
 #define BAR_UPDATE 1
 #define BAR_TITLE  2
 
-KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Enum, Filter)
+KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
 
 K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<ApperKCM>();)
 K_EXPORT_PLUGIN(KPackageKitFactory("kcm_apper"))
@@ -67,7 +69,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_findIcon("edit-find"),
     m_cancelIcon("dialog-cancel"),
     m_history(0),
-    m_searchRole(Enum::UnknownRole)
+    m_searchRole(Transaction::UnknownRole)
 {
     KAboutData *aboutData;
     aboutData = new KAboutData("apper",
@@ -85,9 +87,9 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
 
     // Set the current locale
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Client::instance()->setHints("locale=" + locale);
+    Daemon::setHints("locale=" + locale);
     // store the actions supported by the backend
-    m_roles = Client::instance()->actions();
+    m_roles = Daemon::actions();
 
     // Browse TAB
     backTB->setIcon(KIcon("go-previous"));
@@ -106,17 +108,17 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     toolBar->addAction(m_genericActionK);
 
     // Add actions that the backend supports
-    if (m_roles & Enum::RoleSearchName) {
+    if (m_roles & Transaction::RoleSearchName) {
         findMenu->addAction(actionFindName);
         setCurrentAction(actionFindName);
     }
-    if (m_roles & Enum::RoleSearchDetails) {
+    if (m_roles & Transaction::RoleSearchDetails) {
         findMenu->addAction(actionFindDescription);
         if (!m_currentAction) {
             setCurrentAction(actionFindDescription);
         }
     }
-    if (m_roles & Enum::RoleSearchFile) {
+    if (m_roles & Transaction::RoleSearchFile) {
         findMenu->addAction(actionFindFile);
         if (!m_currentAction) {
             setCurrentAction(actionFindFile);
@@ -155,7 +157,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     homeView->setItemDelegate(delegate);
 
     // install the backend filters
-    filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(Client::instance()->filters(), this));
+    filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(Daemon::filters(), this));
     filtersTB->setIcon(KIcon("view-filter"));
     browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(const QString &)),
@@ -277,9 +279,9 @@ void ApperKCM::checkChanged()
     emit changed(value);
 }
 
-void ApperKCM::errorCode(PackageKit::Enum::Error error, const QString &details)
+void ApperKCM::errorCode(PackageKit::Transaction::Error error, const QString &details)
 {
-    if (error != Enum::ErrorTransactionCancelled) {
+    if (error != Transaction::ErrorTransactionCancelled) {
         KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify);
     }
 }
@@ -293,7 +295,7 @@ void ApperKCM::on_actionFindName_triggered()
     setCurrentAction(actionFindName);
     if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchRole    = Enum::RoleSearchName;
+        m_searchRole    = Transaction::RoleSearchName;
         m_searchString  = searchKLE->text();
         m_searchFilters = m_filtersMenu->filters();
         // create the main transaction
@@ -306,7 +308,7 @@ void ApperKCM::on_actionFindDescription_triggered()
     setCurrentAction(actionFindDescription);
     if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchRole    = Enum::RoleSearchDetails;
+        m_searchRole    = Transaction::RoleSearchDetails;
         m_searchString  = searchKLE->text();
         m_searchFilters = m_filtersMenu->filters();
         // create the main transaction
@@ -319,7 +321,7 @@ void ApperKCM::on_actionFindFile_triggered()
     setCurrentAction(actionFindFile);
     if (!searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchRole    = Enum::RoleSearchFile;
+        m_searchRole    = Transaction::RoleSearchFile;
         m_searchString  = searchKLE->text();
         m_searchFilters = m_filtersMenu->filters();
         // create the main transaction
@@ -340,11 +342,11 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
         }
 
         // cache the search
-        m_searchRole    = static_cast<Enum::Role>(index.data(CategoryModel::SearchRole).toUInt());
+        m_searchRole    = static_cast<Transaction::Role>(index.data(CategoryModel::SearchRole).toUInt());
         m_searchFilters = m_filtersMenu->filters();
-        if (m_searchRole == Enum::RoleResolve) {
+        if (m_searchRole == Transaction::RoleResolve) {
             m_searchString = index.data(CategoryModel::CategoryRole).toString();
-        } else if (m_searchRole == Enum::RoleSearchGroup) {
+        } else if (m_searchRole == Transaction::RoleSearchGroup) {
             if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
                 QString category = index.data(CategoryModel::GroupRole).toString();
                 if (category.startsWith('@') ||
@@ -357,9 +359,9 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
                 }
             } else {
                 m_searchGroupCategory.clear();
-                m_searchGroup = static_cast<Enum::Group>(index.data(CategoryModel::GroupRole).toUInt());
+                m_searchGroup = static_cast<Package::Group>(index.data(CategoryModel::GroupRole).toUInt());
             }
-        } else if (m_searchRole == Enum::RoleGetOldTransactions) {
+        } else if (m_searchRole == Transaction::RoleGetOldTransactions) {
             m_history = new TransactionHistory(this);
             searchKLE->clear();
             connect(searchKLE, SIGNAL(textChanged(const QString &)),
@@ -370,10 +372,10 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
             filtersTB->setEnabled(false);
             widget->setEnabled(false);
             return;
-        } else if (m_searchRole == Enum::RoleGetUpdates) {
+        } else if (m_searchRole == Transaction::RoleGetUpdates) {
             setPage("updates");
             return;
-        } else if (m_searchRole == Enum::RoleGetRepoList) {
+        } else if (m_searchRole == Transaction::RoleGetRepoList) {
             setPage("settings");
             return;
         }
@@ -528,7 +530,7 @@ void ApperKCM::on_backTB_clicked()
     stackedWidget->setCurrentWidget(pageHome);
     backTB->setEnabled(canGoBack);
     // reset the search role
-    m_searchRole = Enum::UnknownRole;
+    m_searchRole = Transaction::UnknownRole;
 }
 
 void ApperKCM::on_changesPB_clicked()
@@ -547,41 +549,41 @@ void ApperKCM::search()
         // Disconnect everything so that the model don't store
         // wrong data
         m_searchTransaction->cancel();
-        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    browseView->busyCursor(), SLOT(stop()));
-        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    this, SLOT(finished()));
-        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    m_browseModel, SLOT(finished()));
-        disconnect(m_searchTransaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-                   m_browseModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
-        disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-                   this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+        disconnect(m_searchTransaction, SIGNAL(package(const Package &)),
+                   m_browseModel, SLOT(addPackage(const Package &)));
+        disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+                   this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
     }
 
     // search
-    m_searchTransaction = new Transaction(QString());
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    m_searchTransaction = new Transaction(this);
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             browseView->busyCursor(), SLOT(stop()));
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(finished()));
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_browseModel, SLOT(finished()));
-    connect(m_searchTransaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-            m_browseModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
-    connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-            this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+    connect(m_searchTransaction, SIGNAL(package(const Package &)),
+            m_browseModel, SLOT(addPackage(const Package &)));
+    connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
     switch (m_searchRole) {
-    case Enum::RoleSearchName:
+    case Transaction::RoleSearchName:
         m_searchTransaction->searchNames(m_searchString, m_searchFilters);
         break;
-    case Enum::RoleSearchDetails:
+    case Transaction::RoleSearchDetails:
         m_searchTransaction->searchDetails(m_searchString, m_searchFilters);
         break;
-    case Enum::RoleSearchFile:
+    case Transaction::RoleSearchFile:
         m_searchTransaction->searchFiles(m_searchString, m_searchFilters);
         break;
-    case Enum::RoleSearchGroup:
+    case Transaction::RoleSearchGroup:
         if (m_searchGroupCategory.isEmpty()) {
             m_searchTransaction->searchGroups(m_searchGroup, m_searchFilters);
         } else {
@@ -595,14 +597,14 @@ void ApperKCM::search()
             // else the transaction is useless
         }
         break;
-    case Enum::RoleGetPackages:
+    case Transaction::RoleGetPackages:
         // we want all the installed ones
         browseView->disableExportInstalledPB();
-        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 browseView, SLOT(enableExportInstalledPB()));
-        m_searchTransaction->getPackages(Enum::FilterInstalled);
+        m_searchTransaction->getPackages(Transaction::FilterInstalled);
         break;
-    case Enum::RoleResolve:
+    case Transaction::RoleResolve:
     {
         QStringList packages = AppInstall::instance()->pkgNamesFromWhere(m_searchString);
         if (!packages.isEmpty()) {
@@ -628,7 +630,7 @@ void ApperKCM::search()
         // cleans the models
         m_browseModel->clear();
 
-        browseView->showInstalledPanel(m_searchRole == Enum::RoleGetPackages);
+        browseView->showInstalledPanel(m_searchRole == Transaction::RoleGetPackages);
         browseView->busyCursor()->start();
 
         backTB->setEnabled(true);
@@ -679,7 +681,7 @@ void ApperKCM::save()
         connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
         if (currentWidget == m_updaterPage) {
             transaction->updatePackages(m_updaterPage->packagesToUpdate());
-            
+
             // wait for the end of transaction
             if (!transaction->isFinished()) {
                 loop.exec();
@@ -690,15 +692,15 @@ void ApperKCM::save()
             }
         } else {
             // install then remove packages
-            QList<QSharedPointer<PackageKit::Package> > removePackages;
-            QList<QSharedPointer<PackageKit::Package> > installPackages;
-            foreach (const QSharedPointer<PackageKit::Package> &p, m_browseModel->selectedPackages()) {
-                if (p->info() == Enum::InfoInstalled ||
-                    p->info() == Enum::InfoCollectionInstalled) {
+            QList<Package> removePackages;
+            QList<Package> installPackages;
+            foreach (const Package &p, m_browseModel->selectedPackages()) {
+                if (p.info() == Package::InfoInstalled ||
+                    p.info() == Package::InfoCollectionInstalled) {
                     // check what packages are installed and marked to be removed
                     removePackages << p;
-                } else if (p->info() == Enum::InfoAvailable ||
-                           p->info() == Enum::InfoCollectionAvailable) {
+                } else if (p.info() == Package::InfoAvailable ||
+                           p.info() == Package::InfoCollectionAvailable) {
                     // check what packages are available and marked to be installed
                     installPackages << p;
                 }
@@ -715,12 +717,12 @@ void ApperKCM::save()
                         return;
                     }
                 }
-                
+
                 if (transaction->exitStatus() == PkTransaction::Success) {
                     m_browseModel->uncheckAvailablePackages();
                 }
             }
-            
+
             if (!removePackages.isEmpty()) {
                 transaction->removePackages(removePackages);
 
@@ -738,7 +740,7 @@ void ApperKCM::save()
                 }
             }
         }
-        
+
         // Finished setup old stuff
         backTB->setEnabled(true);
         stackedWidget->setCurrentWidget(currentWidget);

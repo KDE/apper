@@ -21,12 +21,8 @@
 #ifndef MAIN_UI_H
 #define MAIN_UI_H
 
-#include <QPackageKit>
-
 #include <KCMultiDialog>
 #include <KCModuleProxy>
-
-using namespace PackageKit;
 
 class MainUi : public KCMultiDialog
 {
