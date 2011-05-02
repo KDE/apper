@@ -125,7 +125,7 @@ PkTransaction::PkTransaction(Transaction *trans, QWidget *parent)
 
 PkTransaction::~PkTransaction()
 {
-    KConfig config("KPackageKit");
+//     KConfig config("KPackageKit");
 //     if (isButtonEnabled(KDialog::Details)) {
 //         KConfigGroup transactionGroup(&config, "Transaction");
 //         transactionGroup.writeEntry("ShowDetails", d->showDetails);
@@ -149,16 +149,17 @@ PkTransaction::~PkTransaction()
         if (reply.type() != QDBusMessage::ReplyMessage) {
             kWarning() << "Message did not receive a reply";
         }
-        // Always disconnect BEFORE emitting finished
-        unsetTransaction();
-
-        setExitStatus(Success);
     }
 
     // DO NOT disconnect the transaction here,
     // it might not exist when this happen
     d->clearApplications();
     delete d;
+}
+
+void PkTransaction::hideCancelButton()
+{
+    ui->cancelButton->hide();
 }
 
 void PkTransaction::installPackages(const QList<QSharedPointer<PackageKit::Package> > &packages)
@@ -844,6 +845,7 @@ bool PkTransaction::isFinished() const
 
 void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
 {
+    kDebug() << status;
     m_exitStatus = status;
     emit finished(status);
 }

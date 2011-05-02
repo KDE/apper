@@ -42,6 +42,8 @@ public:
     explicit PkTransaction(Transaction *trans, QWidget *parent = 0);
     ~PkTransaction();
     
+    void hideCancelButton();
+    
     void installPackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
     void removePackages(const QList<QSharedPointer<PackageKit::Package> > &packages);
     void updatePackages(const QList<QSharedPointer<PackageKit::Package> > &packages);

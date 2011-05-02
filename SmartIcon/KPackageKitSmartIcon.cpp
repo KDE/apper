@@ -30,7 +30,7 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 
-#define MINUTE 60000
+#define MINUTE 600000
 
 using namespace kpackagekit;
 

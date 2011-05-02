@@ -2,7 +2,7 @@
 [Desktop Entry]
 Type=Application
 Icon=applications-other
-Exec=apper -caption "%c" %i %F
+Exec=apper %U
 X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 

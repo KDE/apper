@@ -22,6 +22,8 @@
 
 #include "TransactionTrayIcon.h"
 
+#include "TransactionJob.h"
+
 #include <KpkStrings.h>
 #include <PkTransactionDialog.h>
 #include <KpkIcons.h>
@@ -52,6 +54,7 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
 {
     // Create a new daemon
     m_client = Client::instance();
+    m_tracker = new KUiServerJobTracker(this);
 
     connect(m_client, SIGNAL(transactionListChanged(const QList<PackageKit::Transaction*> &)),
             this, SLOT(transactionListChanged(const QList<PackageKit::Transaction*> &)));
@@ -85,6 +88,8 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
 
 KpkTransactionTrayIcon::~KpkTransactionTrayIcon()
 {
+    // release any cookie that we might have
+    suppressSleep(false);
 }
 
 void KpkTransactionTrayIcon::checkTransactionList()
@@ -143,10 +148,40 @@ void KpkTransactionTrayIcon::transactionListChanged(const QList<PackageKit::Tran
 {
     kDebug() << tids.size();
     if (tids.size()) {
-        setCurrentTransaction(tids.first());
+//         setCurrentTransaction(tids.first());
+        
+        foreach (Transaction *t, tids) {
+            Enum::Role role = t->role();
+            if (!m_tids.contains(t->tid()) &&
+                (role == Enum::RoleInstallPackages ||
+                role == Enum::RoleInstallFiles    ||
+                role == Enum::RoleRemovePackages  ||
+                role == Enum::RoleUpdatePackages  ||
+                role == Enum::RoleUpdateSystem    ||
+                role == Enum::RoleRefreshCache)) {
+                TransactionJob *job = new TransactionJob(t, this);
+                job->start();
+                m_tracker->registerJob(job);
+                m_tids << t->tid();
+            }
+        }
+        
+        foreach (const QString tid, m_tids) {
+            bool found = false;
+            foreach (Transaction *t, tids) {
+                if (t->tid() == tid) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                m_tids.removeOne(tid);
+            }
+        }
     } else {
         // release any cookie that we might have
-        suppressSleep(false);
+        suppressSleep(true);
+        m_tids.clear();
 
         if (m_messagesCount == 0 &&
             m_restartType == Enum::RestartNone)
@@ -489,19 +524,18 @@ void KpkTransactionTrayIcon::suppressSleep(bool enable, const QString &reason)
 {
     if (enable) {
         if (m_inhibitCookie == -1) {
-            kDebug() << "Disabling powermanagement sleep";
+            kDebug() << "Begin Suppressing Sleep";
             m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep(reason);
             if (m_inhibitCookie == -1) {
                 kDebug() << "Sleep suppression denied!";
             }
         }
-    } else {
-        kDebug() << "Enabling powermanagement sleep";
-        if (m_inhibitCookie == -1) {
-            if ( ! Solid::PowerManagement::stopSuppressingSleep(m_inhibitCookie)) {
-                kDebug() << "Enable failed: invalid cookie.";
-            }
+    } else if (m_inhibitCookie != -1) {
+        kDebug() << "Stop Suppressing Sleep";
+        if (!Solid::PowerManagement::stopSuppressingSleep(m_inhibitCookie)) {
+            kDebug() << "Stop failed: invalid cookie.";
         }
+        m_inhibitCookie = -1;
     }
 }
 

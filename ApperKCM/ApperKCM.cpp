@@ -430,6 +430,11 @@ QString ApperKCM::page() const
 
 void ApperKCM::setPage(const QString &page)
 {
+    PkTransaction *transaction = qobject_cast<PkTransaction*>(stackedWidget->currentWidget());
+    if (transaction) {
+        return;
+    }
+        
     if (page == "settings") {
         if (stackedWidget->currentWidget() != m_settingsPage) {
             if (!canChangePage()) {
@@ -659,6 +664,8 @@ void ApperKCM::save()
         m_settingsPage->save();
     } else {
         PkTransaction *transaction = new PkTransaction(0, this);
+        QWeakPointer<PkTransaction> pointer = transaction;
+
         stackedWidget->addWidget(transaction);
         stackedWidget->setCurrentWidget(transaction);
         int oldBar = stackedWidgetBar->currentIndex();
@@ -676,6 +683,10 @@ void ApperKCM::save()
             // wait for the end of transaction
             if (!transaction->isFinished()) {
                 loop.exec();
+                if (pointer.isNull()) {
+                    // Avoid crashing
+                    return;
+                }
             }
         } else {
             // install then remove packages
@@ -699,6 +710,10 @@ void ApperKCM::save()
                 // wait for the end of transaction
                 if (!transaction->isFinished()) {
                     loop.exec();
+                    if (pointer.isNull()) {
+                        // Avoid crashing
+                        return;
+                    }
                 }
                 
                 if (transaction->exitStatus() == PkTransaction::Success) {
@@ -712,6 +727,10 @@ void ApperKCM::save()
                 // wait for the end of transaction
                 if (!transaction->isFinished()) {
                     loop.exec();
+                    if (pointer.isNull()) {
+                        // Avoid crashing
+                        return;
+                    }
                 }
 
                 if (transaction->exitStatus() == PkTransaction::Success) {
@@ -776,6 +795,16 @@ void ApperKCM::keyPressEvent(QKeyEvent *event)
         return;
     }
     KCModule::keyPressEvent(event);
+}
+
+void ApperKCM::closeEvent(QCloseEvent *event)
+{
+//     PkTransaction *transaction = qobject_cast<PkTransaction*>(stackedWidget->currentWidget());
+//     if (transaction) {
+        event->ignore();
+//     } else {
+//         event->accept();
+//     }
 }
 
 #include "ApperKCM.moc"

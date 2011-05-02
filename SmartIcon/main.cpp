@@ -41,6 +41,7 @@ int main(int argc, char **argv)
     about.addAuthor(ki18n("Trever Fischer"), KLocalizedString(), "wm161@wm161.net", "http://wm161.net");
 
     about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"),"@");
+    about.setProgramIconName("applications-other");
 
     KCmdLineArgs::init(argc, argv, &about);
 

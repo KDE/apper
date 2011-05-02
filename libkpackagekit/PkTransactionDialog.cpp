@@ -72,6 +72,8 @@ PkTransactionDialog::PkTransactionDialog(Transaction *trans, Behaviors flags, QW
    d(new PkTransactionDialogPrivate)
 {
     m_ui = new PkTransaction(trans, parent);
+    m_ui->hideCancelButton();
+
     connect(m_ui, SIGNAL(allowCancel(bool)), button(KDialog::Cancel), SLOT(setEnabled(bool)));
     connect(m_ui, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SIGNAL(finished(PkTransaction::ExitStatus)));

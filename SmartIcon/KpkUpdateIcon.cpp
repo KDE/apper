@@ -32,6 +32,7 @@
 #include <KConfigGroup>
 #include <KActionCollection>
 #include <KMenu>
+#include <KToolInvocation>
 
 #include <Solid/PowerManagement>
 
@@ -56,7 +57,7 @@ KpkUpdateIcon::~KpkUpdateIcon()
 
 void KpkUpdateIcon::showSettings()
 {
-    QProcess::execute("apper", QStringList() << "--settings");
+    KToolInvocation::startServiceByDesktopName("Apper", QStringList() << "--settings");
 }
 
 void KpkUpdateIcon::refresh(bool update)
@@ -186,6 +187,7 @@ void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
     QString text;
     text = i18np("You have one update", "You have %1 updates", m_updateList.size());
     m_statusNotifierItem->setToolTip(UPDATES_ICON, text, QString());
+
     QString icon;
     if (type == Important) {
         icon = "kpackagekit-important";
@@ -300,7 +302,7 @@ void KpkUpdateIcon::autoUpdatesFinished(PackageKit::Enum::Exit status)
 
 void KpkUpdateIcon::showUpdates()
 {
-    QProcess::execute("apper", QStringList() << "--updates");
+    KToolInvocation::startServiceByDesktopName("Apper", QStringList() << "--updates");
 }
 
 void KpkUpdateIcon::removeStatusNotifierItem()
@@ -348,4 +350,3 @@ bool KpkUpdateIcon::systemIsReady(bool checkUpdates)
 
     return true;
 }
-

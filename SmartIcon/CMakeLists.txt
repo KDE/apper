@@ -2,6 +2,7 @@ find_package(KDE4Internal REQUIRED)
 
 set(kpackagekit_smart_icon_SRCS
     TransactionTrayIcon.cpp
+    TransactionJob.cpp
     KpkTransactionTrayIcon.cpp
     KpkUpdateIcon.cpp
     KpkDistroUpgrade.cpp

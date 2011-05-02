@@ -23,6 +23,9 @@
 
 #include <KpkAbstractIsRunning.h>
 
+#include <kuiserverjobtracker.h>
+#include <kwidgetjobtracker.h>
+
 #include <QPackageKit>
 
 #include <QAction>
@@ -95,6 +98,8 @@ private:
     
     // cookie to suppress sleep
     int           m_inhibitCookie;
+    QStringList   m_tids;
+    KUiServerJobTracker *m_tracker;
 };
 
 #endif

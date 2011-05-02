@@ -83,6 +83,9 @@ private slots:
     
     void updatePackages(PkTransaction *transaction);
 
+protected:
+    virtual void closeEvent(QCloseEvent *event);
+
 private:
     bool canChangePage();
     void setCurrentActionEnabled(bool state);
