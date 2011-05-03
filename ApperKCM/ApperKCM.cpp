@@ -592,7 +592,7 @@ void ApperKCM::search()
 #ifndef HAVE_APPINSTALL
             if (m_searchGroupCategory.startsWith('@') ||
                 m_searchGroupCategory.startsWith(QLatin1String("repo:"))) {
-                m_searchTransaction->searchGroups(m_searchGroupCategory, m_searchFilters);
+                m_searchTransaction->searchGroup(m_searchGroupCategory, m_searchFilters);
             }
 #endif //HAVE_APPINSTALL
             // else the transaction is useless
