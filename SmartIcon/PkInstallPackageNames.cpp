@@ -90,8 +90,8 @@ void PkInstallPackageNames::start()
         } else {
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(resolveFinished(PackageKit::Transaction::Exit)));
-            connect(t, SIGNAL(package(const Package &)),
-                    this, SLOT(addPackage(const Package &)));
+            connect(t, SIGNAL(package(const PackageKit::Package &)),
+                    this, SLOT(addPackage(const PackageKit::Package &)));
             if (showProgress()) {
                 kTransaction()->setTransaction(t);
                 kTransaction()->show();
@@ -118,6 +118,7 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::Exit status
             sendErrorFinished(Failed, "package already found");
         } else if (m_foundPackages.size()) {
             kTransaction()->hide();
+            kDebug() << m_foundPackages.size();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
@@ -139,13 +140,15 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::Exit status
     }
 }
 
-void PkInstallPackageNames::addPackage(const Package &package)
+void PkInstallPackageNames::addPackage(const PackageKit::Package &package)
 {
     if (package.info() != Package::InfoInstalled) {
         m_foundPackages.append(package);
     } else {
         m_alreadyInstalled << package.name();
     }
+
+    kDebug() << package.name();
 }
 
 #include "PkInstallPackageNames.moc"

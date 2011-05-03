@@ -85,8 +85,8 @@ void PkInstallProvideFiles::start()
         } else {
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
-            connect(t, SIGNAL(package(const Package &)),
-                    this, SLOT(addPackage(const Package &)));
+            connect(t, SIGNAL(package(const PackageKit::Package &)),
+                    this, SLOT(addPackage(const PackageKit::Package &)));
             if (showProgress()) {
                 kTransaction()->setTransaction(t);
                 kTransaction()->show();
@@ -131,7 +131,7 @@ void PkInstallProvideFiles::searchFinished(PackageKit::Transaction::Exit status)
     }
 }
 
-void PkInstallProvideFiles::addPackage(const Package &package)
+void PkInstallProvideFiles::addPackage(const PackageKit::Package &package)
 {
     if (package.info() != Package::InfoInstalled) {
         m_foundPackages.append(package);

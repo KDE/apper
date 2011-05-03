@@ -44,18 +44,19 @@ void PkIsInstalled::start()
 {
     Transaction *t = new Transaction(this);
     t->resolve(m_packageName, Transaction::FilterInstalled);
-    if (t->error()) {
+    Transaction::InternalError error = t->error();
+    if (error) {
         if (showWarning()) {
             KMessageBox::sorryWId(parentWId(),
-                                  KpkStrings::daemonError(t->error()),
+                                  KpkStrings::daemonError(error),
                                   i18n("Failed to start resolve transaction"));
         }
         sendErrorFinished(Failed, "Failed to start resolve transaction");
     } else {
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
-        connect(t, SIGNAL(package(const Package &)),
-                this, SLOT(addPackage(const Package &)));
+        connect(t, SIGNAL(package(const PackageKit::Package &)),
+                this, SLOT(addPackage(const PackageKit::Package &)));
         if (showProgress()) {
             kTransaction()->setTransaction(t);
             kTransaction()->show();
@@ -77,7 +78,7 @@ void PkIsInstalled::searchFinished(PackageKit::Transaction::Exit status)
     }
 }
 
-void PkIsInstalled::addPackage(const Package &package)
+void PkIsInstalled::addPackage(const PackageKit::Package &package)
 {
     m_foundPackages.append(package);
 }

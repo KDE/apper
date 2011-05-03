@@ -535,7 +535,6 @@ void ApperKCM::on_backTB_clicked()
 void ApperKCM::on_changesPB_clicked()
 {
     m_changesModel->clear();
-    m_browseModel->selectedPackages();
     m_changesModel->addPackages(m_browseModel->selectedPackages(), true);
     stackedWidget->setCurrentWidget(pageChanges);
     backTB->setEnabled(true);
@@ -585,7 +584,7 @@ void ApperKCM::search()
         break;
     case Transaction::RoleSearchGroup:
         if (m_searchGroupCategory.isEmpty()) {
-            m_searchTransaction->searchGroups(m_searchGroup, m_searchFilters);
+            m_searchTransaction->searchGroup(m_searchGroup, m_searchFilters);
         } else {
             browseView->setParentCategory(m_searchParentCategory);
 #ifndef HAVE_APPINSTALL

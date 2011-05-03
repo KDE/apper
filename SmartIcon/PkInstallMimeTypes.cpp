@@ -87,8 +87,8 @@ void PkInstallMimeTypes::start()
         } else {
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
-            connect(t, SIGNAL(package(const Package &)),
-                    this, SLOT(addPackage(const Package &)));
+            connect(t, SIGNAL(package(const PackageKit::Package &)),
+                    this, SLOT(addPackage(const PackageKit::Package &)));
             if (showProgress()) {
                 kTransaction()->setTransaction(t);
                 kTransaction()->show();
@@ -128,7 +128,7 @@ void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Transaction::Exit stat
     }
 }
 
-void PkInstallMimeTypes::addPackage(const Package &package)
+void PkInstallMimeTypes::addPackage(const PackageKit::Package &package)
 {
     m_foundPackages.append(package);
 }

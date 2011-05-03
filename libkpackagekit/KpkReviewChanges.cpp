@@ -88,7 +88,6 @@ KpkReviewChanges::KpkReviewChanges(const QList<Package> &packages,
     d->pkgDelegate->setExtendPixmapWidth(0);
     d->ui.packageView->setItemDelegate(d->pkgDelegate);
     d->mainPkgModel->addPackages(packages, true);
-    d->mainPkgModel->finished();
     connect(d->mainPkgModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkChanged()));
 

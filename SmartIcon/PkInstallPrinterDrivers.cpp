@@ -68,12 +68,12 @@ void PkInstallPrinterDrivers::start()
         }
     }
 
-    Transaction *t = new Transaction(QString());
+    Transaction *t = new Transaction(this);
     t->whatProvides(Transaction::ProvidesPostscriptDriver,
                     search,
                     Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
-    connect(t, SIGNAL(package(PackageKit::const Package &)),
-               this, SLOT(addPackage(PackageKit::const Package &)));
+    connect(t, SIGNAL(package(const PackageKit::Package &)),
+               this, SLOT(addPackage(const PackageKit::Package &)));
     if (t->error()) {
         QString msg(i18n("Failed to search for provides"));
         KMessageBox::sorryWId(parentWId(),
@@ -118,7 +118,7 @@ void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Transaction::Exit
     }
 }
 
-void PkInstallPrinterDrivers::addPackage(const Package &package)
+void PkInstallPrinterDrivers::addPackage(const PackageKit::Package &package)
 {
     m_foundPackages.append(package);
 }

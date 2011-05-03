@@ -29,7 +29,7 @@ using namespace PackageKit;
 
 class PkInstallGStreamerResources : public KpkAbstractTask
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     PkInstallGStreamerResources(uint xid,
                                 const QStringList &resources,
@@ -43,7 +43,7 @@ public slots:
 
 private slots:
     void whatProvidesFinished(PackageKit::Transaction::Exit status);
-    void addPackage(const Package &package);
+    void addPackage(const PackageKit::Package &package);
 
 private:
     QList<Package> m_foundPackages;

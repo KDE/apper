@@ -82,14 +82,15 @@ void PkRemovePackageByFiles::start()
         Transaction *t = new Transaction(QString());
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
-        connect(t, SIGNAL(package(const Package &)),
-                this, SLOT(addPackage(const Package &)));
+        connect(t, SIGNAL(package(const PackageKit::Package &)),
+                this, SLOT(addPackage(const PackageKit::Package &)));
         t->searchFiles(m_files, Transaction::FilterInstalled);
-        if (t->error()) {
+        Transaction::InternalError error = t->error();
+        if (error) {
             QString msg(i18n("Failed to start search file transaction"));
             if (showWarning()) {
                 KMessageBox::sorryWId(parentWId(),
-                                      KpkStrings::daemonError(t->error()),
+                                      KpkStrings::daemonError(error),
                                       msg);
             }
             sendErrorFinished(Failed, "Failed to search for package");
@@ -132,7 +133,7 @@ void PkRemovePackageByFiles::searchFinished(PackageKit::Transaction::Exit status
     }
 }
 
-void PkRemovePackageByFiles::addPackage(const Package &package)
+void PkRemovePackageByFiles::addPackage(const PackageKit::Package &package)
 {
     m_foundPackages.append(package);
 }

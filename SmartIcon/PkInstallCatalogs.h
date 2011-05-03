@@ -39,11 +39,11 @@ public:
                       QWidget *parent = 0);
     ~PkInstallCatalogs();
 
-private slots:
+public slots:
     void start();
 
 private slots:
-    void addPackage(const Package &package);
+    void addPackage(const PackageKit::Package &package);
 
 private:
     bool installPackages(const QStringList &packages);

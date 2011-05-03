@@ -238,8 +238,8 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
         QEventLoop loop;
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 &loop, SLOT(quit()));
-        connect(t, SIGNAL(package(const Package &)),
-                this, SLOT(addPackage(const Package &)));
+        connect(t, SIGNAL(package(const PackageKit::Package &)),
+                this, SLOT(addPackage(const PackageKit::Package &)));
         if (showProgress()) {
             kTransaction()->setTransaction(t);
             kTransaction()->show();
@@ -249,7 +249,7 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
     }
 }
 
-void PkInstallCatalogs::addPackage(const Package &package)
+void PkInstallCatalogs::addPackage(const PackageKit::Package &package)
 {
     if (package.info() != Package::InfoInstalled) {
         m_foundPackages.append(package);

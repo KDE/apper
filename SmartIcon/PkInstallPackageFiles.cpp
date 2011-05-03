@@ -183,15 +183,16 @@ void PkInstallPackageFiles::installFiles()
     Transaction *t = new Transaction(this);
     t->setHints("frontend-socket=" + socket);
     t->installFiles(m_files, true);
-    if (t->error()) {
+    Transaction::InternalError error = t->error();
+    if (error) {
         if (showWarning()) {
             KMessageBox::sorryWId(parentWId(),
-                                  KpkStrings::daemonError(t->error()),
+                                  KpkStrings::daemonError(error),
                                   i18np("Failed to install file",
                                         "Failed to install files",
                                         m_files.count()));
         }
-        sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
+        sendErrorFinished(Failed, KpkStrings::daemonError(error));
     } else {
         kTransaction()->setTransaction(t);
 //         kTransaction()->setupDebconfDialog(socket);

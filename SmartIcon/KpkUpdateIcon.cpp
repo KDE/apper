@@ -129,8 +129,8 @@ void KpkUpdateIcon::update()
         if (m_getUpdatesT->error()) {
             m_getUpdatesT = 0;
         } else {
-            connect(m_getUpdatesT, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    this, SLOT(packageToUpdate(QSharedPointer<PackageKit::Package>)));
+            connect(m_getUpdatesT, SIGNAL(package(const PackageKit::Package &)),
+                    this, SLOT(packageToUpdate(const PackageKit::Package &)));
             connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(getUpdateFinished()));
             return;

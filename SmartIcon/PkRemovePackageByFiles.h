@@ -43,7 +43,7 @@ public slots:
 
 private slots:
     void searchFinished(PackageKit::Transaction::Exit status);
-    void addPackage(const Package &package);
+    void addPackage(const PackageKit::Package &package);
 
 private:
     QList<Package> m_foundPackages;

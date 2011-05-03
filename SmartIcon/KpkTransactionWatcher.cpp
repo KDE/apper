@@ -46,7 +46,7 @@ KpkTransactionWatcher::~KpkTransactionWatcher()
 
 void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactive)
 {
-    foreach(const Transaction *trans, m_hiddenTransactions) {
+    foreach (const Transaction *trans, m_hiddenTransactions) {
         if (trans->tid() == tid) {
             // Oops we are already watching this one
 //             kDebug() << "Oops we are already watching this one" << tid;
@@ -54,7 +54,7 @@ void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactiv
         }
     }
 
-    foreach(const QString transId, Daemon::getTransactions()) {
+    foreach (const QString &transId, Daemon::getTransactions()) {
         if (transId == tid) {
             // found it let's start watching
             Transaction *trans = new Transaction(transId, this);
@@ -72,7 +72,7 @@ void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactiv
 
 void KpkTransactionWatcher::removeTransactionWatcher(const QString &tid)
 {
-    foreach(Transaction *trans, m_hiddenTransactions) {
+    foreach (Transaction *trans, m_hiddenTransactions) {
         if (trans->tid() == tid) {
             // Found it, let's remove
 //             kDebug() << "found it let's remove" << tid;

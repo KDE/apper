@@ -51,10 +51,11 @@ void PkSearchFile::start()
 
     Transaction *t = new Transaction(this);
     t->searchFiles(m_fileName, Transaction::FilterNewest);
-    if (t->error()) {
+    Transaction::InternalError error = t->error();
+    if (error) {
         if (showWarning()) {
             KMessageBox::sorryWId(parentWId(),
-                                  KpkStrings::daemonError(t->error()),
+                                  KpkStrings::daemonError(error),
                                   i18n("Failed to start search file transaction"));
         }
         sendErrorFinished(Failed, "Failed to start search file transaction");

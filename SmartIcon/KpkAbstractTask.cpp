@@ -69,8 +69,8 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
 
     m_transaction = new PkTransactionDialog(0, PkTransactionDialog::Modal);
     KWindowSystem::setMainWindow(m_transaction, m_xid);
-    connect(m_transaction, SIGNAL(finished(PkTransactionDialog::ExitStatus)),
-            this, SLOT(transactionFinished(PkTransactionDialog::ExitStatus)));
+    connect(m_transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
 }
 
 void KpkAbstractTask::setExec(const QString &exec)

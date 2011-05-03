@@ -50,7 +50,7 @@ public slots:
 
 private slots:
     void update();
-    void packageToUpdate(const Package &package);
+    void packageToUpdate(const PackageKit::Package &package);
     void getUpdateFinished();
     void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
 
