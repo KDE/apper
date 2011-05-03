@@ -42,7 +42,7 @@ QVariant KpkSimulateModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    Package p = m_packages[m_currentInfo].at(index.row());
+    const Package &p = m_packages[m_currentInfo].at(index.row());
     switch(index.column()) {
     case 0:
         switch (role) {
@@ -85,14 +85,14 @@ int KpkSimulateModel::countInfo(Package::Info info)
     }
 }
 
-void KpkSimulateModel::addPackage(const Package &p)
+void KpkSimulateModel::addPackage(const PackageKit::Package &p)
 {
     if (p.info() == Package::InfoFinished ||
         p.info() == Package::InfoCleanup) {
         return;
     }
 
-    foreach (const Package pkg, m_skipPackages) {
+    foreach (const Package &pkg, m_skipPackages) {
         if (pkg.id() == p.id()) {
             // found a package to skip
             return;

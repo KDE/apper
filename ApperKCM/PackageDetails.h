@@ -63,7 +63,7 @@ private slots:
     void on_screenshotL_clicked();
     void actionActivated(QAction *action);
     void description(const PackageKit::Package &package);
-    void files(const Package &package, const QStringList &files);
+    void files(const PackageKit::Package &package, const QStringList &files);
     void finished();
     void resultJob(KJob *);
 

@@ -77,7 +77,6 @@ QString KpkIcons::statusIconName(Transaction::Status status)
         KpkIcons::configure();
     }
     switch (status) {
-    case Transaction::LastStatus                 :
     case Transaction::UnknownStatus              : return "help-browser";
     case Transaction::StatusCancel               :
     case Transaction::StatusCleanup              : return "package-clean-up";
@@ -176,7 +175,6 @@ QString KpkIcons::actionIconName(Transaction::Role role)
         KpkIcons::configure();
     }
     switch (role) {
-    case Transaction::LastRole                    :
     case Transaction::UnknownRole                 : return "applications-other";
     case Transaction::RoleAcceptEula              : return "package-info";
     case Transaction::RoleCancel                  : return "process-stop";
@@ -229,7 +227,6 @@ KIcon KpkIcons::groupsIcon(Package::Group group)
         KpkIcons::configure();
     }
     switch (group) {
-    case Package::LastGroup            :
     case Package::UnknownGroup         : return KIcon("unknown");
     case Package::GroupAccessibility   : return KIcon("preferences-desktop-accessibility");
     case Package::GroupAccessories     : return KIcon("applications-accessories");
@@ -303,7 +300,6 @@ QString KpkIcons::restartIconName(Package::Restart type)
     case Package::RestartSession         : return "system-log-out";
     case Package::RestartApplication     : return "process-stop";
     case Package::RestartNone            :
-    case Package::LastRestart            :
     case Package::UnknownRestart         : break;
     }
     return "";

@@ -18,7 +18,7 @@ kde4_add_executable(apper
 target_link_libraries(apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KUTILS_LIBS}
-    ${QPACKAGEKIT_LIBRARIES}
+    ${QPACKAGEKIT2_LIBRARIES}
     kpackagekitlib
 )
 

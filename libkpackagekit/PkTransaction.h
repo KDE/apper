@@ -90,13 +90,13 @@ private slots:
     void removePackages(bool allow_deps = true);
     void updatePackages();
 
-    void transactionFinished(Transaction::Exit status);
-    void errorCode(Transaction::Error error, const QString &details);
+    void transactionFinished(PackageKit::Transaction::Exit status);
+    void errorCode(PackageKit::Transaction::Error error, const QString &details);
     void updateUi();
-    void eulaRequired(Eula info);
-    void mediaChangeRequired(Transaction::MediaType type, const QString &id, const QString &text);
-    void repoSignatureRequired(Signature info);
-    void files(const Package &package, const QStringList &files);
+    void eulaRequired(PackageKit::Eula info);
+    void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
+    void repoSignatureRequired(PackageKit::Signature info);
+    void files(const PackageKit::Package &package, const QStringList &files);
 
     void setExitStatus(PkTransaction::ExitStatus status);
     void reject();

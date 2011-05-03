@@ -47,7 +47,7 @@ public:
     void clear();
 
 public slots:
-    void currentPackage(const Package &package);
+    void currentPackage(const PackageKit::Package &package);
 
 private slots:
     void followBottom(int value);

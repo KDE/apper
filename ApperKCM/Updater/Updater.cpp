@@ -223,11 +223,11 @@ void Updater::getUpdates()
     updateDetails->hide();
     m_updatesT = new Transaction(this);
     if (m_selected) {
-        connect(m_updatesT, SIGNAL(package(const Package &)),
-                m_updatesModel, SLOT(addSelectedPackage(const Package &)));
+        connect(m_updatesT, SIGNAL(package(const PackageKit::Package &)),
+                m_updatesModel, SLOT(addSelectedPackage(const PackageKit::Package &)));
     } else {
-        connect(m_updatesT, SIGNAL(package(const Package &)),
-                m_updatesModel, SLOT(addPackage(const Package &)));
+        connect(m_updatesT, SIGNAL(package(const PackageKit::Package &)),
+                m_updatesModel, SLOT(addPackage(const PackageKit::Package &)));
     }
     connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));

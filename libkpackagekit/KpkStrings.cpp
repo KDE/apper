@@ -27,7 +27,6 @@
 QString KpkStrings::status(Transaction::Status status)
 {
     switch (status) {
-    case Transaction::LastStatus :
     case Transaction::UnknownStatus :
         return i18nc("This is when the transaction status is not known",
                      "Unknown state");
@@ -168,7 +167,6 @@ QString KpkStrings::statusPast(Transaction::Status status)
 QString KpkStrings::action(Transaction::Role action)
 {
     switch (action) {
-    case Transaction::LastRole :
     case Transaction::UnknownRole :
         return i18nc("The role of the transaction, in present tense", "Unknown role type");
     case Transaction::RoleGetDepends :
@@ -247,7 +245,6 @@ QString KpkStrings::action(Transaction::Role action)
 QString KpkStrings::actionPast(Transaction::Role action)
 {
     switch (action) {
-    case Transaction::LastRole :
     case Transaction::UnknownRole :
         return i18nc("The role of the transaction, in past tense", "Unknown role type");
     case Transaction::RoleGetDepends :
@@ -502,7 +499,6 @@ QString KpkStrings::error(Transaction::Error error)
         return i18n("Update failed due to running process");
     case Transaction::ErrorPackageDatabaseChanged :
         return i18n("The package database was changed");
-    case Transaction::LastError :
     case Transaction::UnknownError :
         return i18n("Unknown error");
     }
@@ -674,7 +670,6 @@ QString KpkStrings::errorMessage(Transaction::Error error)
                     "More information is available in the detailed report.");
     case Transaction::ErrorPackageDatabaseChanged :
         return i18n("The package database was changed while the request was running.");
-    case Transaction::LastError :
     case Transaction::UnknownError :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
@@ -754,7 +749,6 @@ QString KpkStrings::groups(Package::Group group)
         return i18nc("The group type", "Vendor");
     case Package::GroupNewest :
         return i18nc("The group type", "Newest packages");
-    case Package::LastGroup :
     case Package::UnknownGroup :
         return i18nc("The group type", "Unknown group");
     }
@@ -834,7 +828,6 @@ QString KpkStrings::restartTypeFuture(Package::Restart value)
         return i18n("You will be required to log out and back in due to a security update.");
     case Package::RestartSecuritySystem :
         return i18n("A restart will be required due to a security update.");
-    case Package::LastRestart :
     case Package::UnknownRestart :
         kWarning() << "restartTypeFuture(Package::UnknownRestartType)";
         return QString();
@@ -858,7 +851,6 @@ QString KpkStrings::restartType(Package::Restart value)
         return i18n("You need to log out and log back in to remain secure.");
     case Package::RestartSecuritySystem :
         return i18n("A restart is required to remain secure.");
-    case Package::LastRestart :
     case Package::UnknownRestart :
         kWarning() << "restartType(Package::UnknownRestartType)";
         return QString();
@@ -876,7 +868,6 @@ QString KpkStrings::updateState(Package::UpdateState value)
         return i18n("Unstable");
     case Package::UpdateStateTesting :
         return i18n("Testing");
-    case Package::LastUpdateState :
     case Package::UnknownUpdateState :
         kWarning() << "updateState(Package::UnknownUpdateState)";
         return QString();
@@ -894,7 +885,6 @@ QString KpkStrings::mediaMessage(Transaction::MediaType value, const QString &te
         return i18n("Please insert the DVD labeled '%1', and press continue.", text);
     case Transaction::MediaTypeDisc :
         return i18n("Please insert the disc labeled '%1', and press continue.", text);
-    case Transaction::LastMediaType :
     case Transaction::UnknownMediaType :
         return i18n("Please insert the medium labeled '%1', and press continue.", text);
     }
@@ -935,7 +925,6 @@ QString KpkStrings::message(Transaction::Message value)
         return i18n("Software source download failed");
     case Transaction::MessageRepoForDevelopersOnly :
         return i18n("This software source is for developers only");
-    case Transaction::LastMessage :
     case Transaction::UnknownMessage :
         kWarning() << "message(Enum::UnknownMessageType)";
         return QString();

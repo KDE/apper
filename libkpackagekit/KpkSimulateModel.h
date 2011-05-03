@@ -47,7 +47,7 @@ public:
     void clear();
 
 public slots:
-    void addPackage(const Package &package);
+    void addPackage(const PackageKit::Package &package);
 
 private:
     QHash<Package::Info, QList<Package> > m_packages;

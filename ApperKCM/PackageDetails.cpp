@@ -304,14 +304,14 @@ void PackageDetails::actionActivated(QAction *action)
     // disconnect the transaction
     // so that we don't get old data
     if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
-                   this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
-        disconnect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-                   m_dependsModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
-        disconnect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-                   m_requiresModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
-        disconnect(m_transaction, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
-                   this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
+        disconnect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
+                   this, SLOT(description(const PackageKit::Package &)));
+        disconnect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
+                   m_dependsModel, SLOT(addPackage(const PackageKit::Package &)));
+        disconnect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
+                   m_requiresModel, SLOT(addPackage(const PackageKit::Package &)));
+        disconnect(m_transaction, SIGNAL(files(const PackageKit::Package &, const QStringList &)),
+                   this, SLOT(files(const PackageKit::Package &, const QStringList &)));
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    this, SLOT(finished()));
         m_transaction = 0;
@@ -319,15 +319,11 @@ void PackageDetails::actionActivated(QAction *action)
 
     // Check to see if we don't already have the required data
     uint role = action->data().toUInt();
-    if (role == Transaction::RoleGetDetails &&
-        m_package.hasDetails()) {
-        description(m_package);
-        return;
-    }
     switch (role) {
     case Transaction::RoleGetDetails:
-        if (m_package.hasDetails()) {
+        if (m_hasDetails) {
             description(m_package);
+            display();
             return;
         }
         break;
@@ -357,30 +353,30 @@ void PackageDetails::actionActivated(QAction *action)
             this, SLOT(finished()));
     switch (role) {
     case Transaction::RoleGetDetails:
-        connect(m_transaction, SIGNAL(details(const QSharedPointer<PackageKit::Package> &)),
-                this, SLOT(description(const QSharedPointer<PackageKit::Package> &)));
+        connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
+                this, SLOT(description(const PackageKit::Package &)));
         m_transaction->getDetails(m_package);
         break;
     case Transaction::RoleGetDepends:
         m_dependsModel->clear();
-        connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-                m_dependsModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
+                m_dependsModel, SLOT(addPackage(const PackageKit::Package &)));
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 m_dependsModel, SLOT(finished()));
         m_transaction->getDepends(m_package, Transaction::FilterNone, false);
         break;
     case Transaction::RoleGetRequires:
         m_requiresModel->clear();
-        connect(m_transaction, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-                m_requiresModel, SLOT(addPackage(const QSharedPointer<PackageKit::Package> &)));
+        connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
+                m_requiresModel, SLOT(addPackage(const PackageKit::Package &)));
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 m_requiresModel, SLOT(finished()));
         m_transaction->getRequires(m_package, Transaction::FilterNone, false);
         break;
     case Transaction::RoleGetFiles:
         m_currentFileList.clear();
-        connect(m_transaction, SIGNAL(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)),
-                this, SLOT(files(const QSharedPointer<PackageKit::Package> &, const QStringList &)));
+        connect(m_transaction, SIGNAL(files(const PackageKit::Package &, const QStringList &)),
+                this, SLOT(files(const PackageKit::Package &, const QStringList &)));
         m_transaction->getFiles(m_package);
         break;
     }
@@ -394,7 +390,6 @@ void PackageDetails::actionActivated(QAction *action)
 
 void PackageDetails::resultJob(KJob *job)
 {
-    kDebug();
     KIO::FileCopyJob *fJob = qobject_cast<KIO::FileCopyJob*>(job);
     if (!fJob->error()) {
         m_screenshotPath[fJob->srcUrl().url()] = fJob->destUrl().toLocalFile();
@@ -679,7 +674,7 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
     return ret;
 }
 
-void PackageDetails::description(const Package &package)
+void PackageDetails::description(const PackageKit::Package &package)
 {
     m_package = package;
 }
@@ -709,7 +704,7 @@ void PackageDetails::finished()
     }
 }
 
-void PackageDetails::files(const Package &package, const QStringList &files)
+void PackageDetails::files(const PackageKit::Package &package, const QStringList &files)
 {
     Q_UNUSED(package)
 

@@ -117,6 +117,8 @@ void Settings::on_showOriginsCB_stateChanged(int state)
             m_originModel, SLOT(finished()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_busySeq, SLOT(stop()));
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            m_originModel, SLOT(checkChanges()));
 
     if (state == Qt::Checked) {
         transaction->getRepoList(Transaction::FilterNone);
@@ -261,7 +263,6 @@ void Settings::save()
             KMessageBox::sorry(this,
                                i18n("You do not have the necessary privileges to perform this action."),
                                i18n("Failed to set origin data"));
-            QTimer::singleShot(1, this, SLOT(checkChanges()));
         }
         on_showOriginsCB_stateChanged(showOriginsCB->checkState());
     }

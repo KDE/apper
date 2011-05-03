@@ -95,7 +95,7 @@ void ProgressView::clear()
     header()->setStretchLastSection(true);
 }
 
-void ProgressView::currentPackage(const Package &p)
+void ProgressView::currentPackage(const PackageKit::Package &p)
 {
     if (!p.id().isEmpty()) {
         m_lastPackageId = p.id();

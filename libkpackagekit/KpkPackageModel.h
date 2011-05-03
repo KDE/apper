@@ -82,11 +82,11 @@ public:
     QModelIndex parent(const QModelIndex &index) const;
 
 public slots:
-    void addPackage(const Package &package,
+    void addPackage(const PackageKit::Package &package,
                     bool selected = false);
     void addPackages(const QList<Package> &packages,
                      bool selected = false);
-    void addSelectedPackage(const Package &package);
+    void addSelectedPackage(const PackageKit::Package &package);
     void rmSelectedPackage(const KpkPackageModel::InternalPackage &package);
 
     void setAllChecked(bool checked);

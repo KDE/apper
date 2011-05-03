@@ -57,7 +57,7 @@ KpkPackageModel::KpkPackageModel(QObject *parent)
     m_installedEmblem = KpkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 }
 
-void KpkPackageModel::addPackage(const Package &package, bool selected)
+void KpkPackageModel::addPackage(const PackageKit::Package &package, bool selected)
 {
     if (package.info() == Package::InfoBlocked) {
         return;
@@ -108,7 +108,7 @@ void KpkPackageModel::addPackage(const Package &package, bool selected)
         iPackage.icon = AppInstall::instance()->genericIcon(package.name());
         iPackage.isPackage = true;
 #else
-        iPackage.icon = package->iconPath();
+        iPackage.icon = package.iconPath();
         if (iPackage.icon.isEmpty()) {
             iPackage.isPackage = true;
         } else {
@@ -539,7 +539,7 @@ QList<Package> KpkPackageModel::selectedPackages() const
 {
     QList<Package> list;
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
-        list << Package(package.id, package.info, package.summary);
+        list.append(Package(package.id, package.info, package.summary));
     }
     return list;
 }

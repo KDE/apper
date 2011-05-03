@@ -27,6 +27,8 @@
 #include <KMessageBox>
 #include <KLocale>
 
+#include <QEventLoop>
+
 #include <Daemon>
 
 using namespace PackageKit;
@@ -92,25 +94,28 @@ bool OriginModel::changed() const
 bool OriginModel::save()
 {
     bool changed = false;
+    QEventLoop loop;
     for (int i = 0; i < rowCount(); ++i) {
         QStandardItem *repo = item(i);
         if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
             Transaction *t = new Transaction(this);
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                    &loop, SLOT(quit()));
             t->repoEnable(repo->data(Qt::UserRole).toString(),
                           static_cast<bool>(repo->checkState()));
             if (t->error()) {
                 KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
                 return false;
             }
+            loop.exec();
             changed = true;
         }
     }
 
     // refresh the user cache if he or she enables/disables any of it
     if (changed) {
-        SET_PROXY
-        Transaction *t = new Transaction(this);
-        t->refreshCache(true);
+        // TODO ask to refresh the cache
+        // TODO emit refresh requested
     }
     return true;
 }

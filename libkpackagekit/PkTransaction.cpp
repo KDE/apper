@@ -385,14 +385,14 @@ void PkTransaction::setTransaction(Transaction *trans)
         m_trans->role() == Transaction::RoleUpdatePackages ||
         m_trans->role() == Transaction::RoleUpdateSystem) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
-        connect(m_trans, SIGNAL(package(const QSharedPointer<PackageKit::Package> &)),
-                ui->progressView, SLOT(currentPackage(const QSharedPointer<PackageKit::Package> &)));
+        connect(m_trans, SIGNAL(package(const PackageKit::Package &)),
+                ui->progressView, SLOT(currentPackage(const PackageKit::Package &)));
         d->showDetails = transactionGroup.readEntry("ShowDetails", false);
 //         enableButton(KDialog::Details, true);
         if (d->showDetails != ui->progressView->isVisible()) {
             slotButtonClicked(KDialog::Details);
         }
-        
+
         d->simulateModel->deleteLater();
         d->simulateModel = 0;
     } else {
@@ -405,8 +405,8 @@ void PkTransaction::setTransaction(Transaction *trans)
                 d->simulateModel = new KpkSimulateModel(this, d->packages);
             }
             d->simulateModel->clear();
-            connect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                    d->simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+            connect(m_trans, SIGNAL(package(const PackageKit::Package &)),
+                    d->simulateModel, SLOT(addPackage(const PackageKit::Package &)));
         }
 
         if (ui->progressView->isVisible()) {
@@ -447,8 +447,8 @@ void PkTransaction::setTransaction(Transaction *trans)
 
 void PkTransaction::unsetTransaction()
 {
-    disconnect(m_trans, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-               d->simulateModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+    disconnect(m_trans, SIGNAL(package(const PackageKit::Package &)),
+               d->simulateModel, SLOT(addPackage(const PackageKit::Package &)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
     disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
@@ -676,7 +676,7 @@ void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
     if (frm && frm->result() == KDialog::Yes) {
         m_handlingActionRequired = false;
         Transaction *trans = new Transaction(this);
-        trans->installSignature(info.type, info.keyId, info.package);
+        trans->installSignature(info);
         if (trans->error()) {
             KMessageBox::sorry(this,
                                KpkStrings::daemonError(trans->error()),
@@ -691,7 +691,7 @@ void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
     delete frm;
 }
 
-void PkTransaction::files(const Package &package, const QStringList &files)
+void PkTransaction::files(const PackageKit::Package &package, const QStringList &files)
 {
     Q_UNUSED(package)
     foreach (const QString &desktop, files.filter(".desktop")) {
@@ -773,8 +773,8 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                 transaction->getFiles(d->packages);
                 if (!transaction->error()) {
                     setTransaction(transaction);
-                    connect(transaction, SIGNAL(files(QSharedPointer<PackageKit::Package>, const QStringList &)),
-                            this, SLOT(files(QSharedPointer<PackageKit::Package>, const QStringList &)));
+                    connect(transaction, SIGNAL(files(const PackageKit::Package &, const QStringList &)),
+                            this, SLOT(files(const PackageKit::Package &, const QStringList &)));
                     return; // avoid the exit code
                 }
             }

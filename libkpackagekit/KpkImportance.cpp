@@ -25,7 +25,6 @@
 int KpkImportance::restartImportance(Package::Restart type)
 {
     switch (type) {
-    case Package::LastRestart :
     case Package::UnknownRestart :
     case Package::RestartNone :
         return 0;

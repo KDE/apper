@@ -40,7 +40,6 @@
 #include <KFileItemDelegate>
 
 #include <KpkPackageModel.h>
-#include <KpkReviewChanges.h>
 #include <KpkDelegate.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
@@ -536,6 +535,7 @@ void ApperKCM::on_backTB_clicked()
 void ApperKCM::on_changesPB_clicked()
 {
     m_changesModel->clear();
+    m_browseModel->selectedPackages();
     m_changesModel->addPackages(m_browseModel->selectedPackages(), true);
     stackedWidget->setCurrentWidget(pageChanges);
     backTB->setEnabled(true);
@@ -555,8 +555,8 @@ void ApperKCM::search()
                    this, SLOT(finished()));
         disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    m_browseModel, SLOT(finished()));
-        disconnect(m_searchTransaction, SIGNAL(package(const Package &)),
-                   m_browseModel, SLOT(addPackage(const Package &)));
+        disconnect(m_searchTransaction, SIGNAL(package(const PackageKit::Package &)),
+                   m_browseModel, SLOT(addPackage(const PackageKit::Package &)));
         disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
                    this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
     }
@@ -569,8 +569,8 @@ void ApperKCM::search()
             this, SLOT(finished()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_browseModel, SLOT(finished()));
-    connect(m_searchTransaction, SIGNAL(package(const Package &)),
-            m_browseModel, SLOT(addPackage(const Package &)));
+    connect(m_searchTransaction, SIGNAL(package(const PackageKit::Package &)),
+            m_browseModel, SLOT(addPackage(const PackageKit::Package &)));
     connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
             this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
     switch (m_searchRole) {

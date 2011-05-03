@@ -46,7 +46,7 @@ target_link_libraries(kpackagekitsmarticon
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_SOLID_LIBS}
-    ${QPACKAGEKIT_LIBRARIES}
+    ${QPACKAGEKIT2_LIBRARIES}
     ${DEBCONF_KDE_LIB}
     kpackagekitlib
 )
