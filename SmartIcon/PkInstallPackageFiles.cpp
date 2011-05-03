@@ -93,7 +93,7 @@ void PkInstallPackageFiles::start()
     // check if there were "false" files
     if (notFiles.count()) {
         if (!showFullPathNotFiles) {
-            for(int i = 0; i < notFiles.count(); i++) {
+            for (int i = 0; i < notFiles.count(); i++) {
                 notFiles[i] = KUrl(notFiles.at(i)).fileName();
             }
         }
@@ -151,8 +151,8 @@ void PkInstallPackageFiles::start()
                 } else {
                     kTransaction()->setTransaction(t);
                     m_installFilesModel = new KpkSimulateModel(this);
-                    connect(t, SIGNAL(package(QSharedPointer<PackageKit::Package>)),
-                            m_installFilesModel, SLOT(addPackage(QSharedPointer<PackageKit::Package>)));
+                    connect(t, SIGNAL(package(const PackageKit::Package &)),
+                            m_installFilesModel, SLOT(addPackage(const PackageKit::Package &)));
                     if (showProgress()) {
                         kTransaction()->show();
                     }

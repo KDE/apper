@@ -54,7 +54,7 @@ private slots:
     void createTransactionDialog(PackageKit::Transaction *t);
     void transactionDialogClosed();
     void message(PackageKit::Transaction::Message type, const QString &message);
-    void requireRestart(PackageKit::Package::Restart type, const Package &pkg);
+    void requireRestart(PackageKit::Package::Restart type, const PackageKit::Package &pkg);
     void finished(PackageKit::Transaction::Exit exit);
     void transactionChanged();
     void logout();

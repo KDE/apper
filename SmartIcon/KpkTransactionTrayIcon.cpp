@@ -259,8 +259,8 @@ void KpkTransactionTrayIcon::setCurrentTransaction(PackageKit::Transaction *tran
         role == Transaction::RoleUpdateSystem) {
         connect(m_currentTransaction, SIGNAL(message(PackageKit::Transaction::Message, const QString &)),
                 this, SLOT(message(PackageKit::Transaction::Message, const QString &)));
-        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Package::Restart, QSharedPointer<PackageKit::Package>)),
-                this, SLOT(requireRestart(PackageKit::Package::Restart, QSharedPointer<PackageKit::Package>)));
+        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Package::Restart, const PackageKit::Package &)),
+                this, SLOT(requireRestart(PackageKit::Package::Restart, const PackageKit::Package &)));
 
         // Don't let the system sleep while doing some sensible actions
         suppressSleep(true, KpkStrings::action(role));

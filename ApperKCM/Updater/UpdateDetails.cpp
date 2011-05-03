@@ -157,7 +157,7 @@ void UpdateDetails::display()
     }
 }
 
-void UpdateDetails::updateDetail(const Package &package)
+void UpdateDetails::updateDetail(const PackageKit::Package &package)
 {
     //format and show description
     QString description;

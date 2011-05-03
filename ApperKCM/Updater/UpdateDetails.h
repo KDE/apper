@@ -49,7 +49,7 @@ public slots:
     void hide();
 
 private slots:
-    void updateDetail(const Package &package);
+    void updateDetail(const PackageKit::Package &package);
     void updateDetailFinished();
     void display();
 

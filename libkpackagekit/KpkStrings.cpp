@@ -237,6 +237,8 @@ QString KpkStrings::action(Transaction::Role action)
         return i18nc("The role of the transaction, in present tense", "Simulating the remove");
     case Transaction::RoleSimulateUpdatePackages :
         return i18nc("The role of the transaction, in present tense", "Simulating the update");
+    case Transaction::RoleUpgradeSystem :
+        return i18nc("The role of the transaction, in present tense", "Upgrading system");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
@@ -315,6 +317,8 @@ QString KpkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Simulated the remove");
     case Transaction::RoleSimulateUpdatePackages :
         return i18nc("The role of the transaction, in past tense", "Simulated the update");
+    case Transaction::RoleUpgradeSystem :
+        return i18nc("The role of the transaction, in past tense", "Upgraded system");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
@@ -499,6 +503,10 @@ QString KpkStrings::error(Transaction::Error error)
         return i18n("Update failed due to running process");
     case Transaction::ErrorPackageDatabaseChanged :
         return i18n("The package database was changed");
+    case Transaction::ErrorProvideTypeNotSupported :
+        return i18n("Virtual provide type is not supported");
+    case Transaction::ErrorInstallRootInvalid :
+        return i18n("Install root is invalid");
     case Transaction::UnknownError :
         return i18n("Unknown error");
     }
@@ -670,6 +678,10 @@ QString KpkStrings::errorMessage(Transaction::Error error)
                     "More information is available in the detailed report.");
     case Transaction::ErrorPackageDatabaseChanged :
         return i18n("The package database was changed while the request was running.");
+    case Transaction::ErrorProvideTypeNotSupported :
+        return i18n("The virtual provide type is not supported by this system.");
+    case Transaction::ErrorInstallRootInvalid :
+        return i18n("The install root is invalid. Please contact your administrator.");
     case Transaction::UnknownError :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
@@ -925,6 +937,8 @@ QString KpkStrings::message(Transaction::Message value)
         return i18n("Software source download failed");
     case Transaction::MessageRepoForDevelopersOnly :
         return i18n("This software source is for developers only");
+    case Transaction::MessageOtherUpdatesHeldBack :
+        return i18n("Other updates have been held back");
     case Transaction::UnknownMessage :
         kWarning() << "message(Enum::UnknownMessageType)";
         return QString();

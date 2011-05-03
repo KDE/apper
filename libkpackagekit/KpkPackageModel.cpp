@@ -146,7 +146,7 @@ void KpkPackageModel::addPackages(const QList<Package> &packages,
     finished();
 }
 
-void KpkPackageModel::addSelectedPackage(const Package &package)
+void KpkPackageModel::addSelectedPackage(const PackageKit::Package &package)
 {
     addPackage(package, true);
 }

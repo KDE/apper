@@ -13,7 +13,6 @@ set(libkpk_SRCS
     KpkRepoSig.cpp
     KpkLicenseAgreement.cpp
     KpkPackageModel.cpp
-    KpkSimplePackageModel.cpp
     KpkProgressBar.cpp
     KpkReviewChanges.cpp
     KpkRequirements.cpp
