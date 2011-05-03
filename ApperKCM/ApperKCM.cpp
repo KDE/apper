@@ -82,14 +82,15 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     setButtons(Apply);
     KGlobal::locale()->insertCatalog("kpackagekit");
 
-    setupUi(this);
-
     // store the actions supported by the backend
     m_roles = Daemon::actions();
 
     // Set the current locale
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Daemon::setHints("locale=" + locale);
+
+    setupUi(this);
+    browseView->init(m_roles);
 
     // Browse TAB
     backTB->setIcon(KIcon("go-previous"));

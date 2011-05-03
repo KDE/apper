@@ -35,6 +35,8 @@ public:
     BrowseView(QWidget *parent = 0);
     ~BrowseView();
 
+    void init(Transaction::Roles roles);
+
     void showInstalledPanel(bool visible);
     void setCategoryModel(QAbstractItemModel *model);
     void setParentCategory(const QModelIndex &index);

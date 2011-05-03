@@ -67,8 +67,10 @@ PackageDetails::PackageDetails(QWidget *parent)
 {
     setupUi(this);
     connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
+}
 
-    Transaction::Roles roles = Daemon::actions();
+void PackageDetails::init(Transaction::Roles roles)
+{
     KMenu *menu = new KMenu(i18n("Display"), this);
     m_actionGroup = new QActionGroup(this);
     QAction *action = 0;

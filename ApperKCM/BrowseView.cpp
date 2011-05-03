@@ -45,9 +45,13 @@ BrowseView::BrowseView(QWidget *parent)
  : QWidget(parent)
 {
     setupUi(this);
-
     connect(categoryView, SIGNAL(clicked(const QModelIndex &)),
             this, SIGNAL(categoryActivated(const QModelIndex &)));
+}
+
+void BrowseView::init(Transaction::Roles roles)
+{
+    packageDetails->init(roles);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));

@@ -29,8 +29,6 @@
 
 #include <QEventLoop>
 
-#include <Daemon>
-
 using namespace PackageKit;
 
 Q_DECLARE_METATYPE(Qt::CheckState)

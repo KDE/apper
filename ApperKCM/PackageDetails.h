@@ -49,6 +49,8 @@ public:
     PackageDetails(QWidget *parent = 0);
     ~PackageDetails();
 
+    void init(Transaction::Roles roles);
+
     void setPackage(const QModelIndex &index);
     void hidePackageVersion(bool hide);
     void hidePackageArch(bool hide);
