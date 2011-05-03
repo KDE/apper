@@ -31,11 +31,11 @@
 using namespace PackageKit;
 
 class OriginModel;
-class Settings : public QWidget, public Ui::Settings
+class Settings : public QWidget, private Ui::Settings
 {
     Q_OBJECT
 public:
-    Settings(QWidget *parent);
+    Settings(Transaction::Roles roles, QWidget *parent);
     ~Settings();
 
     bool hasChanges() const;

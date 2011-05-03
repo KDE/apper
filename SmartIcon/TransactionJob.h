@@ -18,65 +18,46 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef UPDATER_H
-#define UPDATER_H
+#ifndef TRANSACTION_JOB_H
+#define TRANSACTION_JOB_H
 
-#include "ui_Updater.h"
-
-#include <PkTransactionDialog.h>
+#include <KpkAbstractIsRunning.h>
+#include <KJob>
 
 #include <Transaction>
 
+#include <QAction>
+
 using namespace PackageKit;
 
-class KpkPackageModel;
-class ApplicationsDelegate;
-class CheckableHeader;
-class Updater : public QWidget, Ui::Updater
+class PkTransactionDialog;
+class TransactionTrayIcon;
+class TransactionJob : public KJob
 {
 Q_OBJECT
 public:
-    Updater(Transaction::Roles roles, QWidget *parent);
-    ~Updater();
+    TransactionJob(Transaction *transaction, QObject *parent = 0);
+    ~TransactionJob();
 
-    bool hasChanges() const;
-    void setSelected(bool selected);
-    QList<Package> packagesToUpdate() const;
-
-signals:
-    void changed(bool);
-
-public slots:
-    void load();
-    void refreshCache();
-    void getUpdates();
+    virtual void start();
 
 private slots:
-    void on_packageView_customContextMenuRequested(const QPoint &pos);
+    void finished(PackageKit::Transaction::Exit exit);
+    void package(const PackageKit::Package &package);
+    void updateJob();
 
-    void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);
-
-    void getUpdatesFinished();
-
-    void on_packageView_clicked(const QModelIndex &index);
-
-    void checkEnableUpdateButton();
-    void errorCode(PackageKit::Transaction::Error error, const QString &details);
-
-    void showVersions(bool enabled);
-    void showArchs(bool enabled);
+protected:
+    virtual bool doKill();
+    void emitDescription();
 
 private:
-    Transaction::Roles    m_roles;
-    bool                  m_selected;
-    KpkPackageModel      *m_updatesModel;
-    ApplicationsDelegate *m_delegate;
-    CheckableHeader      *m_header;
-    QAction              *m_showPackageVersion;
-    QAction              *m_showPackageArch;
-    PkTransactionDialog  *m_transDialog;
-    Transaction          *m_updatesT;
-    KPixmapSequenceOverlayPainter *m_busySeq;
+    Transaction  *m_transaction;
+    Transaction::Status  m_status;
+    uint          m_percentage;
+    uint          m_speed;
+    QString       m_title;
+    QString       m_details;
+    QStringList   m_packages;
 };
 
 #endif

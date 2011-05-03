@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>520</width>
+    <width>552</width>
     <height>505</height>
    </rect>
   </property>
@@ -180,16 +180,6 @@
         </property>
         <property name="text">
          <string>Get Updates</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QCheckBox" name="getRepositoryListCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Get Repository List</string>
         </property>
        </widget>
       </item>
@@ -373,7 +363,17 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
+      <item row="9" column="2">
+       <widget class="QCheckBox" name="getRepositoryListCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Get Repository List</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
        <widget class="QCheckBox" name="repositoryEnableCB">
         <property name="enabled">
          <bool>false</bool>
@@ -383,7 +383,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item row="1" column="3">
        <widget class="QCheckBox" name="repositorySetEnableCB">
         <property name="enabled">
          <bool>false</bool>
@@ -393,7 +393,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="3">
+      <item row="2" column="3">
        <widget class="QCheckBox" name="whatProvidesCB">
         <property name="enabled">
          <bool>false</bool>
@@ -403,7 +403,7 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="3">
+      <item row="3" column="3">
        <widget class="QCheckBox" name="getPackagesCB">
         <property name="enabled">
          <bool>false</bool>
@@ -413,7 +413,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="3">
+      <item row="4" column="3">
        <widget class="QCheckBox" name="simulateInstallFilesCB">
         <property name="enabled">
          <bool>false</bool>
@@ -423,7 +423,7 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="3">
+      <item row="5" column="3">
        <widget class="QCheckBox" name="simulateInstallPackagesCB">
         <property name="enabled">
          <bool>false</bool>
@@ -433,7 +433,7 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="3">
+      <item row="6" column="3">
        <widget class="QCheckBox" name="simulateRemovePackagesCB">
         <property name="enabled">
          <bool>false</bool>
@@ -443,13 +443,23 @@
         </property>
        </widget>
       </item>
-      <item row="8" column="3">
+      <item row="7" column="3">
        <widget class="QCheckBox" name="simulateUpdatePackagesCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
          <string>Simulate Update Packages</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <widget class="QCheckBox" name="upgradeSystemCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Upgrade System</string>
         </property>
        </widget>
       </item>

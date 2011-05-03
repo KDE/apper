@@ -70,6 +70,7 @@ BackendDetails::BackendDetails(QWidget *parent)
     simulateInstallPackagesCB->setChecked(actions & Transaction::RoleSimulateInstallPackages);
     simulateRemovePackagesCB->setChecked(actions & Transaction::RoleSimulateRemovePackages);
     simulateUpdatePackagesCB->setChecked(actions & Transaction::RoleSimulateUpdatePackages);
+    upgradeSystemCB->setChecked(actions & Transaction::RoleUpgradeSystem);
 
     // FILTERS - Setup filters
     Transaction::Filters filters = Daemon::filters();

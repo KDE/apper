@@ -47,8 +47,9 @@
 
 #include <Daemon>
 
-Updater::Updater(QWidget *parent) :
+Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     QWidget(parent),
+    m_roles(roles),
     m_selected(false),
     m_updatesT(0)
 {
@@ -88,9 +89,6 @@ Updater::Updater(QWidget *parent) :
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(packageView->viewport());
-
-    // check to see what roles the backend has
-    m_roles = Daemon::actions();
 
     // hide distro Upgrade container and line
     distroUpgradesSA->hide();
@@ -255,11 +253,13 @@ void Updater::getUpdates()
     distroUpgradesSA->hide();
     line->hide();
 
-    // Check for distribution Upgrades
-    Transaction *t = new Transaction(this);
-    connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)),
-            this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)));
-    t->getDistroUpgrades();
+    if (m_roles & Transaction::RoleGetDistroUpgrades) {
+        // Check for distribution Upgrades
+        Transaction *t = new Transaction(this);
+        connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)),
+                this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)));
+        t->getDistroUpgrades();
+    }
 }
 
 void Updater::refreshCache()

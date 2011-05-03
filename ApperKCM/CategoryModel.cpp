@@ -39,8 +39,9 @@
 
 #include <config.h>
 
-CategoryModel::CategoryModel(QObject *parent)
- : QStandardItemModel(parent)
+CategoryModel::CategoryModel(Transaction::Roles roles, QObject *parent) :
+    QStandardItemModel(parent),
+    m_roles(roles)
 {
     QStandardItem *item;
     item = new QStandardItem(i18n("Installed Software"));
@@ -75,11 +76,9 @@ CategoryModel::CategoryModel(QObject *parent)
     item->setIcon(KIcon("preferences-other"));
     appendRow(item);
 
+#ifdef HAVE_APPINSTALL
     // Get the groups
     m_groups = Daemon::groups();
-    m_roles  = Daemon::actions();
-
-#ifdef HAVE_APPINSTALL
     fillWithServiceGroups();
 //         category("",
 //                              "servers",
@@ -213,6 +212,8 @@ QStandardItem* CategoryModel::findCategory(const QString &categoryId, const QMod
 
 void CategoryModel::fillWithStandardGroups()
 {
+    // Get the groups
+    m_groups = Daemon::groups();
     QStandardItem *item;
     foreach (const Package::Group &group, m_groups) {
         if (group != Package::UnknownGroup) {

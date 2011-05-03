@@ -84,11 +84,12 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
 
     setupUi(this);
 
+    // store the actions supported by the backend
+    m_roles = Daemon::actions();
+
     // Set the current locale
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Daemon::setHints("locale=" + locale);
-    // store the actions supported by the backend
-    m_roles = Daemon::actions();
 
     // Browse TAB
     backTB->setIcon(KIcon("go-previous"));
@@ -144,7 +145,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     }
 
     // Create the groups model
-    m_groupsModel = new CategoryModel(this);
+    m_groupsModel = new CategoryModel(m_roles, this);
     browseView->setCategoryModel(m_groupsModel);
     connect(m_groupsModel, SIGNAL(finished()),
             this, SLOT(setupHomeModel()));
@@ -443,7 +444,7 @@ void ApperKCM::setPage(const QString &page)
             }
 
             if (m_settingsPage == 0) {
-                m_settingsPage = new Settings(this);
+                m_settingsPage = new Settings(m_roles, this);
                 stackedWidget->addWidget(m_settingsPage);
                 m_settingsPage->load();
             }
@@ -464,7 +465,7 @@ void ApperKCM::setPage(const QString &page)
             }
 
             if (m_updaterPage == 0) {
-                m_updaterPage = new Updater(this);
+                m_updaterPage = new Updater(m_roles, this);
                 stackedWidget->addWidget(m_updaterPage);
                 checkUpdatesPB->setIcon(KIcon("view-refresh"));
                 connect(checkUpdatesPB, SIGNAL(clicked(bool)),

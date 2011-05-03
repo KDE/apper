@@ -32,20 +32,17 @@
 
 #include <Solid/Device>
 
-#include <Daemon>
-
 #include <config.h>
 
 #include <KDebug>
 
 using namespace PackageKit;
 
-Settings::Settings(QWidget *parent) :
-    QWidget(parent)
+Settings::Settings(Transaction::Roles roles, QWidget *parent) :
+    QWidget(parent),
+    m_roles(roles)
 {
     setupUi(this);
-
-    m_roles = Daemon::actions();
 
     if (!(m_roles & Transaction::RoleRefreshCache)) {
         intervalL->setEnabled(false);
