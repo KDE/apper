@@ -65,7 +65,7 @@ Comment[uk]=KPackageKit
 Comment[x-test]=xxKPackageKitxx
 
 [Event/ShowUpdates]
-Name=New updates avaliable
+Name=New updates available
 Name[bg]=Има нови налични обновления
 Name[ca]=Hi ha noves actualitzacions disponibles
 Name[ca@valencia]=Hi ha noves actualitzacions disponibles
