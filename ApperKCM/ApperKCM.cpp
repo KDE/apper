@@ -80,7 +80,6 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
     setAboutData(aboutData);
     setButtons(Apply);
-    KGlobal::locale()->insertCatalog("kpackagekit");
 
     // store the actions supported by the backend
     m_roles = Daemon::actions();
