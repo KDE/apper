@@ -1,6 +1,7 @@
 find_package(KDE4Internal REQUIRED)
 
-set(kpackagekit_smart_icon_SRCS
+set(sentinel_SRCS
+    StatusNotifierItem.cpp
     TransactionTrayIcon.cpp
     TransactionJob.cpp
     KpkTransactionTrayIcon.cpp
@@ -25,37 +26,37 @@ set(kpackagekit_smart_icon_SRCS
     main.cpp
 )
 
-qt4_add_dbus_adaptor(kpackagekit_smart_dbus_SRCS
-    org.kde.KPackageKitSmartIcon.xml
+qt4_add_dbus_adaptor(sentinel_dbus_SRCS
+    org.kde.ApperSentinel.xml
     KpkInterface.h
     KpkInterface
 )
 
-qt4_add_dbus_adaptor(kpackagekit_smart_dbus_SRCS
+qt4_add_dbus_adaptor(sentinel_dbus_SRCS
     org.freedesktop.PackageKit.xml
     PkInterface.h
     PkInterface
 )
 
-kde4_add_executable(kpackagekitsmarticon
-    ${kpackagekit_smart_icon_SRCS}
-    ${kpackagekit_smart_dbus_SRCS}
+kde4_add_executable(apper-sentinel
+    ${sentinel_SRCS}
+    ${sentinel_dbus_SRCS}
 )
 
-target_link_libraries(kpackagekitsmarticon
+target_link_libraries(apper-sentinel
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_SOLID_LIBS}
     ${QPACKAGEKIT2_LIBRARIES}
     ${DEBCONF_KDE_LIB}
-    kpackagekitlib
+    sharedlib
 )
 
-install(TARGETS kpackagekitsmarticon DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS apper-sentinel DESTINATION ${LIBEXEC_INSTALL_DIR})
 
-install(FILES KPackageKitSmartIcon.notifyrc DESTINATION ${DATA_INSTALL_DIR}/KPackageKitSmartIcon)
+install(FILES ApperSentinel.notifyrc DESTINATION ${DATA_INSTALL_DIR}/ApperSentinel)
 
 include(PkgConfigGetVar)
-dbus_add_activation_service(org.kde.KPackageKitSmartIcon.service.in)
+dbus_add_activation_service(org.kde.ApperSentinel.service.in)
 dbus_add_activation_service(org.freedesktop.PackageKit.service.in)
 

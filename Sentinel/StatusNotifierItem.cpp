@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
+ *   Copyright (C) 2010 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,47 +18,24 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPACKAGEKIT_SMART_ICON_H
-#define KPACKAGEKIT_SMART_ICON_H
+#include "StatusNotifierItem.h"
 
-#include <KUniqueApplication>
-#include <QTimer>
+#include <KMenu>
+#include <KIcon>
+#include <KActionCollection>
 
-class KpkUpdateIcon;
-class KpkDistroUpgrade;
-class KpkTransactionTrayIcon;
-class KpkInterface;
-class KpkTransactionWatcher;
-class PkInterface;
-
-namespace kpackagekit {
-
-class KPackageKit_Smart_Icon : public KUniqueApplication
+StatusNotifierItem::StatusNotifierItem(QObject *parent)
+ : KStatusNotifierItem(parent)
 {
-Q_OBJECT
+    setCategory(KStatusNotifierItem::SystemServices);
+    setStatus(KStatusNotifierItem::Active);
 
-public:
-    KPackageKit_Smart_Icon();
-    virtual ~KPackageKit_Smart_Icon();
-    int newInstance();
-
-private slots:
-    void prepareToClose();
-    void close();
-
-private:
-    bool isRunning();
-    QTimer *m_closeT;
-
-    KpkTransactionTrayIcon *m_trayIcon;
-    KpkUpdateIcon *m_updateIcon;
-    KpkDistroUpgrade *m_distroUpgrade;
-
-    KpkInterface *m_interface;
-    KpkTransactionWatcher *m_transWatcher;
-    PkInterface *m_pkInterface;
-};
-
+    // Remove standard quit action, as it would quit app
+    KActionCollection *actions = actionCollection();
+    actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
+    setAssociatedWidget(contextMenu());
 }
 
-#endif
+StatusNotifierItem::~StatusNotifierItem()
+{
+}

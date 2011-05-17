@@ -26,10 +26,11 @@
 
 #include <KLocale>
 #include <KGlobal>
+#include <KNotification>
 
 #include <KDebug>
 
-Q_DECLARE_METATYPE(Package::Restart)
+Q_DECLARE_METATYPE(PackageKit::Transaction::Error)
 
 TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
  : KJob(parent),
@@ -41,9 +42,13 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
     m_title = KpkStrings::action(transaction->role());
     connect(transaction, SIGNAL(changed()), this, SLOT(updateJob()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(finished(PackageKit::Transaction::Exit)));
+            this, SLOT(finished()));
+    connect(transaction, SIGNAL(destroyed()),
+            this, SLOT(finished()));
     connect(transaction, SIGNAL(package(const PackageKit::Package &)),
             this, SLOT(package(const PackageKit::Package &)));
+    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
     kDebug();
 }
 
@@ -51,14 +56,14 @@ TransactionJob::~TransactionJob()
 {
 }
 
-void TransactionJob::finished(PackageKit::Transaction::Exit exit)
+void TransactionJob::finished()
 {
     // emit the description so the Speed: xxx KiB/s
     // don't get confused to a destination URL
     emit description(this, m_title);
-    if (exit == Transaction::ExitCancelled) {
-        setError(KilledJobError);
-    }
+//     if (exit == Transaction::ExitCancelled) {
+//         setError(KilledJobError);
+//     }
     emitResult();
 }
 
@@ -78,6 +83,27 @@ void TransactionJob::package(const PackageKit::Package &package)
             emitDescription();
         }
     }
+}
+
+void TransactionJob::errorCode(PackageKit::Transaction::Error err, const QString &details)
+{
+//     increaseRunning();
+
+    KNotification *notify;
+    notify = new KNotification("TransactionError", 0, KNotification::Persistent);
+    notify->setText("<b>"+KpkStrings::error(err)+"</b><br>"+KpkStrings::errorMessage(err));
+    notify->setProperty("ErrorType", QVariant::fromValue(err));
+    notify->setProperty("Details", details);
+
+    QStringList actions;
+    actions << i18n("Details") << i18n("Ignore");
+    notify->setActions(actions);
+    notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+    connect(notify, SIGNAL(activated(uint)),
+            this, SLOT(errorActivated(uint)));
+    connect(notify, SIGNAL(closed()),
+            this, SLOT(decreaseRunning()));
+    notify->sendEvent();
 }
 
 void TransactionJob::emitDescription()

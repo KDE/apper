@@ -37,9 +37,10 @@ ProgressView::ProgressView(QWidget *parent)
    m_keepScrollBarBottom(true)
 {
     m_model = new QStandardItemModel(this);
+    m_delegate = new TransactionDelegate(this);
+    m_defaultDelegate = new QStyledItemDelegate(this);
 
     setModel(m_model);
-    setItemDelegate(new TransactionDelegate(this));
     setRootIsDecorated(false);
     setHeaderHidden(true);
     setSelectionMode(QAbstractItemView::NoSelection);
@@ -86,13 +87,29 @@ void ProgressView::setSubProgress(int value)
     }
 }
 
+void ProgressView::handleRepo(bool handle) {
+    if (handle) {
+        setItemDelegate(m_defaultDelegate);
+        m_model->setColumnCount(1);
+    } else {
+        setItemDelegate(m_delegate);
+        m_model->setColumnCount(3);
+        header()->setResizeMode(0, QHeaderView::ResizeToContents);
+        header()->setResizeMode(1, QHeaderView::ResizeToContents);
+        header()->setStretchLastSection(true);
+    }
+}
+
+void ProgressView::currentRepo(const QString &repoId, const QString &description)
+{
+    Q_UNUSED(repoId)
+    QStandardItem *item = new QStandardItem(description);
+    m_model->appendRow(item);
+}
+
 void ProgressView::clear()
 {
     m_model->clear();
-    m_model->setColumnCount(3);
-    header()->setResizeMode(0, QHeaderView::ResizeToContents);
-    header()->setResizeMode(1, QHeaderView::ResizeToContents);
-    header()->setStretchLastSection(true);
 }
 
 void ProgressView::currentPackage(const PackageKit::Package &p)

@@ -18,49 +18,17 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef PROGRESS_VIEW_H
-#define PROGRESS_VIEW_H
+#ifndef STATUS_NOTIFIER_ITEM_H
+#define STATUS_NOTIFIER_ITEM_H
 
-#include <QStandardItemModel>
-#include <QTreeView>
-#include <QLabel>
-#include <QAbstractSlider>
+#include <KStatusNotifierItem>
 
-#include <Package>
-
-using namespace PackageKit;
-
-class ProgressView: public QTreeView
+class StatusNotifierItem : public KStatusNotifierItem
 {
     Q_OBJECT
 public:
-    typedef enum {
-        RoleInfo = Qt::UserRole + 1,
-        RoleFinished,
-        RoleProgress,
-        RoleId
-    } PackageRoles;
-    ProgressView(QWidget *parent = 0);
-    ~ProgressView();
-
-    void setSubProgress(int value);
-    void clear();
-
-public slots:
-    void currentPackage(const PackageKit::Package &package);
-
-private slots:
-    void followBottom(int value);
-    void rangeChanged(int min, int max);
-
-private:
-    void itemFinished(QStandardItem *item);
-    QList<QStandardItem *> findItems(const QString &packageId);
-
-    QStandardItemModel *m_model;
-    QScrollBar         *m_scrollBar;
-    QString             m_lastPackageId;
-    bool                m_keepScrollBarBottom;
+    StatusNotifierItem(QObject *parent = 0);
+    ~StatusNotifierItem();
 };
 
 #endif

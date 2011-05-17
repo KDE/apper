@@ -81,7 +81,7 @@ private slots:
     void checkChanged();
     void changed();
 
-    void updatePackages(PkTransaction *transaction);
+    void refreshCache();
 
 protected:
     virtual void closeEvent(QCloseEvent *event);

@@ -437,7 +437,7 @@ void ApperKCM::setPage(const QString &page)
     if (transaction) {
         return;
     }
-        
+
     if (page == "settings") {
         if (stackedWidget->currentWidget() != m_settingsPage) {
             if (!canChangePage()) {
@@ -470,7 +470,7 @@ void ApperKCM::setPage(const QString &page)
                 stackedWidget->addWidget(m_updaterPage);
                 checkUpdatesPB->setIcon(KIcon("view-refresh"));
                 connect(checkUpdatesPB, SIGNAL(clicked(bool)),
-                        m_updaterPage, SLOT(refreshCache()));
+                        this, SLOT(refreshCache()));
             }
 
             connect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
@@ -648,14 +648,46 @@ void ApperKCM::changed()
     setCurrentActionEnabled(trans->allowCancel());
 }
 
-void ApperKCM::updatePackages(PkTransaction *transaction)
+void ApperKCM::refreshCache()
 {
-    kDebug();
-    backTB->setEnabled(false);
+    QWidget *currentWidget = stackedWidget->currentWidget();
+
+    PkTransaction *transaction = new PkTransaction(0, this);
+    QWeakPointer<PkTransaction> pointer = transaction;
+
     stackedWidget->addWidget(transaction);
+    stackedWidget->setCurrentWidget(transaction);
+    int oldBar = stackedWidgetBar->currentIndex();
     stackedWidgetBar->setCurrentIndex(BAR_TITLE);
+    backTB->setEnabled(false);
     connect(transaction, SIGNAL(titleChanged(const QString &)),
             titleL, SLOT(setText(const QString &)));
+
+    QEventLoop loop;
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
+    transaction->refreshCache();
+
+    // wait for the end of transaction
+    if (!transaction->isFinished()) {
+        loop.exec();
+        if (pointer.isNull()) {
+            // Avoid crashing
+            return;
+        }
+    }
+
+    // Finished setup old stuff
+    backTB->setEnabled(true);
+    stackedWidget->setCurrentWidget(currentWidget);
+    stackedWidgetBar->setCurrentIndex(oldBar);
+    transaction->deleteLater();
+    if (currentWidget == m_updaterPage) {
+        m_updaterPage->getUpdates();
+    } else {
+        // install then remove packages
+        search();
+    }
+    QTimer::singleShot(0, this, SLOT(checkChanged()));
 }
 
 void ApperKCM::save()

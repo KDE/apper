@@ -18,44 +18,55 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "TransactionTrayIcon.h"
+#ifndef PROGRESS_VIEW_H
+#define PROGRESS_VIEW_H
 
-#include <KMenu>
-#include <KLocale>
-#include <KActionCollection>
-#include <KDebug>
+#include <QStandardItemModel>
+#include <QTreeView>
+#include <QLabel>
+#include <QAbstractSlider>
+#include <QStyledItemDelegate>
 
-#include <Transaction>
+#include <Package>
 
 using namespace PackageKit;
 
-TransactionTrayIcon::TransactionTrayIcon(QObject *parent)
- : KStatusNotifierItem(parent)
+class TransactionDelegate;
+class ProgressView: public QTreeView
 {
-    setCategory(KStatusNotifierItem::SystemServices);
-    setStatus(KStatusNotifierItem::Active);
+    Q_OBJECT
+public:
+    typedef enum {
+        RoleInfo = Qt::UserRole + 1,
+        RoleFinished,
+        RoleProgress,
+        RoleId
+    } PackageRoles;
+    ProgressView(QWidget *parent = 0);
+    ~ProgressView();
 
-    // Remove standard quit action, as it would quit all of KDED
-    KActionCollection *actions = actionCollection();
-    actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
-    connect(contextMenu(), SIGNAL(triggered(QAction *)),
-            this, SLOT(actionActivated(QAction *)));
-    setAssociatedWidget(contextMenu());
-}
+    void setSubProgress(int value);
+    void handleRepo(bool handle);
+    void clear();
 
-TransactionTrayIcon::~TransactionTrayIcon()
-{
-}
+public slots:
+    void currentPackage(const PackageKit::Package &package);
+    void currentRepo(const QString &repoId, const QString &description);
 
-void TransactionTrayIcon::actionActivated(QAction *action)
-{
-    kDebug();
-    // Check to see if there is transaction id in action
-    if (!action->data().isNull()) {
-        // we need to find if the action clicked has already a dialog
-        Transaction *t = new Transaction(action->data().toString(), this);
-        if (!t->error()) {
-            emit transactionActivated(t);
-        }
-    }
-}
+private slots:
+    void followBottom(int value);
+    void rangeChanged(int min, int max);
+
+private:
+    void itemFinished(QStandardItem *item);
+    QList<QStandardItem *> findItems(const QString &packageId);
+
+    QStyledItemDelegate *m_defaultDelegate;
+    TransactionDelegate *m_delegate;
+    QStandardItemModel  *m_model;
+    QScrollBar          *m_scrollBar;
+    QString              m_lastPackageId;
+    bool                 m_keepScrollBarBottom;
+};
+
+#endif

@@ -47,6 +47,7 @@ public:
     void installPackages(const QList<Package> &packages);
     void removePackages(const QList<Package> &packages);
     void updatePackages(const QList<Package> &packages);
+    void refreshCache();
 
     void setTransaction(Transaction *trans);
     // Do not create a method to retrieve the internal pointer

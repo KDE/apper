@@ -24,7 +24,6 @@
 #include "KpkDistroUpgrade.h"
 #include "KpkTransactionTrayIcon.h"
 #include "KpkInterface.h"
-#include "KpkTransactionWatcher.h"
 #include "PkInterface.h"
 
 #include <KCmdLineArgs>
@@ -60,8 +59,6 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     m_trayIcon = new KpkTransactionTrayIcon(this);
     connect(m_trayIcon, SIGNAL(close()),
             this, SLOT(prepareToClose()));
-    // This MUST be called after connecting all the signals or slots!
-    QTimer::singleShot(0, m_trayIcon, SLOT(checkTransactionList()));
 
     m_updateIcon = new KpkUpdateIcon(this);
     connect(m_updateIcon, SIGNAL(close()),
@@ -80,18 +77,9 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     connect(m_interface, SIGNAL(refresh()),
             m_updateIcon, SLOT(refresh()));
 
-    m_transWatcher = new KpkTransactionWatcher(this);
-    connect(m_transWatcher, SIGNAL(close()),
-            this, SLOT(prepareToClose()));
-    // connect the watch transaction coming through DBus to our watcher
-    connect(m_interface, SIGNAL(watchTransaction(const QString &, bool)),
-            m_transWatcher, SLOT(watchTransaction(const QString &, bool)));
     // connect the watch transaction coming from the updater icon to our watcher
-    connect(m_updateIcon, SIGNAL(watchTransaction(const QString &, bool)),
-            m_transWatcher, SLOT(watchTransaction(const QString &, bool)));
-    // do not watch a transaction that is being
-    connect(m_trayIcon, SIGNAL(removeTransactionWatcher(const QString &)),
-            m_transWatcher, SLOT(removeTransactionWatcher(const QString &)));
+//     connect(m_updateIcon, SIGNAL(watchTransaction(const QString &, bool)),
+//             m_transWatcher, SLOT(watchTransaction(const QString &, bool)));
 
     this->prepareToClose();
 }
@@ -117,9 +105,6 @@ bool KPackageKit_Smart_Icon::isRunning()
         return true;
     }
     if (m_distroUpgrade && m_distroUpgrade->isRunning()) {
-        return true;
-    }
-    if (m_transWatcher && m_transWatcher->isRunning()) {
         return true;
     }
 

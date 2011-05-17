@@ -174,7 +174,7 @@ void PackageDetails::init(Transaction::Roles roles)
     // is the the Forward or Backward property
     QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(stackedWidget);
     effect->setOpacity(0);
-    stackedWidget->setGraphicsEffect(effect);
+    descriptionL->setGraphicsEffect(effect);
     m_fadeStacked = new QPropertyAnimation(effect, "opacity", this);
     m_fadeStacked->setDuration(500);
     m_fadeStacked->setStartValue(qreal(0));

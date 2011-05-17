@@ -65,11 +65,11 @@ include_directories(${CMAKE_SOURCE_DIR}
     ${KDE4_INCLUDES}
     ${QPACKAGEKIT2_INCLUDE_DIRS}
     ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2
-    ${CMAKE_CURRENT_SOURCE_DIR}/libkpackagekit)
+    ${CMAKE_CURRENT_SOURCE_DIR}/libshared)
 
-add_subdirectory(libkpackagekit)
+add_subdirectory(libshared)
 add_subdirectory(ApperKCM)
 add_subdirectory(Apper)
-add_subdirectory(SmartIcon)
+add_subdirectory(Sentinel)
 add_subdirectory(KPackageKitD)
 add_subdirectory(Desktop)

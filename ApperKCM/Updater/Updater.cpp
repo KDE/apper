@@ -262,25 +262,6 @@ void Updater::getUpdates()
     }
 }
 
-void Updater::refreshCache()
-{
-    SET_PROXY
-    Transaction *t = new Transaction(this);
-    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(getUpdates()));
-    t->refreshCache(true);
-
-    PkTransactionDialog *frm = new PkTransactionDialog(t,
-                                             PkTransactionDialog::Modal | PkTransactionDialog::CloseOnFinish,
-                                             this);
-    if (t->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(t->error()));
-        delete frm;
-    } else {
-        frm->show();
-    }
-}
-
 void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
     KMenu *menu = new KMenu(this);

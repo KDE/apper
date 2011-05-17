@@ -19,7 +19,7 @@
 
 #include "KpkInterface.h"
 
-#include "kpackagekitsmarticonadaptor.h"
+#include "appersentineladaptor.h"
 
 #include <QtDBus/QDBusConnection>
 #include <KpkIcons.h>
@@ -40,8 +40,8 @@ KpkInterface::KpkInterface(QObject *parent)
         : QObject(parent)
 {
     kDebug() << "Creating Helper";
-    (void) new KPackageKitSmartIconAdaptor(this);
-    if (!QDBusConnection::sessionBus().registerService("org.kde.KPackageKitSmartIcon")) {
+    (void) new ApperSentinelAdaptor(this);
+    if (!QDBusConnection::sessionBus().registerService("org.kde.ApperSentinel")) {
         kDebug() << "another helper is already running";
         return;
     }
@@ -60,12 +60,6 @@ KpkInterface::~KpkInterface()
         delete gui;
     }
 #endif //HAVE_DEBCONFKDE
-}
-
-void KpkInterface::WatchTransaction(const QString &tid)
-{
-    kDebug() << tid;
-    emit watchTransaction(tid, true);
 }
 
 void KpkInterface::RefreshCache()

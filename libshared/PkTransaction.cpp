@@ -244,6 +244,19 @@ void PkTransaction::updatePackages(const QList<Package> &packages)
     }
 }
 
+void PkTransaction::refreshCache()
+{
+    SET_PROXY
+    Transaction *trans = new Transaction(this);
+    trans->refreshCache(true);
+    if (trans->error()) {
+        KMessageBox::sorry(this, KpkStrings::daemonError(trans->error()),
+                           i18n("Failed to refresh package cache"));
+    } else {
+        setTransaction(trans);
+    }
+}
+
 void PkTransaction::installPackages()
 {
     SET_PROXY
@@ -363,11 +376,12 @@ void PkTransaction::setTransaction(Transaction *trans)
     }
 
     m_trans = trans;
-    if (trans->role() != Transaction::RoleInstallSignature &&
-        trans->role() != Transaction::RoleAcceptEula &&
-        trans->role() != Transaction::RoleGetFiles) {
+    Transaction::Role role = trans->role();
+    if (role != Transaction::RoleInstallSignature &&
+        role != Transaction::RoleAcceptEula &&
+        role != Transaction::RoleGetFiles) {
         // We need to keep the original role for requeuing
-        d->role = trans->role();
+        d->role = role;
     }
     d->tid = trans->tid();
     d->finished = false;
@@ -379,14 +393,22 @@ void PkTransaction::setTransaction(Transaction *trans)
     KConfig config("KPackageKit");
     KConfigGroup transactionGroup(&config, "Transaction");
     // enable the Details button just on these roles
-    if (m_trans->role() == Transaction::RoleInstallPackages ||
-        m_trans->role() == Transaction::RoleInstallFiles ||
-        m_trans->role() == Transaction::RoleRemovePackages ||
-        m_trans->role() == Transaction::RoleUpdatePackages ||
-        m_trans->role() == Transaction::RoleUpdateSystem) {
+    if (role == Transaction::RoleInstallPackages ||
+        role == Transaction::RoleInstallFiles ||
+        role == Transaction::RoleRemovePackages ||
+        role == Transaction::RoleUpdatePackages ||
+        role == Transaction::RoleUpdateSystem ||
+        role == Transaction::RoleRefreshCache) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
-        connect(m_trans, SIGNAL(package(const PackageKit::Package &)),
+        if (role == Transaction::RoleRefreshCache) {
+            connect(m_trans, SIGNAL(repoDetail(const QString &, const QString &, bool)),
+                    ui->progressView, SLOT(currentRepo(const QString &, const QString &)));
+            ui->progressView->handleRepo(true);
+        } else {
+            connect(m_trans, SIGNAL(package(const PackageKit::Package &)),
                 ui->progressView, SLOT(currentPackage(const PackageKit::Package &)));
+            ui->progressView->handleRepo(false);
+        }
         d->showDetails = transactionGroup.readEntry("ShowDetails", false);
 //         enableButton(KDialog::Details, true);
         if (d->showDetails != ui->progressView->isVisible()) {
@@ -396,10 +418,10 @@ void PkTransaction::setTransaction(Transaction *trans)
         d->simulateModel->deleteLater();
         d->simulateModel = 0;
     } else {
-        if (m_trans->role() == Transaction::RoleSimulateInstallPackages ||
-            m_trans->role() == Transaction::RoleSimulateInstallFiles ||
-            m_trans->role() == Transaction::RoleSimulateRemovePackages ||
-            m_trans->role() == Transaction::RoleSimulateUpdatePackages) {
+        if (role == Transaction::RoleSimulateInstallPackages ||
+            role == Transaction::RoleSimulateInstallFiles ||
+            role == Transaction::RoleSimulateRemovePackages ||
+            role == Transaction::RoleSimulateUpdatePackages) {
             // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
             if (!d->simulateModel) {
                 d->simulateModel = new KpkSimulateModel(this, d->packages);
@@ -417,11 +439,11 @@ void PkTransaction::setTransaction(Transaction *trans)
     }
 
     // sets the action icon to be the window icon
-    setWindowIcon(KpkIcons::actionIcon(m_trans->role()));
+    setWindowIcon(KpkIcons::actionIcon(role));
 
     // Sets the kind of transaction
-    emit titleChanged(KpkStrings::action(m_trans->role()));
-//     setCaption(KpkStrings::action(m_trans->role()));
+    emit titleChanged(KpkStrings::action(role));
+//     setCaption(KpkStrings::action(role));
 
     // Now sets the last package
     ui->progressView->currentPackage(m_trans->lastPackage());

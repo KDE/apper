@@ -42,8 +42,9 @@ public:
     virtual void start();
 
 private slots:
-    void finished(PackageKit::Transaction::Exit exit);
+    void finished();
     void package(const PackageKit::Package &package);
+    void errorCode(PackageKit::Transaction::Error, const QString &);
     void updateJob();
 
 protected:

@@ -61,10 +61,10 @@ void KpkTransactionWatcher::watchTransaction(const QString &tid, bool interactiv
 //             kDebug() << "found it let's start watching" << tid;
             m_hiddenTransactions.append(trans);
             trans->setProperty("interactive", QVariant(interactive));
-            connect(trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            connect(trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(finished()));
-            connect(trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-                    this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+            connect(trans, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+                    this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
             break;
         }
     }
@@ -78,10 +78,10 @@ void KpkTransactionWatcher::removeTransactionWatcher(const QString &tid)
 //             kDebug() << "found it let's remove" << tid;
             m_hiddenTransactions.removeOne(trans);
             // disconnect to not show any notification
-            disconnect(trans, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+            disconnect(trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(finished()));
-            disconnect(trans, SIGNAL(errorCode(PackageKit::Enum::Error, const QString &)),
-                    this, SLOT(errorCode(PackageKit::Enum::Error, const QString &)));
+            disconnect(trans, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+                    this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
             break;
         }
     }

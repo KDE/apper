@@ -24,7 +24,6 @@
 #include <KpkAbstractIsRunning.h>
 
 #include <kuiserverjobtracker.h>
-#include <kwidgetjobtracker.h>
 
 #include <Transaction>
 
@@ -32,72 +31,51 @@
 
 using namespace PackageKit;
 
-class PkTransactionDialog;
-class TransactionTrayIcon;
+class StatusNotifierItem;
 class KpkTransactionTrayIcon : public KpkAbstractIsRunning
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     KpkTransactionTrayIcon(QObject *parent = 0);
     ~KpkTransactionTrayIcon();
 
     bool isRunning();
 
-signals:
-    void removeTransactionWatcher(const QString &tid);
-
-public slots:
-    void checkTransactionList();
-
 private slots:
     void transactionListChanged(const QStringList &tids);
-    void createTransactionDialog(PackageKit::Transaction *t);
-    void transactionDialogClosed();
     void message(PackageKit::Transaction::Message type, const QString &message);
     void requireRestart(PackageKit::Package::Restart type, const PackageKit::Package &pkg);
     void finished(PackageKit::Transaction::Exit exit);
     void transactionChanged();
-    void logout();
 
-    void refreshCache();
+    void logout();
     void showMessages();
-    void hideIcon();
+    void hideMessageIcon();
     void fillMenu();
 
 private:
     void suppressSleep(bool enable, const QString &reason = QString());
-    void updateMenu(const QList<PackageKit::Transaction*> &tids);
-    void setCurrentTransaction(PackageKit::Transaction *transaction);
-
-    TransactionTrayIcon *m_trayIcon;
-    QHash<QString, PkTransactionDialog *> m_transDialogs;
+    void setCurrentTransaction(const QString &tid);
 
     Transaction *m_currentTransaction;
-
-    // Refresh Cache menu entry
-    QAction *m_refreshCacheAction;
+    QString m_currentTid;
+    bool m_transHasJob;
 
     // Hide this icon action
     QAction *m_hideAction;
 
     // Message Container
-    int      m_messagesCount;
-    QString  m_messages;
-    QAction *m_messagesAction;
+    QStringList  m_messages;
+    QAction     *m_messagesAction;
+    StatusNotifierItem *m_messagesSNI;
 
     // Restart menu entry
     Package::Restart m_restartType;
-    QAction      *m_restartAction;
-    QStringList   m_restartPackages;
-
-    // Cache data for tooltip
-    Transaction::Status  m_currentStatus;
-    Transaction::Role    m_currentRole;
-    uint          m_currentProgress;
+    QStringList      m_restartPackages;
+    StatusNotifierItem *m_restartSNI;
 
     // cookie to suppress sleep
     int           m_inhibitCookie;
-    QStringList   m_tids;
     KUiServerJobTracker *m_tracker;
 };
 

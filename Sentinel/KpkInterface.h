@@ -32,19 +32,17 @@ using namespace DebconfKde;
 class KpkInterface : public QObject, protected QDBusContext
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.KPackageKitSmartIcon")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.ApperSentinel")
 public:
     KpkInterface(QObject *parent = 0);
     ~KpkInterface();
 
-    void WatchTransaction(const QString &tid);
     void RefreshCache();
     void RefreshAndUpdate();
     void Update();
     void SetupDebconfDialog(const QString &socket_path, uint xid_parent);
 
 signals:
-    void watchTransaction(const QString &tid, bool interactive);
     void refreshAndUpdate(bool refresh);
     void refresh();
 

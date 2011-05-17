@@ -1,4 +1,4 @@
-set(libkpk_SRCS
+set(libshared_SRCS
     AppInstall.cpp
     KpkIcons.cpp
     KpkStrings.cpp
@@ -22,7 +22,7 @@ set(libkpk_SRCS
     KpkCategorizedView.cpp
 )
 
-kde4_add_ui_files(libkpk_SRCS
+kde4_add_ui_files(libshared_SRCS
     ApplicationLauncher.ui
     PkTransaction.ui
     KpkRepoSig.ui
@@ -31,10 +31,8 @@ kde4_add_ui_files(libkpk_SRCS
     KpkRequirements.ui
 )
 
-kde4_add_library(kpackagekitlib SHARED ${libkpk_SRCS})
-target_link_libraries(kpackagekitlib
+kde4_add_library(sharedlib STATIC ${libshared_SRCS})
+target_link_libraries(sharedlib
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${QPACKAGEKIT2_LIBRARIES})
-
-install(TARGETS kpackagekitlib ${INSTALL_TARGETS_DEFAULT_ARGS})

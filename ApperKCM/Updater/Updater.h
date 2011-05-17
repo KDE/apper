@@ -48,7 +48,6 @@ signals:
 
 public slots:
     void load();
-    void refreshCache();
     void getUpdates();
 
 private slots:

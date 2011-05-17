@@ -507,6 +507,10 @@ QString KpkStrings::error(Transaction::Error error)
         return i18n("Virtual provide type is not supported");
     case Transaction::ErrorInstallRootInvalid :
         return i18n("Install root is invalid");
+    case Transaction::ErrorCannotFetchSources :
+        return i18n("Cannot fetch install sources");
+    case Transaction::ErrorCancelledPriority :
+        return i18n("Rescheduled due to priority");
     case Transaction::UnknownError :
         return i18n("Unknown error");
     }
@@ -682,6 +686,10 @@ QString KpkStrings::errorMessage(Transaction::Error error)
         return i18n("The virtual provide type is not supported by this system.");
     case Transaction::ErrorInstallRootInvalid :
         return i18n("The install root is invalid. Please contact your administrator.");
+    case Transaction::ErrorCannotFetchSources :
+        return i18n("The list of software could not be downloaded.");
+    case Transaction::ErrorCancelledPriority :
+        return i18n("The transaction has been cancelled and will be retried when the system is idle.");
     case Transaction::UnknownError :
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");

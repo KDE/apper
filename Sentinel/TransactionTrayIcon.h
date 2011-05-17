@@ -22,25 +22,31 @@
 #define TRANSACTION_TRAY_ICON_H
 
 #include <KStatusNotifierItem>
+#include <QAction>
 
-class QAction;
+#include <Transaction>
 
-namespace PackageKit {
-    class Transaction;
-}
+using namespace PackageKit;
 
 class TransactionTrayIcon : public KStatusNotifierItem
 {
 Q_OBJECT
 public:
-    TransactionTrayIcon(QObject *parent = 0);
+    TransactionTrayIcon(PackageKit::Transaction *transaction, QObject *parent = 0);
     ~TransactionTrayIcon();
 
 signals:
     void transactionActivated(PackageKit::Transaction *transaction);
 
-public slots:
+private slots:
     void actionActivated(QAction *action);
+    void transactionChanged();
+
+private:
+    // Cache data for tooltip
+    Transaction::Status m_currentStatus;
+    Transaction::Role   m_currentRole;
+    uint                m_currentProgress;
 };
 
 #endif

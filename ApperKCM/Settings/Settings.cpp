@@ -115,7 +115,7 @@ void Settings::on_showOriginsCB_stateChanged(int state)
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_busySeq, SLOT(stop()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            m_originModel, SLOT(checkChanges()));
+            this, SLOT(checkChanges()));
 
     if (state == Qt::Checked) {
         transaction->getRepoList(Transaction::FilterNone);
