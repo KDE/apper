@@ -35,7 +35,7 @@ target_link_libraries(apper
     ${KDE4_KUTILS_LIBS}
     ${QPACKAGEKIT2_LIBRARIES}
     ${KDE4_SOLID_LIBS}
-    kpackagekitlib
+    sharedlib
 )
 
 install(TARGETS apper DESTINATION ${PLUGIN_INSTALL_DIR} )

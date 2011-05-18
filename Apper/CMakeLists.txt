@@ -19,7 +19,7 @@ target_link_libraries(apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KUTILS_LIBS}
     ${QPACKAGEKIT2_LIBRARIES}
-    kpackagekitlib
+    sharedlib
 )
 
 install(TARGETS apper ${INSTALL_TARGETS_DEFAULT_ARGS})
