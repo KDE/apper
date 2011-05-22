@@ -49,6 +49,7 @@ Comment[x-test]=xxKPackageKitxx
 
 [Event/ShowUpdates]
 Name=New updates available
+Name[da]=Nye opdateringer tilgængelige
 Name[nl]=Nieuwe zaken voor bijwerken beschikbaar
 Name[pt]=Estão disponíveis actualizações novas
 Name[sv]=Nya uppdateringar tillgängliga
