@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkTransactionTrayIcon.h"
+#include "TransactionWatcher.h"
 
 #include "TransactionJob.h"
 #include "StatusNotifierItem.h"
@@ -34,6 +34,7 @@
 #include <KLocale>
 #include <KDialog>
 #include <KWindowSystem>
+#include <KMessageBox>
 
 #include <Solid/PowerManagement>
 #include <QtDBus/QDBusMessage>
@@ -44,12 +45,13 @@
 #include <Daemon>
 
 Q_DECLARE_METATYPE(Package::Restart)
+Q_DECLARE_METATYPE(Transaction::Error)
 
-KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
- : KpkAbstractIsRunning(parent),
-   m_messagesSNI(0),
-   m_restartSNI(0),
-   m_inhibitCookie(-1)
+TransactionWatcher::TransactionWatcher(QObject *parent) :
+    AbstractIsRunning(parent),
+    m_messagesSNI(0),
+    m_restartSNI(0),
+    m_inhibitCookie(-1)
 {
     m_transHasJob = false;
     m_tracker = new KUiServerJobTracker(this);
@@ -70,13 +72,13 @@ KpkTransactionTrayIcon::KpkTransactionTrayIcon(QObject *parent)
     transactionListChanged(Daemon::getTransactions());
 }
 
-KpkTransactionTrayIcon::~KpkTransactionTrayIcon()
+TransactionWatcher::~TransactionWatcher()
 {
     // release any cookie that we might have
     suppressSleep(false);
 }
 
-void KpkTransactionTrayIcon::transactionListChanged(const QStringList &tids)
+void TransactionWatcher::transactionListChanged(const QStringList &tids)
 {
     kDebug() << tids.size();
     if (!tids.isEmpty()) {
@@ -96,7 +98,7 @@ void KpkTransactionTrayIcon::transactionListChanged(const QStringList &tids)
     }
 }
 
-void KpkTransactionTrayIcon::setCurrentTransaction(const QString &tid)
+void TransactionWatcher::setCurrentTransaction(const QString &tid)
 {
     // Check if the current transaction is still the same
     if (m_currentTid == tid) {
@@ -139,12 +141,14 @@ void KpkTransactionTrayIcon::setCurrentTransaction(const QString &tid)
     m_transHasJob = !m_currentTransaction->isCallerActive();
     if (m_transHasJob) {
         TransactionJob *job = new TransactionJob(m_currentTransaction, this);
+        connect(m_currentTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+                this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
         job->start();
         m_tracker->registerJob(job);
     }
 }
 
-void KpkTransactionTrayIcon::finished(PackageKit::Transaction::Exit exit)
+void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
 {
     // check if the transaction emitted any require restart
     Transaction *transaction = qobject_cast<Transaction*>(sender());
@@ -188,17 +192,19 @@ void KpkTransactionTrayIcon::finished(PackageKit::Transaction::Exit exit)
     }
 }
 
-void KpkTransactionTrayIcon::transactionChanged()
+void TransactionWatcher::transactionChanged()
 {
     if (!m_transHasJob && !m_currentTransaction->isCallerActive()) {
         TransactionJob *job = new TransactionJob(m_currentTransaction, this);
+        connect(m_currentTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+                this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
         job->start();
         m_tracker->registerJob(job);
         m_transHasJob = true;
     }
 }
 
-void KpkTransactionTrayIcon::message(PackageKit::Transaction::Message type, const QString &message)
+void TransactionWatcher::message(PackageKit::Transaction::Message type, const QString &message)
 {
     QString html;
     html.append("<p><h3>");
@@ -240,7 +246,7 @@ void KpkTransactionTrayIcon::message(PackageKit::Transaction::Message type, cons
     }
 }
 
-void KpkTransactionTrayIcon::showMessages()
+void TransactionWatcher::showMessages()
 {
     if (!m_messages.isEmpty()) {
         increaseRunning();
@@ -265,54 +271,46 @@ void KpkTransactionTrayIcon::showMessages()
     }
 }
 
-void KpkTransactionTrayIcon::fillMenu()
+void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QString &details)
 {
-    // this function checks if we need to display the menu
-    if (!isRunning()) {
-        hideMessageIcon();
-        return;
-    }
+    increaseRunning();
 
-    KMenu *contextMenu = qobject_cast<KMenu*>(sender());
-    QString text;
-    bool refreshCache = true;
+    KNotification *notify;
+    notify = new KNotification("TransactionError", 0, KNotification::Persistent);
+    notify->setText("<b>"+KpkStrings::error(err)+"</b><br>"+KpkStrings::errorMessage(err));
+    notify->setProperty("ErrorType", QVariant::fromValue(err));
+    notify->setProperty("Details", details);
 
-    contextMenu->clear();
-
-    QList<PackageKit::Transaction*> tids = Daemon::getTransactionsObj(this);
-
-    contextMenu->addTitle(KIcon("applications-other"), i18n("Transactions"));
-    foreach (Transaction *t, tids) {
-        QAction *transactionAction = new QAction(this);
-        // We use the tid since the pointer might get deleted
-        // as it was some times
-        transactionAction->setData(t->tid());
-
-        if (t->role() == Transaction::RoleRefreshCache) {
-            refreshCache = false;
-        }
-
-        text = KpkStrings::action(t->role())
-               + " (" + KpkStrings::status(t->status()) + ')';
-        transactionAction->setText(text);
-        transactionAction->setIcon(KpkIcons::statusIcon(t->status()));
-        contextMenu->addAction(transactionAction);
-    }
-
-    contextMenu->addSeparator();
-//     if (refreshCache && m_refreshCacheAction) {
-//         contextMenu->addAction(m_refreshCacheAction);
-//     }
-    if (m_restartType != Package::RestartNone) {
-//         contextMenu->addAction(m_restartAction);
-    }
-    if (!m_messages.isEmpty()) {
-        contextMenu->addAction(m_messagesAction);
-    }
-    contextMenu->addAction(m_hideAction);
+    QStringList actions;
+    actions << i18n("Details") << i18n("Ignore");
+    notify->setActions(actions);
+    notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+    connect(notify, SIGNAL(activated(uint)),
+            this, SLOT(errorActivated(uint)));
+    connect(notify, SIGNAL(closed()),
+            this, SLOT(decreaseRunning()));
+    notify->sendEvent();
 }
 
-void KpkTransactionTrayIcon::requireRestart(PackageKit::Package::Restart type, const Package &pkg)
+void TransactionWatcher::errorActivated(uint action)
+{
+    KNotification *notify = qobject_cast<KNotification*>(sender());
+
+    // if the user clicked "Details"
+    if (action == 1) {
+        Transaction::Error error = notify->property("ErrorType").value<Transaction::Error>();
+        QString details = notify->property("Details").toString();
+        KMessageBox::detailedSorry(0,
+                                   KpkStrings::errorMessage(error),
+                                   details.replace('\n', "<br />"),
+                                   KpkStrings::error(error),
+                                   KMessageBox::Notify);
+    }
+
+    notify->close();
+}
+
+void TransactionWatcher::requireRestart(PackageKit::Package::Restart type, const Package &pkg)
 {
     if (m_currentTransaction->property("restartType").isNull()) {
         m_currentTransaction->setProperty("restartType", qVariantFromValue(type));
@@ -331,7 +329,7 @@ void KpkTransactionTrayIcon::requireRestart(PackageKit::Package::Restart type, c
     }
 }
 
-void KpkTransactionTrayIcon::logout()
+void TransactionWatcher::logout()
 {
     // We call KSM server to restart or logout our system
     QDBusMessage message;
@@ -365,7 +363,7 @@ void KpkTransactionTrayIcon::logout()
     }
 }
 
-void KpkTransactionTrayIcon::hideMessageIcon()
+void TransactionWatcher::hideMessageIcon()
 {
     // Reset things as the user don't want to see it
     if (m_messagesSNI) {
@@ -376,15 +374,15 @@ void KpkTransactionTrayIcon::hideMessageIcon()
     emit close();
 }
 
-bool KpkTransactionTrayIcon::isRunning()
+bool TransactionWatcher::isRunning()
 {
-    return KpkAbstractIsRunning::isRunning() ||
+    return AbstractIsRunning::isRunning() ||
            m_currentTransaction ||
           !m_messages.isEmpty() ||
            m_restartType != Package::RestartNone;
 }
 
-void KpkTransactionTrayIcon::suppressSleep(bool enable, const QString &reason)
+void TransactionWatcher::suppressSleep(bool enable, const QString &reason)
 {
     if (enable) {
         if (m_inhibitCookie == -1) {
@@ -403,4 +401,4 @@ void KpkTransactionTrayIcon::suppressSleep(bool enable, const QString &reason)
     }
 }
 
-#include "KpkTransactionTrayIcon.moc"
+#include "TransactionWatcher.moc"

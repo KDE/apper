@@ -164,6 +164,32 @@ void PkTransaction::hideCancelButton()
     ui->cancelButton->hide();
 }
 
+void PkTransaction::installFiles(const QStringList &files)
+{
+    if (Daemon::actions() & Transaction::RoleInstallFiles) {
+        if (Daemon::actions() & Transaction::RoleSimulateInstallFiles) {
+            d->files         = files;
+            d->simulateModel = new KpkSimulateModel(this, d->packages);
+
+            // Create the simulate transaction and it's model
+            Transaction *trans = new Transaction(this);
+            trans->simulateInstallFiles(files);
+            if (trans->error()) {
+                KMessageBox::sorry(this,
+                                   KpkStrings::daemonError(trans->error()),
+                                   i18n("Failed to simulate file install"));
+//                 taskDone(Transaction::RoleInstallPackages);
+            } else {
+                setTransaction(trans);
+            }
+        } else {
+            installFiles();
+        }
+    } else {
+        KMessageBox::error(this, i18n("Current backend does not support installing files."), i18n("Error"));
+    }
+}
+
 void PkTransaction::installPackages(const QList<Package> &packages)
 {
     if (Daemon::actions() & Transaction::RoleInstallPackages) {
@@ -179,7 +205,6 @@ void PkTransaction::installPackages(const QList<Package> &packages)
                 KMessageBox::sorry(this,
                                    KpkStrings::daemonError(trans->error()),
                                    i18n("Failed to simulate package install"));
-//                 taskDone(Transaction::RoleInstallPackages);
             } else {
                 setTransaction(trans);
             }
@@ -188,7 +213,6 @@ void PkTransaction::installPackages(const QList<Package> &packages)
         }
     } else {
         KMessageBox::error(this, i18n("Current backend does not support installing packages."), i18n("Error"));
-//         taskDone(Transaction::RoleInstallPackages);
     }
 }
 
@@ -207,7 +231,6 @@ void PkTransaction::removePackages(const QList<Package> &packages)
                 KMessageBox::sorry(this,
                                    KpkStrings::daemonError(trans->error()),
                                    i18n("Failed to simulate package removal"));
-//                 taskDone(Transaction::RoleRemovePackages);
             } else {
                 setTransaction(trans);
             }
@@ -217,7 +240,6 @@ void PkTransaction::removePackages(const QList<Package> &packages)
         }
     } else {
         KMessageBox::error(this, i18n("The current backend does not support removing packages."), i18n("Error"));
-//         taskDone(Transaction::RoleRemovePackages);
     }
 }
 
@@ -263,16 +285,33 @@ void PkTransaction::installPackages()
     QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
     Transaction *trans = new Transaction(this);
     trans->setHints("frontend-socket=" + socket);
-    trans->installPackages(d->packages, this);
+    trans->installPackages(d->packages, d->onlyTrusted);
     if (trans->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
                            i18n("Failed to install package"));
-//         taskDone(Transaction::RoleInstallPackages);
     } else {
         setTransaction(trans);
         setupDebconfDialog(socket);
-//         d->transactionDialog->setPackages(d->addPackages);
+    }
+}
+
+void PkTransaction::installFiles()
+{
+    SET_PROXY
+    QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
+    Transaction *trans = new Transaction(this);
+    trans->setHints("frontend-socket=" + socket);
+    trans->installFiles(d->files, d->onlyTrusted);
+    if (trans->error()) {
+        KMessageBox::sorry(this,
+                           KpkStrings::daemonError(trans->error()),
+                           i18np("Failed to install file",
+                                 "Failed to install files",
+                                 d->files.size()));
+    } else {
+        setTransaction(trans);
+        setupDebconfDialog(socket);
     }
 }
 
@@ -321,53 +360,6 @@ void PkTransaction::cancel()
 //     m_flags |= CloseOnFinish;
 }
 
-void PkTransaction::slotButtonClicked(int bt)
-{
-//     switch(bt) {
-//     case KDialog::Cancel :
-// //         kDebug() << "KDialog::Cancel";
-//         m_trans->cancel();
-// //         m_flags |= CloseOnFinish;
-//         break;
-//     case KDialog::User1 :
-// //         kDebug() << "KDialog::User1";
-//         // when we're done finishedDialog() is called
-//         done(KDialog::User1);
-//         break;
-//     case KDialog::Close :
-// //         kDebug() << "KDialog::Close";
-//         // Always disconnect BEFORE emitting finished
-//         unsetTransaction();
-//         setExitStatus(Cancelled);
-//         done(KDialog::Close);
-//         break;
-//     case KDialog::Details :
-//     {
-//         d->showDetails = !d->progressView->isVisible();
-//         button(KDialog::Details)->setChecked(d->showDetails);
-//         if (d->progressView->isVisible()) {
-//             QSize windowSize = size();
-//             windowSize.rheight() -= d->progressView->height();
-//             d->progressView->setVisible(false);
-//             setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-//             setMaximumSize(QWIDGETSIZE_MAX, windowSize.height());
-//             ui->gridLayout->removeWidget(d->progressView);
-//         } else {
-//             QSize windowSize = size();
-//             windowSize.rheight() += d->progressView->height();
-//             setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-//             setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-//             ui->gridLayout->addWidget(d->progressView, 1, 0, 1, 2);
-//             d->progressView->setVisible(true);
-//             resize(windowSize);
-//         }
-//     }
-//         break;
-//     default : // Should be only details
-//         KDialog::slotButtonClicked(bt);
-//     }
-}
-
 void PkTransaction::setTransaction(Transaction *trans)
 {
     if (!trans) {
@@ -412,7 +404,7 @@ void PkTransaction::setTransaction(Transaction *trans)
         d->showDetails = transactionGroup.readEntry("ShowDetails", false);
 //         enableButton(KDialog::Details, true);
         if (d->showDetails != ui->progressView->isVisible()) {
-            slotButtonClicked(KDialog::Details);
+//             slotButtonClicked(KDialog::Details);
         }
 
         d->simulateModel->deleteLater();
@@ -774,7 +766,11 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                 }
                 return;
             case Transaction::RoleSimulateInstallFiles:
-                // TODO
+                if (requires) {
+                    connect(requires, SIGNAL(accepted()), this, SLOT(installFiles()));
+                } else {
+                    installFiles();
+                }
                 return;
             default:
                 break;

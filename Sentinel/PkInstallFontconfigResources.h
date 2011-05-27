@@ -29,9 +29,10 @@
 
 using namespace PackageKit;
 
+class IntroDialog;
 class PkInstallFontconfigResources : public KpkAbstractTask
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     PkInstallFontconfigResources(uint xid,
                                  const QStringList &resources,
@@ -44,10 +45,12 @@ public slots:
     void start();
 
 private slots:
+    void slotButtonClicked(int bt);
     void whatProvidesFinished(PackageKit::Transaction::Exit status);
     void addPackage(const PackageKit::Package &package);
 
 private:
+    IntroDialog *m_introDialog;
     QList<Package> m_foundPackages;
     QStringList  m_resources;
     QDBusMessage m_message;

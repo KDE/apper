@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,31 +18,40 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_ABSTRACT_IS_RUNNING_H
-#define KPK_ABSTRACT_IS_RUNNING_H
+#ifndef APPER_SENTINEL_H
+#define APPER_SENTINEL_H
 
-#include <kdemacros.h>
+#include <KUniqueApplication>
+#include <QTimer>
 
-#include <QObject>
+class KpkUpdateIcon;
+class KpkDistroUpgrade;
+class TransactionWatcher;
+class KpkInterface;
+class PkInterface;
 
-class KDE_EXPORT KpkAbstractIsRunning : public QObject
+class ApperSentinel : public KUniqueApplication
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    KpkAbstractIsRunning(QObject *parent = 0);
-    ~KpkAbstractIsRunning();
+    ApperSentinel();
+    virtual ~ApperSentinel();
+    int newInstance();
 
-    bool isRunning() const;
-
-signals:
+private slots:
+    void prepareToClose();
     void close();
 
-protected slots:
-    void increaseRunning();
-    void decreaseRunning();
-
 private:
-    int m_running;
+    bool isRunning();
+    QTimer *m_closeT;
+
+    TransactionWatcher *m_trayIcon;
+    KpkUpdateIcon *m_updateIcon;
+    KpkDistroUpgrade *m_distroUpgrade;
+
+    KpkInterface *m_interface;
+    PkInterface *m_pkInterface;
 };
 
 #endif

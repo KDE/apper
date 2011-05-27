@@ -26,9 +26,9 @@
 #include <PkTransactionDialog.h>
 
 #include <QDBusMessage>
-#include <QWidget>
+#include <KDialog>
 
-class KpkAbstractTask : public QWidget
+class KpkAbstractTask : public KDialog
 {
     Q_OBJECT
     Q_ENUMS(Errors)

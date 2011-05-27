@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009 by Daniel Nicoletti                                *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,35 +18,39 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_TRANSACTION_WATCHER_H
-#define KPK_TRANSACTION_WATCHER_H
+#include "AbstractIsRunning.h"
 
-#include <KpkAbstractIsRunning.h>
+#include <KDebug>
 
-#include <Transaction>
-
-using namespace PackageKit;
-
-class KpkTransaction;
-class KpkTransactionWatcher : public KpkAbstractIsRunning
+AbstractIsRunning::AbstractIsRunning(QObject *parent) :
+    QObject(parent),
+    m_running(0)
 {
-Q_OBJECT
-public:
-    KpkTransactionWatcher(QObject *parent = 0);
-    ~KpkTransactionWatcher();
+}
 
-public slots:
-    void watchTransaction(const QString &tid, bool interactive);
-    void removeTransactionWatcher(const QString &tid);
+AbstractIsRunning::~AbstractIsRunning()
+{
+}
 
-private slots:
-    void errorCode(PackageKit::Transaction::Error, const QString &);
-    void errorActivated(uint action);
-    void finished();
-    void showError();
+void AbstractIsRunning::increaseRunning()
+{
+    m_running++;
+    kDebug();
+}
 
-private:
-    QList<Transaction *> m_hiddenTransactions;
-};
+void AbstractIsRunning::decreaseRunning()
+{
+    m_running--;
+    kDebug();
+    if (!isRunning()) {
+        kDebug() << "Is not Running anymore";
+        emit close();
+    }
+}
 
-#endif
+bool AbstractIsRunning::isRunning() const
+{
+    return m_running > 0;
+}
+
+#include "AbstractIsRunning.moc"

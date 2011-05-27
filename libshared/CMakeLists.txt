@@ -16,7 +16,6 @@ set(libshared_SRCS
     KpkProgressBar.cpp
     KpkReviewChanges.cpp
     KpkRequirements.cpp
-    KpkAbstractIsRunning.cpp
     KpkImportance.cpp
     KpkSimulateModel.cpp
     KpkCategorizedView.cpp
@@ -31,8 +30,10 @@ kde4_add_ui_files(libshared_SRCS
     KpkRequirements.ui
 )
 
-kde4_add_library(sharedlib STATIC ${libshared_SRCS})
+kde4_add_library(sharedlib SHARED ${libshared_SRCS})
 target_link_libraries(sharedlib
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${QPACKAGEKIT2_LIBRARIES})
+
+install(TARGETS sharedlib ${INSTALL_TARGETS_DEFAULT_ARGS})

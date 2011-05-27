@@ -22,12 +22,12 @@
 #define PK_INSTALL_PACKAGE_FILES_H
 
 #include "KpkAbstractTask.h"
-#include "PkTransactionDialog.h"
 
-class KpkSimulateModel;
+class IntroDialog;
+class FilesModel;
 class PkInstallPackageFiles : public KpkAbstractTask
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     PkInstallPackageFiles(uint xid,
                           const QStringList &files,
@@ -40,14 +40,13 @@ public slots:
     void start();
 
 private slots:
+    void slotButtonClicked(int bt);
     void transactionFinished(PkTransaction::ExitStatus status);
+    void modelChanged();
 
 private:
-    void installFiles();
-    KUrl::List m_urls;
-    QStringList m_files;
-
-    KpkSimulateModel *m_installFilesModel;
+    IntroDialog *m_introDialog;
+    FilesModel *m_model;
 };
 
 #endif

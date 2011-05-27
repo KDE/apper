@@ -20,6 +20,8 @@
 
 #include "PkInstallFontconfigResources.h"
 
+#include "IntroDialog.h"
+
 #include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
@@ -36,82 +38,112 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
  : KpkAbstractTask(xid, interaction, message, parent),
    m_resources(resources)
 {
+    m_introDialog = new IntroDialog(this);
+    setMainWidget(m_introDialog);
+    foreach (const QString &font, resources) {
+        if (!font.startsWith(QLatin1String(":lang="))) {
+            sendErrorFinished(InternalError, QString("not recognised prefix: '%1'").arg(font));
+            return;
+        }
+        int size = font.size();
+        if (size < 7 || size > 20) {
+            sendErrorFinished(InternalError, QString(" lang tag malformed: '%1'").arg(font));
+            return;
+        }
+    }
+
+    QString description;
+    description = i18np("An additional font is required to view this document correctly. "
+                            "Do you want to search for a suitable package now?",
+                            "Additional fonts are required to view this document correctly. "
+                            "Do you want to search for suitable packages now?",
+                            resources.size());
+
+    QString title;
+    // this will come from DBus interface
+    if (parentTitle.isNull()) {
+        title = i18np("A program wants to install a font",
+                    "A program wants to install fonts",
+                    resources.size());
+    } else {
+        title = i18np("%2 wants to install a font",
+                      "%2 wants to install fonts",
+                    resources.size(),
+                    parentTitle);
+    }
+
+    m_introDialog->setDescription(description);
+    m_introDialog->setTitle(title);
 }
 
 PkInstallFontconfigResources::~PkInstallFontconfigResources()
 {
 }
 
-void PkInstallFontconfigResources::start()
+void PkInstallFontconfigResources::slotButtonClicked(int bt)
 {
-    kDebug() << m_resources.first();
-    int ret = KMessageBox::Yes;
-
-    if (showConfirmSearch()) {
-        foreach (const QString &font, m_resources) {
-            if (!font.startsWith(QLatin1String(":lang="))) {
-                sendErrorFinished(InternalError, QString("not recognised prefix: '%1'").arg(font));
-                return;
-            }
-            int size = font.size();
-            if (size < 7 || size > 20) {
-                sendErrorFinished(InternalError, QString(" lang tag malformed: '%1'").arg(font));
-                return;
-            }
-        }
-
-        QString message = i18np("An additional font is required to view this document correctly. "
-                                "Do you want to search for a suitable package now?",
-                                "Additional fonts are required to view this document correctly. "
-                                "Do you want to search for suitable packages now?",
-                                m_resources.size());
-
-        QString title;
-        // this will come from DBus interface
-        if (parentTitle.isNull()) {
-            title = i18np("A program wants to install a font",
-                        "A program wants to install fonts",
-                        m_resources.size());
-        } else {
-            title = i18np("%2 wants to install a font",
-                        "%2 wants to install fonts",
-                        m_resources.size(),
-                        parentTitle);
-        }
-        QString msg = "<h3>" + title + "</h3>" + message;
-        KGuiItem searchBt = KStandardGuiItem::yes();
-        searchBt.setText(i18nc("Search for packages" ,"Search"));
-        searchBt.setIcon(KIcon("edit-find"));
-
-        ret = KMessageBox::questionYesNoWId(parentWId(), msg, title, searchBt);
-    }
-
-    if (ret == KMessageBox::Yes) {
-        Transaction *t = new Transaction(this);
-        t->whatProvides(Transaction::ProvidesFont,
-                        m_resources,
-                        Transaction::FilterNotInstalled |
-                        Transaction::FilterArch |
-                        Transaction::FilterNewest);
-        if (t->error()) {
-            QString msg(i18n("Failed to search for provides"));
-            KMessageBox::sorryWId(parentWId(),
-                                  KpkStrings::daemonError(t->error()),
-                                  msg);
-            sendErrorFinished(InternalError, msg);
-        } else {
+    if (bt == KDialog::Ok) {
+        if (mainWidget() == m_introDialog) {
+            Transaction *t = new Transaction(this);
+            PkTransaction *trans = new PkTransaction(t, this);
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
             connect(t, SIGNAL(package(const PackageKit::Package &)),
                     this, SLOT(addPackage(const PackageKit::Package &)));
-            if (showProgress()) {
-                kTransaction()->setTransaction(t);
-                kTransaction()->show();
+            t->whatProvides(Transaction::ProvidesFont,
+                            m_resources,
+                            Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+            if (t->error()) {
+                QString msg(i18n("Failed to search for provides"));
+                if (showWarning()) {
+                    KMessageBox::sorry(this,
+                                       KpkStrings::daemonError(t->error()),
+                                       msg);
+                }
+                sendErrorFinished(Failed, msg);
             }
+
+            setMainWidget(trans);
+//             trans->installFiles(m_model->files());
+            enableButtonOk(false);
         }
     } else {
-        sendErrorFinished(Cancelled, i18n("did not agree to search"));
+        sendErrorFinished(Cancelled, "Aborted");
     }
+    KDialog::slotButtonClicked(bt);
+}
+
+void PkInstallFontconfigResources::start()
+{
+//     kDebug() << m_resources.first();
+//     int ret = KMessageBox::Yes;
+// 
+//     if (ret == KMessageBox::Yes) {
+//         Transaction *t = new Transaction(this);
+//         t->whatProvides(Transaction::ProvidesFont,
+//                         m_resources,
+//                         Transaction::FilterNotInstalled |
+//                         Transaction::FilterArch |
+//                         Transaction::FilterNewest);
+//         if (t->error()) {
+//             QString msg(i18n("Failed to search for provides"));
+//             KMessageBox::sorryWId(parentWId(),
+//                                   KpkStrings::daemonError(t->error()),
+//                                   msg);
+//             sendErrorFinished(InternalError, msg);
+//         } else {
+//             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+//                     this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
+//             connect(t, SIGNAL(package(const PackageKit::Package &)),
+//                     this, SLOT(addPackage(const PackageKit::Package &)));
+//             if (showProgress()) {
+//                 kTransaction()->setTransaction(t);
+//                 kTransaction()->show();
+//             }
+//         }
+//     } else {
+//         sendErrorFinished(Cancelled, i18n("did not agree to search"));
+//     }
 }
 
 void PkInstallFontconfigResources::whatProvidesFinished(PackageKit::Transaction::Exit status)

@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KPackageKitSmartIcon.h"
+#include "ApperSentinel.h"
 #include <version.h>
 
 #include <KDebug>
@@ -29,13 +29,13 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about("ApperSmartIcon",
+    KAboutData about("ApperSentinel",
                      "apper",
                      ki18n("Apper"),
                      KPK_VERSION,
-                     ki18n("Apper Tray Icon"),
+                     ki18n("Apper Sentinel"),
                      KAboutData::License_GPL,
-                     ki18n("(C) 2008-2010 Daniel Nicoletti"));
+                     ki18n("(C) 2008-2011 Daniel Nicoletti"));
 
     about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti85-pk@yahoo.com.br", "http://www.packagekit.org" );
     about.addAuthor(ki18n("Trever Fischer"), KLocalizedString(), "wm161@wm161.net", "http://wm161.net");
@@ -45,11 +45,11 @@ int main(int argc, char **argv)
 
     KCmdLineArgs::init(argc, argv, &about);
 
-    if (!kpackagekit::KPackageKit_Smart_Icon::start()) {
-        //kDebug() << "KPackageKit-Smart-Icon is already running!";
+    if (!ApperSentinel::start()) {
+        //kDebug() << "ApperSentinel is already running!";
         return 0;
     }
 
-    kpackagekit::KPackageKit_Smart_Icon app;
+    ApperSentinel app;
     return app.exec();
 }

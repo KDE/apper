@@ -43,8 +43,8 @@
 
 using namespace PackageKit;
 
-PkInterface::PkInterface(QObject *parent)
-        : KpkAbstractIsRunning(parent)
+PkInterface::PkInterface(QObject *parent) :
+    AbstractIsRunning(parent)
 {
     kDebug() << "Creating Helper";
     (void) new ModifyAdaptor(this);
@@ -114,7 +114,7 @@ void PkInterface::InstallPackageFiles(uint xid, const QStringList &files, const 
     setDelayedReply(true);
     PkInstallPackageFiles *task = new PkInstallPackageFiles(xid, files, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    task->show();
 }
 
 void PkInterface::InstallPackageNames(uint xid, const QStringList &packages, const QString &interaction)
@@ -124,7 +124,7 @@ void PkInterface::InstallPackageNames(uint xid, const QStringList &packages, con
     setDelayedReply(true);
     PkInstallPackageNames *task = new PkInstallPackageNames(xid, packages, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    task->show();
 }
 
 void PkInterface::InstallProvideFiles(uint xid, const QStringList &files, const QString &interaction)

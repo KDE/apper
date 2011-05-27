@@ -27,6 +27,7 @@
 
 using namespace PackageKit;
 
+class IntroDialog;
 class PkInstallGStreamerResources : public KpkAbstractTask
 {
     Q_OBJECT
@@ -42,10 +43,12 @@ public slots:
     void start();
 
 private slots:
+    void slotButtonClicked(int bt);
     void whatProvidesFinished(PackageKit::Transaction::Exit status);
     void addPackage(const PackageKit::Package &package);
 
 private:
+    IntroDialog *m_introDialog;
     QList<Package> m_foundPackages;
     QStringList m_resources;
 };

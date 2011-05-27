@@ -22,9 +22,9 @@
 
 #include <QtDBus/QDBusContext>
 
-#include <KpkAbstractIsRunning.h>
+#include "AbstractIsRunning.h"
 
-class PkInterface : public KpkAbstractIsRunning, protected QDBusContext
+class PkInterface : public AbstractIsRunning, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.PackageKit")

@@ -18,11 +18,11 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KPackageKitSmartIcon.h"
+#include "ApperSentinel.h"
 
 #include "KpkUpdateIcon.h"
 #include "KpkDistroUpgrade.h"
-#include "KpkTransactionTrayIcon.h"
+#include "TransactionWatcher.h"
 #include "KpkInterface.h"
 #include "PkInterface.h"
 
@@ -33,9 +33,9 @@
 
 #define MINUTE 600000
 
-using namespace kpackagekit;
+// #define MINUTE 60000
 
-KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
+ApperSentinel::ApperSentinel()
  : KUniqueApplication(),
    m_trayIcon(0),
    m_updateIcon(0),
@@ -56,7 +56,7 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
     connect(m_closeT, SIGNAL(timeout()),
             this, SLOT(close()));
 
-    m_trayIcon = new KpkTransactionTrayIcon(this);
+    m_trayIcon = new TransactionWatcher(this);
     connect(m_trayIcon, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
@@ -81,10 +81,10 @@ KPackageKit_Smart_Icon::KPackageKit_Smart_Icon()
 //     connect(m_updateIcon, SIGNAL(watchTransaction(const QString &, bool)),
 //             m_transWatcher, SLOT(watchTransaction(const QString &, bool)));
 
-    this->prepareToClose();
+    prepareToClose();
 }
 
-void KPackageKit_Smart_Icon::prepareToClose()
+void ApperSentinel::prepareToClose()
 {
     if (isRunning()) {
         kDebug() << "Stoping Timer";
@@ -95,7 +95,7 @@ void KPackageKit_Smart_Icon::prepareToClose()
     }
 }
 
-bool KPackageKit_Smart_Icon::isRunning()
+bool ApperSentinel::isRunning()
 {
     // check to see if no piece of code is running
     if (m_trayIcon && m_trayIcon->isRunning()) {
@@ -115,7 +115,7 @@ bool KPackageKit_Smart_Icon::isRunning()
     return false;
 }
 
-void KPackageKit_Smart_Icon::close()
+void ApperSentinel::close()
 {
     // This will run when the timer times out, we will check
     // again just to be sure.
@@ -125,13 +125,13 @@ void KPackageKit_Smart_Icon::close()
     }
 }
 
-int KPackageKit_Smart_Icon::newInstance()
+int ApperSentinel::newInstance()
 {
     return 0;
 }
 
-KPackageKit_Smart_Icon::~KPackageKit_Smart_Icon()
+ApperSentinel::~ApperSentinel()
 {
 }
 
-#include "KPackageKitSmartIcon.moc"
+#include "ApperSentinel.moc"

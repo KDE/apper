@@ -45,7 +45,7 @@
 using namespace PackageKit;
 
 KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
-    : KpkAbstractIsRunning(parent),
+    : AbstractIsRunning(parent),
       m_getUpdatesT(0),
       m_statusNotifierItem(0)
 {

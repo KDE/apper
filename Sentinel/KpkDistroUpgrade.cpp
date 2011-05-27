@@ -26,9 +26,9 @@
 
 #include <KDebug>
 
-KpkDistroUpgrade::KpkDistroUpgrade(QObject *parent)
- : KpkAbstractIsRunning(parent),
-   m_distroUpgradeProcess(0)
+KpkDistroUpgrade::KpkDistroUpgrade(QObject *parent) :
+    AbstractIsRunning(parent),
+    m_distroUpgradeProcess(0)
 {
 }
 

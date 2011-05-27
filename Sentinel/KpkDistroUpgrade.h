@@ -21,7 +21,7 @@
 #ifndef KPK_DISTRO_UPGRADE_H
 #define KPK_DISTRO_UPGRADE_H
 
-#include <KpkAbstractIsRunning.h>
+#include "AbstractIsRunning.h"
 
 #include <QProcess>
 
@@ -29,7 +29,7 @@
 
 using namespace PackageKit;
 
-class KpkDistroUpgrade : public KpkAbstractIsRunning
+class KpkDistroUpgrade : public AbstractIsRunning
 {
 Q_OBJECT
 public:

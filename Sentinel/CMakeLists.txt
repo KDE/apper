@@ -4,11 +4,12 @@ set(sentinel_SRCS
     StatusNotifierItem.cpp
     TransactionTrayIcon.cpp
     TransactionJob.cpp
-    KpkTransactionTrayIcon.cpp
+    TransactionWatcher.cpp
+    IntroDialog.cpp
+    AbstractIsRunning.cpp
     KpkUpdateIcon.cpp
     KpkDistroUpgrade.cpp
     KpkInterface.cpp
-    KpkTransactionWatcher.cpp
     PkInterface.cpp
     KpkAbstractTask.cpp
     PkInstallPackageNames.cpp
@@ -17,13 +18,18 @@ set(sentinel_SRCS
     PkInstallMimeTypes.cpp
     PkInstallGStreamerResources.cpp
     PkInstallFontconfigResources.cpp
+    FilesModel.cpp
     PkInstallPackageFiles.cpp
     PkInstallProvideFiles.cpp
     PkInstallCatalogs.cpp
     PkRemovePackageByFiles.cpp
     PkInstallPrinterDrivers.cpp
-    KPackageKitSmartIcon.cpp
+    ApperSentinel.cpp
     main.cpp
+)
+
+kde4_add_ui_files(sentinel_SRCS
+    IntroDialog.ui
 )
 
 qt4_add_dbus_adaptor(sentinel_dbus_SRCS

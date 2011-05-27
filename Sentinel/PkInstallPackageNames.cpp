@@ -25,8 +25,11 @@
 
 #include <KLocale>
 #include <KMessageBox>
+#include <QStandardItemModel>
 
 #include <KDebug>
+
+#include "IntroDialog.h"
 
 PkInstallPackageNames::PkInstallPackageNames(uint xid,
                                              const QStringList &packages,
@@ -37,10 +40,76 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
    m_packages(packages),
    m_message(message)
 {
+    m_introDialog = new IntroDialog(this);
+    QStandardItemModel *model = new QStandardItemModel(this);
+
+    foreach (const QString &package, packages) {
+        QStandardItem *item = new QStandardItem(package);
+        item->setIcon(KIcon("package-x-generic").pixmap(32, 32));
+        model->appendRow(item);
+    }
+    m_introDialog->setModel(model);
+    setMainWidget(m_introDialog);
+
+    QString description;
+    description = i18np("Do you want to search for and install this package now?",
+                        "Do you want to search for and install these packages now?",
+                        m_packages.size());
+    m_introDialog->setDescription(description);
+
+    QString title;
+    // this will come from DBus interface
+    if (parentTitle.isNull()) {
+        title = i18np("An application wants to install a package",
+                      "An application wants to install packages",
+                        m_packages.size());
+    } else {
+        title = i18np("The application <i>%2</i> wants to install a package",
+                      "The application <i>%2</i> wants to install packages",
+                        m_packages.size(),
+                        parentTitle);
+    }
+    m_introDialog->setTitle(title);
 }
 
 PkInstallPackageNames::~PkInstallPackageNames()
 {
+}
+
+void PkInstallPackageNames::slotButtonClicked(int bt)
+{
+    if (bt == KDialog::Ok) {
+        if (mainWidget() == m_introDialog) {
+            Transaction *t = new Transaction(this);
+            PkTransaction *trans = new PkTransaction(t, this);
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                    this, SLOT(resolveFinished(PackageKit::Transaction::Exit)));
+            connect(t, SIGNAL(package(const PackageKit::Package &)),
+                    this, SLOT(addPackage(const PackageKit::Package &)));
+            t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
+            if (t->error()) {
+                QString msg(i18n("Failed to start resolve transaction"));
+                if (showWarning()) {
+                    KMessageBox::sorry(this,
+                                       KpkStrings::daemonError(t->error()),
+                                       msg);
+                }
+                sendErrorFinished(Failed, msg);
+            } else {
+//                 if (showProgress()) {
+//                     kTransaction()->setTransaction(t);
+//                     kTransaction()->show();
+//                 }
+            }
+        
+            setMainWidget(trans);
+//             trans->installFiles(m_model->files());
+            enableButtonOk(false);
+        }
+    } else {
+        sendErrorFinished(Cancelled, "Aborted");
+    }
+    KDialog::slotButtonClicked(bt);
 }
 
 void PkInstallPackageNames::start()

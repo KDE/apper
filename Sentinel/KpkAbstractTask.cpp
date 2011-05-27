@@ -36,11 +36,15 @@
 using namespace PackageKit;
 
 KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent)
- : QWidget(parent),
+ : KDialog(parent),
    m_xid(xid),
    m_message(message)
 {
     setWindowIcon(KIcon("applications-other"));
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    setButtonText(KDialog::Ok, i18n("Continue"));
+    setButtonIcon(KDialog::Ok, KIcon("go-next"));
+
     connect(this, SIGNAL(finished()), SLOT(deleteLater()));
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Daemon::setHints("locale=" + locale);

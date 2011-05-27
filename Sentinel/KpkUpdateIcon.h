@@ -21,7 +21,7 @@
 #ifndef KPK_UPDATE_ICON_H
 #define KPK_UPDATE_ICON_H
 
-#include <KpkAbstractIsRunning.h>
+#include "AbstractIsRunning.h"
 
 #include <KStatusNotifierItem>
 
@@ -29,7 +29,7 @@
 
 using namespace PackageKit;
 
-class KpkUpdateIcon : public KpkAbstractIsRunning
+class KpkUpdateIcon : public AbstractIsRunning
 {
     Q_OBJECT
 public:

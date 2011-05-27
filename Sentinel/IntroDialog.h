@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,42 +18,30 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef PK_INSTALL_PACKAGE_NAMES_H
-#define PK_INSTALL_PACKAGE_NAMES_H
+#ifndef INTRO_DIALOG_H
+#define INTRO_DIALOG_H
 
-#include "KpkAbstractTask.h"
+#include <QWidget>
+#include <QAbstractItemModel>
 
-#include <QDBusMessage>
+namespace Ui {
+    class IntroDialog;
+}
 
-#include <Transaction>
-
-using namespace PackageKit;
-
-class IntroDialog;
-class PkInstallPackageNames : public KpkAbstractTask
+class FilesModel;
+class IntroDialog : public QWidget
 {
     Q_OBJECT
 public:
-    PkInstallPackageNames(uint xid,
-                          const QStringList &packages,
-                          const QString &interaction,
-                          const QDBusMessage &message,
-                          QWidget *parent = 0);
-    ~PkInstallPackageNames();
+    IntroDialog(QWidget *parent = 0);
+    ~IntroDialog();
 
-private slots:
-    void start();
-
-    void slotButtonClicked(int bt);
-    void resolveFinished(PackageKit::Transaction::Exit);
-    void addPackage(const PackageKit::Package &package);
+    void setTitle(const QString &title);
+    void setDescription(const QString &description);
+    void setModel(QAbstractItemModel *model);
 
 private:
-    IntroDialog *m_introDialog;
-    QList<Package> m_foundPackages;
-    QStringList  m_packages;
-    QDBusMessage m_message;
-    QStringList  m_alreadyInstalled;
+    Ui::IntroDialog *ui;
 };
 
 #endif

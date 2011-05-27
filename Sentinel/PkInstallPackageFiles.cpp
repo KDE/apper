@@ -20,10 +20,14 @@
 
 #include "PkInstallPackageFiles.h"
 
+#include "IntroDialog.h"
+#include "FilesModel.h"
+
 #include <KpkSimulateModel.h>
 #include <KpkRequirements.h>
 #include <KpkStrings.h>
 #include <KpkMacros.h>
+#include <PkTransaction.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -42,163 +46,105 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
                                              const QString &interaction,
                                              const QDBusMessage &message,
                                              QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent),
-   m_urls(files)
+ : KpkAbstractTask(xid, interaction, message, parent)
 {
+    m_introDialog = new IntroDialog(this);
+    m_model = new FilesModel(files, Daemon::mimeTypes(), this);
+    connect(m_model, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+            this, SLOT(modelChanged()));
+    m_introDialog->setModel(m_model);
+    setMainWidget(m_introDialog);
+
+    modelChanged();
 }
 
 PkInstallPackageFiles::~PkInstallPackageFiles()
 {
 }
 
-void PkInstallPackageFiles::start()
+void PkInstallPackageFiles::modelChanged()
 {
-    QStringList notFiles;
-    QStringList mimeTypes = Daemon::mimeTypes();
-    QString lastDirectory = m_urls.at(0).directory();
-    QString lastDirectoryNotFiles = m_urls.at(0).directory();
-    bool showFullPath = false;
-    bool showFullPathNotFiles = false;
-    for (int i = 0; i < m_urls.count(); i++) {
-        bool supported = false;
-        if (QFileInfo(m_urls.at(i).path()).isFile()) {
-            kDebug() << "isFIle" << m_urls.at(i);
-            KMimeType::Ptr mime = KMimeType::findByFileContent(m_urls.at(i).path());
-            foreach (const QString &mimeType, mimeTypes) {
-                if (mime->is(mimeType)) {
-                    kDebug() << "Found Supported Mime" << mimeType;
-                    supported = true;
-                    m_files << m_urls.at(i).path();
-                    // if the path of all the files is the same
-                    // why bothering the user showing a full path?
-                    if (m_urls.at(i).directory() != lastDirectory) {
-                        showFullPath = true;
-                    }
-                    lastDirectory = m_urls.at(i).directory();
-                    break;
-                }
-            }
-        }
-
-        if (!supported) {
-            kDebug() << "~isFIle" << m_urls.at(i);
-            notFiles << m_urls.at(i).path();
-            if (m_urls.at(i).directory() != lastDirectoryNotFiles) {
-                showFullPathNotFiles = true;
-            }
-            lastDirectoryNotFiles = m_urls.at(i).directory();
-        }
-    }
-
-    // check if there were "false" files
-    if (notFiles.count()) {
-        if (!showFullPathNotFiles) {
-            for (int i = 0; i < notFiles.count(); i++) {
-                notFiles[i] = KUrl(notFiles.at(i)).fileName();
-            }
-        }
-        if (showWarning()) {
-            KMessageBox::errorListWId(parentWId(),
-                                      i18np("This item is not supported by your backend, "
-                                            "or it is not a file. ",
-                                            "These items are not supported by your "
-                                            "backend, or they are not files.",
-                                            notFiles.count()),
-                                      notFiles,
-                                      i18n("Impossible to install"));
-        }
-        sendErrorFinished(Failed, "Files not supported by your backend or they are not files");
-        return;
-    }
-
-    if (m_files.count()) {
-        QStringList displayFiles = m_files;
-        if (!showFullPath) {
-            for(int i = 0; i < displayFiles.count(); i++) {
-                displayFiles[i] = KUrl(displayFiles.at(i)).fileName();
-            }
-        }
-
-        KGuiItem installBt = KStandardGuiItem::yes();
-        installBt.setText(i18n("Install"));
-
-        int ret = KMessageBox::Yes;
-        if (showConfirmSearch()) {
-            ret = KMessageBox::questionYesNoListWId(parentWId(),
-                                                    i18np("Do you want to install this file?",
-                                                          "Do you want to install these files?",
-                                                          displayFiles.count()),
-                                                    displayFiles,
-                                                    i18n("Install?"),
-                                                    installBt);
-        }
-        if (ret == KMessageBox::Yes) {
-            if (Daemon::actions() & Transaction::RoleSimulateInstallFiles &&
-                showConfirmDeps()) {
-                // TODO
-                Transaction *t = new Transaction(this);
-                t->simulateInstallFiles(m_files);
-                if (t->error()) {
-                    // Send the error FIRST otherwise 't' might get deleted
-                    sendErrorFinished(Failed, KpkStrings::daemonError(t->error()));
-                    if (showWarning()) {
-                        KMessageBox::sorryWId(parentWId(),
-                                              KpkStrings::daemonError(t->error()),
-                                              i18np("Failed to install file",
-                                                    "Failed to install files",
-                                                    m_files.count()));
-                    }
-                } else {
-                    kTransaction()->setTransaction(t);
-                    m_installFilesModel = new KpkSimulateModel(this);
-                    connect(t, SIGNAL(package(const PackageKit::Package &)),
-                            m_installFilesModel, SLOT(addPackage(const PackageKit::Package &)));
-                    if (showProgress()) {
-                        kTransaction()->show();
-                    }
-                }
-            } else {
-                installFiles();
-            }
-        } else {
-            QString msg = i18np("The file was not installed",
-                                "The files were not installed",
-                                displayFiles.count());
-            if (showWarning()) {
-                KMessageBox::sorryWId(parentWId(), msg, msg);
-            }
-            sendErrorFinished(Cancelled, "Aborted");
-        }
-    } else {
-        sendErrorFinished(Failed, "there were no files to install");
-    }
+    QString message;
+    message = i18np("Press <i>Continue</i> if you want to install this file:",
+                    "Press <i>Continue</i> if you want to install these files:",
+                    m_model->rowCount());
+    enableButtonOk(m_model->rowCount() > 0);
+    m_introDialog->setDescription(message);
 }
 
-void PkInstallPackageFiles::installFiles()
+void PkInstallPackageFiles::slotButtonClicked(int bt)
 {
-    //TODO move to PkTransaction
-    SET_PROXY
-    QString socket;
-    socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    Transaction *t = new Transaction(this);
-    t->setHints("frontend-socket=" + socket);
-    t->installFiles(m_files, true);
-    Transaction::InternalError error = t->error();
-    if (error) {
-        if (showWarning()) {
-            KMessageBox::sorryWId(parentWId(),
-                                  KpkStrings::daemonError(error),
-                                  i18np("Failed to install file",
-                                        "Failed to install files",
-                                        m_files.count()));
+    if (bt == KDialog::Ok) {
+        if (mainWidget() == m_introDialog) {
+            PkTransaction *trans = new PkTransaction(0, this);
+            setMainWidget(trans);
+            trans->installFiles(m_model->files());
+            enableButtonOk(false);
         }
-        sendErrorFinished(Failed, KpkStrings::daemonError(error));
     } else {
-        kTransaction()->setTransaction(t);
-//         kTransaction()->setupDebconfDialog(socket);
-        kTransaction()->setFiles(m_files);
-        kTransaction()->show();
+        sendErrorFinished(Cancelled, "Aborted");
     }
+    KDialog::slotButtonClicked(bt);
+}
+
+void PkInstallPackageFiles::start()
+{
+    // check if there were "false" files
+//     if (notFiles.count()) {
+//         if (!showFullPathNotFiles) {
+//             for (int i = 0; i < notFiles.count(); i++) {
+//                 notFiles[i] = KUrl(notFiles.at(i)).fileName();
+//             }
+//         }
+//         if (showWarning()) {
+//             KMessageBox::errorListWId(parentWId(),
+//                                       i18np("This item is not supported by your backend, "
+//                                             "or it is not a file. ",
+//                                             "These items are not supported by your "
+//                                             "backend, or they are not files.",
+//                                             notFiles.count()),
+//                                       notFiles,
+//                                       i18n("Impossible to install"));
+//         }
+//         sendErrorFinished(Failed, "Files not supported by your backend or they are not files");
+//         return;
+//     }
+
+//     if (m_files.count()) {
+//         QStringList displayFiles = m_files;
+//         if (!showFullPath) {
+//             for(int i = 0; i < displayFiles.count(); i++) {
+//                 displayFiles[i] = KUrl(displayFiles.at(i)).fileName();
+//             }
+//         }
+// 
+//         KGuiItem installBt = KStandardGuiItem::yes();
+//         installBt.setText(i18n("Install"));
+// 
+//         int ret = KMessageBox::Yes;
+//         if (showConfirmSearch()) {
+//             ret = KMessageBox::questionYesNoListWId(parentWId(),
+//                                                     i18np("Do you want to install this file?",
+//                                                           "Do you want to install these files?",
+//                                                           displayFiles.count()),
+//                                                     displayFiles,
+//                                                     i18n("Install?"),
+//                                                     installBt);
+//         }
+//         if (ret == KMessageBox::Yes) {
+// 
+//         } else {
+//             QString msg = i18np("The file was not installed",
+//                                 "The files were not installed",
+//                                 displayFiles.count());
+//             if (showWarning()) {
+//                 KMessageBox::sorryWId(parentWId(), msg, msg);
+//             }
+//             sendErrorFinished(Cancelled, "Aborted");
+//         }
+//     } else {
+//         sendErrorFinished(Failed, "there were no files to install");
+//     }
 }
 
 void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status)
@@ -206,17 +152,17 @@ void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status
     kDebug() << "Finished.";
     if (kTransaction()->transaction()->role() == Transaction::RoleSimulateInstallFiles) {
         if (status == PkTransaction::Success) {
-            if (m_installFilesModel->rowCount() > 0) {
-                QWeakPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
-                if (frm.data()->exec() == QDialog::Accepted) {
-                    installFiles();
-                } else {
-                    sendErrorFinished(Cancelled, "Aborted");
-                }
-                frm.data()->deleteLater();
-            } else {
-                installFiles();
-            }
+//             if (m_installFilesModel->rowCount() > 0) {
+//                 QWeakPointer<KpkRequirements> frm = new KpkRequirements(m_installFilesModel);
+//                 if (frm.data()->exec() == QDialog::Accepted) {
+// //                     installFiles();
+//                 } else {
+//                     sendErrorFinished(Cancelled, "Aborted");
+//                 }
+//                 frm.data()->deleteLater();
+//             } else {
+// //                 installFiles();
+//             }
         } else {
             sendErrorFinished(Failed, kTransaction()->transaction()->errorDetails());
         }

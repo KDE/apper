@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,39 +18,61 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkAbstractIsRunning.h"
+#include "IntroDialog.h"
+
+#include "ui_IntroDialog.h"
+
+#include <KpkSimulateModel.h>
+#include <KpkRequirements.h>
+#include <KpkStrings.h>
+#include <KpkMacros.h>
+
+#include <KLocale>
+#include <KMessageBox>
+#include <KMimeType>
 
 #include <KDebug>
 
-KpkAbstractIsRunning::KpkAbstractIsRunning(QObject *parent)
- : QObject(parent),
-   m_running(0)
+#include <QWeakPointer>
+#include <QFileInfo>
+#include <QCoreApplication>
+
+#include <Daemon>
+
+#include "FilesModel.h"
+
+IntroDialog::IntroDialog(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::IntroDialog)
 {
+    ui->setupUi(this);
+    ui->arrowL->setPixmap(KIcon("go-next-view").pixmap(32, 32));
+    ui->iconL->setPixmap(KIcon("computer").pixmap(128, 128));
 }
 
-KpkAbstractIsRunning::~KpkAbstractIsRunning()
+IntroDialog::~IntroDialog()
 {
+    delete ui;
 }
 
-void KpkAbstractIsRunning::increaseRunning()
+void IntroDialog::setModel(QAbstractItemModel *model)
 {
-    m_running++;
-    kDebug();
+    ui->listView->setModel(model);
 }
 
-void KpkAbstractIsRunning::decreaseRunning()
+void IntroDialog::setTitle(const QString &title)
 {
-    m_running--;
-    kDebug();
-    if (!isRunning()) {
-        kDebug() << "Is not Running anymore";
-        emit close();
+    if (title.isNull()) {
+        ui->titleL->hide();
+    } else {
+        ui->titleL->show();
+        ui->titleL->setText(title);
     }
 }
 
-bool KpkAbstractIsRunning::isRunning() const
+void IntroDialog::setDescription(const QString &description)
 {
-    return m_running > 0;
+    ui->descriptionL->setText(description);
 }
 
-#include "KpkAbstractIsRunning.moc"
+#include "IntroDialog.moc"

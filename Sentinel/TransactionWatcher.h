@@ -18,10 +18,10 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_TRANSACTION_TRAY_ICON_H
-#define KPK_TRANSACTION_TRAY_ICON_H
+#ifndef TRANSACTION_WATCHER_H
+#define TRANSACTION_WATCHER_H
 
-#include <KpkAbstractIsRunning.h>
+#include "AbstractIsRunning.h"
 
 #include <kuiserverjobtracker.h>
 
@@ -32,18 +32,20 @@
 using namespace PackageKit;
 
 class StatusNotifierItem;
-class KpkTransactionTrayIcon : public KpkAbstractIsRunning
+class TransactionWatcher : public AbstractIsRunning
 {
     Q_OBJECT
 public:
-    KpkTransactionTrayIcon(QObject *parent = 0);
-    ~KpkTransactionTrayIcon();
+    TransactionWatcher(QObject *parent = 0);
+    ~TransactionWatcher();
 
     bool isRunning();
 
 private slots:
     void transactionListChanged(const QStringList &tids);
     void message(PackageKit::Transaction::Message type, const QString &message);
+    void errorCode(PackageKit::Transaction::Error, const QString &);
+    void errorActivated(uint action);
     void requireRestart(PackageKit::Package::Restart type, const PackageKit::Package &pkg);
     void finished(PackageKit::Transaction::Exit exit);
     void transactionChanged();
@@ -51,7 +53,6 @@ private slots:
     void logout();
     void showMessages();
     void hideMessageIcon();
-    void fillMenu();
 
 private:
     void suppressSleep(bool enable, const QString &reason = QString());

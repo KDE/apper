@@ -45,6 +45,7 @@ public:
     void hideCancelButton();
 
     void installPackages(const QList<Package> &packages);
+    void installFiles(const QStringList &files);
     void removePackages(const QList<Package> &packages);
     void updatePackages(const QList<Package> &packages);
     void refreshCache();
@@ -88,6 +89,7 @@ public slots:
 
 private slots:
     void installPackages();
+    void installFiles();
     void removePackages(bool allow_deps = true);
     void updatePackages();
 
@@ -113,9 +115,6 @@ private:
     Transaction::Status m_status;
     Ui::PkTransaction *ui;
     PkTransactionPrivate *d;
-
-protected slots:
-    virtual void slotButtonClicked(int button);
 };
 
 #endif

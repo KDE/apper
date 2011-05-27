@@ -21,7 +21,6 @@
 #ifndef TRANSACTION_JOB_H
 #define TRANSACTION_JOB_H
 
-#include <KpkAbstractIsRunning.h>
 #include <KJob>
 
 #include <Transaction>
@@ -34,7 +33,7 @@ class PkTransactionDialog;
 class TransactionTrayIcon;
 class TransactionJob : public KJob
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     TransactionJob(Transaction *transaction, QObject *parent = 0);
     ~TransactionJob();
@@ -42,9 +41,9 @@ public:
     virtual void start();
 
 private slots:
-    void finished();
+    void finished(PackageKit::Transaction::Exit exit = Transaction::ExitSuccess);
     void package(const PackageKit::Package &package);
-    void errorCode(PackageKit::Transaction::Error, const QString &);
+    void repoDetail(const QString &repoId, const QString &repoDescription);
     void updateJob();
 
 protected:

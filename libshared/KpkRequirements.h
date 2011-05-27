@@ -26,7 +26,7 @@
 
 class KpkRequirementsPrivate;
 class KpkSimulateModel;
-class KDE_EXPORT KpkRequirements : public KDialog
+class KpkRequirements : public KDialog
 {
     Q_OBJECT
 public:
