@@ -61,9 +61,9 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
 
 
     QString description;
-    description = i18np("The following plugin is required"
+    description = i18np("The following plugin is required. "
                         "Do you want to search for this now?",
-                        "The following plugins are required"
+                        "The following plugins are required. "
                         "Do you want to search for these now?",
                         m_resources.size());
 
