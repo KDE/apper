@@ -74,6 +74,7 @@ void PkInstallProvideFiles::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = new Transaction(this);
+        PkTransaction *trans = new PkTransaction(t, this);
         t->searchFiles(m_args.first(), Transaction::FilterArch | Transaction::FilterNewest);
         if (t->error()) {
             if (showWarning()) {
@@ -88,8 +89,7 @@ void PkInstallProvideFiles::start()
             connect(t, SIGNAL(package(const PackageKit::Package &)),
                     this, SLOT(addPackage(const PackageKit::Package &)));
             if (showProgress()) {
-                kTransaction()->setTransaction(t);
-                kTransaction()->show();
+                setMainWidget(trans);
             }
         }
     } else {
@@ -109,7 +109,6 @@ void PkInstallProvideFiles::searchFinished(PackageKit::Transaction::Exit status)
             }
             sendErrorFinished(Failed, "already provided");
         } else if (m_foundPackages.size()) {
-            kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, "Transaction did not finish with success");

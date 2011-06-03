@@ -80,6 +80,7 @@ void PkRemovePackageByFiles::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = new Transaction(QString());
+        PkTransaction *trans = new PkTransaction(t, this);
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
         connect(t, SIGNAL(package(const PackageKit::Package &)),
@@ -96,8 +97,7 @@ void PkRemovePackageByFiles::start()
             sendErrorFinished(Failed, "Failed to search for package");
         } else {
             if (showProgress()) {
-                kTransaction()->setTransaction(t);
-                kTransaction()->show();
+                setMainWidget(trans);
             }
         }
     } else {
@@ -110,7 +110,6 @@ void PkRemovePackageByFiles::searchFinished(PackageKit::Transaction::Exit status
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));

@@ -153,28 +153,24 @@ void KpkPackageModel::addSelectedPackage(const PackageKit::Package &package)
 
 QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    Q_UNUSED(orientation);   
-    if (!m_checkable && role == Qt::DisplayRole) {
-        // the architecture text is too long
-        return QString();
-    }
+    Q_UNUSED(orientation);
 
     if (/*m_packageCount && */role == Qt::DisplayRole) {
-        if (section == 0) {
+        if (section == NameCol) {
             if (m_checkable) {
                 return KpkStrings::packageQuantity(true,
-                                                m_packages.size(),
-                                                m_checkedPackages.size());
+                                                   m_packages.size(),
+                                                   m_checkedPackages.size());
             }
-            return KpkStrings::packageQuantity(false,
-                                            m_packages.size(),
-                                            0);
-        } else if (section == 1) {
+            return i18n("Name");
+        } else if (section == VersionCol) {
             return i18n("Version");
-        } else if (section == 2) {
-            return i18n("Architecture");
-        } else if (section == 3) {
+        } else if (section == ArchCol) {
+            return i18n("Arch");
+        } else if (section == SummaryCol) {
             return i18n("Summary");
+        } else if (section == ActionCol) {
+            return i18n("Action");
         }
     }
     return QVariant();
@@ -212,7 +208,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
 
     InternalPackage package = m_packages.at(index.row());
 
-    if (index.column() == 0) {
+    if (index.column() == NameCol) {
         switch (role) {
         case Qt::CheckStateRole:
             if (!m_checkable) {
@@ -259,17 +255,19 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         }
         case PackageName:
             return package.id.split(';')[0];
+        case Qt::ToolTipRole:
+            return i18n("Version: %1\nArchitecture: %2", package.version, package.arch);
         }
-    } else if (index.column() == 1) {
+    } else if (index.column() == VersionCol) {
         if (role == Qt::DisplayRole) {
             return package.version;
         }
-    } else if (index.column() == 2) {
+    } else if (index.column() == ArchCol) {
         if (role == Qt::DisplayRole) {
             return package.arch;
         }
-    } else if (index.column() == 3) {
-        if (role == Qt::DisplayRole) {
+    } else if (index.column() == SummaryCol) {
+        if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
             return package.summary;
         }
     }
@@ -349,7 +347,7 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
 
 Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
 {
-    if (index.column() == 0) {
+    if (index.column() == NameCol) {
         return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | QAbstractItemModel::flags(index);
     }
     return QAbstractItemModel::flags(index);
@@ -359,10 +357,10 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     if (m_checkable) {
-        // when the model is checkable we have one less column
-        return 4;
+        // when the model is checkable the action column is not shown
+        return ActionCol;
     } else {
-        return 5;
+        return ActionCol + 1;
     }
 }
 
@@ -558,3 +556,5 @@ void KpkPackageModel::setCheckable(bool checkable)
 {
     m_checkable = checkable;
 }
+
+#include "KpkPackageModel.moc"

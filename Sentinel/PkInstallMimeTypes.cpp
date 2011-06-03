@@ -72,6 +72,7 @@ void PkInstallMimeTypes::start()
 
     if (ret == KMessageBox::Yes) {
         Transaction *t = new Transaction(this);
+        PkTransaction *trans = new PkTransaction(t, this);
         t->whatProvides(Transaction::ProvidesMimetype,
                         m_mimeTypes,
                         Transaction::FilterNotInstalled |
@@ -90,8 +91,7 @@ void PkInstallMimeTypes::start()
             connect(t, SIGNAL(package(const PackageKit::Package &)),
                     this, SLOT(addPackage(const PackageKit::Package &)));
             if (showProgress()) {
-                kTransaction()->setTransaction(t);
-                kTransaction()->show();
+                setMainWidget(trans);
             }
         }
     } else {
@@ -104,7 +104,6 @@ void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Transaction::Exit stat
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             frm->setMessage(i18np("Application that can open this type of file",
                                   "Applications that can open this type of file",

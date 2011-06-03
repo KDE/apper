@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
  *   dantti85-pk@yahoo.com.br                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,47 +18,27 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef PK_INSTALL_CATALOGS_H
-#define PK_INSTALL_CATALOGS_H
+#ifndef FILES_MODEL_H
+#define FILES_MODEL_H
 
-#include "KpkAbstractTask.h"
+#include <QStandardItemModel>
 
-#include <Package>
-#include <QDBusMessage>
-
-using namespace PackageKit;
-
-class PkTransaction;
-class PkInstallCatalogs : public KpkAbstractTask
+class FilesModel : public QStandardItemModel
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    PkInstallCatalogs(uint xid,
-                      const QStringList &files,
-                      const QString &interaction,
-                      const QDBusMessage &message,
-                      QWidget *parent = 0);
-    ~PkInstallCatalogs();
+    explicit FilesModel(const QStringList &files, const QStringList &mimes, QObject *parent = 0);
 
-public slots:
-    void start();
-
-private slots:
-    void addPackage(const PackageKit::Package &package);
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+    QStringList mimeTypes() const;
+    Qt::DropActions supportedDropActions() const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QStringList files() const;
 
 private:
-    bool installPackages(const QStringList &packages);
-    bool installProvides(const QStringList &provides);
-    bool installFiles(const QStringList &files);
-    bool runTransaction(Transaction *trans);
+    bool insertFiles(const QList<QUrl> &urls);
 
-    PkTransaction *m_trans;
-    QList<Package> m_foundPackages;
-    QStringList  m_files;
-    QString      m_interaction;
-    QDBusMessage m_message;
-    QStringList  m_alreadyInstalled;
-    int          m_maxResolve;
+    QStringList m_mimes;
 };
 
 #endif

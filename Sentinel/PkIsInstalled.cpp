@@ -43,6 +43,7 @@ PkIsInstalled::~PkIsInstalled()
 void PkIsInstalled::start()
 {
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = new PkTransaction(t, this);
     t->resolve(m_packageName, Transaction::FilterInstalled);
     Transaction::InternalError error = t->error();
     if (error) {
@@ -58,8 +59,7 @@ void PkIsInstalled::start()
         connect(t, SIGNAL(package(const PackageKit::Package &)),
                 this, SLOT(addPackage(const PackageKit::Package &)));
         if (showProgress()) {
-            kTransaction()->setTransaction(t);
-            kTransaction()->show();
+            setMainWidget(trans);
         }
     }
 }

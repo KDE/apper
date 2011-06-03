@@ -31,9 +31,9 @@
 
 #include <Daemon>
 
-#define MINUTE 600000
+// #define MINUTE 600000
 
-// #define MINUTE 60000
+#define MINUTE 60000
 
 ApperSentinel::ApperSentinel()
  : KUniqueApplication(),

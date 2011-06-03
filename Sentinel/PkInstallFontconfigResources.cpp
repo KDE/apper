@@ -151,7 +151,6 @@ void PkInstallFontconfigResources::whatProvidesFinished(PackageKit::Transaction:
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             frm->setMessage(i18np("Application that can open this type of file",
                                   "Applications that can open this type of file",

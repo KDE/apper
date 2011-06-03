@@ -50,6 +50,7 @@ void PkSearchFile::start()
     }
 
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = new PkTransaction(t, this);
     t->searchFiles(m_fileName, Transaction::FilterNewest);
     Transaction::InternalError error = t->error();
     if (error) {
@@ -67,8 +68,7 @@ void PkSearchFile::start()
         connect(t, SIGNAL(package(const Package &)),
                 this, SLOT(addPackage(const Package &)));
         if (showProgress()) {
-            kTransaction()->setTransaction(t);
-            kTransaction()->show();
+            setMainWidget(trans);
         }
     }
 }

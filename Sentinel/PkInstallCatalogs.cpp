@@ -132,6 +132,10 @@ void PkInstallCatalogs::start()
 
         QStringList filesFailedToOpen;
         bool failed = false;
+
+        if (!m_files.isEmpty()) {
+            m_trans = new PkTransaction(0, this);
+        }
         foreach (const QString &file, m_files) {
             QFile catalog(file);
             if (catalog.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -167,7 +171,6 @@ void PkInstallCatalogs::start()
         }
 
         if (m_foundPackages.size()) {
-            kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
@@ -241,8 +244,7 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
         connect(t, SIGNAL(package(const PackageKit::Package &)),
                 this, SLOT(addPackage(const PackageKit::Package &)));
         if (showProgress()) {
-            kTransaction()->setTransaction(t);
-            kTransaction()->show();
+            m_trans->setTransaction(t);
         }
         loop.exec();
         return true;

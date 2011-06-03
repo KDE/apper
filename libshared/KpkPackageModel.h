@@ -34,6 +34,13 @@ class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
     Q_OBJECT
 public:
     enum {
+        NameCol = 0,
+        SummaryCol,
+        VersionCol,
+        ArchCol,
+        ActionCol
+    };
+    enum {
         SortRole = Qt::UserRole,
         NameRole,
         SummaryRole,

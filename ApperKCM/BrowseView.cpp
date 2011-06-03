@@ -68,14 +68,14 @@ void BrowseView::init(Transaction::Roles roles)
     m_proxy->setFilterRole(KpkPackageModel::ApplicationFilterRole);
 
     packageView->setModel(m_proxy);
-    packageView->sortByColumn(0, Qt::AscendingOrder);
+    packageView->sortByColumn(KpkPackageModel::NameCol, Qt::AscendingOrder);
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
     packageView->header()->setStretchLastSection(false);
-    packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(2, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(3, QHeaderView::Stretch);
-    packageView->header()->setResizeMode(4, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(KpkPackageModel::NameCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(KpkPackageModel::VersionCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(KpkPackageModel::ArchCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(KpkPackageModel::SummaryCol, QHeaderView::Stretch);
+    packageView->header()->setResizeMode(KpkPackageModel::ActionCol, QHeaderView::ResizeToContents);
 
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     packageView->setItemDelegate(delegate);
@@ -85,12 +85,15 @@ void BrowseView::init(Transaction::Roles roles)
 
     KConfig config("KPackageKit");
     KConfigGroup viewGroup(&config, "ViewGroup");
+
+    // Version
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
     connect(m_showPackageVersion, SIGNAL(toggled(bool)),
             this, SLOT(showVersions(bool)));
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowApplicationVersions", false));
     showVersions(m_showPackageVersion->isChecked());
+
     // Arch
     m_showPackageArch = new QAction(i18n("Show Architectures"), this);
     m_showPackageArch->setCheckable(true);
@@ -124,13 +127,13 @@ KpkPackageModel* BrowseView::model() const
 
 void BrowseView::showVersions(bool enabled)
 {
-    packageView->header()->setSectionHidden(1, !enabled);
+    packageView->header()->setSectionHidden(KpkPackageModel::VersionCol, !enabled);
     packageDetails->hidePackageVersion(enabled);
 }
 
 void BrowseView::showArchs(bool enabled)
 {
-    packageView->header()->setSectionHidden(2, !enabled);
+    packageView->header()->setSectionHidden(KpkPackageModel::ArchCol, !enabled);
     packageDetails->hidePackageArch(enabled);
 }
 
@@ -145,7 +148,7 @@ void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
 
 void BrowseView::on_packageView_clicked(const QModelIndex &index)
 {
-    if (index.column() == 4) {
+    if (index.column() == KpkPackageModel::ActionCol) {
         return;
     }
 

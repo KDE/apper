@@ -20,6 +20,8 @@
 
 #include "KpkAbstractTask.h"
 
+#include "InfoWidget.h"
+
 #include <limits.h>
 #include <QtDBus/QDBusConnection>
 #include <QTimer>
@@ -45,7 +47,6 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
     setButtonText(KDialog::Ok, i18n("Continue"));
     setButtonIcon(KDialog::Ok, KIcon("go-next"));
 
-    connect(this, SIGNAL(finished()), SLOT(deleteLater()));
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Daemon::setHints("locale=" + locale);
 
@@ -71,10 +72,34 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
         setExec(cmdline);
     }
 
-    m_transaction = new PkTransactionDialog(0, PkTransactionDialog::Modal);
-    KWindowSystem::setMainWindow(m_transaction, m_xid);
-    connect(m_transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
+    m_stackedWidget = new QStackedWidget(this);
+    KDialog::setMainWidget(m_stackedWidget);
+
+    KWindowSystem::setMainWindow(this, m_xid);
+}
+
+KpkAbstractTask::~KpkAbstractTask()
+{
+}
+
+void KpkAbstractTask::setMainWidget(QWidget *widget)
+{
+    m_stackedWidget->addWidget(widget);
+    m_stackedWidget->setCurrentWidget(widget);
+}
+
+QWidget* KpkAbstractTask::mainWidget()
+{
+    return m_stackedWidget->currentWidget();
+}
+
+void KpkAbstractTask::setInfo(const QString &title, const QString &text)
+{
+    InfoWidget *info = new InfoWidget(this);
+    info->setTitle(title);
+    info->setDescription(text);
+    setMainWidget(info);
+    setButtons(KDialog::Close);
 }
 
 void KpkAbstractTask::setExec(const QString &exec)
@@ -155,11 +180,6 @@ uint KpkAbstractTask::getPidSession()
     return UINT_MAX;
 }
 
-KpkAbstractTask::~KpkAbstractTask()
-{
-    delete m_transaction;
-}
-
 // void KpkAbstractTask::setParentWindow(QWidget *widget)
 // {
 //     if (m_xid != 0) {
@@ -203,7 +223,6 @@ void KpkAbstractTask::sendErrorFinished(DBusError error, const QString &msg)
     QDBusMessage reply;
     reply = m_message.createErrorReply(dbusError, msg);
     QDBusConnection::sessionBus().send(reply);
-    emit finished();
 }
 
 bool KpkAbstractTask::sendMessageFinished(const QDBusMessage &message)
@@ -215,11 +234,6 @@ bool KpkAbstractTask::sendMessageFinished(const QDBusMessage &message)
 uint KpkAbstractTask::parentWId() const
 {
     return m_xid;
-}
-
-PkTransactionDialog* KpkAbstractTask::kTransaction() const
-{
-    return m_transaction;
 }
 
 void KpkAbstractTask::parseInteraction(const QString &interaction)
@@ -286,10 +300,6 @@ void KpkAbstractTask::parseInteraction(const QString &interaction)
             m_timeout = rx.cap(1).toUInt();
         }
     }
-}
-
-void KpkAbstractTask::transactionFinished(PkTransaction::ExitStatus)
-{
 }
 
 void KpkAbstractTask::finishTaskOk()

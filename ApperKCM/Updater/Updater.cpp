@@ -59,7 +59,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     m_header = new CheckableHeader(Qt::Horizontal, this);
     m_header->setCheckBoxVisible(false);
     packageView->setHeader(m_header);
-    packageView->setHeaderHidden(true);
+    packageView->setHeaderHidden(false);
 
     m_updatesModel = new KpkPackageModel(this);
     m_updatesModel->setCheckable(true);
@@ -73,16 +73,19 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     m_delegate = new ApplicationsDelegate(packageView);
     m_delegate->setCheckable(true);
     packageView->setItemDelegate(m_delegate);
-    packageView->sortByColumn(0, Qt::AscendingOrder);
+    packageView->sortByColumn(KpkPackageModel::NameCol, Qt::AscendingOrder);
     connect(m_header, SIGNAL(toggled(bool)),
             m_updatesModel, SLOT(setAllChecked(bool)));
     connect(m_updatesModel, SIGNAL(changed(bool)),
             this, SLOT(checkEnableUpdateButton()));
 
+    m_header->setDefaultAlignment(Qt::AlignCenter);
     // This must be set AFTER the model is set, otherwise it doesn't work
-    m_header->setResizeMode(0, QHeaderView::ResizeToContents);
-    m_header->setResizeMode(1, QHeaderView::ResizeToContents);
-    m_header->setStretchLastSection(true);
+    m_header->setResizeMode(KpkPackageModel::NameCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(KpkPackageModel::VersionCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(KpkPackageModel::ArchCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(KpkPackageModel::SummaryCol, QHeaderView::Stretch);
+    m_header->setStretchLastSection(false);
 
     // Setup the busy cursor
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
@@ -96,6 +99,8 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
     KConfig config("KPackageKit");
     KConfigGroup viewGroup(&config, "ViewGroup");
+
+    // versions
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
     connect(m_showPackageVersion, SIGNAL(toggled(bool)),
@@ -127,12 +132,12 @@ void Updater::setSelected(bool selected)
 
 void Updater::showVersions(bool enabled)
 {
-    packageView->header()->setSectionHidden(1, !enabled);
+    packageView->header()->setSectionHidden(KpkPackageModel::VersionCol, !enabled);
 }
 
 void Updater::showArchs(bool enabled)
 {
-    packageView->header()->setSectionHidden(2, !enabled);
+    packageView->header()->setSectionHidden(KpkPackageModel::ArchCol, !enabled);
 }
 
 void Updater::on_packageView_clicked(const QModelIndex &index)

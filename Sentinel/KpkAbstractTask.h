@@ -23,9 +23,9 @@
 
 #include <kdemacros.h>
 #include <KpkReviewChanges.h>
-#include <PkTransactionDialog.h>
 
 #include <QDBusMessage>
+#include <QStackedWidget>
 #include <KDialog>
 
 class KpkAbstractTask : public KDialog
@@ -66,21 +66,18 @@ public:
     uint timeout() const;
 
     KpkReviewChanges::OperationModes operationModes() const;
+    void setMainWidget(QWidget *widget);
+    QWidget* mainWidget();
+
+    void setInfo(const QString &title, const QString &text);
 
     void run();
-
-signals:
-    void finished();
-
-protected slots:
-    virtual void transactionFinished(PkTransaction::ExitStatus status);
 
 protected:
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);
     uint parentWId() const;
-    PkTransactionDialog* kTransaction() const;
     QString parentTitle;
 
 private:
@@ -89,7 +86,7 @@ private:
     QDBusMessage m_message;
     Interactions m_interactions;
     uint m_timeout;
-    PkTransactionDialog *m_transaction;
+    QStackedWidget *m_stackedWidget;
 
     void parseInteraction(const QString &interaction);
     uint getPidSystem();

@@ -6,6 +6,7 @@ set(sentinel_SRCS
     TransactionJob.cpp
     TransactionWatcher.cpp
     IntroDialog.cpp
+    InfoWidget.cpp
     AbstractIsRunning.cpp
     KpkUpdateIcon.cpp
     KpkDistroUpgrade.cpp
@@ -30,6 +31,7 @@ set(sentinel_SRCS
 
 kde4_add_ui_files(sentinel_SRCS
     IntroDialog.ui
+    InfoWidget.ui
 )
 
 qt4_add_dbus_adaptor(sentinel_dbus_SRCS

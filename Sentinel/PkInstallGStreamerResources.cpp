@@ -184,7 +184,6 @@ void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Transaction::
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this);
             setMainWidget(frm);
 //             if (frm->exec(operationModes()) == 0) {

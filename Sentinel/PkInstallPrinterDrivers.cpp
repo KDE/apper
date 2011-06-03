@@ -69,6 +69,7 @@ void PkInstallPrinterDrivers::start()
     }
 
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = new PkTransaction(t, this);
     t->whatProvides(Transaction::ProvidesPostscriptDriver,
                     search,
                     Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
@@ -85,8 +86,7 @@ void PkInstallPrinterDrivers::start()
                 this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit, uint)));
 
         if (showProgress()) {
-            kTransaction()->setTransaction(t);
-            kTransaction()->show();
+            setMainWidget(trans);
         }
     }
 }
@@ -97,7 +97,6 @@ void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Transaction::Exit
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            kTransaction()->hide();
             KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
