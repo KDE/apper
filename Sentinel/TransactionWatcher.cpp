@@ -49,6 +49,7 @@ Q_DECLARE_METATYPE(Transaction::Error)
 
 TransactionWatcher::TransactionWatcher(QObject *parent) :
     AbstractIsRunning(parent),
+    m_currentTransaction(0),
     m_messagesSNI(0),
     m_restartSNI(0),
     m_inhibitCookie(-1)
@@ -86,6 +87,7 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
         setCurrentTransaction(tids.first());
     } else {
         // There is no current transaction
+        m_currentTid.clear();
         m_currentTransaction = 0;
 
         // release any cookie that we might have
@@ -152,6 +154,11 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
 {
     // check if the transaction emitted any require restart
     Transaction *transaction = qobject_cast<Transaction*>(sender());
+    m_currentTid.clear();
+    m_currentTransaction = 0;
+    disconnect(transaction, SIGNAL(changed()),
+               this, SLOT(transactionChanged()));
+
     if (exit == Transaction::ExitSuccess && !transaction->property("restartType").isNull()) {
         Package::Restart type = transaction->property("restartType").value<Package::Restart>();
 
@@ -194,9 +201,10 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
 
 void TransactionWatcher::transactionChanged()
 {
-    if (!m_transHasJob && !m_currentTransaction->isCallerActive()) {
-        TransactionJob *job = new TransactionJob(m_currentTransaction, this);
-        connect(m_currentTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
+    Transaction *transaction = qobject_cast<Transaction*>(sender());
+    if (!m_transHasJob && !transaction->isCallerActive()) {
+        TransactionJob *job = new TransactionJob(transaction, this);
+        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
                 this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
         job->start();
         m_tracker->registerJob(job);
@@ -312,15 +320,16 @@ void TransactionWatcher::errorActivated(uint action)
 
 void TransactionWatcher::requireRestart(PackageKit::Package::Restart type, const Package &pkg)
 {
-    if (m_currentTransaction->property("restartType").isNull()) {
-        m_currentTransaction->setProperty("restartType", qVariantFromValue(type));
+    Transaction *transaction = qobject_cast<Transaction*>(sender());
+    if (transaction->property("restartType").isNull()) {
+        transaction->setProperty("restartType", qVariantFromValue(type));
     } else {
-        Package::Restart oldType = m_currentTransaction->property("restartType").value<Package::Restart>();
+        Package::Restart oldType = transaction->property("restartType").value<Package::Restart>();
         int old = KpkImportance::restartImportance(oldType);
         int newer = KpkImportance::restartImportance(type);
         // Check to see which one is more important
         if (newer > old) {
-            m_currentTransaction->setProperty("restartType", qVariantFromValue(type));
+            transaction->setProperty("restartType", qVariantFromValue(type));
         }
     }
 
