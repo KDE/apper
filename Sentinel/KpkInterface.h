@@ -46,10 +46,10 @@ signals:
     void refreshAndUpdate(bool refresh);
     void refresh();
 
-#ifdef HAVE_DEBCONFKDE
 private slots:
     void debconfActivate();
 
+#ifdef HAVE_DEBCONFKDE
 private:
     QHash<QString, DebconfGui*> m_debconfGuis;
 #endif

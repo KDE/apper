@@ -940,9 +940,9 @@ void PkTransaction::setupDebconfDialog(const QString &tid)
 {
 #ifdef HAVE_DEBCONFKDE
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+    message = QDBusMessage::createMethodCall("org.kde.ApperSentinel",
                                              "/",
-                                             "org.kde.KPackageKitSmartIcon",
+                                             "org.kde.ApperSentinel",
                                              QLatin1String("SetupDebconfDialog"));
     // Use our own cached tid to avoid crashes
     message << qVariantFromValue(tid);

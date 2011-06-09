@@ -103,15 +103,15 @@ void KpkInterface::SetupDebconfDialog(const QString &socketPath, uint xidParent)
 #endif //HAVE_DEBCONFKDE
 }
 
-#ifdef HAVE_DEBCONFKDE
 void KpkInterface::debconfActivate()
 {
+#ifdef HAVE_DEBCONFKDE
     // Correct the parent
     DebconfGui *gui = qobject_cast<DebconfGui*>(sender());
     uint xidParent  = gui->property("xidParent").toUInt();
     KWindowSystem::setMainWindow(gui, xidParent);
     gui->show();
-}
 #endif
+}
 
 #include "KpkInterface.moc"
