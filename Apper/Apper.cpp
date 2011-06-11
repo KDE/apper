@@ -92,12 +92,12 @@ int Apper::newInstance()
     }
 
     if (args->isSet("updates")) {
-        kDebug() << "SHOW UPDATES!";
+//         kDebug() << "SHOW UPDATES!";
         QTimer::singleShot(0, this, SLOT(showUpdates()));
         notSet = false;
     }
     if (args->isSet("settings")) {
-        kDebug() << "SHOW SETTINGS!";
+//         kDebug() << "SHOW SETTINGS!";
         QTimer::singleShot(0, this, SLOT(showSettings()));
         notSet = false;
     }
@@ -137,7 +137,7 @@ int Apper::newInstance()
     }
 
     if (notSet) {
-        kDebug() << "SHOW UI!";
+//         kDebug() << "SHOW UI!";
         QTimer::singleShot(0, this, SLOT(showUi()));
     }
 

@@ -106,7 +106,7 @@ void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInf
     m_transaction = new Transaction(this);
     connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
             this, SLOT(updateDetail(const PackageKit::Package &)));
-    connect(m_transaction, SIGNAL(finished(PackageKit::Transction::Exit, uint)),
+    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(display()));
     m_transaction->getUpdateDetail(package);
     if (m_transaction->error()) {

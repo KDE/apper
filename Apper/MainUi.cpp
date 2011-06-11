@@ -40,9 +40,13 @@ MainUi::MainUi(QWidget *parent)
     setButtons(KDialog::Apply /*| KDialog::Help*/ | KDialog::Default | KDialog::Reset);
 
     KPageWidgetItem *page = addModule("kcm_apper.desktop");
-    KCModuleProxy *proxy = static_cast<KCModuleProxy*>(page->widget());
-    if (proxy) {
-        m_apperModule = proxy->realModule();
+    if (page) {
+        KCModuleProxy *proxy = static_cast<KCModuleProxy*>(page->widget());
+        if (proxy) {
+            m_apperModule = proxy->realModule();
+        }
+    } else {
+        kWarning() << "Could not load kcm_apper.desktop!";
     }
 }
 
@@ -56,21 +60,27 @@ MainUi::~MainUi()
 
 void MainUi::showAll()
 {
-    m_apperModule->setProperty("page", "home");
+    if (m_apperModule) {
+        m_apperModule->setProperty("page", "home");
+    }
 }
 
 void MainUi::showUpdates(bool selected)
 {
-    if (selected) {   
-        m_apperModule->setProperty("page", "updatesSelected");
-    } else {
-        m_apperModule->setProperty("page", "updates");
+    if (m_apperModule) {
+        if (selected) {
+            m_apperModule->setProperty("page", "updatesSelected");
+        } else {
+            m_apperModule->setProperty("page", "updates");
+        }
     }
 }
 
 void MainUi::showSettings()
 {
-    m_apperModule->setProperty("page", "settings");
+    if (m_apperModule) {
+        m_apperModule->setProperty("page", "settings");
+    }
 }
 
 #include "MainUi.moc"
