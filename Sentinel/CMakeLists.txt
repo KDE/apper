@@ -19,6 +19,7 @@ set(sentinel_SRCS
     PkInstallMimeTypes.cpp
     PkInstallGStreamerResources.cpp
     PkInstallFontconfigResources.cpp
+    PkInstallPlasmaResources.cpp
     FilesModel.cpp
     PkInstallPackageFiles.cpp
     PkInstallProvideFiles.cpp

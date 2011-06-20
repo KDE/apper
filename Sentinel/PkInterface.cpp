@@ -30,6 +30,7 @@
 #include "PkInstallMimeTypes.h"
 #include "PkInstallGStreamerResources.h"
 #include "PkInstallFontconfigResources.h"
+#include "PkInstallPlasmaResources.h"
 #include "PkInstallPackageFiles.h"
 #include "PkInstallProvideFiles.h"
 #include "PkInstallCatalogs.h"
@@ -157,6 +158,33 @@ void PkInterface::InstallPrinterDrivers(uint xid, const QStringList &resources, 
     task = new PkInstallPrinterDrivers(xid, resources, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
     task->run();
+}
+
+void PkInterface::InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction)
+{
+    increaseRunning();
+    kDebug() << xid << resources << interaction;
+    setDelayedReply(true);
+    PkInstallPlasmaResources *task;
+    task = new PkInstallPlasmaResources(xid, resources, interaction, message());
+    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    task->run();
+}
+
+void PkInterface::InstallResources(uint xid, const QString &type, const QStringList &resources, const QString &interaction)
+{
+    if (type == "codec")
+        InstallGStreamerResources(xid, resources, interaction);
+    else if (type == "mimetype")
+        InstallMimeTypes(xid, resources, interaction);
+    else if (type == "font")
+        InstallFontconfigResources(xid, resources, interaction);
+    else if (type == "postscript-driver")
+        InstallPrinterDrivers(xid, resources, interaction);
+    else if (type == "plasma-service")
+        InstallPlasmaResources(xid, resources, interaction);
+    else
+        sendErrorReply("org.freedesktop.PackageKit.Failed", "Unsupported resource type");
 }
 
 //Query

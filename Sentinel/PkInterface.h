@@ -42,12 +42,14 @@ public slots:
     void InstallProvideFiles(uint xid, const QStringList &files, const QString &interaction);
     void RemovePackageByFiles(uint xid, const QStringList &files, const QString &interaction);
     void InstallPrinterDrivers(uint xid, const QStringList &resources, const QString &interaction);
+    void InstallResources(uint xid, const QString &type, const QStringList &resources, const QString &interaction);
 //Query
     bool IsInstalled(const QString &package_name, const QString &interaction);
     bool SearchFile(const QString &file_name, const QString &interaction, QString &package_name);
 
 private:
     QHash<QString, QVariant> parseInteraction(const QString &interaction);
+    void InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction);
 };
 
 

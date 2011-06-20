@@ -404,6 +404,55 @@
     </method>
 
     <!--*****************************************************************************************-->
+    <method name="InstallResources">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Installs resources of a given type from a configured software source.
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+      <arg type="u" name="xid" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              The X window handle ID, used for focus stealing prevention and setting modality.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="s" name="type" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              The type of resource to request, e.g. <doc:tt>plasma-service</doc:tt>
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="as" name="resources" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              An array of resource descriptors
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type="s" name="interaction" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              An optional interaction mode, e.g.
+              <doc:tt>show-confirm-search,show-confirm-deps,show-confirm-install,show-progress,show-finished,show-warning</doc:tt>
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+    </method>
+
+    <!--*****************************************************************************************-->
     <method name="RemovePackageByFiles">
       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
       <doc:doc>
