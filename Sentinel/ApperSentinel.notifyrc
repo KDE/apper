@@ -2,6 +2,7 @@
 IconName=applications-other
 Name=Apper
 Name[da]=Apper
+Name[de]=Apper
 Name[es]=Apper
 Name[et]=Apper
 Name[fr]=Apper
@@ -51,6 +52,8 @@ Comment[x-test]=xxKPackageKitxx
 [Event/ShowUpdates]
 Name=New updates available
 Name[da]=Nye opdateringer tilgængelige
+Name[de]=Es sind neue Aktualisierungen verfügbar.
+Name[et]=Saadaval on uued uuendused
 Name[nl]=Nieuwe zaken voor bijwerken beschikbaar
 Name[pt]=Estão disponíveis actualizações novas
 Name[pt_BR]=Novas atualizações disponíveis
