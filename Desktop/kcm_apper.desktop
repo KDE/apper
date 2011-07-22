@@ -44,6 +44,7 @@ Name[uk]=Керування програмами
 Name[x-test]=xxSoftware Managementxx
 
 Comment=Get, Remove and Update Software
+Comment[bg]=Инсталиране, премахване и обновяване на програми
 Comment[ca]=Obtén, elimina i actualitza el programari
 Comment[ca@valencia]=Obtén, elimina i actualitza el programari
 Comment[da]=Hent, fjern og opdatér software

@@ -1,6 +1,7 @@
 [Global]
 IconName=applications-other
 Name=Apper
+Name[bg]=Apper
 Name[da]=Apper
 Name[de]=Apper
 Name[es]=Apper
@@ -51,6 +52,7 @@ Comment[x-test]=xxKPackageKitxx
 
 [Event/ShowUpdates]
 Name=New updates available
+Name[bg]=Има налични нови обновления
 Name[da]=Nye opdateringer tilgængelige
 Name[de]=Es sind neue Aktualisierungen verfügbar.
 Name[et]=Saadaval on uued uuendused
@@ -134,6 +136,7 @@ Action=Sound|Popup
 
 [Event/TransactionFailed]
 Name=A transaction failed to complete successfully
+Name[bg]=Грешка при извършване на прехвърлянето
 Name[ca]=No s'ha pogut completar la transacció
 Name[ca@valencia]=No s'ha pogut completar la transacció
 Name[cs]=Dokončení transakce selhalo
@@ -198,6 +201,7 @@ Action=Sound|Popup
 
 [Event/TransactionError]
 Name=A transaction error occurred
+Name[bg]=Възникна грешка при прехвърляне
 Name[ca]=Hi ha hagut un error durant la transacció
 Name[ca@valencia]=Hi ha hagut un error durant la transacció
 Name[cs]=Nastala chyba v transakci
