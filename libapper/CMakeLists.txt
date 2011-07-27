@@ -8,7 +8,7 @@ ELSE(CMAKE_SIZEOF_VOID_P EQUAL 4)
    MESSAGE(STATUS "Apper detected that you use a 64 bit processor. Added -fPIC to the CXX_FLAGS.")
 ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
 
-set(libshared_SRCS
+set(libapper_SRCS
     AppInstall.cpp
     KpkIcons.cpp
     KpkStrings.cpp
@@ -31,7 +31,7 @@ set(libshared_SRCS
     KpkCategorizedView.cpp
 )
 
-kde4_add_ui_files(libshared_SRCS
+kde4_add_ui_files(libapper_SRCS
     ApplicationLauncher.ui
     PkTransaction.ui
     KpkRepoSig.ui
@@ -40,7 +40,7 @@ kde4_add_ui_files(libshared_SRCS
     KpkRequirements.ui
 )
 
-kde4_add_library(sharedlib SHARED ${libshared_SRCS})
+kde4_add_library(sharedlib SHARED ${libapper_SRCS})
 target_link_libraries(sharedlib
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}

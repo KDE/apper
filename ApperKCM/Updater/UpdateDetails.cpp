@@ -142,6 +142,10 @@ void UpdateDetails::hide()
 
 void UpdateDetails::display()
 {
+    // set transaction to 0 as if PK crashes
+    // UpdateDetails won't be emmited
+    m_transaction = 0;
+
     if (!m_show) {
         hide();
         return;
@@ -299,7 +303,6 @@ void UpdateDetails::updateDetail(const PackageKit::Package &package)
 
     m_currentDescription = description;
     m_busySeq->stop();
-    m_transaction = 0;
 }
 
 QString UpdateDetails::getLinkList(const QString &links) const

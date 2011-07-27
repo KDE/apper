@@ -51,7 +51,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 include(FindPkgConfig)
-set(QPACKAGEKIT_MIN_VERSION 0.6.11)
+set(QPACKAGEKIT_MIN_VERSION 0.7.0)
 pkg_check_modules(QPACKAGEKIT2 REQUIRED packagekit-qt2>=${QPACKAGEKIT_MIN_VERSION})
 macro_log_feature(QPACKAGEKIT2_FOUND "packagekit-qt2" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
 include(KDE4Defaults)
@@ -65,9 +65,9 @@ include_directories(${CMAKE_SOURCE_DIR}
     ${KDE4_INCLUDES}
     ${QPACKAGEKIT2_INCLUDE_DIRS}
     ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2
-    ${CMAKE_CURRENT_SOURCE_DIR}/libshared)
+    ${CMAKE_CURRENT_SOURCE_DIR}/libapper)
 
-add_subdirectory(libshared)
+add_subdirectory(libapper)
 add_subdirectory(ApperKCM)
 add_subdirectory(Apper)
 add_subdirectory(Sentinel)
