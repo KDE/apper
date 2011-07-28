@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "kpackagekitd.h"
+#include "apperd.h"
 #include <KpkEnum.h>
 
 #include <KGenericFactory>
@@ -33,10 +33,10 @@
 
 #define FIVE_MIN 360000
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<KPackageKitD>();)
-K_EXPORT_PLUGIN(KPackageKitFactory("apperd"))
+K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperD>();)
+K_EXPORT_PLUGIN(ApperFactory("apperd"))
 
-KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant> &)
+ApperD::ApperD(QObject *parent, const QList<QVariant> &)
     : KDEDModule(parent),
       m_actRefreshCacheChecked(false)
 {
@@ -58,18 +58,18 @@ KPackageKitD::KPackageKitD(QObject *parent, const QList<QVariant> &)
     //check if any changes to the file occour
     //this also prevents from reading when a checkUpdate happens
     KDirWatch *confWatch = new KDirWatch(this);
-    confWatch->addFile(KStandardDirs::locateLocal("config", "KPackageKit"));
+    confWatch->addFile(KStandardDirs::locateLocal("config", "Apper"));
     connect(confWatch, SIGNAL(  dirty(const QString &)), this, SLOT(read()));
     connect(confWatch, SIGNAL(created(const QString &)), this, SLOT(read()));
     connect(confWatch, SIGNAL(deleted(const QString &)), this, SLOT(read()));
     confWatch->startScan();
 }
 
-KPackageKitD::~KPackageKitD()
+ApperD::~ApperD()
 {
 }
 
-void KPackageKitD::init()
+void ApperD::init()
 {
     m_qtimer->stop();
     m_qtimer->disconnect();
@@ -77,7 +77,7 @@ void KPackageKitD::init()
 
     // check to see when the next check update will happen
     // if more that 15 minutes, call show updates
-    KConfig config("KPackageKit");
+    KConfig config("Apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     // default to one day, 86400 sec
     uint interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
@@ -95,9 +95,9 @@ void KPackageKitD::init()
     read();
 }
 
-void KPackageKitD::read()
+void ApperD::read()
 {
-    KConfig config("KPackageKit");
+    KConfig config("Apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     // default to one day, 86400 sec
     int interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
@@ -117,7 +117,7 @@ void KPackageKitD::read()
     }
 }
 
-void KPackageKitD::transactionListChanged(const QStringList &tids)
+void ApperD::transactionListChanged(const QStringList &tids)
 {
     if (tids.size()) {
         QDBusMessage message;
@@ -125,35 +125,35 @@ void KPackageKitD::transactionListChanged(const QStringList &tids)
                                                  "/",
                                                  "org.freedesktop.DBus",
                                                  QLatin1String("StartServiceByName"));
-        message << qVariantFromValue(QString("org.kde.KPackageKitSmartIcon"));
+        message << qVariantFromValue(QString("org.kde.ApperSentinel"));
         message << qVariantFromValue((uint) 0);
         QDBusConnection::sessionBus().call(message);
     }
 }
 
-void KPackageKitD::refreshAndUpdate()
+void ApperD::refreshAndUpdate()
 {
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+    message = QDBusMessage::createMethodCall("org.kde.ApperSentinel",
                                              "/",
-                                             "org.kde.KPackageKitSmartIcon",
+                                             "org.kde.ApperSentinel",
                                              QLatin1String("RefreshAndUpdate"));
     QDBusConnection::sessionBus().call(message);
 
     m_qtimer->start(FIVE_MIN);
 }
 
-void KPackageKitD::update()
+void ApperD::update()
 {
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
+    message = QDBusMessage::createMethodCall("org.kde.ApperSentinel",
                                              "/",
-                                             "org.kde.KPackageKitSmartIcon",
+                                             "org.kde.ApperSentinel",
                                              QLatin1String("Update"));
     QDBusConnection::sessionBus().call(message);
 }
 
-uint KPackageKitD::getTimeSinceRefreshCache() const
+uint ApperD::getTimeSinceRefreshCache() const
 {
     QDBusMessage message;
     message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
@@ -165,7 +165,7 @@ uint KPackageKitD::getTimeSinceRefreshCache() const
     return reply.value();
 }
 
-bool KPackageKitD::canRefreshCache()
+bool ApperD::canRefreshCache()
 {
     if (m_actRefreshCacheChecked) {
         return m_canRefreshCache;

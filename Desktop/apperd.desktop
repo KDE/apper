@@ -2,10 +2,10 @@
 Type=Service
 
 X-KDE-ServiceTypes=KDEDModule
-X-KDE-Library=kpackagekitd
+X-KDE-Library=apperd
 X-KDE-Kded-autoload=true
 
-Name=KPackageKit Service
+Name=Apper Monitor
 Name[bg]=Услуга KPackageKit
 Name[ca]=Servei del KPackageKit
 Name[ca@valencia]=Servei del KPackageKit
@@ -39,7 +39,7 @@ Name[tr]=KPackageKit Servisi
 Name[uk]=Служба KPackageKit
 Name[x-test]=xxKPackageKit Servicexx
 
-Comment=Tracks and Notify about Software Updates
+Comment=Watch transactions and Notify about Software Updates
 Comment[bg]=Следи и уведомява за обновления на програмите
 Comment[ca]=Segueix i comunica les actualitzacions de programari
 Comment[ca@valencia]=Segueix i comunica les actualitzacions de programari

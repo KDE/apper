@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,20 +18,20 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPACKAGEKITD_H
-#define KPACKAGEKITD_H
+#ifndef APPERD_H
+#define APPERD_H
 
 #include <KDEDModule>
 
 #include <QTimer>
 
-class KPackageKitD : public KDEDModule
+class ApperD : public KDEDModule
 {
 Q_OBJECT
 
 public:
-    KPackageKitD(QObject *parent, const QList<QVariant>&);
-    ~KPackageKitD();
+    ApperD(QObject *parent, const QList<QVariant>&);
+    ~ApperD();
 
 private slots:
     void init();

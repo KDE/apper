@@ -95,7 +95,7 @@ void PkInterface::InstallGStreamerResources(uint xid, const QStringList &resourc
     PkInstallGStreamerResources *task;
     task = new PkInstallGStreamerResources(xid, resources, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    task->show();
 }
 
 void PkInterface::InstallMimeTypes(uint xid, const QStringList &mime_types, const QString &interaction)
