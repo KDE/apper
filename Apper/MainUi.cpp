@@ -32,9 +32,9 @@ MainUi::MainUi(QWidget *parent)
     setCaption(QString());
     setWindowIcon(KIcon("applications-other"));
 
-    KConfig config("KPackageKit");
-    KConfigGroup kpackagekitMain(&config, "MainUi");
-    restoreDialogSize(kpackagekitMain);
+    KConfig config;
+    KConfigGroup configGroup(&config, "MainUi");
+    restoreDialogSize(configGroup);
 
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply /*| KDialog::Help*/ | KDialog::Default | KDialog::Reset);
@@ -53,9 +53,9 @@ MainUi::MainUi(QWidget *parent)
 MainUi::~MainUi()
 {
     // save size
-    KConfig config("KPackageKit");
-    KConfigGroup kpackagekitMain(&config, "MainUi");
-    saveDialogSize(kpackagekitMain);
+    KConfig config;
+    KConfigGroup configGroup(&config, "MainUi");
+    saveDialogSize(configGroup);
 }
 
 void MainUi::showAll()

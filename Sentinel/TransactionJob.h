@@ -41,6 +41,7 @@ public:
     virtual void start();
 
 private slots:
+    void transactionDestroyed();
     void finished(PackageKit::Transaction::Exit exit = Transaction::ExitSuccess);
     void package(const PackageKit::Package &package);
     void repoDetail(const QString &repoId, const QString &repoDescription);

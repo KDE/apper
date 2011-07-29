@@ -96,16 +96,16 @@ void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInf
     m_updateInfo = updateInfo;
     m_currentDescription.clear();
     if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
-                   this, SLOT(updateDetail(const PackageKit::Package &)));
+        disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
+                   this, SLOT(updateDetail(PackageKit::Package)));
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    this, SLOT(display()));
     }
 
     Package package(m_packageId, Package::UnknownInfo, QString());
     m_transaction = new Transaction(this);
-    connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
-            this, SLOT(updateDetail(const PackageKit::Package &)));
+    connect(m_transaction, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(updateDetail(PackageKit::Package)));
     connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(display()));
     m_transaction->getUpdateDetail(package);

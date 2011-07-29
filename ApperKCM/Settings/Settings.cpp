@@ -108,8 +108,8 @@ void Settings::on_editOriginsPB_clicked()
 void Settings::on_showOriginsCB_stateChanged(int state)
 {
     Transaction *transaction = new Transaction(this);
-    connect(transaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
-            m_originModel, SLOT(addOriginItem(const QString &, const QString &, bool)));
+    connect(transaction, SIGNAL(repoDetail(QString, QString, bool)),
+            m_originModel, SLOT(addOriginItem(QString, QString, bool)));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_originModel, SLOT(finished()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
@@ -130,7 +130,7 @@ void Settings::on_showOriginsCB_stateChanged(int state)
 
 bool Settings::hasChanges() const
 {
-    KConfig config("KPackageKit");
+    KConfig config;
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     KConfigGroup transaction(&config, "Transaction");
@@ -183,7 +183,7 @@ void Settings::checkChanges()
 
 void Settings::load()
 {
-    KConfig config("KPackageKit");
+    KConfig config;
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     autoConfirmCB->setChecked(!requirementsDialog.readEntry("autoConfirm", false));
@@ -233,7 +233,7 @@ void Settings::load()
 
 void Settings::save()
 {
-    KConfig config("KPackageKit");
+    KConfig config;
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     requirementsDialog.writeEntry("autoConfirm", !autoConfirmCB->isChecked());

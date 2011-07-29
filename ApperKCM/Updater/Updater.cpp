@@ -225,14 +225,14 @@ void Updater::getUpdates()
     updateDetails->hide();
     m_updatesT = new Transaction(this);
     if (m_selected) {
-        connect(m_updatesT, SIGNAL(package(const PackageKit::Package &)),
-                m_updatesModel, SLOT(addSelectedPackage(const PackageKit::Package &)));
+        connect(m_updatesT, SIGNAL(package(PackageKit::Package)),
+                m_updatesModel, SLOT(addSelectedPackage(PackageKit::Package)));
     } else {
-        connect(m_updatesT, SIGNAL(package(const PackageKit::Package &)),
-                m_updatesModel, SLOT(addPackage(const PackageKit::Package &)));
+        connect(m_updatesT, SIGNAL(package(PackageKit::Package)),
+                m_updatesModel, SLOT(addPackage(PackageKit::Package)));
     }
-    connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
+    connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(getUpdatesFinished()));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
@@ -260,8 +260,8 @@ void Updater::getUpdates()
     if (m_roles & Transaction::RoleGetDistroUpgrades) {
         // Check for distribution Upgrades
         Transaction *t = new Transaction(this);
-        connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)),
-                this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)));
+        connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, QString, QString)),
+                this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, QString, QString)));
         t->getDistroUpgrades();
     }
 }

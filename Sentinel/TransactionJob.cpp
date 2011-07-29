@@ -44,16 +44,21 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(finished(PackageKit::Transaction::Exit)));
     connect(transaction, SIGNAL(destroyed()),
-            this, SLOT(finished(PackageKit::Transaction::Exit)));
-    connect(transaction, SIGNAL(package(const PackageKit::Package &)),
-            this, SLOT(package(const PackageKit::Package &)));
-    connect(transaction, SIGNAL(repoDetail(const QString &, const QString &, bool)),
-            this, SLOT(repoDetail(const QString &, const QString &)));
+            this, SLOT(transactionDestroyed()));
+    connect(transaction, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(package(PackageKit::Package)));
+    connect(transaction, SIGNAL(repoDetail(QString, QString, bool)),
+            this, SLOT(repoDetail(QString, QString)));
     kDebug();
 }
 
 TransactionJob::~TransactionJob()
 {
+}
+
+void TransactionJob::transactionDestroyed()
+{
+    finished(Transaction::ExitCancelled);
 }
 
 void TransactionJob::finished(PackageKit::Transaction::Exit exit)

@@ -102,8 +102,8 @@ void BrowseView::init(Transaction::Roles roles)
     showArchs(m_showPackageArch->isChecked());
 
     // Ensure the index is visible when the packageDetails appears
-    connect(packageDetails, SIGNAL(ensureVisible(const QModelIndex &)),
-            this, SLOT(ensureVisible(const QModelIndex &)));
+    connect(packageDetails, SIGNAL(ensureVisible(QModelIndex)),
+            this, SLOT(ensureVisible(QModelIndex)));
 }
 
 BrowseView::~BrowseView()

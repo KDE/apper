@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -306,14 +306,14 @@ void PackageDetails::actionActivated(QAction *action)
     // disconnect the transaction
     // so that we don't get old data
     if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
-                   this, SLOT(description(const PackageKit::Package &)));
-        disconnect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
-                   m_dependsModel, SLOT(addPackage(const PackageKit::Package &)));
-        disconnect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
-                   m_requiresModel, SLOT(addPackage(const PackageKit::Package &)));
-        disconnect(m_transaction, SIGNAL(files(const PackageKit::Package &, const QStringList &)),
-                   this, SLOT(files(const PackageKit::Package &, const QStringList &)));
+        disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
+                   this, SLOT(description(PackageKit::Package)));
+        disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
+                   m_dependsModel, SLOT(addPackage(PackageKit::Package)));
+        disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
+                   m_requiresModel, SLOT(addPackage(PackageKit::Package)));
+        disconnect(m_transaction, SIGNAL(files(PackageKit::Package, QStringList)),
+                   this, SLOT(files(PackageKit::Package, QStringList)));
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    this, SLOT(finished()));
         m_transaction = 0;
@@ -355,30 +355,30 @@ void PackageDetails::actionActivated(QAction *action)
             this, SLOT(finished()));
     switch (role) {
     case Transaction::RoleGetDetails:
-        connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
-                this, SLOT(description(const PackageKit::Package &)));
+        connect(m_transaction, SIGNAL(package(PackageKit::Package)),
+                this, SLOT(description(PackageKit::Package)));
         m_transaction->getDetails(m_package);
         break;
     case Transaction::RoleGetDepends:
         m_dependsModel->clear();
-        connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
-                m_dependsModel, SLOT(addPackage(const PackageKit::Package &)));
+        connect(m_transaction, SIGNAL(package(PackageKit::Package)),
+                m_dependsModel, SLOT(addPackage(PackageKit::Package)));
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 m_dependsModel, SLOT(finished()));
         m_transaction->getDepends(m_package, Transaction::FilterNone, false);
         break;
     case Transaction::RoleGetRequires:
         m_requiresModel->clear();
-        connect(m_transaction, SIGNAL(package(const PackageKit::Package &)),
-                m_requiresModel, SLOT(addPackage(const PackageKit::Package &)));
+        connect(m_transaction, SIGNAL(package(PackageKit::Package)),
+                m_requiresModel, SLOT(addPackage(PackageKit::Package)));
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 m_requiresModel, SLOT(finished()));
         m_transaction->getRequires(m_package, Transaction::FilterNone, false);
         break;
     case Transaction::RoleGetFiles:
         m_currentFileList.clear();
-        connect(m_transaction, SIGNAL(files(const PackageKit::Package &, const QStringList &)),
-                this, SLOT(files(const PackageKit::Package &, const QStringList &)));
+        connect(m_transaction, SIGNAL(files(PackageKit::Package, QStringList)),
+                this, SLOT(files(PackageKit::Package, QStringList)));
         m_transaction->getFiles(m_package);
         break;
     }

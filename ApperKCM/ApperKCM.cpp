@@ -100,8 +100,8 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     gridLayout_2->addWidget(toolBar);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    connect(browseView, SIGNAL(categoryActivated(const QModelIndex &)),
-            this, SLOT(on_homeView_clicked(const QModelIndex &)));
+    connect(browseView, SIGNAL(categoryActivated(QModelIndex)),
+            this, SLOT(on_homeView_clicked(QModelIndex)));
 
     QMenu *findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method
@@ -161,8 +161,8 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(Daemon::filters(), this));
     filtersTB->setIcon(KIcon("view-filter"));
     browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
-    connect(m_filtersMenu, SIGNAL(filterApplications(const QString &)),
-            browseView->proxy(), SLOT(setFilterFixedString(const QString &)));
+    connect(m_filtersMenu, SIGNAL(filterApplications(QString)),
+            browseView->proxy(), SLOT(setFilterFixedString(QString)));
 
 
     //initialize the model, delegate, client and  connect it's signals
@@ -188,10 +188,10 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     connect(m_browseModel, SIGNAL(changed(bool)), changesPB, SLOT(setEnabled(bool)));
 
     // packageUnchecked from changes model
-    connect(m_changesModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
-            m_changesModel, SLOT(rmSelectedPackage(const KpkPackageModel::InternalPackage &)));
-    connect(m_changesModel, SIGNAL(packageUnchecked(const KpkPackageModel::InternalPackage &)),
-            m_browseModel, SLOT(uncheckPackage(const KpkPackageModel::InternalPackage &)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(KpkPackageModel::InternalPackage)),
+            m_changesModel, SLOT(rmSelectedPackage(KpkPackageModel::InternalPackage)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(KpkPackageModel::InternalPackage)),
+            m_browseModel, SLOT(uncheckPackage(KpkPackageModel::InternalPackage)));
 
     changesPB->setIcon(KIcon("edit-redo"));
 }
@@ -365,8 +365,8 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
         } else if (m_searchRole == Transaction::RoleGetOldTransactions) {
             m_history = new TransactionHistory(this);
             searchKLE->clear();
-            connect(searchKLE, SIGNAL(textChanged(const QString &)),
-                    m_history, SLOT(setFilterRegExp(const QString &)));
+            connect(searchKLE, SIGNAL(textChanged(QString)),
+                    m_history, SLOT(setFilterRegExp(QString)));
             stackedWidget->addWidget(m_history);
             stackedWidget->setCurrentWidget(m_history);
             backTB->setEnabled(true);
@@ -556,10 +556,10 @@ void ApperKCM::search()
                    this, SLOT(finished()));
         disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    m_browseModel, SLOT(finished()));
-        disconnect(m_searchTransaction, SIGNAL(package(const PackageKit::Package &)),
-                   m_browseModel, SLOT(addPackage(const PackageKit::Package &)));
-        disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
-                   this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
+        disconnect(m_searchTransaction, SIGNAL(package(PackageKit::Package)),
+                   m_browseModel, SLOT(addPackage(PackageKit::Package)));
+        disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+                   this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
     }
 
     // search
@@ -570,10 +570,10 @@ void ApperKCM::search()
             this, SLOT(finished()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_browseModel, SLOT(finished()));
-    connect(m_searchTransaction, SIGNAL(package(const PackageKit::Package &)),
-            m_browseModel, SLOT(addPackage(const PackageKit::Package &)));
-    connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
+    connect(m_searchTransaction, SIGNAL(package(PackageKit::Package)),
+            m_browseModel, SLOT(addPackage(PackageKit::Package)));
+    connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
     switch (m_searchRole) {
     case Transaction::RoleSearchName:
         m_searchTransaction->searchNames(m_searchString, m_searchFilters);
@@ -660,8 +660,8 @@ void ApperKCM::refreshCache()
     int oldBar = stackedWidgetBar->currentIndex();
     stackedWidgetBar->setCurrentIndex(BAR_TITLE);
     backTB->setEnabled(false);
-    connect(transaction, SIGNAL(titleChanged(const QString &)),
-            titleL, SLOT(setText(const QString &)));
+    connect(transaction, SIGNAL(titleChanged(QString)),
+            titleL, SLOT(setText(QString)));
 
     QEventLoop loop;
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
@@ -706,8 +706,8 @@ void ApperKCM::save()
         int oldBar = stackedWidgetBar->currentIndex();
         stackedWidgetBar->setCurrentIndex(BAR_TITLE);
         backTB->setEnabled(false);
-        connect(transaction, SIGNAL(titleChanged(const QString &)),
-                titleL, SLOT(setText(const QString &)));
+        connect(transaction, SIGNAL(titleChanged(QString)),
+                titleL, SLOT(setText(QString)));
         emit changed(false);
 
         QEventLoop loop;
