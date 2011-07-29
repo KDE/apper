@@ -81,10 +81,9 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
     m_header->setDefaultAlignment(Qt::AlignCenter);
     // This must be set AFTER the model is set, otherwise it doesn't work
-    m_header->setResizeMode(KpkPackageModel::NameCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(KpkPackageModel::NameCol, QHeaderView::Stretch);
     m_header->setResizeMode(KpkPackageModel::VersionCol, QHeaderView::ResizeToContents);
     m_header->setResizeMode(KpkPackageModel::ArchCol, QHeaderView::ResizeToContents);
-    m_header->setResizeMode(KpkPackageModel::SummaryCol, QHeaderView::Stretch);
     m_header->setStretchLastSection(false);
 
     // Setup the busy cursor

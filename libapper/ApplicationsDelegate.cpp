@@ -68,32 +68,52 @@ void ApplicationsDelegate::paint(QPainter *painter,
 
     // Button height
     int btHeight = m_buttonSize.height() + UNIVERSAL_PADDING;
-    if (index.column() == KpkPackageModel::NameCol ||
-        index.column() == KpkPackageModel::VersionCol ||
+    if (index.column() == KpkPackageModel::VersionCol ||
         index.column() == KpkPackageModel::ArchCol) {
         QStyleOptionViewItemV4 opt(option);
         if (opt.state & QStyle::State_HasFocus) {
             opt.state ^= QStyle::State_HasFocus;
         }
+        painter->save();
         QStyledItemDelegate::paint(painter, opt, index);
+        painter->restore();
         return;
-    } else if (index.column() == KpkPackageModel::SummaryCol) {
-        QPixmap pixmap(option.rect.size());
+    } else if (index.column() == KpkPackageModel::NameCol) {
+        bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
+        QStyleOptionViewItemV4 opt1(option);
+        if (opt1.state & QStyle::State_HasFocus) {
+            opt1.state ^= QStyle::State_HasFocus;
+        }
+        QSize size = QStyledItemDelegate::sizeHint(opt1, index);
+        if (leftToRight) {
+            opt1.rect.setRight(size.width());
+        } else {
+            opt1.rect.setLeft(option.rect.left() + (option.rect.width() - size.width()));
+        }
+        painter->save();
+        QStyledItemDelegate::paint(painter, opt1, index);
+        painter->restore();
+
+        // a new option for the summary
+        QStyleOptionViewItemV4 opt(option);
+        if (leftToRight) {
+            opt.rect.setLeft(size.width() + 1);
+        } else {
+            opt.rect.setRight(option.rect.left() + (option.rect.width() - size.width()) - 1);
+        }
+
+        QPixmap pixmap(opt.rect.size());
         pixmap.fill(Qt::transparent);
         QPainter p(&pixmap);
-        p.translate(-option.rect.topLeft());
+        p.translate(-opt.rect.topLeft());
 
-        bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
-
-
-        QStyleOptionViewItemV4 opt(option);
         QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
+        opt.viewItemPosition = QStyleOptionViewItemV4::Middle;
         painter->save();
         style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
         painter->restore();
 
         int left = opt.rect.left();
-//         int top = opt.rect.top();
         int width = opt.rect.width();
 
         Package::Info info;
@@ -102,33 +122,32 @@ void ApplicationsDelegate::paint(QPainter *painter,
         bool    pkgInstalled  = (info == Package::InfoInstalled ||
                                  info == Package::InfoCollectionInstalled);
 
+        if (!pkgSummary.isEmpty()) {
+            if (leftToRight) {
+                pkgSummary.prepend("- ");
+            } else {
+                pkgSummary.append(" -");
+            }
+        }
+
         // store the original opacity
         qreal opa = p.opacity();
-        QStyleOptionViewItem local_option_normal(option);
+        QStyleOptionViewItem local_option_normal(opt);
         if (!pkgInstalled) {
             local_option_normal.font.setItalic(true);
         }
 
         QColor foregroundColor;
-        if (option.state.testFlag(QStyle::State_Selected)) {
-            foregroundColor = option.palette.color(QPalette::HighlightedText);
+        p.setOpacity(0.75);
+        if (opt.state.testFlag(QStyle::State_Selected)) {
+            foregroundColor = opt.palette.color(QPalette::HighlightedText);
         } else {
-            if (!pkgInstalled) {
-                p.setOpacity(0.75);
-            }
-            foregroundColor = option.palette.color(QPalette::Text);
+            foregroundColor = opt.palette.color(QPalette::Text);
         }
-
 
         p.setFont(local_option_normal.font);
         p.setPen(foregroundColor);
         p.drawText(opt.rect, Qt::AlignVCenter | (leftToRight ? Qt::AlignLeft : Qt::AlignRight), pkgSummary);
-//         p.drawText(leftToRight ? leftCount + iconSize + UNIVERSAL_PADDING : left - UNIVERSAL_PADDING,
-//                 top + itemHeight / 2,
-//                 textWidth - iconSize,
-//                 QFontInfo(local_option_normal.font).pixelSize() + UNIVERSAL_PADDING,
-//                 ,
-//                 pkgSummary);
         p.setOpacity(opa);
 
         QLinearGradient gradient;
@@ -149,7 +168,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
             gradient.setColorAt(1, Qt::white);
         }
 
-        QRect paintRect = option.rect;
+        QRect paintRect = opt.rect;
         p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
         p.fillRect(paintRect, gradient);
 
@@ -169,19 +188,23 @@ void ApplicationsDelegate::paint(QPainter *painter,
         p.setCompositionMode(QPainter::CompositionMode_SourceOver);
         p.end();
 
-        painter->drawPixmap(option.rect.topLeft(), pixmap);
+        painter->drawPixmap(opt.rect.topLeft(), pixmap);
         return;
     } else if (index.column() == KpkPackageModel::ActionCol) {
         bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
+        QStyleOptionViewItemV4 opt(option);
+        if (opt.state & QStyle::State_HasFocus) {
+            opt.state ^= QStyle::State_HasFocus;
+        }
 
+        // Do not draw if the line is not selected or the mouse is over it
         if (!(option.state & QStyle::State_MouseOver) &&
             !(option.state & QStyle::State_Selected) &&
             !pkgChecked) {
-            QStyleOptionViewItemV4 opt(option);
             QStyledItemDelegate::paint(painter, opt, index);
             return;
         }
-        QStyleOptionViewItemV4 opt(option);
+
         QStyledItemDelegate::paint(painter, opt, index);
         QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
 
@@ -193,14 +216,6 @@ void ApplicationsDelegate::paint(QPainter *painter,
         bool    pkgInstalled  = (info == Package::InfoInstalled ||
                                  info == Package::InfoCollectionInstalled);
 
-//         if (leftToRight) {
-//             optBt.rect.setLeft(left + width - (m_buttonSize.width() + UNIVERSAL_PADDING));
-//             width -= m_buttonSize.width() + UNIVERSAL_PADDING;
-//         } else {
-//             optBt.rect.setLeft(left + UNIVERSAL_PADDING);
-//             left += m_buttonSize.width() + UNIVERSAL_PADDING;
-//         }
-
         // Calculate the top of the button which is the item height - the button height size divided by 2
         // this give us a little value which is the top and bottom margin
         optBt.rect.setLeft(optBt.rect.left() + UNIVERSAL_PADDING / 2);
@@ -208,9 +223,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
 
         if (option.state & QStyle::State_Selected) {
-            optBt.palette.setBrush(QPalette::ButtonText, optBt.palette.brush(QPalette::HighlightedText));
-//                 QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
-//     option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
+            optBt.palette.setColor(QPalette::WindowText, option.palette.color(QPalette::HighlightedText));
         }
 
         optBt.features = QStyleOptionButton::Flat;
@@ -315,6 +328,7 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
                 // Adds the icon size AND the checkbox size
                 // [ x ] (icon) Text
                 size.rwidth() += 4 * UNIVERSAL_PADDING + 46 + rect.width();
+//                return QStyledItemDelegate::sizeHint(option, index);
             } else {
                 // Adds the icon size
                 size.rwidth() += 3 * UNIVERSAL_PADDING + 44;

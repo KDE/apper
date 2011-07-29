@@ -167,8 +167,6 @@ QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, i
             return i18n("Version");
         } else if (section == ArchCol) {
             return i18n("Arch");
-        } else if (section == SummaryCol) {
-            return i18n("Summary");
         } else if (section == ActionCol) {
             return i18n("Action");
         }
@@ -266,21 +264,9 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         if (role == Qt::DisplayRole) {
             return package.arch;
         }
-    } else if (index.column() == SummaryCol) {
-        if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
-            return package.summary;
-        }
     }
 
     switch (role) {
-    case Qt::ForegroundRole:
-        if (package.info != Package::InfoInstalled &&
-            package.info != Package::InfoCollectionInstalled) {
-            QColor foregroundColor = QApplication::palette().color(QPalette::Text);
-            foregroundColor.setAlphaF(0.75);
-            return QBrush(foregroundColor);
-        }
-        break;
     case Qt::FontRole:
         if (package.info != Package::InfoInstalled &&
             package.info != Package::InfoCollectionInstalled) {

@@ -35,7 +35,6 @@ class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
 public:
     enum {
         NameCol = 0,
-        SummaryCol,
         VersionCol,
         ArchCol,
         ActionCol

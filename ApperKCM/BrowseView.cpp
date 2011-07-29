@@ -71,10 +71,9 @@ void BrowseView::init(Transaction::Roles roles)
     packageView->sortByColumn(KpkPackageModel::NameCol, Qt::AscendingOrder);
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
     packageView->header()->setStretchLastSection(false);
-    packageView->header()->setResizeMode(KpkPackageModel::NameCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(KpkPackageModel::NameCol, QHeaderView::Stretch);
     packageView->header()->setResizeMode(KpkPackageModel::VersionCol, QHeaderView::ResizeToContents);
     packageView->header()->setResizeMode(KpkPackageModel::ArchCol, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(KpkPackageModel::SummaryCol, QHeaderView::Stretch);
     packageView->header()->setResizeMode(KpkPackageModel::ActionCol, QHeaderView::ResizeToContents);
 
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
