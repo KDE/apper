@@ -94,7 +94,11 @@
     </layout>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="ProgressView" name="progressView"/>
+    <widget class="ProgressView" name="progressView">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

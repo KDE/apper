@@ -38,7 +38,11 @@ void TransactionDelegate::paint(QPainter *painter,
                            const QStyleOptionViewItem &option,
                            const QModelIndex &index) const
 {
-    QStyledItemDelegate::paint(painter, option, index);
+    QStyleOptionViewItemV4 opt1(option);
+    if (opt1.state & QStyle::State_HasFocus) {
+        opt1.state ^= QStyle::State_HasFocus;
+    }
+    QStyledItemDelegate::paint(painter, opt1, index);
     if (index.column() == 0) {
         int  progress = index.data(ProgressView::RoleProgress).toInt();
         QString text  = index.data(Qt::DisplayRole).toString();

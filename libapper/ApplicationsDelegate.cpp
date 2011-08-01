@@ -118,9 +118,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
 
         Package::Info info;
         info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
-        QString pkgSummary    = index.data(KpkPackageModel::SummaryRole).toString();
-        bool    pkgInstalled  = (info == Package::InfoInstalled ||
-                                 info == Package::InfoCollectionInstalled);
+        QString pkgSummary = index.data(KpkPackageModel::SummaryRole).toString();
 
         if (!pkgSummary.isEmpty()) {
             if (leftToRight) {
@@ -133,11 +131,8 @@ void ApplicationsDelegate::paint(QPainter *painter,
         // store the original opacity
         qreal opa = p.opacity();
         QStyleOptionViewItem local_option_normal(opt);
-        if (!pkgInstalled) {
-            local_option_normal.font.setItalic(true);
-        }
-
         QColor foregroundColor;
+
         p.setOpacity(0.75);
         if (opt.state.testFlag(QStyle::State_Selected)) {
             foregroundColor = opt.palette.color(QPalette::HighlightedText);

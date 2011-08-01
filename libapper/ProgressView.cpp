@@ -147,7 +147,7 @@ void ProgressView::currentPackage(const PackageKit::Package &p)
             items << item;
 
             item = new QStandardItem(p.name());
-            item->setToolTip(p.name());
+            item->setToolTip(p.version());
             items << item;
 
             item = new QStandardItem(p.summary());
