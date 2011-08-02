@@ -38,7 +38,7 @@
 using namespace PackageKit;
 
 class KpkPackageModel;
-class KpkFiltersMenu;
+class FiltersMenu;
 class TransactionHistory;
 class CategoryModel;
 class Settings;
@@ -52,7 +52,6 @@ public:
     ~ApperKCM();
     
     QString page() const;
-    void setPage(const QString &page);
 
 signals:
     void changed(bool state);
@@ -61,8 +60,10 @@ public slots:
     void load();
     void save();
     void defaults();
+    void setPage(const QString &page);
 
 private slots:
+    void search();
     void setupHomeModel();
     void genericActionKTriggered();
 
@@ -93,7 +94,6 @@ private:
     void setCurrentActionCancel(bool cancel);
 
     void setActionCancel(bool enabled);
-    void search();
     void keyPressEvent(QKeyEvent *event);
 
     KToolBarPopupAction *m_genericActionK;
@@ -110,7 +110,7 @@ private:
     KIcon m_findIcon;
     KIcon m_cancelIcon;
 
-    KpkFiltersMenu *m_filtersMenu;
+    FiltersMenu *m_filtersMenu;
     Transaction::Roles m_roles;
 
     TransactionHistory *m_history;

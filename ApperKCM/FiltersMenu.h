@@ -18,25 +18,26 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_FILTERS_MENU_H
-#define KPK_FILTERS_MENU_H
+#ifndef FILTERS_MENU_H
+#define FILTERS_MENU_H
 
 #include <QMenu>
 #include <Transaction>
 
 using namespace PackageKit;
 
-class KpkFiltersMenu : public QMenu
+class FiltersMenu : public QMenu
 {
 Q_OBJECT
 public:
-    explicit KpkFiltersMenu(Transaction::Filters filters, QWidget *parent = 0);
-    ~KpkFiltersMenu();
+    explicit FiltersMenu(Transaction::Filters filters, QWidget *parent = 0);
+    ~FiltersMenu();
 
     Transaction::Filters filters() const;
     QString filterApplications() const;
 
 signals:
+    void filtersChanged();
     void filterApplications(const QString &filter);
 
 private slots:

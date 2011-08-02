@@ -27,7 +27,7 @@
 
 #include <version.h>
 
-#include "KpkFiltersMenu.h"
+#include "FiltersMenu.h"
 #include "BrowseView.h"
 #include "CategoryModel.h"
 #include "TransactionHistory.h"
@@ -38,6 +38,7 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KFileItemDelegate>
+#include <KMenu>
 
 #include <KpkPackageModel.h>
 #include <KpkDelegate.h>
@@ -158,7 +159,8 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     homeView->setItemDelegate(delegate);
 
     // install the backend filters
-    filtersTB->setMenu(m_filtersMenu = new KpkFiltersMenu(Daemon::filters(), this));
+    filtersTB->setMenu(m_filtersMenu = new FiltersMenu(Daemon::filters(), this));
+    connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(genericActionKTriggered()));
     filtersTB->setIcon(KIcon("view-filter"));
     browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(QString)),
@@ -194,6 +196,24 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
             m_browseModel, SLOT(uncheckPackage(KpkPackageModel::InternalPackage)));
 
     changesPB->setIcon(KIcon("edit-redo"));
+
+    KMenu *menu = new KMenu(this);
+    settingsTB->setMenu(menu);
+    settingsTB->setIcon(KIcon("preferences-other"));
+    QSignalMapper *signalMapper = new QSignalMapper(this);
+    QAction *action;
+    action = menu->addAction(KIcon("view-history"), i18n("History"));
+    signalMapper->setMapping(action, "history");
+    connect(action, SIGNAL(triggered()),
+            signalMapper, SLOT(map()));
+    connect(signalMapper, SIGNAL(mapped(QString)),
+            this, SLOT(setPage(QString)));
+    action = menu->addAction(KIcon("preferences-other"), i18n("Settings"));
+    signalMapper->setMapping(action, "settings");
+    connect(action, SIGNAL(triggered()),
+            signalMapper, SLOT(map()));
+    connect(signalMapper, SIGNAL(mapped(QString)),
+            this, SLOT(setPage(QString)));
 }
 
 void ApperKCM::setupHomeModel()
@@ -362,22 +382,8 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
                 m_searchGroupCategory.clear();
                 m_searchGroup = static_cast<Package::Group>(index.data(CategoryModel::GroupRole).toUInt());
             }
-        } else if (m_searchRole == Transaction::RoleGetOldTransactions) {
-            m_history = new TransactionHistory(this);
-            searchKLE->clear();
-            connect(searchKLE, SIGNAL(textChanged(QString)),
-                    m_history, SLOT(setFilterRegExp(QString)));
-            stackedWidget->addWidget(m_history);
-            stackedWidget->setCurrentWidget(m_history);
-            backTB->setEnabled(true);
-            filtersTB->setEnabled(false);
-            widget->setEnabled(false);
-            return;
         } else if (m_searchRole == Transaction::RoleGetUpdates) {
             setPage("updates");
-            return;
-        } else if (m_searchRole == Transaction::RoleGetRepoList) {
-            setPage("settings");
             return;
         }
 
@@ -486,6 +492,16 @@ void ApperKCM::setPage(const QString &page)
             stackedWidget->currentWidget() == m_settingsPage) {
             on_backTB_clicked();
         }
+    } else if (page == "history") {
+        m_history = new TransactionHistory(this);
+        searchKLE->clear();
+        connect(searchKLE, SIGNAL(textChanged(QString)),
+                m_history, SLOT(setFilterRegExp(QString)));
+        stackedWidget->addWidget(m_history);
+        stackedWidget->setCurrentWidget(m_history);
+        backTB->setEnabled(true);
+        filtersTB->setEnabled(false);
+        widget->setEnabled(false);
     }
 }
 

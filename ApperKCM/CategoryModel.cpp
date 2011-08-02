@@ -52,28 +52,12 @@ CategoryModel::CategoryModel(Transaction::Roles roles, QObject *parent) :
     item->setIcon(KIcon("dialog-ok-apply"));
     appendRow(item);
 
-    item = new QStandardItem(i18n("History"));
-    item->setDragEnabled(false);
-    item->setData(Transaction::RoleGetOldTransactions, SearchRole);
-    item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
-    item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
-    item->setIcon(KIcon("view-history"));
-    appendRow(item);
-
     item = new QStandardItem(i18n("Updates"));
     item->setDragEnabled(false);
     item->setData(Transaction::RoleGetUpdates, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
     item->setIcon(KIcon("system-software-update"));
-    appendRow(item);
-
-    item = new QStandardItem(i18n("Settings"));
-    item->setDragEnabled(false);
-    item->setData(Transaction::RoleGetRepoList, SearchRole);
-    item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
-    item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
-    item->setIcon(KIcon("preferences-other"));
     appendRow(item);
 
 #ifdef HAVE_APPINSTALL

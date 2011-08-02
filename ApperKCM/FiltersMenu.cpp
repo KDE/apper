@@ -20,13 +20,13 @@
 
 #include <config.h>
 
-#include "KpkFiltersMenu.h"
+#include "FiltersMenu.h"
 
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocale>
 
-KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
+FiltersMenu::FiltersMenu(Transaction::Filters filters, QWidget *parent)
  : QMenu(parent)
 {
     // Loads the filter menu settings
@@ -35,6 +35,8 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
 
     if (filters & Transaction::FilterCollections || filters & Transaction::FilterNotCollections) {
         QMenu *menuCollections = new QMenu(i18n("Collections"), this);
+        connect(menuCollections, SIGNAL(triggered(QAction*)),
+                this, SIGNAL(filtersChanged()));
         addMenu(menuCollections);
         QActionGroup *collectionGroup = new QActionGroup(menuCollections);
         collectionGroup->setExclusive(true);
@@ -56,6 +58,8 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
     if (filters & Transaction::FilterInstalled || filters & Transaction::FilterNotInstalled) {
         // Installed
         QMenu *menuInstalled = new QMenu(i18n("Installed"), this);
+        connect(menuInstalled, SIGNAL(triggered(QAction*)),
+                this, SIGNAL(filtersChanged()));
         addMenu(menuInstalled);
         QActionGroup *installedGroup = new QActionGroup(menuInstalled);
         installedGroup->setExclusive(true);
@@ -84,6 +88,8 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
     if (filters & Transaction::FilterDevel || filters & Transaction::FilterNotDevel) {
         // Development
         QMenu *menuDevelopment = new QMenu(i18n("Development"), this);
+        connect(menuDevelopment, SIGNAL(triggered(QAction*)),
+                this, SIGNAL(filtersChanged()));
         addMenu(menuDevelopment);
         QActionGroup *developmentGroup = new QActionGroup(menuDevelopment);
         developmentGroup->setExclusive(true);
@@ -112,6 +118,8 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
     if (filters & Transaction::FilterGui || filters & Transaction::FilterNotGui) {
         // Graphical
         QMenu *menuGui = new QMenu(i18n("Graphical"), this);
+        connect(menuGui, SIGNAL(triggered(QAction*)),
+                this, SIGNAL(filtersChanged()));
         addMenu(menuGui);
         QActionGroup *guiGroup = new QActionGroup(menuGui);
         guiGroup->setExclusive(true);
@@ -140,6 +148,8 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
     if (filters & Transaction::FilterFree || filters & Transaction::FilterNotFree) {
         // Free
         QMenu *menuFree = new QMenu(i18nc("Filter for free packages", "Free"), this);
+        connect(menuFree, SIGNAL(triggered(QAction*)),
+                this, SIGNAL(filtersChanged()));
         addMenu(menuFree);
         QActionGroup *freeGroup = new QActionGroup(menuFree);
         freeGroup->setExclusive(true);
@@ -169,6 +179,8 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
     if (filters & Transaction::FilterSource || filters & Transaction::FilterNotSource) {
         // Source
         QMenu *menuSource = new QMenu(i18nc("Filter for source packages", "Source"), this);
+        connect(menuSource, SIGNAL(triggered(QAction*)),
+                this, SIGNAL(filtersChanged()));
         addMenu(menuSource);
         QActionGroup *sourceGroup = new QActionGroup(menuSource);
         sourceGroup->setExclusive(true);
@@ -212,6 +224,8 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
     }
     if (filters & Transaction::FilterNewest) {
         QAction *newest = new QAction(i18n("Only Newest Packages"), this);
+        connect(newest, SIGNAL(triggered()),
+                this, SIGNAL(filtersChanged()));
         newest->setCheckable(true);
         newest->setChecked(filterMenuGroup.readEntry("FilterNewest", true));
         newest->setToolTip(i18n("Only show the newest available package"));
@@ -222,6 +236,8 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
     }
     if (filters & Transaction::FilterArch) {
         QAction *native = new QAction(i18n("Only Native Packages"), this);
+        connect(native, SIGNAL(triggered()),
+                this, SIGNAL(filtersChanged()));
         native->setCheckable(true);
         native->setChecked(filterMenuGroup.readEntry("FilterNative", true));
         native->setToolTip(i18n("Only show packages matching the machine architecture"));
@@ -243,7 +259,7 @@ KpkFiltersMenu::KpkFiltersMenu(Transaction::Filters filters, QWidget *parent)
 #endif //HAVE_APPINSTALL
 }
 
-KpkFiltersMenu::~KpkFiltersMenu()
+FiltersMenu::~FiltersMenu()
 {
     KConfig config("KPackageKit");
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
@@ -266,7 +282,7 @@ KpkFiltersMenu::~KpkFiltersMenu()
 #endif //HAVE_APPINSTALL
 }
 
-QString KpkFiltersMenu::filterApplications() const
+QString FiltersMenu::filterApplications() const
 {
 #ifdef HAVE_APPINSTALL
     return m_applications->isChecked() ? "a" : QString();
@@ -275,12 +291,12 @@ QString KpkFiltersMenu::filterApplications() const
 #endif //HAVE_APPINSTALL
 }
 
-void KpkFiltersMenu::filterAppTriggered(bool checked)
+void FiltersMenu::filterAppTriggered(bool checked)
 {
     emit filterApplications(checked ? "a" : QString());
 }
 
-Transaction::Filters KpkFiltersMenu::filters() const
+Transaction::Filters FiltersMenu::filters() const
 {
     Transaction::Filters filters;
     bool filterSet = false;
@@ -298,4 +314,4 @@ Transaction::Filters KpkFiltersMenu::filters() const
     return filters;
 }
 
-#include "KpkFiltersMenu.moc"
+#include "FiltersMenu.moc"

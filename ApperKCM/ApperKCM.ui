@@ -200,6 +200,16 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QToolButton" name="settingsTB">
+         <property name="popupMode">
+          <enum>QToolButton::InstantPopup</enum>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page_6">

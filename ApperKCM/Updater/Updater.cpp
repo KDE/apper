@@ -55,12 +55,6 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 {
     setupUi(this);
 
-    //initialize the model, delegate, client and  connect it's signals
-    m_header = new CheckableHeader(Qt::Horizontal, this);
-    m_header->setCheckBoxVisible(false);
-    packageView->setHeader(m_header);
-    packageView->setHeaderHidden(false);
-
     m_updatesModel = new KpkPackageModel(this);
     m_updatesModel->setCheckable(true);
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
@@ -74,12 +68,18 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     m_delegate->setCheckable(true);
     packageView->setItemDelegate(m_delegate);
     packageView->sortByColumn(KpkPackageModel::NameCol, Qt::AscendingOrder);
-    connect(m_header, SIGNAL(toggled(bool)),
-            m_updatesModel, SLOT(setAllChecked(bool)));
     connect(m_updatesModel, SIGNAL(changed(bool)),
             this, SLOT(checkEnableUpdateButton()));
 
+    //initialize the model, delegate, client and  connect it's signals
+    m_header = new CheckableHeader(Qt::Horizontal, this);
+    connect(m_header, SIGNAL(toggled(bool)),
+            m_updatesModel, SLOT(setAllChecked(bool)));
+    m_header->setCheckBoxVisible(false);
     m_header->setDefaultAlignment(Qt::AlignCenter);
+    packageView->setHeaderHidden(false);
+    packageView->setHeader(m_header);
+
     // This must be set AFTER the model is set, otherwise it doesn't work
     m_header->setResizeMode(KpkPackageModel::NameCol, QHeaderView::Stretch);
     m_header->setResizeMode(KpkPackageModel::VersionCol, QHeaderView::ResizeToContents);
@@ -189,6 +189,7 @@ void Updater::checkEnableUpdateButton()
 
 void Updater::load()
 {
+    return;
     // set focus on the updates view
     packageView->setFocus(Qt::OtherFocusReason);
     // If the model already has some packages

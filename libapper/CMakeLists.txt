@@ -40,10 +40,10 @@ kde4_add_ui_files(libapper_SRCS
     KpkRequirements.ui
 )
 
-kde4_add_library(sharedlib SHARED ${libapper_SRCS})
-target_link_libraries(sharedlib
+kde4_add_library(libapper SHARED ${libapper_SRCS})
+target_link_libraries(libapper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${QPACKAGEKIT2_LIBRARIES})
 
-install(TARGETS sharedlib ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS libapper ${INSTALL_TARGETS_DEFAULT_ARGS})

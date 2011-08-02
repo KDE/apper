@@ -5,7 +5,7 @@ set(kpk_addrm_SRCS
     Updater/DistroUpgrade.cpp
     Updater/CheckableHeader.cpp
     Updater/Updater.cpp
-    KpkFiltersMenu.cpp
+    FiltersMenu.cpp
     ClickableLabel.cpp
     ScreenShotViewer.cpp
     PackageDetails.cpp
@@ -35,7 +35,7 @@ target_link_libraries(apper
     ${KDE4_KUTILS_LIBS}
     ${QPACKAGEKIT2_LIBRARIES}
     ${KDE4_SOLID_LIBS}
-    sharedlib
+    libapper
 )
 
 install(TARGETS apper DESTINATION ${PLUGIN_INSTALL_DIR} )
