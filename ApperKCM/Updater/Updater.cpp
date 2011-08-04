@@ -189,7 +189,6 @@ void Updater::checkEnableUpdateButton()
 
 void Updater::load()
 {
-    return;
     // set focus on the updates view
     packageView->setFocus(Qt::OtherFocusReason);
     // If the model already has some packages
