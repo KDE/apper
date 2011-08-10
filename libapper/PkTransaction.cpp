@@ -279,12 +279,36 @@ void PkTransaction::refreshCache()
     }
 }
 
+void PkTransaction::setupTransaction(PackageKit::Transaction *transaction)
+{
+    SET_PROXY;
+
+#ifdef HAVE_DEBCONFKDE
+    QString socket;
+    socket = QLatin1String("/tmp/debconf_") + transaction->tid().remove("/");
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.kde.ApperSentinel",
+                                             "/",
+                                             "org.kde.ApperSentinel",
+                                             QLatin1String("SetupDebconfDialog"));
+    // Use our own cached tid to avoid crashes
+    message << qVariantFromValue(socket);
+    message << qVariantFromValue(static_cast<uint>(effectiveWinId()));
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+    if (reply.type() != QDBusMessage::ReplyMessage) {
+        kWarning() << "Message did not receive a reply";
+    }
+
+    transaction->setHints("frontend-socket=" + socket);
+#else
+     Q_UNUSED(transaction)
+#endif //HAVE_DEBCONFKDE
+}
+
 void PkTransaction::installPackages()
 {
-    SET_PROXY
-    QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
     Transaction *trans = new Transaction(this);
-    trans->setHints("frontend-socket=" + socket);
+    setupTransaction(trans);
     trans->installPackages(d->packages, d->onlyTrusted);
     if (trans->error()) {
         KMessageBox::sorry(this,
@@ -292,16 +316,13 @@ void PkTransaction::installPackages()
                            i18n("Failed to install package"));
     } else {
         setTransaction(trans);
-        setupDebconfDialog(socket);
     }
 }
 
 void PkTransaction::installFiles()
 {
-    SET_PROXY
-    QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
     Transaction *trans = new Transaction(this);
-    trans->setHints("frontend-socket=" + socket);
+    setupTransaction(trans);
     trans->installFiles(d->files, d->onlyTrusted);
     if (trans->error()) {
         KMessageBox::sorry(this,
@@ -311,25 +332,20 @@ void PkTransaction::installFiles()
                                  d->files.size()));
     } else {
         setTransaction(trans);
-        setupDebconfDialog(socket);
     }
 }
 
 void PkTransaction::removePackages(bool allow_deps)
 {
-    SET_PROXY
-    QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
     Transaction *trans = new Transaction(this);
-    trans->setHints("frontend-socket=" + socket);
+    setupTransaction(trans);
     trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE);
     if (trans->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
                            i18n("Failed to remove package"));
-//         taskDone(Transaction::RoleRemovePackages);
     } else {
         setTransaction(trans);
-        setupDebconfDialog(socket);
 //         setAllowDeps(allowDeps);
 //         d->transactionDialog->setAllowDeps(allowDeps);
     }
@@ -337,27 +353,24 @@ void PkTransaction::removePackages(bool allow_deps)
 
 void PkTransaction::updatePackages()
 {
-    SET_PROXY
-    QString socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
     Transaction *trans = new Transaction(this);
-    trans->setHints("frontend-socket=" + socket);
+    setupTransaction(trans);
     trans->updatePackages(d->packages, true);
     if (trans->error()) {
         KMessageBox::sorry(this,
                            KpkStrings::daemonError(trans->error()),
                            i18n("Failed to update package"));
-//         taskDone(Transaction::RoleRemovePackages);
     } else {
         setTransaction(trans);
-        setupDebconfDialog(socket);
 //         d->transactionDialog->setAllowDeps(allowDeps);
     }
 }
 
 void PkTransaction::cancel()
 {
-    m_trans->cancel();
-//     m_flags |= CloseOnFinish;
+    if (m_trans) {
+        m_trans->cancel();
+    }
 }
 
 void PkTransaction::setTransaction(Transaction *trans)
@@ -461,6 +474,10 @@ void PkTransaction::setTransaction(Transaction *trans)
 
 void PkTransaction::unsetTransaction()
 {
+    if (m_trans == 0) {
+        return;
+    }
+
     disconnect(m_trans, SIGNAL(package(const PackageKit::Package &)),
                d->simulateModel, SLOT(addPackage(const PackageKit::Package &)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
@@ -483,7 +500,7 @@ void PkTransaction::requeueTransaction()
     Transaction *trans = new Transaction(this);
     QString socket;
     socket = "/tmp/kpk_debconf_" + QString::number(QCoreApplication::applicationPid());
-    trans->setHints("frontend-socket=" + socket);
+    setupTransaction(trans);
     switch (d->role) {
     case Transaction::RoleRemovePackages :
         trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE);
@@ -726,6 +743,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
     Transaction *trans = qobject_cast<Transaction*>(sender());
     Transaction::Role role = trans->role();
     KpkRequirements *requires = 0;
+    m_trans = 0;
 
 //     kDebug() << status;
     d->finished = true;
@@ -934,26 +952,6 @@ void PkTransaction::setPackages(const QList<Package> &packages)
 void PkTransaction::setFiles(const QStringList &files)
 {
     d->files = files;
-}
-
-void PkTransaction::setupDebconfDialog(const QString &tid)
-{
-#ifdef HAVE_DEBCONFKDE
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.ApperSentinel",
-                                             "/",
-                                             "org.kde.ApperSentinel",
-                                             QLatin1String("SetupDebconfDialog"));
-    // Use our own cached tid to avoid crashes
-    message << qVariantFromValue(tid);
-    message << qVariantFromValue(static_cast<uint>(effectiveWinId()));
-    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-    if (reply.type() != QDBusMessage::ReplyMessage) {
-        kWarning() << "Message did not receive a reply";
-    }
-#else
-    Q_UNUSED(tid)
-#endif //HAVE_DEBCONFKDE
 }
 
 #include "PkTransaction.moc"

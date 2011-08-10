@@ -82,8 +82,8 @@ void KpkInterface::RefreshAndUpdate()
 
 void KpkInterface::SetupDebconfDialog(const QString &socketPath, uint xidParent)
 {
-    kDebug() << socketPath << xidParent;
 #ifdef HAVE_DEBCONFKDE
+    kDebug() << socketPath << xidParent;
     DebconfGui *gui;
     if (m_debconfGuis.contains(socketPath)) {
         gui = m_debconfGuis[socketPath];
@@ -107,6 +107,7 @@ void KpkInterface::debconfActivate()
 {
 #ifdef HAVE_DEBCONFKDE
     // Correct the parent
+    kDebug();
     DebconfGui *gui = qobject_cast<DebconfGui*>(sender());
     uint xidParent  = gui->property("xidParent").toUInt();
     KWindowSystem::setMainWindow(gui, xidParent);

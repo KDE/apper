@@ -88,6 +88,7 @@ public slots:
     void cancel();
 
 private slots:
+    void setupTransaction(PackageKit::Transaction *transaction);
     void installPackages();
     void installFiles();
     void removePackages(bool allow_deps = true);
