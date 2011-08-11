@@ -25,6 +25,7 @@
 #include <KpkMacros.h>
 #include <KIcon>
 #include <KNotification>
+#include <KWindowSystem>
 
 #include "PkInstallPackageNames.h"
 #include "PkInstallMimeTypes.h"
@@ -95,7 +96,7 @@ void PkInterface::InstallGStreamerResources(uint xid, const QStringList &resourc
     PkInstallGStreamerResources *task;
     task = new PkInstallGStreamerResources(xid, resources, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->show();
+    show(task);
 }
 
 void PkInterface::InstallMimeTypes(uint xid, const QStringList &mime_types, const QString &interaction)
@@ -115,7 +116,7 @@ void PkInterface::InstallPackageFiles(uint xid, const QStringList &files, const 
     setDelayedReply(true);
     PkInstallPackageFiles *task = new PkInstallPackageFiles(xid, files, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->show();
+    show(task);
 }
 
 void PkInterface::InstallPackageNames(uint xid, const QStringList &packages, const QString &interaction)
@@ -125,7 +126,7 @@ void PkInterface::InstallPackageNames(uint xid, const QStringList &packages, con
     setDelayedReply(true);
     PkInstallPackageNames *task = new PkInstallPackageNames(xid, packages, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->show();
+    show(task);
 }
 
 void PkInterface::InstallProvideFiles(uint xid, const QStringList &files, const QString &interaction)
@@ -145,7 +146,7 @@ void PkInterface::RemovePackageByFiles(uint xid, const QStringList &files, const
     setDelayedReply(true);
     PkRemovePackageByFiles *task = new PkRemovePackageByFiles(xid, files, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->show();
+    show(task);
 }
 
 void PkInterface::InstallPrinterDrivers(uint xid, const QStringList &resources, const QString &interaction)
@@ -208,4 +209,10 @@ bool PkInterface::SearchFile(const QString &file_name, const QString &interactio
     task->run();
     // This is discarted
     return false;
+}
+
+void PkInterface::show(QWidget *widget) const
+{
+    widget->show();
+    KWindowSystem::forceActiveWindow(widget->winId());
 }

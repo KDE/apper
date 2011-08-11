@@ -21,13 +21,13 @@
 #ifndef PK_INSTALL_MIME_TYPE_H
 #define PK_INSTALL_MIME_TYPE_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <Transaction>
 
 using namespace PackageKit;
 
-class PkInstallMimeTypes : public KpkAbstractTask
+class PkInstallMimeTypes : public SessionTask
 {
 Q_OBJECT
 public:

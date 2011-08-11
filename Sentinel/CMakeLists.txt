@@ -12,7 +12,7 @@ set(sentinel_SRCS
     KpkDistroUpgrade.cpp
     KpkInterface.cpp
     PkInterface.cpp
-    KpkAbstractTask.cpp
+    SessionTask.cpp
     PkInstallPackageNames.cpp
     PkSearchFile.cpp
     PkIsInstalled.cpp
@@ -26,13 +26,16 @@ set(sentinel_SRCS
     PkInstallCatalogs.cpp
     PkRemovePackageByFiles.cpp
     PkInstallPrinterDrivers.cpp
+    ReviewChanges.cpp
     ApperSentinel.cpp
     main.cpp
 )
 
 kde4_add_ui_files(sentinel_SRCS
+    SessionTask.ui
     IntroDialog.ui
     InfoWidget.ui
+    ReviewChanges.ui
 )
 
 qt4_add_dbus_adaptor(sentinel_dbus_SRCS

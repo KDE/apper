@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkReviewChanges.h"
+#include "ReviewChanges.h"
 
 #include <KMessageBox>
 #include <KWindowSystem>
@@ -37,12 +37,12 @@
 #include "PkTransactionDialog.h"
 #include "KpkDelegate.h"
 
-#include "ui_KpkReviewChanges.h"
+#include "ui_ReviewChanges.h"
 
-class KpkReviewChangesPrivate
+class ReviewChangesPrivate
 {
 public:
-    Ui::KpkReviewChanges ui;
+    Ui::ReviewChanges ui;
 
     PackageModel *mainPkgModel;
     KpkSimulateModel *installPkgModel, *removePkgModel;
@@ -57,14 +57,14 @@ public:
     PkTransactionDialog *transactionDialog;
 };
 
-KpkReviewChanges::KpkReviewChanges(const QList<Package> &packages,
+ReviewChanges::ReviewChanges(const QList<Package> &packages,
                                    QWidget *parent,
                                    uint parentWId)
- : KDialog(parent),
-   d(new KpkReviewChangesPrivate),
+ : QWidget(parent),
+   d(new ReviewChangesPrivate),
    m_flags(Default)
 {
-    d->ui.setupUi(mainWidget());
+    d->ui.setupUi(this);
 
     d->transactionDialog = 0;
     d->parentWId = parentWId;
@@ -90,55 +90,26 @@ KpkReviewChanges::KpkReviewChanges(const QList<Package> &packages,
     d->mainPkgModel->addPackages(packages, true);
     connect(d->mainPkgModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
             this, SLOT(checkChanged()));
-
-    // Set Apply and Cancel buttons
-    setButtons(KDialog::Apply | KDialog::Cancel);
-    setWindowModality(Qt::WindowModal);
-
-    foreach (const Package &p, packages) {
-        if (p.info() == Package::InfoInstalled ||
-            p.info() == Package::InfoCollectionInstalled) {
-            // check what packages are installed and marked to be removed
-            d->remPackages << p;
-        } else if (p.info() == Package::InfoAvailable ||
-                   p.info() == Package::InfoCollectionAvailable) {
-            // check what packages are available and marked to be installed
-            d->addPackages << p;
-        }
-    }
-
-    setCaption(i18np("Review Change", "Review Changes", packages.size()));
-    setMessage(i18np("The following package was found",
-                     "The following packages were found",
-                     packages.size()));
-
-    // restore size
-    setMinimumSize(QSize(320,280));
-    KConfig config("KPackageKit");
-    KConfigGroup reviewChangesDialog(&config, "ReviewChangesDialog");
-    restoreDialogSize(reviewChangesDialog);
 }
 
-KpkReviewChanges::~KpkReviewChanges()
+ReviewChanges::~ReviewChanges()
 {
     // Make sure the dialog is deleted in case we are not it's parent
     if (d->transactionDialog) {
         d->transactionDialog->deleteLater();
     }
 
-    // save size
-    KConfig config("KPackageKit");
-    KConfigGroup reviewChangesDialog(&config, "ReviewChangesDialog");
-    saveDialogSize(reviewChangesDialog);
     delete d;
 }
 
-void KpkReviewChanges::setMessage(const QString &msg)
+QString ReviewChanges::title() const
 {
-    d->ui.label->setText(msg);
+    return i18np("The following package was found",
+                 "The following packages were found",
+                 d->mainPkgModel->rowCount());
 }
 
-int KpkReviewChanges::exec(OperationModes flags)
+int ReviewChanges::exec(OperationModes flags)
 {
     m_flags = flags;
     if (m_flags & ShowConfirmation) {
@@ -155,7 +126,7 @@ int KpkReviewChanges::exec(OperationModes flags)
     return QDialog::Accepted;
 }
 
-void KpkReviewChanges::doAction()
+void ReviewChanges::doAction()
 {
     // Fix up the parent when this class is not shown
     QWidget *transParent = qobject_cast<QWidget*>(parent());
@@ -164,6 +135,20 @@ void KpkReviewChanges::doAction()
     }
 
     d->actions = Daemon::actions();
+    d->remPackages.clear();
+    d->addPackages.clear();
+
+    foreach (const Package &p, d->mainPkgModel->selectedPackages()) {
+        if (p.info() == Package::InfoInstalled ||
+            p.info() == Package::InfoCollectionInstalled) {
+            // check what packages are installed and marked to be removed
+            d->remPackages << p;
+        } else if (p.info() == Package::InfoAvailable ||
+                   p.info() == Package::InfoCollectionAvailable) {
+            // check what packages are available and marked to be installed
+            d->addPackages << p;
+        }
+    }
 
     if (!d->addPackages.isEmpty() || !d->remPackages.isEmpty()) {
         d->transactionDialog = new PkTransactionDialog(0,
@@ -178,11 +163,11 @@ void KpkReviewChanges::doAction()
 
         checkTask();
     } else {
-        reject();
+//        reject();
     }
 }
 
-void KpkReviewChanges::checkTask()
+void ReviewChanges::checkTask()
 {
     if (!d->remPackages.isEmpty()) {
         d->transactionDialog->transaction()->removePackages(d->remPackages);
@@ -193,7 +178,7 @@ void KpkReviewChanges::checkTask()
     }
 }
 
-void KpkReviewChanges::transactionFinished(PkTransaction::ExitStatus status)
+void ReviewChanges::transactionFinished(PkTransaction::ExitStatus status)
 {
     PkTransactionDialog *trans = qobject_cast<PkTransactionDialog*>(sender());
     if (status == PkTransaction::Success) {
@@ -215,7 +200,7 @@ void KpkReviewChanges::transactionFinished(PkTransaction::ExitStatus status)
     }
 }
 
-void KpkReviewChanges::taskDone(Transaction::Role role)
+void ReviewChanges::taskDone(Transaction::Role role)
 {
     if (role == Transaction::RoleRemovePackages) {
         d->remPackages.clear();
@@ -225,32 +210,32 @@ void KpkReviewChanges::taskDone(Transaction::Role role)
     checkTask();
 }
 
-void KpkReviewChanges::slotButtonClicked(int button)
+void ReviewChanges::slotButtonClicked(int button)
 {
     switch(button) {
     case KDialog::Cancel :
     case KDialog::Close :
-        reject();
+//        reject();
         break;
     case KDialog::Ok :
-        accept();
+//        accept();
         break;
     case KDialog::Apply :
         hide();
         doAction();
         break;
-    default :
-        KDialog::slotButtonClicked(button);
+//    default :
+//        KDialog::slotButtonClicked(button);
     }
 }
 
-void KpkReviewChanges::checkChanged()
+void ReviewChanges::checkChanged()
 {
     if (d->mainPkgModel->selectedPackages().size() > 0) {
-        enableButtonApply(true);
+//        enableButtonApply(true);
     } else {
-        enableButtonApply(false);
+//        enableButtonApply(false);
     }
 }
 
-#include "KpkReviewChanges.moc"
+#include "ReviewChanges.moc"

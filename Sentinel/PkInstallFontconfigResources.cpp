@@ -22,7 +22,6 @@
 
 #include "IntroDialog.h"
 
-#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
 #include <KLocale>
@@ -35,7 +34,7 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
                                                            const QString &interaction,
                                                            const QDBusMessage &message,
                                                            QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent),
+ : SessionTask(xid, interaction, message, parent),
    m_resources(resources)
 {
     m_introDialog = new IntroDialog(this);
@@ -73,7 +72,7 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
     }
 
     m_introDialog->setDescription(description);
-    m_introDialog->setTitle(title);
+    setTitle(title);
 }
 
 PkInstallFontconfigResources::~PkInstallFontconfigResources()
@@ -151,10 +150,10 @@ void PkInstallFontconfigResources::whatProvidesFinished(PackageKit::Transaction:
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
-            frm->setMessage(i18np("Application that can open this type of file",
-                                  "Applications that can open this type of file",
-                                  m_foundPackages.size()));
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
+            setTitle(i18np("Application that can open this type of file",
+                           "Applications that can open this type of file",
+                           m_foundPackages.size()));
 
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, "Transaction did not finish with success");

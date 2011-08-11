@@ -58,16 +58,6 @@ void IntroDialog::setModel(QAbstractItemModel *model)
     ui->listView->setModel(model);
 }
 
-void IntroDialog::setTitle(const QString &title)
-{
-    if (title.isNull()) {
-        ui->titleL->hide();
-    } else {
-        ui->titleL->show();
-        ui->titleL->setText(title);
-    }
-}
-
 void IntroDialog::setDescription(const QString &description)
 {
     ui->descriptionL->setText(description);

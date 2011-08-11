@@ -20,7 +20,6 @@
 
 #include "PkInstallPackageNames.h"
 
-#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
 #include <KLocale>
@@ -36,7 +35,7 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
                                              const QString &interaction,
                                              const QDBusMessage &message,
                                              QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent),
+ : SessionTask(xid, interaction, message, parent),
    m_packages(packages),
    m_message(message)
 {
@@ -69,7 +68,7 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
                         m_packages.size(),
                         parentTitle);
     }
-    m_introDialog->setTitle(title);
+    setTitle(title);
 }
 
 PkInstallPackageNames::~PkInstallPackageNames()
@@ -106,9 +105,9 @@ void PkInstallPackageNames::slotButtonClicked(int bt)
             return;
         }
     } else {
+        KDialog::slotButtonClicked(bt);
         sendErrorFinished(Cancelled, "Aborted");
     }
-    KDialog::slotButtonClicked(bt);
 }
 
 void PkInstallPackageNames::start()
@@ -185,12 +184,13 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::Exit status
             sendErrorFinished(Failed, "package already found");
         } else if (m_foundPackages.size()) {
             kDebug() << m_foundPackages.size();
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
-            if (frm->exec(operationModes()) == 0) {
-                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
-            } else {
-                finishTaskOk();
-            }
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
+            setMainWidget(frm);
+//            if (frm->exec(operationModes()) == 0) {
+//                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
+//            } else {
+//                finishTaskOk();
+//            }
         } else {
             if (showWarning()) {
                 setInfo(i18n("Could not find %1", m_packages.join(", ")),

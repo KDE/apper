@@ -127,32 +127,6 @@ PkTransaction::PkTransaction(Transaction *trans, QWidget *parent)
 
 PkTransaction::~PkTransaction()
 {
-//     KConfig config("KPackageKit");
-//     if (isButtonEnabled(KDialog::Details)) {
-//         KConfigGroup transactionGroup(&config, "Transaction");
-//         transactionGroup.writeEntry("ShowDetails", d->showDetails);
-//     }
-//     KConfigGroup transactionDialog(&config, "TransactionDialog");
-//     saveDialogSize(transactionDialog);
-
-    if (!d->finished) {
-        // We are going to hide the transaction,
-        // which can make the user even close System Settings or KPackageKit
-        // so we call the tray icon to keep watching the transaction so if the
-        // transaction receives some error we can display them
-        QDBusMessage message;
-        message = QDBusMessage::createMethodCall("org.kde.KPackageKitSmartIcon",
-                                                 "/",
-                                                 "org.kde.KPackageKitSmartIcon",
-                                                 QLatin1String("WatchTransaction"));
-        // Use our own cached tid to avoid crashes
-        message << qVariantFromValue(d->tid);
-        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-        if (reply.type() != QDBusMessage::ReplyMessage) {
-            kWarning() << "Message did not receive a reply";
-        }
-    }
-
     // DO NOT disconnect the transaction here,
     // it might not exist when this happen
     d->clearApplications();

@@ -21,14 +21,14 @@
 #ifndef PK_SEARCH_FILE_H
 #define PK_SEARCH_FILE_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <Transaction>
 #include <QDBusMessage>
 
 using namespace PackageKit;
 
-class PkSearchFile : public KpkAbstractTask
+class PkSearchFile : public SessionTask
 {
     Q_OBJECT
 public:

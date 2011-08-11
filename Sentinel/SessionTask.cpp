@@ -18,7 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
+#include "ui_SessionTask.h"
 
 #include "InfoWidget.h"
 
@@ -30,6 +31,7 @@
 
 #include <KWindowSystem>
 #include <KLocale>
+#include <KGlobalSettings>
 
 #include <KDebug>
 
@@ -37,11 +39,18 @@
 
 using namespace PackageKit;
 
-KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent)
+SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent)
  : KDialog(parent),
    m_xid(xid),
-   m_message(message)
+   m_message(message),
+   ui(new Ui::SessionTask)
 {
+    ui->setupUi(KDialog::mainWidget());
+
+    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+            this, SLOT(updatePallete()));
+    updatePallete();
+
     setWindowIcon(KIcon("applications-other"));
     setButtons(KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
@@ -74,28 +83,42 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
         setExec(cmdline);
     }
 
-    m_stackedWidget = new QStackedWidget(this);
-    KDialog::setMainWidget(m_stackedWidget);
-
     KWindowSystem::setMainWindow(this, m_xid);
+    setMinimumSize(QSize(420,280));
+    KConfig config;
+    KConfigGroup configGroup(&config, "SessionInstaller");
+    restoreDialogSize(configGroup);
 }
 
-KpkAbstractTask::~KpkAbstractTask()
+SessionTask::~SessionTask()
 {
+    KConfig config;
+    KConfigGroup configGroup(&config, "SessionInstaller");
+    saveDialogSize(configGroup);
+
+    delete ui;
 }
 
-void KpkAbstractTask::setMainWidget(QWidget *widget)
+void SessionTask::updatePallete()
 {
-    m_stackedWidget->addWidget(widget);
-    m_stackedWidget->setCurrentWidget(widget);
+    QPalette pal;
+    pal.setColor(QPalette::Window, KGlobalSettings::activeTitleColor());
+    pal.setColor(QPalette::WindowText, KGlobalSettings::activeTextColor());
+    ui->titleL->setPalette(pal);
 }
 
-QWidget* KpkAbstractTask::mainWidget()
+void SessionTask::setMainWidget(QWidget *widget)
 {
-    return m_stackedWidget->currentWidget();
+    ui->stackedWidget->addWidget(widget);
+    ui->stackedWidget->setCurrentWidget(widget);
 }
 
-void KpkAbstractTask::setInfo(const QString &title, const QString &text)
+QWidget* SessionTask::mainWidget()
+{
+    return ui->stackedWidget->currentWidget();
+}
+
+void SessionTask::setInfo(const QString &title, const QString &text)
 {
     InfoWidget *info = new InfoWidget(this);
     info->setTitle(title);
@@ -104,7 +127,12 @@ void KpkAbstractTask::setInfo(const QString &title, const QString &text)
     setButtons(KDialog::Close);
 }
 
-void KpkAbstractTask::setExec(const QString &exec)
+void SessionTask::setTitle(const QString &title)
+{
+    ui->titleL->setText(title);
+}
+
+void SessionTask::setExec(const QString &exec)
 {
     if (pathIsTrusted(exec)) {
         // Get from X11 the window title
@@ -115,7 +143,7 @@ void KpkAbstractTask::setExec(const QString &exec)
     }
 }
 
-bool KpkAbstractTask::pathIsTrusted(const QString &exec)
+bool SessionTask::pathIsTrusted(const QString &exec)
 {
     // special case the plugin helper -- it's trusted
     return exec == "/usr/libexec/gst-install-plugins-helper" ||
@@ -126,7 +154,7 @@ bool KpkAbstractTask::pathIsTrusted(const QString &exec)
            exec == "/usr/bin/apper";
 }
 
-QString KpkAbstractTask::getCmdLine(uint pid)
+QString SessionTask::getCmdLine(uint pid)
 {
     QFile file(QString("/proc/%1/cmdline").arg(pid));
     QString line;
@@ -144,7 +172,7 @@ QString KpkAbstractTask::getCmdLine(uint pid)
     return QString();
 }
 
-uint KpkAbstractTask::getPidSystem()
+uint SessionTask::getPidSystem()
 {
     QDBusMessage msg;
     msg = QDBusMessage::createMethodCall("org.freedesktop.DBus",
@@ -164,7 +192,7 @@ uint KpkAbstractTask::getPidSystem()
     return UINT_MAX;
 }
 
-uint KpkAbstractTask::getPidSession()
+uint SessionTask::getPidSession()
 {
     QDBusMessage msg;
     msg = QDBusMessage::createMethodCall("org.freedesktop.DBus",
@@ -184,7 +212,7 @@ uint KpkAbstractTask::getPidSession()
     return UINT_MAX;
 }
 
-// void KpkAbstractTask::setParentWindow(QWidget *widget)
+// void SessionTask::setParentWindow(QWidget *widget)
 // {
 //     if (m_xid != 0) {
 //         KWindowSystem::setMainWindow(widget, m_xid);
@@ -193,18 +221,18 @@ uint KpkAbstractTask::getPidSession()
 //     }
 // }
 
-void KpkAbstractTask::run()
+void SessionTask::run()
 {
     // Call the start slot
     QTimer::singleShot(0, this, SLOT(start()));
 }
 
-void KpkAbstractTask::start()
+void SessionTask::start()
 {
     // kDebug() << "dummy start slot";
 }
 
-void KpkAbstractTask::sendErrorFinished(DBusError error, const QString &msg)
+void SessionTask::sendErrorFinished(DBusError error, const QString &msg)
 {
     QString dbusError;
     switch (error) {
@@ -229,18 +257,18 @@ void KpkAbstractTask::sendErrorFinished(DBusError error, const QString &msg)
     QDBusConnection::sessionBus().send(reply);
 }
 
-bool KpkAbstractTask::sendMessageFinished(const QDBusMessage &message)
+bool SessionTask::sendMessageFinished(const QDBusMessage &message)
 {
     emit finished();
     return QDBusConnection::sessionBus().send(message);
 }
 
-uint KpkAbstractTask::parentWId() const
+uint SessionTask::parentWId() const
 {
     return m_xid;
 }
 
-void KpkAbstractTask::parseInteraction(const QString &interaction)
+void SessionTask::parseInteraction(const QString &interaction)
 {
     QStringList interactions = interaction.split(',');
 
@@ -306,68 +334,68 @@ void KpkAbstractTask::parseInteraction(const QString &interaction)
     }
 }
 
-void KpkAbstractTask::finishTaskOk()
+void SessionTask::finishTaskOk()
 {
     sendMessageFinished(m_message.createReply());
 }
 
-KpkAbstractTask::Interactions KpkAbstractTask::interactions() const
+SessionTask::Interactions SessionTask::interactions() const
 {
     return m_interactions;
 }
 
-uint KpkAbstractTask::timeout() const
+uint SessionTask::timeout() const
 {
     return m_timeout;
 }
 
-bool KpkAbstractTask::showConfirmSearch() const
+bool SessionTask::showConfirmSearch() const
 {
     return m_interactions & ConfirmSearch;
 }
 
-bool KpkAbstractTask::showConfirmDeps() const
+bool SessionTask::showConfirmDeps() const
 {
     return m_interactions & ConfirmDeps;
 }
 
-bool KpkAbstractTask::showConfirmInstall() const
+bool SessionTask::showConfirmInstall() const
 {
     return m_interactions & ConfirmInstall;
 }
 
-bool KpkAbstractTask::showProgress() const
+bool SessionTask::showProgress() const
 {
     return m_interactions & Progress;
 }
 
-bool KpkAbstractTask::showFinished() const
+bool SessionTask::showFinished() const
 {
     return m_interactions & Finished;
 }
 
-bool KpkAbstractTask::showWarning() const
+bool SessionTask::showWarning() const
 {
     return m_interactions & Warning;
 }
 
-KpkReviewChanges::OperationModes KpkAbstractTask::operationModes() const
+ReviewChanges::OperationModes SessionTask::operationModes() const
 {
-    KpkReviewChanges::OperationModes opt;
-    opt = KpkReviewChanges::ReturnOnlyWhenFinished;
+    ReviewChanges::OperationModes opt;
+    opt = ReviewChanges::ReturnOnlyWhenFinished;
     if (showConfirmInstall()) {
-        opt |= KpkReviewChanges::ShowConfirmation;
+        opt |= ReviewChanges::ShowConfirmation;
     }
 
     if (!showProgress()) {
-        opt |= KpkReviewChanges::HideProgress;
+        opt |= ReviewChanges::HideProgress;
     }
 
     if (!showConfirmDeps()) {
-        opt |= KpkReviewChanges::HideConfirmDeps;
+        opt |= ReviewChanges::HideConfirmDeps;
     }
 
     return opt;
 }
 
-#include "KpkAbstractTask.moc"
+#include "SessionTask.moc"

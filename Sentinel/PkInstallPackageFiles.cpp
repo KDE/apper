@@ -46,7 +46,7 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
                                              const QString &interaction,
                                              const QDBusMessage &message,
                                              QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent)
+ : SessionTask(xid, interaction, message, parent)
 {
     m_introDialog = new IntroDialog(this);
     m_model = new FilesModel(files, Daemon::mimeTypes(), this);
@@ -83,7 +83,7 @@ void PkInstallPackageFiles::modelChanged()
                       m_model->rowCount(),
                       parentTitle);
     }
-    m_introDialog->setTitle(title);
+    setTitle(title);
 }
 
 void PkInstallPackageFiles::slotButtonClicked(int bt)
@@ -96,9 +96,9 @@ void PkInstallPackageFiles::slotButtonClicked(int bt)
             enableButtonOk(false);
         }
     } else {
+        KDialog::slotButtonClicked(bt);
         sendErrorFinished(Cancelled, "Aborted");
     }
-    KDialog::slotButtonClicked(bt);
 }
 
 void PkInstallPackageFiles::start()

@@ -21,13 +21,13 @@
 #ifndef PK_INSTALL_PRINTER_DRIVERS_H
 #define PK_INSTALL_PRINTER_DRIVERS_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <Transaction>
 
 using namespace PackageKit;
 
-class PkInstallPrinterDrivers : public KpkAbstractTask
+class PkInstallPrinterDrivers : public SessionTask
 {
     Q_OBJECT
 public:

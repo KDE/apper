@@ -36,7 +36,6 @@ public:
     IntroDialog(QWidget *parent = 0);
     ~IntroDialog();
 
-    void setTitle(const QString &title);
     void setDescription(const QString &description);
     void setModel(QAbstractItemModel *model);
 

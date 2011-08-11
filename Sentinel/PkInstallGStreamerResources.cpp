@@ -22,7 +22,6 @@
 
 #include "IntroDialog.h"
 
-#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
 #include <QStandardItemModel>
@@ -36,7 +35,7 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
                                                          const QString &interaction,
                                                          const QDBusMessage &message,
                                                          QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent)
+ : SessionTask(xid, interaction, message, parent)
 {
     m_introDialog = new IntroDialog(this);
     setMainWidget(m_introDialog);
@@ -109,7 +108,7 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
     }
 
     m_introDialog->setDescription(description);
-    m_introDialog->setTitle(title);
+    setTitle(title);
 }
 
 PkInstallGStreamerResources::~PkInstallGStreamerResources()
@@ -184,7 +183,7 @@ void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Transaction::
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this);
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
             setMainWidget(frm);
 //             if (frm->exec(operationModes()) == 0) {
 //                 sendErrorFinished(Failed, "Transaction did not finish with success");

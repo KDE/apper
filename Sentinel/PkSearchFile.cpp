@@ -31,7 +31,7 @@ PkSearchFile::PkSearchFile(const QString &file_name,
                            const QString &interaction,
                            const QDBusMessage &message,
                            QWidget *parent)
- : KpkAbstractTask(0, interaction, message, parent),
+ : SessionTask(0, interaction, message, parent),
    m_fileName(file_name),
    m_message(message)
 {

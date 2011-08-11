@@ -21,7 +21,7 @@
 #ifndef PK_INSTALL_FONTCONFIG_RESOURCES_H
 #define PK_INSTALL_FONTCONFIG_RESOURCES_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <QDBusMessage>
 
@@ -30,7 +30,7 @@
 using namespace PackageKit;
 
 class IntroDialog;
-class PkInstallFontconfigResources : public KpkAbstractTask
+class PkInstallFontconfigResources : public SessionTask
 {
     Q_OBJECT
 public:

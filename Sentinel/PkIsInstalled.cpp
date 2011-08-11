@@ -30,7 +30,7 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
                              const QString &interaction,
                              const QDBusMessage &message,
                              QWidget *parent)
- : KpkAbstractTask(0, interaction, message, parent),
+ : SessionTask(0, interaction, message, parent),
    m_packageName(package_name),
    m_message(message)
 {

@@ -23,7 +23,6 @@
 
 #include "IntroDialog.h"
 
-#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
 #include <QStandardItemModel>
@@ -37,7 +36,7 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
                                                    const QString &interaction,
                                                    const QDBusMessage &message,
                                                    QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent)
+ : SessionTask(xid, interaction, message, parent)
 {
     m_introDialog = new IntroDialog(this);
     setMainWidget(m_introDialog);
@@ -70,7 +69,7 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
                           m_resources.size());
 
     m_introDialog->setDescription(description);
-    m_introDialog->setTitle(title);
+    setTitle(title);
 }
 
 PkInstallPlasmaResources::~PkInstallPlasmaResources()
@@ -145,7 +144,7 @@ void PkInstallPlasmaResources::whatProvidesFinished(PackageKit::Transaction::Exi
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this);
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
             setMainWidget(frm);
 //             if (frm->exec(operationModes()) == 0) {
 //                 sendErrorFinished(Failed, "Transaction did not finish with success");

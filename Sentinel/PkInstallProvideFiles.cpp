@@ -20,7 +20,6 @@
 
 #include "PkInstallProvideFiles.h"
 
-#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
 #include <KLocale>
@@ -33,7 +32,7 @@ PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
                                              const QString &interaction,
                                              const QDBusMessage &message,
                                              QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent),
+ : SessionTask(xid, interaction, message, parent),
    m_args(files)
 {
 }
@@ -109,7 +108,7 @@ void PkInstallProvideFiles::searchFinished(PackageKit::Transaction::Exit status)
             }
             sendErrorFinished(Failed, "already provided");
         } else if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, "Transaction did not finish with success");
             } else {

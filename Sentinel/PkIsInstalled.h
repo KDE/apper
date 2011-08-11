@@ -21,14 +21,14 @@
 #ifndef PK_IS_INSTALLED_H
 #define PK_IS_INSTALLED_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <Transaction>
 #include <QDBusMessage>
 
 using namespace PackageKit;
 
-class PkIsInstalled : public KpkAbstractTask
+class PkIsInstalled : public SessionTask
 {
 Q_OBJECT
 public:

@@ -22,14 +22,14 @@
 #ifndef PK_INSTALL_PLASMA_RESOURCES_H
 #define PK_INSTALL_PLASMA_RESOURCES_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <Transaction>
 
 using namespace PackageKit;
 
 class IntroDialog;
-class PkInstallPlasmaResources : public KpkAbstractTask
+class PkInstallPlasmaResources : public SessionTask
 {
     Q_OBJECT
 public:

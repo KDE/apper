@@ -20,7 +20,6 @@
 
 #include "PkInstallPrinterDrivers.h"
 
-#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
 #include <KLocale>
@@ -35,7 +34,7 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
                                                  const QString &interaction,
                                                  const QDBusMessage &message,
                                                  QWidget *parent) :
-    KpkAbstractTask(xid, interaction, message, parent),
+    SessionTask(xid, interaction, message, parent),
     m_resources(resources)
 {
 }
@@ -97,7 +96,7 @@ void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Transaction::Exit
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
             } else {

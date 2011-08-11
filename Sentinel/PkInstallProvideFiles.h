@@ -21,13 +21,13 @@
 #ifndef KPK_INSTALL_PROVIDE_FILES_H
 #define KPK_INSTALL_PROVIDE_FILES_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <Transaction>
 
 using namespace PackageKit;
 
-class PkInstallProvideFiles : public KpkAbstractTask
+class PkInstallProvideFiles : public SessionTask
 {
     Q_OBJECT
 public:

@@ -24,7 +24,6 @@ set(libapper_SRCS
     KpkLicenseAgreement.cpp
     PackageModel.cpp
     KpkProgressBar.cpp
-    KpkReviewChanges.cpp
     KpkRequirements.cpp
     KpkImportance.cpp
     KpkSimulateModel.cpp
@@ -36,7 +35,6 @@ kde4_add_ui_files(libapper_SRCS
     PkTransaction.ui
     KpkRepoSig.ui
     KpkLicenseAgreement.ui
-    KpkReviewChanges.ui
     KpkRequirements.ui
 )
 

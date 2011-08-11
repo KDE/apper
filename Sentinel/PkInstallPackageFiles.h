@@ -21,11 +21,11 @@
 #ifndef PK_INSTALL_PACKAGE_FILES_H
 #define PK_INSTALL_PACKAGE_FILES_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 class IntroDialog;
 class FilesModel;
-class PkInstallPackageFiles : public KpkAbstractTask
+class PkInstallPackageFiles : public SessionTask
 {
     Q_OBJECT
 public:

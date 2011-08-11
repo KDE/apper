@@ -21,7 +21,7 @@
 #ifndef PK_INSTALL_PACKAGE_NAMES_H
 #define PK_INSTALL_PACKAGE_NAMES_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <QDBusMessage>
 
@@ -30,7 +30,7 @@
 using namespace PackageKit;
 
 class IntroDialog;
-class PkInstallPackageNames : public KpkAbstractTask
+class PkInstallPackageNames : public SessionTask
 {
     Q_OBJECT
 public:

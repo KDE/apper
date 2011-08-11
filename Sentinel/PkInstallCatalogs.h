@@ -21,7 +21,7 @@
 #ifndef PK_INSTALL_CATALOGS_H
 #define PK_INSTALL_CATALOGS_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <Package>
 #include <QDBusMessage>
@@ -29,7 +29,7 @@
 using namespace PackageKit;
 
 class PkTransaction;
-class PkInstallCatalogs : public KpkAbstractTask
+class PkInstallCatalogs : public SessionTask
 {
 Q_OBJECT
 public:

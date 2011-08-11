@@ -274,14 +274,6 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
     }
 
     switch (role) {
-    case Qt::FontRole:
-        if (package.info != Package::InfoInstalled &&
-            package.info != Package::InfoCollectionInstalled) {
-            QFont font;
-            font.setItalic(true);
-            return font;
-        }
-        break;
     case IconRole:
         return package.icon;
     case SortRole:

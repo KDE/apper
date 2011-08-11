@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,23 +18,26 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_ABSTRACT_TASK_H
-#define KPK_ABSTRACT_TASK_H
+#ifndef SESSION_TASK_H
+#define SESSION_TASK_H
 
 #include <kdemacros.h>
-#include <KpkReviewChanges.h>
+#include "ReviewChanges.h"
 
 #include <QDBusMessage>
-#include <QStackedWidget>
 #include <KDialog>
 
-class KpkAbstractTask : public KDialog
+namespace Ui {
+    class SessionTask;
+}
+
+class SessionTask : public KDialog
 {
     Q_OBJECT
     Q_ENUMS(Errors)
 public:
-    KpkAbstractTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent = 0);
-    ~KpkAbstractTask();
+    SessionTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent = 0);
+    ~SessionTask();
 
     typedef enum{
         Failed,
@@ -65,11 +68,12 @@ public:
     Interactions interactions() const;
     uint timeout() const;
 
-    KpkReviewChanges::OperationModes operationModes() const;
+    ReviewChanges::OperationModes operationModes() const;
     void setMainWidget(QWidget *widget);
     QWidget* mainWidget();
 
     void setInfo(const QString &title, const QString &text);
+    void setTitle(const QString &title);
 
     void run();
 
@@ -80,14 +84,11 @@ protected:
     uint parentWId() const;
     QString parentTitle;
 
-private:
-    uint m_xid;
-    uint m_pid;
-    QDBusMessage m_message;
-    Interactions m_interactions;
-    uint m_timeout;
-    QStackedWidget *m_stackedWidget;
+private slots:
+    virtual void start();
+    void updatePallete();
 
+private:
     void parseInteraction(const QString &interaction);
     uint getPidSystem();
     uint getPidSession();
@@ -95,10 +96,14 @@ private:
     bool pathIsTrusted(const QString &exec);
     void setExec(const QString &exec);
 
-private slots:
-    virtual void start();
+    uint m_xid;
+    uint m_pid;
+    QDBusMessage m_message;
+    Interactions m_interactions;
+    uint m_timeout;
+    Ui::SessionTask *ui;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KpkAbstractTask::Interactions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(SessionTask::Interactions)
 
 #endif

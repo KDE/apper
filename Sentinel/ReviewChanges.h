@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,10 +18,10 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_REVIEW_CHANGES_H
-#define KPK_REVIEW_CHANGES_H
+#ifndef REVIEW_CHANGES_H
+#define REVIEW_CHANGES_H
 
-#include <KDialog>
+#include <QWidget>
 
 #include <Transaction>
 
@@ -29,16 +29,11 @@
 
 using namespace PackageKit;
 
-class KpkReviewChangesPrivate;
-class KDE_EXPORT KpkReviewChanges : public KDialog
+class ReviewChangesPrivate;
+class ReviewChanges : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KpkReviewChanges(const QList<Package> &packages,
-                              QWidget *parent = 0,
-                              uint parentWId = 0);
-    ~KpkReviewChanges();
-
     enum OperationMode {
         // Doesn't show confirmation and exits if some transaction is hidden
         Default                 = 0x00,
@@ -49,7 +44,12 @@ public:
     };
     Q_DECLARE_FLAGS(OperationModes, OperationMode)
 
-    void setMessage(const QString &msg);
+    explicit ReviewChanges(const QList<Package> &packages,
+                              QWidget *parent = 0,
+                              uint parentWId = 0);
+    ~ReviewChanges();
+
+    QString title() const;
     int exec(OperationModes flags = 0);
 
 signals:
@@ -67,13 +67,13 @@ private:
 
     void checkTask();
 
-    KpkReviewChangesPrivate *d;
+    ReviewChangesPrivate *d;
     OperationModes m_flags;
 
 protected slots:
     virtual void slotButtonClicked(int button);
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KpkReviewChanges::OperationModes)
+Q_DECLARE_OPERATORS_FOR_FLAGS(ReviewChanges::OperationModes)
 
 #endif

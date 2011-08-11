@@ -48,6 +48,7 @@ public slots:
     bool SearchFile(const QString &file_name, const QString &interaction, QString &package_name);
 
 private:
+    void show(QWidget *widget) const;
     QHash<QString, QVariant> parseInteraction(const QString &interaction);
     void InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction);
 };

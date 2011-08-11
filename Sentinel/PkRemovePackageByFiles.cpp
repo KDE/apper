@@ -23,7 +23,6 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
-#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 #include <PkTransactionDialog.h>
 
@@ -38,7 +37,7 @@ PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
                                                const QString &interaction,
                                                const QDBusMessage &message,
                                                QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent),
+ : SessionTask(xid, interaction, message, parent),
    m_files(files)
 {
     m_introDialog = new IntroDialog(this);
@@ -89,7 +88,7 @@ void PkRemovePackageByFiles::modelChanged()
     } else {
         title = i18n("No application was found");
     }
-    m_introDialog->setTitle(title);
+    setTitle(title);
 }
 
 void PkRemovePackageByFiles::slotButtonClicked(int bt)
@@ -98,8 +97,8 @@ void PkRemovePackageByFiles::slotButtonClicked(int bt)
         if (mainWidget() == m_introDialog) {
             Transaction *t = new Transaction(QString());
             PkTransaction *trans = new PkTransaction(t, this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                    this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
+            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+                    this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
             connect(t, SIGNAL(package(const PackageKit::Package &)),
                     this, SLOT(addPackage(const PackageKit::Package &)));
             setMainWidget(trans);
@@ -116,9 +115,9 @@ void PkRemovePackageByFiles::slotButtonClicked(int bt)
             }
         }
     } else {
+        KDialog::slotButtonClicked(bt);
         sendErrorFinished(Cancelled, "Aborted");
     }
-    KDialog::slotButtonClicked(bt);
 }
 
 void PkRemovePackageByFiles::start()
@@ -184,29 +183,29 @@ void PkRemovePackageByFiles::start()
 
 void PkRemovePackageByFiles::transactionFinished(PkTransaction::ExitStatus status)
 {
-    kDebug() << "Finished.";
-//    if (status == Transaction::ExitSuccess) {
-//        if (m_foundPackages.size()) {
-//            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
+    kDebug() << "Finished." << (status == PkTransaction::Success) << m_foundPackages.size();
+    if (status == PkTransaction::Success) {
+        if (m_foundPackages.size()) {
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
+            setTitle(frm->title());
+            setMainWidget(frm);
 //            if (frm->exec(operationModes()) == 0) {
 //                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
 //            } else {
 //                finishTaskOk();
 //            }
-//        } else {
-//            if (showWarning()) {
-//                KMessageBox::sorryWId(parentWId(),
-//                                      i18np("The file could not be found in any installed package",
-//                                            "The files could not be found in any installed package",
-//                                            m_files.size()),
-//                                      i18n("Could not find %1",
-//                                           m_files.join(", ")));
-//            }
-//            sendErrorFinished(NoPackagesFound, "no package found");
-//        }
-//    } else {
-//        sendErrorFinished(Failed, "failed to search for file");
-//    }
+        } else {
+            if (showWarning()) {
+                setInfo(i18n("Could not find %1", m_files.join(", ")),
+                        i18np("The file could not be found in any installed package",
+                              "The files could not be found in any installed package",
+                              m_files.size()));
+            }
+            sendErrorFinished(NoPackagesFound, "no package found");
+        }
+    } else {
+        sendErrorFinished(Failed, "failed to search for file");
+    }
 }
 
 void PkRemovePackageByFiles::addPackage(const PackageKit::Package &package)

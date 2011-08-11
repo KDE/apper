@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KpkReviewChanges</class>
- <widget class="QWidget" name="KpkReviewChanges">
+ <class>ReviewChanges</class>
+ <widget class="QWidget" name="ReviewChanges">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -21,26 +21,6 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string notr="true">TextLabel</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
     <widget class="KpkCategorizedView" name="packageView">
      <property name="mouseTracking">
       <bool>true</bool>

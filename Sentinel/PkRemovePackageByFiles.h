@@ -21,7 +21,7 @@
 #ifndef PK_REMOVE_PACKAGE_BY_FILES_H
 #define PK_REMOVE_PACKAGE_BY_FILES_H
 
-#include <KpkAbstractTask.h>
+#include <SessionTask.h>
 
 #include <Transaction>
 
@@ -29,7 +29,7 @@ using namespace PackageKit;
 
 class IntroDialog;
 class FilesModel;
-class PkRemovePackageByFiles : public KpkAbstractTask
+class PkRemovePackageByFiles : public SessionTask
 {
 Q_OBJECT
 public:

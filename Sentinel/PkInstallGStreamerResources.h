@@ -21,14 +21,14 @@
 #ifndef PK_INSTALL_GSTREAMER_RESOURCES_H
 #define PK_INSTALL_GSTREAMER_RESOURCES_H
 
-#include "KpkAbstractTask.h"
+#include "SessionTask.h"
 
 #include <Transaction>
 
 using namespace PackageKit;
 
 class IntroDialog;
-class PkInstallGStreamerResources : public KpkAbstractTask
+class PkInstallGStreamerResources : public SessionTask
 {
     Q_OBJECT
 public:

@@ -20,7 +20,6 @@
 
 #include "PkInstallMimeTypes.h"
 
-#include <KpkReviewChanges.h>
 #include <KpkStrings.h>
 
 #include <KLocale>
@@ -33,7 +32,7 @@ PkInstallMimeTypes::PkInstallMimeTypes(uint xid,
                                       const QString &interaction,
                                       const QDBusMessage &message,
                                       QWidget *parent)
- : KpkAbstractTask(xid, interaction, message, parent),
+ : SessionTask(xid, interaction, message, parent),
    m_mimeTypes(mime_types)
 {
 }
@@ -104,10 +103,10 @@ void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Transaction::Exit stat
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            KpkReviewChanges *frm = new KpkReviewChanges(m_foundPackages, this, parentWId());
-            frm->setMessage(i18np("Application that can open this type of file",
-                                  "Applications that can open this type of file",
-                                  m_foundPackages.size()));
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
+            setTitle(i18np("Application that can open this type of file",
+                           "Applications that can open this type of file",
+                           m_foundPackages.size()));
             if (frm->exec(operationModes()) == 0) {
                 sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
             } else {
