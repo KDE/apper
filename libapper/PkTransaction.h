@@ -61,6 +61,7 @@ public:
     QStringList files() const;
     KpkSimulateModel* simulateModel() const;
 
+    QString title() const;
     Transaction::Role role() const;
     Transaction::Error error() const;
     QString errorDetails() const;

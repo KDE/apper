@@ -883,6 +883,11 @@ bool PkTransaction::onlyTrusted() const
     return d->onlyTrusted;
 }
 
+QString PkTransaction::title() const
+{
+    return KpkStrings::action(d->role);
+}
+
 Transaction::Role PkTransaction::role() const
 {
     return d->role;

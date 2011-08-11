@@ -47,7 +47,7 @@
       <bool>true</bool>
      </property>
      <property name="selectionMode">
-      <enum>QAbstractItemView::SingleSelection</enum>
+      <enum>QAbstractItemView::NoSelection</enum>
      </property>
      <property name="iconSize">
       <size>
@@ -57,16 +57,6 @@
      </property>
      <property name="spacing">
       <number>5</number>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="descriptionL">
-     <property name="text">
-      <string>Informative text</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

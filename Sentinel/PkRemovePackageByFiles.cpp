@@ -103,6 +103,7 @@ void PkRemovePackageByFiles::slotButtonClicked(int bt)
                     this, SLOT(addPackage(const PackageKit::Package &)));
             setMainWidget(trans);
             t->searchFiles(m_model->files(), Transaction::FilterInstalled);
+            setTitle(trans->title());
             enableButtonOk(false);
             if (t->error()) {
                 QString msg(i18n("Failed to start search file transaction"));
