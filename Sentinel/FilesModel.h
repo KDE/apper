@@ -34,6 +34,7 @@ public:
     Qt::DropActions supportedDropActions() const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QStringList files() const;
+    bool onlyApplications() const;
 
 private:
     bool insertFiles(const QList<QUrl> &urls);

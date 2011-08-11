@@ -29,6 +29,7 @@
 #include <KLocale>
 #include <KMimeType>
 #include <KIconLoader>
+#include <KService>
 
 FilesModel::FilesModel(const QStringList &files, const QStringList &mimes, QObject *parent)
 : QStandardItemModel(parent),
@@ -65,18 +66,44 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
         QFileInfo fileInfo(url.path());
         if (fileInfo.isFile()) {
             KMimeType::Ptr mime = KMimeType::findByFileContent(url.path());
+            QStandardItem *item = 0;
             foreach (const QString &mimeType, m_mimes) {
                 if (mime->is(mimeType)) {
                     ret = true;
 /*                    kDebug() << "Found Supported Mime" << mimeType << mime->iconName();*/
-                    QStandardItem *item = new QStandardItem(fileInfo.fileName());
+                    item = new QStandardItem(fileInfo.fileName());
                     item->setData(url.path());
                     item->setToolTip(url.path());
                     item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime->iconName(),
                                                                         KIconLoader::Desktop));
-                    appendRow(item);
                     break;
                 }
+            }
+
+            if (ret == false && m_mimes.isEmpty()) {
+                if (mime->name() == "application/x-desktop") {
+                    KService *service = new KService(url.path());
+                    item = new QStandardItem(service->name());
+                    item->setData(true, Qt::UserRole);
+                    item->setIcon(KIconLoader::global()->loadMimeTypeIcon(service->icon(),
+                                                                          KIconLoader::Desktop));
+                } else {
+                    item = new QStandardItem(fileInfo.fileName());
+                    item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime->iconName(),
+                                                                        KIconLoader::Desktop));
+                }
+                item->setData(url.path());
+                item->setToolTip(url.path());
+            } else if (ret == false && !m_mimes.isEmpty()) {
+                item = new QStandardItem(fileInfo.fileName());
+                item->setData(url.path());
+                item->setToolTip(url.path());
+                item->setEnabled(false);
+                item->setIcon(KIconLoader::global()->loadIcon("dialog-cancel", KIconLoader::Desktop));
+            }
+
+            if (item) {
+                appendRow(item);
             }
         }
     }
@@ -107,9 +134,23 @@ QStringList FilesModel::files() const
 {
     QStringList ret;
     for (int i = 0; i < rowCount(); ++i) {
-        ret << item(i)->data().toString();
+        if (item(i)->isEnabled()) {
+            ret << item(i)->data().toString();
+        }
     }
     return ret;
+}
+
+bool FilesModel::onlyApplications() const
+{
+    for (int i = 0; i < rowCount(); ++i) {
+        // UserRole is true if it is an application
+        if (item(i)->isEnabled() == true &&
+            item(i)->data(Qt::UserRole).toBool() == false) {
+            return false; // there is something that is not an app
+        }
+    }
+    return true;
 }
 
 #include "FilesModel.moc"

@@ -22,7 +22,7 @@
 
 #include <config.h>
 
-#include "KpkPackageModel.h"
+#include "PackageModel.h"
 
 #include <AppInstall.h>
 #include <KpkStrings.h>
@@ -49,7 +49,7 @@
 
 using namespace PackageKit;
 
-KpkPackageModel::KpkPackageModel(QObject *parent)
+PackageModel::PackageModel(QObject *parent)
 : QAbstractItemModel(parent),
   m_packageCount(0),
   m_checkable(false)
@@ -57,7 +57,7 @@ KpkPackageModel::KpkPackageModel(QObject *parent)
     m_installedEmblem = KpkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 }
 
-void KpkPackageModel::addPackage(const PackageKit::Package &package, bool selected)
+void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
 {
     if (package.info() == Package::InfoBlocked) {
         return;
@@ -97,12 +97,13 @@ void KpkPackageModel::addPackage(const PackageKit::Package &package, bool select
 #endif //HAVE_APPINSTALL
 
         InternalPackage iPackage;
-        iPackage.name        = package.name();
-        iPackage.summary     = package.summary();
-        iPackage.version     = package.version();
-        iPackage.arch        = package.arch();
-        iPackage.id          = package.id();
-        iPackage.info        = package.info();
+        iPackage.name    = package.name();
+        iPackage.summary = package.summary();
+        iPackage.version = package.version();
+        iPackage.arch    = package.arch();
+        iPackage.id      = package.id();
+        iPackage.info    = package.info();
+        iPackage.size    = 0;
 
 #ifdef HAVE_APPINSTALL
         iPackage.icon = AppInstall::instance()->genericIcon(package.name());
@@ -137,7 +138,7 @@ void KpkPackageModel::addPackage(const PackageKit::Package &package, bool select
 #endif //HAVE_APPINSTALL
 }
 
-void KpkPackageModel::addPackages(const QList<Package> &packages,
+void PackageModel::addPackages(const QList<Package> &packages,
                                   bool selected)
 {
     foreach(const Package &package, packages) {
@@ -146,12 +147,12 @@ void KpkPackageModel::addPackages(const QList<Package> &packages,
     finished();
 }
 
-void KpkPackageModel::addSelectedPackage(const PackageKit::Package &package)
+void PackageModel::addSelectedPackage(const PackageKit::Package &package)
 {
     addPackage(package, true);
 }
 
-QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant PackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
 
@@ -167,6 +168,8 @@ QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, i
             return i18n("Version");
         } else if (section == ArchCol) {
             return i18n("Arch");
+        } else if (section == SizeCol) {
+            return i18n("Size");
         } else if (section == ActionCol) {
             return i18n("Action");
         }
@@ -174,7 +177,7 @@ QVariant KpkPackageModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
-int KpkPackageModel::rowCount(const QModelIndex &parent) const
+int PackageModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return 0;
@@ -182,7 +185,7 @@ int KpkPackageModel::rowCount(const QModelIndex &parent) const
     return m_packageCount;
 }
 
-QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex PackageModel::index(int row, int column, const QModelIndex &parent) const
 {
 //   kDebug() << parent.isValid() << m_packageCount << row << column;
     // Check to see if the index isn't out of list
@@ -192,13 +195,13 @@ QModelIndex KpkPackageModel::index(int row, int column, const QModelIndex &paren
     return QModelIndex();
 }
 
-QModelIndex KpkPackageModel::parent(const QModelIndex &index) const
+QModelIndex PackageModel::parent(const QModelIndex &index) const
 {
     Q_UNUSED(index)
     return QModelIndex();
 }
 
-QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
+QVariant PackageModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -264,6 +267,10 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
         if (role == Qt::DisplayRole) {
             return package.arch;
         }
+    } else if (index.column() == SizeCol) {
+        if (role == Qt::DisplayRole) {
+            return package.size;
+        }
     }
 
     switch (role) {
@@ -315,7 +322,7 @@ QVariant KpkPackageModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool PackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == Qt::CheckStateRole && m_packageCount > index.row()) {
         if (value.toBool()) {
@@ -331,7 +338,7 @@ bool KpkPackageModel::setData(const QModelIndex &index, const QVariant &value, i
     return false;
 }
 
-Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
+Qt::ItemFlags PackageModel::flags(const QModelIndex &index) const
 {
     if (index.column() == NameCol) {
         return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | QAbstractItemModel::flags(index);
@@ -339,7 +346,7 @@ Qt::ItemFlags KpkPackageModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index);
 }
 
-int KpkPackageModel::columnCount(const QModelIndex &parent) const
+int PackageModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     if (m_checkable) {
@@ -350,7 +357,7 @@ int KpkPackageModel::columnCount(const QModelIndex &parent) const
     }
 }
 
-void KpkPackageModel::rmSelectedPackage(const KpkPackageModel::InternalPackage &package)
+void PackageModel::rmSelectedPackage(const PackageModel::InternalPackage &package)
 {
     QString pkgId = package.id;
     for (int i = 0; i < m_packages.size(); i++) {
@@ -364,7 +371,7 @@ void KpkPackageModel::rmSelectedPackage(const KpkPackageModel::InternalPackage &
     }
 }
 
-void KpkPackageModel::clear()
+void PackageModel::clear()
 {
     beginRemoveRows(QModelIndex(), 0, m_packageCount);
     m_packageCount = 0;
@@ -372,7 +379,7 @@ void KpkPackageModel::clear()
     endRemoveRows();
 }
 
-void KpkPackageModel::clearSelectedNotPresent()
+void PackageModel::clearSelectedNotPresent()
 {
     QVector<InternalPackage> uncheckPackages;
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
@@ -395,7 +402,7 @@ void KpkPackageModel::clearSelectedNotPresent()
     }
 }
 
-void KpkPackageModel::uncheckInstalledPackages()
+void PackageModel::uncheckInstalledPackages()
 {
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
         if (package.info == Package::InfoInstalled ||
@@ -405,7 +412,7 @@ void KpkPackageModel::uncheckInstalledPackages()
     }
 }
 
-void KpkPackageModel::uncheckAvailablePackages()
+void PackageModel::uncheckAvailablePackages()
 {
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
         if (package.info == Package::InfoAvailable ||
@@ -415,7 +422,7 @@ void KpkPackageModel::uncheckAvailablePackages()
     }
 }
 
-void KpkPackageModel::finished()
+void PackageModel::finished()
 {
     // The whole structure is about to change
     beginInsertRows(QModelIndex(), 0, m_packages.size() - 1);
@@ -425,12 +432,12 @@ void KpkPackageModel::finished()
     emit changed(!m_checkedPackages.isEmpty());
 }
 
-bool KpkPackageModel::hasChanges() const
+bool PackageModel::hasChanges() const
 {
     return !m_checkedPackages.isEmpty();
 }
 
-void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitDataChanged)
+void PackageModel::checkPackage(const InternalPackage &package, bool emitDataChanged)
 {
     QString pkgId = package.id;
     if (!containsChecked(pkgId)) {
@@ -456,7 +463,7 @@ void KpkPackageModel::checkPackage(const InternalPackage &package, bool emitData
     }
 }
 
-void KpkPackageModel::uncheckPackage(const InternalPackage &package,
+void PackageModel::uncheckPackage(const InternalPackage &package,
                                      bool forceEmitUnchecked,
                                      bool emitDataChanged)
 {
@@ -490,7 +497,7 @@ void KpkPackageModel::uncheckPackage(const InternalPackage &package,
     }
 }
 
-bool KpkPackageModel::containsChecked(const QString &pid) const
+bool PackageModel::containsChecked(const QString &pid) const
 {
     if (m_checkedPackages.isEmpty()) {
         return false;
@@ -498,7 +505,7 @@ bool KpkPackageModel::containsChecked(const QString &pid) const
     return m_checkedPackages.contains(pid);
 }
 
-void KpkPackageModel::setAllChecked(bool checked)
+void PackageModel::setAllChecked(bool checked)
 {
     if (checked) {
         m_checkedPackages.clear();
@@ -519,7 +526,7 @@ void KpkPackageModel::setAllChecked(bool checked)
     emit changed(!m_checkedPackages.isEmpty());
 }
 
-QList<Package> KpkPackageModel::selectedPackages() const
+QList<Package> PackageModel::selectedPackages() const
 {
     QList<Package> list;
     foreach (const InternalPackage &package, m_checkedPackages.values()) {
@@ -528,7 +535,7 @@ QList<Package> KpkPackageModel::selectedPackages() const
     return list;
 }
 
-bool KpkPackageModel::allSelected() const
+bool PackageModel::allSelected() const
 {
     foreach (const InternalPackage &package, m_packages) {
         if (!containsChecked(package.id)) {
@@ -538,9 +545,9 @@ bool KpkPackageModel::allSelected() const
     return true;
 }
 
-void KpkPackageModel::setCheckable(bool checkable)
+void PackageModel::setCheckable(bool checkable)
 {
     m_checkable = checkable;
 }
 
-#include "KpkPackageModel.moc"
+#include "PackageModel.moc"

@@ -37,7 +37,7 @@
 #include <KpkIcons.h>
 #include <KpkSimulateModel.h>
 #include <KpkRequirements.h>
-#include <KpkPackageModel.h>
+#include <PackageModel.h>
 
 #include <QSortFilterProxyModel>
 #include <QDBusConnection>
@@ -55,19 +55,19 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 {
     setupUi(this);
 
-    m_updatesModel = new KpkPackageModel(this);
+    m_updatesModel = new PackageModel(this);
     m_updatesModel->setCheckable(true);
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(m_updatesModel);
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    proxyModel->setSortRole(KpkPackageModel::SortRole);
+    proxyModel->setSortRole(PackageModel::SortRole);
     packageView->setModel(proxyModel);
 
     m_delegate = new ApplicationsDelegate(packageView);
     m_delegate->setCheckable(true);
     packageView->setItemDelegate(m_delegate);
-    packageView->sortByColumn(KpkPackageModel::NameCol, Qt::AscendingOrder);
+    packageView->sortByColumn(PackageModel::NameCol, Qt::AscendingOrder);
     connect(m_updatesModel, SIGNAL(changed(bool)),
             this, SLOT(checkEnableUpdateButton()));
 
@@ -81,9 +81,10 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     packageView->setHeader(m_header);
 
     // This must be set AFTER the model is set, otherwise it doesn't work
-    m_header->setResizeMode(KpkPackageModel::NameCol, QHeaderView::Stretch);
-    m_header->setResizeMode(KpkPackageModel::VersionCol, QHeaderView::ResizeToContents);
-    m_header->setResizeMode(KpkPackageModel::ArchCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
+    m_header->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(PackageModel::SizeCol, QHeaderView::ResizeToContents);
     m_header->setStretchLastSection(false);
 
     // Setup the busy cursor
@@ -131,18 +132,18 @@ void Updater::setSelected(bool selected)
 
 void Updater::showVersions(bool enabled)
 {
-    packageView->header()->setSectionHidden(KpkPackageModel::VersionCol, !enabled);
+    packageView->header()->setSectionHidden(PackageModel::VersionCol, !enabled);
 }
 
 void Updater::showArchs(bool enabled)
 {
-    packageView->header()->setSectionHidden(KpkPackageModel::ArchCol, !enabled);
+    packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
 }
 
 void Updater::on_packageView_clicked(const QModelIndex &index)
 {
-    QString    pkgId   = index.data(KpkPackageModel::IdRole).toString();
-    Package::Info pkgInfo = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+    QString    pkgId   = index.data(PackageModel::IdRole).toString();
+    Package::Info pkgInfo = static_cast<Package::Info>(index.data(PackageModel::InfoRole).toUInt());
     updateDetails->setPackage(pkgId, pkgInfo);
 }
 

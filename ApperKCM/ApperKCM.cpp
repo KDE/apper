@@ -40,7 +40,7 @@
 #include <KFileItemDelegate>
 #include <KMenu>
 
-#include <KpkPackageModel.h>
+#include <PackageModel.h>
 #include <KpkDelegate.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
@@ -172,14 +172,14 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
 
     // CHANGES TAB
     changesView->viewport()->setAttribute(Qt::WA_Hover);
-    m_changesModel = new KpkPackageModel(this);
+    m_changesModel = new PackageModel(this);
     KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
     changedProxy->setSourceModel(m_changesModel);
     changedProxy->setCategorizedModel(true);
     changedProxy->sort(0);
     changedProxy->setDynamicSortFilter(true);
     changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-    changedProxy->setSortRole(KpkPackageModel::SortRole);
+    changedProxy->setSortRole(PackageModel::SortRole);
     changesView->setModel(changedProxy);
     KpkDelegate *changesDelegate = new KpkDelegate(changesView);
     changesDelegate->setExtendPixmapWidth(0);
@@ -190,10 +190,10 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     connect(m_browseModel, SIGNAL(changed(bool)), changesPB, SLOT(setEnabled(bool)));
 
     // packageUnchecked from changes model
-    connect(m_changesModel, SIGNAL(packageUnchecked(KpkPackageModel::InternalPackage)),
-            m_changesModel, SLOT(rmSelectedPackage(KpkPackageModel::InternalPackage)));
-    connect(m_changesModel, SIGNAL(packageUnchecked(KpkPackageModel::InternalPackage)),
-            m_browseModel, SLOT(uncheckPackage(KpkPackageModel::InternalPackage)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(PackageModel::InternalPackage)),
+            m_changesModel, SLOT(rmSelectedPackage(PackageModel::InternalPackage)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(PackageModel::InternalPackage)),
+            m_browseModel, SLOT(uncheckPackage(PackageModel::InternalPackage)));
 
     changesPB->setIcon(KIcon("edit-redo"));
 

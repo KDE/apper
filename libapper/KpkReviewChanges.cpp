@@ -33,7 +33,7 @@
 #include "KpkEnum.h"
 #include "KpkRequirements.h"
 #include "KpkSimulateModel.h"
-#include "KpkPackageModel.h"
+#include "PackageModel.h"
 #include "PkTransactionDialog.h"
 #include "KpkDelegate.h"
 
@@ -44,7 +44,7 @@ class KpkReviewChangesPrivate
 public:
     Ui::KpkReviewChanges ui;
 
-    KpkPackageModel *mainPkgModel;
+    PackageModel *mainPkgModel;
     KpkSimulateModel *installPkgModel, *removePkgModel;
     KpkDelegate *pkgDelegate;
 
@@ -75,14 +75,14 @@ KpkReviewChanges::KpkReviewChanges(const QList<Package> &packages,
 
     //initialize the model, delegate, client and  connect it's signals
     d->ui.packageView->viewport()->setAttribute(Qt::WA_Hover);
-    d->mainPkgModel = new KpkPackageModel(this);
+    d->mainPkgModel = new PackageModel(this);
     KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
     changedProxy->setSourceModel(d->mainPkgModel);
     changedProxy->setCategorizedModel(true);
     changedProxy->sort(0);
     changedProxy->setDynamicSortFilter(true);
     changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-    changedProxy->setSortRole(KpkPackageModel::SortRole);
+    changedProxy->setSortRole(PackageModel::SortRole);
     d->ui.packageView->setModel(changedProxy);
     d->pkgDelegate = new KpkDelegate(d->ui.packageView);
     d->pkgDelegate->setExtendPixmapWidth(0);

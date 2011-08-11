@@ -27,6 +27,8 @@
 
 using namespace PackageKit;
 
+class IntroDialog;
+class FilesModel;
 class PkRemovePackageByFiles : public KpkAbstractTask
 {
 Q_OBJECT
@@ -42,12 +44,16 @@ public slots:
     void start();
 
 private slots:
-    void searchFinished(PackageKit::Transaction::Exit status);
+    void slotButtonClicked(int bt);
+    void transactionFinished(PkTransaction::ExitStatus status);
+    void modelChanged();
     void addPackage(const PackageKit::Package &package);
 
 private:
     QList<Package> m_foundPackages;
     QStringList m_files;
+    IntroDialog *m_introDialog;
+    FilesModel *m_model;
 };
 
 #endif

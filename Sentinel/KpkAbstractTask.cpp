@@ -62,9 +62,11 @@ KpkAbstractTask::KpkAbstractTask(uint xid, const QString &interaction, const QDB
 
     QString cmdline;
     uint pid;
-    if ((pid = getPidSystem()) != UINT_MAX) {
+    // TODO as we are running on the session it might
+    // be useless to check the PID on the system
+    if ((pid = getPidSession()) != UINT_MAX) {
         cmdline = getCmdLine(pid);
-    } else if ((pid = getPidSession()) != UINT_MAX) {
+    } else if ((pid = getPidSystem()) != UINT_MAX) {
         cmdline = getCmdLine(pid);
     }
 
@@ -119,7 +121,9 @@ bool KpkAbstractTask::pathIsTrusted(const QString &exec)
     return exec == "/usr/libexec/gst-install-plugins-helper" ||
            exec == "/usr/libexec/pk-gstreamer-install" ||
            exec == "/usr/bin/gstreamer-codec-install" ||
-           exec == "/usr/lib/packagekit/pk-gstreamer-install";
+           exec == "/usr/lib/packagekit/pk-gstreamer-install" ||
+           exec == "/usr/bin/plasma-desktop" ||
+           exec == "/usr/bin/apper";
 }
 
 QString KpkAbstractTask::getCmdLine(uint pid)

@@ -143,10 +143,9 @@ void PkInterface::RemovePackageByFiles(uint xid, const QStringList &files, const
     increaseRunning();
     kDebug() << xid << files << interaction;
     setDelayedReply(true);
-    PkRemovePackageByFiles *task;
-    task = new PkRemovePackageByFiles(xid, files, interaction, message());
+    PkRemovePackageByFiles *task = new PkRemovePackageByFiles(xid, files, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    task->show();
 }
 
 void PkInterface::InstallPrinterDrivers(uint xid, const QStringList &resources, const QString &interaction)

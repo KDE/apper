@@ -25,7 +25,7 @@
 
 #include "ui_BrowseView.h"
 
-class KpkPackageModel;
+class PackageModel;
 
 class KpkSearchableTreeView;
 class BrowseView : public QWidget, Ui::BrowseView
@@ -40,7 +40,7 @@ public:
     void showInstalledPanel(bool visible);
     void setCategoryModel(QAbstractItemModel *model);
     void setParentCategory(const QModelIndex &index);
-    KpkPackageModel*                  model() const;
+    PackageModel*                  model() const;
     KCategorizedSortFilterProxyModel* proxy() const;
     KPixmapSequenceOverlayPainter*    busyCursor() const;
 
@@ -71,7 +71,7 @@ private:
 
     QAction                          *m_showPackageVersion;
     QAction                          *m_showPackageArch;
-    KpkPackageModel                  *m_model;
+    PackageModel                  *m_model;
     KCategorizedSortFilterProxyModel *m_proxy;
     KpkSearchableTreeView            *m_packageView;
     KPixmapSequenceOverlayPainter    *m_busySeq;

@@ -37,7 +37,7 @@
 
 using namespace PackageKit;
 
-class KpkPackageModel;
+class PackageModel;
 class FiltersMenu;
 class TransactionHistory;
 class CategoryModel;
@@ -100,8 +100,8 @@ private:
     QAction             *m_currentAction;
     CategoryModel       *m_groupsModel;
     KCategorizedSortFilterProxyModel *m_groupsProxyModel;
-    KpkPackageModel     *m_browseModel;
-    KpkPackageModel     *m_changesModel;
+    PackageModel     *m_browseModel;
+    PackageModel     *m_changesModel;
     Settings            *m_settingsPage;
     Updater             *m_updaterPage;
 

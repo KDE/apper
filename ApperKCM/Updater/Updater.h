@@ -29,7 +29,7 @@
 
 using namespace PackageKit;
 
-class KpkPackageModel;
+class PackageModel;
 class ApplicationsDelegate;
 class CheckableHeader;
 class Updater : public QWidget, Ui::Updater
@@ -68,7 +68,7 @@ private slots:
 private:
     Transaction::Roles    m_roles;
     bool                  m_selected;
-    KpkPackageModel      *m_updatesModel;
+    PackageModel      *m_updatesModel;
     ApplicationsDelegate *m_delegate;
     CheckableHeader      *m_header;
     QAction              *m_showPackageVersion;

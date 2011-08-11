@@ -65,11 +65,25 @@ PkInstallPackageFiles::~PkInstallPackageFiles()
 void PkInstallPackageFiles::modelChanged()
 {
     QString message;
-    message = i18np("Press <i>Continue</i> if you want to install this file:",
-                    "Press <i>Continue</i> if you want to install these files:",
+    message = i18np("Press <i>Continue</i> if you want to install this file",
+                    "Press <i>Continue</i> if you want to install these files",
                     m_model->rowCount());
-    enableButtonOk(m_model->rowCount() > 0);
+    enableButtonOk(!m_model->files().isEmpty());
     m_introDialog->setDescription(message);
+
+    QString title;
+    // this will come from DBus interface
+    if (parentTitle.isNull()) {
+        title = i18np("An application wants to install a package:",
+                      "An application wants to install packages:",
+                      m_model->rowCount());
+    } else {
+        title = i18np("The application <i>%2</i> wants to install a package:",
+                      "The application <i>%2</i> wants to install packages:",
+                      m_model->rowCount(),
+                      parentTitle);
+    }
+    m_introDialog->setTitle(title);
 }
 
 void PkInstallPackageFiles::slotButtonClicked(int bt)

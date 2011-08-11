@@ -26,7 +26,7 @@
 
 #include <Package>
 
-#include "KpkPackageModel.h"
+#include "PackageModel.h"
 #include "KpkIcons.h"
 
 #define FAV_ICON_SIZE 24
@@ -88,15 +88,15 @@ void KpkDelegate::paint(QPainter *painter,
     painter->restore();
 
     //grab the package from the index pointer
-    QString pkgName       = index.data(KpkPackageModel::NameRole).toString();
-    QString pkgSummary    = index.data(KpkPackageModel::SummaryRole).toString();
-    QString pkgVersion    = index.data(KpkPackageModel::VersionRole).toString();
-    QString pkgArch       = index.data(KpkPackageModel::ArchRole).toString();
-//     QString pkgIconPath   = index.data(KpkPackageModel::IconPathRole).toString();
-    bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
+    QString pkgName       = index.data(PackageModel::NameRole).toString();
+    QString pkgSummary    = index.data(PackageModel::SummaryRole).toString();
+    QString pkgVersion    = index.data(PackageModel::VersionRole).toString();
+    QString pkgArch       = index.data(PackageModel::ArchRole).toString();
+//     QString pkgIconPath   = index.data(PackageModel::IconPathRole).toString();
+    bool    pkgChecked    = index.data(PackageModel::CheckStateRole).toBool();
     bool    pkgCheckable  = !index.data(Qt::CheckStateRole).isNull();
     Package::Info info;
-    info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+    info = static_cast<Package::Info>(index.data(PackageModel::InfoRole).toUInt());
     bool    pkgInstalled  = (info == Package::InfoInstalled ||
                              info == Package::InfoCollectionInstalled);
 
@@ -106,7 +106,7 @@ void KpkDelegate::paint(QPainter *painter,
     QIcon emblemIcon;
     if (pkgCheckable) {
         // update kind icon
-        emblemIcon = index.data(KpkPackageModel::IconRole).value<QIcon>();
+        emblemIcon = index.data(PackageModel::IconRole).value<QIcon>();
     } else {
         emblemIcon = m_checkedIcon;
     }
@@ -371,7 +371,7 @@ bool KpkDelegate::editorEvent(QEvent *event,
 //         kDebug() << view->visualRect(index);
         if (insideButton(optBt.rect, point)) {
             return model->setData(index,
-                                  !index.data(KpkPackageModel::CheckStateRole).toBool(),
+                                  !index.data(PackageModel::CheckStateRole).toBool(),
                                   Qt::CheckStateRole);
         }
         QRect rect = view->visualRect(index);

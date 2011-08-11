@@ -46,8 +46,6 @@ IntroDialog::IntroDialog(QWidget *parent) :
     ui(new Ui::IntroDialog)
 {
     ui->setupUi(this);
-    ui->arrowL->setPixmap(KIcon("go-next-view").pixmap(32, 32));
-    ui->iconL->setPixmap(KIcon("computer").pixmap(128, 128));
 }
 
 IntroDialog::~IntroDialog()

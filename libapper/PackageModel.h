@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_PACKAGE_MODEL_H
-#define KPK_PACKAGE_MODEL_H
+#ifndef PACKAGE_MODEL_H
+#define PACKAGE_MODEL_H
 
 #include <QAbstractItemModel>
 #include <QAbstractItemView>
@@ -29,7 +29,7 @@
 
 using namespace PackageKit;
 
-class KDE_EXPORT KpkPackageModel : public QAbstractItemModel
+class KDE_EXPORT PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
@@ -37,6 +37,7 @@ public:
         NameCol = 0,
         VersionCol,
         ArchCol,
+        SizeCol,
         ActionCol
     };
     enum {
@@ -63,9 +64,10 @@ public:
         QString    appId;
         bool       isPackage;
         Package::Info info;
+        double     size;
     } InternalPackage;
 
-    explicit KpkPackageModel(QObject *parent = 0);
+    explicit PackageModel(QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -93,12 +95,12 @@ public slots:
     void addPackages(const QList<Package> &packages,
                      bool selected = false);
     void addSelectedPackage(const PackageKit::Package &package);
-    void rmSelectedPackage(const KpkPackageModel::InternalPackage &package);
+    void rmSelectedPackage(const PackageModel::InternalPackage &package);
 
     void setAllChecked(bool checked);
-    void checkPackage(const KpkPackageModel::InternalPackage &package,
+    void checkPackage(const PackageModel::InternalPackage &package,
                       bool emitDataChanged = true);
-    void uncheckPackage(const KpkPackageModel::InternalPackage &package,
+    void uncheckPackage(const PackageModel::InternalPackage &package,
                         bool forceEmitUnchecked = false,
                         bool emitDataChanged = true);
     bool hasChanges() const;
@@ -110,8 +112,8 @@ public slots:
 
 signals:
     void changed(bool value);
-    void packageChecked(const KpkPackageModel::InternalPackage &package);
-    void packageUnchecked(const KpkPackageModel::InternalPackage &package);
+    void packageChecked(const PackageModel::InternalPackage &package);
+    void packageUnchecked(const PackageModel::InternalPackage &package);
 
 private:
     bool containsChecked(const QString &pid) const;

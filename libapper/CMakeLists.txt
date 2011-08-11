@@ -22,7 +22,7 @@ set(libapper_SRCS
     PkTransactionDialog.cpp
     KpkRepoSig.cpp
     KpkLicenseAgreement.cpp
-    KpkPackageModel.cpp
+    PackageModel.cpp
     KpkProgressBar.cpp
     KpkReviewChanges.cpp
     KpkRequirements.cpp

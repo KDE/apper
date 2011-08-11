@@ -22,8 +22,7 @@
 
 #include "ScreenShotViewer.h"
 
-#include <KpkPackageModel.h>
-#include <KpkPackageModel.h>
+#include <PackageModel.h>
 #include <KpkStrings.h>
 #include <KpkIcons.h>
 #include <AppInstall.h>
@@ -97,10 +96,10 @@ void PackageDetails::init(Transaction::Roles roles)
         palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
         actionsViewport->setPalette(palette);
 
-        m_dependsModel = new KpkPackageModel(this);
+        m_dependsModel = new PackageModel(this);
         m_dependsProxy = new QSortFilterProxyModel(this);
         m_dependsProxy->setDynamicSortFilter(true);
-        m_dependsProxy->setSortRole(KpkPackageModel::SortRole);
+        m_dependsProxy->setSortRole(PackageModel::SortRole);
         m_dependsProxy->setSourceModel(m_dependsModel);
         dependsOnLV->setModel(m_dependsProxy);
         dependsOnLV->sortByColumn(0, Qt::AscendingOrder);
@@ -123,10 +122,10 @@ void PackageDetails::init(Transaction::Roles roles)
         palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
         actionsViewport->setPalette(palette);
 
-        m_requiresModel = new KpkPackageModel(this);
+        m_requiresModel = new PackageModel(this);
         m_requiresProxy = new QSortFilterProxyModel(this);
         m_requiresProxy->setDynamicSortFilter(true);
-        m_requiresProxy->setSortRole(KpkPackageModel::SortRole);
+        m_requiresProxy->setSortRole(PackageModel::SortRole);
         m_requiresProxy->setSourceModel(m_requiresModel);
         requiredByLV->setModel(m_requiresProxy);
         requiredByLV->sortByColumn(0, Qt::AscendingOrder);
@@ -221,8 +220,8 @@ PackageDetails::~PackageDetails()
 
 void PackageDetails::setPackage(const QModelIndex &index)
 {
-    QString pkgId = index.data(KpkPackageModel::IdRole).toString();
-    QString appId = index.data(KpkPackageModel::ApplicationId).toString();
+    QString pkgId = index.data(PackageModel::IdRole).toString();
+    QString appId = index.data(PackageModel::ApplicationId).toString();
 
     // if it's the same package and the same application, return
     if (pkgId == m_packageId && appId == m_appId) {
@@ -240,7 +239,7 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_index     = index;
     m_packageId = pkgId;
     m_appId     = appId;
-    Package::Info info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+    Package::Info info = static_cast<Package::Info>(index.data(PackageModel::InfoRole).toUInt());
 
     m_package       = Package(m_packageId, info, QString());
     m_hasDetails    = false;
@@ -248,9 +247,9 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_hasRequires   = false;
     m_hasDepends    = false;
 
-    QString pkgIconPath = index.data(KpkPackageModel::IconRole).toString();
+    QString pkgIconPath = index.data(PackageModel::IconRole).toString();
     m_currentIcon       = KpkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
-    m_appName           = index.data(KpkPackageModel::NameRole).toString();
+    m_appName           = index.data(PackageModel::NameRole).toString();
 
     m_currentScreenshot = AppInstall::instance()->thumbnail(m_package.name());
     if (!m_currentScreenshot.isEmpty()) {

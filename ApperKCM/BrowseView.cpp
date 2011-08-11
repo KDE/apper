@@ -24,7 +24,7 @@
 #include "CategoryModel.h"
 
 #include <ApplicationsDelegate.h>
-#include <KpkPackageModel.h>
+#include <PackageModel.h>
 
 #include <Daemon>
 
@@ -58,23 +58,23 @@ void BrowseView::init(Transaction::Roles roles)
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(packageView->viewport());
 
-    m_model = new KpkPackageModel(this);
+    m_model = new PackageModel(this);
     m_proxy = new KCategorizedSortFilterProxyModel(this);
     m_proxy->setSourceModel(m_model);
     m_proxy->setDynamicSortFilter(true);
     m_proxy->setCategorizedModel(true);
     m_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-    m_proxy->setSortRole(KpkPackageModel::SortRole);
-    m_proxy->setFilterRole(KpkPackageModel::ApplicationFilterRole);
+    m_proxy->setSortRole(PackageModel::SortRole);
+    m_proxy->setFilterRole(PackageModel::ApplicationFilterRole);
 
     packageView->setModel(m_proxy);
-    packageView->sortByColumn(KpkPackageModel::NameCol, Qt::AscendingOrder);
+    packageView->sortByColumn(PackageModel::NameCol, Qt::AscendingOrder);
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
     packageView->header()->setStretchLastSection(false);
-    packageView->header()->setResizeMode(KpkPackageModel::NameCol, QHeaderView::Stretch);
-    packageView->header()->setResizeMode(KpkPackageModel::VersionCol, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(KpkPackageModel::ArchCol, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(KpkPackageModel::ActionCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
+    packageView->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(PackageModel::ActionCol, QHeaderView::ResizeToContents);
 
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     packageView->setItemDelegate(delegate);
@@ -119,20 +119,20 @@ bool BrowseView::showPageHeader() const
     return false;
 }
 
-KpkPackageModel* BrowseView::model() const
+PackageModel* BrowseView::model() const
 {
     return m_model;
 }
 
 void BrowseView::showVersions(bool enabled)
 {
-    packageView->header()->setSectionHidden(KpkPackageModel::VersionCol, !enabled);
+    packageView->header()->setSectionHidden(PackageModel::VersionCol, !enabled);
     packageDetails->hidePackageVersion(enabled);
 }
 
 void BrowseView::showArchs(bool enabled)
 {
-    packageView->header()->setSectionHidden(KpkPackageModel::ArchCol, !enabled);
+    packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
     packageDetails->hidePackageArch(enabled);
 }
 
@@ -147,7 +147,7 @@ void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
 
 void BrowseView::on_packageView_clicked(const QModelIndex &index)
 {
-    if (index.column() == KpkPackageModel::ActionCol) {
+    if (index.column() == PackageModel::ActionCol) {
         return;
     }
 
@@ -250,7 +250,7 @@ void BrowseView::on_exportInstalledPB_clicked()
     QStringList packages;
     for (int i = 0; i < m_model->rowCount(); i++) {
         packages << m_model->data(m_model->index(i, 0),
-                                  KpkPackageModel::PackageName).toString();
+                                  PackageModel::PackageName).toString();
     }
     out << packages.join(";");
 }

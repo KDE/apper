@@ -35,7 +35,7 @@
 
 using namespace PackageKit;
 
-class KpkPackageModel;
+class PackageModel;
 class PackageDetails : public QWidget, Ui::PackageDetails
 {
 Q_OBJECT
@@ -107,12 +107,12 @@ private:
 
     // GetDepends buffer
     bool m_hasDepends;
-    KpkPackageModel *m_dependsModel;
+    PackageModel *m_dependsModel;
     QSortFilterProxyModel *m_dependsProxy;
 
     // GetRequires buffer
     bool m_hasRequires;
-    KpkPackageModel *m_requiresModel;
+    PackageModel *m_requiresModel;
     QSortFilterProxyModel *m_requiresProxy;
 
     // Screen shot buffer

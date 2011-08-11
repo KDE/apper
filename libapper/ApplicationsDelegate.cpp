@@ -26,7 +26,7 @@
 
 #include <Package>
 
-#include "KpkPackageModel.h"
+#include "PackageModel.h"
 #include "KpkIcons.h"
 
 #define UNIVERSAL_PADDING 4
@@ -68,8 +68,9 @@ void ApplicationsDelegate::paint(QPainter *painter,
 
     // Button height
     int btHeight = m_buttonSize.height() + UNIVERSAL_PADDING;
-    if (index.column() == KpkPackageModel::VersionCol ||
-        index.column() == KpkPackageModel::ArchCol) {
+    if (index.column() == PackageModel::VersionCol ||
+        index.column() == PackageModel::ArchCol ||
+        index.column() == PackageModel::SizeCol) {
         QStyleOptionViewItemV4 opt(option);
         if (opt.state & QStyle::State_HasFocus) {
             opt.state ^= QStyle::State_HasFocus;
@@ -78,7 +79,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         QStyledItemDelegate::paint(painter, opt, index);
         painter->restore();
         return;
-    } else if (index.column() == KpkPackageModel::NameCol) {
+    } else if (index.column() == PackageModel::NameCol) {
         bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
         QStyleOptionViewItemV4 opt1(option);
         if (opt1.state & QStyle::State_HasFocus) {
@@ -117,8 +118,8 @@ void ApplicationsDelegate::paint(QPainter *painter,
         int width = opt.rect.width();
 
         Package::Info info;
-        info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
-        QString pkgSummary = index.data(KpkPackageModel::SummaryRole).toString();
+        info = static_cast<Package::Info>(index.data(PackageModel::InfoRole).toUInt());
+        QString pkgSummary = index.data(PackageModel::SummaryRole).toString();
 
         if (!pkgSummary.isEmpty()) {
             if (leftToRight) {
@@ -185,8 +186,8 @@ void ApplicationsDelegate::paint(QPainter *painter,
 
         painter->drawPixmap(opt.rect.topLeft(), pixmap);
         return;
-    } else if (index.column() == KpkPackageModel::ActionCol) {
-        bool    pkgChecked    = index.data(KpkPackageModel::CheckStateRole).toBool();
+    } else if (index.column() == PackageModel::ActionCol) {
+        bool pkgChecked = index.data(PackageModel::CheckStateRole).toBool();
         QStyleOptionViewItemV4 opt(option);
         if (opt.state & QStyle::State_HasFocus) {
             opt.state ^= QStyle::State_HasFocus;
@@ -207,7 +208,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         optBt.rect = option.rect;
 
         Package::Info info;
-        info = static_cast<Package::Info>(index.data(KpkPackageModel::InfoRole).toUInt());
+        info = static_cast<Package::Info>(index.data(PackageModel::InfoRole).toUInt());
         bool    pkgInstalled  = (info == Package::InfoInstalled ||
                                  info == Package::InfoCollectionInstalled);
 
@@ -255,7 +256,7 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
                                        const QModelIndex &index)
 {
     bool setData = false;
-    if (index.column() == KpkPackageModel::ActionCol &&
+    if (index.column() == PackageModel::ActionCol &&
         event->type() == QEvent::MouseButtonPress) {
         setData = true;
     }
@@ -291,7 +292,7 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
 
     if (setData) {
         return model->setData(index,
-                       !index.data(KpkPackageModel::CheckStateRole).toBool(),
+                       !index.data(PackageModel::CheckStateRole).toBool(),
                        Qt::CheckStateRole);
     }
     return false;
@@ -307,7 +308,7 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     QSize size;
 //     kDebug() << index;
-    if (index.column() == KpkPackageModel::ActionCol) {
+    if (index.column() == PackageModel::ActionCol) {
         size = m_buttonSize;
         size.rheight() += UNIVERSAL_PADDING;
         size.rwidth()  += UNIVERSAL_PADDING;
@@ -316,7 +317,7 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
         // Button size is always bigger than text (since it has text in it
         size.setHeight(m_buttonSize.height() + UNIVERSAL_PADDING);
         size.setWidth(metric.width(index.data().toString()));
-        if (index.column() == KpkPackageModel::NameCol) {
+        if (index.column() == PackageModel::NameCol) {
             if (m_checkable) {
                 const QStyle *style = QApplication::style();
                 QRect rect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &option);
