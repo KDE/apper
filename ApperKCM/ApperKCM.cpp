@@ -667,6 +667,7 @@ void ApperKCM::changed()
 void ApperKCM::refreshCache()
 {
     QWidget *currentWidget = stackedWidget->currentWidget();
+    emit changed(false);
 
     PkTransaction *transaction = new PkTransaction(0, this);
     QWeakPointer<PkTransaction> pointer = transaction;

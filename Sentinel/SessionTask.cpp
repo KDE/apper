@@ -132,6 +132,7 @@ void SessionTask::setMainWidget(QWidget *widget)
     ui->stackedWidget->setCurrentWidget(widget);
     if (widget->objectName() == QLatin1String("PkTransaction")) {
         PkTransaction *trans = qobject_cast<PkTransaction*>(widget);
+        trans->hideCancelButton();
         connect(trans, SIGNAL(titleChanged(QString)),
                 this, SLOT(setTitle(QString)));
         setTitle(trans->title());
