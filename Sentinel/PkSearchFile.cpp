@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,11 +41,11 @@ PkSearchFile::PkSearchFile(const QString &file_name,
     }
 
     Transaction *t = new Transaction(this);
-    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     setMainWidget(trans);
     t->searchFiles(m_fileName, Transaction::FilterNewest);
     Transaction::InternalError error = t->error();
@@ -63,31 +63,22 @@ PkSearchFile::~PkSearchFile()
 {
 }
 
-void PkSearchFile::searchFinished(PackageKit::Transaction::Exit status)
+void PkSearchFile::searchSuccess()
 {
-    kDebug();
-    if (status == Transaction::ExitSuccess) {
-        if (m_foundPackages.size()) {
-            const Package &pkg = m_foundPackages.first();
-            bool installed = pkg.info() == Package::InfoInstalled;
-            QDBusMessage reply = m_message.createReply();
-            reply << installed;
-            reply << pkg.name();
-            kDebug() << reply;
-            sendMessageFinished(reply);
-        } else {
-            QString msg(i18n("The file name could not be found in any software source"));
-            setError(i18n("Could not find %1", m_fileName), msg);
-            sendErrorFinished(NoPackagesFound, msg);
-        }
-    } else {
-        sendErrorFinished(InternalError, "An unknown error happened");
-    }
+    const Package &pkg = foundPackagesList().first();
+    bool installed = pkg.info() == Package::InfoInstalled;
+    QDBusMessage reply = m_message.createReply();
+    reply << installed;
+    reply << pkg.name();
+    kDebug() << reply;
+    sendMessageFinished(reply);
 }
 
-void PkSearchFile::addPackage(const Package &package)
+void PkSearchFile::notFound()
 {
-    m_foundPackages.append(package);
+    QString msg(i18n("The file name could not be found in any software source"));
+    setError(i18n("Could not find %1", m_fileName), msg);
+    sendErrorFinished(NoPackagesFound, msg);
 }
 
 #include "PkSearchFile.moc"

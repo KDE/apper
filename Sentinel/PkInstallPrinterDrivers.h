@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,12 +38,10 @@ public:
                            QWidget *parent = 0);
     ~PkInstallPrinterDrivers();
 
-private slots:
-    void whatProvidesFinished(PackageKit::Transaction::Exit status);
-    void addPackage(const PackageKit::Package &package);
+protected:
+    virtual void notFound();
 
 private:
-    QList<Package> m_foundPackages;
     QStringList    m_resources;
 };
 

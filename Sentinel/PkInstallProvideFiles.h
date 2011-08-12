@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_INSTALL_PROVIDE_FILES_H
-#define KPK_INSTALL_PROVIDE_FILES_H
+#ifndef PK_INSTALL_PROVIDE_FILES_H
+#define PK_INSTALL_PROVIDE_FILES_H
 
 #include "SessionTask.h"
 
@@ -42,14 +42,13 @@ public:
 
 protected:
     virtual void search();
+    virtual void notFound();
 
 private slots:
     void modelChanged();
-    void searchFinished(PackageKit::Transaction::Exit status);
     void addPackage(const PackageKit::Package &package);
 
 private:
-    QList<Package> m_foundPackages;
     QStringList m_args;
     QString     m_alreadyInstalled;
     IntroDialog *m_introDialog;

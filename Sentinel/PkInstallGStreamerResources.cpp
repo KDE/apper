@@ -117,11 +117,11 @@ PkInstallGStreamerResources::~PkInstallGStreamerResources()
 void PkInstallGStreamerResources::search()
 {
     Transaction *t = new Transaction(this);
-    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     setMainWidget(trans);
     t->whatProvides(Transaction::ProvidesCodec,
                     m_resources,
@@ -136,35 +136,15 @@ void PkInstallGStreamerResources::search()
 
 }
 
-void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Transaction::Exit status)
+void PkInstallGStreamerResources::notFound()
 {
-    kDebug() << "Finished.";
-    if (status == Transaction::ExitSuccess) {
-        if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
-            setMainWidget(frm);
-//             if (frm->exec(operationModes()) == 0) {
-//                 sendErrorFinished(Failed, "Transaction did not finish with success");
-//             } else {
-//                 finishTaskOk();
-//             }
-        } else {
-            if (showWarning()) {
-                QString mgs = i18n("No results found");
-                setInfo(mgs,
-                        i18n("Could not find plugin "
-                             "in any configured software source"));
-            }
-            sendErrorFinished(NoPackagesFound, "failed to find codec");
-        }
-    } else {
-        sendErrorFinished(Failed, "what provides failed");
+    if (showWarning()) {
+        QString mgs = i18n("No results found");
+        setInfo(mgs,
+                i18n("Could not find plugin "
+                     "in any configured software source"));
     }
-}
-
-void PkInstallGStreamerResources::addPackage(const PackageKit::Package &package)
-{
-    m_foundPackages.append(package);
+    sendErrorFinished(NoPackagesFound, "failed to find codec");
 }
 
 #include "PkInstallGStreamerResources.moc"

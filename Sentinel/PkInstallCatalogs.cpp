@@ -21,6 +21,7 @@
 #include "PkInstallCatalogs.h"
 #include "IntroDialog.h"
 #include "FilesModel.h"
+#include "ReviewChanges.h"
 
 #include <KpkStrings.h>
 
@@ -187,8 +188,8 @@ void PkInstallCatalogs::search()
                            i18n("Failed to open"));
     }
 
-    if (m_foundPackages.size()) {
-        ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
+    if (foundPackages()) {
+        ReviewChanges *frm = new ReviewChanges(foundPackagesList(), this);
         setTitle(frm->title());
         setMainWidget(frm);/*
         if (frm->exec(operationModes()) == 0) {
@@ -197,12 +198,13 @@ void PkInstallCatalogs::search()
             finishTaskOk();
         }*/
     } else {
-        if (showWarning()) {
-            // TODO display a nicer message informing of already installed ones
-            setInfo(i18n("Catalog search complete"),
-                    i18n("No package was found to be installed"));
-        }
-        sendErrorFinished(NoPackagesFound, "no package found");
+        //TODO fix me
+//        if (showWarning()) {
+//            // TODO display a nicer message informing of already installed ones
+//            setInfo(i18n("Catalog search complete"),
+//                    i18n("No package was found to be installed"));
+//        }
+//        sendErrorFinished(NoPackagesFound, "no package found");
     }
 }
 
@@ -267,7 +269,7 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
 void PkInstallCatalogs::addPackage(const PackageKit::Package &package)
 {
     if (package.info() != Package::InfoInstalled) {
-        m_foundPackages.append(package);
+        SessionTask::addPackage(package);
     } else {
         m_alreadyInstalled << package.name();
     }

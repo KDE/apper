@@ -78,11 +78,11 @@ PkInstallPlasmaResources::~PkInstallPlasmaResources()
 void PkInstallPlasmaResources::search()
 {
     Transaction *t = new Transaction(this);
-    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     setMainWidget(trans);
     t->whatProvides(Transaction::ProvidesPlasmaService,
                     m_resources,
@@ -97,36 +97,15 @@ void PkInstallPlasmaResources::search()
     }
 }
 
-void PkInstallPlasmaResources::whatProvidesFinished(PackageKit::Transaction::Exit status)
+void PkInstallPlasmaResources::notFound()
 {
-    kDebug() << "Finished.";
-    if (status == Transaction::ExitSuccess) {
-        if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
-            setMainWidget(frm);
-            setTitle(frm->title());
-//             if (frm->exec(operationModes()) == 0) {
-//                 sendErrorFinished(Failed, "Transaction did not finish with success");
-//             } else {
-//                 finishTaskOk();
-//             }
-        } else {
-            QString msg = i18n("Failed to search for Plasma service");
-            if (showWarning()) {
-                setInfo(msg,
-                        i18n("Could not find service "
-                             "in any configured software source"));
-            }
-            sendErrorFinished(NoPackagesFound, msg);
-        }
-    } else {
-        sendErrorFinished(Failed, "what provides transaction failed");
+    QString msg = i18n("Failed to search for Plasma service");
+    if (showWarning()) {
+        setInfo(msg,
+                i18n("Could not find service "
+                     "in any configured software source"));
     }
-}
-
-void PkInstallPlasmaResources::addPackage(const PackageKit::Package &package)
-{
-    m_foundPackages.append(package);
+    sendErrorFinished(NoPackagesFound, msg);
 }
 
 #include "PkInstallPlasmaResources.moc"

@@ -56,7 +56,6 @@ private:
     bool runTransaction(Transaction *trans);
 
     PkTransaction *m_trans;
-    QList<Package> m_foundPackages;
     QStringList  m_files;
     QString      m_interaction;
     QDBusMessage m_message;

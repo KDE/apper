@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -44,14 +44,14 @@ public:
 protected:
     virtual void search();
     virtual void commit();
+    virtual void notFound();
+    virtual void searchFailed();
 
 private slots:
-    void resolveFinished(PackageKit::Transaction::Exit);
     void addPackage(const PackageKit::Package &package);
 
 private:
     IntroDialog *m_introDialog;
-    QList<Package> m_foundPackages;
     QStringList  m_packages;
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;

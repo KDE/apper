@@ -78,12 +78,12 @@ PkInstallPackageNames::~PkInstallPackageNames()
 void PkInstallPackageNames::search()
 {
     Transaction *t = new Transaction(this);
-    PkTransaction *trans = new PkTransaction(t, this);
-    setMainWidget(trans);
-    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(resolveFinished(PackageKit::Transaction::Exit)));
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
+    PkTransaction *trans = new PkTransaction(t, this);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+    setMainWidget(trans);
     t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
     if (t->error()) {
         QString msg(i18n("Failed to start resolve transaction"));
@@ -98,52 +98,40 @@ void PkInstallPackageNames::commit()
 {
 }
 
-void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::Exit status)
+void PkInstallPackageNames::notFound()
 {
-    kDebug() << "Finished." << m_alreadyInstalled.size();
-    if (status == Transaction::ExitSuccess) {
-        if (m_alreadyInstalled.size()) {
-            if (showWarning()) {
-                setInfo(i18n("Failed to install packages"),
-                        i18np("The package %2 is already installed",
-                              "The packages %2 are already installed",
-                              m_alreadyInstalled.size(),
-                              m_alreadyInstalled.join(",")));
-            }
-            sendErrorFinished(Failed, "package already found");
-        } else if (m_foundPackages.size()) {
-            kDebug() << m_foundPackages.size();
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
-            setTitle(frm->title());
-            setMainWidget(frm);
-//            if (frm->exec(operationModes()) == 0) {
-//                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
-//            } else {
-//                finishTaskOk();
-//            }
-        } else {
-            if (showWarning()) {
-                setInfo(i18n("Could not find %1", m_packages.join(", ")),
-                        i18np("The package could not be found in any software source",
-                                            "The packages could not be found in any software source",
-                                            m_packages.size()));
-            }
-            sendErrorFinished(NoPackagesFound, "no package found");
+    if (m_alreadyInstalled.size()) {
+        if (showWarning()) {
+            setInfo(i18n("Failed to install packages"),
+                    i18np("The package %2 is already installed",
+                          "The packages %2 are already installed",
+                          m_alreadyInstalled.size(),
+                          m_alreadyInstalled.join(",")));
         }
+        sendErrorFinished(Failed, "package already found");
     } else {
-        sendErrorFinished(Failed, "failed to resolve package name");
+        if (showWarning()) {
+            setInfo(i18n("Could not find %1", m_packages.join(", ")),
+                    i18np("The package could not be found in any software source",
+                          "The packages could not be found in any software source",
+                          m_packages.size()));
+        }
+        sendErrorFinished(NoPackagesFound, "no package found");
     }
+}
+
+void PkInstallPackageNames::searchFailed()
+{
+    sendErrorFinished(Failed, "failed to resolve package name");
 }
 
 void PkInstallPackageNames::addPackage(const PackageKit::Package &package)
 {
     if (package.info() != Package::InfoInstalled) {
-        m_foundPackages.append(package);
+        SessionTask::addPackage(package);
     } else {
         m_alreadyInstalled << package.name();
     }
-
-    kDebug() << package.name();
 }
 
 #include "PkInstallPackageNames.moc"

@@ -22,7 +22,8 @@
 #define SESSION_TASK_H
 
 #include <kdemacros.h>
-#include "ReviewChanges.h"
+#include <PkTransaction.h>
+//#include "ReviewChanges.h"
 
 #include <QDBusMessage>
 #include <KDialog>
@@ -70,13 +71,12 @@ public:
     Interactions interactions() const;
     uint timeout() const;
 
-    ReviewChanges::OperationModes operationModes() const;
+//    ReviewChanges::OperationModes operationModes() const;
     void setMainWidget(QWidget *widget);
     QWidget* mainWidget();
 
     void setInfo(const QString &title, const QString &text);
     void setError(const QString &title, const QString &text);
-    void setTitle(const QString &title);
 
     uint parentWId() const;
 
@@ -84,11 +84,22 @@ protected:
     // Virtual methods to easy subclasses
     virtual void search();
     virtual void commit();
+    virtual void notFound();
+    virtual void searchFailed();
+    virtual void searchSuccess();
 
+    bool foundPackages() const;
+    int  foundPackagesSize() const;
+    QList<Package> foundPackagesList() const;
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);
     QString parentTitle;
+
+protected slots:
+    void setTitle(const QString &title);
+    virtual void addPackage(const PackageKit::Package &package);
+    virtual void searchFinished(PkTransaction::ExitStatus status);
 
 private slots:
     void updatePallete();
@@ -106,6 +117,7 @@ private:
     QDBusMessage m_message;
     Interactions m_interactions;
     uint m_timeout;
+    QList<Package> m_foundPackages;
     Ui::SessionTask *ui;
 };
 

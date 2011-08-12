@@ -75,7 +75,11 @@ void PkInstallProvideFiles::modelChanged()
 void PkInstallProvideFiles::search()
 {
     Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     setMainWidget(trans);
     t->searchFiles(m_args.first(), Transaction::FilterArch | Transaction::FilterNewest);
     if (t->error()) {
@@ -85,51 +89,33 @@ void PkInstallProvideFiles::search()
                      KpkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, msg);
-    } else {
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
-        connect(t, SIGNAL(package(PackageKit::Package)),
-                this, SLOT(addPackage(PackageKit::Package)));
     }
 }
 
-void PkInstallProvideFiles::searchFinished(PackageKit::Transaction::Exit status)
+void PkInstallProvideFiles::notFound()
 {
-    if (status == Transaction::ExitSuccess) {
-        if (m_alreadyInstalled.size()) {
-            if (showWarning()) {
-                setInfo(i18n("Failed to install file"),
-                        i18n("The %1 package already provides this file",
-                             m_alreadyInstalled));
-            }
-            sendErrorFinished(Failed, "already provided");
-        } else if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
-            setMainWidget(frm);
-            setTitle(frm->title());
-//            if (frm->exec(operationModes()) == 0) {
-//                sendErrorFinished(Failed, "Transaction did not finish with success");
-//            } else {
-//                finishTaskOk();
-//            }
-        } else {
-            if (showWarning()) {
-                setInfo(i18n("Failed to find package"),
-                        i18np("The file could not be found in any packages",
-                              "The files could not be found in any packages",
-                              m_args.size()));
-            }
-            sendErrorFinished(NoPackagesFound, "no files found");
+    if (m_alreadyInstalled.size()) {
+        if (showWarning()) {
+            setInfo(i18n("Failed to install file"),
+                    i18n("The %1 package already provides this file",
+                         m_alreadyInstalled));
         }
+        sendErrorFinished(Failed, "already provided");
     } else {
-        sendErrorFinished(Failed, "failed to resolve");
+        if (showWarning()) {
+            setInfo(i18n("Failed to find package"),
+                    i18np("The file could not be found in any packages",
+                          "The files could not be found in any packages",
+                          m_args.size()));
+        }
+        sendErrorFinished(NoPackagesFound, "no files found");
     }
 }
 
 void PkInstallProvideFiles::addPackage(const PackageKit::Package &package)
 {
     if (package.info() != Package::InfoInstalled) {
-        m_foundPackages.append(package);
+        SessionTask::addPackage(package);
     } else {
         m_alreadyInstalled = package.name();
     }

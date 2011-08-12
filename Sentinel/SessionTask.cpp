@@ -22,6 +22,7 @@
 #include "ui_SessionTask.h"
 
 #include "InfoWidget.h"
+#include "ReviewChanges.h"
 
 #include <limits.h>
 #include <QtDBus/QDBusConnection>
@@ -99,6 +100,24 @@ SessionTask::~SessionTask()
     delete ui;
 }
 
+void SessionTask::addPackage(const PackageKit::Package &package)
+{
+    m_foundPackages.append(package);
+}
+
+void SessionTask::searchFinished(PkTransaction::ExitStatus status)
+{
+    if (status == PkTransaction::Success) {
+        if (m_foundPackages.isEmpty()) {
+            notFound();
+        } else {
+            searchSuccess();
+        }
+    } else {
+        searchFailed();
+    }
+}
+
 void SessionTask::updatePallete()
 {
     QPalette pal;
@@ -111,6 +130,12 @@ void SessionTask::setMainWidget(QWidget *widget)
 {
     ui->stackedWidget->addWidget(widget);
     ui->stackedWidget->setCurrentWidget(widget);
+    if (widget->objectName() == QLatin1String("PkTransaction")) {
+        PkTransaction *trans = qobject_cast<PkTransaction*>(widget);
+        connect(trans, SIGNAL(titleChanged(QString)),
+                this, SLOT(setTitle(QString)));
+        setTitle(trans->title());
+    }
 }
 
 QWidget* SessionTask::mainWidget()
@@ -242,6 +267,37 @@ void SessionTask::commit()
     kDebug() << "virtual method called";
 }
 
+void SessionTask::notFound()
+{
+    kDebug() << "virtual method called";
+    if (showWarning()) {
+        setInfo(i18n("Could not find"),
+                i18n("No packages were found that meet the request"));
+    }
+    sendErrorFinished(NoPackagesFound, "no package found");
+}
+
+void SessionTask::searchFailed()
+{
+    kDebug() << "virtual method called";
+    setInfo(i18n("Failed to find"),
+            i18n("No packages were found that meet the request"));
+    sendErrorFinished(Failed, "failed to search");
+}
+
+void SessionTask::searchSuccess()
+{
+    kDebug() << "virtual method called";
+    ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
+    setTitle(frm->title());
+    setMainWidget(frm);
+//            if (frm->exec(operationModes()) == 0) {
+//                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
+//            } else {
+//                finishTaskOk();
+//            }
+}
+
 void SessionTask::slotButtonClicked(int button)
 {
     if (button == KDialog::Ok) {
@@ -361,6 +417,21 @@ void SessionTask::parseInteraction(const QString &interaction)
     }
 }
 
+bool SessionTask::foundPackages() const
+{
+    return !m_foundPackages.isEmpty();
+}
+
+int SessionTask::foundPackagesSize() const
+{
+    return m_foundPackages.size();
+}
+
+QList<Package> SessionTask::foundPackagesList() const
+{
+    return m_foundPackages;
+}
+
 void SessionTask::finishTaskOk()
 {
     sendMessageFinished(m_message.createReply());
@@ -406,23 +477,23 @@ bool SessionTask::showWarning() const
     return m_interactions & Warning;
 }
 
-ReviewChanges::OperationModes SessionTask::operationModes() const
-{
-    ReviewChanges::OperationModes opt;
-    opt = ReviewChanges::ReturnOnlyWhenFinished;
-    if (showConfirmInstall()) {
-        opt |= ReviewChanges::ShowConfirmation;
-    }
+//ReviewChanges::OperationModes SessionTask::operationModes() const
+//{
+//    ReviewChanges::OperationModes opt;
+//    opt = ReviewChanges::ReturnOnlyWhenFinished;
+//    if (showConfirmInstall()) {
+//        opt |= ReviewChanges::ShowConfirmation;
+//    }
 
-    if (!showProgress()) {
-        opt |= ReviewChanges::HideProgress;
-    }
+//    if (!showProgress()) {
+//        opt |= ReviewChanges::HideProgress;
+//    }
 
-    if (!showConfirmDeps()) {
-        opt |= ReviewChanges::HideConfirmDeps;
-    }
+//    if (!showConfirmDeps()) {
+//        opt |= ReviewChanges::HideConfirmDeps;
+//    }
 
-    return opt;
-}
+//    return opt;
+//}
 
 #include "SessionTask.moc"

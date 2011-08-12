@@ -41,14 +41,10 @@ public:
 
 protected:
     virtual void search();
-
-private slots:
-    void whatProvidesFinished(PackageKit::Transaction::Exit status);
-    void addPackage(const PackageKit::Package &package);
+    virtual void notFound();
 
 private:
     IntroDialog *m_introDialog;
-    QList<Package> m_foundPackages;
     QStringList m_resources;
 };
 

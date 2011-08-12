@@ -39,11 +39,9 @@ public:
     ~PkIsInstalled();
 
 private slots:
-    void searchFinished(PackageKit::Transaction::Exit);
-    void addPackage(const PackageKit::Package &package);
+    void searchFinished(PkTransaction::ExitStatus status);
 
 private:
-    QList<Package> m_foundPackages;
     QString      m_packageName;
     QDBusMessage m_message;
 };

@@ -34,11 +34,11 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
    m_message(message)
 {
     Transaction *t = new Transaction(this);
-    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     setMainWidget(trans);
     t->resolve(m_packageName, Transaction::FilterInstalled);
     if (t->error()) {
@@ -55,23 +55,18 @@ PkIsInstalled::~PkIsInstalled()
 {
 }
 
-void PkIsInstalled::searchFinished(PackageKit::Transaction::Exit status)
+void PkIsInstalled::searchFinished(PkTransaction::ExitStatus status)
 {
     kDebug();
-    if (status == Transaction::ExitSuccess) {
+    if (status == PkTransaction::Success) {
         QDBusMessage reply = m_message.createReply();
-        reply << (bool) m_foundPackages.size();
+        reply << (bool) foundPackagesSize();
         sendMessageFinished(reply);
-    } else if (status == Transaction::ExitCancelled) {
+    } else if (status == PkTransaction::Cancelled) {
         sendErrorFinished(Cancelled, i18n("User canceled the transaction"));
     } else {
         sendErrorFinished(InternalError, i18n("An unknown error happened"));
     }
-}
-
-void PkIsInstalled::addPackage(const PackageKit::Package &package)
-{
-    m_foundPackages.append(package);
 }
 
 #include "PkIsInstalled.moc"

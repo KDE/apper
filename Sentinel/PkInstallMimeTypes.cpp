@@ -74,7 +74,11 @@ void PkInstallMimeTypes::modelChanged()
 void PkInstallMimeTypes::search()
 {
     Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     t->whatProvides(Transaction::ProvidesMimetype,
                     m_mimeTypes,
                     Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
@@ -85,45 +89,21 @@ void PkInstallMimeTypes::search()
                      KpkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, "Failed to search for provides");
-    } else {
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
-        connect(t, SIGNAL(package(PackageKit::Package)),
-                this, SLOT(addPackage(PackageKit::Package)));
     }
 }
 
-void PkInstallMimeTypes::whatProvidesFinished(PackageKit::Transaction::Exit status)
+void PkInstallMimeTypes::notFound()
 {
-    kDebug() << "Finished.";
-    if (status == Transaction::ExitSuccess) {
-        if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
-            setTitle(i18np("Application that can open this type of file",
-                           "Applications that can open this type of file",
-                           m_foundPackages.size()));
-            setMainWidget(frm);
-
-//                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
-//            } else {
-//                finishTaskOk();
-//            }
-        } else {
-            QString msg = i18n("Could not find software");
-            if (showWarning()) {
-                setInfo(msg, i18n("No new applications can be found "
-                                  "to handle this type of file"));
-            }
-            sendErrorFinished(NoPackagesFound, "nothing was found to handle mime type");
-        }
-    } else {
-        sendErrorFinished(Failed, "what provides failed");
+    QString msg = i18n("Could not find software");
+    if (showWarning()) {
+        setInfo(msg, i18n("No new applications can be found "
+                          "to handle this type of file"));
     }
+    sendErrorFinished(NoPackagesFound, "nothing was found to handle mime type");
 }
 
-void PkInstallMimeTypes::addPackage(const PackageKit::Package &package)
-{
-    m_foundPackages.append(package);
-}
+//setTitle(i18np("Application that can open this type of file",
+//               "Applications that can open this type of file",
+//               m_foundPackages.size()));
 
 #include "PkInstallMimeTypes.moc"

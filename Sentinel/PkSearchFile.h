@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,10 +23,7 @@
 
 #include "SessionTask.h"
 
-#include <Transaction>
 #include <QDBusMessage>
-
-using namespace PackageKit;
 
 class PkSearchFile : public SessionTask
 {
@@ -38,12 +35,11 @@ public:
                  QWidget *parent = 0);
     ~PkSearchFile();
 
-private slots:
-    void searchFinished(PackageKit::Transaction::Exit);
-    void addPackage(const PackageKit::Package &package);
+protected:
+    virtual void notFound();
+    virtual void searchSuccess();
 
 private:
-    QList<Package> m_foundPackages;
     QString      m_fileName;
     QDBusMessage m_message;
 };

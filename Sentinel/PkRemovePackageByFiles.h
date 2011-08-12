@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,14 +42,12 @@ public:
 
 protected:
     virtual void search();
+    virtual void notFound();
 
 private slots:
-    void transactionFinished(PkTransaction::ExitStatus status);
     void modelChanged();
-    void addPackage(const PackageKit::Package &package);
 
 private:
-    QList<Package> m_foundPackages;
     QStringList m_files;
     IntroDialog *m_introDialog;
     FilesModel *m_model;

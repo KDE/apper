@@ -23,10 +23,6 @@
 
 #include "SessionTask.h"
 
-#include <Transaction>
-
-using namespace PackageKit;
-
 class IntroDialog;
 class FilesModel;
 class PkInstallMimeTypes : public SessionTask
@@ -43,11 +39,9 @@ public:
 private slots:
     void modelChanged();
     virtual void search();
-    void whatProvidesFinished(PackageKit::Transaction::Exit status);
-    void addPackage(const PackageKit::Package &package);
+    virtual void notFound();
 
 private:
-    QList<Package> m_foundPackages;
     QStringList m_mimeTypes;
     IntroDialog *m_introDialog;
     FilesModel *m_model;

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -97,10 +97,9 @@ void PkRemovePackageByFiles::search()
             this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     setMainWidget(trans);
     t->searchFiles(m_model->files(), Transaction::FilterInstalled);
-    setTitle(trans->title());
     if (t->error()) {
         QString msg(i18n("Failed to start search file transaction"));
         if (showWarning()) {
@@ -111,36 +110,15 @@ void PkRemovePackageByFiles::search()
     }
 }
 
-void PkRemovePackageByFiles::transactionFinished(PkTransaction::ExitStatus status)
+void PkRemovePackageByFiles::notFound()
 {
-    kDebug() << "Finished." << (status == PkTransaction::Success) << m_foundPackages.size();
-    if (status == PkTransaction::Success) {
-        if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
-            setTitle(frm->title());
-            setMainWidget(frm);
-//            if (frm->exec(operationModes()) == 0) {
-//                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
-//            } else {
-//                finishTaskOk();
-//            }
-        } else {
-            if (showWarning()) {
-                setInfo(i18n("Could not find %1", m_files.join(", ")),
-                        i18np("The file could not be found in any installed package",
-                              "The files could not be found in any installed package",
-                              m_files.size()));
-            }
-            sendErrorFinished(NoPackagesFound, "no package found");
-        }
-    } else {
-        sendErrorFinished(Failed, "failed to search for file");
+    if (showWarning()) {
+        setInfo(i18n("Could not find %1", m_files.join(", ")),
+                i18np("The file could not be found in any installed package",
+                      "The files could not be found in any installed package",
+                      m_files.size()));
     }
-}
-
-void PkRemovePackageByFiles::addPackage(const PackageKit::Package &package)
-{
-    m_foundPackages.append(package);
+    sendErrorFinished(NoPackagesFound, "no package found");
 }
 
 #include "PkRemovePackageByFiles.moc"

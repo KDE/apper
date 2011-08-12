@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *   Copyright (C) 2011 Kevin Kofler <kevin.kofler@chello.at>              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,10 +24,6 @@
 
 #include "SessionTask.h"
 
-#include <Transaction>
-
-using namespace PackageKit;
-
 class IntroDialog;
 class PkInstallPlasmaResources : public SessionTask
 {
@@ -42,14 +38,10 @@ public:
 
 protected:
     virtual void search();
-
-private slots:
-    void whatProvidesFinished(PackageKit::Transaction::Exit status);
-    void addPackage(const PackageKit::Package &package);
+    virtual void notFound();
 
 private:
     IntroDialog *m_introDialog;
-    QList<Package> m_foundPackages;
     QStringList m_resources;
 };
 
