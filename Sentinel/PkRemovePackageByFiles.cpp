@@ -65,17 +65,17 @@ void PkRemovePackageByFiles::modelChanged()
     if (!m_model->files().isEmpty() && parentTitle.isNull()) {
         if (m_model->onlyApplications()) {
             title = i18np("Do you want to remove the following application:",
-                          "Do you want to is asking to remove the following applications:",
+                          "Do you want to remove the following applications:",
                           m_model->rowCount());
         } else {
-            title = i18np("Do you want to to remove a package:",
-                          "Do you want to to remove packages:",
+            title = i18np("Do you want to remove a package:",
+                          "Do you want to remove packages:",
                           m_model->rowCount());
         }
     } else if (!m_model->files().isEmpty()) {
         if (m_model->onlyApplications()) {
             title = i18np("The application <i>%2</i> is asking to remove an application:",
-                          "The application <i>%2</i> is asking to remove an application:",
+                          "The application <i>%2</i> is asking to remove applications:",
                           m_model->rowCount(),
                           parentTitle);
         } else {
