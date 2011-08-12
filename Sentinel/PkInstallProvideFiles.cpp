@@ -19,11 +19,12 @@
  ***************************************************************************/
 
 #include "PkInstallProvideFiles.h"
+#include "IntroDialog.h"
+#include "FilesModel.h"
 
 #include <KpkStrings.h>
 
 #include <KLocale>
-#include <KMessageBox>
 
 #include <KDebug>
 
@@ -35,64 +36,60 @@ PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
  : SessionTask(xid, interaction, message, parent),
    m_args(files)
 {
+    m_introDialog = new IntroDialog(this);
+    m_model = new FilesModel(files, QStringList(), this);
+    connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
+            this, SLOT(modelChanged()));
+    m_introDialog->setModel(m_model);
+    setMainWidget(m_introDialog);
+
+    modelChanged();
 }
 
 PkInstallProvideFiles::~PkInstallProvideFiles()
 {
 }
 
-void PkInstallProvideFiles::start()
+void PkInstallProvideFiles::modelChanged()
 {
-    int ret = KMessageBox::Yes;
-    if (showConfirmSearch()) {
-        QString message = i18np("The following file is required: <ul><li>%2</li></ul>"
-                                "Do you want to search for this now?",
-                                "The following files are required: <ul><li>%2</li></ul>"
-                                "Do you want to search for these now?",
-                                m_args.size(),
-                                m_args.join("</li><li>"));
-        QString title;
-        // this will come from DBus interface
-        if (parentTitle.isNull()) {
-            title = i18np("A program wants to install a file",
-                          "A program wants to install files",
-                          m_args.size());
-        } else {
-            title = i18np("%2 wants to install a file",
-                          "%2 wants to install files",
-                          m_args.size(),
-                          parentTitle);
-        }
-
-        QString msg = "<h3>" + title + "</h3>" + message;
-        KGuiItem searchBt = KStandardGuiItem::yes();
-        searchBt.setText(i18nc("Search for a package that provides these files and install it", "Install"));
-        searchBt.setIcon(KIcon("edit-find"));
-        ret = KMessageBox::questionYesNoWId(parentWId(), msg, title, searchBt);
+    QString message = i18np("Do you want to search for this now?",
+                            "Do you want to search for these now?",
+                            m_args.size());
+    QString title;
+    // this will come from DBus interface
+    if (parentTitle.isNull()) {
+        title = i18np("A program wants to install a file",
+                      "A program wants to install files",
+                      m_args.size());
+    } else {
+        title = i18np("The application %2 is asking to install a file",
+                      "The application %2 is asking to install files",
+                      m_args.size(),
+                      parentTitle);
     }
 
-    if (ret == KMessageBox::Yes) {
-        Transaction *t = new Transaction(this);
-        PkTransaction *trans = new PkTransaction(t, this);
-        t->searchFiles(m_args.first(), Transaction::FilterArch | Transaction::FilterNewest);
-        if (t->error()) {
-            if (showWarning()) {
-                KMessageBox::sorryWId(parentWId(),
-                                      KpkStrings::daemonError(t->error()),
-                                      i18n("Failed to start search file transaction"));
-            }
-            sendErrorFinished(Failed, "Failed to start search file transaction");
-        } else {
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                    this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
-            connect(t, SIGNAL(package(const PackageKit::Package &)),
-                    this, SLOT(addPackage(const PackageKit::Package &)));
-            if (showProgress()) {
-                setMainWidget(trans);
-            }
+    setTitle(title);
+    m_introDialog->setDescription(message);
+}
+
+void PkInstallProvideFiles::search()
+{
+    Transaction *t = new Transaction(this);
+    PkTransaction *trans = new PkTransaction(t, this);
+    setMainWidget(trans);
+    t->searchFiles(m_args.first(), Transaction::FilterArch | Transaction::FilterNewest);
+    if (t->error()) {
+        QString msg = i18n("Failed to start search file transaction");
+        if (showWarning()) {
+            setError(msg,
+                     KpkStrings::daemonError(t->error()));
         }
+        sendErrorFinished(Failed, msg);
     } else {
-        sendErrorFinished(Cancelled, i18n("did not agree to search"));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
+        connect(t, SIGNAL(package(PackageKit::Package)),
+                this, SLOT(addPackage(PackageKit::Package)));
     }
 }
 
@@ -101,26 +98,26 @@ void PkInstallProvideFiles::searchFinished(PackageKit::Transaction::Exit status)
     if (status == Transaction::ExitSuccess) {
         if (m_alreadyInstalled.size()) {
             if (showWarning()) {
-                KMessageBox::sorryWId(parentWId(),
-                                      i18n("The %1 package already provides this file",
-                                           m_alreadyInstalled),
-                                      i18n("Failed to install file"));
+                setInfo(i18n("Failed to install file"),
+                        i18n("The %1 package already provides this file",
+                             m_alreadyInstalled));
             }
             sendErrorFinished(Failed, "already provided");
         } else if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
-            if (frm->exec(operationModes()) == 0) {
-                sendErrorFinished(Failed, "Transaction did not finish with success");
-            } else {
-                finishTaskOk();
-            }
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
+            setMainWidget(frm);
+            setTitle(frm->title());
+//            if (frm->exec(operationModes()) == 0) {
+//                sendErrorFinished(Failed, "Transaction did not finish with success");
+//            } else {
+//                finishTaskOk();
+//            }
         } else {
             if (showWarning()) {
-                KMessageBox::sorryWId(parentWId(),
-                                      i18np("The file could not be found in any packages",
-                                            "The files could not be found in any packages",
-                                            m_args.size()),
-                                      i18n("Failed to find package"));
+                setInfo(i18n("Failed to find package"),
+                        i18np("The file could not be found in any packages",
+                              "The files could not be found in any packages",
+                              m_args.size()));
             }
             sendErrorFinished(NoPackagesFound, "no files found");
         }

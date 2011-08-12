@@ -26,7 +26,6 @@
 
 #include <QStandardItemModel>
 #include <KLocale>
-#include <KMessageBox>
 
 #include <KDebug>
 
@@ -35,7 +34,7 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
                                                          const QString &interaction,
                                                          const QDBusMessage &message,
                                                          QWidget *parent)
- : SessionTask(xid, interaction, message, parent)
+    : SessionTask(xid, interaction, message, parent)
 {
     m_introDialog = new IntroDialog(this);
     setMainWidget(m_introDialog);
@@ -115,67 +114,26 @@ PkInstallGStreamerResources::~PkInstallGStreamerResources()
 {
 }
 
-void PkInstallGStreamerResources::slotButtonClicked(int bt)
+void PkInstallGStreamerResources::search()
 {
-    if (bt == KDialog::Ok) {
-        if (mainWidget() == m_introDialog) {
-            Transaction *t = new Transaction(this);
-            PkTransaction *trans = new PkTransaction(t, this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                    this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
-            connect(t, SIGNAL(package(const PackageKit::Package &)),
-                    this, SLOT(addPackage(const PackageKit::Package &)));
-            t->whatProvides(Transaction::ProvidesCodec,
-                            m_resources,
-                            Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-            if (t->error()) {
-                QString msg(i18n("Failed to search for provides"));
-                if (showWarning()) {
-                    KMessageBox::sorry(this,
-                                       KpkStrings::daemonError(t->error()),
-                                       msg);
-                }
-                sendErrorFinished(Failed, msg);
-            }
-
-            setMainWidget(trans);
-//             trans->installFiles(m_model->files());
-            enableButtonOk(false);
+    Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
+    connect(t, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(addPackage(PackageKit::Package)));
+    PkTransaction *trans = new PkTransaction(t, this);
+    setMainWidget(trans);
+    t->whatProvides(Transaction::ProvidesCodec,
+                    m_resources,
+                    Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+    if (t->error()) {
+        QString msg(i18n("Failed to search for provides"));
+        if (showWarning()) {
+            setError(msg, KpkStrings::daemonError(t->error()));
         }
-    } else {
-        sendErrorFinished(Cancelled, "Aborted");
+        sendErrorFinished(Failed, msg);
     }
-    KDialog::slotButtonClicked(bt);
-}
 
-void PkInstallGStreamerResources::start()
-{
-
-
-//     if (ret == KMessageBox::Yes) {
-//         Transaction *t = new Transaction(this);
-//         t->whatProvides(Transaction::ProvidesCodec,
-//                         search,
-//                         Transaction::FilterNotInstalled |
-//                         Transaction::FilterArch |
-//                         Transaction::FilterNewest);
-//         if (t->error()) {
-//             QString msg(i18n("Failed to search for provides"));
-//             KMessageBox::sorryWId(parentWId(), KpkStrings::daemonError(t->error()), msg);
-//             sendErrorFinished(InternalError, msg);
-//         } else {
-//             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-//                     this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
-//             connect(t, SIGNAL(package(const PackageKit::Package &)),
-//                     this, SLOT(addPackage(const PackageKit::Package &)));
-//             if (showProgress()) {
-//                 kTransaction()->setTransaction(t);
-//                 kTransaction()->show();
-//             }
-//         }
-//     } else {
-//         sendErrorFinished(Cancelled, i18n("did not agree to search"));
-//     }
 }
 
 void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Transaction::Exit status)
@@ -192,10 +150,10 @@ void PkInstallGStreamerResources::whatProvidesFinished(PackageKit::Transaction::
 //             }
         } else {
             if (showWarning()) {
-                KMessageBox::sorry(this,
-                                   i18n("Could not find plugin "
-                                        "in any configured software source"),
-                                   i18n("Failed to search for plugin"));
+                QString mgs = i18n("No results found");
+                setInfo(mgs,
+                        i18n("Could not find plugin "
+                             "in any configured software source"));
             }
             sendErrorFinished(NoPackagesFound, "failed to find codec");
         }

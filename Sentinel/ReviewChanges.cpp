@@ -32,7 +32,6 @@
 #include "KpkStrings.h"
 #include "KpkEnum.h"
 #include "KpkRequirements.h"
-#include "KpkSimulateModel.h"
 #include "PackageModel.h"
 #include "PkTransactionDialog.h"
 #include "KpkDelegate.h"
@@ -45,21 +44,18 @@ public:
     Ui::ReviewChanges ui;
 
     PackageModel *mainPkgModel;
-    KpkSimulateModel *installPkgModel, *removePkgModel;
     KpkDelegate *pkgDelegate;
 
     QList<Package> remPackages;
     QList<Package> addPackages;
 
     Transaction::Roles actions;
-    uint parentWId;
 
     PkTransactionDialog *transactionDialog;
 };
 
 ReviewChanges::ReviewChanges(const QList<Package> &packages,
-                                   QWidget *parent,
-                                   uint parentWId)
+                             QWidget *parent)
  : QWidget(parent),
    d(new ReviewChangesPrivate),
    m_flags(Default)
@@ -67,11 +63,6 @@ ReviewChanges::ReviewChanges(const QList<Package> &packages,
     d->ui.setupUi(this);
 
     d->transactionDialog = 0;
-    d->parentWId = parentWId;
-
-    if (parentWId) {
-        KWindowSystem::setMainWindow(this, parentWId);
-    }
 
     //initialize the model, delegate, client and  connect it's signals
     d->ui.packageView->viewport()->setAttribute(Qt::WA_Hover);
@@ -156,9 +147,7 @@ void ReviewChanges::doAction()
                                                   transParent);
         connect(d->transactionDialog, SIGNAL(finished(PkTransaction::ExitStatus)),
                 this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
-        if (d->parentWId) {
-            KWindowSystem::setMainWindow(d->transactionDialog, d->parentWId);
-        }
+
         d->transactionDialog->show();
 
         checkTask();

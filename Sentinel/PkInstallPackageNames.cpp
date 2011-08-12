@@ -75,98 +75,27 @@ PkInstallPackageNames::~PkInstallPackageNames()
 {
 }
 
-void PkInstallPackageNames::slotButtonClicked(int bt)
+void PkInstallPackageNames::search()
 {
-    if (bt == KDialog::Ok) {
-        if (mainWidget() == m_introDialog) {
-            Transaction *t = new Transaction(this);
-            PkTransaction *trans = new PkTransaction(t, this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                    this, SLOT(resolveFinished(PackageKit::Transaction::Exit)));
-            connect(t, SIGNAL(package(const PackageKit::Package &)),
-                    this, SLOT(addPackage(const PackageKit::Package &)));
-            t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
-            if (t->error()) {
-                QString msg(i18n("Failed to start resolve transaction"));
-                if (showWarning()) {
-                    setInfo(msg, KpkStrings::daemonError(t->error()));
-                }
-                sendErrorFinished(Failed, msg);
-            } else {
-//                 if (showProgress()) {
-//                     kTransaction()->setTransaction(t);
-//                     kTransaction()->show();
-//                 }
-            }
-
-            setMainWidget(trans);
-//             trans->installFiles(m_model->files());
-            enableButtonOk(false);
-            return;
+    Transaction *t = new Transaction(this);
+    PkTransaction *trans = new PkTransaction(t, this);
+    setMainWidget(trans);
+    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(resolveFinished(PackageKit::Transaction::Exit)));
+    connect(t, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(addPackage(PackageKit::Package)));
+    t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
+    if (t->error()) {
+        QString msg(i18n("Failed to start resolve transaction"));
+        if (showWarning()) {
+            setError(msg, KpkStrings::daemonError(t->error()));
         }
-    } else {
-        KDialog::slotButtonClicked(bt);
-        sendErrorFinished(Cancelled, "Aborted");
+        sendErrorFinished(Failed, msg);
     }
 }
 
-void PkInstallPackageNames::start()
+void PkInstallPackageNames::commit()
 {
-//     kDebug() << m_packages.first();
-//     int ret = KMessageBox::Yes;
-//     if (showConfirmSearch()) {
-//         QString message = i18np("An additional package is required: <ul><li>%2</li></ul>"
-//                                 "Do you want to search for and install this package now?",
-//                                 "Additional packages are required: <ul><li>%2</li></ul>"
-//                                 "Do you want to search for and install these packages now?",
-//                                 m_packages.size(),
-//                                 m_packages.join("</li><li>"));
-//         QString title;
-//         // this will come from DBus interface
-//         if (parentTitle.isNull()) {
-//             title = i18np("A program wants to install a package",
-//                           "A program wants to install packages",
-//                           m_packages.size());
-//         } else {
-//             title = i18np("%2 wants to install a package",
-//                           "%2 wants to install packages",
-//                           m_packages.size(),
-//                           parentTitle);
-//         }
-//         QString msg = "<h3>" + title + "</h3>" + message;
-//         KGuiItem searchBt = KStandardGuiItem::yes();
-//         searchBt.setText(i18nc("Search for a package and install it", "Install"));
-//         searchBt.setIcon(KIcon("edit-find"));
-//         ret = KMessageBox::questionYesNoWId(parentWId(),
-//                                             msg,
-//                                             title,
-//                                             searchBt);
-//     }
-// 
-//     if (ret == KMessageBox::Yes) {
-//         Transaction *t = new Transaction(this);
-//         PkTransaction *trans = new PkTransaction(t, this);
-//         t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
-//         if (t->error()) {
-//             QString msg(i18n("Failed to start resolve transaction"));
-//             if (showWarning()) {
-//                 KMessageBox::sorryWId(parentWId(),
-//                                       KpkStrings::daemonError(t->error()),
-//                                       msg);
-//             }
-//             sendErrorFinished(Failed, msg);
-//         } else {
-//             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-//                     this, SLOT(resolveFinished(PackageKit::Transaction::Exit)));
-//             connect(t, SIGNAL(package(const PackageKit::Package &)),
-//                     this, SLOT(addPackage(const PackageKit::Package &)));
-//             if (showProgress()) {
-//                 setMainWidget(trans);
-//             }
-//         }
-//     } else {
-//         sendErrorFinished(Cancelled, "did not agree to search");
-//     }
 }
 
 void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::Exit status)
@@ -184,7 +113,8 @@ void PkInstallPackageNames::resolveFinished(PackageKit::Transaction::Exit status
             sendErrorFinished(Failed, "package already found");
         } else if (m_foundPackages.size()) {
             kDebug() << m_foundPackages.size();
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
+            setTitle(frm->title());
             setMainWidget(frm);
 //            if (frm->exec(operationModes()) == 0) {
 //                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));

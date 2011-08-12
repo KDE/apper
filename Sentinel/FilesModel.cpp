@@ -35,11 +35,25 @@ FilesModel::FilesModel(const QStringList &files, const QStringList &mimes, QObje
 : QStandardItemModel(parent),
   m_mimes(mimes)
 {
-    QList<QUrl> urls;
-    foreach (const QString &file, files) {
-        urls << file;
+    if (!files.isEmpty()) {
+        QList<QUrl> urls;
+        foreach (const QString &file, files) {
+            urls << file;
+        }
+        insertFiles(urls);
+    } else if (!mimes.isEmpty()) {
+        // we are searching for mimetypes
+        foreach (const QString &mime, mimes) {
+            KMimeType::Ptr mimePtr = KMimeType::mimeType(mime);
+            if (mimePtr->isValid()) {
+                QStandardItem *item = new QStandardItem(mime);
+                item->setData(mime);
+                item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mimePtr->iconName(),
+                                                                      KIconLoader::Desktop));
+                appendRow(item);
+            }
+        }
     }
-    insertFiles(urls);
 }
 
 bool FilesModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
@@ -64,9 +78,10 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
         }
 
         QFileInfo fileInfo(url.path());
+        QStandardItem *item = 0;
         if (fileInfo.isFile()) {
             KMimeType::Ptr mime = KMimeType::findByFileContent(url.path());
-            QStandardItem *item = 0;
+            kDebug() << url << mime->name();
             foreach (const QString &mimeType, m_mimes) {
                 if (mime->is(mimeType)) {
                     ret = true;
@@ -101,10 +116,16 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
                 item->setEnabled(false);
                 item->setIcon(KIconLoader::global()->loadIcon("dialog-cancel", KIconLoader::Desktop));
             }
+        } else if (m_mimes.isEmpty()) {
+            // It's not a file but we don't have a mime so it's ok
+            item = new QStandardItem(fileInfo.fileName());
+            item->setData(url.path());
+            item->setToolTip(url.path());
+            item->setIcon(KIconLoader::global()->loadIcon("unknown", KIconLoader::Desktop));
+        }
 
-            if (item) {
-                appendRow(item);
-            }
+        if (item) {
+            appendRow(item);
         }
     }
     return ret;

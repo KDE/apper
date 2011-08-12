@@ -23,7 +23,6 @@
 #include <KpkStrings.h>
 
 #include <KLocale>
-#include <KMessageBox>
 
 #include <KDebug>
 
@@ -37,14 +36,7 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
     SessionTask(xid, interaction, message, parent),
     m_resources(resources)
 {
-}
-
-PkInstallPrinterDrivers::~PkInstallPrinterDrivers()
-{
-}
-
-void PkInstallPrinterDrivers::start()
-{
+    // TODO confirm operation
     QStringList search;
     foreach (const QString &deviceid, m_resources) {
         QString mfg, mdl;
@@ -68,46 +60,45 @@ void PkInstallPrinterDrivers::start()
     }
 
     Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
+    connect(t, SIGNAL(package(PackageKit::Package)),
+               this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
+    setMainWidget(trans);
     t->whatProvides(Transaction::ProvidesPostscriptDriver,
                     search,
                     Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
-    connect(t, SIGNAL(package(const PackageKit::Package &)),
-               this, SLOT(addPackage(const PackageKit::Package &)));
+
     if (t->error()) {
         QString msg(i18n("Failed to search for provides"));
-        KMessageBox::sorryWId(parentWId(),
-                              KpkStrings::daemonError(t->error()),
-                              msg);
+        setError(msg, KpkStrings::daemonError(t->error()));
         sendErrorFinished(InternalError, msg);
-    } else {
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit, uint)));
-
-        if (showProgress()) {
-            setMainWidget(trans);
-        }
     }
 }
 
-void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Transaction::Exit status, uint runtime)
+PkInstallPrinterDrivers::~PkInstallPrinterDrivers()
 {
-    Q_UNUSED(runtime)
+}
+
+void PkInstallPrinterDrivers::whatProvidesFinished(PackageKit::Transaction::Exit status)
+{
     kDebug() << "Finished.";
     if (status == Transaction::ExitSuccess) {
         if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
-            if (frm->exec(operationModes()) == 0) {
-                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
-            } else {
-                finishTaskOk();
-            }
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
+            setMainWidget(frm);
+            setTitle(frm->title());
+//            if (frm->exec(operationModes()) == 0) {
+//                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
+//            } else {
+//                finishTaskOk();
+//            }
         } else {
             if (showWarning()) {
-                KMessageBox::sorryWId(parentWId(),
-                                      i18n("Could not find printer driver "
-                                           "in any configured software source"),
-                                      i18n("Failed to search for printer driver"));
+                setInfo(i18n("Failed to search for printer driver"),
+                        i18n("Could not find printer driver "
+                             "in any configured software source"));
             }
             sendErrorFinished(NoPackagesFound, "failed to find printer driver");
         }

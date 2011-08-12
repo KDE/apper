@@ -39,9 +39,6 @@ public:
     ~PkIsInstalled();
 
 private slots:
-    void start();
-
-private slots:
     void searchFinished(PackageKit::Transaction::Exit);
     void addPackage(const PackageKit::Package &package);
 

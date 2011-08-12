@@ -27,6 +27,7 @@
 #include <KNotification>
 #include <KWindowSystem>
 
+#include "SessionTask.h"
 #include "PkInstallPackageNames.h"
 #include "PkInstallMimeTypes.h"
 #include "PkInstallGStreamerResources.h"
@@ -74,7 +75,7 @@ void PkInterface::InstallCatalogs(uint xid, const QStringList &files, const QStr
     PkInstallCatalogs *task;
     task = new PkInstallCatalogs(xid, files, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    show(task);
 }
 
 void PkInterface::InstallFontconfigResources(uint xid, const QStringList &resources, const QString &interaction)
@@ -85,7 +86,7 @@ void PkInterface::InstallFontconfigResources(uint xid, const QStringList &resour
     PkInstallFontconfigResources *task;
     task = new PkInstallFontconfigResources(xid, resources, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    show(task);
 }
 
 void PkInterface::InstallGStreamerResources(uint xid, const QStringList &resources, const QString &interaction)
@@ -106,7 +107,7 @@ void PkInterface::InstallMimeTypes(uint xid, const QStringList &mime_types, cons
     setDelayedReply(true);
     PkInstallMimeTypes *task = new PkInstallMimeTypes(xid, mime_types, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    show(task);
 }
 
 void PkInterface::InstallPackageFiles(uint xid, const QStringList &files, const QString &interaction)
@@ -136,7 +137,7 @@ void PkInterface::InstallProvideFiles(uint xid, const QStringList &files, const 
     setDelayedReply(true);
     PkInstallProvideFiles *task = new PkInstallProvideFiles(xid, files, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    show(task);
 }
 
 void PkInterface::RemovePackageByFiles(uint xid, const QStringList &files, const QString &interaction)
@@ -157,7 +158,7 @@ void PkInterface::InstallPrinterDrivers(uint xid, const QStringList &resources, 
     PkInstallPrinterDrivers *task;
     task = new PkInstallPrinterDrivers(xid, resources, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    show(task);
 }
 
 void PkInterface::InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction)
@@ -168,7 +169,7 @@ void PkInterface::InstallPlasmaResources(uint xid, const QStringList &resources,
     PkInstallPlasmaResources *task;
     task = new PkInstallPlasmaResources(xid, resources, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    show(task);
 }
 
 void PkInterface::InstallResources(uint xid, const QString &type, const QStringList &resources, const QString &interaction)
@@ -194,7 +195,7 @@ bool PkInterface::IsInstalled(const QString &package_name, const QString &intera
     setDelayedReply(true);
     PkIsInstalled *task = new PkIsInstalled(package_name, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    show(task);
     // This is discarted
     return false;
 }
@@ -206,13 +207,14 @@ bool PkInterface::SearchFile(const QString &file_name, const QString &interactio
     setDelayedReply(true);
     PkSearchFile *task = new PkSearchFile(file_name, interaction, message());
     connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-    task->run();
+    show(task);
     // This is discarted
     return false;
 }
 
-void PkInterface::show(QWidget *widget) const
+void PkInterface::show(SessionTask *widget) const
 {
     widget->show();
     KWindowSystem::forceActiveWindow(widget->winId());
+    KWindowSystem::setMainWindow(widget, widget->parentWId());
 }

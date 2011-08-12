@@ -65,6 +65,8 @@ public:
     bool showFinished() const;
     bool showWarning() const;
 
+    virtual void slotButtonClicked(int button);
+
     Interactions interactions() const;
     uint timeout() const;
 
@@ -73,19 +75,22 @@ public:
     QWidget* mainWidget();
 
     void setInfo(const QString &title, const QString &text);
+    void setError(const QString &title, const QString &text);
     void setTitle(const QString &title);
 
-    void run();
+    uint parentWId() const;
 
 protected:
+    // Virtual methods to easy subclasses
+    virtual void search();
+    virtual void commit();
+
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);
-    uint parentWId() const;
     QString parentTitle;
 
 private slots:
-    virtual void start();
     void updatePallete();
 
 private:

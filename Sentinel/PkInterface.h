@@ -24,6 +24,7 @@
 
 #include "AbstractIsRunning.h"
 
+class SessionTask;
 class PkInterface : public AbstractIsRunning, protected QDBusContext
 {
     Q_OBJECT
@@ -48,7 +49,7 @@ public slots:
     bool SearchFile(const QString &file_name, const QString &interaction, QString &package_name);
 
 private:
-    void show(QWidget *widget) const;
+    void show(SessionTask *widget) const;
     QHash<QString, QVariant> parseInteraction(const QString &interaction);
     void InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction);
 };

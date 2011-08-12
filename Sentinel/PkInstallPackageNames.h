@@ -41,10 +41,11 @@ public:
                           QWidget *parent = 0);
     ~PkInstallPackageNames();
 
-private slots:
-    void start();
+protected:
+    virtual void search();
+    virtual void commit();
 
-    void slotButtonClicked(int bt);
+private slots:
     void resolveFinished(PackageKit::Transaction::Exit);
     void addPackage(const PackageKit::Package &package);
 

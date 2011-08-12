@@ -36,11 +36,10 @@ public:
                           QWidget *parent = 0);
     ~PkInstallPackageFiles();
 
-public slots:
-    void start();
+private:
+    virtual void commit();
 
 private slots:
-    void slotButtonClicked(int bt);
     void transactionFinished(PkTransaction::ExitStatus status);
     void modelChanged();
 

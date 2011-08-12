@@ -29,6 +29,8 @@
 using namespace PackageKit;
 
 class PkTransaction;
+class IntroDialog;
+class FilesModel;
 class PkInstallCatalogs : public SessionTask
 {
 Q_OBJECT
@@ -40,10 +42,11 @@ public:
                       QWidget *parent = 0);
     ~PkInstallCatalogs();
 
-public slots:
-    void start();
+protected:
+    virtual void search();
 
 private slots:
+    void modelChanged();
     void addPackage(const PackageKit::Package &package);
 
 private:
@@ -59,6 +62,8 @@ private:
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;
     int          m_maxResolve;
+    IntroDialog *m_introDialog;
+    FilesModel  *m_model;
 };
 
 #endif

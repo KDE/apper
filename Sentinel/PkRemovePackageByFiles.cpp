@@ -27,7 +27,6 @@
 #include <PkTransactionDialog.h>
 
 #include <KLocale>
-#include <KMessageBox>
 #include <KService>
 
 #include <KDebug>
@@ -42,7 +41,7 @@ PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
 {
     m_introDialog = new IntroDialog(this);
     m_model = new FilesModel(files, QStringList(), this);
-    connect(m_model, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+    connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
             this, SLOT(modelChanged()));
     m_introDialog->setModel(m_model);
     setMainWidget(m_introDialog);
@@ -91,95 +90,25 @@ void PkRemovePackageByFiles::modelChanged()
     setTitle(title);
 }
 
-void PkRemovePackageByFiles::slotButtonClicked(int bt)
+void PkRemovePackageByFiles::search()
 {
-    if (bt == KDialog::Ok) {
-        if (mainWidget() == m_introDialog) {
-            Transaction *t = new Transaction(QString());
-            PkTransaction *trans = new PkTransaction(t, this);
-            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-                    this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
-            connect(t, SIGNAL(package(const PackageKit::Package &)),
-                    this, SLOT(addPackage(const PackageKit::Package &)));
-            setMainWidget(trans);
-            t->searchFiles(m_model->files(), Transaction::FilterInstalled);
-            setTitle(trans->title());
-            enableButtonOk(false);
-            if (t->error()) {
-                QString msg(i18n("Failed to start search file transaction"));
-                if (showWarning()) {
-//                    KMessageBox::sorryWId(this,
-//                                          KpkStrings::daemonError(t->error()),
-//                                          msg);
-                }
-                sendErrorFinished(Failed, "Failed to search for package");
-            }
+    Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(addPackage(PackageKit::Package)));
+    PkTransaction *trans = new PkTransaction(t, this);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
+    setMainWidget(trans);
+    t->searchFiles(m_model->files(), Transaction::FilterInstalled);
+    setTitle(trans->title());
+    if (t->error()) {
+        QString msg(i18n("Failed to start search file transaction"));
+        if (showWarning()) {
+            setError(msg,
+                     KpkStrings::daemonError(t->error()));
         }
-    } else {
-        KDialog::slotButtonClicked(bt);
-        sendErrorFinished(Cancelled, "Aborted");
+        sendErrorFinished(Failed, "Failed to search for package");
     }
-}
-
-void PkRemovePackageByFiles::start()
-{
-//    int ret = KMessageBox::Yes;
-//    if (showConfirmSearch()) {
-//        QString title;
-//        // this will come from DBus interface
-//        if (parentTitle.isNull()) {
-//            title = i18np("A program wants to remove a file",
-//                        "A program wants to remove files",
-//                        m_files.size());
-//        } else {
-//            title = i18np("%2 wants to remove a file",
-//                        "%2 wants to remove files",
-//                        m_files.size(),
-//                        parentTitle);
-//        }
-
-//        QString message = i18np("The following file is going to be removed:",
-//                                "The following files are going to be removed:",
-//                                m_files.size())
-//                                + QString("<ul><li>%1</li></ul>").arg(m_files.join("</li><li>")) +
-//                        i18np("Do you want to search for packages containing this file and remove it now?",
-//                                "Do you want to search for packages containing these files and remove them now?",
-//                            m_files.size());
-//        QString msg = "<h3>" + title + "</h3>" + message;
-//        KGuiItem searchBt = KStandardGuiItem::yes();
-//        searchBt.setText(i18nc("Search for a package and remove", "Search"));
-//        searchBt.setIcon(KIcon("edit-find"));
-//        ret = KMessageBox::questionYesNoWId(parentWId(),
-//                                            msg,
-//                                            title,
-//                                            searchBt);
-//    }
-
-//    if (ret == KMessageBox::Yes) {
-//        Transaction *t = new Transaction(QString());
-//        PkTransaction *trans = new PkTransaction(t, this);
-//        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-//                this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
-//        connect(t, SIGNAL(package(const PackageKit::Package &)),
-//                this, SLOT(addPackage(const PackageKit::Package &)));
-//        t->searchFiles(m_files, Transaction::FilterInstalled);
-//        Transaction::InternalError error = t->error();
-//        if (error) {
-//            QString msg(i18n("Failed to start search file transaction"));
-//            if (showWarning()) {
-//                KMessageBox::sorryWId(parentWId(),
-//                                      KpkStrings::daemonError(error),
-//                                      msg);
-//            }
-//            sendErrorFinished(Failed, "Failed to search for package");
-//        } else {
-//            if (showProgress()) {
-//                setMainWidget(trans);
-//            }
-//        }
-//    } else {
-//        sendErrorFinished(Cancelled, "did not agree to search");
-//    }
 }
 
 void PkRemovePackageByFiles::transactionFinished(PkTransaction::ExitStatus status)
@@ -187,7 +116,7 @@ void PkRemovePackageByFiles::transactionFinished(PkTransaction::ExitStatus statu
     kDebug() << "Finished." << (status == PkTransaction::Success) << m_foundPackages.size();
     if (status == PkTransaction::Success) {
         if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
+            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
             setTitle(frm->title());
             setMainWidget(frm);
 //            if (frm->exec(operationModes()) == 0) {

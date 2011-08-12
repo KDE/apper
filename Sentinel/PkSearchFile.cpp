@@ -23,7 +23,6 @@
 #include <KpkStrings.h>
 
 #include <KLocale>
-#include <KMessageBox>
 
 #include <KDebug>
 
@@ -35,14 +34,6 @@ PkSearchFile::PkSearchFile(const QString &file_name,
    m_fileName(file_name),
    m_message(message)
 {
-}
-
-PkSearchFile::~PkSearchFile()
-{
-}
-
-void PkSearchFile::start()
-{
     // Check for a leading slash '/' return with an error if it's not there..
     if (!m_fileName.startsWith('/')) {
         sendErrorFinished(Failed, "Only full file name path is supported");
@@ -50,27 +41,26 @@ void PkSearchFile::start()
     }
 
     Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
+    connect(t, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(addPackage(PackageKit::Package)));
     PkTransaction *trans = new PkTransaction(t, this);
+    setMainWidget(trans);
     t->searchFiles(m_fileName, Transaction::FilterNewest);
     Transaction::InternalError error = t->error();
     if (error) {
+        QString msg = i18n("Failed to start search file transaction");
         if (showWarning()) {
-            KMessageBox::sorryWId(parentWId(),
-                                  KpkStrings::daemonError(error),
-                                  i18n("Failed to start search file transaction"));
+            setError(msg,
+                     KpkStrings::daemonError(error));
         }
-        sendErrorFinished(Failed, "Failed to start search file transaction");
-    } else {
-        // TODO add timeout support
-        // which cancel the transaction in x seconds if it's not running yet
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
-        connect(t, SIGNAL(package(const Package &)),
-                this, SLOT(addPackage(const Package &)));
-        if (showProgress()) {
-            setMainWidget(trans);
-        }
+        sendErrorFinished(Failed, msg);
     }
+}
+
+PkSearchFile::~PkSearchFile()
+{
 }
 
 void PkSearchFile::searchFinished(PackageKit::Transaction::Exit status)
@@ -87,9 +77,7 @@ void PkSearchFile::searchFinished(PackageKit::Transaction::Exit status)
             sendMessageFinished(reply);
         } else {
             QString msg(i18n("The file name could not be found in any software source"));
-            KMessageBox::sorryWId(parentWId(),
-                                  msg,
-                                  i18n("Could not find %1", m_fileName));
+            setError(i18n("Could not find %1", m_fileName), msg);
             sendErrorFinished(NoPackagesFound, msg);
         }
     } else {

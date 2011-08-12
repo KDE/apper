@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "PkInstallCatalogs.h"
+#include "IntroDialog.h"
+#include "FilesModel.h"
 
 #include <KpkStrings.h>
 
@@ -43,7 +45,7 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
    m_message(message),
    m_maxResolve(100)
 {
-    kDebug() << xid;
+    // Find out how many packages PackageKit is able to resolve
     QFile file("/etc/PackageKit/PackageKit.conf");
     QRegExp rx("\\s*MaximumItemsToResolve=(\\d+)", Qt::CaseSensitive);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -55,86 +57,103 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
             }
         }
     }
+
+    m_introDialog = new IntroDialog(this);
+    m_model = new FilesModel(files, QStringList(), this);
+    connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
+            this, SLOT(modelChanged()));
+    m_introDialog->setModel(m_model);
+    setMainWidget(m_introDialog);
+
+    modelChanged();
 }
 
 PkInstallCatalogs::~PkInstallCatalogs()
 {
 }
 
-void PkInstallCatalogs::start()
+void PkInstallCatalogs::modelChanged()
 {
-    int ret = KMessageBox::Yes;
-    if (showConfirmSearch()) {
-        QString message = i18np("<h3>Do you want to install this catalog?</h3>"
-                                "<ul><li>%2</li></ul>",
-                                "<h3>Do you want to install these catalogs?</h3>"
-                                "<ul><li>%2</li></ul>",
-                                m_files.size(),
-                                m_files.join("</li><li>"));
-        QString title;
-        title = i18np("Install catalog",
-                      "Install catalogs",
-                      m_files.size());
-        KGuiItem searchBt = KStandardGuiItem::yes();
-        searchBt.setText(i18nc("Parse the catalog search and install it", "Install"));
-        searchBt.setIcon(KIcon("edit-find"));
-        ret = KMessageBox::questionYesNoWId(parentWId(),
-                                            message,
-                                            title,
-                                            searchBt);
+
+    QString message = i18np("Do you want to install this catalog?",
+                            "Do you want to install these catalogs?",
+                            m_files.size());
+    QString title;
+    // this will come from DBus interface
+    if (parentTitle.isNull()) {
+        title = i18np("An application wants to install a catalog",
+                      "An application wants to install catalogs",
+                        m_files.size());
+    } else {
+        title = i18np("The application <i>%2</i> wants to install a catalog",
+                      "The application <i>%2</i> wants to install catalogs",
+                        m_files.size(),
+                        parentTitle);
     }
 
-    if (ret == KMessageBox::Yes) {
-        QString distroId = Daemon::distroId();
-        QStringList parts = distroId.split(';');
-        if (parts.size() != 3) {
-            sendErrorFinished(Failed, "invalid distribution id, please fill a bug against you distribution backend");
-            return;
+    m_introDialog->setDescription(message);
+    setTitle(title);
+
+//    if (ret == KMessageBox::Yes) {
+//
+//    } else {
+//        sendErrorFinished(Cancelled, "did not agree to install");
+//    }
+}
+
+void PkInstallCatalogs::search()
+{
+    QString distroId = Daemon::distroId();
+    QStringList parts = distroId.split(';');
+    if (parts.size() != 3) {
+        sendErrorFinished(Failed, "invalid distribution id, please fill a bug against you distribution backend");
+        return;
+    }
+    QString distro = parts.at(0);
+    QString version = parts.at(1);
+    QString arch = parts.at(2);
+
+    QStringList rxActions;
+    Transaction::Roles actions = Daemon::actions();
+    if (actions & Transaction::RoleResolve) {
+        rxActions << "InstallPackages";
+    }
+
+    if (actions & Transaction::RoleWhatProvides) {
+        rxActions << "InstallProvides";
+    }
+
+    if (actions & Transaction::RoleSearchFile) {
+        rxActions << "InstallFiles";
+    }
+
+    if (rxActions.isEmpty()) {
+        if (showWarning()) {
+            // TODO display a nicer message informing of already installed ones
+            setInfo(i18n("Not supported"),
+                    i18n("Your backend does not support any of the needed "
+                         "methods to install a catalog"));
         }
-        QString distro = parts.at(0);
-        QString version = parts.at(1);
-        QString arch = parts.at(2);
+        sendErrorFinished(Failed, "not supported by backend");
+        return;
+    }
 
-        QStringList rxActions;
-        Transaction::Roles actions = Daemon::actions();
-        if (actions & Transaction::RoleResolve) {
-            rxActions << "InstallPackages";
-        }
+    // matches at the beginning of line installPackages or InstallProvides or installFiles and capture it
+    // matches an optional set of parenthesis
+    // matches *%1* and or *%2* and or *%3*
+    // matches after '=' but ';' at the end
+    QString pattern;
+    pattern = QString(
+                "^(%1)(?:\\((?:.*%2[^;]*(?:;(?:.*%3[^;]*(?:;(?:.*%4[^;]*)?)?)?)?)?\\))?=(.*[^;$])").arg(rxActions.join("|")).arg(distro).arg(version).arg(arch);
+    QRegExp rx(pattern, Qt::CaseInsensitive);
 
-        if (actions & Transaction::RoleWhatProvides) {
-            rxActions << "InstallProvides";
-        }
+    QStringList filesFailedToOpen;
+    bool failed = false;
 
-        if (actions & Transaction::RoleSearchFile) {
-            rxActions << "InstallFiles";
-        }
+    if (!m_files.isEmpty()) {
+        m_trans = new PkTransaction(0, this);
+        setMainWidget(m_trans);
 
-        if (rxActions.isEmpty()) {
-            if (showWarning()) {
-                // TODO display a nicer message informing of already installed ones
-                KMessageBox::sorryWId(parentWId(),
-                                      i18n("Your backend does not support any of the needed methods to install a catalog"),
-                                      i18n("Not supported"));
-            }
-            sendErrorFinished(Failed, "not supported by backend");
-            return;
-        }
-
-        // matches at the beginning of line installPackages or InstallProvides or installFiles and capture it
-        // matches an optional set of parenthesis
-        // matches *%1* and or *%2* and or *%3*
-        // matches after '=' but ';' at the end
-        QString pattern;
-        pattern = QString(
-        "^(%1)(?:\\((?:.*%2[^;]*(?:;(?:.*%3[^;]*(?:;(?:.*%4[^;]*)?)?)?)?)?\\))?=(.*[^;$])").arg(rxActions.join("|")).arg(distro).arg(version).arg(arch);
-        QRegExp rx(pattern, Qt::CaseInsensitive);
-
-        QStringList filesFailedToOpen;
-        bool failed = false;
-
-        if (!m_files.isEmpty()) {
-            m_trans = new PkTransaction(0, this);
-        }
         foreach (const QString &file, m_files) {
             QFile catalog(file);
             if (catalog.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -158,35 +177,32 @@ void PkInstallCatalogs::start()
                 filesFailedToOpen << file;
             }
         }
+    } else if (showWarning() && filesFailedToOpen.size()) {
+        // TODO display a nicer message informing of already installed ones
+        KMessageBox::sorry(this,
+                           i18np("Catalog %2 failed to open",
+                                 "Catalogs %2 failed to open",
+                                 filesFailedToOpen.size(),
+                                 filesFailedToOpen.join(",")),
+                           i18n("Failed to open"));
+    }
 
-        if (showWarning() && filesFailedToOpen.size()) {
-            // TODO display a nicer message informing of already installed ones
-            KMessageBox::sorryWId(parentWId(),
-                                  i18np("Catalog %2 failed to open",
-                                        "Catalogs %2 failed to open",
-                                        filesFailedToOpen.size(),
-                                        filesFailedToOpen.join(",")),
-                                  i18n("Failed to open"));
-        }
-
-        if (m_foundPackages.size()) {
-            ReviewChanges *frm = new ReviewChanges(m_foundPackages, this, parentWId());
-            if (frm->exec(operationModes()) == 0) {
-                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
-            } else {
-                finishTaskOk();
-            }
+    if (m_foundPackages.size()) {
+        ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
+        setTitle(frm->title());
+        setMainWidget(frm);/*
+        if (frm->exec(operationModes()) == 0) {
+            sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
         } else {
-            if (showWarning()) {
-                // TODO display a nicer message informing of already installed ones
-                KMessageBox::sorryWId(parentWId(),
-                                      i18n("No package was found to be installed"),
-                                      i18n("No package was found to be installed"));
-            }
-            sendErrorFinished(NoPackagesFound, "no package found");
-        }
+            finishTaskOk();
+        }*/
     } else {
-        sendErrorFinished(Cancelled, "did not agree to install");
+        if (showWarning()) {
+            // TODO display a nicer message informing of already installed ones
+            setInfo(i18n("Catalog search complete"),
+                    i18n("No package was found to be installed"));
+        }
+        sendErrorFinished(NoPackagesFound, "no package found");
     }
 }
 
@@ -230,9 +246,7 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
     if (t->error()) {
         QString msg(i18n("Failed to start setup transaction"));
         if (showWarning()) {
-            KMessageBox::sorryWId(parentWId(),
-                                  KpkStrings::daemonError(t->error()),
-                                  msg);
+            setError(msg, KpkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, msg);
         return false;
@@ -240,8 +254,8 @@ bool PkInstallCatalogs::runTransaction(Transaction *t)
         QEventLoop loop;
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 &loop, SLOT(quit()));
-        connect(t, SIGNAL(package(const PackageKit::Package &)),
-                this, SLOT(addPackage(const PackageKit::Package &)));
+        connect(t, SIGNAL(package(PackageKit::Package)),
+                this, SLOT(addPackage(PackageKit::Package)));
         if (showProgress()) {
             m_trans->setTransaction(t);
         }

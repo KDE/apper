@@ -40,11 +40,10 @@ public:
                            QWidget *parent = 0);
     ~PkRemovePackageByFiles();
 
-public slots:
-    void start();
+protected:
+    virtual void search();
 
 private slots:
-    void slotButtonClicked(int bt);
     void transactionFinished(PkTransaction::ExitStatus status);
     void modelChanged();
     void addPackage(const PackageKit::Package &package);

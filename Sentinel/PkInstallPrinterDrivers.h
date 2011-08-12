@@ -38,11 +38,8 @@ public:
                            QWidget *parent = 0);
     ~PkInstallPrinterDrivers();
 
-public slots:
-    void start();
-
 private slots:
-    void whatProvidesFinished(PackageKit::Transaction::Exit status, uint runtime);
+    void whatProvidesFinished(PackageKit::Transaction::Exit status);
     void addPackage(const PackageKit::Package &package);
 
 private:
@@ -51,4 +48,3 @@ private:
 };
 
 #endif
-

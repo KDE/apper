@@ -39,11 +39,10 @@ public:
                                 QWidget *parent = 0);
     ~PkInstallGStreamerResources();
 
-public slots:
-    void start();
+protected:
+    virtual void search();
 
 private slots:
-    void slotButtonClicked(int bt);
     void whatProvidesFinished(PackageKit::Transaction::Exit status);
     void addPackage(const PackageKit::Package &package);
 

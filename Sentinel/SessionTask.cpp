@@ -46,6 +46,7 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
    ui(new Ui::SessionTask)
 {
     ui->setupUi(KDialog::mainWidget());
+    setModal(true);
 
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
             this, SLOT(updatePallete()));
@@ -83,7 +84,6 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
         setExec(cmdline);
     }
 
-    KWindowSystem::setMainWindow(this, m_xid);
     setMinimumSize(QSize(420,280));
     KConfig config;
     KConfigGroup configGroup(&config, "SessionInstaller");
@@ -121,8 +121,18 @@ QWidget* SessionTask::mainWidget()
 void SessionTask::setInfo(const QString &title, const QString &text)
 {
     InfoWidget *info = new InfoWidget(this);
-    info->setTitle(title);
+    setTitle(title);
     info->setDescription(text);
+    setMainWidget(info);
+    setButtons(KDialog::Close);
+}
+
+void SessionTask::setError(const QString &title, const QString &text)
+{
+    InfoWidget *info = new InfoWidget(this);
+    setTitle(title);
+    info->setDescription(text);
+    info->setIcon(KIcon("dialog-error"));
     setMainWidget(info);
     setButtons(KDialog::Close);
 }
@@ -221,15 +231,32 @@ uint SessionTask::getPidSession()
 //     }
 // }
 
-void SessionTask::run()
+void SessionTask::search()
 {
-    // Call the start slot
-    QTimer::singleShot(0, this, SLOT(start()));
+    kDebug() << "virtual method called, falling back to commit()";
+    commit();
 }
 
-void SessionTask::start()
+void SessionTask::commit()
 {
-    // kDebug() << "dummy start slot";
+    kDebug() << "virtual method called";
+}
+
+void SessionTask::slotButtonClicked(int button)
+{
+    if (button == KDialog::Ok) {
+        kDebug() << mainWidget()->objectName();
+        if (mainWidget()->objectName() == "IntroDialog") {
+            enableButtonOk(false);
+            search();
+        } else if (mainWidget()->objectName() == "ReviewChanges") {
+            enableButtonOk(false);
+            commit();
+        }
+    } else {
+        KDialog::slotButtonClicked(button);
+        sendErrorFinished(Cancelled, "Aborted by the user");
+    }
 }
 
 void SessionTask::sendErrorFinished(DBusError error, const QString &msg)

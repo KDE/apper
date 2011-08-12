@@ -37,7 +37,6 @@ public:
     InfoWidget(QWidget *parent = 0);
     ~InfoWidget();
 
-    void setTitle(const QString &title);
     void setDescription(const QString &description);
     void setIcon(const KIcon &icon);
 

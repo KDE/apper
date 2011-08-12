@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,9 +27,11 @@
 
 using namespace PackageKit;
 
+class IntroDialog;
+class FilesModel;
 class PkInstallMimeTypes : public SessionTask
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     PkInstallMimeTypes(uint xid,
                        const QStringList &mime_types,
@@ -38,16 +40,17 @@ public:
                        QWidget *parent = 0);
     ~PkInstallMimeTypes();
 
-public slots:
-    void start();
-
 private slots:
+    void modelChanged();
+    virtual void search();
     void whatProvidesFinished(PackageKit::Transaction::Exit status);
     void addPackage(const PackageKit::Package &package);
 
 private:
     QList<Package> m_foundPackages;
     QStringList m_mimeTypes;
+    IntroDialog *m_introDialog;
+    FilesModel *m_model;
 };
 
 #endif

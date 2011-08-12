@@ -45,8 +45,7 @@ public:
     Q_DECLARE_FLAGS(OperationModes, OperationMode)
 
     explicit ReviewChanges(const QList<Package> &packages,
-                              QWidget *parent = 0,
-                              uint parentWId = 0);
+                           QWidget *parent = 0);
     ~ReviewChanges();
 
     QString title() const;

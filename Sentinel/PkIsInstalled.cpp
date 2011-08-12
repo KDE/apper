@@ -22,7 +22,6 @@
 
 #include <KpkStrings.h>
 
-#include <KMessageBox>
 #include <KLocale>
 #include <KDebug>
 
@@ -34,34 +33,26 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
    m_packageName(package_name),
    m_message(message)
 {
+    Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
+    connect(t, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(addPackage(PackageKit::Package)));
+    PkTransaction *trans = new PkTransaction(t, this);
+    setMainWidget(trans);
+    t->resolve(m_packageName, Transaction::FilterInstalled);
+    if (t->error()) {
+        QString msg = i18n("Failed to start resolve transaction");
+        if (showWarning()) {
+            setError(msg,
+                     KpkStrings::daemonError(t->error()));
+        }
+        sendErrorFinished(Failed, msg);
+    }
 }
 
 PkIsInstalled::~PkIsInstalled()
 {
-}
-
-void PkIsInstalled::start()
-{
-    Transaction *t = new Transaction(this);
-    PkTransaction *trans = new PkTransaction(t, this);
-    t->resolve(m_packageName, Transaction::FilterInstalled);
-    Transaction::InternalError error = t->error();
-    if (error) {
-        if (showWarning()) {
-            KMessageBox::sorryWId(parentWId(),
-                                  KpkStrings::daemonError(error),
-                                  i18n("Failed to start resolve transaction"));
-        }
-        sendErrorFinished(Failed, "Failed to start resolve transaction");
-    } else {
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                this, SLOT(searchFinished(PackageKit::Transaction::Exit)));
-        connect(t, SIGNAL(package(const PackageKit::Package &)),
-                this, SLOT(addPackage(const PackageKit::Package &)));
-        if (showProgress()) {
-            setMainWidget(trans);
-        }
-    }
 }
 
 void PkIsInstalled::searchFinished(PackageKit::Transaction::Exit status)

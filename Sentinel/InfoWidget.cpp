@@ -59,16 +59,6 @@ void InfoWidget::setIcon(const KIcon &icon)
     ui->iconL->setPixmap(icon.pixmap(128, 128));
 }
 
-void InfoWidget::setTitle(const QString &title)
-{
-    if (title.isNull()) {
-        ui->titleL->hide();
-    } else {
-        ui->titleL->show();
-        ui->titleL->setText(title);
-    }
-}
-
 void InfoWidget::setDescription(const QString &description)
 {
     ui->descriptionL->setText(description);

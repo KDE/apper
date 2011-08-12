@@ -27,6 +27,8 @@
 
 using namespace PackageKit;
 
+class IntroDialog;
+class FilesModel;
 class PkInstallProvideFiles : public SessionTask
 {
     Q_OBJECT
@@ -38,10 +40,11 @@ public:
                           QWidget *parent = 0);
     ~PkInstallProvideFiles();
 
-public slots:
-    void start();
+protected:
+    virtual void search();
 
 private slots:
+    void modelChanged();
     void searchFinished(PackageKit::Transaction::Exit status);
     void addPackage(const PackageKit::Package &package);
 
@@ -49,6 +52,8 @@ private:
     QList<Package> m_foundPackages;
     QStringList m_args;
     QString     m_alreadyInstalled;
+    IntroDialog *m_introDialog;
+    FilesModel *m_model;
 };
 
 #endif

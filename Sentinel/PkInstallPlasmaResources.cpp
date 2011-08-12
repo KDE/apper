@@ -27,7 +27,6 @@
 
 #include <QStandardItemModel>
 #include <KLocale>
-#include <KMessageBox>
 
 #include <KDebug>
 
@@ -76,67 +75,26 @@ PkInstallPlasmaResources::~PkInstallPlasmaResources()
 {
 }
 
-void PkInstallPlasmaResources::slotButtonClicked(int bt)
+void PkInstallPlasmaResources::search()
 {
-    if (bt == KDialog::Ok) {
-        if (mainWidget() == m_introDialog) {
-            Transaction *t = new Transaction(this);
-            PkTransaction *trans = new PkTransaction(t, this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                    this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
-            connect(t, SIGNAL(package(const PackageKit::Package &)),
-                    this, SLOT(addPackage(const PackageKit::Package &)));
-            t->whatProvides(Transaction::ProvidesPlasmaService,
-                            m_resources,
-                            Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-            if (t->error()) {
-                QString msg(i18n("Failed to search for provides"));
-                if (showWarning()) {
-                    KMessageBox::sorry(this,
-                                       KpkStrings::daemonError(t->error()),
-                                       msg);
-                }
-                sendErrorFinished(Failed, msg);
-            }
-
-            setMainWidget(trans);
-//             trans->installFiles(m_model->files());
-            enableButtonOk(false);
+    Transaction *t = new Transaction(this);
+    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
+    connect(t, SIGNAL(package(PackageKit::Package)),
+            this, SLOT(addPackage(PackageKit::Package)));
+    PkTransaction *trans = new PkTransaction(t, this);
+    setMainWidget(trans);
+    t->whatProvides(Transaction::ProvidesPlasmaService,
+                    m_resources,
+                    Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+    if (t->error()) {
+        QString msg(i18n("Failed to search for provides"));
+        if (showWarning()) {
+            setError(msg,
+                     KpkStrings::daemonError(t->error()));
         }
-    } else {
-        sendErrorFinished(Cancelled, "Aborted");
+        sendErrorFinished(Failed, msg);
     }
-    KDialog::slotButtonClicked(bt);
-}
-
-void PkInstallPlasmaResources::start()
-{
-
-
-//     if (ret == KMessageBox::Yes) {
-//         Transaction *t = new Transaction(this);
-//         t->whatProvides(Transaction::ProvidesPlasmaService,
-//                         search,
-//                         Transaction::FilterNotInstalled |
-//                         Transaction::FilterArch |
-//                         Transaction::FilterNewest);
-//         if (t->error()) {
-//             QString msg(i18n("Failed to search for provides"));
-//             KMessageBox::sorryWId(parentWId(), KpkStrings::daemonError(t->error()), msg);
-//             sendErrorFinished(InternalError, msg);
-//         } else {
-//             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-//                     this, SLOT(whatProvidesFinished(PackageKit::Transaction::Exit)));
-//             connect(t, SIGNAL(package(const PackageKit::Package &)),
-//                     this, SLOT(addPackage(const PackageKit::Package &)));
-//             if (showProgress()) {
-//                 kTransaction()->setTransaction(t);
-//                 kTransaction()->show();
-//             }
-//         }
-//     } else {
-//         sendErrorFinished(Cancelled, i18n("did not agree to search"));
-//     }
 }
 
 void PkInstallPlasmaResources::whatProvidesFinished(PackageKit::Transaction::Exit status)
@@ -146,22 +104,23 @@ void PkInstallPlasmaResources::whatProvidesFinished(PackageKit::Transaction::Exi
         if (m_foundPackages.size()) {
             ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
             setMainWidget(frm);
+            setTitle(frm->title());
 //             if (frm->exec(operationModes()) == 0) {
 //                 sendErrorFinished(Failed, "Transaction did not finish with success");
 //             } else {
 //                 finishTaskOk();
 //             }
         } else {
+            QString msg = i18n("Failed to search for Plasma service");
             if (showWarning()) {
-                KMessageBox::sorry(this,
-                                   i18n("Could not find service "
-                                        "in any configured software source"),
-                                   i18n("Failed to search for Plasma service"));
+                setInfo(msg,
+                        i18n("Could not find service "
+                             "in any configured software source"));
             }
-            sendErrorFinished(NoPackagesFound, "failed to find Plasma service");
+            sendErrorFinished(NoPackagesFound, msg);
         }
     } else {
-        sendErrorFinished(Failed, "what provides failed");
+        sendErrorFinished(Failed, "what provides transaction failed");
     }
 }
 
