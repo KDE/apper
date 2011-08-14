@@ -107,7 +107,7 @@ void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status
      switch (status) {
      case PkTransaction::Success :
          if (showFinished()) {
-             setInfo(i18n("Instalation Complete"),
+             setInfo(i18n("Installation Complete"),
                      i18np("File was installed successfully",
                            "Files were installed successfully",
                            m_model->files().count()));

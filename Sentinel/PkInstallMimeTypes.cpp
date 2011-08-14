@@ -60,12 +60,12 @@ void PkInstallMimeTypes::modelChanged()
     QString title;
     // this will come from DBus interface
     if (parentTitle.isNull()) {
-        title = i18np("A program is requiring support to open this kind of file",
-                      "A program is requiring support to open these kind of files",
+        title = i18np("A program is requiring support to open this kind of files",
+                      "A program is requiring support to open these kinds of files",
                       m_mimeTypes.size());
     } else {
-        title = i18np("The application %2 is requiring support to open this kind of file",
-                      "The application %2 is requiring support to open these kind of files",
+        title = i18np("The application %2 is requiring support to open this kind of files",
+                      "The application %2 is requiring support to open these kinds of files",
                       m_mimeTypes.size(),
                       parentTitle);
     }
