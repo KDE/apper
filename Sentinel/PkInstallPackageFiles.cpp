@@ -45,8 +45,10 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
                                              const QString &interaction,
                                              const QDBusMessage &message,
                                              QWidget *parent)
- : SessionTask(xid, interaction, message, parent)
+    : SessionTask(xid, interaction, message, parent)
 {
+    setWindowTitle(i18n("Install Packages Files"));
+
     if (Daemon::actions() & Transaction::RoleInstallFiles) {
         m_introDialog = new IntroDialog(this);
         m_model = new FilesModel(files, Daemon::mimeTypes(), this);
@@ -92,10 +94,10 @@ void PkInstallPackageFiles::modelChanged()
 
 void PkInstallPackageFiles::commit()
 {
-    PkTransaction *trans = new PkTransaction(0, this);
+
+    PkTransaction *trans = setTransaction(0);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
-    setMainWidget(trans);
+            this, SLOT(transactionFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     trans->installFiles(m_model->files());
 }
 

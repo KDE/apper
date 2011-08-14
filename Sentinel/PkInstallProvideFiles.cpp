@@ -36,6 +36,8 @@ PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
  : SessionTask(xid, interaction, message, parent),
    m_args(files)
 {
+    setWindowTitle(i18n("Install Packages that Provides Files"));
+
     m_introDialog = new IntroDialog(this);
     m_model = new FilesModel(files, QStringList(), this);
     connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
@@ -75,12 +77,11 @@ void PkInstallProvideFiles::modelChanged()
 void PkInstallProvideFiles::search()
 {
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = setTransaction(t);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
-    PkTransaction *trans = new PkTransaction(t, this);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
-    setMainWidget(trans);
     t->searchFiles(m_args.first(), Transaction::FilterArch | Transaction::FilterNewest);
     if (t->error()) {
         QString msg = i18n("Failed to start search file transaction");

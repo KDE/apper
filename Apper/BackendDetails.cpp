@@ -28,6 +28,8 @@ using namespace PackageKit;
 BackendDetails::BackendDetails(QWidget *parent)
   : KDialog(parent)
 {
+    setWindowTitle(i18n("Backend Details"));
+
     setupUi(mainWidget());
     setButtons(KDialog::Close);
     setWindowIcon(KIcon("help-about"));

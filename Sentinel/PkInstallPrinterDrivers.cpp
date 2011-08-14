@@ -36,6 +36,7 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
     SessionTask(xid, interaction, message, parent),
     m_resources(resources)
 {
+    setWindowTitle(i18n("Install Printer Drivers"));
     // TODO confirm operation
     QStringList search;
     foreach (const QString &deviceid, m_resources) {
@@ -60,12 +61,11 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
     }
 
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = setTransaction(t);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
-    PkTransaction *trans = new PkTransaction(t, this);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
-    setMainWidget(trans);
     t->whatProvides(Transaction::ProvidesPostscriptDriver,
                     search,
                     Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);

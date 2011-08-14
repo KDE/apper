@@ -214,7 +214,13 @@ bool PkInterface::SearchFile(const QString &file_name, const QString &interactio
 
 void PkInterface::show(SessionTask *widget) const
 {
+    if (widget->parentWId()) {
+        // Check before showing if the widget has
+        // a parent, otherwise it should not be modal
+        // to not lock the application
+        widget->setWindowModality(Qt::WindowModal);
+    }
     widget->show();
-    KWindowSystem::forceActiveWindow(widget->winId());
+    KWindowSystem::forceActiveWindow(widget->winId());  
     KWindowSystem::setMainWindow(widget, widget->parentWId());
 }

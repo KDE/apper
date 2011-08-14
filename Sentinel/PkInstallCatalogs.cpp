@@ -46,18 +46,20 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
    m_message(message),
    m_maxResolve(100)
 {
+    setWindowTitle(i18n("Install Packages Catalogs"));
+
     // Find out how many packages PackageKit is able to resolve
-    QFile file("/etc/PackageKit/PackageKit.conf");
-    QRegExp rx("\\s*MaximumItemsToResolve=(\\d+)", Qt::CaseSensitive);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&file);
-        while (!in.atEnd()) {
-            if (rx.indexIn(in.readLine()) != -1) {
-                m_maxResolve = rx.capturedTexts()[1].toInt();
-                break;
-            }
-        }
-    }
+//    QFile file("/etc/PackageKit/PackageKit.conf");
+//    QRegExp rx("\\s*MaximumItemsToResolve=(\\d+)", Qt::CaseSensitive);
+//    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+//        QTextStream in(&file);
+//        while (!in.atEnd()) {
+//            if (rx.indexIn(in.readLine()) != -1) {
+//                m_maxResolve = rx.capturedTexts()[1].toInt();
+//                break;
+//            }
+//        }
+//    }
 
     m_introDialog = new IntroDialog(this);
     m_model = new FilesModel(files, QStringList(), this);
@@ -94,12 +96,6 @@ void PkInstallCatalogs::modelChanged()
 
     m_introDialog->setDescription(message);
     setTitle(title);
-
-//    if (ret == KMessageBox::Yes) {
-//
-//    } else {
-//        sendErrorFinished(Cancelled, "did not agree to install");
-//    }
 }
 
 void PkInstallCatalogs::search()
@@ -149,12 +145,8 @@ void PkInstallCatalogs::search()
     QRegExp rx(pattern, Qt::CaseInsensitive);
 
     QStringList filesFailedToOpen;
-    bool failed = false;
 
     if (!m_files.isEmpty()) {
-        m_trans = new PkTransaction(0, this);
-        setMainWidget(m_trans);
-
         foreach (const QString &file, m_files) {
             QFile catalog(file);
             if (catalog.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -162,15 +154,11 @@ void PkInstallCatalogs::search()
                 while (!in.atEnd()) {
                     if (rx.indexIn(in.readLine()) != -1) {
                         if (rx.cap(1).compare("InstallPackages", Qt::CaseInsensitive) == 0) {
-                            failed = !installPackages(rx.cap(2).split(';'));
+                            m_installPackages.append(rx.cap(2).split(';'));
                         } else if (rx.cap(1).compare("InstallProvides", Qt::CaseInsensitive) == 0) {
-                            failed = !installProvides(rx.cap(2).split(';'));
+                            m_installProvides.append(rx.cap(2).split(';'));
                         } else if (rx.cap(1).compare("InstallFiles", Qt::CaseInsensitive) == 0) {
-                            failed = !installFiles(rx.cap(2).split(';'));
-                        }
-
-                        if (failed) {
-                            return;
+                            m_installFiles.append(rx.cap(2).split(';'));
                         }
                     }
                 }
@@ -178,7 +166,13 @@ void PkInstallCatalogs::search()
                 filesFailedToOpen << file;
             }
         }
-    } else if (showWarning() && filesFailedToOpen.size()) {
+    } else {
+        setInfo(i18n("Catalog not found"),
+                i18n("Could not find a catalog to install"));
+        return;
+    }
+
+    if (showWarning() && filesFailedToOpen.size()) {
         // TODO display a nicer message informing of already installed ones
         KMessageBox::sorry(this,
                            i18np("Catalog %2 failed to open",
@@ -188,86 +182,113 @@ void PkInstallCatalogs::search()
                            i18n("Failed to open"));
     }
 
-    if (foundPackages()) {
-        ReviewChanges *frm = new ReviewChanges(foundPackagesList(), this);
-        setTitle(frm->title());
-        setMainWidget(frm);/*
-        if (frm->exec(operationModes()) == 0) {
-            sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
-        } else {
-            finishTaskOk();
-        }*/
+    if (m_installPackages.isEmpty() &&
+        m_installProvides.isEmpty() &&
+        m_installFiles.isEmpty()) {
+        setInfo(i18n("Catalog is Empty"),
+                i18n("Could not find any package to install in this catalog"));
     } else {
-        //TODO fix me
+        // Start resolving
+        searchFinished(PkTransaction::Success);
+    }
+//    if (foundPackages()) {
+//        // Call search success that already have a common way to display changes
+//        searchSuccess();
+//    } else {
+//        //TODO fix me
 //        if (showWarning()) {
 //            // TODO display a nicer message informing of already installed ones
 //            setInfo(i18n("Catalog search complete"),
-//                    i18n("No package was found to be installed"));
+//                    i18n("No extra package was found to be installed"));
 //        }
 //        sendErrorFinished(NoPackagesFound, "no package found");
-    }
+//    }
 }
 
-bool PkInstallCatalogs::installPackages(const QStringList &packages)
+void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
 {
-    int count = 0;
-    while (count < packages.size()) {
-//         kDebug() << packages.mid(count, m_maxResolve);
-        Transaction *t = new Transaction(this);
-        t->resolve(packages.mid(count, m_maxResolve),
-                   Transaction::FilterArch | Transaction::FilterNewest);
-        count += m_maxResolve;
-        if (!runTransaction(t)) {
-            return false;
+    if (status == PkTransaction::Success) {
+        if (!m_installPackages.isEmpty()) {
+            // Continue resolving Install Packages
+            QStringList resolve;
+            int count = 0;
+            while (!m_installPackages.isEmpty() && count < m_maxResolve) {
+                // Remove the items from the list so next call we have less
+                resolve.append(m_installPackages.takeFirst());
+                ++count;
+            }
+            kDebug() << "m_installPackages" << m_maxResolve << m_installPackages.size() << resolve.size();
+
+            Transaction *t = new Transaction(this);
+            PkTransaction *trans = setTransaction(t);
+            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+                    this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+            connect(t, SIGNAL(package(PackageKit::Package)),
+                    this, SLOT(addPackage(PackageKit::Package)));
+            t->resolve(resolve, Transaction::FilterArch | Transaction::FilterNewest);
+            checkTransaction(t);
+        } else if (!m_installProvides.isEmpty()) {
+            // Continue resolving Install Provides
+            QStringList provides;
+            int count = 0;
+            while (!m_installProvides.isEmpty() && count < m_maxResolve) {
+                // Remove the items from the list so next call we have less
+                provides.append(m_installProvides.takeFirst());
+                ++count;
+            }
+            kDebug() << "m_installProvides" <<  m_maxResolve << m_installProvides.size() << provides.size();
+
+            Transaction *t = new Transaction(this);
+            PkTransaction *trans = setTransaction(t);
+            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+                    this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+            connect(t, SIGNAL(package(PackageKit::Package)),
+                    this, SLOT(addPackage(PackageKit::Package)));
+            t->whatProvides(Transaction::ProvidesAny,
+                            provides,
+                            Transaction::FilterArch | Transaction::FilterNewest);
+            checkTransaction(t);
+        } else if (!m_installFiles.isEmpty()) {
+            // Continue resolving Install Packages
+            QStringList files;
+            int count = 0;
+            while (!m_installFiles.isEmpty() && count < m_maxResolve) {
+                // Remove the items from the list so next call we have less
+                files.append(m_installFiles.takeFirst());
+                ++count;
+            }
+            kDebug() << "m_installFiles" << m_maxResolve << m_installFiles.size() << files.size();
+
+            Transaction *t = new Transaction(this);
+            PkTransaction *trans = setTransaction(t);
+            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+                    this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+            connect(t, SIGNAL(package(PackageKit::Package)),
+                    this, SLOT(addPackage(PackageKit::Package)));
+            t->searchFiles(files, Transaction::FilterArch | Transaction::FilterNewest);
+            checkTransaction(t);
+        } else {
+            // we are done resolving
+            SessionTask::searchFinished(status);
         }
-    }
-    return true;
-}
-
-bool PkInstallCatalogs::installProvides(const QStringList &provides)
-{
-    kDebug() << provides;
-    Transaction *t = new Transaction(this);
-    t->whatProvides(Transaction::ProvidesAny,
-                    provides,
-                    Transaction::FilterArch | Transaction::FilterNewest);
-    return runTransaction(t);
-}
-
-bool PkInstallCatalogs::installFiles(const QStringList &files)
-{
-    kDebug() << files;
-    Transaction *t = new Transaction(this);
-    t->searchFiles(files,
-                   Transaction::FilterArch | Transaction::FilterNewest);
-    return runTransaction(t);
-}
-
-bool PkInstallCatalogs::runTransaction(Transaction *t)
-{
-    if (t->error()) {
-        QString msg(i18n("Failed to start setup transaction"));
-        if (showWarning()) {
-            setError(msg, KpkStrings::daemonError(t->error()));
-        }
-        sendErrorFinished(Failed, msg);
-        return false;
     } else {
-        QEventLoop loop;
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                &loop, SLOT(quit()));
-        connect(t, SIGNAL(package(PackageKit::Package)),
-                this, SLOT(addPackage(PackageKit::Package)));
-        if (showProgress()) {
-            m_trans->setTransaction(t);
-        }
-        loop.exec();
-        return true;
+        // we got an error...
+        SessionTask::searchFinished(status);
+    }
+}
+
+void PkInstallCatalogs::checkTransaction(Transaction *transaction)
+{
+    if (transaction->error()) {
+        QString msg(i18n("Failed to start resolve transaction"));
+        setError(msg, KpkStrings::daemonError(transaction->error()));
+        sendErrorFinished(Failed, msg);
     }
 }
 
 void PkInstallCatalogs::addPackage(const PackageKit::Package &package)
 {
+    // When there are updates the package is available...
     if (package.info() != Package::InfoInstalled) {
         SessionTask::addPackage(package);
     } else {

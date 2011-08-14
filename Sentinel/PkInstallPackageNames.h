@@ -43,7 +43,6 @@ public:
 
 protected:
     virtual void search();
-    virtual void commit();
     virtual void notFound();
     virtual void searchFailed();
 

@@ -58,8 +58,8 @@ TransactionWatcher::TransactionWatcher(QObject *parent) :
     m_tracker = new KUiServerJobTracker(this);
 
     // keep track of new transactions
-    connect(Daemon::global(), SIGNAL(transactionListChanged(const QStringList &)),
-            this, SLOT(transactionListChanged(const QStringList &)));
+    connect(Daemon::global(), SIGNAL(transactionListChanged(QStringList)),
+            this, SLOT(transactionListChanged(QStringList)));
 
     m_hideAction = new QAction(this);
     m_hideAction->setText(i18n("Hide this icon"));
@@ -127,10 +127,10 @@ void TransactionWatcher::setCurrentTransaction(const QString &tid)
         // AVOID showing messages and restart requires when
         // the user was just simulating an instalation
         // TODO fix yum backend
-        connect(m_currentTransaction, SIGNAL(message(PackageKit::Transaction::Message, const QString &)),
-                this, SLOT(message(PackageKit::Transaction::Message, const QString &)));
-        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Package::Restart, const PackageKit::Package &)),
-                this, SLOT(requireRestart(PackageKit::Package::Restart, const PackageKit::Package &)));
+        connect(m_currentTransaction, SIGNAL(message(PackageKit::Transaction::Message, QString)),
+                this, SLOT(message(PackageKit::Transaction::Message, QString)));
+        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Package::Restart, PackageKit::Package)),
+                this, SLOT(requireRestart(PackageKit::Package::Restart, PackageKit::Package)));
 
         // Don't let the system sleep while doing some sensible actions
         suppressSleep(true, KpkStrings::action(role));
@@ -143,8 +143,8 @@ void TransactionWatcher::setCurrentTransaction(const QString &tid)
     m_transHasJob = !m_currentTransaction->isCallerActive();
     if (m_transHasJob) {
         TransactionJob *job = new TransactionJob(m_currentTransaction, this);
-        connect(m_currentTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
-                this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
+        connect(m_currentTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+                this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
         job->start();
         m_tracker->registerJob(job);
     }
@@ -186,7 +186,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
                                            "Packages: %2",
                                            m_restartPackages.size(),
                                            m_restartPackages.join(", ")));
-            connect(m_messagesSNI, SIGNAL(activateRequested(bool, const QPoint &)),
+            connect(m_messagesSNI, SIGNAL(activateRequested(bool, QPoint)),
                     this, SLOT(logout()));
         }
 
@@ -204,8 +204,8 @@ void TransactionWatcher::transactionChanged()
     Transaction *transaction = qobject_cast<Transaction*>(sender());
     if (!m_transHasJob && !transaction->isCallerActive()) {
         TransactionJob *job = new TransactionJob(transaction, this);
-        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
-                this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
+        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+                this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
         job->start();
         m_tracker->registerJob(job);
         m_transHasJob = true;
@@ -233,7 +233,7 @@ void TransactionWatcher::message(PackageKit::Transaction::Message type, const QS
                                   i18np("One message from the software manager",
                                         "%1 messages from the software manager",
                                         m_messages.size()));
-        connect(m_messagesSNI, SIGNAL(activateRequested(bool, const QPoint &)),
+        connect(m_messagesSNI, SIGNAL(activateRequested(bool, QPoint)),
                 this, SLOT(showMessages()));
 
         // Action for message handling

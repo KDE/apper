@@ -19,212 +19,85 @@
  ***************************************************************************/
 
 #include "ReviewChanges.h"
+#include "ui_ReviewChanges.h"
 
-#include <KMessageBox>
-#include <KWindowSystem>
+#include <PackageModel.h>
+#include <KpkDelegate.h>
+
 #include <KCategorizedSortFilterProxyModel>
 
 #include <KDebug>
 
-#include <Daemon>
-
-#include "KpkMacros.h"
-#include "KpkStrings.h"
-#include "KpkEnum.h"
-#include "KpkRequirements.h"
-#include "PackageModel.h"
-#include "PkTransactionDialog.h"
-#include "KpkDelegate.h"
-
-#include "ui_ReviewChanges.h"
-
-class ReviewChangesPrivate
-{
-public:
-    Ui::ReviewChanges ui;
-
-    PackageModel *mainPkgModel;
-    KpkDelegate *pkgDelegate;
-
-    QList<Package> remPackages;
-    QList<Package> addPackages;
-
-    Transaction::Roles actions;
-
-    PkTransactionDialog *transactionDialog;
-};
-
 ReviewChanges::ReviewChanges(const QList<Package> &packages,
                              QWidget *parent)
  : QWidget(parent),
-   d(new ReviewChangesPrivate),
-   m_flags(Default)
+   ui(new Ui::ReviewChanges)
 {
-    d->ui.setupUi(this);
+    ui->setupUi(this);
 
-    d->transactionDialog = 0;
 
     //initialize the model, delegate, client and  connect it's signals
-    d->ui.packageView->viewport()->setAttribute(Qt::WA_Hover);
-    d->mainPkgModel = new PackageModel(this);
+    m_model = new PackageModel(this);
+    ui->packageView->viewport()->setAttribute(Qt::WA_Hover);
     KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
-    changedProxy->setSourceModel(d->mainPkgModel);
+    changedProxy->setSourceModel(m_model);
     changedProxy->setCategorizedModel(true);
     changedProxy->sort(0);
     changedProxy->setDynamicSortFilter(true);
     changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     changedProxy->setSortRole(PackageModel::SortRole);
-    d->ui.packageView->setModel(changedProxy);
-    d->pkgDelegate = new KpkDelegate(d->ui.packageView);
-    d->pkgDelegate->setExtendPixmapWidth(0);
-    d->ui.packageView->setItemDelegate(d->pkgDelegate);
-    d->mainPkgModel->addPackages(packages, true);
-    connect(d->mainPkgModel, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
-            this, SLOT(checkChanged()));
+    ui->packageView->setModel(changedProxy);
+    m_model->addPackages(packages, true);
+
+    KpkDelegate *delegate = new KpkDelegate(ui->packageView);
+    delegate->setExtendPixmapWidth(0);
+    ui->packageView->setItemDelegate(delegate);
+
+    connect(m_model, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+            this, SLOT(selectionChanged()));
 }
 
 ReviewChanges::~ReviewChanges()
 {
-    // Make sure the dialog is deleted in case we are not it's parent
-    if (d->transactionDialog) {
-        d->transactionDialog->deleteLater();
-    }
-
-    delete d;
+    delete ui;
 }
 
 QString ReviewChanges::title() const
 {
     return i18np("The following package was found",
                  "The following packages were found",
-                 d->mainPkgModel->rowCount());
+                 m_model->rowCount());
 }
 
-int ReviewChanges::exec(OperationModes flags)
+QList<Package> ReviewChanges::packagesToRemove() const
 {
-    m_flags = flags;
-    if (m_flags & ShowConfirmation) {
-        show();
-    } else {
-        // Starts the action without showing the dialog
-        QTimer::singleShot(0, this, SLOT(doAction()));
-    }
-
-    QEventLoop loop;
-    connect(this, SIGNAL(finished(int)), &loop, SLOT(quit()));
-    loop.exec();
-
-    return QDialog::Accepted;
-}
-
-void ReviewChanges::doAction()
-{
-    // Fix up the parent when this class is not shown
-    QWidget *transParent = qobject_cast<QWidget*>(parent());
-    if (m_flags & ShowConfirmation) {
-        transParent = this;
-    }
-
-    d->actions = Daemon::actions();
-    d->remPackages.clear();
-    d->addPackages.clear();
-
-    foreach (const Package &p, d->mainPkgModel->selectedPackages()) {
+    QList<Package> ret;
+    foreach (const Package &p, m_model->selectedPackages()) {
         if (p.info() == Package::InfoInstalled ||
             p.info() == Package::InfoCollectionInstalled) {
             // check what packages are installed and marked to be removed
-            d->remPackages << p;
-        } else if (p.info() == Package::InfoAvailable ||
-                   p.info() == Package::InfoCollectionAvailable) {
+            ret << p;
+        }
+    }
+    return ret;
+}
+
+QList<Package> ReviewChanges::packagesToInstall() const
+{
+    QList<Package> ret;
+    foreach (const Package &p, m_model->selectedPackages()) {
+        if (p.info() == Package::InfoAvailable ||
+            p.info() == Package::InfoCollectionAvailable) {
             // check what packages are available and marked to be installed
-            d->addPackages << p;
+            ret << p;
         }
     }
-
-    if (!d->addPackages.isEmpty() || !d->remPackages.isEmpty()) {
-        d->transactionDialog = new PkTransactionDialog(0,
-                                                  PkTransactionDialog::Modal,
-                                                  transParent);
-        connect(d->transactionDialog, SIGNAL(finished(PkTransaction::ExitStatus)),
-                this, SLOT(transactionFinished(PkTransaction::ExitStatus)));
-
-        d->transactionDialog->show();
-
-        checkTask();
-    } else {
-//        reject();
-    }
+    return ret;
 }
 
-void ReviewChanges::checkTask()
+void ReviewChanges::selectionChanged()
 {
-    if (!d->remPackages.isEmpty()) {
-        d->transactionDialog->transaction()->removePackages(d->remPackages);
-    } else if (!d->addPackages.isEmpty()) {
-        d->transactionDialog->transaction()->installPackages(d->addPackages);
-    } else {
-        slotButtonClicked(KDialog::Ok);
-    }
-}
-
-void ReviewChanges::transactionFinished(PkTransaction::ExitStatus status)
-{
-    PkTransactionDialog *trans = qobject_cast<PkTransactionDialog*>(sender());
-    if (status == PkTransaction::Success) {
-        switch (trans->transaction()->role()) {
-        case Transaction::RoleRemovePackages:
-            emit successfullyRemoved();
-            taskDone(trans->transaction()->role());
-            break;
-        case Transaction::RoleInstallPackages:
-            emit successfullyInstalled();
-            taskDone(trans->transaction()->role());
-            break;
-        default:
-            kWarning() << "Role not Handled" << trans->transaction()->role();
-            break;
-        }
-    } else {
-        slotButtonClicked(KDialog::Cancel);
-    }
-}
-
-void ReviewChanges::taskDone(Transaction::Role role)
-{
-    if (role == Transaction::RoleRemovePackages) {
-        d->remPackages.clear();
-    } else if (role == Transaction::RoleInstallPackages) {
-        d->addPackages.clear();
-    }
-    checkTask();
-}
-
-void ReviewChanges::slotButtonClicked(int button)
-{
-    switch(button) {
-    case KDialog::Cancel :
-    case KDialog::Close :
-//        reject();
-        break;
-    case KDialog::Ok :
-//        accept();
-        break;
-    case KDialog::Apply :
-        hide();
-        doAction();
-        break;
-//    default :
-//        KDialog::slotButtonClicked(button);
-    }
-}
-
-void ReviewChanges::checkChanged()
-{
-    if (d->mainPkgModel->selectedPackages().size() > 0) {
-//        enableButtonApply(true);
-    } else {
-//        enableButtonApply(false);
-    }
+    hasSelectedPackages(!m_model->selectedPackages().isEmpty());
 }
 
 #include "ReviewChanges.moc"

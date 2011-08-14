@@ -94,6 +94,7 @@ QList<QStringList> AppInstall::applications(const QString &pkgName) const
 
 QString AppInstall::genericIcon(const QString &pkgName) const
 {
+    kDebug() << pkgName;
     if (m_appInstall->contains(pkgName)) {
         foreach (const QStringList &list, applications(pkgName)) {
             if (!list.at(AppIcon).isEmpty()) {

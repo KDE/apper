@@ -34,6 +34,8 @@ PkSearchFile::PkSearchFile(const QString &file_name,
    m_fileName(file_name),
    m_message(message)
 {
+    setWindowTitle(i18n("Search Packages that Provides Files"));
+
     // Check for a leading slash '/' return with an error if it's not there..
     if (!m_fileName.startsWith('/')) {
         sendErrorFinished(Failed, "Only full file name path is supported");
@@ -41,12 +43,11 @@ PkSearchFile::PkSearchFile(const QString &file_name,
     }
 
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = setTransaction(t);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
-    PkTransaction *trans = new PkTransaction(t, this);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
-    setMainWidget(trans);
     t->searchFiles(m_fileName, Transaction::FilterNewest);
     Transaction::InternalError error = t->error();
     if (error) {

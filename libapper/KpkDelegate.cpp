@@ -41,10 +41,10 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     // loads it here to be faster when displaying items
     m_packageIcon("package"),
     m_collectionIcon("package-orign"),
-    m_installIcon("go-down"),
-    m_installString(i18n("Install")),
-    m_removeIcon("edit-delete"),
-    m_removeString(i18n("Remove")),
+    m_installIcon("dialog-cancel"),
+    m_installString(i18n("Do not Install")),
+    m_removeIcon("dialog-cancel"),
+    m_removeString(i18n("Do not Remove")),
     m_undoIcon("edit-undo"),
     m_undoString(i18n("Deselect")),
     m_checkedIcon("dialog-ok-apply")
@@ -140,8 +140,8 @@ void KpkDelegate::paint(QPainter *painter,
             leftCount -= optBt.rect.width();
         }
     } else  if ((option.state & QStyle::State_MouseOver) ||
-                (option.state & QStyle::State_Selected)
-    ) {
+                (option.state & QStyle::State_Selected) ||
+                !pkgChecked) {
         if (leftToRight) {
             optBt.rect.setLeft(left + width - (m_buttonSize.width() + UNIVERSAL_PADDING));
             width -= m_buttonSize.width() + UNIVERSAL_PADDING;
@@ -154,22 +154,17 @@ void KpkDelegate::paint(QPainter *painter,
         optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
         optBt.rect.setSize(m_buttonSize); // the width and height sizes of the button
         optBt.features = QStyleOptionButton::Flat;
-        if (option.state & QStyle::State_MouseOver) {
-//                 if ()
-//             QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-//             QPoint pos = view->viewport()->mapFromGlobal(QCursor::pos());
-//             kDebug() << optBt.rect << pos << insideButton(optBt.rect, pos);
-//             insideCheckBox(rect, pos);
-            optBt.state |= QStyle::State_MouseOver;
-        }
-        optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;
         optBt.iconSize = m_buttonIconSize;
+        optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
+        optBt.text = pkgInstalled ? m_removeString : m_installString;
         if (pkgChecked) {
-            optBt.text = m_undoString;
-            optBt.icon = m_undoIcon;
+            optBt.state |= QStyle::State_Raised | QStyle::State_Active | QStyle::State_Enabled;;
         } else {
-            optBt.icon = pkgInstalled ? m_removeIcon   : m_installIcon;
-            optBt.text = pkgInstalled ? m_removeString : m_installString;
+            if ((option.state & QStyle::State_MouseOver) &&
+                !(option.state & QStyle::State_Selected)) {
+                optBt.state |= QStyle::State_MouseOver;
+            }
+            optBt.state |= QStyle::State_Sunken | QStyle::State_Active | QStyle::State_Enabled;
         }
         style->drawControl(QStyle::CE_PushButton, &optBt, painter);
     }
@@ -201,8 +196,16 @@ void KpkDelegate::paint(QPainter *painter,
 
     // Main icon
     QIcon icon;
+    if (pkgCollection) {
+        icon = m_collectionIcon;
+    } else {
+        icon = KpkIcons::getIcon(index.data(PackageModel::IconRole).toString(), QString());
+        if (icon.isNull()) {
+            icon = m_packageIcon;
+        }
+    }
 //     if (pkgIconPath.isEmpty()) {
-        icon = pkgCollection ? m_collectionIcon : m_packageIcon;
+//        icon = pkgCollection ? m_collectionIcon : m_packageIcon;
 //     } else {
 //         icon = KpkIcons::getIcon(pkgIconPath, "package");
 //     }

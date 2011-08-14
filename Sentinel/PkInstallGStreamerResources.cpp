@@ -36,6 +36,8 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
                                                          QWidget *parent)
     : SessionTask(xid, interaction, message, parent)
 {
+    setWindowTitle(i18n("Install GStreamer Resources"));
+
     m_introDialog = new IntroDialog(this);
     setMainWidget(m_introDialog);
     QStandardItemModel *model = new QStandardItemModel(this);
@@ -117,12 +119,11 @@ PkInstallGStreamerResources::~PkInstallGStreamerResources()
 void PkInstallGStreamerResources::search()
 {
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = setTransaction(t);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
-    PkTransaction *trans = new PkTransaction(t, this);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
-    setMainWidget(trans);
     t->whatProvides(Transaction::ProvidesCodec,
                     m_resources,
                     Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
@@ -133,7 +134,6 @@ void PkInstallGStreamerResources::search()
         }
         sendErrorFinished(Failed, msg);
     }
-
 }
 
 void PkInstallGStreamerResources::notFound()

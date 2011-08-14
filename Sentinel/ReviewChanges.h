@@ -23,56 +23,37 @@
 
 #include <QWidget>
 
-#include <Transaction>
+#include <Package>
 
-#include "PkTransactionDialog.h"
+namespace Ui {
+    class ReviewChanges;
+}
 
 using namespace PackageKit;
 
-class ReviewChangesPrivate;
+class PackageModel;
 class ReviewChanges : public QWidget
 {
     Q_OBJECT
 public:
-    enum OperationMode {
-        // Doesn't show confirmation and exits if some transaction is hidden
-        Default                 = 0x00,
-        ShowConfirmation        = 0x01,
-        ReturnOnlyWhenFinished  = 0x02,
-        HideProgress            = 0x04,
-        HideConfirmDeps         = 0x10
-    };
-    Q_DECLARE_FLAGS(OperationModes, OperationMode)
-
-    explicit ReviewChanges(const QList<Package> &packages,
-                           QWidget *parent = 0);
+    explicit ReviewChanges(const QList<Package> &packages, QWidget *parent = 0);
     ~ReviewChanges();
 
+    QList<Package> packagesToRemove() const;
+    QList<Package> packagesToInstall() const;
+
     QString title() const;
-    int exec(OperationModes flags = 0);
 
 signals:
-    void successfullyInstalled();
+    void hasSelectedPackages(bool has);
     void successfullyRemoved();
 
 private slots:
-    void transactionFinished(PkTransaction::ExitStatus status);
-
-    void doAction();
-    void checkChanged();
+    void selectionChanged();
 
 private:
-    void taskDone(Transaction::Role role);
-
-    void checkTask();
-
-    ReviewChangesPrivate *d;
-    OperationModes m_flags;
-
-protected slots:
-    virtual void slotButtonClicked(int button);
+    Ui::ReviewChanges *ui;
+    PackageModel *m_model;
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(ReviewChanges::OperationModes)
 
 #endif

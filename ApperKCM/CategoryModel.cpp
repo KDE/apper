@@ -83,8 +83,8 @@ CategoryModel::CategoryModel(Transaction::Roles roles, QObject *parent) :
     if (m_roles & Transaction::RoleGetCategories
         && Daemon::getTransactions().isEmpty()) {
         Transaction *trans = new Transaction(this);
-        connect(trans, SIGNAL(category(const QString &, const QString &, const QString &, const QString &, const QString &)),
-                this, SLOT(category(const QString &, const QString &, const QString &, const QString &, const QString &)));
+        connect(trans, SIGNAL(category(QString,QString,QString,QString,QString)),
+                this, SLOT(category(QString,QString,QString,QString,QString)));
         connect(trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 this, SIGNAL(finished()));
         trans->getCategories();

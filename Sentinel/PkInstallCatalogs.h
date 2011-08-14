@@ -28,7 +28,6 @@
 
 using namespace PackageKit;
 
-class PkTransaction;
 class IntroDialog;
 class FilesModel;
 class PkInstallCatalogs : public SessionTask
@@ -45,18 +44,20 @@ public:
 protected:
     virtual void search();
 
+protected slots:
+    virtual void addPackage(const PackageKit::Package &package);
+    virtual void searchFinished(PkTransaction::ExitStatus status);
+
 private slots:
     void modelChanged();
-    void addPackage(const PackageKit::Package &package);
 
 private:
-    bool installPackages(const QStringList &packages);
-    bool installProvides(const QStringList &provides);
-    bool installFiles(const QStringList &files);
-    bool runTransaction(Transaction *trans);
+    void checkTransaction(Transaction *trans);
 
-    PkTransaction *m_trans;
     QStringList  m_files;
+    QStringList  m_installPackages;
+    QStringList  m_installProvides;
+    QStringList  m_installFiles;
     QString      m_interaction;
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;

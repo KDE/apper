@@ -406,8 +406,8 @@ void PkTransaction::setTransaction(Transaction *trans)
                 d->simulateModel = new KpkSimulateModel(this, d->packages);
             }
             d->simulateModel->clear();
-            connect(m_trans, SIGNAL(package(const PackageKit::Package &)),
-                    d->simulateModel, SLOT(addPackage(const PackageKit::Package &)));
+            connect(m_trans, SIGNAL(package(PackageKit::Package)),
+                    d->simulateModel, SLOT(addPackage(PackageKit::Package)));
         }
 
         if (ui->progressView->isVisible()) {
@@ -421,7 +421,7 @@ void PkTransaction::setTransaction(Transaction *trans)
     setWindowIcon(KpkIcons::actionIcon(role));
 
     // Sets the kind of transaction
-    emit titleChanged(KpkStrings::action(role));
+//    emit titleChanged(KpkStrings::action(role));
 //     setCaption(KpkStrings::action(role));
 
     // Now sets the last package
@@ -433,14 +433,14 @@ void PkTransaction::setTransaction(Transaction *trans)
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
     connect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
-    connect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
+    connect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
     connect(m_trans, SIGNAL(changed()),
             this, SLOT(updateUi()));
     connect(m_trans, SIGNAL(eulaRequired(PackageKit::Eula)),
             this, SLOT(eulaRequired(PackageKit::Eula)));
-    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)),
-            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
+    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, QString, QString)),
+            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, QString, QString)));
     connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Signature)),
             this, SLOT(repoSignatureRequired(PackageKit::Signature)));
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
@@ -452,18 +452,18 @@ void PkTransaction::unsetTransaction()
         return;
     }
 
-    disconnect(m_trans, SIGNAL(package(const PackageKit::Package &)),
-               d->simulateModel, SLOT(addPackage(const PackageKit::Package &)));
+    disconnect(m_trans, SIGNAL(package(PackageKit::Package)),
+               d->simulateModel, SLOT(addPackage(PackageKit::Package)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
-    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, const QString &)),
-               this, SLOT(errorCode(PackageKit::Transaction::Error, const QString &)));
+    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+               this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
     disconnect(m_trans, SIGNAL(changed()),
                this, SLOT(updateUi()));
     disconnect(m_trans, SIGNAL(eulaRequired(PackageKit::Eula)),
                this, SLOT(eulaRequired(PackageKit::Eula)));
-    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)),
-               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, const QString &, const QString &)));
+    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, QString, QString)),
+               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, QString, QString)));
     disconnect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Signature)),
                this, SLOT(repoSignatureRequired(PackageKit::Signature)));
 }
@@ -505,7 +505,13 @@ void PkTransaction::requeueTransaction()
 
 void PkTransaction::updateUi()
 {
-    uint percentage = m_trans->percentage();
+    Transaction *transaction = qobject_cast<Transaction*>(sender());
+    if (transaction == 0 && (transaction = m_trans) == 0) {
+        kWarning() << "no transaction object";
+        return;
+    }
+
+    uint percentage = transaction->percentage();
     if (percentage <= 100) {
         ui->progressBar->setMaximum(100);
         ui->progressBar->setValue(percentage);
@@ -514,32 +520,41 @@ void PkTransaction::updateUi()
         ui->progressBar->reset();
     }
 
-    ui->progressView->setSubProgress(m_trans->subpercentage());
-    ui->progressBar->setRemaining(m_trans->remainingTime());
+    ui->progressView->setSubProgress(transaction->subpercentage());
+    ui->progressBar->setRemaining(transaction->remainingTime());
 
     // Status & Speed
-    Transaction::Status status = m_trans->status();
+    Transaction::Status status = transaction->status();
     if (m_status != status) {
         m_status = status;
         ui->currentL->setText(KpkStrings::status(status));
 
-//         kDebug() << KIconLoader::global()->iconPath(KpkIcons::statusAnimation(status), -KIconLoader::SizeLarge);
         KPixmapSequence sequence = KPixmapSequence(KpkIcons::statusAnimation(status),
                                                    KIconLoader::SizeLarge);
         if (sequence.isValid()) {
             d->busySeq->setSequence(sequence);
             d->busySeq->start();
         }
-    } else if (status == Transaction::StatusDownload && m_trans->speed() != 0) {
-        uint speed = m_trans->speed();
+    } else if (status == Transaction::StatusDownload && transaction->speed() != 0) {
+        uint speed = transaction->speed();
         if (speed) {
             ui->currentL->setText(i18n("Downloading packages at %1/s",
                                          KGlobal::locale()->formatByteSize(speed)));
         }
     }
 
+    Transaction::Role role = transaction->role();
+    if (d->role != role &&
+        role != Transaction::RoleInstallSignature &&
+        role != Transaction::RoleAcceptEula &&
+        role != Transaction::RoleGetFiles) {
+        // We need to keep the original role for requeuing
+        d->role = role;
+        emit titleChanged(KpkStrings::action(role));
+    }
+
     // check to see if we can cancel
-    bool cancel = m_trans->allowCancel();
+    bool cancel = transaction->allowCancel();
     emit allowCancel(cancel);
     ui->cancelButton->setEnabled(cancel);
 }

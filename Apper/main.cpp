@@ -21,10 +21,31 @@
 #include "Apper.h"
 #include <version.h>
 
+#include <QDBusMessage>
+#include <QDBusConnection>
+
 #include <KDebug>
 #include <KConfig>
 #include <KAboutData>
 #include <KCmdLineArgs>
+#include <KUrl>
+
+int invoke(const QString &method_name, const QStringList &args)
+{
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
+                                             "/org/freedesktop/PackageKit",
+                                             "org.freedesktop.PackageKit.Modify",
+                                             method_name);
+    message << (uint) 0;
+    message << args;
+    message << QString();
+
+    // This call must block otherwise this application closes before
+    // smarticon is activated
+    QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::Block);
+    return reply.type() == QDBusMessage::ErrorMessage ? 1 : 0;
+}
 
 int main(int argc, char **argv)
 {
@@ -52,6 +73,42 @@ int main(int argc, char **argv)
     options.add("remove-package-by-file <filename>", ki18n("Single package remover"));
     options.add("+[package]", ki18n("Package file to install"));
     KCmdLineArgs::addCmdLineOptions(options);
+
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+    if (args->count()) {
+        // grab the list of files
+        QStringList urls;
+        for (int i = 0; i < args->count(); i++) {
+            urls << args->url(i).url();
+        }
+
+        // TODO remote files are copied to /tmp
+        // what will happen if we call the other process to
+        // install and this very one closes? will the files
+        // in /tmp be deleted?
+        return invoke("InstallPackageFiles", urls);
+    }
+
+    if (args->isSet("install-mime-type")) {
+        return invoke("InstallMimeTypes", args->getOptionList("install-mime-type"));
+    }
+
+    if (args->isSet("install-package-name")) {
+        return invoke("InstallPackageNames", args->getOptionList("install-package-name"));
+    }
+
+    if (args->isSet("install-provide-file")) {
+        return invoke("InstallProvideFiles", args->getOptionList("install-provide-file"));
+    }
+
+    if (args->isSet("install-catalog")) {
+        return invoke("InstallCatalogs", args->getOptionList("install-catalog"));
+    }
+
+    if (args->isSet("remove-package-by-file")) {
+        return invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
+    }
 
     Apper::addCmdLineOptions();
 

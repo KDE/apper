@@ -36,6 +36,8 @@ PkInstallMimeTypes::PkInstallMimeTypes(uint xid,
  : SessionTask(xid, interaction, message, parent),
    m_mimeTypes(mime_types)
 {
+    setWindowTitle(i18n("Install Support for File Types"));
+
     m_introDialog = new IntroDialog(this);
     m_model = new FilesModel(QStringList(), mime_types, this);
     connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
@@ -74,15 +76,14 @@ void PkInstallMimeTypes::modelChanged()
 void PkInstallMimeTypes::search()
 {
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = setTransaction(t);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
-    PkTransaction *trans = new PkTransaction(t, this);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     t->whatProvides(Transaction::ProvidesMimetype,
                     m_mimeTypes,
                     Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-    setMainWidget(trans);
     if (t->error()) {
         if (showWarning()) {
             setError(i18n("Failed to search for provides"),

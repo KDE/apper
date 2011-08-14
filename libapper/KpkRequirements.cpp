@@ -240,11 +240,8 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
     d->ui.actionsView->setModel(d->actionsModel);
     d->ui.actionsView->setItemDelegate(new KActionsViewDelegate(d->ui.actionsView));
 
-    connect(d->ui.actionsView->selectionModel(),
-                SIGNAL(currentChanged(const QModelIndex &,
-                                      const QModelIndex &)),
-            this,
-                SLOT(actionClicked(const QModelIndex &)));
+    connect(d->ui.actionsView->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
+            this, SLOT(actionClicked(QModelIndex)));
 
     // Sets a transparent background
     QWidget *actionsViewport = d->ui.actionsView->viewport();

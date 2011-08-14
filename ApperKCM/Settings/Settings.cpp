@@ -54,7 +54,7 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     originTV->header()->setDefaultAlignment(Qt::AlignCenter);
     if (m_roles & Transaction::RoleGetRepoList) {
         // The data will be loaded when Load is called
-        connect(m_originModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+        connect(m_originModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 this, SLOT(checkChanges()));
     } else {
         // Disables the group box
@@ -108,8 +108,8 @@ void Settings::on_editOriginsPB_clicked()
 void Settings::on_showOriginsCB_stateChanged(int state)
 {
     Transaction *transaction = new Transaction(this);
-    connect(transaction, SIGNAL(repoDetail(QString, QString, bool)),
-            m_originModel, SLOT(addOriginItem(QString, QString, bool)));
+    connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
+            m_originModel, SLOT(addOriginItem(QString,QString,bool)));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_originModel, SLOT(finished()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),

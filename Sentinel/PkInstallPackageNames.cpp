@@ -39,6 +39,8 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
    m_packages(packages),
    m_message(message)
 {
+    setWindowTitle(i18n("Install Packages by Name"));
+
     m_introDialog = new IntroDialog(this);
     QStandardItemModel *model = new QStandardItemModel(this);
 
@@ -78,12 +80,11 @@ PkInstallPackageNames::~PkInstallPackageNames()
 void PkInstallPackageNames::search()
 {
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = setTransaction(t);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
-    PkTransaction *trans = new PkTransaction(t, this);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
-    setMainWidget(trans);
     t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
     if (t->error()) {
         QString msg(i18n("Failed to start resolve transaction"));
@@ -92,10 +93,6 @@ void PkInstallPackageNames::search()
         }
         sendErrorFinished(Failed, msg);
     }
-}
-
-void PkInstallPackageNames::commit()
-{
 }
 
 void PkInstallPackageNames::notFound()

@@ -24,6 +24,8 @@
 #include "InfoWidget.h"
 #include "ReviewChanges.h"
 
+#include <KpkStrings.h>
+
 #include <limits.h>
 #include <QtDBus/QDBusConnection>
 #include <QTimer>
@@ -33,6 +35,7 @@
 #include <KWindowSystem>
 #include <KLocale>
 #include <KGlobalSettings>
+#include <KPushButton>
 
 #include <KDebug>
 
@@ -44,10 +47,11 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
  : KDialog(parent),
    m_xid(xid),
    m_message(message),
+   m_reviewChanges(0),
+   m_pkTransaction(0),
    ui(new Ui::SessionTask)
 {
     ui->setupUi(KDialog::mainWidget());
-    setModal(true);
 
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
             this, SLOT(updatePallete()));
@@ -107,14 +111,43 @@ void SessionTask::addPackage(const PackageKit::Package &package)
 
 void SessionTask::searchFinished(PkTransaction::ExitStatus status)
 {
+    if (m_pkTransaction) {
+        // Disconnect so it can be connected to commitFinished latter
+        disconnect(m_pkTransaction, SIGNAL(finished(PkTransaction::ExitStatus)),
+                   this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+    }
+
     if (status == PkTransaction::Success) {
         if (m_foundPackages.isEmpty()) {
             notFound();
         } else {
             searchSuccess();
         }
+    } else if (status == PkTransaction::Cancelled) {
+        slotButtonClicked(KDialog::Cancel);
     } else {
         searchFailed();
+    }
+}
+
+void SessionTask::commitFinished(PkTransaction::ExitStatus status)
+{
+    if (m_pkTransaction) {
+        // Disconnect so it can be connected to something else latter
+        disconnect(m_pkTransaction, SIGNAL(finished(PkTransaction::ExitStatus)),
+                   this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+    }
+
+    if (status == PkTransaction::Success) {
+        if (!m_removePackages.isEmpty()) {
+            removePackages();
+        } else {
+            commitSuccess();
+        }
+    } else if (status == PkTransaction::Cancelled) {
+        slotButtonClicked(KDialog::Cancel);
+    } else {
+        commitFailed();
     }
 }
 
@@ -123,20 +156,13 @@ void SessionTask::updatePallete()
     QPalette pal;
     pal.setColor(QPalette::Window, KGlobalSettings::activeTitleColor());
     pal.setColor(QPalette::WindowText, KGlobalSettings::activeTextColor());
-    ui->titleL->setPalette(pal);
+    ui->brackgroundFrame->setPalette(pal);
 }
 
 void SessionTask::setMainWidget(QWidget *widget)
 {
     ui->stackedWidget->addWidget(widget);
     ui->stackedWidget->setCurrentWidget(widget);
-    if (widget->objectName() == QLatin1String("PkTransaction")) {
-        PkTransaction *trans = qobject_cast<PkTransaction*>(widget);
-        trans->hideCancelButton();
-        connect(trans, SIGNAL(titleChanged(QString)),
-                this, SLOT(setTitle(QString)));
-        setTitle(trans->title());
-    }
 }
 
 QWidget* SessionTask::mainWidget()
@@ -151,6 +177,7 @@ void SessionTask::setInfo(const QString &title, const QString &text)
     info->setDescription(text);
     setMainWidget(info);
     setButtons(KDialog::Close);
+    button(KDialog::Close)->setFocus();
 }
 
 void SessionTask::setError(const QString &title, const QString &text)
@@ -161,6 +188,18 @@ void SessionTask::setError(const QString &title, const QString &text)
     info->setIcon(KIcon("dialog-error"));
     setMainWidget(info);
     setButtons(KDialog::Close);
+    button(KDialog::Close)->setFocus();
+}
+
+void SessionTask::setFinish(const QString &title, const QString &text)
+{
+    InfoWidget *info = new InfoWidget(this);
+    setTitle(title);
+    info->setDescription(text);
+    info->setIcon(KIcon("dialog-ok-apply"));
+    setMainWidget(info);
+    setButtons(KDialog::Close);
+    button(KDialog::Close)->setFocus();
 }
 
 void SessionTask::setTitle(const QString &title)
@@ -248,15 +287,6 @@ uint SessionTask::getPidSession()
     return UINT_MAX;
 }
 
-// void SessionTask::setParentWindow(QWidget *widget)
-// {
-//     if (m_xid != 0) {
-//         KWindowSystem::setMainWindow(widget, m_xid);
-//     } else {
-// //         updateUserTimestamp(); // make it get focus unconditionally :-/
-//     }
-// }
-
 void SessionTask::search()
 {
     kDebug() << "virtual method called, falling back to commit()";
@@ -266,6 +296,35 @@ void SessionTask::search()
 void SessionTask::commit()
 {
     kDebug() << "virtual method called";
+    if (m_reviewChanges) {
+        QList<Package> installPackages = m_reviewChanges->packagesToInstall();
+        m_removePackages = m_reviewChanges->packagesToRemove();
+
+        if (installPackages.isEmpty() && m_removePackages.isEmpty()) {
+            setInfo(i18n("There are no packages to Install or Remove"),
+                    i18n("This action should not happen"));
+            sendErrorFinished(Failed, "to install or remove due to empty lists");
+        } else if (!installPackages.isEmpty()) {
+            // Install Packages
+            PkTransaction *trans = setTransaction(0);
+            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+                    this, SLOT(commitFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
+            trans->installPackages(installPackages);
+        } else {
+            // Remove them
+            removePackages();
+        }
+    }
+}
+
+void SessionTask::removePackages()
+{
+    // Remove Packages
+    PkTransaction *trans = setTransaction(0);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(commitFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
+    trans->removePackages(m_removePackages);
+    m_removePackages.clear();
 }
 
 void SessionTask::notFound()
@@ -289,14 +348,28 @@ void SessionTask::searchFailed()
 void SessionTask::searchSuccess()
 {
     kDebug() << "virtual method called";
-    ReviewChanges *frm = new ReviewChanges(m_foundPackages, this);
-    setTitle(frm->title());
-    setMainWidget(frm);
-//            if (frm->exec(operationModes()) == 0) {
-//                sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
-//            } else {
-//                finishTaskOk();
-//            }
+    enableButtonOk(true);
+    m_reviewChanges = new ReviewChanges(m_foundPackages, this);
+    setTitle(m_reviewChanges->title());
+    connect(m_reviewChanges, SIGNAL(hasSelectedPackages(bool)),
+            this, SLOT(enableButtonOk(bool)));
+    setMainWidget(m_reviewChanges);
+    button(KDialog::Ok)->setFocus();
+}
+
+void SessionTask::commitFailed()
+{
+    kDebug() << "virtual method called";
+    setInfo(i18n("Failed to commit transaction"),
+            KpkStrings::errorMessage(m_pkTransaction->error()));
+    sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
+}
+
+void SessionTask::commitSuccess()
+{
+    kDebug() << "virtual method called";
+    setFinish(i18n("Task completed"), i18n("All operations were commited succesfully"));
+    finishTaskOk();
 }
 
 void SessionTask::slotButtonClicked(int button)
@@ -433,6 +506,24 @@ QList<Package> SessionTask::foundPackagesList() const
     return m_foundPackages;
 }
 
+PkTransaction* SessionTask::setTransaction(Transaction *transaction)
+{
+    if (m_pkTransaction) {
+        m_pkTransaction->setTransaction(transaction);
+    } else {
+        m_pkTransaction = new PkTransaction(transaction, this);
+        m_pkTransaction->hideCancelButton();
+        ui->stackedWidget->addWidget(m_pkTransaction);
+        connect(m_pkTransaction, SIGNAL(titleChanged(QString)),
+                this, SLOT(setTitle(QString)));
+        connect(this, SIGNAL(cancelClicked()),
+                m_pkTransaction, SLOT(cancel()));
+        setTitle(m_pkTransaction->title());
+    }
+    ui->stackedWidget->setCurrentWidget(m_pkTransaction);
+    return m_pkTransaction;
+}
+
 void SessionTask::finishTaskOk()
 {
     sendMessageFinished(m_message.createReply());
@@ -477,24 +568,5 @@ bool SessionTask::showWarning() const
 {
     return m_interactions & Warning;
 }
-
-//ReviewChanges::OperationModes SessionTask::operationModes() const
-//{
-//    ReviewChanges::OperationModes opt;
-//    opt = ReviewChanges::ReturnOnlyWhenFinished;
-//    if (showConfirmInstall()) {
-//        opt |= ReviewChanges::ShowConfirmation;
-//    }
-
-//    if (!showProgress()) {
-//        opt |= ReviewChanges::HideProgress;
-//    }
-
-//    if (!showConfirmDeps()) {
-//        opt |= ReviewChanges::HideConfirmDeps;
-//    }
-
-//    return opt;
-//}
 
 #include "SessionTask.moc"

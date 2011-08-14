@@ -21,9 +21,8 @@
 #ifndef SESSION_TASK_H
 #define SESSION_TASK_H
 
-#include <kdemacros.h>
+#include <Transaction>
 #include <PkTransaction.h>
-//#include "ReviewChanges.h"
 
 #include <QDBusMessage>
 #include <KDialog>
@@ -32,6 +31,7 @@ namespace Ui {
     class SessionTask;
 }
 
+class ReviewChanges;
 class SessionTask : public KDialog
 {
     Q_OBJECT
@@ -71,12 +71,12 @@ public:
     Interactions interactions() const;
     uint timeout() const;
 
-//    ReviewChanges::OperationModes operationModes() const;
     void setMainWidget(QWidget *widget);
     QWidget* mainWidget();
 
     void setInfo(const QString &title, const QString &text);
     void setError(const QString &title, const QString &text);
+    void setFinish(const QString &title, const QString &text);
 
     uint parentWId() const;
 
@@ -87,10 +87,13 @@ protected:
     virtual void notFound();
     virtual void searchFailed();
     virtual void searchSuccess();
+    virtual void commitFailed();
+    virtual void commitSuccess();
 
     bool foundPackages() const;
     int  foundPackagesSize() const;
     QList<Package> foundPackagesList() const;
+    PkTransaction* setTransaction(Transaction *transaction);
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);
@@ -100,11 +103,13 @@ protected slots:
     void setTitle(const QString &title);
     virtual void addPackage(const PackageKit::Package &package);
     virtual void searchFinished(PkTransaction::ExitStatus status);
+    virtual void commitFinished(PkTransaction::ExitStatus status);
 
 private slots:
     void updatePallete();
 
 private:
+    void removePackages();
     void parseInteraction(const QString &interaction);
     uint getPidSystem();
     uint getPidSession();
@@ -118,6 +123,9 @@ private:
     Interactions m_interactions;
     uint m_timeout;
     QList<Package> m_foundPackages;
+    QList<Package> m_removePackages;
+    ReviewChanges *m_reviewChanges;
+    PkTransaction *m_pkTransaction;
     Ui::SessionTask *ui;
 };
 

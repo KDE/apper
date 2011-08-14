@@ -33,13 +33,14 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
    m_packageName(package_name),
    m_message(message)
 {
+    setWindowTitle(i18n("Quering if a Package is Installed"));
+
     Transaction *t = new Transaction(this);
+    PkTransaction *trans = setTransaction(t);
+    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
-    PkTransaction *trans = new PkTransaction(t, this);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)));
-    setMainWidget(trans);
     t->resolve(m_packageName, Transaction::FilterInstalled);
     if (t->error()) {
         QString msg = i18n("Failed to start resolve transaction");
