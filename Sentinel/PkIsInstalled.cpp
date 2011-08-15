@@ -33,7 +33,7 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
    m_packageName(package_name),
    m_message(message)
 {
-    setWindowTitle(i18n("Quering if a Package is Installed"));
+    setWindowTitle(i18n("Querying if a Package is Installed"));
 
     Transaction *t = new Transaction(this);
     PkTransaction *trans = setTransaction(t);

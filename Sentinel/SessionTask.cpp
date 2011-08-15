@@ -368,7 +368,7 @@ void SessionTask::commitFailed()
 void SessionTask::commitSuccess()
 {
     kDebug() << "virtual method called";
-    setFinish(i18n("Task completed"), i18n("All operations were commited succesfully"));
+    setFinish(i18n("Task completed"), i18n("All operations were committed successfully"));
     finishTaskOk();
 }
 
