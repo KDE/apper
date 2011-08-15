@@ -61,6 +61,7 @@ target_link_libraries(apper-sentinel
     ${KDE4_SOLID_LIBS}
     ${QPACKAGEKIT2_LIBRARIES}
     ${DEBCONF_KDE_LIB}
+    ${QT_QTXMLPATTERNS_LIBRARY}
     libapper
 )
 

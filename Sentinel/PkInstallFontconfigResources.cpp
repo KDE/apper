@@ -25,6 +25,8 @@
 #include <KpkStrings.h>
 
 #include <QStandardItemModel>
+#include <QXmlQuery>
+#include <QFile>
 
 #include <KLocale>
 #include <KDebug>
@@ -34,8 +36,7 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
                                                            const QString &interaction,
                                                            const QDBusMessage &message,
                                                            QWidget *parent)
- : SessionTask(xid, interaction, message, parent),
-   m_resources(resources)
+ : SessionTask(xid, interaction, message, parent)
 {
     setWindowTitle(i18n("Installs new Fonts"));
 
@@ -46,18 +47,57 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
             this, SLOT(enableButtonOk(bool)));
     setMainWidget(introDialog);
 
+    // This will only validate fields
+    QStringList errors;
+    QStringList iso639;
     foreach (const QString &font, resources) {
         // TODO never return in here
         // TODO add name field from /usr/share/xml/iso-codes/iso_639.xml into model
         if (!font.startsWith(QLatin1String(":lang="))) {
-            sendErrorFinished(InternalError, QString("not recognised prefix: '%1'").arg(font));
-            return;
+            errors << QString("not recognised prefix: '%1'").arg(font);
+            kWarning() << QString("not recognised prefix: '%1'").arg(font);
+            continue;
         }
         int size = font.size();
         if (size < 7 || size > 20) {
-            sendErrorFinished(InternalError, QString(" lang tag malformed: '%1'").arg(font));
-            return;
+            errors << QString("lang tag malformed: '%1'").arg(font);
+            kWarning() << QString("lang tag malformed: '%1'").arg(font);
+            continue;
         }
+//        iso639.append(font.res);
+        m_resources << font;
+    }
+
+    if (m_resources.isEmpty()) {
+        setError(i18n("Could interpret request"), i18n("Please verify if the request was valid"));
+        sendErrorFinished(InternalError, errors.join("\n"));
+        return;
+    }
+
+    // Search for the iso 639 names to present it nicely to the user
+    QStringList niceNames;
+    QFile file("/usr/share/xml/iso-codes/iso_639.xml");
+    file.open(QFile::ReadOnly);
+    QXmlQuery query;
+    query.bindVariable("path", &file);
+    foreach (const QString &font, iso639) {
+        QString queryTxt;
+        queryTxt = QString("declare variable $path external;"
+                           "doc($path)/iso_639_entries/"
+                           "iso_639_entry[@iso_639_2B_code=\"%1\" or "
+                                         "@iso_639_2T_code=\"%1\" or "
+                                         "@iso_639_1_code=\"%1\"]/string(@name)").arg(font);
+        query.setQuery(queryTxt);
+        QStringList result;
+        query.evaluateTo(&result);
+        niceNames.append(result);
+    }
+
+    kDebug() << "result" << niceNames;
+    foreach (const QString &name, niceNames) {
+        QStandardItem *item = new QStandardItem(name);
+        item->setIcon(KIcon("fonts-package").pixmap(32, 32));
+        model->appendRow(item);
     }
 
     QString description;
