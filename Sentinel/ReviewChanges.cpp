@@ -97,7 +97,7 @@ QList<Package> ReviewChanges::packagesToInstall() const
 
 void ReviewChanges::selectionChanged()
 {
-    hasSelectedPackages(!m_model->selectedPackages().isEmpty());
+    emit hasSelectedPackages(!m_model->selectedPackages().isEmpty());
 }
 
 #include "ReviewChanges.moc"

@@ -45,7 +45,8 @@ FilesModel::FilesModel(const QStringList &files, const QStringList &mimes, QObje
         // we are searching for mimetypes
         foreach (const QString &mime, mimes) {
             KMimeType::Ptr mimePtr = KMimeType::mimeType(mime);
-            if (mimePtr->isValid()) {
+            // Make sure we have a pointer
+            if (mimePtr && mimePtr->isValid()) {
                 QStandardItem *item = new QStandardItem(mime);
                 item->setData(mime);
                 item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mimePtr->iconName(),

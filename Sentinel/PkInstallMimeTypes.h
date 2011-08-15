@@ -23,7 +23,6 @@
 
 #include "SessionTask.h"
 
-class IntroDialog;
 class FilesModel;
 class PkInstallMimeTypes : public SessionTask
 {
@@ -37,14 +36,12 @@ public:
     ~PkInstallMimeTypes();
 
 private slots:
-    void modelChanged();
     virtual void search();
     virtual void notFound();
 
 private:
-    QStringList m_mimeTypes;
-    IntroDialog *m_introDialog;
     FilesModel *m_model;
+    QStringList m_mimeTypes;
 };
 
 #endif

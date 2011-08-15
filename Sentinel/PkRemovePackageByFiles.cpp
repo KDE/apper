@@ -42,6 +42,7 @@ PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
     setWindowTitle(i18n("Remove Packages that Provides Files"));
 
     m_introDialog = new IntroDialog(this);
+    m_introDialog->acceptDrops(i18n("You can drop more files in here"));
     m_model = new FilesModel(files, QStringList(), this);
     connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
             this, SLOT(modelChanged()));
@@ -57,33 +58,47 @@ PkRemovePackageByFiles::~PkRemovePackageByFiles()
 
 void PkRemovePackageByFiles::modelChanged()
 {
-    QString message;
-    message = i18n("Press <i>Continue</i> if you want to remove");
-    enableButtonOk(!m_model->files().isEmpty());
-    m_introDialog->setDescription(message);
+    QStringList files = m_model->files();
+    enableButtonOk(!files.isEmpty());
+
+    QString description;
+    if (files.isEmpty()) {
+        description = i18n("No supported files were provided");
+    } else {
+        if (m_model->onlyApplications()) {
+            description = i18np("Do you want to remove the following application?",
+                                "Do you want to remove the following applications?",
+                                files.size());
+        } else {
+            description = i18np("Do you want to search for a package providing this file?",
+                                "Do you want to search for a package providing these files?",
+                                files.size());
+        }
+    }
+    m_introDialog->setDescription(description);
 
     QString title;
     // this will come from DBus interface
-    if (!m_model->files().isEmpty() && parentTitle.isNull()) {
+    if (!files.isEmpty() && parentTitle.isNull()) {
         if (m_model->onlyApplications()) {
-            title = i18np("Do you want to remove the following application:",
-                          "Do you want to remove the following applications:",
-                          m_model->rowCount());
+            title = i18np("An application is asking to remove an application",
+                          "An application is asking to remove applications",
+                          files.size());
         } else {
-            title = i18np("Do you want to remove a package:",
-                          "Do you want to remove packages:",
-                          m_model->rowCount());
+            title = i18np("An application is asking to remove a file",
+                          "An application is asking to remove files",
+                          files.size());
         }
-    } else if (!m_model->files().isEmpty()) {
+    } else if (!files.isEmpty()) {
         if (m_model->onlyApplications()) {
-            title = i18np("The application <i>%2</i> is asking to remove an application:",
-                          "The application <i>%2</i> is asking to remove applications:",
-                          m_model->rowCount(),
+            title = i18np("The application <i>%2</i> is asking to remove an application",
+                          "The application <i>%2</i> is asking to remove applications",
+                          files.size(),
                           parentTitle);
         } else {
-            title = i18np("The application <i>%2</i> is asking to remove a package:",
-                          "The application <i>%2</i> is asking to remove packages:",
-                          m_model->rowCount(),
+            title = i18np("The application <i>%2</i> is asking to remove a file",
+                          "The application <i>%2</i> is asking to remove files",
+                          files.size(),
                           parentTitle);
         }
     } else {

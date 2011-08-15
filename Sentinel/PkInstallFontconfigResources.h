@@ -23,13 +23,6 @@
 
 #include "SessionTask.h"
 
-#include <QDBusMessage>
-
-#include <Transaction>
-
-using namespace PackageKit;
-
-class IntroDialog;
 class PkInstallFontconfigResources : public SessionTask
 {
     Q_OBJECT
@@ -47,7 +40,6 @@ protected:
     virtual void searchFailed();
 
 private:
-    IntroDialog *m_introDialog;
     QStringList  m_resources;
     QDBusMessage m_message;
 };

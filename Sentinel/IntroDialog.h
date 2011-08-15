@@ -38,6 +38,14 @@ public:
 
     void setDescription(const QString &description);
     void setModel(QAbstractItemModel *model);
+    void acceptDrops(const QString &toolTip);
+    bool canContinue() const;
+
+signals:
+    void continueChanged(bool enable);
+
+private slots:
+    void selectionChanged();
 
 private:
     Ui::IntroDialog *ui;

@@ -23,11 +23,6 @@
 
 #include "SessionTask.h"
 
-#include <Transaction>
-#include <QDBusMessage>
-
-using namespace PackageKit;
-
 class PkIsInstalled : public SessionTask
 {
 Q_OBJECT

@@ -41,7 +41,6 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
                                      const QDBusMessage &message,
                                      QWidget *parent)
  : SessionTask(xid, interaction, message, parent),
-   m_files(files),
    m_interaction(interaction),
    m_message(message),
    m_maxResolve(100)
@@ -61,8 +60,12 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
 //        }
 //    }
 
+    QStringList mimes;
+    mimes << "application/x-catalog";
+    mimes << "text/plain";
     m_introDialog = new IntroDialog(this);
-    m_model = new FilesModel(files, QStringList(), this);
+    m_introDialog->acceptDrops(i18n("You can drop more catalogs in here"));
+    m_model = new FilesModel(files, mimes, this);
     connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
             this, SLOT(modelChanged()));
     m_introDialog->setModel(m_model);
@@ -77,24 +80,30 @@ PkInstallCatalogs::~PkInstallCatalogs()
 
 void PkInstallCatalogs::modelChanged()
 {
-
-    QString message = i18np("Do you want to install this catalog?",
+    QStringList files = m_model->files();
+    enableButtonOk(!files.isEmpty());
+    QString description;
+    if (files.isEmpty()) {
+        description = i18n("No supported catalog was found");
+    } else {
+        description = i18np("Do you want to install this catalog?",
                             "Do you want to install these catalogs?",
-                            m_files.size());
+                            files.size());
+    }
+    m_introDialog->setDescription(description);
+
     QString title;
     // this will come from DBus interface
     if (parentTitle.isNull()) {
         title = i18np("An application wants to install a catalog",
                       "An application wants to install catalogs",
-                        m_files.size());
+                        files.size());
     } else {
         title = i18np("The application <i>%2</i> wants to install a catalog",
                       "The application <i>%2</i> wants to install catalogs",
-                        m_files.size(),
+                        files.size(),
                         parentTitle);
     }
-
-    m_introDialog->setDescription(message);
     setTitle(title);
 }
 
@@ -145,9 +154,9 @@ void PkInstallCatalogs::search()
     QRegExp rx(pattern, Qt::CaseInsensitive);
 
     QStringList filesFailedToOpen;
-
-    if (!m_files.isEmpty()) {
-        foreach (const QString &file, m_files) {
+    QStringList files = m_model->files();
+    if (!files.isEmpty()) {
+        foreach (const QString &file, files) {
             QFile catalog(file);
             if (catalog.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QTextStream in(&catalog);

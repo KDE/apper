@@ -51,10 +51,12 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
 
     if (Daemon::actions() & Transaction::RoleInstallFiles) {
         m_introDialog = new IntroDialog(this);
+        m_introDialog->acceptDrops(i18n("You can drop more files in here"));
+
         m_model = new FilesModel(files, Daemon::mimeTypes(), this);
+        m_introDialog->setModel(m_model);
         connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
                 this, SLOT(modelChanged()));
-        m_introDialog->setModel(m_model);
         setMainWidget(m_introDialog);
 
         modelChanged();
@@ -70,12 +72,17 @@ PkInstallPackageFiles::~PkInstallPackageFiles()
 
 void PkInstallPackageFiles::modelChanged()
 {
-    QString message;
-    message = i18np("Press <i>Continue</i> if you want to install this file",
-                    "Press <i>Continue</i> if you want to install these files",
-                    m_model->rowCount());
     enableButtonOk(!m_model->files().isEmpty());
-    m_introDialog->setDescription(message);
+
+    QString description;
+    if (m_model->rowCount()) {
+        description = i18n("No supported files were provided");
+    } else {
+        description = i18np("Press <i>Continue</i> if you want to install this file",
+                            "Press <i>Continue</i> if you want to install these files",
+                            m_model->rowCount());
+    }
+    m_introDialog->setDescription(description);
 
     QString title;
     // this will come from DBus interface

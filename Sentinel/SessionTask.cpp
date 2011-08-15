@@ -61,6 +61,7 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
     setButtons(KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
     setButtonIcon(KDialog::Ok, KIcon("go-next"));
+    enableButtonOk(false);
 
     QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Daemon::setHints("locale=" + locale);
@@ -354,7 +355,6 @@ void SessionTask::searchSuccess()
     connect(m_reviewChanges, SIGNAL(hasSelectedPackages(bool)),
             this, SLOT(enableButtonOk(bool)));
     setMainWidget(m_reviewChanges);
-    button(KDialog::Ok)->setFocus();
 }
 
 void SessionTask::commitFailed()
@@ -423,6 +423,15 @@ bool SessionTask::sendMessageFinished(const QDBusMessage &message)
 uint SessionTask::parentWId() const
 {
     return m_xid;
+}
+
+void SessionTask::enableButtonOk(bool state)
+{
+    KDialog::enableButtonOk(state);
+    if (state) {
+        // When enabling the Continue button put focus on it
+        button(KDialog::Ok)->setFocus();
+    }
 }
 
 void SessionTask::parseInteraction(const QString &interaction)

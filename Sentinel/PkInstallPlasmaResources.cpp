@@ -38,9 +38,13 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
     : SessionTask(xid, interaction, message, parent)
 {
     setWindowTitle(i18n("Install Plasma Resources"));
-    m_introDialog = new IntroDialog(this);
-    setMainWidget(m_introDialog);
+
+    IntroDialog *introDialog = new IntroDialog(this);
     QStandardItemModel *model = new QStandardItemModel(this);
+    introDialog->setModel(model);
+    connect(introDialog, SIGNAL(continueChanged(bool)),
+            this, SLOT(enableButtonOk(bool)));
+    setMainWidget(introDialog);
 
     // Resources are strings like "dataengine-weather"
     foreach (const QString &service, resources) {
@@ -52,7 +56,7 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
         }
 
         QStandardItem *item = new QStandardItem(prettyService);
-        item->setIcon(KIcon("x-kde-nsplugin-generated").pixmap(32, 32));
+        item->setIcon(KIcon("application-x-plasma").pixmap(32, 32));
         model->appendRow(item);
 
         m_resources << service;
@@ -63,12 +67,12 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
                                 "The following services are required. "
                                 "Do you want to search for these now?",
                                 m_resources.size());
+    introDialog->setDescription(description);
 
     QString title = i18np("Plasma requires an additional service for this operation",
                           "Plasma requires additional services for this operation",
                           m_resources.size());
 
-    m_introDialog->setDescription(description);
     setTitle(title);
 }
 

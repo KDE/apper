@@ -38,43 +38,45 @@ PkInstallMimeTypes::PkInstallMimeTypes(uint xid,
 {
     setWindowTitle(i18n("Install Support for File Types"));
 
-    m_introDialog = new IntroDialog(this);
+    IntroDialog *introDialog = new IntroDialog(this);
     m_model = new FilesModel(QStringList(), mime_types, this);
-    connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
-            this, SLOT(modelChanged()));
-    m_introDialog->setModel(m_model);
-    setMainWidget(m_introDialog);
+    introDialog->setModel(m_model);
+    connect(introDialog, SIGNAL(continueChanged(bool)),
+            this, SLOT(enableButtonOk(bool)));
+    setMainWidget(introDialog);
 
-    modelChanged();
+    QString description;
+    if (m_model->rowCount()) {
+        description = i18n("No valid file types were provided");
+    } else {
+        description = i18np("Do you want to search for a program that can open this file type?",
+                            "Do you want to search for a program that can open these file types?",
+                            m_model->rowCount());
+    }
+    introDialog->setDescription(description);
+
+    QString title;
+    // this will come from DBus interface
+    if (parentTitle.isNull()) {
+        title = i18np("A program is requiring support to open this kind of files",
+                      "A program is requiring support to open these kinds of files",
+                      m_model->rowCount());
+    } else {
+        title = i18np("The application %2 is requiring support to open this kind of files",
+                      "The application %2 is requiring support to open these kinds of files",
+                      m_model->rowCount(),
+                      parentTitle);
+    }
+    setTitle(title);
 }
 
 PkInstallMimeTypes::~PkInstallMimeTypes()
 {
 }
 
-void PkInstallMimeTypes::modelChanged()
-{
-    kDebug() << m_mimeTypes.first();
-    QString message = i18n("Do you want to search for a program that can open this file type?",
-                           m_mimeTypes.first());
-    QString title;
-    // this will come from DBus interface
-    if (parentTitle.isNull()) {
-        title = i18np("A program is requiring support to open this kind of files",
-                      "A program is requiring support to open these kinds of files",
-                      m_mimeTypes.size());
-    } else {
-        title = i18np("The application %2 is requiring support to open this kind of files",
-                      "The application %2 is requiring support to open these kinds of files",
-                      m_mimeTypes.size(),
-                      parentTitle);
-    }
-    setTitle(title);
-    m_introDialog->setDescription(message);
-}
-
 void PkInstallMimeTypes::search()
 {
+    QStringList mimeTypes = m_model->files();
     Transaction *t = new Transaction(this);
     PkTransaction *trans = setTransaction(t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
@@ -82,7 +84,7 @@ void PkInstallMimeTypes::search()
     connect(t, SIGNAL(package(PackageKit::Package)),
             this, SLOT(addPackage(PackageKit::Package)));
     t->whatProvides(Transaction::ProvidesMimetype,
-                    m_mimeTypes,
+                    mimeTypes,
                     Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
     if (t->error()) {
         if (showWarning()) {

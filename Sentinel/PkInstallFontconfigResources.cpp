@@ -24,8 +24,9 @@
 
 #include <KpkStrings.h>
 
-#include <KLocale>
+#include <QStandardItemModel>
 
+#include <KLocale>
 #include <KDebug>
 
 PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
@@ -38,9 +39,16 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
 {
     setWindowTitle(i18n("Installs new Fonts"));
 
-    m_introDialog = new IntroDialog(this);
-    setMainWidget(m_introDialog);
+    IntroDialog *introDialog = new IntroDialog(this);
+    QStandardItemModel *model = new QStandardItemModel(this);
+    introDialog->setModel(model);
+    connect(introDialog, SIGNAL(continueChanged(bool)),
+            this, SLOT(enableButtonOk(bool)));
+    setMainWidget(introDialog);
+
     foreach (const QString &font, resources) {
+        // TODO never return in here
+        // TODO add name field from /usr/share/xml/iso-codes/iso_639.xml into model
         if (!font.startsWith(QLatin1String(":lang="))) {
             sendErrorFinished(InternalError, QString("not recognised prefix: '%1'").arg(font));
             return;
@@ -72,7 +80,7 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
                       parentTitle);
     }
 
-    m_introDialog->setDescription(description);
+    introDialog->setDescription(description);
     setTitle(title);
 }
 

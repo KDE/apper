@@ -41,22 +41,24 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
 {
     setWindowTitle(i18n("Install Packages by Name"));
 
-    m_introDialog = new IntroDialog(this);
+    IntroDialog *introDialog = new IntroDialog(this);
     QStandardItemModel *model = new QStandardItemModel(this);
+    introDialog->setModel(model);
+    connect(introDialog, SIGNAL(continueChanged(bool)),
+            this, SLOT(enableButtonOk(bool)));
+    setMainWidget(introDialog);
 
     foreach (const QString &package, packages) {
         QStandardItem *item = new QStandardItem(package);
         item->setIcon(KIcon("package-x-generic").pixmap(32, 32));
         model->appendRow(item);
     }
-    m_introDialog->setModel(model);
-    setMainWidget(m_introDialog);
 
     QString description;
     description = i18np("Do you want to search for and install this package now?",
                         "Do you want to search for and install these packages now?",
                         m_packages.size());
-    m_introDialog->setDescription(description);
+    introDialog->setDescription(description);
 
     QString title;
     // this will come from DBus interface

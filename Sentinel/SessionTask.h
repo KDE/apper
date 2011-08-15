@@ -80,6 +80,9 @@ public:
 
     uint parentWId() const;
 
+public slots:
+    void enableButtonOk(bool state);
+
 protected:
     // Virtual methods to easy subclasses
     virtual void search();

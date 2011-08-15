@@ -24,7 +24,6 @@
 
 #include "SessionTask.h"
 
-class IntroDialog;
 class PkInstallPlasmaResources : public SessionTask
 {
     Q_OBJECT
@@ -41,7 +40,6 @@ protected:
     virtual void notFound();
 
 private:
-    IntroDialog *m_introDialog;
     QStringList m_resources;
 };
 

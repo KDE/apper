@@ -23,8 +23,6 @@
 
 #include "SessionTask.h"
 
-#include <QDBusMessage>
-
 class PkSearchFile : public SessionTask
 {
     Q_OBJECT

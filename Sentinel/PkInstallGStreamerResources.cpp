@@ -38,9 +38,12 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
 {
     setWindowTitle(i18n("Install GStreamer Resources"));
 
-    m_introDialog = new IntroDialog(this);
-    setMainWidget(m_introDialog);
+    IntroDialog *introDialog = new IntroDialog(this);
     QStandardItemModel *model = new QStandardItemModel(this);
+    introDialog->setModel(model);
+    connect(introDialog, SIGNAL(continueChanged(bool)),
+            this, SLOT(enableButtonOk(bool)));
+    setMainWidget(introDialog);
 
     bool encoder = false;
     bool decoder = false;
@@ -108,7 +111,7 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
         }
     }
 
-    m_introDialog->setDescription(description);
+    introDialog->setDescription(description);
     setTitle(title);
 }
 

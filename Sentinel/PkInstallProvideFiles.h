@@ -23,12 +23,8 @@
 
 #include "SessionTask.h"
 
-#include <Transaction>
+#include <Package>
 
-using namespace PackageKit;
-
-class IntroDialog;
-class FilesModel;
 class PkInstallProvideFiles : public SessionTask
 {
     Q_OBJECT
@@ -45,14 +41,11 @@ protected:
     virtual void notFound();
 
 private slots:
-    void modelChanged();
     void addPackage(const PackageKit::Package &package);
 
 private:
     QStringList m_args;
     QString     m_alreadyInstalled;
-    IntroDialog *m_introDialog;
-    FilesModel *m_model;
 };
 
 #endif

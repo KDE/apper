@@ -23,11 +23,6 @@
 
 #include "SessionTask.h"
 
-#include <Transaction>
-
-using namespace PackageKit;
-
-class IntroDialog;
 class PkInstallGStreamerResources : public SessionTask
 {
     Q_OBJECT
@@ -44,7 +39,6 @@ protected:
     virtual void notFound();
 
 private:
-    IntroDialog *m_introDialog;
     QStringList m_resources;
 };
 

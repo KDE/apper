@@ -23,13 +23,8 @@
 
 #include "SessionTask.h"
 
-#include <QDBusMessage>
+#include <Package>
 
-#include <Transaction>
-
-using namespace PackageKit;
-
-class IntroDialog;
 class PkInstallPackageNames : public SessionTask
 {
     Q_OBJECT
@@ -50,7 +45,6 @@ private slots:
     void addPackage(const PackageKit::Package &package);
 
 private:
-    IntroDialog *m_introDialog;
     QStringList  m_packages;
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;

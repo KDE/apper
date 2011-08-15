@@ -23,10 +23,6 @@
 
 #include <SessionTask.h>
 
-#include <Transaction>
-
-using namespace PackageKit;
-
 class IntroDialog;
 class FilesModel;
 class PkRemovePackageByFiles : public SessionTask

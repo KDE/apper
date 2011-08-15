@@ -23,10 +23,6 @@
 
 #include "SessionTask.h"
 
-#include <Transaction>
-
-using namespace PackageKit;
-
 class PkInstallPrinterDrivers : public SessionTask
 {
     Q_OBJECT

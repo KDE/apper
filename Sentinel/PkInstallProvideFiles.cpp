@@ -38,25 +38,17 @@ PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
 {
     setWindowTitle(i18n("Install Packages that Provides Files"));
 
-    m_introDialog = new IntroDialog(this);
-    m_model = new FilesModel(files, QStringList(), this);
-    connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
-            this, SLOT(modelChanged()));
-    m_introDialog->setModel(m_model);
-    setMainWidget(m_introDialog);
+    IntroDialog *introDialog = new IntroDialog(this);
+    FilesModel *model = new FilesModel(files, QStringList(), this);
+    introDialog->setModel(model);
+    connect(introDialog, SIGNAL(continueChanged(bool)),
+            this, SLOT(enableButtonOk(bool)));
+    setMainWidget(introDialog);
 
-    modelChanged();
-}
-
-PkInstallProvideFiles::~PkInstallProvideFiles()
-{
-}
-
-void PkInstallProvideFiles::modelChanged()
-{
-    QString message = i18np("Do you want to search for this now?",
-                            "Do you want to search for these now?",
-                            m_args.size());
+    QString description;
+    description = i18np("Do you want to search for this now?",
+                        "Do you want to search for these now?",
+                        m_args.size());
     QString title;
     // this will come from DBus interface
     if (parentTitle.isNull()) {
@@ -71,7 +63,11 @@ void PkInstallProvideFiles::modelChanged()
     }
 
     setTitle(title);
-    m_introDialog->setDescription(message);
+    introDialog->setDescription(description);
+}
+
+PkInstallProvideFiles::~PkInstallProvideFiles()
+{
 }
 
 void PkInstallProvideFiles::search()

@@ -56,6 +56,25 @@ IntroDialog::~IntroDialog()
 void IntroDialog::setModel(QAbstractItemModel *model)
 {
     ui->listView->setModel(model);
+    connect(model, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+            this, SLOT(selectionChanged()));
+}
+
+void IntroDialog::acceptDrops(const QString &toolTip)
+{
+    ui->listView->setDragDropMode(QListView::DropOnly);
+    ui->listView->setToolTip(toolTip);
+}
+
+bool IntroDialog::canContinue() const
+{
+    return ui->listView->model()->rowCount();
+}
+
+void IntroDialog::selectionChanged()
+{
+    // if the model has more than one item it can continue
+    emit continueChanged(canContinue());
 }
 
 void IntroDialog::setDescription(const QString &description)

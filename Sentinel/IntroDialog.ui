@@ -22,14 +22,10 @@
        <height>0</height>
       </size>
      </property>
-     <property name="acceptDrops">
-      <bool>true</bool>
-     </property>
-     <property name="toolTip">
-      <string>You can drop more files in here</string>
-     </property>
      <property name="styleSheet">
-      <string notr="true">background: transparent;</string>
+      <string notr="true">QListView {
+background: transparent;
+};</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -37,14 +33,8 @@
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>
-     <property name="dragDropMode">
-      <enum>QAbstractItemView::DropOnly</enum>
-     </property>
      <property name="defaultDropAction">
       <enum>Qt::LinkAction</enum>
-     </property>
-     <property name="alternatingRowColors">
-      <bool>true</bool>
      </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::NoSelection</enum>

@@ -24,9 +24,6 @@
 #include "SessionTask.h"
 
 #include <Package>
-#include <QDBusMessage>
-
-using namespace PackageKit;
 
 class IntroDialog;
 class FilesModel;
@@ -54,7 +51,6 @@ private slots:
 private:
     void checkTransaction(Transaction *trans);
 
-    QStringList  m_files;
     QStringList  m_installPackages;
     QStringList  m_installProvides;
     QStringList  m_installFiles;
