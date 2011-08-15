@@ -129,8 +129,8 @@ void KpkUpdateIcon::update()
         if (m_getUpdatesT->error()) {
             m_getUpdatesT = 0;
         } else {
-            connect(m_getUpdatesT, SIGNAL(package(const PackageKit::Package &)),
-                    this, SLOT(packageToUpdate(const PackageKit::Package &)));
+            connect(m_getUpdatesT, SIGNAL(package(PackageKit::Package)),
+                    this, SLOT(packageToUpdate(PackageKit::Package)));
             connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(getUpdateFinished()));
             return;
@@ -182,7 +182,7 @@ void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
                 this, SLOT(removeStatusNotifierItem()));
         m_statusNotifierItem->setContextMenu(menu);
         // Show updates on the left click
-        connect(m_statusNotifierItem, SIGNAL(activateRequested(bool, const QPoint &)),
+        connect(m_statusNotifierItem, SIGNAL(activateRequested(bool, QPoint)),
                 this, SLOT(showUpdates()));
     }
 

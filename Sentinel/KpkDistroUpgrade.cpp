@@ -42,8 +42,8 @@ void KpkDistroUpgrade::checkDistroUpgrades()
         Transaction *t = new Transaction(this);
         t->getDistroUpgrades();
         if (!t->error()) {
-            connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)),
-                    this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, const QString &, const QString &)));
+            connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, QString, QString)),
+                    this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, QString, QString)));
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                     this, SLOT(decreaseRunning()));
             increaseRunning();

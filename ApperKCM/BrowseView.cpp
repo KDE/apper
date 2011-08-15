@@ -45,8 +45,8 @@ BrowseView::BrowseView(QWidget *parent)
  : QWidget(parent)
 {
     setupUi(this);
-    connect(categoryView, SIGNAL(clicked(const QModelIndex &)),
-            this, SIGNAL(categoryActivated(const QModelIndex &)));
+    connect(categoryView, SIGNAL(clicked(QModelIndex)),
+            this, SIGNAL(categoryActivated(QModelIndex)));
 }
 
 void BrowseView::init(Transaction::Roles roles)
