@@ -143,7 +143,9 @@ QList<Package> SimulateModel::packages() const
     QHash<Package::Info, QList<Package> >::const_iterator i = m_packages.constBegin();
      while (i != m_packages.constEnd()) {
          if (i.key() != Package::InfoRemoving) {
-             ret.append(i.value());
+             foreach (const Package &pkg, i.value()) {
+                 ret.append(Package(pkg.name() + ";" + pkg.version() + ";;"));
+             }
          }
          ++i;
      }
