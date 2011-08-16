@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,20 +18,20 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKREQUIREMENTS_H
-#define KPKREQUIREMENTS_H
+#ifndef REQUIREMENTS_H
+#define REQUIREMENTS_H
 
 #include <KDialog>
 #include <QModelIndex>
 
-class KpkRequirementsPrivate;
-class KpkSimulateModel;
-class KpkRequirements : public KDialog
+class RequirementsPrivate;
+class SimulateModel;
+class Requirements : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KpkRequirements(KpkSimulateModel *model, QWidget *parent = 0);
-    ~KpkRequirements();
+    explicit Requirements(SimulateModel *model, QWidget *parent = 0);
+    ~Requirements();
 
 public slots:
     void show();
@@ -40,7 +40,7 @@ private slots:
     void actionClicked(const QModelIndex &index);
 
 private:
-    KpkRequirementsPrivate *d;
+    RequirementsPrivate *d;
 };
 
 #endif

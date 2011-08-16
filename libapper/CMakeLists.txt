@@ -24,9 +24,9 @@ set(libapper_SRCS
     KpkLicenseAgreement.cpp
     PackageModel.cpp
     KpkProgressBar.cpp
-    KpkRequirements.cpp
+    Requirements.cpp
     KpkImportance.cpp
-    KpkSimulateModel.cpp
+    SimulateModel.cpp
     KpkCategorizedView.cpp
 )
 
@@ -35,7 +35,7 @@ kde4_add_ui_files(libapper_SRCS
     PkTransaction.ui
     KpkRepoSig.ui
     KpkLicenseAgreement.ui
-    KpkRequirements.ui
+    Requirements.ui
 )
 
 kde4_add_library(libapper SHARED ${libapper_SRCS})

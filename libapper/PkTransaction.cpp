@@ -46,8 +46,8 @@
 #include "KpkIcons.h"
 #include "ProgressView.h"
 #include "ApplicationLauncher.h"
-#include "KpkSimulateModel.h"
-#include "KpkRequirements.h"
+#include "SimulateModel.h"
+#include "Requirements.h"
 
 #include "ui_PkTransaction.h"
 
@@ -65,7 +65,7 @@ public:
     QList<Package> packages;
     QStringList files;
     QVector<KService*> applications;
-    KpkSimulateModel *simulateModel;
+    SimulateModel *simulateModel;
     KPixmapSequenceOverlayPainter *busySeq;
 
     void clearApplications()
@@ -143,7 +143,7 @@ void PkTransaction::installFiles(const QStringList &files)
     if (Daemon::actions() & Transaction::RoleInstallFiles) {
         if (Daemon::actions() & Transaction::RoleSimulateInstallFiles) {
             d->files         = files;
-            d->simulateModel = new KpkSimulateModel(this, d->packages);
+            d->simulateModel = new SimulateModel(this, d->packages);
 
             // Create the simulate transaction and it's model
             Transaction *trans = new Transaction(this);
@@ -170,7 +170,7 @@ void PkTransaction::installPackages(const QList<Package> &packages)
         if (Daemon::actions() & Transaction::RoleSimulateInstallPackages/* &&
             !(m_flags & HideConfirmDeps)*/) {
             d->packages      = packages;
-            d->simulateModel = new KpkSimulateModel(this, d->packages);
+            d->simulateModel = new SimulateModel(this, d->packages);
 
             // Create the depends transaction and it's model
             Transaction *trans = new Transaction(this);
@@ -196,7 +196,7 @@ void PkTransaction::removePackages(const QList<Package> &packages)
         if (Daemon::actions() & Transaction::RoleSimulateRemovePackages/* &&
             !(m_flags & HideConfirmDeps)*/) { //TODO we need admin to lock this down
             d->packages      = packages;
-            d->simulateModel = new KpkSimulateModel(this, d->packages);
+            d->simulateModel = new SimulateModel(this, d->packages);
 
             // Create the requirements transaction and it's model
             Transaction *trans = new Transaction(this);
@@ -222,7 +222,7 @@ void PkTransaction::updatePackages(const QList<Package> &packages)
     if (Daemon::actions() & Transaction::RoleRemovePackages) {
         if (Daemon::actions() & Transaction::RoleSimulateUpdatePackages) {
             d->packages      = packages;
-            d->simulateModel = new KpkSimulateModel(this, d->packages);
+            d->simulateModel = new SimulateModel(this, d->packages);
 
             Transaction *trans = new Transaction(this);
             trans->simulateUpdatePackages(d->packages);
@@ -403,7 +403,7 @@ void PkTransaction::setTransaction(Transaction *trans)
             role == Transaction::RoleSimulateUpdatePackages) {
             // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
             if (!d->simulateModel) {
-                d->simulateModel = new KpkSimulateModel(this, d->packages);
+                d->simulateModel = new SimulateModel(this, d->packages);
             }
             d->simulateModel->clear();
             connect(m_trans, SIGNAL(package(PackageKit::Package)),
@@ -731,7 +731,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
 {
     Transaction *trans = qobject_cast<Transaction*>(sender());
     Transaction::Role role = trans->role();
-    KpkRequirements *requires = 0;
+    Requirements *requires = 0;
     m_trans = 0;
 
 //     kDebug() << status;
@@ -744,7 +744,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
         // If the simulate model exists we were simulating
         if (d->simulateModel) {
             if (d->simulateModel->rowCount() > 0) {
-                requires = new KpkRequirements(d->simulateModel, this);
+                requires = new Requirements(d->simulateModel, this);
                 connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
                 requires->show();
             }
@@ -774,6 +774,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                 return;
             case Transaction::RoleSimulateInstallFiles:
                 if (requires) {
+                    d->packages = d->simulateModel->packages();
                     connect(requires, SIGNAL(accepted()), this, SLOT(installFiles()));
                 } else {
                     installFiles();
@@ -928,7 +929,7 @@ QStringList PkTransaction::files() const
     return d->files;
 }
 
-KpkSimulateModel* PkTransaction::simulateModel() const
+SimulateModel* PkTransaction::simulateModel() const
 {
     return d->simulateModel;
 }

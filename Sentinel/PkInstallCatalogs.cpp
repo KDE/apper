@@ -21,7 +21,6 @@
 #include "PkInstallCatalogs.h"
 #include "IntroDialog.h"
 #include "FilesModel.h"
-#include "ReviewChanges.h"
 
 #include <KpkStrings.h>
 
@@ -30,7 +29,6 @@
 
 #include <KDebug>
 
-#include <QEventLoop>
 #include <QFile>
 
 #include <Daemon>
@@ -48,17 +46,17 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
     setWindowTitle(i18n("Install Packages Catalogs"));
 
     // Find out how many packages PackageKit is able to resolve
-//    QFile file("/etc/PackageKit/PackageKit.conf");
-//    QRegExp rx("\\s*MaximumItemsToResolve=(\\d+)", Qt::CaseSensitive);
-//    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-//        QTextStream in(&file);
-//        while (!in.atEnd()) {
-//            if (rx.indexIn(in.readLine()) != -1) {
-//                m_maxResolve = rx.capturedTexts()[1].toInt();
-//                break;
-//            }
-//        }
-//    }
+    QFile file("/etc/PackageKit/PackageKit.conf");
+    QRegExp rx("\\s*MaximumItemsToResolve=(\\d+)", Qt::CaseSensitive);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            if (rx.indexIn(in.readLine()) != -1) {
+                m_maxResolve = rx.capturedTexts()[1].toInt();
+                break;
+            }
+        }
+    }
 
     QStringList mimes;
     mimes << "application/x-catalog";

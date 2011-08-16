@@ -22,8 +22,6 @@
 
 #include "ui_IntroDialog.h"
 
-#include <KpkSimulateModel.h>
-#include <KpkRequirements.h>
 #include <KpkStrings.h>
 #include <KpkMacros.h>
 

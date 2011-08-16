@@ -32,7 +32,7 @@ namespace Ui {
     class PkTransaction;
 }
 
-class KpkSimulateModel;
+class SimulateModel;
 class PkTransactionPrivate;
 class KDE_EXPORT PkTransaction : public QWidget
 {
@@ -59,7 +59,7 @@ public:
     bool onlyTrusted() const;
     QList<Package> packages() const;
     QStringList files() const;
-    KpkSimulateModel* simulateModel() const;
+    SimulateModel* simulateModel() const;
 
     QString title() const;
     Transaction::Role role() const;

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -46,7 +46,6 @@
 #include "KpkIcons.h"
 #include "ProgressView.h"
 #include "ApplicationLauncher.h"
-#include "KpkSimulateModel.h"
 
 #include "PkTransaction.h"
 
@@ -63,7 +62,6 @@ public:
     QString errorDetails;
     QList<Package> packages;
     QStringList files;
-    KpkSimulateModel *simulateModel;
     ProgressView *progressView;
     KPixmapSequenceOverlayPainter *busySeq;
 };

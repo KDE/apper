@@ -38,11 +38,11 @@
 
 */
 
-#include "KpkRequirements.h"
-#include "ui_KpkRequirements.h"
+#include "Requirements.h"
+#include "ui_Requirements.h"
 
 #include "KpkIcons.h"
-#include "KpkSimulateModel.h"
+#include "SimulateModel.h"
 
 #include <KDebug>
 
@@ -207,18 +207,18 @@ qreal KActionsViewDelegate::contentsOpacity(const QModelIndex &index) const
 }
 
 
-class KpkRequirementsPrivate
+class RequirementsPrivate
 {
 public:
     QStandardItemModel *actionsModel;
     bool hideAutoConfirm;
 
-    Ui::KpkRequirements ui;
+    Ui::Requirements ui;
 };
 
-KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
+Requirements::Requirements(SimulateModel *model, QWidget *parent)
  : KDialog(parent),
-   d(new KpkRequirementsPrivate)
+   d(new RequirementsPrivate)
 {
     d->ui.setupUi(mainWidget());
 
@@ -324,7 +324,7 @@ KpkRequirements::KpkRequirements(KpkSimulateModel *model, QWidget *parent)
     }
 }
 
-KpkRequirements::~KpkRequirements()
+Requirements::~Requirements()
 {
     // save size
     KConfig config("KPackageKit");
@@ -338,7 +338,7 @@ KpkRequirements::~KpkRequirements()
     delete d;
 }
 
-void KpkRequirements::show()
+void Requirements::show()
 {
     if (d->ui.confirmCB->isChecked()) {
         emit accepted();
@@ -347,12 +347,12 @@ void KpkRequirements::show()
     }
 }
 
-void KpkRequirements::actionClicked(const QModelIndex &index)
+void Requirements::actionClicked(const QModelIndex &index)
 {
     Package::Info state = index.data(Qt::UserRole+1).value<Package::Info>();
-    static_cast<KpkSimulateModel*>(d->ui.packageView->model())->setCurrentInfo(state);
+    static_cast<SimulateModel*>(d->ui.packageView->model())->setCurrentInfo(state);
     d->ui.packageView->resizeColumnToContents(0);
     d->ui.packageView->resizeColumnToContents(1);
 }
 
-#include "KpkRequirements.moc"
+#include "Requirements.moc"

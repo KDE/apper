@@ -28,7 +28,6 @@
 #include <KDebug>
 
 #include "IntroDialog.h"
-#include "InfoWidget.h"
 
 PkInstallPackageNames::PkInstallPackageNames(uint xid,
                                              const QStringList &packages,

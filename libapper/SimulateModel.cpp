@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkSimulateModel.h"
+#include "SimulateModel.h"
 
 #include <KDebug>
 #include <KpkIcons.h>
@@ -26,7 +26,7 @@
 
 using namespace PackageKit;
 
-KpkSimulateModel::KpkSimulateModel(QObject *parent, QList<Package> skipPackages)
+SimulateModel::SimulateModel(QObject *parent, QList<Package> skipPackages)
 : QAbstractTableModel(parent),
   m_skipPackages(skipPackages),
   m_currentInfo(Package::UnknownInfo)
@@ -34,7 +34,7 @@ KpkSimulateModel::KpkSimulateModel(QObject *parent, QList<Package> skipPackages)
 //     setSortRole(Qt::DisplayRole);
 }
 
-QVariant KpkSimulateModel::data(const QModelIndex &index, int role) const
+QVariant SimulateModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() ||
         m_currentInfo == Package::UnknownInfo ||
@@ -65,18 +65,18 @@ QVariant KpkSimulateModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-Package::Info KpkSimulateModel::currentInfo() const
+Package::Info SimulateModel::currentInfo() const
 {
     return m_currentInfo;
 }
 
-void KpkSimulateModel::setCurrentInfo(Package::Info currentInfo)
+void SimulateModel::setCurrentInfo(Package::Info currentInfo)
 {
     m_currentInfo = currentInfo;
     reset();
 }
 
-int KpkSimulateModel::countInfo(Package::Info info)
+int SimulateModel::countInfo(Package::Info info)
 {
     if (m_packages.contains(info)) {
         return m_packages[info].size();
@@ -85,7 +85,7 @@ int KpkSimulateModel::countInfo(Package::Info info)
     }
 }
 
-void KpkSimulateModel::addPackage(const PackageKit::Package &p)
+void SimulateModel::addPackage(const PackageKit::Package &p)
 {
     if (p.info() == Package::InfoFinished ||
         p.info() == Package::InfoCleanup) {
@@ -105,7 +105,7 @@ void KpkSimulateModel::addPackage(const PackageKit::Package &p)
     m_packages[p.info()].append(p);
 }
 
-int KpkSimulateModel::rowCount(const QModelIndex &parent) const
+int SimulateModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid() && m_currentInfo == Package::UnknownInfo) {
         return 0;
@@ -114,7 +114,7 @@ int KpkSimulateModel::rowCount(const QModelIndex &parent) const
     }
 }
 
-int KpkSimulateModel::columnCount(const QModelIndex &parent) const
+int SimulateModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid() && m_currentInfo == Package::UnknownInfo) {
         return 0;
@@ -123,7 +123,7 @@ int KpkSimulateModel::columnCount(const QModelIndex &parent) const
     }
 }
 
-QVariant KpkSimulateModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SimulateModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
     if (role == Qt::DisplayRole) {
@@ -137,7 +137,20 @@ QVariant KpkSimulateModel::headerData(int section, Qt::Orientation orientation, 
     return QVariant();
 }
 
-void KpkSimulateModel::clear()
+QList<Package> SimulateModel::packages() const
+{
+    QList<Package> ret;
+    QHash<Package::Info, QList<Package> >::const_iterator i = m_packages.constBegin();
+     while (i != m_packages.constEnd()) {
+         if (i.key() != Package::InfoRemoving) {
+             ret.append(i.value());
+         }
+         ++i;
+     }
+    return ret;
+}
+
+void SimulateModel::clear()
 {
     m_packages.clear();
     m_currentInfo = Package::UnknownInfo;

@@ -24,7 +24,6 @@
 #include "FilesModel.h"
 
 #include <KpkStrings.h>
-#include <PkTransactionDialog.h>
 
 #include <KLocale>
 #include <KService>

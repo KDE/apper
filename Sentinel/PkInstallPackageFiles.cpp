@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,20 +23,8 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
-#include <KpkSimulateModel.h>
-#include <KpkRequirements.h>
-#include <KpkStrings.h>
-#include <KpkMacros.h>
-#include <PkTransaction.h>
-
 #include <KLocale>
-#include <KMimeType>
-
 #include <KDebug>
-
-#include <QWeakPointer>
-#include <QFileInfo>
-#include <QCoreApplication>
 
 #include <Daemon>
 
@@ -115,10 +103,10 @@ void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status
      switch (status) {
      case PkTransaction::Success :
          if (showFinished()) {
-             setInfo(i18n("Installation Complete"),
-                     i18np("File was installed successfully",
-                           "Files were installed successfully",
-                           m_model->files().count()));
+             setFinish(i18n("Installation Complete"),
+                       i18np("File was installed successfully",
+                             "Files were installed successfully",
+                             m_model->files().count()));
          }
          finishTaskOk();
          break;

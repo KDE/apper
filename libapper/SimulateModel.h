@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_SIMULATE_MODEL_H
-#define KPK_SIMULATE_MODEL_H
+#ifndef SIMULATE_MODEL_H
+#define SIMULATE_MODEL_H
 
 #include <QAbstractTableModel>
 #include <KIcon>
@@ -28,12 +28,11 @@
 
 using namespace PackageKit;
 
-class KDE_EXPORT KpkSimulateModel : public QAbstractTableModel
+class KDE_EXPORT SimulateModel : public QAbstractTableModel
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
-    explicit KpkSimulateModel(QObject *parent = 0,
+    explicit SimulateModel(QObject *parent = 0,
                               QList<Package> skipPackages = QList<Package>());
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -41,6 +40,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+    QList<Package> packages() const;
     Package::Info currentInfo() const;
     void setCurrentInfo(Package::Info currentInfo);
     int countInfo(Package::Info info);

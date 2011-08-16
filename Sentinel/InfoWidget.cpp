@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2011 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,27 +19,10 @@
  ***************************************************************************/
 
 #include "InfoWidget.h"
-
 #include "ui_InfoWidget.h"
 
-#include <KpkSimulateModel.h>
-#include <KpkRequirements.h>
-#include <KpkStrings.h>
-#include <KpkMacros.h>
-
-#include <KLocale>
-#include <KMessageBox>
-#include <KMimeType>
 
 #include <KDebug>
-
-#include <QWeakPointer>
-#include <QFileInfo>
-#include <QCoreApplication>
-
-#include <Daemon>
-
-#include "FilesModel.h"
 
 InfoWidget::InfoWidget(QWidget *parent) :
     QWidget(parent),
