@@ -1,6 +1,6 @@
 /*
  *   Copyright (C) 2007 Ivan Cukic <ivan.cukic+kde@gmail.com>
- *   Copyright (C) 2008 Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+ *   Copyright (C) 2008-2011 Daniel Nicoletti <dantti12@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library/Lesser General Public License
@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "KpkDelegate.h"
+#include "ChangesDelegate.h"
 
 #include <KDebug>
 #include <KIconLoader>
@@ -27,7 +27,7 @@
 #include <Package>
 
 #include "PackageModel.h"
-#include "KpkIcons.h"
+#include "PkIcons.h"
 
 #define FAV_ICON_SIZE 24
 #define EMBLEM_ICON_SIZE 8
@@ -35,7 +35,7 @@
 #define FADE_LENGTH 16
 #define MAIN_ICON_SIZE 32
 
-KpkDelegate::KpkDelegate(QAbstractItemView *parent)
+ChangesDelegate::ChangesDelegate(QAbstractItemView *parent)
   : KExtendableItemDelegate(parent),
     m_viewport(parent->viewport()),
     // loads it here to be faster when displaying items
@@ -72,7 +72,7 @@ KpkDelegate::KpkDelegate(QAbstractItemView *parent)
     m_buttonIconSize = button.iconSize();
 }
 
-void KpkDelegate::paint(QPainter *painter,
+void ChangesDelegate::paint(QPainter *painter,
                         const QStyleOptionViewItem &option,
                         const QModelIndex &index) const
 {
@@ -199,7 +199,7 @@ void KpkDelegate::paint(QPainter *painter,
     if (pkgCollection) {
         icon = m_collectionIcon;
     } else {
-        icon = KpkIcons::getIcon(index.data(PackageModel::IconRole).toString(), QString());
+        icon = PkIcons::getIcon(index.data(PackageModel::IconRole).toString(), QString());
         if (icon.isNull()) {
             icon = m_packageIcon;
         }
@@ -207,7 +207,7 @@ void KpkDelegate::paint(QPainter *painter,
 //     if (pkgIconPath.isEmpty()) {
 //        icon = pkgCollection ? m_collectionIcon : m_packageIcon;
 //     } else {
-//         icon = KpkIcons::getIcon(pkgIconPath, "package");
+//         icon = PkIcons::getIcon(pkgIconPath, "package");
 //     }
 
     int iconSize = calcItemHeight(option) - 2 * UNIVERSAL_PADDING;
@@ -320,7 +320,7 @@ void KpkDelegate::paint(QPainter *painter,
     painter->drawPixmap(option.rect.topLeft(), pixmap);
 }
 
-int KpkDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
+int ChangesDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
 {
     // Painting main column
     QStyleOptionViewItem local_option_title(option);
@@ -332,7 +332,7 @@ int KpkDelegate::calcItemHeight(const QStyleOptionViewItem &option) const
     return textHeight + 3 * UNIVERSAL_PADDING;
 }
 
-bool KpkDelegate::insideButton(const QRect &rect, const QPoint &pos) const
+bool ChangesDelegate::insideButton(const QRect &rect, const QPoint &pos) const
 {
 //     kDebug() << rect << pos;
     if ((pos.x() >= rect.x() && (pos.x() <= rect.x() + rect.width())) &&
@@ -342,7 +342,7 @@ bool KpkDelegate::insideButton(const QRect &rect, const QPoint &pos) const
     return false;
 }
 
-bool KpkDelegate::editorEvent(QEvent *event,
+bool ChangesDelegate::editorEvent(QEvent *event,
                                     QAbstractItemModel *model,
                                     const QStyleOptionViewItem &option,
                                     const QModelIndex &index)
@@ -401,17 +401,17 @@ bool KpkDelegate::editorEvent(QEvent *event,
     return KExtendableItemDelegate::editorEvent(event, model, opt, index);
 }
 
-void KpkDelegate::setExtendPixmapWidth(int width)
+void ChangesDelegate::setExtendPixmapWidth(int width)
 {
     m_extendPixmapWidth = width;
 }
 
-void KpkDelegate::setViewport(QWidget *viewport)
+void ChangesDelegate::setViewport(QWidget *viewport)
 {
     m_viewport = viewport;
 }
 
-QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const
+QSize ChangesDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     int width = (index.column() == 0) ? index.data(Qt::SizeHintRole).toSize().width() : FAV_ICON_SIZE + 2 * UNIVERSAL_PADDING;
     QSize ret(KExtendableItemDelegate::sizeHint(option, index));
@@ -424,4 +424,4 @@ QSize KpkDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelInde
     return ret;
 }
 
-#include "KpkDelegate.moc"
+#include "ChangesDelegate.moc"

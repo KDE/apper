@@ -1,5 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Daniel Nicoletti                                *
+ *   Copyright (C) 2008 by Trever Fischer                                  *
+ *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2010-2011 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,26 +20,37 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef GRAPHICS_OPACITY_DROP_SHADOW_EFFECT_H
-#define GRAPHICS_OPACITY_DROP_SHADOW_EFFECT_H
+#ifndef PK_ICONS_H
+#define PK_ICONS_H
 
-#include <QGraphicsDropShadowEffect>
+#include <Package>
+#include <Transaction>
+#include <KIcon>
 
-class GraphicsOpacityDropShadowEffect : public QGraphicsDropShadowEffect
-{
-    Q_OBJECT
-    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity USER true)
-public:
-    GraphicsOpacityDropShadowEffect(QObject *parent = 0);
-    ~GraphicsOpacityDropShadowEffect();
+#define KPK_ICON_SIZE 64
 
-    qreal opacity() const;
-    void  setOpacity(qreal opacity);
+using namespace PackageKit;
 
-    virtual void draw(QPainter *painter);
+class KDE_EXPORT PkIcons {
+    public:
+        static KIcon   groupsIcon(Package::Group group);
+        static QString statusIconName(Transaction::Status status);
+        static KIcon   statusIcon(Transaction::Status status);
+        static QString statusAnimation(Transaction::Status status);
+        static QString actionIconName(Transaction::Role role);
+        static KIcon   actionIcon(Transaction::Role role);
+        static KIcon   packageIcon(Package::Info state);
+        static QString restartIconName(Package::Restart type);
+        static KIcon   restartIcon(Package::Restart type);
+        static KIcon   getIcon(const QString &name);
+        static KIcon   getIcon(const QString &name, const QString &defaultName);
+        static QIcon   getPreloadedIcon(const QString &name);
 
-private:
-    qreal m_opacity;
+    private:
+        static void configure();
+
+        static QHash<QString, KIcon> cache;
+        static bool init;
 };
 
 #endif

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,33 +18,21 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkRepoSig.h"
+#ifndef LICENSE_AGREEMENT_H
+#define LICENSE_AGREEMENT_H
 
-#include <KLocale>
+#include <KDialog>
 
-#include <KDebug>
+#include "ui_LicenseAgreement.h"
 
-#include <Signature>
+#include <Eula>
 
-#include "KpkStrings.h"
-
-KpkRepoSig::KpkRepoSig(const Signature &info, bool modal, QWidget *parent)
- : KDialog(parent)
+class LicenseAgreement : public KDialog, Ui::LicenseAgreement
 {
-    setupUi(mainWidget());
-    setModal(modal);
+    Q_OBJECT
+public:
+    explicit LicenseAgreement(PackageKit::Eula eula, bool modal = true, QWidget *parent = 0);
+    ~LicenseAgreement();
+};
 
-    setButtons(KDialog::Cancel | KDialog::Yes);
-    setCaption(i18n("Software signature is required"));
-
-    repoNameL->setText(info.repoId);
-    sigUrlL->setText(info.keyUrl);
-    sigUserIdL->setText(info.keyUserid);
-    sigIdL->setText(info.keyId);
-}
-
-KpkRepoSig::~KpkRepoSig()
-{
-}
-
-#include "KpkRepoSig.moc"
+#endif

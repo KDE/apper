@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,10 +20,10 @@
 
 #include "ApperSentinel.h"
 
-#include "KpkUpdateIcon.h"
-#include "KpkDistroUpgrade.h"
+#include "UpdateIcon.h"
+#include "DistroUpgrade.h"
 #include "TransactionWatcher.h"
-#include "KpkInterface.h"
+#include "DBusInterface.h"
 #include "PkInterface.h"
 
 #include <KCmdLineArgs>
@@ -60,15 +60,15 @@ ApperSentinel::ApperSentinel()
     connect(m_trayIcon, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
-    m_updateIcon = new KpkUpdateIcon(this);
+    m_updateIcon = new UpdateIcon(this);
     connect(m_updateIcon, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
-    m_distroUpgrade = new KpkDistroUpgrade(this);
+    m_distroUpgrade = new DistroUpgrade(this);
     connect(m_distroUpgrade, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
-    m_interface = new KpkInterface(this);
+    m_interface = new DBusInterface(this);
     // connect the update signal from DBus to our update and distro classes
     connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
             m_updateIcon, SLOT(refreshAndUpdate(bool)));

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,9 +41,9 @@
 #include <KMenu>
 
 #include <PackageModel.h>
-#include <KpkDelegate.h>
-#include <KpkStrings.h>
-#include <KpkIcons.h>
+#include <ChangesDelegate.h>
+#include <PkStrings.h>
+#include <PkIcons.h>
 #include <AppInstall.h>
 
 #include <KDebug>
@@ -56,11 +56,11 @@
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
 
-K_PLUGIN_FACTORY(KPackageKitFactory, registerPlugin<ApperKCM>();)
-K_EXPORT_PLUGIN(KPackageKitFactory("kcm_apper"))
+K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperKCM>();)
+K_EXPORT_PLUGIN(ApperFactory("kcm_apper"))
 
 ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
-    KCModule(KPackageKitFactory::componentData(), parent, args),
+    KCModule(ApperFactory::componentData(), parent, args),
     m_currentAction(0),
     m_groupsProxyModel(0),
     m_settingsPage(0),
@@ -75,7 +75,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     aboutData = new KAboutData("apper",
                                "apper",
                                ki18n("Application Manager"),
-                               KPK_VERSION,
+                               APP_VERSION,
                                ki18n("KDE interface for managing software"),
                                KAboutData::License_GPL,
                                ki18n("(C) 2008-2010 Daniel Nicoletti"));
@@ -181,7 +181,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     changedProxy->setSortRole(PackageModel::SortRole);
     changesView->setModel(changedProxy);
-    KpkDelegate *changesDelegate = new KpkDelegate(changesView);
+    ChangesDelegate *changesDelegate = new ChangesDelegate(changesView);
     changesDelegate->setExtendPixmapWidth(0);
     changesView->setItemDelegate(changesDelegate);
 
@@ -303,7 +303,7 @@ void ApperKCM::checkChanged()
 void ApperKCM::errorCode(PackageKit::Transaction::Error error, const QString &details)
 {
     if (error != Transaction::ErrorTransactionCancelled) {
-        KMessageBox::detailedSorry(this, KpkStrings::errorMessage(error), details, KpkStrings::error(error), KMessageBox::Notify);
+        KMessageBox::detailedSorry(this, PkStrings::errorMessage(error), details, PkStrings::error(error), KMessageBox::Notify);
     }
 }
 
@@ -640,7 +640,7 @@ void ApperKCM::search()
     }
 
     if (m_searchTransaction->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(m_searchTransaction->error()));
+        KMessageBox::sorry(this, PkStrings::daemonError(m_searchTransaction->error()));
         setCurrentActionEnabled(true);
         m_searchTransaction = 0;
     } else {

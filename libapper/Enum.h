@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,23 +18,35 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_REPO_SIG_H
-#define KPK_REPO_SIG_H
+#ifndef ENUM_H
+#define ENUM_H
 
-#include <KDialog>
+#include <config.h>
 
-#include <Signature>
+#ifdef HAVE_AUTOREMOVE
+#define AUTOREMOVE true
+#else
+#define AUTOREMOVE false
+#endif // HAVE_AUTOREMOVE
 
-#include "ui_KpkRepoSig.h"
+namespace Enum {
 
-using namespace PackageKit;
+    typedef enum {
+            None,
+            Security,
+            All
+    } AutoUpdate;
+    const int AutoUpdateDefault = None;
 
-class KpkRepoSig : public KDialog, Ui::KpkRepoSig
-{
-    Q_OBJECT
-public:
-    explicit KpkRepoSig(const Signature &info, bool modal = true, QWidget *parent = 0);
-    ~KpkRepoSig();
-};
+    typedef enum {
+            Never   =       0,
+            Hourly  =    3600,
+            Daily   =   86400,
+            Weekly  =  604800,
+            Monthly = 2628000
+    } TimeInterval;
+    const int TimeIntervalDefault = Daily;
+
+}
 
 #endif

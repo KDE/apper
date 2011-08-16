@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,8 +22,7 @@
 
 #include "ui_IntroDialog.h"
 
-#include <KpkStrings.h>
-#include <KpkMacros.h>
+#include <PkStrings.h>
 
 #include <KLocale>
 #include <KMessageBox>

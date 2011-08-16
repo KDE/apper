@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,10 +23,9 @@
 #include "TransactionJob.h"
 #include "StatusNotifierItem.h"
 
-#include <KpkStrings.h>
-#include <KpkIcons.h>
-#include <KpkImportance.h>
-#include <KpkEnum.h>
+#include <PkStrings.h>
+#include <PkIcons.h>
+#include <PackageImportance.h>
 
 #include <KMenu>
 #include <KTextBrowser>
@@ -133,7 +132,7 @@ void TransactionWatcher::setCurrentTransaction(const QString &tid)
                 this, SLOT(requireRestart(PackageKit::Package::Restart, PackageKit::Package)));
 
         // Don't let the system sleep while doing some sensible actions
-        suppressSleep(true, KpkStrings::action(role));
+        suppressSleep(true, PkStrings::action(role));
     }
     connect(m_currentTransaction, SIGNAL(changed()),
             this, SLOT(transactionChanged()));
@@ -165,7 +164,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
         // Create the notification object
         KNotification *notify = new KNotification("RestartRequired");
         QString text("<b>" + i18n("The system update has completed") + "</b>");
-        text.append("<br>" + KpkStrings::restartType(type));
+        text.append("<br>" + PkStrings::restartType(type));
         m_restartPackages.removeDuplicates();
         m_restartPackages.sort();
         if (!m_restartPackages.isEmpty()) {
@@ -173,15 +172,15 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
             text.append(i18n("Packages: %1", m_restartPackages.join(", ")));
         }
 
-        notify->setPixmap(KpkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+        notify->setPixmap(PkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         notify->setText(text);
         notify->sendEvent();
 
         if (m_restartSNI == 0) {
-            QString iconName = KpkIcons::restartIconName(m_restartType);
+            QString iconName = PkIcons::restartIconName(m_restartType);
             m_restartSNI = new StatusNotifierItem(this);
             m_restartSNI->setToolTip(iconName,
-                                     KpkStrings::restartType(m_restartType),
+                                     PkStrings::restartType(m_restartType),
                                      i18np("Package: %2",
                                            "Packages: %2",
                                            m_restartPackages.size(),
@@ -190,8 +189,8 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
                     this, SLOT(logout()));
         }
 
-        int old = KpkImportance::restartImportance(m_restartType);
-        int newer = KpkImportance::restartImportance(type);
+        int old = PackageImportance::restartImportance(m_restartType);
+        int newer = PackageImportance::restartImportance(type);
         // Check to see which one is more important
         if (newer > old) {
             m_restartType = type;
@@ -218,14 +217,14 @@ void TransactionWatcher::message(PackageKit::Transaction::Message type, const QS
     html.append("<p><h3>");
     html.append(QDateTime::currentDateTime().toString("hh:mm:ss"));
     html.append(" - ");
-    html.append(KpkStrings::message(type));
+    html.append(PkStrings::message(type));
     html.append("</h3>");
     html.append(message);
     html.append("</p>");
     m_messages << html;
 
     if (m_messagesSNI == 0) {
-        QIcon icon = KpkIcons::getPreloadedIcon("kpk-important");
+        QIcon icon = PkIcons::getPreloadedIcon("kpk-important");
         m_messagesSNI = new StatusNotifierItem(this);
         m_messagesSNI->setIconByPixmap(icon);
         m_messagesSNI->setToolTip(icon,
@@ -285,7 +284,7 @@ void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QSt
 
     KNotification *notify;
     notify = new KNotification("TransactionError", 0, KNotification::Persistent);
-    notify->setText("<b>"+KpkStrings::error(err)+"</b><br>"+KpkStrings::errorMessage(err));
+    notify->setText("<b>"+PkStrings::error(err)+"</b><br>"+PkStrings::errorMessage(err));
     notify->setProperty("ErrorType", QVariant::fromValue(err));
     notify->setProperty("Details", details);
 
@@ -309,9 +308,9 @@ void TransactionWatcher::errorActivated(uint action)
         Transaction::Error error = notify->property("ErrorType").value<Transaction::Error>();
         QString details = notify->property("Details").toString();
         KMessageBox::detailedSorry(0,
-                                   KpkStrings::errorMessage(error),
+                                   PkStrings::errorMessage(error),
                                    details.replace('\n', "<br />"),
-                                   KpkStrings::error(error),
+                                   PkStrings::error(error),
                                    KMessageBox::Notify);
     }
 
@@ -325,8 +324,8 @@ void TransactionWatcher::requireRestart(PackageKit::Package::Restart type, const
         transaction->setProperty("restartType", qVariantFromValue(type));
     } else {
         Package::Restart oldType = transaction->property("restartType").value<Package::Restart>();
-        int old = KpkImportance::restartImportance(oldType);
-        int newer = KpkImportance::restartImportance(type);
+        int old = PackageImportance::restartImportance(oldType);
+        int newer = PackageImportance::restartImportance(type);
         // Check to see which one is more important
         if (newer > old) {
             transaction->setProperty("restartType", qVariantFromValue(type));

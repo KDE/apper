@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,7 @@
 
 #include "OriginModel.h"
 
-#include <KpkEnum.h>
+#include <Enum.h>
 
 #include <QTimer>
 
@@ -62,15 +62,15 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
         showOriginsCB->setEnabled(false);
     }
 
-    intervalCB->addItem(i18nc("Hourly refresh the package cache", "Hourly"),  KpkEnum::Hourly);
-    intervalCB->addItem(i18nc("Daily refresh the package cache", "Daily"),   KpkEnum::Daily);
-    intervalCB->addItem(i18nc("Weekly refresh the package cache", "Weekly"),  KpkEnum::Weekly);
-    intervalCB->addItem(i18nc("Monthly refresh the package cache", "Monthly"), KpkEnum::Monthly);
-    intervalCB->addItem(i18nc("Never refresh package cache", "Never"), KpkEnum::Never);
+    intervalCB->addItem(i18nc("Hourly refresh the package cache", "Hourly"),  Enum::Hourly);
+    intervalCB->addItem(i18nc("Daily refresh the package cache", "Daily"),   Enum::Daily);
+    intervalCB->addItem(i18nc("Weekly refresh the package cache", "Weekly"),  Enum::Weekly);
+    intervalCB->addItem(i18nc("Monthly refresh the package cache", "Monthly"), Enum::Monthly);
+    intervalCB->addItem(i18nc("Never refresh package cache", "Never"), Enum::Never);
 
-    autoCB->addItem(i18n("Security only"), KpkEnum::Security);
-    autoCB->addItem(i18n("All updates"),   KpkEnum::All);
-    autoCB->addItem(i18nc("No updates will be automatically installed", "None"),          KpkEnum::None);
+    autoCB->addItem(i18n("Security only"), Enum::Security);
+    autoCB->addItem(i18n("All updates"),   Enum::All);
+    autoCB->addItem(i18nc("No updates will be automatically installed", "None"),          Enum::None);
 
     connect(autoConfirmCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(appLauncherCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
@@ -139,14 +139,14 @@ bool Settings::hasChanges() const
     if (notifyUpdatesCB->isChecked() != notifyGroup.readEntry("notifyUpdates", true)
         ||
         intervalCB->itemData(intervalCB->currentIndex()).toUInt() !=
-        static_cast<uint>(checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault))
+        static_cast<uint>(checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault))
         ||
         checkUpdatesBatteryCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnBattery", false)
         ||
         checkUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnMobile", false)
         ||    
         autoCB->itemData(autoCB->currentIndex()).toUInt() !=
-        static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault))
+        static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault))
         ||
         installUpdatesBatteryCB->isChecked()  != checkUpdateGroup.readEntry("installUpdatesOnBattery", false)
         ||
@@ -167,7 +167,7 @@ void Settings::checkChanges()
     emit changed(hasChanges());
 
     // Check if interval update is never
-    bool enabled = intervalCB->itemData(intervalCB->currentIndex()).toUInt() != KpkEnum::Never;
+    bool enabled = intervalCB->itemData(intervalCB->currentIndex()).toUInt() != Enum::Never;
     checkUpdatesBatteryCB->setEnabled(enabled);
     checkUpdatesMobileCB->setEnabled(enabled);
     notifyUpdatesCB->setEnabled(enabled);
@@ -175,7 +175,7 @@ void Settings::checkChanges()
     autoInsL->setEnabled(enabled);
     autoCB->setEnabled(enabled);
     if (enabled) {
-        enabled = autoCB->itemData(autoCB->currentIndex()).toUInt() != KpkEnum::None;
+        enabled = autoCB->itemData(autoCB->currentIndex()).toUInt() != Enum::None;
     }
     installUpdatesMobileCB->setEnabled(enabled);
     installUpdatesBatteryCB->setEnabled(enabled);
@@ -195,7 +195,7 @@ void Settings::load()
     notifyUpdatesCB->setChecked(notifyGroup.readEntry("notifyUpdates", true));
 
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    uint interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
+    uint interval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
     int ret = intervalCB->findData(interval);
     if (ret == -1) {
         // this is if someone change the file by hand...
@@ -207,11 +207,11 @@ void Settings::load()
     checkUpdatesBatteryCB->setChecked(checkUpdateGroup.readEntry("checkUpdatesOnBattery", false));
     checkUpdatesMobileCB->setChecked(checkUpdateGroup.readEntry("checkUpdatesOnMobile", false));
 
-    uint autoUpdate = checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault);
+    uint autoUpdate = checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault);
     ret = autoCB->findData(autoUpdate);
     if (ret == -1) {
         // this is if someone change the file by hand...
-        autoCB->setCurrentIndex( autoCB->findData(KpkEnum::AutoUpdateDefault) );
+        autoCB->setCurrentIndex( autoCB->findData(Enum::AutoUpdateDefault) );
     } else {
         autoCB->setCurrentIndex(ret);
     }
@@ -270,8 +270,8 @@ void Settings::defaults()
     autoConfirmCB->setChecked(true);
     appLauncherCB->setChecked(true);
     notifyUpdatesCB->setCheckState(Qt::Checked);
-    intervalCB->setCurrentIndex(intervalCB->findData(KpkEnum::TimeIntervalDefault));
-    autoCB->setCurrentIndex(autoCB->findData(KpkEnum::AutoUpdateDefault) );
+    intervalCB->setCurrentIndex(intervalCB->findData(Enum::TimeIntervalDefault));
+    autoCB->setCurrentIndex(autoCB->findData(Enum::AutoUpdateDefault) );
     m_originModel->clearChanges();
     checkChanges();
 }

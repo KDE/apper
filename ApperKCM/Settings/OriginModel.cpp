@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,8 +20,7 @@
 
 #include "OriginModel.h"
 
-#include <KpkStrings.h>
-#include <KpkMacros.h>
+#include <PkStrings.h>
 
 #include <KDebug>
 #include <KMessageBox>
@@ -102,7 +101,7 @@ bool OriginModel::save()
             t->repoEnable(repo->data(Qt::UserRole).toString(),
                           static_cast<bool>(repo->checkState()));
             if (t->error()) {
-                KMessageBox::sorry(0, KpkStrings::daemonError(t->error()));
+                KMessageBox::sorry(0, PkStrings::daemonError(t->error()));
                 return false;
             }
             loop.exec();

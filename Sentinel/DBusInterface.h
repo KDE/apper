@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -13,33 +12,48 @@
  *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU General Public License     *
- *   along with this program; see the file COPYING. If not, write to       *
- *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
- *   Boston, MA 02110-1301, USA.                                           *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "KpkLicenseAgreement.h"
+#ifndef DBUS_INTERFACE_H
+#define DBUS_INTERFACE_H
 
-#include <KLocale>
+#include <QtDBus/QDBusContext>
 
-#include "KpkStrings.h"
+#include <config.h>
 
-KpkLicenseAgreement::KpkLicenseAgreement(PackageKit::Eula info, bool modal, QWidget *parent)
- : KDialog(parent)
+#ifdef HAVE_DEBCONFKDE
+#include <DebconfGui.h>
+using namespace DebconfKde;
+#endif //HAVE_DEBCONFKDE
+
+class DBusInterface : public QObject, protected QDBusContext
 {
-    setupUi(mainWidget());
-    setModal(modal);
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.ApperSentinel")
+public:
+    DBusInterface(QObject *parent = 0);
+    ~DBusInterface();
 
-    setButtons(KDialog::Cancel | KDialog::Yes);
-    setButtonText(KDialog::Yes, i18n("Accept Agreement"));
-    setCaption(i18n("License Agreement Required"));
-    title->setText(i18n("License required for %1 by %2", info.package.name(), info.vendor));
+    void RefreshCache();
+    void RefreshAndUpdate();
+    void Update();
+    void SetupDebconfDialog(const QString &socket_path, uint xid_parent);
 
-    ktextbrowser->setText(info.licenseAgreement);
-}
+signals:
+    void refreshAndUpdate(bool refresh);
+    void refresh();
 
-KpkLicenseAgreement::~KpkLicenseAgreement()
-{
-}
+private slots:
+    void debconfActivate();
 
-#include "KpkLicenseAgreement.moc"
+#ifdef HAVE_DEBCONFKDE
+private:
+    QHash<QString, DebconfGui*> m_debconfGuis;
+#endif
+};
+
+
+#endif

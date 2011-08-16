@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,13 +18,13 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkStrings.h"
+#include "PkStrings.h"
 
 #include <KLocale>
 
 #include <KDebug>
 
-QString KpkStrings::status(Transaction::Status status)
+QString PkStrings::status(Transaction::Status status)
 {
     switch (status) {
     case Transaction::UnknownStatus :
@@ -143,7 +143,7 @@ QString KpkStrings::status(Transaction::Status status)
     return QString();
 }
 
-QString KpkStrings::statusPast(Transaction::Status status)
+QString PkStrings::statusPast(Transaction::Status status)
 {
     switch (status) {
     case Transaction::StatusDownload:
@@ -164,7 +164,7 @@ QString KpkStrings::statusPast(Transaction::Status status)
     }
 }
 
-QString KpkStrings::action(Transaction::Role action)
+QString PkStrings::action(Transaction::Role action)
 {
     switch (action) {
     case Transaction::UnknownRole :
@@ -244,7 +244,7 @@ QString KpkStrings::action(Transaction::Role action)
     return QString();
 }
 
-QString KpkStrings::actionPast(Transaction::Role action)
+QString PkStrings::actionPast(Transaction::Role action)
 {
     switch (action) {
     case Transaction::UnknownRole :
@@ -324,7 +324,7 @@ QString KpkStrings::actionPast(Transaction::Role action)
     return QString();
 }
 
-QString KpkStrings::infoPresent(Package::Info info)
+QString PkStrings::infoPresent(Package::Info info)
 {
     switch (info) {
     case Package::InfoDownloading :
@@ -351,7 +351,7 @@ QString KpkStrings::infoPresent(Package::Info info)
     }
 }
 
-QString KpkStrings::infoPast(Package::Info info)
+QString PkStrings::infoPast(Package::Info info)
 {
     switch (info) {
     case Package::InfoDownloading :
@@ -378,7 +378,7 @@ QString KpkStrings::infoPast(Package::Info info)
     }
 }
 
-QString KpkStrings::error(Transaction::Error error)
+QString PkStrings::error(Transaction::Error error)
 {
     switch (error) {
     case Transaction::ErrorNoNetwork :
@@ -518,7 +518,7 @@ QString KpkStrings::error(Transaction::Error error)
     return QString();
 }
 
-QString KpkStrings::errorMessage(Transaction::Error error)
+QString PkStrings::errorMessage(Transaction::Error error)
 {
     switch (error) {
     case Transaction::ErrorNoNetwork :
@@ -698,7 +698,7 @@ QString KpkStrings::errorMessage(Transaction::Error error)
     return QString();
 }
 
-QString KpkStrings::groups(Package::Group group)
+QString PkStrings::groups(Package::Group group)
 {
     switch (group) {
     case Package::GroupAccessibility :
@@ -776,7 +776,7 @@ QString KpkStrings::groups(Package::Group group)
     return QString();
 }
 
-QString KpkStrings::info(Package::Info state)
+QString PkStrings::info(Package::Info state)
 {
     switch (state) {
     case Package::InfoLow :
@@ -807,7 +807,7 @@ QString KpkStrings::info(Package::Info state)
     }
 }
 
-QString KpkStrings::packageQuantity(bool updates, int packages, int selected)
+QString PkStrings::packageQuantity(bool updates, int packages, int selected)
 {
     if (updates) {
         if (packages == 0) {
@@ -833,7 +833,7 @@ QString KpkStrings::packageQuantity(bool updates, int packages, int selected)
     }
 }
 
-QString KpkStrings::restartTypeFuture(Package::Restart value)
+QString PkStrings::restartTypeFuture(Package::Restart value)
 {
     switch (value) {
     case Package::RestartNone :
@@ -856,7 +856,7 @@ QString KpkStrings::restartTypeFuture(Package::Restart value)
     return QString();
 }
 
-QString KpkStrings::restartType(Package::Restart value)
+QString PkStrings::restartType(Package::Restart value)
 {
     switch (value) {
     case Package::RestartNone :
@@ -879,7 +879,7 @@ QString KpkStrings::restartType(Package::Restart value)
     return QString();
 }
 
-QString KpkStrings::updateState(Package::UpdateState value)
+QString PkStrings::updateState(Package::UpdateState value)
 {
     switch (value) {
     case Package::UpdateStateStable :
@@ -896,7 +896,7 @@ QString KpkStrings::updateState(Package::UpdateState value)
     return QString();
 }
 
-QString KpkStrings::mediaMessage(Transaction::MediaType value, const QString &text)
+QString PkStrings::mediaMessage(Transaction::MediaType value, const QString &text)
 {
     switch (value) {
     case Transaction::MediaTypeCd :
@@ -912,7 +912,7 @@ QString KpkStrings::mediaMessage(Transaction::MediaType value, const QString &te
     return i18n("Please insert the medium labeled '%1', and press continue.", text);
 }
 
-QString KpkStrings::message(Transaction::Message value)
+QString PkStrings::message(Transaction::Message value)
 {
     switch (value) {
     case Transaction::MessageBrokenMirror :
@@ -955,7 +955,7 @@ QString KpkStrings::message(Transaction::Message value)
     return QString();
 }
 
-QString KpkStrings::daemonError(Transaction::InternalError value)
+QString PkStrings::daemonError(Transaction::InternalError value)
 {
     switch (value) {
     case Transaction::InternalErrorFailedAuth :

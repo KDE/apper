@@ -20,7 +20,7 @@
 
 #include "PkSearchFile.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <KLocale>
 
@@ -54,7 +54,7 @@ PkSearchFile::PkSearchFile(const QString &file_name,
         QString msg = i18n("Failed to start search file transaction");
         if (showWarning()) {
             setError(msg,
-                     KpkStrings::daemonError(error));
+                     PkStrings::daemonError(error));
         }
         sendErrorFinished(Failed, msg);
     }

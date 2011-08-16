@@ -23,7 +23,6 @@
 #include "UpdateDetails.h"
 #include "DistroUpgrade.h"
 #include "CheckableHeader.h"
-#include "KpkMacros.h"
 
 #include <version.h>
 
@@ -33,8 +32,8 @@
 #include <KAboutData>
 
 #include <ApplicationsDelegate.h>
-#include <KpkStrings.h>
-#include <KpkIcons.h>
+#include <PkStrings.h>
+#include <PkIcons.h>
 #include <PackageModel.h>
 
 #include <QSortFilterProxyModel>
@@ -95,7 +94,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     distroUpgradesSA->hide();
     line->hide();
 
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup viewGroup(&config, "ViewGroup");
 
     // versions
@@ -117,7 +116,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
 Updater::~Updater()
 {
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup viewGroup(&config, "ViewGroup");
     viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
     viewGroup.writeEntry("ShowArchs", m_showPackageArch->isChecked());
@@ -242,7 +241,7 @@ void Updater::getUpdates()
     m_updatesT->getUpdates();
 
     if (m_updatesT->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(m_updatesT->error()));
+        KMessageBox::sorry(this, PkStrings::daemonError(m_updatesT->error()));
     } else {
         m_busySeq->start();
     }
@@ -282,9 +281,9 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
 void Updater::errorCode(PackageKit::Transaction::Error error, const QString &details)
 {
     KMessageBox::detailedSorry(this,
-                               KpkStrings::errorMessage(error),
+                               PkStrings::errorMessage(error),
                                details,
-                               KpkStrings::error(error),
+                               PkStrings::error(error),
                                KMessageBox::Notify);
 }
 

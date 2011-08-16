@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 Daniel Nicoletti <dantti85-pk@yahoo.com.br>   *
+ *   Copyright (C) 2008-2011 Daniel Nicoletti                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,14 +18,11 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "KpkInterface.h"
+#include "DBusInterface.h"
 
 #include "appersentineladaptor.h"
 
 #include <QtDBus/QDBusConnection>
-#include <KpkIcons.h>
-#include <KpkMacros.h>
-#include <KIcon>
 #include <KNotification>
 
 #ifdef HAVE_DEBCONFKDE
@@ -34,9 +32,7 @@
 
 #include <KDebug>
 
-using namespace PackageKit;
-
-KpkInterface::KpkInterface(QObject *parent)
+DBusInterface::DBusInterface(QObject *parent)
         : QObject(parent)
 {
     kDebug() << "Creating Helper";
@@ -52,7 +48,7 @@ KpkInterface::KpkInterface(QObject *parent)
     }
 }
 
-KpkInterface::~KpkInterface()
+DBusInterface::~DBusInterface()
 {
     kDebug();
 #ifdef HAVE_DEBCONFKDE
@@ -62,25 +58,25 @@ KpkInterface::~KpkInterface()
 #endif //HAVE_DEBCONFKDE
 }
 
-void KpkInterface::RefreshCache()
+void DBusInterface::RefreshCache()
 {
     emit refresh();
 }
 
-void KpkInterface::Update()
+void DBusInterface::Update()
 {
     // This is to show updates when the session
     // starts and it's not time to refresh the cache
     emit refreshAndUpdate(false);
 }
 
-void KpkInterface::RefreshAndUpdate()
+void DBusInterface::RefreshAndUpdate()
 {
     // This is to show updates and refresh the cache
     emit refreshAndUpdate(true);
 }
 
-void KpkInterface::SetupDebconfDialog(const QString &socketPath, uint xidParent)
+void DBusInterface::SetupDebconfDialog(const QString &socketPath, uint xidParent)
 {
 #ifdef HAVE_DEBCONFKDE
     kDebug() << socketPath << xidParent;
@@ -103,7 +99,7 @@ void KpkInterface::SetupDebconfDialog(const QString &socketPath, uint xidParent)
 #endif //HAVE_DEBCONFKDE
 }
 
-void KpkInterface::debconfActivate()
+void DBusInterface::debconfActivate()
 {
 #ifdef HAVE_DEBCONFKDE
     // Correct the parent
@@ -115,4 +111,4 @@ void KpkInterface::debconfActivate()
 #endif
 }
 
-#include "KpkInterface.moc"
+#include "DBusInterface.moc"

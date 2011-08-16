@@ -23,8 +23,8 @@
 #include "ScreenShotViewer.h"
 
 #include <PackageModel.h>
-#include <KpkStrings.h>
-#include <KpkIcons.h>
+#include <PkStrings.h>
+#include <PkIcons.h>
 #include <AppInstall.h>
 
 #include <KMessageBox>
@@ -248,7 +248,7 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_hasDepends    = false;
 
     QString pkgIconPath = index.data(PackageModel::IconRole).toString();
-    m_currentIcon       = KpkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
+    m_currentIcon       = PkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
     m_appName           = index.data(PackageModel::NameRole).toString();
 
     m_currentScreenshot = AppInstall::instance()->thumbnail(m_package.name());
@@ -383,7 +383,7 @@ void PackageDetails::actionActivated(QAction *action)
     }
 
     if (m_transaction->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(m_transaction->error()));
+        KMessageBox::sorry(this, PkStrings::daemonError(m_transaction->error()));
     } else {
         m_busySeq->start();
     }
@@ -577,7 +577,7 @@ void PackageDetails::setupDescription()
 
 //     if (details->group() != Package::UnknownGroup) {
 // //         description += "<tr><td align=\"right\"><b>" + i18nc("Group of the package", "Group") + ":</b></td><td>"
-// //                     + KpkStrings::groups(details->group())
+// //                     + PkStrings::groups(details->group())
 // //                     + "</td></tr>";
 //     }
 

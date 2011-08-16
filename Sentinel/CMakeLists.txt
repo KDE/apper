@@ -8,9 +8,9 @@ set(sentinel_SRCS
     IntroDialog.cpp
     InfoWidget.cpp
     AbstractIsRunning.cpp
-    KpkUpdateIcon.cpp
-    KpkDistroUpgrade.cpp
-    KpkInterface.cpp
+    UpdateIcon.cpp
+    DistroUpgrade.cpp
+    DBusInterface.cpp
     PkInterface.cpp
     SessionTask.cpp
     PkInstallPackageNames.cpp
@@ -40,8 +40,8 @@ kde4_add_ui_files(sentinel_SRCS
 
 qt4_add_dbus_adaptor(sentinel_dbus_SRCS
     org.kde.ApperSentinel.xml
-    KpkInterface.h
-    KpkInterface
+    DBusInterface.h
+    DBusInterface
 )
 
 qt4_add_dbus_adaptor(sentinel_dbus_SRCS

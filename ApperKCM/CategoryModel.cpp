@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2010-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,8 +24,8 @@
 #include <QFile>
 #include <QTimer>
 
-#include <KpkStrings.h>
-#include <KpkIcons.h>
+#include <PkStrings.h>
+#include <PkIcons.h>
 
 #include <KCategorizedSortFilterProxyModel>
 #include <KLocale>
@@ -201,13 +201,13 @@ void CategoryModel::fillWithStandardGroups()
     QStandardItem *item;
     foreach (const Package::Group &group, m_groups) {
         if (group != Package::UnknownGroup) {
-            item = new QStandardItem(KpkStrings::groups(group));
+            item = new QStandardItem(PkStrings::groups(group));
             item->setDragEnabled(false);
             item->setData(Transaction::RoleSearchGroup, SearchRole);
             item->setData(group, GroupRole);
             item->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
             item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
-            item->setIcon(KpkIcons::groupsIcon(group));
+            item->setIcon(PkIcons::groupsIcon(group));
             if (!(m_roles & Transaction::RoleSearchGroup)) {
                 item->setSelectable(false);
             }
@@ -275,7 +275,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                 QString _icon;
                 _icon = xml.readElementText();
                 if (item->icon().isNull()) {
-                    item->setIcon(KpkIcons::getIcon(_icon, icon));
+                    item->setIcon(PkIcons::getIcon(_icon, icon));
                     icon = _icon;
                 }
             } else if (xml.name() == "Categories") {
@@ -302,7 +302,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                 QString _icon = config.readEntry("Icon");
                 QString _name = config.readEntry("Name");
                 if (!_icon.isEmpty()) {
-                    item->setIcon(KpkIcons::getIcon(_icon, icon));
+                    item->setIcon(PkIcons::getIcon(_icon, icon));
                     icon = _icon;
                 }
                 if (!_name.isEmpty()) {
@@ -334,7 +334,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
             // Set the group name to get it translated
             Package::Group group;
             group = static_cast<Package::Group>(item->data(GroupRole).toUInt());
-            item->setText(KpkStrings::groups(group));
+            item->setText(PkStrings::groups(group));
         }
         item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
         item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);

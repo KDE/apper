@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KpkRepoSig</class>
- <widget class="QWidget" name="KpkRepoSig">
+ <class>RepoSig</class>
+ <widget class="QWidget" name="RepoSig">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>211</width>
+    <height>93</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Software signature is required</string>
   </property>

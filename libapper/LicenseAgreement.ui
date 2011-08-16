@@ -1,7 +1,8 @@
-<ui version="4.0" >
- <class>KpkLicenseAgreement</class>
- <widget class="QWidget" name="KpkLicenseAgreement" >
-  <property name="geometry" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LicenseAgreement</class>
+ <widget class="QWidget" name="LicenseAgreement">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,33 +10,33 @@
     <height>472</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>License Agreement Required</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <item row="0" column="0" >
-    <widget class="QLabel" name="title" >
-     <property name="font" >
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="title">
+     <property name="font">
       <font>
        <pointsize>11</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="QLabel" name="label_2" >
-     <property name="text" >
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
       <string>Please read the following important information before continuing:</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" >
-    <widget class="KTextBrowser" name="ktextbrowser" />
+   <item row="2" column="0">
+    <widget class="KTextBrowser" name="ktextbrowser"/>
    </item>
   </layout>
  </widget>

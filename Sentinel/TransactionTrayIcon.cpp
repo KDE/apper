@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2010-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,8 +26,8 @@
 #include <KIcon>
 #include <KDebug>
 
-#include <KpkStrings.h>
-#include <KpkIcons.h>
+#include <PkStrings.h>
+#include <PkIcons.h>
 
 #include <Transaction>
 
@@ -71,25 +71,25 @@ void TransactionTrayIcon::transactionChanged()
 
     if (m_currentRole != role) {
         m_currentRole = role;
-        QString iconName = KpkIcons::actionIconName(role);
-        setToolTipTitle(KpkStrings::action(role));
-        setToolTipIconByPixmap(KpkIcons::getPreloadedIcon(iconName));
+        QString iconName = PkIcons::actionIconName(role);
+        setToolTipTitle(PkStrings::action(role));
+        setToolTipIconByPixmap(PkIcons::getPreloadedIcon(iconName));
     }
 
     if (status != m_currentStatus) {
         // Do not store status here
         // so we can compare on the next 'if'
-        QString iconName = KpkIcons::statusIconName(status);
-        setIconByPixmap(KpkIcons::getPreloadedIcon(iconName));
+        QString iconName = PkIcons::statusIconName(status);
+        setIconByPixmap(PkIcons::getPreloadedIcon(iconName));
     }
 
     if (percentage != m_currentProgress || status != m_currentStatus) {
         m_currentProgress = percentage;
         m_currentStatus   = status;
         if (percentage && percentage <= 100) {
-            toolTip = i18n("%1% - %2", percentage, KpkStrings::status(status));
+            toolTip = i18n("%1% - %2", percentage, PkStrings::status(status));
         } else {
-            toolTip = i18n("%1", KpkStrings::status(status));
+            toolTip = i18n("%1", PkStrings::status(status));
         }
         setToolTipSubTitle(toolTip);
     }

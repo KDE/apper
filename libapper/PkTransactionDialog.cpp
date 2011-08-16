@@ -38,15 +38,7 @@
 
 #include <Transaction>
 
-#include "KpkMacros.h"
-#include "KpkEnum.h"
-#include "KpkStrings.h"
-#include "KpkRepoSig.h"
-#include "KpkLicenseAgreement.h"
-#include "KpkIcons.h"
 #include "ProgressView.h"
-#include "ApplicationLauncher.h"
-
 #include "PkTransaction.h"
 
 class PkTransactionDialogPrivate
@@ -95,7 +87,7 @@ PkTransactionDialog::PkTransactionDialog(Transaction *trans, Behaviors flags, QW
                      i18n("Allows you to hide the window whilst keeping the transaction task running."));
     setEscapeButton(KDialog::User1);
 
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup transactionGroup(&config, "Transaction");
 
     d->progressView = new ProgressView;
@@ -116,7 +108,7 @@ PkTransactionDialog::PkTransactionDialog(Transaction *trans, Behaviors flags, QW
 
 PkTransactionDialog::~PkTransactionDialog()
 {
-    KConfig config("KPackageKit");
+    KConfig config;
     if (isButtonEnabled(KDialog::Details)) {
         KConfigGroup transactionGroup(&config, "Transaction");
         transactionGroup.writeEntry("ShowDetails", d->showDetails);

@@ -1,8 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,12 +20,12 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkUpdateIcon.h"
+#include "UpdateIcon.h"
 
-#include <KpkStrings.h>
-#include <KpkIcons.h>
-#include <KpkEnum.h>
-#include <KpkMacros.h>
+#include <PkStrings.h>
+#include <PkIcons.h>
+#include <Macros.h>
+#include <Enum.h>
 
 #include <KLocale>
 #include <KNotification>
@@ -44,7 +44,7 @@
 
 using namespace PackageKit;
 
-KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
+UpdateIcon::UpdateIcon(QObject* parent)
     : AbstractIsRunning(parent),
       m_getUpdatesT(0),
       m_statusNotifierItem(0)
@@ -52,17 +52,17 @@ KpkUpdateIcon::KpkUpdateIcon(QObject* parent)
     connect(Daemon::global(), SIGNAL(updatesChanged()), this, SLOT(update()));
 }
 
-KpkUpdateIcon::~KpkUpdateIcon()
+UpdateIcon::~UpdateIcon()
 {
     removeStatusNotifierItem();
 }
 
-void KpkUpdateIcon::showSettings()
+void UpdateIcon::showSettings()
 {
     KToolInvocation::startServiceByDesktopName("Apper", QStringList() << "--settings");
 }
 
-void KpkUpdateIcon::refresh(bool update)
+void UpdateIcon::refresh(bool update)
 {
     if (!systemIsReady(true)) {
         kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
@@ -85,7 +85,7 @@ void KpkUpdateIcon::refresh(bool update)
                     this, SLOT(decreaseRunning()));
         } else {
             KNotification *notify = new KNotification("TransactionError", 0);
-            notify->setText(KpkStrings::daemonError(t->error()));
+            notify->setText(PkStrings::daemonError(t->error()));
             notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
             notify->sendEvent();
         }
@@ -95,7 +95,7 @@ void KpkUpdateIcon::refresh(bool update)
 // refresh the cache and try to update,
 // if it can't automatically update show
 // a notification about updates available
-void KpkUpdateIcon::refreshAndUpdate(bool doRefresh)
+void UpdateIcon::refreshAndUpdate(bool doRefresh)
 {
     // This is really necessary to don't bother the user with
     // tons of popups
@@ -107,22 +107,22 @@ void KpkUpdateIcon::refreshAndUpdate(bool doRefresh)
     }
 }
 
-void KpkUpdateIcon::update()
+void UpdateIcon::update()
 {
     if (m_getUpdatesT) {
         return;
     }
 
     increaseRunning();
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup notifyGroup(&config, "Notify");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     
     bool notifyUpdate = notifyGroup.readEntry("notifyUpdates", true);
-    uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault));
+    uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
 
     // get updates if we should display a notification or automatic update the system
-    if (notifyUpdate || updateType == KpkEnum::All || updateType == KpkEnum::Security) {
+    if (notifyUpdate || updateType == Enum::All || updateType == Enum::Security) {
         m_updateList.clear();
         m_getUpdatesT = new Transaction(QString(), this);
         m_getUpdatesT->getUpdates();
@@ -141,7 +141,7 @@ void KpkUpdateIcon::update()
     decreaseRunning();
 }
 
-void KpkUpdateIcon::packageToUpdate(const Package &package)
+void UpdateIcon::packageToUpdate(const Package &package)
 {
     // Blocked updates are not instalable updates so there is no
     // reason to show/count them
@@ -150,9 +150,9 @@ void KpkUpdateIcon::packageToUpdate(const Package &package)
     }
 }
 
-void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
+void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
 {
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup checkUpdateGroup(&config, "Notify");
     bool iconEnabled = checkUpdateGroup.readEntry("notifyUpdates", true);
     if (!iconEnabled) {
@@ -168,7 +168,7 @@ void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
         actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
         // Setup a menu with some actions
         KMenu *menu = new KMenu;
-        menu->addTitle(KIcon(UPDATES_ICON), i18n("KPackageKit"));
+        menu->addTitle(KIcon(UPDATES_ICON), i18n("Apper"));
         QAction *action;
         action = menu->addAction(i18n("Review Updates"));
         connect(action, SIGNAL(triggered(bool)),
@@ -203,7 +203,7 @@ void KpkUpdateIcon::updateStatusNotifierIcon(UpdateType type)
     increaseRunning();
 }
 
-void KpkUpdateIcon::getUpdateFinished()
+void UpdateIcon::getUpdateFinished()
 {
     m_getUpdatesT = 0;
     decreaseRunning();
@@ -220,15 +220,15 @@ void KpkUpdateIcon::getUpdateFinished()
             }
         }
 
-        KConfig config("KPackageKit");
+        KConfig config;
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-        uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", KpkEnum::AutoUpdateDefault));
+        uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
         bool systemReady = systemIsReady(true);
-        if (!systemReady && (updateType == KpkEnum::All || (updateType == KpkEnum::Security && !securityUpdateList.isEmpty()))) {
+        if (!systemReady && (updateType == Enum::All || (updateType == Enum::Security && !securityUpdateList.isEmpty()))) {
             kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
         }
 
-        if (systemReady && updateType == KpkEnum::All) {
+        if (systemReady && updateType == Enum::All) {
             // update all
             SET_PROXY
             Transaction *t = new Transaction(this);
@@ -249,7 +249,7 @@ void KpkUpdateIcon::getUpdateFinished()
                 removeStatusNotifierItem();
                 return;
             }
-        } else if (systemReady && updateType == KpkEnum::Security && !securityUpdateList.isEmpty()) {
+        } else if (systemReady && updateType == Enum::Security && !securityUpdateList.isEmpty()) {
             // Defaults to security
             SET_PROXY
             Transaction *t = new Transaction(this);
@@ -279,7 +279,7 @@ void KpkUpdateIcon::getUpdateFinished()
     }
 }
 
-void KpkUpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
+void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
 {
     // decrease first only because we want to check for updates again
     decreaseRunning();
@@ -302,12 +302,12 @@ void KpkUpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
     }
 }
 
-void KpkUpdateIcon::showUpdates()
+void UpdateIcon::showUpdates()
 {
     KToolInvocation::startServiceByDesktopName("Apper", QStringList() << "--updates");
 }
 
-void KpkUpdateIcon::removeStatusNotifierItem()
+void UpdateIcon::removeStatusNotifierItem()
 {
     if (m_statusNotifierItem) {
         m_statusNotifierItem->deleteLater();
@@ -315,7 +315,7 @@ void KpkUpdateIcon::removeStatusNotifierItem()
     }
 }
 
-bool KpkUpdateIcon::systemIsReady(bool checkUpdates)
+bool UpdateIcon::systemIsReady(bool checkUpdates)
 {
     Daemon::Network networkState = Daemon::networkState();
 
@@ -324,7 +324,7 @@ bool KpkUpdateIcon::systemIsReady(bool checkUpdates)
         return false;
     }
 
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     bool ignoreBattery;
     if (checkUpdates) {

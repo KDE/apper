@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,32 +18,35 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkProgressBar.h"
+#ifndef DISTRO_UPGRADE_H
+#define DISTRO_UPGRADE_H
 
-#include <KLocale>
-#include <KGlobal>
+#include "AbstractIsRunning.h"
 
-KpkProgressBar::KpkProgressBar(QWidget *parent)
- : QProgressBar(parent), m_remaining(0)
+#include <QProcess>
+
+#include <Transaction>
+
+using namespace PackageKit;
+
+class DistroUpgrade : public AbstractIsRunning
 {
-}
+Q_OBJECT
+public:
+    DistroUpgrade(QObject *parent = 0);
+    ~DistroUpgrade();
 
-KpkProgressBar::~KpkProgressBar()
-{
-}
+public slots:
+    void checkDistroUpgrades();
 
-QString KpkProgressBar::text() const
-{
-    if (m_remaining) {
-        return i18n("%1 remaining", KGlobal::locale()->prettyFormatDuration(m_remaining * 1000));
-    } else {
-        return QProgressBar::text();
-    }
-}
+private slots:
+    void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);
+    void handleDistroUpgradeAction(uint action);
+    void distroUpgradeError(QProcess::ProcessError error);
+    void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
-void KpkProgressBar::setRemaining(uint remaining)
-{
-    m_remaining = remaining;
-}
+private:
+    QProcess *m_distroUpgradeProcess;
+};
 
-#include "KpkProgressBar.moc"
+#endif

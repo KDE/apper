@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,7 @@
 
 #include "IntroDialog.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <QStandardItemModel>
 #include <QXmlQuery>
@@ -142,7 +142,7 @@ void PkInstallFontconfigResources::search()
     if (t->error()) {
         QString msg(i18n("Failed to search for provides"));
         if (showWarning()) {
-            setError(msg, KpkStrings::daemonError(t->error()));
+            setError(msg, PkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, msg);
     }

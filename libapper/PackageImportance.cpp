@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,19 +18,27 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_IMPORTANCE_H
-#define KPK_IMPORTANCE_H
+#include "PackageImportance.h"
 
-#include <kdemacros.h>
+#include <KDebug>
 
-#include <Package>
-
-using namespace PackageKit;
-
-namespace KpkImportance
+int PackageImportance::restartImportance(Package::Restart type)
 {
-    KDE_EXPORT int restartImportance(Package::Restart type);
-};
-
-#endif
- 
+    switch (type) {
+    case Package::UnknownRestart :
+    case Package::RestartNone :
+        return 0;
+    case Package::RestartApplication :
+        return 1;
+    case Package::RestartSession :
+        return 2;
+    case Package::RestartSecuritySession :
+        return 3;
+    case Package::RestartSystem :
+        return 4;
+    case Package::RestartSecuritySystem :
+        return 5;
+    }
+    kWarning() << "restart type unrecognised: " << type;
+    return 0;
+}

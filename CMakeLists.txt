@@ -6,17 +6,17 @@ find_package(KDE4 REQUIRED)
 include (MacroLibrary)
 
 # Only for Debian based systems
-option(DEBCONF_SUPPORT "Build KPackageKit with debconf support" OFF)
+option(DEBCONF_SUPPORT "Build Apper with debconf support" OFF)
 
 # Yum does not support this
-option(AUTOREMOVE "Build KPackageKit with auto remove enabled" ON)
+option(AUTOREMOVE "Build Apper with auto remove enabled" ON)
 set(HAVE_AUTOREMOVE ${AUTOREMOVE})
-message(STATUS "Building KPackageKit with auto remove: " ${AUTOREMOVE})
+message(STATUS "Building Apper with auto remove: " ${AUTOREMOVE})
 
 # App Install, only Debian based support this for now
-option(APPINSTALL "Build KPackageKit with app install" OFF)
+option(APPINSTALL "Build Apper with app install" OFF)
 set(HAVE_APPINSTALL ${APPINSTALL})
-message(STATUS "Building KPackageKit with app install: " ${APPINSTALL})
+message(STATUS "Building Apper with app install: " ${APPINSTALL})
 
 if (HAVE_APPINSTALL)
     # path to the sqlite app-install db

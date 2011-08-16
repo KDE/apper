@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,23 +18,28 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_LICENSE_AGREEMENT_H
-#define KPK_LICENSE_AGREEMENT_H
+#include "LicenseAgreement.h"
 
-#include <KDialog>
+#include <KLocale>
 
-#include "ui_KpkLicenseAgreement.h"
+#include "PkStrings.h"
 
-#include <Eula>
-
-using namespace PackageKit;
-
-class KpkLicenseAgreement : public KDialog, Ui::KpkLicenseAgreement
+LicenseAgreement::LicenseAgreement(PackageKit::Eula info, bool modal, QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit KpkLicenseAgreement(Eula eula, bool modal = true, QWidget *parent = 0);
-    ~KpkLicenseAgreement();
-};
+    setupUi(mainWidget());
+    setModal(modal);
 
-#endif
+    setButtons(KDialog::Cancel | KDialog::Yes);
+    setButtonText(KDialog::Yes, i18n("Accept Agreement"));
+    setCaption(i18n("License Agreement Required"));
+    title->setText(i18n("License required for %1 by %2", info.package.name(), info.vendor));
+
+    ktextbrowser->setText(info.licenseAgreement);
+}
+
+LicenseAgreement::~LicenseAgreement()
+{
+}
+
+#include "LicenseAgreement.moc"

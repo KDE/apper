@@ -20,7 +20,7 @@
 
 #include "PkIsInstalled.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <KLocale>
 #include <KDebug>
@@ -46,7 +46,7 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
         QString msg = i18n("Failed to start resolve transaction");
         if (showWarning()) {
             setError(msg,
-                     KpkStrings::daemonError(t->error()));
+                     PkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, msg);
     }

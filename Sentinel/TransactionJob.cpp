@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,9 +20,8 @@
 
 #include "TransactionJob.h"
 
-#include <KpkStrings.h>
-#include <KpkIcons.h>
-#include <KpkEnum.h>
+#include <PkStrings.h>
+#include <PkIcons.h>
 
 #include <KLocale>
 #include <KGlobal>
@@ -39,7 +38,7 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
    m_percentage(0)
 {
     setCapabilities(Killable);
-    m_title = KpkStrings::action(transaction->role());
+    m_title = PkStrings::action(transaction->role());
     connect(transaction, SIGNAL(changed()), this, SLOT(updateJob()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(finished(PackageKit::Transaction::Exit)));
@@ -93,7 +92,7 @@ void TransactionJob::package(const PackageKit::Package &package)
 void TransactionJob::repoDetail(const QString &repoId, const QString &repoDescription)
 {
     Q_UNUSED(repoId)
-    QString first = KpkStrings::status(m_status);
+    QString first = PkStrings::status(m_status);
     emit description(this, m_title, qMakePair(first, repoDescription));
 }
 
@@ -104,7 +103,7 @@ void TransactionJob::emitDescription()
         details = "...";
     }
 
-    QString first = KpkStrings::status(m_status);
+    QString first = PkStrings::status(m_status);
     emit description(this, m_title, qMakePair(first, details));
 }
 

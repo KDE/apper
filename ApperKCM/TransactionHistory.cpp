@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,8 +23,8 @@
 #include "TransactionFilterModel.h"
 #include "TransactionModel.h"
 
-#include <KpkIcons.h>
-#include <KpkStrings.h>
+#include <PkIcons.h>
+#include <PkStrings.h>
 
 #include <Daemon>
 
@@ -78,7 +78,7 @@ void TransactionHistory::refreshList()
             m_transactionModel, SLOT(addTransaction(PackageKit::Transaction *)));
     transaction->getOldTransactions(0);
     if (transaction->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(transaction->error()));
+        KMessageBox::sorry(this, PkStrings::daemonError(transaction->error()));
     }
 
     // Refresh time

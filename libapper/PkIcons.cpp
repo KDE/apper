@@ -1,8 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,38 +22,38 @@
 
 #include <config.h>
 
-#include "KpkIcons.h"
+#include "PkIcons.h"
 
 #include <KIconLoader>
 #include <KStandardDirs>
 
 #include <KDebug>
 
-bool KpkIcons::init = false;
-QHash<QString, KIcon> KpkIcons::cache = QHash<QString, KIcon>();
+bool PkIcons::init = false;
+QHash<QString, KIcon> PkIcons::cache = QHash<QString, KIcon>();
 
-void KpkIcons::configure()
+void PkIcons::configure()
 {
     KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-install/icons/");
-    KIconLoader::global()->reconfigure("kpackagekit", 0);
-    KpkIcons::init = true;
+    KIconLoader::global()->reconfigure("apper", 0);
+    PkIcons::init = true;
 }
 
-KIcon KpkIcons::getIcon(const QString &name)
+KIcon PkIcons::getIcon(const QString &name)
 {
 //     kDebug() << 1 << name;
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
 
     return KIcon(name);
 }
 
-KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
+KIcon PkIcons::getIcon(const QString &name, const QString &defaultName)
 {
 //     kDebug() << 2 << name << defaultName;
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
 
     if (name.isEmpty()) {
@@ -71,10 +71,10 @@ KIcon KpkIcons::getIcon(const QString &name, const QString &defaultName)
     return KIcon(name);
 }
 
-QString KpkIcons::statusIconName(Transaction::Status status)
+QString PkIcons::statusIconName(Transaction::Status status)
 {
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
     switch (status) {
     case Transaction::UnknownStatus              : return "help-browser";
@@ -119,15 +119,15 @@ QString KpkIcons::statusIconName(Transaction::Status status)
     return "help-browser";
 }
 
-KIcon KpkIcons::statusIcon(Transaction::Status status)
+KIcon PkIcons::statusIcon(Transaction::Status status)
 {
-    return KIcon(KpkIcons::statusIconName(status));
+    return KIcon(PkIcons::statusIconName(status));
 }
 
-QString KpkIcons::statusAnimation(Transaction::Status status)
+QString PkIcons::statusAnimation(Transaction::Status status)
 {
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
     switch (status) {
     case Transaction::UnknownStatus             : return "help-browser";
@@ -169,10 +169,10 @@ QString KpkIcons::statusAnimation(Transaction::Status status)
     }
 }
 
-QString KpkIcons::actionIconName(Transaction::Role role)
+QString PkIcons::actionIconName(Transaction::Role role)
 {
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
     switch (role) {
     case Transaction::UnknownRole                 : return "applications-other";
@@ -216,15 +216,15 @@ QString KpkIcons::actionIconName(Transaction::Role role)
     return "applications-other";
 }
 
-KIcon KpkIcons::actionIcon(Transaction::Role role)
+KIcon PkIcons::actionIcon(Transaction::Role role)
 {
     return KIcon(actionIconName(role));
 }
 
-KIcon KpkIcons::groupsIcon(Package::Group group)
+KIcon PkIcons::groupsIcon(Package::Group group)
 {
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
     switch (group) {
     case Package::UnknownGroup         : return KIcon("unknown");
@@ -267,10 +267,10 @@ KIcon KpkIcons::groupsIcon(Package::Group group)
     return KIcon("unknown");
 }
 
-KIcon KpkIcons::packageIcon(Package::Info info)
+KIcon PkIcons::packageIcon(Package::Info info)
 {
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
     switch (info) {
     case Package::InfoBugfix      : return KIcon("script-error");
@@ -286,10 +286,10 @@ KIcon KpkIcons::packageIcon(Package::Info info)
     }
 }
 
-QString KpkIcons::restartIconName(Package::Restart type)
+QString PkIcons::restartIconName(Package::Restart type)
 {
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
     // These names MUST be standard icons, otherwise KStatusNotifierItem
     // will not be able to load them
@@ -305,15 +305,15 @@ QString KpkIcons::restartIconName(Package::Restart type)
     return "";
 }
 
-KIcon KpkIcons::restartIcon(Package::Restart type)
+KIcon PkIcons::restartIcon(Package::Restart type)
 {
-    return KpkIcons::getIcon(restartIconName(type));
+    return PkIcons::getIcon(restartIconName(type));
 }
 
-QIcon KpkIcons::getPreloadedIcon(const QString &name)
+QIcon PkIcons::getPreloadedIcon(const QString &name)
 {
-    if (!KpkIcons::init) {
-        KpkIcons::configure();
+    if (!PkIcons::init) {
+        PkIcons::configure();
     }
 
     kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup, true);

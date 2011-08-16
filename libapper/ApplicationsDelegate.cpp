@@ -1,6 +1,6 @@
 /*
  *   Copyright (C) 2007 Ivan Cukic <ivan.cukic+kde@gmail.com>
- *   Copyright (C) 2008 Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+ *   Copyright (C) 2008-2011 Daniel Nicoletti <dantti12@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library/Lesser General Public License
@@ -27,7 +27,7 @@
 #include <Package>
 
 #include "PackageModel.h"
-#include "KpkIcons.h"
+#include "PkIcons.h"
 
 #define UNIVERSAL_PADDING 4
 #define FADE_LENGTH 16

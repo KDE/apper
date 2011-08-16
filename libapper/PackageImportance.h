@@ -1,8 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Trever Fischer                                  *
- *   wm161@wm161.net                                                       *
- *   Copyright (C) 2010 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,37 +18,19 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKICONS_H
-#define KPKICONS_H
+#ifndef PACKAGE_IMPORTANCE_H
+#define PACKAGE_IMPORTANCE_H
+
+#include <kdemacros.h>
 
 #include <Package>
-#include <Transaction>
-#include <KIcon>
-
-#define KPK_ICON_SIZE 64
 
 using namespace PackageKit;
 
-class KDE_EXPORT KpkIcons {
-    public:
-        static KIcon   groupsIcon(Package::Group group);
-        static QString statusIconName(Transaction::Status status);
-        static KIcon   statusIcon(Transaction::Status status);
-        static QString statusAnimation(Transaction::Status status);
-        static QString actionIconName(Transaction::Role role);
-        static KIcon   actionIcon(Transaction::Role role);
-        static KIcon   packageIcon(Package::Info state);
-        static QString restartIconName(Package::Restart type);
-        static KIcon   restartIcon(Package::Restart type);
-        static KIcon   getIcon(const QString &name);
-        static KIcon   getIcon(const QString &name, const QString &defaultName);
-        static QIcon   getPreloadedIcon(const QString &name);
-
-    private:
-        static void configure();
-
-        static QHash<QString, KIcon> cache;
-        static bool init;
+namespace PackageImportance
+{
+    KDE_EXPORT int restartImportance(PackageKit::Package::Restart type);
 };
 
 #endif
+ 

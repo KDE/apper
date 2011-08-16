@@ -10,31 +10,31 @@ ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
 
 set(libapper_SRCS
     AppInstall.cpp
-    KpkIcons.cpp
-    KpkStrings.cpp
+    PkIcons.cpp
+    PkStrings.cpp
     ApplicationLauncher.cpp
     ApplicationsDelegate.cpp
     CategoryDrawer.cpp
-    KpkDelegate.cpp
+    ChangesDelegate.cpp
     TransactionDelegate.cpp
     ProgressView.cpp
     PkTransaction.cpp
     PkTransactionDialog.cpp
-    KpkRepoSig.cpp
-    KpkLicenseAgreement.cpp
+    RepoSig.cpp
+    LicenseAgreement.cpp
     PackageModel.cpp
-    KpkProgressBar.cpp
+    CustomProgressBar.cpp
     Requirements.cpp
-    KpkImportance.cpp
+    PackageImportance.cpp
     SimulateModel.cpp
-    KpkCategorizedView.cpp
+    CategorizedView.cpp
 )
 
 kde4_add_ui_files(libapper_SRCS
     ApplicationLauncher.ui
     PkTransaction.ui
-    KpkRepoSig.ui
-    KpkLicenseAgreement.ui
+    RepoSig.ui
+    LicenseAgreement.ui
     Requirements.ui
 )
 

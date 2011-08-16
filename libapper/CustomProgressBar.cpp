@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Trever Fischer                                  *
- *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,54 +18,32 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_UPDATE_ICON_H
-#define KPK_UPDATE_ICON_H
+#include "CustomProgressBar.h"
 
-#include "AbstractIsRunning.h"
+#include <KLocale>
+#include <KGlobal>
 
-#include <KStatusNotifierItem>
-
-#include <Transaction>
-
-using namespace PackageKit;
-
-class KpkUpdateIcon : public AbstractIsRunning
+CustomProgressBar::CustomProgressBar(QWidget *parent)
+ : QProgressBar(parent), m_remaining(0)
 {
-    Q_OBJECT
-public:
-    typedef enum{
-        Normal,
-        Important,
-        Security
-    } UpdateType;
-    KpkUpdateIcon(QObject *parent = 0);
-    ~KpkUpdateIcon();
+}
 
-signals:
-    void watchTransaction(const QString &tid, bool interactive);
+CustomProgressBar::~CustomProgressBar()
+{
+}
 
-public slots:
-    void refreshAndUpdate(bool doRefresh);
-    void refresh(bool update = false);
+QString CustomProgressBar::text() const
+{
+    if (m_remaining) {
+        return i18n("%1 remaining", KGlobal::locale()->prettyFormatDuration(m_remaining * 1000));
+    } else {
+        return QProgressBar::text();
+    }
+}
 
-private slots:
-    void update();
-    void packageToUpdate(const PackageKit::Package &package);
-    void getUpdateFinished();
-    void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
+void CustomProgressBar::setRemaining(uint remaining)
+{
+    m_remaining = remaining;
+}
 
-    void showSettings();
-    void showUpdates();
-    void removeStatusNotifierItem();
-
-private:
-    bool systemIsReady(bool checkUpdates);
-
-    Transaction *m_getUpdatesT;
-    KStatusNotifierItem *m_statusNotifierItem;
-    QList<Package> m_updateList;
-
-    void updateStatusNotifierIcon(UpdateType type);
-};
-
-#endif
+#include "CustomProgressBar.moc"

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2010-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,7 +28,7 @@
 #include <KConfigGroup>
 #include <KDebug>
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include "TransactionDelegate.h"
 
@@ -55,7 +55,7 @@ ProgressView::ProgressView(QWidget *parent)
     connect(m_scrollBar, SIGNAL(rangeChanged(int, int)),
             this, SLOT(rangeChanged(int, int)));
 
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup transactionDialog(&config, "TransactionDialog");
 
     resize(width(), transactionDialog.readEntry("detailsHeight", QWidget::height()));
@@ -63,7 +63,7 @@ ProgressView::ProgressView(QWidget *parent)
 
 ProgressView::~ProgressView()
 {
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup transactionDialog(&config, "TransactionDialog");
     transactionDialog.writeEntry("detailsHeight", height());
 }
@@ -132,14 +132,14 @@ void ProgressView::currentPackage(const PackageKit::Package &p)
                     itemFinished(item);
                 } else {
                     item->setData(p.info(), RoleInfo);
-                    item->setText(KpkStrings::infoPresent(p.info()));
+                    item->setText(PkStrings::infoPresent(p.info()));
                 }
             }
         } else {
             QList<QStandardItem *> items;
             // It's a new package create it and append it
             item = new QStandardItem;
-            item->setText(KpkStrings::infoPresent(p.info()));
+            item->setText(PkStrings::infoPresent(p.info()));
             item->setData(p.info(), RoleInfo);
             item->setData(0,        RoleProgress);
             item->setData(false,    RoleFinished);
@@ -192,7 +192,7 @@ void ProgressView::itemFinished(QStandardItem *item)
     }
 
     Package::Info info = static_cast<Package::Info>(item->data(ProgressView::RoleInfo).toInt());
-    item->setText(KpkStrings::infoPast(info));
+    item->setText(PkStrings::infoPast(info));
     item->setData(100,  RoleProgress);
     item->setData(true, RoleFinished);
 }

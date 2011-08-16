@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,7 +30,7 @@ FiltersMenu::FiltersMenu(Transaction::Filters filters, QWidget *parent)
  : QMenu(parent)
 {
     // Loads the filter menu settings
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
     if (filters & Transaction::FilterCollections || filters & Transaction::FilterNotCollections) {
@@ -261,7 +261,7 @@ FiltersMenu::FiltersMenu(Transaction::Filters filters, QWidget *parent)
 
 FiltersMenu::~FiltersMenu()
 {
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
     // For usability we will only save ViewInGroups settings and Newest filter,

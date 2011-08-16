@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,7 +20,7 @@
 
 #include "DistroUpgrade.h"
 
-#include <KpkIcons.h>
+#include <PkIcons.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -37,7 +37,7 @@ DistroUpgrade::DistroUpgrade(QWidget *parent)
 {
     // only the model package has the right state
     setText(i18n("Distribution upgrade available"));
-    setPixmap(KpkIcons::getIcon("distro-upgrade"));
+    setPixmap(PkIcons::getIcon("distro-upgrade"));
     setWidget(m_distroUpgradeUL = new KUrlLabel(this));
 
     connect(m_distroUpgradeUL, SIGNAL(leftClickedUrl()), SLOT(startDistroUpgrade()));

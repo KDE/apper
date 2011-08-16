@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,7 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -288,7 +288,7 @@ void PkInstallCatalogs::checkTransaction(Transaction *transaction)
 {
     if (transaction->error()) {
         QString msg(i18n("Failed to start resolve transaction"));
-        setError(msg, KpkStrings::daemonError(transaction->error()));
+        setError(msg, PkStrings::daemonError(transaction->error()));
         sendErrorFinished(Failed, msg);
     }
 }

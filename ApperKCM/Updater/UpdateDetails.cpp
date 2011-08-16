@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,7 +20,7 @@
 
 #include "UpdateDetails.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <KMessageBox>
 #include <KPixmapSequence>
@@ -110,7 +110,7 @@ void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInf
             this, SLOT(display()));
     m_transaction->getUpdateDetail(package);
     if (m_transaction->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(m_transaction->error()));
+        KMessageBox::sorry(this, PkStrings::daemonError(m_transaction->error()));
     } else {
         if (maximumSize().height() == 0) {
             // Expand the panel

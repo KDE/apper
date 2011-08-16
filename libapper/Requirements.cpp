@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,7 +41,7 @@
 #include "Requirements.h"
 #include "ui_Requirements.h"
 
-#include "KpkIcons.h"
+#include "PkIcons.h"
 #include "SimulateModel.h"
 
 #include <KDebug>
@@ -231,7 +231,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
     // restore size
     setMinimumSize(QSize(450,300));
     setInitialSize(QSize(450,300));
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     restoreDialogSize(requirementsDialog);
 
@@ -255,7 +255,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
     if (int c = model->countInfo(Package::InfoRemoving)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to remove", "%1 packages to remove", c));
-        item->setIcon(KpkIcons::actionIcon(Transaction::RoleRemovePackages));
+        item->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
         item->setData(QVariant::fromValue(Package::InfoRemoving));
         d->actionsModel->appendRow(item);
         model->setCurrentInfo(Package::InfoRemoving);
@@ -265,7 +265,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
     if (int c = model->countInfo(Package::InfoDowngrading)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
-        item->setIcon(KpkIcons::actionIcon(Transaction::RoleRollback));
+        item->setIcon(PkIcons::actionIcon(Transaction::RoleRollback));
         item->setData(QVariant::fromValue(Package::InfoDowngrading));
         if (model->currentInfo() == Package::UnknownInfo) {
             model->setCurrentInfo(Package::InfoDowngrading);
@@ -277,7 +277,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
     if (int c = model->countInfo(Package::InfoReinstalling)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to reinstall", "%1 packages to reinstall", c));
-        item->setIcon(KpkIcons::actionIcon(Transaction::RoleRemovePackages));
+        item->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
         item->setData(QVariant::fromValue(Package::InfoReinstalling));
         if (model->currentInfo() == Package::UnknownInfo) {
             model->setCurrentInfo(Package::InfoReinstalling);
@@ -289,8 +289,8 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
         item = new QStandardItem;
 //         item->setIconSize(QSize(48, 48));
         item->setText(i18np("1 package to install", "%1 packages to install", c));
-        item->setIcon(KpkIcons::actionIcon(Transaction::RoleInstallPackages).pixmap(48.48));
-        kDebug() << KIconLoader::global()->iconPath(KpkIcons::actionIconName(Transaction::RoleInstallPackages), KIconLoader::NoGroup, true);
+        item->setIcon(PkIcons::actionIcon(Transaction::RoleInstallPackages).pixmap(48.48));
+        kDebug() << KIconLoader::global()->iconPath(PkIcons::actionIconName(Transaction::RoleInstallPackages), KIconLoader::NoGroup, true);
         item->setData(QVariant::fromValue(Package::InfoInstalling));
         if (model->currentInfo() == Package::UnknownInfo) {
             model->setCurrentInfo(Package::InfoInstalling);
@@ -301,7 +301,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
     if (int c = model->countInfo(Package::InfoUpdating)) {
         item = new QStandardItem;
         item->setText(i18np("1 package to update", "%1 packages to update", c));
-        item->setIcon(KpkIcons::actionIcon(Transaction::RoleUpdatePackages));
+        item->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
         item->setData(QVariant::fromValue(Package::InfoUpdating));
         if (model->currentInfo() == Package::UnknownInfo) {
             model->setCurrentInfo(Package::InfoUpdating);
@@ -327,7 +327,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
 Requirements::~Requirements()
 {
     // save size
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     saveDialogSize(requirementsDialog);
 

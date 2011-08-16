@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkDistroUpgrade.h"
+#include "DistroUpgrade.h"
 
 #include <KNotification>
 #include <KLocale>
@@ -26,17 +26,17 @@
 
 #include <KDebug>
 
-KpkDistroUpgrade::KpkDistroUpgrade(QObject *parent) :
+DistroUpgrade::DistroUpgrade(QObject *parent) :
     AbstractIsRunning(parent),
     m_distroUpgradeProcess(0)
 {
 }
 
-KpkDistroUpgrade::~KpkDistroUpgrade()
+DistroUpgrade::~DistroUpgrade()
 {
 }
 
-void KpkDistroUpgrade::checkDistroUpgrades()
+void DistroUpgrade::checkDistroUpgrades()
 {
     if (!isRunning()) {
         Transaction *t = new Transaction(this);
@@ -51,7 +51,7 @@ void KpkDistroUpgrade::checkDistroUpgrades()
     }
 }
 
-void KpkDistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
+void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
 {
     Q_UNUSED(type)
     kDebug() << "Distro upgrade found!" << name << description;
@@ -75,7 +75,7 @@ void KpkDistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type
     notify->sendEvent();
 }
 
-void KpkDistroUpgrade::handleDistroUpgradeAction(uint action)
+void DistroUpgrade::handleDistroUpgradeAction(uint action)
 {
     // get the sender cause there might be more than one
     KNotification *notify = qobject_cast<KNotification*>(sender());
@@ -105,7 +105,7 @@ void KpkDistroUpgrade::handleDistroUpgradeAction(uint action)
     notify->close();
 }
 
-void KpkDistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     decreaseRunning();
     KNotification *notify = new KNotification("DistroUpgradeFinished");
@@ -124,7 +124,7 @@ void KpkDistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus 
 //     suppressSleep(false);
 }
 
-void KpkDistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
+void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
 {
     QString text;
 
@@ -145,4 +145,4 @@ void KpkDistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
     notify->sendEvent();
 }
 
-#include "KpkDistroUpgrade.moc"
+#include "DistroUpgrade.moc"

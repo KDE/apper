@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +18,24 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPKENUM_H
-#define KPKENUM_H
+#ifndef CUSTOM_PROGRESS_BAR_H
+#define CUSTOM_PROGRESS_BAR_H
 
-#include <config.h>
+#include <QProgressBar>
 
-#ifdef HAVE_AUTOREMOVE
-#define AUTOREMOVE true
-#else
-#define AUTOREMOVE false
-#endif // HAVE_AUTOREMOVE
+class CustomProgressBar : public QProgressBar
+{
+    Q_OBJECT
+public:
+    CustomProgressBar(QWidget *parent = 0);
+    ~CustomProgressBar();
 
-namespace KpkEnum {
+    QString text() const;
 
-    typedef enum {
-            None,
-            Security,
-            All
-    } AutoUpdate;
-    const int AutoUpdateDefault = None;
+    void setRemaining(uint remaining);
 
-    typedef enum {
-            Never   =       0,
-            Hourly  =    3600,
-            Daily   =   86400,
-            Weekly  =  604800,
-            Monthly = 2628000
-    } TimeInterval;
-    const int TimeIntervalDefault = Daily;
-
-}
+private:
+    uint m_remaining;
+};
 
 #endif

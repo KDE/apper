@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +18,35 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_DISTRO_UPGRADE_H
-#define KPK_DISTRO_UPGRADE_H
+#ifndef PK_STRINGS_H
+#define PK_STRINGS_H
 
-#include "AbstractIsRunning.h"
-
-#include <QProcess>
+#include <kdemacros.h>
 
 #include <Transaction>
 
 using namespace PackageKit;
 
-class KpkDistroUpgrade : public AbstractIsRunning
+namespace PkStrings
 {
-Q_OBJECT
-public:
-    KpkDistroUpgrade(QObject *parent = 0);
-    ~KpkDistroUpgrade();
-
-public slots:
-    void checkDistroUpgrades();
-
-private slots:
-    void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);
-    void handleDistroUpgradeAction(uint action);
-    void distroUpgradeError(QProcess::ProcessError error);
-    void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
-private:
-    QProcess *m_distroUpgradeProcess;
+    KDE_EXPORT QString finished(Transaction::Exit status);
+    KDE_EXPORT QString infoPresent(Package::Info info);
+    KDE_EXPORT QString infoPast(Package::Info info);
+    KDE_EXPORT QString error(Transaction::Error error);
+    KDE_EXPORT QString errorMessage(Transaction::Error error);
+    KDE_EXPORT QString message(Transaction::Message type);
+    KDE_EXPORT QString status(Transaction::Status status);
+    KDE_EXPORT QString statusPast(Transaction::Status status);
+    KDE_EXPORT QString groups(Package::Group group);
+    KDE_EXPORT QString info(Package::Info state);
+    KDE_EXPORT QString packageQuantity(bool updates, int packages, int selected);
+    KDE_EXPORT QString updateState(Package::UpdateState value);
+    KDE_EXPORT QString restartType(Package::Restart value);
+    KDE_EXPORT QString restartTypeFuture(Package::Restart value);
+    KDE_EXPORT QString action(Transaction::Role action);
+    KDE_EXPORT QString actionPast(Transaction::Role action);
+    KDE_EXPORT QString mediaMessage(Transaction::MediaType value, const QString &text);
+    KDE_EXPORT QString daemonError(Transaction::InternalError value);
 };
 
 #endif

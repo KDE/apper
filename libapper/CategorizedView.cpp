@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Rafael FernÃ¡ndez LÃ³pez <ereslibre@kde.org>      *
+ *   Copyright (C) 2009 by Rafael FernÃ¡ndez LÃ³pez <ereslibre@kde.org>    *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA          *
  ***************************************************************************/
 
-#include "KpkCategorizedView.h"
+#include "CategorizedView.h"
 
 #include "CategoryDrawer.h"
 
@@ -25,7 +26,7 @@
 #include <QSortFilterProxyModel>
 #include <KDebug>
 
-KpkCategorizedView::KpkCategorizedView(QWidget *parent)
+CategorizedView::CategorizedView(QWidget *parent)
     : KCategorizedView(parent)
 {
     setWordWrap(true);
@@ -33,7 +34,7 @@ KpkCategorizedView::KpkCategorizedView(QWidget *parent)
     setCategoryDrawer(drawer);
 }
 
-void KpkCategorizedView::setModel(QAbstractItemModel *model)
+void CategorizedView::setModel(QAbstractItemModel *model)
 {
     KCategorizedView::setModel(model);
     //     KFileItemDelegate *delegate = qobject_cast<KFileItemDelegate*>(itemDelegate());

@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "apperd.h"
-#include <KpkEnum.h>
+#include <Enum.h>
 
 #include <KGenericFactory>
 #include <KStandardDirs>
@@ -80,7 +80,7 @@ void ApperD::init()
     KConfig config("Apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     // default to one day, 86400 sec
-    uint interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
+    uint interval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
 
     if (!canRefreshCache()) {
         //if the backend does not suport refreshing cache let's don't do nothing
@@ -100,9 +100,9 @@ void ApperD::read()
     KConfig config("Apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     // default to one day, 86400 sec
-    int interval = checkUpdateGroup.readEntry("interval", KpkEnum::TimeIntervalDefault);
+    int interval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
     int actRefreshCache = getTimeSinceRefreshCache();
-    if (interval == KpkEnum::Never) {
+    if (interval == Enum::Never) {
         return;
     }
     if (actRefreshCache >= interval) {

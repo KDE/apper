@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -82,7 +82,7 @@ void BrowseView::init(Transaction::Roles roles)
     exportInstalledPB->setIcon(KIcon("document-export"));
     importInstalledPB->setIcon(KIcon("document-import"));
 
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup viewGroup(&config, "ViewGroup");
 
     // Version
@@ -108,7 +108,7 @@ void BrowseView::init(Transaction::Roles roles)
 
 BrowseView::~BrowseView()
 {
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup viewGroup(&config, "ViewGroup");
     viewGroup.writeEntry("ShowApplicationVersions", m_showPackageVersion->isChecked());
     viewGroup.writeEntry("ShowApplicationArchitectures", m_showPackageArch->isChecked());

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,27 +18,33 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "KpkImportance.h"
+#include "RepoSig.h"
+
+#include <KLocale>
 
 #include <KDebug>
 
-int KpkImportance::restartImportance(Package::Restart type)
+#include <Signature>
+
+#include "PkStrings.h"
+
+RepoSig::RepoSig(const Signature &info, bool modal, QWidget *parent)
+ : KDialog(parent)
 {
-    switch (type) {
-    case Package::UnknownRestart :
-    case Package::RestartNone :
-        return 0;
-    case Package::RestartApplication :
-        return 1;
-    case Package::RestartSession :
-        return 2;
-    case Package::RestartSecuritySession :
-        return 3;
-    case Package::RestartSystem :
-        return 4;
-    case Package::RestartSecuritySystem :
-        return 5;
-    }
-    kWarning() << "restart type unrecognised: " << type;
-    return 0;
+    setupUi(mainWidget());
+    setModal(modal);
+
+    setButtons(KDialog::Cancel | KDialog::Yes);
+    setCaption(i18n("Software signature is required"));
+
+    repoNameL->setText(info.repoId);
+    sigUrlL->setText(info.keyUrl);
+    sigUserIdL->setText(info.keyUserid);
+    sigIdL->setText(info.keyId);
 }
+
+RepoSig::~RepoSig()
+{
+}
+
+#include "RepoSig.moc"

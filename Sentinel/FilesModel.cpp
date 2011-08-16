@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,7 +25,7 @@
 #include <QFileInfo>
 
 #include <KDebug>
-#include <KpkIcons.h>
+#include <PkIcons.h>
 #include <KLocale>
 #include <KMimeType>
 #include <KIconLoader>

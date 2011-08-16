@@ -23,7 +23,7 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <KLocale>
 #include <KService>
@@ -119,7 +119,7 @@ void PkRemovePackageByFiles::search()
         QString msg(i18n("Failed to start search file transaction"));
         if (showWarning()) {
             setError(msg,
-                     KpkStrings::daemonError(t->error()));
+                     PkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, "Failed to search for package");
     }

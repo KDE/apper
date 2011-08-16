@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,7 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <KLocale>
 
@@ -89,7 +89,7 @@ void PkInstallMimeTypes::search()
     if (t->error()) {
         if (showWarning()) {
             setError(i18n("Failed to search for provides"),
-                     KpkStrings::daemonError(t->error()));
+                     PkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, "Failed to search for provides");
     }

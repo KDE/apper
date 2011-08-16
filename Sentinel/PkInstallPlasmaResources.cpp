@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *   Copyright (C) 2011 Kevin Kofler <kevin.kofler@chello.at>              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -23,7 +23,7 @@
 
 #include "IntroDialog.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <QStandardItemModel>
 #include <KLocale>
@@ -95,7 +95,7 @@ void PkInstallPlasmaResources::search()
         QString msg(i18n("Failed to search for provides"));
         if (showWarning()) {
             setError(msg,
-                     KpkStrings::daemonError(t->error()));
+                     PkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, msg);
     }

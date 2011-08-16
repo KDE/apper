@@ -1,6 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008 by Trever Fischer                                  *
+ *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +20,54 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_STRINGS_H
-#define KPK_STRINGS_H
+#ifndef UPDATE_ICON_H
+#define UPDATE_ICON_H
 
-#include <kdemacros.h>
+#include "AbstractIsRunning.h"
+
+#include <KStatusNotifierItem>
 
 #include <Transaction>
 
 using namespace PackageKit;
 
-namespace KpkStrings
+class UpdateIcon : public AbstractIsRunning
 {
-    KDE_EXPORT QString finished(Transaction::Exit status);
-    KDE_EXPORT QString infoPresent(Package::Info info);
-    KDE_EXPORT QString infoPast(Package::Info info);
-    KDE_EXPORT QString error(Transaction::Error error);
-    KDE_EXPORT QString errorMessage(Transaction::Error error);
-    KDE_EXPORT QString message(Transaction::Message type);
-    KDE_EXPORT QString status(Transaction::Status status);
-    KDE_EXPORT QString statusPast(Transaction::Status status);
-    KDE_EXPORT QString groups(Package::Group group);
-    KDE_EXPORT QString info(Package::Info state);
-    KDE_EXPORT QString packageQuantity(bool updates, int packages, int selected);
-    KDE_EXPORT QString updateState(Package::UpdateState value);
-    KDE_EXPORT QString restartType(Package::Restart value);
-    KDE_EXPORT QString restartTypeFuture(Package::Restart value);
-    KDE_EXPORT QString action(Transaction::Role action);
-    KDE_EXPORT QString actionPast(Transaction::Role action);
-    KDE_EXPORT QString mediaMessage(Transaction::MediaType value, const QString &text);
-    KDE_EXPORT QString daemonError(Transaction::InternalError value);
+    Q_OBJECT
+public:
+    typedef enum{
+        Normal,
+        Important,
+        Security
+    } UpdateType;
+    UpdateIcon(QObject *parent = 0);
+    ~UpdateIcon();
+
+signals:
+    void watchTransaction(const QString &tid, bool interactive);
+
+public slots:
+    void refreshAndUpdate(bool doRefresh);
+    void refresh(bool update = false);
+
+private slots:
+    void update();
+    void packageToUpdate(const PackageKit::Package &package);
+    void getUpdateFinished();
+    void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
+
+    void showSettings();
+    void showUpdates();
+    void removeStatusNotifierItem();
+
+private:
+    bool systemIsReady(bool checkUpdates);
+
+    Transaction *m_getUpdatesT;
+    KStatusNotifierItem *m_statusNotifierItem;
+    QList<Package> m_updateList;
+
+    void updateStatusNotifierIcon(UpdateType type);
 };
 
 #endif

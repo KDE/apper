@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,10 +24,10 @@
 #include <KUniqueApplication>
 #include <QTimer>
 
-class KpkUpdateIcon;
-class KpkDistroUpgrade;
+class UpdateIcon;
+class DistroUpgrade;
 class TransactionWatcher;
-class KpkInterface;
+class DBusInterface;
 class PkInterface;
 
 class ApperSentinel : public KUniqueApplication
@@ -47,10 +47,10 @@ private:
     QTimer *m_closeT;
 
     TransactionWatcher *m_trayIcon;
-    KpkUpdateIcon *m_updateIcon;
-    KpkDistroUpgrade *m_distroUpgrade;
+    UpdateIcon *m_updateIcon;
+    DistroUpgrade *m_distroUpgrade;
 
-    KpkInterface *m_interface;
+    DBusInterface *m_interface;
     PkInterface *m_pkInterface;
 };
 

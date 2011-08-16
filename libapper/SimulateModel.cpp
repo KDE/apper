@@ -21,7 +21,7 @@
 #include "SimulateModel.h"
 
 #include <KDebug>
-#include <KpkIcons.h>
+#include <PkIcons.h>
 #include <KLocale>
 
 using namespace PackageKit;
@@ -49,7 +49,7 @@ QVariant SimulateModel::data(const QModelIndex &index, int role) const
         case Qt::DisplayRole:
             return p.name();
         case Qt::DecorationRole:
-            return KpkIcons::getIcon("package");
+            return PkIcons::getIcon("package");
         case Qt::ToolTipRole:
             return p.summary();
         default:

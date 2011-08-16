@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,12 +38,12 @@
 
 #include <Daemon>
 
-#include "KpkMacros.h"
-#include "KpkEnum.h"
-#include "KpkStrings.h"
-#include "KpkRepoSig.h"
-#include "KpkLicenseAgreement.h"
-#include "KpkIcons.h"
+#include "Macros.h"
+#include "Enum.h"
+#include "PkStrings.h"
+#include "RepoSig.h"
+#include "LicenseAgreement.h"
+#include "PkIcons.h"
 #include "ProgressView.h"
 #include "ApplicationLauncher.h"
 #include "SimulateModel.h"
@@ -107,7 +107,7 @@ PkTransaction::PkTransaction(Transaction *trans, QWidget *parent)
 //                      i18n("Allows you to hide the window whilst keeping the transaction task running."));
 //     setEscapeButton(KDialog::User1);
 
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup transactionGroup(&config, "Transaction");
     
     connect(ui->cancelButton, SIGNAL(rejected()), this, SLOT(cancel()));
@@ -150,7 +150,7 @@ void PkTransaction::installFiles(const QStringList &files)
             trans->simulateInstallFiles(files);
             if (trans->error()) {
                 KMessageBox::sorry(this,
-                                   KpkStrings::daemonError(trans->error()),
+                                   PkStrings::daemonError(trans->error()),
                                    i18n("Failed to simulate file install"));
 //                 taskDone(Transaction::RoleInstallPackages);
             } else {
@@ -177,7 +177,7 @@ void PkTransaction::installPackages(const QList<Package> &packages)
             trans->simulateInstallPackages(d->packages);
             if (trans->error()) {
                 KMessageBox::sorry(this,
-                                   KpkStrings::daemonError(trans->error()),
+                                   PkStrings::daemonError(trans->error()),
                                    i18n("Failed to simulate package install"));
             } else {
                 setTransaction(trans);
@@ -203,7 +203,7 @@ void PkTransaction::removePackages(const QList<Package> &packages)
             trans->simulateRemovePackages(d->packages, AUTOREMOVE);
             if (trans->error()) {
                 KMessageBox::sorry(this,
-                                   KpkStrings::daemonError(trans->error()),
+                                   PkStrings::daemonError(trans->error()),
                                    i18n("Failed to simulate package removal"));
             } else {
                 setTransaction(trans);
@@ -227,7 +227,7 @@ void PkTransaction::updatePackages(const QList<Package> &packages)
             Transaction *trans = new Transaction(this);
             trans->simulateUpdatePackages(d->packages);
             if (trans->error()) {
-                KMessageBox::sorry(this, KpkStrings::daemonError(trans->error()),
+                KMessageBox::sorry(this, PkStrings::daemonError(trans->error()),
                                 i18n("Failed to simulate package update"));
             } else {
                 setTransaction(trans);
@@ -246,7 +246,7 @@ void PkTransaction::refreshCache()
     Transaction *trans = new Transaction(this);
     trans->refreshCache(true);
     if (trans->error()) {
-        KMessageBox::sorry(this, KpkStrings::daemonError(trans->error()),
+        KMessageBox::sorry(this, PkStrings::daemonError(trans->error()),
                            i18n("Failed to refresh package cache"));
     } else {
         setTransaction(trans);
@@ -286,7 +286,7 @@ void PkTransaction::installPackages()
     trans->installPackages(d->packages, d->onlyTrusted);
     if (trans->error()) {
         KMessageBox::sorry(this,
-                           KpkStrings::daemonError(trans->error()),
+                           PkStrings::daemonError(trans->error()),
                            i18n("Failed to install package"));
     } else {
         setTransaction(trans);
@@ -300,7 +300,7 @@ void PkTransaction::installFiles()
     trans->installFiles(d->files, d->onlyTrusted);
     if (trans->error()) {
         KMessageBox::sorry(this,
-                           KpkStrings::daemonError(trans->error()),
+                           PkStrings::daemonError(trans->error()),
                            i18np("Failed to install file",
                                  "Failed to install files",
                                  d->files.size()));
@@ -316,7 +316,7 @@ void PkTransaction::removePackages(bool allow_deps)
     trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE);
     if (trans->error()) {
         KMessageBox::sorry(this,
-                           KpkStrings::daemonError(trans->error()),
+                           PkStrings::daemonError(trans->error()),
                            i18n("Failed to remove package"));
     } else {
         setTransaction(trans);
@@ -332,7 +332,7 @@ void PkTransaction::updatePackages()
     trans->updatePackages(d->packages, true);
     if (trans->error()) {
         KMessageBox::sorry(this,
-                           KpkStrings::daemonError(trans->error()),
+                           PkStrings::daemonError(trans->error()),
                            i18n("Failed to update package"));
     } else {
         setTransaction(trans);
@@ -369,7 +369,7 @@ void PkTransaction::setTransaction(Transaction *trans)
     ui->progressView->clear();
     d->clearApplications();
 
-    KConfig config("KPackageKit");
+    KConfig config;
     KConfigGroup transactionGroup(&config, "Transaction");
     // enable the Details button just on these roles
     if (role == Transaction::RoleInstallPackages ||
@@ -418,11 +418,11 @@ void PkTransaction::setTransaction(Transaction *trans)
     }
 
     // sets the action icon to be the window icon
-    setWindowIcon(KpkIcons::actionIcon(role));
+    setWindowIcon(PkIcons::actionIcon(role));
 
     // Sets the kind of transaction
-//    emit titleChanged(KpkStrings::action(role));
-//     setCaption(KpkStrings::action(role));
+//    emit titleChanged(PkStrings::action(role));
+//     setCaption(PkStrings::action(role));
 
     // Now sets the last package
     ui->progressView->currentPackage(m_trans->lastPackage());
@@ -495,8 +495,8 @@ void PkTransaction::requeueTransaction()
 
     if (trans->error()) {
         KMessageBox::sorry(this,
-                           KpkStrings::daemonError(trans->error()),
-                           KpkStrings::action(trans->role()));
+                           PkStrings::daemonError(trans->error()),
+                           PkStrings::action(trans->role()));
         setExitStatus(Failed);
     } else {
         setTransaction(trans);
@@ -527,9 +527,9 @@ void PkTransaction::updateUi()
     Transaction::Status status = transaction->status();
     if (m_status != status) {
         m_status = status;
-        ui->currentL->setText(KpkStrings::status(status));
+        ui->currentL->setText(PkStrings::status(status));
 
-        KPixmapSequence sequence = KPixmapSequence(KpkIcons::statusAnimation(status),
+        KPixmapSequence sequence = KPixmapSequence(PkIcons::statusAnimation(status),
                                                    KIconLoader::SizeLarge);
         if (sequence.isValid()) {
             d->busySeq->setSequence(sequence);
@@ -550,7 +550,7 @@ void PkTransaction::updateUi()
         role != Transaction::RoleGetFiles) {
         // We need to keep the original role for requeuing
         d->role = role;
-        emit titleChanged(KpkStrings::action(role));
+        emit titleChanged(PkStrings::action(role));
     }
 
     // check to see if we can cancel
@@ -618,9 +618,9 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
 
     m_showingError = true;
     KMessageBox::detailedSorry(this,
-                               KpkStrings::errorMessage(error),
+                               PkStrings::errorMessage(error),
                                QString(details).replace('\n', "<br />"),
-                               KpkStrings::error(error),
+                               PkStrings::error(error),
                                KMessageBox::Notify);
     m_showingError = false;
 
@@ -642,14 +642,14 @@ void PkTransaction::eulaRequired(PackageKit::Eula info)
         m_handlingActionRequired = true;
     }
 
-    QPointer<KpkLicenseAgreement> frm = new KpkLicenseAgreement(info, true, this);
+    QPointer<LicenseAgreement> frm = new LicenseAgreement(info, true, this);
     if (frm->exec() == KDialog::Yes) {
         m_handlingActionRequired = false;
         Transaction *trans = new Transaction(this);
         trans->acceptEula(info.id);
         if (trans->error()) {
             KMessageBox::sorry(this,
-                               KpkStrings::daemonError(trans->error()),
+                               PkStrings::daemonError(trans->error()),
                                i18n("Failed to accept EULA"));
         } else {
             setTransaction(trans);
@@ -667,7 +667,7 @@ void PkTransaction::mediaChangeRequired(Transaction::MediaType type, const QStri
 
     m_handlingActionRequired = true;
     int ret = KMessageBox::questionYesNo(this,
-                                         KpkStrings::mediaMessage(type, text),
+                                         PkStrings::mediaMessage(type, text),
                                          i18n("A media change is required"),
                                          KStandardGuiItem::cont(),
                                          KStandardGuiItem::cancel());
@@ -691,7 +691,7 @@ void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
         m_handlingActionRequired = true;
     }
 
-    QPointer<KpkRepoSig> frm = new KpkRepoSig(info, true, this);
+    QPointer<RepoSig> frm = new RepoSig(info, true, this);
     frm->exec();
     if (frm && frm->result() == KDialog::Yes) {
         m_handlingActionRequired = false;
@@ -699,7 +699,7 @@ void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
         trans->installSignature(info);
         if (trans->error()) {
             KMessageBox::sorry(this,
-                               KpkStrings::daemonError(trans->error()),
+                               PkStrings::daemonError(trans->error()),
                                i18n("Failed to install signature"));
         } else {
             setTransaction(trans);
@@ -788,7 +788,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
         if (role != Transaction::RoleInstallSignature &&
             role != Transaction::RoleAcceptEula &&
             role != Transaction::RoleGetFiles) {
-            KConfig config("KPackageKit");
+            KConfig config;
             KConfigGroup transactionGroup(&config, "Transaction");
             if ((role == Transaction::RoleInstallPackages ||
                  role == Transaction::RoleInstallFiles) &&
@@ -838,7 +838,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
     case Transaction::ExitMediaChangeRequired :
     case Transaction::ExitNeedUntrusted :
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
-        ui->currentL->setText(KpkStrings::status(Transaction::StatusSetup));
+        ui->currentL->setText(PkStrings::status(Transaction::StatusSetup));
         if (!m_handlingActionRequired) {
             setExitStatus(Failed);
         }
@@ -901,7 +901,7 @@ bool PkTransaction::onlyTrusted() const
 
 QString PkTransaction::title() const
 {
-    return KpkStrings::action(d->role);
+    return PkStrings::action(d->role);
 }
 
 Transaction::Role PkTransaction::role() const

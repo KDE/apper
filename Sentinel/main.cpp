@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -32,12 +32,12 @@ int main(int argc, char **argv)
     KAboutData about("ApperSentinel",
                      "apper",
                      ki18n("Apper"),
-                     KPK_VERSION,
+                     APP_VERSION,
                      ki18n("Apper Sentinel"),
                      KAboutData::License_GPL,
                      ki18n("(C) 2008-2011 Daniel Nicoletti"));
 
-    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti85-pk@yahoo.com.br", "http://www.packagekit.org" );
+    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti12@gmail.com", "http://dantti.wordpress.com" );
     about.addAuthor(ki18n("Trever Fischer"), KLocalizedString(), "wm161@wm161.net", "http://wm161.net");
 
     about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"),"@");

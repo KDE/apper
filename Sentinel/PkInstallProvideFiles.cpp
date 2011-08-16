@@ -22,7 +22,7 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <KLocale>
 
@@ -83,7 +83,7 @@ void PkInstallProvideFiles::search()
         QString msg = i18n("Failed to start search file transaction");
         if (showWarning()) {
             setError(msg,
-                     KpkStrings::daemonError(t->error()));
+                     PkStrings::daemonError(t->error()));
         }
         sendErrorFinished(Failed, msg);
     }

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,7 @@
 #include "ui_ReviewChanges.h"
 
 #include <PackageModel.h>
-#include <KpkDelegate.h>
+#include <ChangesDelegate.h>
 
 #include <KCategorizedSortFilterProxyModel>
 
@@ -49,7 +49,7 @@ ReviewChanges::ReviewChanges(const QList<Package> &packages,
     ui->packageView->setModel(changedProxy);
     m_model->addPackages(packages, true);
 
-    KpkDelegate *delegate = new KpkDelegate(ui->packageView);
+    ChangesDelegate *delegate = new ChangesDelegate(ui->packageView);
     delegate->setExtendPixmapWidth(0);
     ui->packageView->setItemDelegate(delegate);
 

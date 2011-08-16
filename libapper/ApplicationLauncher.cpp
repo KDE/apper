@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -51,7 +51,7 @@ ApplicationLauncher::ApplicationLauncher(const QVector<KService*> &applications,
 ApplicationLauncher::~ApplicationLauncher()
 {
     if (showCB->isChecked()) {
-        KConfig config("KPackageKit");
+        KConfig config;
         KConfigGroup transactionGroup(&config, "Transaction");
         transactionGroup.writeEntry("ShowApplicationLauncher", false);
     }

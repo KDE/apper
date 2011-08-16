@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,8 +25,8 @@
 #include <KLocale>
 #include <KDebug>
 
-#include <KpkIcons.h>
-#include <KpkStrings.h>
+#include <PkIcons.h>
+#include <PkStrings.h>
 
 using namespace PackageKit;
 
@@ -63,8 +63,8 @@ void TransactionModel::addTransaction(PackageKit::Transaction *trans)
     dateI->setData(trans->timespec(), Qt::UserRole);
     dateI->setEditable(false);
 
-    roleI->setText(KpkStrings::actionPast(trans->role()));
-    roleI->setIcon(KpkIcons::actionIcon(trans->role()));
+    roleI->setText(PkStrings::actionPast(trans->role()));
+    roleI->setIcon(PkIcons::actionIcon(trans->role()));
     roleI->setEditable(false);
 
     detailsI->setText(getDetailsLocalized(trans->data()));
@@ -147,7 +147,7 @@ QString TransactionModel::getTypeLine(const QStringList &lines, Transaction::Sta
 
     if (text.size()) {
         // TODO make the status BOLD
-        return KpkStrings::statusPast(status) + ": " + text.join(", ");
+        return PkStrings::statusPast(status) + ": " + text.join(", ");
     } else {
         return QString();
     }

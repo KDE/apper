@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008-2010 by Daniel Nicoletti                           *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
  *                                                                         *
@@ -25,12 +25,13 @@
 #include "PackageModel.h"
 
 #include <AppInstall.h>
-#include <KpkStrings.h>
-#include <KpkDelegate.h>
+#include <PkStrings.h>
+
+#include <QPainter>
 
 #include <KIconLoader>
 #include <KDebug>
-#include <KpkIcons.h>
+#include <PkIcons.h>
 #include <KLocale>
 #include <KCategorizedSortFilterProxyModel>
 
@@ -54,7 +55,7 @@ PackageModel::PackageModel(QObject *parent)
   m_packageCount(0),
   m_checkable(false)
 {
-    m_installedEmblem = KpkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
+    m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 }
 
 void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
@@ -159,7 +160,7 @@ QVariant PackageModel::headerData(int section, Qt::Orientation orientation, int 
     if (/*m_packageCount && */role == Qt::DisplayRole) {
         if (section == NameCol) {
             if (m_checkable) {
-                return KpkStrings::packageQuantity(true,
+                return PkStrings::packageQuantity(true,
                                                    m_packages.size(),
                                                    m_checkedPackages.size());
             }
@@ -230,7 +231,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             QPixmap icon = QPixmap(44, ICON_SIZE);
             icon.fill(Qt::transparent);
             if (!package.icon.isEmpty()) {
-                QPixmap pixmap = KpkIcons::getIcon(package.icon, QString()).pixmap(ICON_SIZE, ICON_SIZE);
+                QPixmap pixmap = PkIcons::getIcon(package.icon, QString()).pixmap(ICON_SIZE, ICON_SIZE);
                 if (!pixmap.isNull()) {
                     QPainter painter(&icon);
                     painter.drawPixmap(QPoint(2, 0), pixmap);
@@ -245,7 +246,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
                 startPoint = QPoint(44 - OVERLAY_SIZE, 4);
                 painter.drawPixmap(startPoint, m_installedEmblem);
             } else if (m_checkable) {
-                QIcon emblemIcon = KpkIcons::packageIcon(package.info);
+                QIcon emblemIcon = PkIcons::packageIcon(package.info);
                 QPainter painter(&icon);
                 QPoint startPoint;
                 // bottom right corner

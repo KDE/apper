@@ -1,6 +1,6 @@
 /*
  *   Copyright (C) 2007 Ivan Cukic <ivan.cukic+kde@gmail.com>
- *   Copyright (C) 2008 Daniel Nicoletti <dantti85-pk@yahoo.com.br>
+ *   Copyright (C) 2008-2011 Daniel Nicoletti <dantti12@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library/Lesser General Public License
@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef KPK_DELEGATE_H
-#define KPK_DELEGATE_H
+#ifndef CHANGES_DELEGATE_H
+#define CHANGES_DELEGATE_H
 
 #include <QtCore/QtCore>
 #include <QtGui/QtGui>
@@ -30,12 +30,12 @@
 /**
  * Delegate for displaying the packages
  */
-class KDE_EXPORT KpkDelegate: public KExtendableItemDelegate
+class KDE_EXPORT ChangesDelegate: public KExtendableItemDelegate
 {
     Q_OBJECT
 
 public:
-    KpkDelegate(QAbstractItemView *parent);
+    ChangesDelegate(QAbstractItemView *parent);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;

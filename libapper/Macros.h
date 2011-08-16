@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,24 +18,17 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef KPK_PROGRESSBAR_H
-#define KPK_PROGRESSBAR_H
+#ifndef MACROS_H
+#define MACROS_H
 
-#include <QProgressBar>
+#include <KProtocolManager>
 
-class KpkProgressBar : public QProgressBar
-{
-    Q_OBJECT
-public:
-    KpkProgressBar(QWidget *parent = 0);
-    ~KpkProgressBar();
-
-    QString text() const;
-
-    void setRemaining(uint remaining);
-
-private:
-    uint m_remaining;
-};
+#define SET_PROXY                                                         \
+    if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) { \
+        Daemon::setProxy(KProtocolManager::proxyFor("http"),  \
+                         KProtocolManager::proxyFor("ftp"));  \
+    } else {                                                              \
+        Daemon::setProxy(QString(), QString());               \
+    }
 
 #endif

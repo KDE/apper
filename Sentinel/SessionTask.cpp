@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Daniel Nicoletti                                *
- *   dantti85-pk@yahoo.com.br                                              *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,7 +24,7 @@
 #include "InfoWidget.h"
 #include "ReviewChanges.h"
 
-#include <KpkStrings.h>
+#include <PkStrings.h>
 
 #include <limits.h>
 #include <QtDBus/QDBusConnection>
@@ -361,7 +361,7 @@ void SessionTask::commitFailed()
 {
     kDebug() << "virtual method called";
     setInfo(i18n("Failed to commit transaction"),
-            KpkStrings::errorMessage(m_pkTransaction->error()));
+            PkStrings::errorMessage(m_pkTransaction->error()));
     sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
 }
 
