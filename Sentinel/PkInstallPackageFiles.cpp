@@ -72,15 +72,16 @@ PkInstallPackageFiles::~PkInstallPackageFiles()
 
 void PkInstallPackageFiles::modelChanged()
 {
-    enableButtonOk(!m_model->files().isEmpty());
+    QStringList files = m_model->files();
+    enableButtonOk(!files.isEmpty());
 
     QString description;
-    if (m_model->rowCount()) {
+    if (files.isEmpty()) {
         description = i18n("No supported files were provided");
     } else {
         description = i18np("Press <i>Continue</i> if you want to install this file",
                             "Press <i>Continue</i> if you want to install these files",
-                            m_model->rowCount());
+                            files.size());
     }
     m_introDialog->setDescription(description);
 
@@ -89,11 +90,11 @@ void PkInstallPackageFiles::modelChanged()
     if (parentTitle.isNull()) {
         title = i18np("An application wants to install a package",
                       "An application wants to install packages",
-                      m_model->rowCount());
+                      files.size());
     } else {
         title = i18np("The application <i>%2</i> wants to install a package",
                       "The application <i>%2</i> wants to install packages",
-                      m_model->rowCount(),
+                      files.size(),
                       parentTitle);
     }
     setTitle(title);
