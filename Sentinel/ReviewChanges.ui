@@ -21,7 +21,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="KpkCategorizedView" name="packageView">
+    <widget class="CategorizedView" name="packageView">
      <property name="mouseTracking">
       <bool>true</bool>
      </property>
@@ -37,9 +37,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KpkCategorizedView</class>
+   <class>CategorizedView</class>
    <extends>QListView</extends>
-   <header>KpkCategorizedView.h</header>
+   <header>CategorizedView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -37,7 +37,7 @@
         <number>0</number>
        </property>
        <item row="0" column="0">
-        <widget class="KpkCategorizedView" name="homeView">
+        <widget class="CategorizedView" name="homeView">
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -76,7 +76,7 @@
         <number>0</number>
        </property>
        <item row="0" column="0">
-        <widget class="KpkCategorizedView" name="changesView">
+        <widget class="CategorizedView" name="changesView">
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -302,9 +302,9 @@
    <header>klineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KpkCategorizedView</class>
+   <class>CategorizedView</class>
    <extends>QListView</extends>
-   <header>KpkCategorizedView.h</header>
+   <header>CategorizedView.h</header>
   </customwidget>
   <customwidget>
    <class>BrowseView</class>

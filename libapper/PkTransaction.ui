@@ -69,7 +69,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="KpkProgressBar" name="progressBar">
+      <widget class="CustomProgressBar" name="progressBar">
        <property name="locale">
         <locale language="English" country="UnitedStates"/>
        </property>
@@ -109,9 +109,9 @@
    <header>kdialogbuttonbox.h</header>
   </customwidget>
   <customwidget>
-   <class>KpkProgressBar</class>
+   <class>CustomProgressBar</class>
    <extends>QProgressBar</extends>
-   <header>KpkProgressBar.h</header>
+   <header>CustomProgressBar.h</header>
   </customwidget>
   <customwidget>
    <class>ProgressView</class>
