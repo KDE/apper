@@ -82,7 +82,7 @@ void BrowseView::init(Transaction::Roles roles)
     exportInstalledPB->setIcon(KIcon("document-export"));
     importInstalledPB->setIcon(KIcon("document-import"));
 
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup viewGroup(&config, "ViewGroup");
 
     // Version
@@ -108,7 +108,7 @@ void BrowseView::init(Transaction::Roles roles)
 
 BrowseView::~BrowseView()
 {
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup viewGroup(&config, "ViewGroup");
     viewGroup.writeEntry("ShowApplicationVersions", m_showPackageVersion->isChecked());
     viewGroup.writeEntry("ShowApplicationArchitectures", m_showPackageArch->isChecked());

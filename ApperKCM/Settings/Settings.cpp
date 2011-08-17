@@ -130,7 +130,7 @@ void Settings::on_showOriginsCB_stateChanged(int state)
 
 bool Settings::hasChanges() const
 {
-    KConfig config;
+    KConfig config("apper");
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     KConfigGroup transaction(&config, "Transaction");
@@ -183,7 +183,7 @@ void Settings::checkChanges()
 
 void Settings::load()
 {
-    KConfig config;
+    KConfig config("apper");
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     autoConfirmCB->setChecked(!requirementsDialog.readEntry("autoConfirm", false));
@@ -233,7 +233,7 @@ void Settings::load()
 
 void Settings::save()
 {
-    KConfig config;
+    KConfig config("apper");
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     requirementsDialog.writeEntry("autoConfirm", !autoConfirmCB->isChecked());

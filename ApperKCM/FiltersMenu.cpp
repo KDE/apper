@@ -30,7 +30,7 @@ FiltersMenu::FiltersMenu(Transaction::Filters filters, QWidget *parent)
  : QMenu(parent)
 {
     // Loads the filter menu settings
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
     if (filters & Transaction::FilterCollections || filters & Transaction::FilterNotCollections) {
@@ -261,7 +261,7 @@ FiltersMenu::FiltersMenu(Transaction::Filters filters, QWidget *parent)
 
 FiltersMenu::~FiltersMenu()
 {
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
     // For usability we will only save ViewInGroups settings and Newest filter,

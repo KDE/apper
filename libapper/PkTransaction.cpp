@@ -481,6 +481,7 @@ void PkTransaction::updateUi()
     if (d->role != role &&
         role != Transaction::UnknownRole) {
         d->role = role;
+        setWindowTitle(PkStrings::action(role));
         emit titleChanged(PkStrings::action(role));
     }
 
@@ -660,7 +661,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             if (d->simulateModel->rowCount() > 0) {
                 requires = new Requirements(d->simulateModel, this);
                 connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
-                requires->show();
+                showDialog(requires);
             }
 
             switch (role) {
@@ -699,7 +700,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             }
         }
 
-        KConfig config;
+        KConfig config("apper");
         KConfigGroup transactionGroup(&config, "Transaction");
         bool showApp = transactionGroup.readEntry("ShowApplicationLauncher", true);
         if (showApp &&
@@ -819,19 +820,19 @@ void PkTransaction::reject()
     setExitStatus(Cancelled);
 }
 
+void PkTransaction::showDialog(KDialog *dlg)
+{
+    if (ui->cancelButton->isVisible()) {
+        dlg->show();
+    } else {
+        dlg->setPlainCaption(QString());
+        emit dialog(dlg);
+    }
+}
+
 QString PkTransaction::tid() const
 {
     return d->tid;
-}
-
-bool PkTransaction::allowDeps() const
-{
-    return d->allowDeps;
-}
-
-bool PkTransaction::onlyTrusted() const
-{
-    return d->onlyTrusted;
 }
 
 QString PkTransaction::title() const

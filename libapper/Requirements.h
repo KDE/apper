@@ -35,6 +35,7 @@ public:
 
 public slots:
     void show();
+    virtual void setPlainCaption(const QString &caption);
 
 private slots:
     void actionClicked(const QModelIndex &index);

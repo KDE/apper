@@ -114,7 +114,7 @@ void UpdateIcon::update()
     }
 
     increaseRunning();
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup notifyGroup(&config, "Notify");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     
@@ -152,7 +152,7 @@ void UpdateIcon::packageToUpdate(const Package &package)
 
 void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
 {
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "Notify");
     bool iconEnabled = checkUpdateGroup.readEntry("notifyUpdates", true);
     if (!iconEnabled) {
@@ -220,7 +220,7 @@ void UpdateIcon::getUpdateFinished()
             }
         }
 
-        KConfig config;
+        KConfig config("apper");
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
         uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
         bool systemReady = systemIsReady(true);
@@ -324,7 +324,7 @@ bool UpdateIcon::systemIsReady(bool checkUpdates)
         return false;
     }
 
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     bool ignoreBattery;
     if (checkUpdates) {

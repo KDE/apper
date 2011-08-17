@@ -42,8 +42,6 @@ public:
     QList<Package> packagesToRemove() const;
     QList<Package> packagesToInstall() const;
 
-    QString title() const;
-
 signals:
     void hasSelectedPackages(bool has);
     void successfullyRemoved();

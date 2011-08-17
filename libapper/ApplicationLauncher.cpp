@@ -36,7 +36,7 @@ ApplicationLauncher::ApplicationLauncher(QWidget *parent)
 ApplicationLauncher::~ApplicationLauncher()
 {
     if (ui->showCB->isChecked()) {
-        KConfig config;
+        KConfig config("apper");
         KConfigGroup transactionGroup(&config, "Transaction");
         transactionGroup.writeEntry("ShowApplicationLauncher", false);
     }

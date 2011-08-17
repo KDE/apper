@@ -49,6 +49,10 @@ ReviewChanges::ReviewChanges(const QList<Package> &packages,
     ui->packageView->setModel(changedProxy);
     m_model->addPackages(packages, true);
 
+    setWindowTitle(i18np("The following package was found",
+                         "The following packages were found",
+                         m_model->rowCount()));
+
     ChangesDelegate *delegate = new ChangesDelegate(ui->packageView);
     delegate->setExtendPixmapWidth(0);
     ui->packageView->setItemDelegate(delegate);
@@ -60,13 +64,6 @@ ReviewChanges::ReviewChanges(const QList<Package> &packages,
 ReviewChanges::~ReviewChanges()
 {
     delete ui;
-}
-
-QString ReviewChanges::title() const
-{
-    return i18np("The following package was found",
-                 "The following packages were found",
-                 m_model->rowCount());
 }
 
 QList<Package> ReviewChanges::packagesToRemove() const

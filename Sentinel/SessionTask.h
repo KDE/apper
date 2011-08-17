@@ -71,7 +71,6 @@ public:
     Interactions interactions() const;
     uint timeout() const;
 
-    void setMainWidget(QWidget *widget);
     QWidget* mainWidget();
 
     void setInfo(const QString &title, const QString &text);
@@ -82,6 +81,7 @@ public:
 
 public slots:
     void enableButtonOk(bool state);
+    void setMainWidget(QWidget *widget);
 
 protected:
     // Virtual methods to easy subclasses
@@ -110,6 +110,7 @@ protected slots:
 
 private slots:
     void updatePallete();
+    void setDialog(KDialog *dialog);
 
 private:
     void removePackages();

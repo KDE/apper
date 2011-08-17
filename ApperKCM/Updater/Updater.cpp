@@ -94,7 +94,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     distroUpgradesSA->hide();
     line->hide();
 
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup viewGroup(&config, "ViewGroup");
 
     // versions
@@ -116,7 +116,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
 Updater::~Updater()
 {
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup viewGroup(&config, "ViewGroup");
     viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
     viewGroup.writeEntry("ShowArchs", m_showPackageArch->isChecked());

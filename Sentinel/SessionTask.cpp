@@ -31,6 +31,7 @@
 #include <QTimer>
 #include <QStringList>
 #include <QFile>
+#include <QSignalMapper>
 
 #include <KWindowSystem>
 #include <KLocale>
@@ -91,14 +92,14 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
     }
 
     setMinimumSize(QSize(420,280));
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup configGroup(&config, "SessionInstaller");
     restoreDialogSize(configGroup);
 }
 
 SessionTask::~SessionTask()
 {
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup configGroup(&config, "SessionInstaller");
     saveDialogSize(configGroup);
 
@@ -162,10 +163,36 @@ void SessionTask::updatePallete()
     ui->brackgroundFrame->setPalette(pal);
 }
 
+void SessionTask::setDialog(KDialog *dialog)
+{
+    // Store the current values
+    QWidget *widget = ui->stackedWidget->currentWidget();
+
+    // Set the new ones
+    setMainWidget(dialog->mainWidget());
+    setTitle(dialog->windowTitle()); // must come after
+    connect(this, SIGNAL(okClicked()),
+            dialog, SLOT(accept()));
+    connect(this, SIGNAL(okClicked()),
+            dialog->mainWidget(), SLOT(deleteLater()));
+    connect(this, SIGNAL(okClicked()),
+            dialog, SLOT());
+
+    // Make sure we see the last widget and title
+    QSignalMapper *mapper = new QSignalMapper(this);
+    mapper->setMapping(this, widget);
+    connect(this, SIGNAL(okClicked()),
+            mapper, SLOT(map()));
+    connect(mapper, SIGNAL(mapped(QWidget*)),
+            this, SLOT(setMainWidget(QWidget*)));
+    enableButtonOk(true);
+}
+
 void SessionTask::setMainWidget(QWidget *widget)
 {
     ui->stackedWidget->addWidget(widget);
     ui->stackedWidget->setCurrentWidget(widget);
+    setTitle(widget->windowTitle());
 }
 
 QWidget* SessionTask::mainWidget()
@@ -176,7 +203,7 @@ QWidget* SessionTask::mainWidget()
 void SessionTask::setInfo(const QString &title, const QString &text)
 {
     InfoWidget *info = new InfoWidget(this);
-    setTitle(title);
+    info->setWindowTitle(title);
     info->setDescription(text);
     setMainWidget(info);
     setButtons(KDialog::Close);
@@ -186,7 +213,7 @@ void SessionTask::setInfo(const QString &title, const QString &text)
 void SessionTask::setError(const QString &title, const QString &text)
 {
     InfoWidget *info = new InfoWidget(this);
-    setTitle(title);
+    info->setWindowTitle(title);
     info->setDescription(text);
     info->setIcon(KIcon("dialog-error"));
     setMainWidget(info);
@@ -197,7 +224,7 @@ void SessionTask::setError(const QString &title, const QString &text)
 void SessionTask::setFinish(const QString &title, const QString &text)
 {
     InfoWidget *info = new InfoWidget(this);
-    setTitle(title);
+    info->setWindowTitle(title);
     info->setDescription(text);
     info->setIcon(KIcon("dialog-ok-apply"));
     setMainWidget(info);
@@ -353,7 +380,6 @@ void SessionTask::searchSuccess()
     kDebug() << "virtual method called";
     enableButtonOk(true);
     m_reviewChanges = new ReviewChanges(m_foundPackages, this);
-    setTitle(m_reviewChanges->title());
     connect(m_reviewChanges, SIGNAL(hasSelectedPackages(bool)),
             this, SLOT(enableButtonOk(bool)));
     setMainWidget(m_reviewChanges);
@@ -384,6 +410,8 @@ void SessionTask::slotButtonClicked(int button)
         } else if (mainWidget()->objectName() == "ReviewChanges") {
             enableButtonOk(false);
             commit();
+        } else {
+            emit okClicked();
         }
     } else {
         KDialog::slotButtonClicked(button);
@@ -527,6 +555,8 @@ PkTransaction* SessionTask::setTransaction(Transaction::Role role, Transaction *
                 this, SLOT(setTitle(QString)));
         connect(this, SIGNAL(cancelClicked()),
                 m_pkTransaction, SLOT(cancel()));
+        connect(m_pkTransaction, SIGNAL(dialog(KDialog*)),
+                this, SLOT(setDialog(KDialog*)));
     }
 
     if (t) {

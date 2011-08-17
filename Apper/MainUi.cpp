@@ -32,7 +32,7 @@ MainUi::MainUi(QWidget *parent)
     setCaption(QString());
     setWindowIcon(KIcon("applications-other"));
 
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup configGroup(&config, "MainUi");
     restoreDialogSize(configGroup);
 
@@ -53,7 +53,7 @@ MainUi::MainUi(QWidget *parent)
 MainUi::~MainUi()
 {
     // save size
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup configGroup(&config, "MainUi");
     saveDialogSize(configGroup);
 }

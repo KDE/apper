@@ -55,7 +55,7 @@ ProgressView::ProgressView(QWidget *parent)
     connect(m_scrollBar, SIGNAL(rangeChanged(int, int)),
             this, SLOT(rangeChanged(int, int)));
 
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup transactionDialog(&config, "TransactionDialog");
 
     resize(width(), transactionDialog.readEntry("detailsHeight", QWidget::height()));
@@ -63,7 +63,7 @@ ProgressView::ProgressView(QWidget *parent)
 
 ProgressView::~ProgressView()
 {
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup transactionDialog(&config, "TransactionDialog");
     transactionDialog.writeEntry("detailsHeight", height());
 }

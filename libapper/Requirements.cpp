@@ -231,7 +231,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
     // restore size
     setMinimumSize(QSize(450,300));
     setInitialSize(QSize(450,300));
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     restoreDialogSize(requirementsDialog);
 
@@ -327,7 +327,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
 Requirements::~Requirements()
 {
     // save size
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     saveDialogSize(requirementsDialog);
 
@@ -345,6 +345,13 @@ void Requirements::show()
     } else{
         KDialog::show();
     }
+}
+
+void Requirements::setPlainCaption(const QString &caption)
+{
+    Q_UNUSED(caption)
+    KDialog::setPlainCaption(d->ui.label->text());
+    d->ui.label->hide();
 }
 
 void Requirements::actionClicked(const QModelIndex &index)

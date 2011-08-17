@@ -88,7 +88,7 @@ PkTransactionDialog::PkTransactionDialog(Transaction *trans, Behaviors flags, QW
                      i18n("Allows you to hide the window whilst keeping the transaction task running."));
     setEscapeButton(KDialog::User1);
 
-    KConfig config;
+    KConfig config("apper");
     KConfigGroup transactionGroup(&config, "Transaction");
 
     d->progressView = new ProgressView;
@@ -109,7 +109,7 @@ PkTransactionDialog::PkTransactionDialog(Transaction *trans, Behaviors flags, QW
 
 PkTransactionDialog::~PkTransactionDialog()
 {
-    KConfig config;
+    KConfig config("apper");
     if (isButtonEnabled(KDialog::Details)) {
         KConfigGroup transactionGroup(&config, "Transaction");
         transactionGroup.writeEntry("ShowDetails", d->showDetails);

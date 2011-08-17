@@ -22,6 +22,7 @@
 #define PK_TRANSACTION_H
 
 #include <QWidget>
+#include <KDialog>
 #include <kdemacros.h>
 
 #include <Transaction>
@@ -55,8 +56,6 @@ public:
     // of Transaction, instead compare the tid with the tids from
     // Client::getTransaction(), to avoid deleted pointers.
     QString tid() const;
-    bool allowDeps() const;
-    bool onlyTrusted() const;
     QList<Package> packages() const;
     QStringList files() const;
     SimulateModel* simulateModel() const;
@@ -84,6 +83,7 @@ signals:
     void finished(PkTransaction::ExitStatus status);
     void allowCancel(bool enable);
     void titleChanged(const QString &title);
+    void dialog(KDialog *widget);
 
 public slots:
     void cancel();
@@ -104,6 +104,7 @@ private slots:
 
     void setExitStatus(PkTransaction::ExitStatus status);
     void reject();
+    void showDialog(KDialog *dialog);
 
 private:
     void unsetTransaction();
