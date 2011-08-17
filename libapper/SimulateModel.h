@@ -40,7 +40,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    QList<Package> packages() const;
+    QStringList newPackages() const;
     Package::Info currentInfo() const;
     void setCurrentInfo(Package::Info currentInfo);
     int countInfo(Package::Info info);
@@ -52,6 +52,7 @@ public slots:
 private:
     QHash<Package::Info, QList<Package> > m_packages;
     QList<Package> m_skipPackages;
+    QStringList m_newPackages;
     Package::Info m_currentInfo;
 };
 

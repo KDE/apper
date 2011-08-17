@@ -92,6 +92,13 @@ void SimulateModel::addPackage(const PackageKit::Package &p)
         return;
     }
 
+    // These are packages that are going to be installed
+    // store them to be resolved later to get the desktop files
+    if (p.info() == Package::InfoAvailable &&
+        !m_newPackages.contains(p.name())) {
+        m_newPackages.append(p.name());
+    }
+
     foreach (const Package &pkg, m_skipPackages) {
         if (pkg.id() == p.id()) {
             // found a package to skip
@@ -137,19 +144,9 @@ QVariant SimulateModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
-QList<Package> SimulateModel::packages() const
+QStringList SimulateModel::newPackages() const
 {
-    QList<Package> ret;
-    QHash<Package::Info, QList<Package> >::const_iterator i = m_packages.constBegin();
-     while (i != m_packages.constEnd()) {
-         if (i.key() != Package::InfoRemoving) {
-             foreach (const Package &pkg, i.value()) {
-                 ret.append(Package(pkg.name() + ";" + pkg.version() + ";;"));
-             }
-         }
-         ++i;
-     }
-    return ret;
+    return m_newPackages;
 }
 
 void SimulateModel::clear()
