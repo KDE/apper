@@ -23,18 +23,34 @@
 
 #include <QDialog>
 #include <KService>
+#include <Package>
+#include <QModelIndex>
 
-#include "ui_ApplicationLauncher.h"
+namespace Ui {
+    class ApplicationLauncher;
+}
 
-class ApplicationLauncher : public QDialog, Ui::ApplicationLauncher
+class ApplicationLauncher : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ApplicationLauncher(const QVector<KService*> &applications, QWidget *parent = 0);
+    explicit ApplicationLauncher(QWidget *parent = 0);
     ~ApplicationLauncher();
+
+    QList<PackageKit::Package> packages() const;
+    bool hasApplications();
+
+public slots:
+    void addPackage(const PackageKit::Package &package);
+    void files(const PackageKit::Package &package, const QStringList &files);
 
 private slots:
     void on_applicationsView_clicked(const QModelIndex &index);
+
+private:
+    QStringList m_files;
+    QList<PackageKit::Package> m_packages;
+    Ui::ApplicationLauncher *ui;
 };
 
 #endif

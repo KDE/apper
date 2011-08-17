@@ -35,8 +35,7 @@ PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
                                                const QString &interaction,
                                                const QDBusMessage &message,
                                                QWidget *parent)
- : SessionTask(xid, interaction, message, parent),
-   m_files(files)
+ : SessionTask(xid, interaction, message, parent)
 {
     setWindowTitle(i18n("Remove Packages that Provides Files"));
 
@@ -108,30 +107,49 @@ void PkRemovePackageByFiles::modelChanged()
 
 void PkRemovePackageByFiles::search()
 {
-    Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(t);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Package)),
-            this, SLOT(addPackage(PackageKit::Package)));
-    t->searchFiles(m_model->files(), Transaction::FilterInstalled);
-    if (t->error()) {
-        QString msg(i18n("Failed to start search file transaction"));
-        if (showWarning()) {
-            setError(msg,
-                     PkStrings::daemonError(t->error()));
+    m_files = m_model->files();
+    searchFinished(PkTransaction::Success);
+}
+
+void PkRemovePackageByFiles::searchFinished(PkTransaction::ExitStatus status)
+{
+    if (status == PkTransaction::Success) {
+        if (!m_files.isEmpty()) {
+            QString file = m_files.takeFirst();
+
+            Transaction *t = new Transaction(this);
+            PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
+            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+                    this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
+            connect(t, SIGNAL(package(PackageKit::Package)),
+                    this, SLOT(addPackage(PackageKit::Package)));
+            t->searchFiles(file, Transaction::FilterInstalled);
+            if (t->error()) {
+                QString msg(i18n("Failed to start search file transaction"));
+                if (showWarning()) {
+                    setError(msg,
+                             PkStrings::daemonError(t->error()));
+                }
+                sendErrorFinished(Failed, "Failed to search for package");
+            }
+        } else {
+            // we are done resolving
+            SessionTask::searchFinished(status);
         }
-        sendErrorFinished(Failed, "Failed to search for package");
+    } else {
+        // we got an error...
+        SessionTask::searchFinished(status);
     }
 }
 
 void PkRemovePackageByFiles::notFound()
 {
     if (showWarning()) {
-        setInfo(i18n("Could not find %1", m_files.join(", ")),
+        QStringList files = m_model->files();
+        setInfo(i18n("Could not find %1", files.join(", ")),
                 i18np("The file could not be found in any installed package",
                       "The files could not be found in any installed package",
-                      m_files.size()));
+                      files.size()));
     }
     sendErrorFinished(NoPackagesFound, "no package found");
 }

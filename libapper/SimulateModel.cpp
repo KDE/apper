@@ -94,7 +94,7 @@ void SimulateModel::addPackage(const PackageKit::Package &p)
 
     // These are packages that are going to be installed
     // store them to be resolved later to get the desktop files
-    if (p.info() == Package::InfoAvailable &&
+    if (p.info() == Package::InfoInstalling &&
         !m_newPackages.contains(p.name())) {
         m_newPackages.append(p.name());
     }

@@ -43,7 +43,7 @@ PkSearchFile::PkSearchFile(const QString &file_name,
     }
 
     Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(t);
+    PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),

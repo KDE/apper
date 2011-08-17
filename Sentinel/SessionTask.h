@@ -96,7 +96,7 @@ protected:
     bool foundPackages() const;
     int  foundPackagesSize() const;
     QList<Package> foundPackagesList() const;
-    PkTransaction* setTransaction(Transaction *transaction);
+    PkTransaction* setTransaction(Transaction::Role role, Transaction *transaction = 0);
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);

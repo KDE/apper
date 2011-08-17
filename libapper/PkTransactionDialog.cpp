@@ -63,7 +63,8 @@ PkTransactionDialog::PkTransactionDialog(Transaction *trans, Behaviors flags, QW
    m_flags(flags),
    d(new PkTransactionDialogPrivate)
 {
-    m_ui = new PkTransaction(trans, parent);
+    m_ui = new PkTransaction(parent);
+    m_ui->setTransaction(trans, trans->role());
     m_ui->hideCancelButton();
 
     connect(m_ui, SIGNAL(allowCancel(bool)), button(KDialog::Cancel), SLOT(setEnabled(bool)));
@@ -171,7 +172,7 @@ void PkTransactionDialog::slotButtonClicked(int bt)
 
 void PkTransactionDialog::setTransaction(Transaction *trans)
 {
-    m_ui->setTransaction(trans);
+    m_ui->setTransaction(trans, trans->role());
 }
 
 PkTransaction* PkTransactionDialog::transaction() const

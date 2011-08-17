@@ -62,12 +62,17 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
         m_resources << service;
     }
 
-    QString description = i18np("The following service is required. "
-                                "Do you want to search for this now?",
-                                "The following services are required. "
-                                "Do you want to search for these now?",
-                                m_resources.size());
-    introDialog->setDescription(description);
+    if (m_resources.isEmpty()) {
+        introDialog->setDescription(i18n("No supported resources were provided"));
+    } else {
+        QString description = i18np("The following service is required. "
+                                    "Do you want to search for this now?",
+                                    "The following services are required. "
+                                    "Do you want to search for these now?",
+                                    m_resources.size());
+        introDialog->setDescription(description);
+        enableButtonOk(true);
+    }
 
     QString title = i18np("Plasma requires an additional service for this operation",
                           "Plasma requires additional services for this operation",
@@ -83,7 +88,7 @@ PkInstallPlasmaResources::~PkInstallPlasmaResources()
 void PkInstallPlasmaResources::search()
 {
     Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(t);
+    PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),

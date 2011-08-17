@@ -107,7 +107,9 @@ SessionTask::~SessionTask()
 
 void SessionTask::addPackage(const PackageKit::Package &package)
 {
-    m_foundPackages.append(package);
+    if (!m_foundPackages.contains(package)) {
+        m_foundPackages.append(package);
+    }
 }
 
 void SessionTask::searchFinished(PkTransaction::ExitStatus status)
@@ -307,7 +309,7 @@ void SessionTask::commit()
             sendErrorFinished(Failed, "to install or remove due to empty lists");
         } else if (!installPackages.isEmpty()) {
             // Install Packages
-            PkTransaction *trans = setTransaction(0);
+            PkTransaction *trans = setTransaction(Transaction::RoleInstallPackages);
             connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(commitFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             trans->installPackages(installPackages);
@@ -321,7 +323,7 @@ void SessionTask::commit()
 void SessionTask::removePackages()
 {
     // Remove Packages
-    PkTransaction *trans = setTransaction(0);
+    PkTransaction *trans = setTransaction(Transaction::RoleRemovePackages);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(commitFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     trans->removePackages(m_removePackages);
@@ -515,18 +517,20 @@ QList<Package> SessionTask::foundPackagesList() const
     return m_foundPackages;
 }
 
-PkTransaction* SessionTask::setTransaction(Transaction *transaction)
+PkTransaction* SessionTask::setTransaction(Transaction::Role role, Transaction *t)
 {
-    if (m_pkTransaction) {
-        m_pkTransaction->setTransaction(transaction);
-    } else {
-        m_pkTransaction = new PkTransaction(transaction, this);
+    if (m_pkTransaction == 0) {
+        m_pkTransaction = new PkTransaction(this);
         m_pkTransaction->hideCancelButton();
         ui->stackedWidget->addWidget(m_pkTransaction);
         connect(m_pkTransaction, SIGNAL(titleChanged(QString)),
                 this, SLOT(setTitle(QString)));
         connect(this, SIGNAL(cancelClicked()),
                 m_pkTransaction, SLOT(cancel()));
+    }
+
+    if (t) {
+        m_pkTransaction->setTransaction(t, role);
         setTitle(m_pkTransaction->title());
     }
     ui->stackedWidget->setCurrentWidget(m_pkTransaction);

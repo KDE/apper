@@ -45,10 +45,17 @@ PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
             this, SLOT(enableButtonOk(bool)));
     setMainWidget(introDialog);
 
-    QString description;
-    description = i18np("Do you want to search for this now?",
-                        "Do you want to search for these now?",
-                        m_args.size());
+    if (m_args.isEmpty()) {
+        introDialog->setDescription(i18n("No files where provided"));
+    } else {
+        QString description;
+        description = i18np("Do you want to search for this now?",
+                            "Do you want to search for these now?",
+                            m_args.size());
+        introDialog->setDescription(description);
+        enableButtonOk(true);
+    }
+
     QString title;
     // this will come from DBus interface
     if (parentTitle.isNull()) {
@@ -61,9 +68,7 @@ PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
                       m_args.size(),
                       parentTitle);
     }
-
     setTitle(title);
-    introDialog->setDescription(description);
 }
 
 PkInstallProvideFiles::~PkInstallProvideFiles()
@@ -73,7 +78,7 @@ PkInstallProvideFiles::~PkInstallProvideFiles()
 void PkInstallProvideFiles::search()
 {
     Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(t);
+    PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),

@@ -47,11 +47,12 @@ PkInstallMimeTypes::PkInstallMimeTypes(uint xid,
 
     QString description;
     if (m_model->rowCount()) {
-        description = i18n("No valid file types were provided");
-    } else {
         description = i18np("Do you want to search for a program that can open this file type?",
                             "Do you want to search for a program that can open these file types?",
                             m_model->rowCount());
+        enableButtonOk(true);
+    } else {
+        description = i18n("No valid file types were provided");
     }
     introDialog->setDescription(description);
 
@@ -78,7 +79,7 @@ void PkInstallMimeTypes::search()
 {
     QStringList mimeTypes = m_model->files();
     Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(t);
+    PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),

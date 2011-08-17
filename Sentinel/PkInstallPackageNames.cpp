@@ -53,11 +53,16 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
         model->appendRow(item);
     }
 
-    QString description;
-    description = i18np("Do you want to search for and install this package now?",
-                        "Do you want to search for and install these packages now?",
-                        m_packages.size());
-    introDialog->setDescription(description);
+    if (m_packages.isEmpty()) {
+        introDialog->setDescription(i18n("No package names were provided"));
+    } else {
+        QString description;
+        description = i18np("Do you want to search for and install this package now?",
+                            "Do you want to search for and install these packages now?",
+                            m_packages.size());
+        introDialog->setDescription(description);
+        enableButtonOk(true);
+    }
 
     QString title;
     // this will come from DBus interface
@@ -81,7 +86,7 @@ PkInstallPackageNames::~PkInstallPackageNames()
 void PkInstallPackageNames::search()
 {
     Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(t);
+    PkTransaction *trans = setTransaction(Transaction::RoleResolve, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),

@@ -36,7 +36,7 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
     setWindowTitle(i18n("Querying if a Package is Installed"));
 
     Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(t);
+    PkTransaction *trans = setTransaction(Transaction::RoleResolve, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(t, SIGNAL(package(PackageKit::Package)),

@@ -39,7 +39,7 @@ class KDE_EXPORT PkTransaction : public QWidget
     Q_OBJECT
     Q_ENUMS(ExitStatus)
 public:
-    explicit PkTransaction(Transaction *trans, QWidget *parent = 0);
+    explicit PkTransaction(QWidget *parent = 0);
     ~PkTransaction();
 
     void hideCancelButton();
@@ -50,7 +50,7 @@ public:
     void updatePackages(const QList<Package> &packages);
     void refreshCache();
 
-    void setTransaction(Transaction *trans);
+    void setTransaction(Transaction *trans, Transaction::Role role);
     // Do not create a method to retrieve the internal pointer
     // of Transaction, instead compare the tid with the tids from
     // Client::getTransaction(), to avoid deleted pointers.
@@ -92,7 +92,7 @@ private slots:
     void setupTransaction(PackageKit::Transaction *transaction);
     void installPackages();
     void installFiles();
-    void removePackages(bool allow_deps = true);
+    void removePackages();
     void updatePackages();
 
     void transactionFinished(PackageKit::Transaction::Exit status);
@@ -101,7 +101,6 @@ private slots:
     void eulaRequired(PackageKit::Eula info);
     void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
     void repoSignatureRequired(PackageKit::Signature info);
-    void files(const PackageKit::Package &package, const QStringList &files);
 
     void setExitStatus(PkTransaction::ExitStatus status);
     void reject();

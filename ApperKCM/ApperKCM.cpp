@@ -78,7 +78,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
                                APP_VERSION,
                                ki18n("KDE interface for managing software"),
                                KAboutData::License_GPL,
-                               ki18n("(C) 2008-2010 Daniel Nicoletti"));
+                               ki18n("(C) 2008-2011 Daniel Nicoletti"));
     setAboutData(aboutData);
     setButtons(Apply);
     KGlobal::locale()->insertCatalog("apper");
@@ -669,7 +669,7 @@ void ApperKCM::refreshCache()
     QWidget *currentWidget = stackedWidget->currentWidget();
     emit changed(false);
 
-    PkTransaction *transaction = new PkTransaction(0, this);
+    PkTransaction *transaction = new PkTransaction(this);
     QWeakPointer<PkTransaction> pointer = transaction;
 
     stackedWidget->addWidget(transaction);
@@ -715,7 +715,7 @@ void ApperKCM::save()
     if (currentWidget == m_settingsPage) {
         m_settingsPage->save();
     } else {
-        PkTransaction *transaction = new PkTransaction(0, this);
+        PkTransaction *transaction = new PkTransaction(this);
         QWeakPointer<PkTransaction> pointer = transaction;
 
         stackedWidget->addWidget(transaction);

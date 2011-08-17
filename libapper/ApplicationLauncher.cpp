@@ -19,42 +19,79 @@
  ***************************************************************************/
 
 #include "ApplicationLauncher.h"
+#include "ui_ApplicationLauncher.h"
 
 #include <QStandardItemModel>
 #include <KToolInvocation>
 #include <KLocale>
 #include <KDebug>
 
-ApplicationLauncher::ApplicationLauncher(const QVector<KService*> &applications, QWidget *parent )
- : QDialog(parent)
+ApplicationLauncher::ApplicationLauncher(QWidget *parent)
+ : QDialog(parent),
+   ui(new Ui::ApplicationLauncher)
 {
-    setupUi(this);
-
-    label->setText(i18np("The following application was just installed. Click on it to launch:",
-                         "The following applications were just installed. Click on them to launch:",
-                         applications.size()));
-
-    QStandardItemModel *model = new QStandardItemModel(this);
-    QStandardItem *item;
-    foreach (const KService *service, applications) {
-        QString name = service->genericName().isEmpty() ?
-                           service->property("Name").toString() :
-                           service->property("Name").toString() + " - " + service->genericName();
-        item = new QStandardItem(name);
-        item->setIcon(KIcon(service->icon()));
-        item->setData(service->desktopEntryPath(), Qt::UserRole);
-        model->appendRow(item);
-    }
-    applicationsView->setModel(model);
+    ui->setupUi(this);
 }
 
 ApplicationLauncher::~ApplicationLauncher()
 {
-    if (showCB->isChecked()) {
+    if (ui->showCB->isChecked()) {
         KConfig config;
         KConfigGroup transactionGroup(&config, "Transaction");
         transactionGroup.writeEntry("ShowApplicationLauncher", false);
     }
+    delete ui;
+}
+
+QList<PackageKit::Package> ApplicationLauncher::packages() const
+{
+    return m_packages;
+}
+
+bool ApplicationLauncher::hasApplications()
+{
+    QStandardItemModel *model = new QStandardItemModel(this);
+    ui->applicationsView->setModel(model);
+    m_files.removeDuplicates();
+
+    QStandardItem *item;
+    foreach (const QString &desktop, m_files) {
+        // we create a new KService because findByDestopPath
+        // might fail because the Sycoca database is not up to date yet.
+        KService *service = new KService(desktop);
+        if (service->isApplication() &&
+           !service->noDisplay() &&
+           !service->exec().isEmpty())
+        {
+            QString name;
+            name = service->genericName().isEmpty() ?
+                        service->property("Name").toString() :
+                        service->property("Name").toString() + " - " + service->genericName();
+            item = new QStandardItem(name);
+            item->setIcon(KIcon(service->icon()));
+            item->setData(service->desktopEntryPath(), Qt::UserRole);
+            model->appendRow(item);
+        }
+    }
+
+    ui->label->setText(i18np("The following application was just installed. Click on it to launch:",
+                             "The following applications were just installed. Click on them to launch:",
+                             model->rowCount()));
+
+    return model->rowCount();
+}
+
+void ApplicationLauncher::addPackage(const PackageKit::Package &package)
+{
+    if (!m_packages.contains(package)) {
+        m_packages.append(package);
+    }
+}
+
+void ApplicationLauncher::files(const PackageKit::Package &package, const QStringList &files)
+{
+    Q_UNUSED(package)
+    m_files.append(files.filter(".desktop"));
 }
 
 void ApplicationLauncher::on_applicationsView_clicked(const QModelIndex &index)

@@ -198,18 +198,6 @@ void PkInstallCatalogs::search()
         // Start resolving
         searchFinished(PkTransaction::Success);
     }
-//    if (foundPackages()) {
-//        // Call search success that already have a common way to display changes
-//        searchSuccess();
-//    } else {
-//        //TODO fix me
-//        if (showWarning()) {
-//            // TODO display a nicer message informing of already installed ones
-//            setInfo(i18n("Catalog search complete"),
-//                    i18n("No extra package was found to be installed"));
-//        }
-//        sendErrorFinished(NoPackagesFound, "no package found");
-//    }
 }
 
 void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
@@ -227,9 +215,9 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             kDebug() << "m_installPackages" << m_maxResolve << m_installPackages.size() << resolve.size();
 
             Transaction *t = new Transaction(this);
-            PkTransaction *trans = setTransaction(t);
+            PkTransaction *trans = setTransaction(Transaction::RoleResolve, t);
             connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-                    this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+                    this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(t, SIGNAL(package(PackageKit::Package)),
                     this, SLOT(addPackage(PackageKit::Package)));
             t->resolve(resolve, Transaction::FilterArch | Transaction::FilterNewest);
@@ -246,9 +234,9 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             kDebug() << "m_installProvides" <<  m_maxResolve << m_installProvides.size() << provides.size();
 
             Transaction *t = new Transaction(this);
-            PkTransaction *trans = setTransaction(t);
+            PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
             connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-                    this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+                    this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(t, SIGNAL(package(PackageKit::Package)),
                     this, SLOT(addPackage(PackageKit::Package)));
             t->whatProvides(Transaction::ProvidesAny,
@@ -267,9 +255,9 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             kDebug() << "m_installFiles" << m_maxResolve << m_installFiles.size() << files.size();
 
             Transaction *t = new Transaction(this);
-            PkTransaction *trans = setTransaction(t);
+            PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
             connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
-                    this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+                    this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(t, SIGNAL(package(PackageKit::Package)),
                     this, SLOT(addPackage(PackageKit::Package)));
             t->searchFiles(files, Transaction::FilterArch | Transaction::FilterNewest);
