@@ -27,10 +27,13 @@
 #include <KDebug>
 
 ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
-    QDialog(parent),
+    KDialog(parent),
+    m_embed(false),
     ui(new Ui::ApplicationLauncher)
 {
-    ui->setupUi(this);
+    ui->setupUi(mainWidget());
+
+    setButtons(KDialog::None);
 }
 
 ApplicationLauncher::~ApplicationLauncher()
@@ -41,6 +44,18 @@ ApplicationLauncher::~ApplicationLauncher()
         transactionGroup.writeEntry("ShowApplicationLauncher", false);
     }
     delete ui;
+}
+
+bool ApplicationLauncher::embedded() const
+{
+    return m_embed;
+}
+
+void ApplicationLauncher::setEmbedded(bool embedded)
+{
+    m_embed = embedded;
+    ui->showCB->setVisible(!embedded);
+    ui->kdialogbuttonbox->setVisible(!embedded);
 }
 
 QList<PackageKit::Package> ApplicationLauncher::packages() const

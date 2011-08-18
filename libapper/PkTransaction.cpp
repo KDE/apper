@@ -711,7 +711,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                    !d->launcher->packages().isEmpty() &&
                    role == Transaction::RoleResolve &&
                    d->originalRole != Transaction::UnknownRole) {
-            // Let's try to find some desktop files'
+            // Let's try to find some desktop files
             Transaction *transaction = new Transaction(this);
             connect(transaction, SIGNAL(files(PackageKit::Package, QStringList)),
                     d->launcher, SLOT(files(PackageKit::Package, QStringList)));
@@ -725,7 +725,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                    d->launcher->hasApplications() &&
                    role == Transaction::RoleGetFiles &&
                    d->originalRole != Transaction::UnknownRole) {
-            d->launcher->exec();
+            showDialog(d->launcher);
         } else if (role == Transaction::RoleAcceptEula ||
                    role == Transaction::RoleInstallSignature) {
             d->finished = false;
@@ -799,7 +799,7 @@ void PkTransaction::showDialog(KDialog *dlg)
         dlg->setModal(true);
         dlg->show();
     } else {
-        dlg->setPlainCaption(QString());
+        dlg->setProperty("embedded", true);
         emit dialog(dlg);
     }
 }

@@ -47,4 +47,11 @@ void InfoWidget::setDescription(const QString &description)
     ui->descriptionL->setText(description);
 }
 
+void InfoWidget::addWidget(QWidget *widget)
+{
+    if (widget) {
+        ui->descriptionLayout->addWidget(widget);
+    }
+}
+
 #include "InfoWidget.moc"

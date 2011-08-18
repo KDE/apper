@@ -31,18 +31,22 @@ class SimulateModel;
 class Requirements : public KDialog
 {
     Q_OBJECT
+    Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)
 public:
     explicit Requirements(SimulateModel *model, QWidget *parent = 0);
     ~Requirements();
 
+    bool embedded() const;
+    void setEmbedded(bool embedded);
+
 public slots:
     bool shouldShow() const;
-    virtual void setPlainCaption(const QString &caption);
 
 private slots:
     void actionClicked(int type);
 
 private:
+    bool m_embed;
     bool m_shouldShow;
     bool m_hideAutoConfirm;
     Ui::Requirements *ui;

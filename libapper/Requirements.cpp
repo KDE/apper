@@ -29,6 +29,7 @@
 
 Requirements::Requirements(SimulateModel *model, QWidget *parent) :
     KDialog(parent),
+    m_embed(false),
     m_shouldShow(true),
     ui(new Ui::Requirements)
 {
@@ -155,17 +156,20 @@ Requirements::~Requirements()
     delete ui;
 }
 
+bool Requirements::embedded() const
+{
+    return m_embed;
+}
+
+void Requirements::setEmbedded(bool embedded)
+{
+    m_embed = embedded;
+    ui->label->setVisible(!embedded);
+}
+
 bool Requirements::shouldShow() const
 {
     return (m_shouldShow && !ui->confirmCB->isChecked());
-}
-
-void Requirements::setPlainCaption(const QString &caption)
-{
-//    Q_UNUSED(caption)
-    kDebug() << caption;
-    KDialog::setPlainCaption(ui->label->text());
-    ui->label->hide();
 }
 
 void Requirements::actionClicked(int type)

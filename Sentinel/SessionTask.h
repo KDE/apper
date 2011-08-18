@@ -86,7 +86,7 @@ protected:
     virtual void searchFailed();
     virtual void searchSuccess();
     virtual void commitFailed();
-    virtual void commitSuccess();
+    virtual void commitSuccess(QWidget *widget = 0);
 
     bool foundPackages() const;
     int  foundPackagesSize() const;
@@ -101,7 +101,7 @@ protected slots:
     void setTitle(const QString &title);
     void setInfo(const QString &title, const QString &text);
     void setError(const QString &title, const QString &text);
-    void setFinish(const QString &title, const QString &text);
+    void setFinish(const QString &title, const QString &text, QWidget *widget = 0);
     virtual void addPackage(const PackageKit::Package &package);
     virtual void searchFinished(PkTransaction::ExitStatus status);
     virtual void commitFinished(PkTransaction::ExitStatus status);

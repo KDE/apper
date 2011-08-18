@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ApplicationLauncher</class>
- <widget class="QDialog" name="ApplicationLauncher">
+ <widget class="QWidget" name="ApplicationLauncher">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,6 +11,9 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
    <item row="0" column="0" colspan="2">
     <widget class="QLabel" name="label">
      <property name="text">

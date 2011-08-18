@@ -21,7 +21,7 @@
 #ifndef APPLICATION_LAUNCHER_H
 #define APPLICATION_LAUNCHER_H
 
-#include <QDialog>
+#include <KDialog>
 #include <KService>
 #include <Package>
 #include <QModelIndex>
@@ -30,12 +30,16 @@ namespace Ui {
     class ApplicationLauncher;
 }
 
-class ApplicationLauncher : public QDialog
+class ApplicationLauncher : public KDialog
 {
     Q_OBJECT
+    Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)
 public:
     explicit ApplicationLauncher(QWidget *parent = 0);
     ~ApplicationLauncher();
+
+    bool embedded() const;
+    void setEmbedded(bool embedded);
 
     QList<PackageKit::Package> packages() const;
     bool hasApplications();
@@ -48,6 +52,7 @@ private slots:
     void on_applicationsView_clicked(const QModelIndex &index);
 
 private:
+    bool m_embed;
     QStringList m_files;
     QList<PackageKit::Package> m_packages;
     Ui::ApplicationLauncher *ui;

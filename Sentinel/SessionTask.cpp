@@ -168,24 +168,32 @@ void SessionTask::setDialog(KDialog *dialog)
     // Store the current values
     QWidget *widget = ui->stackedWidget->currentWidget();
 
-    // Set the new ones
-    setMainWidget(dialog->mainWidget());
-    setTitle(dialog->windowTitle()); // must come after
-    connect(this, SIGNAL(okClicked()),
-            dialog, SLOT(accept()));
-    connect(this, SIGNAL(okClicked()),
-            dialog->mainWidget(), SLOT(deleteLater()));
-    connect(this, SIGNAL(okClicked()),
-            dialog, SLOT());
+    if (widget->objectName() == "ApplicationLauncher") {
+        // TODO if there is a removal after instalation
+        // this will break it, but we don't have
+        // this case yet...
+        m_pkTransaction->disconnect();
+        commitSuccess(widget);
+    } else {
+        // Set the new ones
+        setMainWidget(dialog->mainWidget());
+        setTitle(dialog->windowTitle()); // must come after
+        connect(this, SIGNAL(okClicked()),
+                dialog, SLOT(accept()));
+        connect(this, SIGNAL(okClicked()),
+                dialog->mainWidget(), SLOT(deleteLater()));
+        connect(this, SIGNAL(okClicked()),
+                dialog, SLOT());
 
-    // Make sure we see the last widget and title
-    QSignalMapper *mapper = new QSignalMapper(this);
-    mapper->setMapping(this, widget);
-    connect(this, SIGNAL(okClicked()),
-            mapper, SLOT(map()));
-    connect(mapper, SIGNAL(mapped(QWidget*)),
-            this, SLOT(setMainWidget(QWidget*)));
-    enableButtonOk(true);
+        // Make sure we see the last widget and title
+        QSignalMapper *mapper = new QSignalMapper(this);
+        mapper->setMapping(this, widget);
+        connect(this, SIGNAL(okClicked()),
+                mapper, SLOT(map()));
+        connect(mapper, SIGNAL(mapped(QWidget*)),
+                this, SLOT(setMainWidget(QWidget*)));
+        enableButtonOk(true);
+    }
 }
 
 void SessionTask::setMainWidget(QWidget *widget)
@@ -221,12 +229,13 @@ void SessionTask::setError(const QString &title, const QString &text)
     button(KDialog::Close)->setFocus();
 }
 
-void SessionTask::setFinish(const QString &title, const QString &text)
+void SessionTask::setFinish(const QString &title, const QString &text, QWidget *widget)
 {
     InfoWidget *info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
     info->setIcon(KIcon("dialog-ok-apply"));
+    info->addWidget(widget);
     setMainWidget(info);
     setButtons(KDialog::Close);
     button(KDialog::Close)->setFocus();
@@ -395,10 +404,10 @@ void SessionTask::commitFailed()
     sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
 }
 
-void SessionTask::commitSuccess()
+void SessionTask::commitSuccess(QWidget *widget)
 {
     kDebug() << "virtual method called";
-    setFinish(i18n("Task completed"), i18n("All operations were committed successfully"));
+    setFinish(i18n("Task completed"), i18n("All operations were committed successfully"), widget);
     finishTaskOk();
 }
 
