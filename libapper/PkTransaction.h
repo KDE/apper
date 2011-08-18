@@ -33,7 +33,6 @@ namespace Ui {
     class PkTransaction;
 }
 
-class SimulateModel;
 class PkTransactionPrivate;
 class KDE_EXPORT PkTransaction : public QWidget
 {
@@ -68,6 +67,8 @@ signals:
     void allowCancel(bool enable);
     void titleChanged(const QString &title);
     void dialog(KDialog *widget);
+    void sorry(const QString &title, const QString &text);
+    void error(const QString &title, const QString &text);
 
 public slots:
     void cancel();
@@ -91,10 +92,11 @@ private slots:
 
     void setExitStatus(PkTransaction::ExitStatus status);
     void reject();
-    void showDialog(KDialog *dialog);
 
 private:
-    void setupDebconfDialog(const QString &tid);
+    void showDialog(KDialog *dialog);
+    void showError(const QString &title, const QString &details);
+    void showSorry(const QString &title, const QString &details);
     void unsetTransaction();
     void requeueTransaction();
 

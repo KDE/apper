@@ -72,11 +72,6 @@ public:
     uint timeout() const;
 
     QWidget* mainWidget();
-
-    void setInfo(const QString &title, const QString &text);
-    void setError(const QString &title, const QString &text);
-    void setFinish(const QString &title, const QString &text);
-
     uint parentWId() const;
 
 public slots:
@@ -104,6 +99,9 @@ protected:
 
 protected slots:
     void setTitle(const QString &title);
+    void setInfo(const QString &title, const QString &text);
+    void setError(const QString &title, const QString &text);
+    void setFinish(const QString &title, const QString &text);
     virtual void addPackage(const PackageKit::Package &package);
     virtual void searchFinished(PkTransaction::ExitStatus status);
     virtual void commitFinished(PkTransaction::ExitStatus status);

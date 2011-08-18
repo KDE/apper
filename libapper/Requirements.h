@@ -22,7 +22,6 @@
 #define REQUIREMENTS_H
 
 #include <KDialog>
-#include <QModelIndex>
 
 namespace Ui {
     class Requirements;
@@ -37,15 +36,15 @@ public:
     ~Requirements();
 
 public slots:
-    void show();
+    bool shouldShow() const;
     virtual void setPlainCaption(const QString &caption);
 
 private slots:
-    void actionClicked(const QModelIndex &index);
+    void actionClicked(int type);
 
 private:
+    bool m_shouldShow;
     bool m_hideAutoConfirm;
-
     Ui::Requirements *ui;
 };
 

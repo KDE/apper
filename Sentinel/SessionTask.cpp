@@ -559,6 +559,10 @@ PkTransaction* SessionTask::setTransaction(Transaction::Role role, Transaction *
                 m_pkTransaction, SLOT(cancel()));
         connect(m_pkTransaction, SIGNAL(dialog(KDialog*)),
                 this, SLOT(setDialog(KDialog*)));
+        connect(m_pkTransaction, SIGNAL(sorry(QString,QString)),
+                this, SLOT(setInfo(QString,QString)));
+        connect(m_pkTransaction, SIGNAL(error(QString,QString)),
+                this, SLOT(setError(QString,QString)));
     }
 
     if (t) {

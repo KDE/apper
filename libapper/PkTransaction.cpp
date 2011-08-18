@@ -119,15 +119,14 @@ void PkTransaction::installFiles(const QStringList &files)
             setTransaction(trans, Transaction::RoleSimulateInstallFiles);
             trans->simulateInstallFiles(files);
             if (trans->error()) {
-                KMessageBox::sorry(this,
-                                   PkStrings::daemonError(trans->error()),
-                                   i18n("Failed to simulate file install"));
+                showSorry(i18n("Failed to simulate file install"),
+                          PkStrings::daemonError(trans->error()));
             }
         } else {
             installFiles();
         }
     } else {
-        KMessageBox::error(this, i18n("Current backend does not support installing files."), i18n("Error"));
+        showError(i18n("Current backend does not support installing files."), i18n("Error"));
     }
 }
 
@@ -144,15 +143,14 @@ void PkTransaction::installPackages(const QList<Package> &packages)
             setTransaction(trans, Transaction::RoleSimulateInstallPackages);
             trans->simulateInstallPackages(d->packages);
             if (trans->error()) {
-                KMessageBox::sorry(this,
-                                   PkStrings::daemonError(trans->error()),
-                                   i18n("Failed to simulate package install"));
+                showSorry(i18n("Failed to simulate package install"),
+                          PkStrings::daemonError(trans->error()));
             }
         } else {
             installPackages();
         }
     } else {
-        KMessageBox::error(this, i18n("Current backend does not support installing packages."), i18n("Error"));
+        showError(i18n("Current backend does not support installing packages."), i18n("Error"));
     }
 }
 
@@ -170,16 +168,15 @@ void PkTransaction::removePackages(const QList<Package> &packages)
             setTransaction(trans, Transaction::RoleSimulateRemovePackages);
             trans->simulateRemovePackages(d->packages, AUTOREMOVE);
             if (trans->error()) {
-                KMessageBox::sorry(this,
-                                   PkStrings::daemonError(trans->error()),
-                                   i18n("Failed to simulate package removal"));
+                showSorry(i18n("Failed to simulate package removal"),
+                          PkStrings::daemonError(trans->error()));
             }
         } else {
             // As we can't check for requires don't allow deps removal
             removePackages();
         }
     } else {
-        KMessageBox::error(this, i18n("The current backend does not support removing packages."), i18n("Error"));
+        showError(i18n("The current backend does not support removing packages."), i18n("Error"));
     }
 }
 
@@ -195,14 +192,14 @@ void PkTransaction::updatePackages(const QList<Package> &packages)
             setTransaction(trans, Transaction::RoleSimulateUpdatePackages);
             trans->simulateUpdatePackages(d->packages);
             if (trans->error()) {
-                KMessageBox::sorry(this, PkStrings::daemonError(trans->error()),
-                                i18n("Failed to simulate package update"));
+                showSorry(i18n("Failed to simulate package update"),
+                          PkStrings::daemonError(trans->error()));
             }
         } else {
             updatePackages();
         }
     } else {
-        KMessageBox::error(this, i18n("The current backend does not support updating packages."), i18n("Error"));
+        showError(i18n("The current backend does not support updating packages."), i18n("Error"));
     }
 }
 
@@ -213,8 +210,8 @@ void PkTransaction::refreshCache()
     setTransaction(trans, Transaction::RoleRefreshCache);
     trans->refreshCache(true);
     if (trans->error()) {
-        KMessageBox::sorry(this, PkStrings::daemonError(trans->error()),
-                           i18n("Failed to refresh package cache"));
+        showSorry(i18n("Failed to refresh package cache"),
+                  PkStrings::daemonError(trans->error()));
     }
 }
 
@@ -251,9 +248,8 @@ void PkTransaction::installPackages()
     setTransaction(trans, Transaction::RoleInstallPackages);
     trans->installPackages(d->packages, d->onlyTrusted);
     if (trans->error()) {
-        KMessageBox::sorry(this,
-                           PkStrings::daemonError(trans->error()),
-                           i18n("Failed to install package"));
+        showSorry(i18n("Failed to install package"),
+                  PkStrings::daemonError(trans->error()));
     }
 }
 
@@ -264,11 +260,9 @@ void PkTransaction::installFiles()
     setTransaction(trans, Transaction::RoleInstallFiles);
     trans->installFiles(d->files, d->onlyTrusted);
     if (trans->error()) {
-        KMessageBox::sorry(this,
-                           PkStrings::daemonError(trans->error()),
-                           i18np("Failed to install file",
-                                 "Failed to install files",
-                                 d->files.size()));
+        showSorry(i18np("Failed to install file",
+                        "Failed to install files", d->files.size()),
+                  PkStrings::daemonError(trans->error()));
     }
 }
 
@@ -279,9 +273,8 @@ void PkTransaction::removePackages()
     setTransaction(trans, Transaction::RoleRemovePackages);
     trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE);
     if (trans->error()) {
-        KMessageBox::sorry(this,
-                           PkStrings::daemonError(trans->error()),
-                           i18n("Failed to remove package"));
+        showSorry(i18n("Failed to remove package"),
+                  PkStrings::daemonError(trans->error()));
     }
 }
 
@@ -292,9 +285,8 @@ void PkTransaction::updatePackages()
     setTransaction(trans, Transaction::RoleUpdatePackages);
     trans->updatePackages(d->packages, true);
     if (trans->error()) {
-        KMessageBox::sorry(this,
-                           PkStrings::daemonError(trans->error()),
-                           i18n("Failed to update package"));
+        showSorry(i18n("Failed to update package"),
+                  PkStrings::daemonError(trans->error()));
     }
 }
 
@@ -567,9 +559,8 @@ void PkTransaction::acceptEula()
         setTransaction(trans, Transaction::RoleAcceptEula);
         trans->acceptEula(eula->id());
         if (trans->error()) {
-            KMessageBox::sorry(this,
-                               PkStrings::daemonError(trans->error()),
-                               i18n("Failed to install signature"));
+            showSorry(i18n("Failed to install signature"),
+                      PkStrings::daemonError(trans->error()));
         }
     } else {
         kWarning() << "something is broken";
@@ -621,9 +612,8 @@ void PkTransaction::installSignature()
         setTransaction(trans, Transaction::RoleInstallSignature);
         trans->installSignature(repoSig->signature());
         if (trans->error()) {
-            KMessageBox::sorry(this,
-                               PkStrings::daemonError(trans->error()),
-                               i18n("Failed to install signature"));
+            showSorry(i18n("Failed to install signature"),
+                      PkStrings::daemonError(trans->error()));
         }
     } else {
         kWarning() << "something is broken";
@@ -647,10 +637,13 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
 
         // If the simulate model exists we were simulating
         if (d->simulateModel) {
-            if (d->simulateModel->rowCount() > 0) {
-                requires = new Requirements(d->simulateModel, this);
-                connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
+            requires = new Requirements(d->simulateModel, this);
+            connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
+            if (requires->shouldShow()) {
                 showDialog(requires);
+            } else {
+                requires->deleteLater();
+                requires = 0;
             }
 
             switch (role) {
@@ -808,6 +801,24 @@ void PkTransaction::showDialog(KDialog *dlg)
     } else {
         dlg->setPlainCaption(QString());
         emit dialog(dlg);
+    }
+}
+
+void PkTransaction::showError(const QString &title, const QString &details)
+{
+    if (ui->cancelButton->isVisible()) {
+        KMessageBox::error(this, details, title);
+    } else {
+        emit error(title, details);
+    }
+}
+
+void PkTransaction::showSorry(const QString &title, const QString &details)
+{
+    if (ui->cancelButton->isVisible()) {
+        KMessageBox::sorry(this, details, title);
+    } else {
+        emit sorry(title, details);
     }
 }
 

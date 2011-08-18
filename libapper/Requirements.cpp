@@ -27,9 +27,10 @@
 #include <QToolButton>
 #include <KDebug>
 
-Requirements::Requirements(SimulateModel *model, QWidget *parent)
- : KDialog(parent),
-   ui(new Ui::Requirements)
+Requirements::Requirements(SimulateModel *model, QWidget *parent) :
+    KDialog(parent),
+    m_shouldShow(true),
+    ui(new Ui::Requirements)
 {
     ui->setupUi(mainWidget());
 
@@ -47,129 +48,97 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
     restoreDialogSize(requirementsDialog);
 
     QButtonGroup *group = new QButtonGroup(this);
+    connect(group, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
+
+    int count = 0;
     if (int c = model->countInfo(Package::InfoRemoving)) {
         QToolButton *button = new QToolButton(this);
-        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
-        button->setAutoExclusive(true);
-        button->setChecked(true);
         button->setIconSize(QSize(32, 32));
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to remove", "%1 packages to remove", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
         group->addButton(button, Package::InfoRemoving);
-        ui->verticalLayout->addWidget(button);
+        ui->verticalLayout->insertWidget(count++, button);
 
-        model->setCurrentInfo(Package::InfoRemoving);
         m_hideAutoConfirm = true;
     }
 
     if (int c = model->countInfo(Package::InfoDowngrading)) {
         QToolButton *button = new QToolButton(this);
-        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
-        button->setAutoExclusive(true);
-        button->setChecked(true);
         button->setIconSize(QSize(32, 32));
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRollback));
         group->addButton(button, Package::InfoDowngrading);
-        ui->verticalLayout->addWidget(button);
+        ui->verticalLayout->insertWidget(count++, button);
 
-        if (model->currentInfo() == Package::UnknownInfo) {
-            model->setCurrentInfo(Package::InfoDowngrading);
-        }
         m_hideAutoConfirm = true;
     }
 
     if (int c = model->countInfo(Package::InfoReinstalling)) {
         QToolButton *button = new QToolButton(this);
-        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
-        button->setAutoExclusive(true);
-        button->setChecked(true);
         button->setIconSize(QSize(32, 32));
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to reinstall", "%1 packages to reinstall", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
         group->addButton(button, Package::InfoReinstalling);
-        ui->verticalLayout->addWidget(button);
-
-        if (model->currentInfo() == Package::UnknownInfo) {
-            model->setCurrentInfo(Package::InfoReinstalling);
-        }
+        ui->verticalLayout->insertWidget(count++, button);
     }
 
     if (int c = model->countInfo(Package::InfoInstalling)) {
         QToolButton *button = new QToolButton(this);
-        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
-        button->setAutoExclusive(true);
-        button->setChecked(true);
         button->setIconSize(QSize(32, 32));
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to install", "%1 packages to install", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleInstallPackages));
         group->addButton(button, Package::InfoInstalling);
-        ui->verticalLayout->addWidget(button);
-
-        if (model->currentInfo() == Package::UnknownInfo) {
-            model->setCurrentInfo(Package::InfoInstalling);
-        }
+        ui->verticalLayout->insertWidget(count++, button);
     }
 
-    QToolButton *button = new QToolButton(this);
-    button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    button->setCheckable(true);
-    button->setAutoRaise(true);
-    button->setAutoExclusive(true);
-    button->setChecked(true);
-    button->setIconSize(QSize(32, 32));
-    button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    button->setText(i18np("1 package to update", "%1 packages to update", 350));
-    button->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
-    group->addButton(button, Package::InfoUpdating);
-    ui->verticalLayout->addWidget(button);
-
-    if (model->currentInfo() == Package::UnknownInfo) {
-        model->setCurrentInfo(Package::InfoUpdating);
-    }
     if (int c = model->countInfo(Package::InfoUpdating)) {
         QToolButton *button = new QToolButton(this);
-        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
-        button->setAutoExclusive(true);
-        button->setChecked(true);
         button->setIconSize(QSize(32, 32));
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to update", "%1 packages to update", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
         group->addButton(button, Package::InfoUpdating);
-        ui->verticalLayout->addWidget(button);
+        ui->verticalLayout->insertWidget(count++, button);
+    }
 
-        if (model->currentInfo() == Package::UnknownInfo) {
-            model->setCurrentInfo(Package::InfoUpdating);
+    QList<QAbstractButton *> buttons = group->buttons();
+    if (!buttons.isEmpty()) {
+        QAbstractButton *button = group->buttons().first();
+        button->setChecked(true);
+
+        ui->packageView->header()->setResizeMode(0, QHeaderView::Stretch);
+        ui->packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+
+        if (m_hideAutoConfirm) {
+            ui->confirmCB->setVisible(false);
+        } else {
+            // if the confirmCB is visible means that we can skip this
+            // dialog, but only if the user previusly set so
+            ui->confirmCB->setChecked(requirementsDialog.readEntry("autoConfirm", false));
         }
-    }
-
-    ui->verticalLayout->addStretch(group->buttons().size());
-    ui->packageView->header()->setResizeMode(0, QHeaderView::Stretch);
-    ui->packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-
-    if (m_hideAutoConfirm) {
-        ui->confirmCB->setVisible(false);
     } else {
-        // if the confirmCB is visible means that we can skip this
-        // dialog, but only if the user previusly set so
-        ui->confirmCB->setChecked(requirementsDialog.readEntry("autoConfirm", false));
+        // set this as false so the dialog is not shown
+        m_shouldShow = false;
     }
-//    ui->toolButton->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
 }
 
 Requirements::~Requirements()
@@ -186,27 +155,23 @@ Requirements::~Requirements()
     delete ui;
 }
 
-void Requirements::show()
+bool Requirements::shouldShow() const
 {
-    if (ui->confirmCB->isChecked()) {
-        emit accepted();
-    } else{
-        KDialog::show();
-    }
+    return (m_shouldShow && !ui->confirmCB->isChecked());
 }
 
 void Requirements::setPlainCaption(const QString &caption)
 {
-    Q_UNUSED(caption)
-    kDebug();
+//    Q_UNUSED(caption)
+    kDebug() << caption;
     KDialog::setPlainCaption(ui->label->text());
     ui->label->hide();
 }
 
-void Requirements::actionClicked(const QModelIndex &index)
+void Requirements::actionClicked(int type)
 {
-//    Package::Info state = index.data(Qt::UserRole+1).value<Package::Info>();
-//    static_cast<SimulateModel*>(ui->packageView->model())->setCurrentInfo(state);
+    SimulateModel *model = static_cast<SimulateModel*>(ui->packageView->model());
+    model->setCurrentInfo(static_cast<Package::Info>(type));
 }
 
 #include "Requirements.moc"

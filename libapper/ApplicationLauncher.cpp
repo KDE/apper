@@ -26,9 +26,9 @@
 #include <KLocale>
 #include <KDebug>
 
-ApplicationLauncher::ApplicationLauncher(QWidget *parent)
- : QDialog(parent),
-   ui(new Ui::ApplicationLauncher)
+ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::ApplicationLauncher)
 {
     ui->setupUi(this);
 }
