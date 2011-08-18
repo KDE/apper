@@ -23,16 +23,24 @@
 
 #include <KDialog>
 
-#include "ui_LicenseAgreement.h"
-
 #include <Eula>
 
-class LicenseAgreement : public KDialog, Ui::LicenseAgreement
+namespace Ui {
+    class LicenseAgreement;
+}
+
+class LicenseAgreement : public KDialog
 {
     Q_OBJECT
 public:
-    explicit LicenseAgreement(PackageKit::Eula eula, bool modal = true, QWidget *parent = 0);
+    explicit LicenseAgreement(PackageKit::Eula eula, QWidget *parent = 0);
     ~LicenseAgreement();
+
+    QString id() const;
+
+private:
+    PackageKit::Eula m_eula;
+    Ui::LicenseAgreement *ui;
 };
 
 #endif

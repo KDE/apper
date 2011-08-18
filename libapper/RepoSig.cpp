@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "RepoSig.h"
+#include "ui_RepoSig.h"
 
 #include <KLocale>
 
@@ -28,23 +29,30 @@
 
 #include "PkStrings.h"
 
-RepoSig::RepoSig(const Signature &info, bool modal, QWidget *parent)
- : KDialog(parent)
+RepoSig::RepoSig(const Signature &info, QWidget *parent) :
+    KDialog(parent),
+    m_info(info),
+    ui(new Ui::RepoSig)
 {
-    setupUi(mainWidget());
-    setModal(modal);
+    ui->setupUi(mainWidget());
 
     setButtons(KDialog::Cancel | KDialog::Yes);
-    setCaption(i18n("Software signature is required"));
+    setPlainCaption(i18n("Software signature is required"));
 
-    repoNameL->setText(info.repoId);
-    sigUrlL->setText(info.keyUrl);
-    sigUserIdL->setText(info.keyUserid);
-    sigIdL->setText(info.keyId);
+    ui->repoNameL->setText(info.repoId);
+    ui->sigUrlL->setText(info.keyUrl);
+    ui->sigUserIdL->setText(info.keyUserid);
+    ui->sigIdL->setText(info.keyId);
 }
 
 RepoSig::~RepoSig()
 {
+    delete ui;
+}
+
+PackageKit::Signature RepoSig::signature() const
+{
+    return m_info;
 }
 
 #include "RepoSig.moc"

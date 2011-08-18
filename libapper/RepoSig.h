@@ -25,16 +25,22 @@
 
 #include <Signature>
 
-#include "ui_RepoSig.h"
+namespace Ui {
+    class RepoSig;
+}
 
-using namespace PackageKit;
-
-class RepoSig : public KDialog, Ui::RepoSig
+class RepoSig : public KDialog
 {
     Q_OBJECT
 public:
-    explicit RepoSig(const Signature &info, bool modal = true, QWidget *parent = 0);
+    explicit RepoSig(const PackageKit::Signature &info, QWidget *parent = 0);
     ~RepoSig();
+
+    PackageKit::Signature signature() const;
+
+private:
+    PackageKit::Signature m_info;
+    Ui::RepoSig *ui;
 };
 
 #endif

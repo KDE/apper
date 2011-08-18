@@ -40,9 +40,15 @@ class KDE_EXPORT PkTransaction : public QWidget
     Q_OBJECT
     Q_ENUMS(ExitStatus)
 public:
+    typedef enum {
+        Success,
+        Failed,
+        Cancelled
+    } ExitStatus;
     explicit PkTransaction(QWidget *parent = 0);
     ~PkTransaction();
 
+    void setTransaction(Transaction *trans, Transaction::Role role);
     void hideCancelButton();
 
     void installPackages(const QList<Package> &packages);
@@ -51,30 +57,8 @@ public:
     void updatePackages(const QList<Package> &packages);
     void refreshCache();
 
-    void setTransaction(Transaction *trans, Transaction::Role role);
-    // Do not create a method to retrieve the internal pointer
-    // of Transaction, instead compare the tid with the tids from
-    // Client::getTransaction(), to avoid deleted pointers.
-    QString tid() const;
-    QList<Package> packages() const;
-    QStringList files() const;
-    SimulateModel* simulateModel() const;
-
     QString title() const;
     Transaction::Role role() const;
-    Transaction::Error error() const;
-    QString errorDetails() const;
-
-    void setAllowDeps(bool allowDeps);
-    void setPackages(const QList<Package> &packages);
-    void setFiles(const QStringList &files);
-    void setupDebconfDialog(const QString &tid);
-
-    typedef enum {
-        Success,
-        Failed,
-        Cancelled
-    } ExitStatus;
 
     PkTransaction::ExitStatus exitStatus() const;
     bool isFinished() const;
@@ -95,6 +79,9 @@ private slots:
     void removePackages();
     void updatePackages();
 
+    void installSignature();
+    void acceptEula();
+
     void transactionFinished(PackageKit::Transaction::Exit status);
     void errorCode(PackageKit::Transaction::Error error, const QString &details);
     void updateUi();
@@ -107,6 +94,7 @@ private slots:
     void showDialog(KDialog *dialog);
 
 private:
+    void setupDebconfDialog(const QString &tid);
     void unsetTransaction();
     void requeueTransaction();
 

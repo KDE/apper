@@ -388,8 +388,10 @@ void SessionTask::searchSuccess()
 void SessionTask::commitFailed()
 {
     kDebug() << "virtual method called";
-    setInfo(i18n("Failed to commit transaction"),
-            PkStrings::errorMessage(m_pkTransaction->error()));
+    // This should not be used to display stuff as the transaction should
+    // emit error() or info()
+//    setInfo(i18n("Failed to commit transaction"),
+//            PkStrings::errorMessage(m_pkTransaction->error()));
     sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
 }
 

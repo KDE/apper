@@ -53,29 +53,18 @@
 class PkTransactionPrivate
 {
 public:
-    QString tid;
     bool finished;
     bool allowDeps;
     bool onlyTrusted;
     Transaction::Role role;
     Transaction::Role originalRole;
     Transaction::Error error;
-    QString errorDetails;
     QList<Package> packages;
     QStringList packagesToResolve;
     ApplicationLauncher *launcher;
     QStringList files;
-    QVector<KService*> applications;
     SimulateModel *simulateModel;
     KPixmapSequenceOverlayPainter *busySeq;
-
-    void clearApplications()
-    {
-        while (!applications.isEmpty()) {
-            delete applications.at(0);
-            applications.remove(0);
-        }
-    }
 };
 
 PkTransaction::PkTransaction(QWidget *parent)
@@ -109,7 +98,6 @@ PkTransaction::~PkTransaction()
 {
     // DO NOT disconnect the transaction here,
     // it might not exist when this happen
-    d->clearApplications();
     delete d;
 }
 
@@ -326,12 +314,10 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
 
     m_trans = trans;
     d->role = role;
-    d->tid = trans->tid();
     d->finished = false;
+    m_handlingActionRequired = false;
     d->error = Transaction::UnknownError;
-    d->errorDetails.clear();
     ui->progressView->clear();
-    d->clearApplications();
 
     // enable the Details button just on these roles
     if (role == Transaction::RoleInstallPackages ||
@@ -510,7 +496,6 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
 {
 //     kDebug() << "errorCode: " << error << details;
     d->error = error;
-    d->errorDetails = details;
     // obvious message, don't tell the user
     if (m_handlingActionRequired ||
         error == Transaction::ErrorTransactionCancelled ||
@@ -531,9 +516,6 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
             requeueTransaction();
         } else {
             setExitStatus(Cancelled);
-//             if (m_flags & CloseOnFinish) {
-//                 done(QDialog::Rejected);
-//             }
         }
         m_handlingActionRequired = false;
         return;
@@ -551,17 +533,13 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
     m_showingError = true;
     KMessageBox::detailedSorry(this,
                                PkStrings::errorMessage(error),
-                               QString(details).replace('\n', "<br />"),
+                               QString(details).replace('\n', "<br>"),
                                PkStrings::error(error),
                                KMessageBox::Notify);
     m_showingError = false;
 
     // when we receive an error we are done
     setExitStatus(Failed);
-    // TODO maybe this should go in the above method
-//     if (m_flags & CloseOnFinish) {
-//         done(QDialog::Rejected);
-//     }
 }
 
 void PkTransaction::eulaRequired(PackageKit::Eula info)
@@ -574,22 +552,28 @@ void PkTransaction::eulaRequired(PackageKit::Eula info)
         m_handlingActionRequired = true;
     }
 
-    QPointer<LicenseAgreement> frm = new LicenseAgreement(info, true, this);
-    if (frm->exec() == KDialog::Yes) {
-        m_handlingActionRequired = false;
+    LicenseAgreement *eula = new LicenseAgreement(info, this);
+    connect(eula, SIGNAL(accepted()), this, SLOT(installSignature()));
+    connect(eula, SIGNAL(rejected()), this, SLOT(reject()));
+    showDialog(eula);
+}
+
+void PkTransaction::acceptEula()
+{
+    LicenseAgreement *eula = qobject_cast<LicenseAgreement*>(sender());
+
+    if (eula) {
         Transaction *trans = new Transaction(this);
         setTransaction(trans, Transaction::RoleAcceptEula);
-        trans->acceptEula(info.id);
+        trans->acceptEula(eula->id());
         if (trans->error()) {
             KMessageBox::sorry(this,
                                PkStrings::daemonError(trans->error()),
-                               i18n("Failed to accept EULA"));
+                               i18n("Failed to install signature"));
         }
     } else {
-        setExitStatus(Cancelled);
-        m_handlingActionRequired = false;
+        kWarning() << "something is broken";
     }
-    delete frm;
 }
 
 void PkTransaction::mediaChangeRequired(Transaction::MediaType type, const QString &id, const QString &text)
@@ -622,23 +606,28 @@ void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
         m_handlingActionRequired = true;
     }
 
-    QPointer<RepoSig> frm = new RepoSig(info, true, this);
-    frm->exec();
-    if (frm && frm->result() == KDialog::Yes) {
-        m_handlingActionRequired = false;
+    RepoSig *repoSig = new RepoSig(info, this);
+    connect(repoSig, SIGNAL(accepted()), this, SLOT(installSignature()));
+    connect(repoSig, SIGNAL(rejected()), this, SLOT(reject()));
+    showDialog(repoSig);
+}
+
+void PkTransaction::installSignature()
+{
+    RepoSig *repoSig = qobject_cast<RepoSig*>(sender());
+
+    if (repoSig)  {
         Transaction *trans = new Transaction(this);
         setTransaction(trans, Transaction::RoleInstallSignature);
-        trans->installSignature(info);
+        trans->installSignature(repoSig->signature());
         if (trans->error()) {
             KMessageBox::sorry(this,
                                PkStrings::daemonError(trans->error()),
                                i18n("Failed to install signature"));
         }
     } else {
-        setExitStatus(Cancelled);
-        m_handlingActionRequired = false;
+        kWarning() << "something is broken";
     }
-    delete frm;
 }
 
 void PkTransaction::transactionFinished(Transaction::Exit status)
@@ -783,18 +772,9 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
         ui->progressBar->setMaximum(100);
         ui->progressBar->setValue(100);
         kDebug() << "finished default" << status;
-//         KDialog::slotButtonClicked(KDialog::Close);
         setExitStatus(Failed);
         break;
     }
-    // if we're not showing an error or don't have the
-    // CloseOnFinish flag don't close the dialog
-    //TODO !!!!!!!!!
-//     if (m_flags & CloseOnFinish && !m_handlingActionRequired && !m_showingError) {
-// //         kDebug() << "CloseOnFinish && !m_handlingActionRequired && !m_showingError";
-//         done(QDialog::Rejected);
-//         deleteLater();
-//     }
 }
 
 PkTransaction::ExitStatus PkTransaction::exitStatus() const
@@ -823,16 +803,12 @@ void PkTransaction::reject()
 void PkTransaction::showDialog(KDialog *dlg)
 {
     if (ui->cancelButton->isVisible()) {
+        dlg->setModal(true);
         dlg->show();
     } else {
         dlg->setPlainCaption(QString());
         emit dialog(dlg);
     }
-}
-
-QString PkTransaction::tid() const
-{
-    return d->tid;
 }
 
 QString PkTransaction::title() const
@@ -843,46 +819,6 @@ QString PkTransaction::title() const
 Transaction::Role PkTransaction::role() const
 {
     return d->role;
-}
-
-Transaction::Error PkTransaction::error() const
-{
-    return d->error;
-}
-
-QString PkTransaction::errorDetails() const
-{
-    return d->errorDetails;
-}
-
-QList<Package> PkTransaction::packages() const
-{
-    return d->packages;
-}
-
-QStringList PkTransaction::files() const
-{
-    return d->files;
-}
-
-SimulateModel* PkTransaction::simulateModel() const
-{
-    return d->simulateModel;
-}
-
-void PkTransaction::setAllowDeps(bool allowDeps)
-{
-    d->allowDeps = allowDeps;
-}
-
-void PkTransaction::setPackages(const QList<Package> &packages)
-{
-    d->packages = packages;
-}
-
-void PkTransaction::setFiles(const QStringList &files)
-{
-    d->files = files;
 }
 
 #include "PkTransaction.moc"

@@ -24,7 +24,10 @@
 #include <KDialog>
 #include <QModelIndex>
 
-class RequirementsPrivate;
+namespace Ui {
+    class Requirements;
+}
+
 class SimulateModel;
 class Requirements : public KDialog
 {
@@ -41,7 +44,9 @@ private slots:
     void actionClicked(const QModelIndex &index);
 
 private:
-    RequirementsPrivate *d;
+    bool m_hideAutoConfirm;
+
+    Ui::Requirements *ui;
 };
 
 #endif

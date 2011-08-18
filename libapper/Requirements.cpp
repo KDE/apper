@@ -17,26 +17,6 @@
  *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
-// The delegate was written by
-// Copyright (C) 2007 Kevin Ottens <ervin@kde.org>
-// Copyright (C) 2008 Rafael Fernández López <ereslibre@kde.org>
-// Under LGPL
-/*
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License version 2 as published by the Free Software Foundation.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
-
-*/
 
 #include "Requirements.h"
 #include "ui_Requirements.h"
@@ -44,190 +24,21 @@
 #include "PkIcons.h"
 #include "SimulateModel.h"
 
+#include <QToolButton>
 #include <KDebug>
-
-#include <QPalette>
-#include <QTimeLine>
-#include <QStandardItemModel>
-
-Q_DECLARE_METATYPE(Package::Info)
-
-#include <QPainter>
-#define LATERAL_MARGIN 4
-
-class KActionsViewDelegate : public QAbstractItemDelegate
-{
-public:
-    KActionsViewDelegate(QObject *parent = 0);
-    virtual ~KActionsViewDelegate();
-    virtual QSize sizeHint(const QStyleOptionViewItem &option,
-                           const QModelIndex &index) const;
-    virtual void paint(QPainter *painter,
-                       const QStyleOptionViewItem &option,
-                       const QModelIndex &index) const;
-
-    int iconSize() const;
-    void setIconSize(int newSize);
-
-    void setShowHoverIndication(bool show);
-
-    void addFadeAnimation(const QModelIndex &index, QTimeLine *timeLine);
-    void removeFadeAnimation(const QModelIndex &index);
-    QModelIndex indexForFadeAnimation(QTimeLine *timeLine) const;
-    QTimeLine *fadeAnimationForIndex(const QModelIndex &index) const;
-
-    qreal contentsOpacity(const QModelIndex &index) const;
-
-private:
-    int m_iconSize;
-
-    QList<QPersistentModelIndex> m_appearingItems;
-    int m_appearingIconSize;
-    qreal m_appearingOpacity;
-
-    QList<QPersistentModelIndex> m_disappearingItems;
-    int m_disappearingIconSize;
-    qreal m_disappearingOpacity;
-
-    bool m_showHoverIndication;
-
-    QMap<QPersistentModelIndex, QTimeLine*> m_timeLineMap;
-    QMap<QTimeLine*, QPersistentModelIndex> m_timeLineInverseMap;
-};
-
-KActionsViewDelegate::KActionsViewDelegate(QObject *parent) :
-    QAbstractItemDelegate(parent),
-    m_iconSize(48),
-    m_appearingIconSize(0),
-    m_appearingOpacity(0.0),
-    m_disappearingIconSize(0),
-    m_disappearingOpacity(0.0),
-    m_showHoverIndication(true)
-{
-}
-
-KActionsViewDelegate::~KActionsViewDelegate()
-{
-}
-
-QSize KActionsViewDelegate::sizeHint(const QStyleOptionViewItem &option,
-                                        const QModelIndex &index) const
-{
-    int iconSize = m_iconSize;
-    if (m_appearingItems.contains(index)) {
-        iconSize = m_appearingIconSize;
-    } else if (m_disappearingItems.contains(index)) {
-        iconSize = m_disappearingIconSize;
-    }
-
-    return QSize(option.rect.width(), option.fontMetrics.height() / 2 + qMax(iconSize, option.fontMetrics.height()));
-}
-
-void KActionsViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    painter->save();
-
-    if (m_appearingItems.contains(index)) {
-        painter->setOpacity(m_appearingOpacity);
-    } else if (m_disappearingItems.contains(index)) {
-        painter->setOpacity(m_disappearingOpacity);
-    }
-
-    QStyleOptionViewItemV4 opt = option;
-    if (!m_showHoverIndication) {
-        opt.state &= ~QStyle::State_MouseOver;
-    }
-    QApplication::style()->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter);
-
-    bool isLTR = option.direction == Qt::LeftToRight;
-
-    QIcon icon = index.model()->data(index, Qt::DecorationRole).value<QIcon>();
-    QPixmap pm = icon.pixmap(m_iconSize, m_iconSize);
-    QPoint point(isLTR ? option.rect.left() + LATERAL_MARGIN
-                       : option.rect.right() - LATERAL_MARGIN - m_iconSize, option.rect.top() + (option.rect.height() - m_iconSize) / 2);
-    painter->drawPixmap(point, pm);
-
-    if (option.state & QStyle::State_Selected) {
-        painter->setPen(option.palette.highlightedText().color());
-    }
-
-    QRect rectText;
-    rectText = QRect(isLTR ? m_iconSize + LATERAL_MARGIN * 2 + option.rect.left()
-                           : 0, option.rect.top(), option.rect.width() - m_iconSize - LATERAL_MARGIN * 2, option.rect.height());
-    painter->drawText(rectText, Qt::AlignLeft | Qt::AlignVCenter, option.fontMetrics.elidedText(index.model()->data(index).toString(), Qt::ElideRight, rectText.width()));
-
-    painter->restore();
-}
-
-int KActionsViewDelegate::iconSize() const
-{
-    return m_iconSize;
-}
-
-void KActionsViewDelegate::setIconSize(int newSize)
-{
-    m_iconSize = newSize;
-}
-
-void KActionsViewDelegate::setShowHoverIndication(bool show)
-{
-    m_showHoverIndication = show;
-}
-
-void KActionsViewDelegate::addFadeAnimation(const QModelIndex &index, QTimeLine *timeLine)
-{
-    m_timeLineMap.insert(index, timeLine);
-    m_timeLineInverseMap.insert(timeLine, index);
-}
-
-void KActionsViewDelegate::removeFadeAnimation(const QModelIndex &index)
-{
-    QTimeLine *timeLine = m_timeLineMap.value(index, 0);
-    m_timeLineMap.remove(index);
-    m_timeLineInverseMap.remove(timeLine);
-}
-
-QModelIndex KActionsViewDelegate::indexForFadeAnimation(QTimeLine *timeLine) const
-{
-    return m_timeLineInverseMap.value(timeLine, QModelIndex());
-}
-
-QTimeLine *KActionsViewDelegate::fadeAnimationForIndex(const QModelIndex &index) const
-{
-    return m_timeLineMap.value(index, 0);
-}
-
-qreal KActionsViewDelegate::contentsOpacity(const QModelIndex &index) const
-{
-    QTimeLine *timeLine = fadeAnimationForIndex(index);
-    if (timeLine) {
-        return timeLine->currentValue();
-    }
-    return 0;
-}
-
-
-class RequirementsPrivate
-{
-public:
-    QStandardItemModel *actionsModel;
-    bool hideAutoConfirm;
-
-    Ui::Requirements ui;
-};
 
 Requirements::Requirements(SimulateModel *model, QWidget *parent)
  : KDialog(parent),
-   d(new RequirementsPrivate)
+   ui(new Ui::Requirements)
 {
-    d->ui.setupUi(mainWidget());
+    ui->setupUi(mainWidget());
 
-    d->hideAutoConfirm = false;
+    ui->packageView->setModel(model);
+    m_hideAutoConfirm = false;
 
     setCaption(i18n("Additional changes"));
     setButtons(KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
-    setModal(true);
     // restore size
     setMinimumSize(QSize(450,300));
     setInitialSize(QSize(450,300));
@@ -235,93 +46,130 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent)
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     restoreDialogSize(requirementsDialog);
 
-    d->ui.packageView->setModel(model);
-    d->actionsModel = new QStandardItemModel(this);
-    d->ui.actionsView->setModel(d->actionsModel);
-    d->ui.actionsView->setItemDelegate(new KActionsViewDelegate(d->ui.actionsView));
-
-    connect(d->ui.actionsView->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
-            this, SLOT(actionClicked(QModelIndex)));
-
-    // Sets a transparent background
-    QWidget *actionsViewport = d->ui.actionsView->viewport();
-    QPalette palette = actionsViewport->palette();
-    palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
-    palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
-    actionsViewport->setPalette(palette);
-
-    // Populate the actionsModel
-    QStandardItem *item;
+    QButtonGroup *group = new QButtonGroup(this);
     if (int c = model->countInfo(Package::InfoRemoving)) {
-        item = new QStandardItem;
-        item->setText(i18np("1 package to remove", "%1 packages to remove", c));
-        item->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
-        item->setData(QVariant::fromValue(Package::InfoRemoving));
-        d->actionsModel->appendRow(item);
+        QToolButton *button = new QToolButton(this);
+        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setCheckable(true);
+        button->setAutoRaise(true);
+        button->setAutoExclusive(true);
+        button->setChecked(true);
+        button->setIconSize(QSize(32, 32));
+        button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        button->setText(i18np("1 package to remove", "%1 packages to remove", c));
+        button->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
+        group->addButton(button, Package::InfoRemoving);
+        ui->verticalLayout->addWidget(button);
+
         model->setCurrentInfo(Package::InfoRemoving);
-        d->hideAutoConfirm = true;
+        m_hideAutoConfirm = true;
     }
 
     if (int c = model->countInfo(Package::InfoDowngrading)) {
-        item = new QStandardItem;
-        item->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
-        item->setIcon(PkIcons::actionIcon(Transaction::RoleRollback));
-        item->setData(QVariant::fromValue(Package::InfoDowngrading));
+        QToolButton *button = new QToolButton(this);
+        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setCheckable(true);
+        button->setAutoRaise(true);
+        button->setAutoExclusive(true);
+        button->setChecked(true);
+        button->setIconSize(QSize(32, 32));
+        button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        button->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
+        button->setIcon(PkIcons::actionIcon(Transaction::RoleRollback));
+        group->addButton(button, Package::InfoDowngrading);
+        ui->verticalLayout->addWidget(button);
+
         if (model->currentInfo() == Package::UnknownInfo) {
             model->setCurrentInfo(Package::InfoDowngrading);
         }
-        d->actionsModel->appendRow(item);
-        d->hideAutoConfirm = true;
+        m_hideAutoConfirm = true;
     }
 
     if (int c = model->countInfo(Package::InfoReinstalling)) {
-        item = new QStandardItem;
-        item->setText(i18np("1 package to reinstall", "%1 packages to reinstall", c));
-        item->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
-        item->setData(QVariant::fromValue(Package::InfoReinstalling));
+        QToolButton *button = new QToolButton(this);
+        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setCheckable(true);
+        button->setAutoRaise(true);
+        button->setAutoExclusive(true);
+        button->setChecked(true);
+        button->setIconSize(QSize(32, 32));
+        button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        button->setText(i18np("1 package to reinstall", "%1 packages to reinstall", c));
+        button->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
+        group->addButton(button, Package::InfoReinstalling);
+        ui->verticalLayout->addWidget(button);
+
         if (model->currentInfo() == Package::UnknownInfo) {
             model->setCurrentInfo(Package::InfoReinstalling);
         }
-        d->actionsModel->appendRow(item);
     }
 
     if (int c = model->countInfo(Package::InfoInstalling)) {
-        item = new QStandardItem;
-//         item->setIconSize(QSize(48, 48));
-        item->setText(i18np("1 package to install", "%1 packages to install", c));
-        item->setIcon(PkIcons::actionIcon(Transaction::RoleInstallPackages).pixmap(48.48));
-        kDebug() << KIconLoader::global()->iconPath(PkIcons::actionIconName(Transaction::RoleInstallPackages), KIconLoader::NoGroup, true);
-        item->setData(QVariant::fromValue(Package::InfoInstalling));
+        QToolButton *button = new QToolButton(this);
+        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setCheckable(true);
+        button->setAutoRaise(true);
+        button->setAutoExclusive(true);
+        button->setChecked(true);
+        button->setIconSize(QSize(32, 32));
+        button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        button->setText(i18np("1 package to install", "%1 packages to install", c));
+        button->setIcon(PkIcons::actionIcon(Transaction::RoleInstallPackages));
+        group->addButton(button, Package::InfoInstalling);
+        ui->verticalLayout->addWidget(button);
+
         if (model->currentInfo() == Package::UnknownInfo) {
             model->setCurrentInfo(Package::InfoInstalling);
         }
-        d->actionsModel->appendRow(item);
     }
 
+    QToolButton *button = new QToolButton(this);
+    button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    button->setCheckable(true);
+    button->setAutoRaise(true);
+    button->setAutoExclusive(true);
+    button->setChecked(true);
+    button->setIconSize(QSize(32, 32));
+    button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    button->setText(i18np("1 package to update", "%1 packages to update", 350));
+    button->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
+    group->addButton(button, Package::InfoUpdating);
+    ui->verticalLayout->addWidget(button);
+
+    if (model->currentInfo() == Package::UnknownInfo) {
+        model->setCurrentInfo(Package::InfoUpdating);
+    }
     if (int c = model->countInfo(Package::InfoUpdating)) {
-        item = new QStandardItem;
-        item->setText(i18np("1 package to update", "%1 packages to update", c));
-        item->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
-        item->setData(QVariant::fromValue(Package::InfoUpdating));
+        QToolButton *button = new QToolButton(this);
+        button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        button->setCheckable(true);
+        button->setAutoRaise(true);
+        button->setAutoExclusive(true);
+        button->setChecked(true);
+        button->setIconSize(QSize(32, 32));
+        button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        button->setText(i18np("1 package to update", "%1 packages to update", c));
+        button->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
+        group->addButton(button, Package::InfoUpdating);
+        ui->verticalLayout->addWidget(button);
+
         if (model->currentInfo() == Package::UnknownInfo) {
             model->setCurrentInfo(Package::InfoUpdating);
         }
-        d->actionsModel->appendRow(item);
     }
 
-    if (d->actionsModel->rowCount()) {
-        d->ui.actionsView->setCurrentIndex(d->actionsModel->index(0, 0));
-    }
-    d->ui.packageView->resizeColumnToContents(0);
-    d->ui.packageView->resizeColumnToContents(1);
+    ui->verticalLayout->addStretch(group->buttons().size());
+    ui->packageView->header()->setResizeMode(0, QHeaderView::Stretch);
+    ui->packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
 
-    if (d->hideAutoConfirm) {
-        d->ui.confirmCB->setVisible(false);
+    if (m_hideAutoConfirm) {
+        ui->confirmCB->setVisible(false);
     } else {
         // if the confirmCB is visible means that we can skip this
         // dialog, but only if the user previusly set so
-        d->ui.confirmCB->setChecked(requirementsDialog.readEntry("autoConfirm", false));
+        ui->confirmCB->setChecked(requirementsDialog.readEntry("autoConfirm", false));
     }
+//    ui->toolButton->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
 }
 
 Requirements::~Requirements()
@@ -331,16 +179,16 @@ Requirements::~Requirements()
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     saveDialogSize(requirementsDialog);
 
-    if (!d->hideAutoConfirm) {
-        requirementsDialog.writeEntry("autoConfirm", d->ui.confirmCB->isChecked());
+    if (!m_hideAutoConfirm) {
+        requirementsDialog.writeEntry("autoConfirm", ui->confirmCB->isChecked());
     }
     config.sync();
-    delete d;
+    delete ui;
 }
 
 void Requirements::show()
 {
-    if (d->ui.confirmCB->isChecked()) {
+    if (ui->confirmCB->isChecked()) {
         emit accepted();
     } else{
         KDialog::show();
@@ -350,16 +198,15 @@ void Requirements::show()
 void Requirements::setPlainCaption(const QString &caption)
 {
     Q_UNUSED(caption)
-    KDialog::setPlainCaption(d->ui.label->text());
-    d->ui.label->hide();
+    kDebug();
+    KDialog::setPlainCaption(ui->label->text());
+    ui->label->hide();
 }
 
 void Requirements::actionClicked(const QModelIndex &index)
 {
-    Package::Info state = index.data(Qt::UserRole+1).value<Package::Info>();
-    static_cast<SimulateModel*>(d->ui.packageView->model())->setCurrentInfo(state);
-    d->ui.packageView->resizeColumnToContents(0);
-    d->ui.packageView->resizeColumnToContents(1);
+//    Package::Info state = index.data(Qt::UserRole+1).value<Package::Info>();
+//    static_cast<SimulateModel*>(ui->packageView->model())->setCurrentInfo(state);
 }
 
 #include "Requirements.moc"

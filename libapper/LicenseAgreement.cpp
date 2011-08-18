@@ -19,27 +19,35 @@
  ***************************************************************************/
 
 #include "LicenseAgreement.h"
+#include "ui_LicenseAgreement.h"
 
 #include <KLocale>
 
 #include "PkStrings.h"
 
-LicenseAgreement::LicenseAgreement(PackageKit::Eula info, bool modal, QWidget *parent)
-    : KDialog(parent)
+LicenseAgreement::LicenseAgreement(PackageKit::Eula eula, QWidget *parent) :
+    KDialog(parent),
+    m_eula(eula),
+    ui(new Ui::LicenseAgreement)
 {
-    setupUi(mainWidget());
-    setModal(modal);
+    ui->setupUi(mainWidget());
 
     setButtons(KDialog::Cancel | KDialog::Yes);
     setButtonText(KDialog::Yes, i18n("Accept Agreement"));
-    setCaption(i18n("License Agreement Required"));
-    title->setText(i18n("License required for %1 by %2", info.package.name(), info.vendor));
+    setPlainCaption(i18n("License Agreement Required"));
+    ui->title->setText(i18n("License required for %1 by %2", eula.package.name(), eula.vendor));
 
-    ktextbrowser->setText(info.licenseAgreement);
+    ui->ktextbrowser->setText(eula.licenseAgreement);
 }
 
 LicenseAgreement::~LicenseAgreement()
 {
+    delete ui;
+}
+
+QString LicenseAgreement::id() const
+{
+    return m_eula.id;
 }
 
 #include "LicenseAgreement.moc"
