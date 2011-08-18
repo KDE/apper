@@ -46,7 +46,7 @@ PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
     setMainWidget(introDialog);
 
     if (m_args.isEmpty()) {
-        introDialog->setDescription(i18n("No files where provided"));
+        introDialog->setDescription(i18n("No files were provided"));
     } else {
         QString description;
         description = i18np("Do you want to search for this now?",
