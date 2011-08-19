@@ -69,6 +69,7 @@ int main(int argc, char **argv)
     options.add("install-mime-type <mime-type>", ki18n("Mime type installer"));
     options.add("install-package-name <name>", ki18n("Package name installer"));
     options.add("install-provide-file <file>", ki18n("Single file installer"));
+    options.add("install-font-resource <lang>", ki18n("Font resource installer"));
     options.add("install-catalog <file>", ki18n("Catalog installer"));
     options.add("remove-package-by-file <filename>", ki18n("Single package remover"));
     options.add("+[package]", ki18n("Package file to install"));
@@ -100,6 +101,18 @@ int main(int argc, char **argv)
 
     if (args->isSet("install-provide-file")) {
         return invoke("InstallProvideFiles", args->getOptionList("install-provide-file"));
+    }
+
+    if (args->isSet("install-font-resource")) {
+        QStringList fonts;
+        foreach (const QString &font, args->getOptionList("install-font-resource")) {
+            if (font.startsWith(":lang=")) {
+                fonts << font;
+            } else {
+                fonts << QString(":lang=%1").arg(font);
+            }
+        }
+        return invoke("InstallFontconfigResources", fonts);
     }
 
     if (args->isSet("install-catalog")) {

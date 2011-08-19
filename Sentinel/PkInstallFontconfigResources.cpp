@@ -64,8 +64,9 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
             kWarning() << QString("lang tag malformed: '%1'").arg(font);
             continue;
         }
-//        iso639.append(font.res);
+
         m_resources << font;
+        iso639 << font.mid(6);
     }
 
     if (m_resources.isEmpty()) {
@@ -73,6 +74,7 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
         sendErrorFinished(InternalError, errors.join("\n"));
         return;
     }
+    enableButtonOk(true);
 
     // Search for the iso 639 names to present it nicely to the user
     QStringList niceNames;
@@ -93,7 +95,7 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
         niceNames.append(result);
     }
 
-    kDebug() << "result" << niceNames;
+//    kDebug() << "result" << niceNames << iso639;
     foreach (const QString &name, niceNames) {
         QStandardItem *item = new QStandardItem(name);
         item->setIcon(KIcon("fonts-package").pixmap(32, 32));
@@ -101,26 +103,25 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
     }
 
     QString description;
-    description = i18np("An additional font is required to view this document correctly. "
+    description = i18np("An additional font is required to view this document correctly.\n"
                         "Do you want to search for a suitable package now?",
-                        "Additional fonts are required to view this document correctly. "
+                        "Additional fonts are required to view this document correctly.\n"
                         "Do you want to search for suitable packages now?",
-                        resources.size());
+                        m_resources.size());
+    introDialog->setDescription(description);
 
     QString title;
     // this will come from DBus interface
     if (parentTitle.isNull()) {
         title = i18np("A program wants to install a font",
                       "A program wants to install fonts",
-                      resources.size());
+                      m_resources.size());
     } else {
         title = i18np("The application %2 wants to install a font",
                       "The application %2 wants to install fonts",
-                      resources.size(),
+                      m_resources.size(),
                       parentTitle);
     }
-
-    introDialog->setDescription(description);
     setTitle(title);
 }
 
@@ -165,9 +166,5 @@ void PkInstallFontconfigResources::searchFailed()
     }
     sendErrorFinished(Failed, "failed to search for provides");
 }
-
-//setTitle(i18np("Application that can open this type of file",
-//               "Applications that can open this type of file",
-//               m_foundPackages.size()));
 
 #include "PkInstallFontconfigResources.moc"
