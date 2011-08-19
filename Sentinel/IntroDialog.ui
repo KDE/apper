@@ -36,9 +36,6 @@ background: transparent;
      <property name="defaultDropAction">
       <enum>Qt::LinkAction</enum>
      </property>
-     <property name="selectionMode">
-      <enum>QAbstractItemView::NoSelection</enum>
-     </property>
      <property name="iconSize">
       <size>
        <width>32</width>

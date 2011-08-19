@@ -21,8 +21,10 @@
 #include "SessionTask.h"
 #include "ui_SessionTask.h"
 
+#include "IntroDialog.h"
 #include "InfoWidget.h"
 #include "ReviewChanges.h"
+#include "ApplicationLauncher.h"
 
 #include <PkStrings.h>
 
@@ -168,12 +170,11 @@ void SessionTask::setDialog(KDialog *dialog)
     // Store the current values
     QWidget *widget = ui->stackedWidget->currentWidget();
 
-    if (widget->objectName() == "ApplicationLauncher") {
+    if (qobject_cast<ApplicationLauncher*>(dialog)) {
         // TODO if there is a removal after instalation
         // this will break it, but we don't have
         // this case yet...
-        m_pkTransaction->disconnect();
-        commitSuccess(widget);
+        commitSuccess(dialog->mainWidget());
     } else {
         // Set the new ones
         setMainWidget(dialog->mainWidget());
@@ -183,7 +184,7 @@ void SessionTask::setDialog(KDialog *dialog)
         connect(this, SIGNAL(okClicked()),
                 dialog->mainWidget(), SLOT(deleteLater()));
         connect(this, SIGNAL(okClicked()),
-                dialog, SLOT());
+                dialog, SLOT(deleteLater()));
 
         // Make sure we see the last widget and title
         QSignalMapper *mapper = new QSignalMapper(this);
@@ -198,9 +199,11 @@ void SessionTask::setDialog(KDialog *dialog)
 
 void SessionTask::setMainWidget(QWidget *widget)
 {
-    ui->stackedWidget->addWidget(widget);
-    ui->stackedWidget->setCurrentWidget(widget);
-    setTitle(widget->windowTitle());
+    if (widget != mainWidget()) {
+        ui->stackedWidget->addWidget(widget);
+        ui->stackedWidget->setCurrentWidget(widget);
+        setTitle(widget->windowTitle());
+    }
 }
 
 QWidget* SessionTask::mainWidget()
@@ -208,25 +211,39 @@ QWidget* SessionTask::mainWidget()
     return ui->stackedWidget->currentWidget();
 }
 
-void SessionTask::setInfo(const QString &title, const QString &text)
+void SessionTask::setInfo(const QString &title, const QString &text, const QString &details)
 {
     InfoWidget *info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
+    info->setDetails(details);
     setMainWidget(info);
     setButtons(KDialog::Close);
     button(KDialog::Close)->setFocus();
+
+    if (sender()) {
+        // if we have a sender this method was caller by PkTransaction
+        sender()->disconnect();
+        sendErrorFinished(Failed, text);
+    }
 }
 
-void SessionTask::setError(const QString &title, const QString &text)
+void SessionTask::setError(const QString &title, const QString &text, const QString &details)
 {
     InfoWidget *info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
     info->setIcon(KIcon("dialog-error"));
+    info->setDetails(details);
     setMainWidget(info);
     setButtons(KDialog::Close);
     button(KDialog::Close)->setFocus();
+
+    if (sender()) {
+        // if we have a sender this method was caller by PkTransaction
+        sender()->disconnect();
+        sendErrorFinished(Failed, text);
+    }
 }
 
 void SessionTask::setFinish(const QString &title, const QString &text, QWidget *widget)
@@ -414,11 +431,11 @@ void SessionTask::commitSuccess(QWidget *widget)
 void SessionTask::slotButtonClicked(int button)
 {
     if (button == KDialog::Ok) {
-        kDebug() << mainWidget()->objectName();
-        if (mainWidget()->objectName() == "IntroDialog") {
+//        kDebug() << mainWidget()->objectName();
+        if (qobject_cast<IntroDialog*>(mainWidget())) {
             enableButtonOk(false);
             search();
-        } else if (mainWidget()->objectName() == "ReviewChanges") {
+        } else if (qobject_cast<ReviewChanges*>(mainWidget())) {
             enableButtonOk(false);
             commit();
         } else {
@@ -568,10 +585,10 @@ PkTransaction* SessionTask::setTransaction(Transaction::Role role, Transaction *
                 m_pkTransaction, SLOT(cancel()));
         connect(m_pkTransaction, SIGNAL(dialog(KDialog*)),
                 this, SLOT(setDialog(KDialog*)));
-        connect(m_pkTransaction, SIGNAL(sorry(QString,QString)),
-                this, SLOT(setInfo(QString,QString)));
-        connect(m_pkTransaction, SIGNAL(error(QString,QString)),
-                this, SLOT(setError(QString,QString)));
+        connect(m_pkTransaction, SIGNAL(sorry(QString,QString,QString)),
+                this, SLOT(setInfo(QString,QString,QString)));
+        connect(m_pkTransaction, SIGNAL(error(QString,QString,QString)),
+                this, SLOT(setError(QString,QString,QString)));
     }
 
     if (t) {

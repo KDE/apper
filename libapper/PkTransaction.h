@@ -67,8 +67,8 @@ signals:
     void allowCancel(bool enable);
     void titleChanged(const QString &title);
     void dialog(KDialog *widget);
-    void sorry(const QString &title, const QString &text);
-    void error(const QString &title, const QString &text);
+    void sorry(const QString &title, const QString &text, const QString &details);
+    void error(const QString &title, const QString &text, const QString &details);
 
 public slots:
     void cancel();
@@ -90,13 +90,13 @@ private slots:
     void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
     void repoSignatureRequired(PackageKit::Signature info);
 
-    void setExitStatus(PkTransaction::ExitStatus status);
+    void setExitStatus(PkTransaction::ExitStatus status = PkTransaction::Success);
     void reject();
 
 private:
     void showDialog(KDialog *dialog);
-    void showError(const QString &title, const QString &details);
-    void showSorry(const QString &title, const QString &details);
+    void showError(const QString &title, const QString &description, const QString &details = QString());
+    void showSorry(const QString &title, const QString &description, const QString &details = QString());
     void unsetTransaction();
     void requeueTransaction();
 

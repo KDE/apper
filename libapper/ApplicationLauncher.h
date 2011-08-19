@@ -30,7 +30,7 @@ namespace Ui {
     class ApplicationLauncher;
 }
 
-class ApplicationLauncher : public KDialog
+class KDE_EXPORT ApplicationLauncher : public KDialog
 {
     Q_OBJECT
     Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)

@@ -32,7 +32,9 @@ ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
     ui(new Ui::ApplicationLauncher)
 {
     ui->setupUi(mainWidget());
+    setObjectName("ApplicationLauncher");
 
+    connect(ui->kdialogbuttonbox, SIGNAL(rejected()), this, SLOT(accept()));
     setButtons(KDialog::None);
 }
 
@@ -56,6 +58,7 @@ void ApplicationLauncher::setEmbedded(bool embedded)
     m_embed = embedded;
     ui->showCB->setVisible(!embedded);
     ui->kdialogbuttonbox->setVisible(!embedded);
+    kDebug() << embedded;
 }
 
 QList<PackageKit::Package> ApplicationLauncher::packages() const
@@ -85,6 +88,7 @@ bool ApplicationLauncher::hasApplications()
             item = new QStandardItem(name);
             item->setIcon(KIcon(service->icon()));
             item->setData(service->desktopEntryPath(), Qt::UserRole);
+            item->setSelectable(false);
             model->appendRow(item);
         }
     }

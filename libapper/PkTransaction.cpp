@@ -308,6 +308,7 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
     d->role = role;
     d->finished = false;
     m_handlingActionRequired = false;
+    m_showingError = false;
     d->error = Transaction::UnknownError;
     ui->progressView->clear();
 
@@ -523,12 +524,7 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
     }
 
     m_showingError = true;
-    KMessageBox::detailedSorry(this,
-                               PkStrings::errorMessage(error),
-                               QString(details).replace('\n', "<br>"),
-                               PkStrings::error(error),
-                               KMessageBox::Notify);
-    m_showingError = false;
+    showSorry(PkStrings::error(error), PkStrings::errorMessage(error), QString(details).replace('\n', "<br>"));
 
     // when we receive an error we are done
     setExitStatus(Failed);
@@ -714,7 +710,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             // Let's try to find some desktop files
             Transaction *transaction = new Transaction(this);
             connect(transaction, SIGNAL(files(PackageKit::Package, QStringList)),
-                    d->launcher, SLOT(files(PackageKit::Package, QStringList)));
+                    d->launcher, SLOT(files(PackageKit::Package,QStringList)));
             setTransaction(transaction, Transaction::RoleGetFiles);
             transaction->getFiles(d->launcher->packages());
             if (!transaction->error()) {
@@ -726,6 +722,9 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                    role == Transaction::RoleGetFiles &&
                    d->originalRole != Transaction::UnknownRole) {
             showDialog(d->launcher);
+            connect(d->launcher, SIGNAL(accepted()),
+                    this, SLOT(setExitStatus()));
+            return;
         } else if (role == Transaction::RoleAcceptEula ||
                    role == Transaction::RoleInstallSignature) {
             d->finished = false;
@@ -784,7 +783,9 @@ void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
 {
     kDebug() << status;
     m_exitStatus = status;
-    emit finished(status);
+    if (!m_handlingActionRequired || !m_showingError) {
+        emit finished(status);
+    }
 }
 
 void PkTransaction::reject()
@@ -804,21 +805,29 @@ void PkTransaction::showDialog(KDialog *dlg)
     }
 }
 
-void PkTransaction::showError(const QString &title, const QString &details)
+void PkTransaction::showError(const QString &title, const QString &description, const QString &details)
 {
     if (ui->cancelButton->isVisible()) {
-        KMessageBox::error(this, details, title);
+        if (details.isEmpty()) {
+            KMessageBox::error(this, description, title);
+        } else {
+            KMessageBox::detailedError(this, description, details, title);
+        }
     } else {
-        emit error(title, details);
+        emit error(title, description, details);
     }
 }
 
-void PkTransaction::showSorry(const QString &title, const QString &details)
+void PkTransaction::showSorry(const QString &title, const QString &description, const QString &details)
 {
     if (ui->cancelButton->isVisible()) {
-        KMessageBox::sorry(this, details, title);
+        if (details.isEmpty()) {
+            KMessageBox::sorry(this, description, title);
+        } else {
+            KMessageBox::detailedSorry(this, description, details, title);
+        }
     } else {
-        emit sorry(title, details);
+        emit sorry(title, description, details);
     }
 }
 

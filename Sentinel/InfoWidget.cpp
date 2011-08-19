@@ -21,7 +21,9 @@
 #include "InfoWidget.h"
 #include "ui_InfoWidget.h"
 
+#include <QGroupBox>
 
+#include <KTextBrowser>
 #include <KDebug>
 
 InfoWidget::InfoWidget(QWidget *parent) :
@@ -47,9 +49,23 @@ void InfoWidget::setDescription(const QString &description)
     ui->descriptionL->setText(description);
 }
 
+void InfoWidget::setDetails(const QString &details)
+{
+    if (!details.isEmpty()) {
+        KTextBrowser *browser = new KTextBrowser(this);
+        browser->setFrameShape(QFrame::NoFrame);
+        browser->setFrameShadow(QFrame::Plain);
+        browser->setStyleSheet("QTextEdit {\nbackground-color: transparent;\n};");
+        browser->setText(details);
+        ui->descriptionLayout->addWidget(browser);
+        ui->descriptionLayout->insertSpacing(0, 20);
+    }
+}
+
 void InfoWidget::addWidget(QWidget *widget)
 {
     if (widget) {
+        ui->descriptionLayout->insertSpacing(0, 20);
         ui->descriptionLayout->addWidget(widget);
     }
 }

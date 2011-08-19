@@ -39,6 +39,7 @@ public:
 
     void setDescription(const QString &description);
     void setIcon(const KIcon &icon);
+    void setDetails(const QString &details);
     void addWidget(QWidget *widget);
 
 private:
