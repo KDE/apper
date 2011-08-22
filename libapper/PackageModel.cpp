@@ -86,6 +86,7 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
             iPackage.id          = package.id();
             iPackage.appId       = list.at(AppInstall::AppId);
             iPackage.info        = package.info();
+            iPackage.size        = 0;
 
             if (selected) {
                 checkPackage(iPackage, false);
@@ -269,8 +270,10 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             return package.arch;
         }
     } else if (index.column() == SizeCol) {
-        if (role == Qt::DisplayRole) {
-            return package.size;
+        if (role == Qt::DisplayRole && package.size) {
+            return KGlobal::locale()->formatByteSize(package.size);
+        } else if (role == Qt::TextAlignmentRole) {
+            return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
         }
     }
 
@@ -423,6 +426,35 @@ void PackageModel::finished()
     endInsertRows();
 
     emit changed(!m_checkedPackages.isEmpty());
+}
+
+void PackageModel::fetchSizes()
+{
+    // get package size
+    QList<Package> pkgs;
+    foreach (const InternalPackage &p, m_packages) {
+        if (p.size == 0) {
+            pkgs << Package(p.id);
+        }
+    }
+
+    if (!pkgs.isEmpty()) {
+        Transaction *transaction = new Transaction(this);
+        connect(transaction, SIGNAL(package(PackageKit::Package)),
+                this, SLOT(updateSize(PackageKit::Package)));
+        transaction->getDetails(pkgs);
+    }
+}
+
+void PackageModel::updateSize(const PackageKit::Package &package)
+{
+    for (int i = 0; i < m_packages.size(); ++i) {
+        if (package.id() == m_packages[i].id) {
+            m_packages[i].size = package.size();
+            emit dataChanged(index(i, SizeCol), index(i,SizeCol));
+            break;
+        }
+    }
 }
 
 bool PackageModel::hasChanges() const

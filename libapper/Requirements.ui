@@ -52,6 +52,9 @@
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
@@ -73,12 +76,15 @@
      <property name="expandsOnDoubleClick">
       <bool>false</bool>
      </property>
+     <attribute name="headerDefaultSectionSize">
+      <number>50</number>
+     </attribute>
     </widget>
    </item>
    <item row="2" column="0" colspan="2">
     <widget class="QCheckBox" name="confirmCB">
      <property name="text">
-      <string>Do not show this confirmation when installing or updating additional packages</string>
+      <string>Do not confirm when installing or updating additional packages</string>
      </property>
     </widget>
    </item>

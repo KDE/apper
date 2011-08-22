@@ -30,7 +30,7 @@ class PackageModel;
 class KpkSearchableTreeView;
 class BrowseView : public QWidget, Ui::BrowseView
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     BrowseView(QWidget *parent = 0);
     ~BrowseView();
@@ -47,6 +47,7 @@ public:
     void disableExportInstalledPB();
     bool goBack();
     void cleanUi();
+    bool showSizes() const;
 
 signals:
     void categoryActivated(const QModelIndex &index);
@@ -57,6 +58,7 @@ public slots:
 private slots:
     void showVersions(bool enabled);
     void showArchs(bool enabled);
+    void showSizes(bool enabled);
     void on_packageView_customContextMenuRequested(const QPoint &pos);
     void on_packageView_clicked(const QModelIndex &);
     void ensureVisible(const QModelIndex &index);
@@ -71,6 +73,7 @@ private:
 
     QAction                          *m_showPackageVersion;
     QAction                          *m_showPackageArch;
+    QAction                          *m_showPackageSizes;
     PackageModel                  *m_model;
     KCategorizedSortFilterProxyModel *m_proxy;
     KpkSearchableTreeView            *m_packageView;

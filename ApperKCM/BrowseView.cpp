@@ -74,6 +74,7 @@ void BrowseView::init(Transaction::Roles roles)
     packageView->header()->setResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
     packageView->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
     packageView->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(PackageModel::SizeCol, QHeaderView::ResizeToContents);
     packageView->header()->setResizeMode(PackageModel::ActionCol, QHeaderView::ResizeToContents);
 
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
@@ -83,14 +84,14 @@ void BrowseView::init(Transaction::Roles roles)
     importInstalledPB->setIcon(KIcon("document-import"));
 
     KConfig config("apper");
-    KConfigGroup viewGroup(&config, "ViewGroup");
+    KConfigGroup viewGroup(&config, "BrowseView");
 
     // Version
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
     connect(m_showPackageVersion, SIGNAL(toggled(bool)),
             this, SLOT(showVersions(bool)));
-    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowApplicationVersions", false));
+    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowApplicationVersions", true));
     showVersions(m_showPackageVersion->isChecked());
 
     // Arch
@@ -98,8 +99,16 @@ void BrowseView::init(Transaction::Roles roles)
     m_showPackageArch->setCheckable(true);
     connect(m_showPackageArch, SIGNAL(toggled(bool)),
             this, SLOT(showArchs(bool)));
-    m_showPackageArch->setChecked(viewGroup.readEntry("ShowApplicationVersions", false));
+    m_showPackageArch->setChecked(viewGroup.readEntry("ShowApplicationArchitectures", false));
     showArchs(m_showPackageArch->isChecked());
+
+    // Sizes
+    m_showPackageSizes = new QAction(i18n("Show Sizes"), this);
+    m_showPackageSizes->setCheckable(true);
+    connect(m_showPackageSizes, SIGNAL(toggled(bool)),
+            this, SLOT(showSizes(bool)));
+    m_showPackageSizes->setChecked(viewGroup.readEntry("ShowPackageSizes", false));
+    showSizes(m_showPackageSizes->isChecked());
 
     // Ensure the index is visible when the packageDetails appears
     connect(packageDetails, SIGNAL(ensureVisible(QModelIndex)),
@@ -109,9 +118,10 @@ void BrowseView::init(Transaction::Roles roles)
 BrowseView::~BrowseView()
 {
     KConfig config("apper");
-    KConfigGroup viewGroup(&config, "ViewGroup");
+    KConfigGroup viewGroup(&config, "BrowseView");
     viewGroup.writeEntry("ShowApplicationVersions", m_showPackageVersion->isChecked());
     viewGroup.writeEntry("ShowApplicationArchitectures", m_showPackageArch->isChecked());
+    viewGroup.writeEntry("ShowPackageSizes", m_showPackageSizes->isChecked());
 }
 
 bool BrowseView::showPageHeader() const
@@ -136,13 +146,26 @@ void BrowseView::showArchs(bool enabled)
     packageDetails->hidePackageArch(enabled);
 }
 
+void BrowseView::showSizes(bool enabled)
+{
+    kDebug() << enabled;
+
+    packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
+    packageDetails->hidePackageArch(enabled);
+    if (enabled) {
+        kDebug();
+        m_model->fetchSizes();
+    }
+}
+
 void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
     KMenu *menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
     menu->addAction(m_showPackageArch);
+    menu->addAction(m_showPackageSizes);
     menu->exec(packageView->mapToGlobal(pos));
-    delete menu;
+    menu->deleteLater();
 }
 
 void BrowseView::on_packageView_clicked(const QModelIndex &index)
@@ -226,6 +249,11 @@ void BrowseView::cleanUi()
 {
     packageDetails->hide();
     categoryF->setVisible(false);
+}
+
+bool BrowseView::showSizes() const
+{
+    return m_showPackageSizes->isChecked();
 }
 
 void BrowseView::on_exportInstalledPB_clicked()

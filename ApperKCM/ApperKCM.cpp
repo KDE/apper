@@ -87,7 +87,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_roles = Daemon::actions();
 
     // Set the current locale
-    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
+    QString locale = QString(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
     Daemon::setHints("locale=" + locale);
 
     setupUi(this);
@@ -165,7 +165,6 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(QString)),
             browseView->proxy(), SLOT(setFilterFixedString(QString)));
-
 
     //initialize the model, delegate, client and  connect it's signals
     m_browseModel = browseView->model();
@@ -473,6 +472,8 @@ void ApperKCM::setPage(const QString &page)
 
             if (m_updaterPage == 0) {
                 m_updaterPage = new Updater(m_roles, this);
+                connect(m_updaterPage, SIGNAL(refreshCache()),
+                        this, SLOT(refreshCache()));
                 stackedWidget->addWidget(m_updaterPage);
                 checkUpdatesPB->setIcon(KIcon("view-refresh"));
                 connect(checkUpdatesPB, SIGNAL(clicked(bool)),
@@ -572,6 +573,8 @@ void ApperKCM::search()
                    this, SLOT(finished()));
         disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                    m_browseModel, SLOT(finished()));
+        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                   m_browseModel, SLOT(fetchSizes()));
         disconnect(m_searchTransaction, SIGNAL(package(PackageKit::Package)),
                    m_browseModel, SLOT(addPackage(PackageKit::Package)));
         disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
@@ -586,6 +589,10 @@ void ApperKCM::search()
             this, SLOT(finished()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_browseModel, SLOT(finished()));
+    if (browseView->showSizes()) {
+        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                m_browseModel, SLOT(fetchSizes()));
+    }
     connect(m_searchTransaction, SIGNAL(package(PackageKit::Package)),
             m_browseModel, SLOT(addPackage(PackageKit::Package)));
     connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),

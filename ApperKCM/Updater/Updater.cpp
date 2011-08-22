@@ -95,14 +95,14 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     line->hide();
 
     KConfig config("apper");
-    KConfigGroup viewGroup(&config, "ViewGroup");
+    KConfigGroup viewGroup(&config, "UpdateView");
 
     // versions
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
     connect(m_showPackageVersion, SIGNAL(toggled(bool)),
             this, SLOT(showVersions(bool)));
-    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", false));
+    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", true));
     showVersions(m_showPackageVersion->isChecked());
 
     // Arch
@@ -112,12 +112,20 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
             this, SLOT(showArchs(bool)));
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
     showArchs(m_showPackageArch->isChecked());
+
+    // Sizes
+    m_showPackageArch = new QAction(i18n("Show Sizes"), this);
+    m_showPackageArch->setCheckable(true);
+    connect(m_showPackageArch, SIGNAL(toggled(bool)),
+            this, SLOT(showArchs(bool)));
+    m_showPackageArch->setChecked(viewGroup.readEntry("ShowSizes", false));
+    showArchs(m_showPackageArch->isChecked());
 }
 
 Updater::~Updater()
 {
     KConfig config("apper");
-    KConfigGroup viewGroup(&config, "ViewGroup");
+    KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
     viewGroup.writeEntry("ShowArchs", m_showPackageArch->isChecked());
 }
@@ -273,7 +281,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     action = menu->addAction(i18n("Check for new Updates"));
     action->setIcon(KIcon("view-refresh"));
     connect(action, SIGNAL(triggered(bool)),
-            this, SLOT(refreshCache()));
+            this, SIGNAL(refreshCache()));
     menu->exec(packageView->mapToGlobal(pos));
     delete menu;
 }

@@ -55,6 +55,7 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
    ui(new Ui::SessionTask)
 {
     ui->setupUi(KDialog::mainWidget());
+    setAttribute(Qt::WA_DeleteOnClose);
 
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
             this, SLOT(updatePallete()));
@@ -93,7 +94,7 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
         setExec(cmdline);
     }
 
-    setMinimumSize(QSize(420,280));
+    setMinimumSize(QSize(430,280));
     KConfig config("apper");
     KConfigGroup configGroup(&config, "SessionInstaller");
     restoreDialogSize(configGroup);
@@ -595,7 +596,11 @@ PkTransaction* SessionTask::setTransaction(Transaction::Role role, Transaction *
         m_pkTransaction->setTransaction(t, role);
         setTitle(m_pkTransaction->title());
     }
-    ui->stackedWidget->setCurrentWidget(m_pkTransaction);
+
+    // avoid changing the current widget
+    if (mainWidget() != m_pkTransaction) {
+        ui->stackedWidget->setCurrentWidget(m_pkTransaction);
+    }
     return m_pkTransaction;
 }
 

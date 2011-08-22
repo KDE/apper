@@ -109,6 +109,8 @@ public slots:
     void uncheckAvailablePackages();
 
     void finished();
+    void fetchSizes();
+    void updateSize(const PackageKit::Package &package);
 
 signals:
     void changed(bool value);

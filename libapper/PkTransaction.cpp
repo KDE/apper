@@ -312,6 +312,11 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
     d->error = Transaction::UnknownError;
     ui->progressView->clear();
 
+    if (role != Transaction::UnknownRole) {
+        setWindowTitle(PkStrings::action(role));
+        emit titleChanged(PkStrings::action(role));
+    }
+
     // enable the Details button just on these roles
     if (role == Transaction::RoleInstallPackages ||
         role == Transaction::RoleInstallFiles ||

@@ -34,7 +34,7 @@ class ApplicationsDelegate;
 class CheckableHeader;
 class Updater : public QWidget, Ui::Updater
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     Updater(Transaction::Roles roles, QWidget *parent);
     ~Updater();
@@ -45,6 +45,7 @@ public:
 
 signals:
     void changed(bool);
+    void refreshCache();
 
 public slots:
     void load();

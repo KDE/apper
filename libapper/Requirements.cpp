@@ -126,8 +126,8 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
         QAbstractButton *button = group->buttons().first();
         button->setChecked(true);
 
-        ui->packageView->header()->setResizeMode(0, QHeaderView::Stretch);
-        ui->packageView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+        ui->packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+//        ui->packageView->header()->setResizeMode(1, QHeaderView::Stretch);
 
         if (m_hideAutoConfirm) {
             ui->confirmCB->setVisible(false);
