@@ -144,12 +144,8 @@ Qt::DropActions FilesModel::supportedDropActions() const
 
 Qt::ItemFlags FilesModel::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
-
-    if (index.isValid())
-        return Qt::ItemIsDropEnabled | defaultFlags;
-    else
-        return Qt::ItemIsDropEnabled | defaultFlags;
+    Q_UNUSED(index)
+    return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
 }
 
 QStringList FilesModel::files() const

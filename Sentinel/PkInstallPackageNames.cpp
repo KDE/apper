@@ -50,6 +50,7 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
     foreach (const QString &package, packages) {
         QStandardItem *item = new QStandardItem(package);
         item->setIcon(KIcon("package-x-generic").pixmap(32, 32));
+        item->setFlags(Qt::ItemIsEnabled);
         model->appendRow(item);
     }
 

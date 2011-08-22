@@ -49,7 +49,7 @@ public slots:
     void files(const PackageKit::Package &package, const QStringList &files);
 
 private slots:
-    void on_applicationsView_clicked(const QModelIndex &index);
+    void itemClicked(const QModelIndex &index);
 
 private:
     bool m_embed;

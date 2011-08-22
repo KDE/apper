@@ -22,6 +22,9 @@
        <height>0</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">QListView {
 background: transparent;

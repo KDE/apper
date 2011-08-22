@@ -36,6 +36,9 @@ ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
 
     connect(ui->kdialogbuttonbox, SIGNAL(rejected()), this, SLOT(accept()));
     setButtons(KDialog::None);
+
+    connect(ui->applicationsView, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(itemClicked(QModelIndex)));
 }
 
 ApplicationLauncher::~ApplicationLauncher()
@@ -88,7 +91,7 @@ bool ApplicationLauncher::hasApplications()
             item = new QStandardItem(name);
             item->setIcon(KIcon(service->icon()));
             item->setData(service->desktopEntryPath(), Qt::UserRole);
-            item->setSelectable(false);
+            item->setFlags(Qt::ItemIsEnabled);
             model->appendRow(item);
         }
     }
@@ -113,7 +116,7 @@ void ApplicationLauncher::files(const PackageKit::Package &package, const QStrin
     m_files.append(files.filter(".desktop"));
 }
 
-void ApplicationLauncher::on_applicationsView_clicked(const QModelIndex &index)
+void ApplicationLauncher::itemClicked(const QModelIndex &index)
 {
 //     kDebug() << index.data(Qt::UserRole).toString();
     KToolInvocation::startServiceByDesktopPath(index.data(Qt::UserRole).toString());

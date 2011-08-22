@@ -99,6 +99,7 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
     foreach (const QString &name, niceNames) {
         QStandardItem *item = new QStandardItem(name);
         item->setIcon(KIcon("fonts-package").pixmap(32, 32));
+        item->setFlags(Qt::ItemIsEnabled);
         model->appendRow(item);
     }
 
