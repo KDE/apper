@@ -110,6 +110,7 @@ public slots:
 
     void finished();
     void fetchSizes();
+    void fetchSizesFinished();
     void updateSize(const PackageKit::Package &package);
 
 signals:

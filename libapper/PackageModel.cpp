@@ -456,18 +456,35 @@ void PackageModel::fetchSizes()
         Transaction *transaction = new Transaction(this);
         connect(transaction, SIGNAL(package(PackageKit::Package)),
                 this, SLOT(updateSize(PackageKit::Package)));
+        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                this, SLOT(fetchSizesFinished()));
         transaction->getDetails(pkgs);
     }
 }
 
+void PackageModel::fetchSizesFinished()
+{
+    Transaction *trans = qobject_cast<Transaction*>(sender());
+    if (trans) {
+        // When pkd dies this method is called twice
+        // pk-qt2 bug..
+        trans->disconnect(this, SLOT(fetchSizesFinished()));
+    }
+    // emit this after all is changed other wise on large models it will
+    // be hell slow...
+    emit dataChanged(createIndex(0, SizeCol), createIndex(m_packageCount, SizeCol));
+}
+
 void PackageModel::updateSize(const PackageKit::Package &package)
 {
-    for (int i = 0; i < m_packages.size(); ++i) {
-        if (package.id() == m_packages[i].id) {
-            m_packages[i].size = package.size();
-            emit dataChanged(index(i, SizeCol), index(i, SizeCol));
-            if (m_checkable) {
-                break;
+    // if size is 0 don't waste time looking for the package
+    if (package.size()) {
+        for (int i = 0; i < m_packages.size(); ++i) {
+            if (package.id() == m_packages[i].id) {
+                m_packages[i].size = package.size();
+                if (m_checkable) {
+                    break;
+                }
             }
         }
     }
