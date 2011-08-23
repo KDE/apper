@@ -209,7 +209,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    InternalPackage package = m_packages.at(index.row());
+    const InternalPackage &package = m_packages[index.row()];
 
     if (index.column() == NameCol) {
         switch (role) {
@@ -522,8 +522,8 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
 }
 
 void PackageModel::uncheckPackage(const InternalPackage &package,
-                                     bool forceEmitUnchecked,
-                                     bool emitDataChanged)
+                                  bool forceEmitUnchecked,
+                                  bool emitDataChanged)
 {
     QString pkgId = package.id;
     if (containsChecked(pkgId)) {

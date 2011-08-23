@@ -247,6 +247,13 @@
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QLabel" name="downloadL">
+         <property name="text">
+          <string notr="true">Average size for download</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page">
