@@ -67,6 +67,8 @@ include_directories(${CMAKE_SOURCE_DIR}
     ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2
     ${CMAKE_CURRENT_SOURCE_DIR}/libapper)
 
+message(STATUS "QPK includ dir: " ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2)
+
 add_subdirectory(libapper)
 add_subdirectory(ApperKCM)
 add_subdirectory(Apper)

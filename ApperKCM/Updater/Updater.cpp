@@ -39,6 +39,7 @@
 #include <QSortFilterProxyModel>
 #include <QDBusConnection>
 
+#include <KGlobalSettings>
 #include <KMessageBox>
 #include <KDebug>
 
@@ -51,6 +52,9 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     m_updatesT(0)
 {
     setupUi(this);
+    updatePallete();
+    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+            this, SLOT(updatePallete()));
 
     m_updatesModel = new PackageModel(this);
     m_updatesModel->setCheckable(true);
@@ -100,26 +104,26 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     // versions
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
-    connect(m_showPackageVersion, SIGNAL(toggled(bool)),
-            this, SLOT(showVersions(bool)));
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", true));
     showVersions(m_showPackageVersion->isChecked());
+    connect(m_showPackageVersion, SIGNAL(toggled(bool)),
+            this, SLOT(showVersions(bool)));
 
     // Arch
     m_showPackageArch = new QAction(i18n("Show Architectures"), this);
     m_showPackageArch->setCheckable(true);
-    connect(m_showPackageArch, SIGNAL(toggled(bool)),
-            this, SLOT(showArchs(bool)));
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
     showArchs(m_showPackageArch->isChecked());
-
-    // Sizes
-    m_showPackageArch = new QAction(i18n("Show Sizes"), this);
-    m_showPackageArch->setCheckable(true);
     connect(m_showPackageArch, SIGNAL(toggled(bool)),
             this, SLOT(showArchs(bool)));
-    m_showPackageArch->setChecked(viewGroup.readEntry("ShowSizes", false));
-    showArchs(m_showPackageArch->isChecked());
+
+    // Sizes
+    m_showPackageSize = new QAction(i18n("Show Sizes"), this);
+    m_showPackageSize->setCheckable(true);
+    m_showPackageSize->setChecked(viewGroup.readEntry("ShowSizes", true));
+    showSizes(m_showPackageSize->isChecked());
+    connect(m_showPackageSize, SIGNAL(toggled(bool)),
+            this, SLOT(showSizes(bool)));
 }
 
 Updater::~Updater()
@@ -128,6 +132,7 @@ Updater::~Updater()
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
     viewGroup.writeEntry("ShowArchs", m_showPackageArch->isChecked());
+    viewGroup.writeEntry("ShowSizes", m_showPackageSize->isChecked());
 }
 
 void Updater::setSelected(bool selected)
@@ -143,6 +148,21 @@ void Updater::showVersions(bool enabled)
 void Updater::showArchs(bool enabled)
 {
     packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
+}
+
+void Updater::showSizes(bool enabled)
+{
+    packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
+    if (enabled) {
+        m_updatesModel->fetchSizes();
+    }
+}
+
+void Updater::updatePallete()
+{
+    QPalette pal;
+    pal.setColor(QPalette::Window, pal.base().color());
+    backgroundFrame->setPalette(pal);
 }
 
 void Updater::on_packageView_clicked(const QModelIndex &index)
@@ -211,6 +231,28 @@ void Updater::getUpdatesFinished()
     m_updatesT = 0;
     m_updatesModel->clearSelectedNotPresent();
     checkEnableUpdateButton();
+    if (m_updatesModel->rowCount() == 0) {
+        // Set the info page
+        stackedWidget->setCurrentIndex(1);
+        uint lastTime = Daemon::getTimeSinceAction(Transaction::RoleRefreshCache);
+        unsigned long time = lastTime * 1000;
+        unsigned long fifteen = 1000 * 60 * 60 * 24 * 15;
+        unsigned long tirty = 1000 * 60 * 60 * 24 * 30;
+
+        if (time < fifteen) {
+            titleL->setText(i18n("Your system is up to date"));
+            descriptionL->clear();
+            iconL->setPixmap(KIcon("security-high").pixmap(128, 128));
+        } else if (time > fifteen && time < tirty && lastTime != UINT_MAX) {
+            titleL->setText(i18n("You have no updates"));
+            descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(time)));
+            iconL->setPixmap(KIcon("security-medium").pixmap(128, 128));
+        } else {
+            titleL->setText(i18n("Last check for updates was more than a month ago"));
+            descriptionL->setText(i18n("It's strongly recommended that you check for new updates now"));
+            iconL->setPixmap(KIcon("security-low").pixmap(128, 128));
+        }
+    }
 }
 
 QList<Package> Updater::packagesToUpdate() const
@@ -223,6 +265,10 @@ void Updater::getUpdates()
     if (m_updatesT) {
         // There is a getUpdates running ignore this call
         return;
+    }
+
+    if (stackedWidget->currentIndex() != 0) {
+        stackedWidget->setCurrentIndex(0);
     }
 
     // clears the model
@@ -240,16 +286,30 @@ void Updater::getUpdates()
     connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
             this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(getUpdatesFinished()));
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_busySeq, SLOT(stop()));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_updatesModel, SLOT(finished()));
+    if (m_showPackageSize->isChecked()) {
+        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                m_updatesModel, SLOT(fetchSizes()));
+    }
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(getUpdatesFinished()));
     // get all updates
     m_updatesT->getUpdates();
 
-    if (m_updatesT->error()) {
-        KMessageBox::sorry(this, PkStrings::daemonError(m_updatesT->error()));
+    Transaction::InternalError error = m_updatesT->error();
+    if (error) {
+        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                   this, SLOT(getUpdatesFinished()));
+        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                   m_busySeq, SLOT(stop()));
+        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                   m_updatesModel, SLOT(finished()));
+        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                   m_updatesModel, SLOT(fetchSizes()));
+        m_updatesT = 0;
+        KMessageBox::sorry(this, PkStrings::daemonError(error));
     } else {
         m_busySeq->start();
     }
@@ -277,6 +337,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     KMenu *menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
     menu->addAction(m_showPackageArch);
+    menu->addAction(m_showPackageSize);
     QAction *action;
     action = menu->addAction(i18n("Check for new Updates"));
     action->setIcon(KIcon("view-refresh"));

@@ -270,8 +270,8 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             return package.arch;
         }
     } else if (index.column() == SizeCol) {
-        if (role == Qt::DisplayRole && package.size) {
-            return KGlobal::locale()->formatByteSize(package.size);
+        if (role == Qt::DisplayRole) {
+            return package.size ? KGlobal::locale()->formatByteSize(package.size) : QString();
         } else if (role == Qt::TextAlignmentRole) {
             return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
         }
@@ -420,6 +420,13 @@ void PackageModel::uncheckAvailablePackages()
 
 void PackageModel::finished()
 {
+    Transaction *trans = qobject_cast<Transaction*>(sender());
+    if (trans) {
+        // When pkd dies this method is called twice
+        // pk-qt2 bug..
+        trans->disconnect(this, SLOT(finished()));
+    }
+
     // The whole structure is about to change
     beginInsertRows(QModelIndex(), 0, m_packages.size() - 1);
     m_packageCount = m_packages.size();
@@ -430,6 +437,13 @@ void PackageModel::finished()
 
 void PackageModel::fetchSizes()
 {
+    Transaction *trans = qobject_cast<Transaction*>(sender());
+    if (trans) {
+        // When pkd dies this method is called twice
+        // pk-qt2 bug..
+        trans->disconnect(this, SLOT(fetchSizes()));
+    }
+
     // get package size
     QList<Package> pkgs;
     foreach (const InternalPackage &p, m_packages) {
@@ -451,8 +465,10 @@ void PackageModel::updateSize(const PackageKit::Package &package)
     for (int i = 0; i < m_packages.size(); ++i) {
         if (package.id() == m_packages[i].id) {
             m_packages[i].size = package.size();
-            emit dataChanged(index(i, SizeCol), index(i,SizeCol));
-            break;
+            emit dataChanged(index(i, SizeCol), index(i, SizeCol));
+            if (m_checkable) {
+                break;
+            }
         }
     }
 }

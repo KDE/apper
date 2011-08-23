@@ -47,7 +47,7 @@ public:
     void disableExportInstalledPB();
     bool goBack();
     void cleanUi();
-    bool showSizes() const;
+    bool isShowingSizes() const;
 
 signals:
     void categoryActivated(const QModelIndex &index);

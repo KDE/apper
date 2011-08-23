@@ -88,6 +88,7 @@ protected:
     virtual void closeEvent(QCloseEvent *event);
 
 private:
+    void disconnectTransaction();
     bool canChangePage();
     void setCurrentActionEnabled(bool state);
     void setCurrentAction(QAction *action);

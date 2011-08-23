@@ -382,8 +382,12 @@ void PackageDetails::actionActivated(QAction *action)
         break;
     }
 
-    if (m_transaction->error()) {
-        KMessageBox::sorry(this, PkStrings::daemonError(m_transaction->error()));
+    Transaction::InternalError error = m_transaction->error();
+    if (error) {
+        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                   this, SLOT(finished()));
+        m_transaction = 0;
+        KMessageBox::sorry(this, PkStrings::daemonError(error));
     } else {
         m_busySeq->start();
     }

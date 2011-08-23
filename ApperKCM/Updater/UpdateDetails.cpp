@@ -109,8 +109,12 @@ void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInf
     connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(display()));
     m_transaction->getUpdateDetail(package);
-    if (m_transaction->error()) {
-        KMessageBox::sorry(this, PkStrings::daemonError(m_transaction->error()));
+    Transaction::InternalError error = m_transaction->error();
+    if (error) {
+        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                   this, SLOT(display()));
+        m_transaction = 0;
+        KMessageBox::sorry(this, PkStrings::daemonError(error));
     } else {
         if (maximumSize().height() == 0) {
             // Expand the panel

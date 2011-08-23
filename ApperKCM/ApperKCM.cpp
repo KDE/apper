@@ -559,10 +559,8 @@ void ApperKCM::on_changesPB_clicked()
     backTB->setEnabled(true);
 }
 
-void ApperKCM::search()
+void ApperKCM::disconnectTransaction()
 {
-    browseView->cleanUi();
-
     if (m_searchTransaction) {
         // Disconnect everything so that the model don't store
         // wrong data
@@ -580,6 +578,13 @@ void ApperKCM::search()
         disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
                    this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
     }
+}
+
+void ApperKCM::search()
+{
+    browseView->cleanUi();
+
+    disconnectTransaction();
 
     // search
     m_searchTransaction = new Transaction(this);
@@ -589,7 +594,7 @@ void ApperKCM::search()
             this, SLOT(finished()));
     connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_browseModel, SLOT(finished()));
-    if (browseView->showSizes()) {
+    if (browseView->isShowingSizes()) {
         connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_browseModel, SLOT(fetchSizes()));
     }
@@ -646,10 +651,12 @@ void ApperKCM::search()
         return;
     }
 
-    if (m_searchTransaction->error()) {
-        KMessageBox::sorry(this, PkStrings::daemonError(m_searchTransaction->error()));
+    Transaction::InternalError error = m_searchTransaction->error();
+    if (error) {
         setCurrentActionEnabled(true);
+        disconnectTransaction();
         m_searchTransaction = 0;
+        KMessageBox::sorry(this, PkStrings::daemonError(error));
     } else {
         // cleans the models
         m_browseModel->clear();
@@ -716,8 +723,6 @@ void ApperKCM::refreshCache()
 
 void ApperKCM::save()
 {
-    kDebug() << stackedWidget->currentWidget() << m_updaterPage << m_settingsPage;
-
     QWidget *currentWidget = stackedWidget->currentWidget();
     if (currentWidget == m_settingsPage) {
         m_settingsPage->save();

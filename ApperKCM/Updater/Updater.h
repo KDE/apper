@@ -49,6 +49,7 @@ signals:
 
 public slots:
     void load();
+
     void getUpdates();
 
 private slots:
@@ -65,15 +66,18 @@ private slots:
 
     void showVersions(bool enabled);
     void showArchs(bool enabled);
+    void showSizes(bool enabled);
+    void updatePallete();
 
 private:
     Transaction::Roles    m_roles;
     bool                  m_selected;
-    PackageModel      *m_updatesModel;
+    PackageModel         *m_updatesModel;
     ApplicationsDelegate *m_delegate;
     CheckableHeader      *m_header;
     QAction              *m_showPackageVersion;
     QAction              *m_showPackageArch;
+    QAction              *m_showPackageSize;
     PkTransactionDialog  *m_transDialog;
     Transaction          *m_updatesT;
     KPixmapSequenceOverlayPainter *m_busySeq;

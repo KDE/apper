@@ -89,26 +89,26 @@ void BrowseView::init(Transaction::Roles roles)
     // Version
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
-    connect(m_showPackageVersion, SIGNAL(toggled(bool)),
-            this, SLOT(showVersions(bool)));
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowApplicationVersions", true));
     showVersions(m_showPackageVersion->isChecked());
+    connect(m_showPackageVersion, SIGNAL(toggled(bool)),
+            this, SLOT(showVersions(bool)));
 
     // Arch
     m_showPackageArch = new QAction(i18n("Show Architectures"), this);
     m_showPackageArch->setCheckable(true);
-    connect(m_showPackageArch, SIGNAL(toggled(bool)),
-            this, SLOT(showArchs(bool)));
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowApplicationArchitectures", false));
     showArchs(m_showPackageArch->isChecked());
+    connect(m_showPackageArch, SIGNAL(toggled(bool)),
+            this, SLOT(showArchs(bool)));
 
     // Sizes
     m_showPackageSizes = new QAction(i18n("Show Sizes"), this);
     m_showPackageSizes->setCheckable(true);
-    connect(m_showPackageSizes, SIGNAL(toggled(bool)),
-            this, SLOT(showSizes(bool)));
     m_showPackageSizes->setChecked(viewGroup.readEntry("ShowPackageSizes", false));
     showSizes(m_showPackageSizes->isChecked());
+    connect(m_showPackageSizes, SIGNAL(toggled(bool)),
+            this, SLOT(showSizes(bool)));
 
     // Ensure the index is visible when the packageDetails appears
     connect(packageDetails, SIGNAL(ensureVisible(QModelIndex)),
@@ -148,12 +148,9 @@ void BrowseView::showArchs(bool enabled)
 
 void BrowseView::showSizes(bool enabled)
 {
-    kDebug() << enabled;
-
     packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
     packageDetails->hidePackageArch(enabled);
     if (enabled) {
-        kDebug();
         m_model->fetchSizes();
     }
 }
@@ -251,7 +248,7 @@ void BrowseView::cleanUi()
     categoryF->setVisible(false);
 }
 
-bool BrowseView::showSizes() const
+bool BrowseView::isShowingSizes() const
 {
     return m_showPackageSizes->isChecked();
 }

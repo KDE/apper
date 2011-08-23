@@ -30,7 +30,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QFrame" name="brackgroundFrame">
+       <widget class="QFrame" name="backgroundFrame">
         <property name="autoFillBackground">
          <bool>true</bool>
         </property>

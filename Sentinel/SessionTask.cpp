@@ -163,7 +163,7 @@ void SessionTask::updatePallete()
     QPalette pal;
     pal.setColor(QPalette::Window, KGlobalSettings::activeTitleColor());
     pal.setColor(QPalette::WindowText, KGlobalSettings::activeTextColor());
-    ui->brackgroundFrame->setPalette(pal);
+    ui->backgroundFrame->setPalette(pal);
 }
 
 void SessionTask::setDialog(KDialog *dialog)
