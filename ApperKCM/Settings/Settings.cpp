@@ -74,7 +74,6 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
 
     connect(autoConfirmCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(appLauncherCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
-    connect(notifyUpdatesCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(intervalCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
     connect(checkUpdatesBatteryCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(checkUpdatesMobileCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
@@ -136,9 +135,7 @@ bool Settings::hasChanges() const
     KConfigGroup transaction(&config, "Transaction");
     KConfigGroup notifyGroup(&config, "Notify");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    if (notifyUpdatesCB->isChecked() != notifyGroup.readEntry("notifyUpdates", true)
-        ||
-        intervalCB->itemData(intervalCB->currentIndex()).toUInt() !=
+    if (intervalCB->itemData(intervalCB->currentIndex()).toUInt() !=
         static_cast<uint>(checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault))
         ||
         checkUpdatesBatteryCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnBattery", false)
@@ -170,7 +167,6 @@ void Settings::checkChanges()
     bool enabled = intervalCB->itemData(intervalCB->currentIndex()).toUInt() != Enum::Never;
     checkUpdatesBatteryCB->setEnabled(enabled);
     checkUpdatesMobileCB->setEnabled(enabled);
-    notifyUpdatesCB->setEnabled(enabled);
 
     autoInsL->setEnabled(enabled);
     autoCB->setEnabled(enabled);
@@ -190,9 +186,6 @@ void Settings::load()
 
     KConfigGroup transaction(&config, "Transaction");
     appLauncherCB->setChecked(transaction.readEntry("ShowApplicationLauncher", true));
-
-    KConfigGroup notifyGroup(&config, "Notify");
-    notifyUpdatesCB->setChecked(notifyGroup.readEntry("notifyUpdates", true));
 
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     uint interval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
@@ -241,11 +234,6 @@ void Settings::save()
     KConfigGroup transaction(&config, "Transaction");
     transaction.writeEntry("ShowApplicationLauncher", appLauncherCB->isChecked());
 
-    KConfigGroup notifyGroup(&config, "Notify");
-    // not used anymore
-    notifyGroup.deleteEntry("notifyLongTasks");
-    notifyGroup.writeEntry("notifyUpdates", notifyUpdatesCB->isChecked());
-
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     checkUpdateGroup.writeEntry("interval", intervalCB->itemData(intervalCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("checkUpdatesOnBattery", checkUpdatesBatteryCB->isChecked());
@@ -269,11 +257,15 @@ void Settings::defaults()
 {
     autoConfirmCB->setChecked(true);
     appLauncherCB->setChecked(true);
-    notifyUpdatesCB->setCheckState(Qt::Checked);
     intervalCB->setCurrentIndex(intervalCB->findData(Enum::TimeIntervalDefault));
     autoCB->setCurrentIndex(autoCB->findData(Enum::AutoUpdateDefault) );
     m_originModel->clearChanges();
     checkChanges();
+}
+
+void Settings::changeCurrentPage(int page)
+{
+    stackedWidget->setCurrentIndex(page);
 }
 
 #include "Settings.moc"

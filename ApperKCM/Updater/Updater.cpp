@@ -208,6 +208,14 @@ void Updater::checkEnableUpdateButton()
         m_header->setCheckState(Qt::PartiallyChecked);
     }
 
+    unsigned long dwSize = m_updatesModel->downloadSize();
+    kDebug() << dwSize;
+    if (dwSize) {
+        emit downloadSize(i18n("Estimated download size: %1",
+                               KGlobal::locale()->formatByteSize(dwSize)));
+    } else {
+        emit downloadSize(QString());
+    }
     // if we don't have any upates let's disable the button
     m_header->setCheckBoxVisible(m_updatesModel->rowCount() != 0);
     packageView->setHeaderHidden(m_updatesModel->rowCount() == 0);
@@ -217,6 +225,7 @@ void Updater::load()
 {
     // set focus on the updates view
     packageView->setFocus(Qt::OtherFocusReason);
+    emit downloadSize(QString());
     // If the model already has some packages
     // let's just clear the selection
     if (m_updatesModel->rowCount()) {

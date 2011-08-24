@@ -115,24 +115,22 @@ void UpdateIcon::update()
 
     increaseRunning();
     KConfig config("apper");
-    KConfigGroup notifyGroup(&config, "Notify");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    
-    bool notifyUpdate = notifyGroup.readEntry("notifyUpdates", true);
+    uint interval = static_cast<uint>(checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault));
     uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
 
     // get updates if we should display a notification or automatic update the system
-    if (notifyUpdate || updateType == Enum::All || updateType == Enum::Security) {
+    if (interval != Enum::Never || updateType == Enum::All || updateType == Enum::Security) {
         m_updateList.clear();
         m_getUpdatesT = new Transaction(QString(), this);
+        connect(m_getUpdatesT, SIGNAL(package(PackageKit::Package)),
+                this, SLOT(packageToUpdate(PackageKit::Package)));
+        connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(getUpdateFinished()));
         m_getUpdatesT->getUpdates();
         if (m_getUpdatesT->error()) {
             m_getUpdatesT = 0;
         } else {
-            connect(m_getUpdatesT, SIGNAL(package(PackageKit::Package)),
-                    this, SLOT(packageToUpdate(PackageKit::Package)));
-            connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                    this, SLOT(getUpdateFinished()));
             return;
         }
     } else {
@@ -152,13 +150,6 @@ void UpdateIcon::packageToUpdate(const Package &package)
 
 void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
 {
-    KConfig config("apper");
-    KConfigGroup checkUpdateGroup(&config, "Notify");
-    bool iconEnabled = checkUpdateGroup.readEntry("notifyUpdates", true);
-    if (!iconEnabled) {
-        return;
-    }
-
     if (!m_statusNotifierItem) {
         m_statusNotifierItem = new KStatusNotifierItem(this);
         m_statusNotifierItem->setCategory(KStatusNotifierItem::SystemServices);
@@ -232,10 +223,10 @@ void UpdateIcon::getUpdateFinished()
             // update all
             SET_PROXY
             Transaction *t = new Transaction(this);
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                    this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
             t->updatePackages(m_updateList, true);
             if (!t->error()) {
-                connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                        this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
                 // don't be interactive to not upset an idle user
                 emit watchTransaction(t->tid(), false);
                 //autoUpdatesInstalling(t);
@@ -253,10 +244,10 @@ void UpdateIcon::getUpdateFinished()
             // Defaults to security
             SET_PROXY
             Transaction *t = new Transaction(this);
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                    this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
             t->updatePackages(securityUpdateList, true);
             if (!t->error()) {
-                connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                        this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
                 // don't be interactive to not upset an idle user
                 emit watchTransaction(t->tid(), false);
                 //autoUpdatesInstalling(t);
@@ -291,7 +282,7 @@ void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
         notify->setText(i18n("System update was successful."));
         notify->sendEvent();
         
-        // run get-updates again so that not auto-installed updates can be displayed
+        // run get-updates again so that non auto-installed updates can be displayed
         update();
     } else {
         KIcon icon("dialog-cancel");

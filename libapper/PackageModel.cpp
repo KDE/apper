@@ -473,6 +473,7 @@ void PackageModel::fetchSizesFinished()
     // emit this after all is changed other wise on large models it will
     // be hell slow...
     emit dataChanged(createIndex(0, SizeCol), createIndex(m_packageCount, SizeCol));
+    emit changed(!m_checkedPackages.isEmpty());
 }
 
 void PackageModel::updateSize(const PackageKit::Package &package)
@@ -591,6 +592,15 @@ QList<Package> PackageModel::selectedPackages() const
         list.append(Package(package.id, package.info, package.summary));
     }
     return list;
+}
+
+unsigned long PackageModel::downloadSize() const
+{
+    unsigned long size = 0;
+    foreach (const InternalPackage &package, m_checkedPackages.values()) {
+        size += package.size;
+    }
+    return size;
 }
 
 bool PackageModel::allSelected() const

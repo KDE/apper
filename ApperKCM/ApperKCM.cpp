@@ -50,9 +50,10 @@
 
 #include <Daemon>
 
-#define BAR_SEARCH 0
-#define BAR_UPDATE 1
-#define BAR_TITLE  2
+#define BAR_SEARCH   0
+#define BAR_UPDATE   1
+#define BAR_TITLE    2
+#define BAR_SETTINGS 3
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
 
@@ -453,6 +454,12 @@ void ApperKCM::setPage(const QString &page)
                 m_settingsPage = new Settings(m_roles, this);
                 stackedWidget->addWidget(m_settingsPage);
                 m_settingsPage->load();
+                QTabBar *tabBar = new QTabBar(this);
+                tabBar->addTab(i18n("General Settings"));
+                tabBar->addTab(i18n("Software Origins"));
+                connect(tabBar, SIGNAL(currentChanged(int)),
+                        m_settingsPage, SLOT(changeCurrentPage(int)));
+                stackedWidgetBar->addWidget(tabBar);
             }
             connect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
             setButtons(KCModule::Default | KCModule::Apply);
@@ -460,7 +467,7 @@ void ApperKCM::setPage(const QString &page)
             emit changed(false);
             stackedWidget->setCurrentWidget(m_settingsPage);
             m_settingsPage->load();
-            stackedWidgetBar->setCurrentIndex(BAR_TITLE);
+            stackedWidgetBar->setCurrentIndex(BAR_SETTINGS);
             titleL->clear();
             backTB->setEnabled(true);
         }
@@ -474,6 +481,8 @@ void ApperKCM::setPage(const QString &page)
                 m_updaterPage = new Updater(m_roles, this);
                 connect(m_updaterPage, SIGNAL(refreshCache()),
                         this, SLOT(refreshCache()));
+                connect(m_updaterPage, SIGNAL(downloadSize(QString)),
+                        downloadL, SLOT(setText(QString)));
                 stackedWidget->addWidget(m_updaterPage);
                 checkUpdatesPB->setIcon(KIcon("view-refresh"));
                 connect(checkUpdatesPB, SIGNAL(clicked(bool)),

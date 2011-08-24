@@ -44,6 +44,7 @@ public slots:
     void load();
     void save();
     void defaults();
+    void changeCurrentPage(int page);
 
 signals:
     void changed(bool state);

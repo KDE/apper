@@ -58,7 +58,7 @@ ApperD::ApperD(QObject *parent, const QList<QVariant> &)
     //check if any changes to the file occour
     //this also prevents from reading when a checkUpdate happens
     KDirWatch *confWatch = new KDirWatch(this);
-    confWatch->addFile(KStandardDirs::locateLocal("config", "Apper"));
+    confWatch->addFile(KStandardDirs::locateLocal("config", "apper"));
     connect(confWatch, SIGNAL(  dirty(const QString &)), this, SLOT(read()));
     connect(confWatch, SIGNAL(created(const QString &)), this, SLOT(read()));
     connect(confWatch, SIGNAL(deleted(const QString &)), this, SLOT(read()));
@@ -77,7 +77,7 @@ void ApperD::init()
 
     // check to see when the next check update will happen
     // if more that 15 minutes, call show updates
-    KConfig config("Apper");
+    KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     // default to one day, 86400 sec
     uint interval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
@@ -97,7 +97,7 @@ void ApperD::init()
 
 void ApperD::read()
 {
-    KConfig config("Apper");
+    KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     // default to one day, 86400 sec
     int interval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);

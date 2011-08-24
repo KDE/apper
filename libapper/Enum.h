@@ -43,7 +43,7 @@ namespace Enum {
             Hourly  =    3600,
             Daily   =   86400,
             Weekly  =  604800,
-            Monthly = 2628000
+            Monthly = 2592000 // 30 days
     } TimeInterval;
     const int TimeIntervalDefault = Daily;
 

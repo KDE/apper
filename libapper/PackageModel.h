@@ -78,6 +78,7 @@ public:
 
     bool allSelected() const;
     QList<Package> selectedPackages() const;
+    unsigned long downloadSize() const;
     void clear();
     /**
      * This removes all selected packages that are not in the model

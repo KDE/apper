@@ -46,6 +46,7 @@ public:
 signals:
     void changed(bool);
     void refreshCache();
+    void downloadSize(const QString &message);
 
 public slots:
     void load();
