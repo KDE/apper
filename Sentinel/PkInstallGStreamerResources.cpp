@@ -70,6 +70,7 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
                         "The following plugins are required. "
                         "Do you want to search for these now?",
                         m_resources.size());
+    enableButtonOk(true);
 
     QString title;
     // this will come from DBus interface
