@@ -38,10 +38,10 @@ kde4_add_ui_files(libapper_SRCS
     Requirements.ui
 )
 
-kde4_add_library(apper SHARED ${libapper_SRCS})
-target_link_libraries(apper
+kde4_add_library(Apper SHARED ${libapper_SRCS})
+target_link_libraries(Apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${QPACKAGEKIT2_LIBRARIES})
 
-install(TARGETS apper ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS Apper ${INSTALL_TARGETS_DEFAULT_ARGS})
