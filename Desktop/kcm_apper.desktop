@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Type=Service
-Exec=kcmshell4 apper
+Exec=kcmshell4 kcm_apper
 Icon=applications-other
 
 X-KDE-Library=apper
