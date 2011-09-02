@@ -62,7 +62,7 @@ target_link_libraries(apper-sentinel
     ${QPACKAGEKIT2_LIBRARIES}
     ${DEBCONF_KDE_LIB}
     ${QT_QTXMLPATTERNS_LIBRARY}
-    Apper
+    apper
 )
 
 install(TARGETS apper-sentinel DESTINATION ${LIBEXEC_INSTALL_DIR})
