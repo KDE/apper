@@ -4,7 +4,7 @@ Type=Service
 Exec=kcmshell4 kcm_apper
 Icon=applications-other
 
-X-KDE-Library=apper
+X-KDE-Library=kcm_apper
 X-KDE-ParentApp=kcontrol
 X-KDE-ServiceTypes=KCModule
 X-KDE-System-Settings-Category=manage-software
