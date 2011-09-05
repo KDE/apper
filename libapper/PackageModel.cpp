@@ -485,7 +485,10 @@ void PackageModel::updateSize(const PackageKit::Package &package)
                 m_packages[i].size = package.size();
                 if (m_checkable) {
                     // updates the checked packages as well
-                    m_checkedPackages[package.id()].size = package.size();
+                    if (m_checkedPackages.contains(package.id())) {
+                        // Avoid checking packages that aren't checked
+                        m_checkedPackages[package.id()].size = package.size();
+                    }
                     break;
                 }
             }
