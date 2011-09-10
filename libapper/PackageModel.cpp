@@ -109,7 +109,17 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
 
 #ifdef HAVE_APPINSTALL
         iPackage.icon = AppInstall::instance()->genericIcon(package.name());
-        iPackage.isPackage = true;
+        if (m_checkable) {
+            // in case of updates model only check if it's an app
+            data = AppInstall::instance()->applications(package.name());
+            if (!data.isEmpty() || !package.iconPath().isEmpty()) {
+                iPackage.isPackage = false;
+            } else {
+                iPackage.isPackage = true;
+            }
+        } else {
+            iPackage.isPackage = true;
+        }
 #else
         iPackage.icon = package.iconPath();
         if (iPackage.icon.isEmpty()) {

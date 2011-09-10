@@ -36,9 +36,9 @@
 #include <PkIcons.h>
 #include <PackageModel.h>
 
-#include <QSortFilterProxyModel>
 #include <QDBusConnection>
 
+#include <KCategorizedSortFilterProxyModel>
 #include <KGlobalSettings>
 #include <KMessageBox>
 #include <KDebug>
@@ -58,11 +58,13 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
     m_updatesModel = new PackageModel(this);
     m_updatesModel->setCheckable(true);
-    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    KCategorizedSortFilterProxyModel *proxyModel = new KCategorizedSortFilterProxyModel(this);
     proxyModel->setSourceModel(m_updatesModel);
     proxyModel->setDynamicSortFilter(true);
+    proxyModel->setCategorizedModel(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setSortRole(PackageModel::SortRole);
+    proxyModel->setFilterRole(PackageModel::ApplicationFilterRole);
     packageView->setModel(proxyModel);
 
     m_delegate = new ApplicationsDelegate(packageView);
@@ -153,9 +155,6 @@ void Updater::showArchs(bool enabled)
 void Updater::showSizes(bool enabled)
 {
     packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
-    if (enabled) {
-        m_updatesModel->fetchSizes();
-    }
 }
 
 void Updater::updatePallete()
@@ -209,7 +208,6 @@ void Updater::checkEnableUpdateButton()
     }
 
     unsigned long dwSize = m_updatesModel->downloadSize();
-    kDebug() << dwSize;
     if (dwSize) {
         emit downloadSize(i18n("Estimated download size: %1",
                                KGlobal::locale()->formatByteSize(dwSize)));
@@ -250,7 +248,7 @@ void Updater::getUpdatesFinished()
 
         if (time < fifteen) {
             titleL->setText(i18n("Your system is up to date"));
-            descriptionL->clear();
+            descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(time)));
             iconL->setPixmap(KIcon("security-high").pixmap(128, 128));
         } else if (time > fifteen && time < tirty && lastTime != UINT_MAX) {
             titleL->setText(i18n("You have no updates"));
@@ -298,10 +296,8 @@ void Updater::getUpdates()
             m_busySeq, SLOT(stop()));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_updatesModel, SLOT(finished()));
-    if (m_showPackageSize->isChecked()) {
-        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                m_updatesModel, SLOT(fetchSizes()));
-    }
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            m_updatesModel, SLOT(fetchSizes()));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(getUpdatesFinished()));
     // get all updates
