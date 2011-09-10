@@ -1,10 +1,10 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Type=Service
-Exec=kcmshell4 apper
+Exec=kcmshell4 kcm_apper
 Icon=applications-other
 
-X-KDE-Library=apper
+X-KDE-Library=kcm_apper
 X-KDE-ParentApp=kcontrol
 X-KDE-ServiceTypes=KCModule
 X-KDE-System-Settings-Category=manage-software
@@ -33,6 +33,7 @@ Name[nds]=Programmpleeg
 Name[nl]=Softwarebeheer
 Name[nn]=Programvarehandsaming
 Name[pa]=ਸਾਫਟਵੇਅਰ ਪਰਬੰਧ
+Name[pl]=Zarządzanie oprogramowaniem
 Name[pt]=Gestão de Aplicações
 Name[pt_BR]=Gerenciamento de software
 Name[ro]=Gestiune programe
@@ -60,6 +61,7 @@ Comment[lt]=Gauti, šalinti ir naujinti programas
 Comment[nds]=Programmen halen, wegmaken un opfrischen
 Comment[nl]=Software verkrijgen, verwijderen en bijwerken
 Comment[pa]=ਸਾਫਟਵੇਅਰ ਲਵੋ, ਹਟਾਓ ਤੇ ਅੱਪਡੇਟ ਕਰੋ
+Comment[pl]=Pobierz, usuń i uaktualnij oprogramowanie
 Comment[pt]=Obter, Remover e Actualizar Aplicações
 Comment[pt_BR]=Obtém, remove e atualiza aplicativos
 Comment[ru]=Установка, удаление и обновление программного обеспечения

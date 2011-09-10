@@ -1,4 +1,4 @@
-set(kpk_addrm_SRCS
+set(kcm_apper_SRCS
     Settings/Settings.cpp
     Settings/OriginModel.cpp
     Updater/UpdateDetails.cpp
@@ -18,7 +18,7 @@ set(kpk_addrm_SRCS
     ApperKCM.cpp
 )
 
-kde4_add_ui_files(kpk_addrm_SRCS
+kde4_add_ui_files(kcm_apper_SRCS
     Settings/Settings.ui
     Updater/UpdateDetails.ui
     Updater/Updater.ui
@@ -28,14 +28,14 @@ kde4_add_ui_files(kpk_addrm_SRCS
     ApperKCM.ui
 )
 
-kde4_add_plugin(apper ${kpk_addrm_SRCS})
-target_link_libraries(apper
+kde4_add_plugin(kcm_apper ${kcm_apper_SRCS})
+target_link_libraries(kcm_apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KUTILS_LIBS}
     ${QPACKAGEKIT2_LIBRARIES}
     ${KDE4_SOLID_LIBS}
-    libapper
+    apper
 )
 
-install(TARGETS apper DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kcm_apper DESTINATION ${PLUGIN_INSTALL_DIR} )
