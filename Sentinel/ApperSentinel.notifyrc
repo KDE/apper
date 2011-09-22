@@ -18,6 +18,7 @@ Name[pt_BR]=Apper
 Name[ru]=Apper
 Name[sv]=Apper
 Name[uk]=Apper
+Name[wa]=Apper
 Name[x-test]=xxApperxx
 Comment=Apper Notification
 Comment[da]=Bekendtgørelse fra Apper
@@ -28,6 +29,7 @@ Comment[pt]=Notificação do Apper
 Comment[pt_BR]=Notificação do Apper
 Comment[sv]=Apper underrättelse
 Comment[uk]=Сповіщення Apper
+Comment[wa]=Notifiaedje d' Apper
 Comment[x-test]=xxApper Notificationxx
 
 [Event/ShowUpdates]
@@ -45,6 +47,7 @@ Name[pt]=Estão disponíveis actualizações novas
 Name[pt_BR]=Novas atualizações disponíveis
 Name[sv]=Nya uppdateringar tillgängliga
 Name[uk]=Доступні оновлення
+Name[wa]=I gn des noveas metaedjes a djoû
 Name[x-test]=xxNew updates availablexx
 Action=Sound|Popup
 
@@ -82,6 +85,7 @@ Name[sl]=Posodobitve se nameščajo
 Name[sv]=Uppdateringar installeras
 Name[tr]=Güncellemeler yükleniyor
 Name[uk]=Оновлення, які буде встановлено
+Name[wa]=Des metaedjes a djoû sont-st a l' astalaedje
 Name[x-test]=xxUpdates are being installedxx
 Action=Sound|Popup
 
@@ -118,6 +122,7 @@ Name[sl]=Potreben je ponoven zagon sistema
 Name[sv]=En omstart av systemet krävs
 Name[tr]=Sistemin Yeniden Başlatılması Gerekiyor
 Name[uk]=Потрібне перезавантаження системи
+Name[wa]=I fåt renonder l' sistinme
 Name[x-test]=xxA System Restart is Requiredxx
 Action=Sound|Popup
 
@@ -152,6 +157,7 @@ Name[sl]=Prenos se ni zaključil uspešno
 Name[sv]=En transaktion misslyckades göras färdig med lyckat resultat
 Name[tr]=Bir aktarım başarılı bir şekilde tamamlanamadı
 Name[uk]=Операцію не вдалося успішно завершити
+Name[wa]=Ene tranzaccion n' s' a nén savou fini comifåt
 Name[x-test]=xxA transaction failed to complete successfullyxx
 Action=Sound|Popup
 
@@ -187,6 +193,7 @@ Name[sl]=Nameščanje posodobitev zaključeno
 Name[sv]=Installering av uppdateringar klar
 Name[tr]=Güncellemelerin yüklenmesi tamamlandı
 Name[uk]=Встановлення оновлень завершено
+Name[wa]=Les metaedjes a djoû ont fini d' s' astaler
 Name[x-test]=xxUpdates finished installingxx
 Action=Sound|Popup
 
@@ -219,6 +226,7 @@ Name[sl]=Prišlo je do napake prenosa
 Name[sv]=Ett transaktionsfel uppstod
 Name[tr]=Bir işlem hatası oluştu
 Name[uk]=Під час операції сталася помилка.
+Name[wa]=Åk n' a nén stî avou l' tranzaccion
 Name[x-test]=xxA transaction error occurredxx
 Action=Sound|Popup
 
@@ -253,6 +261,7 @@ Name[sl]=Na voljo je nadgradnja distribucije
 Name[sv]=En uppgradering av distributionen är tillgänglig
 Name[tr]=Bir dağıtım güncellemesi mevcut
 Name[uk]=Доступне оновлення дистрибутива
+Name[wa]=I gn a on metaedje a livea del distribucion
 Name[x-test]=xxA distribution upgrade is availablexx
 Action=Sound|Popup
 
@@ -287,6 +296,7 @@ Name[sl]=Nadgradnja distribucije zaključena
 Name[sv]=Uppgraderingen av distributionen färdig
 Name[tr]=Dağıtım güncellemesi tamamlandı
 Name[uk]=Оновлення дистрибутива завершено
+Name[wa]=Li metaedje a livea del distribucion est tot fwait
 Name[x-test]=xxThe distribution upgrade completedxx
 Action=Sound|Popup
 
@@ -320,5 +330,6 @@ Name[sl]=Nadgradnja distribucije zaključena z napako
 Name[sv]=Uppgraderingen av distributionen avslutades med ett fel
 Name[tr]=Dağıtım güncellemesi bir hata ile tamamlandı
 Name[uk]=Спроба оновлення дистрибутива завершилася повідомленням про помилку
+Name[wa]=Li metaedje a livea del distribucion s' a fini avou ene aroke
 Name[x-test]=xxThe distribution upgrade completed with an errorxx
 Action=Sound|Popup
