@@ -7,6 +7,7 @@ X-KDE-Kded-autoload=true
 
 Name=Apper Monitor
 Name[da]=Apper overvågning
+Name[fr]=Moniteur Apper
 Name[nl]=Apper-monitor
 Name[pa]=ਅੱਪਰ ਮਾਨੀਟਰ
 Name[pl]=Monitor Apper
@@ -19,6 +20,7 @@ Name[x-test]=xxApper Monitorxx
 
 Comment=Watch transactions and Notify about Software Updates
 Comment[da]=Overvåger transaktioner og bekendtgør om softwareopdateringer
+Comment[fr]=Surveille les transactions et informe à propos des mises à jour logicielles
 Comment[nl]=Bewaak transacties en meldt het bijwerken van software
 Comment[pa]=ਸਾਫਟਵੇਅਰ ਅੱਪਡੇਟ ਬਾਰੇ ਟਰਾਂਸ਼ੈਕਸ਼ਨ ਅਤੇ ਸੂਚਨਾ ਵੇਖੋ
 Comment[pl]=Obserwuj transakcje i powiadom o uaktualnieniach oprogramowania
