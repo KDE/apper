@@ -175,7 +175,11 @@ void Updater::on_packageView_clicked(const QModelIndex &index)
 //That way, by default, users only see stable ones.
 void Updater::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
 {
-    Q_UNUSED(type)
+    if (type != Transaction::DistroUpgradeStable) {
+        // Ignore unstable distros upgrades for now
+        return;
+    }
+
     if (verticalLayout->count()) {
         QFrame *frame = new QFrame(this);
         frame->setFrameShape(QFrame::HLine);
