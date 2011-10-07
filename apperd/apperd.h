@@ -24,29 +24,34 @@
 #include <KDEDModule>
 
 #include <QTimer>
+#include <QDBusConnection>
 
 class ApperD : public KDEDModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     ApperD(QObject *parent, const QList<QVariant>&);
     ~ApperD();
 
 private slots:
-    void init();
-    void read();
+    void poll();
+    void configFileChanged();
 
     void transactionListChanged(const QStringList &tids);
+    void updatesChanged();
+    void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
 
 private:
-    void update();
-    void refreshAndUpdate();
+    void callApperSentinel(const QString &method);
     uint getTimeSinceRefreshCache() const;
-    bool canRefreshCache();
+    bool nameHasOwner(const QString &name, const QDBusConnection &connection) const;
 
     bool m_actRefreshCacheChecked;
     bool m_canRefreshCache;
+    bool m_sentinelIsRunning;
+    bool m_showUpdates;
+    uint m_timeSinceRefreshCache;
+    uint m_refreshCacheInterval;
     QTimer *m_qtimer;
 };
 
