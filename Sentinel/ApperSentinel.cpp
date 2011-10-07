@@ -31,9 +31,7 @@
 
 #include <Daemon>
 
-#define MINUTE 600000
-
-// #define MINUTE 60000
+#define MINUTE 60000
 
 ApperSentinel::ApperSentinel()
  : KUniqueApplication(),
@@ -99,16 +97,20 @@ bool ApperSentinel::isRunning()
 {
     // check to see if no piece of code is running
     if (m_trayIcon && m_trayIcon->isRunning()) {
+        kDebug() << m_trayIcon;
         return true;
     }
     if (m_updateIcon && m_updateIcon->isRunning()) {
+        kDebug() << m_updateIcon;
         return true;
     }
     if (m_distroUpgrade && m_distroUpgrade->isRunning()) {
+        kDebug() << m_distroUpgrade;
         return true;
     }
 
     if (m_pkInterface && m_pkInterface->isRunning()) {
+        kDebug() << m_pkInterface;
         return true;
     }
 

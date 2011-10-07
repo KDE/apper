@@ -50,13 +50,11 @@ K_EXPORT_PLUGIN(ApperFactory("apperd"))
 ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
     KDEDModule(parent),
     m_actRefreshCacheChecked(false),
-    m_timeSinceRefreshCache(0)
+    m_showedUpdates(false)
 {
     m_qtimer = new QTimer(this);
     connect(m_qtimer, SIGNAL(timeout()), this, SLOT(poll()));
-    // Start after 5 minutes, 360000 msec
-    // To keep the startup fast..
-    m_qtimer->start(ONE_MIN);
+    m_qtimer->start(FIVE_MIN);
 
     // Watch for TransactionListChanged so we start sentinel
     QDBusConnection::systemBus().connect(QLatin1String(""),
@@ -93,10 +91,12 @@ ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
             this, SLOT(serviceOwnerChanged(QString,QString,QString)));
 
     // Check if Sentinel is running
-    m_sentinelIsRunning = nameHasOwner(QLatin1String("org.kde.ApperSentinel"), QDBusConnection::sessionBus());
+    m_sentinelIsRunning = nameHasOwner(QLatin1String("org.kde.ApperSentinel"),
+                                       QDBusConnection::sessionBus());
 
     // if PackageKit is running check to see if there are running transactons already
-    if (!m_sentinelIsRunning && nameHasOwner(QLatin1String("org.freedesktop.PackageKit"), QDBusConnection::systemBus())) {
+    if (!m_sentinelIsRunning && nameHasOwner(QLatin1String("org.freedesktop.PackageKit"),
+                                             QDBusConnection::systemBus())) {
         QDBusMessage message;
         message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.PackageKit"),
                                                  QLatin1String("/org/freedesktop/PackageKit"),
@@ -104,7 +104,7 @@ ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
                                                  QLatin1String("GetTransactionList"));
         QDBusReply<QStringList> reply = QDBusConnection::systemBus().call(message);
         transactionListChanged(reply.value()); // In case of a running transaction fire up sentinel
-        m_timeSinceRefreshCache = getTimeSinceRefreshCache();
+        m_lastRefreshCache = getTimeSinceRefreshCache();
     }
 
     configFileChanged();
@@ -116,26 +116,24 @@ ApperD::~ApperD()
 
 void ApperD::poll()
 {
-    if (m_timeSinceRefreshCache == 0) {
+    if (m_lastRefreshCache.isNull()) {
         // This value wasn't set
         // convert this to QDateTime
-        m_timeSinceRefreshCache = getTimeSinceRefreshCache();
-    } else {
-        // to not keep waking PK we do some sort of calculation
-        m_timeSinceRefreshCache += m_qtimer->interval() / 1000;
+        m_lastRefreshCache = getTimeSinceRefreshCache();
     }
 
     // If check for updates is active
     if (m_refreshCacheInterval != Enum::Never) {
-        if (m_timeSinceRefreshCache > m_refreshCacheInterval) {
+        uint maxTime = QDateTime::currentDateTime().toTime_t() - m_refreshCacheInterval;
+        // If lastRefreshCache is null it means that the cache was never refreshed
+        if (m_lastRefreshCache.isNull() || m_lastRefreshCache.toTime_t() < maxTime) {
             callApperSentinel(QLatin1String("RefreshAndUpdate"));
-            // with this the next cache refresh will be from now to the interval
-            m_timeSinceRefreshCache = 1;
         }
     }
 
-    //
-    if (!m_sentinelIsRunning) {
+    // display or update the system
+    if (!m_showedUpdates) {
+        m_showedUpdates = true; // don't do that so often
         callApperSentinel(QLatin1String("Update"));
     }
 }
@@ -145,6 +143,7 @@ void ApperD::configFileChanged()
     KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     m_refreshCacheInterval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
+    kDebug() << "new refresh cache interval" << m_refreshCacheInterval;
 }
 
 void ApperD::transactionListChanged(const QStringList &tids)
@@ -165,12 +164,9 @@ void ApperD::transactionListChanged(const QStringList &tids)
 void ApperD::updatesChanged()
 {
     // - update time since last refresh
-    // - make sure sentinel is running to display this
-    m_timeSinceRefreshCache = getTimeSinceRefreshCache();
-    if (!m_sentinelIsRunning && m_showUpdates) {
-        // start sentinel
-        transactionListChanged(QStringList() << "run");
-    }
+    // - reset showed updates to display this change
+    getTimeSinceRefreshCache();
+    m_showedUpdates = false;
 }
 
 void ApperD::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
@@ -196,7 +192,7 @@ void ApperD::callApperSentinel(const QString &method)
     QDBusConnection::sessionBus().call(message);
 }
 
-uint ApperD::getTimeSinceRefreshCache() const
+QDateTime ApperD::getTimeSinceRefreshCache() const
 {
     QDBusMessage message;
     message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.PackageKit"),
@@ -205,7 +201,13 @@ uint ApperD::getTimeSinceRefreshCache() const
                                              QLatin1String("GetTimeSinceAction"));
     message << QLatin1String("refresh-cache");
     QDBusReply<uint> reply = QDBusConnection::systemBus().call(message);
-    return reply.value();
+
+    // When the refresh cache value was not yet defined UINT_MAX is returned
+    if (reply.value() == UINT_MAX) {
+        return QDateTime();
+    } else {
+        return QDateTime::currentDateTime().addSecs(reply.value() * -1);
+    }
 }
 
 bool ApperD::nameHasOwner(const QString &name, const QDBusConnection &connection) const

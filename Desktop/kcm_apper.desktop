@@ -1,4 +1,3 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
 Type=Service
 Exec=kcmshell4 kcm_apper
