@@ -25,6 +25,7 @@
 
 #include <QTimer>
 #include <QDBusConnection>
+#include <QDateTime>
 
 class ApperD : public KDEDModule
 {
@@ -43,14 +44,14 @@ private slots:
 
 private:
     void callApperSentinel(const QString &method);
-    uint getTimeSinceRefreshCache() const;
+    QDateTime getTimeSinceRefreshCache() const;
     bool nameHasOwner(const QString &name, const QDBusConnection &connection) const;
 
     bool m_actRefreshCacheChecked;
     bool m_canRefreshCache;
     bool m_sentinelIsRunning;
-    bool m_showUpdates;
-    uint m_timeSinceRefreshCache;
+    bool m_showedUpdates;
+    QDateTime m_lastRefreshCache;
     uint m_refreshCacheInterval;
     QTimer *m_qtimer;
 };

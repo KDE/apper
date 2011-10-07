@@ -71,19 +71,18 @@ void UpdateIcon::refresh(bool update)
 
     if (!isRunning()) {
         SET_PROXY
-        Transaction *t = new Transaction(QString());
-        t->refreshCache(true);
-        if (!t->error()) {
-            increaseRunning();
-            // ignore if there is an error
-            // Be silent! don't bother the user if the cache couldn't be refreshed
-            if (update) {
-                connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                        this, SLOT(update()));
-            }
+        increaseRunning();
+        Transaction *t = new Transaction(this);
+        // ignore if there is an error
+        // Be silent! don't bother the user if the cache couldn't be refreshed
+        if (update) {
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                    this, SLOT(decreaseRunning()));
-        } else {
+                    this, SLOT(update()));
+        }
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(decreaseRunning()));
+        t->refreshCache(true);
+        if (t->error()) {
             KNotification *notify = new KNotification("TransactionError", 0);
             notify->setText(PkStrings::daemonError(t->error()));
             notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
@@ -122,7 +121,7 @@ void UpdateIcon::update()
     // get updates if we should display a notification or automatic update the system
     if (interval != Enum::Never || updateType == Enum::All || updateType == Enum::Security) {
         m_updateList.clear();
-        m_getUpdatesT = new Transaction(QString(), this);
+        m_getUpdatesT = new Transaction(this);
         connect(m_getUpdatesT, SIGNAL(package(PackageKit::Package)),
                 this, SLOT(packageToUpdate(PackageKit::Package)));
         connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
@@ -312,6 +311,7 @@ bool UpdateIcon::systemIsReady(bool checkUpdates)
 
     // test whether network is connected
     if (networkState == Daemon::NetworkOffline || networkState == Daemon::UnknownNetwork) {
+        kDebug() << "nerwork state" << networkState;
         return false;
     }
 
@@ -324,10 +324,12 @@ bool UpdateIcon::systemIsReady(bool checkUpdates)
         ignoreBattery = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
     }
 
+    kDebug() << "conserve" <<  Solid::PowerManagement::appShouldConserveResources();
+    // THIS IS NOT working on my computer
     // check how applications should behave (e.g. on battery power)
-    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
-        return false;
-    }
+//    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
+//        return false;
+//    }
     
     bool ignoreMobile;
     if (checkUpdates) {
