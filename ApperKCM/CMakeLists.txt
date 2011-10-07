@@ -38,4 +38,6 @@ target_link_libraries(kcm_apper
     apper
 )
 
+set_target_properties(kcm_apper PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+
 install(TARGETS kcm_apper DESTINATION ${PLUGIN_INSTALL_DIR} )

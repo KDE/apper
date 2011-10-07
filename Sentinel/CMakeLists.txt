@@ -65,6 +65,8 @@ target_link_libraries(apper-sentinel
     apper
 )
 
+set_target_properties(apper-sentinel PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+
 install(TARGETS apper-sentinel DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 install(FILES ApperSentinel.notifyrc DESTINATION ${DATA_INSTALL_DIR}/ApperSentinel)

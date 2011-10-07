@@ -22,6 +22,8 @@ target_link_libraries(apper_executable
     apper
 )
 
+set_target_properties(apper_executable PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/apper_executable DESTINATION ${BIN_INSTALL_DIR} RENAME apper)
 
 add_subdirectory(Icons)
