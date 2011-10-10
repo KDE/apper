@@ -54,9 +54,9 @@ protected:
 private:
     Transaction  *m_transaction;
     Transaction::Status  m_status;
+    Transaction::Role m_role;
     uint          m_percentage;
     uint          m_speed;
-    QString       m_title;
     QString       m_details;
     QStringList   m_packages;
 };

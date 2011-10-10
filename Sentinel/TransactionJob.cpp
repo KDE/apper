@@ -35,10 +35,11 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
  : KJob(parent),
    m_transaction(transaction),
    m_status(Transaction::UnknownStatus),
+   m_role(Transaction::UnknownRole),
    m_percentage(0)
 {
     setCapabilities(Killable);
-    m_title = PkStrings::action(transaction->role());
+    m_role = transaction->role();
     connect(transaction, SIGNAL(changed()), this, SLOT(updateJob()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(finished(PackageKit::Transaction::Exit)));
@@ -64,7 +65,7 @@ void TransactionJob::finished(PackageKit::Transaction::Exit exit)
 {
     // emit the description so the Speed: xxx KiB/s
     // don't get confused to a destination URL
-    emit description(this, m_title);
+    emit description(this, PkStrings::action(m_role));
     if (exit == Transaction::ExitCancelled) {
         setError(KilledJobError);
     }
@@ -93,7 +94,7 @@ void TransactionJob::repoDetail(const QString &repoId, const QString &repoDescri
 {
     Q_UNUSED(repoId)
     QString first = PkStrings::status(m_status);
-    emit description(this, m_title, qMakePair(first, repoDescription));
+    emit description(this, PkStrings::action(m_role), qMakePair(first, repoDescription));
 }
 
 void TransactionJob::emitDescription()
@@ -104,7 +105,7 @@ void TransactionJob::emitDescription()
     }
 
     QString first = PkStrings::status(m_status);
-    emit description(this, m_title, qMakePair(first, details));
+    emit description(this, PkStrings::action(m_role), qMakePair(first, details));
 }
 
 void TransactionJob::updateJob()
@@ -123,11 +124,16 @@ void TransactionJob::updateJob()
 //         emitSpeed(m_speed);
 //     }
 
+    Transaction::Role role = m_transaction->role();
+    if (m_role != role) {
+        m_role = role;
+        emitDescription();
+    }
+
     // Status & Speed
     Transaction::Status status = m_transaction->status();
     if (m_status != status) {
         m_status = status;
-        emit description(this, m_title);
         emitDescription();
     }
 }
@@ -143,7 +149,7 @@ bool TransactionJob::doKill()
 {
     // emit the description so the Speed: xxx KiB/s
     // don't get confused to a destination URL
-    emit description(this, m_title);
+    emit description(this, PkStrings::action(m_role));
     if (m_transaction->allowCancel()) {
         m_transaction->cancel();
     }

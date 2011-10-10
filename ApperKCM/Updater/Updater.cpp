@@ -246,17 +246,16 @@ void Updater::getUpdatesFinished()
         // Set the info page
         stackedWidget->setCurrentIndex(1);
         uint lastTime = Daemon::getTimeSinceAction(Transaction::RoleRefreshCache);
-        unsigned long time = lastTime * 1000;
-        unsigned long fifteen = 1000 * 60 * 60 * 24 * 15;
-        unsigned long tirty = 1000 * 60 * 60 * 24 * 30;
+        unsigned long fifteen = 60 * 60 * 24 * 15;
+        unsigned long tirty = 60 * 60 * 24 * 30;
 
-        if (time < fifteen) {
+        if (lastTime < fifteen) {
             titleL->setText(i18n("Your system is up to date"));
-            descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(time)));
+            descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(lastTime * 1000)));
             iconL->setPixmap(KIcon("security-high").pixmap(128, 128));
-        } else if (time > fifteen && time < tirty && lastTime != UINT_MAX) {
+        } else if (lastTime > fifteen && lastTime < tirty && lastTime != UINT_MAX) {
             titleL->setText(i18n("You have no updates"));
-            descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(time)));
+            descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(lastTime * 1000)));
             iconL->setPixmap(KIcon("security-medium").pixmap(128, 128));
         } else {
             titleL->setText(i18n("Last check for updates was more than a month ago"));

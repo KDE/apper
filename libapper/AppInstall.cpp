@@ -52,7 +52,7 @@ AppInstall::AppInstall(QObject *parent)
  : QObject(parent)
 {
 #ifdef HAVE_APPINSTALL
-    // load all the data in memory since quering SQLITE is really slow
+    // load all the data in memory since querying SQLITE is really slow
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "app-install");
     db.setDatabaseName(AI_DB_PATH);
     db.open();
