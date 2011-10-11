@@ -1,0 +1,132 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title>KDE User's Manual</title>
+<authorgroup>
+<author>
+      <firstname>Daniel</firstname>
+      <surname>Nicoletti</surname>
+      <email>dantti12@gmail.com</email>
+</author>
+<author>
+      <firstname>Matthias</firstname>
+      <surname>Klumpp</surname>
+      <email>matthias@tenstral.net</email>
+</author>
+</authorgroup>
+<date>2011-10-10</date>
+<productname>K Desktop Environment</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>apper</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>apper</command></refname>
+<refpurpose>An application and package manager using PackageKit</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>apper</command>
+<group choice="opt"><option>--updates</option> </group>
+<group choice="opt"><option>--settings</option> </group>
+<group choice="opt"><option>--backend-details</option> </group>
+<group choice="opt"><option>--install-mime-type</option><replaceable>
+mime-type</replaceable></group>
+<group choice="opt"><option>--install-package-name</option><replaceable>
+name</replaceable></group>
+<group choice="opt"><option>--install-provide-file</option><replaceable>
+file</replaceable></group>
+<group choice="opt"><option>--install-font-resource</option><replaceable>
+font</replaceable></group>
+<group choice="opt"><option>--install-catalog</option><replaceable>
+file</replaceable></group>
+<group choice="opt"><option>--remove-package-by-file</option><replaceable>
+filename</replaceable></group>
+
+<arg choice="opt">KDE Generic Options</arg>
+<arg choice="opt">Qt Generic Options</arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+<para>Apper is the &kde; interface for PackageKit</para>
+<para>Apper is able to manage packages, applications and updates in a cross-distribution way thanks to the PackageKit project.</para>
+<para>It is providing Linux users a single application that they can learn and use in whatever distribution they are.</para>
+
+</refsect1>
+
+<refsect1>
+<title>Options</title>
+<variablelist>
+
+<varlistentry>
+<term><option>--updates</option></term>
+<listitem><para>Show available updates</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--settings</option></term>
+<listitem><para>Show Apper configuration page.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--backend-details</option> <replaceable>name</replaceable></term>
+<listitem><para>Display information about the backend PackageKit uses at time.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--install-mime-type</option> <replaceable>mime-type</replaceable></term>
+<listitem><para>Call the mime-type installer.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--install-package-name</option> <replaceable>name</replaceable></term>
+<listitem><para>Install package with the name <replaceable>name</replaceable>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--install-provide-file</option> <replaceable>file</replaceable></term>
+<listitem><para>Install package providing file <replaceable>file</replaceable>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--install-font-resource</option> <replaceable>font</replaceable></term>
+<listitem><para>Install a font resource.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--install-catalog</option> <replaceable>file</replaceable></term>
+<listitem><para>Install the package catalog in <replaceable>file</replaceable>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--remove-package-by-file</option> <replaceable>filename</replaceable></term>
+<listitem><para>Remove a package containing file <replaceable>filename</replaceable>.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+
+<para>More information about Apper can be found at <ulink
+url="http://kde-apps.org/content/show.php/Apper?content=84745">the Apper website</ulink>.</para>
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+<para>The maintainer of Apper is Daniel Nicoletti <email>dantti12@gmail.com</email>;
+This manual page was written by Matthias Klumpp <email>matthias@tenstral.net</email>.</para>
+</refsect1>
+
+</refentry>
