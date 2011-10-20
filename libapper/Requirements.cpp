@@ -34,6 +34,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
     ui(new Ui::Requirements)
 {
     ui->setupUi(mainWidget());
+    connect(ui->confirmCB, SIGNAL(toggled(bool)), this, SLOT(on_confirmCB_Toggled(bool)));
 
     ui->packageView->setModel(model);
     m_hideAutoConfirm = false;
@@ -144,6 +145,10 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
 
 Requirements::~Requirements()
 {
+    KConfig config("apper");
+    KConfigGroup requirementsDialog(&config, "requirementsDialog");
+    saveDialogSize(requirementsDialog);
+
     delete ui;
 }
 
@@ -165,10 +170,8 @@ bool Requirements::shouldShow() const
 
 void Requirements::on_confirmCB_Toggled(bool checked)
 {
-    // save size
     KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
-    saveDialogSize(requirementsDialog);
 
     if (!m_hideAutoConfirm) {
         requirementsDialog.writeEntry("autoConfirm", checked);
