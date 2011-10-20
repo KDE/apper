@@ -87,5 +87,5 @@ Comment[wa]=Programe po cweri eyet manaedjî ses programes
 Comment[x-test]=xxApplication to get and manage softwarexx
 
 Terminal=false
-Categories=Qt;KDE;System;PackageManager;
+Categories=Qt;KDE;System;Settings;PackageManager;
 InitialPreference=10
