@@ -43,11 +43,6 @@ ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
 
 ApplicationLauncher::~ApplicationLauncher()
 {
-    if (ui->showCB->isChecked()) {
-        KConfig config("apper");
-        KConfigGroup transactionGroup(&config, "Transaction");
-        transactionGroup.writeEntry("ShowApplicationLauncher", false);
-    }
     delete ui;
 }
 
@@ -120,6 +115,13 @@ void ApplicationLauncher::itemClicked(const QModelIndex &index)
 {
 //     kDebug() << index.data(Qt::UserRole).toString();
     KToolInvocation::startServiceByDesktopPath(index.data(Qt::UserRole).toString());
+}
+
+void ApplicationLauncher::on_showCB_toggled(bool checked)
+{
+    KConfig config("apper");
+    KConfigGroup transactionGroup(&config, "Transaction");
+    transactionGroup.writeEntry("ShowApplicationLauncher", !checked);
 }
 
 #include "ApplicationLauncher.moc"

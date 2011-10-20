@@ -50,6 +50,7 @@ public slots:
 
 private slots:
     void itemClicked(const QModelIndex &index);
+    void on_showCB_toggled(bool checked);
 
 private:
     bool m_embed;

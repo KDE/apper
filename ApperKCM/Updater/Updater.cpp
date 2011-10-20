@@ -104,37 +104,29 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     KConfigGroup viewGroup(&config, "UpdateView");
 
     // versions
+    packageView->header()->setSectionHidden(PackageModel::VersionCol, true);
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
+    connect(m_showPackageVersion, SIGNAL(toggled(bool)), this, SLOT(showVersions(bool)));
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", true));
-    showVersions(m_showPackageVersion->isChecked());
-    connect(m_showPackageVersion, SIGNAL(toggled(bool)),
-            this, SLOT(showVersions(bool)));
 
     // Arch
+    packageView->header()->setSectionHidden(PackageModel::ArchCol, true);
     m_showPackageArch = new QAction(i18n("Show Architectures"), this);
     m_showPackageArch->setCheckable(true);
-    m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
-    showArchs(m_showPackageArch->isChecked());
-    connect(m_showPackageArch, SIGNAL(toggled(bool)),
-            this, SLOT(showArchs(bool)));
+    connect(m_showPackageArch, SIGNAL(toggled(bool)), this, SLOT(showArchs(bool)));
+    m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));    
 
     // Sizes
+    packageView->header()->setSectionHidden(PackageModel::SizeCol, true);
     m_showPackageSize = new QAction(i18n("Show Sizes"), this);
     m_showPackageSize->setCheckable(true);
+    connect(m_showPackageSize, SIGNAL(toggled(bool)), this, SLOT(showSizes(bool)));
     m_showPackageSize->setChecked(viewGroup.readEntry("ShowSizes", true));
-    showSizes(m_showPackageSize->isChecked());
-    connect(m_showPackageSize, SIGNAL(toggled(bool)),
-            this, SLOT(showSizes(bool)));
 }
 
 Updater::~Updater()
 {
-    KConfig config("apper");
-    KConfigGroup viewGroup(&config, "UpdateView");
-    viewGroup.writeEntry("ShowVersions", m_showPackageVersion->isChecked());
-    viewGroup.writeEntry("ShowArchs", m_showPackageArch->isChecked());
-    viewGroup.writeEntry("ShowSizes", m_showPackageSize->isChecked());
 }
 
 void Updater::setSelected(bool selected)
@@ -144,16 +136,25 @@ void Updater::setSelected(bool selected)
 
 void Updater::showVersions(bool enabled)
 {
+    KConfig config("apper");
+    KConfigGroup viewGroup(&config, "UpdateView");
+    viewGroup.writeEntry("ShowVersions", enabled);
     packageView->header()->setSectionHidden(PackageModel::VersionCol, !enabled);
 }
 
 void Updater::showArchs(bool enabled)
 {
+    KConfig config("apper");
+    KConfigGroup viewGroup(&config, "UpdateView");
+    viewGroup.writeEntry("ShowArchs", enabled);
     packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
 }
 
 void Updater::showSizes(bool enabled)
 {
+    KConfig config("apper");
+    KConfigGroup viewGroup(&config, "UpdateView");
+    viewGroup.writeEntry("ShowSizes", enabled);
     packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
 }
 

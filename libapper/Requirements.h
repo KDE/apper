@@ -43,6 +43,7 @@ public slots:
     bool shouldShow() const;
 
 private slots:
+    void on_confirmCB_Toggled(bool checked);
     void actionClicked(int type);
 
 private:

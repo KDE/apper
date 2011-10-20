@@ -117,10 +117,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         int left = opt.rect.left();
         int width = opt.rect.width();
 
-        Package::Info info;
-        info = static_cast<Package::Info>(index.data(PackageModel::InfoRole).toUInt());
         QString pkgSummary = index.data(PackageModel::SummaryRole).toString();
-
         if (!pkgSummary.isEmpty()) {
             if (leftToRight) {
                 pkgSummary.prepend("- ");
