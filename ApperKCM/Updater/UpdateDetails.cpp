@@ -211,9 +211,10 @@ void UpdateDetails::updateDetail(const PackageKit::Package &package)
     if (!package.updateText().isEmpty()) {
         QString updateText = package.updateText();
         updateText.replace('\n', "<br/>");
-        description += "<p><pre>" +
+        updateText.replace(' ', "&nbsp;");
+        description += "<p>" +
                        updateText +
-                       "</pre></p>";
+                       "</p>";
     }
 
     // links
@@ -273,11 +274,12 @@ void UpdateDetails::updateDetail(const PackageKit::Package &package)
     if (package.updateText().isEmpty() && !package.changelog().isEmpty()) {
         QString changelog = package.changelog();
         changelog.replace('\n', "<br/>");
+        changelog.replace(' ', "&nbsp;");
         description += "<p>" +
                        i18n("The developer logs will be shown as no description is available for this update:") +
-                       "<br/><pre>" +
+                       "<br/>" +
                        changelog +
-                       "</pre></p>";
+                       "</p>";
     }
 
     // Updates (lists of packages that are updated)
