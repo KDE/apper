@@ -1,11 +1,11 @@
 [Desktop Entry]
 Type=Application
 Icon=applications-other
-Exec=apper
-X-DBUS-StartupType=Unique
-X-DBUS-ServiceName=org.kde.apper
+Exec=apper %F
+NoDisplay=true
+StartupNotify=false
 
-Name=Apper
+Name=Apper Installer
 Name[bg]=Apper
 Name[da]=Apper
 Name[de]=Apper
@@ -86,6 +86,7 @@ Comment[uk]=Програма для звантаження і керування
 Comment[wa]=Programe po cweri eyet manaedjî ses programes
 Comment[x-test]=xxApplication to get and manage softwarexx
 
+MimeType=application/x-deb;application/x-rpm;application/x-redhat-package-manager;application/x-servicepack;
 Terminal=false
 Categories=Qt;KDE;System;PackageManager;
 InitialPreference=10

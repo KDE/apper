@@ -1,11 +1,12 @@
 [Desktop Entry]
 Type=Application
 Icon=applications-other
-Exec=apper
+Exec=apper --updates
+NoDisplay=true
 X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 
-Name=Apper
+Name=Apper Updates
 Name[bg]=Apper
 Name[da]=Apper
 Name[de]=Apper
@@ -85,7 +86,3 @@ Comment[tr]=Yazılımları indirmek ve yönetmek için kullanılan bir uygulama
 Comment[uk]=Програма для звантаження і керування пакунками програмного забезпечення
 Comment[wa]=Programe po cweri eyet manaedjî ses programes
 Comment[x-test]=xxApplication to get and manage softwarexx
-
-Terminal=false
-Categories=Qt;KDE;System;PackageManager;
-InitialPreference=10

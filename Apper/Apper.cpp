@@ -192,7 +192,7 @@ void Apper::invoke(const QString &method_name, const QStringList &args)
 
     // This call must block otherwise this application closes before
     // smarticon is activated
-    QDBusConnection::sessionBus().call(message, QDBus::NoBlock);
+    QDBusConnection::sessionBus().call(message, QDBus::BlockWithGui);
 
     QTimer::singleShot(0, this, SLOT(appClose()));
 }

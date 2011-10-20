@@ -59,7 +59,7 @@ UpdateIcon::~UpdateIcon()
 
 void UpdateIcon::showSettings()
 {
-    KToolInvocation::startServiceByDesktopName("Apper", QStringList() << "--settings");
+    KToolInvocation::startServiceByDesktopName("apper_settings");
 }
 
 void UpdateIcon::refresh(bool update)
@@ -294,7 +294,7 @@ void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
 
 void UpdateIcon::showUpdates()
 {
-    KToolInvocation::startServiceByDesktopName("Apper", QStringList() << "--updates");
+    KToolInvocation::startServiceByDesktopName("apper_updates");
 }
 
 void UpdateIcon::removeStatusNotifierItem()
@@ -324,12 +324,12 @@ bool UpdateIcon::systemIsReady(bool checkUpdates)
         ignoreBattery = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
     }
 
-    kDebug() << "conserve" <<  Solid::PowerManagement::appShouldConserveResources();
     // THIS IS NOT working on my computer
     // check how applications should behave (e.g. on battery power)
-//    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
+    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
 //        return false;
-//    }
+        kDebug() << "should conserve??";
+    }
     
     bool ignoreMobile;
     if (checkUpdates) {
