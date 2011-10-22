@@ -6,6 +6,11 @@ NoDisplay=true
 StartupNotify=false
 
 Name=Apper Installer
+Name[pt]=Instalador do Apper
+Name[pt_BR]=Instalador do Apper
+Name[sv]=Apper installation
+Name[uk]=Встановлювач Apper
+Name[x-test]=xxApper Installerxx
 GenericName=Software Management
 GenericName[bg]=Управление на софтуер
 GenericName[ca]=Gestor de programari
