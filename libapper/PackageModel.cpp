@@ -269,7 +269,11 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         case PackageName:
             return package.id.split(';')[0];
         case Qt::ToolTipRole:
-            return i18n("Version: %1\nArchitecture: %2", package.version, package.arch);
+            if (m_checkable) {
+                return PkStrings::info(package.info);
+            } else {
+                return i18n("Version: %1\nArchitecture: %2", package.version, package.arch);
+            }
         }
     } else if (index.column() == VersionCol) {
         if (role == Qt::DisplayRole) {
