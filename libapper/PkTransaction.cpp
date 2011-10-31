@@ -546,7 +546,7 @@ void PkTransaction::eulaRequired(PackageKit::Eula info)
     }
 
     LicenseAgreement *eula = new LicenseAgreement(info, this);
-    connect(eula, SIGNAL(accepted()), this, SLOT(installSignature()));
+    connect(eula, SIGNAL(yesClicked()), this, SLOT(acceptEula()));
     connect(eula, SIGNAL(rejected()), this, SLOT(reject()));
     showDialog(eula);
 }
@@ -564,7 +564,7 @@ void PkTransaction::acceptEula()
                       PkStrings::daemonError(trans->error()));
         }
     } else {
-        kWarning() << "something is broken";
+        kWarning() << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
     }
 }
 
@@ -599,7 +599,7 @@ void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
     }
 
     RepoSig *repoSig = new RepoSig(info, this);
-    connect(repoSig, SIGNAL(accepted()), this, SLOT(installSignature()));
+    connect(repoSig, SIGNAL(yesClicked()), this, SLOT(installSignature()));
     connect(repoSig, SIGNAL(rejected()), this, SLOT(reject()));
     showDialog(repoSig);
 }
@@ -617,7 +617,7 @@ void PkTransaction::installSignature()
                       PkStrings::daemonError(trans->error()));
         }
     } else {
-        kWarning() << "something is broken";
+        kWarning() << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
     }
 }
 
