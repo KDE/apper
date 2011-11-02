@@ -7,6 +7,7 @@ X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper
 Name[bg]=Apper
+Name[cs]=Apper
 Name[da]=Apper
 Name[de]=Apper
 Name[es]=Apper
@@ -64,6 +65,7 @@ Comment=Application to get and manage software
 Comment[bg]=Инструмент за изтегляне и управление на програми
 Comment[ca]=Aplicació per obtenir i gestionar programari
 Comment[ca@valencia]=Aplicació per obtindre i gestionar programari
+Comment[cs]=Aplikace pro získání a správu softwaru
 Comment[da]=Program til at hente og håndtere software
 Comment[de]=Anwendung zum Beziehen und Verwalten der Software
 Comment[en_GB]=Application to get and manage software
