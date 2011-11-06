@@ -8,6 +8,8 @@ X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper Updates
 Name[da]=Apper opdateringer
+Name[de]=Apper-Updater
+Name[lt]=Apper atnaujinimai
 Name[pt]=Actualizações do Apper
 Name[pt_BR]=Atualizações do Apper
 Name[sv]=Apper uppdateringar
@@ -60,6 +62,7 @@ Comment[et]=Tarkvara hankimise ja haldamise tarkvara
 Comment[fr]=Application pour obtenir et gérer des logiciels
 Comment[hr]=Aplikacija za dohvaćanje i upravljanje softverom
 Comment[hu]=Alkalmazás szoftverek beszerzéséhez és kezeléséhez
+Comment[lt]=Programinės įrangos atsiuntimo ir tvarkymo programa
 Comment[nds]=Warktüüch för't Halen un Opfrischen vun Programmen
 Comment[nl]=Toepassing voor het verkrijgen en beheren van software
 Comment[pa]=ਸਾਫਟਵੇਅਰ ਲੈਣ ਤੇ ਉਨ੍ਹਾਂ ਦੇ ਪਰਬੰਧ ਲਈ ਐਪਲੀਕੇਸ਼ਨ
