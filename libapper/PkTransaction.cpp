@@ -556,6 +556,7 @@ void PkTransaction::acceptEula()
     LicenseAgreement *eula = qobject_cast<LicenseAgreement*>(sender());
 
     if (eula) {
+        kDebug() << "Accepting EULA" << eula->id();
         Transaction *trans = new Transaction(this);
         setTransaction(trans, Transaction::RoleAcceptEula);
         trans->acceptEula(eula->id());
@@ -609,6 +610,7 @@ void PkTransaction::installSignature()
     RepoSig *repoSig = qobject_cast<RepoSig*>(sender());
 
     if (repoSig)  {
+        kDebug() << "Installing Signature" << repoSig->signature().keyId;
         Transaction *trans = new Transaction(this);
         setTransaction(trans, Transaction::RoleInstallSignature);
         trans->installSignature(repoSig->signature());
@@ -627,7 +629,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
     Requirements *requires = 0;
     m_trans = 0;
 
-//     kDebug() << status;
+    kDebug() << status << trans->role();
     d->finished = true;
     switch(status) {
     case Transaction::ExitSuccess :
@@ -638,6 +640,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
 
         // If the simulate model exists we were simulating
         if (d->simulateModel) {
+            kDebug() << "We have a simulate model";
             requires = new Requirements(d->simulateModel, this);
             connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
             if (requires->shouldShow()) {
@@ -732,6 +735,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             return;
         } else if (role == Transaction::RoleAcceptEula ||
                    role == Transaction::RoleInstallSignature) {
+            kDebug() << "EULA or Signature accepted";
             d->finished = false;
             requeueTransaction();
             return;
@@ -762,6 +766,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
         ui->currentL->setText(PkStrings::status(Transaction::StatusSetup));
         if (!m_handlingActionRequired) {
+            kDebug() << "Not Handling Required Action";
             setExitStatus(Failed);
         }
         break;
