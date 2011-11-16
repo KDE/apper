@@ -23,6 +23,7 @@ Name[uk]=Apper
 Name[wa]=Apper
 Name[x-test]=xxApperxx
 Comment=Apper Notification
+Comment[cs]=Upozornění Apper
 Comment[da]=Bekendtgørelse fra Apper
 Comment[de]=Apper-Benachrichtigung
 Comment[fr]=Notification Apper
@@ -41,6 +42,7 @@ Comment[x-test]=xxApper Notificationxx
 [Event/ShowUpdates]
 Name=New updates available
 Name[bg]=Има налични нови обновления
+Name[cs]=Jsou dostupné aktualizace
 Name[da]=Nye opdateringer tilgængelige
 Name[de]=Es sind neue Aktualisierungen verfügbar.
 Name[et]=Saadaval on uued uuendused

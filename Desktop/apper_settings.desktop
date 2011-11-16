@@ -7,6 +7,7 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper Settings
+Name[cs]=Nastavení Apper
 Name[da]=Indstillinger for Apper
 Name[de]=Apper-Einstellungen
 Name[lt]=Apper nustatymai
