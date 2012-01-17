@@ -79,6 +79,7 @@ Comment[x-test]=xxGet, Remove and Update Softwarexx
 X-KDE-Keywords=install,uninstall,remove,software,applications,management,packages,packagekit,purge
 X-KDE-Keywords[da]=installér,afinstallér,fjern,software,programmer,håndtering,pakker,packagekit,purge
 X-KDE-Keywords[es]=instalar,desinstalar,eliminar,software,aplicaciones,gestión,paquetes,packagekit,purgar
+X-KDE-Keywords[et]=paigaldamine,eemaldamine,installimine,tarkvara,rakendused,haldamine,haldur,paketid,pakid,packagekit,puhastamine
 X-KDE-Keywords[gl]=instalar,desinstalar,eliminar,software,aplicativos,xestión,paquetes, packagekit,purgar
 X-KDE-Keywords[hu]=telepítés,eltávolítás,eltávolítás,szoftver,alkalmazások,kezelés,csomagok,packagekit,teljes eltávolítás
 X-KDE-Keywords[lt]=įdiegti,pašalinti,išimti,programos,valdymas,paketai,packagekit,išvalyti
