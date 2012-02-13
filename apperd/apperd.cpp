@@ -76,7 +76,7 @@ ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
     //this also prevents from reading when a checkUpdate happens
     KDirWatch *confWatch = new KDirWatch(this);
     confWatch->addFile(KStandardDirs::locateLocal("config", "apper"));
-    connect(confWatch, SIGNAL(  dirty(QString)), this, SLOT(configFileChanged()));
+    connect(confWatch, SIGNAL(dirty(QString)), this, SLOT(configFileChanged()));
     connect(confWatch, SIGNAL(created(QString)), this, SLOT(configFileChanged()));
     connect(confWatch, SIGNAL(deleted(QString)), this, SLOT(configFileChanged()));
     confWatch->startScan();

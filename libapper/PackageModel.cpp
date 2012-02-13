@@ -322,7 +322,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         }
     case KCategorizedSortFilterProxyModel::CategorySortRole:
         // USING 0 here seems to let things unsorted
-        return package.isPackage ? 1 : 0; // Packages comes after aplications
+        return package.isPackage ? 1 : 0; // Packages comes after applications
     case ApplicationId:
         return package.appId;
     default:

@@ -221,7 +221,7 @@ void PkTransaction::setupTransaction(PackageKit::Transaction *transaction)
 
 #ifdef HAVE_DEBCONFKDE
     QString socket;
-    socket = QLatin1String("/tmp/debconf_") + transaction->tid().remove("/");
+    socket = QLatin1String("/tmp/debconf_") + transaction->tid().remove('/');
     QDBusMessage message;
     message = QDBusMessage::createMethodCall("org.kde.ApperSentinel",
                                              "/",

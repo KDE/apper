@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     if (args->isSet("install-font-resource")) {
         QStringList fonts;
         foreach (const QString &font, args->getOptionList("install-font-resource")) {
-            if (font.startsWith(":lang=")) {
+            if (font.startsWith(QLatin1String(":lang="))) {
                 fonts << font;
             } else {
                 fonts << QString(":lang=%1").arg(font);

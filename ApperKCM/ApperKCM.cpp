@@ -39,6 +39,7 @@
 #include <KMessageBox>
 #include <KFileItemDelegate>
 #include <KMenu>
+#include <KTabBar>
 
 #include <PackageModel.h>
 #include <ChangesDelegate.h>
@@ -454,7 +455,7 @@ void ApperKCM::setPage(const QString &page)
                 m_settingsPage = new Settings(m_roles, this);
                 stackedWidget->addWidget(m_settingsPage);
                 m_settingsPage->load();
-                QTabBar *tabBar = new QTabBar(this);
+                KTabBar *tabBar = new KTabBar(this);
                 tabBar->addTab(i18n("General Settings"));
                 tabBar->addTab(i18n("Software Origins"));
                 connect(tabBar, SIGNAL(currentChanged(int)),

@@ -49,9 +49,9 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
     // Resources are strings like "dataengine-weather"
     foreach (const QString &service, resources) {
         QString prettyService = service;
-        if (service.startsWith("dataengine-")) {
+        if (service.startsWith(QLatin1String("dataengine-"))) {
             prettyService = i18n("%1 data engine", service.mid(11));
-        } else if (service.startsWith("scriptengine-")) {
+        } else if (service.startsWith(QLatin1String("scriptengine-"))) {
             prettyService = i18n("%1 script engine", service.mid(13));
         }
 
