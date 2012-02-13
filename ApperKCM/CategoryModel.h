@@ -39,7 +39,7 @@ public:
         GroupRole,
         CategoryRole
     } Roles;
-    CategoryModel(Transaction::Roles roles, QObject *parent = 0);
+    explicit CategoryModel(Transaction::Roles roles, QObject *parent = 0);
     ~CategoryModel();
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;

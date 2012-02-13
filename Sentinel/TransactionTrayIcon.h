@@ -32,7 +32,7 @@ class TransactionTrayIcon : public KStatusNotifierItem
 {
 Q_OBJECT
 public:
-    TransactionTrayIcon(PackageKit::Transaction *transaction, QObject *parent = 0);
+    explicit TransactionTrayIcon(PackageKit::Transaction *transaction, QObject *parent = 0);
     ~TransactionTrayIcon();
 
 signals:

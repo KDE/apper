@@ -35,7 +35,7 @@ class TransactionJob : public KJob
 {
     Q_OBJECT
 public:
-    TransactionJob(Transaction *transaction, QObject *parent = 0);
+    explicit TransactionJob(Transaction *transaction, QObject *parent = 0);
     ~TransactionJob();
 
     virtual void start();
