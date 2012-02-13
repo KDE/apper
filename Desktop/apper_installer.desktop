@@ -91,5 +91,5 @@ Comment[x-test]=xxApplication to get and manage softwarexx
 
 MimeType=application/x-deb;application/x-rpm;application/x-redhat-package-manager;application/x-servicepack;
 Terminal=false
-Categories=Qt;KDE;System;PackageManager;
+Categories=Qt;KDE;System;Settings;PackageManager;
 InitialPreference=10
