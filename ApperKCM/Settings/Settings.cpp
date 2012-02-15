@@ -244,12 +244,12 @@ void Settings::save()
     checkUpdateGroup.writeEntry("installUpdatesOnMobile", installUpdatesMobileCB->isChecked());
     // check to see if the backend support this
     if (m_roles & Transaction::RoleGetRepoList) {
+        on_showOriginsCB_stateChanged(showOriginsCB->checkState());
         if (!m_originModel->save()) {
             KMessageBox::sorry(this,
                                i18n("You do not have the necessary privileges to perform this action."),
                                i18n("Failed to set origin data"));
         }
-        on_showOriginsCB_stateChanged(showOriginsCB->checkState());
     }
 }
 

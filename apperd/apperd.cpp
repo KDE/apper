@@ -102,7 +102,7 @@ ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
                                                  QLatin1String("/org/freedesktop/PackageKit"),
                                                  QLatin1String("org.freedesktop.PackageKit"),
                                                  QLatin1String("GetTransactionList"));
-        QDBusReply<QStringList> reply = QDBusConnection::systemBus().call(message);
+        QDBusReply<QStringList> reply = QDBusConnection::systemBus().call(message, QDBus::BlockWithGui);
         transactionListChanged(reply.value()); // In case of a running transaction fire up sentinel
         m_lastRefreshCache = getTimeSinceRefreshCache();
     }
@@ -157,7 +157,7 @@ void ApperD::transactionListChanged(const QStringList &tids)
                                                  QLatin1String("StartServiceByName"));
         message << QLatin1String("org.kde.ApperSentinel");
         message << static_cast<uint>(0);
-        QDBusConnection::sessionBus().call(message);
+        QDBusConnection::sessionBus().send(message);
     }
 }
 
@@ -189,7 +189,7 @@ void ApperD::callApperSentinel(const QString &method)
                                              QLatin1String("/"),
                                              QLatin1String("org.kde.ApperSentinel"),
                                              method);
-    QDBusConnection::sessionBus().call(message);
+    QDBusConnection::sessionBus().send(message);
 }
 
 QDateTime ApperD::getTimeSinceRefreshCache() const
@@ -200,7 +200,7 @@ QDateTime ApperD::getTimeSinceRefreshCache() const
                                              QLatin1String("org.freedesktop.PackageKit"),
                                              QLatin1String("GetTimeSinceAction"));
     message << QLatin1String("refresh-cache");
-    QDBusReply<uint> reply = QDBusConnection::systemBus().call(message);
+    QDBusReply<uint> reply = QDBusConnection::systemBus().call(message, QDBus::BlockWithGui);
 
     // When the refresh cache value was not yet defined UINT_MAX is returned
     if (reply.value() == UINT_MAX) {
@@ -218,6 +218,6 @@ bool ApperD::nameHasOwner(const QString &name, const QDBusConnection &connection
                                              QLatin1String("org.freedesktop.DBus"),
                                              QLatin1String("NameHasOwner"));
     message << qVariantFromValue(name);
-    QDBusReply<bool> reply = connection.call(message);
+    QDBusReply<bool> reply = connection.call(message, QDBus::BlockWithGui);
     return reply.value();
 }

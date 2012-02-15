@@ -91,21 +91,28 @@ bool OriginModel::changed() const
 bool OriginModel::save()
 {
     bool changed = false;
+    int rows = rowCount();
     QEventLoop loop;
-    for (int i = 0; i < rowCount(); ++i) {
+    for (int i = 0; i < rows; ++i) {
         QStandardItem *repo = item(i);
         if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
-            Transaction *t = new Transaction(this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            Transaction *transaction = new Transaction(this);
+            QWeakPointer<Transaction> pointer = transaction;
+            connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     &loop, SLOT(quit()));
-            t->repoEnable(repo->data(Qt::UserRole).toString(),
+            transaction->repoEnable(repo->data(Qt::UserRole).toString(),
                           static_cast<bool>(repo->checkState()));
-            if (t->error()) {
-                KMessageBox::sorry(0, PkStrings::daemonError(t->error()));
+            if (transaction->error()) {
+                KMessageBox::sorry(0, PkStrings::daemonError(transaction->error()));
                 return false;
             }
             loop.exec();
             changed = true;
+
+            if (pointer.isNull()) {
+                // Avoid crashing when the application is quiting
+                return false;
+            }
         }
     }
 

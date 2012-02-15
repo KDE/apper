@@ -222,8 +222,9 @@ void SessionTask::setInfo(const QString &title, const QString &text, const QStri
     setButtons(KDialog::Close);
     button(KDialog::Close)->setFocus();
 
-    if (sender()) {
+    if (qobject_cast<PkTransaction*>(sender())) {
         // if we have a sender this method was caller by PkTransaction
+        // be carefull because QSignalMapper from KDialog also calls this method
         sender()->disconnect();
         sendErrorFinished(Failed, text);
     }
@@ -240,8 +241,9 @@ void SessionTask::setError(const QString &title, const QString &text, const QStr
     setButtons(KDialog::Close);
     button(KDialog::Close)->setFocus();
 
-    if (sender()) {
+    if (qobject_cast<PkTransaction*>(sender())) {
         // if we have a sender this method was caller by PkTransaction
+        // be carefull because QSignalMapper from KDialog also calls this method
         sender()->disconnect();
         sendErrorFinished(Failed, text);
     }

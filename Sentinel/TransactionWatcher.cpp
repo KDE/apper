@@ -90,7 +90,7 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
         m_currentTransaction = 0;
 
         // release any cookie that we might have
-        suppressSleep(true);
+        suppressSleep(false);
 
         if (m_messages.isEmpty() && m_restartType == Package::RestartNone) {
             // the app can close now
