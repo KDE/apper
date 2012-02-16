@@ -26,6 +26,7 @@
 #include <KIcon>
 
 #include <Package>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -36,7 +37,9 @@ public:
     enum {
         NameCol = 0,
         VersionCol,
+        CurrentVersionCol,
         ArchCol,
+        OriginCol,
         SizeCol,
         ActionCol
     };
@@ -52,14 +55,16 @@ public:
         InfoRole,
         ApplicationId,
         ApplicationFilterRole,
-        PackageName,
+        PackageName
     };
     typedef struct {
         QString    name;
         QString    version;
+        QString    currentVersion;
         QString    icon;
         QString    summary;
         QString    arch;
+        QString    repo;
         QString    id;
         QString    appId;
         bool       isPackage;
@@ -110,9 +115,14 @@ public slots:
     void uncheckAvailablePackages();
 
     void finished();
+
     void fetchSizes();
     void fetchSizesFinished();
     void updateSize(const PackageKit::Package &package);
+
+    void fetchCurrentVersions();
+    void fetchCurrentVersionsFinished();
+    void updateCurrentVersion(const PackageKit::Package &package);
 
 signals:
     void changed(bool value);
@@ -127,6 +137,8 @@ private:
     QPixmap                         m_installedEmblem;
     QVector<InternalPackage>        m_packages;
     QHash<QString, InternalPackage> m_checkedPackages;
+    Transaction *m_fetchSizesTransaction;
+    Transaction *m_fetchInstalledVersionsTransaction;
 };
 
 #endif

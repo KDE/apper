@@ -53,7 +53,9 @@ using namespace PackageKit;
 PackageModel::PackageModel(QObject *parent)
 : QAbstractItemModel(parent),
   m_packageCount(0),
-  m_checkable(false)
+  m_checkable(false),
+  m_fetchSizesTransaction(0),
+  m_fetchInstalledVersionsTransaction(0)
 {
     m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 }
@@ -83,6 +85,7 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
             iPackage.icon        = list.at(AppInstall::AppIcon);
             iPackage.version     = package.version();
             iPackage.arch        = package.arch();
+            iPackage.repo        = package.data();
             iPackage.id          = package.id();
             iPackage.appId       = list.at(AppInstall::AppId);
             iPackage.info        = package.info();
@@ -103,6 +106,7 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
         iPackage.summary = package.summary();
         iPackage.version = package.version();
         iPackage.arch    = package.arch();
+        iPackage.repo    = package.data();
         iPackage.id      = package.id();
         iPackage.info    = package.info();
         iPackage.size    = 0;
@@ -178,8 +182,12 @@ QVariant PackageModel::headerData(int section, Qt::Orientation orientation, int 
             return i18n("Name");
         } else if (section == VersionCol) {
             return i18n("Version");
+        } else if (section == CurrentVersionCol) {
+            return i18n("Installed Version");
         } else if (section == ArchCol) {
             return i18n("Arch");
+        } else if (section == OriginCol) {
+            return i18n("Origin");
         } else if (section == SizeCol) {
             return i18n("Size");
         } else if (section == ActionCol) {
@@ -275,20 +283,20 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
                 return i18n("Version: %1\nArchitecture: %2", package.version, package.arch);
             }
         }
-    } else if (index.column() == VersionCol) {
-        if (role == Qt::DisplayRole) {
+    } else if (role == Qt::DisplayRole) {
+        if (index.column() == VersionCol) {
             return package.version;
-        }
-    } else if (index.column() == ArchCol) {
-        if (role == Qt::DisplayRole) {
+        } else if (index.column() == CurrentVersionCol) {
+                return package.currentVersion;
+        } else if (index.column() == ArchCol) {
             return package.arch;
-        }
-    } else if (index.column() == SizeCol) {
-        if (role == Qt::DisplayRole) {
+        } else if (index.column() == OriginCol) {
+            return package.repo;
+        } else if (index.column() == SizeCol) {
             return package.size ? KGlobal::locale()->formatByteSize(package.size) : QString();
-        } else if (role == Qt::TextAlignmentRole) {
-            return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
         }
+    } else if (index.column() == SizeCol && role == Qt::TextAlignmentRole) {
+        return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
     }
 
     switch (role) {
@@ -311,6 +319,8 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         return package.version;
     case ArchRole:
         return package.arch;
+    case OriginCol:
+        return package.repo;
     case InfoRole:
         return package.info;
     case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
@@ -386,6 +396,8 @@ void PackageModel::clear()
     beginRemoveRows(QModelIndex(), 0, m_packageCount);
     m_packageCount = 0;
     m_packages.clear();
+    m_fetchSizesTransaction = 0;
+    m_fetchInstalledVersionsTransaction = 0;
     endRemoveRows();
 }
 
@@ -451,11 +463,8 @@ void PackageModel::finished()
 
 void PackageModel::fetchSizes()
 {
-    Transaction *trans = qobject_cast<Transaction*>(sender());
-    if (trans) {
-        // When pkd dies this method is called twice
-        // pk-qt2 bug..
-        trans->disconnect(this, SLOT(fetchSizes()));
+    if (m_fetchSizesTransaction) {
+        return;
     }
 
     // get package size
@@ -467,12 +476,12 @@ void PackageModel::fetchSizes()
     }
 
     if (!pkgs.isEmpty()) {
-        Transaction *transaction = new Transaction(this);
-        connect(transaction, SIGNAL(package(PackageKit::Package)),
+        m_fetchSizesTransaction = new Transaction(this);
+        connect(m_fetchSizesTransaction, SIGNAL(package(PackageKit::Package)),
                 this, SLOT(updateSize(PackageKit::Package)));
-        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+        connect(m_fetchSizesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(fetchSizesFinished()));
-        transaction->getDetails(pkgs);
+        m_fetchSizesTransaction->getDetails(pkgs);
     }
 }
 
@@ -484,7 +493,7 @@ void PackageModel::fetchSizesFinished()
         // pk-qt2 bug..
         trans->disconnect(this, SLOT(fetchSizesFinished()));
     }
-    // emit this after all is changed other wise on large models it will
+    // emit this after all is changed other =wise on large models it will
     // be hell slow...
     emit dataChanged(createIndex(0, SizeCol), createIndex(m_packageCount, SizeCol));
     emit changed(!m_checkedPackages.isEmpty());
@@ -502,6 +511,66 @@ void PackageModel::updateSize(const PackageKit::Package &package)
                     if (m_checkedPackages.contains(package.id())) {
                         // Avoid checking packages that aren't checked
                         m_checkedPackages[package.id()].size = package.size();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void PackageModel::fetchCurrentVersions()
+{
+    if (m_fetchInstalledVersionsTransaction) {
+        return;
+    }
+
+    // get package current version
+    QStringList pkgs;
+    foreach (const InternalPackage &p, m_packages) {
+        if (p.size == 0) {
+            pkgs << p.name;
+        }
+    }
+
+    if (!pkgs.isEmpty()) {
+        m_fetchInstalledVersionsTransaction = new Transaction(this);
+        connect(m_fetchInstalledVersionsTransaction, SIGNAL(package(PackageKit::Package)),
+                this, SLOT(updateCurrentVersion(PackageKit::Package)));
+        connect(m_fetchInstalledVersionsTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                this, SLOT(fetchCurrentVersionsFinished()));
+        m_fetchInstalledVersionsTransaction->resolve(pkgs, Transaction::FilterInstalled);
+            kDebug() << pkgs;
+    }
+}
+
+void PackageModel::fetchCurrentVersionsFinished()
+{
+    Transaction *trans = qobject_cast<Transaction*>(sender());
+    if (trans) {
+        // When pkd dies this method is called twice
+        // pk-qt2 bug..
+        trans->disconnect(this, SLOT(fetchCurrentVersionsFinished()));
+    }
+    // emit this after all is changed otherwise on large models it will
+    // be hell slow...
+    emit dataChanged(createIndex(0, SizeCol), createIndex(m_packageCount, SizeCol));
+    emit changed(!m_checkedPackages.isEmpty());
+}
+
+void PackageModel::updateCurrentVersion(const PackageKit::Package &package)
+{
+    // if current version is empty don't waste time looking
+    if (!package.version().isEmpty()) {
+        for (int i = 0; i < m_packages.size(); ++i) {
+            if (package.name() == m_packages[i].name &&
+                package.arch() == m_packages[i].arch) {
+                m_packages[i].currentVersion = package.version();
+                if (m_checkable) {
+                    // updates the checked packages as well
+                    if (m_checkedPackages.contains(m_packages[i].id)) {
+                        // Avoid checking packages that aren't checked
+                        m_checkedPackages[package.id()].currentVersion = package.version();
                     }
                     break;
                 }

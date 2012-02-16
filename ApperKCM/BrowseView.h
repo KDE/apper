@@ -58,6 +58,7 @@ public slots:
 private slots:
     void showVersions(bool enabled);
     void showArchs(bool enabled);
+    void showOrigins(bool enabled);
     void showSizes(bool enabled);
     void on_packageView_customContextMenuRequested(const QPoint &pos);
     void on_packageView_clicked(const QModelIndex &);
@@ -73,6 +74,7 @@ private:
 
     QAction                          *m_showPackageVersion;
     QAction                          *m_showPackageArch;
+    QAction                          *m_showPackageOrigin;
     QAction                          *m_showPackageSizes;
     PackageModel                  *m_model;
     KCategorizedSortFilterProxyModel *m_proxy;

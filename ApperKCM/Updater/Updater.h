@@ -66,7 +66,9 @@ private slots:
     void errorCode(PackageKit::Transaction::Error error, const QString &details);
 
     void showVersions(bool enabled);
+    void showCurrentVersions(bool enabled);
     void showArchs(bool enabled);
+    void showOrigins(bool enabled);
     void showSizes(bool enabled);
     void updatePallete();
 
@@ -77,7 +79,9 @@ private:
     ApplicationsDelegate *m_delegate;
     CheckableHeader      *m_header;
     QAction              *m_showPackageVersion;
+    QAction              *m_showPackageCurrentVersion;
     QAction              *m_showPackageArch;
+    QAction              *m_showPackageOrigin;
     QAction              *m_showPackageSize;
     PkTransactionDialog  *m_transDialog;
     Transaction          *m_updatesT;

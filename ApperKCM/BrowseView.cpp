@@ -74,8 +74,12 @@ void BrowseView::init(Transaction::Roles roles)
     packageView->header()->setResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
     packageView->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
     packageView->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
+    packageView->header()->setResizeMode(PackageModel::OriginCol, QHeaderView::ResizeToContents);
     packageView->header()->setResizeMode(PackageModel::SizeCol, QHeaderView::ResizeToContents);
     packageView->header()->setResizeMode(PackageModel::ActionCol, QHeaderView::ResizeToContents);
+
+    // Hide current Version since it's useless for us
+    packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, true);
 
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     packageView->setItemDelegate(delegate);
@@ -99,6 +103,13 @@ void BrowseView::init(Transaction::Roles roles)
     m_showPackageArch->setCheckable(true);
     connect(m_showPackageArch, SIGNAL(toggled(bool)), this, SLOT(showArchs(bool)));
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowApplicationArchitectures", false));
+
+    // Origin
+    packageView->header()->setSectionHidden(PackageModel::OriginCol, true);
+    m_showPackageOrigin = new QAction(i18n("Show Origins"), this);
+    m_showPackageOrigin->setCheckable(true);
+    connect(m_showPackageOrigin, SIGNAL(toggled(bool)), this, SLOT(showOrigins(bool)));
+    m_showPackageOrigin->setChecked(viewGroup.readEntry("ShowApplicationOrigins", false));
 
     // Sizes
     packageView->header()->setSectionHidden(PackageModel::SizeCol, true);
@@ -145,6 +156,14 @@ void BrowseView::showArchs(bool enabled)
     packageDetails->hidePackageArch(enabled);
 }
 
+void BrowseView::showOrigins(bool enabled)
+{
+    KConfig config("apper");
+    KConfigGroup viewGroup(&config, "BrowseView");
+    viewGroup.writeEntry("ShowApplicationOrigins", enabled);
+    packageView->header()->setSectionHidden(PackageModel::OriginCol, !enabled);
+}
+
 void BrowseView::showSizes(bool enabled)
 {
     KConfig config("apper");
@@ -162,6 +181,7 @@ void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
     KMenu *menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
     menu->addAction(m_showPackageArch);
+    menu->addAction(m_showPackageOrigin);
     menu->addAction(m_showPackageSizes);
     menu->exec(packageView->mapToGlobal(pos));
     menu->deleteLater();

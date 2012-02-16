@@ -86,7 +86,9 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     // This must be set AFTER the model is set, otherwise it doesn't work
     m_header->setResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
     m_header->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(PackageModel::CurrentVersionCol, QHeaderView::ResizeToContents);
     m_header->setResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
+    m_header->setResizeMode(PackageModel::OriginCol, QHeaderView::ResizeToContents);
     m_header->setResizeMode(PackageModel::SizeCol, QHeaderView::ResizeToContents);
     m_header->setStretchLastSection(false);
 
@@ -110,12 +112,26 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     connect(m_showPackageVersion, SIGNAL(toggled(bool)), this, SLOT(showVersions(bool)));
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", true));
 
+    // versions
+    packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, true);
+    m_showPackageCurrentVersion = new QAction(i18n("Show Current Versions"), this);
+    m_showPackageCurrentVersion->setCheckable(true);
+    connect(m_showPackageCurrentVersion, SIGNAL(toggled(bool)), this, SLOT(showCurrentVersions(bool)));
+    m_showPackageCurrentVersion->setChecked(viewGroup.readEntry("ShowCurrentVersions", false));
+
     // Arch
     packageView->header()->setSectionHidden(PackageModel::ArchCol, true);
     m_showPackageArch = new QAction(i18n("Show Architectures"), this);
     m_showPackageArch->setCheckable(true);
     connect(m_showPackageArch, SIGNAL(toggled(bool)), this, SLOT(showArchs(bool)));
-    m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));    
+    m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
+
+    // Origin
+    packageView->header()->setSectionHidden(PackageModel::OriginCol, true);
+    m_showPackageOrigin = new QAction(i18n("Show Origins"), this);
+    m_showPackageOrigin->setCheckable(true);
+    connect(m_showPackageOrigin, SIGNAL(toggled(bool)), this, SLOT(showOrigins(bool)));
+    m_showPackageOrigin->setChecked(viewGroup.readEntry("ShowOrigins", false));
 
     // Sizes
     packageView->header()->setSectionHidden(PackageModel::SizeCol, true);
@@ -142,6 +158,17 @@ void Updater::showVersions(bool enabled)
     packageView->header()->setSectionHidden(PackageModel::VersionCol, !enabled);
 }
 
+void Updater::showCurrentVersions(bool enabled)
+{
+    KConfig config("apper");
+    KConfigGroup viewGroup(&config, "UpdateView");
+    viewGroup.writeEntry("ShowCurrentVersions", enabled);
+    packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, !enabled);
+    if (enabled) {
+        m_updatesModel->fetchCurrentVersions();
+    }
+}
+
 void Updater::showArchs(bool enabled)
 {
     KConfig config("apper");
@@ -150,12 +177,23 @@ void Updater::showArchs(bool enabled)
     packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
 }
 
+void Updater::showOrigins(bool enabled)
+{
+    KConfig config("apper");
+    KConfigGroup viewGroup(&config, "UpdateView");
+    viewGroup.writeEntry("showOrigins", enabled);
+    packageView->header()->setSectionHidden(PackageModel::OriginCol, !enabled);
+}
+
 void Updater::showSizes(bool enabled)
 {
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowSizes", enabled);
     packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
+    if (enabled) {
+        m_updatesModel->fetchSizes();
+    }
 }
 
 void Updater::updatePallete()
@@ -300,8 +338,13 @@ void Updater::getUpdates()
             m_busySeq, SLOT(stop()));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_updatesModel, SLOT(finished()));
+    // This is required to estimate download size
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_updatesModel, SLOT(fetchSizes()));
+    if (m_showPackageCurrentVersion) {
+        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                m_updatesModel, SLOT(fetchCurrentVersions()));
+    }
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(getUpdatesFinished()));
     // get all updates
@@ -345,7 +388,9 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
     KMenu *menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
+    menu->addAction(m_showPackageCurrentVersion);
     menu->addAction(m_showPackageArch);
+    menu->addAction(m_showPackageOrigin);
     menu->addAction(m_showPackageSize);
     QAction *action;
     action = menu->addAction(i18n("Check for new Updates"));
