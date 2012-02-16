@@ -1,4 +1,5 @@
 find_package(KDE4Internal REQUIRED)
+find_package(KDE4Workspace REQUIRED)
 
 set(sentinel_SRCS
     StatusNotifierItem.cpp
@@ -56,6 +57,7 @@ kde4_add_executable(apper-sentinel
 )
 
 target_link_libraries(apper-sentinel
+    ${KDE4WORKSPACE_KWORKSPACE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_SOLID_LIBS}

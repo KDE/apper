@@ -22,6 +22,8 @@
 
 #include "UpdateIcon.h"
 
+#include "StatusNotifierItem.h"
+
 #include <PkStrings.h>
 #include <PkIcons.h>
 #include <Macros.h>
@@ -150,12 +152,7 @@ void UpdateIcon::packageToUpdate(const Package &package)
 void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
 {
     if (!m_statusNotifierItem) {
-        m_statusNotifierItem = new KStatusNotifierItem(this);
-        m_statusNotifierItem->setCategory(KStatusNotifierItem::SystemServices);
-        m_statusNotifierItem->setStatus(KStatusNotifierItem::Active);
-        // Remove the EXIT button
-        KActionCollection *actions = m_statusNotifierItem->actionCollection();
-        actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
+        m_statusNotifierItem = new StatusNotifierItem(this);
         // Setup a menu with some actions
         KMenu *menu = new KMenu;
         menu->addTitle(KIcon(UPDATES_ICON), i18n("Apper"));

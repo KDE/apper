@@ -35,6 +35,8 @@
 #include <KWindowSystem>
 #include <KMessageBox>
 
+#include <kworkspace/kworkspace.h>
+
 #include <Solid/PowerManagement>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -161,7 +163,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
     if (exit == Transaction::ExitSuccess && !transaction->property("restartType").isNull()) {
         Package::Restart type = transaction->property("restartType").value<Package::Restart>();
 
-        // Create the notification object
+        // Create the notification about this transaction
         KNotification *notify = new KNotification("RestartRequired");
         QString text("<b>" + i18n("The system update has completed") + "</b>");
         text.append("<br>" + PkStrings::restartType(type));
@@ -171,29 +173,41 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
             text.append("<br>");
             text.append(i18n("Packages: %1", m_restartPackages.join(", ")));
         }
-
         notify->setPixmap(PkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         notify->setText(text);
         notify->sendEvent();
 
         if (m_restartSNI == 0) {
-            QString iconName = PkIcons::restartIconName(m_restartType);
             m_restartSNI = new StatusNotifierItem(this);
-            m_restartSNI->setToolTip(iconName,
-                                     PkStrings::restartType(m_restartType),
-                                     i18np("Package: %2",
-                                           "Packages: %2",
-                                           m_restartPackages.size(),
-                                           m_restartPackages.join(", ")));
-            connect(m_messagesSNI, SIGNAL(activateRequested(bool, QPoint)),
+            connect(m_restartSNI, SIGNAL(activateRequested(bool,QPoint)),
                     this, SLOT(logout()));
+            // Right click shows HIDE action
+            QAction *action;
+            action = m_restartSNI->contextMenu()->addAction(i18n("Hide"));
+            connect(action, SIGNAL(triggered(bool)),
+                    this, SLOT(hideRestartIcon()));
         }
 
+        // Now check if old transactions had a higher restart importance
         int old = PackageImportance::restartImportance(m_restartType);
         int newer = PackageImportance::restartImportance(type);
         // Check to see which one is more important
         if (newer > old) {
             m_restartType = type;
+            // The restart type changed let's update the Icon
+            QString iconName;
+            QString subtitle;
+            if (!m_restartPackages.isEmpty()) {
+                subtitle = i18np("Package: %2",
+                                 "Packages: %2",
+                                 m_restartPackages.size(),
+                                 m_restartPackages.join(", "));
+            }
+            iconName = PkIcons::restartIconName(m_restartType);
+            m_restartSNI->setToolTip(iconName,
+                                     PkStrings::restartType(m_restartType),
+                                     subtitle);
+            m_restartSNI->setIconByName(iconName);
         }
     }
 }
@@ -227,6 +241,8 @@ void TransactionWatcher::message(PackageKit::Transaction::Message type, const QS
         QIcon icon = PkIcons::getPreloadedIcon("kpk-important");
         m_messagesSNI = new StatusNotifierItem(this);
         m_messagesSNI->setIconByPixmap(icon);
+        // Seems that this break in the restart icon
+        m_messagesSNI->setAssociatedWidget(m_messagesSNI->contextMenu());
         m_messagesSNI->setToolTip(icon,
                                   i18n("Software Manager Messages"),
                                   i18np("One message from the software manager",
@@ -339,36 +355,22 @@ void TransactionWatcher::requireRestart(PackageKit::Package::Restart type, const
 
 void TransactionWatcher::logout()
 {
-    // We call KSM server to restart or logout our system
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.ksmserver",
-                                             "/KSMServer",
-                                             "org.kde.KSMServerInterface",
-                                             QLatin1String("logout"));
-    // We are polite
-    // KWorkSpace::ShutdownConfirmYes = 1
-    message << qVariantFromValue(1);
-
+    KWorkSpace::ShutdownType shutdownType;
     if (m_restartType == Package::RestartSystem) {
         // The restart type was system
-        // KWorkSpace::ShutdownTypeReboot = 1
-        message << qVariantFromValue(1);
+        shutdownType = KWorkSpace::ShutdownTypeReboot;
     } else if (m_restartType == Package::RestartSession) {
         // The restart type was session
-        // KWorkSpace::ShutdownTypeLogout = 3
-        message << qVariantFromValue(3);
+        shutdownType = KWorkSpace::ShutdownTypeLogout;
     } else {
         kWarning() << "Unknown restart type:" << m_restartType;
         return;
     }
-    // Try now
-    // KWorkSpace::ShutdownModeTryNow = 1
-    message << qVariantFromValue(1);
 
-    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-    if (reply.type() != QDBusMessage::ReplyMessage) {
-        kWarning() << "Message did not receive a reply" << reply;
-    }
+    // We call KSM server to restart or logout our system
+    KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmYes,
+                                shutdownType,
+                                KWorkSpace::ShutdownModeInteractive);
 }
 
 void TransactionWatcher::hideMessageIcon()
@@ -379,6 +381,17 @@ void TransactionWatcher::hideMessageIcon()
         m_messagesSNI = 0;
     }
     m_messages.clear();
+    emit close();
+}
+
+void TransactionWatcher::hideRestartIcon()
+{
+    // Reset things as the user don't want to see it
+    if (m_restartSNI) {
+        m_restartSNI->deleteLater();
+        m_restartSNI = 0;
+    }
+    m_restartType = Package::RestartNone;
     emit close();
 }
 

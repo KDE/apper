@@ -53,6 +53,7 @@ private slots:
     void logout();
     void showMessages();
     void hideMessageIcon();
+    void hideRestartIcon();
 
 private:
     void suppressSleep(bool enable, const QString &reason = QString());

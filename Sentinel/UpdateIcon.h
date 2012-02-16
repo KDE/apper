@@ -25,12 +25,11 @@
 
 #include "AbstractIsRunning.h"
 
-#include <KStatusNotifierItem>
-
 #include <Transaction>
 
 using namespace PackageKit;
 
+class StatusNotifierItem;
 class UpdateIcon : public AbstractIsRunning
 {
     Q_OBJECT
@@ -64,7 +63,7 @@ private:
     bool systemIsReady(bool checkUpdates);
 
     Transaction *m_getUpdatesT;
-    KStatusNotifierItem *m_statusNotifierItem;
+    StatusNotifierItem *m_statusNotifierItem;
     QList<Package> m_updateList;
 
     void updateStatusNotifierIcon(UpdateType type);

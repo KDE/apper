@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2010-2012 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -33,7 +33,6 @@ StatusNotifierItem::StatusNotifierItem(QObject *parent)
     // Remove standard quit action, as it would quit app
     KActionCollection *actions = actionCollection();
     actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
-    setAssociatedWidget(contextMenu());
 }
 
 StatusNotifierItem::~StatusNotifierItem()
