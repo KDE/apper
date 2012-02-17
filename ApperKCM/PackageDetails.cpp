@@ -481,6 +481,7 @@ void PackageDetails::display()
                     if (m_currentFileList.isEmpty()) {
                         filesPTE->insertPlainText(i18n("No files were found."));
                     } else {
+                        m_currentFileList.sort();
                         filesPTE->insertPlainText(m_currentFileList.join("\n"));
                     }
 
