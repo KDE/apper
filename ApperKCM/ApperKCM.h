@@ -123,7 +123,6 @@ private:
     Package::Group   m_searchGroup;
     QModelIndex   m_searchParentCategory;
     QStringList   m_searchCategory;
-    Transaction::Filters m_searchFilters;
 };
 
 #endif

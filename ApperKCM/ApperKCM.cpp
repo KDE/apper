@@ -162,7 +162,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
 
     // install the backend filters
     filtersTB->setMenu(m_filtersMenu = new FiltersMenu(Daemon::filters(), this));
-    connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(genericActionKTriggered()));
+    connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(search()));
     filtersTB->setIcon(KIcon("view-filter"));
     browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(QString)),
@@ -319,7 +319,6 @@ void ApperKCM::on_actionFindName_triggered()
         // cache the search
         m_searchRole    = Transaction::RoleSearchName;
         m_searchString  = searchKLE->text();
-        m_searchFilters = m_filtersMenu->filters();
         // create the main transaction
         search();
     }
@@ -332,7 +331,6 @@ void ApperKCM::on_actionFindDescription_triggered()
         // cache the search
         m_searchRole    = Transaction::RoleSearchDetails;
         m_searchString  = searchKLE->text();
-        m_searchFilters = m_filtersMenu->filters();
         // create the main transaction
         search();
     }
@@ -345,7 +343,6 @@ void ApperKCM::on_actionFindFile_triggered()
         // cache the search
         m_searchRole    = Transaction::RoleSearchFile;
         m_searchString  = searchKLE->text();
-        m_searchFilters = m_filtersMenu->filters();
         // create the main transaction
         search();
     }
@@ -365,7 +362,6 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
 
         // cache the search
         m_searchRole    = static_cast<Transaction::Role>(index.data(CategoryModel::SearchRole).toUInt());
-        m_searchFilters = m_filtersMenu->filters();
         if (m_searchRole == Transaction::RoleResolve) {
             m_searchString = index.data(CategoryModel::CategoryRole).toString();
         } else if (m_searchRole == Transaction::RoleSearchGroup) {
@@ -614,23 +610,23 @@ void ApperKCM::search()
             this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
     switch (m_searchRole) {
     case Transaction::RoleSearchName:
-        m_searchTransaction->searchNames(m_searchString, m_searchFilters);
+        m_searchTransaction->searchNames(m_searchString, m_filtersMenu->filters());
         break;
     case Transaction::RoleSearchDetails:
-        m_searchTransaction->searchDetails(m_searchString, m_searchFilters);
+        m_searchTransaction->searchDetails(m_searchString, m_filtersMenu->filters());
         break;
     case Transaction::RoleSearchFile:
-        m_searchTransaction->searchFiles(m_searchString, m_searchFilters);
+        m_searchTransaction->searchFiles(m_searchString, m_filtersMenu->filters());
         break;
     case Transaction::RoleSearchGroup:
         if (m_searchGroupCategory.isEmpty()) {
-            m_searchTransaction->searchGroup(m_searchGroup, m_searchFilters);
+            m_searchTransaction->searchGroup(m_searchGroup, m_filtersMenu->filters());
         } else {
             browseView->setParentCategory(m_searchParentCategory);
 #ifndef HAVE_APPINSTALL
             if (m_searchGroupCategory.startsWith('@') ||
                 m_searchGroupCategory.startsWith(QLatin1String("repo:"))) {
-                m_searchTransaction->searchGroup(m_searchGroupCategory, m_searchFilters);
+                m_searchTransaction->searchGroup(m_searchGroupCategory, m_filtersMenu->filters());
             }
 #endif //HAVE_APPINSTALL
             // else the transaction is useless
@@ -641,7 +637,7 @@ void ApperKCM::search()
         browseView->disableExportInstalledPB();
         connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 browseView, SLOT(enableExportInstalledPB()));
-        m_searchTransaction->getPackages(Transaction::FilterInstalled);
+        m_searchTransaction->getPackages(Transaction::FilterInstalled | m_filtersMenu->filters());
         break;
     case Transaction::RoleResolve:
     {
@@ -650,7 +646,7 @@ void ApperKCM::search()
             browseView->setParentCategory(m_searchParentCategory);
             // WARNING the resolve might fail if the backend
             // has a low limit MaximumItemsToResolve
-            m_searchTransaction->resolve(packages, m_searchFilters);
+            m_searchTransaction->resolve(packages, m_filtersMenu->filters());
         } else {
             return;
         }
