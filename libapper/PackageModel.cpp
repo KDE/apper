@@ -470,9 +470,7 @@ void PackageModel::fetchSizes()
     // get package size
     QList<Package> pkgs;
     foreach (const InternalPackage &p, m_packages) {
-        if (p.size == 0) {
-            pkgs << Package(p.id);
-        }
+        pkgs << Package(p.id);
     }
 
     if (!pkgs.isEmpty()) {
@@ -528,9 +526,7 @@ void PackageModel::fetchCurrentVersions()
     // get package current version
     QStringList pkgs;
     foreach (const InternalPackage &p, m_packages) {
-        if (p.size == 0) {
-            pkgs << p.name;
-        }
+        pkgs << p.name;
     }
 
     if (!pkgs.isEmpty()) {
@@ -540,7 +536,6 @@ void PackageModel::fetchCurrentVersions()
         connect(m_fetchInstalledVersionsTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(fetchCurrentVersionsFinished()));
         m_fetchInstalledVersionsTransaction->resolve(pkgs, Transaction::FilterInstalled);
-            kDebug() << pkgs;
     }
 }
 
@@ -554,7 +549,7 @@ void PackageModel::fetchCurrentVersionsFinished()
     }
     // emit this after all is changed otherwise on large models it will
     // be hell slow...
-    emit dataChanged(createIndex(0, SizeCol), createIndex(m_packageCount, SizeCol));
+    emit dataChanged(createIndex(0, CurrentVersionCol), createIndex(m_packageCount, CurrentVersionCol));
     emit changed(!m_checkedPackages.isEmpty());
 }
 
@@ -570,7 +565,7 @@ void PackageModel::updateCurrentVersion(const PackageKit::Package &package)
                     // updates the checked packages as well
                     if (m_checkedPackages.contains(m_packages[i].id)) {
                         // Avoid checking packages that aren't checked
-                        m_checkedPackages[package.id()].currentVersion = package.version();
+                        m_checkedPackages[m_packages[i].id].currentVersion = package.version();
                     }
                     break;
                 }

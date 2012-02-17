@@ -341,7 +341,7 @@ void Updater::getUpdates()
     // This is required to estimate download size
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             m_updatesModel, SLOT(fetchSizes()));
-    if (m_showPackageCurrentVersion) {
+    if (m_showPackageCurrentVersion->isChecked()) {
         connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 m_updatesModel, SLOT(fetchCurrentVersions()));
     }
