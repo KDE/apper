@@ -29,8 +29,7 @@ namespace Ui {
     class InfoWidget;
 }
 
-class FilesModel;
-class InfoWidget : public QWidget
+class KDE_EXPORT InfoWidget : public QWidget
 {
     Q_OBJECT
 public:

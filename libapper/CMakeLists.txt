@@ -28,6 +28,8 @@ set(libapper_SRCS
     PackageImportance.cpp
     SimulateModel.cpp
     CategorizedView.cpp
+    InfoWidget.cpp
+    ReviewChanges.cpp
 )
 
 kde4_add_ui_files(libapper_SRCS
@@ -36,6 +38,8 @@ kde4_add_ui_files(libapper_SRCS
     RepoSig.ui
     LicenseAgreement.ui
     Requirements.ui
+    InfoWidget.ui
+    ReviewChanges.ui
 )
 
 kde4_add_library(apper SHARED ${libapper_SRCS})
