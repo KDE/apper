@@ -20,14 +20,22 @@
 #ifndef SetupWizard_H
 #define SetupWizard_H
 
-#include <KXmlGuiWindow>
+#include <KDialog>
 
-class SetupWizard : public KMainWindow
+namespace Ui {
+    class SetupWizard;
+}
+
+class SetupWizard : public KDialog
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    SetupWizard();
+    SetupWizard(QWidget *parent = 0);
     virtual ~SetupWizard();
+
+private:
+    Ui::SetupWizard *ui;
+
 };
 
 #endif // SetupWizard_H

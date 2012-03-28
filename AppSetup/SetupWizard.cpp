@@ -18,6 +18,7 @@
  */
 
 #include "SetupWizard.h"
+#include "ui_SetupWizard.h"
 
 #include <QLabel>
 #include <QApplication>
@@ -25,12 +26,34 @@
 #include <KMenuBar>
 #include <KDebug>
 
-SetupWizard::SetupWizard()
+#include "InfoWidget.h"
+
+SetupWizard::SetupWizard(QWidget *parent)
+    : KDialog (parent),
+      ui(new Ui::SetupWizard)
 {
-    QLabel* l = new QLabel( this );
-    l->setText( "Hello World!\nThis will become the Listaller app installer for Apper! :)" );
-    setCentralWidget( l );
+    ui->setupUi(KDialog::mainWidget());
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    setWindowIcon(KIcon("applications-other"));
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    setButtonText(KDialog::Ok, i18n("Continue"));
+    setButtonIcon(KDialog::Ok, KIcon("go-next"));
+    enableButtonOk(false);
+
+    InfoWidget *info = new InfoWidget(this);
+    info->setDescription("AppSetup template");
+    info->setDetails("This will become a simple Listaller setup wizard");
+
+    ui->stackedWidget->addWidget(info);
+
+    setMinimumSize(QSize(430,280));
+    KConfig config("apper");
+    KConfigGroup configGroup(&config, "AppInstaller");
+    restoreDialogSize(configGroup);
 }
 
 SetupWizard::~SetupWizard()
-{}
+{
+    delete ui;
+}

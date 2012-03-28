@@ -9,7 +9,13 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 		    ${LISTALLER_INCLUDE_DIRS}
 )
 
-set(AppSetup_SRCS SetupWizard.cpp main.cpp)
+set(AppSetup_SRCS main.cpp
+	SetupWizard.cpp
+)
+
+kde4_add_ui_files(AppSetup_SRCS
+	SetupWizard.ui
+)
 
 kde4_add_executable(appsetup-kde ${AppSetup_SRCS})
 
