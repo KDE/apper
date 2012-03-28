@@ -70,4 +70,12 @@ void InfoWidget::addWidget(QWidget *widget)
     }
 }
 
+void InfoWidget::reset()
+{
+    ui->iconL->setPixmap(KIcon("dialog-warning").pixmap(128, 128));
+    setWindowTitle("");
+    setDescription("");
+    setDetails("");
+}
+
 #include "InfoWidget.moc"

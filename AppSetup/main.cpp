@@ -21,6 +21,8 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KApplication>
+#include <KMessageBox>
+#include <QFileInfo>
 #include <glib-object.h>
 
 #include "SetupWizard.h"
@@ -43,11 +45,31 @@ int main(int argc, char** argv)
     options.add("debug", ki18n("Show debugging information"));
     KCmdLineArgs::addCmdLineOptions(options);
 
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QString fname = "";
+    for(int i = 0; i < args->count(); i++) {
+        fname = args->arg(i);
+        QFileInfo file(fname);
+        if (!file.exists())
+	  fname = "";
+	else
+	  break;
+    }
+    args->clear();
+
     // Initialize GObject type system
     g_type_init();
 
     KApplication app;
-    SetupWizard *wizard = new SetupWizard();
+    // Check if we have a package
+    if (fname == "") {
+        KMessageBox::sorry (0, "Sorry, we didn't get an existing IPK package as parameter.\n",
+			    "Package not found!");
+	return 1;
+    }
+
+    // Create & run the setup wizard
+    SetupWizard *wizard = new SetupWizard(fname);
     wizard->show();
     return app.exec();
 }

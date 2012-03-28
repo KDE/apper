@@ -40,6 +40,7 @@ public:
     void setIcon(const KIcon &icon);
     void setDetails(const QString &details);
     void addWidget(QWidget *widget);
+    void reset();
 
 private:
     Ui::InfoWidget *ui;

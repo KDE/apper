@@ -26,16 +26,24 @@ namespace Ui {
     class SetupWizard;
 }
 
+class SetupWizardPrivate;
+
 class SetupWizard : public KDialog
 {
     Q_OBJECT
 public:
-    SetupWizard(QWidget *parent = 0);
+    SetupWizard(const QString& ipkFName, QWidget *parent = 0);
     virtual ~SetupWizard();
 
-private:
-    Ui::SetupWizard *ui;
+    virtual void slotButtonClicked(int button);
 
+    bool initialize();
+
+    SetupWizardPrivate *getPriv() { return d; };
+private:
+    SetupWizardPrivate *const d;
+
+    Ui::SetupWizard *ui;
 };
 
 #endif // SetupWizard_H
