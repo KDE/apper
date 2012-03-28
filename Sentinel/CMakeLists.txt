@@ -26,6 +26,7 @@ set(sentinel_SRCS
     PkInstallPrinterDrivers.cpp
     ApperSentinel.cpp
     IntroDialog.cpp
+    ReviewChanges.cpp
     SessionTask.cpp
     main.cpp
 )
@@ -44,6 +45,7 @@ qt4_add_dbus_adaptor(sentinel_dbus_SRCS
 
 kde4_add_ui_files(sentinel_SRCS
     IntroDialog.ui
+    ReviewChanges.ui
     SessionTask.ui
 )
 

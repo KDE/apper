@@ -32,7 +32,7 @@ namespace Ui {
 using namespace PackageKit;
 
 class PackageModel;
-class Q_DECL_EXPORT ReviewChanges : public QWidget
+class ReviewChanges : public QWidget
 {
     Q_OBJECT
 public:
