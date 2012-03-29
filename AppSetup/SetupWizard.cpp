@@ -29,26 +29,27 @@
 #include <listaller.h>
 
 #include "InfoWidget.h"
+#include "SimplePage.h"
 
 class SetupWizardPrivate
 {
-    public:
-        SetupWizardPrivate()
-            : liSetup(NULL)
-        {
-            // Create a new Listaller settings module
-            liConf = listaller_settings_new (false);
-        }
-        ~SetupWizardPrivate()
-        {
-	   if (liSetup != NULL)
-	      g_object_unref (liSetup);
-            g_object_unref (liConf);
-        }
+public:
+    SetupWizardPrivate()
+        : liSetup(NULL)
+    {
+        // Create a new Listaller settings module
+        liConf = listaller_settings_new (false);
+    }
+    ~SetupWizardPrivate()
+    {
+        if (liSetup != NULL)
+            g_object_unref (liSetup);
+        g_object_unref (liConf);
+    }
 
-        ListallerSettings *liConf;
-        ListallerSetup *liSetup;
-	InfoWidget *infoPage;
+    ListallerSettings *liConf;
+    ListallerSetup *liSetup;
+    InfoWidget *infoPage;
 };
 
 void on_lisetup_message (GObject *sender, ListallerMessageItem *message, SetupWizard *self)
@@ -76,9 +77,9 @@ void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWiz
     d->infoPage->setDescription("An error occured");
     d->infoPage->setIcon(KIcon("dialog-error"));
     d->infoPage->setDetails(listaller_error_item_get_details(error));
-    //self->setMainWidget(d->infoPage);
     self->setButtons(KDialog::Close);
     self->button(KDialog::Close)->setFocus();
+    self->setCurrentPage(d->infoPage);
 }
 
 void on_lisetup_progress_changed (GObject *sender, int progress, int subProgress, SetupWizard *self)
@@ -96,16 +97,18 @@ SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
     setAttribute(Qt::WA_DeleteOnClose);
 
     setWindowIcon(KIcon("applications-other"));
-    setButtons(KDialog::Ok | KDialog::Cancel);
+    setButtons(KDialog::User1 | KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
     setButtonIcon(KDialog::Ok, KIcon("go-next"));
+    setButtonText(KDialog::User1, i18n("Back"));
+    setButtonIcon(KDialog::User1, KIcon("go-previous"));
+
     enableButtonOk(true);
 
-    d->infoPage = new InfoWidget(this);
-    d->infoPage->setDescription("AppSetup template");
-    d->infoPage->setDetails("This will become a simple Listaller setup wizard");
+    connect(ui->stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(currentPageChanged(int)));
 
-    ui->stackedWidget->addWidget(d->infoPage);
+    // Build layout of our setup wizard
+    constructWizardLayout();
 
     setMinimumSize(QSize(430,280));
     KConfig config("apper");
@@ -126,11 +129,72 @@ SetupWizard::~SetupWizard()
     delete ui;
 }
 
+void SetupWizard::constructWizardLayout()
+{
+    d->infoPage = new InfoWidget(this);
+    d->infoPage->setWindowTitle("Information");
+    ui->stackedWidget->addWidget(d->infoPage);
+
+    SimplePage *introP = new SimplePage(this);
+    introP->setTitle(i18n("Welcome!"));
+    QString appName = "TestApp";
+    introP->setDescription(i18n("Welcome to the installation of %1!", appName));
+    introP->setDetails(i18n("Please be careful while installing 3rd-party applications.<br>"
+                            "They may eventually <b>damage</b> your system or "
+                            "have <b>malicious behaviour</b>, like spying out your passwords.<br>"
+                            "Please do only install this software if you <b>trust the "
+                            "publisher and the author</b> of it."));
+    ui->stackedWidget->addWidget(introP);
+
+    SimplePage *detailsP = new SimplePage(this);
+    detailsP->setTitle(i18n("Details"));
+    detailsP->setDescription(i18n("Details about this installation"));
+    detailsP->setDetails("::TODO");
+    ui->stackedWidget->addWidget(detailsP);
+
+    setCurrentPage(introP);
+}
+
+void SetupWizard::currentPageChanged(int index)
+{
+    // Set the page title
+    ui->titleL->setText(ui->stackedWidget->currentWidget()->windowTitle());
+
+    // Show "back" button if necessary
+    if (index > 1)
+        enableButton(KDialog::User1, true);
+    else
+        enableButton(KDialog::User1, false);
+}
+
+void SetupWizard::setCurrentPage(QWidget* widget)
+{
+    ui->stackedWidget->setCurrentWidget(widget);
+}
+
 void SetupWizard::slotButtonClicked(int button)
 {
-    //if (button == KDialog::Ok) {
-    //     initialize();
-    //}
+    if (button == KDialog::Ok) {
+        // We go forward
+
+        int index = ui->stackedWidget->currentIndex();
+        if (index < 2) {
+            index++;
+            ui->stackedWidget->setCurrentIndex(index);
+        }
+    } else if (button == KDialog::User1) {
+        // We go back
+
+        int index = ui->stackedWidget->currentIndex();
+        if (index > 1) {
+            index--;
+            ui->stackedWidget->setCurrentIndex(index);
+            if (index == 1)
+                enableButton(KDialog::User1, false);
+        }
+    } else if (button == KDialog::Cancel) {
+        close();
+    }
 }
 
 bool SetupWizard::initialize()

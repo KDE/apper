@@ -17,40 +17,35 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef SetupWizard_H
-#define SetupWizard_H
+#ifndef SIMPLE_PAGE_H
+#define SIMPLE_PAGE_H
 
-#include <KDialog>
+#include <QWidget>
+#include <QAbstractItemModel>
+#include <KIcon>
 
 namespace Ui {
-    class SetupWizard;
+    class SimplePage;
 }
 
-class SetupWizardPrivate;
-
-class SetupWizard : public KDialog
+class SimplePage : public QWidget
 {
     Q_OBJECT
 public:
-    SetupWizard(const QString& ipkFName, QWidget *parent = 0);
-    virtual ~SetupWizard();
+    SimplePage(QWidget *parent = 0);
+    ~SimplePage();
 
-    virtual void slotButtonClicked(int button);
+    void setTitle(const QString& title);
+    void setDescription(const QString &description);
+    void setDetails(const QString &details, bool isHtml = true);
+    void reset();
 
-    bool initialize();
-
-    void setCurrentPage(QWidget *widget);
-
-    SetupWizardPrivate *getPriv() { return d; };
-
-private slots:
-    void currentPageChanged(int index);
+    void addWidget(QWidget *widget);
 
 private:
-    void constructWizardLayout();
+    int m_pageId;
 
-    SetupWizardPrivate *const d;
-    Ui::SetupWizard *ui;
+    Ui::SimplePage *ui;
 };
 
-#endif // SetupWizard_H
+#endif

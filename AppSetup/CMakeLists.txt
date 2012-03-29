@@ -13,10 +13,12 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 
 set(AppSetup_SRCS main.cpp
 	SetupWizard.cpp
+	SimplePage.cpp
 )
 
 kde4_add_ui_files(AppSetup_SRCS
 	SetupWizard.ui
+	SimplePage.ui
 )
 
 kde4_add_executable(appsetup-kde ${AppSetup_SRCS})
