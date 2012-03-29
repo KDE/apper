@@ -30,6 +30,7 @@
 
 #include "InfoWidget.h"
 #include "SimplePage.h"
+#include "LicensePage.h"
 
 class SetupWizardPrivate
 {
@@ -49,6 +50,7 @@ public:
 
     ListallerSettings *liConf;
     ListallerSetup *liSetup;
+    ListallerAppItem *appID;
     InfoWidget *infoPage;
 };
 
@@ -107,9 +109,6 @@ SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
 
     connect(ui->stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(currentPageChanged(int)));
 
-    // Build layout of our setup wizard
-    constructWizardLayout();
-
     setMinimumSize(QSize(430,280));
     KConfig config("apper");
     KConfigGroup configGroup(&config, "AppInstaller");
@@ -121,6 +120,12 @@ SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
     g_signal_connect (d->liSetup, "status-changed", (GCallback) on_lisetup_status_changed, this);
     g_signal_connect (d->liSetup, "progress-changed", (GCallback) on_lisetup_progress_changed, this);
     g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code, this);
+
+    // Initialize the setup, required to have an AppItem present
+    initialize();
+
+    // Build layout of our setup wizard
+    constructWizardLayout();
 }
 
 SetupWizard::~SetupWizard()
@@ -135,9 +140,16 @@ void SetupWizard::constructWizardLayout()
     d->infoPage->setWindowTitle("Information");
     ui->stackedWidget->addWidget(d->infoPage);
 
+    if (d->appID == NULL) {
+	kDebug() << "AppID was NULL!";
+	return;
+    }
+
+    QString appName = listaller_app_item_get_full_name(d->appID);
+
+    // Welcome page
     SimplePage *introP = new SimplePage(this);
     introP->setTitle(i18n("Welcome!"));
-    QString appName = "TestApp";
     introP->setDescription(i18n("Welcome to the installation of %1!", appName));
     introP->setDetails(i18n("Please be careful while installing 3rd-party applications.<br>"
                             "They may eventually <b>damage</b> your system or "
@@ -146,11 +158,30 @@ void SetupWizard::constructWizardLayout()
                             "publisher and the author</b> of it."));
     ui->stackedWidget->addWidget(introP);
 
+    // Setup details page
     SimplePage *detailsP = new SimplePage(this);
     detailsP->setTitle(i18n("Details"));
     detailsP->setDescription(i18n("Details about this installation"));
     detailsP->setDetails("::TODO");
     ui->stackedWidget->addWidget(detailsP);
+
+    // Application description page
+    SimplePage *descP = new SimplePage(this);
+    descP->setTitle(i18n("Application description"));
+    descP->setDescription(i18n("Description"));
+    descP->setDetails(listaller_app_item_get_description(d->appID));
+    ui->stackedWidget->addWidget(descP);
+
+    // License page
+    ListallerAppLicense appLicense;
+    listaller_app_item_get_license(d->appID, &appLicense);
+    LicensePage *licenseP = new LicensePage(this);
+    licenseP->setTitle(i18n("Software license"));
+    licenseP->setDescription(i18n("Please read the following terms and conditions carefully!"));
+    licenseP->setLicenseText(appLicense.text);
+    ui->stackedWidget->addWidget(licenseP);
+
+    // Setup exec page
 
     setCurrentPage(introP);
 }
@@ -178,7 +209,7 @@ void SetupWizard::slotButtonClicked(int button)
         // We go forward
 
         int index = ui->stackedWidget->currentIndex();
-        if (index < 2) {
+        if (index < 5) {
             index++;
             ui->stackedWidget->setCurrentIndex(index);
         }
@@ -199,5 +230,10 @@ void SetupWizard::slotButtonClicked(int button)
 
 bool SetupWizard::initialize()
 {
-    return listaller_setup_initialize(d->liSetup);
+    bool ret;
+    ret = listaller_setup_initialize(d->liSetup);
+    if (ret) {
+	d->appID = listaller_setup_get_current_application(d->liSetup);
+    }
+    return ret;
 }

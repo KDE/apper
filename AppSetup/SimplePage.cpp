@@ -77,4 +77,9 @@ void SimplePage::reset()
     setTitle("");
     setDescription("");
     setDetails("");
+    QList<KTextBrowser*> detailsB = findChildren<KTextBrowser*>();
+    foreach (KTextBrowser* browser, detailsB) {
+	browser->setVisible(false);
+	delete browser;
+    }
 }

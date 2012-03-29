@@ -43,6 +43,7 @@ int main(int argc, char** argv)
     // Add --debug as commandline option
     KCmdLineOptions options;
     options.add("debug", ki18n("Show debugging information"));
+    options.add("+file", ki18n("IPK package filename"));
     KCmdLineArgs::addCmdLineOptions(options);
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -51,9 +52,9 @@ int main(int argc, char** argv)
         fname = args->arg(i);
         QFileInfo file(fname);
         if (!file.exists())
-	  fname = "";
-	else
-	  break;
+            fname = "";
+        else
+            break;
     }
     args->clear();
 
@@ -61,11 +62,12 @@ int main(int argc, char** argv)
     g_type_init();
 
     KApplication app;
+
     // Check if we have a package
     if (fname == "") {
         KMessageBox::sorry (0, "Sorry, we didn't get an existing IPK package as parameter.\n",
-			    "Package not found!");
-	return 1;
+                            "Package not found!");
+        return 1;
     }
 
     // Create & run the setup wizard
