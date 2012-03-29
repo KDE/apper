@@ -65,8 +65,8 @@ int main(int argc, char** argv)
 
     // Check if we have a package
     if (fname == "") {
-        KMessageBox::sorry (0, "Sorry, we didn't get an existing IPK package as parameter.\n",
-                            "Package not found!");
+        KMessageBox::sorry (0, i18n("Sorry, we didn't get an existing IPK package as parameter."),
+                            i18n("Package not found!"));
         return 1;
     }
 

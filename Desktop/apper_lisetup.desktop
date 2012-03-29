@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Icon=applications-other
+Exec=appsetup-kde %F
+Name=Listaller Package Installer
+GenericName=3rd-Party Software Installer
+Comment=Application to install new 3rd-party software
+Categories=System;PackageManager;KDE;
+MimeType=application/x-installation;
+StartupNotify=true
+NoDisplay=true
+X-Publisher=KDE Project
+X-AppVersion=0.1

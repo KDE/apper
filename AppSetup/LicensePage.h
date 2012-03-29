@@ -30,6 +30,8 @@ namespace Ui {
     class LicensePage;
 }
 
+class QShowEvent;
+
 class LicensePage : public QWidget
 {
     Q_OBJECT
@@ -41,6 +43,15 @@ public:
     void setDescription(const QString &description);
     void setLicenseText(const QString &licenseText);
     void reset();
+
+signals:
+    void licenseAccepted(bool accepted);
+
+protected:
+    void showEvent(QShowEvent *event);
+
+private slots:
+    void licenseStateChanged(bool accepted);
 
 private:
     Ui::LicensePage *ui;

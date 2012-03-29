@@ -23,6 +23,7 @@
 #include <QLabel>
 #include <QApplication>
 #include <QAction>
+#include <QProgressBar>
 #include <KPushButton>
 #include <KMenuBar>
 #include <KDebug>
@@ -40,6 +41,7 @@ public:
     {
         // Create a new Listaller settings module
         liConf = listaller_settings_new (false);
+        PAGE_COUNT = -1;
     }
     ~SetupWizardPrivate()
     {
@@ -48,35 +50,50 @@ public:
         g_object_unref (liConf);
     }
 
+    int PAGE_COUNT;
     ListallerSettings *liConf;
     ListallerSetup *liSetup;
     ListallerAppItem *appID;
     InfoWidget *infoPage;
+    SimplePage *execPage;
+    QProgressBar *mainProgressBar;
 };
 
 void on_lisetup_message (GObject *sender, ListallerMessageItem *message, SetupWizard *self)
 {
-    Q_UNUSED(*sender);
+    Q_UNUSED(sender);
     Q_UNUSED(self);
     kDebug() << "Listaller message:" << listaller_message_item_get_details(message);
 }
 
 void on_lisetup_status_changed (GObject *sender, ListallerStatusItem *status, SetupWizard *self)
 {
-    Q_UNUSED(*sender);
-    Q_UNUSED(self);
+    Q_UNUSED(sender);
     Q_UNUSED(status);
+    SetupWizardPrivate *d = self->getPriv();
+
+    ListallerStatusEnum statusType = listaller_status_item_get_status(status);
+
+    if (statusType == LISTALLER_STATUS_ENUM_INSTALLATION_FINISHED) {
+        QString appName = listaller_app_item_get_full_name(d->appID);
+        d->infoPage->reset();
+        d->infoPage->setWindowTitle(i18n("Installation finished!"));
+        d->infoPage->setDescription(i18n("%1 has been installed successfully!", appName));
+        d->infoPage->setIcon(KIcon("dialog-ok-apply"));
+        self->setButtons(KDialog::Close);
+        self->button(KDialog::Close)->setFocus();
+        self->setCurrentPage(d->infoPage);
+    }
 }
 
 void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWizard *self)
 {
     Q_UNUSED(*sender);
-
     SetupWizardPrivate *d = self->getPriv();
-    ListallerErrorEnum etype = listaller_error_item_get_error(error);
+
     d->infoPage->reset();
-    d->infoPage->setWindowTitle(listaller_error_enum_to_string(etype));
-    d->infoPage->setDescription("An error occured");
+    d->infoPage->setWindowTitle(i18n("Error"));
+    d->infoPage->setDescription(i18n("An error occured"));
     d->infoPage->setIcon(KIcon("dialog-error"));
     d->infoPage->setDetails(listaller_error_item_get_details(error));
     self->setButtons(KDialog::Close);
@@ -86,8 +103,11 @@ void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWiz
 
 void on_lisetup_progress_changed (GObject *sender, int progress, int subProgress, SetupWizard *self)
 {
-    Q_UNUSED(*sender);
-    Q_UNUSED(self);
+    Q_UNUSED(sender);
+    Q_UNUSED(subProgress);
+    SetupWizardPrivate *d = self->getPriv();
+
+    d->mainProgressBar->setValue(progress);
 }
 
 SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
@@ -134,15 +154,18 @@ SetupWizard::~SetupWizard()
     delete ui;
 }
 
-void SetupWizard::constructWizardLayout()
+bool SetupWizard::constructWizardLayout()
 {
+    if (d->PAGE_COUNT > 0)
+        return true;
+
     d->infoPage = new InfoWidget(this);
     d->infoPage->setWindowTitle("Information");
     ui->stackedWidget->addWidget(d->infoPage);
 
     if (d->appID == NULL) {
-	kDebug() << "AppID was NULL!";
-	return;
+        kDebug() << "AppID was NULL!";
+        return false;
     }
 
     QString appName = listaller_app_item_get_full_name(d->appID);
@@ -179,11 +202,21 @@ void SetupWizard::constructWizardLayout()
     licenseP->setTitle(i18n("Software license"));
     licenseP->setDescription(i18n("Please read the following terms and conditions carefully!"));
     licenseP->setLicenseText(appLicense.text);
+    connect(licenseP, SIGNAL(licenseAccepted(bool)), this, SLOT(licenseAccepted(bool)));
     ui->stackedWidget->addWidget(licenseP);
 
     // Setup exec page
+    d->execPage = new SimplePage(this);
+    d->execPage->setTitle(i18n("Running installation"));
+    d->execPage->setDescription(i18n("Installing %1...", appName));
+    d->mainProgressBar = new QProgressBar(d->execPage);
+    d->execPage->addWidget(d->mainProgressBar);
+    ui->stackedWidget->addWidget(d->execPage);
 
+    d->PAGE_COUNT = 5;
     setCurrentPage(introP);
+
+    return true;
 }
 
 void SetupWizard::currentPageChanged(int index)
@@ -209,10 +242,21 @@ void SetupWizard::slotButtonClicked(int button)
         // We go forward
 
         int index = ui->stackedWidget->currentIndex();
-        if (index < 5) {
+        if (index < d->PAGE_COUNT) {
             index++;
             ui->stackedWidget->setCurrentIndex(index);
         }
+
+        if (index == d->PAGE_COUNT) {
+            // We can install the software now, so disable prev/fwd & abort buttons
+            enableButton(KDialog::User1, false);
+            enableButton(KDialog::Ok, false);
+            enableButton(KDialog::Cancel, false);
+
+            // We now show the install dialog, so run the installation now!
+            listaller_setup_run_installation(d->liSetup);
+        }
+
     } else if (button == KDialog::User1) {
         // We go back
 
@@ -225,7 +269,14 @@ void SetupWizard::slotButtonClicked(int button)
         }
     } else if (button == KDialog::Cancel) {
         close();
+    } else if (button == KDialog::Close) {
+        close();
     }
+}
+
+void SetupWizard::licenseAccepted(bool accepted)
+{
+    enableButton(KDialog::Ok, accepted);
 }
 
 bool SetupWizard::initialize()
@@ -233,7 +284,7 @@ bool SetupWizard::initialize()
     bool ret;
     ret = listaller_setup_initialize(d->liSetup);
     if (ret) {
-	d->appID = listaller_setup_get_current_application(d->liSetup);
+        d->appID = listaller_setup_get_current_application(d->liSetup);
     }
     return ret;
 }

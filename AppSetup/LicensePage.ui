@@ -87,7 +87,7 @@
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
-            <widget class="QRadioButton" name="radioButton_2">
+            <widget class="QRadioButton" name="acceptedRB">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -95,12 +95,12 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>I agree with the above terms and conditions</string>
+              <string>I agree to the above terms and conditions</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QRadioButton" name="radioButton">
+            <widget class="QRadioButton" name="rejectedRB">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                <horstretch>0</horstretch>

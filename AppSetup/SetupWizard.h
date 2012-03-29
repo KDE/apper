@@ -45,9 +45,10 @@ public:
 
 private slots:
     void currentPageChanged(int index);
+    void licenseAccepted(bool accepted);
 
 private:
-    void constructWizardLayout();
+    bool constructWizardLayout();
 
     SetupWizardPrivate *const d;
     Ui::SetupWizard *ui;

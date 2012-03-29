@@ -21,6 +21,7 @@
 #include "ui_LicensePage.h"
 
 #include <QGroupBox>
+#include <QMouseEvent>
 
 #include <KTextBrowser>
 #include <KDebug>
@@ -30,6 +31,8 @@ LicensePage::LicensePage(QWidget *parent) :
     ui(new Ui::LicensePage)
 {
     ui->setupUi(this);
+
+    connect(ui->acceptedRB, SIGNAL(toggled(bool)), this, SLOT(licenseStateChanged(bool)));
 }
 
 LicensePage::~LicensePage()
@@ -58,4 +61,17 @@ void LicensePage::reset()
     setTitle("");
     setDescription("");
     setLicenseText("");
+    ui->acceptedRB->setChecked(false);
+}
+
+void LicensePage::licenseStateChanged(bool accepted)
+{
+    emit licenseAccepted(accepted);
+}
+
+void LicensePage::showEvent(QShowEvent *event)
+{
+    licenseStateChanged(ui->acceptedRB->isChecked());
+
+    QWidget::showEvent(event);
 }

@@ -25,9 +25,13 @@ kde4_add_ui_files(AppSetup_SRCS
 
 kde4_add_executable(appsetup-kde ${AppSetup_SRCS})
 
+set_target_properties(appsetup-kde PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+
 target_link_libraries(appsetup-kde
 		      ${KDE4_KDEUI_LIBS}
 		      ${GLIB2_LIBRARIES}
 		      ${LISTALLER_LIBRARIES}
 		      apper
 )
+
+install(TARGETS appsetup-kde RUNTIME DESTINATION ${BIN_INSTALL_DIR})
