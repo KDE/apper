@@ -2,19 +2,20 @@
  *
  * Copyright (C) 2012 Matthias Klumpp <matthias@tenstral.net>
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; see the file COPYING. If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #include "SetupWizard.h"
@@ -54,9 +55,11 @@ public:
     ListallerSettings *liConf;
     ListallerSetup *liSetup;
     ListallerAppItem *appID;
+    ListallerIPKPackSecurity *packSecurity;
     InfoWidget *infoPage;
     SimplePage *execPage;
     QProgressBar *mainProgressBar;
+    QProgressBar *subProgressBar;
 };
 
 void on_lisetup_message (GObject *sender, ListallerMessageItem *message, SetupWizard *self)
@@ -104,10 +107,10 @@ void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWiz
 void on_lisetup_progress_changed (GObject *sender, int progress, int subProgress, SetupWizard *self)
 {
     Q_UNUSED(sender);
-    Q_UNUSED(subProgress);
     SetupWizardPrivate *d = self->getPriv();
 
     d->mainProgressBar->setValue(progress);
+    d->subProgressBar->setValue(subProgress);
 }
 
 SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
@@ -185,7 +188,27 @@ bool SetupWizard::constructWizardLayout()
     SimplePage *detailsP = new SimplePage(this);
     detailsP->setTitle(i18n("Details"));
     detailsP->setDescription(i18n("Details about this installation"));
-    detailsP->setDetails("::TODO");
+
+    QWidget *securityWidget = new QWidget(detailsP);
+    QHBoxLayout *secWgLayout = new QHBoxLayout();
+    securityWidget->setLayout(secWgLayout);
+    QLabel *pix = new QLabel(detailsP);
+
+    ListallerSecurityLevel secLev = listaller_ipk_pack_security_get_level(d->packSecurity);
+    if (secLev == LISTALLER_SECURITY_LEVEL_HIGH)
+	pix->setPixmap(KIcon("security-high").pixmap (32, 32));
+    else if (secLev == LISTALLER_SECURITY_LEVEL_MEDIUM)
+	pix->setPixmap(KIcon("security-medium").pixmap (32, 32));
+    else if (secLev <= LISTALLER_SECURITY_LEVEL_LOW)
+	pix->setPixmap(KIcon("security-low").pixmap (32, 32));
+    secWgLayout->addWidget(pix);
+
+    QLabel *secInfo = new QLabel(detailsP);
+    secInfo->setText(listaller_security_level_to_string(secLev));
+    secWgLayout->addWidget(secInfo);
+
+    secWgLayout->addStretch();
+    detailsP->addWidget(securityWidget);
     ui->stackedWidget->addWidget(detailsP);
 
     // Application description page
@@ -210,7 +233,10 @@ bool SetupWizard::constructWizardLayout()
     d->execPage->setTitle(i18n("Running installation"));
     d->execPage->setDescription(i18n("Installing %1...", appName));
     d->mainProgressBar = new QProgressBar(d->execPage);
+    d->mainProgressBar->setMinimumHeight(40);
+    d->subProgressBar = new QProgressBar(d->execPage);
     d->execPage->addWidget(d->mainProgressBar);
+    d->execPage->addWidget(d->subProgressBar);
     ui->stackedWidget->addWidget(d->execPage);
 
     d->PAGE_COUNT = 5;
@@ -285,6 +311,7 @@ bool SetupWizard::initialize()
     ret = listaller_setup_initialize(d->liSetup);
     if (ret) {
         d->appID = listaller_setup_get_current_application(d->liSetup);
+	d->packSecurity = listaller_setup_get_security_info(d->liSetup);
     }
     return ret;
 }
