@@ -25,9 +25,11 @@
 #include <QApplication>
 #include <QAction>
 #include <QProgressBar>
+#include <QCheckBox>
 #include <KPushButton>
 #include <KMenuBar>
 #include <KDebug>
+#include <KMessageBox>
 #include <listaller.h>
 
 #include "InfoWidget.h"
@@ -40,10 +42,11 @@ public:
     SetupWizardPrivate()
         : liSetup(NULL)
     {
-        // Create a new Listaller settings module
+        // Create a new Listaller settings provider
         liConf = listaller_settings_new (false);
         PAGE_COUNT = -1;
     }
+
     ~SetupWizardPrivate()
     {
         if (liSetup != NULL)
@@ -52,12 +55,17 @@ public:
     }
 
     int PAGE_COUNT;
+
+    // Listaller structures
     ListallerSettings *liConf;
     ListallerSetup *liSetup;
     ListallerAppItem *appID;
     ListallerIPKPackSecurity *packSecurity;
+
+    // UI components
     InfoWidget *infoPage;
     SimplePage *execPage;
+    QCheckBox *sharedInstallCb;
     QProgressBar *mainProgressBar;
     QProgressBar *subProgressBar;
 };
@@ -196,11 +204,11 @@ bool SetupWizard::constructWizardLayout()
 
     ListallerSecurityLevel secLev = listaller_ipk_pack_security_get_level(d->packSecurity);
     if (secLev == LISTALLER_SECURITY_LEVEL_HIGH)
-	pix->setPixmap(KIcon("security-high").pixmap (32, 32));
+        pix->setPixmap(KIcon("security-high").pixmap (32, 32));
     else if (secLev == LISTALLER_SECURITY_LEVEL_MEDIUM)
-	pix->setPixmap(KIcon("security-medium").pixmap (32, 32));
+        pix->setPixmap(KIcon("security-medium").pixmap (32, 32));
     else if (secLev <= LISTALLER_SECURITY_LEVEL_LOW)
-	pix->setPixmap(KIcon("security-low").pixmap (32, 32));
+        pix->setPixmap(KIcon("security-low").pixmap (32, 32));
     secWgLayout->addWidget(pix);
 
     QLabel *secInfo = new QLabel(detailsP);
@@ -209,6 +217,10 @@ bool SetupWizard::constructWizardLayout()
 
     secWgLayout->addStretch();
     detailsP->addWidget(securityWidget);
+    d->sharedInstallCb = new QCheckBox(detailsP);
+    d->sharedInstallCb->setText(i18n("Install for all users (as root)"));
+    connect(d->sharedInstallCb, SIGNAL(toggled(bool)), this, SLOT(sharedInstallCbToggled(bool)));
+    detailsP->addWidget(d->sharedInstallCb);
     ui->stackedWidget->addWidget(detailsP);
 
     // Application description page
@@ -300,18 +312,33 @@ void SetupWizard::slotButtonClicked(int button)
     }
 }
 
-void SetupWizard::licenseAccepted(bool accepted)
-{
-    enableButton(KDialog::Ok, accepted);
-}
-
 bool SetupWizard::initialize()
 {
     bool ret;
     ret = listaller_setup_initialize(d->liSetup);
     if (ret) {
         d->appID = listaller_setup_get_current_application(d->liSetup);
-	d->packSecurity = listaller_setup_get_security_info(d->liSetup);
+        d->packSecurity = listaller_setup_get_security_info(d->liSetup);
     }
     return ret;
+}
+
+void SetupWizard::licenseAccepted(bool accepted)
+{
+    enableButton(KDialog::Ok, accepted);
+}
+
+void SetupWizard::sharedInstallCbToggled(bool shared)
+{
+    if (shared) {
+        int btnCode = KMessageBox::warningYesNo(this, i18n("You want to install this application as root!\n"
+                                                "This can damage your system or install malicious software for all users.\n"
+                                                "Please only proceed, if you really know what you're doing!\n"
+                                                "Continue?"), i18n("Really install as superuser?"));
+        if (btnCode == KMessageBox::No) {
+            d->sharedInstallCb->setChecked(false);
+            return;
+        }
+    }
+    listaller_settings_set_sumode(d->liConf, shared);
 }
