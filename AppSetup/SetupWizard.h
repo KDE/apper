@@ -33,7 +33,7 @@ class SetupWizard : public KDialog
 {
     Q_OBJECT
 public:
-    SetupWizard(const QString& ipkFName, QWidget *parent = 0);
+    explicit SetupWizard(const QString& ipkFName, QWidget *parent = 0);
     virtual ~SetupWizard();
 
     virtual void slotButtonClicked(int button);

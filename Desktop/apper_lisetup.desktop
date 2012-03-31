@@ -1,7 +1,8 @@
 [Desktop Entry]
-Version=1.0
+Type=Application
 Icon=applications-other
 Exec=appsetup-kde %F
+
 Name=Listaller Package Installer
 Name[nl]=Installatieprogramma voor pakketten Listaller
 Name[pt]=Instalador de Pacotes Listaller
@@ -25,7 +26,8 @@ Comment[pt_BR]=Aplicativo para instalar software de terceiros
 Comment[sv]=Program för att installera ny programvara från tredje part
 Comment[uk]=Програма для встановлення стороннього програмного забезпечення
 Comment[x-test]=xxApplication to install new 3rd-party softwarexx
-Categories=System;PackageManager;KDE;
+
+Categories=Qt;KDE;System;PackageManager;
 MimeType=application/x-installation;
 StartupNotify=true
 NoDisplay=true

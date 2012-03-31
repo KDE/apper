@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     KApplication app;
 
     // Check if we have a package
-    if (fname == "") {
+    if (fname.isEmpty()) {
         KMessageBox::sorry (0, i18n("Sorry, we didn't get an existing IPK package as parameter."),
                             i18n("Package not found!"));
         return 1;
