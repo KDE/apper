@@ -25,6 +25,7 @@
 #include <KMessageBox>
 #include <QFileInfo>
 #include <glib-object.h>
+#include <listaller.h>
 
 #include "SetupWizard.h"
 
@@ -41,14 +42,19 @@ int main(int argc, char** argv)
     aboutData.setProductName("apper/listaller");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
-    // Add --debug as commandline option
+    // Add --verbose as commandline option
     KCmdLineOptions options;
-    options.add("debug", ki18n("Show debugging information"));
+    options.add("verbose", ki18n("Show verbose information"));
     options.add("+file", ki18n("IPK package filename"));
     KCmdLineArgs::addCmdLineOptions(options);
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    QString fname = "";
+
+    // Set if we are in verbose mode
+    listaller_set_verbose_mode(args->isSet("verbose"));
+    listaller_add_log_domain("KDEAppSetup");
+
+    QString fname;
     for(int i = 0; i < args->count(); i++) {
         fname = args->arg(i);
         QFileInfo file(fname);
