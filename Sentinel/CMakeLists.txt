@@ -31,13 +31,13 @@ set(sentinel_SRCS
     main.cpp
 )
 
-qt4_add_dbus_adaptor(sentinel_dbus_SRCS
+qt4_add_dbus_adaptor(sentinel_SRCS
     org.kde.ApperSentinel.xml
     DBusInterface.h
     DBusInterface
 )
 
-qt4_add_dbus_adaptor(sentinel_dbus_SRCS
+qt4_add_dbus_adaptor(sentinel_SRCS
     org.freedesktop.PackageKit.xml
     PkInterface.h
     PkInterface
@@ -51,7 +51,6 @@ kde4_add_ui_files(sentinel_SRCS
 
 kde4_add_executable(apper-sentinel
     ${sentinel_SRCS}
-    ${sentinel_dbus_SRCS}
 )
 
 target_link_libraries(apper-sentinel

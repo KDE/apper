@@ -26,7 +26,6 @@
 
 #include <KLocale>
 #include <KMessageBox>
-#include <KMimeType>
 
 #include <KDebug>
 
