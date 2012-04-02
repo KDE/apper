@@ -29,8 +29,7 @@ namespace Ui {
     class InfoWidget;
 }
 
-class FilesModel;
-class InfoWidget : public QWidget
+class KDE_EXPORT InfoWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -41,6 +40,7 @@ public:
     void setIcon(const KIcon &icon);
     void setDetails(const QString &details);
     void addWidget(QWidget *widget);
+    void reset();
 
 private:
     Ui::InfoWidget *ui;

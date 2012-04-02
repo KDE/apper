@@ -110,7 +110,7 @@ bool OriginModel::save()
             changed = true;
 
             if (pointer.isNull()) {
-                // Avoid crashing when the application is quiting
+                // Avoid crashing when the application is quitting
                 return false;
             }
         }

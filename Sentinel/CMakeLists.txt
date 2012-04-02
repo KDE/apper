@@ -6,14 +6,11 @@ set(sentinel_SRCS
     TransactionTrayIcon.cpp
     TransactionJob.cpp
     TransactionWatcher.cpp
-    IntroDialog.cpp
-    InfoWidget.cpp
     AbstractIsRunning.cpp
     UpdateIcon.cpp
     DistroUpgrade.cpp
     DBusInterface.cpp
     PkInterface.cpp
-    SessionTask.cpp
     PkInstallPackageNames.cpp
     PkSearchFile.cpp
     PkIsInstalled.cpp
@@ -27,16 +24,11 @@ set(sentinel_SRCS
     PkInstallCatalogs.cpp
     PkRemovePackageByFiles.cpp
     PkInstallPrinterDrivers.cpp
-    ReviewChanges.cpp
     ApperSentinel.cpp
+    IntroDialog.cpp
+    ReviewChanges.cpp
+    SessionTask.cpp
     main.cpp
-)
-
-kde4_add_ui_files(sentinel_SRCS
-    SessionTask.ui
-    IntroDialog.ui
-    InfoWidget.ui
-    ReviewChanges.ui
 )
 
 qt4_add_dbus_adaptor(sentinel_SRCS
@@ -49,6 +41,12 @@ qt4_add_dbus_adaptor(sentinel_SRCS
     org.freedesktop.PackageKit.xml
     PkInterface.h
     PkInterface
+)
+
+kde4_add_ui_files(sentinel_SRCS
+    IntroDialog.ui
+    ReviewChanges.ui
+    SessionTask.ui
 )
 
 kde4_add_executable(apper-sentinel

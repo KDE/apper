@@ -1,4 +1,5 @@
 project(Apper)
+cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
@@ -17,6 +18,11 @@ message(STATUS "Building Apper with auto remove: " ${AUTOREMOVE})
 option(APPINSTALL "Build Apper with app install" OFF)
 set(HAVE_APPINSTALL ${APPINSTALL})
 message(STATUS "Building Apper with app install: " ${APPINSTALL})
+
+# Enable support for Listaller cross-distro application installer
+option(USE_LISTALLER "Build Apper with app install" OFF)
+set(HAVE_LISTALLER ${APPINSTALL})
+message(STATUS "Building Apper with Listaller modules: " ${HAVE_LISTALLER})
 
 if (HAVE_APPINSTALL)
     # path to the sqlite app-install db
@@ -75,3 +81,6 @@ add_subdirectory(Apper)
 add_subdirectory(Sentinel)
 add_subdirectory(apperd)
 add_subdirectory(Desktop)
+if(USE_LISTALLER)
+	add_subdirectory(AppSetup)
+endif()
