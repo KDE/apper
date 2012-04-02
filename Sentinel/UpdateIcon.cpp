@@ -78,10 +78,10 @@ void UpdateIcon::refresh(bool update)
         // ignore if there is an error
         // Be silent! don't bother the user if the cache couldn't be refreshed
         if (update) {
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(update()));
         }
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(decreaseRunning()));
         t->refreshCache(true);
         if (t->error()) {
@@ -126,7 +126,7 @@ void UpdateIcon::update()
         m_getUpdatesT = new Transaction(this);
         connect(m_getUpdatesT, SIGNAL(package(PackageKit::Package)),
                 this, SLOT(packageToUpdate(PackageKit::Package)));
-        connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(getUpdateFinished()));
         m_getUpdatesT->getUpdates();
         if (m_getUpdatesT->error()) {
@@ -169,7 +169,7 @@ void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
                 this, SLOT(removeStatusNotifierItem()));
         m_statusNotifierItem->setContextMenu(menu);
         // Show updates on the left click
-        connect(m_statusNotifierItem, SIGNAL(activateRequested(bool, QPoint)),
+        connect(m_statusNotifierItem, SIGNAL(activateRequested(bool,QPoint)),
                 this, SLOT(showUpdates()));
     }
 
@@ -219,7 +219,7 @@ void UpdateIcon::getUpdateFinished()
             // update all
             SET_PROXY
             Transaction *t = new Transaction(this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
             t->updatePackages(m_updateList, true);
             if (!t->error()) {
@@ -240,7 +240,7 @@ void UpdateIcon::getUpdateFinished()
             // Defaults to security
             SET_PROXY
             Transaction *t = new Transaction(this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
             t->updatePackages(securityUpdateList, true);
             if (!t->error()) {

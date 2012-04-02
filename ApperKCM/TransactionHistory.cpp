@@ -74,8 +74,8 @@ void TransactionHistory::refreshList()
     // Refresh transaction list
     m_transactionModel->clear();
     Transaction *transaction = new Transaction(this);
-    connect(transaction, SIGNAL(transaction(PackageKit::Transaction *)),
-            m_transactionModel, SLOT(addTransaction(PackageKit::Transaction *)));
+    connect(transaction, SIGNAL(transaction(PackageKit::Transaction*)),
+            m_transactionModel, SLOT(addTransaction(PackageKit::Transaction*)));
     transaction->getOldTransactions(0);
     if (transaction->error()) {
         KMessageBox::sorry(this, PkStrings::daemonError(transaction->error()));

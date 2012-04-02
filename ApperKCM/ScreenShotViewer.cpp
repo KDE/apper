@@ -55,8 +55,8 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
                                             tempFile->fileName(),
                                             -1,
                                             KIO::Overwrite | KIO::HideProgressInfo);
-    connect(job, SIGNAL(result(KJob *)),
-            this, SLOT(resultJob(KJob *)));
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(resultJob(KJob*)));
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));

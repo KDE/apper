@@ -41,14 +41,14 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
     setCapabilities(Killable);
     m_role = transaction->role();
     connect(transaction, SIGNAL(changed()), this, SLOT(updateJob()));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(finished(PackageKit::Transaction::Exit)));
     connect(transaction, SIGNAL(destroyed()),
             this, SLOT(transactionDestroyed()));
     connect(transaction, SIGNAL(package(PackageKit::Package)),
             this, SLOT(package(PackageKit::Package)));
-    connect(transaction, SIGNAL(repoDetail(QString, QString, bool)),
-            this, SLOT(repoDetail(QString, QString)));
+    connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
+            this, SLOT(repoDetail(QString,QString)));
     kDebug();
 }
 

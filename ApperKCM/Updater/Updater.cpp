@@ -332,33 +332,33 @@ void Updater::getUpdates()
         connect(m_updatesT, SIGNAL(package(PackageKit::Package)),
                 m_updatesModel, SLOT(addPackage(PackageKit::Package)));
     }
-    connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             m_busySeq, SLOT(stop()));
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             m_updatesModel, SLOT(finished()));
     // This is required to estimate download size
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             m_updatesModel, SLOT(fetchSizes()));
     if (m_showPackageCurrentVersion->isChecked()) {
-        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_updatesModel, SLOT(fetchCurrentVersions()));
     }
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(getUpdatesFinished()));
     // get all updates
     m_updatesT->getUpdates();
 
     Transaction::InternalError error = m_updatesT->error();
     if (error) {
-        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(getUpdatesFinished()));
-        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    m_busySeq, SLOT(stop()));
-        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    m_updatesModel, SLOT(finished()));
-        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    m_updatesModel, SLOT(fetchSizes()));
         m_updatesT = 0;
         KMessageBox::sorry(this, PkStrings::daemonError(error));
@@ -378,8 +378,8 @@ void Updater::getUpdates()
     if (m_roles & Transaction::RoleGetDistroUpgrades) {
         // Check for distribution Upgrades
         Transaction *t = new Transaction(this);
-        connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, QString, QString)),
-                this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, QString, QString)));
+        connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
+                this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
         t->getDistroUpgrades();
     }
 }

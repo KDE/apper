@@ -42,9 +42,9 @@ void DistroUpgrade::checkDistroUpgrades()
         Transaction *t = new Transaction(this);
         t->getDistroUpgrades();
         if (!t->error()) {
-            connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade, QString, QString)),
-                    this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade, QString, QString)));
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
+                    this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
+            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(decreaseRunning()));
             increaseRunning();
         }
@@ -91,8 +91,8 @@ void DistroUpgrade::handleDistroUpgradeAction(uint action)
             increaseRunning();
             connect (m_distroUpgradeProcess, SIGNAL(error(QProcess::ProcessError)),
                     this, SLOT(distroUpgradeError(QProcess::ProcessError)));
-            connect (m_distroUpgradeProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
-                    this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus)));
+            connect (m_distroUpgradeProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+                    this, SLOT(distroUpgradeFinished(int,QProcess::ExitStatus)));
             QStringList env = QProcess::systemEnvironment();
             env << "DESKTOP=kde";
             m_distroUpgradeProcess->setEnvironment(env);

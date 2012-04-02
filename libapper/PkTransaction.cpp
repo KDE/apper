@@ -326,12 +326,12 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
         role == Transaction::RoleRefreshCache) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         if (role == Transaction::RoleRefreshCache) {
-            connect(m_trans, SIGNAL(repoDetail(const QString &, const QString &, bool)),
-                    ui->progressView, SLOT(currentRepo(const QString &, const QString &)));
+            connect(m_trans, SIGNAL(repoDetail(QString,QString,bool)),
+                    ui->progressView, SLOT(currentRepo(QString,QString,bool)));
             ui->progressView->handleRepo(true);
         } else {
-            connect(m_trans, SIGNAL(package(const PackageKit::Package &)),
-                ui->progressView, SLOT(currentPackage(const PackageKit::Package &)));
+            connect(m_trans, SIGNAL(package(PackageKit::Package)),
+                ui->progressView, SLOT(currentPackage(PackageKit::Package)));
             ui->progressView->handleRepo(false);
         }
 
@@ -363,16 +363,16 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
     updateUi();
 
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
-    connect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
-    connect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
+    connect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     connect(m_trans, SIGNAL(changed()),
             this, SLOT(updateUi()));
     connect(m_trans, SIGNAL(eulaRequired(PackageKit::Eula)),
             this, SLOT(eulaRequired(PackageKit::Eula)));
-    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, QString, QString)),
-            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, QString, QString)));
+    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
+            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
     connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Signature)),
             this, SLOT(repoSignatureRequired(PackageKit::Signature)));
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
@@ -386,16 +386,16 @@ void PkTransaction::unsetTransaction()
 
     disconnect(m_trans, SIGNAL(package(PackageKit::Package)),
                d->simulateModel, SLOT(addPackage(PackageKit::Package)));
-    disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
-    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-               this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
+    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+               this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     disconnect(m_trans, SIGNAL(changed()),
                this, SLOT(updateUi()));
     disconnect(m_trans, SIGNAL(eulaRequired(PackageKit::Eula)),
                this, SLOT(eulaRequired(PackageKit::Eula)));
-    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType, QString, QString)),
-               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType, QString, QString)));
+    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
+               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
     disconnect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Signature)),
                this, SLOT(repoSignatureRequired(PackageKit::Signature)));
 }
@@ -717,7 +717,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                    d->originalRole != Transaction::UnknownRole) {
             // Let's try to find some desktop files
             Transaction *transaction = new Transaction(this);
-            connect(transaction, SIGNAL(files(PackageKit::Package, QStringList)),
+            connect(transaction, SIGNAL(files(PackageKit::Package,QStringList)),
                     d->launcher, SLOT(files(PackageKit::Package,QStringList)));
             setTransaction(transaction, Transaction::RoleGetFiles);
             transaction->getFiles(d->launcher->packages());

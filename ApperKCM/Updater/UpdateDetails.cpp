@@ -98,7 +98,7 @@ void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInf
     if (m_transaction) {
         disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
                    this, SLOT(updateDetail(PackageKit::Package)));
-        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(display()));
     }
 
@@ -106,7 +106,7 @@ void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInf
     m_transaction = new Transaction(this);
     connect(m_transaction, SIGNAL(package(PackageKit::Package)),
             this, SLOT(updateDetail(PackageKit::Package)));
-    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(display()));
     m_transaction->getUpdateDetail(package);
     Transaction::InternalError error = m_transaction->error();

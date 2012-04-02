@@ -43,7 +43,7 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
 
         m_model = new FilesModel(files, Daemon::mimeTypes(), this);
         m_introDialog->setModel(m_model);
-        connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
+        connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
                 this, SLOT(modelChanged()));
         setMainWidget(m_introDialog);
 

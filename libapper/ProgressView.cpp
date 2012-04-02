@@ -52,8 +52,8 @@ ProgressView::ProgressView(QWidget *parent)
             this, SLOT(followBottom(int)));
     connect(m_scrollBar, SIGNAL(valueChanged(int)),
             this, SLOT(followBottom(int)));
-    connect(m_scrollBar, SIGNAL(rangeChanged(int, int)),
-            this, SLOT(rangeChanged(int, int)));
+    connect(m_scrollBar, SIGNAL(rangeChanged(int,int)),
+            this, SLOT(rangeChanged(int,int)));
 
     KConfig config("apper");
     KConfigGroup transactionDialog(&config, "TransactionDialog");

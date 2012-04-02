@@ -75,8 +75,8 @@ void DistroUpgrade::startDistroUpgrade()
         m_distroUpgradeProcess = new QProcess;
         connect(m_distroUpgradeProcess, SIGNAL(error (QProcess::ProcessError)),
                 this, SLOT(distroUpgradeError(QProcess::ProcessError)));
-        connect(m_distroUpgradeProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
-                this, SLOT(distroUpgradeFinished(int, QProcess::ExitStatus)));
+        connect(m_distroUpgradeProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+                this, SLOT(distroUpgradeFinished(int,QProcess::ExitStatus)));
 
         m_distroUpgradeDialog = new KProgressDialog(this);
         m_distroUpgradeDialog->setLabelText("Waiting for distribution upgrade to complete");

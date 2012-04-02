@@ -128,10 +128,10 @@ void TransactionWatcher::setCurrentTransaction(const QString &tid)
         // AVOID showing messages and restart requires when
         // the user was just simulating an instalation
         // TODO fix yum backend
-        connect(m_currentTransaction, SIGNAL(message(PackageKit::Transaction::Message, QString)),
-                this, SLOT(message(PackageKit::Transaction::Message, QString)));
-        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Package::Restart, PackageKit::Package)),
-                this, SLOT(requireRestart(PackageKit::Package::Restart, PackageKit::Package)));
+        connect(m_currentTransaction, SIGNAL(message(PackageKit::Transaction::Message,QString)),
+                this, SLOT(message(PackageKit::Transaction::Message,QString)));
+        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::Package::Restart,PackageKit::Package)),
+                this, SLOT(requireRestart(PackageKit::Package::Restart,PackageKit::Package)));
 
         // Don't let the system sleep while doing some sensible actions
         suppressSleep(true, PkStrings::action(role));
@@ -144,8 +144,8 @@ void TransactionWatcher::setCurrentTransaction(const QString &tid)
     m_transHasJob = !m_currentTransaction->isCallerActive();
     if (m_transHasJob) {
         TransactionJob *job = new TransactionJob(m_currentTransaction, this);
-        connect(m_currentTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-                this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
+        connect(m_currentTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+                this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
         job->start();
         m_tracker->registerJob(job);
     }
@@ -217,8 +217,8 @@ void TransactionWatcher::transactionChanged()
     Transaction *transaction = qobject_cast<Transaction*>(sender());
     if (!m_transHasJob && !transaction->isCallerActive()) {
         TransactionJob *job = new TransactionJob(transaction, this);
-        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-                this, SLOT(errorCode(PackageKit::Transaction::Error, QString)));
+        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+                this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
         job->start();
         m_tracker->registerJob(job);
         m_transHasJob = true;
@@ -248,7 +248,7 @@ void TransactionWatcher::message(PackageKit::Transaction::Message type, const QS
                                   i18np("One message from the software manager",
                                         "%1 messages from the software manager",
                                         m_messages.size()));
-        connect(m_messagesSNI, SIGNAL(activateRequested(bool, QPoint)),
+        connect(m_messagesSNI, SIGNAL(activateRequested(bool,QPoint)),
                 this, SLOT(showMessages()));
 
         // Action for message handling

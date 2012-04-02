@@ -109,11 +109,11 @@ void Settings::on_showOriginsCB_stateChanged(int state)
     Transaction *transaction = new Transaction(this);
     connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
             m_originModel, SLOT(addOriginItem(QString,QString,bool)));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             m_originModel, SLOT(finished()));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             m_busySeq, SLOT(stop()));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(checkChanges()));
 
     if (state == Qt::Checked) {

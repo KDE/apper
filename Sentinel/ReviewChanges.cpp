@@ -57,7 +57,7 @@ ReviewChanges::ReviewChanges(const QList<Package> &packages,
     delegate->setExtendPixmapWidth(0);
     ui->packageView->setItemDelegate(delegate);
 
-    connect(m_model, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SLOT(selectionChanged()));
 }
 

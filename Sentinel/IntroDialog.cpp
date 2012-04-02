@@ -52,7 +52,7 @@ IntroDialog::~IntroDialog()
 void IntroDialog::setModel(QAbstractItemModel *model)
 {
     ui->listView->setModel(model);
-    connect(model, SIGNAL(dataChanged(const QModelIndex, const QModelIndex)),
+    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SLOT(selectionChanged()));
 }
 

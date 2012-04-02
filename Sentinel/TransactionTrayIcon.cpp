@@ -43,8 +43,8 @@ TransactionTrayIcon::TransactionTrayIcon(PackageKit::Transaction *transaction, Q
     KActionCollection *actions = actionCollection();
     actions->removeAction(actions->action(KStandardAction::name(KStandardAction::Quit)));
     contextMenu()->addTitle(KIcon("applications-other"), i18n("Transactions"));
-    connect(contextMenu(), SIGNAL(triggered(QAction *)),
-            this, SLOT(actionActivated(QAction *)));
+    connect(contextMenu(), SIGNAL(triggered(QAction*)),
+            this, SLOT(actionActivated(QAction*)));
     connect(contextMenu(), SIGNAL(aboutToShow()),
                 this, SLOT(fillMenu()));
     setAssociatedWidget(contextMenu());

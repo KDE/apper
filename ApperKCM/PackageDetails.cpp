@@ -155,8 +155,8 @@ void PackageDetails::init(Transaction::Roles roles)
     } else {
         action = m_actionGroup->actions().first();
         action->setChecked(true);
-        connect(m_actionGroup, SIGNAL(triggered(QAction *)),
-                this, SLOT(actionActivated(QAction *)));
+        connect(m_actionGroup, SIGNAL(triggered(QAction*)),
+                this, SLOT(actionActivated(QAction*)));
         // Set the menu
         menuTB->setMenu(menu);
         menuTB->setIcon(KIcon("help-about"));
@@ -264,8 +264,8 @@ void PackageDetails::setPackage(const QModelIndex &index)
                                                    tempFile->fileName(),
                                                    -1,
                                                    KIO::Overwrite | KIO::HideProgressInfo);
-            connect(job, SIGNAL(result(KJob *)),
-                    this, SLOT(resultJob(KJob *)));
+            connect(job, SIGNAL(result(KJob*)),
+                    this, SLOT(resultJob(KJob*)));
         }
     }
 
@@ -311,9 +311,9 @@ void PackageDetails::actionActivated(QAction *action)
                    m_dependsModel, SLOT(addPackage(PackageKit::Package)));
         disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
                    m_requiresModel, SLOT(addPackage(PackageKit::Package)));
-        disconnect(m_transaction, SIGNAL(files(PackageKit::Package, QStringList)),
-                   this, SLOT(files(PackageKit::Package, QStringList)));
-        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        disconnect(m_transaction, SIGNAL(files(PackageKit::Package,QStringList)),
+                   this, SLOT(files(PackageKit::Package,QStringList)));
+        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(finished()));
         m_transaction = 0;
     }
@@ -350,7 +350,7 @@ void PackageDetails::actionActivated(QAction *action)
 
     // we don't have the data
     m_transaction = new Transaction(this);
-    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(finished()));
     switch (role) {
     case Transaction::RoleGetDetails:
@@ -362,7 +362,7 @@ void PackageDetails::actionActivated(QAction *action)
         m_dependsModel->clear();
         connect(m_transaction, SIGNAL(package(PackageKit::Package)),
                 m_dependsModel, SLOT(addPackage(PackageKit::Package)));
-        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_dependsModel, SLOT(finished()));
         m_transaction->getDepends(m_package, Transaction::FilterNone, false);
         break;
@@ -370,13 +370,13 @@ void PackageDetails::actionActivated(QAction *action)
         m_requiresModel->clear();
         connect(m_transaction, SIGNAL(package(PackageKit::Package)),
                 m_requiresModel, SLOT(addPackage(PackageKit::Package)));
-        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_requiresModel, SLOT(finished()));
         m_transaction->getRequires(m_package, Transaction::FilterNone, false);
         break;
     case Transaction::RoleGetFiles:
         m_currentFileList.clear();
-        connect(m_transaction, SIGNAL(files(PackageKit::Package, QStringList)),
+        connect(m_transaction, SIGNAL(files(PackageKit::Package,QStringList)),
                 this, SLOT(files(PackageKit::Package, QStringList)));
         m_transaction->getFiles(m_package);
         break;

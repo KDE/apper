@@ -85,7 +85,7 @@ CategoryModel::CategoryModel(Transaction::Roles roles, QObject *parent) :
         Transaction *trans = new Transaction(this);
         connect(trans, SIGNAL(category(QString,QString,QString,QString,QString)),
                 this, SLOT(category(QString,QString,QString,QString,QString)));
-        connect(trans, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+        connect(trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SIGNAL(finished()));
         trans->getCategories();
         if (trans->error()) {

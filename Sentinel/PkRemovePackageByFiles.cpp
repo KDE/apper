@@ -42,7 +42,7 @@ PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
     m_introDialog = new IntroDialog(this);
     m_introDialog->acceptDrops(i18n("You can drop more files in here"));
     m_model = new FilesModel(files, QStringList(), this);
-    connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
+    connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(modelChanged()));
     m_introDialog->setModel(m_model);
     setMainWidget(m_introDialog);
