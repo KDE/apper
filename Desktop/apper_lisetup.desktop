@@ -33,7 +33,7 @@ Comment[sv]=Program för att installera ny programvara från tredje part
 Comment[uk]=Програма для встановлення стороннього програмного забезпечення
 Comment[x-test]=xxApplication to install new 3rd-party softwarexx
 
-Categories=Qt;KDE;System;PackageManager;
+Categories=Qt;KDE;System;Settings;PackageManager;
 MimeType=application/x-installation;
 StartupNotify=true
 NoDisplay=true
