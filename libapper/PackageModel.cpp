@@ -404,7 +404,7 @@ void PackageModel::clear()
 void PackageModel::clearSelectedNotPresent()
 {
     QVector<InternalPackage> uncheckPackages;
-    foreach (const InternalPackage &package, m_checkedPackages.values()) {
+    foreach (const InternalPackage &package, m_checkedPackages) {
         bool found = false;
         QString pkgId = package.id;
         for (int i = 0; i < m_packages.size(); ++i) {
@@ -426,7 +426,7 @@ void PackageModel::clearSelectedNotPresent()
 
 void PackageModel::uncheckInstalledPackages()
 {
-    foreach (const InternalPackage &package, m_checkedPackages.values()) {
+    foreach (const InternalPackage &package, m_checkedPackages) {
         if (package.info == Package::InfoInstalled ||
             package.info == Package::InfoCollectionInstalled) {
             uncheckPackage(package, true);
@@ -436,7 +436,7 @@ void PackageModel::uncheckInstalledPackages()
 
 void PackageModel::uncheckAvailablePackages()
 {
-    foreach (const InternalPackage &package, m_checkedPackages.values()) {
+    foreach (const InternalPackage &package, m_checkedPackages) {
         if (package.info == Package::InfoAvailable ||
             package.info == Package::InfoCollectionAvailable) {
             uncheckPackage(package, true);
@@ -659,7 +659,7 @@ void PackageModel::setAllChecked(bool checked)
                          createIndex(m_packages.size(), 0));
     } else {
         // This is a very slow operation, which in here we try to optimize
-        foreach (const InternalPackage &package, m_checkedPackages.values()) {
+        foreach (const InternalPackage &package, m_checkedPackages) {
             uncheckPackage(package, true, false);
         }
         emit dataChanged(createIndex(0, 0),
@@ -671,7 +671,7 @@ void PackageModel::setAllChecked(bool checked)
 QList<Package> PackageModel::selectedPackages() const
 {
     QList<Package> list;
-    foreach (const InternalPackage &package, m_checkedPackages.values()) {
+    foreach (const InternalPackage &package, m_checkedPackages) {
         list.append(Package(package.id, package.info, package.summary));
     }
     return list;
@@ -680,7 +680,7 @@ QList<Package> PackageModel::selectedPackages() const
 unsigned long PackageModel::downloadSize() const
 {
     unsigned long size = 0;
-    foreach (const InternalPackage &package, m_checkedPackages.values()) {
+    foreach (const InternalPackage &package, m_checkedPackages) {
         size += package.size;
     }
     return size;
