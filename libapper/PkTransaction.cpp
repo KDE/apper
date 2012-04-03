@@ -32,6 +32,7 @@
 
 #include <KDebug>
 
+#include <QStringBuilder>
 #include <QPropertyAnimation>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -220,14 +221,18 @@ void PkTransaction::setupTransaction(PackageKit::Transaction *transaction)
     SET_PROXY;
 
 #ifdef HAVE_DEBCONFKDE
+    QString tid;
     QString socket;
-    socket = QLatin1String("/tmp/debconf_") + transaction->tid().remove('/');
+    tid = transaction->tid();
+    // Build a socket path like /tmp/1761_edeceabd_data_debconf
+    socket = QLatin1String("/tmp") % tid % QLatin1String("_debconf");
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.kde.ApperSentinel",
-                                             "/",
-                                             "org.kde.ApperSentinel",
+    message = QDBusMessage::createMethodCall(QLatin1String("org.kde.ApperSentinel"),
+                                             QLatin1String("/"),
+                                             QLatin1String("org.kde.ApperSentinel"),
                                              QLatin1String("SetupDebconfDialog"));
     // Use our own cached tid to avoid crashes
+    message << qVariantFromValue(tid);
     message << qVariantFromValue(socket);
     message << qVariantFromValue(static_cast<uint>(effectiveWinId()));
     QDBusMessage reply = QDBusConnection::sessionBus().call(message);
@@ -235,7 +240,7 @@ void PkTransaction::setupTransaction(PackageKit::Transaction *transaction)
         kWarning() << "Message did not receive a reply";
     }
 
-    transaction->setHints("frontend-socket=" + socket);
+    transaction->setHints(QLatin1String("frontend-socket=") % socket);
 #else
      Q_UNUSED(transaction)
 #endif //HAVE_DEBCONFKDE

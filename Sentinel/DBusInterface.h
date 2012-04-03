@@ -40,7 +40,7 @@ public:
     void RefreshCache();
     void RefreshAndUpdate();
     void Update();
-    void SetupDebconfDialog(const QString &socket_path, uint xid_parent);
+    void SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent);
 
 signals:
     void refreshAndUpdate(bool refresh);
@@ -48,6 +48,7 @@ signals:
 
 private slots:
     void debconfActivate();
+    void transactionFinished();
 
 #ifdef HAVE_DEBCONFKDE
 private:
