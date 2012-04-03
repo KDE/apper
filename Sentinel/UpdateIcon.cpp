@@ -56,7 +56,6 @@ UpdateIcon::UpdateIcon(QObject* parent)
 
 UpdateIcon::~UpdateIcon()
 {
-    removeStatusNotifierItem();
 }
 
 void UpdateIcon::showSettings()

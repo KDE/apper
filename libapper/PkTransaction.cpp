@@ -283,7 +283,7 @@ void PkTransaction::updatePackages()
     Transaction *trans = new Transaction(this);
     setupTransaction(trans);
     setTransaction(trans, Transaction::RoleUpdatePackages);
-    trans->updatePackages(d->packages, true);
+    trans->updatePackages(d->packages, d->onlyTrusted);
     if (trans->error()) {
         showSorry(i18n("Failed to update package"),
                   PkStrings::daemonError(trans->error()));
@@ -299,10 +299,7 @@ void PkTransaction::cancel()
 
 void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
 {
-    if (!trans) {
-        // 0 pointer passed
-        return;
-    }
+    Q_ASSERT(trans);
 
     m_trans = trans;
     d->role = role;
