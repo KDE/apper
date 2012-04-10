@@ -52,6 +52,8 @@ private slots:
 private:
     bool constructWizardLayout();
 
+    void runInstallation();
+
     SetupWizardPrivate *const d;
     Ui::SetupWizard *ui;
 };

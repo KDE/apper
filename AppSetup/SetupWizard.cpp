@@ -274,6 +274,21 @@ void SetupWizard::setCurrentPage(QWidget* widget)
     ui->stackedWidget->setCurrentWidget(widget);
 }
 
+void SetupWizard::runInstallation()
+{
+    //
+    QString pkgStr = QString::fromUtf8(listaller_setup_get_replaced_native_packs (d->liSetup));
+    QStringList pkgs = pkgStr.split("\n");
+    if (!pkgs.isEmpty()) {
+        KMessageBox::informationList(this, i18n("Installing this package will make the following native packages obsolete. You might consider removing them manually."),
+                                     pkgs, i18n("Similar native packages found"));
+    }
+
+    // We now show the install dialog, so run the installation now!
+    listaller_setup_run_installation(d->liSetup);
+}
+
+
 void SetupWizard::slotButtonClicked(int button)
 {
     if (button == KDialog::Ok) {
@@ -291,8 +306,7 @@ void SetupWizard::slotButtonClicked(int button)
             enableButton(KDialog::Ok, false);
             enableButton(KDialog::Cancel, false);
 
-            // We now show the install dialog, so run the installation now!
-            listaller_setup_run_installation(d->liSetup);
+	    runInstallation();
         }
 
     } else if (button == KDialog::User1) {
@@ -320,6 +334,7 @@ bool SetupWizard::initialize()
         d->appID = listaller_setup_get_current_application(d->liSetup);
         d->packSecurity = listaller_setup_get_security_info(d->liSetup);
     }
+
     return ret;
 }
 
