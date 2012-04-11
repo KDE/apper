@@ -203,12 +203,17 @@ bool SetupWizard::constructWizardLayout()
     QLabel *pix = new QLabel(detailsP);
 
     ListallerSecurityLevel secLev = listaller_ipk_pack_security_get_level(d->packSecurity);
+    std::cout << "SecurityLevel:" << secLev << std::endl;
     if (secLev == LISTALLER_SECURITY_LEVEL_HIGH)
         pix->setPixmap(KIcon("security-high").pixmap (32, 32));
     else if (secLev == LISTALLER_SECURITY_LEVEL_MEDIUM)
         pix->setPixmap(KIcon("security-medium").pixmap (32, 32));
-    else if (secLev <= LISTALLER_SECURITY_LEVEL_LOW)
+    else if (secLev == LISTALLER_SECURITY_LEVEL_LOW)
         pix->setPixmap(KIcon("security-low").pixmap (32, 32));
+    else if (secLev == LISTALLER_SECURITY_LEVEL_DANGEROUS)
+        pix->setPixmap(KIcon("security-low").pixmap (32, 32));
+    else
+	pix->setPixmap(KIcon("task-reject").pixmap (32, 32));
     secWgLayout->addWidget(pix);
 
     QLabel *secInfo = new QLabel(detailsP);
