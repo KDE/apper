@@ -86,7 +86,7 @@ void on_lisetup_status_changed (GObject *sender, ListallerStatusItem *status, Se
     ListallerStatusEnum statusType = listaller_status_item_get_status(status);
 
     if (statusType == LISTALLER_STATUS_ENUM_INSTALLATION_FINISHED) {
-        QString appName = listaller_app_item_get_full_name(d->appID);
+        QString appName = QString::fromUtf8(listaller_app_item_get_full_name(d->appID));
         d->infoPage->reset();
         d->infoPage->setWindowTitle(i18n("Installation finished!"));
         d->infoPage->setDescription(i18n("%1 has been installed successfully!", appName));
@@ -106,7 +106,7 @@ void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWiz
     d->infoPage->setWindowTitle(i18n("Error"));
     d->infoPage->setDescription(i18n("An error occurred"));
     d->infoPage->setIcon(KIcon("dialog-error"));
-    d->infoPage->setDetails(listaller_error_item_get_details(error));
+    d->infoPage->setDetails(QString::fromUtf8(listaller_error_item_get_details(error)));
     self->setButtons(KDialog::Close);
     self->button(KDialog::Close)->setFocus();
     self->setCurrentPage(d->infoPage);
@@ -284,7 +284,7 @@ void SetupWizard::runInstallation()
     //
     QString pkgStr = QString::fromUtf8(listaller_setup_get_replaced_native_packs (d->liSetup));
     QStringList pkgs = pkgStr.split("\n");
-    if (!pkgs.isEmpty()) {
+    if (!pkgStr.isEmpty()) {
         KMessageBox::informationList(this, i18n("Installing this package will make the following native packages obsolete. You might consider removing them manually."),
                                      pkgs, i18n("Similar native packages found"));
     }
