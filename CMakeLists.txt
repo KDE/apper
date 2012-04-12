@@ -20,7 +20,7 @@ set(HAVE_APPINSTALL ${APPINSTALL})
 message(STATUS "Building Apper with app install: " ${APPINSTALL})
 
 # Enable support for Listaller cross-distro application installer
-option(USE_LISTALLER "Build Apper with app install" OFF)
+option(LISTALLER "Build Apper with app install" OFF)
 set(HAVE_LISTALLER ${APPINSTALL})
 message(STATUS "Building Apper with Listaller modules: " ${HAVE_LISTALLER})
 
@@ -81,6 +81,6 @@ add_subdirectory(Apper)
 add_subdirectory(Sentinel)
 add_subdirectory(apperd)
 add_subdirectory(Desktop)
-if(USE_LISTALLER)
+if(LISTALLER)
 	add_subdirectory(AppSetup)
 endif()

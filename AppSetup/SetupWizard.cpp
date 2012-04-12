@@ -203,7 +203,6 @@ bool SetupWizard::constructWizardLayout()
     QLabel *pix = new QLabel(detailsP);
 
     ListallerSecurityLevel secLev = listaller_ipk_pack_security_get_level(d->packSecurity);
-    std::cout << "SecurityLevel:" << secLev << std::endl;
     if (secLev == LISTALLER_SECURITY_LEVEL_HIGH)
         pix->setPixmap(KIcon("security-high").pixmap (32, 32));
     else if (secLev == LISTALLER_SECURITY_LEVEL_MEDIUM)
@@ -241,7 +240,7 @@ bool SetupWizard::constructWizardLayout()
     LicensePage *licenseP = new LicensePage(this);
     licenseP->setTitle(i18n("Software license"));
     licenseP->setDescription(i18n("Please read the following terms and conditions carefully!"));
-    licenseP->setLicenseText(appLicense.text);
+    licenseP->setLicenseText(QString::fromUtf8(appLicense.text));
     connect(licenseP, SIGNAL(licenseAccepted(bool)), this, SLOT(licenseAccepted(bool)));
     ui->stackedWidget->addWidget(licenseP);
 
