@@ -282,7 +282,7 @@ void SetupWizard::runInstallation()
 {
     //
     QString pkgStr = QString::fromUtf8(listaller_setup_get_replaced_native_packs (d->liSetup));
-    QStringList pkgs = pkgStr.split("\n");
+    QStringList pkgs = pkgStr.split('\n');
     if (!pkgStr.isEmpty()) {
         KMessageBox::informationList(this, i18n("Installing this package will make the following native packages obsolete. You might consider removing them manually."),
                                      pkgs, i18n("Similar native packages found"));
