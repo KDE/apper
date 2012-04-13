@@ -152,11 +152,17 @@ SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
     g_signal_connect (d->liSetup, "progress-changed", (GCallback) on_lisetup_progress_changed, this);
     g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code, this);
 
+    // Create info page to notify about errors
+    d->infoPage = new InfoWidget(this);
+    d->infoPage->setWindowTitle("Information");
+    ui->stackedWidget->addWidget(d->infoPage);
+
     // Initialize the setup, required to have an AppItem present
-    initialize();
+    bool ret = initialize();
 
     // Build layout of our setup wizard
-    constructWizardLayout();
+    if (ret)
+	constructWizardLayout();
 }
 
 SetupWizard::~SetupWizard()
@@ -167,12 +173,11 @@ SetupWizard::~SetupWizard()
 
 bool SetupWizard::constructWizardLayout()
 {
-    if (d->PAGE_COUNT > 0)
+    if (d->PAGE_COUNT > 1)
         return true;
 
-    d->infoPage = new InfoWidget(this);
-    d->infoPage->setWindowTitle("Information");
-    ui->stackedWidget->addWidget(d->infoPage);
+    if (d->PAGE_COUNT == 0)
+	ui->stackedWidget->addWidget(d->infoPage);
 
     if (d->appID == NULL) {
         kDebug() << "AppID was NULL!";
@@ -310,6 +315,7 @@ void SetupWizard::slotButtonClicked(int button)
             enableButton(KDialog::Ok, false);
             enableButton(KDialog::Cancel, false);
 
+	    ui->stackedWidget->update();
 	    runInstallation();
         }
 
