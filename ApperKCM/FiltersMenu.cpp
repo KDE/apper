@@ -176,6 +176,37 @@ FiltersMenu::FiltersMenu(Transaction::Filters filters, QWidget *parent)
         m_actions << freeNone;
     }
 
+    if (filters & Transaction::FilterSupported || filters & Transaction::FilterNotSupported) {
+        // Supported
+        QMenu *menuSupported = new QMenu(i18nc("Filter for supported packages", "Supported"), this);
+        connect(menuSupported, SIGNAL(triggered(QAction*)),
+                this, SIGNAL(filtersChanged()));
+        addMenu(menuSupported);
+        QActionGroup *supportedGroup = new QActionGroup(menuSupported);
+        supportedGroup->setExclusive(true);
+
+        QAction *supportedTrue = new QAction(i18n("Only supported software"), supportedGroup);
+        supportedTrue->setCheckable(true);
+        m_filtersAction[supportedTrue] = Transaction::FilterSupported;
+        supportedGroup->addAction(supportedTrue);
+        menuSupported->addAction(supportedTrue);
+        m_actions << supportedTrue;
+
+        QAction *supportedFalse = new QAction(i18n("Only non-supported software"), supportedGroup);
+        supportedFalse->setCheckable(true);
+        m_filtersAction[supportedFalse] = Transaction::FilterNotSupported;
+        supportedGroup->addAction(supportedFalse);
+        menuSupported->addAction(supportedFalse);
+        m_actions << supportedFalse;
+
+        QAction *supportedNone = new QAction(i18n("No filter"), supportedGroup);
+        supportedNone->setCheckable(true);
+        supportedNone->setChecked(true);
+        supportedGroup->addAction(supportedNone);
+        menuSupported->addAction(supportedNone);
+        m_actions << supportedNone;
+    }
+
     if (filters & Transaction::FilterSource || filters & Transaction::FilterNotSource) {
         // Source
         QMenu *menuSource = new QMenu(i18nc("Filter for source packages", "Source"), this);

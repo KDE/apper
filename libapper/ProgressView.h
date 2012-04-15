@@ -51,7 +51,7 @@ public:
 
 public slots:
     void currentPackage(const PackageKit::Package &package);
-    void currentRepo(const QString &repoId, const QString &description);
+    void currentRepo(const QString& repoId, const QString& description, bool enabled);
 
 private slots:
     void followBottom(int value);

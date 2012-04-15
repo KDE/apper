@@ -83,7 +83,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
                                ki18n("(C) 2008-2011 Daniel Nicoletti"));
     setAboutData(aboutData);
     setButtons(Apply);
-    KGlobal::locale()->insertCatalog("apper");
+    KGlobal::insertCatalog(QLatin1String("apper"));
 
     // store the actions supported by the backend
     m_roles = Daemon::actions();

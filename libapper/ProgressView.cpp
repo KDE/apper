@@ -100,9 +100,10 @@ void ProgressView::handleRepo(bool handle) {
     }
 }
 
-void ProgressView::currentRepo(const QString &repoId, const QString &description)
+void ProgressView::currentRepo(const QString &repoId, const QString &description, bool enabled)
 {
     Q_UNUSED(repoId)
+    Q_UNUSED(enabled)
     QStandardItem *item = new QStandardItem(description);
     m_model->appendRow(item);
 }

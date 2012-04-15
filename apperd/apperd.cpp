@@ -128,6 +128,9 @@ void ApperD::poll()
         // If lastRefreshCache is null it means that the cache was never refreshed
         if (m_lastRefreshCache.isNull() || m_lastRefreshCache.toTime_t() < maxTime) {
             callApperSentinel(QLatin1String("RefreshAndUpdate"));
+
+            // Invalidate the last time the cache was refreshed
+            m_lastRefreshCache = QDateTime();
         }
     }
 
@@ -158,6 +161,12 @@ void ApperD::transactionListChanged(const QStringList &tids)
         message << QLatin1String("org.kde.ApperSentinel");
         message << static_cast<uint>(0);
         QDBusConnection::sessionBus().send(message);
+    }
+    
+    if (tids.isEmpty()) {
+        // update the last time the cache was refreshed
+        // TODO PackageKit should emit a property change for this
+        m_lastRefreshCache = getTimeSinceRefreshCache();
     }
 }
 
