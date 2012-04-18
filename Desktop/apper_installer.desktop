@@ -6,6 +6,7 @@ NoDisplay=true
 StartupNotify=false
 
 Name=Apper Installer
+Name[ca]=Instal·lador Apper
 Name[cs]=Instalátor Apper
 Name[da]=Apper installationsprogram
 Name[de]=Apper-Installer

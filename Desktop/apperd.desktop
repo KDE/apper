@@ -6,6 +6,7 @@ X-KDE-Library=apperd
 X-KDE-Kded-autoload=true
 
 Name=Apper Monitor
+Name[ca]=Monitor Apper
 Name[cs]=Apper monitor
 Name[da]=Apper overvågning
 Name[el]=Παρακολούθηση Apper
@@ -28,6 +29,7 @@ Name[wa]=Corwaitoe d' Apper
 Name[x-test]=xxApper Monitorxx
 
 Comment=Watch transactions and Notify about Software Updates
+Comment[ca]=Mira les transaccions i comunica sobre actualitzacions de programari
 Comment[cs]=Sledovat transakce a upozorňovat na aktualizace softwaru
 Comment[da]=Overvåger transaktioner og bekendtgør om softwareopdateringer
 Comment[el]=Παρακολούθηση συναλλαγών και ειδοποίηση σχετικά με ενημερώσεις λογισμικού

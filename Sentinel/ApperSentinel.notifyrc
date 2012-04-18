@@ -2,6 +2,7 @@
 IconName=applications-other
 Name=Apper
 Name[bg]=Apper
+Name[ca]=Apper
 Name[cs]=Apper
 Name[da]=Apper
 Name[de]=Apper
@@ -27,6 +28,7 @@ Name[uk]=Apper
 Name[wa]=Apper
 Name[x-test]=xxApperxx
 Comment=Apper Notification
+Comment[ca]=Notificació de Apper
 Comment[cs]=Upozornění Apper
 Comment[da]=Bekendtgørelse fra Apper
 Comment[de]=Apper-Benachrichtigung
@@ -52,6 +54,7 @@ Comment[x-test]=xxApper Notificationxx
 [Event/ShowUpdates]
 Name=New updates available
 Name[bg]=Има налични нови обновления
+Name[ca]=Hi ha noves actualitzacions disponibles
 Name[cs]=Jsou dostupné aktualizace
 Name[da]=Nye opdateringer tilgængelige
 Name[de]=Es sind neue Aktualisierungen verfügbar.

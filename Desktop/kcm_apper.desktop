@@ -77,6 +77,7 @@ Comment[wa]=Cweri, oister eyet mete a djoû des programes
 Comment[x-test]=xxGet, Remove and Update Softwarexx
 
 X-KDE-Keywords=install,uninstall,remove,software,applications,management,packages,packagekit,purge
+X-KDE-Keywords[ca]=instal·la,desinstal·la,elimina,programari,aplicacions,gestiona,paquets,packagekit,purga
 X-KDE-Keywords[da]=installér,afinstallér,fjern,software,programmer,håndtering,pakker,packagekit,purge
 X-KDE-Keywords[el]=εγκατάσταση,απεγκατάσταση,αφαίρεση,λογισμικό,εφαρμογές,διαχείριση,πακέτα,packagekit,διαγραφή
 X-KDE-Keywords[es]=instalar,desinstalar,eliminar,software,aplicaciones,gestión,paquetes,packagekit,purgar
