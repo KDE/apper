@@ -30,6 +30,7 @@
 #include <KMenuBar>
 #include <KDebug>
 #include <KMessageBox>
+#include <KGlobalSettings>
 #include <listaller.h>
 
 #include "InfoWidget.h"
@@ -128,6 +129,10 @@ SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
 {
     ui->setupUi(KDialog::mainWidget());
     setAttribute(Qt::WA_DeleteOnClose);
+
+    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+            this, SLOT(updatePallete()));
+    updatePallete();
 
     setWindowIcon(KIcon("applications-other"));
     setButtons(KDialog::User1 | KDialog::Ok | KDialog::Cancel);
@@ -366,4 +371,12 @@ void SetupWizard::sharedInstallCbToggled(bool shared)
         }
     }
     listaller_settings_set_sumode(d->liConf, shared);
+}
+
+void SetupWizard::updatePallete()
+{
+    QPalette pal;
+    pal.setColor(QPalette::Window, KGlobalSettings::activeTitleColor());
+    pal.setColor(QPalette::WindowText, KGlobalSettings::activeTextColor());
+    ui->backgroundFrame->setPalette(pal);
 }

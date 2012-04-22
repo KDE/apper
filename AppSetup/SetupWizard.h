@@ -48,6 +48,7 @@ private slots:
     void currentPageChanged(int index);
     void licenseAccepted(bool accepted);
     void sharedInstallCbToggled(bool shared);
+    void updatePallete();
 
 private:
     bool constructWizardLayout();
