@@ -65,7 +65,7 @@ void TransactionHistory::on_treeView_customContextMenuRequested(const QPoint &po
     QAction *action;
     action = menu->addAction(i18n("Refresh transactions list"));
     connect(action, SIGNAL(triggered(bool)), this, SLOT(refreshList()));
-    menu->exec(treeView->mapToGlobal(pos));
+    menu->exec(treeView->viewport()->mapToGlobal(pos));
     delete menu;
 }
 

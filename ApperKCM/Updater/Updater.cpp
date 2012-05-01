@@ -397,7 +397,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     action->setIcon(KIcon("view-refresh"));
     connect(action, SIGNAL(triggered(bool)),
             this, SIGNAL(refreshCache()));
-    menu->exec(packageView->mapToGlobal(pos));
+    menu->exec(packageView->viewport()->mapToGlobal(pos));
     delete menu;
 }
 

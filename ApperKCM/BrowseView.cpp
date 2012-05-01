@@ -183,7 +183,7 @@ void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
     menu->addAction(m_showPackageArch);
     menu->addAction(m_showPackageOrigin);
     menu->addAction(m_showPackageSizes);
-    menu->exec(packageView->mapToGlobal(pos));
+    menu->exec(packageView->viewport()->mapToGlobal(pos));
     menu->deleteLater();
 }
 
