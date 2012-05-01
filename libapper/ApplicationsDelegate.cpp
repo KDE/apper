@@ -45,6 +45,7 @@ ApplicationsDelegate::ApplicationsDelegate(QAbstractItemView *parent)
     m_checkedIcon("dialog-ok"),
     m_checkable(false)
 {
+    m_viewport->setAttribute(Qt::WA_Hover, true);
     QPushButton button, button2;
     button.setText(m_installString);
     button.setIcon(m_installIcon);
