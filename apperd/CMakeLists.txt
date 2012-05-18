@@ -1,4 +1,7 @@
-kde4_add_plugin(kded_apperd apperd.cpp)
+kde4_add_plugin(kded_apperd
+    ApperdThread.cpp
+    apperd.cpp
+)
 
 target_link_libraries(kded_apperd
     ${KDE4_KIO_LIBS}
