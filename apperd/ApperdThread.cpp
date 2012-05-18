@@ -161,7 +161,7 @@ void ApperdThread::transactionListChanged(const QStringList &tids)
                                                  QLatin1String("StartServiceByName"));
         message << QLatin1String("org.kde.ApperSentinel");
         message << static_cast<uint>(0);
-        QDBusConnection::sessionBus().send(message);
+        QDBusConnection::sessionBus().call(message);
     }
 
     if (tids.isEmpty()) {
@@ -201,7 +201,7 @@ void ApperdThread::callApperSentinel(const QString &method)
                                              QLatin1String("/"),
                                              QLatin1String("org.kde.ApperSentinel"),
                                              method);
-    QDBusConnection::sessionBus().send(message);
+    QDBusConnection::sessionBus().call(message);
 }
 
 QDateTime ApperdThread::getTimeSinceRefreshCache() const
