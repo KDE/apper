@@ -31,6 +31,24 @@ ApperdThread::ApperdThread(QObject *parent) :
     m_actRefreshCacheChecked(false),
     m_refreshCacheInterval(Enum::TimeIntervalDefault)
 {
+    // Make all our init code run on the thread since
+    // the DBus calls were made blocking
+    QTimer::singleShot(0, this, SLOT(init()));
+
+    m_thread = new QThread(this);
+    moveToThread(m_thread);
+    m_thread->start();
+}
+
+ApperdThread::~ApperdThread()
+{
+    m_thread->quit();
+    m_thread->wait();
+    delete m_thread;
+}
+
+void ApperdThread::init()
+{
     // This will prevent the user seeing updates again,
     // PackageKit emits UpdatesChanges when we should display
     // that information again
@@ -61,7 +79,7 @@ ApperdThread::ApperdThread(QObject *parent) :
 
     //check if any changes to the file occour
     //this also prevents from reading when a checkUpdate happens
-    KDirWatch *confWatch = new KDirWatch(QThread::currentThread());
+    KDirWatch *confWatch = new KDirWatch(this);
     confWatch->addFile(KStandardDirs::locateLocal("config", "apper"));
     connect(confWatch, SIGNAL(dirty(QString)), this, SLOT(configFileChanged()));
     connect(confWatch, SIGNAL(created(QString)), this, SLOT(configFileChanged()));
@@ -73,7 +91,7 @@ ApperdThread::ApperdThread(QObject *parent) :
     watcher = new QDBusServiceWatcher(QLatin1String("org.kde.ApperSentinel"),
                                       QDBusConnection::sessionBus(),
                                       QDBusServiceWatcher::WatchForOwnerChange,
-                                      QThread::currentThread());
+                                      this);
     connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
             this, SLOT(serviceOwnerChanged(QString,QString,QString)));
 
@@ -95,17 +113,6 @@ ApperdThread::ApperdThread(QObject *parent) :
 
     // read the current settings
     configFileChanged();
-
-    m_thread = new QThread(this);
-    moveToThread(m_thread);
-    m_thread->start();
-}
-
-ApperdThread::~ApperdThread()
-{
-    m_thread->quit();
-    m_thread->wait();
-    delete m_thread;
 }
 
 // This is called every 5 minutes

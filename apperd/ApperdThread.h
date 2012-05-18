@@ -15,6 +15,7 @@ public:
     ~ApperdThread();
 
 private slots:
+    void init();
     void poll();
     void configFileChanged();
 
