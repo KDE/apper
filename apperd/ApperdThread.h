@@ -25,13 +25,13 @@ private slots:
 
 private:
     void callApperSentinel(const QString &method);
-    uint getTimeSinceRefreshCache() const;
+    QDateTime getTimeSinceRefreshCache() const;
     bool nameHasOwner(const QString &name, const QDBusConnection &connection) const;
 
     bool m_actRefreshCacheChecked;
     bool m_canRefreshCache;
     bool m_sentinelIsRunning;
-    uint m_lastRefreshCache;
+    QDateTime m_lastRefreshCache;
     uint m_refreshCacheInterval;
     QTimer *m_qtimer;
     QThread *m_thread;

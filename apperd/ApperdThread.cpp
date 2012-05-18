@@ -29,7 +29,6 @@
 ApperdThread::ApperdThread(QObject *parent) :
     QObject(parent),
     m_actRefreshCacheChecked(false),
-    m_lastRefreshCache(0),
     m_refreshCacheInterval(Enum::TimeIntervalDefault)
 {
     // Make all our init code run on the thread since
@@ -119,7 +118,7 @@ void ApperdThread::init()
 // This is called every 5 minutes
 void ApperdThread::poll()
 {
-    if (m_lastRefreshCache == 0) {
+    if (m_lastRefreshCache.isNull()) {
         // This value wasn't set
         // convert this to QDateTime
         m_lastRefreshCache = getTimeSinceRefreshCache();
@@ -127,12 +126,16 @@ void ApperdThread::poll()
 
     // If check for updates is active
     if (m_refreshCacheInterval != Enum::Never) {
+        // Find out how many seconds passed since last refresh cache
+        uint secsSinceLastRefresh;
+        secsSinceLastRefresh = QDateTime::currentDateTime().toTime_t() - m_lastRefreshCache.toTime_t();
+
         // If lastRefreshCache is null it means that the cache was never refreshed
-        if (m_lastRefreshCache == UINT_MAX || m_lastRefreshCache > m_refreshCacheInterval) {
+        if (m_lastRefreshCache.isNull() || secsSinceLastRefresh > m_refreshCacheInterval) {
             callApperSentinel(QLatin1String("RefreshCache"));
 
             // Invalidate the last time the cache was refreshed
-            m_lastRefreshCache = 0;
+            m_lastRefreshCache = QDateTime();
         }
     }
 }
@@ -166,7 +169,7 @@ void ApperdThread::transactionListChanged(const QStringList &tids)
 
     if (tids.isEmpty()) {
         // update the last time the cache was refreshed
-        uint lastCacheRefresh;
+        QDateTime lastCacheRefresh;
         lastCacheRefresh = getTimeSinceRefreshCache();
         if (lastCacheRefresh != m_lastRefreshCache) {
             m_lastRefreshCache = lastCacheRefresh;
@@ -204,7 +207,7 @@ void ApperdThread::callApperSentinel(const QString &method)
     QDBusConnection::sessionBus().call(message);
 }
 
-uint ApperdThread::getTimeSinceRefreshCache() const
+QDateTime ApperdThread::getTimeSinceRefreshCache() const
 {
     QDBusMessage message;
     message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.PackageKit"),
@@ -216,7 +219,13 @@ uint ApperdThread::getTimeSinceRefreshCache() const
 
     // When the refresh cache value was not yet defined UINT_MAX is returned
     kDebug() << reply.value();
-    return reply.value();
+    if (reply.value() == UINT_MAX) {
+        return QDateTime();
+    } else {
+        // Calculate the last time the cache was refreshed by
+        // subtracting the seconds from the current time
+        return QDateTime::currentDateTime().addSecs(reply.value() * -1);
+    }
 }
 
 bool ApperdThread::nameHasOwner(const QString &name, const QDBusConnection &connection) const
