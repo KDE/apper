@@ -3,9 +3,7 @@
    <interface name="org.kde.ApperSentinel">
        <method name="RefreshCache" >
        </method>
-       <method name="Update" >
-       </method>
-       <method name="RefreshAndUpdate" >
+       <method name="CheckForUpdates" >
        </method>
        <method name="SetupDebconfDialog" >
            <arg type="s" name="tid" direction="in" />

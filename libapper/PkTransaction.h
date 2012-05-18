@@ -54,7 +54,7 @@ public:
     void installFiles(const QStringList &files);
     void removePackages(const QList<Package> &packages);
     void updatePackages(const QList<Package> &packages);
-    void refreshCache();
+    void refreshCache(bool force = false);
 
     QString title() const;
     Transaction::Role role() const;

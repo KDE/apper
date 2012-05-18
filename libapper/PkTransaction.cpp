@@ -204,12 +204,12 @@ void PkTransaction::updatePackages(const QList<Package> &packages)
     }
 }
 
-void PkTransaction::refreshCache()
+void PkTransaction::refreshCache(bool force)
 {
     SET_PROXY
     Transaction *trans = new Transaction(this);
     setTransaction(trans, Transaction::RoleRefreshCache);
-    trans->refreshCache(true);
+    trans->refreshCache(force);
     if (trans->error()) {
         showSorry(i18n("Failed to refresh package cache"),
                   PkStrings::daemonError(trans->error()));

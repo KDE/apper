@@ -56,20 +56,12 @@ DBusInterface::~DBusInterface()
 
 void DBusInterface::RefreshCache()
 {
-    emit refresh();
+    emit refreshCache();
 }
 
-void DBusInterface::Update()
+void DBusInterface::CheckForUpdates()
 {
-    // This is to show updates when the session
-    // starts and it's not time to refresh the cache
-    emit refreshAndUpdate(false);
-}
-
-void DBusInterface::RefreshAndUpdate()
-{
-    // This is to show updates and refresh the cache
-    emit refreshAndUpdate(true);
+    emit checkForUpdates();
 }
 
 void DBusInterface::SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent)

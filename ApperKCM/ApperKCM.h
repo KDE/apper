@@ -113,6 +113,7 @@ private:
 
     FiltersMenu *m_filtersMenu;
     Transaction::Roles m_roles;
+    bool m_forceRefreshCache;
 
     TransactionHistory *m_history;
 

@@ -63,7 +63,7 @@ void UpdateIcon::showSettings()
     KToolInvocation::startServiceByDesktopName("apper_settings");
 }
 
-void UpdateIcon::refresh(bool update)
+void UpdateIcon::refreshCache()
 {
     if (!systemIsReady(true)) {
         kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
@@ -76,13 +76,12 @@ void UpdateIcon::refresh(bool update)
         Transaction *t = new Transaction(this);
         // ignore if there is an error
         // Be silent! don't bother the user if the cache couldn't be refreshed
-        if (update) {
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                    this, SLOT(update()));
-        }
+        // TODO bother the user again... he needs to know the thruth
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(decreaseRunning()));
-        t->refreshCache(true);
+        // Refresh Cache is false otherwise it will rebuild
+        // the whole cache on Fedora
+        t->refreshCache(false);
         if (t->error()) {
             KNotification *notify = new KNotification("TransactionError", 0);
             notify->setText(PkStrings::daemonError(t->error()));
@@ -92,23 +91,10 @@ void UpdateIcon::refresh(bool update)
     }
 }
     
-// refresh the cache and try to update,
-// if it can't automatically update show
-// a notification about updates available
-void UpdateIcon::refreshAndUpdate(bool doRefresh)
+void UpdateIcon::checkForUpdates()
 {
     // This is really necessary to don't bother the user with
     // tons of popups
-    if (doRefresh) {
-        // Force an update after refresh cache
-        refresh(true);
-    } else {
-        update();
-    }
-}
-
-void UpdateIcon::update()
-{
     if (m_getUpdatesT) {
         return;
     }
@@ -278,7 +264,7 @@ void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
         notify->sendEvent();
         
         // run get-updates again so that non auto-installed updates can be displayed
-        update();
+        checkForUpdates();
     } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing

@@ -46,11 +46,10 @@ signals:
     void watchTransaction(const QString &tid, bool interactive);
 
 public slots:
-    void refreshAndUpdate(bool doRefresh);
-    void refresh(bool update = false);
+    void checkForUpdates();
+    void refreshCache();
 
 private slots:
-    void update();
     void packageToUpdate(const PackageKit::Package &package);
     void getUpdateFinished();
     void autoUpdatesFinished(PackageKit::Transaction::Exit exit);

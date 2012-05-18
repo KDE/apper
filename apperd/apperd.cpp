@@ -50,11 +50,13 @@ K_EXPORT_PLUGIN(ApperFactory("apperd"))
 ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
     KDEDModule(parent),
     m_actRefreshCacheChecked(false),
-    m_showedUpdates(false)
+    m_showedUpdates(false),
+    m_refreshCacheInterval(Enum::TimeIntervalDefault)
 {
     m_qtimer = new QTimer(this);
     connect(m_qtimer, SIGNAL(timeout()), this, SLOT(poll()));
-    m_qtimer->start(FIVE_MIN);
+    m_qtimer->setInterval(FIVE_MIN);
+    m_qtimer->start();
 
     // Watch for TransactionListChanged so we start sentinel
     QDBusConnection::systemBus().connect(QLatin1String(""),
@@ -104,9 +106,9 @@ ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
                                                  QLatin1String("GetTransactionList"));
         QDBusReply<QStringList> reply = QDBusConnection::systemBus().call(message, QDBus::BlockWithGui);
         transactionListChanged(reply.value()); // In case of a running transaction fire up sentinel
-        m_lastRefreshCache = getTimeSinceRefreshCache();
     }
 
+    // read the current settings
     configFileChanged();
 }
 
@@ -114,6 +116,7 @@ ApperD::~ApperD()
 {
 }
 
+// This is called every 5 minutes
 void ApperD::poll()
 {
     if (m_lastRefreshCache.isNull()) {
@@ -127,17 +130,22 @@ void ApperD::poll()
         uint maxTime = QDateTime::currentDateTime().toTime_t() - m_refreshCacheInterval;
         // If lastRefreshCache is null it means that the cache was never refreshed
         if (m_lastRefreshCache.isNull() || m_lastRefreshCache.toTime_t() < maxTime) {
-            callApperSentinel(QLatin1String("RefreshAndUpdate"));
+            callApperSentinel(QLatin1String("RefreshCache"));
 
             // Invalidate the last time the cache was refreshed
             m_lastRefreshCache = QDateTime();
         }
     }
 
-    // display or update the system
+    // Display updates to the user the first time the session starts
     if (!m_showedUpdates) {
-        m_showedUpdates = true; // don't do that so often
-        callApperSentinel(QLatin1String("Update"));
+        // This will prevent the user seeing updates again,
+        // PackageKit emits UpdatesChanges when we should display
+        // that information
+        m_showedUpdates = true;
+
+        // Show the updates to the users
+        updatesChanged();
     }
 }
 
@@ -145,14 +153,19 @@ void ApperD::configFileChanged()
 {
     KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    m_refreshCacheInterval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
-    kDebug() << "new refresh cache interval" << m_refreshCacheInterval;
+    uint refreshCacheInterval;
+    refreshCacheInterval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
+    // Check if the refresh cache interval was changed
+    if (m_refreshCacheInterval != refreshCacheInterval) {
+        m_refreshCacheInterval = refreshCacheInterval;
+        kDebug() << "new refresh cache interval" << m_refreshCacheInterval;
+    }
 }
 
 void ApperD::transactionListChanged(const QStringList &tids)
 {
     kDebug() << "tids.size()" << tids.size();
-    if (!m_sentinelIsRunning && tids.size()) {
+    if (!m_sentinelIsRunning && !tids.isEmpty()) {
         QDBusMessage message;
         message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.DBus"),
                                                  QLatin1String("/"),
@@ -165,17 +178,19 @@ void ApperD::transactionListChanged(const QStringList &tids)
     
     if (tids.isEmpty()) {
         // update the last time the cache was refreshed
-        // TODO PackageKit should emit a property change for this
-        m_lastRefreshCache = getTimeSinceRefreshCache();
+        QDateTime lastCacheRefresh;
+        lastCacheRefresh = getTimeSinceRefreshCache();
+        if (lastCacheRefresh != m_lastRefreshCache) {
+            m_lastRefreshCache = lastCacheRefresh;
+        }
     }
 }
 
+// This is called when the list of updates changes
 void ApperD::updatesChanged()
 {
-    // - update time since last refresh
-    // - reset showed updates to display this change
-    getTimeSinceRefreshCache();
-    m_showedUpdates = false;
+    // Make sure the user sees the updates
+    callApperSentinel(QLatin1String("CheckForUpdates"));
 }
 
 void ApperD::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)

@@ -70,6 +70,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_searchTransaction(0),
     m_findIcon("edit-find"),
     m_cancelIcon("dialog-cancel"),
+    m_forceRefreshCache(false),
     m_history(0),
     m_searchRole(Transaction::UnknownRole)
 {
@@ -702,7 +703,7 @@ void ApperKCM::refreshCache()
 
     QEventLoop loop;
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
-    transaction->refreshCache();
+    transaction->refreshCache(m_forceRefreshCache);
 
     // wait for the end of transaction
     if (!transaction->isFinished()) {
@@ -711,6 +712,9 @@ void ApperKCM::refreshCache()
             // Avoid crashing
             return;
         }
+
+        // If the refresh failed force next refresh Cache call
+        m_forceRefreshCache = transaction->exitStatus() == PkTransaction::Failed;
     }
 
     // Finished setup old stuff

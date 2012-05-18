@@ -68,12 +68,12 @@ ApperSentinel::ApperSentinel()
 
     m_interface = new DBusInterface(this);
     // connect the update signal from DBus to our update and distro classes
-    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
-            m_updateIcon, SLOT(refreshAndUpdate(bool)));
-    connect(m_interface, SIGNAL(refreshAndUpdate(bool)),
+    connect(m_interface, SIGNAL(checkForUpdates()),
+            m_updateIcon, SLOT(checkForUpdates()));
+    connect(m_interface, SIGNAL(checkForUpdates()),
             m_distroUpgrade, SLOT(checkDistroUpgrades()));
-    connect(m_interface, SIGNAL(refresh()),
-            m_updateIcon, SLOT(refresh()));
+    connect(m_interface, SIGNAL(refreshCache()),
+            m_updateIcon, SLOT(refreshCache()));
 
     // connect the watch transaction coming from the updater icon to our watcher
 //     connect(m_updateIcon, SIGNAL(watchTransaction(const QString &, bool)),
@@ -135,5 +135,3 @@ int ApperSentinel::newInstance()
 ApperSentinel::~ApperSentinel()
 {
 }
-
-#include "ApperSentinel.moc"

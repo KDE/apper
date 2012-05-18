@@ -38,13 +38,12 @@ public:
     ~DBusInterface();
 
     void RefreshCache();
-    void RefreshAndUpdate();
-    void Update();
+    void CheckForUpdates();
     void SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent);
 
 signals:
-    void refreshAndUpdate(bool refresh);
-    void refresh();
+    void checkForUpdates();
+    void refreshCache();
 
 private slots:
     void debconfActivate();
