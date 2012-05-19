@@ -126,9 +126,12 @@ void ApperdThread::poll()
 
     // If check for updates is active
     if (m_refreshCacheInterval != Enum::Never) {
-        uint maxTime = QDateTime::currentDateTime().toTime_t() - m_refreshCacheInterval;
+        // Find out how many seconds passed since last refresh cache
+        uint secsSinceLastRefresh;
+        secsSinceLastRefresh = QDateTime::currentDateTime().toTime_t() - m_lastRefreshCache.toTime_t();
+
         // If lastRefreshCache is null it means that the cache was never refreshed
-        if (m_lastRefreshCache.isNull() || m_lastRefreshCache.toTime_t() < maxTime) {
+        if (m_lastRefreshCache.isNull() || secsSinceLastRefresh > m_refreshCacheInterval) {
             callApperSentinel(QLatin1String("RefreshCache"));
 
             // Invalidate the last time the cache was refreshed
@@ -215,9 +218,12 @@ QDateTime ApperdThread::getTimeSinceRefreshCache() const
     QDBusReply<uint> reply = QDBusConnection::systemBus().call(message);
 
     // When the refresh cache value was not yet defined UINT_MAX is returned
+    kDebug() << reply.value();
     if (reply.value() == UINT_MAX) {
         return QDateTime();
     } else {
+        // Calculate the last time the cache was refreshed by
+        // subtracting the seconds from the current time
         return QDateTime::currentDateTime().addSecs(reply.value() * -1);
     }
 }
