@@ -57,42 +57,47 @@ void RefreshCacheTask::refreshCache()
         SET_PROXY
         increaseRunning();
         Transaction *t = new Transaction(this);
-        // ignore if there is an error
-        // Be silent! don't bother the user if the cache couldn't be refreshed
-        // TODO bother the user again... he needs to know the thruth
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(decreaseRunning()));
+                this, SLOT(refreshCacheFinished(PackageKit::Transaction::Exit)));
+        connect(t, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+                this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+
         // Refresh Cache is false otherwise it will rebuild
         // the whole cache on Fedora
         t->refreshCache(false);
         if (t->error()) {
-            kDebug() << "refresh error" << t->error();
-            KNotification *notify = new KNotification("TransactionError", 0);
-            notify->setText(PkStrings::daemonError(t->error()));
-            notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-            notify->sendEvent();
-            decreaseRunning();
+            m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
+            connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
+            KIcon icon("dialog-cancel");
+            // use of QSize does the right thing
+            m_notification->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+            m_notification->setText(PkStrings::daemonError(t->error()));
+            m_notification->sendEvent();
         }
     }
 }
 
-void RefreshCacheTask::autoUpdatesFinished(PackageKit::Transaction::Exit status)
+void RefreshCacheTask::refreshCacheFinished(PackageKit::Transaction::Exit status)
 {
     if (status == Transaction::ExitSuccess || status == Transaction::ExitCancelled) {
         // decrease first only because we want to check for updates again
         decreaseRunning();
-    } else {
-        // Not decreasing and being Persistent
-        // prevents multiple popups issued by
-        // subsequent refresh cache tries
-        m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
-        connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
-        KIcon icon("dialog-cancel");
-        // use of QSize does the right thing
-        m_notification->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-        m_notification->setText(i18n("The automated refresh caches failed."));
-        m_notification->sendEvent();
     }
+}
+
+void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorMessage)
+{
+    // Not decreasing and being Persistent
+    // prevents multiple popups issued by
+    // subsequent refresh cache tries
+    m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
+    connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
+    KIcon icon("dialog-cancel");
+    // use of QSize does the right thing
+    m_notification->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+    m_notification->setTitle(PkStrings::error(error));
+    m_notification->setText(errorMessage);
+    m_notification->sendEvent();
 }
 
 void RefreshCacheTask::notificationClosed()

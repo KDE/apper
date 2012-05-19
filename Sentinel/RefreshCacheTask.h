@@ -36,7 +36,8 @@ public slots:
     void refreshCache();
 
 private slots:
-    void autoUpdatesFinished(PackageKit::Transaction::Exit status);
+    void refreshCacheFinished(PackageKit::Transaction::Exit status);
+    void errorCode(PackageKit::Transaction::Error error, const QString &errorMessage);
     void notificationClosed();
 
 private:
