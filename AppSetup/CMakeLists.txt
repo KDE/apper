@@ -33,4 +33,6 @@ target_link_libraries(apper-appsetup
 		      apper
 )
 
+kde4_create_manpage(man-apper-appsetup.1.docbook 1 INSTALL_DESTINATION ${MAN_INSTALL_DIR})
+
 install(TARGETS apper-appsetup RUNTIME DESTINATION ${BIN_INSTALL_DIR})
