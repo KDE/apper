@@ -46,13 +46,13 @@
 
 using namespace PackageKit;
 
-SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent)
- : KDialog(parent),
-   m_xid(xid),
-   m_message(message),
-   m_reviewChanges(0),
-   m_pkTransaction(0),
-   ui(new Ui::SessionTask)
+SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent) :
+    KDialog(parent),
+    m_xid(xid),
+    m_message(message),
+    m_reviewChanges(0),
+    m_pkTransaction(0),
+    ui(new Ui::SessionTask)
 {
     ui->setupUi(KDialog::mainWidget());
     setAttribute(Qt::WA_DeleteOnClose);

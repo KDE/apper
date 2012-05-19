@@ -36,8 +36,6 @@
 #include <KMenu>
 #include <KToolInvocation>
 
-#include <Solid/PowerManagement>
-
 #include <KDebug>
 
 #include <Daemon>
@@ -51,7 +49,7 @@ UpdateIcon::UpdateIcon(QObject* parent)
       m_getUpdatesT(0),
       m_statusNotifierItem(0)
 {
-    connect(Daemon::global(), SIGNAL(updatesChanged()), this, SLOT(update()));
+    connect(Daemon::global(), SIGNAL(updatesChanged()), this, SLOT(checkForUpdates()));
 }
 
 UpdateIcon::~UpdateIcon()
@@ -63,34 +61,6 @@ void UpdateIcon::showSettings()
     KToolInvocation::startServiceByDesktopName("apper_settings");
 }
 
-void UpdateIcon::refreshCache()
-{
-    if (!systemIsReady(true)) {
-        kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
-        return;
-    }
-
-    if (!isRunning()) {
-        SET_PROXY
-        increaseRunning();
-        Transaction *t = new Transaction(this);
-        // ignore if there is an error
-        // Be silent! don't bother the user if the cache couldn't be refreshed
-        // TODO bother the user again... he needs to know the thruth
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(decreaseRunning()));
-        // Refresh Cache is false otherwise it will rebuild
-        // the whole cache on Fedora
-        t->refreshCache(false);
-        if (t->error()) {
-            KNotification *notify = new KNotification("TransactionError", 0);
-            notify->setText(PkStrings::daemonError(t->error()));
-            notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-            notify->sendEvent();
-        }
-    }
-}
-    
 void UpdateIcon::checkForUpdates()
 {
     // This is really necessary to don't bother the user with
@@ -194,8 +164,15 @@ void UpdateIcon::getUpdateFinished()
 
         KConfig config("apper");
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-        uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
-        bool systemReady = systemIsReady(true);
+        bool ignoreBattery;
+        bool ignoreMobile;
+        uint updateType;
+        ignoreBattery = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
+        ignoreMobile = checkUpdateGroup.readEntry("installUpdatesOnMobile", false);
+        updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
+
+
+        bool systemReady = systemIsReady(ignoreBattery, ignoreMobile);
         if (!systemReady && (updateType == Enum::All || (updateType == Enum::Security && !securityUpdateList.isEmpty()))) {
             kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
         }
@@ -285,45 +262,4 @@ void UpdateIcon::removeStatusNotifierItem()
         m_statusNotifierItem->deleteLater();
         m_statusNotifierItem = 0;
     }
-}
-
-bool UpdateIcon::systemIsReady(bool checkUpdates)
-{
-    Daemon::Network networkState = Daemon::networkState();
-
-    // test whether network is connected
-    if (networkState == Daemon::NetworkOffline || networkState == Daemon::UnknownNetwork) {
-        kDebug() << "nerwork state" << networkState;
-        return false;
-    }
-
-    KConfig config("apper");
-    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    bool ignoreBattery;
-    if (checkUpdates) {
-        ignoreBattery = checkUpdateGroup.readEntry("checkUpdatesOnBattery", false);
-    } else {
-        ignoreBattery = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
-    }
-
-    // THIS IS NOT working on my computer
-    // check how applications should behave (e.g. on battery power)
-    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
-//        return false;
-        kDebug() << "should conserve??";
-    }
-    
-    bool ignoreMobile;
-    if (checkUpdates) {
-        ignoreMobile = checkUpdateGroup.readEntry("checkUpdatesOnMobile", false);
-    } else {
-        ignoreMobile = checkUpdateGroup.readEntry("installUpdatesOnMobile", false);
-    }
-
-    // check how applications should behave (e.g. on battery power)
-    if (!ignoreMobile && networkState == Daemon::NetworkMobile) {
-        return false;
-    } 
-
-    return true;
 }

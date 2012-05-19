@@ -20,6 +20,7 @@
 
 #include "ApperSentinel.h"
 
+#include "RefreshCacheTask.h"
 #include "UpdateIcon.h"
 #include "DistroUpgrade.h"
 #include "TransactionWatcher.h"
@@ -58,6 +59,10 @@ ApperSentinel::ApperSentinel()
     connect(m_trayIcon, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
+    m_refreshCache = new RefreshCacheTask(this);
+    connect(m_refreshCache, SIGNAL(close()),
+            this, SLOT(prepareToClose()));
+
     m_updateIcon = new UpdateIcon(this);
     connect(m_updateIcon, SIGNAL(close()),
             this, SLOT(prepareToClose()));
@@ -72,8 +77,9 @@ ApperSentinel::ApperSentinel()
             m_updateIcon, SLOT(checkForUpdates()));
     connect(m_interface, SIGNAL(checkForUpdates()),
             m_distroUpgrade, SLOT(checkDistroUpgrades()));
+
     connect(m_interface, SIGNAL(refreshCache()),
-            m_updateIcon, SLOT(refreshCache()));
+            m_refreshCache, SLOT(refreshCache()));
 
     // connect the watch transaction coming from the updater icon to our watcher
 //     connect(m_updateIcon, SIGNAL(watchTransaction(const QString &, bool)),
@@ -98,6 +104,10 @@ bool ApperSentinel::isRunning()
     // check to see if no piece of code is running
     if (m_trayIcon && m_trayIcon->isRunning()) {
         kDebug() << m_trayIcon;
+        return true;
+    }
+    if (m_refreshCache && m_refreshCache->isRunning()) {
+        kDebug() << m_refreshCache;
         return true;
     }
     if (m_updateIcon && m_updateIcon->isRunning()) {

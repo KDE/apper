@@ -47,7 +47,6 @@ signals:
 
 public slots:
     void checkForUpdates();
-    void refreshCache();
 
 private slots:
     void packageToUpdate(const PackageKit::Package &package);
@@ -59,13 +58,11 @@ private slots:
     void removeStatusNotifierItem();
 
 private:
-    bool systemIsReady(bool checkUpdates);
+    void updateStatusNotifierIcon(UpdateType type);
 
     Transaction *m_getUpdatesT;
     StatusNotifierItem *m_statusNotifierItem;
     QList<Package> m_updateList;
-
-    void updateStatusNotifierIcon(UpdateType type);
 };
 
 #endif

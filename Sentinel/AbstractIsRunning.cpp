@@ -20,7 +20,13 @@
 
 #include "AbstractIsRunning.h"
 
+#include <Solid/PowerManagement>
+
+#include <Daemon>
+
 #include <KDebug>
+
+using namespace PackageKit;
 
 AbstractIsRunning::AbstractIsRunning(QObject *parent) :
     QObject(parent),
@@ -53,4 +59,27 @@ bool AbstractIsRunning::isRunning() const
     return m_running > 0;
 }
 
-#include "AbstractIsRunning.moc"
+bool AbstractIsRunning::systemIsReady(bool ignoreBattery, bool ignoreMobile)
+{
+    Daemon::Network networkState = Daemon::networkState();
+
+    // test whether network is connected
+    if (networkState == Daemon::NetworkOffline || networkState == Daemon::UnknownNetwork) {
+        kDebug() << "nerwork state" << networkState;
+        return false;
+    }
+
+    // THIS IS NOT working on my computer
+    // check how applications should behave (e.g. on battery power)
+    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
+//        return false;
+        kDebug() << "should conserve??";
+    }
+
+    // check how applications should behave (e.g. on battery power)
+    if (!ignoreMobile && networkState == Daemon::NetworkMobile) {
+        return false;
+    }
+
+    return true;
+}

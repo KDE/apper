@@ -7,6 +7,7 @@ set(sentinel_SRCS
     TransactionJob.cpp
     TransactionWatcher.cpp
     AbstractIsRunning.cpp
+    RefreshCacheTask.cpp
     UpdateIcon.cpp
     DistroUpgrade.cpp
     DBusInterface.cpp

@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
- *   dantti12@gmail.com                                                    *
+ *   Copyright (C) 2012 by Daniel Nicoletti dantti12@gmail.com             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,42 +17,30 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef APPER_SENTINEL_H
-#define APPER_SENTINEL_H
+#ifndef REFRESHCACHETASK_H
+#define REFRESHCACHETASK_H
 
-#include <KUniqueApplication>
-#include <QTimer>
+#include "AbstractIsRunning.h"
 
-class RefreshCacheTask;
-class UpdateIcon;
-class DistroUpgrade;
-class TransactionWatcher;
-class DBusInterface;
-class PkInterface;
+#include <Transaction>
 
-class ApperSentinel : public KUniqueApplication
+#include <KNotification>
+
+class RefreshCacheTask : public AbstractIsRunning
 {
     Q_OBJECT
 public:
-    ApperSentinel();
-    virtual ~ApperSentinel();
-    int newInstance();
+    explicit RefreshCacheTask(QObject *parent = 0);
+
+public slots:
+    void refreshCache();
 
 private slots:
-    void prepareToClose();
-    void close();
+    void autoUpdatesFinished(PackageKit::Transaction::Exit status);
+    void notificationClosed();
 
 private:
-    bool isRunning();
-    QTimer *m_closeT;
-
-    TransactionWatcher *m_trayIcon;
-    RefreshCacheTask *m_refreshCache;
-    UpdateIcon *m_updateIcon;
-    DistroUpgrade *m_distroUpgrade;
-
-    DBusInterface *m_interface;
-    PkInterface *m_pkInterface;
+    KNotification *m_notification;
 };
 
-#endif
+#endif // REFRESHCACHETASK_H
