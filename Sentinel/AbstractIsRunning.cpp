@@ -65,15 +65,14 @@ bool AbstractIsRunning::systemIsReady(bool ignoreBattery, bool ignoreMobile)
 
     // test whether network is connected
     if (networkState == Daemon::NetworkOffline || networkState == Daemon::UnknownNetwork) {
-        kDebug() << "nerwork state" << networkState;
+        kDebug() << "network state" << networkState;
         return false;
     }
 
-    // THIS IS NOT working on my computer
     // check how applications should behave (e.g. on battery power)
     if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
-//        return false;
         kDebug() << "should conserve??";
+        return false;
     }
 
     // check how applications should behave (e.g. on battery power)
