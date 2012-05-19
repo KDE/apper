@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Icon=applications-other
-Exec=appsetup-kde %F
+Exec=apper-appsetup %F
 
 Name=Listaller Package Installer
 Name[ca]=Instal·lador de paquets llista-ho tot
@@ -51,4 +51,4 @@ MimeType=application/x-installation;
 StartupNotify=true
 NoDisplay=true
 X-Publisher=KDE Project
-X-AppVersion=0.1
+X-AppVersion=0.4

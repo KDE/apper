@@ -22,15 +22,15 @@ kde4_add_ui_files(AppSetup_SRCS
 	LicensePage.ui
 )
 
-kde4_add_executable(appsetup-kde ${AppSetup_SRCS})
+kde4_add_executable(apper-appsetup ${AppSetup_SRCS})
 
-set_target_properties(appsetup-kde PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+set_target_properties(apper-appsetup PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
 
-target_link_libraries(appsetup-kde
+target_link_libraries(apper-appsetup
 		      ${KDE4_KDEUI_LIBS}
 		      ${GLIB2_LIBRARIES}
 		      ${LISTALLER_LIBRARIES}
 		      apper
 )
 
-install(TARGETS appsetup-kde RUNTIME DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS apper-appsetup RUNTIME DESTINATION ${BIN_INSTALL_DIR})
