@@ -50,7 +50,6 @@ UpdateIcon::UpdateIcon(QObject* parent)
       m_getUpdatesT(0),
       m_statusNotifierItem(0)
 {
-    connect(Daemon::global(), SIGNAL(updatesChanged()), this, SLOT(checkForUpdates()));
 }
 
 UpdateIcon::~UpdateIcon()
