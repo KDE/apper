@@ -74,7 +74,7 @@ void ApperdThread::init()
     // This will prevent the user seeing updates again,
     // PackageKit emits UpdatesChanges when we should display
     // that information again
-    QTimer::singleShot(0, this, SLOT(updatesChanged()));
+    QTimer::singleShot(FIVE_MIN, this, SLOT(updatesChanged()));
 
     // This timer keeps polling to see if it has
     // to refresh the cache
