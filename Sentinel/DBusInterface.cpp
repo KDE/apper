@@ -59,9 +59,9 @@ void DBusInterface::RefreshCache()
     emit refreshCache();
 }
 
-void DBusInterface::CheckForUpdates()
+void DBusInterface::CheckForUpdates(bool system_ready)
 {
-    emit checkForUpdates();
+    emit checkForUpdates(system_ready);
 }
 
 void DBusInterface::SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent)

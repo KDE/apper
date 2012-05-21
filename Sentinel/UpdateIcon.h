@@ -46,7 +46,7 @@ signals:
     void watchTransaction(const QString &tid, bool interactive);
 
 public slots:
-    void checkForUpdates();
+    void checkForUpdates(bool system_ready);
 
 private slots:
     void packageToUpdate(const PackageKit::Package &package);

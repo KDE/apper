@@ -41,6 +41,7 @@
 #include <Daemon>
 
 #define UPDATES_ICON "system-software-update"
+#define SYSTEM_READY "system_ready"
 
 using namespace PackageKit;
 
@@ -61,7 +62,7 @@ void UpdateIcon::showSettings()
     KToolInvocation::startServiceByDesktopName("apper_settings");
 }
 
-void UpdateIcon::checkForUpdates()
+void UpdateIcon::checkForUpdates(bool system_ready)
 {
     // This is really necessary to don't bother the user with
     // tons of popups
@@ -79,6 +80,7 @@ void UpdateIcon::checkForUpdates()
     if (interval != Enum::Never || updateType == Enum::All || updateType == Enum::Security) {
         m_updateList.clear();
         m_getUpdatesT = new Transaction(this);
+        m_getUpdatesT->setProperty(SYSTEM_READY, system_ready);
         connect(m_getUpdatesT, SIGNAL(package(PackageKit::Package)),
                 this, SLOT(packageToUpdate(PackageKit::Package)));
         connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
@@ -162,17 +164,12 @@ void UpdateIcon::getUpdateFinished()
             }
         }
 
+        uint updateType;
+        bool systemReady;
         KConfig config("apper");
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-        bool ignoreBattery;
-        bool ignoreMobile;
-        uint updateType;
-        ignoreBattery = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
-        ignoreMobile = checkUpdateGroup.readEntry("installUpdatesOnMobile", false);
         updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
-
-
-        bool systemReady = systemIsReady(ignoreBattery, ignoreMobile);
+        systemReady = sender()->property(SYSTEM_READY).toBool();
         if (!systemReady && (updateType == Enum::All || (updateType == Enum::Security && !securityUpdateList.isEmpty()))) {
             kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
         }
@@ -183,6 +180,7 @@ void UpdateIcon::getUpdateFinished()
             Transaction *t = new Transaction(this);
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
+            t->setProperty(SYSTEM_READY, systemReady);
             t->updatePackages(m_updateList, true);
             if (!t->error()) {
                 // don't be interactive to not upset an idle user
@@ -204,6 +202,7 @@ void UpdateIcon::getUpdateFinished()
             Transaction *t = new Transaction(this);
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
+            t->setProperty(SYSTEM_READY, systemReady);
             t->updatePackages(securityUpdateList, true);
             if (!t->error()) {
                 // don't be interactive to not upset an idle user
@@ -241,7 +240,7 @@ void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
         notify->sendEvent();
         
         // run get-updates again so that non auto-installed updates can be displayed
-        checkForUpdates();
+        checkForUpdates(sender()->property(SYSTEM_READY).toBool());
     } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing

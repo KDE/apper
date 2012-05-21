@@ -73,9 +73,9 @@ ApperSentinel::ApperSentinel()
 
     m_interface = new DBusInterface(this);
     // connect the update signal from DBus to our update and distro classes
-    connect(m_interface, SIGNAL(checkForUpdates()),
-            m_updateIcon, SLOT(checkForUpdates()));
-    connect(m_interface, SIGNAL(checkForUpdates()),
+    connect(m_interface, SIGNAL(checkForUpdates(bool)),
+            m_updateIcon, SLOT(checkForUpdates(bool)));
+    connect(m_interface, SIGNAL(checkForUpdates(bool)),
             m_distroUpgrade, SLOT(checkDistroUpgrades()));
 
     connect(m_interface, SIGNAL(refreshCache()),

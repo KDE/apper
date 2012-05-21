@@ -26,9 +26,12 @@
 #include <KConfigGroup>
 #include <KDirWatch>
 
+#include <Solid/PowerManagement>
+
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusReply>
 #include <QtDBus/QDBusServiceWatcher>
+#include <QtDBus/QDBusInterface>
 
 #include <limits.h>
 
@@ -71,7 +74,7 @@ void ApperdThread::init()
     // This will prevent the user seeing updates again,
     // PackageKit emits UpdatesChanges when we should display
     // that information again
-    QTimer::singleShot(FIVE_MIN, this, SLOT(updatesChanged()));
+    QTimer::singleShot(0, this, SLOT(updatesChanged()));
 
     // This timer keeps polling to see if it has
     // to refresh the cache
@@ -151,7 +154,15 @@ void ApperdThread::poll()
 
         // If lastRefreshCache is null it means that the cache was never refreshed
         if (m_lastRefreshCache.isNull() || secsSinceLastRefresh > m_refreshCacheInterval) {
-            callApperSentinel(QLatin1String("RefreshCache"));
+            KConfig config("apper");
+            KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
+            bool ignoreBattery;
+            bool ignoreMobile;
+            ignoreBattery = checkUpdateGroup.readEntry("checkUpdatesOnBattery", false);
+            ignoreMobile = checkUpdateGroup.readEntry("checkUpdatesOnMobile", false);
+            if (isSystemReady(ignoreBattery, ignoreMobile)) {
+                callApperSentinel(QLatin1String("RefreshCache"));
+            }
 
             // Invalidate the last time the cache was refreshed
             m_lastRefreshCache = QDateTime();
@@ -199,8 +210,19 @@ void ApperdThread::transactionListChanged(const QStringList &tids)
 // This is called when the list of updates changes
 void ApperdThread::updatesChanged()
 {
+    KConfig config("apper");
+    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
+    bool ignoreBattery;
+    bool ignoreMobile;
+    ignoreBattery = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
+    ignoreMobile = checkUpdateGroup.readEntry("installUpdatesOnMobile", false);
+
+    // Append the system_ready argument
+    QList<QVariant> arguments;
+    arguments << isSystemReady(ignoreBattery, ignoreMobile);
+
     // Make sure the user sees the updates
-    callApperSentinel(QLatin1String("CheckForUpdates"));
+    callApperSentinel(QLatin1String("CheckForUpdates"), arguments);
 }
 
 void ApperdThread::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
@@ -215,7 +237,7 @@ void ApperdThread::serviceOwnerChanged(const QString &serviceName, const QString
     }
 }
 
-void ApperdThread::callApperSentinel(const QString &method)
+void ApperdThread::callApperSentinel(const QString &method, const QList<QVariant> &arguments)
 {
     kDebug() << method;
     QDBusMessage message;
@@ -223,6 +245,7 @@ void ApperdThread::callApperSentinel(const QString &method)
                                              QLatin1String("/"),
                                              QLatin1String("org.kde.ApperSentinel"),
                                              method);
+    message.setArguments(arguments);
     QDBusConnection::sessionBus().call(message);
 }
 
@@ -247,6 +270,21 @@ QDateTime ApperdThread::getTimeSinceRefreshCache() const
     }
 }
 
+QString ApperdThread::networkState() const
+{
+    QString ret;
+    QDBusInterface packagekitInterface(QLatin1String("org.freedesktop.PackageKit"),
+                                       QLatin1String("/org/freedesktop/PackageKit"),
+                                       QLatin1String("org.freedesktop.PackageKit"),
+                                       QDBusConnection::systemBus());
+    if (!packagekitInterface.isValid()) {
+        return ret;
+    }
+
+    ret = packagekitInterface.property("NetworkState").toString();
+    return ret;
+}
+
 bool ApperdThread::nameHasOwner(const QString &name, const QDBusConnection &connection) const
 {
     QDBusMessage message;
@@ -257,4 +295,31 @@ bool ApperdThread::nameHasOwner(const QString &name, const QDBusConnection &conn
     message << qVariantFromValue(name);
     QDBusReply<bool> reply = connection.call(message);
     return reply.value();
+}
+
+bool ApperdThread::isSystemReady(bool ignoreBattery, bool ignoreMobile) const
+{
+    // First check if we should conserve resources
+    // check how applications should behave (e.g. on battery power)
+    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
+        kDebug() << "System is not ready, application should conserve resources";
+        return false;
+    }
+
+    // TODO it would be nice is Solid provided this
+    // so we wouldn't be waking up PackageKit for this Solid task.
+    QString netState = networkState();
+    // test whether network is connected
+    if (netState == QLatin1String("offline") || netState == QLatin1String("unknown")) {
+        kDebug() << "System is not ready, network state" << netState;
+        return false;
+    }
+
+    // check how applications should behave (e.g. on battery power)
+    if (!ignoreMobile && netState == QLatin1String("mobile")) {
+        kDebug() << "System is not ready, network state" << netState;
+        return false;
+    }
+
+    return true;
 }

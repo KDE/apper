@@ -41,17 +41,6 @@ RefreshCacheTask::RefreshCacheTask(QObject *parent) :
 
 void RefreshCacheTask::refreshCache()
 {
-    KConfig config("apper");
-    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    bool ignoreBattery;
-    bool ignoreMobile;
-    ignoreBattery = checkUpdateGroup.readEntry("checkUpdatesOnBattery", false);
-    ignoreMobile = checkUpdateGroup.readEntry("checkUpdatesOnMobile", false);
-    if (!systemIsReady(ignoreBattery, ignoreMobile)) {
-        kDebug() << "Not checking for updates, as we might be on battery or mobile connection";
-        return;
-    }
-
     kDebug() << "isRunning" << isRunning();
     if (!isRunning()) {
         SET_PROXY

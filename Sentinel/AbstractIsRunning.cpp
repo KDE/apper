@@ -20,8 +20,6 @@
 
 #include "AbstractIsRunning.h"
 
-#include <Solid/PowerManagement>
-
 #include <Daemon>
 
 #include <KDebug>
@@ -57,28 +55,4 @@ void AbstractIsRunning::decreaseRunning()
 bool AbstractIsRunning::isRunning() const
 {
     return m_running > 0;
-}
-
-bool AbstractIsRunning::systemIsReady(bool ignoreBattery, bool ignoreMobile)
-{
-    Daemon::Network networkState = Daemon::networkState();
-
-    // test whether network is connected
-    if (networkState == Daemon::NetworkOffline || networkState == Daemon::UnknownNetwork) {
-        kDebug() << "network state" << networkState;
-        return false;
-    }
-
-    // check how applications should behave (e.g. on battery power)
-    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
-        kDebug() << "should conserve??";
-        return false;
-    }
-
-    // check how applications should behave (e.g. on battery power)
-    if (!ignoreMobile && networkState == Daemon::NetworkMobile) {
-        return false;
-    }
-
-    return true;
 }

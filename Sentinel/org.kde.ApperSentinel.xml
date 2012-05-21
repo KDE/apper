@@ -4,6 +4,7 @@
        <method name="RefreshCache" >
        </method>
        <method name="CheckForUpdates" >
+           <arg type="b" name="system_ready" direction="in" />
        </method>
        <method name="SetupDebconfDialog" >
            <arg type="s" name="tid" direction="in" />

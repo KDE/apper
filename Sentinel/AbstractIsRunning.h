@@ -33,7 +33,6 @@ public:
     ~AbstractIsRunning();
 
     bool isRunning() const;
-    bool systemIsReady(bool ignoreBattery, bool ignoreMobile);
 
 signals:
     void close();
