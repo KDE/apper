@@ -48,8 +48,7 @@ void OriginModel::addOriginItem(const QString &repo_id, const QString &details, 
 {
     if (m_finished) {
         // if we received a finished signal this is a new query
-        QStandardItemModel::clear();
-        setHorizontalHeaderLabels(QStringList() << i18n("Origin of Packages"));
+        removeRows(0, rowCount());
         m_finished = false;
     }
 
