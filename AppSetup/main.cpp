@@ -41,6 +41,8 @@ int main(int argc, char** argv)
                         "matthias@tenstral.net");
     aboutData.setProductName("apper/listaller");
 
+    KGlobal::insertCatalog(QLatin1String("apper"));
+
     KCmdLineArgs::init(argc, argv, &aboutData);
     // Add --verbose as commandline option
     KCmdLineOptions options;
