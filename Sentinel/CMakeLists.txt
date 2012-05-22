@@ -71,7 +71,7 @@ install(TARGETS apper-sentinel DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 install(FILES ApperSentinel.notifyrc DESTINATION ${DATA_INSTALL_DIR}/ApperSentinel)
 
-include(PkgConfigGetVar)
+include(MacroDBusAddActivationService)
 dbus_add_activation_service(org.kde.ApperSentinel.service.in)
 dbus_add_activation_service(org.freedesktop.PackageKit.service.in)
 
