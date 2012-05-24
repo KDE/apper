@@ -31,7 +31,7 @@
 
 int main(int argc, char** argv)
 {
-    KAboutData aboutData("appsetup-kde", 0, ki18n("KDE Application Installer"), "0.1",
+    KAboutData aboutData("apper-appsetup", "apper", ki18n("KDE Application Installer"), "0.1",
                          ki18n("KDE Application Installer"), KAboutData::License_GPL,
                          ki18n("(C) 2012, Matthias Klumpp"));
 
@@ -40,8 +40,6 @@ int main(int argc, char** argv)
     aboutData.addAuthor(ki18nc("@info:credit", "Matthias Klumpp"), ki18n("Developer"),
                         "matthias@tenstral.net");
     aboutData.setProductName("apper/listaller");
-
-    KGlobal::insertCatalog(QLatin1String("apper"));
 
     KCmdLineArgs::init(argc, argv, &aboutData);
     // Add --verbose as commandline option
