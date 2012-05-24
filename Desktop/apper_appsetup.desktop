@@ -4,6 +4,20 @@ Icon=applications-other
 Exec=apper-appsetup %F
 
 Name=Listaller Package Installer
+Name[ca]=Instal·lador de paquets llista-ho tot
+Name[da]=Listaller pakkeinstallationsprogram
+Name[el]=Εγκατάσταση πακέτων Listaller
+Name[et]=Listalleri tarkvara paigaldaja
+Name[fr]=Programme d'installation de paquetages Listaller
+Name[hu]=Listaller csomagtelepítő
+Name[nl]=Installatieprogramma voor pakketten Listaller
+Name[pa]=ਲਿਸਟਰ ਪੈਕੇਜ ਇੰਸਟਾਲਰ
+Name[pl]=Instalator pakietów Listaller
+Name[pt]=Instalador de Pacotes Listaller
+Name[pt_BR]=Instalador de pacote Listaller
+Name[sv]=Listaller paketinstallation
+Name[uk]=Програма для встановлення пакунків Listaller
+Name[x-test]=xxListaller Package Installerxx
 GenericName=3rd-party software installer
 Comment=Tool to install new 3rd-party software
 
