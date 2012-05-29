@@ -138,7 +138,7 @@ void TransactionWatcher::setCurrentTransaction(const QString &tid)
     }
     connect(m_currentTransaction, SIGNAL(changed()),
             this, SLOT(transactionChanged()));
-    connect(m_currentTransaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_currentTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(finished(PackageKit::Transaction::Exit)));
 
     m_transHasJob = !m_currentTransaction->isCallerActive();

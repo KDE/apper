@@ -377,7 +377,7 @@ void PackageDetails::actionActivated(QAction *action)
     case Transaction::RoleGetFiles:
         m_currentFileList.clear();
         connect(m_transaction, SIGNAL(files(PackageKit::Package,QStringList)),
-                this, SLOT(files(PackageKit::Package, QStringList)));
+                this, SLOT(files(PackageKit::Package,QStringList)));
         m_transaction->getFiles(m_package);
         break;
     }
