@@ -27,6 +27,7 @@ Name[sv]=Apper övervakning
 Name[uk]=Монітор Apper
 Name[wa]=Corwaitoe d' Apper
 Name[x-test]=xxApper Monitorxx
+Name[zh_TW]=Apper 監視器
 
 Comment=Watch transactions and Notify about Software Updates
 Comment[ca]=Mira les transaccions i comunica sobre actualitzacions de programari
@@ -50,3 +51,4 @@ Comment[sv]=Övervaka transaktioner och underrätta om uppdateringar av programv
 Comment[uk]=Перегляд операцій та сповіщення щодо оновлень програм
 Comment[wa]=Waitî après les tranzaccions eyet notifyî cwand gn a des metaedjes a djoû des programes
 Comment[x-test]=xxWatch transactions and Notify about Software Updatesxx
+Comment[zh_TW]=查看並通知軟體的更新

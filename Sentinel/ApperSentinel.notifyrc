@@ -27,6 +27,7 @@ Name[ug]=Apper
 Name[uk]=Apper
 Name[wa]=Apper
 Name[x-test]=xxApperxx
+Name[zh_TW]=Apper
 Comment=Apper Notification
 Comment[ca]=Notificació de Apper
 Comment[cs]=Upozornění Apper
@@ -50,6 +51,7 @@ Comment[sv]=Apper underrättelse
 Comment[uk]=Сповіщення Apper
 Comment[wa]=Notifiaedje d' Apper
 Comment[x-test]=xxApper Notificationxx
+Comment[zh_TW]=Apper 通知
 
 [Event/ShowUpdates]
 Name=New updates available
@@ -77,6 +79,7 @@ Name[sv]=Nya uppdateringar tillgängliga
 Name[uk]=Доступні оновлення
 Name[wa]=I gn des noveas metaedjes a djoû
 Name[x-test]=xxNew updates availablexx
+Name[zh_TW]=有可用的更新
 Action=Sound|Popup
 
 [Event/AutoInstallingUpdates]
@@ -115,6 +118,7 @@ Name[tr]=Güncellemeler yükleniyor
 Name[uk]=Оновлення, які буде встановлено
 Name[wa]=Des metaedjes a djoû sont-st a l' astalaedje
 Name[x-test]=xxUpdates are being installedxx
+Name[zh_TW]=正在安裝更新中
 Action=Sound|Popup
 
 [Event/RestartRequired]
@@ -152,6 +156,7 @@ Name[tr]=Sistemin Yeniden Başlatılması Gerekiyor
 Name[uk]=Потрібне перезавантаження системи
 Name[wa]=I fåt renonder l' sistinme
 Name[x-test]=xxA System Restart is Requiredxx
+Name[zh_TW]=需要重新開機
 Action=Sound|Popup
 
 [Event/TransactionFailed]
@@ -189,6 +194,7 @@ Name[tr]=Bir aktarım başarılı bir şekilde tamamlanamadı
 Name[uk]=Операцію не вдалося успішно завершити
 Name[wa]=Ene tranzaccion n' s' a nén savou fini comifåt
 Name[x-test]=xxA transaction failed to complete successfullyxx
+Name[zh_TW]=操作無法成功完成
 Action=Sound|Popup
 
 [Event/UpdatesComplete]
@@ -226,6 +232,7 @@ Name[tr]=Güncellemelerin yüklenmesi tamamlandı
 Name[uk]=Встановлення оновлень завершено
 Name[wa]=Les metaedjes a djoû ont fini d' s' astaler
 Name[x-test]=xxUpdates finished installingxx
+Name[zh_TW]=已完成安裝更新
 Action=Sound|Popup
 
 [Event/TransactionError]
@@ -262,6 +269,7 @@ Name[tr]=Bir işlem hatası oluştu
 Name[uk]=Під час операції сталася помилка.
 Name[wa]=Åk n' a nén stî avou l' tranzaccion
 Name[x-test]=xxA transaction error occurredxx
+Name[zh_TW]=執行操作發生錯誤
 Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
@@ -298,6 +306,7 @@ Name[tr]=Bir dağıtım güncellemesi mevcut
 Name[uk]=Доступне оновлення дистрибутива
 Name[wa]=I gn a on metaedje a livea del distribucion
 Name[x-test]=xxA distribution upgrade is availablexx
+Name[zh_TW]=可進行發行版升級
 Action=Sound|Popup
 
 [Event/DistroUpgradeFinished]
@@ -334,6 +343,7 @@ Name[tr]=Dağıtım güncellemesi tamamlandı
 Name[uk]=Оновлення дистрибутива завершено
 Name[wa]=Li metaedje a livea del distribucion est tot fwait
 Name[x-test]=xxThe distribution upgrade completedxx
+Name[zh_TW]=發行版升級程序完成
 Action=Sound|Popup
 
 [Event/DistroUpgradeError]
@@ -370,4 +380,5 @@ Name[tr]=Dağıtım güncellemesi bir hata ile tamamlandı
 Name[uk]=Спроба оновлення дистрибутива завершилася повідомленням про помилку
 Name[wa]=Li metaedje a livea del distribucion s' a fini avou ene aroke
 Name[x-test]=xxThe distribution upgrade completed with an errorxx
+Name[zh_TW]=發行版升級程序完成，但是有錯誤
 Action=Sound|Popup
