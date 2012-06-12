@@ -77,7 +77,7 @@ QString PkIcons::statusIconName(Transaction::Status status)
         PkIcons::configure();
     }
     switch (status) {
-    case Transaction::UnknownStatus              : return "help-browser";
+    case Transaction::StatusUnknown              : return "help-browser";
     case Transaction::StatusCancel               :
     case Transaction::StatusCleanup              : return "package-clean-up";
     case Transaction::StatusCommit               : return "package-working";//TODO needs a better icon
@@ -102,7 +102,6 @@ QString PkIcons::statusIconName(Transaction::Status status)
     case Transaction::StatusRemove               : return "package-removed";
     case Transaction::StatusRepackaging          : return "package-clean-up";
     case Transaction::StatusRequest              : return "search-package";
-    case Transaction::StatusRollback             : return "package-rollback";
     case Transaction::StatusRunning              : return "package-working";
     case Transaction::StatusScanApplications     : return "search-package";
     case Transaction::StatusSetup                : return "package-working";
@@ -130,7 +129,7 @@ QString PkIcons::statusAnimation(Transaction::Status status)
         PkIcons::configure();
     }
     switch (status) {
-    case Transaction::UnknownStatus             : return "help-browser";
+    case Transaction::StatusUnknown             : return "help-browser";
     case Transaction::StatusCancel              :
     case Transaction::StatusCleanup             : return "pk-cleaning-up";
     case Transaction::StatusCommit              :
@@ -154,7 +153,6 @@ QString PkIcons::statusAnimation(Transaction::Status status)
     case Transaction::StatusRemove              : return "package-removed";//TODO do the animation
     case Transaction::StatusRepackaging         : return "pk-searching";
     case Transaction::StatusRequest             : return "process-working";
-    case Transaction::StatusRollback            : return "package-removed";
     case Transaction::StatusRunning             : return "pk-testing";
     case Transaction::StatusScanApplications    : return "pk-searching";
     case Transaction::StatusSetup               : return "pk-searching";
@@ -175,7 +173,7 @@ QString PkIcons::actionIconName(Transaction::Role role)
         PkIcons::configure();
     }
     switch (role) {
-    case Transaction::UnknownRole                 : return "applications-other";
+    case Transaction::RoleUnknown                 : return "applications-other";
     case Transaction::RoleAcceptEula              : return "package-info";
     case Transaction::RoleCancel                  : return "process-stop";
     case Transaction::RoleDownloadPackages        : return "package-download";
@@ -198,7 +196,6 @@ QString PkIcons::actionIconName(Transaction::Role role)
     case Transaction::RoleRepoEnable              : return "package-orign";
     case Transaction::RoleRepoSetData             : return "package-orign";
     case Transaction::RoleResolve                 : return "search-package";
-    case Transaction::RoleRollback                : return "package-rollback";
     case Transaction::RoleSearchDetails           : return "search-package";
     case Transaction::RoleSearchFile              : return "search-package";
     case Transaction::RoleSearchGroup             : return "search-package";
@@ -207,10 +204,7 @@ QString PkIcons::actionIconName(Transaction::Role role)
     case Transaction::RoleUpdateSystem            : return "distro-upgrade";//TODO
     case Transaction::RoleUpgradeSystem           : return "distro-upgrade";//TODO
     case Transaction::RoleWhatProvides            : return "search-package";
-    case Transaction::RoleSimulateInstallFiles    : return "package-installed";
-    case Transaction::RoleSimulateInstallPackages : return "package-installed";
-    case Transaction::RoleSimulateRemovePackages  : return "package-removed";
-    case Transaction::RoleSimulateUpdatePackages  : return "package-update'";
+    case Transaction::RoleRepairSystem            : return "package-rollback";
     }
     kDebug() << "action unrecognised: " << role;
     return "applications-other";

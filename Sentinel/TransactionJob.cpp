@@ -34,8 +34,8 @@ Q_DECLARE_METATYPE(PackageKit::Transaction::Error)
 TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
  : KJob(parent),
    m_transaction(transaction),
-   m_status(Transaction::UnknownStatus),
-   m_role(Transaction::UnknownRole),
+   m_status(Transaction::StatusUnknown),
+   m_role(Transaction::RoleUnknown),
    m_percentage(0)
 {
     setCapabilities(Killable);

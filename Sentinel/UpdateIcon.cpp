@@ -180,7 +180,7 @@ void UpdateIcon::getUpdateFinished()
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
             t->setProperty(SYSTEM_READY, systemReady);
-            t->updatePackages(m_updateList, true);
+            t->updatePackages(m_updateList, Transaction::TransactionFlagOnlyTrusted);
             if (!t->error()) {
                 // don't be interactive to not upset an idle user
                 emit watchTransaction(t->tid(), false);
@@ -202,7 +202,7 @@ void UpdateIcon::getUpdateFinished()
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
             t->setProperty(SYSTEM_READY, systemReady);
-            t->updatePackages(securityUpdateList, true);
+            t->updatePackages(securityUpdateList, Transaction::TransactionFlagOnlyTrusted);
             if (!t->error()) {
                 // don't be interactive to not upset an idle user
                 emit watchTransaction(t->tid(), false);

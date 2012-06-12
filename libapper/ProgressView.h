@@ -45,13 +45,13 @@ public:
     ProgressView(QWidget *parent = 0);
     ~ProgressView();
 
-    void setSubProgress(int value);
     void handleRepo(bool handle);
     void clear();
 
 public slots:
     void currentPackage(const PackageKit::Package &package);
-    void currentRepo(const QString& repoId, const QString& description, bool enabled);
+    void currentRepo(const QString &repoId, const QString &description, bool enabled);
+    void itemProgress(const QString &id, uint percentage);
 
 private slots:
     void followBottom(int value);
@@ -59,7 +59,7 @@ private slots:
 
 private:
     void itemFinished(QStandardItem *item);
-    QList<QStandardItem *> findItems(const QString &packageId);
+    QStandardItem* findLastItem(const QString &packageId);
 
     QStyledItemDelegate *m_defaultDelegate;
     TransactionDelegate *m_delegate;

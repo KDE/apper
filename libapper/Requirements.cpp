@@ -76,7 +76,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
         button->setIconSize(QSize(32, 32));
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
-        button->setIcon(PkIcons::actionIcon(Transaction::RoleRollback));
+        button->setIcon(PkIcons::actionIcon(Transaction::RoleRepairSystem));
         group->addButton(button, Package::InfoDowngrading);
         ui->verticalLayout->insertWidget(count++, button);
 

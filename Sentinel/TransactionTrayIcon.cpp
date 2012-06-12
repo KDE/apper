@@ -51,8 +51,8 @@ TransactionTrayIcon::TransactionTrayIcon(PackageKit::Transaction *transaction, Q
 
     connect(transaction, SIGNAL(transactionChanged()),
             this, SLOT(transactionChanged()));
-    m_currentRole     = Transaction::UnknownRole;
-    m_currentStatus   = Transaction::UnknownStatus;
+    m_currentRole     = Transaction::RoleUnknown;
+    m_currentStatus   = Transaction::StatusUnknown;
     m_currentProgress = 0;
 }
 

@@ -93,6 +93,7 @@ void DBusInterface::SetupDebconfDialog(const QString &tid, const QString &socket
     }
     gui->setProperty("xidParent", xidParent);
 #else
+    Q_UNUSED(tid)
     Q_UNUSED(socketPath)
     Q_UNUSED(xidParent)
     kDebug() << "Not compiled with Debconf support - ignoring";
@@ -121,5 +122,3 @@ void DBusInterface::transactionFinished()
     }
 #endif // HAVE_DEBCONFKDE
 }
-
-#include "DBusInterface.moc"

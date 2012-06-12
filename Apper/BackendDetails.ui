@@ -414,52 +414,22 @@
        </widget>
       </item>
       <item row="4" column="3">
-       <widget class="QCheckBox" name="simulateInstallFilesCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Simulate Install Files</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="3">
-       <widget class="QCheckBox" name="simulateInstallPackagesCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Simulate Install Packages</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="3">
-       <widget class="QCheckBox" name="simulateRemovePackagesCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Simulate Remove Packages</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="3">
-       <widget class="QCheckBox" name="simulateUpdatePackagesCB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Simulate Update Packages</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="3">
        <widget class="QCheckBox" name="upgradeSystemCB">
         <property name="enabled">
          <bool>false</bool>
         </property>
         <property name="text">
          <string>Upgrade System</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QCheckBox" name="repairSystemCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Repair System</string>
         </property>
        </widget>
       </item>

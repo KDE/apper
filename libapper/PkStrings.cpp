@@ -27,13 +27,13 @@
 QString PkStrings::status(Transaction::Status status)
 {
     switch (status) {
-    case Transaction::UnknownStatus :
+    case Transaction::StatusUnknown:
         return i18nc("This is when the transaction status is not known",
                      "Unknown state");
-    case Transaction::StatusSetup :
+    case Transaction::StatusSetup:
         return i18nc("transaction state, the daemon is in the process of starting",
                      "Waiting for service to start");
-    case Transaction::StatusWait :
+    case Transaction::StatusWait:
         return i18nc("transaction state, the transaction is waiting for another to complete",
                      "Waiting for other tasks");
     case Transaction::StatusRunning :
@@ -72,9 +72,6 @@ QString PkStrings::status(Transaction::Status status)
     case Transaction::StatusSigCheck :
         return i18nc("transaction state, checking if we have all the security keys for the operation",
                      "Checking signatures");
-    case Transaction::StatusRollback :
-        return i18nc("transaction state, when we return to a previous system state",
-                     "Rolling back");
     case Transaction::StatusTestCommit :
         return i18nc("transaction state, when we're doing a test transaction",
                      "Testing changes");
@@ -167,7 +164,7 @@ QString PkStrings::statusPast(Transaction::Status status)
 QString PkStrings::action(Transaction::Role action)
 {
     switch (action) {
-    case Transaction::UnknownRole :
+    case Transaction::RoleUnknown :
         return i18nc("The role of the transaction, in present tense", "Unknown role type");
     case Transaction::RoleGetDepends :
         return i18nc("The role of the transaction, in present tense", "Getting dependencies");
@@ -201,8 +198,6 @@ QString PkStrings::action(Transaction::Role action)
         return i18nc("The role of the transaction, in present tense", "Updating system");
     case Transaction::RoleCancel :
         return i18nc("The role of the transaction, in present tense", "Canceling");
-    case Transaction::RoleRollback :
-        return i18nc("The role of the transaction, in present tense", "Rolling back");
     case Transaction::RoleGetRepoList :
         return i18nc("The role of the transaction, in present tense", "Getting list of repositories");
     case Transaction::RoleRepoEnable :
@@ -229,16 +224,10 @@ QString PkStrings::action(Transaction::Role action)
         return i18nc("The role of the transaction, in present tense", "Getting categories");
     case Transaction::RoleGetOldTransactions :
         return i18nc("The role of the transaction, in present tense", "Getting old transactions");
-    case Transaction::RoleSimulateInstallFiles :
-        return i18nc("The role of the transaction, in present tense", "Simulating the install of files");
-    case Transaction::RoleSimulateInstallPackages :
-        return i18nc("The role of the transaction, in present tense", "Simulating the install");
-    case Transaction::RoleSimulateRemovePackages :
-        return i18nc("The role of the transaction, in present tense", "Simulating the remove");
-    case Transaction::RoleSimulateUpdatePackages :
-        return i18nc("The role of the transaction, in present tense", "Simulating the update");
     case Transaction::RoleUpgradeSystem :
         return i18nc("The role of the transaction, in present tense", "Upgrading system");
+    case Transaction::RoleRepairSystem :
+        return i18nc("The role of the transaction, in present tense", "Repairing system");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
@@ -247,7 +236,7 @@ QString PkStrings::action(Transaction::Role action)
 QString PkStrings::actionPast(Transaction::Role action)
 {
     switch (action) {
-    case Transaction::UnknownRole :
+    case Transaction::RoleUnknown:
         return i18nc("The role of the transaction, in past tense", "Unknown role type");
     case Transaction::RoleGetDepends :
         return i18nc("The role of the transaction, in past tense", "Got dependencies");
@@ -281,8 +270,6 @@ QString PkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Updated system");
     case Transaction::RoleCancel :
         return i18nc("The role of the transaction, in past tense", "Canceled");
-    case Transaction::RoleRollback :
-        return i18nc("The role of the transaction, in past tense", "Rolled back");
     case Transaction::RoleGetRepoList :
         return i18nc("The role of the transaction, in past tense", "Got list of repositories");
     case Transaction::RoleRepoEnable :
@@ -309,16 +296,10 @@ QString PkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Got categories");
     case Transaction::RoleGetOldTransactions :
         return i18nc("The role of the transaction, in past tense", "Got old transactions");
-    case Transaction::RoleSimulateInstallFiles :
-        return i18nc("The role of the transaction, in past tense", "Simulated the install of files");
-    case Transaction::RoleSimulateInstallPackages :
-        return i18nc("The role of the transaction, in past tense", "Simulated the install");
-    case Transaction::RoleSimulateRemovePackages :
-        return i18nc("The role of the transaction, in past tense", "Simulated the remove");
-    case Transaction::RoleSimulateUpdatePackages :
-        return i18nc("The role of the transaction, in past tense", "Simulated the update");
     case Transaction::RoleUpgradeSystem :
         return i18nc("The role of the transaction, in past tense", "Upgraded system");
+    case Transaction::RoleRepairSystem:
+        return i18nc("The role of the transaction, in past tense", "Repaired system");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
@@ -511,7 +492,7 @@ QString PkStrings::error(Transaction::Error error)
         return i18n("Cannot fetch install sources");
     case Transaction::ErrorCancelledPriority :
         return i18n("Rescheduled due to priority");
-    case Transaction::UnknownError :
+    case Transaction::ErrorUnknown:
         return i18n("Unknown error");
     }
     kWarning() << "error unrecognised: " << error;
@@ -690,7 +671,7 @@ QString PkStrings::errorMessage(Transaction::Error error)
         return i18n("The list of software could not be downloaded.");
     case Transaction::ErrorCancelledPriority :
         return i18n("The transaction has been cancelled and will be retried when the system is idle.");
-    case Transaction::UnknownError :
+    case Transaction::ErrorUnknown:
         return i18n("Unknown error, please report a bug.\n"
                     "More information is available in the detailed report.");
     }
@@ -905,7 +886,7 @@ QString PkStrings::mediaMessage(Transaction::MediaType value, const QString &tex
         return i18n("Please insert the DVD labeled '%1', and press continue.", text);
     case Transaction::MediaTypeDisc :
         return i18n("Please insert the disc labeled '%1', and press continue.", text);
-    case Transaction::UnknownMediaType :
+    case Transaction::MediaTypeUnknown:
         return i18n("Please insert the medium labeled '%1', and press continue.", text);
     }
     kWarning() << "value unrecognised: " << value;
@@ -978,7 +959,7 @@ QString PkStrings::daemonError(Transaction::InternalError value)
         return i18n("Could not talk to packagekitd.");
     case Transaction::NoInternalError :
     case Transaction::InternalErrorFailed :
-    case Transaction::UnkownInternalError :
+    case Transaction::InternalErrorUnkown :
         return i18n("An unknown error happened.");
     }
     kWarning() << "value unrecognised: " << value;

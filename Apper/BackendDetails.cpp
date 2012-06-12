@@ -68,10 +68,7 @@ BackendDetails::BackendDetails(QWidget *parent)
     repositorySetEnableCB->setChecked(actions & Transaction::RoleRepoSetData);
     whatProvidesCB->setChecked(actions & Transaction::RoleWhatProvides);
     getPackagesCB->setChecked(actions & Transaction::RoleGetPackages);
-    simulateInstallFilesCB->setChecked(actions & Transaction::RoleSimulateInstallFiles);
-    simulateInstallPackagesCB->setChecked(actions & Transaction::RoleSimulateInstallPackages);
-    simulateRemovePackagesCB->setChecked(actions & Transaction::RoleSimulateRemovePackages);
-    simulateUpdatePackagesCB->setChecked(actions & Transaction::RoleSimulateUpdatePackages);
+    repairSystemCB->setChecked(actions & Transaction::RoleRepairSystem);
     upgradeSystemCB->setChecked(actions & Transaction::RoleUpgradeSystem);
 
     // FILTERS - Setup filters

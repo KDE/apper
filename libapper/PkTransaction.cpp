@@ -56,7 +56,7 @@ class PkTransactionPrivate
 public:
     bool finished;
     bool allowDeps;
-    bool onlyTrusted;
+    Transaction::TransactionFlags flags;
     Transaction::Role role;
     Transaction::Role originalRole;
     Transaction::Error error;
@@ -74,7 +74,7 @@ PkTransaction::PkTransaction(QWidget *parent)
    m_handlingActionRequired(false),
    m_showingError(false),
    m_exitStatus(Success),
-   m_status(Transaction::UnknownStatus),
+   m_status(Transaction::StatusUnknown),
    ui(new Ui::PkTransaction),
    d(new PkTransactionPrivate)
 {
@@ -85,12 +85,14 @@ PkTransaction::PkTransaction(QWidget *parent)
     d->busySeq->setWidget(ui->label);
     ui->label->clear();
 
-    d->finished = true; // for sanity we are finished till some transaction is set
-    d->onlyTrusted = true; // for sanity we are trusted till an error is given and the user accepts
+    // for sanity we are finished till some transaction is set
+    d->finished = true;
     d->simulateModel = 0;
     d->launcher = 0;
-    d->originalRole = Transaction::UnknownRole;
-    d->role = Transaction::UnknownRole;
+    d->originalRole = Transaction::RoleUnknown;
+    d->role = Transaction::RoleUnknown;
+    // for sanity we are trusted till an error is given and the user accepts
+    d->flags = Transaction::TransactionFlagOnlyTrusted;
     
     connect(ui->cancelButton, SIGNAL(rejected()), this, SLOT(cancel()));
 }
@@ -111,20 +113,18 @@ void PkTransaction::installFiles(const QStringList &files)
 {
     if (Daemon::actions() & Transaction::RoleInstallFiles) {
         d->originalRole = Transaction::RoleInstallFiles;
-        if (Daemon::actions() & Transaction::RoleSimulateInstallFiles) {
-            d->files         = files;
-            d->simulateModel = new SimulateModel(this, d->packages);
+        d->files = files;
+        d->flags = Transaction::TransactionFlagOnlyTrusted;
+        d->flags |= Transaction::TransactionFlagSimulate;
+        d->simulateModel = new SimulateModel(this, d->packages);
 
-            // Create the simulate transaction and it's model
-            Transaction *trans = new Transaction(this);
-            setTransaction(trans, Transaction::RoleSimulateInstallFiles);
-            trans->simulateInstallFiles(files);
-            if (trans->error()) {
-                showSorry(i18n("Failed to simulate file install"),
-                          PkStrings::daemonError(trans->error()));
-            }
-        } else {
-            installFiles();
+        // Create the simulate transaction and it's model
+        Transaction *trans = new Transaction(this);
+        setTransaction(trans, Transaction::RoleInstallFiles);
+        trans->installFiles(files, d->flags);
+        if (trans->error()) {
+            showSorry(i18n("Failed to simulate file install"),
+                      PkStrings::daemonError(trans->error()));
         }
     } else {
         showError(i18n("Current backend does not support installing files."), i18n("Error"));
@@ -135,20 +135,18 @@ void PkTransaction::installPackages(const QList<Package> &packages)
 {
     if (Daemon::actions() & Transaction::RoleInstallPackages) {
         d->originalRole = Transaction::RoleInstallPackages;
-        if (Daemon::actions() & Transaction::RoleSimulateInstallPackages) {
-            d->packages      = packages;
-            d->simulateModel = new SimulateModel(this, d->packages);
+        d->packages = packages;
+        d->flags = Transaction::TransactionFlagOnlyTrusted;
+        d->flags |= Transaction::TransactionFlagSimulate;
+        d->simulateModel = new SimulateModel(this, d->packages);
 
-            // Create the depends transaction and it's model
-            Transaction *trans = new Transaction(this);
-            setTransaction(trans, Transaction::RoleSimulateInstallPackages);
-            trans->simulateInstallPackages(d->packages);
-            if (trans->error()) {
-                showSorry(i18n("Failed to simulate package install"),
-                          PkStrings::daemonError(trans->error()));
-            }
-        } else {
-            installPackages();
+        // Create the depends transaction and it's model
+        Transaction *trans = new Transaction(this);
+        setTransaction(trans, Transaction::RoleInstallPackages);
+        trans->installPackages(d->packages, d->flags);
+        if (trans->error()) {
+            showSorry(i18n("Failed to simulate package install"),
+                      PkStrings::daemonError(trans->error()));
         }
     } else {
         showError(i18n("Current backend does not support installing packages."), i18n("Error"));
@@ -160,21 +158,18 @@ void PkTransaction::removePackages(const QList<Package> &packages)
     if (Daemon::actions() & Transaction::RoleRemovePackages) {
         d->originalRole = Transaction::RoleRemovePackages;
         d->allowDeps = false; // Default to avoid dependencies removal unless simulate says so
-        if (Daemon::actions() & Transaction::RoleSimulateRemovePackages) {
-            d->packages      = packages;
-            d->simulateModel = new SimulateModel(this, d->packages);
+        d->packages = packages;
+        d->flags = Transaction::TransactionFlagOnlyTrusted;
+        d->flags |= Transaction::TransactionFlagSimulate;
+        d->simulateModel = new SimulateModel(this, d->packages);
 
-            // Create the requirements transaction and it's model
-            Transaction *trans = new Transaction(this);
-            setTransaction(trans, Transaction::RoleSimulateRemovePackages);
-            trans->simulateRemovePackages(d->packages, AUTOREMOVE);
-            if (trans->error()) {
-                showSorry(i18n("Failed to simulate package removal"),
-                          PkStrings::daemonError(trans->error()));
-            }
-        } else {
-            // As we can't check for requires don't allow deps removal
-            removePackages();
+        // Create the requirements transaction and it's model
+        Transaction *trans = new Transaction(this);
+        setTransaction(trans, Transaction::RoleRemovePackages);
+        trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
+        if (trans->error()) {
+            showSorry(i18n("Failed to simulate package removal"),
+                      PkStrings::daemonError(trans->error()));
         }
     } else {
         showError(i18n("The current backend does not support removing packages."), i18n("Error"));
@@ -185,19 +180,17 @@ void PkTransaction::updatePackages(const QList<Package> &packages)
 {
     if (Daemon::actions() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
-        if (Daemon::actions() & Transaction::RoleSimulateUpdatePackages) {
-            d->packages      = packages;
-            d->simulateModel = new SimulateModel(this, d->packages);
+        d->packages = packages;
+        d->flags = Transaction::TransactionFlagOnlyTrusted;
+        d->flags |= Transaction::TransactionFlagSimulate;
+        d->simulateModel = new SimulateModel(this, d->packages);
 
-            Transaction *trans = new Transaction(this);
-            setTransaction(trans, Transaction::RoleSimulateUpdatePackages);
-            trans->simulateUpdatePackages(d->packages);
-            if (trans->error()) {
-                showSorry(i18n("Failed to simulate package update"),
-                          PkStrings::daemonError(trans->error()));
-            }
-        } else {
-            updatePackages();
+        Transaction *trans = new Transaction(this);
+        setTransaction(trans, Transaction::RoleUpdatePackages);
+        trans->updatePackages(d->packages, d->flags);
+        if (trans->error()) {
+            showSorry(i18n("Failed to simulate package update"),
+                      PkStrings::daemonError(trans->error()));
         }
     } else {
         showError(i18n("The current backend does not support updating packages."), i18n("Error"));
@@ -251,7 +244,7 @@ void PkTransaction::installPackages()
     Transaction *trans = new Transaction(this);
     setupTransaction(trans);
     setTransaction(trans, Transaction::RoleInstallPackages);
-    trans->installPackages(d->packages, d->onlyTrusted);
+    trans->installPackages(d->packages, d->flags);
     if (trans->error()) {
         showSorry(i18n("Failed to install package"),
                   PkStrings::daemonError(trans->error()));
@@ -263,7 +256,7 @@ void PkTransaction::installFiles()
     Transaction *trans = new Transaction(this);
     setupTransaction(trans);
     setTransaction(trans, Transaction::RoleInstallFiles);
-    trans->installFiles(d->files, d->onlyTrusted);
+    trans->installFiles(d->files, d->flags);
     if (trans->error()) {
         showSorry(i18np("Failed to install file",
                         "Failed to install files", d->files.size()),
@@ -276,7 +269,7 @@ void PkTransaction::removePackages()
     Transaction *trans = new Transaction(this);
     setupTransaction(trans);
     setTransaction(trans, Transaction::RoleRemovePackages);
-    trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE);
+    trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
     if (trans->error()) {
         showSorry(i18n("Failed to remove package"),
                   PkStrings::daemonError(trans->error()));
@@ -288,7 +281,7 @@ void PkTransaction::updatePackages()
     Transaction *trans = new Transaction(this);
     setupTransaction(trans);
     setTransaction(trans, Transaction::RoleUpdatePackages);
-    trans->updatePackages(d->packages, d->onlyTrusted);
+    trans->updatePackages(d->packages, d->flags);
     if (trans->error()) {
         showSorry(i18n("Failed to update package"),
                   PkStrings::daemonError(trans->error()));
@@ -311,10 +304,10 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
     d->finished = false;
     m_handlingActionRequired = false;
     m_showingError = false;
-    d->error = Transaction::UnknownError;
+    d->error = Transaction::ErrorUnknown;
     ui->progressView->clear();
 
-    if (role != Transaction::UnknownRole) {
+    if (role != Transaction::RoleUnknown) {
         setWindowTitle(PkStrings::action(role));
         emit titleChanged(PkStrings::action(role));
     }
@@ -334,6 +327,8 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
         } else {
             connect(m_trans, SIGNAL(package(PackageKit::Package)),
                 ui->progressView, SLOT(currentPackage(PackageKit::Package)));
+            connect(m_trans, SIGNAL(ItemProgress(QString,uint)),
+                    ui->progressView, SLOT(itemProgress(QString,uint)));
             ui->progressView->handleRepo(false);
         }
 
@@ -342,10 +337,7 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
             d->simulateModel->deleteLater();
             d->simulateModel = 0;
         }
-    } else if (role == Transaction::RoleSimulateInstallPackages ||
-               role == Transaction::RoleSimulateInstallFiles ||
-               role == Transaction::RoleSimulateRemovePackages ||
-               role == Transaction::RoleSimulateUpdatePackages) {
+    } else if (d->flags & Transaction::TransactionFlagSimulate) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         if (d->simulateModel == 0) {
             d->simulateModel = new SimulateModel(this, d->packages);
@@ -386,6 +378,8 @@ void PkTransaction::unsetTransaction()
         return;
     }
 
+    disconnect(m_trans, SIGNAL(ItemProgress(QString,uint)),
+               ui->progressView, SLOT(itemProgress(QString,uint)));
     disconnect(m_trans, SIGNAL(package(PackageKit::Package)),
                d->simulateModel, SLOT(addPackage(PackageKit::Package)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
@@ -440,7 +434,6 @@ void PkTransaction::updateUi()
         ui->progressBar->reset();
     }
 
-    ui->progressView->setSubProgress(transaction->subpercentage());
     ui->progressBar->setRemaining(transaction->remainingTime());
 
     // Status & Speed
@@ -465,7 +458,7 @@ void PkTransaction::updateUi()
 
     Transaction::Role role = transaction->role();
     if (d->role != role &&
-        role != Transaction::UnknownRole) {
+        role != Transaction::RoleUnknown) {
         d->role = role;
         setWindowTitle(PkStrings::action(role));
         emit titleChanged(PkStrings::action(role));
@@ -512,7 +505,7 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
                                             i18n("Installing unsigned software"));
         if (ret == KMessageBox::Yes) {
             // Set only trusted to false, to do as the user asked
-            d->onlyTrusted = false;
+            d->flags &= Transaction::TransactionFlagOnlyTrusted;
             requeueTransaction();
         } else {
             setExitStatus(Cancelled);
@@ -642,6 +635,8 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
 
         // If the simulate model exists we were simulating
         if (d->simulateModel) {
+            // Disable the simulate flag
+            d->flags &= Transaction::TransactionFlagSimulate;
             kDebug() << "We have a simulate model";
             requires = new Requirements(d->simulateModel, this);
             connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
@@ -653,14 +648,14 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             }
 
             switch (role) {
-            case Transaction::RoleSimulateInstallPackages:
+            case Transaction::RoleInstallPackages:
                 if (requires) {
                     connect(requires, SIGNAL(accepted()), this, SLOT(installPackages()));
                 } else {
                     installPackages();
                 }
                 return;
-            case Transaction::RoleSimulateRemovePackages:
+            case Transaction::RoleRemovePackages:
                 if (requires) {
                     // As we have requires allow deps removal
                     d->allowDeps = true;
@@ -669,14 +664,14 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                     removePackages();
                 }
                 return;
-            case Transaction::RoleSimulateUpdatePackages:
+            case Transaction::RoleUpdatePackages:
                 if (requires) {
                     connect(requires, SIGNAL(accepted()), this, SLOT(updatePackages()));
                 } else {
                     updatePackages();
                 }
                 return;
-            case Transaction::RoleSimulateInstallFiles:
+            case Transaction::RoleInstallFiles:
                 if (requires) {
                     connect(requires, SIGNAL(accepted()), this, SLOT(installFiles()));
                 } else {
@@ -716,7 +711,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                    d->launcher &&
                    !d->launcher->packages().isEmpty() &&
                    role == Transaction::RoleResolve &&
-                   d->originalRole != Transaction::UnknownRole) {
+                   d->originalRole != Transaction::RoleUnknown) {
             // Let's try to find some desktop files
             Transaction *transaction = new Transaction(this);
             connect(transaction, SIGNAL(files(PackageKit::Package,QStringList)),
@@ -730,7 +725,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                    d->launcher &&
                    d->launcher->hasApplications() &&
                    role == Transaction::RoleGetFiles &&
-                   d->originalRole != Transaction::UnknownRole) {
+                   d->originalRole != Transaction::RoleUnknown) {
             showDialog(d->launcher);
             connect(d->launcher, SIGNAL(accepted()),
                     this, SLOT(setExitStatus()));

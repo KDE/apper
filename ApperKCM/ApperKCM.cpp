@@ -72,7 +72,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_cancelIcon("dialog-cancel"),
     m_forceRefreshCache(false),
     m_history(0),
-    m_searchRole(Transaction::UnknownRole)
+    m_searchRole(Transaction::RoleUnknown)
 {
     KAboutData *aboutData;
     aboutData = new KAboutData("apper",
@@ -555,7 +555,7 @@ void ApperKCM::on_backTB_clicked()
     stackedWidget->setCurrentWidget(pageHome);
     backTB->setEnabled(canGoBack);
     // reset the search role
-    m_searchRole = Transaction::UnknownRole;
+    m_searchRole = Transaction::RoleUnknown;
 }
 
 void ApperKCM::on_changesPB_clicked()
