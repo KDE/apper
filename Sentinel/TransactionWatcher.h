@@ -42,7 +42,7 @@ public:
     bool isRunning();
 
 private slots:
-    void transactionListChanged(const QStringList &tids);
+    void transactionListChanged(const QList<QDBusObjectPath> &tids);
     void message(PackageKit::Transaction::Message type, const QString &message);
     void errorCode(PackageKit::Transaction::Error, const QString &);
     void errorActivated(uint action);
@@ -57,10 +57,10 @@ private slots:
 
 private:
     void suppressSleep(bool enable, const QString &reason = QString());
-    void setCurrentTransaction(const QString &tid);
+    void setCurrentTransaction(const QDBusObjectPath &tid);
 
     Transaction *m_currentTransaction;
-    QString m_currentTid;
+    QDBusObjectPath m_currentTid;
     bool m_transHasJob;
 
     // Hide this icon action

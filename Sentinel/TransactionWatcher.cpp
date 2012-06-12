@@ -71,7 +71,7 @@ TransactionWatcher::TransactionWatcher(QObject *parent) :
     m_restartType = Package::RestartNone;
 
     // here we check whether a transaction job should be created or not
-    transactionListChanged(Daemon::getTransactions());
+    transactionListChanged(Daemon::getTransactionList());
 }
 
 TransactionWatcher::~TransactionWatcher()
@@ -80,7 +80,7 @@ TransactionWatcher::~TransactionWatcher()
     suppressSleep(false);
 }
 
-void TransactionWatcher::transactionListChanged(const QStringList &tids)
+void TransactionWatcher::transactionListChanged(const QList<QDBusObjectPath> &tids)
 {
     kDebug() << tids.size();
     if (!tids.isEmpty()) {
@@ -88,7 +88,7 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
         setCurrentTransaction(tids.first());
     } else {
         // There is no current transaction
-        m_currentTid.clear();
+        m_currentTid = QDBusObjectPath();
         m_currentTransaction = 0;
 
         // release any cookie that we might have
@@ -101,7 +101,7 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
     }
 }
 
-void TransactionWatcher::setCurrentTransaction(const QString &tid)
+void TransactionWatcher::setCurrentTransaction(const QDBusObjectPath &tid)
 {
     // Check if the current transaction is still the same
     if (m_currentTid == tid) {
@@ -155,7 +155,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
 {
     // check if the transaction emitted any require restart
     Transaction *transaction = qobject_cast<Transaction*>(sender());
-    m_currentTid.clear();
+    m_currentTid = QDBusObjectPath();
     m_currentTransaction = 0;
     disconnect(transaction, SIGNAL(changed()),
                this, SLOT(transactionChanged()));

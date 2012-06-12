@@ -82,8 +82,8 @@ ApperSentinel::ApperSentinel()
             m_refreshCache, SLOT(refreshCache()));
 
     // connect the watch transaction coming from the updater icon to our watcher
-//     connect(m_updateIcon, SIGNAL(watchTransaction(const QString &, bool)),
-//             m_transWatcher, SLOT(watchTransaction(const QString &, bool)));
+    connect(m_updateIcon, SIGNAL(watchTransaction(QDBusObjectPath,bool)),
+            m_trayIcon, SLOT(watchTransaction(QDBusObjectPath,bool)));
 
     prepareToClose();
 }

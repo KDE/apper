@@ -81,7 +81,7 @@ CategoryModel::CategoryModel(Transaction::Roles roles, QObject *parent) :
 //                              "dialog-cancel");
 #else
     if (m_roles & Transaction::RoleGetCategories
-        && Daemon::getTransactions().isEmpty()) {
+        && Daemon::getTransactionList().isEmpty()) {
         Transaction *trans = new Transaction(this);
         connect(trans, SIGNAL(category(QString,QString,QString,QString,QString)),
                 this, SLOT(category(QString,QString,QString,QString,QString)));

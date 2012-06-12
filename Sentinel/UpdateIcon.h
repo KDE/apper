@@ -43,7 +43,7 @@ public:
     ~UpdateIcon();
 
 signals:
-    void watchTransaction(const QString &tid, bool interactive);
+    void watchTransaction(const QDBusObjectPath &tid, bool interactive);
 
 public slots:
     void checkForUpdates(bool system_ready);

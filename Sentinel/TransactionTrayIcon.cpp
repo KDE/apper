@@ -101,7 +101,7 @@ void TransactionTrayIcon::actionActivated(QAction *action)
     // Check to see if there is transaction id in action
     if (!action->data().isNull()) {
         // we need to find if the action clicked has already a dialog
-        Transaction *t = new Transaction(action->data().toString(), this);
+        Transaction *t = new Transaction(action->data().value<QDBusObjectPath>(), this);
         if (!t->error()) {
             emit transactionActivated(t);
         }
