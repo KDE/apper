@@ -930,7 +930,7 @@ QString PkStrings::message(Transaction::Message value)
         return i18n("This software source is for developers only");
     case Transaction::MessageOtherUpdatesHeldBack :
         return i18n("Other updates have been held back");
-    case Transaction::UnknownMessage :
+    case Transaction::MessageUnknown:
         kWarning() << "message(Enum::UnknownMessageType)";
         return QString();
     }
@@ -959,7 +959,7 @@ QString PkStrings::daemonError(Transaction::InternalError value)
         return i18n("This function is not yet supported.");
     case Transaction::InternalErrorDaemonUnreachable :
         return i18n("Could not talk to packagekitd.");
-    case Transaction::NoInternalError :
+    case Transaction::InternalErrorNone:
     case Transaction::InternalErrorFailed :
     case Transaction::InternalErrorUnkown :
         return i18n("An unknown error happened.");

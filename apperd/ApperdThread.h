@@ -37,6 +37,7 @@ private slots:
     void init();
     void poll();
     void configFileChanged();
+    void setProxy();
 
     void transactionListChanged(const QStringList &tids);
     void updatesChanged();

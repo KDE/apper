@@ -40,7 +40,6 @@
 
 #include <Daemon>
 
-#include "Macros.h"
 #include "Enum.h"
 #include "PkStrings.h"
 #include "RepoSig.h"
@@ -199,7 +198,6 @@ void PkTransaction::updatePackages(const QList<Package> &packages)
 
 void PkTransaction::refreshCache(bool force)
 {
-    SET_PROXY
     Transaction *trans = new Transaction(this);
     setTransaction(trans, Transaction::RoleRefreshCache);
     trans->refreshCache(force);
@@ -211,8 +209,6 @@ void PkTransaction::refreshCache(bool force)
 
 void PkTransaction::setupTransaction(PackageKit::Transaction *transaction)
 {
-    SET_PROXY;
-
 #ifdef HAVE_DEBCONFKDE
     QString tid;
     QString socket;

@@ -19,7 +19,6 @@
 
 #include "RefreshCacheTask.h"
 
-#include <Macros.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
 
@@ -43,7 +42,6 @@ void RefreshCacheTask::refreshCache()
 {
     kDebug() << "isRunning" << isRunning();
     if (!isRunning()) {
-        SET_PROXY
         increaseRunning();
         Transaction *t = new Transaction(this);
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),

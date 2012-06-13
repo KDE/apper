@@ -26,7 +26,6 @@
 
 #include <PkStrings.h>
 #include <PkIcons.h>
-#include <Macros.h>
 #include <Enum.h>
 
 #include <KLocale>
@@ -175,7 +174,6 @@ void UpdateIcon::getUpdateFinished()
 
         if (systemReady && updateType == Enum::All) {
             // update all
-            SET_PROXY
             Transaction *t = new Transaction(this);
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
@@ -197,7 +195,6 @@ void UpdateIcon::getUpdateFinished()
             }
         } else if (systemReady && updateType == Enum::Security && !securityUpdateList.isEmpty()) {
             // Defaults to security
-            SET_PROXY
             Transaction *t = new Transaction(this);
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));

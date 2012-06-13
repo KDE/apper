@@ -25,6 +25,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDirWatch>
+#include <KProtocolManager>
 
 #include <Solid/PowerManagement>
 
@@ -180,6 +181,16 @@ void ApperdThread::configFileChanged()
     if (m_refreshCacheInterval != refreshCacheInterval) {
         m_refreshCacheInterval = refreshCacheInterval;
         kDebug() << "New refresh cache interval" << m_refreshCacheInterval;
+    }
+}
+
+void ApperdThread::setProxy()
+{
+    if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) {
+//        Daemon::setProxy(KProtocolManager::proxyFor("http"),
+//                         KProtocolManager::proxyFor("ftp"));
+    } else {
+//        Daemon::setProxy(QString(), QString());
     }
 }
 
