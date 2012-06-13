@@ -32,6 +32,8 @@
 #define UNIVERSAL_PADDING 4
 #define FADE_LENGTH 16
 
+using namespace PackageKit;
+
 ApplicationsDelegate::ApplicationsDelegate(QAbstractItemView *parent)
   : QStyledItemDelegate(parent),
     m_viewport(parent->viewport()),

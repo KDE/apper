@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2012 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -25,28 +25,26 @@
 
 #include <Transaction>
 
-using namespace PackageKit;
-
 namespace PkStrings
 {
-    KDE_EXPORT QString finished(Transaction::Exit status);
-    KDE_EXPORT QString infoPresent(Package::Info info);
-    KDE_EXPORT QString infoPast(Package::Info info);
-    KDE_EXPORT QString error(Transaction::Error error);
-    KDE_EXPORT QString errorMessage(Transaction::Error error);
-    KDE_EXPORT QString message(Transaction::Message type);
-    KDE_EXPORT QString status(Transaction::Status status);
-    KDE_EXPORT QString statusPast(Transaction::Status status);
-    KDE_EXPORT QString groups(Package::Group group);
-    KDE_EXPORT QString info(Package::Info state);
+    KDE_EXPORT QString finished(PackageKit::Transaction::Exit status);
+    KDE_EXPORT QString infoPresent(PackageKit::Package::Info info);
+    KDE_EXPORT QString infoPast(PackageKit::Package::Info info);
+    KDE_EXPORT QString error(PackageKit::Transaction::Error error);
+    KDE_EXPORT QString errorMessage(PackageKit::Transaction::Error error);
+    KDE_EXPORT QString message(PackageKit::Transaction::Message type);
+    KDE_EXPORT QString status(PackageKit::Transaction::Status status);
+    KDE_EXPORT QString statusPast(PackageKit::Transaction::Status status);
+    KDE_EXPORT QString groups(PackageKit::PackageDetails::Group group);
+    KDE_EXPORT QString info(PackageKit::Package::Info state);
     KDE_EXPORT QString packageQuantity(bool updates, int packages, int selected);
-    KDE_EXPORT QString updateState(Package::UpdateState value);
-    KDE_EXPORT QString restartType(Package::Restart value);
-    KDE_EXPORT QString restartTypeFuture(Package::Restart value);
-    KDE_EXPORT QString action(Transaction::Role action);
-    KDE_EXPORT QString actionPast(Transaction::Role action);
-    KDE_EXPORT QString mediaMessage(Transaction::MediaType value, const QString &text);
-    KDE_EXPORT QString daemonError(Transaction::InternalError value);
+    KDE_EXPORT QString updateState(PackageKit::PackageUpdateDetails::UpdateState value);
+    KDE_EXPORT QString restartType(PackageKit::PackageUpdateDetails::Restart value);
+    KDE_EXPORT QString restartTypeFuture(PackageKit::PackageUpdateDetails::Restart value);
+    KDE_EXPORT QString action(PackageKit::Transaction::Role action);
+    KDE_EXPORT QString actionPast(PackageKit::Transaction::Role action);
+    KDE_EXPORT QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);
+    KDE_EXPORT QString daemonError(PackageKit::Transaction::InternalError value);
 };
 
 #endif

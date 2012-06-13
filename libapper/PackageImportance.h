@@ -23,13 +23,13 @@
 
 #include <kdemacros.h>
 
-#include <Package>
+#include <PackageUpdateDetails>
 
 using namespace PackageKit;
 
 namespace PackageImportance
 {
-    KDE_EXPORT int restartImportance(PackageKit::Package::Restart type);
+    KDE_EXPORT int restartImportance(PackageKit::PackageUpdateDetails::Restart type);
 };
 
 #endif

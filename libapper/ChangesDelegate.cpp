@@ -35,6 +35,8 @@
 #define FADE_LENGTH 16
 #define MAIN_ICON_SIZE 32
 
+using namespace PackageKit;
+
 ChangesDelegate::ChangesDelegate(QAbstractItemView *parent)
   : KExtendableItemDelegate(parent),
     m_viewport(parent->viewport()),

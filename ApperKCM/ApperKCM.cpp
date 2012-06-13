@@ -378,7 +378,7 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
                 }
             } else {
                 m_searchGroupCategory.clear();
-                m_searchGroup = static_cast<Package::Group>(index.data(CategoryModel::GroupRole).toUInt());
+                m_searchGroup = static_cast<PackageKit::PackageDetails::Group>(index.data(CategoryModel::GroupRole).toUInt());
             }
         } else if (m_searchRole == Transaction::RoleGetUpdates) {
             setPage("updates");
@@ -621,7 +621,7 @@ void ApperKCM::search()
         break;
     case Transaction::RoleSearchGroup:
         if (m_searchGroupCategory.isEmpty()) {
-            m_searchTransaction->searchGroup(m_searchGroup, m_filtersMenu->filters());
+            m_searchTransaction->searchGroups(m_searchGroup, m_filtersMenu->filters());
         } else {
             browseView->setParentCategory(m_searchParentCategory);
 #ifndef HAVE_APPINSTALL

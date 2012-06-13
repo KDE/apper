@@ -21,7 +21,7 @@
 #ifndef UPDATE_DETAILS_H
 #define UPDATE_DETAILS_H
 
-#include <Package>
+#include <PackageUpdateDetails>
 
 #include <KPixmapSequenceOverlayPainter>
 
@@ -49,12 +49,12 @@ public slots:
     void hide();
 
 private slots:
-    void updateDetail(const PackageKit::Package &package);
+    void updateDetail(const PackageKit::PackageUpdateDetails &package);
     void updateDetailFinished();
     void display();
 
 private:
-    QString getLinkList(const QString &links) const;
+    QString getLinkList(const QStringList &urls) const;
 
     bool m_show;
     QString m_packageId;

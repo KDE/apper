@@ -29,6 +29,8 @@
 
 #include <KDebug>
 
+using namespace PackageKit;
+
 bool PkIcons::init = false;
 QHash<QString, KIcon> PkIcons::cache = QHash<QString, KIcon>();
 
@@ -215,47 +217,47 @@ KIcon PkIcons::actionIcon(Transaction::Role role)
     return KIcon(actionIconName(role));
 }
 
-KIcon PkIcons::groupsIcon(Package::Group group)
+KIcon PkIcons::groupsIcon(PackageDetails::Group group)
 {
     if (!PkIcons::init) {
         PkIcons::configure();
     }
     switch (group) {
-    case Package::UnknownGroup         : return KIcon("unknown");
-    case Package::GroupAccessibility   : return KIcon("preferences-desktop-accessibility");
-    case Package::GroupAccessories     : return KIcon("applications-accessories");
-    case Package::GroupAdminTools      : return KIcon("dialog-password");
-    case Package::GroupCommunication   : return KIcon("network-workgroup");//FIXME
-    case Package::GroupDesktopGnome    : return KIcon("kpk-desktop-gnome");
-    case Package::GroupDesktopKde      : return KIcon("kde");
-    case Package::GroupDesktopOther    : return KIcon("user-desktop");
-    case Package::GroupDesktopXfce     : return KIcon("kpk-desktop-xfce");
-    case Package::GroupDocumentation   : return KIcon("accessories-dictionary");//FIXME
-    case Package::GroupEducation       : return KIcon("applications-education");
-    case Package::GroupElectronics     : return KIcon("media-flash");
-    case Package::GroupFonts           : return KIcon("preferences-desktop-font");
-    case Package::GroupGames           : return KIcon("applications-games");
-    case Package::GroupGraphics        : return KIcon("applications-graphics");
-    case Package::GroupInternet        : return KIcon("applications-internet");
-    case Package::GroupLegacy          : return KIcon("media-floppy");
-    case Package::GroupLocalization    : return KIcon("applications-education-language");
-    case Package::GroupMaps            : return KIcon("Maps");//FIXME
-    case Package::GroupCollections     : return KIcon("package-orign");
-    case Package::GroupMultimedia      : return KIcon("applications-multimedia");
-    case Package::GroupNetwork         : return KIcon("network-wired");
-    case Package::GroupOffice          : return KIcon("applications-office");
-    case Package::GroupOther           : return KIcon("applications-other");
-    case Package::GroupPowerManagement : return KIcon("battery");
-    case Package::GroupProgramming     : return KIcon("applications-development");
-    case Package::GroupPublishing      : return KIcon("accessories-text-editor");
-    case Package::GroupRepos           : return KIcon("application-x-compressed-tar");
-    case Package::GroupScience         : return KIcon("applications-science");
-    case Package::GroupSecurity        : return KIcon("security-high");
-    case Package::GroupServers         : return KIcon("network-server");
-    case Package::GroupSystem          : return KIcon("applications-system");
-    case Package::GroupVirtualization  : return KIcon("cpu");
-    case Package::GroupVendor          : return KIcon("application-certificate");
-    case Package::GroupNewest          : return KIcon("dialog-information");
+    case PackageDetails::GroupUnknown         : return KIcon("unknown");
+    case PackageDetails::GroupAccessibility   : return KIcon("preferences-desktop-accessibility");
+    case PackageDetails::GroupAccessories     : return KIcon("applications-accessories");
+    case PackageDetails::GroupAdminTools      : return KIcon("dialog-password");
+    case PackageDetails::GroupCommunication   : return KIcon("network-workgroup");//FIXME
+    case PackageDetails::GroupDesktopGnome    : return KIcon("kpk-desktop-gnome");
+    case PackageDetails::GroupDesktopKde      : return KIcon("kde");
+    case PackageDetails::GroupDesktopOther    : return KIcon("user-desktop");
+    case PackageDetails::GroupDesktopXfce     : return KIcon("kpk-desktop-xfce");
+    case PackageDetails::GroupDocumentation   : return KIcon("accessories-dictionary");//FIXME
+    case PackageDetails::GroupEducation       : return KIcon("applications-education");
+    case PackageDetails::GroupElectronics     : return KIcon("media-flash");
+    case PackageDetails::GroupFonts           : return KIcon("preferences-desktop-font");
+    case PackageDetails::GroupGames           : return KIcon("applications-games");
+    case PackageDetails::GroupGraphics        : return KIcon("applications-graphics");
+    case PackageDetails::GroupInternet        : return KIcon("applications-internet");
+    case PackageDetails::GroupLegacy          : return KIcon("media-floppy");
+    case PackageDetails::GroupLocalization    : return KIcon("applications-education-language");
+    case PackageDetails::GroupMaps            : return KIcon("Maps");//FIXME
+    case PackageDetails::GroupCollections     : return KIcon("package-orign");
+    case PackageDetails::GroupMultimedia      : return KIcon("applications-multimedia");
+    case PackageDetails::GroupNetwork         : return KIcon("network-wired");
+    case PackageDetails::GroupOffice          : return KIcon("applications-office");
+    case PackageDetails::GroupOther           : return KIcon("applications-other");
+    case PackageDetails::GroupPowerManagement : return KIcon("battery");
+    case PackageDetails::GroupProgramming     : return KIcon("applications-development");
+    case PackageDetails::GroupPublishing      : return KIcon("accessories-text-editor");
+    case PackageDetails::GroupRepos           : return KIcon("application-x-compressed-tar");
+    case PackageDetails::GroupScience         : return KIcon("applications-science");
+    case PackageDetails::GroupSecurity        : return KIcon("security-high");
+    case PackageDetails::GroupServers         : return KIcon("network-server");
+    case PackageDetails::GroupSystem          : return KIcon("applications-system");
+    case PackageDetails::GroupVirtualization  : return KIcon("cpu");
+    case PackageDetails::GroupVendor          : return KIcon("application-certificate");
+    case PackageDetails::GroupNewest          : return KIcon("dialog-information");
     }
     kDebug() << "group unrecognised: " << group;
     return KIcon("unknown");
@@ -280,7 +282,7 @@ KIcon PkIcons::packageIcon(Package::Info info)
     }
 }
 
-QString PkIcons::restartIconName(Package::Restart type)
+QString PkIcons::restartIconName(PackageUpdateDetails::Restart type)
 {
     if (!PkIcons::init) {
         PkIcons::configure();
@@ -288,18 +290,18 @@ QString PkIcons::restartIconName(Package::Restart type)
     // These names MUST be standard icons, otherwise KStatusNotifierItem
     // will not be able to load them
     switch (type) {
-    case Package::RestartSecuritySystem  :
-    case Package::RestartSystem          : return "system-reboot";
-    case Package::RestartSecuritySession :
-    case Package::RestartSession         : return "system-log-out";
-    case Package::RestartApplication     : return "process-stop";
-    case Package::RestartNone            :
-    case Package::UnknownRestart         : break;
+    case PackageUpdateDetails::RestartSecuritySystem  :
+    case PackageUpdateDetails::RestartSystem          : return "system-reboot";
+    case PackageUpdateDetails::RestartSecuritySession :
+    case PackageUpdateDetails::RestartSession         : return "system-log-out";
+    case PackageUpdateDetails::RestartApplication     : return "process-stop";
+    case PackageUpdateDetails::RestartNone            :
+    case PackageUpdateDetails::RestartUnknown         : break;
     }
     return "";
 }
 
-KIcon PkIcons::restartIcon(Package::Restart type)
+KIcon PkIcons::restartIcon(PackageUpdateDetails::Restart type)
 {
     return PkIcons::getIcon(restartIconName(type));
 }

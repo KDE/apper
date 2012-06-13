@@ -27,8 +27,6 @@
 #include <Transaction>
 #include <Package>
 
-using namespace PackageKit;
-
 class CategoryModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -39,7 +37,7 @@ public:
         GroupRole,
         CategoryRole
     } Roles;
-    explicit CategoryModel(Transaction::Roles roles, QObject *parent = 0);
+    explicit CategoryModel(PackageKit::Transaction::Roles roles, QObject *parent = 0);
     ~CategoryModel();
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
@@ -64,10 +62,9 @@ private:
     QStandardItem* findCategory(const QString &categoryId, const QModelIndex &parent = QModelIndex()) const;
     void parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent = 0);
     QString parseCategories(QXmlStreamReader &xml, QStandardItem *item, const QString &join = QString());
-    template<class T> static int enumFromString(const QString& str, const char* enumName, const QString& prefix = QString());
 
-    Transaction::Roles  m_roles;
-    Package::Groups m_groups;
+    PackageKit::Transaction::Roles  m_roles;
+    PackageKit::PackageDetails::Groups m_groups;
     QModelIndex  m_rootIndex;
 };
 

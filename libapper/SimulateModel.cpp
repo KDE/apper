@@ -29,7 +29,7 @@ using namespace PackageKit;
 SimulateModel::SimulateModel(QObject *parent, QList<Package> skipPackages)
 : QAbstractTableModel(parent),
   m_skipPackages(skipPackages),
-  m_currentInfo(Package::UnknownInfo)
+  m_currentInfo(Package::InfoUnknown)
 {
 //     setSortRole(Qt::DisplayRole);
 }
@@ -37,7 +37,7 @@ SimulateModel::SimulateModel(QObject *parent, QList<Package> skipPackages)
 QVariant SimulateModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() ||
-        m_currentInfo == Package::UnknownInfo ||
+        m_currentInfo == Package::InfoUnknown ||
         index.row() >= m_packages[m_currentInfo].size()) {
         return QVariant();
     }
@@ -106,7 +106,7 @@ void SimulateModel::addPackage(const PackageKit::Package &p)
         }
     }
 
-    if (m_currentInfo == Package::UnknownInfo) {
+    if (m_currentInfo == Package::InfoUnknown) {
         m_currentInfo = p.info();
     }
     m_packages[p.info()].append(p);
@@ -114,7 +114,7 @@ void SimulateModel::addPackage(const PackageKit::Package &p)
 
 int SimulateModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && m_currentInfo == Package::UnknownInfo) {
+    if (parent.isValid() && m_currentInfo == Package::InfoUnknown) {
         return 0;
     } else {
         return m_packages[m_currentInfo].size();
@@ -123,7 +123,7 @@ int SimulateModel::rowCount(const QModelIndex &parent) const
 
 int SimulateModel::columnCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && m_currentInfo == Package::UnknownInfo) {
+    if (parent.isValid() && m_currentInfo == Package::InfoUnknown) {
         return 0;
     } else {
         return 2;
@@ -152,6 +152,6 @@ QStringList SimulateModel::newPackages() const
 void SimulateModel::clear()
 {
     m_packages.clear();
-    m_currentInfo = Package::UnknownInfo;
+    m_currentInfo = Package::InfoUnknown;
     reset();
 }

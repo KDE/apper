@@ -68,26 +68,27 @@ PackageDetails::PackageDetails(QWidget *parent)
     connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 }
 
-void PackageDetails::init(Transaction::Roles roles)
+void PackageDetails::init(PackageKit::Transaction::Roles roles)
 {
+    kDebug();
     KMenu *menu = new KMenu(i18n("Display"), this);
     m_actionGroup = new QActionGroup(this);
     QAction *action = 0;
 
     // we check to see which roles are supported by the backend
     // if so we ask for information and create the containers
-    if (roles & Transaction::RoleGetDetails) {
+    if (roles & PackageKit::Transaction::RoleGetDetails) {
         action = menu->addAction(i18n("Description"));
         action->setCheckable(true);
-        action->setData(Transaction::RoleGetDetails);
+        action->setData(PackageKit::Transaction::RoleGetDetails);
         m_actionGroup->addAction(action);
         descriptionW->setWidgetResizable(true);
     }
 
-    if (roles & Transaction::RoleGetDepends) {
+    if (roles & PackageKit::Transaction::RoleGetDepends) {
         action = menu->addAction(i18n("Depends On"));
         action->setCheckable(true);
-        action->setData(Transaction::RoleGetDepends);
+        action->setData(PackageKit::Transaction::RoleGetDepends);
         m_actionGroup->addAction(action);
         // Sets a transparent background
         QWidget *actionsViewport = dependsOnLV->viewport();
@@ -110,10 +111,10 @@ void PackageDetails::init(Transaction::Roles roles)
         dependsOnLV->header()->hideSection(4);
     }
 
-    if (roles & Transaction::RoleGetRequires) {
+    if (roles & PackageKit::Transaction::RoleGetRequires) {
         action = menu->addAction(i18n("Required By"));
         action->setCheckable(true);
-        action->setData(Transaction::RoleGetRequires);
+        action->setData(PackageKit::Transaction::RoleGetRequires);
         m_actionGroup->addAction(action);
         // Sets a transparent background
         QWidget *actionsViewport = requiredByLV->viewport();
@@ -136,10 +137,10 @@ void PackageDetails::init(Transaction::Roles roles)
         requiredByLV->header()->hideSection(4);
     }
 
-    if (roles & Transaction::RoleGetFiles) {
+    if (roles & PackageKit::Transaction::RoleGetFiles) {
         action = menu->addAction(i18n("File List"));
         action->setCheckable(true);
-        action->setData(Transaction::RoleGetFiles);
+        action->setData(PackageKit::Transaction::RoleGetFiles);
         m_actionGroup->addAction(action);
         // Sets a transparent background
         QWidget *actionsViewport = filesPTE->viewport();
@@ -220,6 +221,7 @@ PackageDetails::~PackageDetails()
 
 void PackageDetails::setPackage(const QModelIndex &index)
 {
+    kDebug();
     QString pkgId = index.data(PackageModel::IdRole).toString();
     QString appId = index.data(PackageModel::ApplicationId).toString();
 
@@ -239,13 +241,15 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_index     = index;
     m_packageId = pkgId;
     m_appId     = appId;
-    Package::Info info = static_cast<Package::Info>(index.data(PackageModel::InfoRole).toUInt());
-
-    m_package       = Package(m_packageId, info, QString());
+    PackageKit::Package::Info info;
+    info = static_cast<PackageKit::Package::Info>(index.data(PackageModel::InfoRole).toUInt());
+    kDebug() << "info" << info;
+    m_package       = PackageKit::Package(m_packageId, info);
     m_hasDetails    = false;
     m_hasFileList   = false;
     m_hasRequires   = false;
     m_hasDepends    = false;
+    kDebug() << "m_package" << m_package.id();
 
     QString pkgIconPath = index.data(PackageModel::IconRole).toString();
     m_currentIcon       = PkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
@@ -301,12 +305,13 @@ void PackageDetails::actionActivated(QAction *action)
     // don't fade the screenshot
     // if the package changed setPackage() fades both
     fadeOut(FadeStacked);
+    kDebug();
 
     // disconnect the transaction
     // so that we don't get old data
     if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
-                   this, SLOT(description(PackageKit::Package)));
+        disconnect(m_transaction, SIGNAL(packageDetails(PackageKit::PackageDetails)),
+                   this, SLOT(description(PackageKit::PackageDetails)));
         disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
                    m_dependsModel, SLOT(addPackage(PackageKit::Package)));
         disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
@@ -321,26 +326,26 @@ void PackageDetails::actionActivated(QAction *action)
     // Check to see if we don't already have the required data
     uint role = action->data().toUInt();
     switch (role) {
-    case Transaction::RoleGetDetails:
+    case PackageKit::Transaction::RoleGetDetails:
         if (m_hasDetails) {
-            description(m_package);
+            description(m_packageDetails);
             display();
             return;
         }
         break;
-    case Transaction::RoleGetDepends:
+    case PackageKit::Transaction::RoleGetDepends:
         if (m_hasDepends) {
             display();
             return;
         }
         break;
-    case Transaction::RoleGetRequires:
+    case PackageKit::Transaction::RoleGetRequires:
         if (m_hasRequires) {
             display();
             return;
         }
         break;
-    case Transaction::RoleGetFiles:
+    case PackageKit::Transaction::RoleGetFiles:
         if (m_hasFileList) {
             display();
             return;
@@ -349,40 +354,42 @@ void PackageDetails::actionActivated(QAction *action)
     }
 
     // we don't have the data
-    m_transaction = new Transaction(this);
+    m_transaction = new PackageKit::Transaction(this);
+    kDebug() << "New transaction";
     connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(finished()));
     switch (role) {
-    case Transaction::RoleGetDetails:
-        connect(m_transaction, SIGNAL(package(PackageKit::Package)),
-                this, SLOT(description(PackageKit::Package)));
+    case PackageKit::Transaction::RoleGetDetails:
+        connect(m_transaction, SIGNAL(packageDetails(PackageKit::PackageDetails)),
+                this, SLOT(description(PackageKit::PackageDetails)));
         m_transaction->getDetails(m_package);
         break;
-    case Transaction::RoleGetDepends:
+    case PackageKit::Transaction::RoleGetDepends:
         m_dependsModel->clear();
         connect(m_transaction, SIGNAL(package(PackageKit::Package)),
                 m_dependsModel, SLOT(addPackage(PackageKit::Package)));
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_dependsModel, SLOT(finished()));
-        m_transaction->getDepends(m_package, Transaction::FilterNone, false);
+        m_transaction->getDepends(m_package, PackageKit::Transaction::FilterNone, false);
         break;
-    case Transaction::RoleGetRequires:
+    case PackageKit::Transaction::RoleGetRequires:
         m_requiresModel->clear();
         connect(m_transaction, SIGNAL(package(PackageKit::Package)),
                 m_requiresModel, SLOT(addPackage(PackageKit::Package)));
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_requiresModel, SLOT(finished()));
-        m_transaction->getRequires(m_package, Transaction::FilterNone, false);
+        m_transaction->getRequires(m_package, PackageKit::Transaction::FilterNone, false);
         break;
-    case Transaction::RoleGetFiles:
+    case PackageKit::Transaction::RoleGetFiles:
         m_currentFileList.clear();
         connect(m_transaction, SIGNAL(files(PackageKit::Package,QStringList)),
                 this, SLOT(files(PackageKit::Package,QStringList)));
         m_transaction->getFiles(m_package);
         break;
     }
+    kDebug() <<"transaction running";
 
-    Transaction::InternalError error = m_transaction->error();
+    PackageKit::Transaction::InternalError error = m_transaction->error();
     if (error) {
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(finished()));
@@ -453,13 +460,13 @@ void PackageDetails::display()
         {
             bool fadeIn = false;
             switch (m_actionGroup->checkedAction()->data().toUInt()) {
-            case Transaction::RoleGetDetails:
+            case PackageKit::Transaction::RoleGetDetails:
                 if (m_hasDetails) {
                     setupDescription();
                     fadeIn = true;
                 }
                 break;
-            case Transaction::RoleGetDepends:
+            case PackageKit::Transaction::RoleGetDepends:
                 if (m_hasDepends) {
                     if (stackedWidget->currentWidget() != pageDepends) {
                         stackedWidget->setCurrentWidget(pageDepends);
@@ -467,7 +474,7 @@ void PackageDetails::display()
                     fadeIn = true;
                 }
                 break;
-            case Transaction::RoleGetRequires:
+            case PackageKit::Transaction::RoleGetRequires:
                 if (m_hasRequires) {
                     if (stackedWidget->currentWidget() != pageRequired) {
                         stackedWidget->setCurrentWidget(pageRequired);
@@ -475,7 +482,7 @@ void PackageDetails::display()
                     fadeIn = true;
                 }
                 break;
-            case Transaction::RoleGetFiles:
+            case PackageKit::Transaction::RoleGetFiles:
                 if (m_hasFileList) {
                     filesPTE->clear();
                     if (m_currentFileList.isEmpty()) {
@@ -524,8 +531,9 @@ void PackageDetails::setupDescription()
     if (stackedWidget->currentWidget() != pageDescription) {
         stackedWidget->setCurrentWidget(pageDescription);
     }
+    kDebug() << m_packageDetails.detail();
 
-    if (!m_package.hasDetails()) {
+    if (!m_packageDetails.isValid()) {
         // Oops we don't have any details
         descriptionL->setText(i18n("Could not fetch software details"));
         descriptionL->show();
@@ -538,16 +546,16 @@ void PackageDetails::setupDescription()
         iconL->clear();
     }
 
-    if (!m_package.description().isEmpty()) {
-        descriptionL->setText(m_package.description().replace('\n', "<br>"));
+    if (!m_packageDetails.detail().isEmpty()) {
+        descriptionL->setText(m_packageDetails.detail().replace('\n', "<br>"));
         descriptionL->show();
     } else {
         descriptionL->clear();
     }
 
-    if (!m_package.url().isEmpty()) {
-        homepageL->setText("<a href=\"" + m_package.url() + "\">" +
-                           m_package.url() + "</a>");
+    if (!m_packageDetails.url().isEmpty()) {
+        homepageL->setText("<a href=\"" + m_packageDetails.url() + "\">" +
+                           m_packageDetails.url() + "</a>");
         homepageL->show();
     } else {
         homepageL->hide();
@@ -586,31 +594,31 @@ void PackageDetails::setupDescription()
 // //                     + "</td></tr>";
 //     }
 
-    if (!m_package.license().isEmpty() && m_package.license() != "unknown") {
+    if (!m_packageDetails.license().isEmpty() && m_packageDetails.license() != "unknown") {
         // We have a license, check if we have and should show show package version
-        if (!m_hideVersion && !m_package.version().isEmpty()) {
-            licenseL->setText(m_package.version() + " - " + m_package.license());
+        if (!m_hideVersion && !m_packageDetails.version().isEmpty()) {
+            licenseL->setText(m_packageDetails.version() + " - " + m_packageDetails.license());
         } else {
-            licenseL->setText(m_package.license());
+            licenseL->setText(m_packageDetails.license());
         }
         licenseL->show();
     } else if (!m_hideVersion) {
-        licenseL->setText(m_package.version());
+        licenseL->setText(m_packageDetails.version());
         licenseL->show();
     } else {
         licenseL->hide();
     }
 
-    if (m_package.size() > 0) {
-        QString size = KGlobal::locale()->formatByteSize(m_package.size());
-        if (!m_hideArch && !m_package.arch().isEmpty()) {
-            sizeL->setText(size + " (" + m_package.arch() + ')');
+    if (m_packageDetails.size() > 0) {
+        QString size = KGlobal::locale()->formatByteSize(m_packageDetails.size());
+        if (!m_hideArch && !m_packageDetails.arch().isEmpty()) {
+            sizeL->setText(size + " (" + m_packageDetails.arch() + ')');
         } else {
             sizeL->setText(size);
         }
         sizeL->show();
-    } else if (!m_hideArch && !m_package.arch().isEmpty()) {
-        sizeL->setText(m_package.arch());
+    } else if (!m_hideArch && !m_packageDetails.arch().isEmpty()) {
+        sizeL->setText(m_packageDetails.arch());
     } else {
         sizeL->hide();
     }
@@ -680,9 +688,10 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
     return ret;
 }
 
-void PackageDetails::description(const PackageKit::Package &package)
+void PackageDetails::description(const PackageKit::PackageDetails &package)
 {
-    m_package = package;
+    kDebug() << package.detail();
+    m_packageDetails = package;
 }
 
 void PackageDetails::finished()
@@ -692,15 +701,18 @@ void PackageDetails::finished()
     }
     m_transaction = 0;
 
-    Transaction *transaction = qobject_cast<Transaction*>(sender());
+    PackageKit::Transaction *transaction;
+    transaction = qobject_cast<PackageKit::Transaction*>(sender());
+    kDebug();
     if (transaction) {
-        if (transaction->role() == Transaction::RoleGetDetails) {
+        kDebug() << transaction->role() << PackageKit::Transaction::RoleGetDetails;
+        if (transaction->role() == PackageKit::Transaction::RoleGetDetails) {
             m_hasDetails  = true;
-        } else if (transaction->role() == Transaction::RoleGetFiles) {
+        } else if (transaction->role() == PackageKit::Transaction::RoleGetFiles) {
             m_hasFileList = true;
-        } else if (transaction->role() == Transaction::RoleGetRequires) {
+        } else if (transaction->role() == PackageKit::Transaction::RoleGetRequires) {
             m_hasRequires = true;
-        } else if (transaction->role() == Transaction::RoleGetDepends) {
+        } else if (transaction->role() == PackageKit::Transaction::RoleGetDepends) {
             m_hasDepends  = true;
         } else {
             return;

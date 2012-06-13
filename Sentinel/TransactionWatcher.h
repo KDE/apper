@@ -46,7 +46,7 @@ private slots:
     void message(PackageKit::Transaction::Message type, const QString &message);
     void errorCode(PackageKit::Transaction::Error, const QString &);
     void errorActivated(uint action);
-    void requireRestart(PackageKit::Package::Restart type, const PackageKit::Package &pkg);
+    void requireRestart(PackageKit::PackageUpdateDetails::Restart type, const PackageKit::Package &pkg);
     void finished(PackageKit::Transaction::Exit exit);
     void transactionChanged();
 
@@ -72,7 +72,7 @@ private:
     StatusNotifierItem *m_messagesSNI;
 
     // Restart menu entry
-    Package::Restart m_restartType;
+    PackageUpdateDetails::Restart m_restartType;
     QStringList      m_restartPackages;
     StatusNotifierItem *m_restartSNI;
 

@@ -27,6 +27,7 @@
 
 #include <QAbstractAnimation>
 #include <QGraphicsOpacityEffect>
+#include <QStringBuilder>
 
 #include <Transaction>
 
@@ -96,13 +97,13 @@ void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInf
     m_updateInfo = updateInfo;
     m_currentDescription.clear();
     if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(package(PackageKit::Package)),
-                   this, SLOT(updateDetail(PackageKit::Package)));
+        disconnect(m_transaction, SIGNAL(packageUpdateDetails(PackageKit::PackageUpdateDetails)),
+                   this, SLOT(updateDetail(PackageKit::PackageUpdateDetails)));
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(display()));
     }
 
-    Package package(m_packageId, Package::UnknownInfo, QString());
+    Package package(m_packageId);
     m_transaction = new Transaction(this);
     connect(m_transaction, SIGNAL(package(PackageKit::Package)),
             this, SLOT(updateDetail(PackageKit::Package)));
@@ -165,7 +166,7 @@ void UpdateDetails::display()
     }
 }
 
-void UpdateDetails::updateDetail(const PackageKit::Package &package)
+void UpdateDetails::updateDetail(const PackageKit::PackageUpdateDetails &package)
 {
     //format and show description
     QString description;
@@ -219,52 +220,52 @@ void UpdateDetails::updateDetail(const PackageKit::Package &package)
 
     // links
     //  Vendor
-    if (!package.vendorUrl().isEmpty()) {
+    if (!package.vendorUrls().isEmpty()) {
         description += "<p>" +
                        i18np("For more information about this update please visit this website:",
                              "For more information about this update please visit these websites:",
-                             package.vendorUrl().split(';').size() % 2) + "<br/>" +
-                       getLinkList(package.vendorUrl()) +
+                             package.vendorUrls().size()) + "<br/>" +
+                       getLinkList(package.vendorUrls()) +
                        "</p>";
     }
 
     //  Bugzilla
-    if (!package.bugzillaUrl().isEmpty()) {
+    if (!package.bugzillaUrls().isEmpty()) {
         description += "<p>" +
                        i18np("For more information about bugs fixed by this update please visit this website:",
                              "For more information about bugs fixed by this update please visit these websites:",
-                             package.bugzillaUrl().split(';').size() % 2) + "<br/>" +
-                       getLinkList(package.bugzillaUrl()) +
+                             package.bugzillaUrls().size()) + "<br/>" +
+                       getLinkList(package.bugzillaUrls()) +
                        "</p>";
     }
 
     //  CVE
-    if (!package.cveUrl().isEmpty()) {
+    if (!package.cveUrls().isEmpty()) {
         description += "<p>" +
                        i18np("For more information about this security update please visit this website:",
                              "For more information about this security update please visit these websites:",
-                             package.cveUrl().split(';').size() % 2) + "<br/>" +
-                       getLinkList(package.cveUrl()) +
+                             package.cveUrls().size()) + "<br/>" +
+                       getLinkList(package.cveUrls()) +
                        "</p>";
     }
 
     // Notice (about the need for a reboot)
-    if (package.restart() == Package::RestartSystem) {
+    if (package.restart() == PackageUpdateDetails::RestartSystem) {
         description += "<p>" +
                        i18n("The computer will have to be restarted after the update for the changes to take effect.") +
                        "</p>";
-    } else if (package.restart() == Package::RestartSession) {
+    } else if (package.restart() == PackageUpdateDetails::RestartSession) {
         description += "<p>" +
                        i18n("You will need to log out and back in after the update for the changes to take effect.") +
                        "</p>";
     }
 
     // State
-    if (package.state() == Package::UpdateStateUnstable) {
+    if (package.state() == PackageUpdateDetails::UpdateStateUnstable) {
         description += "<p>" +
                        i18n("The classification of this update is unstable which means it is not designed for production use.") +
                        "</p>";
-    } else if (package.state() == Package::UpdateStateTesting) {
+    } else if (package.state() == PackageUpdateDetails::UpdateStateTesting) {
         description += "<p>" +
                        i18n("This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter.") +
                        "</p>";
@@ -311,24 +312,14 @@ void UpdateDetails::updateDetail(const PackageKit::Package &package)
     m_busySeq->stop();
 }
 
-QString UpdateDetails::getLinkList(const QString &links) const
+QString UpdateDetails::getLinkList(const QStringList &urls) const
 {
-    QStringList linkList = links.split(';');
-    int length = linkList.size();
     QString ret;
-
-    // check for malformed strings with ';'
-    if (length % 2 != 0) {
-        kWarning() << "length not correct, correcting";
-        length--;
-    }
-
-    for (int i = 0; i < length; i += 2) {
+    foreach (const QString &url, urls) {
         if (!ret.isEmpty()) {
             ret += "<br/>";
         }
-        ret += QString::fromUtf8(" \xE2\x80\xA2 <a href=\"") + linkList.at(i) + "\">"
-               + linkList.at(i + 1) + "</a>";
+        ret += QString::fromUtf8(" \xE2\x80\xA2 <a href=\"") % url % QLatin1String("\"></a>");
     }
     return ret;
 }

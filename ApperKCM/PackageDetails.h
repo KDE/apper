@@ -33,8 +33,6 @@
 
 #include "ui_PackageDetails.h"
 
-using namespace PackageKit;
-
 class PackageModel;
 class PackageDetails : public QWidget, Ui::PackageDetails
 {
@@ -49,7 +47,7 @@ public:
     PackageDetails(QWidget *parent = 0);
     ~PackageDetails();
 
-    void init(Transaction::Roles roles);
+    void init(PackageKit::Transaction::Roles roles);
 
     void setPackage(const QModelIndex &index);
     void hidePackageVersion(bool hide);
@@ -64,7 +62,7 @@ signals:
 private slots:
     void on_screenshotL_clicked();
     void actionActivated(QAction *action);
-    void description(const PackageKit::Package &package);
+    void description(const PackageKit::PackageDetails &package);
     void files(const PackageKit::Package &package, const QStringList &files);
     void finished();
     void resultJob(KJob *);
@@ -78,7 +76,8 @@ private:
 
     QActionGroup *m_actionGroup;
     QModelIndex   m_index;
-    Package       m_package;
+    PackageKit::Package m_package;
+    PackageKit::PackageDetails m_packageDetails;
     QString       m_appName;
 
     QParallelAnimationGroup       *m_expandPanel;
@@ -94,7 +93,7 @@ private:
     // we have, so that we update only when we are
     // totaly transparent this way the user
     // does not see the ui flicker
-    Transaction *m_transaction;
+    PackageKit::Transaction *m_transaction;
     bool         m_hasDetails;
     QString      m_currentText;
     QPixmap      m_currentIcon;

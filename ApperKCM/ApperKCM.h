@@ -121,7 +121,7 @@ private:
     Transaction::Role    m_searchRole;
     QString       m_searchString;
     QString       m_searchGroupCategory;
-    Package::Group   m_searchGroup;
+    PackageKit::PackageDetails::Group   m_searchGroup;
     QModelIndex   m_searchParentCategory;
     QStringList   m_searchCategory;
 };

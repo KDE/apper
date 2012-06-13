@@ -28,8 +28,6 @@
 #include <Package>
 #include <Transaction>
 
-using namespace PackageKit;
-
 class KDE_EXPORT PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -68,7 +66,7 @@ public:
         QString    id;
         QString    appId;
         bool       isPackage;
-        Package::Info info;
+        PackageKit::Package::Info info;
         double     size;
     } InternalPackage;
 
@@ -82,7 +80,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     bool allSelected() const;
-    QList<Package> selectedPackages() const;
+    PackageKit::PackageList selectedPackages() const;
     unsigned long downloadSize() const;
     void clear();
     /**
@@ -98,7 +96,7 @@ public:
 public slots:
     void addPackage(const PackageKit::Package &package,
                     bool selected = false);
-    void addPackages(const QList<Package> &packages,
+    void addPackages(const PackageKit::PackageList &packages,
                      bool selected = false);
     void addSelectedPackage(const PackageKit::Package &package);
     void rmSelectedPackage(const PackageModel::InternalPackage &package);
@@ -118,7 +116,7 @@ public slots:
 
     void fetchSizes();
     void fetchSizesFinished();
-    void updateSize(const PackageKit::Package &package);
+    void updateSize(const PackageKit::PackageDetails &package);
 
     void fetchCurrentVersions();
     void fetchCurrentVersionsFinished();
@@ -137,8 +135,8 @@ private:
     QPixmap                         m_installedEmblem;
     QVector<InternalPackage>        m_packages;
     QHash<QString, InternalPackage> m_checkedPackages;
-    Transaction *m_fetchSizesTransaction;
-    Transaction *m_fetchInstalledVersionsTransaction;
+    PackageKit::Transaction *m_fetchSizesTransaction;
+    PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
 };
 
 #endif

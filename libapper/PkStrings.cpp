@@ -24,6 +24,8 @@
 
 #include <KDebug>
 
+using namespace PackageKit;
+
 QString PkStrings::status(Transaction::Status status)
 {
     switch (status) {
@@ -679,78 +681,78 @@ QString PkStrings::errorMessage(Transaction::Error error)
     return QString();
 }
 
-QString PkStrings::groups(Package::Group group)
+QString PkStrings::groups(PackageDetails::Group group)
 {
     switch (group) {
-    case Package::GroupAccessibility :
+    case PackageDetails::GroupAccessibility :
         return i18nc("The group type", "Accessibility");
-    case Package::GroupAccessories :
+    case PackageDetails::GroupAccessories :
         return i18nc("The group type", "Accessories");
-    case Package::GroupEducation :
+    case PackageDetails::GroupEducation :
         return i18nc("The group type", "Education");
-    case Package::GroupGames :
+    case PackageDetails::GroupGames :
         return i18nc("The group type", "Games");
-    case Package::GroupGraphics :
+    case PackageDetails::GroupGraphics :
         return i18nc("The group type", "Graphics");
-    case Package::GroupInternet :
+    case PackageDetails::GroupInternet :
         return i18nc("The group type", "Internet");
-    case Package::GroupOffice :
+    case PackageDetails::GroupOffice :
         return i18nc("The group type", "Office");
-    case Package::GroupOther :
+    case PackageDetails::GroupOther :
         return i18nc("The group type", "Others");
-    case Package::GroupProgramming :
+    case PackageDetails::GroupProgramming :
         return i18nc("The group type", "Development");
-    case Package::GroupMultimedia :
+    case PackageDetails::GroupMultimedia :
         return i18nc("The group type", "Multimedia");
-    case Package::GroupSystem :
+    case PackageDetails::GroupSystem :
         return i18nc("The group type", "System");
-    case Package::GroupDesktopGnome :
+    case PackageDetails::GroupDesktopGnome :
         return i18nc("The group type", "GNOME desktop");
-    case Package::GroupDesktopKde :
+    case PackageDetails::GroupDesktopKde :
         return i18nc("The group type", "KDE desktop");
-    case Package::GroupDesktopXfce :
+    case PackageDetails::GroupDesktopXfce :
         return i18nc("The group type", "XFCE desktop");
-    case Package::GroupDesktopOther :
+    case PackageDetails::GroupDesktopOther :
         return i18nc("The group type", "Other desktops");
-    case Package::GroupPublishing :
+    case PackageDetails::GroupPublishing :
         return i18nc("The group type", "Publishing");
-    case Package::GroupServers :
+    case PackageDetails::GroupServers :
         return i18nc("The group type", "Servers");
-    case Package::GroupFonts :
+    case PackageDetails::GroupFonts :
         return i18nc("The group type", "Fonts");
-    case Package::GroupAdminTools :
+    case PackageDetails::GroupAdminTools :
         return i18nc("The group type", "Admin tools");
-    case Package::GroupLegacy :
+    case PackageDetails::GroupLegacy :
         return i18nc("The group type", "Legacy");
-    case Package::GroupLocalization :
+    case PackageDetails::GroupLocalization :
         return i18nc("The group type", "Localization");
-    case Package::GroupVirtualization :
+    case PackageDetails::GroupVirtualization :
         return i18nc("The group type", "Virtualization");
-    case Package::GroupSecurity :
+    case PackageDetails::GroupSecurity :
         return i18nc("The group type", "Security");
-    case Package::GroupPowerManagement :
+    case PackageDetails::GroupPowerManagement :
         return i18nc("The group type", "Power management");
-    case Package::GroupCommunication :
+    case PackageDetails::GroupCommunication :
         return i18nc("The group type", "Communication");
-    case Package::GroupNetwork :
+    case PackageDetails::GroupNetwork :
         return i18nc("The group type", "Network");
-    case Package::GroupMaps :
+    case PackageDetails::GroupMaps :
         return i18nc("The group type", "Maps");
-    case Package::GroupRepos :
+    case PackageDetails::GroupRepos :
         return i18nc("The group type", "Software sources");
-    case Package::GroupScience :
+    case PackageDetails::GroupScience :
         return i18nc("The group type", "Science");
-    case Package::GroupDocumentation :
+    case PackageDetails::GroupDocumentation :
         return i18nc("The group type", "Documentation");
-    case Package::GroupElectronics :
+    case PackageDetails::GroupElectronics :
         return i18nc("The group type", "Electronics");
-    case Package::GroupCollections ://TODO check this one
+    case PackageDetails::GroupCollections ://TODO check this one
         return i18nc("The group type", "Package collections");
-    case Package::GroupVendor :
+    case PackageDetails::GroupVendor :
         return i18nc("The group type", "Vendor");
-    case Package::GroupNewest :
+    case PackageDetails::GroupNewest :
         return i18nc("The group type", "Newest packages");
-    case Package::UnknownGroup :
+    case PackageDetails::GroupUnknown:
         return i18nc("The group type", "Unknown group");
     }
     kWarning() << "group unrecognised: " << group;
@@ -780,7 +782,7 @@ QString PkStrings::info(Package::Info state)
     case Package::InfoAvailable :
     case Package::InfoCollectionAvailable :
         return i18nc("The type of update", "Available");
-    case Package::UnknownInfo :
+    case Package::InfoUnknown:
         return i18nc("The type of update", "Unknown update");
     default : // In this case we don't want to map all enums
         kWarning() << "info unrecognised: " << state;
@@ -814,62 +816,62 @@ QString PkStrings::packageQuantity(bool updates, int packages, int selected)
     }
 }
 
-QString PkStrings::restartTypeFuture(Package::Restart value)
+QString PkStrings::restartTypeFuture(PackageUpdateDetails::Restart value)
 {
     switch (value) {
-    case Package::RestartNone :
+    case PackageUpdateDetails::RestartNone:
         return i18n("No restart is necessary");
-    case Package::RestartApplication :
+    case PackageUpdateDetails::RestartApplication:
         return i18n("You will be required to restart this application");
-    case Package::RestartSession :
+    case PackageUpdateDetails::RestartSession:
         return i18n("You will be required to log out and back in");
-    case Package::RestartSystem :
+    case PackageUpdateDetails::RestartSystem:
         return i18n("A restart will be required");
-    case Package::RestartSecuritySession :
+    case PackageUpdateDetails::RestartSecuritySession:
         return i18n("You will be required to log out and back in due to a security update.");
-    case Package::RestartSecuritySystem :
+    case PackageUpdateDetails::RestartSecuritySystem:
         return i18n("A restart will be required due to a security update.");
-    case Package::UnknownRestart :
-        kWarning() << "restartTypeFuture(Package::UnknownRestartType)";
+    case PackageUpdateDetails::RestartUnknown:
+        kWarning() << "restartTypeFuture(PackageUpdateDetails::RestartUnknown)";
         return QString();
     }
     kWarning() << "restart unrecognised: " << value;
     return QString();
 }
 
-QString PkStrings::restartType(Package::Restart value)
+QString PkStrings::restartType(PackageUpdateDetails::Restart value)
 {
     switch (value) {
-    case Package::RestartNone :
+    case PackageUpdateDetails::RestartNone:
         return i18n("No restart is required");
-    case Package::RestartSystem :
+    case PackageUpdateDetails::RestartSystem:
         return i18n("A restart is required");
-    case Package::RestartSession :
+    case PackageUpdateDetails::RestartSession:
         return i18n("You need to log out and log back in");
-    case Package::RestartApplication :
+    case PackageUpdateDetails::RestartApplication:
         return i18n("You need to restart the application");
-    case Package::RestartSecuritySession :
+    case PackageUpdateDetails::RestartSecuritySession:
         return i18n("You need to log out and log back in to remain secure.");
-    case Package::RestartSecuritySystem :
+    case PackageUpdateDetails::RestartSecuritySystem:
         return i18n("A restart is required to remain secure.");
-    case Package::UnknownRestart :
-        kWarning() << "restartType(Package::UnknownRestartType)";
+    case PackageUpdateDetails::RestartUnknown:
+        kWarning() << "restartType(PackageUpdateDetails::RestartUnknown)";
         return QString();
     }
     kWarning() << "restart unrecognised: " << value;
     return QString();
 }
 
-QString PkStrings::updateState(Package::UpdateState value)
+QString PkStrings::updateState(PackageUpdateDetails::UpdateState value)
 {
     switch (value) {
-    case Package::UpdateStateStable :
+    case PackageUpdateDetails::UpdateStateStable:
         return i18n("Stable");
-    case Package::UpdateStateUnstable :
+    case PackageUpdateDetails::UpdateStateUnstable:
         return i18n("Unstable");
-    case Package::UpdateStateTesting :
+    case PackageUpdateDetails::UpdateStateTesting:
         return i18n("Testing");
-    case Package::UnknownUpdateState :
+    case PackageUpdateDetails::UpdateStateUnknown:
         kWarning() << "updateState(Package::UnknownUpdateState)";
         return QString();
     }

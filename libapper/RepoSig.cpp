@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2012 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -29,6 +29,8 @@
 
 #include "PkStrings.h"
 
+using namespace PackageKit;
+
 RepoSig::RepoSig(const Signature &info, QWidget *parent) :
     KDialog(parent),
     m_info(info),
@@ -54,5 +56,3 @@ PackageKit::Signature RepoSig::signature() const
 {
     return m_info;
 }
-
-#include "RepoSig.moc"

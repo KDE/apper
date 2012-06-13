@@ -154,7 +154,7 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
 #endif //HAVE_APPINSTALL
 }
 
-void PackageModel::addPackages(const QList<Package> &packages,
+void PackageModel::addPackages(const PackageList &packages,
                                   bool selected)
 {
     foreach(const Package &package, packages) {
@@ -475,8 +475,8 @@ void PackageModel::fetchSizes()
 
     if (!pkgs.isEmpty()) {
         m_fetchSizesTransaction = new Transaction(this);
-        connect(m_fetchSizesTransaction, SIGNAL(package(PackageKit::Package)),
-                this, SLOT(updateSize(PackageKit::Package)));
+        connect(m_fetchSizesTransaction, SIGNAL(packageDetails(PackageKit::PackageDetails)),
+                this, SLOT(updateSize(PackageKit::PackageDetails)));
         connect(m_fetchSizesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(fetchSizesFinished()));
         m_fetchSizesTransaction->getDetails(pkgs);
@@ -497,7 +497,7 @@ void PackageModel::fetchSizesFinished()
     emit changed(!m_checkedPackages.isEmpty());
 }
 
-void PackageModel::updateSize(const PackageKit::Package &package)
+void PackageModel::updateSize(const PackageKit::PackageDetails &package)
 {
     // if size is 0 don't waste time looking for the package
     if (package.size()) {
@@ -668,7 +668,7 @@ void PackageModel::setAllChecked(bool checked)
     emit changed(!m_checkedPackages.isEmpty());
 }
 
-QList<Package> PackageModel::selectedPackages() const
+PackageList PackageModel::selectedPackages() const
 {
     QList<Package> list;
     foreach (const InternalPackage &package, m_checkedPackages) {

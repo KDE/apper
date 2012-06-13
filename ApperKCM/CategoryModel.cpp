@@ -39,7 +39,9 @@
 
 #include <config.h>
 
-CategoryModel::CategoryModel(Transaction::Roles roles, QObject *parent) :
+using namespace PackageKit;
+
+CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *parent) :
     QStandardItemModel(parent),
     m_roles(roles)
 {
@@ -198,22 +200,22 @@ void CategoryModel::fillWithStandardGroups()
 {
     // Get the groups
     m_groups = Daemon::groups();
-    QStandardItem *item;
-    foreach (const Package::Group &group, m_groups) {
-        if (group != Package::UnknownGroup) {
-            item = new QStandardItem(PkStrings::groups(group));
-            item->setDragEnabled(false);
-            item->setData(Transaction::RoleSearchGroup, SearchRole);
-            item->setData(group, GroupRole);
-            item->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
-            item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
-            item->setIcon(PkIcons::groupsIcon(group));
-            if (!(m_roles & Transaction::RoleSearchGroup)) {
-                item->setSelectable(false);
-            }
-            appendRow(item);
-        }
-    }
+//    QStandardItem *item;
+//    foreach (const Package::Group &group, m_groups) {
+//        if (group != Package::UnknownGroup) {
+//            item = new QStandardItem(PkStrings::groups(group));
+//            item->setDragEnabled(false);
+//            item->setData(Transaction::RoleSearchGroup, SearchRole);
+//            item->setData(group, GroupRole);
+//            item->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+//            item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
+//            item->setIcon(PkIcons::groupsIcon(group));
+//            if (!(m_roles & Transaction::RoleSearchGroup)) {
+//                item->setSelectable(false);
+//            }
+//            appendRow(item);
+//        }
+//    }
 
     emit finished();
 }
@@ -313,14 +315,15 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                     item = new QStandardItem;
                     item->setDragEnabled(false);
                 }
-                QString group = xml.readElementText();
-                Package::Group groupEnum = static_cast<Package::Group>(enumFromString<Package>(group, "Group", "Group"));
+//                QString group = xml.readElementText();
+//                PackageDetails::Group groupEnum;
+////                groupEnum = static_cast<PackageDetails::Group>(enumFromString<Package>(group, "Group", "Group"));
 
-                if (groupEnum != Package::UnknownGroup &&
-                    (m_groups.contains(groupEnum))) {
-                    item->setData(Transaction::RoleSearchGroup, SearchRole);
-                    item->setData(groupEnum, GroupRole);
-                }
+//                if (groupEnum != PackageDetails::GroupUnknown &&
+//                    (m_groups.contains(groupEnum))) {
+//                    item->setData(Transaction::RoleSearchGroup, SearchRole);
+//                    item->setData(groupEnum, GroupRole);
+//                }
             }
         }
 
@@ -332,8 +335,8 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
         (!item->data(GroupRole).isNull() || !item->data(CategoryRole).isNull())) {
         if (item->data(CategoryRole).isNull()) {
             // Set the group name to get it translated
-            Package::Group group;
-            group = static_cast<Package::Group>(item->data(GroupRole).toUInt());
+            PackageDetails::Group group;
+            group = static_cast<PackageDetails::Group>(item->data(GroupRole).toUInt());
             item->setText(PkStrings::groups(group));
         }
         item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
@@ -417,57 +420,3 @@ QString CategoryModel::parseCategories(QXmlStreamReader &xml, QStandardItem *ite
     }
     return ret.join(' ' + join + ' ');
 }
-
-template<class T> int CategoryModel::enumFromString(const QString& str, const char* enumName, const QString& prefix)
-{
-    QString realName;
-    bool lastWasDash = false;
-    QChar buf;
-
-    for(int i = 0 ; i < str.length() ; ++i) {
-        buf = str[i].toLower();
-        if(i == 0 || lastWasDash) {
-            buf = buf.toUpper();
-        }
-
-        lastWasDash = false;
-        if(buf.toAscii() == '-') {
-            lastWasDash = true;
-        } else if(buf.toAscii() == '~') {
-            lastWasDash = true;
-            realName += "Not";
-        } else {
-            realName += buf;
-        }
-    };
-
-    if(!prefix.isNull())
-        realName = prefix + realName;
-
-    // Filter quirk
-    if(enumName == QString("Filter")) {
-        if(realName == QString("FilterNone"))
-            realName = "NoFilter";
-
-        if(realName == QString("FilterDevel") || realName == QString("FilterNotDevel"))
-            realName += "opment";
-    }
-
-    // Action quirk
-    if(enumName == QString("Action") && realName == QString("ActionUpdatePackage"))
-        realName = "ActionUpdatePackages";
-
-
-    int id = T::staticMetaObject.indexOfEnumerator(enumName);
-    QMetaEnum e = T::staticMetaObject.enumerator(id);
-    int enumValue = e.keyToValue(realName.toAscii().data());
-
-    if(enumValue == -1) {
-        enumValue = e.keyToValue(QString("Unknown").append(enumName).toAscii().data());
-        qDebug() << "enumFromString (" << enumName << ") : converted" << str << "to" << QString("Unknown").append(enumName) << ", enum value" << enumValue;
-    }
-    return enumValue;
-}
-
-
-#include "CategoryModel.moc"
