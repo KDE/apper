@@ -1,40 +1,73 @@
 [Global]
 IconName=applications-other
 Name=Apper
+Name[nl]=Apper
+Name[pt]=Apper
+Name[x-test]=xxApperxx
 Comment=Apper Notification
+Comment[nl]=Melding van Apper
+Comment[pt]=Notificação do Apper
+Comment[x-test]=xxApper Notificationxx
 
 [Event/ShowUpdates]
 Name=New updates available
+Name[nl]=Nieuwe zaken voor bijwerken beschikbaar
+Name[pt]=Estão disponíveis actualizações novas
+Name[x-test]=xxNew updates availablexx
 Action=Sound|Popup
 
 [Event/AutoInstallingUpdates]
 Name=Updates are being installed
+Name[nl]=Opwaarderingen worden geïnstalleerd
+Name[pt]=As actualizações estão a ser instaladas
+Name[x-test]=xxUpdates are being installedxx
 Action=Sound|Popup
 
 [Event/RestartRequired]
 Name=A System Restart is Required
+Name[nl]=Opnieuw starten van het systeem is nodig
+Name[pt]=É Necessário Reiniciar o Sistema
+Name[x-test]=xxA System Restart is Requiredxx
 Action=Sound|Popup
 
 [Event/TransactionFailed]
 Name=A transaction failed to complete successfully
+Name[nl]=Een transactie met succes afronden is mislukt
+Name[pt]=Não foi possível terminar com sucesso uma transacção
+Name[x-test]=xxA transaction failed to complete successfullyxx
 Action=Sound|Popup
 
 [Event/UpdatesComplete]
 Name=Updates finished installing
+Name[nl]=Het installeren bij bijwerken is gereed
+Name[pt]=As actualizações acabar de ser instaladas
+Name[x-test]=xxUpdates finished installingxx
 Action=Sound|Popup
 
 [Event/TransactionError]
 Name=A transaction error occurred
+Name[nl]=Er deed zich een fout voor in een transactie
+Name[pt]=Ocorreu um erro de transacção
+Name[x-test]=xxA transaction error occurredxx
 Action=Sound|Popup
 
 [Event/DistroUpgradeAvailable]
 Name=A distribution upgrade is available
+Name[nl]=Opwaardering van een distributie beschikbaar
+Name[pt]=Está disponível uma actualização da distribuição
+Name[x-test]=xxA distribution upgrade is availablexx
 Action=Sound|Popup
 
 [Event/DistroUpgradeFinished]
 Name=The distribution upgrade completed
+Name[nl]=Het opwaarderen van de distributie is gereed
+Name[pt]=A actualização da distribuição está completa
+Name[x-test]=xxThe distribution upgrade completedxx
 Action=Sound|Popup
 
 [Event/DistroUpgradeError]
 Name=The distribution upgrade completed with an error
+Name[nl]=Het opwaarderen van de distributie is beëindigd met een fout
+Name[pt]=A actualização da distribuição terminou com erros
+Name[x-test]=xxThe distribution upgrade completed with an errorxx
 Action=Sound|Popup

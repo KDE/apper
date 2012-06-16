@@ -7,5 +7,14 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper Settings
+Name[nl]=Apper-instellingen
+Name[pt]=Configuração do Apper
+Name[x-test]=xxApper Settingsxx
 GenericName=Software Management
+GenericName[nl]=Softwarebeheer
+GenericName[pt]=Gestão de Aplicações
+GenericName[x-test]=xxSoftware Managementxx
 Comment=Application to get and manage software
+Comment[nl]=Toepassing voor het verkrijgen en beheren van software
+Comment[pt]=Uma aplicação para obter e gerir aplicações
+Comment[x-test]=xxApplication to get and manage softwarexx

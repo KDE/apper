@@ -6,5 +6,11 @@ X-KDE-Library=apperd
 X-KDE-Kded-autoload=true
 
 Name=Apper Monitor
+Name[nl]=Apper-monitor
+Name[pt]=Monitor do Apper
+Name[x-test]=xxApper Monitorxx
 
 Comment=Watch transactions and Notify about Software Updates
+Comment[nl]=Bewaak transacties en meldt het bijwerken van software
+Comment[pt]=Segue as transacções e notifica as Actualizações de 'Software'
+Comment[x-test]=xxWatch transactions and Notify about Software Updatesxx

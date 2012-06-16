@@ -6,8 +6,17 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper
+Name[nl]=Apper
+Name[pt]=Apper
+Name[x-test]=xxApperxx
 GenericName=Software Management
+GenericName[nl]=Softwarebeheer
+GenericName[pt]=Gestão de Aplicações
+GenericName[x-test]=xxSoftware Managementxx
 Comment=Application to get and manage software
+Comment[nl]=Toepassing voor het verkrijgen en beheren van software
+Comment[pt]=Uma aplicação para obter e gerir aplicações
+Comment[x-test]=xxApplication to get and manage softwarexx
 
 Terminal=false
 Categories=Qt;KDE;System;Settings;PackageManager;

@@ -4,8 +4,17 @@ Icon=applications-other
 Exec=apper-appsetup %F
 
 Name=Listaller Package Installer
+Name[nl]=Installatieprogramma voor pakketten Listaller
+Name[pt]=Instalador de Pacotes Listaller
+Name[x-test]=xxListaller Package Installerxx
 GenericName=3rd-party software installer
+GenericName[nl]=Installatieprogramma voor software van derden
+GenericName[pt]=Instalador de aplicações de terceiros
+GenericName[x-test]=xx3rd-party software installerxx
 Comment=Tool to install new 3rd-party software
+Comment[nl]=Hulpmiddel voor het installeren van software van derden
+Comment[pt]=Uma ferramenta para instalar aplicações de terceiros
+Comment[x-test]=xxTool to install new 3rd-party softwarexx
 
 Categories=Qt;KDE;System;Settings;PackageManager;
 MimeType=application/x-installation;

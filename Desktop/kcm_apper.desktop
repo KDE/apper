@@ -11,7 +11,16 @@ X-KDE-System-Settings-Parent-Category=computer-administration
 X-KDE-System-Settings-Parent-Category-V2=system-administration
 
 Name=Software Management
+Name[nl]=Softwarebeheer
+Name[pt]=Gestão de Aplicações
+Name[x-test]=xxSoftware Managementxx
 
 Comment=Get, Remove and Update Software
+Comment[nl]=Software verkrijgen, verwijderen en bijwerken
+Comment[pt]=Obter, Remover e Actualizar Aplicações
+Comment[x-test]=xxGet, Remove and Update Softwarexx
 
 X-KDE-Keywords=install,uninstall,remove,software,applications,management,packages,packagekit,purge
+X-KDE-Keywords[nl]=install,installeren,uninstall,deïnstalleren,remove,verwijderen,software,applications,toepassingen,management,beheer,pakketten,pakketkit,purge,opruimen
+X-KDE-Keywords[pt]=instalar,desinstalar,remover,aplicação,aplicações,gestão,pacotes,packagekit,eliminar
+X-KDE-Keywords[x-test]=xxinstall,uninstall,remove,software,applications,management,packages,packagekit,purgexx
