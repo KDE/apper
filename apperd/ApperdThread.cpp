@@ -314,8 +314,8 @@ bool ApperdThread::isSystemReady(bool ignoreBattery, bool ignoreMobile) const
     // check how applications should behave (e.g. on battery power)
     if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
         kDebug() << "System is not ready, application should conserve resources";
-        // FIXME this always return true even on AC
-//        return false;
+        // This was fixed for KDElibs 4.8.5
+        return false;
     }
 
     // TODO it would be nice is Solid provided this
