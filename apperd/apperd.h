@@ -31,6 +31,9 @@ public:
     ApperD(QObject *parent, const QList<QVariant>&);
     ~ApperD();
 
+private slots:
+    void loadThread();
+
 private:
     ApperdThread *m_apperThread;
 };

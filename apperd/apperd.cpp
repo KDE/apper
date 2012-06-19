@@ -23,13 +23,16 @@
 
 #include <KGenericFactory>
 
+#include <QCoreApplication>
+
 K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperD>();)
 K_EXPORT_PLUGIN(ApperFactory("apperd"))
 
 ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
-    KDEDModule(parent)
+    KDEDModule(parent),
+    m_apperThread(0)
 {
-    m_apperThread = new ApperdThread;
+    QTimer::singleShot(0, this, SLOT(loadThread()));
 }
 
 ApperD::~ApperD()
@@ -37,4 +40,9 @@ ApperD::~ApperD()
     // delete the apper thread code, don't use delete later since it has moved
     // to the stopped thread
     delete m_apperThread;
+}
+
+void ApperD::loadThread()
+{
+    m_apperThread = new ApperdThread;
 }
