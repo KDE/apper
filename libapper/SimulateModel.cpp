@@ -26,9 +26,8 @@
 
 using namespace PackageKit;
 
-SimulateModel::SimulateModel(QObject *parent, QList<Package> skipPackages)
+SimulateModel::SimulateModel(QObject *parent)
 : QAbstractTableModel(parent),
-  m_skipPackages(skipPackages),
   m_currentInfo(Package::InfoUnknown)
 {
 //     setSortRole(Qt::DisplayRole);
@@ -144,6 +143,11 @@ QVariant SimulateModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
+void SimulateModel::setSkipPackages(const PackageList &skipPackages)
+{
+    m_skipPackages = skipPackages;
+}
+
 QStringList SimulateModel::newPackages() const
 {
     return m_newPackages;
@@ -152,6 +156,7 @@ QStringList SimulateModel::newPackages() const
 void SimulateModel::clear()
 {
     m_packages.clear();
+    m_skipPackages.clear();
     m_currentInfo = Package::InfoUnknown;
     reset();
 }

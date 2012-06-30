@@ -32,14 +32,14 @@ class KDE_EXPORT SimulateModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit SimulateModel(QObject *parent = 0,
-                              QList<Package> skipPackages = QList<Package>());
+    explicit SimulateModel(QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+    void setSkipPackages(const PackageList &skipPackages);
     QStringList newPackages() const;
     Package::Info currentInfo() const;
     void setCurrentInfo(Package::Info currentInfo);
@@ -50,8 +50,8 @@ public slots:
     void addPackage(const PackageKit::Package &package);
 
 private:
-    QHash<Package::Info, QList<Package> > m_packages;
-    QList<Package> m_skipPackages;
+    QHash<Package::Info, PackageList> m_packages;
+    PackageList m_skipPackages;
     QStringList m_newPackages;
     Package::Info m_currentInfo;
 };

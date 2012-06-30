@@ -10,7 +10,7 @@ include (MacroLibrary)
 option(DEBCONF_SUPPORT "Build Apper with debconf support" OFF)
 
 # Yum does not support this
-option(AUTOREMOVE "Build Apper with auto remove enabled" ON)
+option(AUTOREMOVE "Build Apper with auto remove enabled" OFF)
 set(HAVE_AUTOREMOVE ${AUTOREMOVE})
 message(STATUS "Building Apper with auto remove: " ${AUTOREMOVE})
 

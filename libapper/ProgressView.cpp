@@ -204,13 +204,12 @@ void ProgressView::rangeChanged(int min, int max)
 
 QStandardItem* ProgressView::findLastItem(const QString &packageId)
 {
-    QStandardItem *ret = 0;
     int rows = m_model->rowCount() - 1;
     for (int i = rows; i >= 0; --i) {
-        if (m_model->item(i)->data(RoleId).toString() == packageId) {
-            // Go on till the last we can find
-            ret = m_model->item(i);
+        QStandardItem *item = m_model->item(i);
+        if (item->data(RoleId).toString() == packageId) {
+            return item;
         }
     }
-    return ret;
+    return 0;
 }

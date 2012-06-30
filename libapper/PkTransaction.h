@@ -50,10 +50,10 @@ public:
     void setTransaction(Transaction *trans, Transaction::Role role);
     void hideCancelButton();
 
-    void installPackages(const QList<Package> &packages);
+    void installPackages(const PackageList &packages);
     void installFiles(const QStringList &files);
-    void removePackages(const QList<Package> &packages);
-    void updatePackages(const QList<Package> &packages);
+    void removePackages(const PackageList &packages);
+    void updatePackages(const PackageList &packages);
     void refreshCache(bool force = false);
 
     QString title() const;

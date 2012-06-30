@@ -105,8 +105,8 @@ void UpdateDetails::setPackage(const QString &packageId, Package::Info updateInf
 
     Package package(m_packageId);
     m_transaction = new Transaction(this);
-    connect(m_transaction, SIGNAL(package(PackageKit::Package)),
-            this, SLOT(updateDetail(PackageKit::Package)));
+    connect(m_transaction, SIGNAL(packageUpdateDetails(PackageKit::PackageUpdateDetails)),
+            this, SLOT(updateDetail(PackageKit::PackageUpdateDetails)));
     connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(display()));
     m_transaction->getUpdateDetail(package);
@@ -319,7 +319,7 @@ QString UpdateDetails::getLinkList(const QStringList &urls) const
         if (!ret.isEmpty()) {
             ret += "<br/>";
         }
-        ret += QString::fromUtf8(" \xE2\x80\xA2 <a href=\"") % url % QLatin1String("\"></a>");
+        ret += QString::fromUtf8(" \xE2\x80\xA2 <a href=\"") % url % QLatin1String("\">") % url % QLatin1String("</a>");
     }
     return ret;
 }

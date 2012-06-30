@@ -59,7 +59,7 @@ public:
     Transaction::Role role;
     Transaction::Role originalRole;
     Transaction::Error error;
-    QList<Package> packages;
+    PackageList packages;
     QStringList packagesToResolve;
     ApplicationLauncher *launcher;
     QStringList files;
@@ -86,7 +86,7 @@ PkTransaction::PkTransaction(QWidget *parent)
 
     // for sanity we are finished till some transaction is set
     d->finished = true;
-    d->simulateModel = 0;
+    d->simulateModel = new SimulateModel(this);
     d->launcher = 0;
     d->originalRole = Transaction::RoleUnknown;
     d->role = Transaction::RoleUnknown;
@@ -115,7 +115,6 @@ void PkTransaction::installFiles(const QStringList &files)
         d->files = files;
         d->flags = Transaction::TransactionFlagOnlyTrusted;
         d->flags |= Transaction::TransactionFlagSimulate;
-        d->simulateModel = new SimulateModel(this, d->packages);
 
         // Create the simulate transaction and it's model
         Transaction *trans = new Transaction(this);
@@ -130,14 +129,13 @@ void PkTransaction::installFiles(const QStringList &files)
     }
 }
 
-void PkTransaction::installPackages(const QList<Package> &packages)
+void PkTransaction::installPackages(const PackageList &packages)
 {
     if (Daemon::actions() & Transaction::RoleInstallPackages) {
         d->originalRole = Transaction::RoleInstallPackages;
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted;
         d->flags |= Transaction::TransactionFlagSimulate;
-        d->simulateModel = new SimulateModel(this, d->packages);
 
         // Create the depends transaction and it's model
         Transaction *trans = new Transaction(this);
@@ -152,7 +150,7 @@ void PkTransaction::installPackages(const QList<Package> &packages)
     }
 }
 
-void PkTransaction::removePackages(const QList<Package> &packages)
+void PkTransaction::removePackages(const PackageList &packages)
 {
     if (Daemon::actions() & Transaction::RoleRemovePackages) {
         d->originalRole = Transaction::RoleRemovePackages;
@@ -160,7 +158,6 @@ void PkTransaction::removePackages(const QList<Package> &packages)
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted;
         d->flags |= Transaction::TransactionFlagSimulate;
-        d->simulateModel = new SimulateModel(this, d->packages);
 
         // Create the requirements transaction and it's model
         Transaction *trans = new Transaction(this);
@@ -175,14 +172,13 @@ void PkTransaction::removePackages(const QList<Package> &packages)
     }
 }
 
-void PkTransaction::updatePackages(const QList<Package> &packages)
+void PkTransaction::updatePackages(const PackageList &packages)
 {
     if (Daemon::actions() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted;
         d->flags |= Transaction::TransactionFlagSimulate;
-        d->simulateModel = new SimulateModel(this, d->packages);
 
         Transaction *trans = new Transaction(this);
         setTransaction(trans, Transaction::RoleUpdatePackages);
@@ -308,13 +304,19 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
         emit titleChanged(PkStrings::action(role));
     }
 
-    // enable the Details button just on these roles
-    if (role == Transaction::RoleInstallPackages ||
-        role == Transaction::RoleInstallFiles ||
-        role == Transaction::RoleRemovePackages ||
-        role == Transaction::RoleUpdatePackages ||
-        role == Transaction::RoleUpdateSystem ||
-        role == Transaction::RoleRefreshCache) {
+    // Setup the simulate model if we are simulating
+    if (d->flags & Transaction::TransactionFlagSimulate) {
+        // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
+        d->simulateModel->clear();
+        d->simulateModel->setSkipPackages(d->packages);
+        connect(m_trans, SIGNAL(package(PackageKit::Package)),
+                d->simulateModel, SLOT(addPackage(PackageKit::Package)));
+    } else if (role == Transaction::RoleInstallPackages ||
+               role == Transaction::RoleInstallFiles ||
+               role == Transaction::RoleRemovePackages ||
+               role == Transaction::RoleUpdatePackages ||
+               role == Transaction::RoleUpdateSystem ||
+               role == Transaction::RoleRefreshCache) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         if (role == Transaction::RoleRefreshCache) {
             connect(m_trans, SIGNAL(repoDetail(QString,QString,bool)),
@@ -322,25 +324,11 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
             ui->progressView->handleRepo(true);
         } else {
             connect(m_trans, SIGNAL(package(PackageKit::Package)),
-                ui->progressView, SLOT(currentPackage(PackageKit::Package)));
+                    ui->progressView, SLOT(currentPackage(PackageKit::Package)));
             connect(m_trans, SIGNAL(ItemProgress(QString,uint,uint)),
                     ui->progressView, SLOT(itemProgress(QString,uint,uint)));
             ui->progressView->handleRepo(false);
         }
-
-        if (d->simulateModel) {
-            d->packagesToResolve.append(d->simulateModel->newPackages());
-            d->simulateModel->deleteLater();
-            d->simulateModel = 0;
-        }
-    } else if (d->flags & Transaction::TransactionFlagSimulate) {
-        // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
-        if (d->simulateModel == 0) {
-            d->simulateModel = new SimulateModel(this, d->packages);
-        }
-        d->simulateModel->clear();
-        connect(m_trans, SIGNAL(package(PackageKit::Package)),
-                d->simulateModel, SLOT(addPackage(PackageKit::Package)));
     }
 
     // sets the action icon to be the window icon
@@ -501,7 +489,7 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
                                             i18n("Installing unsigned software"));
         if (ret == KMessageBox::Yes) {
             // Set only trusted to false, to do as the user asked
-            d->flags &= Transaction::TransactionFlagOnlyTrusted;
+            d->flags ^= Transaction::TransactionFlagOnlyTrusted;
             requeueTransaction();
         } else {
             setExitStatus(Cancelled);
@@ -620,20 +608,21 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
     Requirements *requires = 0;
     m_trans = 0;
 
-    kDebug() << status << trans->role();
+    Transaction::Role role = trans->role();
+    kDebug() << status << role;
     d->finished = true;
     switch(status) {
     case Transaction::ExitSuccess :
-    {
-        Transaction::Role role = trans->role();
         ui->progressBar->setMaximum(100);
         ui->progressBar->setValue(100);
 
-        // If the simulate model exists we were simulating
-        if (d->simulateModel) {
+        // Check if we are just simulating
+        if (d->flags & Transaction::TransactionFlagSimulate) {
             // Disable the simulate flag
-            d->flags &= Transaction::TransactionFlagSimulate;
-            kDebug() << "We have a simulate model";
+            d->flags ^= Transaction::TransactionFlagSimulate;
+
+            kDebug() << "Simulate Finished";
+            d->packagesToResolve.append(d->simulateModel->newPackages());
             requires = new Requirements(d->simulateModel, this);
             connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
             if (requires->shouldShow()) {
@@ -677,64 +666,63 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             default:
                 break;
             }
-        }
+        } else {
+            KConfig config("apper");
+            KConfigGroup transactionGroup(&config, "Transaction");
+            bool showApp = transactionGroup.readEntry("ShowApplicationLauncher", true);
+            if (showApp &&
+                    !d->packagesToResolve.isEmpty() &&
+                    (role == Transaction::RoleInstallPackages ||
+                     role == Transaction::RoleInstallFiles ||
+                     role == Transaction::RoleRemovePackages ||
+                     role == Transaction::RoleUpdatePackages)) {
+                // When installing files or updates that involves new packages
+                // try to resolve the available packages at simulation time
+                // to maybe show the user the new applications that where installed
+                if (d->launcher == 0) {
+                    d->launcher = new ApplicationLauncher(this);
+                }
 
-        KConfig config("apper");
-        KConfigGroup transactionGroup(&config, "Transaction");
-        bool showApp = transactionGroup.readEntry("ShowApplicationLauncher", true);
-        if (showApp &&
-            !d->packagesToResolve.isEmpty() &&
-               (role == Transaction::RoleInstallPackages ||
-                role == Transaction::RoleInstallFiles ||
-                role == Transaction::RoleRemovePackages ||
-                role == Transaction::RoleUpdatePackages)) {
-            // When installing files or updates that involves new packages
-            // try to resolve the available packages at simulation time
-            // to maybe show the user the new applications that where installed
-            if (d->launcher == 0) {
-                d->launcher = new ApplicationLauncher(this);
+                Transaction *transaction = new Transaction(this);
+                connect(transaction, SIGNAL(package(PackageKit::Package)),
+                        d->launcher, SLOT(addPackage(PackageKit::Package)));
+                setTransaction(transaction, Transaction::RoleResolve);
+                transaction->resolve(d->packagesToResolve, Transaction::FilterInstalled);
+                if (!transaction->error()) {
+                    return; // avoid the exit code
+                }
+            } else if (showApp &&
+                       d->launcher &&
+                       !d->launcher->packages().isEmpty() &&
+                       role == Transaction::RoleResolve &&
+                       d->originalRole != Transaction::RoleUnknown) {
+                // Let's try to find some desktop files
+                Transaction *transaction = new Transaction(this);
+                connect(transaction, SIGNAL(files(PackageKit::Package,QStringList)),
+                        d->launcher, SLOT(files(PackageKit::Package,QStringList)));
+                setTransaction(transaction, Transaction::RoleGetFiles);
+                transaction->getFiles(d->launcher->packages());
+                if (!transaction->error()) {
+                    return; // avoid the exit code
+                }
+            } else if (showApp &&
+                       d->launcher &&
+                       d->launcher->hasApplications() &&
+                       role == Transaction::RoleGetFiles &&
+                       d->originalRole != Transaction::RoleUnknown) {
+                showDialog(d->launcher);
+                connect(d->launcher, SIGNAL(accepted()),
+                        this, SLOT(setExitStatus()));
+                return;
+            } else if (role == Transaction::RoleAcceptEula ||
+                       role == Transaction::RoleInstallSignature) {
+                kDebug() << "EULA or Signature accepted";
+                d->finished = false;
+                requeueTransaction();
+                return;
             }
-
-            Transaction *transaction = new Transaction(this);
-            connect(transaction, SIGNAL(package(PackageKit::Package)),
-                    d->launcher, SLOT(addPackage(PackageKit::Package)));
-            setTransaction(transaction, Transaction::RoleResolve);
-            transaction->resolve(d->packagesToResolve, Transaction::FilterInstalled);
-            if (!transaction->error()) {
-                return; // avoid the exit code
-            }
-        } else if (showApp &&
-                   d->launcher &&
-                   !d->launcher->packages().isEmpty() &&
-                   role == Transaction::RoleResolve &&
-                   d->originalRole != Transaction::RoleUnknown) {
-            // Let's try to find some desktop files
-            Transaction *transaction = new Transaction(this);
-            connect(transaction, SIGNAL(files(PackageKit::Package,QStringList)),
-                    d->launcher, SLOT(files(PackageKit::Package,QStringList)));
-            setTransaction(transaction, Transaction::RoleGetFiles);
-            transaction->getFiles(d->launcher->packages());
-            if (!transaction->error()) {
-                return; // avoid the exit code
-            }
-        } else if (showApp &&
-                   d->launcher &&
-                   d->launcher->hasApplications() &&
-                   role == Transaction::RoleGetFiles &&
-                   d->originalRole != Transaction::RoleUnknown) {
-            showDialog(d->launcher);
-            connect(d->launcher, SIGNAL(accepted()),
-                    this, SLOT(setExitStatus()));
-            return;
-        } else if (role == Transaction::RoleAcceptEula ||
-                   role == Transaction::RoleInstallSignature) {
-            kDebug() << "EULA or Signature accepted";
-            d->finished = false;
-            requeueTransaction();
-            return;
+            setExitStatus(Success);
         }
-        setExitStatus(Success);
-    }
         break;
     case Transaction::ExitCancelled :
         ui->progressBar->setMaximum(100);
