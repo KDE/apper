@@ -432,11 +432,19 @@ void PkTransaction::updateUi()
             d->busySeq->setSequence(sequence);
             d->busySeq->start();
         }
-    } else if (status == Transaction::StatusDownload && transaction->speed() != 0) {
+    } else if (status == Transaction::StatusDownload) {
         uint speed = transaction->speed();
-        if (speed) {
+        qulonglong downloadRemaining = transaction->downloadSizeRemaining();
+        if (speed != 0 && downloadRemaining != 0) {
+            ui->currentL->setText(i18n("Downloading packages at %1/s, %2 remaining",
+                                       KGlobal::locale()->formatByteSize(speed),
+                                       KGlobal::locale()->formatByteSize(downloadRemaining)));
+        } else if (speed != 0 && downloadRemaining == 0) {
             ui->currentL->setText(i18n("Downloading packages at %1/s",
                                          KGlobal::locale()->formatByteSize(speed)));
+        } else if (speed == 0 && downloadRemaining != 0) {
+            ui->currentL->setText(i18n("Downloading packages, %1 remaining",
+                                         KGlobal::locale()->formatByteSize(downloadRemaining)));
         }
     }
 
