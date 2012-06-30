@@ -51,7 +51,7 @@ public:
 public slots:
     void currentPackage(const PackageKit::Package &package);
     void currentRepo(const QString &repoId, const QString &description, bool enabled);
-    void itemProgress(const QString &id, uint percentage);
+    void itemProgress(const QString &id, uint status, uint percentage);
 
 private slots:
     void followBottom(int value);
@@ -65,7 +65,6 @@ private:
     TransactionDelegate *m_delegate;
     QStandardItemModel  *m_model;
     QScrollBar          *m_scrollBar;
-    QString              m_lastPackageId;
     bool                 m_keepScrollBarBottom;
 };
 

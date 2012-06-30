@@ -89,17 +89,16 @@ void ProgressView::currentRepo(const QString &repoId, const QString &description
     m_model->appendRow(item);
 }
 
-void ProgressView::itemProgress(const QString &id, uint percentage)
+void ProgressView::itemProgress(const QString &id, uint status, uint percentage)
 {
     QStandardItem *stdItem = findLastItem(id);
-    uint value = percentage;
     if (stdItem && !stdItem->data(RoleFinished).toBool()) {
         // if the progress is unknown (101), make it empty
-        if (value == 101) {
-            value = 0;
+        if (percentage == 101) {
+            percentage = 0;
         }
         if (stdItem->data(RoleProgress).toUInt() != percentage) {
-            stdItem->setData(value, RoleProgress);
+            stdItem->setData(percentage, RoleProgress);
         }
     }
 }
@@ -112,8 +111,6 @@ void ProgressView::clear()
 void ProgressView::currentPackage(const PackageKit::Package &p)
 {
     if (!p.id().isEmpty()) {
-        m_lastPackageId = p.id();
-
         QStandardItem *stdItem = findLastItem(p.id());
         // If there is alread some packages check to see if it has
         // finished, if the progress is 100 create a new item for the next task
@@ -128,7 +125,7 @@ void ProgressView::currentPackage(const PackageKit::Package &p)
                     stdItem->setText(PkStrings::infoPresent(p.info()));
                 }
             }
-        } else {
+        } else if (p.info() != Package::InfoFinished) {
             QList<QStandardItem *> items;
             // It's a new package create it and append it
             stdItem = new QStandardItem;

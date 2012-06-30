@@ -323,8 +323,8 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
         } else {
             connect(m_trans, SIGNAL(package(PackageKit::Package)),
                 ui->progressView, SLOT(currentPackage(PackageKit::Package)));
-            connect(m_trans, SIGNAL(ItemProgress(QString,uint)),
-                    ui->progressView, SLOT(itemProgress(QString,uint)));
+            connect(m_trans, SIGNAL(ItemProgress(QString,uint,uint)),
+                    ui->progressView, SLOT(itemProgress(QString,uint,uint)));
             ui->progressView->handleRepo(false);
         }
 
