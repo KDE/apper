@@ -123,7 +123,6 @@ void TransactionWatcher::setCurrentTransaction(const QDBusObjectPath &tid)
         role == Transaction::RoleInstallFiles    ||
         role == Transaction::RoleRemovePackages  ||
         role == Transaction::RoleUpdatePackages  ||
-        role == Transaction::RoleUpdateSystem    ||
         role == Transaction::RoleUpgradeSystem) {
         // AVOID showing messages and restart requires when
         // the user was just simulating an instalation

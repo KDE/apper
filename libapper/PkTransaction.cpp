@@ -315,7 +315,6 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
                role == Transaction::RoleInstallFiles ||
                role == Transaction::RoleRemovePackages ||
                role == Transaction::RoleUpdatePackages ||
-               role == Transaction::RoleUpdateSystem ||
                role == Transaction::RoleRefreshCache) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         if (role == Transaction::RoleRefreshCache) {

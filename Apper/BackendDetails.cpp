@@ -45,7 +45,6 @@ BackendDetails::BackendDetails(QWidget *parent)
     getUpdatesCB->setChecked(actions & Transaction::RoleGetUpdates);
     getDistroUpgradesCB->setChecked(actions & Transaction::RoleGetDistroUpgrades);
     refreshCacheCB->setChecked(actions & Transaction::RoleRefreshCache);
-    updateSystemCB->setChecked(actions & Transaction::RoleUpdateSystem);
     searchNameCB->setChecked(actions & Transaction::RoleSearchName);
     searchDetailsCB->setChecked(actions & Transaction::RoleSearchDetails);
     searchGroupCB->setChecked(actions & Transaction::RoleSearchGroup);

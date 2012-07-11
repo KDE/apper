@@ -203,7 +203,6 @@ QString PkIcons::actionIconName(Transaction::Role role)
     case Transaction::RoleSearchGroup             : return "search-package";
     case Transaction::RoleSearchName              : return "search-package";
     case Transaction::RoleUpdatePackages          : return "package-update";
-    case Transaction::RoleUpdateSystem            : return "distro-upgrade";//TODO
     case Transaction::RoleUpgradeSystem           : return "distro-upgrade";//TODO
     case Transaction::RoleWhatProvides            : return "search-package";
     case Transaction::RoleRepairSystem            : return "package-rollback";

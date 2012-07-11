@@ -196,8 +196,6 @@ QString PkStrings::action(Transaction::Role action)
         return i18nc("The role of the transaction, in present tense", "Refreshing package cache");
     case Transaction::RoleUpdatePackages :
         return i18nc("The role of the transaction, in present tense", "Updating packages");
-    case Transaction::RoleUpdateSystem :
-        return i18nc("The role of the transaction, in present tense", "Updating system");
     case Transaction::RoleCancel :
         return i18nc("The role of the transaction, in present tense", "Canceling");
     case Transaction::RoleGetRepoList :
@@ -268,8 +266,6 @@ QString PkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Refreshed package cache");
     case Transaction::RoleUpdatePackages :
         return i18nc("The role of the transaction, in past tense", "Updated packages");
-    case Transaction::RoleUpdateSystem :
-        return i18nc("The role of the transaction, in past tense", "Updated system");
     case Transaction::RoleCancel :
         return i18nc("The role of the transaction, in past tense", "Canceled");
     case Transaction::RoleGetRepoList :
