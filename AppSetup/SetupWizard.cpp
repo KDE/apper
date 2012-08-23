@@ -215,7 +215,7 @@ bool SetupWizard::constructWizardLayout()
     secWgLayout->addWidget(pix);
 
     QLabel *secInfo = new QLabel(detailsP);
-    secInfo->setText(listaller_security_level_to_string(secLev));
+    secInfo->setText(QString::fromUtf8(listaller_security_level_to_string(secLev)));
     secWgLayout->addWidget(secInfo);
 
     secWgLayout->addStretch();
