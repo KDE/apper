@@ -43,8 +43,8 @@ public:
     SetupWizardPrivate()
         : liSetup(NULL)
     {
-        // Create a new Listaller settings provider
-        liConf = listaller_settings_new (false);
+        // Create new Listaller configuration
+        liConf = listaller_config_new (false);
         PAGE_COUNT = -1;
     }
 
@@ -58,7 +58,7 @@ public:
     int PAGE_COUNT;
 
     // Listaller structures
-    ListallerSettings *liConf;
+    ListallerConfig *liConf;
     ListallerSetup *liSetup;
     ListallerAppItem *appID;
     ListallerIPKPackSecurity *packSecurity;
@@ -67,8 +67,7 @@ public:
     InfoWidget *infoPage;
     SimplePage *execPage;
     QCheckBox *sharedInstallCb;
-    QProgressBar *mainProgressBar;
-    QProgressBar *subProgressBar;
+    QProgressBar *progressBar;
 };
 
 void on_lisetup_message (GObject *sender, ListallerMessageItem *message, SetupWizard *self)
@@ -100,7 +99,7 @@ void on_lisetup_status_changed (GObject *sender, ListallerStatusItem *status, Se
 
 void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWizard *self)
 {
-    Q_UNUSED(*sender);
+    Q_UNUSED(sender);
     SetupWizardPrivate *d = self->getPriv();
 
     d->infoPage->reset();
@@ -113,19 +112,28 @@ void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWiz
     self->setCurrentPage(d->infoPage);
 }
 
-void on_lisetup_progress_changed (GObject *sender, int progress, int subProgress, SetupWizard *self)
+void on_lisetup_error_code_simple (GObject *sender, ListallerErrorItem *error, SetupWizard *self)
+{
+    Q_UNUSED(sender);
+
+    KMessageBox::error(self,
+                       QString::fromUtf8(listaller_error_item_get_details(error)),
+                       i18n("An error occurred"));
+}
+
+void on_lisetup_progress_changed (GObject *sender, int progress, SetupWizard *self)
 {
     Q_UNUSED(sender);
     SetupWizardPrivate *d = self->getPriv();
 
-    d->mainProgressBar->setValue(progress);
-    d->subProgressBar->setValue(subProgress);
+    d->progressBar->setValue(progress);
 }
 
 SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
     : KDialog (parent),
       d(new SetupWizardPrivate()),
-      ui(new Ui::SetupWizard)
+      ui(new Ui::SetupWizard),
+      m_ipkFName(ipkFName)
 {
     ui->setupUi(KDialog::mainWidget());
     setAttribute(Qt::WA_DeleteOnClose);
@@ -149,25 +157,6 @@ SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
     KConfig config("apper");
     KConfigGroup configGroup(&config, "AppInstaller");
     restoreDialogSize(configGroup);
-
-    // Create a new Listaller application setup instance
-    d->liSetup = listaller_setup_new (ipkFName.toUtf8(), d->liConf);
-    g_signal_connect (d->liSetup, "message", (GCallback) on_lisetup_message, this);
-    g_signal_connect (d->liSetup, "status-changed", (GCallback) on_lisetup_status_changed, this);
-    g_signal_connect (d->liSetup, "progress-changed", (GCallback) on_lisetup_progress_changed, this);
-    g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code, this);
-
-    // Create info page to notify about errors
-    d->infoPage = new InfoWidget(this);
-    d->infoPage->setWindowTitle("Information");
-    ui->stackedWidget->addWidget(d->infoPage);
-
-    // Initialize the setup, required to have an AppItem present
-    bool ret = initialize();
-
-    // Build layout of our setup wizard
-    if (ret)
-	constructWizardLayout();
 }
 
 SetupWizard::~SetupWizard()
@@ -258,11 +247,9 @@ bool SetupWizard::constructWizardLayout()
     d->execPage = new SimplePage(this);
     d->execPage->setTitle(i18n("Running installation"));
     d->execPage->setDescription(i18n("Installing %1...", appName));
-    d->mainProgressBar = new QProgressBar(d->execPage);
-    d->mainProgressBar->setMinimumHeight(40);
-    d->subProgressBar = new QProgressBar(d->execPage);
-    d->execPage->addWidget(d->mainProgressBar);
-    d->execPage->addWidget(d->subProgressBar);
+    d->progressBar = new QProgressBar(d->execPage);
+    d->progressBar->setMinimumHeight(40);
+    d->execPage->addWidget(d->progressBar);
     ui->stackedWidget->addWidget(d->execPage);
 
     d->PAGE_COUNT = 5;
@@ -344,11 +331,39 @@ void SetupWizard::slotButtonClicked(int button)
 bool SetupWizard::initialize()
 {
     bool ret;
+
+    // Create a new Listaller application setup instance
+    d->liSetup = listaller_setup_new (m_ipkFName.toUtf8(), d->liConf);
+    // Only connect to simple error handling at first
+    uint signal_error;
+    signal_error = g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code_simple, this);
+
+    // Create info page to notify about errors
+    d->infoPage = new InfoWidget(this);
+    d->infoPage->setWindowTitle("Information");
+    ui->stackedWidget->addWidget(d->infoPage);
+
+    // Initialize the setup, required to have an AppItem present
     ret = listaller_setup_initialize(d->liSetup);
     if (ret) {
         d->appID = listaller_setup_get_current_application(d->liSetup);
         d->packSecurity = listaller_setup_get_security_info(d->liSetup);
     }
+    if (!ret)
+        return false;
+
+    // Disconnect the simple error handler
+    // (we can use the bigger error dialog then, because Setup is initialized and UI constructed)
+    g_signal_handler_disconnect (d->liSetup, signal_error);
+    // Now connect all signals
+    g_signal_connect (d->liSetup, "message", (GCallback) on_lisetup_message, this);
+    g_signal_connect (d->liSetup, "status-changed", (GCallback) on_lisetup_status_changed, this);
+    g_signal_connect (d->liSetup, "progress-changed", (GCallback) on_lisetup_progress_changed, this);
+    g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code, this);
+    // TODO: Handle item-progress too
+
+    // Build layout of our setup wizard
+    constructWizardLayout();
 
     return ret;
 }
@@ -370,7 +385,7 @@ void SetupWizard::sharedInstallCbToggled(bool shared)
             return;
         }
     }
-    listaller_settings_set_sumode(d->liConf, shared);
+    listaller_config_set_sumode(d->liConf, shared);
 }
 
 void SetupWizard::updatePallete()

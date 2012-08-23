@@ -78,7 +78,11 @@ int main(int argc, char** argv)
     }
 
     // Create & run the setup wizard
+    bool ret;
     SetupWizard *wizard = new SetupWizard(fname);
+    ret = wizard->initialize();
+    if (!ret)
+        return 4;
     wizard->show();
     return app.exec();
 }

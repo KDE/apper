@@ -57,6 +57,7 @@ private:
 
     SetupWizardPrivate *const d;
     Ui::SetupWizard *ui;
+    QString m_ipkFName;
 };
 
 #endif // SetupWizard_H
