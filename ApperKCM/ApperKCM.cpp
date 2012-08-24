@@ -18,6 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
+#include <AppStream/AppStreamDb.h>
+
 #include "ApperKCM.h"
 
 #include <config.h>
@@ -26,13 +28,6 @@
 #include <KAboutData>
 
 #include <version.h>
-
-#include "FiltersMenu.h"
-#include "BrowseView.h"
-#include "CategoryModel.h"
-#include "TransactionHistory.h"
-#include "Settings/Settings.h"
-#include "Updater/Updater.h"
 
 #include <KLocale>
 #include <KStandardDirs>
@@ -45,11 +40,16 @@
 #include <ChangesDelegate.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
-#include <AppInstall.h>
 
 #include <KDebug>
-
 #include <Daemon>
+
+#include "FiltersMenu.h"
+#include "BrowseView.h"
+#include "CategoryModel.h"
+#include "TransactionHistory.h"
+#include "Settings/Settings.h"
+#include "Updater/Updater.h"
 
 #define BAR_SEARCH   0
 #define BAR_UPDATE   1
@@ -624,12 +624,12 @@ void ApperKCM::search()
             m_searchTransaction->searchGroups(m_searchGroup, m_filtersMenu->filters());
         } else {
             browseView->setParentCategory(m_searchParentCategory);
-#ifndef HAVE_APPINSTALL
+#ifndef HAVE_APPSTREAM
             if (m_searchGroupCategory.startsWith('@') ||
                 m_searchGroupCategory.startsWith(QLatin1String("repo:"))) {
                 m_searchTransaction->searchGroup(m_searchGroupCategory, m_filtersMenu->filters());
             }
-#endif //HAVE_APPINSTALL
+#endif
             // else the transaction is useless
         }
         break;
@@ -642,7 +642,7 @@ void ApperKCM::search()
         break;
     case Transaction::RoleResolve:
     {
-        QStringList packages = AppInstall::instance()->pkgNamesFromWhere(m_searchString);
+        QStringList packages = AppStreamDb::instance()->findPkgNames(m_searchString);
         if (!packages.isEmpty()) {
             browseView->setParentCategory(m_searchParentCategory);
             // WARNING the resolve might fail if the backend

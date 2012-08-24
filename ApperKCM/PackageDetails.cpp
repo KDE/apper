@@ -18,14 +18,11 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "PackageDetails.h"
-
-#include "ScreenShotViewer.h"
+#include <AppStream/AppStreamDb.h>
 
 #include <PackageModel.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
-#include <AppInstall.h>
 
 #include <KMessageBox>
 
@@ -46,6 +43,9 @@
 #include <KDebug>
 
 #include <Daemon>
+
+#include "PackageDetails.h"
+#include "ScreenShotViewer.h"
 
 #include "GraphicsOpacityDropShadowEffect.h"
 
@@ -255,7 +255,7 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_currentIcon       = PkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
     m_appName           = index.data(PackageModel::NameRole).toString();
 
-    m_currentScreenshot = AppInstall::instance()->thumbnail(m_package.name());
+    m_currentScreenshot = AppStreamDb::instance()->thumbnail(m_package.name());
     if (!m_currentScreenshot.isEmpty()) {
         if (m_screenshotPath.contains(m_currentScreenshot)) {
             display();
@@ -281,7 +281,7 @@ void PackageDetails::setPackage(const QModelIndex &index)
 void PackageDetails::on_screenshotL_clicked()
 {
     QString screenshot;
-    screenshot = AppInstall::instance()->screenshot(m_package.name());
+    screenshot = AppStreamDb::instance()->screenshot(m_package.name());
     if (screenshot.isEmpty()) {
         return;
     }

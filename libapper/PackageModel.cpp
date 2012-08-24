@@ -22,9 +22,9 @@
 
 #include <config.h>
 
-#include "PackageModel.h"
+#include <AppStream/AppStreamDb.h>
 
-#include <AppInstall.h>
+#include "PackageModel.h"
 #include <PkStrings.h>
 
 #include <QPainter>
@@ -39,11 +39,6 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #endif
-
-#define APP_NAME    0
-#define APP_SUMMARY 1
-#define APP_ICON    2
-#define APP_ID      3
 
 #define ICON_SIZE 22
 #define OVERLAY_SIZE 16
@@ -66,28 +61,28 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
         return;
     }
 
-#ifdef HAVE_APPINSTALL
+#ifdef HAVE_APPSTREAM
     QList<QStringList> data;
     if (!m_checkable) {
-        data = AppInstall::instance()->applications(package.name());
+        data = AppStreamDb::instance()->applications(package.name());
 
         foreach (const QStringList &list, data) {
             InternalPackage iPackage;
             iPackage.isPackage   = false;
-            iPackage.name        = list.at(AppInstall::AppName);
+            iPackage.name        = list.at(AppStreamDb::AppName);
             if (iPackage.name.isEmpty()) {
                 iPackage.name = package.name();
             }
-            iPackage.summary     = list.at(AppInstall::AppSummary);
+            iPackage.summary     = list.at(AppStreamDb::AppSummary);
             if (iPackage.summary.isEmpty()) {
                 iPackage.summary = package.summary();
             }
-            iPackage.icon        = list.at(AppInstall::AppIcon);
+            iPackage.icon        = list.at(AppStreamDb::AppIcon);
             iPackage.version     = package.version();
             iPackage.arch        = package.arch();
             iPackage.repo        = package.data();
             iPackage.id          = package.id();
-            iPackage.appId       = list.at(AppInstall::AppId);
+            iPackage.appId       = list.at(AppStreamDb::AppId);
             iPackage.info        = package.info();
             iPackage.size        = 0;
 
@@ -99,7 +94,7 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
     }
 
     if (data.isEmpty()) {
-#endif //HAVE_APPINSTALL
+#endif //HAVE_APPSTREAM
 
         InternalPackage iPackage;
         iPackage.name    = package.name();
@@ -111,11 +106,11 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
         iPackage.info    = package.info();
         iPackage.size    = 0;
 
-#ifdef HAVE_APPINSTALL
-        iPackage.icon = AppInstall::instance()->genericIcon(package.name());
+#ifdef HAVE_APPSTREAM
+        iPackage.icon = AppStreamDb::instance()->genericIcon(package.name());
         if (m_checkable) {
             // in case of updates model only check if it's an app
-            data = AppInstall::instance()->applications(package.name());
+            data = AppStreamDb::instance()->applications(package.name());
             if (!data.isEmpty() || !package.iconPath().isEmpty()) {
                 iPackage.isPackage = false;
             } else {
@@ -142,16 +137,16 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
                 }
             }
         }
-#endif //HAVE_APPINSTALL
+#endif // HAVE_APPSTREAM
 
         if (selected) {
             checkPackage(iPackage, false);
         }
         m_packages.append(iPackage);
 
-#ifdef HAVE_APPINSTALL
+#ifdef HAVE_APPSTREAM
     }
-#endif //HAVE_APPINSTALL
+#endif // HAVE_APPSTREAM
 }
 
 void PackageModel::addPackages(const PackageList &packages,

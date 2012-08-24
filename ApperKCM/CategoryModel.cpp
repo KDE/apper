@@ -62,7 +62,7 @@ CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *pare
     item->setIcon(KIcon("system-software-update"));
     appendRow(item);
 
-#ifdef HAVE_APPINSTALL
+#ifdef HAVE_APPSTREAM
     // Get the groups
     m_groups = Daemon::groups();
     fillWithServiceGroups();
@@ -96,7 +96,7 @@ CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *pare
     } else {
         fillWithStandardGroups();
     }
-#endif //HAVE_APPINSTALL
+#endif //HAVE_APPSTREAM
     QTimer::singleShot(0, this, SIGNAL(finished()));
 }
 

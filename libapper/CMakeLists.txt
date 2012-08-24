@@ -8,8 +8,13 @@ ELSE(CMAKE_SIZEOF_VOID_P EQUAL 4)
    MESSAGE(STATUS "Apper detected that you use a 64 bit processor. Added -fPIC to the CXX_FLAGS.")
 ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
 
+if(APPSTREAM)
+    find_package(Xapian 1.2 REQUIRED)
+    add_definitions("-fexceptions")
+endif()
+
 set(libapper_SRCS
-    AppInstall.cpp
+    AppStream/AppStreamDb.cpp
     PkIcons.cpp
     PkStrings.cpp
     ApplicationLauncher.cpp
@@ -46,6 +51,7 @@ target_link_libraries(apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${QPACKAGEKIT2_LIBRARIES}
+    ${XAPIAN_LIBRARIES}
 )
 
 install(TARGETS apper DESTINATION ${LIB_INSTALL_DIR}/apper)

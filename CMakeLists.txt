@@ -14,28 +14,15 @@ option(AUTOREMOVE "Build Apper with auto remove enabled" OFF)
 set(HAVE_AUTOREMOVE ${AUTOREMOVE})
 message(STATUS "Building Apper with auto remove: " ${AUTOREMOVE})
 
-# App Install, only Debian based support this for now
-option(APPINSTALL "Build Apper with app install" OFF)
-set(HAVE_APPINSTALL ${APPINSTALL})
-message(STATUS "Building Apper with app install: " ${APPINSTALL})
+# AppStream application management support
+option(APPSTREAM "Build Apper with AppStream support" OFF)
+set(HAVE_APPSTREAM ${APPSTREAM})
+message(STATUS "Building Apper with AppStream support: " ${APPSTREAM})
 
 # Enable support for Listaller cross-distro application installer
 option(LISTALLER "Build Apper with app install" OFF)
-set(HAVE_LISTALLER ${APPINSTALL})
-message(STATUS "Building Apper with Listaller modules: " ${HAVE_LISTALLER})
-
-if (HAVE_APPINSTALL)
-    # path to the sqlite app-install db
-    set(AI_DB_PATH "${CMAKE_INSTALL_PREFIX}/share/app-install/desktop.db"
-        CACHE STRING "App Install database path")
-    message(STATUS "App Install database path: " ${AI_DB_PATH})
-
-    # path to the categories.xml menus
-    set(AI_CATEGORIES_PATH "${CMAKE_INSTALL_PREFIX}/share/app-install"
-        CACHE STRING "App Install categories path")
-    message(STATUS "App Install categories path: " ${AI_CATEGORIES_PATH})
-    install(FILES categories.xml DESTINATION ${AI_CATEGORIES_PATH})
-endif (HAVE_APPINSTALL)
+set(HAVE_LISTALLER ${LISTALLER})
+message(STATUS "Building Apper with Listaller modules: " ${LISTALLER})
 
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
