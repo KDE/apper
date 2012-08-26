@@ -43,8 +43,6 @@ public:
     SetupWizardPrivate()
         : liSetup(NULL)
     {
-        // Create new Listaller configuration
-        liConf = listaller_config_new (false);
         PAGE_COUNT = -1;
     }
 
@@ -52,13 +50,11 @@ public:
     {
         if (liSetup != NULL)
             g_object_unref (liSetup);
-        g_object_unref (liConf);
     }
 
     int PAGE_COUNT;
 
     // Listaller structures
-    ListallerConfig *liConf;
     ListallerSetup *liSetup;
     ListallerAppItem *appID;
     ListallerIPKPackSecurity *packSecurity;
@@ -218,10 +214,21 @@ bool SetupWizard::constructWizardLayout()
     secInfo->setText(QString::fromUtf8(listaller_security_level_to_string(secLev)));
     secWgLayout->addWidget(secInfo);
 
+    // Install mode select checkbox
     secWgLayout->addStretch();
     detailsP->addWidget(securityWidget);
     d->sharedInstallCb = new QCheckBox(detailsP);
-    d->sharedInstallCb->setText(i18n("Install for all users (as root)"));
+    d->sharedInstallCb->setText(i18n("Install for all users"));
+
+    // Check if current package allows shared installations (if not disable the checkbox)
+    ListallerIPKInstallMode modes = listaller_setup_supported_install_modes (d->liSetup);
+    if (listaller_setup_get_install_mode (d->liSetup) == LISTALLER_IPK_INSTALL_MODE_SHARED)
+        d->sharedInstallCb->setChecked(true);
+    if (listaller_ipk_install_mode_is_all_set(modes, LISTALLER_IPK_INSTALL_MODE_PRIVATE))
+        d->sharedInstallCb->setEnabled(true);
+    else
+        d->sharedInstallCb->setEnabled(false);
+
     connect(d->sharedInstallCb, SIGNAL(toggled(bool)), this, SLOT(sharedInstallCbToggled(bool)));
     detailsP->addWidget(d->sharedInstallCb);
     ui->stackedWidget->addWidget(detailsP);
@@ -317,6 +324,8 @@ void SetupWizard::slotButtonClicked(int button)
         int index = ui->stackedWidget->currentIndex();
         if (index > 1) {
             index--;
+            // Make sure go-forward button is enabled
+            enableButton(KDialog::Ok, true);
             ui->stackedWidget->setCurrentIndex(index);
             if (index == 1)
                 enableButton(KDialog::User1, false);
@@ -333,7 +342,7 @@ bool SetupWizard::initialize()
     bool ret;
 
     // Create a new Listaller application setup instance
-    d->liSetup = listaller_setup_new (m_ipkFName.toUtf8(), d->liConf);
+    d->liSetup = listaller_setup_new (m_ipkFName.toUtf8());
     // Only connect to simple error handling at first
     uint signal_error;
     signal_error = g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code_simple, this);
@@ -385,7 +394,10 @@ void SetupWizard::sharedInstallCbToggled(bool shared)
             return;
         }
     }
-    listaller_config_set_sumode(d->liConf, shared);
+    if (shared)
+        listaller_setup_set_install_mode (d->liSetup, LISTALLER_IPK_INSTALL_MODE_SHARED);
+    else
+        listaller_setup_set_install_mode (d->liSetup, LISTALLER_IPK_INSTALL_MODE_PRIVATE);
 }
 
 void SetupWizard::updatePallete()
