@@ -22,11 +22,14 @@
 #ifndef APPSTREAMDB_H
 #define APPSTREAMDB_H
 
-#include <xapian.h>
 #include <QObject>
 #include <QHash>
 
 #include <kdemacros.h>
+
+#undef slots
+#include <xapian.h>
+#define slots
 
 class KDE_EXPORT AppStreamDb : public QObject {
     public:

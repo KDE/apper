@@ -18,8 +18,6 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include <AppStream/AppStreamDb.h>
-
 #include "ApperKCM.h"
 
 #include <config.h>
@@ -40,6 +38,7 @@
 #include <ChangesDelegate.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
+#include <AppStream/AppStreamDb.h>
 
 #include <KDebug>
 #include <Daemon>

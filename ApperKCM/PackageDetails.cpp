@@ -18,8 +18,6 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include <AppStream/AppStreamDb.h>
-
 #include <PackageModel.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
@@ -46,6 +44,7 @@
 
 #include "PackageDetails.h"
 #include "ScreenShotViewer.h"
+#include <AppStream/AppStreamDb.h>
 
 #include "GraphicsOpacityDropShadowEffect.h"
 

@@ -22,8 +22,6 @@
 
 #include <config.h>
 
-#include <AppStream/AppStreamDb.h>
-
 #include "PackageModel.h"
 #include <PkStrings.h>
 
@@ -34,6 +32,7 @@
 #include <PkIcons.h>
 #include <KLocale>
 #include <KCategorizedSortFilterProxyModel>
+#include <AppStream/AppStreamDb.h>
 
 #ifndef HAVE_APPINSTALL
 #include <QSqlDatabase>
