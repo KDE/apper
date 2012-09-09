@@ -70,8 +70,7 @@ Comment[x-test]=xxTool to install new 3rd-party softwarexx
 Comment[zh_TW]=安裝新的第三方軟體的工具
 
 Categories=Qt;KDE;System;Settings;PackageManager;
-MimeType=application/x-installation;
+MimeType=application/x-app-package;
 StartupNotify=true
 NoDisplay=true
 X-Publisher=KDE Project
-X-AppVersion=0.4
