@@ -57,7 +57,7 @@ public:
     // Listaller structures
     ListallerSetup *liSetup;
     ListallerAppItem *appID;
-    ListallerIPKPackSecurity *packSecurity;
+    ListallerIPKSecurityInfo *secInfo;
 
     // UI components
     InfoWidget *infoPage;
@@ -197,7 +197,7 @@ bool SetupWizard::constructWizardLayout()
     securityWidget->setLayout(secWgLayout);
     QLabel *pix = new QLabel(detailsP);
 
-    ListallerSecurityLevel secLev = listaller_ipk_pack_security_get_level(d->packSecurity);
+    ListallerSecurityLevel secLev = listaller_ipk_security_info_get_level(d->secInfo);
     if (secLev == LISTALLER_SECURITY_LEVEL_HIGH)
         pix->setPixmap(KIcon("security-high").pixmap (32, 32));
     else if (secLev == LISTALLER_SECURITY_LEVEL_MEDIUM)
@@ -207,12 +207,20 @@ bool SetupWizard::constructWizardLayout()
     else if (secLev == LISTALLER_SECURITY_LEVEL_DANGEROUS)
         pix->setPixmap(KIcon("security-low").pixmap (32, 32));
     else
-	pix->setPixmap(KIcon("task-reject").pixmap (32, 32));
+        pix->setPixmap(KIcon("task-reject").pixmap (32, 32));
     secWgLayout->addWidget(pix);
 
     QLabel *secInfo = new QLabel(detailsP);
-    secInfo->setText(QString::fromUtf8(listaller_ipk_pack_security_get_level_as_string(d->packSecurity)));
+    secInfo->setText(QString::fromUtf8(listaller_ipk_security_info_get_level_as_string(d->secInfo)));
     secWgLayout->addWidget(secInfo);
+
+    QPushButton *infoBtn = new QPushButton (detailsP);
+    infoBtn->setIcon(KIcon("dialog-information"));
+    infoBtn->setFlat(true);
+    infoBtn->setMinimumWidth(16);
+    infoBtn->setMinimumHeight(16);
+    connect(infoBtn, SIGNAL(clicked()), this, SLOT(securityInfoBtnClicked()));
+    secWgLayout->addWidget(infoBtn);
 
     // Install mode select checkbox
     secWgLayout->addStretch();
@@ -356,7 +364,7 @@ bool SetupWizard::initialize()
     ret = listaller_setup_initialize(d->liSetup);
     if (ret) {
         d->appID = listaller_setup_get_current_application(d->liSetup);
-        d->packSecurity = listaller_setup_get_security_info(d->liSetup);
+        d->secInfo = listaller_setup_get_security_info(d->liSetup);
     }
     if (!ret)
         return false;
@@ -398,6 +406,20 @@ void SetupWizard::sharedInstallCbToggled(bool shared)
         listaller_setup_set_install_mode (d->liSetup, LISTALLER_IPK_INSTALL_MODE_SHARED);
     else
         listaller_setup_set_install_mode (d->liSetup, LISTALLER_IPK_INSTALL_MODE_PRIVATE);
+}
+
+void SetupWizard::securityInfoBtnClicked()
+{
+    // fix all caracters in user-names string to display it
+    QString userNames = QString::fromUtf8(listaller_ipk_security_info_get_user_names(d->secInfo)).replace ('<', '[').replace('>', ']').replace('\n', "<br>");
+
+    QString infoText = i18n("This package has the following security level: <b>%1</b>", QString::fromUtf8(listaller_ipk_security_info_get_level_as_string(d->secInfo)));
+    infoText += "<br>";
+    infoText += i18n("It was signed with a key belonging to these user-ids: %1", "<br>" + userNames);
+    infoText += "<br>";
+    // TODO: Add the remaining infotmation too
+
+    KMessageBox::information(this, infoText, i18n("Security hints"));
 }
 
 void SetupWizard::updatePallete()
