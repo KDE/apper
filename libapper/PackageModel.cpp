@@ -32,7 +32,10 @@
 #include <PkIcons.h>
 #include <KLocale>
 #include <KCategorizedSortFilterProxyModel>
+
+#ifdef HAVE_APPSTREAM
 #include <AppStream/AppStreamDb.h>
+#endif
 
 #ifndef HAVE_APPINSTALL
 #include <QSqlDatabase>
