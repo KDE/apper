@@ -44,7 +44,10 @@
 
 #include "PackageDetails.h"
 #include "ScreenShotViewer.h"
+
+#ifdef HAVE_APPSTREAM
 #include <AppStream/AppStreamDb.h>
+#endif
 
 #include "GraphicsOpacityDropShadowEffect.h"
 
@@ -254,7 +257,9 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_currentIcon       = PkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
     m_appName           = index.data(PackageModel::NameRole).toString();
 
+#ifdef HAVE_APPSTREAM
     m_currentScreenshot = AppStreamDb::instance()->thumbnail(m_package.name());
+#endif
     if (!m_currentScreenshot.isEmpty()) {
         if (m_screenshotPath.contains(m_currentScreenshot)) {
             display();
@@ -279,14 +284,20 @@ void PackageDetails::setPackage(const QModelIndex &index)
 
 void PackageDetails::on_screenshotL_clicked()
 {
+#ifndef HAVE_APPSTREAM
+    return;
+#else
     QString screenshot;
+
     screenshot = AppStreamDb::instance()->screenshot(m_package.name());
     if (screenshot.isEmpty()) {
         return;
     }
+
     ScreenShotViewer *view = new ScreenShotViewer(screenshot);
     view->setWindowTitle(m_appName);
     view->show();
+#endif
 }
 
 void PackageDetails::hidePackageVersion(bool hide)

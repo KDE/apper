@@ -8,13 +8,7 @@ ELSE(CMAKE_SIZEOF_VOID_P EQUAL 4)
    MESSAGE(STATUS "Apper detected that you use a 64 bit processor. Added -fPIC to the CXX_FLAGS.")
 ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
 
-if(APPSTREAM)
-    find_package(Xapian 1.2 REQUIRED)
-    add_definitions("-fexceptions")
-endif()
-
 set(libapper_SRCS
-    AppStream/AppStreamDb.cpp
     PkIcons.cpp
     PkStrings.cpp
     ApplicationLauncher.cpp
@@ -35,6 +29,13 @@ set(libapper_SRCS
     CategorizedView.cpp
     InfoWidget.cpp
 )
+
+if(APPSTREAM)
+    find_package(Xapian 1.2 REQUIRED)
+    add_definitions("-fexceptions")
+
+    set(libapper_SRCS ${libapper_SRCS} AppStream/AppStreamDb.cpp)
+endif()
 
 kde4_add_ui_files(libapper_SRCS
     ApplicationLauncher.ui

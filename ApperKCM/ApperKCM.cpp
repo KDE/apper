@@ -38,7 +38,10 @@
 #include <ChangesDelegate.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
+
+#ifdef HAVE_APPSTREAM
 #include <AppStream/AppStreamDb.h>
+#endif
 
 #include <KDebug>
 #include <Daemon>
@@ -641,6 +644,7 @@ void ApperKCM::search()
         break;
     case Transaction::RoleResolve:
     {
+#ifdef HAVE_APPSTREAM
         QStringList packages = AppStreamDb::instance()->findPkgNames(m_searchString);
         if (!packages.isEmpty()) {
             browseView->setParentCategory(m_searchParentCategory);
@@ -650,6 +654,9 @@ void ApperKCM::search()
         } else {
             return;
         }
+#else
+        return;
+#endif
         break;
     }
     default:
