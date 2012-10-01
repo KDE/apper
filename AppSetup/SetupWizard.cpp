@@ -66,14 +66,14 @@ public:
     QProgressBar *progressBar;
 };
 
-void on_lisetup_message (GObject *sender, ListallerMessageItem *message, SetupWizard *self)
+void on_lisetup_message(GObject *sender, ListallerMessageItem *message, SetupWizard *self)
 {
     Q_UNUSED(sender);
     Q_UNUSED(self);
     kDebug() << "Listaller message:" << listaller_message_item_get_details(message);
 }
 
-void on_lisetup_status_changed (GObject *sender, ListallerStatusItem *status, SetupWizard *self)
+void on_lisetup_status_changed(GObject *sender, ListallerStatusItem *status, SetupWizard *self)
 {
     Q_UNUSED(sender);
     Q_UNUSED(status);
@@ -93,7 +93,7 @@ void on_lisetup_status_changed (GObject *sender, ListallerStatusItem *status, Se
     }
 }
 
-void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWizard *self)
+void on_lisetup_error_code(GObject *sender, ListallerErrorItem *error, SetupWizard *self)
 {
     Q_UNUSED(sender);
     SetupWizardPrivate *d = self->getPriv();
@@ -108,7 +108,7 @@ void on_lisetup_error_code (GObject *sender, ListallerErrorItem *error, SetupWiz
     self->setCurrentPage(d->infoPage);
 }
 
-void on_lisetup_error_code_simple (GObject *sender, ListallerErrorItem *error, SetupWizard *self)
+void on_lisetup_error_code_simple(GObject *sender, ListallerErrorItem *error, SetupWizard *self)
 {
     Q_UNUSED(sender);
 
@@ -117,12 +117,19 @@ void on_lisetup_error_code_simple (GObject *sender, ListallerErrorItem *error, S
                        i18n("An error occurred"));
 }
 
-void on_lisetup_progress_changed (GObject *sender, int progress, SetupWizard *self)
+void on_lisetup_progress(GObject *sender, ListallerProgressItem *item, SetupWizard *self)
 {
     Q_UNUSED(sender);
     SetupWizardPrivate *d = self->getPriv();
 
-    d->progressBar->setValue(progress);
+    if (listaller_progress_item_get_prog_type (item) != LISTALLER_PROGRESS_ENUM_MAIN_PROGRESS)
+        return;
+
+    // TODO: Handle item-progress too
+
+    int value = listaller_progress_item_get_value (item);
+    if (value > 0)
+        d->progressBar->setValue(value);
 }
 
 SetupWizard::SetupWizard(const QString& ipkFName, QWidget *parent)
@@ -375,9 +382,8 @@ bool SetupWizard::initialize()
     // Now connect all signals
     g_signal_connect (d->liSetup, "message", (GCallback) on_lisetup_message, this);
     g_signal_connect (d->liSetup, "status-changed", (GCallback) on_lisetup_status_changed, this);
-    g_signal_connect (d->liSetup, "progress-changed", (GCallback) on_lisetup_progress_changed, this);
+    g_signal_connect (d->liSetup, "progress", (GCallback) on_lisetup_progress, this);
     g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code, this);
-    // TODO: Handle item-progress too
 
     // Build layout of our setup wizard
     constructWizardLayout();
