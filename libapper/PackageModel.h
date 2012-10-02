@@ -56,17 +56,11 @@ public:
         PackageName
     };
     typedef struct {
-        QString    name;
-        QString    version;
+        PackageKit::Package pkg;
         QString    currentVersion;
         QString    icon;
-        QString    summary;
-        QString    arch;
-        QString    repo;
-        QString    id;
         QString    appId;
         bool       isPackage;
-        PackageKit::Package::Info info;
         double     size;
     } InternalPackage;
 
