@@ -200,22 +200,27 @@ void CategoryModel::fillWithStandardGroups()
 {
     // Get the groups
     m_groups = Daemon::groups();
-//    QStandardItem *item;
-//    foreach (const Package::Group &group, m_groups) {
-//        if (group != Package::UnknownGroup) {
-//            item = new QStandardItem(PkStrings::groups(group));
-//            item->setDragEnabled(false);
-//            item->setData(Transaction::RoleSearchGroup, SearchRole);
-//            item->setData(group, GroupRole);
-//            item->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
-//            item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
-//            item->setIcon(PkIcons::groupsIcon(group));
-//            if (!(m_roles & Transaction::RoleSearchGroup)) {
-//                item->setSelectable(false);
-//            }
-//            appendRow(item);
-//        }
-//    }
+    kDebug();
+    QStandardItem *item;
+    for (int i = 1; i < 64; ++i) {
+        if (m_groups & i) {
+            PackageDetails::Group group;
+            group = static_cast<PackageDetails::Group>(i);
+            if (group != PackageDetails::GroupUnknown) {
+                item = new QStandardItem(PkStrings::groups(group));
+                item->setDragEnabled(false);
+                item->setData(Transaction::RoleSearchGroup, SearchRole);
+                item->setData(group, GroupRole);
+                item->setData(i18n("Groups"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
+                item->setData(1, KCategorizedSortFilterProxyModel::CategorySortRole);
+                item->setIcon(PkIcons::groupsIcon(group));
+                if (!(m_roles & Transaction::RoleSearchGroup)) {
+                    item->setSelectable(false);
+                }
+                appendRow(item);
+            }
+        }
+    }
 
     emit finished();
 }
@@ -315,15 +320,14 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                     item = new QStandardItem;
                     item->setDragEnabled(false);
                 }
-//                QString group = xml.readElementText();
-//                PackageDetails::Group groupEnum;
-////                groupEnum = static_cast<PackageDetails::Group>(enumFromString<Package>(group, "Group", "Group"));
-
-//                if (groupEnum != PackageDetails::GroupUnknown &&
-//                    (m_groups.contains(groupEnum))) {
-//                    item->setData(Transaction::RoleSearchGroup, SearchRole);
-//                    item->setData(groupEnum, GroupRole);
-//                }
+                QString group = xml.readElementText();
+                PackageDetails::Group groupEnum;
+                int groupInt = Daemon::enumFromString<Package>(group, "Group");
+                groupEnum = static_cast<PackageDetails::Group>(groupInt);
+                if (groupEnum != PackageDetails::GroupUnknown && m_groups & groupEnum) {
+                    item->setData(Transaction::RoleSearchGroup, SearchRole);
+                    item->setData(groupEnum, GroupRole);
+                }
             }
         }
 

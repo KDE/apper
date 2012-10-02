@@ -623,7 +623,7 @@ void ApperKCM::search()
         break;
     case Transaction::RoleSearchGroup:
         if (m_searchGroupCategory.isEmpty()) {
-            m_searchTransaction->searchGroups(m_searchGroup, m_filtersMenu->filters());
+            m_searchTransaction->searchGroup(m_searchGroup, m_filtersMenu->filters());
         } else {
             browseView->setParentCategory(m_searchParentCategory);
 #ifndef HAVE_APPSTREAM
