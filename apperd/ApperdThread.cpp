@@ -267,7 +267,7 @@ QDateTime ApperdThread::getTimeSinceRefreshCache() const
                                              QLatin1String("/org/freedesktop/PackageKit"),
                                              QLatin1String("org.freedesktop.PackageKit"),
                                              QLatin1String("GetTimeSinceAction"));
-    message << QLatin1String("refresh-cache");
+    message << 13U;
     QDBusReply<uint> reply = QDBusConnection::systemBus().call(message);
 
     // When the refresh cache value was not yet defined UINT_MAX is returned
