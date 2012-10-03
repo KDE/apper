@@ -64,8 +64,11 @@ CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *pare
 
 #ifdef HAVE_APPSTREAM
     // Get the groups
-    m_groups = Daemon::groups();
+#ifdef AI_CATEGORIES_PATH
     fillWithServiceGroups();
+#else
+    fillWithStandardGroups();
+#endif // AI_CATEGORIES_PATH
 //         category("",
 //                              "servers",
 //                              "Servers",
