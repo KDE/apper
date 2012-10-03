@@ -33,7 +33,7 @@ signals:
     void clicked();
 
 protected:
-    virtual void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 };
 
 #endif

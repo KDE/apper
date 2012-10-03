@@ -18,6 +18,11 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
+#include "PackageDetails.h"
+#include "ui_PackageDetails.h"
+
+#include "ScreenShotViewer.h"
+
 #include <PackageModel.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
@@ -44,9 +49,6 @@
 
 #include <config.h>
 
-#include "PackageDetails.h"
-#include "ScreenShotViewer.h"
-
 #ifdef HAVE_APPSTREAM
 #include <AppStream/AppStreamDb.h>
 #endif
@@ -60,6 +62,7 @@ Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 
 PackageDetails::PackageDetails(QWidget *parent)
  : QWidget(parent),
+   ui(new Ui::PackageDetails),
    m_busySeq(0),
    m_display(false),
    m_hideVersion(false),
@@ -68,8 +71,8 @@ PackageDetails::PackageDetails(QWidget *parent)
    m_hasDetails(false),
    m_hasFileList(false)
 {
-    setupUi(this);
-    connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
+    ui->setupUi(this);
+    connect(ui->hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 }
 
 void PackageDetails::init(PackageKit::Transaction::Roles roles)
@@ -86,7 +89,7 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         action->setCheckable(true);
         action->setData(PackageKit::Transaction::RoleGetDetails);
         m_actionGroup->addAction(action);
-        descriptionW->setWidgetResizable(true);
+        ui->descriptionW->setWidgetResizable(true);
     }
 
     if (roles & PackageKit::Transaction::RoleGetDepends) {
@@ -95,7 +98,7 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         action->setData(PackageKit::Transaction::RoleGetDepends);
         m_actionGroup->addAction(action);
         // Sets a transparent background
-        QWidget *actionsViewport = dependsOnLV->viewport();
+        QWidget *actionsViewport = ui->dependsOnLV->viewport();
         QPalette palette = actionsViewport->palette();
         palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
         palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
@@ -106,13 +109,13 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         m_dependsProxy->setDynamicSortFilter(true);
         m_dependsProxy->setSortRole(PackageModel::SortRole);
         m_dependsProxy->setSourceModel(m_dependsModel);
-        dependsOnLV->setModel(m_dependsProxy);
-        dependsOnLV->sortByColumn(0, Qt::AscendingOrder);
-        dependsOnLV->header()->setDefaultAlignment(Qt::AlignCenter);
-        dependsOnLV->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-        dependsOnLV->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-        dependsOnLV->header()->setResizeMode(2, QHeaderView::ResizeToContents);
-        dependsOnLV->header()->hideSection(4);
+        ui->dependsOnLV->setModel(m_dependsProxy);
+        ui->dependsOnLV->sortByColumn(0, Qt::AscendingOrder);
+        ui->dependsOnLV->header()->setDefaultAlignment(Qt::AlignCenter);
+        ui->dependsOnLV->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+        ui->dependsOnLV->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+        ui->dependsOnLV->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+        ui->dependsOnLV->header()->hideSection(4);
     }
 
     if (roles & PackageKit::Transaction::RoleGetRequires) {
@@ -121,7 +124,7 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         action->setData(PackageKit::Transaction::RoleGetRequires);
         m_actionGroup->addAction(action);
         // Sets a transparent background
-        QWidget *actionsViewport = requiredByLV->viewport();
+        QWidget *actionsViewport = ui->requiredByLV->viewport();
         QPalette palette = actionsViewport->palette();
         palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
         palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
@@ -132,13 +135,13 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         m_requiresProxy->setDynamicSortFilter(true);
         m_requiresProxy->setSortRole(PackageModel::SortRole);
         m_requiresProxy->setSourceModel(m_requiresModel);
-        requiredByLV->setModel(m_requiresProxy);
-        requiredByLV->sortByColumn(0, Qt::AscendingOrder);
-        requiredByLV->header()->setDefaultAlignment(Qt::AlignCenter);
-        requiredByLV->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-        requiredByLV->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-        requiredByLV->header()->setResizeMode(2, QHeaderView::ResizeToContents);
-        requiredByLV->header()->hideSection(4);
+        ui->requiredByLV->setModel(m_requiresProxy);
+        ui->requiredByLV->sortByColumn(0, Qt::AscendingOrder);
+        ui->requiredByLV->header()->setDefaultAlignment(Qt::AlignCenter);
+        ui->requiredByLV->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+        ui->requiredByLV->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+        ui->requiredByLV->header()->setResizeMode(2, QHeaderView::ResizeToContents);
+        ui->requiredByLV->header()->hideSection(4);
     }
 
     if (roles & PackageKit::Transaction::RoleGetFiles) {
@@ -147,7 +150,7 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         action->setData(PackageKit::Transaction::RoleGetFiles);
         m_actionGroup->addAction(action);
         // Sets a transparent background
-        QWidget *actionsViewport = filesPTE->viewport();
+        QWidget *actionsViewport = ui->filesPTE->viewport();
         QPalette palette = actionsViewport->palette();
         palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
         palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
@@ -156,29 +159,29 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
 
     // Check to se if we have any action
     if (m_actionGroup->actions().isEmpty()) {
-        menuTB->hide();
+        ui->menuTB->hide();
     } else {
         action = m_actionGroup->actions().first();
         action->setChecked(true);
         connect(m_actionGroup, SIGNAL(triggered(QAction*)),
                 this, SLOT(actionActivated(QAction*)));
         // Set the menu
-        menuTB->setMenu(menu);
-        menuTB->setIcon(KIcon("help-about"));
+        ui->menuTB->setMenu(menu);
+        ui->menuTB->setIcon(KIcon("help-about"));
     }
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_busySeq->setWidget(stackedWidget);
+    m_busySeq->setWidget(ui->stackedWidget);
 
     // Setup the opacit effect that makes the descriptio transparent
     // after finished it checks in display() to see if it shouldn't show
     // up again. The property animation is always the same, the only different thing
     // is the the Forward or Backward property
-    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(stackedWidget);
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(ui->stackedWidget);
     effect->setOpacity(0);
-    stackedWidget->setGraphicsEffect(effect);
+    ui->stackedWidget->setGraphicsEffect(effect);
     m_fadeStacked = new QPropertyAnimation(effect, "opacity", this);
     m_fadeStacked->setDuration(500);
     m_fadeStacked->setStartValue(qreal(0));
@@ -188,12 +191,12 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
     // It's is impossible due to some limitation in Qt to set two effects on the same
     // Widget
     m_fadeScreenshot = new QPropertyAnimation(effect, "opacity", this);
-    GraphicsOpacityDropShadowEffect *shadow = new GraphicsOpacityDropShadowEffect(screenshotL);
+    GraphicsOpacityDropShadowEffect *shadow = new GraphicsOpacityDropShadowEffect(ui->screenshotL);
     shadow->setOpacity(0);
     shadow->setBlurRadius(BLUR_RADIUS);
     shadow->setOffset(2);
     shadow->setColor(QApplication::palette().dark().color());
-    screenshotL->setGraphicsEffect(shadow);
+    ui->screenshotL->setGraphicsEffect(shadow);
 
     m_fadeScreenshot = new QPropertyAnimation(shadow, "opacity", this);
     m_fadeScreenshot->setDuration(500);
@@ -283,6 +286,7 @@ void PackageDetails::setPackage(const QModelIndex &index)
 
 void PackageDetails::on_screenshotL_clicked()
 {
+    kDebug();
 #ifndef HAVE_APPSTREAM
     return;
 #else
@@ -450,7 +454,7 @@ void PackageDetails::fadeOut(FadeWidgets widgets)
 
     // Fade out the screenshot only if needed
     if ((widgets & FadeScreenshot) && m_fadeScreenshot->currentValue().toReal() != 0) {
-        screenshotL->unsetCursor();
+        ui->screenshotL->unsetCursor();
         m_fadeScreenshot->setDirection(QAbstractAnimation::Backward);
         m_fadeScreenshot->start();
     }
@@ -478,34 +482,34 @@ void PackageDetails::display()
                 break;
             case PackageKit::Transaction::RoleGetDepends:
                 if (m_hasDepends) {
-                    if (stackedWidget->currentWidget() != pageDepends) {
-                        stackedWidget->setCurrentWidget(pageDepends);
+                    if (ui->stackedWidget->currentWidget() != ui->pageDepends) {
+                        ui->stackedWidget->setCurrentWidget(ui->pageDepends);
                     }
                     fadeIn = true;
                 }
                 break;
             case PackageKit::Transaction::RoleGetRequires:
                 if (m_hasRequires) {
-                    if (stackedWidget->currentWidget() != pageRequired) {
-                        stackedWidget->setCurrentWidget(pageRequired);
+                    if (ui->stackedWidget->currentWidget() != ui->pageRequired) {
+                        ui->stackedWidget->setCurrentWidget(ui->pageRequired);
                     }
                     fadeIn = true;
                 }
                 break;
             case PackageKit::Transaction::RoleGetFiles:
                 if (m_hasFileList) {
-                    filesPTE->clear();
+                    ui->filesPTE->clear();
                     if (m_currentFileList.isEmpty()) {
-                        filesPTE->insertPlainText(i18n("No files were found."));
+                        ui->filesPTE->insertPlainText(i18n("No files were found."));
                     } else {
                         m_currentFileList.sort();
-                        filesPTE->insertPlainText(m_currentFileList.join("\n"));
+                        ui->filesPTE->insertPlainText(m_currentFileList.join("\n"));
                     }
 
-                    if (stackedWidget->currentWidget() != pageFiles) {
-                        stackedWidget->setCurrentWidget(pageFiles);
+                    if (ui->stackedWidget->currentWidget() != ui->pageFiles) {
+                        ui->stackedWidget->setCurrentWidget(ui->pageFiles);
                     }
-                    filesPTE->verticalScrollBar()->setValue(0);
+                    ui->filesPTE->verticalScrollBar()->setValue(0);
                     fadeIn = true;
                 }
                 break;
@@ -527,8 +531,8 @@ void PackageDetails::display()
             QPixmap pixmap;
             pixmap = QPixmap(m_screenshotPath[m_currentScreenshot])
                              .scaled(160,120, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            screenshotL->setPixmap(pixmap);
-            screenshotL->setCursor(Qt::PointingHandCursor);
+            ui->screenshotL->setPixmap(pixmap);
+            ui->screenshotL->setCursor(Qt::PointingHandCursor);
             // Fade In
             m_fadeScreenshot->setDirection(QAbstractAnimation::Forward);
             m_fadeScreenshot->start();
@@ -538,36 +542,36 @@ void PackageDetails::display()
 
 void PackageDetails::setupDescription()
 {
-    if (stackedWidget->currentWidget() != pageDescription) {
-        stackedWidget->setCurrentWidget(pageDescription);
+    if (ui->stackedWidget->currentWidget() != ui->pageDescription) {
+        ui->stackedWidget->setCurrentWidget(ui->pageDescription);
     }
 
     if (!m_packageDetails.isValid()) {
         // Oops we don't have any details
-        descriptionL->setText(i18n("Could not fetch software details"));
-        descriptionL->show();
+        ui->descriptionL->setText(i18n("Could not fetch software details"));
+        ui->descriptionL->show();
 
         // Hide stuff so we don't display outdated data
-        homepageL->hide();
-        pathL->hide();
-        licenseL->hide();
-        sizeL->hide();
-        iconL->clear();
+        ui->homepageL->hide();
+        ui->pathL->hide();
+        ui->licenseL->hide();
+        ui->sizeL->hide();
+        ui->iconL->clear();
     }
 
     if (!m_packageDetails.detail().isEmpty()) {
-        descriptionL->setText(m_packageDetails.detail().replace('\n', "<br>"));
-        descriptionL->show();
+        ui->descriptionL->setText(m_packageDetails.detail().replace('\n', "<br>"));
+        ui->descriptionL->show();
     } else {
-        descriptionL->clear();
+        ui->descriptionL->clear();
     }
 
     if (!m_packageDetails.url().isEmpty()) {
-        homepageL->setText("<a href=\"" + m_packageDetails.url() + "\">" +
-                           m_packageDetails.url() + "</a>");
-        homepageL->show();
+        ui->homepageL->setText("<a href=\"" + m_packageDetails.url() + "\">" +
+                               m_packageDetails.url() + "</a>");
+        ui->homepageL->show();
     } else {
-        homepageL->hide();
+        ui->homepageL->hide();
     }
 
     // Let's try to find the application's path in human user
@@ -578,7 +582,7 @@ void PackageDetails::setupDescription()
         ret = locateApplication(QString(), service->menuId());
     }
     if (ret.isEmpty()) {
-        pathL->hide();
+        ui->pathL->hide();
     } else {
         QString path;
         path.append(QString("<img width=\"16\" heigh=\"16\"src=\"%1\"/>")
@@ -593,8 +597,8 @@ void PackageDetails::setupDescription()
                         .arg(KIconLoader::global()->iconPath(ret.at(i).second, KIconLoader::Small))
                         .arg(ret.at(i).first));
         }
-        pathL->setText(path);
-        pathL->show();
+        ui->pathL->setText(path);
+        ui->pathL->show();
     }
 
 //     if (details->group() != Package::UnknownGroup) {
@@ -606,36 +610,36 @@ void PackageDetails::setupDescription()
     if (!m_packageDetails.license().isEmpty() && m_packageDetails.license() != "unknown") {
         // We have a license, check if we have and should show show package version
         if (!m_hideVersion && !m_packageDetails.version().isEmpty()) {
-            licenseL->setText(m_packageDetails.version() + " - " + m_packageDetails.license());
+            ui->licenseL->setText(m_packageDetails.version() + " - " + m_packageDetails.license());
         } else {
-            licenseL->setText(m_packageDetails.license());
+            ui->licenseL->setText(m_packageDetails.license());
         }
-        licenseL->show();
+        ui->licenseL->show();
     } else if (!m_hideVersion) {
-        licenseL->setText(m_packageDetails.version());
-        licenseL->show();
+        ui->licenseL->setText(m_packageDetails.version());
+        ui->licenseL->show();
     } else {
-        licenseL->hide();
+        ui->licenseL->hide();
     }
 
     if (m_packageDetails.size() > 0) {
         QString size = KGlobal::locale()->formatByteSize(m_packageDetails.size());
         if (!m_hideArch && !m_packageDetails.arch().isEmpty()) {
-            sizeL->setText(size + " (" + m_packageDetails.arch() + ')');
+            ui->sizeL->setText(size + " (" + m_packageDetails.arch() + ')');
         } else {
-            sizeL->setText(size);
+            ui->sizeL->setText(size);
         }
-        sizeL->show();
+        ui->sizeL->show();
     } else if (!m_hideArch && !m_packageDetails.arch().isEmpty()) {
-        sizeL->setText(m_packageDetails.arch());
+        ui->sizeL->setText(m_packageDetails.arch());
     } else {
-        sizeL->hide();
+        ui->sizeL->hide();
     }
 
     if (m_currentIcon.isNull()) {
-        iconL->clear();
+        ui->iconL->clear();
     } else {
-        iconL->setPixmap(m_currentIcon);
+        ui->iconL->setPixmap(m_currentIcon);
     }
 }
 

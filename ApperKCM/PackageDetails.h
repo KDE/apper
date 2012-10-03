@@ -30,11 +30,14 @@
 #include <QSortFilterProxyModel>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QActionGroup>
 
-#include "ui_PackageDetails.h"
+namespace Ui {
+    class PackageDetails;
+}
 
 class PackageModel;
-class PackageDetails : public QWidget, Ui::PackageDetails
+class PackageDetails : public QWidget
 {
 Q_OBJECT
 public:
@@ -74,6 +77,7 @@ private:
     void setupDescription();
     QVector<QPair<QString, QString> > locateApplication(const QString &_relPath, const QString &menuId) const;
 
+    Ui::PackageDetails *ui;
     QActionGroup *m_actionGroup;
     QModelIndex   m_index;
     PackageKit::Package m_package;

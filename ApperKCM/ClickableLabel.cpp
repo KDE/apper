@@ -22,15 +22,16 @@
 
 #include <QMouseEvent>
 
-ClickableLabel::ClickableLabel(QWidget *parent, Qt::WindowFlags f)
- : QLabel(parent, f)
+ClickableLabel::ClickableLabel(QWidget *parent, Qt::WindowFlags f) :
+    QLabel(parent, f)
 {
 }
 
 
-void ClickableLabel::mousePressEvent(QMouseEvent *event)
+void ClickableLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     QLabel::mousePressEvent(event);
+    emit clicked();
 }
 
 #include "ClickableLabel.moc"
