@@ -38,7 +38,7 @@
 #include <AppStream/AppStreamDb.h>
 #endif
 
-#ifndef HAVE_APPINSTALL
+#ifndef HAVE_APPSTREAM
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #endif
