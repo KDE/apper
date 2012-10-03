@@ -37,7 +37,8 @@ class KDE_EXPORT AppStreamDb : public QObject {
             AppName = 0,
             AppSummary,
             AppIcon,
-            AppId
+            AppId,
+            AppCategories
         } Position;
         static AppStreamDb* instance();
 
@@ -51,8 +52,8 @@ class KDE_EXPORT AppStreamDb : public QObject {
         AppStreamDb(QObject *parent = 0);
         Xapian::Database m_xapianDB;
 
-        QHash<QString, QStringList> *m_appInfo;
-        static AppStreamDb            *m_instance;
+        QHash<QString, QStringList> m_appInfo;
+        static AppStreamDb         *m_instance;
 
         void processXapianDoc (Xapian::Document doc);
 };

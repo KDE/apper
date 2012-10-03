@@ -50,8 +50,6 @@ AppStreamDb* AppStreamDb::instance()
 AppStreamDb::AppStreamDb(QObject *parent)
  : QObject(parent)
 {
-    m_appInfo = new QHash<QString, QStringList>;
-
 #ifdef HAVE_APPSTREAM
     try {
         // hardcode path for now, since we don't use LibAppStreamDb in Apper
@@ -92,19 +90,23 @@ void AppStreamDb::processXapianDoc(Xapian::Document doc)
     // Application stock icon
     QString appIconName = QString::fromUtf8(doc.get_value (AppStream::ICON).c_str());
 
-    m_appInfo->insertMulti(pkgName,
-                              QStringList()
-                                << appName
-                                << appSummary
-                                << appIconName.split('.')[0]
-                                << desktopFile);
+    // Application categories
+    QString appCategories = QString::fromUtf8(doc.get_value (AppStream::CATEGORIES).c_str());
+
+    m_appInfo.insertMulti(pkgName,
+                          QStringList()
+                          << appName
+                          << appSummary
+                          << appIconName.split('.')[0]
+                          << desktopFile
+                          << appCategories);
 }
 
 QList<QStringList> AppStreamDb::applications(const QString &pkgName) const
 {
     QList<QStringList> ret;
-    if (m_appInfo->contains(pkgName)) {
-        ret = m_appInfo->values(pkgName);
+    if (m_appInfo.contains(pkgName)) {
+        ret = m_appInfo.values(pkgName);
     }
 
     return ret;
@@ -112,7 +114,7 @@ QList<QStringList> AppStreamDb::applications(const QString &pkgName) const
 
 QString AppStreamDb::genericIcon(const QString &pkgName) const
 {
-    if (m_appInfo->contains(pkgName)) {
+    if (m_appInfo.contains(pkgName)) {
         foreach (const QStringList &list, applications(pkgName)) {
             if (!list.at(AppIcon).isEmpty()) {
                 return list.at(AppIcon);
@@ -126,10 +128,23 @@ QString AppStreamDb::genericIcon(const QString &pkgName) const
 QStringList AppStreamDb::findPkgNames(const QString &searchStr) const
 {
     QStringList packages;
+    QRegExp rx(searchStr);
+    rx.setPatternSyntax(QRegExp::RegExp2);
 
-    Q_UNUSED(searchStr);
+    kDebug() << searchStr;
     // TODO: Implement this - searching in AppStreamDb db is more complicated
     // see AppStreamDb-Core project or reference
+    QHash<QString, QStringList>::const_iterator i = m_appInfo.constBegin();
+    while (i != m_appInfo.constEnd()) {
+        QString categories = i.value()[AppCategories];
+        int ret = rx.indexIn(categories);
+        bool ma = rx.exactMatch(categories);
+        if (ret != -1) {
+            kDebug() << ma << i.key() << categories << ret << searchStr;
+        }
+//        cout << i.key() << ": " << i.value() << endl;
+        ++i;
+    }
 
     return packages;
 }

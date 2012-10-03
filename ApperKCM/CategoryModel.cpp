@@ -23,6 +23,7 @@
 #include <QMetaEnum>
 #include <QFile>
 #include <QTimer>
+#include <QStringBuilder>
 
 #include <PkStrings.h>
 #include <PkIcons.h>
@@ -235,6 +236,7 @@ void CategoryModel::fillWithServiceGroups()
     QFile file(QString(AS_CATEGORIES_PATH) + "/categories.xml");
      if (!file.open(QIODevice::ReadOnly)) {
          kDebug() << "Failed to open file";
+         fillWithStandardGroups();
          return;
     }
     QXmlStreamReader xml(&file);
@@ -297,7 +299,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
 //                 kDebug() << "Found Categories           ";
                 QString categories;
                 categories = parseCategories(xml, item);
-//                 kDebug() << categories;
+                kDebug() << categories;
                 item->setData(categories, CategoryRole);
                 item->setData(Transaction::RoleResolve, SearchRole);
             } else if (xml.name() == "Directory") {
@@ -372,8 +374,9 @@ QString CategoryModel::parseCategories(QXmlStreamReader &xml, QStandardItem *ite
             xml.name() == endElement)) {
         if(xml.tokenType() == QXmlStreamReader::StartElement) {
             // Where the categories where AND or OR
-            if (xml.name() == "And" || xml.name() == "Or") {
+            if (xml.name() == QLatin1String("And") || xml.name() == QLatin1String("Or")) {
 //                 kDebug() << "Found:" << xml.name();
+                // We are going to read the next element to save the token name
                 QString _endElement = xml.name().toString();
                 xml.readNext();
                 QString andOr;
@@ -381,18 +384,19 @@ QString CategoryModel::parseCategories(QXmlStreamReader &xml, QStandardItem *ite
                 if (!andOr.isEmpty()) {
                     // The result should be so that we make sure the
                     // precedence is right "( andOr )"
-                    andOr.prepend("( ");
-                    andOr.append(" )");
+//                    andOr.prepend("(?");
+//                    andOr.append(")");
                     ret << andOr;
                 }
             }
 
             // USED to negate the categories inside it
-            if(xml.name() == "Not") {
+            if(xml.name() == QLatin1String("Not")) {
 //                 kDebug() << "Found:" << xml.name();
                 xml.readNext();
                 QString _ret;
-                _ret = parseCategories(xml, item, "Not");
+
+                _ret = parseCategories(xml, item, QLatin1String("Not"));
                 if (!_ret.isEmpty()) {
                     ret << _ret;
                 }
@@ -404,16 +408,10 @@ QString CategoryModel::parseCategories(QXmlStreamReader &xml, QStandardItem *ite
                 QString name;
                 name = xml.readElementText();
                 if (!name.isEmpty()){
-                    if (join == "Not") {
-                        ret << QString("categories != '%1' AND "
-                                       "categories NOT GLOB '*;%1' AND "
-                                       "categories NOT GLOB '*;%1;*' AND "
-                                       "categories NOT GLOB '%1;*'").arg(name);
+                    if (join == QLatin1String("Not")) {
+                        ret << QString("\\b(?!%1)\\b").arg(name);
                     } else {
-                        ret << QString("categories = '%1' OR "
-                                       "categories GLOB '*;%1' OR "
-                                       "categories GLOB '*;%1;*' OR "
-                                       "categories GLOB '%1;*'").arg(name);
+                        ret << QString("\\b(?:%1)\\b").arg(name);
                     }
                 }
             }
@@ -425,5 +423,15 @@ QString CategoryModel::parseCategories(QXmlStreamReader &xml, QStandardItem *ite
     if (ret.isEmpty()) {
         return QString();
     }
-    return ret.join(' ' + join + ' ');
+
+    if (ret.size() == 1) {
+        return ret.first();
+//        return QLatin1String(".*") % ret.first() % QLatin1String(".*");
+    } else if (join == QLatin1String("Or")) {
+        return QLatin1String("(?:") % ret.join(QLatin1String("|")) % QLatin1String(")");
+    } else {
+//        return QLatin1String("(?:") % ret.join(QLatin1String("")) % QLatin1String(")");
+//        return ret.join(QLatin1String(""));
+        return QLatin1String(".*") % ret.join(QLatin1String("")) % QLatin1String(".*");
+    }
 }

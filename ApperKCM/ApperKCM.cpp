@@ -365,6 +365,7 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
 
         // cache the search
         m_searchRole    = static_cast<Transaction::Role>(index.data(CategoryModel::SearchRole).toUInt());
+        kDebug() << m_searchRole << index.data(CategoryModel::CategoryRole).toString();
         if (m_searchRole == Transaction::RoleResolve) {
             m_searchString = index.data(CategoryModel::CategoryRole).toString();
         } else if (m_searchRole == Transaction::RoleSearchGroup) {
@@ -645,6 +646,7 @@ void ApperKCM::search()
     case Transaction::RoleResolve:
     {
 #ifdef HAVE_APPSTREAM
+        kDebug() << m_searchString;
         QStringList packages = AppStreamDb::instance()->findPkgNames(m_searchString);
         if (!packages.isEmpty()) {
             browseView->setParentCategory(m_searchParentCategory);
