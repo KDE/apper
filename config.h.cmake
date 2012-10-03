@@ -10,6 +10,9 @@
 // Define if AppStream data is available.
 #cmakedefine HAVE_APPSTREAM
 
+// Define the AppStream categories path.
+#cmakedefine AS_CATEGORIES_PATH "@AS_CATEGORIES_PATH@"
+
 // Define the edit origins command.
 #cmakedefine EDIT_ORIGNS_DESKTOP_NAME "@EDIT_ORIGNS_DESKTOP_NAME@"
 

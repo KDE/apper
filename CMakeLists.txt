@@ -24,6 +24,13 @@ option(LISTALLER "Build Apper with app install" OFF)
 set(HAVE_LISTALLER ${LISTALLER})
 message(STATUS "Building Apper with Listaller modules: " ${LISTALLER})
 
+if (HAVE_APPSTREAM)
+    # path to the categories.xml menus
+    set(AS_CATEGORIES_PATH "${CMAKE_INSTALL_PREFIX}/share/app-info"
+        CACHE STRING "AppStream categories path")
+    message(STATUS "AppStream categories path: " ${AS_CATEGORIES_PATH})
+endif (HAVE_APPSTREAM)
+
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
     find_package(DebconfKDE REQUIRED)
