@@ -98,7 +98,6 @@ private:
     QString      m_currentText;
     QPixmap      m_currentIcon;
     QString      m_appId;
-    QString      m_packageId;
 
     // file list buffer
     bool         m_hasFileList;

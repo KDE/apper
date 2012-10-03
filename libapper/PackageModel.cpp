@@ -71,23 +71,19 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
 
         foreach (const QStringList &list, data) {
             InternalPackage iPackage;
-            iPackage.isPackage   = false;
-            iPackage.name        = list.at(AppStreamDb::AppName);
-            if (iPackage.name.isEmpty()) {
-                iPackage.name = package.name();
+            iPackage.pkg = package;
+            iPackage.isPackage = false;
+            iPackage.displayName = list.at(AppStreamDb::AppName);
+            if (iPackage.displayName.isEmpty()) {
+                iPackage.displayName = package.name();
             }
-            iPackage.summary     = list.at(AppStreamDb::AppSummary);
-            if (iPackage.summary.isEmpty()) {
-                iPackage.summary = package.summary();
+            iPackage.displaySummary = list.at(AppStreamDb::AppSummary);
+            if (iPackage.displaySummary.isEmpty()) {
+                iPackage.displaySummary = package.summary();
             }
-            iPackage.icon        = list.at(AppStreamDb::AppIcon);
-            iPackage.version     = package.version();
-            iPackage.arch        = package.arch();
-            iPackage.repo        = package.data();
-            iPackage.id          = package.id();
-            iPackage.appId       = list.at(AppStreamDb::AppId);
-            iPackage.info        = package.info();
-            iPackage.size        = 0;
+            iPackage.icon  = list.at(AppStreamDb::AppIcon);
+            iPackage.appId = list.at(AppStreamDb::AppId);
+            iPackage.size  = 0;
 
             if (selected) {
                 checkPackage(iPackage, false);
@@ -100,8 +96,10 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
 #endif //HAVE_APPSTREAM
 
         InternalPackage iPackage;
-        iPackage.pkg    = package;
-        iPackage.size    = 0;
+        iPackage.pkg  = package;
+        iPackage.displayName = package.name();
+        iPackage.displaySummary = package.summary();
+        iPackage.size = 0;
 
 #ifdef HAVE_APPSTREAM
         iPackage.icon = AppStreamDb::instance()->genericIcon(package.name());
@@ -236,7 +234,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             // if we are an application return 'a', if package 'p'
             return package.isPackage ? QString('p') : QString('a');
         case Qt::DisplayRole:
-            return package.pkg.name();
+            return package.displayName;
         case Qt::DecorationRole:
         {
             QPixmap icon = QPixmap(44, ICON_SIZE);
@@ -266,6 +264,8 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             }
             return icon;
         }
+        case PackageRole:
+            return qVariantFromValue(package.pkg);
         case PackageName:
             return package.pkg.id().split(';')[0];
         case Qt::ToolTipRole:
@@ -295,7 +295,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
     case IconRole:
         return package.icon;
     case SortRole:
-        return QString(package.pkg.name() % QLatin1Char(' ') % package.pkg.version() % QLatin1Char(' ') % package.pkg.arch());
+        return QString(package.displayName % QLatin1Char(' ') % package.pkg.version() % QLatin1Char(' ') % package.pkg.arch());
     case CheckStateRole:
         if (containsChecked(package.pkg.id())) {
             return Qt::Checked;
@@ -304,9 +304,9 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
     case IdRole:
         return package.pkg.id();
     case NameRole:
-        return package.pkg.name();
+        return package.displayName;
     case SummaryRole:
-        return package.pkg.summary();
+        return package.displaySummary;
     case VersionRole:
         return package.pkg.version();
     case ArchRole:

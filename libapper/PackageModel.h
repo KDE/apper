@@ -23,6 +23,7 @@
 
 #include <QAbstractItemModel>
 #include <QAbstractItemView>
+#include <QMetaObject>
 #include <KIcon>
 
 #include <Package>
@@ -53,10 +54,13 @@ public:
         InfoRole,
         ApplicationId,
         ApplicationFilterRole,
-        PackageName
+        PackageName,
+        PackageRole
     };
     typedef struct {
         PackageKit::Package pkg;
+        QString    displayName;
+        QString    displaySummary;
         QString    currentVersion;
         QString    icon;
         QString    appId;
@@ -132,5 +136,7 @@ private:
     PackageKit::Transaction *m_fetchSizesTransaction;
     PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
 };
+
+Q_DECLARE_METATYPE(PackageKit::Package)
 
 #endif

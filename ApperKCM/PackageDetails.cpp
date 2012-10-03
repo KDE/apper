@@ -42,6 +42,8 @@
 
 #include <Daemon>
 
+#include <config.h>
+
 #include "PackageDetails.h"
 #include "ScreenShotViewer.h"
 
@@ -223,12 +225,12 @@ PackageDetails::~PackageDetails()
 
 void PackageDetails::setPackage(const QModelIndex &index)
 {
-    kDebug();
-    QString pkgId = index.data(PackageModel::IdRole).toString();
+    kDebug() << index;
     QString appId = index.data(PackageModel::ApplicationId).toString();
+    PackageKit::Package package = index.data(PackageModel::PackageRole).value<PackageKit::Package>();
 
     // if it's the same package and the same application, return
-    if (pkgId == m_packageId && appId == m_appId) {
+    if (package.id() == m_package.id() && appId == m_appId) {
         return;
     } else if (maximumSize().height() == 0) {
         // Expand the panel
@@ -241,17 +243,13 @@ void PackageDetails::setPackage(const QModelIndex &index)
     }
 
     m_index     = index;
-    m_packageId = pkgId;
     m_appId     = appId;
-    PackageKit::Package::Info info;
-    info = static_cast<PackageKit::Package::Info>(index.data(PackageModel::InfoRole).toUInt());
-    kDebug() << "info" << info;
-    m_package       = PackageKit::Package(m_packageId, info);
+    m_package   = package;
     m_hasDetails    = false;
     m_hasFileList   = false;
     m_hasRequires   = false;
     m_hasDepends    = false;
-    kDebug() << "m_package" << m_package.id();
+    kDebug() << "appId" << appId << "m_package" << m_package.id();
 
     QString pkgIconPath = index.data(PackageModel::IconRole).toString();
     m_currentIcon       = PkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
@@ -259,6 +257,7 @@ void PackageDetails::setPackage(const QModelIndex &index)
 
 #ifdef HAVE_APPSTREAM
     m_currentScreenshot = AppStreamDb::instance()->thumbnail(m_package.name());
+    kDebug() << "current screenshot" << m_currentScreenshot;
 #endif
     if (!m_currentScreenshot.isEmpty()) {
         if (m_screenshotPath.contains(m_currentScreenshot)) {
@@ -404,6 +403,7 @@ void PackageDetails::actionActivated(QAction *action)
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(finished()));
         m_transaction = 0;
+        kDebug() << "transaction running" << error << PkStrings::daemonError(error);
         KMessageBox::sorry(this, PkStrings::daemonError(error));
     } else {
         m_busySeq->start();
@@ -424,7 +424,7 @@ void PackageDetails::hide()
     m_display = false;
     // Clean the old description otherwise if the user selects the same
     // package the pannel won't expand
-    m_packageId.clear();
+    m_package = PackageKit::Package();
     m_appId.clear();
 
     if (maximumSize().height() == FINAL_HEIGHT) {
@@ -541,7 +541,6 @@ void PackageDetails::setupDescription()
     if (stackedWidget->currentWidget() != pageDescription) {
         stackedWidget->setCurrentWidget(pageDescription);
     }
-    kDebug() << m_packageDetails.detail();
 
     if (!m_packageDetails.isValid()) {
         // Oops we don't have any details
