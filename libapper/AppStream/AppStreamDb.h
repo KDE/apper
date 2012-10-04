@@ -22,6 +22,8 @@
 #ifndef APPSTREAMDB_H
 #define APPSTREAMDB_H
 
+#include "CategoryMatcher.h"
+
 #include <QObject>
 #include <QHash>
 
@@ -44,7 +46,7 @@ class KDE_EXPORT AppStreamDb : public QObject {
 
         QList<QStringList> applications(const QString &pkgName) const;
         QString genericIcon(const QString &pkgName) const;
-        QStringList findPkgNames(const QString &searchStr) const;
+        QStringList findPkgNames(const CategoryMatcher &parser) const;
         QString thumbnail(const QString &pkgName) const;
         QString screenshot(const QString &pkgName) const;
 

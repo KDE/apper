@@ -262,14 +262,14 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
     QStandardItem *item = 0;
     while(!xml.atEnd() &&
           !(xml.tokenType() == QXmlStreamReader::EndElement &&
-            xml.name() == "Menu")) {
+            xml.name() == QLatin1String("Menu"))) {
 
         if(xml.tokenType() == QXmlStreamReader::StartElement) {
-            if (xml.name() == "Menu") {
+            if (xml.name() == QLatin1String("Menu")) {
                 xml.readNext();
 //                 kDebug() << "Found Menu";
                 parseMenu(xml, icon, item);
-            } else if (xml.name() == "Name") {
+            } else if (xml.name() == QLatin1String("Name")) {
                 QString name = xml.readElementText();
                 if (!item) {
                     item = new QStandardItem(i18n(name.toUtf8()));
@@ -277,7 +277,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                 } else if (item->text().isEmpty()) {
                     item->setText(i18n(name.toUtf8()));
                 }
-            } else if (xml.name() == "Icon") {
+            } else if (xml.name() == QLatin1String("Icon")) {
                 if (!item) {
                     item = new QStandardItem;
                     item->setDragEnabled(false);
@@ -290,19 +290,27 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                     item->setIcon(PkIcons::getIcon(_icon, icon));
                     icon = _icon;
                 }
-            } else if (xml.name() == "Categories") {
-                if (!item) {
-                    item = new QStandardItem;
-                    item->setDragEnabled(false);
-                }
-                xml.readNext();
+            } else if (xml.name() == QLatin1String("Categories")) {
 //                 kDebug() << "Found Categories           ";
-                QString categories;
-                categories = parseCategories(xml, item);
-                kDebug() << categories;
-                item->setData(categories, CategoryRole);
-                item->setData(Transaction::RoleResolve, SearchRole);
-            } else if (xml.name() == "Directory") {
+                QList<CategoryMatcher> categories;
+                categories = parseCategories(xml);
+                if (!categories.isEmpty()) {
+                    if (!item) {
+                        item = new QStandardItem;
+                        item->setDragEnabled(false);
+                    }
+
+                    // If we only have one category inside get the first item
+                    if (categories.size() == 1) {
+                        item->setData(qVariantFromValue(categories.first()), CategoryRole);
+                    } else {
+                        CategoryMatcher parser(CategoryMatcher::And);
+                        parser.setChild(categories);
+                        item->setData(qVariantFromValue(parser), CategoryRole);
+                    }
+                    item->setData(Transaction::RoleResolve, SearchRole);
+                }
+            } else if (xml.name() == QLatin1String("Directory")) {
                 if (!item) {
                     item = new QStandardItem;
                     item->setDragEnabled(false);
@@ -320,7 +328,7 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                 if (!_name.isEmpty()) {
                     item->setText(_name);
                 }
-            } else if (xml.name() == "PkGroups") {
+            } else if (xml.name() == QLatin1String("PkGroups")) {
                 if (!item) {
                     item = new QStandardItem;
                     item->setDragEnabled(false);
@@ -358,80 +366,51 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
     }
 }
 
-QString CategoryModel::parseCategories(QXmlStreamReader &xml, QStandardItem *item, const QString &join)
+QList<CategoryMatcher> CategoryModel::parseCategories(QXmlStreamReader &xml)
 {
-    QString endElement = join;
-    // When the join element is empty means that it was started by
-    // 'Categories' keyword
-    if (endElement.isEmpty()) {
-        endElement = "Categories";
-    }
-//     kDebug() << "endElement" << endElement;
+    QString token = xml.name().toString();
 
-    QStringList ret;
-    while(!xml.atEnd() &&
-          !(xml.tokenType() == QXmlStreamReader::EndElement &&
-            xml.name() == endElement)) {
+    QList<CategoryMatcher> ret;
+    while(!xml.atEnd() && !(xml.readNext() == QXmlStreamReader::EndElement && xml.name() == token)) {
         if(xml.tokenType() == QXmlStreamReader::StartElement) {
-            // Where the categories where AND or OR
-            if (xml.name() == QLatin1String("And") || xml.name() == QLatin1String("Or")) {
-//                 kDebug() << "Found:" << xml.name();
+            // Where the categories where AND
+            if (xml.name() == QLatin1String("And")) {
                 // We are going to read the next element to save the token name
-                QString _endElement = xml.name().toString();
-                xml.readNext();
-                QString andOr;
-                andOr = parseCategories(xml, item, _endElement);
-                if (!andOr.isEmpty()) {
-                    // The result should be so that we make sure the
-                    // precedence is right "( andOr )"
-//                    andOr.prepend("(?");
-//                    andOr.append(")");
-                    ret << andOr;
+                QList<CategoryMatcher> parsers;
+                parsers = parseCategories(xml);
+                if (!parsers.isEmpty()) {
+                    CategoryMatcher opAND(CategoryMatcher::And);
+                    opAND.setChild(parsers);
+                    ret << opAND;
                 }
-            }
-
-            // USED to negate the categories inside it
-            if(xml.name() == QLatin1String("Not")) {
-//                 kDebug() << "Found:" << xml.name();
-                xml.readNext();
-                QString _ret;
-
-                _ret = parseCategories(xml, item, QLatin1String("Not"));
-                if (!_ret.isEmpty()) {
-                    ret << _ret;
+            } else if (xml.name() == QLatin1String("Or")) {
+                // Where the categories where OR
+                QList<CategoryMatcher> parsers;
+                parsers = parseCategories(xml);
+                if (!parsers.isEmpty()) {
+                    CategoryMatcher opOR(CategoryMatcher::Or);
+                    opOR.setChild(parsers);
+                    ret << opOR;
                 }
-            }
-
-            // Found the real category, if the join was not means
-            // that applications in this category should NOT be displayed
-            if(xml.name() == "Category") {
-                QString name;
-                name = xml.readElementText();
+            } else if (xml.name() == QLatin1String("Not")) {
+                // USED to negate the categories inside it
+                QList<CategoryMatcher> parsers;
+                parsers = parseCategories(xml);
+                if (!parsers.isEmpty()) {
+                    CategoryMatcher opNot(CategoryMatcher::Not);
+                    opNot.setChild(parsers);
+                    ret << opNot;
+                }
+            } else if (xml.name() == QLatin1String("Category")) {
+                // Found the real category, if the join was not means
+                // that applications in this category should NOT be displayed
+                QString name = xml.readElementText();
                 if (!name.isEmpty()){
-                    if (join == QLatin1String("Not")) {
-                        ret << QString("\\b(?!%1)\\b").arg(name);
-                    } else {
-                        ret << QString("\\b(?:%1)\\b").arg(name);
-                    }
+                    ret << CategoryMatcher(CategoryMatcher::Term, name);
                 }
             }
         }
-
-        xml.readNext();
     }
 
-    if (ret.isEmpty()) {
-        return QString();
-    }
-
-    if (ret.size() == 1) {
-        return ret.first();
-//        return QLatin1String(".*") % ret.first() % QLatin1String(".*");
-    } else if (join == QLatin1String("Or")) {
-        return QLatin1String("(?:") % ret.join(QLatin1String("|")) % QLatin1String(")");
-    } else {
-//        return QLatin1String("(?:") % ret.join(QLatin1String("")) % QLatin1String(")");
-//        return ret.join(QLatin1String(""));
-        return QLatin1String(".*") % ret.join(QLatin1String("")) % QLatin1String(".*");
-    }
+    return ret;
 }

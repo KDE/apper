@@ -21,11 +21,14 @@
 #ifndef CATEGORY_MODEL_H
 #define CATEGORY_MODEL_H
 
+#include <QObject>
 #include <QStandardItemModel>
 #include <QXmlStreamReader>
 
 #include <Transaction>
 #include <Package>
+
+#include <AppStream/CategoryMatcher.h>
 
 class CategoryModel : public QStandardItemModel
 {
@@ -61,7 +64,7 @@ private:
     void fillWithServiceGroups();
     QStandardItem* findCategory(const QString &categoryId, const QModelIndex &parent = QModelIndex()) const;
     void parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent = 0);
-    QString parseCategories(QXmlStreamReader &xml, QStandardItem *item, const QString &join = QString());
+    QList<CategoryMatcher> parseCategories(QXmlStreamReader &xml);
 
     PackageKit::Transaction::Roles  m_roles;
     PackageKit::PackageDetails::Groups m_groups;

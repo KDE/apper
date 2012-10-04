@@ -9,6 +9,7 @@ ELSE(CMAKE_SIZEOF_VOID_P EQUAL 4)
 ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
 
 set(libapper_SRCS
+    AppStream/CategoryMatcher.cpp
     PkIcons.cpp
     PkStrings.cpp
     ApplicationLauncher.cpp

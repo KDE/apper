@@ -367,7 +367,10 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
         m_searchRole    = static_cast<Transaction::Role>(index.data(CategoryModel::SearchRole).toUInt());
         kDebug() << m_searchRole << index.data(CategoryModel::CategoryRole).toString();
         if (m_searchRole == Transaction::RoleResolve) {
-            m_searchString = index.data(CategoryModel::CategoryRole).toString();
+#ifdef HAVE_APPSTREAM
+            CategoryMatcher parser = index.data(CategoryModel::CategoryRole).value<CategoryMatcher>();
+            m_searchCategory = AppStreamDb::instance()->findPkgNames(parser);
+#endif // HAVE_APPSTREAM
         } else if (m_searchRole == Transaction::RoleSearchGroup) {
             if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
                 QString category = index.data(CategoryModel::GroupRole).toString();
@@ -644,25 +647,25 @@ void ApperKCM::search()
         m_searchTransaction->getPackages(Transaction::FilterInstalled | m_filtersMenu->filters());
         break;
     case Transaction::RoleResolve:
-    {
 #ifdef HAVE_APPSTREAM
-        kDebug() << m_searchString;
-        QStringList packages = AppStreamDb::instance()->findPkgNames(m_searchString);
-        if (!packages.isEmpty()) {
+        if (!m_searchCategory.isEmpty()) {
             browseView->setParentCategory(m_searchParentCategory);
             // WARNING the resolve might fail if the backend
             // has a low limit MaximumItemsToResolve
-            m_searchTransaction->resolve(packages, m_filtersMenu->filters());
+            m_searchTransaction->resolve(m_searchCategory, m_filtersMenu->filters());
         } else {
+            browseView->setParentCategory(m_searchParentCategory);
+            KMessageBox::sorry(this, i18n("Could not find an application that matched this category"));
+            disconnectTransaction();
+            m_searchTransaction = 0;
             return;
         }
-#else
-        return;
-#endif
         break;
-    }
+#endif
     default:
-        kDebug() << "Search type not defined yet";
+        kWarning() << "Search type not defined yet";
+        disconnectTransaction();
+        m_searchTransaction = 0;
         return;
     }
 
@@ -671,6 +674,7 @@ void ApperKCM::search()
         setCurrentActionEnabled(true);
         disconnectTransaction();
         m_searchTransaction = 0;
+        kDebug() << "InternalError" << error;
         KMessageBox::sorry(this, PkStrings::daemonError(error));
     } else {
         // cleans the models

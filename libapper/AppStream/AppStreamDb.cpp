@@ -125,24 +125,17 @@ QString AppStreamDb::genericIcon(const QString &pkgName) const
     return QString();
 }
 
-QStringList AppStreamDb::findPkgNames(const QString &searchStr) const
+QStringList AppStreamDb::findPkgNames(const CategoryMatcher &parser) const
 {
     QStringList packages;
-    QRegExp rx(searchStr);
-    rx.setPatternSyntax(QRegExp::RegExp2);
 
-    kDebug() << searchStr;
-    // TODO: Implement this - searching in AppStreamDb db is more complicated
-    // see AppStreamDb-Core project or reference
     QHash<QString, QStringList>::const_iterator i = m_appInfo.constBegin();
     while (i != m_appInfo.constEnd()) {
         QString categories = i.value()[AppCategories];
-        int ret = rx.indexIn(categories);
-        bool ma = rx.exactMatch(categories);
-        if (ret != -1) {
-            kDebug() << ma << i.key() << categories << ret << searchStr;
+        if (parser.match(categories.split(QLatin1String(";")))) {
+//            kDebug() << i.key() << categories;
+            packages << i.key();
         }
-//        cout << i.key() << ": " << i.value() << endl;
         ++i;
     }
 
