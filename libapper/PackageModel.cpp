@@ -65,24 +65,24 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
     }
 
 #ifdef HAVE_APPSTREAM
-    QList<QStringList> data;
+    QList<AppStreamDb::Application> applications;
     if (!m_checkable) {
-        data = AppStreamDb::instance()->applications(package.name());
+        applications = AppStreamDb::instance()->applications(package.name());
 
-        foreach (const QStringList &list, data) {
+        foreach (const AppStreamDb::Application &app, applications) {
             InternalPackage iPackage;
             iPackage.pkg = package;
             iPackage.isPackage = false;
-            iPackage.displayName = list.at(AppStreamDb::AppName);
+            iPackage.displayName = app.name;
             if (iPackage.displayName.isEmpty()) {
                 iPackage.displayName = package.name();
             }
-            iPackage.displaySummary = list.at(AppStreamDb::AppSummary);
+            iPackage.displaySummary = app.summary;
             if (iPackage.displaySummary.isEmpty()) {
                 iPackage.displaySummary = package.summary();
             }
-            iPackage.icon  = list.at(AppStreamDb::AppIcon);
-            iPackage.appId = list.at(AppStreamDb::AppId);
+            iPackage.icon  = app.icon;
+            iPackage.appId = app.id;
             iPackage.size  = 0;
 
             if (selected) {
@@ -92,7 +92,7 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
         }
     }
 
-    if (data.isEmpty()) {
+    if (applications.isEmpty()) {
 #endif //HAVE_APPSTREAM
 
         InternalPackage iPackage;
@@ -105,8 +105,8 @@ void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
         iPackage.icon = AppStreamDb::instance()->genericIcon(package.name());
         if (m_checkable) {
             // in case of updates model only check if it's an app
-            data = AppStreamDb::instance()->applications(package.name());
-            if (!data.isEmpty() || !package.iconPath().isEmpty()) {
+            applications = AppStreamDb::instance()->applications(package.name());
+            if (!applications.isEmpty() || !package.iconPath().isEmpty()) {
                 iPackage.isPackage = false;
             } else {
                 iPackage.isPackage = true;
@@ -232,15 +232,21 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             return Qt::Unchecked;
         case ApplicationFilterRole:
             // if we are an application return 'a', if package 'p'
-            return package.isPackage ? QString('p') : QString('a');
+            return package.isPackage ? QChar('p') : QChar('a');
         case Qt::DisplayRole:
             return package.displayName;
         case Qt::DecorationRole:
         {
             QPixmap icon = QPixmap(44, ICON_SIZE);
             icon.fill(Qt::transparent);
-            if (!package.icon.isEmpty()) {
-                QPixmap pixmap = PkIcons::getIcon(package.icon, QString()).pixmap(ICON_SIZE, ICON_SIZE);
+            if (!package.icon.isNull()) {
+                QPixmap pixmap = KIconLoader::global()->loadIcon(package.icon,
+                                                                 KIconLoader::NoGroup,
+                                                                 ICON_SIZE,
+                                                                 KIconLoader::DefaultState,
+                                                                 QStringList(),
+                                                                 0L,
+                                                                 true);
                 if (!pixmap.isNull()) {
                     QPainter painter(&icon);
                     painter.drawPixmap(QPoint(2, 0), pixmap);

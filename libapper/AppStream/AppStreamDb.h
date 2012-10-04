@@ -35,16 +35,16 @@
 
 class KDE_EXPORT AppStreamDb : public QObject {
     public:
-        typedef enum {
-            AppName = 0,
-            AppSummary,
-            AppIcon,
-            AppId,
-            AppCategories
-        } Position;
+        struct Application {
+            QString name;
+            QString summary;
+            QString icon;
+            QString id;
+            QStringList categories;
+        };
         static AppStreamDb* instance();
 
-        QList<QStringList> applications(const QString &pkgName) const;
+        QList<Application> applications(const QString &pkgName) const;
         QString genericIcon(const QString &pkgName) const;
         QStringList findPkgNames(const CategoryMatcher &parser) const;
         QString thumbnail(const QString &pkgName) const;
@@ -54,7 +54,7 @@ class KDE_EXPORT AppStreamDb : public QObject {
         AppStreamDb(QObject *parent = 0);
         Xapian::Database m_xapianDB;
 
-        QHash<QString, QStringList> m_appInfo;
+        QHash<QString, Application> m_appInfo;
         static AppStreamDb         *m_instance;
 
         void processXapianDoc (Xapian::Document doc);

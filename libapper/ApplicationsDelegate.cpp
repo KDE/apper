@@ -128,9 +128,9 @@ void ApplicationsDelegate::paint(QPainter *painter,
         QString pkgSummary = index.data(PackageModel::SummaryRole).toString();
         if (!pkgSummary.isEmpty()) {
             if (leftToRight) {
-                pkgSummary.prepend("- ");
+                pkgSummary.prepend(QLatin1String("- "));
             } else {
-                pkgSummary.append(" -");
+                pkgSummary.append(QLatin1String(" -"));
             }
         }
 

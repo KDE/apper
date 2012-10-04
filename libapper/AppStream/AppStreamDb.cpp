@@ -25,6 +25,7 @@
 
 #include <QApplication>
 #include <QVariant>
+#include <QStringBuilder>
 
 #include <KLocale>
 #include <KGlobal>
@@ -53,7 +54,7 @@ AppStreamDb::AppStreamDb(QObject *parent)
 #ifdef HAVE_APPSTREAM
     try {
         // hardcode path for now, since we don't use LibAppStreamDb in Apper
-        m_xapianDB = Xapian::Database ("/var/cache/software-center/xapian");
+        m_xapianDB = Xapian::Database("/var/cache/software-center/xapian");
     } catch (const Xapian::Error &error) {
         qWarning("Unable to load AppStreamDb Xapian database: %s", error.get_msg ().c_str ());
         return;
@@ -75,49 +76,41 @@ AppStreamDb::AppStreamDb(QObject *parent)
 
 void AppStreamDb::processXapianDoc(Xapian::Document doc)
 {
+    Application app;
+
     // Application name
-    QString appName = QString::fromUtf8(doc.get_value (AppStream::APPNAME).c_str());
+    app.name = QString::fromUtf8(doc.get_value(AppStream::APPNAME).c_str());
 
     // Package name
     QString pkgName = QString::fromUtf8(doc.get_value (AppStream::PKGNAME).c_str());
 
     // Desktop file
-    QString desktopFile = QString::fromUtf8(doc.get_value (AppStream::DESKTOP_FILE).c_str());
+    app.id = QString::fromUtf8(doc.get_value(AppStream::DESKTOP_FILE).c_str());
 
     // Summary
-    QString appSummary = QString::fromUtf8(doc.get_value (AppStream::SUMMARY).c_str());
+    app.summary = QString::fromUtf8(doc.get_value(AppStream::SUMMARY).c_str());
 
     // Application stock icon
-    QString appIconName = QString::fromUtf8(doc.get_value (AppStream::ICON).c_str());
+    app.icon = QString::fromUtf8(doc.get_value(AppStream::ICON).c_str());
 
     // Application categories
-    QString appCategories = QString::fromUtf8(doc.get_value (AppStream::CATEGORIES).c_str());
+    QString categories = QString::fromUtf8(doc.get_value(AppStream::CATEGORIES).c_str());
+    app.categories = categories.split(QLatin1String(";"));
 
-    m_appInfo.insertMulti(pkgName,
-                          QStringList()
-                          << appName
-                          << appSummary
-                          << appIconName.split('.')[0]
-                          << desktopFile
-                          << appCategories);
+    m_appInfo.insertMulti(pkgName, app);
 }
 
-QList<QStringList> AppStreamDb::applications(const QString &pkgName) const
+QList<AppStreamDb::Application> AppStreamDb::applications(const QString &pkgName) const
 {
-    QList<QStringList> ret;
-    if (m_appInfo.contains(pkgName)) {
-        ret = m_appInfo.values(pkgName);
-    }
-
-    return ret;
+    return m_appInfo.values(pkgName);;
 }
 
 QString AppStreamDb::genericIcon(const QString &pkgName) const
 {
     if (m_appInfo.contains(pkgName)) {
-        foreach (const QStringList &list, applications(pkgName)) {
-            if (!list.at(AppIcon).isEmpty()) {
-                return list.at(AppIcon);
+        foreach (const Application &app, applications(pkgName)) {
+            if (!app.icon.isEmpty()) {
+                return app.icon;
             }
         }
     }
@@ -129,10 +122,9 @@ QStringList AppStreamDb::findPkgNames(const CategoryMatcher &parser) const
 {
     QStringList packages;
 
-    QHash<QString, QStringList>::const_iterator i = m_appInfo.constBegin();
+    QHash<QString, Application>::const_iterator i = m_appInfo.constBegin();
     while (i != m_appInfo.constEnd()) {
-        QString categories = i.value()[AppCategories];
-        if (parser.match(categories.split(QLatin1String(";")))) {
+        if (parser.match(i.value().categories)) {
 //            kDebug() << i.key() << categories;
             packages << i.key();
         }
@@ -145,7 +137,7 @@ QStringList AppStreamDb::findPkgNames(const CategoryMatcher &parser) const
 QString AppStreamDb::thumbnail(const QString &pkgName) const
 {
 #ifdef HAVE_APPSTREAM
-    return "http://screenshots.debian.net/thumbnail/" + pkgName;
+    return QLatin1String("http://screenshots.debian.net/thumbnail/") % pkgName;
 #else
     Q_UNUSED(pkgName)
     return QString();
@@ -155,7 +147,7 @@ QString AppStreamDb::thumbnail(const QString &pkgName) const
 QString AppStreamDb::screenshot(const QString &pkgName) const
 {
 #ifdef HAVE_APPSTREAM
-    return "http://screenshots.debian.net/screenshot/" + pkgName;
+    return QLatin1String("http://screenshots.debian.net/screenshot/") % pkgName;
 #else
     Q_UNUSED(pkgName)
     return QString();
