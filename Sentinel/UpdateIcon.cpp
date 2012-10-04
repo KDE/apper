@@ -180,8 +180,9 @@ void UpdateIcon::getUpdateFinished()
             t->setProperty(SYSTEM_READY, systemReady);
             t->updatePackages(m_updateList, Transaction::TransactionFlagOnlyTrusted);
             if (!t->error()) {
-                // don't be interactive to not upset an idle user
-                emit watchTransaction(t->tid(), false);
+                // Force the creation of a transaction Job
+                emit watchTransaction(t->tid(), true);
+
                 //autoUpdatesInstalling(t);
                 KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
                 autoInstallNotify->setText(i18n("Updates are being automatically installed."));
@@ -201,8 +202,9 @@ void UpdateIcon::getUpdateFinished()
             t->setProperty(SYSTEM_READY, systemReady);
             t->updatePackages(securityUpdateList, Transaction::TransactionFlagOnlyTrusted);
             if (!t->error()) {
-                // don't be interactive to not upset an idle user
-                emit watchTransaction(t->tid(), false);
+                // Force the creation of a transaction Job
+                emit watchTransaction(t->tid(), true);
+
                 //autoUpdatesInstalling(t);
                 KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
                 autoInstallNotify->setText(i18n("Security updates are being automatically installed."));

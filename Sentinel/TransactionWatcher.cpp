@@ -50,12 +50,10 @@ Q_DECLARE_METATYPE(Transaction::Error)
 
 TransactionWatcher::TransactionWatcher(QObject *parent) :
     AbstractIsRunning(parent),
-    m_currentTransaction(0),
     m_messagesSNI(0),
     m_restartSNI(0),
     m_inhibitCookie(-1)
 {
-    m_transHasJob = false;
     m_tracker = new KUiServerJobTracker(this);
 
     // keep track of new transactions
@@ -71,7 +69,12 @@ TransactionWatcher::TransactionWatcher(QObject *parent) :
     m_restartType = PackageUpdateDetails::RestartNone;
 
     // here we check whether a transaction job should be created or not
-    transactionListChanged(Daemon::getTransactionList());
+    QList<QDBusObjectPath> paths = Daemon::getTransactionList();
+    QStringList tids;
+    foreach (const QDBusObjectPath &path, paths) {
+        tids << path.path();
+    }
+    transactionListChanged(tids);
 }
 
 TransactionWatcher::~TransactionWatcher()
@@ -80,16 +83,17 @@ TransactionWatcher::~TransactionWatcher()
     suppressSleep(false);
 }
 
-void TransactionWatcher::transactionListChanged(const QList<QDBusObjectPath> &tids)
+void TransactionWatcher::transactionListChanged(const QStringList &tids)
 {
     kDebug() << tids.size();
     if (!tids.isEmpty()) {
-        // the first tid is always the tid of a running transaction
-        setCurrentTransaction(tids.first());
+        foreach (const QString &tid, tids) {
+            watchTransaction(QDBusObjectPath(tid), false);
+        }
     } else {
         // There is no current transaction
-        m_currentTid = QDBusObjectPath();
-        m_currentTransaction = 0;
+        m_transactions.clear();
+        m_transactionJob.clear();
 
         // release any cookie that we might have
         suppressSleep(false);
@@ -101,76 +105,71 @@ void TransactionWatcher::transactionListChanged(const QList<QDBusObjectPath> &ti
     }
 }
 
-void TransactionWatcher::setCurrentTransaction(const QDBusObjectPath &tid)
+void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool interactive)
 {
-    // Check if the current transaction is still the same
-    if (m_currentTid == tid) {
-        if (m_currentTransaction->isCallerActive() || m_transHasJob) {
-            // if the caller is active we don't need to check if the transaction
-            // has a job watcher Or if the caller is not active but already
-            // has a transaction job return
+    Transaction *transaction;
+    if (!m_transactions.contains(tid)) {
+        // Check if the current transaction is still the same
+        transaction = new Transaction(tid, this);
+        if (transaction->error()) {
+            qWarning() << "Could not create a transaction for the path:" << tid.path();
+            delete transaction;
             return;
         }
+
+        // Store the transaction id
+        m_transactions[tid] = transaction;
+
+        Transaction::Role role = transaction->role();
+        if (role == Transaction::RoleInstallPackages ||
+                role == Transaction::RoleInstallFiles    ||
+                role == Transaction::RoleRemovePackages  ||
+                role == Transaction::RoleUpdatePackages  ||
+                role == Transaction::RoleUpgradeSystem) {
+            // AVOID showing messages and restart requires when
+            // the user was just simulating an instalation
+            // TODO fix yum backend
+            connect(transaction, SIGNAL(message(PackageKit::Transaction::Message,QString)),
+                    this, SLOT(message(PackageKit::Transaction::Message,QString)));
+            connect(transaction, SIGNAL(requireRestart(PackageKit::PackageUpdateDetails::Restart,PackageKit::Package)),
+                    this, SLOT(requireRestart(PackageKit::PackageUpdateDetails::Restart,PackageKit::Package)));
+
+            // Don't let the system sleep while doing some sensible actions
+            suppressSleep(true, PkStrings::action(role));
+        }
+        connect(transaction, SIGNAL(changed()), this, SLOT(transactionChanged()));
+        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                this, SLOT(finished(PackageKit::Transaction::Exit)));
+    } else {
+        transaction = m_transactions[tid];
     }
 
-    // saves the current transaction
-    m_currentTid = tid;
-    m_restartPackages.clear();
-    m_currentTransaction = new Transaction(tid, this);
-
-    Transaction::Role role = m_currentTransaction->role();
-    if (role == Transaction::RoleInstallPackages ||
-        role == Transaction::RoleInstallFiles    ||
-        role == Transaction::RoleRemovePackages  ||
-        role == Transaction::RoleUpdatePackages  ||
-        role == Transaction::RoleUpgradeSystem) {
-        // AVOID showing messages and restart requires when
-        // the user was just simulating an instalation
-        // TODO fix yum backend
-        connect(m_currentTransaction, SIGNAL(message(PackageKit::Transaction::Message,QString)),
-                this, SLOT(message(PackageKit::Transaction::Message,QString)));
-        connect(m_currentTransaction, SIGNAL(requireRestart(PackageKit::PackageUpdateDetails::Restart,PackageKit::Package)),
-                this, SLOT(requireRestart(PackageKit::PackageUpdateDetails::Restart,PackageKit::Package)));
-
-        // Don't let the system sleep while doing some sensible actions
-        suppressSleep(true, PkStrings::action(role));
-    }
-    connect(m_currentTransaction, SIGNAL(changed()),
-            this, SLOT(transactionChanged()));
-    connect(m_currentTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(finished(PackageKit::Transaction::Exit)));
-
-    m_transHasJob = !m_currentTransaction->isCallerActive();
-    if (m_transHasJob) {
-        TransactionJob *job = new TransactionJob(m_currentTransaction, this);
-        connect(m_currentTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-                this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
-        job->start();
-        m_tracker->registerJob(job);
-    }
+    // force the firs changed or create a TransactionJob
+    transactionChanged(transaction, interactive);
 }
 
 void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
 {
     // check if the transaction emitted any require restart
     Transaction *transaction = qobject_cast<Transaction*>(sender());
-    m_currentTid = QDBusObjectPath();
-    m_currentTransaction = 0;
-    disconnect(transaction, SIGNAL(changed()),
-               this, SLOT(transactionChanged()));
+    QDBusObjectPath tid = transaction->tid();
+    disconnect(transaction, SIGNAL(changed()), this, SLOT(transactionChanged()));
+    m_transactions.remove(tid);
+    m_transactionJob.remove(tid);
 
     if (exit == Transaction::ExitSuccess && !transaction->property("restartType").isNull()) {
         PackageUpdateDetails::Restart type = transaction->property("restartType").value<PackageUpdateDetails::Restart>();
+        QStringList restartPackages = transaction->property("restartPackages").toStringList();
 
         // Create the notification about this transaction
         KNotification *notify = new KNotification("RestartRequired");
         QString text("<b>" + i18n("The system update has completed") + "</b>");
         text.append("<br>" + PkStrings::restartType(type));
-        m_restartPackages.removeDuplicates();
-        m_restartPackages.sort();
-        if (!m_restartPackages.isEmpty()) {
+        restartPackages.removeDuplicates();
+        restartPackages.sort();
+        if (!restartPackages.isEmpty()) {
             text.append("<br>");
-            text.append(i18n("Packages: %1", m_restartPackages.join(", ")));
+            text.append(i18n("Packages: %1", restartPackages.join(QLatin1String(", "))));
         }
         notify->setPixmap(PkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         notify->setText(text);
@@ -196,11 +195,11 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
             // The restart type changed let's update the Icon
             QString iconName;
             QString subtitle;
-            if (!m_restartPackages.isEmpty()) {
+            if (!restartPackages.isEmpty()) {
                 subtitle = i18np("Package: %2",
                                  "Packages: %2",
-                                 m_restartPackages.size(),
-                                 m_restartPackages.join(", "));
+                                 restartPackages.size(),
+                                 restartPackages.join(QLatin1String(", ")));
             }
             iconName = PkIcons::restartIconName(m_restartType);
             m_restartSNI->setToolTip(iconName,
@@ -211,16 +210,25 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
     }
 }
 
-void TransactionWatcher::transactionChanged()
+void TransactionWatcher::transactionChanged(Transaction *transaction, bool interactive)
 {
-    Transaction *transaction = qobject_cast<Transaction*>(sender());
-    if (!m_transHasJob && !transaction->isCallerActive()) {
+    if (!transaction) {
+        transaction = qobject_cast<Transaction*>(sender());
+    }
+
+    QDBusObjectPath tid = transaction->tid();
+    if (!interactive) {
+        interactive = !transaction->isCallerActive();
+    }
+
+    // If the
+    if (!m_transactionJob.contains(tid) && interactive) {
         TransactionJob *job = new TransactionJob(transaction, this);
         connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
                 this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
         job->start();
         m_tracker->registerJob(job);
-        m_transHasJob = true;
+        m_transactionJob[tid] = job;
     }
 }
 
@@ -349,7 +357,9 @@ void TransactionWatcher::requireRestart(PackageKit::PackageUpdateDetails::Restar
     }
 
     if (!pkg.name().isEmpty()) {
-        m_restartPackages << pkg.name();
+        QStringList restartPackages = transaction->property("restartPackages").toStringList();
+        restartPackages << pkg.name();
+        transaction->setProperty("restartPackages", restartPackages);
     }
 }
 
@@ -398,9 +408,9 @@ void TransactionWatcher::hideRestartIcon()
 bool TransactionWatcher::isRunning()
 {
     return AbstractIsRunning::isRunning() ||
-           m_currentTransaction ||
-          !m_messages.isEmpty() ||
-           m_restartType != PackageUpdateDetails::RestartNone;
+            !m_transactions.isEmpty() ||
+            !m_messages.isEmpty() ||
+            m_restartType != PackageUpdateDetails::RestartNone;
 }
 
 void TransactionWatcher::suppressSleep(bool enable, const QString &reason)

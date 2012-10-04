@@ -31,6 +31,7 @@
 
 using namespace PackageKit;
 
+class TransactionJob;
 class StatusNotifierItem;
 class TransactionWatcher : public AbstractIsRunning
 {
@@ -41,14 +42,17 @@ public:
 
     bool isRunning();
 
+public slots:
+    void watchTransaction(const QDBusObjectPath &tid, bool interactive);
+
 private slots:
-    void transactionListChanged(const QList<QDBusObjectPath> &tids);
+    void transactionListChanged(const QStringList &tids);
     void message(PackageKit::Transaction::Message type, const QString &message);
     void errorCode(PackageKit::Transaction::Error, const QString &);
     void errorActivated(uint action);
     void requireRestart(PackageKit::PackageUpdateDetails::Restart type, const PackageKit::Package &pkg);
     void finished(PackageKit::Transaction::Exit exit);
-    void transactionChanged();
+    void transactionChanged(Transaction *transaction = 0, bool interactive = false);
 
     void logout();
     void showMessages();
@@ -57,11 +61,6 @@ private slots:
 
 private:
     void suppressSleep(bool enable, const QString &reason = QString());
-    void setCurrentTransaction(const QDBusObjectPath &tid);
-
-    Transaction *m_currentTransaction;
-    QDBusObjectPath m_currentTid;
-    bool m_transHasJob;
 
     // Hide this icon action
     QAction *m_hideAction;
@@ -73,8 +72,9 @@ private:
 
     // Restart menu entry
     PackageUpdateDetails::Restart m_restartType;
-    QStringList      m_restartPackages;
     StatusNotifierItem *m_restartSNI;
+    QHash<QDBusObjectPath, Transaction*> m_transactions;
+    QHash<QDBusObjectPath, TransactionJob*> m_transactionJob;
 
     // cookie to suppress sleep
     int           m_inhibitCookie;
