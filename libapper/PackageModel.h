@@ -32,6 +32,7 @@
 class KDE_EXPORT PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
+    Q_PROPERTY(bool checkable READ checkable WRITE setCheckable NOTIFY changed)
 public:
     enum {
         NameCol = 0,
@@ -55,7 +56,8 @@ public:
         ApplicationId,
         ApplicationFilterRole,
         PackageName,
-        PackageRole
+        PackageRole,
+        InfoIconRole
     };
     typedef struct {
         PackageKit::Package pkg;
@@ -86,6 +88,7 @@ public:
      */
     void clearSelectedNotPresent();
 
+    bool checkable() const;
     void setCheckable(bool checkable);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
@@ -119,6 +122,8 @@ public slots:
     void fetchCurrentVersions();
     void fetchCurrentVersionsFinished();
     void updateCurrentVersion(const PackageKit::Package &package);
+
+    void getUpdates(bool fetchCurrentVersions, bool selected);
 
 signals:
     void changed(bool value);

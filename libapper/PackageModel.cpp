@@ -56,6 +56,23 @@ PackageModel::PackageModel(QObject *parent)
   m_fetchInstalledVersionsTransaction(0)
 {
     m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
+
+    QHash<int, QByteArray> roles = roleNames();
+    roles[SortRole] = "rSort";
+    roles[NameRole] = "rName";
+    roles[SummaryRole] = "rSummary";
+    roles[VersionRole] = "rVersion";
+    roles[ArchRole] = "rArch";
+    roles[IconRole] = "rIcon";
+    roles[IdRole] = "rId";
+    roles[CheckStateRole] = "rChecked";
+    roles[InfoRole] = "rInfo";
+    roles[ApplicationId] = "rApplicationId";
+    roles[ApplicationFilterRole] = "rApplicationFilter";
+    roles[PackageName] = "rPackageName";
+    roles[PackageRole] = "rPackage";
+    roles[InfoIconRole] = "rInfoIcon";
+    setRoleNames(roles);
 }
 
 void PackageModel::addPackage(const PackageKit::Package &package, bool selected)
@@ -333,6 +350,8 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         return package.isPackage ? 1 : 0; // Packages comes after applications
     case ApplicationId:
         return package.appId;
+    case InfoIconRole:
+        return PkIcons::packageIcon(package.pkg.info());
     default:
         return QVariant();
     }
@@ -412,6 +431,11 @@ void PackageModel::clearSelectedNotPresent()
             }
         }
     }
+}
+
+bool PackageModel::checkable() const
+{
+    return m_checkable;
 }
 
 void PackageModel::uncheckInstalledPackages()
@@ -561,6 +585,44 @@ void PackageModel::updateCurrentVersion(const PackageKit::Package &package)
                 }
             }
         }
+    }
+}
+
+void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
+{
+    clear();
+    Transaction *transaction = new Transaction(this);
+    if (selected) {
+        connect(transaction, SIGNAL(package(PackageKit::Package)),
+                this, SLOT(addSelectedPackage(PackageKit::Package)));
+    } else {
+        connect(transaction, SIGNAL(package(PackageKit::Package)),
+                this, SLOT(addPackage(PackageKit::Package)));
+    }
+    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+//    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+//            m_busySeq, SLOT(stop()));
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            this, SLOT(finished()));
+    // This is required to estimate download size
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            this, SLOT(fetchSizes()));
+    if (fetchCurrentVersions) {
+        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                this, SLOT(fetchCurrentVersions()));
+    }
+//    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+//            this, SLOT(getUpdatesFinished()));
+    // get all updates
+    transaction->getUpdates();
+
+    Transaction::InternalError error = transaction->error();
+    if (error) {
+        transaction->deleteLater();
+//        KMessageBox::sorry(this, PkStrings::daemonError(error));
+    } else {
+//        m_busySeq->start();
     }
 }
 
