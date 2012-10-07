@@ -1,6 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Software Updater (QML)
+Name[nl]=Toepassing om software bij te werken (QML)
+Name[pt]=Actualização das Aplicações (QML)
+Name[pt_BR]=Atualizador de programas (QML)
+Name[sv]=Uppdateringar av programvara (QML)
+Name[uk]=Оновлення програм (QML)
+Name[x-test]=xxSoftware Updater (QML)xx
 Type=Service
 ServiceTypes=Plasma/Applet,Plasma/PopupApplet
 Icon=weather-clear
