@@ -21,11 +21,12 @@ import Qt 4.7
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.qtextracomponents 0.1
+import org.packagekit 0.1 as PackageKit
 
 Item {
     id: updateItem
     width: ListView.view.width
-    property bool expanded: updateItem.ListView.view.currentIndex === index
+    property bool expanded: ListView.view.currentIndex === index
     height: (expanded ? actionRow.height + updateRow.height : updateRow.height) + padding.margins.top + padding.margins.bottom
     Behavior on height { PropertyAnimation {} }
 
@@ -36,6 +37,12 @@ Item {
         opacity: 0
         Behavior on opacity { PropertyAnimation {} }
         anchors.fill: parent
+    }
+
+    onExpandedChanged: {
+        console.debug("expanded changed: " + index);
+        var transaction = new PackageKit.Transaction();
+        transaction.getPackageDetails("foo:foof");
     }
     
     MouseArea {

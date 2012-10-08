@@ -39,10 +39,7 @@ Item {
 
         }
 
-        model: Apper.PackageModel {
-            id: updatesModel
-            checkable: true
-        }
+        model: updatesModel
     }
 
     Component.onCompleted: {
