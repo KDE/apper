@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Software Updater
+Name[el]=Ενημερώσεις λογισμικού
 Name[nl]=Toepassing om software bij te werken
 Name[pt]=Actualização das Aplicações
 Name[pt_BR]=Atualizador de programas
@@ -8,6 +9,7 @@ Name[sv]=Uppdateringar av programvara
 Name[uk]=Оновлення програм
 Name[x-test]=xxSoftware Updaterxx
 Comment=Displays and updates software
+Comment[el]=Εμφανίζει και ενημερώνει το λογισμικό
 Comment[nl]=Toont software en werkt deze bij
 Comment[pt]=Mostra e actualiza as aplicações
 Comment[pt_BR]=Mostra e atualiza os programas
