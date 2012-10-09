@@ -69,6 +69,10 @@ UpdaterApplet::~UpdaterApplet()
 {
 }
 
+QML_DECLARE_TYPE(PackageKit::PackageUpdateDetails)
+QML_DECLARE_TYPE(PackageKit::PackageUpdateDetails::UpdateState)
+QML_DECLARE_TYPE(PackageKit::PackageUpdateDetails::Restart)
+
 QGraphicsWidget *UpdaterApplet::graphicsWidget()
 {
     if (!m_declarativeWidget) {
@@ -77,8 +81,11 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
         m_declarativeWidget->engine()->rootContext()->setContextProperty("updatesModel", m_updatesModel);
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
         qmlRegisterType<PackageKit::Transaction>("org.packagekit", 0, 1, "Transaction");
-        qmlRegisterUncreatableType<PackageKit::PackageDetails>("org.packagekit", 0, 1, "PackageDetails", QString("reason for?"));
-        qmlRegisterUncreatableType<PackageKit::PackageUpdateDetails>("org.packagekit", 0, 1, "PackageUpdateDetails", QString("reason for?"));
+        qmlRegisterType<PackageKit::Package>("org.packagekit", 0, 1, "Pkg");
+        qmlRegisterType<PackageKit::PackageDetails>("org.packagekit", 0, 1, "PkgDetails");
+        qmlRegisterType<PackageKit::PackageUpdateDetails>("org.packagekit", 0, 1, "PkgUpdateDetails");
+        qmlRegisterUncreatableType<PackageKit::PackageUpdateDetails::UpdateState>("org.packagekit", 0, 1, "PkgUpdateDetailsState", "enum");
+        qmlRegisterUncreatableType<PackageKit::PackageUpdateDetails::Restart>("org.packagekit", 0, 1, "PkgUpdateDetailsRestart", "enum");
 
         Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
         Plasma::Package package(QString(), "org.packagekit.updater", structure);

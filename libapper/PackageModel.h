@@ -142,6 +142,4 @@ private:
     PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
 };
 
-Q_DECLARE_METATYPE(PackageKit::Package)
-
 #endif

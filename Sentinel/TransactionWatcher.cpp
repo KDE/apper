@@ -45,7 +45,6 @@
 
 #include <Daemon>
 
-Q_DECLARE_METATYPE(PackageUpdateDetails::Restart)
 Q_DECLARE_METATYPE(Transaction::Error)
 
 TransactionWatcher::TransactionWatcher(QObject *parent) :

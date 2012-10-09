@@ -40,9 +40,17 @@ Item {
     }
 
     onExpandedChanged: {
-        console.debug("expanded changed: " + index);
-        var transaction = new PackageKit.Transaction();
-        transaction.getPackageDetails("foo:foof");
+        console.debug("expanded changed: " + index + " rPackageId " + rId);
+        if (expanded) {
+            var component = Qt.createComponent("ChangelogView.qml");
+            console.debug("component changed: " + component.status);
+            if (component.status === Component.Ready) {
+                var details = component.createObject(actionRow, {"packageID" : rId});
+                console.debug("createObject " + details);
+            } else {
+                console.debug("component changed: " + component.errorString());
+            }
+        }
     }
     
     MouseArea {
