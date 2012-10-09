@@ -1,10 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Software Updater (QML)
+Name[cs]=Aktualizace softwaru (QML)
+Name[da]=Softwareopdatering (QML)
 Name[el]=Ενημερώσεις λογισμικού (QML)
 Name[nl]=Toepassing om software bij te werken (QML)
 Name[pt]=Actualização das Aplicações (QML)
 Name[pt_BR]=Atualizador de programas (QML)
+Name[sk]=Aktualizácot softvéru (QML)
 Name[sv]=Uppdateringar av programvara (QML)
 Name[uk]=Оновлення програм (QML)
 Name[x-test]=xxSoftware Updater (QML)xx
