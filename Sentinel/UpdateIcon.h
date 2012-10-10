@@ -25,6 +25,8 @@
 
 #include "AbstractIsRunning.h"
 
+#include <QStringList>
+
 #include <Transaction>
 
 using namespace PackageKit;
@@ -49,7 +51,7 @@ public slots:
     void checkForUpdates(bool system_ready);
 
 private slots:
-    void packageToUpdate(const PackageKit::Package &package);
+    void packageToUpdate(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void getUpdateFinished();
     void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
 
@@ -62,7 +64,7 @@ private:
 
     Transaction *m_getUpdatesT;
     StatusNotifierItem *m_statusNotifierItem;
-    QList<Package> m_updateList;
+    QStringList m_updateList;
 };
 
 #endif

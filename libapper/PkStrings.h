@@ -28,19 +28,19 @@
 namespace PkStrings
 {
     KDE_EXPORT QString finished(PackageKit::Transaction::Exit status);
-    KDE_EXPORT QString infoPresent(PackageKit::Package::Info info);
-    KDE_EXPORT QString infoPast(PackageKit::Package::Info info);
+    KDE_EXPORT QString infoPresent(PackageKit::Transaction::Info info);
+    KDE_EXPORT QString infoPast(PackageKit::Transaction::Info info);
     KDE_EXPORT QString error(PackageKit::Transaction::Error error);
     KDE_EXPORT QString errorMessage(PackageKit::Transaction::Error error);
     KDE_EXPORT QString message(PackageKit::Transaction::Message type);
     KDE_EXPORT QString status(PackageKit::Transaction::Status status);
     KDE_EXPORT QString statusPast(PackageKit::Transaction::Status status);
-    KDE_EXPORT QString groups(PackageKit::PackageDetails::Group group);
-    KDE_EXPORT QString info(PackageKit::Package::Info state);
+    KDE_EXPORT QString groups(PackageKit::Transaction::Group group);
+    KDE_EXPORT QString info(PackageKit::Transaction::Info state);
     KDE_EXPORT QString packageQuantity(bool updates, int packages, int selected);
-    KDE_EXPORT QString updateState(PackageKit::PackageUpdateDetails::UpdateState value);
-    KDE_EXPORT QString restartType(PackageKit::PackageUpdateDetails::Restart value);
-    KDE_EXPORT QString restartTypeFuture(PackageKit::PackageUpdateDetails::Restart value);
+    KDE_EXPORT QString updateState(PackageKit::Transaction::UpdateState value);
+    KDE_EXPORT QString restartType(PackageKit::Transaction::Restart value);
+    KDE_EXPORT QString restartTypeFuture(PackageKit::Transaction::Restart value);
     KDE_EXPORT QString action(PackageKit::Transaction::Role action);
     KDE_EXPORT QString actionPast(PackageKit::Transaction::Role action);
     KDE_EXPORT QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);

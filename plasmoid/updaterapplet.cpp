@@ -34,8 +34,6 @@
 
 #include <PackageModel.h>
 #include <Transaction>
-#include <PackageDetails>
-#include <PackageUpdateDetails>
 
 using namespace PackageKit;
 
@@ -69,10 +67,6 @@ UpdaterApplet::~UpdaterApplet()
 {
 }
 
-QML_DECLARE_TYPE(PackageKit::PackageUpdateDetails)
-QML_DECLARE_TYPE(PackageKit::PackageUpdateDetails::UpdateState)
-QML_DECLARE_TYPE(PackageKit::PackageUpdateDetails::Restart)
-
 QGraphicsWidget *UpdaterApplet::graphicsWidget()
 {
     if (!m_declarativeWidget) {
@@ -81,11 +75,6 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
         m_declarativeWidget->engine()->rootContext()->setContextProperty("updatesModel", m_updatesModel);
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
         qmlRegisterType<PackageKit::Transaction>("org.packagekit", 0, 1, "Transaction");
-        qmlRegisterType<PackageKit::Package>("org.packagekit", 0, 1, "Pkg");
-        qmlRegisterType<PackageKit::PackageDetails>("org.packagekit", 0, 1, "PkgDetails");
-        qmlRegisterType<PackageKit::PackageUpdateDetails>("org.packagekit", 0, 1, "PkgUpdateDetails");
-        qmlRegisterUncreatableType<PackageKit::PackageUpdateDetails::UpdateState>("org.packagekit", 0, 1, "PkgUpdateDetailsState", "enum");
-        qmlRegisterUncreatableType<PackageKit::PackageUpdateDetails::Restart>("org.packagekit", 0, 1, "PkgUpdateDetailsRestart", "enum");
 
         Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
         Plasma::Package package(QString(), "org.packagekit.updater", structure);
@@ -109,11 +98,11 @@ void UpdaterApplet::toolTipAboutToShow()
 
     QString icon = "kpackagekit-updates";
     for (int i = 0; i < m_updatesModel->rowCount(); ++i) {
-        Package::Info info = m_updatesModel->index(i, 0).data(PackageModel::InfoRole).value<Package::Info>();
-        if (info == Package::InfoSecurity) {
+        Transaction::Info info = m_updatesModel->index(i, 0).data(PackageModel::InfoRole).value<Transaction::Info>();
+        if (info == Transaction::InfoSecurity) {
             icon = "kpackagekit-security";
             break;
-        } else if (info == Package::InfoSecurity) {
+        } else if (info == Transaction::InfoSecurity) {
             icon = "kpackagekit-important";
         }
     }

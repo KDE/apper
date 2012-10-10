@@ -205,8 +205,8 @@ void Updater::updatePallete()
 
 void Updater::on_packageView_clicked(const QModelIndex &index)
 {
-    QString    pkgId   = index.data(PackageModel::IdRole).toString();
-    Package::Info pkgInfo = static_cast<Package::Info>(index.data(PackageModel::InfoRole).toUInt());
+    QString pkgId = index.data(PackageModel::IdRole).toString();
+    Transaction::Info pkgInfo = index.data(PackageModel::InfoRole).value<Transaction::Info>();
     updateDetails->setPackage(pkgId, pkgInfo);
 }
 
@@ -240,7 +240,7 @@ bool Updater::hasChanges() const
 void Updater::checkEnableUpdateButton()
 {
     emit changed(hasChanges());
-    int selectedSize = m_updatesModel->selectedPackages().size();
+    int selectedSize = m_updatesModel->selectedPackagesToInstall().size();
     int updatesSize = m_updatesModel->rowCount();
     if (selectedSize == 0) {
         m_header->setCheckState(Qt::Unchecked);
@@ -304,9 +304,9 @@ void Updater::getUpdatesFinished()
     }
 }
 
-QList<Package> Updater::packagesToUpdate() const
+QStringList Updater::packagesToUpdate() const
 {
-    return m_updatesModel->selectedPackages();
+    return m_updatesModel->selectedPackagesToInstall();
 }
 
 void Updater::getUpdates()
@@ -326,11 +326,11 @@ void Updater::getUpdates()
     updateDetails->hide();
     m_updatesT = new Transaction(this);
     if (m_selected) {
-        connect(m_updatesT, SIGNAL(package(PackageKit::Package)),
-                m_updatesModel, SLOT(addSelectedPackage(PackageKit::Package)));
+        connect(m_updatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                m_updatesModel, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
     } else {
-        connect(m_updatesT, SIGNAL(package(PackageKit::Package)),
-                m_updatesModel, SLOT(addPackage(PackageKit::Package)));
+        connect(m_updatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                m_updatesModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     }
     connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
             this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));

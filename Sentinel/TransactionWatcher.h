@@ -50,7 +50,7 @@ private slots:
     void message(PackageKit::Transaction::Message type, const QString &message);
     void errorCode(PackageKit::Transaction::Error, const QString &);
     void errorActivated(uint action);
-    void requireRestart(PackageKit::PackageUpdateDetails::Restart type, const PackageKit::Package &pkg);
+    void requireRestart(PackageKit::Transaction::Restart type, const QString &packageID);
     void finished(PackageKit::Transaction::Exit exit);
     void transactionChanged(Transaction *transaction = 0, bool interactive = false);
 
@@ -71,7 +71,7 @@ private:
     StatusNotifierItem *m_messagesSNI;
 
     // Restart menu entry
-    PackageUpdateDetails::Restart m_restartType;
+    Transaction::Restart m_restartType;
     StatusNotifierItem *m_restartSNI;
     QHash<QDBusObjectPath, Transaction*> m_transactions;
     QHash<QDBusObjectPath, TransactionJob*> m_transactionJob;
@@ -80,5 +80,7 @@ private:
     int           m_inhibitCookie;
     KUiServerJobTracker *m_tracker;
 };
+
+Q_DECLARE_METATYPE(PackageKit::Transaction::Restart)
 
 #endif

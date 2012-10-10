@@ -23,11 +23,15 @@
 
 #include <KLocale>
 
+#include <Transaction>
+
 #include "PkStrings.h"
 
-LicenseAgreement::LicenseAgreement(PackageKit::Eula eula, QWidget *parent) :
+using namespace PackageKit;
+
+LicenseAgreement::LicenseAgreement(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement, QWidget *parent) :
     KDialog(parent),
-    m_eula(eula),
+    m_id(eulaID),
     ui(new Ui::LicenseAgreement)
 {
     ui->setupUi(mainWidget());
@@ -35,9 +39,9 @@ LicenseAgreement::LicenseAgreement(PackageKit::Eula eula, QWidget *parent) :
     setButtons(KDialog::Cancel | KDialog::Yes);
     setButtonText(KDialog::Yes, i18n("Accept Agreement"));
     setPlainCaption(i18n("License Agreement Required"));
-    ui->title->setText(i18n("License required for %1 by %2", eula.package.name(), eula.vendor));
+    ui->title->setText(i18n("License required for %1 by %2", Transaction::packageName(packageID), vendor));
 
-    ui->ktextbrowser->setText(eula.licenseAgreement);
+    ui->ktextbrowser->setText(licenseAgreement);
 }
 
 LicenseAgreement::~LicenseAgreement()
@@ -47,7 +51,7 @@ LicenseAgreement::~LicenseAgreement()
 
 QString LicenseAgreement::id() const
 {
-    return m_eula.id;
+    return m_id;
 }
 
 #include "LicenseAgreement.moc"

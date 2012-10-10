@@ -16,27 +16,51 @@
  */
 
 import QtQuick 1.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.packagekit 0.1 as PackageKit
 
 Item {
     id: root
 
+    function deleteLater() {
+        root.destroy();
+    }
+
     width: parent.width
-    height: changelog.paintedHeight
+    height: busy.running ? busy.height : changelogText.paintedHeight
 
     property string packageID: ""
 
     PackageKit.Transaction {
         id: transaction
-        onPackageUpdateDetails: {
+        onUpdateDetail: {
+            busy.running = false;
+            busy.visible = false;
             console.debug("onPackageUpdateDetails: ");
-            console.debug(pkgUpdateDetails.packageId);
-            changelog.text = pkgUpdateDetails.detail;
+            console.debug(packageID);
+            console.debug(updateText);
+            console.debug(restart);
+            console.debug(state);
+            console.debug(issued);
+            if (restart === PackageKit.Transaction.RestartApplication) {
+                console.debug("RestartApplication: ");
+            } else {
+                console.debug("RestartNone not this: ");
+            }
+
+            changelogText.text = changelog;
         }
     }
 
+    PlasmaComponents.BusyIndicator {
+        id: busy
+        anchors.centerIn: parent
+        running: true
+    }
+
     Text {
-        id: changelog
+        id: changelogText
+        width: parent.width
         wrapMode: Text.WordWrap
     }
 

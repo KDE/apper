@@ -26,7 +26,6 @@
 #include <QMetaObject>
 #include <KIcon>
 
-#include <Package>
 #include <Transaction>
 
 class KDE_EXPORT PackageModel : public QAbstractItemModel
@@ -56,16 +55,19 @@ public:
         ApplicationId,
         ApplicationFilterRole,
         PackageName,
-        PackageRole,
         InfoIconRole
     };
     typedef struct {
-        PackageKit::Package pkg;
         QString    displayName;
-        QString    displaySummary;
-        QString    currentVersion;
+        QString    version;
+        QString    arch;
+        QString    repo;
+        QString    packageID;
+        QString    summary;
+        PackageKit::Transaction::Info info;
         QString    icon;
         QString    appId;
+        QString    currentVersion;
         bool       isPackage;
         double     size;
     } InternalPackage;
@@ -80,7 +82,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     bool allSelected() const;
-    PackageKit::PackageList selectedPackages() const;
+    QStringList selectedPackagesToInstall() const;
+    QStringList selectedPackagesToRemove() const;
     unsigned long downloadSize() const;
     void clear();
     /**
@@ -95,11 +98,10 @@ public:
     QModelIndex parent(const QModelIndex &index) const;
 
 public slots:
-    void addPackage(const PackageKit::Package &package,
-                    bool selected = false);
-    void addPackages(const PackageKit::PackageList &packages,
+    void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected = false);
+    void addPackages(const QStringList &packages,
                      bool selected = false);
-    void addSelectedPackage(const PackageKit::Package &package);
+    void addSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void rmSelectedPackage(const PackageModel::InternalPackage &package);
 
     void setAllChecked(bool checked);
@@ -117,11 +119,16 @@ public slots:
 
     void fetchSizes();
     void fetchSizesFinished();
-    void updateSize(const PackageKit::PackageDetails &package);
+    void updateSize(const QString &packageID,
+                    const QString &license,
+                    PackageKit::Transaction::Group group,
+                    const QString &detail,
+                    const QString &url,
+                    qulonglong size);
 
     void fetchCurrentVersions();
     void fetchCurrentVersionsFinished();
-    void updateCurrentVersion(const PackageKit::Package &package);
+    void updateCurrentVersion(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
 
     void getUpdates(bool fetchCurrentVersions, bool selected);
 

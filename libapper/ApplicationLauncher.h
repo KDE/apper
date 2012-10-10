@@ -23,8 +23,9 @@
 
 #include <KDialog>
 #include <KService>
-#include <Package>
 #include <QModelIndex>
+
+#include <Transaction>
 
 namespace Ui {
     class ApplicationLauncher;
@@ -41,12 +42,12 @@ public:
     bool embedded() const;
     void setEmbedded(bool embedded);
 
-    QList<PackageKit::Package> packages() const;
+    QStringList packages() const;
     bool hasApplications();
 
 public slots:
-    void addPackage(const PackageKit::Package &package);
-    void files(const PackageKit::Package &package, const QStringList &files);
+    void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
+    void files(const QString &packageID, const QStringList &files);
 
 private slots:
     void itemClicked(const QModelIndex &index);
@@ -55,7 +56,7 @@ private slots:
 private:
     bool m_embed;
     QStringList m_files;
-    QList<PackageKit::Package> m_packages;
+    QStringList m_packages;
     Ui::ApplicationLauncher *ui;
 };
 

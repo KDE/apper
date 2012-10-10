@@ -31,6 +31,7 @@ namespace Ui {
     class SessionTask;
 }
 
+class PackageModel;
 class ReviewChanges;
 class SessionTask : public KDialog
 {
@@ -58,6 +59,12 @@ public:
         Unknown         = 0x100
     };
     Q_DECLARE_FLAGS(Interactions, Interaction)
+
+    typedef struct {
+        Transaction::Info info;
+        QString packageID;
+        QString summary;
+    } IPackage;
 
     bool showConfirmSearch() const;
     bool showConfirmDeps() const;
@@ -90,7 +97,7 @@ protected:
 
     bool foundPackages() const;
     int  foundPackagesSize() const;
-    QList<Package> foundPackagesList() const;
+    PackageModel* model() const;
     PkTransaction* setTransaction(Transaction::Role role, Transaction *transaction = 0);
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
@@ -102,7 +109,7 @@ protected slots:
     void setInfo(const QString &title, const QString &text, const QString &details = QString());
     void setError(const QString &title, const QString &text, const QString &details = QString());
     void setFinish(const QString &title, const QString &text, QWidget *widget = 0);
-    virtual void addPackage(const PackageKit::Package &package);
+    virtual void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     virtual void searchFinished(PkTransaction::ExitStatus status);
     virtual void commitFinished(PkTransaction::ExitStatus status);
 
@@ -124,8 +131,8 @@ private:
     QDBusMessage m_message;
     Interactions m_interactions;
     uint m_timeout;
-    QList<Package> m_foundPackages;
-    QList<Package> m_removePackages;
+    PackageModel *m_model;
+    QStringList m_removePackages;
     ReviewChanges *m_reviewChanges;
     PkTransaction *m_pkTransaction;
     Ui::SessionTask *ui;

@@ -21,6 +21,7 @@
 #include "PkSearchFile.h"
 
 #include <PkStrings.h>
+#include <PackageModel.h>
 
 #include <KLocale>
 
@@ -46,8 +47,8 @@ PkSearchFile::PkSearchFile(const QString &file_name,
     PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Package)),
-            this, SLOT(addPackage(PackageKit::Package)));
+    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     t->searchFiles(m_fileName, Transaction::FilterNewest);
     Transaction::InternalError error = t->error();
     if (error) {
@@ -66,11 +67,18 @@ PkSearchFile::~PkSearchFile()
 
 void PkSearchFile::searchSuccess()
 {
-    const Package &pkg = foundPackagesList().first();
-    bool installed = pkg.info() == Package::InfoInstalled;
+    QModelIndex index = model()->index(0, 0);
+    bool installed = false;
+    QString packageID;
+    if (index.isValid()) {
+        Transaction::Info info;
+        info = index.data(PackageModel::InfoRole).value<Transaction::Info>();
+        installed = info == Transaction::InfoInstalled;
+        packageID = index.data(PackageModel::IdRole).toString();
+    }
     QDBusMessage reply = m_message.createReply();
     reply << installed;
-    reply << pkg.name();
+    reply << Transaction::packageName(packageID);
     kDebug() << reply;
     sendMessageFinished(reply);
 }

@@ -208,9 +208,9 @@ void CategoryModel::fillWithStandardGroups()
     QStandardItem *item;
     for (int i = 1; i < 64; ++i) {
         if (m_groups & i) {
-            PackageDetails::Group group;
-            group = static_cast<PackageDetails::Group>(i);
-            if (group != PackageDetails::GroupUnknown) {
+            Transaction::Group group;
+            group = static_cast<Transaction::Group>(i);
+            if (group != Transaction::GroupUnknown) {
                 item = new QStandardItem(PkStrings::groups(group));
                 item->setDragEnabled(false);
                 item->setData(Transaction::RoleSearchGroup, SearchRole);
@@ -334,10 +334,10 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                     item->setDragEnabled(false);
                 }
                 QString group = xml.readElementText();
-                PackageDetails::Group groupEnum;
-                int groupInt = Daemon::enumFromString<Package>(group, "Group");
-                groupEnum = static_cast<PackageDetails::Group>(groupInt);
-                if (groupEnum != PackageDetails::GroupUnknown && m_groups & groupEnum) {
+                Transaction::Group groupEnum;
+                int groupInt = Daemon::enumFromString<Transaction>(group, "Group");
+                groupEnum = static_cast<Transaction::Group>(groupInt);
+                if (groupEnum != Transaction::GroupUnknown && m_groups & groupEnum) {
                     item->setData(Transaction::RoleSearchGroup, SearchRole);
                     item->setData(groupEnum, GroupRole);
                 }
@@ -352,8 +352,8 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
         (!item->data(GroupRole).isNull() || !item->data(CategoryRole).isNull())) {
         if (item->data(CategoryRole).isNull()) {
             // Set the group name to get it translated
-            PackageDetails::Group group;
-            group = static_cast<PackageDetails::Group>(item->data(GroupRole).toUInt());
+            Transaction::Group group;
+            group = item->data(GroupRole).value<Transaction::Group>();
             item->setText(PkStrings::groups(group));
         }
         item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);

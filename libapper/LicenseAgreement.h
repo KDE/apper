@@ -23,8 +23,6 @@
 
 #include <KDialog>
 
-#include <Eula>
-
 namespace Ui {
     class LicenseAgreement;
 }
@@ -33,13 +31,13 @@ class LicenseAgreement : public KDialog
 {
     Q_OBJECT
 public:
-    explicit LicenseAgreement(PackageKit::Eula eula, QWidget *parent = 0);
+    explicit LicenseAgreement(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement, QWidget *parent = 0);
     ~LicenseAgreement();
 
     QString id() const;
 
 private:
-    PackageKit::Eula m_eula;
+    QString m_id;
     Ui::LicenseAgreement *ui;
 };
 

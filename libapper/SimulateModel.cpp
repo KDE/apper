@@ -28,101 +28,101 @@ using namespace PackageKit;
 
 SimulateModel::SimulateModel(QObject *parent)
 : QAbstractTableModel(parent),
-  m_currentInfo(Package::InfoUnknown)
+  m_currentInfo(Transaction::InfoUnknown)
 {
 //     setSortRole(Qt::DisplayRole);
 }
 
 QVariant SimulateModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() ||
-        m_currentInfo == Package::InfoUnknown ||
-        index.row() >= m_packages[m_currentInfo].size()) {
-        return QVariant();
-    }
+//    if (!index.isValid() ||
+//        m_currentInfo == Transaction::InfoUnknown ||
+//        index.row() >= m_packages[m_currentInfo].size()) {
+//        return QVariant();
+//    }
 
-    const Package &p = m_packages[m_currentInfo].at(index.row());
-    switch(index.column()) {
-    case 0:
-        switch (role) {
-        case Qt::DisplayRole:
-            return p.name();
-        case Qt::DecorationRole:
-            return PkIcons::getIcon("package");
-        case Qt::ToolTipRole:
-            return p.summary();
-        default:
-            return QVariant();
-        }
-        break;
-    case 1:
-        if (role == Qt::DisplayRole) {
-            return p.version();
-        }
-        break;
-    }
+//    const Package &p = m_packages[m_currentInfo].at(index.row());
+//    switch(index.column()) {
+//    case 0:
+//        switch (role) {
+//        case Qt::DisplayRole:
+//            return p.name();
+//        case Qt::DecorationRole:
+//            return PkIcons::getIcon("package");
+//        case Qt::ToolTipRole:
+//            return p.summary();
+//        default:
+//            return QVariant();
+//        }
+//        break;
+//    case 1:
+//        if (role == Qt::DisplayRole) {
+//            return p.version();
+//        }
+//        break;
+//    }
     return QVariant();
 }
 
-Package::Info SimulateModel::currentInfo() const
+Transaction::Info SimulateModel::currentInfo() const
 {
     return m_currentInfo;
 }
 
-void SimulateModel::setCurrentInfo(Package::Info currentInfo)
+void SimulateModel::setCurrentInfo(Transaction::Info currentInfo)
 {
     m_currentInfo = currentInfo;
     reset();
 }
 
-int SimulateModel::countInfo(Package::Info info)
+int SimulateModel::countInfo(Transaction::Info info)
 {
-    if (m_packages.contains(info)) {
-        return m_packages[info].size();
-    } else {
+//    if (m_packages.contains(info)) {
+//        return m_packages[info].size();
+//    } else {
         return 0;
-    }
+//    }
 }
 
-void SimulateModel::addPackage(const PackageKit::Package &p)
+void SimulateModel::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    if (p.info() == Package::InfoFinished ||
-        p.info() == Package::InfoCleanup) {
-        return;
-    }
+//    if (info == Transaction::InfoFinished ||
+//        info == Transaction::InfoCleanup) {
+//        return;
+//    }
 
-    // These are packages that are going to be installed
-    // store them to be resolved later to get the desktop files
-    if (p.info() == Package::InfoInstalling &&
-        !m_newPackages.contains(p.name())) {
-        m_newPackages.append(p.name());
-    }
+//    // These are packages that are going to be installed
+//    // store them to be resolved later to get the desktop files
+//    if (info == Transaction::InfoInstalling &&
+//        !m_newPackages.contains(Transaction::packageName(packageID))) {
+//        m_newPackages << Transaction::packageName(packageID);
+//    }
 
-    foreach (const Package &pkg, m_skipPackages) {
-        if (pkg.id() == p.id()) {
-            // found a package to skip
-            return;
-        }
-    }
+//    foreach (const QString &pkg, m_skipPackages) {
+//        if (pkg == packageID) {
+//            // found a package to skip
+//            return;
+//        }
+//    }
 
-    if (m_currentInfo == Package::InfoUnknown) {
-        m_currentInfo = p.info();
-    }
-    m_packages[p.info()].append(p);
+//    if (m_currentInfo == Transaction::InfoUnknown) {
+//        m_currentInfo = info;
+//    }
+//    m_packages[info] << packageID;
 }
 
 int SimulateModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && m_currentInfo == Package::InfoUnknown) {
+//    if (parent.isValid() && m_currentInfo == Transaction::InfoUnknown) {
         return 0;
-    } else {
-        return m_packages[m_currentInfo].size();
-    }
+//    } else {
+//        return m_packages[m_currentInfo].size();
+//    }
 }
 
 int SimulateModel::columnCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && m_currentInfo == Package::InfoUnknown) {
+    if (parent.isValid() && m_currentInfo == Transaction::InfoUnknown) {
         return 0;
     } else {
         return 2;
@@ -143,7 +143,7 @@ QVariant SimulateModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
-void SimulateModel::setSkipPackages(const PackageList &skipPackages)
+void SimulateModel::setSkipPackages(const QStringList &skipPackages)
 {
     m_skipPackages = skipPackages;
 }
@@ -155,8 +155,8 @@ QStringList SimulateModel::newPackages() const
 
 void SimulateModel::clear()
 {
-    m_packages.clear();
+//    m_packages.clear();
     m_skipPackages.clear();
-    m_currentInfo = Package::InfoUnknown;
+    m_currentInfo = Transaction::InfoUnknown;
     reset();
 }

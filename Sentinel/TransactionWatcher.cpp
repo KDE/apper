@@ -65,7 +65,7 @@ TransactionWatcher::TransactionWatcher(QObject *parent) :
             this, SLOT(hideMessageIcon()));
 
     // initiate the restart type
-    m_restartType = PackageUpdateDetails::RestartNone;
+    m_restartType = Transaction::RestartNone;
 
     // here we check whether a transaction job should be created or not
     QList<QDBusObjectPath> paths = Daemon::getTransactionList();
@@ -97,7 +97,7 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
         // release any cookie that we might have
         suppressSleep(false);
 
-        if (m_messages.isEmpty() && m_restartType == PackageUpdateDetails::RestartNone) {
+        if (m_messages.isEmpty() && m_restartType == Transaction::RestartNone) {
             // the app can close now
             emit close();
         }
@@ -130,8 +130,8 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
             // TODO fix yum backend
             connect(transaction, SIGNAL(message(PackageKit::Transaction::Message,QString)),
                     this, SLOT(message(PackageKit::Transaction::Message,QString)));
-            connect(transaction, SIGNAL(requireRestart(PackageKit::PackageUpdateDetails::Restart,PackageKit::Package)),
-                    this, SLOT(requireRestart(PackageKit::PackageUpdateDetails::Restart,PackageKit::Package)));
+            connect(transaction, SIGNAL(requireRestart(PackageKit::Transaction::Restart,QString)),
+                    this, SLOT(requireRestart(PackageKit::Transaction::Restart,QString)));
 
             // Don't let the system sleep while doing some sensible actions
             suppressSleep(true, PkStrings::action(role));
@@ -157,7 +157,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
     m_transactionJob.remove(tid);
 
     if (exit == Transaction::ExitSuccess && !transaction->property("restartType").isNull()) {
-        PackageUpdateDetails::Restart type = transaction->property("restartType").value<PackageUpdateDetails::Restart>();
+        Transaction::Restart type = transaction->property("restartType").value<Transaction::Restart>();
         QStringList restartPackages = transaction->property("restartPackages").toStringList();
 
         // Create the notification about this transaction
@@ -339,14 +339,14 @@ void TransactionWatcher::errorActivated(uint action)
     notify->close();
 }
 
-void TransactionWatcher::requireRestart(PackageKit::PackageUpdateDetails::Restart type, const Package &pkg)
+void TransactionWatcher::requireRestart(PackageKit::Transaction::Restart type, const QString &packageID)
 {
     Transaction *transaction = qobject_cast<Transaction*>(sender());
     if (transaction->property("restartType").isNull()) {
         transaction->setProperty("restartType", qVariantFromValue(type));
     } else {
-        PackageUpdateDetails::Restart oldType;
-        oldType = transaction->property("restartType").value<PackageUpdateDetails::Restart>();
+        Transaction::Restart oldType;
+        oldType = transaction->property("restartType").value<Transaction::Restart>();
         int old = PackageImportance::restartImportance(oldType);
         int newer = PackageImportance::restartImportance(type);
         // Check to see which one is more important
@@ -355,9 +355,9 @@ void TransactionWatcher::requireRestart(PackageKit::PackageUpdateDetails::Restar
         }
     }
 
-    if (!pkg.name().isEmpty()) {
+    if (!Transaction::packageName(packageID).isEmpty()) {
         QStringList restartPackages = transaction->property("restartPackages").toStringList();
-        restartPackages << pkg.name();
+        restartPackages << Transaction::packageName(packageID);
         transaction->setProperty("restartPackages", restartPackages);
     }
 }
@@ -365,10 +365,10 @@ void TransactionWatcher::requireRestart(PackageKit::PackageUpdateDetails::Restar
 void TransactionWatcher::logout()
 {
     KWorkSpace::ShutdownType shutdownType;
-    if (m_restartType == PackageUpdateDetails::RestartSystem) {
+    if (m_restartType == Transaction::RestartSystem) {
         // The restart type was system
         shutdownType = KWorkSpace::ShutdownTypeReboot;
-    } else if (m_restartType == PackageUpdateDetails::RestartSession) {
+    } else if (m_restartType == Transaction::RestartSession) {
         // The restart type was session
         shutdownType = KWorkSpace::ShutdownTypeLogout;
     } else {
@@ -400,7 +400,7 @@ void TransactionWatcher::hideRestartIcon()
         m_restartSNI->deleteLater();
         m_restartSNI = 0;
     }
-    m_restartType = PackageUpdateDetails::RestartNone;
+    m_restartType = Transaction::RestartNone;
     emit close();
 }
 
@@ -409,7 +409,7 @@ bool TransactionWatcher::isRunning()
     return AbstractIsRunning::isRunning() ||
             !m_transactions.isEmpty() ||
             !m_messages.isEmpty() ||
-            m_restartType != PackageUpdateDetails::RestartNone;
+            m_restartType != Transaction::RestartNone;
 }
 
 void TransactionWatcher::suppressSleep(bool enable, const QString &reason)

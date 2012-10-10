@@ -41,7 +41,7 @@ public:
 
     bool hasChanges() const;
     void setSelected(bool selected);
-    QList<Package> packagesToUpdate() const;
+    QStringList packagesToUpdate() const;
 
 signals:
     void changed(bool);

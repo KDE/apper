@@ -24,7 +24,7 @@
 #include <QAbstractTableModel>
 #include <KIcon>
 
-#include <Package>
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -39,21 +39,20 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    void setSkipPackages(const PackageList &skipPackages);
+    void setSkipPackages(const QStringList &skipPackages);
     QStringList newPackages() const;
-    Package::Info currentInfo() const;
-    void setCurrentInfo(Package::Info currentInfo);
-    int countInfo(Package::Info info);
+    Transaction::Info currentInfo() const;
+    void setCurrentInfo(Transaction::Info currentInfo);
+    int countInfo(Transaction::Info info);
     void clear();
 
 public slots:
-    void addPackage(const PackageKit::Package &package);
+    void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
 
 private:
-    QHash<Package::Info, PackageList> m_packages;
-    PackageList m_skipPackages;
+    QStringList m_skipPackages;
     QStringList m_newPackages;
-    Package::Info m_currentInfo;
+    Transaction::Info m_currentInfo;
 };
 
 #endif

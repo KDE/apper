@@ -59,7 +59,7 @@ public:
     Transaction::Role role;
     Transaction::Role originalRole;
     Transaction::Error error;
-    PackageList packages;
+    QStringList packages;
     QStringList packagesToResolve;
     ApplicationLauncher *launcher;
     QStringList files;
@@ -129,7 +129,7 @@ void PkTransaction::installFiles(const QStringList &files)
     }
 }
 
-void PkTransaction::installPackages(const PackageList &packages)
+void PkTransaction::installPackages(const QStringList &packages)
 {
     if (Daemon::actions() & Transaction::RoleInstallPackages) {
         d->originalRole = Transaction::RoleInstallPackages;
@@ -150,7 +150,7 @@ void PkTransaction::installPackages(const PackageList &packages)
     }
 }
 
-void PkTransaction::removePackages(const PackageList &packages)
+void PkTransaction::removePackages(const QStringList &packages)
 {
     if (Daemon::actions() & Transaction::RoleRemovePackages) {
         d->originalRole = Transaction::RoleRemovePackages;
@@ -172,7 +172,7 @@ void PkTransaction::removePackages(const PackageList &packages)
     }
 }
 
-void PkTransaction::updatePackages(const PackageList &packages)
+void PkTransaction::updatePackages(const QStringList &packages)
 {
     if (Daemon::actions() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
@@ -309,8 +309,8 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         d->simulateModel->clear();
         d->simulateModel->setSkipPackages(d->packages);
-        connect(m_trans, SIGNAL(package(PackageKit::Package)),
-                d->simulateModel, SLOT(addPackage(PackageKit::Package)));
+        connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     } else if (role == Transaction::RoleInstallPackages ||
                role == Transaction::RoleInstallFiles ||
                role == Transaction::RoleRemovePackages ||
@@ -322,19 +322,16 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
                     ui->progressView, SLOT(currentRepo(QString,QString,bool)));
             ui->progressView->handleRepo(true);
         } else {
-            connect(m_trans, SIGNAL(package(PackageKit::Package)),
-                    ui->progressView, SLOT(currentPackage(PackageKit::Package)));
-            connect(m_trans, SIGNAL(ItemProgress(QString,uint,uint)),
-                    ui->progressView, SLOT(itemProgress(QString,uint,uint)));
+            connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                    ui->progressView, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
+            connect(m_trans, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
+                    ui->progressView, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
             ui->progressView->handleRepo(false);
         }
     }
 
     // sets the action icon to be the window icon
     setWindowIcon(PkIcons::actionIcon(role));
-
-    // Now sets the last package
-    ui->progressView->currentPackage(m_trans->lastPackage());
 
     // sets ui
     updateUi();
@@ -346,12 +343,12 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
             this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     connect(m_trans, SIGNAL(changed()),
             this, SLOT(updateUi()));
-    connect(m_trans, SIGNAL(eulaRequired(PackageKit::Eula)),
-            this, SLOT(eulaRequired(PackageKit::Eula)));
+    connect(m_trans, SIGNAL(eulaRequired(QString,QString,QString,QString)),
+            this, SLOT(eulaRequired(QString,QString,QString,QString)));
     connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
             this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
-    connect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Signature)),
-            this, SLOT(repoSignatureRequired(PackageKit::Signature)));
+    connect(m_trans, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
+            this, SLOT(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
 }
 
@@ -363,20 +360,20 @@ void PkTransaction::unsetTransaction()
 
     disconnect(m_trans, SIGNAL(ItemProgress(QString,uint)),
                ui->progressView, SLOT(itemProgress(QString,uint)));
-    disconnect(m_trans, SIGNAL(package(PackageKit::Package)),
-               d->simulateModel, SLOT(addPackage(PackageKit::Package)));
+    disconnect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+               d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
     disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
                this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     disconnect(m_trans, SIGNAL(changed()),
                this, SLOT(updateUi()));
-    disconnect(m_trans, SIGNAL(eulaRequired(PackageKit::Eula)),
-               this, SLOT(eulaRequired(PackageKit::Eula)));
+    disconnect(m_trans, SIGNAL(eulaRequired(QString,QString,QString,QString)),
+               this, SLOT(eulaRequired(QString,QString,QString,QString)));
     disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
                this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
-    disconnect(m_trans, SIGNAL(repoSignatureRequired(PackageKit::Signature)),
-               this, SLOT(repoSignatureRequired(PackageKit::Signature)));
+    disconnect(m_trans, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
+               this, SLOT(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
 }
 
 void PkTransaction::requeueTransaction()
@@ -521,7 +518,7 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
     setExitStatus(Failed);
 }
 
-void PkTransaction::eulaRequired(PackageKit::Eula info)
+void PkTransaction::eulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement)
 {
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
@@ -531,7 +528,7 @@ void PkTransaction::eulaRequired(PackageKit::Eula info)
         m_handlingActionRequired = true;
     }
 
-    LicenseAgreement *eula = new LicenseAgreement(info, this);
+    LicenseAgreement *eula = new LicenseAgreement(eulaID, packageID, vendor, licenseAgreement, this);
     connect(eula, SIGNAL(yesClicked()), this, SLOT(acceptEula()));
     connect(eula, SIGNAL(rejected()), this, SLOT(reject()));
     showDialog(eula);
@@ -575,7 +572,7 @@ void PkTransaction::mediaChangeRequired(Transaction::MediaType type, const QStri
     }
 }
 
-void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
+void PkTransaction::repoSignatureRequired(const QString &packageID, const QString &repoName, const QString &keyUrl, const QString &keyUserid, const QString &keyId, const QString &keyFingerprint, const QString &keyTimestamp, Transaction::SigType type)
 {
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
@@ -585,7 +582,7 @@ void PkTransaction::repoSignatureRequired(PackageKit::Signature info)
         m_handlingActionRequired = true;
     }
 
-    RepoSig *repoSig = new RepoSig(info, this);
+    RepoSig *repoSig = new RepoSig(packageID, repoName, keyUrl, keyUserid, keyId, keyFingerprint, keyTimestamp, type, this);
     connect(repoSig, SIGNAL(yesClicked()), this, SLOT(installSignature()));
     connect(repoSig, SIGNAL(rejected()), this, SLOT(reject()));
     showDialog(repoSig);
@@ -596,10 +593,10 @@ void PkTransaction::installSignature()
     RepoSig *repoSig = qobject_cast<RepoSig*>(sender());
 
     if (repoSig)  {
-        kDebug() << "Installing Signature" << repoSig->signature().keyId;
+        kDebug() << "Installing Signature" << repoSig->keyID();
         Transaction *trans = new Transaction(this);
         setTransaction(trans, Transaction::RoleInstallSignature);
-        trans->installSignature(repoSig->signature());
+        trans->installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID());
         if (trans->error()) {
             showSorry(i18n("Failed to install signature"),
                       PkStrings::daemonError(trans->error()));
@@ -691,8 +688,8 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                 }
 
                 Transaction *transaction = new Transaction(this);
-                connect(transaction, SIGNAL(package(PackageKit::Package)),
-                        d->launcher, SLOT(addPackage(PackageKit::Package)));
+                connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                        d->launcher, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
                 setTransaction(transaction, Transaction::RoleResolve);
                 transaction->resolve(d->packagesToResolve, Transaction::FilterInstalled);
                 if (!transaction->error()) {
@@ -705,8 +702,8 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
                        d->originalRole != Transaction::RoleUnknown) {
                 // Let's try to find some desktop files
                 Transaction *transaction = new Transaction(this);
-                connect(transaction, SIGNAL(files(PackageKit::Package,QStringList)),
-                        d->launcher, SLOT(files(PackageKit::Package,QStringList)));
+                connect(transaction, SIGNAL(files(QString,QStringList)),
+                        d->launcher, SLOT(files(QString,QStringList)));
                 setTransaction(transaction, Transaction::RoleGetFiles);
                 transaction->getFiles(d->launcher->packages());
                 if (!transaction->error()) {

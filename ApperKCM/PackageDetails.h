@@ -65,8 +65,13 @@ signals:
 private slots:
     void on_screenshotL_clicked();
     void actionActivated(QAction *action);
-    void description(const PackageKit::PackageDetails &package);
-    void files(const PackageKit::Package &package, const QStringList &files);
+    void description(const QString &packageID,
+                     const QString &license,
+                     PackageKit::Transaction::Group group,
+                     const QString &detail,
+                     const QString &url,
+                     qulonglong size);
+    void files(const QString &packageID, const QStringList &files);
     void finished();
     void resultJob(KJob *);
 
@@ -80,8 +85,14 @@ private:
     Ui::PackageDetails *ui;
     QActionGroup *m_actionGroup;
     QModelIndex   m_index;
-    PackageKit::Package m_package;
-    PackageKit::PackageDetails m_packageDetails;
+    QString m_packageID;
+    QString m_detailsPackageID;
+    QString m_detailsLicense;
+    PackageKit::Transaction::Group m_detailsGroup;
+    QString m_detailsDetail;
+    QString m_detailsUrl;
+    qulonglong m_detailsSize;
+
     QString       m_appName;
 
     QParallelAnimationGroup       *m_expandPanel;

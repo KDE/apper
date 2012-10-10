@@ -60,7 +60,7 @@ void ApplicationLauncher::setEmbedded(bool embedded)
     kDebug() << embedded;
 }
 
-QList<PackageKit::Package> ApplicationLauncher::packages() const
+QStringList ApplicationLauncher::packages() const
 {
     return m_packages;
 }
@@ -99,16 +99,18 @@ bool ApplicationLauncher::hasApplications()
     return model->rowCount();
 }
 
-void ApplicationLauncher::addPackage(const PackageKit::Package &package)
+void ApplicationLauncher::addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    if (!m_packages.contains(package)) {
-        m_packages.append(package);
+    Q_UNUSED(info)
+    Q_UNUSED(summary)
+    if (!m_packages.contains(packageID)) {
+        m_packages << packageID;
     }
 }
 
-void ApplicationLauncher::files(const PackageKit::Package &package, const QStringList &files)
+void ApplicationLauncher::files(const QString &packageID, const QStringList &files)
 {
-    Q_UNUSED(package)
+    Q_UNUSED(packageID)
     m_files.append(files.filter(".desktop"));
 }
 

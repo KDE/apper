@@ -384,7 +384,7 @@ void ApperKCM::on_homeView_clicked(const QModelIndex &index)
                 }
             } else {
                 m_searchGroupCategory.clear();
-                m_searchGroup = static_cast<PackageKit::PackageDetails::Group>(index.data(CategoryModel::GroupRole).toUInt());
+                m_searchGroup = index.data(CategoryModel::GroupRole).value<PackageKit::Transaction::Group>();
             }
         } else if (m_searchRole == Transaction::RoleGetUpdates) {
             setPage("updates");
@@ -567,7 +567,8 @@ void ApperKCM::on_backTB_clicked()
 void ApperKCM::on_changesPB_clicked()
 {
     m_changesModel->clear();
-    m_changesModel->addPackages(m_browseModel->selectedPackages(), true);
+    // TODO FIXME!!!
+//    m_changesModel->addPackages(m_browseModel->selectedPackagesToInstall(), true);
     stackedWidget->setCurrentWidget(pageChanges);
     backTB->setEnabled(true);
 }
@@ -586,8 +587,8 @@ void ApperKCM::disconnectTransaction()
                    m_browseModel, SLOT(finished()));
         disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    m_browseModel, SLOT(fetchSizes()));
-        disconnect(m_searchTransaction, SIGNAL(package(PackageKit::Package)),
-                   m_browseModel, SLOT(addPackage(PackageKit::Package)));
+        disconnect(m_searchTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                   m_browseModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
         disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
                    this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     }
@@ -611,8 +612,8 @@ void ApperKCM::search()
         connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_browseModel, SLOT(fetchSizes()));
     }
-    connect(m_searchTransaction, SIGNAL(package(PackageKit::Package)),
-            m_browseModel, SLOT(addPackage(PackageKit::Package)));
+    connect(m_searchTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            m_browseModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
             this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     switch (m_searchRole) {
@@ -776,20 +777,7 @@ void ApperKCM::save()
             }
         } else {
             // install then remove packages
-            QList<Package> removePackages;
-            QList<Package> installPackages;
-            foreach (const Package &p, m_browseModel->selectedPackages()) {
-                if (p.info() == Package::InfoInstalled ||
-                    p.info() == Package::InfoCollectionInstalled) {
-                    // check what packages are installed and marked to be removed
-                    removePackages << p;
-                } else if (p.info() == Package::InfoAvailable ||
-                           p.info() == Package::InfoCollectionAvailable) {
-                    // check what packages are available and marked to be installed
-                    installPackages << p;
-                }
-            }
-
+            QStringList installPackages = m_browseModel->selectedPackagesToInstall();
             if (!installPackages.isEmpty()) {
                 transaction->installPackages(installPackages);
 
@@ -807,6 +795,7 @@ void ApperKCM::save()
                 }
             }
 
+            QStringList removePackages = m_browseModel->selectedPackagesToRemove();
             if (!removePackages.isEmpty()) {
                 transaction->removePackages(removePackages);
 

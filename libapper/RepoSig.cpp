@@ -25,26 +25,36 @@
 
 #include <KDebug>
 
-#include <Signature>
-
 #include "PkStrings.h"
 
 using namespace PackageKit;
 
-RepoSig::RepoSig(const Signature &info, QWidget *parent) :
+RepoSig::RepoSig(const QString &packageID,
+                 const QString &repoName,
+                 const QString &keyUrl,
+                 const QString &keyUserid,
+                 const QString &keyId,
+                 const QString &keyFingerprint,
+                 const QString &keyTimestamp,
+                 PackageKit::Transaction::SigType type,
+                 QWidget *parent) :
     KDialog(parent),
-    m_info(info),
+    m_sigType(type),
+    m_keyID(keyId),
+    m_packageID(packageID),
     ui(new Ui::RepoSig)
 {
+    Q_UNUSED(keyFingerprint)
+    Q_UNUSED(keyTimestamp)
     ui->setupUi(mainWidget());
 
     setButtons(KDialog::Cancel | KDialog::Yes);
     setPlainCaption(i18n("Software signature is required"));
 
-    ui->repoNameL->setText(info.repoId);
-    ui->sigUrlL->setText(info.keyUrl);
-    ui->sigUserIdL->setText(info.keyUserid);
-    ui->sigIdL->setText(info.keyId);
+    ui->repoNameL->setText(repoName);
+    ui->sigUrlL->setText(keyUrl);
+    ui->sigUserIdL->setText(keyUserid);
+    ui->sigIdL->setText(keyId);
 }
 
 RepoSig::~RepoSig()
@@ -52,7 +62,17 @@ RepoSig::~RepoSig()
     delete ui;
 }
 
-PackageKit::Signature RepoSig::signature() const
+Transaction::SigType RepoSig::sigType() const
 {
-    return m_info;
+    return m_sigType;
+}
+
+QString RepoSig::keyID() const
+{
+    return m_keyID;
+}
+
+QString RepoSig::packageID() const
+{
+    return m_packageID;
 }

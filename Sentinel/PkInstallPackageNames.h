@@ -23,8 +23,6 @@
 
 #include "SessionTask.h"
 
-#include <Package>
-
 class PkInstallPackageNames : public SessionTask
 {
     Q_OBJECT
@@ -42,7 +40,7 @@ protected:
     virtual void searchFailed();
 
 private slots:
-    void addPackage(const PackageKit::Package &package);
+    void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
 
 private:
     QStringList  m_packages;

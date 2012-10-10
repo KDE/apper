@@ -27,6 +27,7 @@
 #include "ApplicationLauncher.h"
 
 #include <PkStrings.h>
+#include <PackageModel.h>
 
 #include <limits.h>
 #include <QtDBus/QDBusConnection>
@@ -56,6 +57,8 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
 {
     ui->setupUi(KDialog::mainWidget());
     setAttribute(Qt::WA_DeleteOnClose);
+
+    m_model = new PackageModel(this);
 
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
             this, SLOT(updatePallete()));
@@ -109,11 +112,16 @@ SessionTask::~SessionTask()
     delete ui;
 }
 
-void SessionTask::addPackage(const PackageKit::Package &package)
+void SessionTask::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    if (!m_foundPackages.contains(package)) {
-        m_foundPackages.append(package);
-    }
+//    IPackage iPackage;
+//    iPackage.info = info;
+//    iPackage.packageID = packageID;
+//    iPackage.summary = summary;
+//    if (!m_foundPackages.contains(iPackage)) {
+//        m_foundPackages.append(iPackage);
+//    }
+    m_model->addSelectedPackage(info, packageID, summary);
 }
 
 void SessionTask::searchFinished(PkTransaction::ExitStatus status)
@@ -125,7 +133,7 @@ void SessionTask::searchFinished(PkTransaction::ExitStatus status)
     }
 
     if (status == PkTransaction::Success) {
-        if (m_foundPackages.isEmpty()) {
+        if (m_model->rowCount() == 0) {
             notFound();
         } else {
             searchSuccess();
@@ -356,8 +364,8 @@ void SessionTask::commit()
 {
     kDebug() << "virtual method called";
     if (m_reviewChanges) {
-        QList<Package> installPackages = m_reviewChanges->packagesToInstall();
-        m_removePackages = m_reviewChanges->packagesToRemove();
+        QStringList installPackages = m_reviewChanges->model()->selectedPackagesToInstall();
+        m_removePackages = m_reviewChanges->model()->selectedPackagesToRemove();
 
         if (installPackages.isEmpty() && m_removePackages.isEmpty()) {
             setInfo(i18n("There are no packages to Install or Remove"),
@@ -408,7 +416,7 @@ void SessionTask::searchSuccess()
 {
     kDebug() << "virtual method called";
     enableButtonOk(true);
-    m_reviewChanges = new ReviewChanges(m_foundPackages, this);
+    m_reviewChanges = new ReviewChanges(m_model, this);
     connect(m_reviewChanges, SIGNAL(hasSelectedPackages(bool)),
             this, SLOT(enableButtonOk(bool)));
     setMainWidget(m_reviewChanges);
@@ -563,17 +571,17 @@ void SessionTask::parseInteraction(const QString &interaction)
 
 bool SessionTask::foundPackages() const
 {
-    return !m_foundPackages.isEmpty();
+    return m_model->rowCount();
 }
 
 int SessionTask::foundPackagesSize() const
 {
-    return m_foundPackages.size();
+    return m_model->rowCount();
 }
 
-QList<Package> SessionTask::foundPackagesList() const
+PackageModel *SessionTask::model() const
 {
-    return m_foundPackages;
+    return m_model;
 }
 
 PkTransaction* SessionTask::setTransaction(Transaction::Role role, Transaction *t)

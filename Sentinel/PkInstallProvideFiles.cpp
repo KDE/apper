@@ -81,8 +81,8 @@ void PkInstallProvideFiles::search()
     PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Package)),
-            this, SLOT(addPackage(PackageKit::Package)));
+    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     t->searchFiles(m_args.first(), Transaction::FilterArch | Transaction::FilterNewest);
     if (t->error()) {
         QString msg = i18n("Failed to start search file transaction");
@@ -114,12 +114,12 @@ void PkInstallProvideFiles::notFound()
     }
 }
 
-void PkInstallProvideFiles::addPackage(const PackageKit::Package &package)
+void PkInstallProvideFiles::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    if (package.info() != Package::InfoInstalled) {
-        SessionTask::addPackage(package);
+    if (info != Transaction::InfoInstalled) {
+        SessionTask::addPackage(info, packageID, summary);
     } else {
-        m_alreadyInstalled = package.name();
+        m_alreadyInstalled = Transaction::packageName(packageID);
     }
 }
 

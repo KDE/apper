@@ -26,7 +26,6 @@
 #include <QXmlStreamReader>
 
 #include <Transaction>
-#include <Package>
 
 #include <AppStream/CategoryMatcher.h>
 
@@ -67,8 +66,10 @@ private:
     QList<CategoryMatcher> parseCategories(QXmlStreamReader &xml);
 
     PackageKit::Transaction::Roles  m_roles;
-    PackageKit::PackageDetails::Groups m_groups;
+    PackageKit::Transaction::Groups m_groups;
     QModelIndex  m_rootIndex;
 };
+
+Q_DECLARE_METATYPE(PackageKit::Transaction::Group)
 
 #endif

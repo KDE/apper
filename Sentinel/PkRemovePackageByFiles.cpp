@@ -34,8 +34,8 @@ PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
                                                const QStringList &files,
                                                const QString &interaction,
                                                const QDBusMessage &message,
-                                               QWidget *parent)
- : SessionTask(xid, interaction, message, parent)
+                                               QWidget *parent) :
+    SessionTask(xid, interaction, message, parent)
 {
     setWindowTitle(i18n("Remove Packages that Provides Files"));
 
@@ -121,8 +121,8 @@ void PkRemovePackageByFiles::searchFinished(PkTransaction::ExitStatus status)
             PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
             connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            connect(t, SIGNAL(package(PackageKit::Package)),
-                    this, SLOT(addPackage(PackageKit::Package)));
+            connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                    this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
             t->searchFiles(file, Transaction::FilterInstalled);
             if (t->error()) {
                 QString msg(i18n("Failed to start search file transaction"));

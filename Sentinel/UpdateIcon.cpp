@@ -79,8 +79,8 @@ void UpdateIcon::checkForUpdates(bool system_ready)
         m_updateList.clear();
         m_getUpdatesT = new Transaction(this);
         m_getUpdatesT->setProperty(SYSTEM_READY, system_ready);
-        connect(m_getUpdatesT, SIGNAL(package(PackageKit::Package)),
-                this, SLOT(packageToUpdate(PackageKit::Package)));
+        connect(m_getUpdatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                this, SLOT(packageToUpdate(PackageKit::Transaction::Info,QString,QString)));
         connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(getUpdateFinished()));
         m_getUpdatesT->getUpdates();
@@ -95,12 +95,13 @@ void UpdateIcon::checkForUpdates(bool system_ready)
     decreaseRunning();
 }
 
-void UpdateIcon::packageToUpdate(const Package &package)
+void UpdateIcon::packageToUpdate(Transaction::Info info, const QString &packageID, const QString &summary)
 {
+    Q_UNUSED(summary)
     // Blocked updates are not instalable updates so there is no
     // reason to show/count them
-    if (package.info() != Package::InfoBlocked) {
-        m_updateList.append(package);
+    if (info != Transaction::InfoBlocked) {
+        m_updateList.append(packageID);
     }
 }
 
@@ -152,15 +153,15 @@ void UpdateIcon::getUpdateFinished()
     if (!m_updateList.isEmpty()) {
         // Store all the security updates
         UpdateType type = Normal;
-        QList<Package> securityUpdateList;
-        foreach(const Package &p, m_updateList) {
-            if (p.info() == Package::InfoSecurity) {
-                securityUpdateList.append(p);
-                type = Security;
-            } else if (type == Normal && p.info() == Package::InfoImportant) {
-                type = Important;
-            }
-        }
+        QStringList securityUpdateList;
+//        foreach(const QString &p, m_updateList) {
+//            if (p.info() == Transaction::InfoSecurity) {
+//                securityUpdateList.append(p);
+//                type = Security;
+//            } else if (type == Normal && p.info() == Transaction::InfoImportant) {
+//                type = Important;
+//            }
+//        }
 
         uint updateType;
         bool systemReady;

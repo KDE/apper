@@ -45,8 +45,8 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
             this, SLOT(finished(PackageKit::Transaction::Exit)));
     connect(transaction, SIGNAL(destroyed()),
             this, SLOT(transactionDestroyed()));
-    connect(transaction, SIGNAL(package(PackageKit::Package)),
-            this, SLOT(package(PackageKit::Package)));
+    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(package(PackageKit::Transaction::Info,QString,QString)));
     connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
             this, SLOT(repoDetail(QString,QString)));
     kDebug();
@@ -72,14 +72,15 @@ void TransactionJob::finished(PackageKit::Transaction::Exit exit)
     emitResult();
 }
 
-void TransactionJob::package(const PackageKit::Package &package)
+void TransactionJob::package(Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    if (!package.id().isEmpty()) {
+    Q_UNUSED(summary)
+    if (!packageID.isEmpty()) {
         bool changed = false;
-        if (package.info() == Package::InfoFinished) {
-            changed = m_packages.removeOne(package.name());
-        } else if (!m_packages.contains(package.name())) {
-            m_packages << package.name();
+        if (info == Transaction::InfoFinished) {
+            changed = m_packages.removeOne(Transaction::packageName(packageID));
+        } else if (!m_packages.contains(Transaction::packageName(packageID))) {
+            m_packages << Transaction::packageName(packageID);
             changed = true;
         }
 
@@ -141,7 +142,7 @@ void TransactionJob::updateJob()
 void TransactionJob::start()
 {
     kDebug();
-    m_details = m_transaction->lastPackage().name();
+    m_details = Transaction::packageName(m_transaction->lastPackage());
     updateJob();
 }
 

@@ -23,8 +23,6 @@
 
 #include "SessionTask.h"
 
-#include <Package>
-
 class IntroDialog;
 class FilesModel;
 class PkInstallCatalogs : public SessionTask
@@ -42,7 +40,7 @@ protected:
     virtual void search();
 
 protected slots:
-    virtual void addPackage(const PackageKit::Package &package);
+    virtual void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     virtual void searchFinished(PkTransaction::ExitStatus status);
 
 private slots:

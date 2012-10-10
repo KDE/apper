@@ -27,9 +27,7 @@
 #include <QAbstractSlider>
 #include <QStyledItemDelegate>
 
-#include <Package>
-
-using namespace PackageKit;
+#include <Transaction>
 
 class TransactionDelegate;
 class ProgressView: public QTreeView
@@ -49,9 +47,9 @@ public:
     void clear();
 
 public slots:
-    void currentPackage(const PackageKit::Package &package);
+    void currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary = QString());
     void currentRepo(const QString &repoId, const QString &description, bool enabled);
-    void itemProgress(const QString &id, uint status, uint percentage);
+    void itemProgress(const QString &id, PackageKit::Transaction::Status status, uint percentage);
 
 private slots:
     void followBottom(int value);
@@ -59,7 +57,7 @@ private slots:
 
 private:
     void itemFinished(QStandardItem *item);
-    QStandardItem* findLastItem(const QString &packageId);
+    QStandardItem* findLastItem(const QString &packageID);
 
     QStyledItemDelegate *m_defaultDelegate;
     TransactionDelegate *m_delegate;

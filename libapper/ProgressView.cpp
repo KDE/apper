@@ -32,6 +32,8 @@
 
 #include "TransactionDelegate.h"
 
+using namespace PackageKit;
+
 ProgressView::ProgressView(QWidget *parent)
  : QTreeView(parent),
    m_keepScrollBarBottom(true)
@@ -89,8 +91,9 @@ void ProgressView::currentRepo(const QString &repoId, const QString &description
     m_model->appendRow(item);
 }
 
-void ProgressView::itemProgress(const QString &id, uint status, uint percentage)
+void ProgressView::itemProgress(const QString &id, Transaction::Status status, uint percentage)
 {
+    Q_UNUSED(status)
     QStandardItem *stdItem = findLastItem(id);
     if (stdItem && !stdItem->data(RoleFinished).toBool()) {
         // if the progress is unknown (101), make it empty
@@ -108,40 +111,41 @@ void ProgressView::clear()
     m_model->clear();
 }
 
-void ProgressView::currentPackage(const PackageKit::Package &p)
+void ProgressView::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    if (!p.id().isEmpty()) {
-        QStandardItem *stdItem = findLastItem(p.id());
+    kDebug() << info << packageID << summary;
+    if (!packageID.isEmpty()) {
+        QStandardItem *stdItem = findLastItem(packageID);
         // If there is alread some packages check to see if it has
         // finished, if the progress is 100 create a new item for the next task
         if (stdItem && !stdItem->data(RoleFinished).toBool()) {
             // if the item status (info) changed update it
-            if (stdItem->data(RoleInfo).toUInt() != p.info()) {
+            if (stdItem->data(RoleInfo).value<Transaction::Info>() != info) {
                 // If the package task has finished set progress to 100
-                if (p.info() == Package::InfoFinished) {
+                if (info == Transaction::InfoFinished) {
                     itemFinished(stdItem);
                 } else {
-                    stdItem->setData(p.info(), RoleInfo);
-                    stdItem->setText(PkStrings::infoPresent(p.info()));
+                    stdItem->setData(qVariantFromValue(info), RoleInfo);
+                    stdItem->setText(PkStrings::infoPresent(info));
                 }
             }
-        } else if (p.info() != Package::InfoFinished) {
+        } else if (info != Transaction::InfoFinished) {
             QList<QStandardItem *> items;
             // It's a new package create it and append it
             stdItem = new QStandardItem;
-            stdItem->setText(PkStrings::infoPresent(p.info()));
-            stdItem->setData(p.info(), RoleInfo);
-            stdItem->setData(0,        RoleProgress);
-            stdItem->setData(false,    RoleFinished);
-            stdItem->setData(p.id(),   RoleId);
+            stdItem->setText(PkStrings::infoPresent(info));
+            stdItem->setData(qVariantFromValue(info), RoleInfo);
+            stdItem->setData(0,         RoleProgress);
+            stdItem->setData(false,     RoleFinished);
+            stdItem->setData(packageID, RoleId);
             items << stdItem;
 
-            stdItem = new QStandardItem(p.name());
-            stdItem->setToolTip(p.version());
+            stdItem = new QStandardItem(Transaction::packageName(packageID));
+            stdItem->setToolTip(Transaction::packageVersion(packageID));
             items << stdItem;
 
-            stdItem = new QStandardItem(p.summary());
-            stdItem->setToolTip(p.summary());
+            stdItem = new QStandardItem(summary);
+            stdItem->setToolTip(summary);
             items << stdItem;
 
             m_model->appendRow(items);
@@ -181,7 +185,7 @@ void ProgressView::itemFinished(QStandardItem *item)
         m_model->insertRow(0, items);
     }
 
-    Package::Info info = static_cast<Package::Info>(item->data(ProgressView::RoleInfo).toInt());
+    Transaction::Info info = item->data(RoleInfo).value<Transaction::Info>();
     item->setText(PkStrings::infoPast(info));
     item->setData(100,  RoleProgress);
     item->setData(true, RoleFinished);
@@ -202,12 +206,12 @@ void ProgressView::rangeChanged(int min, int max)
     }
 }
 
-QStandardItem* ProgressView::findLastItem(const QString &packageId)
+QStandardItem* ProgressView::findLastItem(const QString &packageID)
 {
     int rows = m_model->rowCount() - 1;
     for (int i = rows; i >= 0; --i) {
         QStandardItem *item = m_model->item(i);
-        if (item->data(RoleId).toString() == packageId) {
+        if (item->data(RoleId).toString() == packageID) {
             return item;
         }
     }

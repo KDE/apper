@@ -218,8 +218,8 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             PkTransaction *trans = setTransaction(Transaction::RoleResolve, t);
             connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            connect(t, SIGNAL(package(PackageKit::Package)),
-                    this, SLOT(addPackage(PackageKit::Package)));
+            connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                    this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
             t->resolve(resolve, Transaction::FilterArch | Transaction::FilterNewest);
             checkTransaction(t);
         } else if (!m_installProvides.isEmpty()) {
@@ -237,8 +237,8 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
             connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            connect(t, SIGNAL(package(PackageKit::Package)),
-                    this, SLOT(addPackage(PackageKit::Package)));
+            connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                    this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
             t->whatProvides(Transaction::ProvidesAny,
                             provides,
                             Transaction::FilterArch | Transaction::FilterNewest);
@@ -258,8 +258,8 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
             connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            connect(t, SIGNAL(package(PackageKit::Package)),
-                    this, SLOT(addPackage(PackageKit::Package)));
+            connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                    this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
             t->searchFiles(files, Transaction::FilterArch | Transaction::FilterNewest);
             checkTransaction(t);
         } else {
@@ -281,13 +281,13 @@ void PkInstallCatalogs::checkTransaction(Transaction *transaction)
     }
 }
 
-void PkInstallCatalogs::addPackage(const PackageKit::Package &package)
+void PkInstallCatalogs::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
     // When there are updates the package is available...
-    if (package.info() != Package::InfoInstalled) {
-        SessionTask::addPackage(package);
+    if (info != Transaction::InfoInstalled) {
+        SessionTask::addPackage(info, packageID, summary);
     } else {
-        m_alreadyInstalled << package.name();
+        m_alreadyInstalled << Transaction::packageName(packageID);
     }
 }
 

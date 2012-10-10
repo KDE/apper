@@ -136,8 +136,8 @@ void PkInstallFontconfigResources::search()
     PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Package)),
-            this, SLOT(addPackage(PackageKit::Package)));
+    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     t->whatProvides(Transaction::ProvidesFont,
                     m_resources,
                     Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);

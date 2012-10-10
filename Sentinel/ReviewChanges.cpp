@@ -28,16 +28,15 @@
 
 #include <KDebug>
 
-ReviewChanges::ReviewChanges(const QList<Package> &packages,
-                             QWidget *parent)
- : QWidget(parent),
-   ui(new Ui::ReviewChanges)
+ReviewChanges::ReviewChanges(PackageModel *model, QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::ReviewChanges),
+    m_model(model)
 {
     ui->setupUi(this);
 
 
     //initialize the model, delegate, client and  connect it's signals
-    m_model = new PackageModel(this);
     ui->packageView->viewport()->setAttribute(Qt::WA_Hover);
     KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
     changedProxy->setSourceModel(m_model);
@@ -47,7 +46,6 @@ ReviewChanges::ReviewChanges(const QList<Package> &packages,
     changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     changedProxy->setSortRole(PackageModel::SortRole);
     ui->packageView->setModel(changedProxy);
-    m_model->addPackages(packages, true);
 
     setWindowTitle(i18np("The following package was found",
                          "The following packages were found",
@@ -66,35 +64,15 @@ ReviewChanges::~ReviewChanges()
     delete ui;
 }
 
-QList<Package> ReviewChanges::packagesToRemove() const
+PackageModel *ReviewChanges::model() const
 {
-    QList<Package> ret;
-    foreach (const Package &p, m_model->selectedPackages()) {
-        if (p.info() == Package::InfoInstalled ||
-            p.info() == Package::InfoCollectionInstalled) {
-            // check what packages are installed and marked to be removed
-            ret << p;
-        }
-    }
-    return ret;
-}
-
-QList<Package> ReviewChanges::packagesToInstall() const
-{
-    QList<Package> ret;
-    foreach (const Package &p, m_model->selectedPackages()) {
-        if (p.info() == Package::InfoAvailable ||
-            p.info() == Package::InfoCollectionAvailable) {
-            // check what packages are available and marked to be installed
-            ret << p;
-        }
-    }
-    return ret;
+    return m_model;
 }
 
 void ReviewChanges::selectionChanged()
 {
-    emit hasSelectedPackages(!m_model->selectedPackages().isEmpty());
+    emit hasSelectedPackages(!m_model->selectedPackagesToInstall().isEmpty() ||
+                             !m_model->selectedPackagesToRemove().isEmpty());
 }
 
 #include "ReviewChanges.moc"

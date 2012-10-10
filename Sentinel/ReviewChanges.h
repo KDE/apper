@@ -23,24 +23,19 @@
 
 #include <QWidget>
 
-#include <Package>
-
 namespace Ui {
     class ReviewChanges;
 }
-
-using namespace PackageKit;
 
 class PackageModel;
 class ReviewChanges : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ReviewChanges(const QList<Package> &packages, QWidget *parent = 0);
+    explicit ReviewChanges(PackageModel *model, QWidget *parent = 0);
     ~ReviewChanges();
 
-    QList<Package> packagesToRemove() const;
-    QList<Package> packagesToInstall() const;
+    PackageModel* model() const;
 
 signals:
     void hasSelectedPackages(bool has);

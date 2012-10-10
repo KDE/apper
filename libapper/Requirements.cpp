@@ -53,7 +53,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
     connect(group, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
 
     int count = 0;
-    if (int c = model->countInfo(Package::InfoRemoving)) {
+    if (int c = model->countInfo(Transaction::InfoRemoving)) {
         QToolButton *button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
@@ -62,13 +62,13 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to remove", "%1 packages to remove", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
-        group->addButton(button, Package::InfoRemoving);
+        group->addButton(button, Transaction::InfoRemoving);
         ui->verticalLayout->insertWidget(count++, button);
 
         m_hideAutoConfirm = true;
     }
 
-    if (int c = model->countInfo(Package::InfoDowngrading)) {
+    if (int c = model->countInfo(Transaction::InfoDowngrading)) {
         QToolButton *button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
@@ -77,13 +77,13 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRepairSystem));
-        group->addButton(button, Package::InfoDowngrading);
+        group->addButton(button, Transaction::InfoDowngrading);
         ui->verticalLayout->insertWidget(count++, button);
 
         m_hideAutoConfirm = true;
     }
 
-    if (int c = model->countInfo(Package::InfoReinstalling)) {
+    if (int c = model->countInfo(Transaction::InfoReinstalling)) {
         QToolButton *button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
@@ -92,11 +92,11 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to reinstall", "%1 packages to reinstall", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
-        group->addButton(button, Package::InfoReinstalling);
+        group->addButton(button, Transaction::InfoReinstalling);
         ui->verticalLayout->insertWidget(count++, button);
     }
 
-    if (int c = model->countInfo(Package::InfoInstalling)) {
+    if (int c = model->countInfo(Transaction::InfoInstalling)) {
         QToolButton *button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
@@ -105,11 +105,11 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to install", "%1 packages to install", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleInstallPackages));
-        group->addButton(button, Package::InfoInstalling);
+        group->addButton(button, Transaction::InfoInstalling);
         ui->verticalLayout->insertWidget(count++, button);
     }
 
-    if (int c = model->countInfo(Package::InfoUpdating)) {
+    if (int c = model->countInfo(Transaction::InfoUpdating)) {
         QToolButton *button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
@@ -118,7 +118,7 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to update", "%1 packages to update", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
-        group->addButton(button, Package::InfoUpdating);
+        group->addButton(button, Transaction::InfoUpdating);
         ui->verticalLayout->insertWidget(count++, button);
     }
 
@@ -182,7 +182,7 @@ void Requirements::on_confirmCB_Toggled(bool checked)
 void Requirements::actionClicked(int type)
 {
     SimulateModel *model = static_cast<SimulateModel*>(ui->packageView->model());
-    model->setCurrentInfo(static_cast<Package::Info>(type));
+    model->setCurrentInfo(static_cast<Transaction::Info>(type));
 }
 
 #include "Requirements.moc"

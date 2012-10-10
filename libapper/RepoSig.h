@@ -23,7 +23,7 @@
 
 #include <KDialog>
 
-#include <Signature>
+#include <Transaction>
 
 namespace Ui {
     class RepoSig;
@@ -33,13 +33,25 @@ class RepoSig : public KDialog
 {
     Q_OBJECT
 public:
-    explicit RepoSig(const PackageKit::Signature &info, QWidget *parent = 0);
+    explicit RepoSig(const QString &packageID,
+                     const QString &repoName,
+                     const QString &keyUrl,
+                     const QString &keyUserid,
+                     const QString &keyId,
+                     const QString &keyFingerprint,
+                     const QString &keyTimestamp,
+                     PackageKit::Transaction::SigType type,
+                     QWidget *parent = 0);
     ~RepoSig();
 
-    PackageKit::Signature signature() const;
+    PackageKit::Transaction::SigType sigType() const;
+    QString keyID() const;
+    QString packageID() const;
 
 private:
-    PackageKit::Signature m_info;
+    PackageKit::Transaction::SigType m_sigType;
+    QString m_keyID;
+    QString m_packageID;
     Ui::RepoSig *ui;
 };
 

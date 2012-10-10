@@ -90,8 +90,8 @@ void PkInstallPackageNames::search()
     PkTransaction *trans = setTransaction(Transaction::RoleResolve, t);
     connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Package)),
-            this, SLOT(addPackage(PackageKit::Package)));
+    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
     if (t->error()) {
         QString msg(i18n("Failed to start resolve transaction"));
@@ -129,12 +129,12 @@ void PkInstallPackageNames::searchFailed()
     sendErrorFinished(Failed, "failed to resolve package name");
 }
 
-void PkInstallPackageNames::addPackage(const PackageKit::Package &package)
+void PkInstallPackageNames::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    if (package.info() != Package::InfoInstalled) {
-        SessionTask::addPackage(package);
+    if (info != Transaction::InfoInstalled) {
+        SessionTask::addPackage(info, packageID, summary);
     } else {
-        m_alreadyInstalled << package.name();
+        m_alreadyInstalled << Transaction::packageName(packageID);
     }
 }
 

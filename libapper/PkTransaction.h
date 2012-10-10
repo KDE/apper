@@ -50,10 +50,10 @@ public:
     void setTransaction(Transaction *trans, Transaction::Role role);
     void hideCancelButton();
 
-    void installPackages(const PackageList &packages);
+    void installPackages(const QStringList &packages);
     void installFiles(const QStringList &files);
-    void removePackages(const PackageList &packages);
-    void updatePackages(const PackageList &packages);
+    void removePackages(const QStringList &packages);
+    void updatePackages(const QStringList &packages);
     void refreshCache(bool force = false);
 
     QString title() const;
@@ -86,9 +86,16 @@ private slots:
     void transactionFinished(PackageKit::Transaction::Exit status);
     void errorCode(PackageKit::Transaction::Error error, const QString &details);
     void updateUi();
-    void eulaRequired(PackageKit::Eula info);
+    void eulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement);
     void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
-    void repoSignatureRequired(PackageKit::Signature info);
+    void repoSignatureRequired(const QString &packageID,
+                               const QString &repoName,
+                               const QString &keyUrl,
+                               const QString &keyUserid,
+                               const QString &keyId,
+                               const QString &keyFingerprint,
+                               const QString &keyTimestamp,
+                               PackageKit::Transaction::SigType type);
 
     void setExitStatus(PkTransaction::ExitStatus status = PkTransaction::Success);
     void reject();

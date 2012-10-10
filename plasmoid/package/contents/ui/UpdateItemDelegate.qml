@@ -26,8 +26,8 @@ import org.packagekit 0.1 as PackageKit
 Item {
     id: updateItem
     width: ListView.view.width
-    property bool expanded: ListView.view.currentIndex === index
-    height: (expanded ? actionRow.height + updateRow.height : updateRow.height) + padding.margins.top + padding.margins.bottom
+    property bool expanded: ListView.isCurrentItem
+    height: items.height + padding.margins.top + padding.margins.bottom
     Behavior on height { PropertyAnimation {} }
 
     PlasmaCore.FrameSvgItem {
@@ -43,12 +43,11 @@ Item {
         console.debug("expanded changed: " + index + " rPackageId " + rId);
         if (expanded) {
             var component = Qt.createComponent("ChangelogView.qml");
-            console.debug("component changed: " + component.status);
             if (component.status === Component.Ready) {
                 var details = component.createObject(actionRow, {"packageID" : rId});
-                console.debug("createObject " + details);
+                updateItem.expandedChanged.connect(details.deleteLater);
             } else {
-                console.debug("component changed: " + component.errorString());
+                console.debug("Error creating details view: " + component.errorString());
             }
         }
     }
@@ -76,7 +75,9 @@ Item {
         id: items
         spacing: 8
         anchors {
-            fill: parent
+            right: parent.right
+            left: parent.left
+            top: parent.top
             topMargin: padding.margins.top
             leftMargin: padding.margins.left
             rightMargin: padding.margins.right
@@ -126,12 +127,25 @@ Item {
                 text: rSummary
             }
         }
-        
+
+        PlasmaCore.SvgItem {
+            id: headerSeparator
+            visible: expanded
+            svg: PlasmaCore.Svg {
+                id: lineSvg
+                imagePath: "widgets/line"
+            }
+            elementId: "horizontal-line"
+            height: lineSvg.elementSize("horizontal-line").height
+            width: parent.width
+        }
+
         Item {
             id: actionRow
             opacity: expanded ? 1 : 0
             width: parent.width
-//            height: cancelButton.height + holdButton.height + padding.margins.bottom
+            height: childrenRect.height
+            clip: true
             Behavior on opacity { PropertyAnimation {} }
         }
     }

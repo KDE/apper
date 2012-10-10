@@ -52,7 +52,7 @@ public:
     Transaction::Role role;
     Transaction::Error error;
     QString errorDetails;
-    QList<Package> packages;
+    QStringList packages;
     QStringList files;
     ProgressView *progressView;
     KPixmapSequenceOverlayPainter *busySeq;
