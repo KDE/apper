@@ -68,7 +68,7 @@ PackageModel::PackageModel(QObject *parent)
     roles[CheckStateRole] = "rChecked";
     roles[InfoRole] = "rInfo";
     roles[ApplicationId] = "rApplicationId";
-    roles[ApplicationFilterRole] = "rApplicationFilter";
+    roles[IsPackageRole] = "rIsPackageRole";
     roles[PackageName] = "rPackageName";
     roles[InfoIconRole] = "rInfoIcon";
     setRoleNames(roles);
@@ -149,7 +149,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             QSqlDatabase db = QSqlDatabase::database();
             QSqlQuery query(db);
             query.prepare("SELECT filename FROM cache WHERE package = :name");
-            query.bindValue(":name", package.name());
+            query.bindValue(":name", Transaction::packageName(packageID));
             if (query.exec()) {
                 if (query.next()) {
                     QString filename = query.value(0).toString();
@@ -256,9 +256,8 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
                 return Qt::Checked;
             }
             return Qt::Unchecked;
-        case ApplicationFilterRole:
-            // if we are an application return 'a', if package 'p'
-            return package.isPackage ? QChar('p') : QChar('a');
+        case IsPackageRole:
+            return package.isPackage;
         case Qt::DisplayRole:
             return package.displayName;
         case Qt::DecorationRole:

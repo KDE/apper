@@ -286,7 +286,7 @@ FiltersMenu::FiltersMenu(Transaction::Filters filters, QWidget *parent)
     m_applications->setToolTip(i18n("Hide packages that are not applications"));
     addAction(m_applications);
     connect(m_applications, SIGNAL(triggered(bool)),
-            this, SLOT(filterAppTriggered(bool)));
+            this, SIGNAL(filterApplications(bool)));
 #endif // HAVE_APPSTREAM
 }
 
@@ -313,18 +313,13 @@ FiltersMenu::~FiltersMenu()
 #endif // HAVE_APPSTREAM
 }
 
-QString FiltersMenu::filterApplications() const
+bool FiltersMenu::filterApplications() const
 {
 #ifdef HAVE_APPSTREAM
-    return m_applications->isChecked() ? "a" : QString();
+    return m_applications->isChecked();
 #else
     return QString();
 #endif // HAVE_APPSTREAM
-}
-
-void FiltersMenu::filterAppTriggered(bool checked)
-{
-    emit filterApplications(checked ? "a" : QString());
 }
 
 Transaction::Filters FiltersMenu::filters() const

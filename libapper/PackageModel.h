@@ -53,7 +53,7 @@ public:
         CheckStateRole,
         InfoRole,
         ApplicationId,
-        ApplicationFilterRole,
+        IsPackageRole,
         PackageName,
         InfoIconRole
     };

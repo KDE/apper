@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2012 by Daniel Nicoletti                                *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,33 +17,33 @@
  *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  *
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
+#ifndef APPLICATIONSORTFILTERMODEL_H
+#define APPLICATIONSORTFILTERMODEL_H
 
-#ifndef FILTERS_MENU_H
-#define FILTERS_MENU_H
+#include <QSortFilterProxyModel>
 
-#include <QMenu>
 #include <Transaction>
+
+#include <kdemacros.h>
 
 using namespace PackageKit;
 
-class FiltersMenu : public QMenu
+class KDE_EXPORT ApplicationSortFilterModel : public QSortFilterProxyModel
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit FiltersMenu(Transaction::Filters filters, QWidget *parent = 0);
-    ~FiltersMenu();
+    explicit ApplicationSortFilterModel(QObject *parent = 0);
 
-    Transaction::Filters filters() const;
-    bool filterApplications() const;
-
-signals:
-    void filtersChanged();
-    void filterApplications(bool checked);
+public slots:
+    void filterByInfo(Transaction::Info info);
+    void filterApplications(bool enable);
 
 private:
-    QAction *m_applications;
-    QList<QAction*> m_actions;
-    QHash<QAction *, Transaction::Filter> m_filtersAction;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+
+    Transaction::Info m_info;
+    bool m_applicationsOnly;
 };
 
-#endif
+#endif // APPLICATIONSORTFILTERMODEL_H

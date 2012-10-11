@@ -35,10 +35,10 @@
 #include <PkStrings.h>
 #include <PkIcons.h>
 #include <PackageModel.h>
+#include <ApplicationSortFilterModel.h>
 
 #include <QDBusConnection>
 
-#include <KCategorizedSortFilterProxyModel>
 #include <KGlobalSettings>
 #include <KMessageBox>
 #include <KDebug>
@@ -58,13 +58,8 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
     m_updatesModel = new PackageModel(this);
     m_updatesModel->setCheckable(true);
-    KCategorizedSortFilterProxyModel *proxyModel = new KCategorizedSortFilterProxyModel(this);
+    ApplicationSortFilterModel *proxyModel = new ApplicationSortFilterModel(this);
     proxyModel->setSourceModel(m_updatesModel);
-    proxyModel->setDynamicSortFilter(true);
-    proxyModel->setCategorizedModel(true);
-    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    proxyModel->setSortRole(PackageModel::SortRole);
-    proxyModel->setFilterRole(PackageModel::ApplicationFilterRole);
     packageView->setModel(proxyModel);
 
     m_delegate = new ApplicationsDelegate(packageView);

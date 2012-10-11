@@ -35,6 +35,7 @@
 #include <KTabBar>
 
 #include <PackageModel.h>
+#include <ApplicationSortFilterModel.h>
 #include <ChangesDelegate.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
@@ -167,9 +168,10 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     filtersTB->setMenu(m_filtersMenu = new FiltersMenu(Daemon::global()->filters(), this));
     connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(search()));
     filtersTB->setIcon(KIcon("view-filter"));
-    browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());
-    connect(m_filtersMenu, SIGNAL(filterApplications(QString)),
-            browseView->proxy(), SLOT(setFilterFixedString(QString)));
+    ApplicationSortFilterModel *proxy = browseView->proxy();
+    proxy->filterApplications(m_filtersMenu->filterApplications());
+    connect(m_filtersMenu, SIGNAL(filterApplications(bool)),
+            proxy, SLOT(filterApplications(bool)));
 
     //initialize the model, delegate, client and  connect it's signals
     m_browseModel = browseView->model();
@@ -177,13 +179,9 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     // CHANGES TAB
     changesView->viewport()->setAttribute(Qt::WA_Hover);
     m_changesModel = new PackageModel(this);
-    KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
+    ApplicationSortFilterModel *changedProxy = new ApplicationSortFilterModel(this);
     changedProxy->setSourceModel(m_changesModel);
-    changedProxy->setCategorizedModel(true);
     changedProxy->sort(0);
-    changedProxy->setDynamicSortFilter(true);
-    changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-    changedProxy->setSortRole(PackageModel::SortRole);
     changesView->setModel(changedProxy);
     ChangesDelegate *changesDelegate = new ChangesDelegate(changesView);
     changesDelegate->setExtendPixmapWidth(0);

@@ -24,13 +24,13 @@
 #include "CategoryModel.h"
 
 #include <ApplicationsDelegate.h>
+#include <ApplicationSortFilterModel.h>
 #include <PackageModel.h>
 
 #include <Daemon>
 
 #include <KFileDialog>
 #include <KPixmapSequence>
-#include <KCategorizedSortFilterProxyModel>
 #include <KMenu>
 
 #include <QDBusConnection>
@@ -59,13 +59,8 @@ void BrowseView::init(Transaction::Roles roles)
     m_busySeq->setWidget(packageView->viewport());
 
     m_model = new PackageModel(this);
-    m_proxy = new KCategorizedSortFilterProxyModel(this);
+    m_proxy = new ApplicationSortFilterModel(this);
     m_proxy->setSourceModel(m_model);
-    m_proxy->setDynamicSortFilter(true);
-    m_proxy->setCategorizedModel(true);
-    m_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-    m_proxy->setSortRole(PackageModel::SortRole);
-    m_proxy->setFilterRole(PackageModel::ApplicationFilterRole);
 
     packageView->setModel(m_proxy);
     packageView->sortByColumn(PackageModel::NameCol, Qt::AscendingOrder);
@@ -208,7 +203,7 @@ void BrowseView::showInstalledPanel(bool visible)
     installedF->setVisible(visible);
 }
 
-KCategorizedSortFilterProxyModel* BrowseView::proxy() const
+ApplicationSortFilterModel* BrowseView::proxy() const
 {
     return m_proxy;
 }
