@@ -27,6 +27,8 @@
 #include "DBusInterface.h"
 #include "PkInterface.h"
 
+#include <QStringBuilder>
+
 #include <KCmdLineArgs>
 #include <KDebug>
 
@@ -44,8 +46,8 @@ ApperSentinel::ApperSentinel()
     connect(m_pkInterface, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
-    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Daemon::setHints("locale=" + locale);
+    QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
+    Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     // this enables not quitting when closing a transaction ui
     setQuitOnLastWindowClosed(false);

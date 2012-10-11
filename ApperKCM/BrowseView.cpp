@@ -293,7 +293,7 @@ void BrowseView::on_exportInstalledPB_clicked()
     file.open(QIODevice::WriteOnly);
     QTextStream out(&file);
     out << "[PackageKit Catalog]\n\n";
-    out << "InstallPackages(" << Daemon::distroId() << ")=";
+    out << "InstallPackages(" << Daemon::global()->distroID() << ")=";
     QStringList packages;
     for (int i = 0; i < m_model->rowCount(); i++) {
         packages << m_model->data(m_model->index(i, 0),

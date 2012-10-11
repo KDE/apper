@@ -82,8 +82,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     bool allSelected() const;
-    QStringList selectedPackagesToInstall() const;
-    QStringList selectedPackagesToRemove() const;
+    Q_INVOKABLE QStringList selectedPackagesToInstall() const;
+    Q_INVOKABLE QStringList selectedPackagesToRemove() const;
     unsigned long downloadSize() const;
     void clear();
     /**

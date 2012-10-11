@@ -107,7 +107,7 @@ void PkInstallCatalogs::modelChanged()
 
 void PkInstallCatalogs::search()
 {
-    QString distroId = Daemon::distroId();
+    QString distroId = Daemon::global()->distroID();
     QStringList parts = distroId.split(';');
     if (parts.size() != 3) {
         sendErrorFinished(Failed, "invalid distribution id, please fill a bug against you distribution backend");
@@ -118,7 +118,7 @@ void PkInstallCatalogs::search()
     QString arch = parts.at(2);
 
     QStringList rxActions;
-    Transaction::Roles actions = Daemon::actions();
+    Transaction::Roles actions = Daemon::global()->actions();
     if (actions & Transaction::RoleResolve) {
         rxActions << "InstallPackages";
     }

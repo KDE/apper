@@ -83,10 +83,9 @@ void TransactionHistory::refreshList()
 
     // Refresh time
     QString text;
-    uint time = Daemon::getTimeSinceAction(Transaction::RoleRefreshCache) * 1000;
+    uint time = Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache) * 1000;
     text = i18n("Time since last cache refresh: %1", KGlobal::locale()->prettyFormatDuration(time));
     timeCacheLabel->setText(text);
 }
-
 
 #include "TransactionHistory.moc"

@@ -284,7 +284,7 @@ void Updater::getUpdatesFinished()
     if (m_updatesModel->rowCount() == 0) {
         // Set the info page
         stackedWidget->setCurrentIndex(1);
-        uint lastTime = Daemon::getTimeSinceAction(Transaction::RoleRefreshCache);
+        uint lastTime = Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache);
         unsigned long fifteen = 60 * 60 * 24 * 15;
         unsigned long tirty = 60 * 60 * 24 * 30;
 

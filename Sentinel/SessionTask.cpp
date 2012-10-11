@@ -35,6 +35,7 @@
 #include <QStringList>
 #include <QFile>
 #include <QSignalMapper>
+#include <QStringBuilder>
 
 #include <KWindowSystem>
 #include <KLocale>
@@ -70,8 +71,8 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
     setButtonIcon(KDialog::Ok, KIcon("go-next"));
     enableButtonOk(false);
 
-    QString locale(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Daemon::setHints("locale=" + locale);
+    QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
+    Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     // Defaults to always
     m_interactions = ConfirmSearch

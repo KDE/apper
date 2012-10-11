@@ -89,11 +89,11 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     KGlobal::insertCatalog(QLatin1String("apper"));
 
     // store the actions supported by the backend
-    m_roles = Daemon::actions();
+    m_roles = Daemon::global()->actions();
 
     // Set the current locale
-    QString locale = QString(KGlobal::locale()->language() + '.' + KGlobal::locale()->encoding());
-    Daemon::setHints("locale=" + locale);
+    QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
+    Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     setupUi(this);
     browseView->init(m_roles);
@@ -164,7 +164,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     homeView->setItemDelegate(delegate);
 
     // install the backend filters
-    filtersTB->setMenu(m_filtersMenu = new FiltersMenu(Daemon::filters(), this));
+    filtersTB->setMenu(m_filtersMenu = new FiltersMenu(Daemon::global()->filters(), this));
     connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(search()));
     filtersTB->setIcon(KIcon("view-filter"));
     browseView->proxy()->setFilterFixedString(m_filtersMenu->filterApplications());

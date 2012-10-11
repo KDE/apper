@@ -19,6 +19,7 @@ import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.apper 0.1 as Apper
+import org.packagekit 0.1 as PackageKit
 
 Item {
     id: root
@@ -33,13 +34,43 @@ Item {
         id: theme
     }
 
+    Row {
+        id: actionRow
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+        Text {
+            width: parent.width - updateBT.width
+            text: "You have X updates"
+        }
+
+        PackageKit.Transaction {
+            id: updateTransaction
+        }
+
+        PlasmaComponents.ToolButton {
+            id: updateBT
+            flat: true
+            iconSource: "system-software-update"
+            text:  i18n("Update")
+            onClicked: {
+                updateTransaction.updatePackages(updatesModel.selectedPackagesToInstall(), PackageKit.Transaction.TransactionFlagOnlyTrusted | PackageKit.Transaction.TransactionFlagOnlyDownload)
+            }
+        }
+    }
+
     ScrollableListView {
-        anchors.fill: parent
+        height: parent.height - actionRow.height
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
         delegate: UpdateItemDelegate {
 
         }
 
-        model: updatesModel
+        model: Apper.PackageModel {
+            id: updatesModel
+        }
     }
 
     Component.onCompleted: {

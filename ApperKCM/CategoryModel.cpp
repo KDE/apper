@@ -203,7 +203,7 @@ QStandardItem* CategoryModel::findCategory(const QString &categoryId, const QMod
 void CategoryModel::fillWithStandardGroups()
 {
     // Get the groups
-    m_groups = Daemon::groups();
+    m_groups = Daemon::global()->groups();
     kDebug();
     QStandardItem *item;
     for (int i = 1; i < 64; ++i) {

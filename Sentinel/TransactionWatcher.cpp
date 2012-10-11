@@ -68,7 +68,7 @@ TransactionWatcher::TransactionWatcher(QObject *parent) :
     m_restartType = Transaction::RestartNone;
 
     // here we check whether a transaction job should be created or not
-    QList<QDBusObjectPath> paths = Daemon::getTransactionList();
+    QList<QDBusObjectPath> paths = Daemon::global()->getTransactionList();
     QStringList tids;
     foreach (const QDBusObjectPath &path, paths) {
         tids << path.path();

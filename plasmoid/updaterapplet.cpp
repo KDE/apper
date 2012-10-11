@@ -72,7 +72,6 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
     if (!m_declarativeWidget) {
         m_declarativeWidget = new Plasma::DeclarativeWidget(this);
 
-        m_declarativeWidget->engine()->rootContext()->setContextProperty("updatesModel", m_updatesModel);
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
         qmlRegisterType<PackageKit::Transaction>("org.packagekit", 0, 1, "Transaction");
 

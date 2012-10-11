@@ -35,13 +35,13 @@ BackendDetails::BackendDetails(QWidget *parent)
     setWindowIcon(KIcon("help-about"));
 
     // GENERAL - Setup backend name and author
-    nameL->setText(Daemon::backendName());
-    descriptionL->setText(Daemon::backendDescription());
-    authorL->setText(Daemon::backendAuthor());
-    distroL->setText(Daemon::distroId());
+    nameL->setText(Daemon::global()->backendName());
+    descriptionL->setText(Daemon::global()->backendDescription());
+    authorL->setText(Daemon::global()->backendAuthor());
+    distroL->setText(Daemon::global()->distroID());
 
     // METHODS - Setup backend supported methods
-    Transaction::Roles actions = Daemon::actions();
+    Transaction::Roles actions = Daemon::global()->actions();
     getUpdatesCB->setChecked(actions & Transaction::RoleGetUpdates);
     getDistroUpgradesCB->setChecked(actions & Transaction::RoleGetDistroUpgrades);
     refreshCacheCB->setChecked(actions & Transaction::RoleRefreshCache);
@@ -71,7 +71,7 @@ BackendDetails::BackendDetails(QWidget *parent)
     upgradeSystemCB->setChecked(actions & Transaction::RoleUpgradeSystem);
 
     // FILTERS - Setup filters
-    Transaction::Filters filters = Daemon::filters();
+    Transaction::Filters filters = Daemon::global()->filters();
     installedCB->setChecked(filters & Transaction::FilterInstalled);
     guiCB->setChecked(filters & Transaction::FilterGui);
 

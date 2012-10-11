@@ -110,11 +110,10 @@ void PkTransaction::hideCancelButton()
 
 void PkTransaction::installFiles(const QStringList &files)
 {
-    if (Daemon::actions() & Transaction::RoleInstallFiles) {
+    if (Daemon::global()->actions() & Transaction::RoleInstallFiles) {
         d->originalRole = Transaction::RoleInstallFiles;
         d->files = files;
-        d->flags = Transaction::TransactionFlagOnlyTrusted;
-        d->flags |= Transaction::TransactionFlagSimulate;
+        d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
         // Create the simulate transaction and it's model
         Transaction *trans = new Transaction(this);
@@ -131,11 +130,10 @@ void PkTransaction::installFiles(const QStringList &files)
 
 void PkTransaction::installPackages(const QStringList &packages)
 {
-    if (Daemon::actions() & Transaction::RoleInstallPackages) {
+    if (Daemon::global()->actions() & Transaction::RoleInstallPackages) {
         d->originalRole = Transaction::RoleInstallPackages;
         d->packages = packages;
-        d->flags = Transaction::TransactionFlagOnlyTrusted;
-        d->flags |= Transaction::TransactionFlagSimulate;
+        d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
         // Create the depends transaction and it's model
         Transaction *trans = new Transaction(this);
@@ -152,12 +150,11 @@ void PkTransaction::installPackages(const QStringList &packages)
 
 void PkTransaction::removePackages(const QStringList &packages)
 {
-    if (Daemon::actions() & Transaction::RoleRemovePackages) {
+    if (Daemon::global()->actions() & Transaction::RoleRemovePackages) {
         d->originalRole = Transaction::RoleRemovePackages;
         d->allowDeps = false; // Default to avoid dependencies removal unless simulate says so
         d->packages = packages;
-        d->flags = Transaction::TransactionFlagOnlyTrusted;
-        d->flags |= Transaction::TransactionFlagSimulate;
+        d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
         // Create the requirements transaction and it's model
         Transaction *trans = new Transaction(this);
@@ -174,11 +171,10 @@ void PkTransaction::removePackages(const QStringList &packages)
 
 void PkTransaction::updatePackages(const QStringList &packages)
 {
-    if (Daemon::actions() & Transaction::RoleUpdatePackages) {
+    if (Daemon::global()->actions() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
         d->packages = packages;
-        d->flags = Transaction::TransactionFlagOnlyTrusted;
-        d->flags |= Transaction::TransactionFlagSimulate;
+        d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
         Transaction *trans = new Transaction(this);
         setTransaction(trans, Transaction::RoleUpdatePackages);

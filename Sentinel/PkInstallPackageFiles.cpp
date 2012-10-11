@@ -37,11 +37,11 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
 {
     setWindowTitle(i18n("Install Packages Files"));
 
-    if (Daemon::actions() & Transaction::RoleInstallFiles) {
+    if (Daemon::global()->actions() & Transaction::RoleInstallFiles) {
         m_introDialog = new IntroDialog(this);
         m_introDialog->acceptDrops(i18n("You can drop more files in here"));
 
-        m_model = new FilesModel(files, Daemon::mimeTypes(), this);
+        m_model = new FilesModel(files, Daemon::global()->mimeTypes(), this);
         m_introDialog->setModel(m_model);
         connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
                 this, SLOT(modelChanged()));
