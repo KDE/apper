@@ -74,6 +74,9 @@ Item {
     }
 
     Component.onCompleted: {
-        updatesModel.getUpdates(false, true);
+        updateTransaction.package.connect(updatesModel.addPackage);
+        updateTransaction.finished.connect(updatesModel.finished);
+        updateTransaction.getUpdates();
+//        updatesModel.getUpdates(false, true);
     }
 }

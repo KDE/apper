@@ -34,6 +34,7 @@
 
 #include <PackageModel.h>
 #include <Transaction>
+#include <Daemon>
 
 using namespace PackageKit;
 
@@ -72,8 +73,11 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
     if (!m_declarativeWidget) {
         m_declarativeWidget = new Plasma::DeclarativeWidget(this);
 
+        m_declarativeWidget->engine()->rootContext()->setContextProperty("Daemon", Daemon::global());
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
         qmlRegisterType<PackageKit::Transaction>("org.packagekit", 0, 1, "Transaction");
+        qmlRegisterUncreatableType<PackageKit::Daemon>("org.packagekit", 0, 1, "Daemon", "Global");
+        qRegisterMetaType<PackageKit::Transaction::Info>("PackageKit::Transaction::Info");
 
         Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
         Plasma::Package package(QString(), "org.packagekit.updater", structure);
