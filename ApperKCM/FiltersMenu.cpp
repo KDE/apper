@@ -318,7 +318,7 @@ bool FiltersMenu::filterApplications() const
 #ifdef HAVE_APPSTREAM
     return m_applications->isChecked();
 #else
-    return QString();
+    return false;
 #endif // HAVE_APPSTREAM
 }
 

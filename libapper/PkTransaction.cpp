@@ -47,7 +47,7 @@
 #include "PkIcons.h"
 #include "ProgressView.h"
 #include "ApplicationLauncher.h"
-#include "SimulateModel.h"
+#include "PackageModel.h"
 #include "Requirements.h"
 
 class PkTransactionPrivate
@@ -63,7 +63,7 @@ public:
     QStringList packagesToResolve;
     ApplicationLauncher *launcher;
     QStringList files;
-    SimulateModel *simulateModel;
+    PackageModel *simulateModel;
     KPixmapSequenceOverlayPainter *busySeq;
 };
 
@@ -86,7 +86,7 @@ PkTransaction::PkTransaction(QWidget *parent)
 
     // for sanity we are finished till some transaction is set
     d->finished = true;
-    d->simulateModel = new SimulateModel(this);
+    d->simulateModel = new PackageModel(this);
     d->launcher = 0;
     d->originalRole = Transaction::RoleUnknown;
     d->role = Transaction::RoleUnknown;
@@ -304,7 +304,7 @@ void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
     if (d->flags & Transaction::TransactionFlagSimulate) {
         // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
         d->simulateModel->clear();
-        d->simulateModel->setSkipPackages(d->packages);
+//        d->simulateModel->setSkipPackages(d->packages);
         connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     } else if (role == Transaction::RoleInstallPackages ||
@@ -620,9 +620,17 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
         if (d->flags & Transaction::TransactionFlagSimulate) {
             // Disable the simulate flag
             d->flags ^= Transaction::TransactionFlagSimulate;
+            d->simulateModel->finished();
 
-            kDebug() << "Simulate Finished";
-            d->packagesToResolve.append(d->simulateModel->newPackages());
+            kDebug() << "Simulate Finished" << d->simulateModel->rowCount();
+            // Remove the transaction packages
+            foreach (const QString &packageID, d->packages) {
+                kDebug() << "Simulate Finished packageID" << packageID;
+                d->simulateModel->removePackage(packageID);
+            }
+            kDebug() << "Simulate Finished removed" << d->simulateModel->rowCount();
+
+            d->packagesToResolve.append(d->simulateModel->selectedPackagesToInstall());
             requires = new Requirements(d->simulateModel, this);
             connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
             if (requires->shouldShow()) {

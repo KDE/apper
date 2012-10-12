@@ -27,13 +27,13 @@ namespace Ui {
     class Requirements;
 }
 
-class SimulateModel;
+class PackageModel;
 class Requirements : public KDialog
 {
     Q_OBJECT
     Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)
 public:
-    explicit Requirements(SimulateModel *model, QWidget *parent = 0);
+    explicit Requirements(PackageModel *model, QWidget *parent = 0);
     ~Requirements();
 
     bool embedded() const;

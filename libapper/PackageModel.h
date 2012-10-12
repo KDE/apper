@@ -101,7 +101,7 @@ public slots:
     void addSelectedPackagesFromModel(PackageModel *model);
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected = false);
     void addSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
-    void rmSelectedPackage(const QString &packageID);
+    void removePackage(const QString &packageID);
 
     void setAllChecked(bool checked);
     void checkPackage(const PackageModel::InternalPackage &package,
@@ -110,6 +110,7 @@ public slots:
                         bool forceEmitUnchecked = false,
                         bool emitDataChanged = true);
     bool hasChanges() const;
+    int countInfo(PackageKit::Transaction::Info info) const;
 
     void uncheckInstalledPackages();
     void uncheckAvailablePackages();
@@ -139,7 +140,7 @@ private:
     QList<InternalPackage> internalSelectedPackages() const;
     bool containsChecked(const QString &pid) const;
 
-    int m_packageCount;
+    bool                            m_finished;
     bool                            m_checkable;
     QPixmap                         m_installedEmblem;
     QVector<InternalPackage>        m_packages;

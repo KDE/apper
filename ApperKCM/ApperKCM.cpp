@@ -197,7 +197,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
 
     // packageUnchecked from changes model
     connect(m_changesModel, SIGNAL(packageUnchecked(QString)),
-            m_changesModel, SLOT(rmSelectedPackage(QString)));
+            m_changesModel, SLOT(removePackage(QString)));
     connect(m_changesModel, SIGNAL(packageUnchecked(QString)),
             m_browseModel, SLOT(uncheckPackage(QString)));
 

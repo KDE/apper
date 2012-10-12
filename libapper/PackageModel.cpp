@@ -50,7 +50,7 @@ using namespace PackageKit;
 
 PackageModel::PackageModel(QObject *parent)
 : QAbstractItemModel(parent),
-  m_packageCount(0),
+  m_finished(false),
   m_checkable(false),
   m_fetchSizesTransaction(0),
   m_fetchInstalledVersionsTransaction(0)
@@ -85,8 +85,14 @@ void PackageModel::addSelectedPackagesFromModel(PackageModel *model)
 
 void PackageModel::addPackage(Transaction::Info info, const QString &packageID, const QString &summary, bool selected)
 {
-    if (info == Transaction::InfoBlocked) {
+    switch(info) {
+    case Transaction::InfoBlocked:
+    case Transaction::InfoFinished:
+    case Transaction::InfoCleanup:
         return;
+    default:
+        kDebug() << info << packageID << summary << selected;
+        break;
     }
 
 #ifdef HAVE_APPSTREAM
@@ -216,17 +222,17 @@ QVariant PackageModel::headerData(int section, Qt::Orientation orientation, int 
 
 int PackageModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid()) {
+    if (parent.isValid() || !m_finished) {
         return 0;
     }
-    return m_packageCount;
+    return m_packages.size();
 }
 
 QModelIndex PackageModel::index(int row, int column, const QModelIndex &parent) const
 {
 //   kDebug() << parent.isValid() << m_packageCount << row << column;
     // Check to see if the index isn't out of list
-    if (!parent.isValid() && m_packageCount > row) {
+    if (!parent.isValid() && m_packages.size() > row) {
         return createIndex(row, column);
     }
     return QModelIndex();
@@ -368,7 +374,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
 
 bool PackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role == Qt::CheckStateRole && m_packageCount > index.row()) {
+    if (role == Qt::CheckStateRole && m_packages.size() > index.row()) {
         if (value.toBool()) {
             checkPackage(m_packages[index.row()]);
         } else {
@@ -401,23 +407,27 @@ int PackageModel::columnCount(const QModelIndex &parent) const
     }
 }
 
-void PackageModel::rmSelectedPackage(const QString &packageID)
+void PackageModel::removePackage(const QString &packageID)
 {
-    for (int i = 0; i < m_packages.size(); i++) {
+    int i = 0;
+    while (i < m_packages.size()) {
         if (m_packages[i].packageID == packageID) {
             beginRemoveRows(QModelIndex(), i, i);
             m_packages.remove(i);
             endRemoveRows();
-            i--; // we have to decrease the pointer otherwise
-                 // we will miss some packages
+
+            // since we removed one entry we don't
+            // need to increase the counter
+            continue;
         }
+        ++i;
     }
 }
 
 void PackageModel::clear()
 {
-    beginRemoveRows(QModelIndex(), 0, m_packageCount);
-    m_packageCount = 0;
+    beginRemoveRows(QModelIndex(), 0, m_packages.size());
+    m_finished = false;
     m_packages.clear();
     m_fetchSizesTransaction = 0;
     m_fetchInstalledVersionsTransaction = 0;
@@ -473,7 +483,7 @@ void PackageModel::finished()
 
     // The whole structure is about to change
     beginInsertRows(QModelIndex(), 0, m_packages.size() - 1);
-    m_packageCount = m_packages.size();
+    m_finished = true;
     endInsertRows();
 
     emit changed(!m_checkedPackages.isEmpty());
@@ -511,7 +521,7 @@ void PackageModel::fetchSizesFinished()
     }
     // emit this after all is changed other =wise on large models it will
     // be hell slow...
-    emit dataChanged(createIndex(0, SizeCol), createIndex(m_packageCount, SizeCol));
+    emit dataChanged(createIndex(0, SizeCol), createIndex(m_packages.size(), SizeCol));
     emit changed(!m_checkedPackages.isEmpty());
 }
 
@@ -578,7 +588,7 @@ void PackageModel::fetchCurrentVersionsFinished()
     }
     // emit this after all is changed otherwise on large models it will
     // be hell slow...
-    emit dataChanged(createIndex(0, CurrentVersionCol), createIndex(m_packageCount, CurrentVersionCol));
+    emit dataChanged(createIndex(0, CurrentVersionCol), createIndex(m_packages.size(), CurrentVersionCol));
     emit changed(!m_checkedPackages.isEmpty());
 }
 
@@ -648,6 +658,17 @@ bool PackageModel::hasChanges() const
     return !m_checkedPackages.isEmpty();
 }
 
+int PackageModel::countInfo(PackageKit::Transaction::Info info) const
+{
+    int ret = 0;
+    foreach (const InternalPackage &package, m_packages) {
+        if (package.info == info) {
+            ++ret;
+        }
+    }
+    return ret;
+}
+
 void PackageModel::checkPackage(const InternalPackage &package, bool emitDataChanged)
 {
     QString pkgId = package.packageID;
@@ -655,7 +676,7 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
         m_checkedPackages[pkgId] = package;
 
         // A checkable model does not have duplicated entries
-        if (emitDataChanged && m_packageCount && !m_checkable) {
+        if (emitDataChanged && !m_packages.isEmpty() && !m_checkable) {
             // This is a slow operation so in case the user
             // is unchecking all of the packages there is
             // no need to emit data changed for every item
@@ -667,7 +688,7 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
             }
 
             // The model might not be displayed yet
-            if (m_packageCount) {
+            if (m_finished) {
                 emit changed(!m_checkedPackages.isEmpty());
             }
         }
@@ -699,7 +720,7 @@ void PackageModel::uncheckPackage(const QString &packageID,
             }
 
             // The model might not be displayed yet
-            if (m_packageCount) {
+            if (m_finished) {
                 emit changed(!m_checkedPackages.isEmpty());
             }
         }

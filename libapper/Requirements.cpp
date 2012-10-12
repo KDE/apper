@@ -22,12 +22,13 @@
 #include "ui_Requirements.h"
 
 #include "PkIcons.h"
-#include "SimulateModel.h"
+#include "PackageModel.h"
+#include "ApplicationSortFilterModel.h"
 
 #include <QToolButton>
 #include <KDebug>
 
-Requirements::Requirements(SimulateModel *model, QWidget *parent) :
+Requirements::Requirements(PackageModel *model, QWidget *parent) :
     KDialog(parent),
     m_embed(false),
     m_shouldShow(true),
@@ -36,7 +37,9 @@ Requirements::Requirements(SimulateModel *model, QWidget *parent) :
     ui->setupUi(mainWidget());
     connect(ui->confirmCB, SIGNAL(toggled(bool)), this, SLOT(on_confirmCB_Toggled(bool)));
 
-    ui->packageView->setModel(model);
+    ApplicationSortFilterModel *proxy = new ApplicationSortFilterModel(this);
+    proxy->setSourceModel(model);
+    ui->packageView->setModel(proxy);
     m_hideAutoConfirm = false;
 
     setCaption(i18n("Additional changes"));
@@ -181,8 +184,9 @@ void Requirements::on_confirmCB_Toggled(bool checked)
 
 void Requirements::actionClicked(int type)
 {
-    SimulateModel *model = static_cast<SimulateModel*>(ui->packageView->model());
-    model->setCurrentInfo(static_cast<Transaction::Info>(type));
+    ApplicationSortFilterModel *proxy;
+    proxy = qobject_cast<ApplicationSortFilterModel*>(ui->packageView->model());
+    proxy->filterByInfo(static_cast<Transaction::Info>(type));
 }
 
 #include "Requirements.moc"
