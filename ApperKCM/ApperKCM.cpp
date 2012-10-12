@@ -192,10 +192,10 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     connect(m_browseModel, SIGNAL(changed(bool)), changesPB, SLOT(setEnabled(bool)));
 
     // packageUnchecked from changes model
-    connect(m_changesModel, SIGNAL(packageUnchecked(PackageModel::InternalPackage)),
-            m_changesModel, SLOT(rmSelectedPackage(PackageModel::InternalPackage)));
-    connect(m_changesModel, SIGNAL(packageUnchecked(PackageModel::InternalPackage)),
-            m_browseModel, SLOT(uncheckPackage(PackageModel::InternalPackage)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(QString)),
+            m_changesModel, SLOT(rmSelectedPackage(QString)));
+    connect(m_changesModel, SIGNAL(packageUnchecked(QString)),
+            m_browseModel, SLOT(uncheckPackage(QString)));
 
     changesPB->setIcon(KIcon("edit-redo"));
 

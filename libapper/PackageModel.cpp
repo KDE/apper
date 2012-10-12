@@ -170,13 +170,13 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 #endif // HAVE_APPSTREAM
 }
 
-void PackageModel::addPackages(const QStringList &packages, bool selected)
-{
+//void PackageModel::addPackages(const QStringList &packages, bool selected)
+//{
 //    foreach(const Package &package, packages) {
 //        addPackage(package, selected);
 //    }
 //    finished();
-}
+//}
 
 void PackageModel::addSelectedPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
@@ -343,7 +343,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
     case OriginCol:
         return package.repo;
     case InfoRole:
-        return package.info;
+        return qVariantFromValue(package.info);
     case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
         if (package.info == Transaction::InfoInstalled ||
             package.info == Transaction::InfoCollectionInstalled) {
@@ -369,9 +369,9 @@ bool PackageModel::setData(const QModelIndex &index, const QVariant &value, int 
 {
     if (role == Qt::CheckStateRole && m_packageCount > index.row()) {
         if (value.toBool()) {
-            checkPackage(m_packages.at(index.row()));
+            checkPackage(m_packages[index.row()]);
         } else {
-            uncheckPackage(m_packages.at(index.row()));
+            uncheckPackage(m_packages[index.row()].packageID);
         }
 
         emit changed(!m_checkedPackages.isEmpty());
@@ -400,11 +400,10 @@ int PackageModel::columnCount(const QModelIndex &parent) const
     }
 }
 
-void PackageModel::rmSelectedPackage(const PackageModel::InternalPackage &package)
+void PackageModel::rmSelectedPackage(const QString &packageID)
 {
-    QString pkgId = package.packageID;
     for (int i = 0; i < m_packages.size(); i++) {
-        if (m_packages[i].packageID == pkgId) {
+        if (m_packages[i].packageID == packageID) {
             beginRemoveRows(QModelIndex(), i, i);
             m_packages.remove(i);
             endRemoveRows();
@@ -430,9 +429,7 @@ void PackageModel::clearSelectedNotPresent()
         foreach (const InternalPackage &iPackage, m_packages) {
             if (iPackage.packageID == package.packageID) {
                 // Uncheck the package If it's not in the model
-                uncheckPackage(package);
-
-                // TODO with applications we probably can't break
+                uncheckPackage(package.packageID);
                 break;
             }
         }
@@ -449,7 +446,7 @@ void PackageModel::uncheckInstalledPackages()
     foreach (const InternalPackage &package, m_checkedPackages) {
         if (package.info == Transaction::InfoInstalled ||
                 package.info == Transaction::InfoCollectionInstalled) {
-            uncheckPackage(package, true);
+            uncheckPackage(package.packageID, true);
         }
     }
 }
@@ -459,7 +456,7 @@ void PackageModel::uncheckAvailablePackages()
     foreach (const InternalPackage &package, m_checkedPackages) {
         if (package.info == Transaction::InfoAvailable ||
                 package.info == Transaction::InfoCollectionAvailable) {
-            uncheckPackage(package, true);
+            uncheckPackage(package.packageID, true);
         }
     }
 }
@@ -676,19 +673,17 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
     }
 }
 
-void PackageModel::uncheckPackage(const InternalPackage &package,
+void PackageModel::uncheckPackage(const QString &packageID,
                                   bool forceEmitUnchecked,
                                   bool emitDataChanged)
 {
-    QString pkgId = package.packageID;
-    if (containsChecked(pkgId)) {
-        m_checkedPackages.remove(pkgId);
+    if (containsChecked(packageID)) {
+        m_checkedPackages.remove(packageID);
         if (forceEmitUnchecked || sender() == 0) {
             // The package might be removed by rmSelectedPackage
             // If we don't copy it the browse model won't uncheck there
             // right package
-            InternalPackage iPackage = package;
-            emit packageUnchecked(iPackage);
+            emit packageUnchecked(packageID);
         }
 
         if (emitDataChanged && !m_checkable) {
@@ -696,7 +691,7 @@ void PackageModel::uncheckPackage(const InternalPackage &package,
             // is unchecking all of the packages there is
             // no need to emit data changed for every item
             for (int i = 0; i < m_packages.size(); ++i) {
-                if (m_packages[i].packageID == pkgId) {
+                if (m_packages[i].packageID == packageID) {
                     QModelIndex index = createIndex(i, 0);
                     emit dataChanged(index, index);
                 }
@@ -730,7 +725,7 @@ void PackageModel::setAllChecked(bool checked)
     } else {
         // This is a very slow operation, which in here we try to optimize
         foreach (const InternalPackage &package, m_checkedPackages) {
-            uncheckPackage(package, true, false);
+            uncheckPackage(package.packageID, true, false);
         }
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));

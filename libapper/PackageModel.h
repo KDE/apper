@@ -99,15 +99,15 @@ public:
 
 public slots:
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected = false);
-    void addPackages(const QStringList &packages,
-                     bool selected = false);
+//    void addPackages(const QStringList &packages,
+//                     bool selected = false);
     void addSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
-    void rmSelectedPackage(const PackageModel::InternalPackage &package);
+    void rmSelectedPackage(const QString &packageID);
 
     void setAllChecked(bool checked);
     void checkPackage(const PackageModel::InternalPackage &package,
                       bool emitDataChanged = true);
-    void uncheckPackage(const PackageModel::InternalPackage &package,
+    void uncheckPackage(const QString &packageID,
                         bool forceEmitUnchecked = false,
                         bool emitDataChanged = true);
     bool hasChanges() const;
@@ -134,8 +134,7 @@ public slots:
 
 signals:
     void changed(bool value);
-    void packageChecked(const PackageModel::InternalPackage &package);
-    void packageUnchecked(const PackageModel::InternalPackage &package);
+    void packageUnchecked(const QString &packageID);
 
 private:
     bool containsChecked(const QString &pid) const;
