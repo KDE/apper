@@ -98,9 +98,8 @@ public:
     QModelIndex parent(const QModelIndex &index) const;
 
 public slots:
+    void addSelectedPackagesFromModel(PackageModel *model);
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected = false);
-//    void addPackages(const QStringList &packages,
-//                     bool selected = false);
     void addSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void rmSelectedPackage(const QString &packageID);
 
@@ -137,6 +136,7 @@ signals:
     void packageUnchecked(const QString &packageID);
 
 private:
+    QList<InternalPackage> internalSelectedPackages() const;
     bool containsChecked(const QString &pid) const;
 
     int m_packageCount;

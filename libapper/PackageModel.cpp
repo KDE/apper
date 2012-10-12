@@ -74,6 +74,15 @@ PackageModel::PackageModel(QObject *parent)
     setRoleNames(roles);
 }
 
+void PackageModel::addSelectedPackagesFromModel(PackageModel *model)
+{
+    QList<InternalPackage> packages = model->internalSelectedPackages();
+    foreach (const InternalPackage &package, packages) {
+        addPackage(package.info, package.packageID, package.summary, true);
+    }
+    finished();
+}
+
 void PackageModel::addPackage(Transaction::Info info, const QString &packageID, const QString &summary, bool selected)
 {
     if (info == Transaction::InfoBlocked) {
@@ -169,14 +178,6 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
     }
 #endif // HAVE_APPSTREAM
 }
-
-//void PackageModel::addPackages(const QStringList &packages, bool selected)
-//{
-//    foreach(const Package &package, packages) {
-//        addPackage(package, selected);
-//    }
-//    finished();
-//}
 
 void PackageModel::addSelectedPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
@@ -703,6 +704,17 @@ void PackageModel::uncheckPackage(const QString &packageID,
             }
         }
     }
+}
+
+QList<PackageModel::InternalPackage> PackageModel::internalSelectedPackages() const
+{
+    QList<InternalPackage> ret;
+    QHash<QString, InternalPackage>::const_iterator i = m_checkedPackages.constBegin();
+    while (i != m_checkedPackages.constEnd()) {
+        ret << i.value();
+        ++i;
+    }
+    return ret;
 }
 
 bool PackageModel::containsChecked(const QString &pid) const

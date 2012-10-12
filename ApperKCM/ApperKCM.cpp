@@ -179,8 +179,12 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     // CHANGES TAB
     changesView->viewport()->setAttribute(Qt::WA_Hover);
     m_changesModel = new PackageModel(this);
-    ApplicationSortFilterModel *changedProxy = new ApplicationSortFilterModel(this);
+    KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
     changedProxy->setSourceModel(m_changesModel);
+    changedProxy->setDynamicSortFilter(true);
+    changedProxy->setCategorizedModel(true);
+    changedProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    changedProxy->setSortRole(PackageModel::SortRole);
     changedProxy->sort(0);
     changesView->setModel(changedProxy);
     ChangesDelegate *changesDelegate = new ChangesDelegate(changesView);
@@ -565,8 +569,7 @@ void ApperKCM::on_backTB_clicked()
 void ApperKCM::on_changesPB_clicked()
 {
     m_changesModel->clear();
-    // TODO FIXME!!!
-//    m_changesModel->addPackages(m_browseModel->selectedPackagesToInstall(), true);
+    m_changesModel->addSelectedPackagesFromModel(m_browseModel);
     stackedWidget->setCurrentWidget(pageChanges);
     backTB->setEnabled(true);
 }
