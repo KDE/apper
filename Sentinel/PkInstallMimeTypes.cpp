@@ -78,19 +78,19 @@ PkInstallMimeTypes::~PkInstallMimeTypes()
 void PkInstallMimeTypes::search()
 {
     QStringList mimeTypes = m_model->files();
-    Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+    PkTransaction *transaction = new PkTransaction(this);
+    setTransaction(Transaction::RoleWhatProvides, transaction);
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    t->whatProvides(Transaction::ProvidesMimetype,
-                    mimeTypes,
-                    Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-    if (t->error()) {
+    transaction->whatProvides(Transaction::ProvidesMimetype,
+                              mimeTypes,
+                              Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+    if (transaction->error()) {
         if (showWarning()) {
             setError(i18n("Failed to search for provides"),
-                     PkStrings::daemonError(t->error()));
+                     PkStrings::daemonError(transaction->error()));
         }
         sendErrorFinished(Failed, "Failed to search for provides");
     }

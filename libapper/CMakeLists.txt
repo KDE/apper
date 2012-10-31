@@ -18,9 +18,9 @@ set(libapper_SRCS
     CategoryDrawer.cpp
     ChangesDelegate.cpp
     TransactionDelegate.cpp
-    ProgressView.cpp
     PkTransaction.cpp
-    PkTransactionDialog.cpp
+    PkTransactionWidget.cpp
+    PkTransactionProgressModel.cpp
     RepoSig.cpp
     LicenseAgreement.cpp
     PackageModel.cpp
@@ -41,7 +41,7 @@ endif()
 
 kde4_add_ui_files(libapper_SRCS
     ApplicationLauncher.ui
-    PkTransaction.ui
+    PkTransactionWidget.ui
     RepoSig.ui
     LicenseAgreement.ui
     Requirements.ui

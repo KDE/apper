@@ -33,6 +33,7 @@ namespace Ui {
 
 class PackageModel;
 class ReviewChanges;
+class PkTransactionWidget;
 class SessionTask : public KDialog
 {
     Q_OBJECT
@@ -98,7 +99,7 @@ protected:
     bool foundPackages() const;
     int  foundPackagesSize() const;
     PackageModel* model() const;
-    PkTransaction* setTransaction(Transaction::Role role, Transaction *transaction = 0);
+    void setTransaction(Transaction::Role role, PkTransaction *transaction = 0);
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);
@@ -134,7 +135,7 @@ private:
     PackageModel *m_model;
     QStringList m_removePackages;
     ReviewChanges *m_reviewChanges;
-    PkTransaction *m_pkTransaction;
+    PkTransactionWidget *m_pkTransaction;
     Ui::SessionTask *ui;
 };
 

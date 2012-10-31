@@ -39,6 +39,7 @@
 #include <ChangesDelegate.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
+#include <PkTransactionWidget.h>
 
 #ifdef HAVE_APPSTREAM
 #include <AppStream/AppStreamDb.h>
@@ -706,9 +707,11 @@ void ApperKCM::refreshCache()
 
     PkTransaction *transaction = new PkTransaction(this);
     QWeakPointer<PkTransaction> pointer = transaction;
+    PkTransactionWidget *transactionW = new PkTransactionWidget(this);
+    transactionW->setTransaction(transaction, Transaction::RoleRefreshCache);
 
-    stackedWidget->addWidget(transaction);
-    stackedWidget->setCurrentWidget(transaction);
+    stackedWidget->addWidget(transactionW);
+    stackedWidget->setCurrentWidget(transactionW);
     int oldBar = stackedWidgetBar->currentIndex();
     stackedWidgetBar->setCurrentIndex(BAR_TITLE);
     backTB->setEnabled(false);
@@ -735,6 +738,7 @@ void ApperKCM::refreshCache()
     backTB->setEnabled(true);
     stackedWidget->setCurrentWidget(currentWidget);
     stackedWidgetBar->setCurrentIndex(oldBar);
+    transactionW->deleteLater();
     transaction->deleteLater();
     if (currentWidget == m_updaterPage) {
         m_updaterPage->getUpdates();
@@ -753,9 +757,10 @@ void ApperKCM::save()
     } else {
         PkTransaction *transaction = new PkTransaction(this);
         QWeakPointer<PkTransaction> pointer = transaction;
+        PkTransactionWidget *transactionW = new PkTransactionWidget(this);
 
-        stackedWidget->addWidget(transaction);
-        stackedWidget->setCurrentWidget(transaction);
+        stackedWidget->addWidget(transactionW);
+        stackedWidget->setCurrentWidget(transactionW);
         int oldBar = stackedWidgetBar->currentIndex();
         stackedWidgetBar->setCurrentIndex(BAR_TITLE);
         backTB->setEnabled(false);
@@ -766,6 +771,7 @@ void ApperKCM::save()
         QEventLoop loop;
         connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
         if (currentWidget == m_updaterPage) {
+            transactionW->setTransaction(transaction, Transaction::RoleUpdatePackages);
             transaction->updatePackages(m_updaterPage->packagesToUpdate());
 
             // wait for the end of transaction
@@ -780,6 +786,7 @@ void ApperKCM::save()
             // install then remove packages
             QStringList installPackages = m_browseModel->selectedPackagesToInstall();
             if (!installPackages.isEmpty()) {
+                transactionW->setTransaction(transaction, Transaction::RoleInstallPackages);
                 transaction->installPackages(installPackages);
 
                 // wait for the end of transaction
@@ -798,6 +805,7 @@ void ApperKCM::save()
 
             QStringList removePackages = m_browseModel->selectedPackagesToRemove();
             if (!removePackages.isEmpty()) {
+                transactionW->setTransaction(transaction, Transaction::RoleRemovePackages);
                 transaction->removePackages(removePackages);
 
                 // wait for the end of transaction

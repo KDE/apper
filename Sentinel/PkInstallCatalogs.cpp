@@ -214,14 +214,14 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             }
             kDebug() << "m_installPackages" << m_maxResolve << m_installPackages.size() << resolve.size();
 
-            Transaction *t = new Transaction(this);
-            PkTransaction *trans = setTransaction(Transaction::RoleResolve, t);
-            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            PkTransaction *transaction = new PkTransaction(this);
+            setTransaction(Transaction::RoleResolve, transaction);
+            connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            t->resolve(resolve, Transaction::FilterArch | Transaction::FilterNewest);
-            checkTransaction(t);
+            transaction->resolve(resolve, Transaction::FilterArch | Transaction::FilterNewest);
+            checkTransaction(transaction);
         } else if (!m_installProvides.isEmpty()) {
             // Continue resolving Install Provides
             QStringList provides;
@@ -233,16 +233,16 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             }
             kDebug() << "m_installProvides" <<  m_maxResolve << m_installProvides.size() << provides.size();
 
-            Transaction *t = new Transaction(this);
-            PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
-            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            PkTransaction *transaction = new PkTransaction(this);
+            setTransaction(Transaction::RoleWhatProvides, transaction);
+            connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            t->whatProvides(Transaction::ProvidesAny,
-                            provides,
-                            Transaction::FilterArch | Transaction::FilterNewest);
-            checkTransaction(t);
+            transaction->whatProvides(Transaction::ProvidesAny,
+                                      provides,
+                                      Transaction::FilterArch | Transaction::FilterNewest);
+            checkTransaction(transaction);
         } else if (!m_installFiles.isEmpty()) {
             // Continue resolving Install Packages
             QStringList files;
@@ -254,14 +254,14 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             }
             kDebug() << "m_installFiles" << m_maxResolve << m_installFiles.size() << files.size();
 
-            Transaction *t = new Transaction(this);
-            PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
-            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            PkTransaction *transaction = new PkTransaction(this);
+            setTransaction(Transaction::RoleSearchFile, transaction);
+            connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            t->searchFiles(files, Transaction::FilterArch | Transaction::FilterNewest);
-            checkTransaction(t);
+            transaction->searchFiles(files, Transaction::FilterArch | Transaction::FilterNewest);
+            checkTransaction(transaction);
         } else {
             // we are done resolving
             SessionTask::searchFinished(status);

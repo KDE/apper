@@ -132,19 +132,19 @@ PkInstallFontconfigResources::~PkInstallFontconfigResources()
 
 void PkInstallFontconfigResources::search()
 {
-    Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+    PkTransaction *transaction = new PkTransaction(this);
+    setTransaction(Transaction::RoleWhatProvides, transaction);
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    t->whatProvides(Transaction::ProvidesFont,
-                    m_resources,
-                    Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-    if (t->error()) {
+    transaction->whatProvides(Transaction::ProvidesFont,
+                              m_resources,
+                              Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+    if (transaction->error()) {
         QString msg(i18n("Failed to search for provides"));
         if (showWarning()) {
-            setError(msg, PkStrings::daemonError(t->error()));
+            setError(msg, PkStrings::daemonError(transaction->error()));
         }
         sendErrorFinished(Failed, msg);
     }

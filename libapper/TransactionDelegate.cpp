@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "TransactionDelegate.h"
-#include "ProgressView.h"
+#include "PkTransactionProgressModel.h"
 
 #include <QApplication>
 
@@ -29,22 +29,22 @@
 
 using namespace PackageKit;
 
-TransactionDelegate::TransactionDelegate(QObject *parent)
- : QStyledItemDelegate(parent)
+TransactionDelegate::TransactionDelegate(QObject *parent) :
+    QStyledItemDelegate(parent)
 {
 }
 
 void TransactionDelegate::paint(QPainter *painter,
-                           const QStyleOptionViewItem &option,
-                           const QModelIndex &index) const
+                                const QStyleOptionViewItem &option,
+                                const QModelIndex &index) const
 {
     QStyleOptionViewItemV4 opt1(option);
     if (opt1.state & QStyle::State_HasFocus) {
         opt1.state ^= QStyle::State_HasFocus;
     }
     QStyledItemDelegate::paint(painter, opt1, index);
-    if (index.column() == 0) {
-        int  progress = index.data(ProgressView::RoleProgress).toInt();
+    if (index.column() == 0 && !index.data(PkTransactionProgressModel::RoleRepo).toBool()) {
+        int  progress = index.data(PkTransactionProgressModel::RoleProgress).toInt();
         QString text  = index.data(Qt::DisplayRole).toString();
 
         QStyleOptionProgressBar progressBarOption;

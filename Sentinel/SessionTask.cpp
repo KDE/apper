@@ -28,6 +28,7 @@
 
 #include <PkStrings.h>
 #include <PackageModel.h>
+#include <PkTransactionWidget.h>
 
 #include <limits.h>
 #include <QtDBus/QDBusConnection>
@@ -374,10 +375,11 @@ void SessionTask::commit()
             sendErrorFinished(Failed, "to install or remove due to empty lists");
         } else if (!installPackages.isEmpty()) {
             // Install Packages
-            PkTransaction *trans = setTransaction(Transaction::RoleInstallPackages);
-            connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+            PkTransaction *transaction = new PkTransaction(this);
+            setTransaction(Transaction::RoleInstallPackages, transaction);
+            connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(commitFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            trans->installPackages(installPackages);
+            transaction->installPackages(installPackages);
         } else {
             // Remove them
             removePackages();
@@ -388,10 +390,11 @@ void SessionTask::commit()
 void SessionTask::removePackages()
 {
     // Remove Packages
-    PkTransaction *trans = setTransaction(Transaction::RoleRemovePackages);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+    PkTransaction *transaction = new PkTransaction(this);
+    setTransaction(Transaction::RoleRemovePackages, transaction);
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(commitFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    trans->removePackages(m_removePackages);
+    transaction->removePackages(m_removePackages);
     m_removePackages.clear();
 }
 
@@ -585,11 +588,12 @@ PackageModel *SessionTask::model() const
     return m_model;
 }
 
-PkTransaction* SessionTask::setTransaction(Transaction::Role role, Transaction *t)
+void SessionTask::setTransaction(Transaction::Role role, PkTransaction *t)
 {
     if (m_pkTransaction == 0) {
-        m_pkTransaction = new PkTransaction(this);
+        m_pkTransaction = new PkTransactionWidget(this);
         m_pkTransaction->hideCancelButton();
+
         ui->stackedWidget->addWidget(m_pkTransaction);
         connect(m_pkTransaction, SIGNAL(titleChanged(QString)),
                 this, SLOT(setTitle(QString)));
@@ -605,14 +609,13 @@ PkTransaction* SessionTask::setTransaction(Transaction::Role role, Transaction *
 
     if (t) {
         m_pkTransaction->setTransaction(t, role);
-        setTitle(m_pkTransaction->title());
+//        setTitle(m_pkTransaction->title());
     }
 
     // avoid changing the current widget
     if (mainWidget() != m_pkTransaction) {
         ui->stackedWidget->setCurrentWidget(m_pkTransaction);
     }
-    return m_pkTransaction;
 }
 
 void SessionTask::finishTaskOk()

@@ -29,7 +29,6 @@
 
 using namespace PackageKit;
 
-class PkTransactionDialog;
 class TransactionTrayIcon;
 class TransactionJob : public KJob
 {

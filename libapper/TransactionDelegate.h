@@ -22,13 +22,13 @@
 #define TRANSACTION_DELEGATE_H
 
 #include <QStyledItemDelegate>
-#include <kdemacros.h>
 
 class TransactionDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    TransactionDelegate(QObject *parent = 0);
+    explicit TransactionDelegate(QObject *parent = 0);
+
     void  paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };

@@ -60,19 +60,19 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
         }
     }
 
-    Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(Transaction::RoleWhatProvides, t);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+    PkTransaction *transaction = new PkTransaction(this);
+    setTransaction(Transaction::RoleWhatProvides, transaction);
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    t->whatProvides(Transaction::ProvidesPostscriptDriver,
-                    search,
-                    Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
+    transaction->whatProvides(Transaction::ProvidesPostscriptDriver,
+                              search,
+                              Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
 
-    if (t->error()) {
+    if (transaction->error()) {
         QString msg(i18n("Failed to search for provides"));
-        setError(msg, PkStrings::daemonError(t->error()));
+        setError(msg, PkStrings::daemonError(transaction->error()));
         sendErrorFinished(InternalError, msg);
     }
 }

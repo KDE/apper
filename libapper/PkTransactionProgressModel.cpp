@@ -18,80 +18,35 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "ProgressView.h"
-
-#include <QVBoxLayout>
-#include <QScrollBar>
-#include <QHeaderView>
+#include "PkTransactionProgressModel.h"
 
 #include <KLocale>
-#include <KConfigGroup>
 #include <KDebug>
 
 #include <PkStrings.h>
 
-#include "TransactionDelegate.h"
-
 using namespace PackageKit;
 
-ProgressView::ProgressView(QWidget *parent)
- : QTreeView(parent),
-   m_keepScrollBarBottom(true)
+PkTransactionProgressModel::PkTransactionProgressModel(QObject *parent) :
+    QStandardItemModel(parent)
 {
-    m_model = new QStandardItemModel(this);
-    m_delegate = new TransactionDelegate(this);
-    m_defaultDelegate = new QStyledItemDelegate(this);
-
-    setModel(m_model);
-    setRootIsDecorated(false);
-    setHeaderHidden(true);
-    setSelectionMode(QAbstractItemView::NoSelection);
-    setEditTriggers(QAbstractItemView::NoEditTriggers);
-//     verticalScrollBar()->value();
-
-    m_scrollBar = verticalScrollBar();
-    connect(m_scrollBar, SIGNAL(sliderMoved(int)),
-            this, SLOT(followBottom(int)));
-    connect(m_scrollBar, SIGNAL(valueChanged(int)),
-            this, SLOT(followBottom(int)));
-    connect(m_scrollBar, SIGNAL(rangeChanged(int,int)),
-            this, SLOT(rangeChanged(int,int)));
-
-    KConfig config("apper");
-    KConfigGroup transactionDialog(&config, "TransactionDialog");
-
-    resize(width(), transactionDialog.readEntry("detailsHeight", QWidget::height()));
 }
 
-ProgressView::~ProgressView()
+PkTransactionProgressModel::~PkTransactionProgressModel()
 {
-    KConfig config("apper");
-    KConfigGroup transactionDialog(&config, "TransactionDialog");
-    transactionDialog.writeEntry("detailsHeight", height());
 }
 
-void ProgressView::handleRepo(bool handle) {
-    if (handle) {
-        setItemDelegate(m_defaultDelegate);
-        m_model->setColumnCount(1);
-    } else {
-        setItemDelegate(m_delegate);
-        m_model->setColumnCount(3);
-        header()->setResizeMode(0, QHeaderView::ResizeToContents);
-        header()->setResizeMode(1, QHeaderView::ResizeToContents);
-        header()->setStretchLastSection(true);
-    }
-}
-
-void ProgressView::currentRepo(const QString &repoId, const QString &description, bool enabled)
+void PkTransactionProgressModel::currentRepo(const QString &repoId, const QString &description, bool enabled)
 {
-    Q_UNUSED(repoId)
     Q_UNUSED(enabled)
-    QStandardItem *item = new QStandardItem(description);
-    m_model->appendRow(item);
+    kDebug() << repoId;
+    QStandardItem *stdItem = new QStandardItem(description);
+    stdItem->setData(repoId, RoleId);
+    stdItem->setData(true,   RoleRepo);
+    appendRow(stdItem);
 }
 
-void ProgressView::itemProgress(const QString &id, Transaction::Status status, uint percentage)
+void PkTransactionProgressModel::itemProgress(const QString &id, Transaction::Status status, uint percentage)
 {
     Q_UNUSED(status)
     QStandardItem *stdItem = findLastItem(id);
@@ -106,12 +61,12 @@ void ProgressView::itemProgress(const QString &id, Transaction::Status status, u
     }
 }
 
-void ProgressView::clear()
+void PkTransactionProgressModel::clear()
 {
-    m_model->clear();
+    removeRows(0, rowCount());
 }
 
-void ProgressView::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
+void PkTransactionProgressModel::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
     kDebug() << info << packageID << summary;
     if (!packageID.isEmpty()) {
@@ -138,6 +93,7 @@ void ProgressView::currentPackage(PackageKit::Transaction::Info info, const QStr
             stdItem->setData(0,         RoleProgress);
             stdItem->setData(false,     RoleFinished);
             stdItem->setData(packageID, RoleId);
+            stdItem->setData(false,     RoleRepo);
             items << stdItem;
 
             stdItem = new QStandardItem(Transaction::packageName(packageID));
@@ -148,15 +104,15 @@ void ProgressView::currentPackage(PackageKit::Transaction::Info info, const QStr
             stdItem->setToolTip(summary);
             items << stdItem;
 
-            m_model->appendRow(items);
+            appendRow(items);
         }
     }
 }
 
-void ProgressView::itemFinished(QStandardItem *item)
+void PkTransactionProgressModel::itemFinished(QStandardItem *stdItem)
 {
     // Point to the item before it
-    int count = item->row() - 1;
+    int count = stdItem->row() - 1;
 
     // Find the last finished item
     bool found = false;
@@ -164,12 +120,12 @@ void ProgressView::itemFinished(QStandardItem *item)
         // Put it after the finished item
         // so that running items can be kept
         // at the bottom
-        if (m_model->item(count)->data(RoleFinished).toBool()) {
+        if (item(count)->data(RoleFinished).toBool()) {
             // make sure it won't end in the same position
-            if (count + 1 != item->row()) {
+            if (count + 1 != stdItem->row()) {
                 QList<QStandardItem*> items;
-                items = m_model->takeRow(item->row());
-                m_model->insertRow(count + 1, items);
+                items = takeRow(stdItem->row());
+                insertRow(count + 1, items);
             }
             found = true;
             break;
@@ -179,40 +135,23 @@ void ProgressView::itemFinished(QStandardItem *item)
 
     // If it's not at the top of the list
     // and no FINISHED Item was found move it there
-    if (!found && item->row() != 0) {
-        QList<QStandardItem*> items;
-        items = m_model->takeRow(item->row());
-        m_model->insertRow(0, items);
+    if (!found && stdItem->row() != 0) {
+        insertRow(0, takeRow(stdItem->row()));
     }
 
-    Transaction::Info info = item->data(RoleInfo).value<Transaction::Info>();
-    item->setText(PkStrings::infoPast(info));
-    item->setData(100,  RoleProgress);
-    item->setData(true, RoleFinished);
+    Transaction::Info info = stdItem->data(RoleInfo).value<Transaction::Info>();
+    stdItem->setText(PkStrings::infoPast(info));
+    stdItem->setData(100,  RoleProgress);
+    stdItem->setData(true, RoleFinished);
 }
 
-void ProgressView::followBottom(int value)
+QStandardItem* PkTransactionProgressModel::findLastItem(const QString &packageID)
 {
-    // If the user moves the slider to the bottom
-    // keep it there as the list expands
-    m_keepScrollBarBottom = value == m_scrollBar->maximum();
-}
-
-void ProgressView::rangeChanged(int min, int max)
-{
-    Q_UNUSED(min)
-    if (m_keepScrollBarBottom && m_scrollBar->value() != max) {
-        m_scrollBar->setValue(max);
-    }
-}
-
-QStandardItem* ProgressView::findLastItem(const QString &packageID)
-{
-    int rows = m_model->rowCount() - 1;
+    int rows = rowCount() - 1;
     for (int i = rows; i >= 0; --i) {
-        QStandardItem *item = m_model->item(i);
-        if (item->data(RoleId).toString() == packageID) {
-            return item;
+        QStandardItem *stdItem = item(i);
+        if (stdItem->data(RoleId).toString() == packageID) {
+            return stdItem;
         }
     }
     return 0;

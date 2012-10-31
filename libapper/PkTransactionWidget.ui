@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PkTransaction</class>
- <widget class="QWidget" name="PkTransaction">
+ <class>PkTransactionWidget</class>
+ <widget class="QWidget" name="PkTransactionWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -94,13 +94,34 @@
     </layout>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="ProgressView" name="progressView">
+    <widget class="QTreeView" name="progressView">
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectColumns</enum>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+     <property name="expandsOnDoubleClick">
+      <bool>false</bool>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
     </widget>
    </item>
   </layout>
@@ -115,11 +136,6 @@
    <class>CustomProgressBar</class>
    <extends>QProgressBar</extends>
    <header>CustomProgressBar.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ProgressView</class>
-   <extends>QTreeView</extends>
-   <header>ProgressView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

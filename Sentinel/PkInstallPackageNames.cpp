@@ -33,10 +33,10 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
                                              const QStringList &packages,
                                              const QString &interaction,
                                              const QDBusMessage &message,
-                                             QWidget *parent)
- : SessionTask(xid, interaction, message, parent),
-   m_packages(packages),
-   m_message(message)
+                                             QWidget *parent) :
+    SessionTask(xid, interaction, message, parent),
+    m_packages(packages),
+    m_message(message)
 {
     setWindowTitle(i18n("Install Packages by Name"));
 
@@ -86,17 +86,17 @@ PkInstallPackageNames::~PkInstallPackageNames()
 
 void PkInstallPackageNames::search()
 {
-    Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(Transaction::RoleResolve, t);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+    PkTransaction *transaction = new PkTransaction(this);
+    setTransaction(Transaction::RoleResolve, transaction);
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    t->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
-    if (t->error()) {
+    transaction->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
+    if (transaction->error()) {
         QString msg(i18n("Failed to start resolve transaction"));
         if (showWarning()) {
-            setError(msg, PkStrings::daemonError(t->error()));
+            setError(msg, PkStrings::daemonError(transaction->error()));
         }
         sendErrorFinished(Failed, msg);
     }

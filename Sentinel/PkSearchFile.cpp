@@ -43,14 +43,14 @@ PkSearchFile::PkSearchFile(const QString &file_name,
         return;
     }
 
-    Transaction *t = new Transaction(this);
-    PkTransaction *trans = setTransaction(Transaction::RoleSearchFile, t);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+    PkTransaction *transaction = new PkTransaction(this);
+    setTransaction(Transaction::RoleSearchFile, transaction);
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(t, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    t->searchFiles(m_fileName, Transaction::FilterNewest);
-    Transaction::InternalError error = t->error();
+    transaction->searchFiles(m_fileName, Transaction::FilterNewest);
+    Transaction::InternalError error = transaction->error();
     if (error) {
         QString msg = i18n("Failed to start search file transaction");
         if (showWarning()) {

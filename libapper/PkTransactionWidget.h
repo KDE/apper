@@ -18,65 +18,51 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef PK_TRANSACTION_H
-#define PK_TRANSACTION_H
+#ifndef PK_TRANSACTION_WIDGET_H
+#define PK_TRANSACTION_WIDGET_H
 
-#include <QObject>
+#include <QWidget>
+#include <KDialog>
 #include <kdemacros.h>
 
-#include <Transaction>
+#include "PkTransaction.h"
 
 using namespace PackageKit;
 
-class PkTransactionPrivate;
-class KDE_EXPORT PkTransaction : public Transaction
+namespace Ui {
+    class PkTransactionWidget;
+}
+
+class PkTransactionWidgetPrivate;
+class KDE_EXPORT PkTransactionWidget : public QWidget
 {
     Q_OBJECT
-    Q_ENUMS(ExitStatus)
 public:
-    typedef enum {
-        Success,
-        Failed,
-        Cancelled
-    } ExitStatus;
-    explicit PkTransaction(QWidget *parent = 0);
-    ~PkTransaction();
+    explicit PkTransactionWidget(QWidget *parent = 0);
+    ~PkTransactionWidget();
 
-    void setTransaction(Transaction *trans, Transaction::Role role);
-
-    void installPackages(const QStringList &packages);
-    void installFiles(const QStringList &files);
-    void removePackages(const QStringList &packages);
-    void updatePackages(const QStringList &packages);
-//    void refreshCache(bool force = false);
+    void setTransaction(PkTransaction *trans, Transaction::Role role);
+    void hideCancelButton();
 
     QString title() const;
     Transaction::Role role() const;
 
-    PkTransaction::ExitStatus exitStatus() const;
     bool isFinished() const;
 
 signals:
-    void finished(PkTransaction::ExitStatus status);
     void allowCancel(bool enable);
     void titleChanged(const QString &title);
+    void dialog(KDialog *widget);
     void sorry(const QString &title, const QString &text, const QString &details);
-    void errorMessage(const QString &title, const QString &text, const QString &details);
+    void error(const QString &title, const QString &text, const QString &details);
 
 public slots:
     void cancel();
 
 private slots:
-    void setupTransaction(PackageKit::Transaction *transaction);
-    void installPackages();
-    void installFiles();
-    void removePackages();
-    void updatePackages();
-
     void installSignature();
     void acceptEula();
 
-    void transactionFinished(PackageKit::Transaction::Exit status);
     void errorCode(PackageKit::Transaction::Error error, const QString &details);
     void updateUi();
     void eulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement);
@@ -90,21 +76,23 @@ private slots:
                                const QString &keyTimestamp,
                                PackageKit::Transaction::SigType type);
 
-    void setExitStatus(PkTransaction::ExitStatus status = PkTransaction::Success);
     void reject();
+    void followBottom(int value);
+    void rangeChanged(int min, int max);
 
 private:
+    void showDialog(KDialog *dialog);
     void showError(const QString &title, const QString &description, const QString &details = QString());
     void showSorry(const QString &title, const QString &description, const QString &details = QString());
     void unsetTransaction();
-    void requeueTransaction();
 
     Transaction *m_trans;
+    bool m_keepScrollBarAtBottom;
     bool m_handlingActionRequired;
     bool m_showingError; //This might replace the above
-    ExitStatus m_exitStatus;
     Transaction::Status m_status;
-    PkTransactionPrivate *d;
+    Ui::PkTransactionWidget *ui;
+    PkTransactionWidgetPrivate *d;
 };
 
 #endif

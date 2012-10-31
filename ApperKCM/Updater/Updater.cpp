@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "Updater.h"
+#include "ui_Updater.h"
 
 #include "UpdateDetails.h"
 #include "DistroUpgrade.h"
@@ -47,11 +48,12 @@
 
 Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     QWidget(parent),
+    ui(new Ui::Updater),
     m_roles(roles),
     m_selected(false),
     m_updatesT(0)
 {
-    setupUi(this);
+    ui->setupUi(this);
     updatePallete();
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
             this, SLOT(updatePallete()));
@@ -60,12 +62,12 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     m_updatesModel->setCheckable(true);
     ApplicationSortFilterModel *proxyModel = new ApplicationSortFilterModel(this);
     proxyModel->setSourceModel(m_updatesModel);
-    packageView->setModel(proxyModel);
+    ui->packageView->setModel(proxyModel);
 
-    m_delegate = new ApplicationsDelegate(packageView);
+    m_delegate = new ApplicationsDelegate(ui->packageView);
     m_delegate->setCheckable(true);
-    packageView->setItemDelegate(m_delegate);
-    packageView->sortByColumn(PackageModel::NameCol, Qt::AscendingOrder);
+    ui->packageView->setItemDelegate(m_delegate);
+    ui->packageView->sortByColumn(PackageModel::NameCol, Qt::AscendingOrder);
     connect(m_updatesModel, SIGNAL(changed(bool)),
             this, SLOT(checkEnableUpdateButton()));
 
@@ -75,8 +77,8 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
             m_updatesModel, SLOT(setAllChecked(bool)));
     m_header->setCheckBoxVisible(false);
     m_header->setDefaultAlignment(Qt::AlignCenter);
-    packageView->setHeaderHidden(false);
-    packageView->setHeader(m_header);
+    ui->packageView->setHeaderHidden(false);
+    ui->packageView->setHeader(m_header);
 
     // This must be set AFTER the model is set, otherwise it doesn't work
     m_header->setResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
@@ -91,45 +93,45 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_busySeq->setWidget(packageView->viewport());
+    m_busySeq->setWidget(ui->packageView->viewport());
 
     // hide distro Upgrade container and line
-    distroUpgradesSA->hide();
-    line->hide();
+    ui->distroUpgradesSA->hide();
+    ui->line->hide();
 
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "UpdateView");
 
     // versions
-    packageView->header()->setSectionHidden(PackageModel::VersionCol, true);
+    ui->packageView->header()->setSectionHidden(PackageModel::VersionCol, true);
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
     connect(m_showPackageVersion, SIGNAL(toggled(bool)), this, SLOT(showVersions(bool)));
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", true));
 
     // versions
-    packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, true);
+    ui->packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, true);
     m_showPackageCurrentVersion = new QAction(i18n("Show Current Versions"), this);
     m_showPackageCurrentVersion->setCheckable(true);
     connect(m_showPackageCurrentVersion, SIGNAL(toggled(bool)), this, SLOT(showCurrentVersions(bool)));
     m_showPackageCurrentVersion->setChecked(viewGroup.readEntry("ShowCurrentVersions", false));
 
     // Arch
-    packageView->header()->setSectionHidden(PackageModel::ArchCol, true);
+    ui->packageView->header()->setSectionHidden(PackageModel::ArchCol, true);
     m_showPackageArch = new QAction(i18n("Show Architectures"), this);
     m_showPackageArch->setCheckable(true);
     connect(m_showPackageArch, SIGNAL(toggled(bool)), this, SLOT(showArchs(bool)));
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
 
     // Origin
-    packageView->header()->setSectionHidden(PackageModel::OriginCol, true);
+    ui->packageView->header()->setSectionHidden(PackageModel::OriginCol, true);
     m_showPackageOrigin = new QAction(i18n("Show Origins"), this);
     m_showPackageOrigin->setCheckable(true);
     connect(m_showPackageOrigin, SIGNAL(toggled(bool)), this, SLOT(showOrigins(bool)));
     m_showPackageOrigin->setChecked(viewGroup.readEntry("ShowOrigins", false));
 
     // Sizes
-    packageView->header()->setSectionHidden(PackageModel::SizeCol, true);
+    ui->packageView->header()->setSectionHidden(PackageModel::SizeCol, true);
     m_showPackageSize = new QAction(i18n("Show Sizes"), this);
     m_showPackageSize->setCheckable(true);
     connect(m_showPackageSize, SIGNAL(toggled(bool)), this, SLOT(showSizes(bool)));
@@ -138,6 +140,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
 Updater::~Updater()
 {
+    delete ui;
 }
 
 void Updater::setSelected(bool selected)
@@ -150,7 +153,7 @@ void Updater::showVersions(bool enabled)
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowVersions", enabled);
-    packageView->header()->setSectionHidden(PackageModel::VersionCol, !enabled);
+    ui->packageView->header()->setSectionHidden(PackageModel::VersionCol, !enabled);
 }
 
 void Updater::showCurrentVersions(bool enabled)
@@ -158,7 +161,7 @@ void Updater::showCurrentVersions(bool enabled)
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowCurrentVersions", enabled);
-    packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, !enabled);
+    ui->packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, !enabled);
     if (enabled) {
         m_updatesModel->fetchCurrentVersions();
     }
@@ -169,7 +172,7 @@ void Updater::showArchs(bool enabled)
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowArchs", enabled);
-    packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
+    ui->packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
 }
 
 void Updater::showOrigins(bool enabled)
@@ -177,7 +180,7 @@ void Updater::showOrigins(bool enabled)
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("showOrigins", enabled);
-    packageView->header()->setSectionHidden(PackageModel::OriginCol, !enabled);
+    ui->packageView->header()->setSectionHidden(PackageModel::OriginCol, !enabled);
 }
 
 void Updater::showSizes(bool enabled)
@@ -185,7 +188,7 @@ void Updater::showSizes(bool enabled)
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowSizes", enabled);
-    packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
+    ui->packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
     if (enabled) {
         m_updatesModel->fetchSizes();
     }
@@ -195,14 +198,14 @@ void Updater::updatePallete()
 {
     QPalette pal;
     pal.setColor(QPalette::WindowText, pal.base().color());
-    backgroundFrame->setPalette(pal);
+    ui->backgroundFrame->setPalette(pal);
 }
 
 void Updater::on_packageView_clicked(const QModelIndex &index)
 {
     QString pkgId = index.data(PackageModel::IdRole).toString();
     Transaction::Info pkgInfo = index.data(PackageModel::InfoRole).value<Transaction::Info>();
-    updateDetails->setPackage(pkgId, pkgInfo);
+    ui->updateDetails->setPackage(pkgId, pkgInfo);
 }
 
 //TODO: We should add some kind of configuration to let users show unstable distributions
@@ -214,17 +217,17 @@ void Updater::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const Q
         return;
     }
 
-    if (verticalLayout->count()) {
+    if (ui->verticalLayout->count()) {
         QFrame *frame = new QFrame(this);
         frame->setFrameShape(QFrame::HLine);
-        verticalLayout->insertWidget(0, frame);
+        ui->verticalLayout->insertWidget(0, frame);
     }
     DistroUpgrade *distro = new DistroUpgrade(this);
-    verticalLayout->insertWidget(0, distro);
+    ui->verticalLayout->insertWidget(0, distro);
     distro->setComment(description);
     distro->setName(name);
-    distroUpgradesSA->show();
-    line->show();
+    ui->distroUpgradesSA->show();
+    ui->line->show();
 }
 
 bool Updater::hasChanges() const
@@ -254,13 +257,13 @@ void Updater::checkEnableUpdateButton()
     }
     // if we don't have any upates let's disable the button
     m_header->setCheckBoxVisible(m_updatesModel->rowCount() != 0);
-    packageView->setHeaderHidden(m_updatesModel->rowCount() == 0);
+    ui->packageView->setHeaderHidden(m_updatesModel->rowCount() == 0);
 }
 
 void Updater::load()
 {
     // set focus on the updates view
-    packageView->setFocus(Qt::OtherFocusReason);
+    ui->packageView->setFocus(Qt::OtherFocusReason);
     emit downloadSize(QString());
     // If the model already has some packages
     // let's just clear the selection
@@ -278,23 +281,23 @@ void Updater::getUpdatesFinished()
     checkEnableUpdateButton();
     if (m_updatesModel->rowCount() == 0) {
         // Set the info page
-        stackedWidget->setCurrentIndex(1);
+        ui->stackedWidget->setCurrentIndex(1);
         uint lastTime = Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache);
         unsigned long fifteen = 60 * 60 * 24 * 15;
         unsigned long tirty = 60 * 60 * 24 * 30;
 
         if (lastTime < fifteen) {
-            titleL->setText(i18n("Your system is up to date"));
-            descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(lastTime * 1000)));
-            iconL->setPixmap(KIcon("security-high").pixmap(128, 128));
+            ui->titleL->setText(i18n("Your system is up to date"));
+            ui->descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(lastTime * 1000)));
+            ui->iconL->setPixmap(KIcon("security-high").pixmap(128, 128));
         } else if (lastTime > fifteen && lastTime < tirty && lastTime != UINT_MAX) {
-            titleL->setText(i18n("You have no updates"));
-            descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(lastTime * 1000)));
-            iconL->setPixmap(KIcon("security-medium").pixmap(128, 128));
+            ui->titleL->setText(i18n("You have no updates"));
+            ui->descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(lastTime * 1000)));
+            ui->iconL->setPixmap(KIcon("security-medium").pixmap(128, 128));
         } else {
-            titleL->setText(i18n("Last check for updates was more than a month ago"));
-            descriptionL->setText(i18n("It's strongly recommended that you check for new updates now"));
-            iconL->setPixmap(KIcon("security-low").pixmap(128, 128));
+            ui->titleL->setText(i18n("Last check for updates was more than a month ago"));
+            ui->descriptionL->setText(i18n("It's strongly recommended that you check for new updates now"));
+            ui->iconL->setPixmap(KIcon("security-low").pixmap(128, 128));
         }
     }
 }
@@ -311,14 +314,14 @@ void Updater::getUpdates()
         return;
     }
 
-    if (stackedWidget->currentIndex() != 0) {
-        stackedWidget->setCurrentIndex(0);
+    if (ui->stackedWidget->currentIndex() != 0) {
+        ui->stackedWidget->setCurrentIndex(0);
     }
 
     // clears the model
-    packageView->setHeaderHidden(true);
+    ui->packageView->setHeaderHidden(true);
     m_updatesModel->clear();
-    updateDetails->hide();
+    ui->updateDetails->hide();
     m_updatesT = new Transaction(this);
     if (m_selected) {
         connect(m_updatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
@@ -363,12 +366,12 @@ void Updater::getUpdates()
 
     // Clean the distribution upgrades area
     QLayoutItem *child;
-    while ((child = verticalLayout->takeAt(0)) != 0) {
+    while ((child = ui->verticalLayout->takeAt(0)) != 0) {
         delete child->widget();
         delete child;
     }
-    distroUpgradesSA->hide();
-    line->hide();
+    ui->distroUpgradesSA->hide();
+    ui->line->hide();
 
     if (m_roles & Transaction::RoleGetDistroUpgrades) {
         // Check for distribution Upgrades
@@ -392,7 +395,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     action->setIcon(KIcon("view-refresh"));
     connect(action, SIGNAL(triggered(bool)),
             this, SIGNAL(refreshCache()));
-    menu->exec(packageView->viewport()->mapToGlobal(pos));
+    menu->exec(ui->packageView->viewport()->mapToGlobal(pos));
     delete menu;
 }
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2010 by Daniel Nicoletti                                *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,54 +18,37 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef PK_TRANSACTION_DIALOG_H
-#define PK_TRANSACTION_DIALOG_H
+#ifndef PK_TRANSACTION_PROGRESS_MODEL_H
+#define PK_TRANSACTION_PROGRESS_MODEL_H
 
-#include <KDialog>
-#include "PkTransaction.h"
+#include <QStandardItemModel>
 
-using namespace PackageKit;
+#include <Transaction>
 
-class KpkSimulateModel;
-class PkTransactionDialogPrivate;
-class KDE_EXPORT PkTransactionDialog : public KDialog
+class PkTransactionProgressModel: public QStandardItemModel
 {
     Q_OBJECT
-    Q_ENUMS(ExitStatus)
 public:
-    enum BehaviorFlag {
-        Modal = 1,
-        CloseOnFinish = 2
+    enum PackageRoles {
+        RoleInfo = Qt::UserRole + 1,
+        RoleFinished,
+        RoleProgress,
+        RoleId,
+        RoleRepo
     };
-    Q_DECLARE_FLAGS(Behaviors, BehaviorFlag)
+    explicit PkTransactionProgressModel(QObject *parent = 0);
+    ~PkTransactionProgressModel();
 
-    explicit PkTransactionDialog(Transaction *trans, Behaviors flags = 0, QWidget *parent = 0);
-    ~PkTransactionDialog();
+    void clear();
 
-    void setTransaction(Transaction *trans);
-    PkTransaction* transaction() const;
-
-    KpkSimulateModel* simulateModel() const;
-
-    void setFiles(const QStringList &files);
-
-    PkTransaction::ExitStatus exitStatus() const;
-
-signals:
-    void finished(PkTransaction::ExitStatus status);
-
-private slots:
-    void finishedDialog(PkTransaction::ExitStatus status);
+public slots:
+    void currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary = QString());
+    void currentRepo(const QString &repoId, const QString &description, bool enabled);
+    void itemProgress(const QString &id, PackageKit::Transaction::Status status, uint percentage);
 
 private:
-    PkTransaction *m_ui;
-    Behaviors m_flags;
-    PkTransactionDialogPrivate *d;
-
-protected slots:
-    virtual void slotButtonClicked(int button);
+    void itemFinished(QStandardItem *stdItem);
+    QStandardItem* findLastItem(const QString &packageID);
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(PkTransactionDialog::Behaviors)
-
-#endif
+#endif // PK_TRANSACTION_PROGRESS_MODEL_H

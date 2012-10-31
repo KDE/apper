@@ -90,10 +90,11 @@ void PkInstallPackageFiles::modelChanged()
 
 void PkInstallPackageFiles::commit()
 {
-    PkTransaction *trans = setTransaction(Transaction::RoleInstallFiles);
-    connect(trans, SIGNAL(finished(PkTransaction::ExitStatus)),
+    PkTransaction *transaction = new PkTransaction(this);
+    setTransaction(Transaction::RoleInstallFiles, transaction);
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(transactionFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    trans->installFiles(m_model->files());
+    transaction->installFiles(m_model->files());
 }
 
 void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status)
