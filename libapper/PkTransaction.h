@@ -29,6 +29,7 @@
 using namespace PackageKit;
 
 class PkTransactionPrivate;
+class PkTransactionProgressModel;
 class KDE_EXPORT PkTransaction : public Transaction
 {
     Q_OBJECT
@@ -52,6 +53,8 @@ public:
 
     QString title() const;
     Transaction::Role role() const;
+    Transaction::TransactionFlags flags() const;
+    PkTransactionProgressModel* progressModel() const;
 
     PkTransaction::ExitStatus exitStatus() const;
     bool isFinished() const;

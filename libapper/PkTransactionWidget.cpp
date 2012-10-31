@@ -45,12 +45,11 @@
 #include "RepoSig.h"
 #include "LicenseAgreement.h"
 #include "PkIcons.h"
-#include "PkTransactionProgressModel.h"
 #include "ApplicationLauncher.h"
-#include "PackageModel.h"
 #include "Requirements.h"
 #include "PkTransaction.h"
 #include "TransactionDelegate.h"
+#include "PkTransactionProgressModel.h"
 
 class PkTransactionWidgetPrivate
 {
@@ -58,7 +57,6 @@ public:
     ApplicationLauncher *launcher;
     Transaction::Role role;
     KPixmapSequenceOverlayPainter *busySeq;
-    PkTransactionProgressModel *progressModel;
 };
 
 PkTransactionWidget::PkTransactionWidget(QWidget *parent) :
@@ -92,8 +90,6 @@ PkTransactionWidget::PkTransactionWidget(QWidget *parent) :
     ui->progressView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
 
     ui->progressView->setItemDelegate(new TransactionDelegate(this));
-    d->progressModel = new PkTransactionProgressModel(this);
-    ui->progressView->setModel(d->progressModel);
     
     connect(ui->cancelButton, SIGNAL(rejected()), this, SLOT(cancel()));
 }
@@ -124,8 +120,8 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
     Q_ASSERT(trans);
 
     m_trans = trans;
+    ui->progressView->setModel(trans->progressModel());
     connect(trans, SIGNAL(changed()), this, SLOT(updateUi()));
-    d->progressModel->clear();
 
     // sets ui
     updateUi();
@@ -143,12 +139,12 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
                role == Transaction::RoleRemovePackages ||
                role == Transaction::RoleUpdatePackages ||
                role == Transaction::RoleRefreshCache) {
-        connect(m_trans, SIGNAL(repoDetail(QString,QString,bool)),
-                d->progressModel, SLOT(currentRepo(QString,QString,bool)));
-        connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
-        connect(m_trans, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
-                d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
+//        connect(m_trans, SIGNAL(repoDetail(QString,QString,bool)),
+//                d->progressModel, SLOT(currentRepo(QString,QString,bool)));
+//        connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+//                d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
+//        connect(m_trans, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
+//                d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
         if (role == Transaction::RoleRefreshCache) {
 
 //            ui->progressView->handleRepo(true);

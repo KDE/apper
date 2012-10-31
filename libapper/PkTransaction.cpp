@@ -48,6 +48,7 @@
 #include "ApplicationLauncher.h"
 #include "PackageModel.h"
 #include "Requirements.h"
+#include "PkTransactionProgressModel.h"
 
 class PkTransactionPrivate
 {
@@ -63,6 +64,7 @@ public:
     ApplicationLauncher *launcher;
     QStringList files;
     PackageModel *simulateModel;
+    PkTransactionProgressModel *progressModel;
 };
 
 PkTransaction::PkTransaction(QWidget *parent) :
@@ -83,6 +85,13 @@ PkTransaction::PkTransaction(QWidget *parent) :
     d->role = Transaction::RoleUnknown;
     // for sanity we are trusted till an error is given and the user accepts
     d->flags = Transaction::TransactionFlagOnlyTrusted;
+    d->progressModel = new PkTransactionProgressModel(this);
+    connect(this, SIGNAL(repoDetail(QString,QString,bool)),
+            d->progressModel, SLOT(currentRepo(QString,QString,bool)));
+    connect(this, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString)));
+    connect(this, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
+            d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
 
     connect(this, SIGNAL(changed()), SLOT(updateUi()));
 }
@@ -814,6 +823,16 @@ QString PkTransaction::title() const
 Transaction::Role PkTransaction::role() const
 {
     return d->role;
+}
+
+Transaction::TransactionFlags PkTransaction::flags() const
+{
+    return d->flags;
+}
+
+PkTransactionProgressModel *PkTransaction::progressModel() const
+{
+    return d->progressModel;
 }
 
 #include "PkTransaction.moc"

@@ -25,6 +25,8 @@
 
 #include <PkStrings.h>
 
+#include "PkTransaction.h"
+
 using namespace PackageKit;
 
 PkTransactionProgressModel::PkTransactionProgressModel(QObject *parent) :
@@ -40,6 +42,12 @@ void PkTransactionProgressModel::currentRepo(const QString &repoId, const QStrin
 {
     Q_UNUSED(enabled)
     kDebug() << repoId;
+
+    PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
+    if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
+        return;
+    }
+
     QStandardItem *stdItem = new QStandardItem(description);
     stdItem->setData(repoId, RoleId);
     stdItem->setData(true,   RoleRepo);
@@ -49,6 +57,12 @@ void PkTransactionProgressModel::currentRepo(const QString &repoId, const QStrin
 void PkTransactionProgressModel::itemProgress(const QString &id, Transaction::Status status, uint percentage)
 {
     Q_UNUSED(status)
+
+    PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
+    if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
+        return;
+    }
+
     QStandardItem *stdItem = findLastItem(id);
     if (stdItem && !stdItem->data(RoleFinished).toBool()) {
         // if the progress is unknown (101), make it empty
@@ -69,6 +83,11 @@ void PkTransactionProgressModel::clear()
 void PkTransactionProgressModel::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
     kDebug() << info << packageID << summary;
+    PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
+    if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
+        return;
+    }
+
     if (!packageID.isEmpty()) {
         QStandardItem *stdItem = findLastItem(packageID);
         // If there is alread some packages check to see if it has
