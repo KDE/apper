@@ -197,7 +197,8 @@ void Updater::showSizes(bool enabled)
 void Updater::updatePallete()
 {
     QPalette pal;
-    pal.setColor(QPalette::WindowText, pal.base().color());
+    pal.setColor(QPalette::Window, pal.base().color());
+    pal.setColor(QPalette::WindowText, pal.text().color());
     ui->backgroundFrame->setPalette(pal);
 }
 

@@ -27,7 +27,6 @@ set(libapper_SRCS
     CustomProgressBar.cpp
     Requirements.cpp
     PackageImportance.cpp
-    SimulateModel.cpp
     CategorizedView.cpp
     InfoWidget.cpp
 )
