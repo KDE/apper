@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <kdemacros.h>
+#include <KDialog>
 
 #include <Transaction>
 
@@ -43,13 +44,10 @@ public:
     explicit PkTransaction(QWidget *parent = 0);
     ~PkTransaction();
 
-    void setTransaction(Transaction *trans, Transaction::Role role);
-
     void installPackages(const QStringList &packages);
     void installFiles(const QStringList &files);
     void removePackages(const QStringList &packages);
     void updatePackages(const QStringList &packages);
-//    void refreshCache(bool force = false);
 
     QString title() const;
     Transaction::Role role() const;
@@ -61,46 +59,42 @@ public:
 
 signals:
     void finished(PkTransaction::ExitStatus status);
-    void allowCancel(bool enable);
     void titleChanged(const QString &title);
     void sorry(const QString &title, const QString &text, const QString &details);
     void errorMessage(const QString &title, const QString &text, const QString &details);
-
-public slots:
-    void cancel();
+    void dialog(KDialog *widget);
 
 private slots:
-    void setupTransaction(PackageKit::Transaction *transaction);
+    void setupTransaction();
     void installPackages();
     void installFiles();
     void removePackages();
     void updatePackages();
+    void requeueTransaction();
 
     void installSignature();
     void acceptEula();
 
     void transactionFinished(PackageKit::Transaction::Exit status);
     void errorCode(PackageKit::Transaction::Error error, const QString &details);
-    void updateUi();
     void eulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement);
     void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
-    void repoSignatureRequired(const QString &packageID,
-                               const QString &repoName,
-                               const QString &keyUrl,
-                               const QString &keyUserid,
-                               const QString &keyId,
-                               const QString &keyFingerprint,
-                               const QString &keyTimestamp,
-                               PackageKit::Transaction::SigType type);
+    void handleRepoSignature(const QString &packageID,
+                             const QString &repoName,
+                             const QString &keyUrl,
+                             const QString &keyUserid,
+                             const QString &keyId,
+                             const QString &keyFingerprint,
+                             const QString &keyTimestamp,
+                             PackageKit::Transaction::SigType type);
 
     void setExitStatus(PkTransaction::ExitStatus status = PkTransaction::Success);
     void reject();
 
 private:
+    void showDialog(KDialog *dialog);
     void showError(const QString &title, const QString &description, const QString &details = QString());
     void showSorry(const QString &title, const QString &description, const QString &details = QString());
-    void unsetTransaction();
-    void requeueTransaction();
 
     Transaction *m_trans;
     bool m_handlingActionRequired;

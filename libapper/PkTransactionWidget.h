@@ -48,6 +48,7 @@ public:
     Transaction::Role role() const;
 
     bool isFinished() const;
+    bool isCancelVisible() const;
 
 signals:
     void allowCancel(bool enable);

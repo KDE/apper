@@ -416,6 +416,11 @@ bool PkTransactionWidget::isFinished() const
     return false;
 }
 
+bool PkTransactionWidget::isCancelVisible() const
+{
+    return ui->cancelButton->isVisible();
+}
+
 void PkTransactionWidget::reject()
 {
 //    d->finished = true;

@@ -49,6 +49,7 @@
 #include "PackageModel.h"
 #include "Requirements.h"
 #include "PkTransactionProgressModel.h"
+#include "PkTransactionWidget.h"
 
 class PkTransactionPrivate
 {
@@ -65,6 +66,7 @@ public:
     QStringList files;
     PackageModel *simulateModel;
     PkTransactionProgressModel *progressModel;
+    QWidget *parentWindow;
 };
 
 PkTransaction::PkTransaction(QWidget *parent) :
@@ -79,10 +81,12 @@ PkTransaction::PkTransaction(QWidget *parent) :
     kDebug() << status() << role();
     // for sanity we are finished till some transaction is set
     d->finished = true;
-    d->simulateModel = new PackageModel(this);
+    d->simulateModel = 0;
     d->launcher = 0;
     d->originalRole = Transaction::RoleUnknown;
     d->role = Transaction::RoleUnknown;
+    d->parentWindow = 0;
+
     // for sanity we are trusted till an error is given and the user accepts
     d->flags = Transaction::TransactionFlagOnlyTrusted;
     d->progressModel = new PkTransactionProgressModel(this);
@@ -92,8 +96,11 @@ PkTransaction::PkTransaction(QWidget *parent) :
             d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString)));
     connect(this, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
             d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
+    connect(this, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
+            SLOT(handleRepoSignature(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
 
-    connect(this, SIGNAL(changed()), SLOT(updateUi()));
+    connect(this, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            SLOT(transactionFinished(PackageKit::Transaction::Exit)));
 }
 
 PkTransaction::~PkTransaction()
@@ -110,13 +117,11 @@ void PkTransaction::installFiles(const QStringList &files)
         d->files = files;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
-        // Create the simulate transaction and it's model
-        Transaction *trans = new Transaction(this);
-        setTransaction(trans, Transaction::RoleInstallFiles);
-        trans->installFiles(files, d->flags);
-        if (trans->error()) {
+        setupTransaction();
+        Transaction::installFiles(files, d->flags);
+        if (error()) {
             showSorry(i18n("Failed to simulate file install"),
-                      PkStrings::daemonError(trans->error()));
+                      PkStrings::daemonError(error()));
         }
     } else {
         showError(i18n("Current backend does not support installing files."), i18n("Error"));
@@ -130,13 +135,11 @@ void PkTransaction::installPackages(const QStringList &packages)
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
-        // Create the depends transaction and it's model
-        Transaction *trans = new Transaction(this);
-        setTransaction(trans, Transaction::RoleInstallPackages);
-        trans->installPackages(d->packages, d->flags);
-        if (trans->error()) {
+        setupTransaction();
+        Transaction::installPackages(d->packages, d->flags);
+        if (error()) {
             showSorry(i18n("Failed to simulate package install"),
-                      PkStrings::daemonError(trans->error()));
+                      PkStrings::daemonError(error()));
         }
     } else {
         showError(i18n("Current backend does not support installing packages."), i18n("Error"));
@@ -151,13 +154,11 @@ void PkTransaction::removePackages(const QStringList &packages)
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
-        // Create the requirements transaction and it's model
-        Transaction *trans = new Transaction(this);
-        setTransaction(trans, Transaction::RoleRemovePackages);
-        trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
-        if (trans->error()) {
+        setupTransaction();
+        Transaction::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
+        if (error()) {
             showSorry(i18n("Failed to simulate package removal"),
-                      PkStrings::daemonError(trans->error()));
+                      PkStrings::daemonError(error()));
         }
     } else {
         showError(i18n("The current backend does not support removing packages."), i18n("Error"));
@@ -171,45 +172,38 @@ void PkTransaction::updatePackages(const QStringList &packages)
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
-        Transaction *trans = new Transaction(this);
-        setTransaction(trans, Transaction::RoleUpdatePackages);
-        trans->updatePackages(d->packages, d->flags);
-        if (trans->error()) {
+        setupTransaction();
+        Transaction::updatePackages(d->packages, d->flags);
+        if (error()) {
             showSorry(i18n("Failed to simulate package update"),
-                      PkStrings::daemonError(trans->error()));
+                      PkStrings::daemonError(error()));
         }
     } else {
         showError(i18n("The current backend does not support updating packages."), i18n("Error"));
     }
 }
 
-//void PkTransaction::refreshCache(bool force)
-//{
-//    kDebug() << force;
-//    Transaction::refreshCache(force);
-//    if (error()) {
-//        showSorry(i18n("Failed to refresh package cache"),
-//                  PkStrings::daemonError(error()));
-//    } else {
-//        d->finished = false;
-//    }
-//}
-
-void PkTransaction::setupTransaction(PackageKit::Transaction *transaction)
+void PkTransaction::setupTransaction()
 {
+    reset();
+    if (d->flags & Transaction::TransactionFlagSimulate) {
+        d->simulateModel = new PackageModel(this);
+        connect(this, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    }
+
 #ifdef HAVE_DEBCONFKDE
-    QString tid;
+    QString _tid = tid();
     QString socket;
-    tid = transaction->tid();
     // Build a socket path like /tmp/1761_edeceabd_data_debconf
-    socket = QLatin1String("/tmp") % tid % QLatin1String("_debconf");
+    socket = QLatin1String("/tmp") % _tid % QLatin1String("_debconf");
     QDBusMessage message;
     message = QDBusMessage::createMethodCall(QLatin1String("org.kde.ApperSentinel"),
                                              QLatin1String("/"),
                                              QLatin1String("org.kde.ApperSentinel"),
                                              QLatin1String("SetupDebconfDialog"));
     // Use our own cached tid to avoid crashes
-    message << qVariantFromValue(tid);
+    message << qVariantFromValue(_tid);
     message << qVariantFromValue(socket);
     message << qVariantFromValue(static_cast<uint>(effectiveWinId()));
     QDBusMessage reply = QDBusConnection::sessionBus().call(message);
@@ -217,235 +211,75 @@ void PkTransaction::setupTransaction(PackageKit::Transaction *transaction)
         kWarning() << "Message did not receive a reply";
     }
 
-    transaction->setHints(QLatin1String("frontend-socket=") % socket);
-#else
-     Q_UNUSED(transaction)
+    setHints(QLatin1String("frontend-socket=") % socket);
 #endif //HAVE_DEBCONFKDE
 }
 
 void PkTransaction::installPackages()
 {
-    Transaction *trans = new Transaction(this);
-    setupTransaction(trans);
-    setTransaction(trans, Transaction::RoleInstallPackages);
-    trans->installPackages(d->packages, d->flags);
-    if (trans->error()) {
+    setupTransaction();
+    Transaction::installPackages(d->packages, d->flags);
+    if (error()) {
         showSorry(i18n("Failed to install package"),
-                  PkStrings::daemonError(trans->error()));
+                  PkStrings::daemonError(error()));
     }
 }
 
 void PkTransaction::installFiles()
 {
-    Transaction *trans = new Transaction(this);
-    setupTransaction(trans);
-    setTransaction(trans, Transaction::RoleInstallFiles);
-    trans->installFiles(d->files, d->flags);
-    if (trans->error()) {
+    setupTransaction();
+    Transaction::installFiles(d->files, d->flags);
+    if (error()) {
         showSorry(i18np("Failed to install file",
                         "Failed to install files", d->files.size()),
-                  PkStrings::daemonError(trans->error()));
+                  PkStrings::daemonError(error()));
     }
 }
 
 void PkTransaction::removePackages()
 {
-    Transaction *trans = new Transaction(this);
-    setupTransaction(trans);
-    setTransaction(trans, Transaction::RoleRemovePackages);
-    trans->removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
-    if (trans->error()) {
+    setupTransaction();
+    Transaction::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
+    if (error()) {
         showSorry(i18n("Failed to remove package"),
-                  PkStrings::daemonError(trans->error()));
+                  PkStrings::daemonError(error()));
     }
 }
 
 void PkTransaction::updatePackages()
 {
-    Transaction *trans = new Transaction(this);
-    setupTransaction(trans);
-    setTransaction(trans, Transaction::RoleUpdatePackages);
-    trans->updatePackages(d->packages, d->flags);
-    if (trans->error()) {
+    setupTransaction();
+    Transaction::updatePackages(d->packages, d->flags);
+    if (error()) {
         showSorry(i18n("Failed to update package"),
-                  PkStrings::daemonError(trans->error()));
+                  PkStrings::daemonError(error()));
     }
-}
-
-void PkTransaction::cancel()
-{
-    if (m_trans) {
-        m_trans->cancel();
-    }
-}
-
-void PkTransaction::setTransaction(Transaction *trans, Transaction::Role role)
-{
-    Q_ASSERT(trans);
-
-    m_trans = trans;
-    d->role = role;
-    d->finished = false;
-    m_handlingActionRequired = false;
-    m_showingError = false;
-    d->error = Transaction::ErrorUnknown;
-
-    if (role != Transaction::RoleUnknown) {
-//        setWindowTitle(PkStrings::action(role));
-        emit titleChanged(PkStrings::action(role));
-    }
-
-
-
-    // sets the action icon to be the window icon
-//    setWindowIcon(PkIcons::actionIcon(role));
-
-    // sets ui
-    updateUi();
-
-    // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
-//    connect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-//            this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
-//    connect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-//            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
-//    connect(m_trans, SIGNAL(changed()),
-//            this, SLOT(updateUi()));
-//    connect(m_trans, SIGNAL(eulaRequired(QString,QString,QString,QString)),
-//            this, SLOT(eulaRequired(QString,QString,QString,QString)));
-//    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
-//            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
-//    connect(m_trans, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
-//            this, SLOT(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
-    // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
-}
-
-void PkTransaction::unsetTransaction()
-{
-    if (m_trans == 0) {
-        return;
-    }
-
-//    disconnect(m_trans, SIGNAL(ItemProgress(QString,uint)),
-//               ui->progressView, SLOT(itemProgress(QString,uint)));
-//    disconnect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-//               d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-//    disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-//               this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
-//    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-//               this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
-//    disconnect(m_trans, SIGNAL(changed()),
-//               this, SLOT(updateUi()));
-//    disconnect(m_trans, SIGNAL(eulaRequired(QString,QString,QString,QString)),
-//               this, SLOT(eulaRequired(QString,QString,QString,QString)));
-//    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
-//               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
-//    disconnect(m_trans, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
-//               this, SLOT(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
 }
 
 void PkTransaction::requeueTransaction()
 {
+    Requirements *requires = qobject_cast<Requirements *>(sender());
     switch (d->originalRole) {
-    case Transaction::RoleRemovePackages :
+    case Transaction::RoleRemovePackages:
+        if (requires) {
+            // As we have requires allow deps removal
+            d->allowDeps = true;
+        }
         removePackages();
         break;
-    case Transaction::RoleInstallPackages :
+    case Transaction::RoleInstallPackages:
         installPackages();
         break;
-    case Transaction::RoleInstallFiles :
+    case Transaction::RoleInstallFiles:
         installFiles();
         break;
-    case Transaction::RoleUpdatePackages :
+    case Transaction::RoleUpdatePackages:
         updatePackages();
         break;
     default :
         setExitStatus(Failed);
         return;
     }
-}
-
-void PkTransaction::updateUi()
-{
-    Transaction *transaction = qobject_cast<Transaction*>(sender());
-    if (transaction == 0 && (transaction = m_trans) == 0) {
-        kWarning() << "no transaction object";
-        return;
-    }
-
-    uint percentage = transaction->percentage();
-    kDebug() << percentage;
-    if (percentage <= 100) {
-//        ui->progressBar->setMaximum(100);
-//        ui->progressBar->setValue(percentage);
-//    } else if (ui->progressBar->maximum() != 0) {
-//        ui->progressBar->setMaximum(0);
-//        ui->progressBar->reset();
-    }
-
-//    ui->progressBar->setRemaining(transaction->remainingTime());
-
-    // Status & Speed
-    Transaction::Status status = transaction->status();
-    if (m_status != status) {
-        m_status = status;
-//        ui->currentL->setText(PkStrings::status(status));
-
-//        KPixmapSequence sequence = KPixmapSequence(PkIcons::statusAnimation(status),
-//                                                   KIconLoader::SizeLarge);
-//        if (sequence.isValid()) {
-//            d->busySeq->setSequence(sequence);
-//            d->busySeq->start();
-//        }
-    } else if (status == Transaction::StatusDownload) {
-        uint speed = transaction->speed();
-        qulonglong downloadRemaining = transaction->downloadSizeRemaining();
-//        if (speed != 0 && downloadRemaining != 0) {
-//            ui->currentL->setText(i18n("Downloading packages at %1/s, %2 remaining",
-//                                       KGlobal::locale()->formatByteSize(speed),
-//                                       KGlobal::locale()->formatByteSize(downloadRemaining)));
-//        } else if (speed != 0 && downloadRemaining == 0) {
-//            ui->currentL->setText(i18n("Downloading packages at %1/s",
-//                                         KGlobal::locale()->formatByteSize(speed)));
-//        } else if (speed == 0 && downloadRemaining != 0) {
-//            ui->currentL->setText(i18n("Downloading packages, %1 remaining",
-//                                         KGlobal::locale()->formatByteSize(downloadRemaining)));
-//        }
-    }
-
-    Transaction::Role role = transaction->role();
-    if (d->role != role &&
-        role != Transaction::RoleUnknown) {
-        d->role = role;
-//        setWindowTitle(PkStrings::action(role));
-        emit titleChanged(PkStrings::action(role));
-
-        // The role changed let's change the connections too
-        unsetTransaction();
-        // Setup the simulate model if we are simulating
-        if (d->flags & Transaction::TransactionFlagSimulate) {
-            // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
-            d->simulateModel->clear();
-    //        d->simulateModel->setSkipPackages(d->packages);
-            connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                    d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-        } else if (role == Transaction::RoleInstallPackages ||
-                   role == Transaction::RoleInstallFiles ||
-                   role == Transaction::RoleRemovePackages ||
-                   role == Transaction::RoleUpdatePackages ||
-                   role == Transaction::RoleRefreshCache) {
-//            connect(m_trans, SIGNAL(repoDetail(QString,QString,bool)),
-//                    d->progressModel, SLOT(currentRepo(QString,QString,bool)));
-//            connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-//                    d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
-//            connect(m_trans, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
-//                    d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
-        }
-    }
-
-    // check to see if we can cancel
-    bool cancel = transaction->allowCancel();
-    emit allowCancel(cancel);
-//    ui->cancelButton->setEnabled(cancel);
 }
 
 // Return value: if the error code suggests to try with only_trusted %FALSE
@@ -476,18 +310,18 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
 
     if (untrustedIsNeed(error)) {
         m_handlingActionRequired = true;
-//        int ret = KMessageBox::warningYesNo(this,
-//                                            i18n("You are about to install unsigned packages that can compromise your system, "
-//                                            "as it is impossible to verify if the software came from a trusted "
-//                                            "source.\n\nAre you sure you want to proceed with the installation?"),
-//                                            i18n("Installing unsigned software"));
-//        if (ret == KMessageBox::Yes) {
-//            // Set only trusted to false, to do as the user asked
-//            d->flags ^= Transaction::TransactionFlagOnlyTrusted;
-//            requeueTransaction();
-//        } else {
-//            setExitStatus(Cancelled);
-//        }
+        int ret = KMessageBox::warningYesNo(d->parentWindow,
+                                            i18n("You are about to install unsigned packages that can compromise your system, "
+                                            "as it is impossible to verify if the software came from a trusted "
+                                            "source.\n\nAre you sure you want to proceed with the installation?"),
+                                            i18n("Installing unsigned software"));
+        if (ret == KMessageBox::Yes) {
+            // Set only trusted to false, to do as the user asked
+            d->flags ^= Transaction::TransactionFlagOnlyTrusted;
+            requeueTransaction();
+        } else {
+            setExitStatus(Cancelled);
+        }
         m_handlingActionRequired = false;
         return;
     }
@@ -518,10 +352,10 @@ void PkTransaction::eulaRequired(const QString &eulaID, const QString &packageID
         m_handlingActionRequired = true;
     }
 
-//    LicenseAgreement *eula = new LicenseAgreement(eulaID, packageID, vendor, licenseAgreement, this);
-//    connect(eula, SIGNAL(yesClicked()), this, SLOT(acceptEula()));
-//    connect(eula, SIGNAL(rejected()), this, SLOT(reject()));
-//    showDialog(eula);
+    LicenseAgreement *eula = new LicenseAgreement(eulaID, packageID, vendor, licenseAgreement, d->parentWindow);
+    connect(eula, SIGNAL(yesClicked()), this, SLOT(acceptEula()));
+    connect(eula, SIGNAL(rejected()), this, SLOT(reject()));
+    showDialog(eula);
 }
 
 void PkTransaction::acceptEula()
@@ -530,12 +364,11 @@ void PkTransaction::acceptEula()
 
     if (eula) {
         kDebug() << "Accepting EULA" << eula->id();
-        Transaction *trans = new Transaction(this);
-        setTransaction(trans, Transaction::RoleAcceptEula);
-        trans->acceptEula(eula->id());
-        if (trans->error()) {
+        reset();
+        Transaction::acceptEula(eula->id());
+        if (error()) {
             showSorry(i18n("Failed to install signature"),
-                      PkStrings::daemonError(trans->error()));
+                      PkStrings::daemonError(error()));
         }
     } else {
         kWarning() << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
@@ -547,22 +380,29 @@ void PkTransaction::mediaChangeRequired(Transaction::MediaType type, const QStri
     Q_UNUSED(id)
 
     m_handlingActionRequired = true;
-//    int ret = KMessageBox::questionYesNo(this,
-//                                         PkStrings::mediaMessage(type, text),
-//                                         i18n("A media change is required"),
-//                                         KStandardGuiItem::cont(),
-//                                         KStandardGuiItem::cancel());
+    int ret = KMessageBox::questionYesNo(d->parentWindow,
+                                         PkStrings::mediaMessage(type, text),
+                                         i18n("A media change is required"),
+                                         KStandardGuiItem::cont(),
+                                         KStandardGuiItem::cancel());
     m_handlingActionRequired = false;
 
     // if the user clicked continue we got yes
-//    if (ret == KMessageBox::Yes) {
-//        requeueTransaction();
-//    } else {
-//        setExitStatus(Cancelled);
-//    }
+    if (ret == KMessageBox::Yes) {
+        requeueTransaction();
+    } else {
+        setExitStatus(Cancelled);
+    }
 }
 
-void PkTransaction::repoSignatureRequired(const QString &packageID, const QString &repoName, const QString &keyUrl, const QString &keyUserid, const QString &keyId, const QString &keyFingerprint, const QString &keyTimestamp, Transaction::SigType type)
+void PkTransaction::handleRepoSignature(const QString &packageID,
+                                        const QString &repoName,
+                                        const QString &keyUrl,
+                                        const QString &keyUserid,
+                                        const QString &keyId,
+                                        const QString &keyFingerprint,
+                                        const QString &keyTimestamp,
+                                        Transaction::SigType type)
 {
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
@@ -572,10 +412,10 @@ void PkTransaction::repoSignatureRequired(const QString &packageID, const QStrin
         m_handlingActionRequired = true;
     }
 
-//    RepoSig *repoSig = new RepoSig(packageID, repoName, keyUrl, keyUserid, keyId, keyFingerprint, keyTimestamp, type, this);
-//    connect(repoSig, SIGNAL(yesClicked()), this, SLOT(installSignature()));
-//    connect(repoSig, SIGNAL(rejected()), this, SLOT(reject()));
-//    showDialog(repoSig);
+    RepoSig *repoSig = new RepoSig(packageID, repoName, keyUrl, keyUserid, keyId, keyFingerprint, keyTimestamp, type, d->parentWindow);
+    connect(repoSig, SIGNAL(yesClicked()), this, SLOT(installSignature()));
+    connect(repoSig, SIGNAL(rejected()), this, SLOT(reject()));
+    showDialog(repoSig);
 }
 
 void PkTransaction::installSignature()
@@ -584,12 +424,11 @@ void PkTransaction::installSignature()
 
     if (repoSig)  {
         kDebug() << "Installing Signature" << repoSig->keyID();
-        Transaction *trans = new Transaction(this);
-        setTransaction(trans, Transaction::RoleInstallSignature);
-        trans->installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID());
-        if (trans->error()) {
+        reset();
+        Transaction::installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID());
+        if (error()) {
             showSorry(i18n("Failed to install signature"),
-                      PkStrings::daemonError(trans->error()));
+                      PkStrings::daemonError(error()));
         }
     } else {
         kWarning() << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
@@ -606,10 +445,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
     kDebug() << status << role;
     d->finished = true;
     switch(status) {
-    case Transaction::ExitSuccess :
-//        ui->progressBar->setMaximum(100);
-//        ui->progressBar->setValue(100);
-
+    case Transaction::ExitSuccess:
         // Check if we are just simulating
         if (d->flags & Transaction::TransactionFlagSimulate) {
             // Disable the simulate flag
@@ -625,48 +461,20 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             kDebug() << "Simulate Finished removed" << d->simulateModel->rowCount();
 
             d->packagesToResolve.append(d->simulateModel->selectedPackagesToInstall());
-//            requires = new Requirements(d->simulateModel, this);
-//            connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
-//            if (requires->shouldShow()) {
-//                showDialog(requires);
-//            } else {
-//                requires->deleteLater();
-//                requires = 0;
-//            }
+            requires = new Requirements(d->simulateModel, d->parentWindow);
+            connect(requires, SIGNAL(accepted()), this, SLOT(requeueTransaction()));
+            connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
+            if (requires->shouldShow()) {
+                showDialog(requires);
+            } else {
+                d->simulateModel->deleteLater();
+                d->simulateModel = 0;
+                requires->deleteLater();
+                requires = 0;
 
-            switch (role) {
-            case Transaction::RoleInstallPackages:
-                if (requires) {
-                    connect(requires, SIGNAL(accepted()), this, SLOT(installPackages()));
-                } else {
-                    installPackages();
-                }
-                return;
-            case Transaction::RoleRemovePackages:
-                if (requires) {
-                    // As we have requires allow deps removal
-                    d->allowDeps = true;
-                    connect(requires, SIGNAL(accepted()), this, SLOT(removePackages()));
-                } else {
-                    removePackages();
-                }
-                return;
-            case Transaction::RoleUpdatePackages:
-                if (requires) {
-                    connect(requires, SIGNAL(accepted()), this, SLOT(updatePackages()));
-                } else {
-                    updatePackages();
-                }
-                return;
-            case Transaction::RoleInstallFiles:
-                if (requires) {
-                    connect(requires, SIGNAL(accepted()), this, SLOT(installFiles()));
-                } else {
-                    installFiles();
-                }
-                return;
-            default:
-                break;
+                // Since we removed the Simulate Flag this will procced
+                // with the actual action
+                requeueTransaction();
             }
         } else {
             KConfig config("apper");
@@ -685,28 +493,30 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
 //                    d->launcher = new ApplicationLauncher(this);
                 }
 
-                Transaction *transaction = new Transaction(this);
-                connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                        d->launcher, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-                setTransaction(transaction, Transaction::RoleResolve);
-                transaction->resolve(d->packagesToResolve, Transaction::FilterInstalled);
-                if (!transaction->error()) {
-                    return; // avoid the exit code
-                }
+                // TODO fix this
+//                Transaction *transaction = new Transaction(this);
+//                connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+//                        d->launcher, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+//                setTransaction(transaction, Transaction::RoleResolve);
+//                transaction->resolve(d->packagesToResolve, Transaction::FilterInstalled);
+//                if (!transaction->error()) {
+//                    return; // avoid the exit code
+//                }
             } else if (showApp &&
                        d->launcher &&
                        !d->launcher->packages().isEmpty() &&
                        role == Transaction::RoleResolve &&
                        d->originalRole != Transaction::RoleUnknown) {
                 // Let's try to find some desktop files
-                Transaction *transaction = new Transaction(this);
-                connect(transaction, SIGNAL(files(QString,QStringList)),
-                        d->launcher, SLOT(files(QString,QStringList)));
-                setTransaction(transaction, Transaction::RoleGetFiles);
-                transaction->getFiles(d->launcher->packages());
-                if (!transaction->error()) {
-                    return; // avoid the exit code
-                }
+                // TODO fix this too
+//                Transaction *transaction = new Transaction(this);
+//                connect(transaction, SIGNAL(files(QString,QStringList)),
+//                        d->launcher, SLOT(files(QString,QStringList)));
+//                setTransaction(transaction, Transaction::RoleGetFiles);
+//                transaction->getFiles(d->launcher->packages());
+//                if (!transaction->error()) {
+//                    return; // avoid the exit code
+//                }
             } else if (showApp &&
                        d->launcher &&
                        d->launcher->hasApplications() &&
@@ -789,30 +599,45 @@ void PkTransaction::reject()
     setExitStatus(Cancelled);
 }
 
+void PkTransaction::showDialog(KDialog *dlg)
+{
+    kDebug() << dlg;
+    PkTransactionWidget *widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
+    if (!widget || widget->isCancelVisible()) {
+        dlg->setModal(true);
+        dlg->show();
+    } else {
+        dlg->setProperty("embedded", true);
+        emit dialog(dlg);
+    }
+}
+
 void PkTransaction::showError(const QString &title, const QString &description, const QString &details)
 {
-//    if (ui->cancelButton->isVisible()) {
-//        if (details.isEmpty()) {
-//            KMessageBox::error(this, description, title);
-//        } else {
-//            KMessageBox::detailedError(this, description, details, title);
-//        }
-//    } else {
-//        emit error(title, description, details);
-//    }
+    PkTransactionWidget *widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
+    if (!widget || widget->isCancelVisible()) {
+        if (details.isEmpty()) {
+            KMessageBox::error(d->parentWindow, description, title);
+        } else {
+            KMessageBox::detailedError(d->parentWindow, description, details, title);
+        }
+    } else {
+        emit errorMessage(title, description, details);
+    }
 }
 
 void PkTransaction::showSorry(const QString &title, const QString &description, const QString &details)
 {
-//    if (ui->cancelButton->isVisible()) {
-//        if (details.isEmpty()) {
-//            KMessageBox::sorry(this, description, title);
-//        } else {
-//            KMessageBox::detailedSorry(this, description, details, title);
-//        }
-//    } else {
-//        emit sorry(title, description, details);
-//    }
+    PkTransactionWidget *widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
+    if (!widget || widget->isCancelVisible()) {
+        if (details.isEmpty()) {
+            KMessageBox::sorry(d->parentWindow, description, title);
+        } else {
+            KMessageBox::detailedSorry(d->parentWindow, description, details, title);
+        }
+    } else {
+        emit sorry(title, description, details);
+    }
 }
 
 QString PkTransaction::title() const
