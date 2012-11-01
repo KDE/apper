@@ -20,7 +20,6 @@
 
 #include "StatusNotifierItem.h"
 
-#include <KMenu>
 #include <KIcon>
 #include <KActionCollection>
 

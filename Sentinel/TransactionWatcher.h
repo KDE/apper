@@ -55,8 +55,6 @@ private slots:
     void transactionChanged(Transaction *transaction = 0, bool interactive = false);
 
     void logout();
-    void showMessages();
-    void hideMessageIcon();
     void hideRestartIcon();
 
 private:
@@ -64,11 +62,6 @@ private:
 
     // Hide this icon action
     QAction *m_hideAction;
-
-    // Message Container
-    QStringList  m_messages;
-    QAction     *m_messagesAction;
-    StatusNotifierItem *m_messagesSNI;
 
     // Restart menu entry
     Transaction::Restart m_restartType;

@@ -22,6 +22,7 @@
 #define STATUS_NOTIFIER_ITEM_H
 
 #include <KStatusNotifierItem>
+#include <KMenu>
 
 class StatusNotifierItem : public KStatusNotifierItem
 {

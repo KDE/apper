@@ -3,7 +3,6 @@ find_package(KDE4Workspace REQUIRED)
 
 set(sentinel_SRCS
     StatusNotifierItem.cpp
-    TransactionTrayIcon.cpp
     TransactionJob.cpp
     TransactionWatcher.cpp
     AbstractIsRunning.cpp

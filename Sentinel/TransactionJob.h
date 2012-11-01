@@ -29,7 +29,6 @@
 
 using namespace PackageKit;
 
-class TransactionTrayIcon;
 class TransactionJob : public KJob
 {
     Q_OBJECT

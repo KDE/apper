@@ -27,12 +27,8 @@
 #include <PkIcons.h>
 #include <PackageImportance.h>
 
-#include <KMenu>
-#include <KTextBrowser>
 #include <KNotification>
 #include <KLocale>
-#include <KDialog>
-#include <KWindowSystem>
 #include <KMessageBox>
 
 #include <kworkspace/kworkspace.h>
@@ -49,7 +45,6 @@ Q_DECLARE_METATYPE(Transaction::Error)
 
 TransactionWatcher::TransactionWatcher(QObject *parent) :
     AbstractIsRunning(parent),
-    m_messagesSNI(0),
     m_restartSNI(0),
     m_inhibitCookie(-1)
 {
@@ -58,11 +53,6 @@ TransactionWatcher::TransactionWatcher(QObject *parent) :
     // keep track of new transactions
     connect(Daemon::global(), SIGNAL(transactionListChanged(QStringList)),
             this, SLOT(transactionListChanged(QStringList)));
-
-    m_hideAction = new QAction(this);
-    m_hideAction->setText(i18n("Hide this icon"));
-    connect(m_hideAction, SIGNAL(triggered(bool)),
-            this, SLOT(hideMessageIcon()));
 
     // initiate the restart type
     m_restartType = Transaction::RestartNone;
@@ -97,10 +87,9 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
         // release any cookie that we might have
         suppressSleep(false);
 
-        if (m_messages.isEmpty() && m_restartType == Transaction::RestartNone) {
-            // the app can close now
-            emit close();
-        }
+        // the app can probably close now
+        // if some notification is being shown isRunning will return true
+        emit close();
     }
 }
 
@@ -233,71 +222,17 @@ void TransactionWatcher::transactionChanged(Transaction *transaction, bool inter
 
 void TransactionWatcher::message(PackageKit::Transaction::Message type, const QString &message)
 {
-    QString html;
-    html.append("<p><h3>");
-    html.append(QDateTime::currentDateTime().toString("hh:mm:ss"));
-    html.append(" - ");
-    html.append(PkStrings::message(type));
-    html.append("</h3>");
-    html.append(message);
-    html.append("</p>");
-    m_messages << html;
+    increaseRunning();
 
-    if (m_messagesSNI == 0) {
-        QIcon icon = PkIcons::getPreloadedIcon("kpk-important");
-        m_messagesSNI = new StatusNotifierItem(this);
-        m_messagesSNI->setIconByPixmap(icon);
-        // Seems that this break in the restart icon
-        m_messagesSNI->setAssociatedWidget(m_messagesSNI->contextMenu());
-        m_messagesSNI->setToolTip(icon,
-                                  i18n("Software Manager Messages"),
-                                  i18np("One message from the software manager",
-                                        "%1 messages from the software manager",
-                                        m_messages.size()));
-        connect(m_messagesSNI, SIGNAL(activateRequested(bool,QPoint)),
-                this, SLOT(showMessages()));
+    KNotification *notify;
+    notify = new KNotification("TransactionMessage", 0, KNotification::Persistent);
+    notify->setTitle(PkStrings::message(type));
+    notify->setText(message);
 
-        // Action for message handling
-        QAction *messagesAction = new QAction(this);
-        messagesAction->setText(i18n("Show messages"));
-        messagesAction->setIcon(KIcon("view-pim-notes"));
-        connect(messagesAction, SIGNAL(triggered(bool)),
-                this, SLOT(showMessages()));
-        m_messagesSNI->contextMenu()->addAction(messagesAction);
-
-        m_messagesSNI->contextMenu()->addSeparator();
-
-        QAction *hideAction = new QAction(this);
-        hideAction->setText(i18n("Hide this icon"));
-        connect(hideAction, SIGNAL(triggered(bool)),
-                m_messagesSNI, SLOT(deleteLater()));
-        m_messagesSNI->contextMenu()->addAction(hideAction);
-    }
-}
-
-void TransactionWatcher::showMessages()
-{
-    if (!m_messages.isEmpty()) {
-        increaseRunning();
-
-        KDialog *dialog = new KDialog;
-
-        QString html = m_messages.join("");
-        KTextBrowser *browser = new KTextBrowser(dialog);
-        browser->setOpenExternalLinks(true);
-        browser->setHtml(html);
-
-        dialog->setMainWidget(browser);
-        dialog->setWindowIcon(KIcon("view-pim-notes"));
-        dialog->setInitialSize(QSize(600, 400));
-        dialog->setCaption(i18n("Software Manager Messages"));
-        dialog->setButtons(KDialog::Close);
-        connect(dialog, SIGNAL(finished()), this, SLOT(decreaseRunning()));
-        connect(dialog, SIGNAL(finished()), SLOT(deleteLater()));
-
-        hideMessageIcon();
-        dialog->show();
-    }
+    notify->setPixmap(KIcon("dialog-warning").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+    connect(notify, SIGNAL(closed()),
+            this, SLOT(decreaseRunning()));
+    notify->sendEvent();
 }
 
 void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QString &details)
@@ -382,17 +317,6 @@ void TransactionWatcher::logout()
                                 KWorkSpace::ShutdownModeInteractive);
 }
 
-void TransactionWatcher::hideMessageIcon()
-{
-    // Reset things as the user don't want to see it
-    if (m_messagesSNI) {
-        m_messagesSNI->deleteLater();
-        m_messagesSNI = 0;
-    }
-    m_messages.clear();
-    emit close();
-}
-
 void TransactionWatcher::hideRestartIcon()
 {
     // Reset things as the user don't want to see it
@@ -408,7 +332,6 @@ bool TransactionWatcher::isRunning()
 {
     return AbstractIsRunning::isRunning() ||
             !m_transactions.isEmpty() ||
-            !m_messages.isEmpty() ||
             m_restartType != Transaction::RestartNone;
 }
 
