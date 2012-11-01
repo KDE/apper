@@ -120,42 +120,12 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
     Q_ASSERT(trans);
 
     m_trans = trans;
+    d->role = role;
     ui->progressView->setModel(trans->progressModel());
     connect(trans, SIGNAL(changed()), this, SLOT(updateUi()));
 
     // sets ui
     updateUi();
-
-    // Setup the simulate model if we are simulating
-//    if (d->flags & Transaction::TransactionFlagSimulate) {
-//        // DISCONNECT THIS SIGNAL BEFORE SETTING A NEW ONE
-//        d->simulateModel->clear();
-////        d->simulateModel->setSkipPackages(d->packages);
-//        connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-//                d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-//    } else
-        if (role == Transaction::RoleInstallPackages ||
-               role == Transaction::RoleInstallFiles ||
-               role == Transaction::RoleRemovePackages ||
-               role == Transaction::RoleUpdatePackages ||
-               role == Transaction::RoleRefreshCache) {
-//        connect(m_trans, SIGNAL(repoDetail(QString,QString,bool)),
-//                d->progressModel, SLOT(currentRepo(QString,QString,bool)));
-//        connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-//                d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
-//        connect(m_trans, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
-//                d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
-        if (role == Transaction::RoleRefreshCache) {
-
-//            ui->progressView->handleRepo(true);
-        } else {
-//            connect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-//                    ui->progressView, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
-//            connect(m_trans, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
-//                    ui->progressView, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
-//            ui->progressView->handleRepo(false);
-        }
-    }
 
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
 //    connect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
@@ -206,8 +176,6 @@ void PkTransactionWidget::updateUi()
         return;
     }
 
-//    setWindowIcon(PkIcons::actionIcon(role));
-
     uint percentage = transaction->percentage();
     kDebug() << percentage;
     if (percentage <= 100) {
@@ -249,11 +217,20 @@ void PkTransactionWidget::updateUi()
     }
 
     Transaction::Role role = transaction->role();
-    if (d->role != role &&
-        role != Transaction::RoleUnknown) {
+    if (d->role != role) {
+        QString windowTitle;
+        KIcon windowIcon;
+        if (role == Transaction::RoleUnknown) {
+            windowTitle  = PkStrings::status(Transaction::StatusSetup);
+            windowIcon = PkIcons::statusIcon(Transaction::StatusSetup);
+        } else {
+            windowTitle = PkStrings::action(role);
+            windowIcon = PkIcons::actionIcon(role);
+        }
         d->role = role;
-        setWindowTitle(PkStrings::action(role));
-        emit titleChanged(PkStrings::action(role));
+        setWindowIcon(PkIcons::actionIcon(role));
+        setWindowTitle(windowTitle);
+        emit titleChanged(windowTitle);
     }
 
     // check to see if we can cancel

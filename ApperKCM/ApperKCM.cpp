@@ -715,7 +715,7 @@ void ApperKCM::refreshCache()
     int oldBar = stackedWidgetBar->currentIndex();
     stackedWidgetBar->setCurrentIndex(BAR_TITLE);
     backTB->setEnabled(false);
-    connect(transaction, SIGNAL(titleChanged(QString)),
+    connect(transactionW, SIGNAL(titleChanged(QString)),
             titleL, SLOT(setText(QString)));
 
     QEventLoop loop;
@@ -764,7 +764,7 @@ void ApperKCM::save()
         int oldBar = stackedWidgetBar->currentIndex();
         stackedWidgetBar->setCurrentIndex(BAR_TITLE);
         backTB->setEnabled(false);
-        connect(transaction, SIGNAL(titleChanged(QString)),
+        connect(transactionW, SIGNAL(titleChanged(QString)),
                 titleL, SLOT(setText(QString)));
         emit changed(false);
 

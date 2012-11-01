@@ -770,9 +770,9 @@ QStringList PackageModel::selectedPackagesToInstall() const
 {
     QStringList list;
     foreach (const InternalPackage &package, m_checkedPackages) {
-        if (package.info == Transaction::InfoAvailable ||
-                package.info == Transaction::InfoCollectionAvailable) {
-            // check what packages are available and marked to be installed
+        if (package.info != Transaction::InfoInstalled &&
+                package.info != Transaction::InfoCollectionInstalled) {
+            // append the packages are not installed
             list << package.packageID;
         }
     }
