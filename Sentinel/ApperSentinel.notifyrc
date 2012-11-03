@@ -246,6 +246,13 @@ Action=Sound|Popup
 
 [Event/TransactionMessage]
 Name=Message from the software manager
+Name[nl]=Bericht van de softwarebeheerder
+Name[pt]=Mensagem do gestor de aplicações
+Name[pt_BR]=Mensagem do gerenciador de programas
+Name[sk]=Správa zo správcu softvéru
+Name[uk]=Повідомлення від засобу керування пакунками
+Name[wa]=Messaedje do manaedjeu des programes
+Name[x-test]=xxMessage from the software managerxx
 Action=Sound|Popup
 
 [Event/TransactionError]

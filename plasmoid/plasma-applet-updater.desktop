@@ -15,6 +15,7 @@ Name[sk]=Aktualizátor softvéru
 Name[sl]=Posodobitve programske opreme
 Name[sv]=Uppdateringar av programvara
 Name[uk]=Оновлення програм
+Name[wa]=Meteu a djoû des programes
 Name[x-test]=xxSoftware Updaterxx
 Comment=Displays and updates software
 Comment[ca]=Mostra i actualitza el programari
@@ -31,6 +32,7 @@ Comment[sk]=Zobrazí a aktualizuje softvér
 Comment[sl]=Prikaže in posodobi programsko opremo
 Comment[sv]=Visar och uppdaterar programvara
 Comment[uk]=Програма для показу та виконання оновлень
+Comment[wa]=Håyner eyet mete a djoû des programes
 Comment[x-test]=xxDisplays and updates softwarexx
 
 Icon=system-software-update
