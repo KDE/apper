@@ -246,7 +246,9 @@ Action=Sound|Popup
 
 [Event/TransactionMessage]
 Name=Message from the software manager
+Name[da]=Meddelelse fra softwarehåndteringen
 Name[el]=Μήνυμα από το διαχειριστή λογισμικού
+Name[et]=Teade tarkvarahaldurilt
 Name[hu]=Üzenet a szoftverkezelőtől
 Name[nl]=Bericht van de softwarebeheerder
 Name[pt]=Mensagem do gestor de aplicações
