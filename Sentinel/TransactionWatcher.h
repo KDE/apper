@@ -32,7 +32,6 @@
 using namespace PackageKit;
 
 class TransactionJob;
-class StatusNotifierItem;
 class TransactionWatcher : public AbstractIsRunning
 {
     Q_OBJECT
@@ -55,17 +54,11 @@ private slots:
     void transactionChanged(Transaction *transaction = 0, bool interactive = false);
 
     void logout();
-    void hideRestartIcon();
 
 private:
     void suppressSleep(bool enable, const QString &reason = QString());
 
-    // Hide this icon action
-    QAction *m_hideAction;
-
-    // Restart menu entry
-    Transaction::Restart m_restartType;
-    StatusNotifierItem *m_restartSNI;
+    // Hash of transactions we are watching
     QHash<QDBusObjectPath, Transaction*> m_transactions;
     QHash<QDBusObjectPath, TransactionJob*> m_transactionJob;
 

@@ -21,7 +21,6 @@
 #include "TransactionWatcher.h"
 
 #include "TransactionJob.h"
-#include "StatusNotifierItem.h"
 
 #include <PkStrings.h>
 #include <PkIcons.h>
@@ -45,7 +44,6 @@ Q_DECLARE_METATYPE(Transaction::Error)
 
 TransactionWatcher::TransactionWatcher(QObject *parent) :
     AbstractIsRunning(parent),
-    m_restartSNI(0),
     m_inhibitCookie(-1)
 {
     m_tracker = new KUiServerJobTracker(this);
@@ -53,9 +51,6 @@ TransactionWatcher::TransactionWatcher(QObject *parent) :
     // keep track of new transactions
     connect(Daemon::global(), SIGNAL(transactionListChanged(QStringList)),
             this, SLOT(transactionListChanged(QStringList)));
-
-    // initiate the restart type
-    m_restartType = Transaction::RestartNone;
 
     // here we check whether a transaction job should be created or not
     QList<QDBusObjectPath> paths = Daemon::global()->getTransactionList();
@@ -146,55 +141,38 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
     m_transactionJob.remove(tid);
 
     if (exit == Transaction::ExitSuccess && !transaction->property("restartType").isNull()) {
+        increaseRunning();
+
         Transaction::Restart type = transaction->property("restartType").value<Transaction::Restart>();
         QStringList restartPackages = transaction->property("restartPackages").toStringList();
 
         // Create the notification about this transaction
         KNotification *notify = new KNotification("RestartRequired");
-        QString text("<b>" + i18n("The system update has completed") + "</b>");
-        text.append("<br>" + PkStrings::restartType(type));
-        restartPackages.removeDuplicates();
-        restartPackages.sort();
-        if (!restartPackages.isEmpty()) {
-            text.append("<br>");
-            text.append(i18n("Packages: %1", restartPackages.join(QLatin1String(", "))));
-        }
+        connect(notify, SIGNAL(activated(uint)), this, SLOT(logout()));
+        connect(notify, SIGNAL(closed()), this, SLOT(decreaseRunning()));
+        notify->setProperty("restartType", qVariantFromValue(type));
         notify->setPixmap(PkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-        notify->setText(text);
+        notify->setTitle(PkStrings::restartType(type));
+
+        // Create a readable text with package names that required the restart
+        if (!restartPackages.isEmpty()) {
+            restartPackages.removeDuplicates();
+            restartPackages.sort();
+
+            QString text;
+            text = i18np("Package: %2",
+                         "Packages: %2",
+                         restartPackages.size(),
+                         restartPackages.join(QLatin1String(", ")));
+            notify->setText(text);
+        }
+
+        // TODO RestartApplication should be handled differently
+        QStringList actions;
+        actions << i18n("Restart");
+        notify->setActions(actions);
+
         notify->sendEvent();
-
-        if (m_restartSNI == 0) {
-            m_restartSNI = new StatusNotifierItem(this);
-            connect(m_restartSNI, SIGNAL(activateRequested(bool,QPoint)),
-                    this, SLOT(logout()));
-            // Right click shows HIDE action
-            QAction *action;
-            action = m_restartSNI->contextMenu()->addAction(i18n("Hide"));
-            connect(action, SIGNAL(triggered(bool)),
-                    this, SLOT(hideRestartIcon()));
-        }
-
-        // Now check if old transactions had a higher restart importance
-        int old = PackageImportance::restartImportance(m_restartType);
-        int newer = PackageImportance::restartImportance(type);
-        // Check to see which one is more important
-        if (newer > old) {
-            m_restartType = type;
-            // The restart type changed let's update the Icon
-            QString iconName;
-            QString subtitle;
-            if (!restartPackages.isEmpty()) {
-                subtitle = i18np("Package: %2",
-                                 "Packages: %2",
-                                 restartPackages.size(),
-                                 restartPackages.join(QLatin1String(", ")));
-            }
-            iconName = PkIcons::restartIconName(m_restartType);
-            m_restartSNI->setToolTip(iconName,
-                                     PkStrings::restartType(m_restartType),
-                                     subtitle);
-            m_restartSNI->setIconByName(iconName);
-        }
     }
 }
 
@@ -246,7 +224,7 @@ void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QSt
     notify->setProperty("Details", details);
 
     QStringList actions;
-    actions << i18n("Details") << i18n("Ignore");
+    actions << i18n("Details");
     notify->setActions(actions);
     notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     connect(notify, SIGNAL(activated(uint)),
@@ -299,15 +277,26 @@ void TransactionWatcher::requireRestart(PackageKit::Transaction::Restart type, c
 
 void TransactionWatcher::logout()
 {
+    decreaseRunning();
+
+    KNotification *notify = qobject_cast<KNotification*>(sender());
+    Transaction::Restart restartType;
+    restartType = notify->property("restartType").value<Transaction::Restart>();
+
     KWorkSpace::ShutdownType shutdownType;
-    if (m_restartType == Transaction::RestartSystem) {
+    switch (restartType) {
+    case Transaction::RestartSystem:
+    case Transaction::RestartSecuritySystem:
         // The restart type was system
         shutdownType = KWorkSpace::ShutdownTypeReboot;
-    } else if (m_restartType == Transaction::RestartSession) {
+        break;
+    case Transaction::RestartSession:
+    case Transaction::RestartSecuritySession:
         // The restart type was session
         shutdownType = KWorkSpace::ShutdownTypeLogout;
-    } else {
-        kWarning() << "Unknown restart type:" << m_restartType;
+        break;
+    default:
+        kWarning() << "Unknown restart type:" << restartType;
         return;
     }
 
@@ -317,22 +306,10 @@ void TransactionWatcher::logout()
                                 KWorkSpace::ShutdownModeInteractive);
 }
 
-void TransactionWatcher::hideRestartIcon()
-{
-    // Reset things as the user don't want to see it
-    if (m_restartSNI) {
-        m_restartSNI->deleteLater();
-        m_restartSNI = 0;
-    }
-    m_restartType = Transaction::RestartNone;
-    emit close();
-}
-
 bool TransactionWatcher::isRunning()
 {
     return AbstractIsRunning::isRunning() ||
-            !m_transactions.isEmpty() ||
-            m_restartType != Transaction::RestartNone;
+            !m_transactions.isEmpty();
 }
 
 void TransactionWatcher::suppressSleep(bool enable, const QString &reason)
