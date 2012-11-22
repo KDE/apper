@@ -88,6 +88,7 @@ PkTransactionWidget::PkTransactionWidget(QWidget *parent) :
 
     ui->progressView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
     ui->progressView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+    ui->progressView->header()->setStretchLastSection(true);
 
     ui->progressView->setItemDelegate(new TransactionDelegate(this));
     
@@ -177,7 +178,6 @@ void PkTransactionWidget::updateUi()
     }
 
     uint percentage = transaction->percentage();
-    kDebug() << percentage;
     if (percentage <= 100) {
         ui->progressBar->setMaximum(100);
         ui->progressBar->setValue(percentage);

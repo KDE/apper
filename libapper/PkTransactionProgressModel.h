@@ -42,7 +42,7 @@ public:
     void clear();
 
 public slots:
-    void currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary = QString());
+    void currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void currentRepo(const QString &repoId, const QString &description, bool enabled);
     void itemProgress(const QString &id, PackageKit::Transaction::Status status, uint percentage);
 

@@ -93,7 +93,7 @@ PkTransaction::PkTransaction(QWidget *parent) :
     connect(this, SIGNAL(repoDetail(QString,QString,bool)),
             d->progressModel, SLOT(currentRepo(QString,QString,bool)));
     connect(this, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString)));
+            d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
     connect(this, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
             d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
     connect(this, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
@@ -259,6 +259,13 @@ void PkTransaction::updatePackages()
 void PkTransaction::requeueTransaction()
 {
     Requirements *requires = qobject_cast<Requirements *>(sender());
+
+    // Delete the simulate model
+    if (d->simulateModel) {
+        d->simulateModel->deleteLater();
+        d->simulateModel = 0;
+    }
+
     switch (d->originalRole) {
     case Transaction::RoleRemovePackages:
         if (requires) {
@@ -280,6 +287,9 @@ void PkTransaction::requeueTransaction()
         setExitStatus(Failed);
         return;
     }
+
+    // Avoid abusing resources
+    requires->deleteLater();
 }
 
 // Return value: if the error code suggests to try with only_trusted %FALSE
@@ -467,10 +477,7 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             if (requires->shouldShow()) {
                 showDialog(requires);
             } else {
-                d->simulateModel->deleteLater();
-                d->simulateModel = 0;
                 requires->deleteLater();
-                requires = 0;
 
                 // Since we removed the Simulate Flag this will procced
                 // with the actual action
