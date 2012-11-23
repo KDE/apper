@@ -91,7 +91,6 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
     case Transaction::InfoCleanup:
         return;
     default:
-        kDebug() << info << packageID << summary << selected;
         break;
     }
 
@@ -187,7 +186,6 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 
 void PackageModel::addSelectedPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    kDebug() << packageID;
     addPackage(info, packageID, summary, true);
 }
 
@@ -500,7 +498,6 @@ void PackageModel::fetchSizes()
     foreach (const InternalPackage &p, m_packages) {
         pkgs << p.packageID;
     }
-
     if (!pkgs.isEmpty()) {
         m_fetchSizesTransaction = new Transaction(this);
         connect(m_fetchSizesTransaction, SIGNAL(details(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)),
@@ -519,7 +516,7 @@ void PackageModel::fetchSizesFinished()
         // pk-qt2 bug..
         trans->disconnect(this, SLOT(fetchSizesFinished()));
     }
-    // emit this after all is changed other =wise on large models it will
+    // emit this after all is changed otherwise on large models it will
     // be hell slow...
     emit dataChanged(createIndex(0, SizeCol), createIndex(m_packages.size(), SizeCol));
     emit changed(!m_checkedPackages.isEmpty());
@@ -536,8 +533,9 @@ void PackageModel::updateSize(const QString &packageID,
     Q_UNUSED(group)
     Q_UNUSED(detail)
     Q_UNUSED(url)
+
     // if size is 0 don't waste time looking for the package
-    if (size) {
+    if (size == 0) {
         return;
     }
 
@@ -552,6 +550,17 @@ void PackageModel::updateSize(const QString &packageID,
                 }
                 break;
             }
+
+#ifdef HAVE_APPSTREAM
+            if (m_checkable) {
+                // checkable models don't have duplicated package ids
+                // so don't waste time scanning all list
+                break;
+            }
+#else
+            // Without AppStream we don't have duplicated package ids
+            break;
+#endif // HAVE_APPSTREAM
         }
     }
 }
