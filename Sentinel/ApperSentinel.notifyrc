@@ -255,6 +255,7 @@ Action=Sound|Popup
 Name=Message from the software manager
 Name[da]=Meddelelse fra softwarehåndteringen
 Name[el]=Μήνυμα από το διαχειριστή λογισμικού
+Name[es]=Mensaje del gestor de software
 Name[et]=Teade tarkvarahaldurilt
 Name[hu]=Üzenet a szoftverkezelőtől
 Name[nl]=Bericht van de softwarebeheerder
