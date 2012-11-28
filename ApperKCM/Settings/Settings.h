@@ -44,7 +44,8 @@ public slots:
     void load();
     void save();
     void defaults();
-    void changeCurrentPage(int page);
+    void showGeneralSettings();
+    void showRepoSettings();
 
 signals:
     void changed(bool state);

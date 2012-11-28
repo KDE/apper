@@ -392,7 +392,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     menu->addAction(m_showPackageOrigin);
     menu->addAction(m_showPackageSize);
     QAction *action;
-    action = menu->addAction(i18n("Check for new Updates"));
+    action = menu->addAction(i18n("Check for new updates"));
     action->setIcon(KIcon("view-refresh"));
     connect(action, SIGNAL(triggered(bool)),
             this, SIGNAL(refreshCache()));

@@ -57,8 +57,8 @@
 
 #define BAR_SEARCH   0
 #define BAR_UPDATE   1
-#define BAR_TITLE    2
-#define BAR_SETTINGS 3
+#define BAR_SETTINGS 2
+#define BAR_TITLE    3
 
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
 
@@ -221,6 +221,9 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
             signalMapper, SLOT(map()));
     connect(signalMapper, SIGNAL(mapped(QString)),
             this, SLOT(setPage(QString)));
+
+    // Make sure the search bar is visible
+    stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
 }
 
 void ApperKCM::setupHomeModel()
@@ -461,12 +464,11 @@ void ApperKCM::setPage(const QString &page)
                 m_settingsPage = new Settings(m_roles, this);
                 stackedWidget->addWidget(m_settingsPage);
                 m_settingsPage->load();
-                KTabBar *tabBar = new KTabBar(this);
-                tabBar->addTab(i18n("General Settings"));
-                tabBar->addTab(i18n("Software Origins"));
-                connect(tabBar, SIGNAL(currentChanged(int)),
-                        m_settingsPage, SLOT(changeCurrentPage(int)));
-                stackedWidgetBar->addWidget(tabBar);
+
+                connect(generalSettingsPB, SIGNAL(toggled(bool)),
+                        m_settingsPage, SLOT(showGeneralSettings()));
+		connect(repoSettingsPB, SIGNAL(toggled(bool)),
+                        m_settingsPage, SLOT(showRepoSettings()));
             }
             connect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
             setButtons(KCModule::Default | KCModule::Apply);

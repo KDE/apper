@@ -147,7 +147,7 @@ bool Settings::hasChanges() const
         checkUpdatesBatteryCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnBattery", false)
         ||
         checkUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnMobile", false)
-        ||    
+        ||
         autoCB->itemData(autoCB->currentIndex()).toUInt() !=
         static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault))
         ||
@@ -269,9 +269,14 @@ void Settings::defaults()
     checkChanges();
 }
 
-void Settings::changeCurrentPage(int page)
+void Settings::showGeneralSettings()
 {
-    stackedWidget->setCurrentIndex(page);
+    stackedWidget->setCurrentIndex(0);
+}
+
+void Settings::showRepoSettings()
+{
+    stackedWidget->setCurrentIndex(1);
 }
 
 #include "Settings.moc"
