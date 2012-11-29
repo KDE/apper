@@ -300,6 +300,8 @@ void Updater::getUpdatesFinished()
             ui->descriptionL->setText(i18n("It's strongly recommended that you check for new updates now"));
             ui->iconL->setPixmap(KIcon("security-low").pixmap(128, 128));
         }
+    } else {
+        m_updatesModel->setAllChecked(true);
     }
 }
 
