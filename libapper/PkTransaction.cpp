@@ -462,13 +462,10 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             d->flags ^= Transaction::TransactionFlagSimulate;
             d->simulateModel->finished();
 
-            kDebug() << "Simulate Finished" << d->simulateModel->rowCount();
             // Remove the transaction packages
             foreach (const QString &packageID, d->packages) {
-                kDebug() << "Simulate Finished packageID" << packageID;
                 d->simulateModel->removePackage(packageID);
             }
-            kDebug() << "Simulate Finished removed" << d->simulateModel->rowCount();
 
             d->packagesToResolve.append(d->simulateModel->selectedPackagesToInstall());
             requires = new Requirements(d->simulateModel, d->parentWindow);

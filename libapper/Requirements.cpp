@@ -128,7 +128,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     QList<QAbstractButton *> buttons = group->buttons();
     if (!buttons.isEmpty()) {
         QAbstractButton *button = group->buttons().first();
-        button->setChecked(true);
+        button->click();
 
         ui->packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
 //        ui->packageView->header()->setResizeMode(1, QHeaderView::Stretch);

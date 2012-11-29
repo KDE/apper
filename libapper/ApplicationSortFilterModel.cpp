@@ -34,11 +34,13 @@ ApplicationSortFilterModel::ApplicationSortFilterModel(QObject *parent) :
 void ApplicationSortFilterModel::filterByInfo(Transaction::Info info)
 {
     m_info = info;
+    invalidate();
 }
 
 void ApplicationSortFilterModel::filterApplications(bool enable)
 {
     m_applicationsOnly = enable;
+    invalidate();
 }
 
 bool ApplicationSortFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
