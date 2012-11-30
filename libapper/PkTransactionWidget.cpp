@@ -86,10 +86,6 @@ PkTransactionWidget::PkTransactionWidget(QWidget *parent) :
     connect(scrollBar, SIGNAL(rangeChanged(int,int)),
             this, SLOT(rangeChanged(int,int)));
 
-    ui->progressView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-    ui->progressView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-    ui->progressView->header()->setStretchLastSection(true);
-
     ui->progressView->setItemDelegate(new TransactionDelegate(this));
     
     connect(ui->cancelButton, SIGNAL(rejected()), this, SLOT(cancel()));
@@ -122,7 +118,22 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
 
     m_trans = trans;
     d->role = role;
-    ui->progressView->setModel(trans->progressModel());
+
+    // This makes sure the Columns will properly resize to contents
+        ui->progressView->header()->setStretchLastSection(false);
+    if (role == Transaction::RoleRefreshCache) {
+        trans->progressModel()->setColumnCount(1);
+        ui->progressView->setModel(trans->progressModel());
+        ui->progressView->header()->setResizeMode(0, QHeaderView::Stretch);
+    } else {
+        trans->progressModel()->setColumnCount(3);
+        ui->progressView->setModel(trans->progressModel());
+        ui->progressView->header()->reset();
+        ui->progressView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+        ui->progressView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
+        ui->progressView->header()->setResizeMode(2, QHeaderView::Stretch);
+    }
+
     connect(trans, SIGNAL(changed()), this, SLOT(updateUi()));
 
     // sets ui

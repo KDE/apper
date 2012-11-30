@@ -43,6 +43,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     m_hideAutoConfirm = false;
 
     setCaption(i18n("Additional changes"));
+    setWindowIcon(KIcon("dialog-warning"));
     setButtons(KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
     // restore size
@@ -130,8 +131,12 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         QAbstractButton *button = group->buttons().first();
         button->click();
 
-        ui->packageView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-//        ui->packageView->header()->setResizeMode(1, QHeaderView::Stretch);
+        ui->packageView->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+        ui->packageView->header()->hideSection(PackageModel::ActionCol);
+        ui->packageView->header()->hideSection(PackageModel::ArchCol);
+        ui->packageView->header()->hideSection(PackageModel::CurrentVersionCol);
+        ui->packageView->header()->hideSection(PackageModel::OriginCol);
+        ui->packageView->header()->hideSection(PackageModel::SizeCol);
 
         if (m_hideAutoConfirm) {
             ui->confirmCB->setVisible(false);

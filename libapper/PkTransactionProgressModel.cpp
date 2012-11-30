@@ -41,7 +41,6 @@ PkTransactionProgressModel::~PkTransactionProgressModel()
 void PkTransactionProgressModel::currentRepo(const QString &repoId, const QString &description, bool enabled)
 {
     Q_UNUSED(enabled)
-    kDebug() << repoId;
 
     PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
     if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
@@ -82,7 +81,6 @@ void PkTransactionProgressModel::clear()
 
 void PkTransactionProgressModel::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    kDebug() << info << packageID << summary;
     PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
     if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
         return;

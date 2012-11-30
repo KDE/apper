@@ -175,7 +175,6 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 #endif // HAVE_APPSTREAM
 
         if (selected) {
-            kDebug() << iPackage.packageID;
             checkPackage(iPackage, false);
         }
         m_packages.append(iPackage);
@@ -688,7 +687,6 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
 {
     QString pkgId = package.packageID;
     if (!containsChecked(pkgId)) {
-        kDebug() << package.packageID;
         m_checkedPackages[pkgId] = package;
 
         // A checkable model does not have duplicated entries

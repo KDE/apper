@@ -116,10 +116,13 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         ui->dependsOnLV->setModel(m_dependsProxy);
         ui->dependsOnLV->sortByColumn(0, Qt::AscendingOrder);
         ui->dependsOnLV->header()->setDefaultAlignment(Qt::AlignCenter);
-        ui->dependsOnLV->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-        ui->dependsOnLV->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-        ui->dependsOnLV->header()->setResizeMode(2, QHeaderView::ResizeToContents);
-        ui->dependsOnLV->header()->hideSection(4);
+        ui->dependsOnLV->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+        ui->dependsOnLV->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+        ui->dependsOnLV->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
+        ui->dependsOnLV->header()->hideSection(PackageModel::ActionCol);
+        ui->dependsOnLV->header()->hideSection(PackageModel::CurrentVersionCol);
+        ui->dependsOnLV->header()->hideSection(PackageModel::OriginCol);
+        ui->dependsOnLV->header()->hideSection(PackageModel::SizeCol);
     }
 
     if (roles & PackageKit::Transaction::RoleGetRequires) {
@@ -142,10 +145,13 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         ui->requiredByLV->setModel(m_requiresProxy);
         ui->requiredByLV->sortByColumn(0, Qt::AscendingOrder);
         ui->requiredByLV->header()->setDefaultAlignment(Qt::AlignCenter);
-        ui->requiredByLV->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-        ui->requiredByLV->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-        ui->requiredByLV->header()->setResizeMode(2, QHeaderView::ResizeToContents);
-        ui->requiredByLV->header()->hideSection(4);
+        ui->requiredByLV->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+        ui->requiredByLV->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+        ui->requiredByLV->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
+        ui->requiredByLV->header()->hideSection(PackageModel::ActionCol);
+        ui->requiredByLV->header()->hideSection(PackageModel::CurrentVersionCol);
+        ui->requiredByLV->header()->hideSection(PackageModel::OriginCol);
+        ui->requiredByLV->header()->hideSection(PackageModel::SizeCol);
     }
 
     if (roles & PackageKit::Transaction::RoleGetFiles) {
