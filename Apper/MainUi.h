@@ -32,7 +32,7 @@ public:
     ~MainUi();
 
     void showAll();
-    void showUpdates(bool selected);
+    void showUpdates();
     void showSettings();
 
 private:

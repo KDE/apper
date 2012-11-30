@@ -454,7 +454,7 @@ void ApperKCM::setPage(const QString &page)
         return;
     }
 
-    if (page == "settings") {
+    if (page == QLatin1String("settings")) {
         if (stackedWidget->currentWidget() != m_settingsPage) {
             if (!canChangePage()) {
                 return;
@@ -480,7 +480,7 @@ void ApperKCM::setPage(const QString &page)
             titleL->clear();
             backTB->setEnabled(true);
         }
-    } else if (page == "updates" || page == "updatesSelected") {
+    } else if (page == QLatin1String("updates")) {
         if (stackedWidget->currentWidget() != m_updaterPage) {
             if (!canChangePage()) {
                 return;
@@ -501,17 +501,16 @@ void ApperKCM::setPage(const QString &page)
             connect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
             emit changed(false);
             stackedWidget->setCurrentWidget(m_updaterPage);
-            m_updaterPage->setSelected(page == "updatesSelected");
             m_updaterPage->load();
             stackedWidgetBar->setCurrentIndex(BAR_UPDATE);
             backTB->setEnabled(true);
         }
-    } else if (page == "home") {
+    } else if (page == QLatin1String("home")) {
         if (stackedWidget->currentWidget() == m_updaterPage ||
             stackedWidget->currentWidget() == m_settingsPage) {
             on_backTB_clicked();
         }
-    } else if (page == "history") {
+    } else if (page == QLatin1String("history")) {
         m_history = new TransactionHistory(this);
         searchKLE->clear();
         connect(searchKLE, SIGNAL(textChanged(QString)),

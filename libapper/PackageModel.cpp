@@ -175,6 +175,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 #endif // HAVE_APPSTREAM
 
         if (selected) {
+            kDebug() << iPackage.packageID;
             checkPackage(iPackage, false);
         }
         m_packages.append(iPackage);
@@ -435,12 +436,17 @@ void PackageModel::clear()
 void PackageModel::clearSelectedNotPresent()
 {
     foreach (const InternalPackage &package, m_checkedPackages) {
+        bool notFound = true;
         foreach (const InternalPackage &iPackage, m_packages) {
             if (iPackage.packageID == package.packageID) {
-                // Uncheck the package If it's not in the model
-                uncheckPackage(package.packageID);
+                notFound = false;
                 break;
             }
+        }
+
+        if (notFound) {
+            // Uncheck the package If it's not in the model
+            uncheckPackage(package.packageID);
         }
     }
 }
@@ -682,6 +688,7 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
 {
     QString pkgId = package.packageID;
     if (!containsChecked(pkgId)) {
+        kDebug() << package.packageID;
         m_checkedPackages[pkgId] = package;
 
         // A checkable model does not have duplicated entries

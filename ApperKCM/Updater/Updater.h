@@ -45,7 +45,6 @@ public:
     ~Updater();
 
     bool hasChanges() const;
-    void setSelected(bool selected);
     QStringList packagesToUpdate() const;
 
 signals:

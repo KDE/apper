@@ -163,7 +163,7 @@ void Apper::showUpdates()
         m_pkUi = new MainUi();
         connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
     }
-    m_pkUi->showUpdates(true);
+    m_pkUi->showUpdates();
     m_pkUi->show();
     KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }

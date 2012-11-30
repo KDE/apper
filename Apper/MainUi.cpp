@@ -65,14 +65,10 @@ void MainUi::showAll()
     }
 }
 
-void MainUi::showUpdates(bool selected)
+void MainUi::showUpdates()
 {
     if (m_apperModule) {
-        if (selected) {
-            m_apperModule->setProperty("page", "updatesSelected");
-        } else {
-            m_apperModule->setProperty("page", "updates");
-        }
+        m_apperModule->setProperty("page", "updates");
     }
 }
 

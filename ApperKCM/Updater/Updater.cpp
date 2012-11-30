@@ -50,7 +50,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Updater),
     m_roles(roles),
-    m_selected(false),
+    m_selected(true),
     m_updatesT(0)
 {
     ui->setupUi(this);
@@ -141,11 +141,6 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 Updater::~Updater()
 {
     delete ui;
-}
-
-void Updater::setSelected(bool selected)
-{
-    m_selected = selected;
 }
 
 void Updater::showVersions(bool enabled)
@@ -300,8 +295,6 @@ void Updater::getUpdatesFinished()
             ui->descriptionL->setText(i18n("It's strongly recommended that you check for new updates now"));
             ui->iconL->setPixmap(KIcon("security-low").pixmap(128, 128));
         }
-    } else {
-        m_updatesModel->setAllChecked(true);
     }
 }
 
@@ -326,13 +319,8 @@ void Updater::getUpdates()
     m_updatesModel->clear();
     ui->updateDetails->hide();
     m_updatesT = new Transaction(this);
-    if (m_selected) {
-        connect(m_updatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                m_updatesModel, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
-    } else {
-        connect(m_updatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                m_updatesModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    }
+    connect(m_updatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            m_updatesModel, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
     connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
             this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
