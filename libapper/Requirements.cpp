@@ -32,6 +32,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     KDialog(parent),
     m_embed(false),
     m_shouldShow(true),
+    m_untrustedButton(0),
     ui(new Ui::Requirements)
 {
     ui->setupUi(mainWidget());
@@ -40,6 +41,13 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     ApplicationSortFilterModel *proxy = new ApplicationSortFilterModel(this);
     proxy->setSourceModel(model);
     ui->packageView->setModel(proxy);
+    ui->packageView->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+    ui->packageView->header()->hideSection(PackageModel::ActionCol);
+    ui->packageView->header()->hideSection(PackageModel::ArchCol);
+    ui->packageView->header()->hideSection(PackageModel::CurrentVersionCol);
+    ui->packageView->header()->hideSection(PackageModel::OriginCol);
+    ui->packageView->header()->hideSection(PackageModel::SizeCol);
+
     m_hideAutoConfirm = false;
 
     setCaption(i18n("Additional changes"));
@@ -47,11 +55,11 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     setButtons(KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
     // restore size
-    setMinimumSize(QSize(450,300));
-    setInitialSize(QSize(450,300));
+    setMinimumSize(QSize(600,480));
+    setInitialSize(QSize(600,600));
     KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
-    restoreDialogSize(requirementsDialog);
+//    restoreDialogSize(requirementsDialog);
 
     QButtonGroup *group = new QButtonGroup(this);
     connect(group, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
@@ -126,17 +134,23 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         ui->verticalLayout->insertWidget(count++, button);
     }
 
-    QList<QAbstractButton *> buttons = group->buttons();
-    if (!buttons.isEmpty()) {
-        QAbstractButton *button = group->buttons().first();
-        button->click();
+    if (int c = model->countInfo(Transaction::InfoUntrusted)) {
+        m_untrustedButton = new QToolButton(this);
+        m_untrustedButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        m_untrustedButton->setCheckable(true);
+        m_untrustedButton->setAutoRaise(true);
+        m_untrustedButton->setIconSize(QSize(32, 32));
+        m_untrustedButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        m_untrustedButton->setText(i18np("1 untrusted package", "%1 untrusted packages", c));
+        m_untrustedButton->setIcon(KIcon("security-low"));
+        m_untrustedButton->setVisible(false);
+        ui->verticalLayout->insertWidget(count++, m_untrustedButton);
+    }
 
-        ui->packageView->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
-        ui->packageView->header()->hideSection(PackageModel::ActionCol);
-        ui->packageView->header()->hideSection(PackageModel::ArchCol);
-        ui->packageView->header()->hideSection(PackageModel::CurrentVersionCol);
-        ui->packageView->header()->hideSection(PackageModel::OriginCol);
-        ui->packageView->header()->hideSection(PackageModel::SizeCol);
+    m_buttons = group->buttons();
+    if (!m_buttons.isEmpty()) {
+        QAbstractButton *button = m_buttons.first();
+        button->click();
 
         if (m_hideAutoConfirm) {
             ui->confirmCB->setVisible(false);
@@ -145,6 +159,8 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
             // dialog, but only if the user previusly set so
             ui->confirmCB->setChecked(requirementsDialog.readEntry("autoConfirm", false));
         }
+    } else if (m_untrustedButton) {
+        showUntrustedButton();
     } else {
         // set this as false so the dialog is not shown
         m_shouldShow = false;
@@ -171,9 +187,26 @@ void Requirements::setEmbedded(bool embedded)
     ui->label->setVisible(!embedded);
 }
 
+bool Requirements::trusted() const
+{
+    // There are untrusted packages if the button was created...
+    return !m_untrustedButton;
+}
+
 bool Requirements::shouldShow() const
 {
     return (m_shouldShow && !ui->confirmCB->isChecked());
+}
+
+void Requirements::slotButtonClicked(int button)
+{
+    if (button == KDialog::Ok &&
+            m_untrustedButton &&
+            !m_untrustedButton->isVisible()) {
+        showUntrustedButton();
+    } else {
+        KDialog::slotButtonClicked(button);
+    }
 }
 
 void Requirements::on_confirmCB_Toggled(bool checked)
@@ -192,6 +225,27 @@ void Requirements::actionClicked(int type)
     ApplicationSortFilterModel *proxy;
     proxy = qobject_cast<ApplicationSortFilterModel*>(ui->packageView->model());
     proxy->filterByInfo(static_cast<Transaction::Info>(type));
+}
+
+void Requirements::showUntrustedButton()
+{
+    // Clear the other buttons
+    foreach (QAbstractButton *button, m_buttons) {
+        delete button;
+    }
+
+    // Hide the auto confirm button since we will be showing this dialog anyway
+    ui->confirmCB->setVisible(false);
+
+    ui->label->setText(i18n("You are about to install unsigned packages that can compromise your system, "
+                            "as it is impossible to verify if the software came from a trusted source."));
+    QButtonGroup *group = new QButtonGroup(this);
+    m_untrustedButton->setVisible(true);
+    group->addButton(m_untrustedButton);
+
+    ApplicationSortFilterModel *proxy;
+    proxy = qobject_cast<ApplicationSortFilterModel*>(ui->packageView->model());
+    proxy->filterByInfo(Transaction::InfoUntrusted);
 }
 
 #include "Requirements.moc"

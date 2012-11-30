@@ -193,8 +193,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     changesView->setItemDelegate(changesDelegate);
 
     // Connect this signal to keep track of changes
-    connect(m_browseModel, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-    connect(m_browseModel, SIGNAL(changed(bool)), changesPB, SLOT(setEnabled(bool)));
+    connect(m_browseModel, SIGNAL(changed(bool)), this, SLOT(checkChanged()));
 
     // packageUnchecked from changes model
     connect(m_changesModel, SIGNAL(packageUnchecked(QString)),
@@ -305,9 +304,19 @@ void ApperKCM::setCurrentActionCancel(bool cancel)
 
 void ApperKCM::checkChanged()
 {
-    bool value = m_browseModel->hasChanges();
-    changesPB->setEnabled(value);
-    emit changed(value);
+    bool hasChanges = false;
+    if (stackedWidget->currentWidget() == pageHome ||
+            stackedWidget->currentWidget() == pageChanges ||
+            stackedWidget->currentWidget() == pageBrowse) {
+        hasChanges = m_browseModel->hasChanges();
+        changesPB->setEnabled(hasChanges);
+    } else if (stackedWidget->currentWidget() == m_updaterPage) {
+        hasChanges = m_updaterPage->hasChanges();
+    } else if (stackedWidget->currentWidget() == m_settingsPage) {
+        hasChanges = m_settingsPage->hasChanges();
+    }
+
+    emit changed(hasChanges);
 }
 
 void ApperKCM::errorCode(PackageKit::Transaction::Error error, const QString &details)
@@ -462,15 +471,16 @@ void ApperKCM::setPage(const QString &page)
 
             if (m_settingsPage == 0) {
                 m_settingsPage = new Settings(m_roles, this);
+                connect(m_settingsPage, SIGNAL(changed(bool)),
+                        this, SLOT(checkChanged()));
                 stackedWidget->addWidget(m_settingsPage);
-                m_settingsPage->load();
 
                 connect(generalSettingsPB, SIGNAL(toggled(bool)),
                         m_settingsPage, SLOT(showGeneralSettings()));
-		connect(repoSettingsPB, SIGNAL(toggled(bool)),
+                connect(repoSettingsPB, SIGNAL(toggled(bool)),
                         m_settingsPage, SLOT(showRepoSettings()));
             }
-            connect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+            checkChanged();
             setButtons(KCModule::Default | KCModule::Apply);
             emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
             emit changed(false);
@@ -492,14 +502,15 @@ void ApperKCM::setPage(const QString &page)
                         this, SLOT(refreshCache()));
                 connect(m_updaterPage, SIGNAL(downloadSize(QString)),
                         downloadL, SLOT(setText(QString)));
+                connect(m_updaterPage, SIGNAL(changed(bool)),
+                        this, SLOT(checkChanged()));
                 stackedWidget->addWidget(m_updaterPage);
                 checkUpdatesPB->setIcon(KIcon("view-refresh"));
                 connect(checkUpdatesPB, SIGNAL(clicked(bool)),
                         this, SLOT(refreshCache()));
             }
 
-            connect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-            emit changed(false);
+            checkChanged();
             stackedWidget->setCurrentWidget(m_updaterPage);
             m_updaterPage->load();
             stackedWidgetBar->setCurrentIndex(BAR_UPDATE);
@@ -548,7 +559,6 @@ void ApperKCM::on_backTB_clicked()
             return;
         }
         stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
-        disconnect(m_updaterPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
     } else if (stackedWidget->currentWidget() == m_settingsPage) {
         if (!canChangePage()) {
@@ -557,7 +567,6 @@ void ApperKCM::on_backTB_clicked()
         setButtons(Apply);
         emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
         stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
-        disconnect(m_settingsPage, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
         checkChanged();
     }
 

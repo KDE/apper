@@ -259,6 +259,11 @@ void PkTransaction::updatePackages()
 void PkTransaction::requeueTransaction()
 {
     Requirements *requires = qobject_cast<Requirements *>(sender());
+    if (requires && !requires->trusted()) {
+        // Set only trusted to false, to do as the user asked
+        // TODO test without this to check the fallback mode
+        d->flags ^= Transaction::TransactionFlagOnlyTrusted;
+    }
 
     // Delete the simulate model
     if (d->simulateModel) {
@@ -309,7 +314,7 @@ static bool untrustedIsNeed(Transaction::Error error)
 
 void PkTransaction::errorCode(Transaction::Error error, const QString &details)
 {
-//     kDebug() << "errorCode: " << error << details;
+     kDebug() << "errorCode: " << error << details;
     d->error = error;
     // obvious message, don't tell the user
     if (m_handlingActionRequired ||
@@ -540,6 +545,17 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
             setExitStatus(Success);
         }
         break;
+    case Transaction::ExitNeedUntrusted:
+    case Transaction::ExitKeyRequired :
+    case Transaction::ExitEulaRequired :
+    case Transaction::ExitMediaChangeRequired :
+        kDebug() << "finished KeyRequired or EulaRequired: " << status;
+//        ui->currentL->setText(PkStrings::status(Transaction::StatusSetup));
+        if (!m_handlingActionRequired) {
+            kDebug() << "Not Handling Required Action";
+            setExitStatus(Failed);
+        }
+        break;
     case Transaction::ExitCancelled :
 //        ui->progressBar->setMaximum(100);
 //        ui->progressBar->setValue(100);
@@ -553,17 +569,6 @@ void PkTransaction::transactionFinished(Transaction::Exit status)
 //            ui->progressBar->setMaximum(0);
 //            ui->progressBar->reset();
             kDebug() << "Yep, we failed.";
-            setExitStatus(Failed);
-        }
-        break;
-    case Transaction::ExitKeyRequired :
-    case Transaction::ExitEulaRequired :
-    case Transaction::ExitMediaChangeRequired :
-    case Transaction::ExitNeedUntrusted :
-        kDebug() << "finished KeyRequired or EulaRequired: " << status;
-//        ui->currentL->setText(PkStrings::status(Transaction::StatusSetup));
-        if (!m_handlingActionRequired) {
-            kDebug() << "Not Handling Required Action";
             setExitStatus(Failed);
         }
         break;
@@ -585,7 +590,12 @@ bool PkTransaction::isFinished() const
 {
     kDebug() << status() << role();
     return status() == Transaction::StatusFinished;
-//    return d->finished;
+    //    return d->finished;
+}
+
+PackageModel *PkTransaction::simulateModel() const
+{
+    return d->simulateModel;
 }
 
 void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)

@@ -29,6 +29,7 @@
 
 using namespace PackageKit;
 
+class PackageModel;
 class PkTransactionPrivate;
 class PkTransactionProgressModel;
 class KDE_EXPORT PkTransaction : public Transaction
@@ -56,6 +57,8 @@ public:
 
     PkTransaction::ExitStatus exitStatus() const;
     bool isFinished() const;
+
+    PackageModel* simulateModel() const;
 
 signals:
     void finished(PkTransaction::ExitStatus status);

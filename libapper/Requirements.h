@@ -23,6 +23,8 @@
 
 #include <KDialog>
 
+#include <QToolButton>
+
 namespace Ui {
     class Requirements;
 }
@@ -38,18 +40,26 @@ public:
 
     bool embedded() const;
     void setEmbedded(bool embedded);
+    bool trusted() const;
 
 public slots:
     bool shouldShow() const;
+
+protected slots:
+     virtual void slotButtonClicked(int button);
 
 private slots:
     void on_confirmCB_Toggled(bool checked);
     void actionClicked(int type);
 
 private:
+    void showUntrustedButton();
+
     bool m_embed;
     bool m_shouldShow;
     bool m_hideAutoConfirm;
+    QToolButton *m_untrustedButton;
+    QList<QAbstractButton *> m_buttons;
     Ui::Requirements *ui;
 };
 

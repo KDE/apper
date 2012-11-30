@@ -50,6 +50,7 @@
 #include "PkTransaction.h"
 #include "TransactionDelegate.h"
 #include "PkTransactionProgressModel.h"
+#include "PackageModel.h"
 
 class PkTransactionWidgetPrivate
 {
@@ -267,7 +268,7 @@ static bool untrustedIsNeed(Transaction::Error error)
 
 void PkTransactionWidget::errorCode(Transaction::Error error, const QString &details)
 {
-//     kDebug() << "errorCode: " << error << details;
+     kDebug() << "errorCode: " << error << details;
 //    d->error = error;
     // obvious message, don't tell the user
     if (m_handlingActionRequired ||

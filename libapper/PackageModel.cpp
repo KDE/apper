@@ -85,6 +85,7 @@ void PackageModel::addSelectedPackagesFromModel(PackageModel *model)
 
 void PackageModel::addPackage(Transaction::Info info, const QString &packageID, const QString &summary, bool selected)
 {
+    kDebug() << packageID;
     switch(info) {
     case Transaction::InfoBlocked:
     case Transaction::InfoFinished:
@@ -409,7 +410,9 @@ void PackageModel::removePackage(const QString &packageID)
 {
     int i = 0;
     while (i < m_packages.size()) {
-        if (m_packages[i].packageID == packageID) {
+        InternalPackage iPackage = m_packages[i];
+        if (iPackage.packageID == packageID &&
+                iPackage.info != Transaction::InfoUntrusted) {
             beginRemoveRows(QModelIndex(), i, i);
             m_packages.remove(i);
             endRemoveRows();
