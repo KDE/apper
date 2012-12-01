@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>552</width>
-    <height>455</height>
+    <height>462</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
@@ -365,7 +365,7 @@
      <property name="title">
       <string>Filters</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QCheckBox" name="installedCB">
         <property name="enabled">
@@ -433,6 +433,16 @@
         </property>
         <property name="text">
          <string>Supported</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="archCB">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Only native</string>
         </property>
        </widget>
       </item>

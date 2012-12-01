@@ -82,6 +82,7 @@ BackendDetails::BackendDetails(QWidget *parent)
     supportedCB->setChecked(filters & Transaction::FilterSupported);
 
     newestCB->setChecked(filters & Transaction::FilterNewest);
+    archCB->setChecked(filters & Transaction::FilterNotArch);
 }
 
 #include "BackendDetails.moc"
