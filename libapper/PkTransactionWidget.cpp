@@ -137,23 +137,22 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
 
     connect(trans, SIGNAL(changed()), this, SLOT(updateUi()));
 
-    // sets ui
-    updateUi();
+    // Forward signals:
+    connect(m_trans, SIGNAL(sorry(QString,QString,QString)),
+            this, SIGNAL(sorry(QString,QString,QString)));
+    connect(m_trans, SIGNAL(errorMessage(QString,QString,QString)),
+            SIGNAL(error(QString,QString,QString)));
+    connect(m_trans, SIGNAL(dialog(KDialog*)),
+            this, SIGNAL(dialog(KDialog*)));
 
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
-//    connect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-//            this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
-    connect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     connect(m_trans, SIGNAL(changed()),
             this, SLOT(updateUi()));
-    connect(m_trans, SIGNAL(eulaRequired(QString,QString,QString,QString)),
-            this, SLOT(eulaRequired(QString,QString,QString,QString)));
-    connect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
-            this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
-    connect(m_trans, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
-            this, SLOT(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
+
     // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
+
+    // sets ui
+    updateUi();
 }
 
 void PkTransactionWidget::unsetTransaction()
@@ -162,22 +161,8 @@ void PkTransactionWidget::unsetTransaction()
         return;
     }
 
-    disconnect(m_trans, SIGNAL(ItemProgress(QString,uint)),
-               ui->progressView, SLOT(itemProgress(QString,uint)));
-//    disconnect(m_trans, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-//               d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    disconnect(m_trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-               this, SLOT(transactionFinished(PackageKit::Transaction::Exit)));
-    disconnect(m_trans, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-               this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     disconnect(m_trans, SIGNAL(changed()),
                this, SLOT(updateUi()));
-    disconnect(m_trans, SIGNAL(eulaRequired(QString,QString,QString,QString)),
-               this, SLOT(eulaRequired(QString,QString,QString,QString)));
-    disconnect(m_trans, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
-               this, SLOT(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
-    disconnect(m_trans, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
-               this, SLOT(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
 }
 
 void PkTransactionWidget::updateUi()
@@ -251,154 +236,6 @@ void PkTransactionWidget::updateUi()
     ui->cancelButton->setEnabled(cancel);
 }
 
-// Return value: if the error code suggests to try with only_trusted %FALSE
-static bool untrustedIsNeed(Transaction::Error error)
-{
-    switch (error) {
-    case Transaction::ErrorGpgFailure:
-    case Transaction::ErrorBadGpgSignature:
-    case Transaction::ErrorMissingGpgSignature:
-    case Transaction::ErrorCannotInstallRepoUnsigned:
-    case Transaction::ErrorCannotUpdateRepoUnsigned:
-        return true;
-    default:
-        return false;
-    }
-}
-
-void PkTransactionWidget::errorCode(Transaction::Error error, const QString &details)
-{
-     kDebug() << "errorCode: " << error << details;
-//    d->error = error;
-    // obvious message, don't tell the user
-    if (m_handlingActionRequired ||
-        error == Transaction::ErrorTransactionCancelled ||
-        error == Transaction::ErrorProcessKill) {
-        return;
-    }
-
-    if (untrustedIsNeed(error)) {
-        m_handlingActionRequired = true;
-        int ret = KMessageBox::warningYesNo(this,
-                                            i18n("You are about to install unsigned packages that can compromise your system, "
-                                            "as it is impossible to verify if the software came from a trusted "
-                                            "source.\n\nAre you sure you want to proceed with the installation?"),
-                                            i18n("Installing unsigned software"));
-        if (ret == KMessageBox::Yes) {
-            // Set only trusted to false, to do as the user asked
-//            d->flags ^= Transaction::TransactionFlagOnlyTrusted;
-//            requeueTransaction();
-        } else {
-//            setExitStatus(Cancelled);
-        }
-        m_handlingActionRequired = false;
-        return;
-    }
-
-    // check to see if we are already handlying these errors
-    if (error == Transaction::ErrorNoLicenseAgreement ||
-        error == Transaction::ErrorMediaChangeRequired)
-    {
-        if (m_handlingActionRequired) {
-            return;
-        }
-    }
-
-    m_showingError = true;
-    showSorry(PkStrings::error(error), PkStrings::errorMessage(error), QString(details).replace('\n', "<br>"));
-
-    // when we receive an error we are done
-//    setExitStatus(Failed);
-}
-
-void PkTransactionWidget::eulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement)
-{
-    if (m_handlingActionRequired) {
-        // if its true means that we alread passed here
-        m_handlingActionRequired = false;
-        return;
-    } else {
-        m_handlingActionRequired = true;
-    }
-
-    LicenseAgreement *eula = new LicenseAgreement(eulaID, packageID, vendor, licenseAgreement, this);
-    connect(eula, SIGNAL(yesClicked()), this, SLOT(acceptEula()));
-    connect(eula, SIGNAL(rejected()), this, SLOT(reject()));
-    showDialog(eula);
-}
-
-void PkTransactionWidget::acceptEula()
-{
-    LicenseAgreement *eula = qobject_cast<LicenseAgreement*>(sender());
-
-    if (eula) {
-        kDebug() << "Accepting EULA" << eula->id();
-        Transaction *trans = new Transaction(this);
-//        setTransaction(trans, Transaction::RoleAcceptEula);
-        trans->acceptEula(eula->id());
-        if (trans->error()) {
-            showSorry(i18n("Failed to install signature"),
-                      PkStrings::daemonError(trans->error()));
-        }
-    } else {
-        kWarning() << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
-    }
-}
-
-void PkTransactionWidget::mediaChangeRequired(Transaction::MediaType type, const QString &id, const QString &text)
-{
-    Q_UNUSED(id)
-
-    m_handlingActionRequired = true;
-    int ret = KMessageBox::questionYesNo(this,
-                                         PkStrings::mediaMessage(type, text),
-                                         i18n("A media change is required"),
-                                         KStandardGuiItem::cont(),
-                                         KStandardGuiItem::cancel());
-    m_handlingActionRequired = false;
-
-    // if the user clicked continue we got yes
-    if (ret == KMessageBox::Yes) {
-//        requeueTransaction();
-    } else {
-//        setExitStatus(Cancelled);
-    }
-}
-
-void PkTransactionWidget::repoSignatureRequired(const QString &packageID, const QString &repoName, const QString &keyUrl, const QString &keyUserid, const QString &keyId, const QString &keyFingerprint, const QString &keyTimestamp, Transaction::SigType type)
-{
-    if (m_handlingActionRequired) {
-        // if its true means that we alread passed here
-        m_handlingActionRequired = false;
-        return;
-    } else {
-        m_handlingActionRequired = true;
-    }
-
-    RepoSig *repoSig = new RepoSig(packageID, repoName, keyUrl, keyUserid, keyId, keyFingerprint, keyTimestamp, type, this);
-    connect(repoSig, SIGNAL(yesClicked()), this, SLOT(installSignature()));
-    connect(repoSig, SIGNAL(rejected()), this, SLOT(reject()));
-    showDialog(repoSig);
-}
-
-void PkTransactionWidget::installSignature()
-{
-    RepoSig *repoSig = qobject_cast<RepoSig*>(sender());
-
-    if (repoSig)  {
-        kDebug() << "Installing Signature" << repoSig->keyID();
-        Transaction *trans = new Transaction(this);
-//        setTransaction(trans, Transaction::RoleInstallSignature);
-        trans->installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID());
-        if (trans->error()) {
-            showSorry(i18n("Failed to install signature"),
-                      PkStrings::daemonError(trans->error()));
-        }
-    } else {
-        kWarning() << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
-    }
-}
-
 bool PkTransactionWidget::isFinished() const
 {
 //    return d->finished;
@@ -430,43 +267,6 @@ void PkTransactionWidget::rangeChanged(int min, int max)
     QScrollBar *scrollBar = qobject_cast<QScrollBar*>(sender());
     if (m_keepScrollBarAtBottom && scrollBar->value() != max) {
         scrollBar->setValue(max);
-    }
-}
-
-void PkTransactionWidget::showDialog(KDialog *dlg)
-{
-    if (ui->cancelButton->isVisible()) {
-        dlg->setModal(true);
-        dlg->show();
-    } else {
-        dlg->setProperty("embedded", true);
-        emit dialog(dlg);
-    }
-}
-
-void PkTransactionWidget::showError(const QString &title, const QString &description, const QString &details)
-{
-    if (ui->cancelButton->isVisible()) {
-        if (details.isEmpty()) {
-            KMessageBox::error(this, description, title);
-        } else {
-            KMessageBox::detailedError(this, description, details, title);
-        }
-    } else {
-        emit error(title, description, details);
-    }
-}
-
-void PkTransactionWidget::showSorry(const QString &title, const QString &description, const QString &details)
-{
-    if (ui->cancelButton->isVisible()) {
-        if (details.isEmpty()) {
-            KMessageBox::sorry(this, description, title);
-        } else {
-            KMessageBox::detailedSorry(this, description, details, title);
-        }
-    } else {
-        emit sorry(title, description, details);
     }
 }
 

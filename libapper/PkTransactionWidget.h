@@ -25,7 +25,7 @@
 #include <KDialog>
 #include <kdemacros.h>
 
-#include "PkTransaction.h"
+#include <Transaction>
 
 using namespace PackageKit;
 
@@ -33,6 +33,7 @@ namespace Ui {
     class PkTransactionWidget;
 }
 
+class PkTransaction;
 class PkTransactionWidgetPrivate;
 class KDE_EXPORT PkTransactionWidget : public QWidget
 {
@@ -61,33 +62,16 @@ public slots:
     void cancel();
 
 private slots:
-    void installSignature();
-    void acceptEula();
-
-    void errorCode(PackageKit::Transaction::Error error, const QString &details);
     void updateUi();
-    void eulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement);
-    void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
-    void repoSignatureRequired(const QString &packageID,
-                               const QString &repoName,
-                               const QString &keyUrl,
-                               const QString &keyUserid,
-                               const QString &keyId,
-                               const QString &keyFingerprint,
-                               const QString &keyTimestamp,
-                               PackageKit::Transaction::SigType type);
 
     void reject();
     void followBottom(int value);
     void rangeChanged(int min, int max);
 
 private:
-    void showDialog(KDialog *dialog);
-    void showError(const QString &title, const QString &description, const QString &details = QString());
-    void showSorry(const QString &title, const QString &description, const QString &details = QString());
     void unsetTransaction();
 
-    Transaction *m_trans;
+    PkTransaction *m_trans;
     bool m_keepScrollBarAtBottom;
     bool m_handlingActionRequired;
     bool m_showingError; //This might replace the above

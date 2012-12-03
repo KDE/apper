@@ -60,6 +60,14 @@ public:
 
     PackageModel* simulateModel() const;
 
+public slots:
+    void setTrusted(bool trusted);
+    /**
+     * When mediaChangeRequired(), eulaRequired() or repoSignatureRequired()
+     * and the action is performed this method should be called
+     */
+    void requeueTransaction();
+
 signals:
     void finished(PkTransaction::ExitStatus status);
     void titleChanged(const QString &title);
@@ -73,23 +81,22 @@ private slots:
     void installFiles();
     void removePackages();
     void updatePackages();
-    void requeueTransaction();
 
     void installSignature();
     void acceptEula();
 
-    void transactionFinished(PackageKit::Transaction::Exit status);
-    void errorCode(PackageKit::Transaction::Error error, const QString &details);
-    void eulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement);
-    void mediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
-    void handleRepoSignature(const QString &packageID,
-                             const QString &repoName,
-                             const QString &keyUrl,
-                             const QString &keyUserid,
-                             const QString &keyId,
-                             const QString &keyFingerprint,
-                             const QString &keyTimestamp,
-                             PackageKit::Transaction::SigType type);
+    void slotFinished(PackageKit::Transaction::Exit status);
+    void slotErrorCode(PackageKit::Transaction::Error error, const QString &details);
+    void slotEulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement);
+    void slotMediaChangeRequired(PackageKit::Transaction::MediaType type, const QString &id, const QString &text);
+    void slotRepoSignature(const QString &packageID,
+                           const QString &repoName,
+                           const QString &keyUrl,
+                           const QString &keyUserid,
+                           const QString &keyId,
+                           const QString &keyFingerprint,
+                           const QString &keyTimestamp,
+                           PackageKit::Transaction::SigType type);
 
     void setExitStatus(PkTransaction::ExitStatus status = PkTransaction::Success);
     void reject();

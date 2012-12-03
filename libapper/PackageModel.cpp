@@ -85,7 +85,6 @@ void PackageModel::addSelectedPackagesFromModel(PackageModel *model)
 
 void PackageModel::addPackage(Transaction::Info info, const QString &packageID, const QString &summary, bool selected)
 {
-    kDebug() << packageID;
     switch(info) {
     case Transaction::InfoBlocked:
     case Transaction::InfoFinished:
@@ -194,29 +193,39 @@ QVariant PackageModel::headerData(int section, Qt::Orientation orientation, int 
 {
     Q_UNUSED(orientation);
 
-    if (/*m_packageCount && */role == Qt::DisplayRole) {
-        if (section == NameCol) {
+    QVariant ret;
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+        case NameCol:
             if (m_checkable) {
-                return PkStrings::packageQuantity(true,
-                                                   m_packages.size(),
-                                                   m_checkedPackages.size());
+                ret = PkStrings::packageQuantity(true,
+                                                 m_packages.size(),
+                                                 m_checkedPackages.size());
+            } else {
+                ret = i18n("Name");
             }
-            return i18n("Name");
-        } else if (section == VersionCol) {
-            return i18n("Version");
-        } else if (section == CurrentVersionCol) {
-            return i18n("Installed Version");
-        } else if (section == ArchCol) {
-            return i18n("Arch");
-        } else if (section == OriginCol) {
-            return i18n("Origin");
-        } else if (section == SizeCol) {
-            return i18n("Size");
-        } else if (section == ActionCol) {
-            return i18n("Action");
+            break;
+        case VersionCol:
+            ret = i18n("Version");
+            break;
+        case CurrentVersionCol:
+            ret = i18n("Installed Version");
+            break;
+        case ArchCol:
+            ret = i18n("Arch");
+            break;
+        case OriginCol:
+            ret = i18n("Origin");
+            break;
+        case SizeCol:
+            ret = i18n("Size");
+            break;
+        case ActionCol:
+            ret = i18n("Action");
+            break;
         }
     }
-    return QVariant();
+    return ret;
 }
 
 int PackageModel::rowCount(const QModelIndex &parent) const

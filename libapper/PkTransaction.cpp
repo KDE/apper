@@ -96,11 +96,17 @@ PkTransaction::PkTransaction(QWidget *parent) :
             d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
     connect(this, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
             d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
+
+    // Required actions
+    connect(this, SIGNAL(eulaRequired(QString,QString,QString,QString)),
+            SLOT(slotEulaRequired(QString,QString,QString,QString)));
+    connect(this, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
+            SLOT(slotMediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
     connect(this, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
-            SLOT(handleRepoSignature(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
+            SLOT(slotRepoSignature(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
 
     connect(this, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            SLOT(transactionFinished(PackageKit::Transaction::Exit)));
+            SLOT(slotFinished(PackageKit::Transaction::Exit)));
 }
 
 PkTransaction::~PkTransaction()
@@ -259,10 +265,14 @@ void PkTransaction::updatePackages()
 void PkTransaction::requeueTransaction()
 {
     Requirements *requires = qobject_cast<Requirements *>(sender());
-    if (requires && !requires->trusted()) {
-        // Set only trusted to false, to do as the user asked
-        // TODO test without this to check the fallback mode
-        d->flags ^= Transaction::TransactionFlagOnlyTrusted;
+    if (requires) {
+        // As we have requires allow deps removal
+        d->allowDeps = true;
+        if (!requires->trusted()) {
+            // Set only trusted to false, to do as the user asked
+            // TODO test without this to check the fallback mode
+            setTrusted(false);
+        }
     }
 
     // Delete the simulate model
@@ -273,10 +283,6 @@ void PkTransaction::requeueTransaction()
 
     switch (d->originalRole) {
     case Transaction::RoleRemovePackages:
-        if (requires) {
-            // As we have requires allow deps removal
-            d->allowDeps = true;
-        }
         removePackages();
         break;
     case Transaction::RoleInstallPackages:
@@ -297,33 +303,28 @@ void PkTransaction::requeueTransaction()
     requires->deleteLater();
 }
 
-// Return value: if the error code suggests to try with only_trusted %FALSE
-static bool untrustedIsNeed(Transaction::Error error)
+void PkTransaction::slotErrorCode(Transaction::Error error, const QString &details)
 {
+    kDebug() << "errorCode: " << error << details;
+    d->error = error;
+
+    if (m_handlingActionRequired) {
+        // We are already handling required actions
+        // like eulaRequired() and repoSignatureRequired()
+        return;
+    }
+
     switch (error) {
+    case Transaction::ErrorTransactionCancelled:
+    case Transaction::ErrorProcessKill:
+        // these errors should be ignored
+        break;
     case Transaction::ErrorGpgFailure:
     case Transaction::ErrorBadGpgSignature:
     case Transaction::ErrorMissingGpgSignature:
     case Transaction::ErrorCannotInstallRepoUnsigned:
     case Transaction::ErrorCannotUpdateRepoUnsigned:
-        return true;
-    default:
-        return false;
-    }
-}
-
-void PkTransaction::errorCode(Transaction::Error error, const QString &details)
-{
-     kDebug() << "errorCode: " << error << details;
-    d->error = error;
-    // obvious message, don't tell the user
-    if (m_handlingActionRequired ||
-        error == Transaction::ErrorTransactionCancelled ||
-        error == Transaction::ErrorProcessKill) {
-        return;
-    }
-
-    if (untrustedIsNeed(error)) {
+    {
         m_handlingActionRequired = true;
         int ret = KMessageBox::warningYesNo(d->parentWindow,
                                             i18n("You are about to install unsigned packages that can compromise your system, "
@@ -332,7 +333,7 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
                                             i18n("Installing unsigned software"));
         if (ret == KMessageBox::Yes) {
             // Set only trusted to false, to do as the user asked
-            d->flags ^= Transaction::TransactionFlagOnlyTrusted;
+            setTrusted(false);
             requeueTransaction();
         } else {
             setExitStatus(Cancelled);
@@ -340,24 +341,16 @@ void PkTransaction::errorCode(Transaction::Error error, const QString &details)
         m_handlingActionRequired = false;
         return;
     }
+    default:
+        m_showingError = true;
+        showSorry(PkStrings::error(error), PkStrings::errorMessage(error), QString(details).replace('\n', "<br>"));
 
-    // check to see if we are already handlying these errors
-    if (error == Transaction::ErrorNoLicenseAgreement ||
-        error == Transaction::ErrorMediaChangeRequired)
-    {
-        if (m_handlingActionRequired) {
-            return;
-        }
+        // when we receive an error we are done
+        setExitStatus(Failed);
     }
-
-    m_showingError = true;
-    showSorry(PkStrings::error(error), PkStrings::errorMessage(error), QString(details).replace('\n', "<br>"));
-
-    // when we receive an error we are done
-    setExitStatus(Failed);
 }
 
-void PkTransaction::eulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement)
+void PkTransaction::slotEulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement)
 {
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
@@ -390,7 +383,7 @@ void PkTransaction::acceptEula()
     }
 }
 
-void PkTransaction::mediaChangeRequired(Transaction::MediaType type, const QString &id, const QString &text)
+void PkTransaction::slotMediaChangeRequired(Transaction::MediaType type, const QString &id, const QString &text)
 {
     Q_UNUSED(id)
 
@@ -410,14 +403,14 @@ void PkTransaction::mediaChangeRequired(Transaction::MediaType type, const QStri
     }
 }
 
-void PkTransaction::handleRepoSignature(const QString &packageID,
-                                        const QString &repoName,
-                                        const QString &keyUrl,
-                                        const QString &keyUserid,
-                                        const QString &keyId,
-                                        const QString &keyFingerprint,
-                                        const QString &keyTimestamp,
-                                        Transaction::SigType type)
+void PkTransaction::slotRepoSignature(const QString &packageID,
+                                      const QString &repoName,
+                                      const QString &keyUrl,
+                                      const QString &keyUserid,
+                                      const QString &keyId,
+                                      const QString &keyFingerprint,
+                                      const QString &keyTimestamp,
+                                      Transaction::SigType type)
 {
     if (m_handlingActionRequired) {
         // if its true means that we alread passed here
@@ -450,13 +443,26 @@ void PkTransaction::installSignature()
     }
 }
 
-void PkTransaction::transactionFinished(Transaction::Exit status)
+void PkTransaction::slotFinished(Transaction::Exit status)
 {
     Transaction *trans = qobject_cast<Transaction*>(sender());
     Requirements *requires = 0;
     m_trans = 0;
 
     Transaction::Role role = trans->role();
+    switch (role) {
+    case Transaction::RoleInstallSignature:
+    case Transaction::RoleAcceptEula:
+        if (status == Transaction::ExitSuccess) {
+            // if the required action was performed with success
+            // requeue our main transaction
+            requeueTransaction();
+        }
+        break;
+    default:
+        break;
+    }
+
     kDebug() << status << role;
     d->finished = true;
     switch(status) {
@@ -596,6 +602,15 @@ bool PkTransaction::isFinished() const
 PackageModel *PkTransaction::simulateModel() const
 {
     return d->simulateModel;
+}
+
+void PkTransaction::setTrusted(bool trusted)
+{
+    if (trusted) {
+        d->flags |= Transaction::TransactionFlagOnlyTrusted;
+    } else {
+        d->flags ^= Transaction::TransactionFlagOnlyTrusted;
+    }
 }
 
 void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
