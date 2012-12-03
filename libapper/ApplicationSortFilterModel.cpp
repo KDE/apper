@@ -21,6 +21,8 @@
 
 #include "PackageModel.h"
 
+#include <KDebug>
+
 ApplicationSortFilterModel::ApplicationSortFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent),
     m_info(Transaction::InfoUnknown),
@@ -29,6 +31,16 @@ ApplicationSortFilterModel::ApplicationSortFilterModel(QObject *parent) :
     setDynamicSortFilter(true);
     setSortCaseSensitivity(Qt::CaseInsensitive);
     setSortRole(PackageModel::SortRole);
+}
+
+QDeclarativeItem *ApplicationSortFilterModel::sourceModelQML() const
+{
+    return (QDeclarativeItem*) sourceModel();
+}
+
+void ApplicationSortFilterModel::setSourceModelQML(QDeclarativeItem *sourceModel)
+{
+    setSourceModel((QAbstractItemModel*) sourceModel);
 }
 
 void ApplicationSortFilterModel::filterByInfo(Transaction::Info info)

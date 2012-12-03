@@ -22,6 +22,8 @@
 
 #include <QSortFilterProxyModel>
 
+#include <QDeclarativeItem>
+
 #include <Transaction>
 
 #include <kdemacros.h>
@@ -31,12 +33,19 @@ using namespace PackageKit;
 class KDE_EXPORT ApplicationSortFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
+    Q_PROPERTY(QDeclarativeItem* sourceModel READ sourceModelQML WRITE setSourceModelQML NOTIFY changed)
 public:
     explicit ApplicationSortFilterModel(QObject *parent = 0);
+
+    QDeclarativeItem* sourceModelQML() const;
+    void setSourceModelQML(QDeclarativeItem *sourceModel);
 
 public slots:
     void filterByInfo(Transaction::Info info);
     void filterApplications(bool enable);
+
+signals:
+    void changed();
 
 private:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;

@@ -98,16 +98,16 @@ Item {
                 id: updateIcon
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                width: 24
-                height: 24
+                width: parent.height
+                height: parent.height
                 icon: QIcon(rIcon)
             }
             QIconItem {
                 id: infoIcon
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                width: 24
-                height: 24
+                width: parent.height
+                height: parent.height
                 icon: rInfoIcon
             }
             PlasmaComponents.Label {

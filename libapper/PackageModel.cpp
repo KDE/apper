@@ -191,10 +191,8 @@ void PackageModel::addSelectedPackage(Transaction::Info info, const QString &pac
 
 QVariant PackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    Q_UNUSED(orientation);
-
     QVariant ret;
-    if (role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
         case NameCol:
             if (m_checkable) {
@@ -677,6 +675,11 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
     } else {
 //        m_busySeq->start();
     }
+}
+
+QString PackageModel::selectionStateText() const
+{
+    return headerData(NameCol, Qt::Horizontal).toString();
 }
 
 bool PackageModel::hasChanges() const

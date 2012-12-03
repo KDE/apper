@@ -33,6 +33,8 @@
 #include <Plasma/Package>
 
 #include <PackageModel.h>
+#include <ApplicationSortFilterModel.h>
+
 #include <Transaction>
 #include <Daemon>
 
@@ -75,6 +77,7 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
 
         m_declarativeWidget->engine()->rootContext()->setContextProperty("Daemon", Daemon::global());
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
+        qmlRegisterType<ApplicationSortFilterModel>("org.kde.apper", 0, 1, "ApplicationSortFilterModel");
         qmlRegisterType<PackageKit::Transaction>("org.packagekit", 0, 1, "Transaction");
         qmlRegisterUncreatableType<PackageKit::Daemon>("org.packagekit", 0, 1, "Daemon", "Global");
         qRegisterMetaType<PackageKit::Transaction::Info>("PackageKit::Transaction::Info");

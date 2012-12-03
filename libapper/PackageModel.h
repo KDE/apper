@@ -32,6 +32,7 @@ class KDE_EXPORT PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(bool checkable READ checkable WRITE setCheckable NOTIFY changed)
+    Q_PROPERTY(QString selectionStateText READ selectionStateText NOTIFY changed)
 public:
     enum {
         NameCol = 0,
@@ -131,6 +132,7 @@ public slots:
     void updateCurrentVersion(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
 
     void getUpdates(bool fetchCurrentVersions, bool selected);
+    QString selectionStateText() const;
 
 signals:
     void changed(bool value);
