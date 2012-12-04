@@ -26,9 +26,16 @@ import org.packagekit 0.1 as PackageKit
 Item {
     id: updateItem
     width: ListView.view.width
-    property bool expanded: ListView.isCurrentItem
     height: items.height + padding.margins.top + padding.margins.bottom
+    property bool expanded: ListView.isCurrentItem
+    property bool updateChecked: rChecked
+
     Behavior on height { PropertyAnimation {} }
+
+    // This is a HACK, for some
+    // reason when the user manually checks some updates,
+    // clicking to check/uncheck all doesn't work on those
+    onUpdateCheckedChanged: updateCB.checked = updateChecked;
 
     PlasmaCore.FrameSvgItem {
         id: padding
@@ -92,7 +99,7 @@ Item {
                 id: updateCB
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                checked: rChecked
+                checked: updateChecked
                 onClicked: updatesModel.toggleSelection(index)
             }
             QIconItem {
