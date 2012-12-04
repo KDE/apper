@@ -28,6 +28,7 @@ using namespace PackageKit;
 
 QString PkStrings::status(Transaction::Status status)
 {
+    kDebug() << status;
     switch (status) {
     case Transaction::StatusUnknown:
         return i18nc("This is when the transaction status is not known",

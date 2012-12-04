@@ -22,47 +22,58 @@ import org.kde.apper 0.1 as Apper
 import org.packagekit 0.1 as PackageKit
 
 Item {
-    id: updates
+    id: transaction
 
     anchors.fill: parent
     clip: true
 
-    function getUpdates() {
-        getUpdatesTransaction.getUpdates();
+    function update(updates) {
+        updateTransaction.updatePackages(updates);
     }
 
-    signal update(variant packages);
-
-    PackageKit.Transaction {
-        id: getUpdatesTransaction
+    Apper.PkTransaction {
+        id: updateTransaction
+        onChanged: {
+            console.debug("changed " + status);
+            statusText.text = PkStrings.status(status);
+            transactionProgress.value = updateTransaction.percentage;
+        }
     }
 
-    Row {
+    Column {
         id: actionRow
         spacing: 4
         anchors.margins: 2
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.right: parent.right
-        PlasmaComponents.CheckBox {
-            id: updateAllCB
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            onClicked: updatesModel.setAllChecked(checked);
+        Row {
+            spacing: 4
+            anchors.margins: 2
+            anchors.left: parent.left
+            anchors.right: parent.right
+            Text {
+                id: statusText
+                height: parent.height
+                width: parent.width - updateBT.width - parent.spacing
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            PlasmaComponents.ToolButton {
+                id: updateBT
+                iconSource: "dialog-cancel"
+                text:  i18n("Cancel")
+                enabled: updateTransaction.allowCancel
+                onClicked: updateTransaction.cancel();
+            }
         }
-        Text {
-            height: parent.height
-            width: parent.width - updateBT.width - updateAllCB.width - parent.spacing * 2
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
-            text: updatesModel.selectionStateText
-        }
-        PlasmaComponents.ToolButton {
-            id: updateBT
-            flat: true
-            iconSource: "system-software-update"
-            text:  i18n("Update")
-            onClicked: update(updatesModel.selectedPackagesToInstall());
+        PlasmaComponents.ProgressBar {
+            id: transactionProgress
+            anchors.left: parent.left
+            anchors.right: parent.right
+            minimumValue: 0
+            maximumValue: 100
+//            indeterminate: true
         }
     }
 
@@ -74,16 +85,6 @@ Item {
         delegate: UpdateItemDelegate {
         }
 
-        model: Apper.PackageModel {
-            id: updatesModel
-            checkable: true
-            onChanged: updateAllCB.checked = updatesModel.allSelected();
-        }
-    }
-
-    Component.onCompleted: {
-        getUpdatesTransaction.package.connect(updatesModel.addSelectedPackage);
-        getUpdatesTransaction.finished.connect(updatesModel.finished);
-        getUpdates();
+        model: updateTransaction.progressModel()
     }
 }

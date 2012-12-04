@@ -45,15 +45,15 @@ public:
     explicit PkTransaction(QWidget *parent = 0);
     ~PkTransaction();
 
-    void installPackages(const QStringList &packages);
-    void installFiles(const QStringList &files);
-    void removePackages(const QStringList &packages);
-    void updatePackages(const QStringList &packages);
+    Q_INVOKABLE void installPackages(const QStringList &packages);
+    Q_INVOKABLE void installFiles(const QStringList &files);
+    Q_INVOKABLE void removePackages(const QStringList &packages);
+    Q_INVOKABLE void updatePackages(const QStringList &packages);
 
     QString title() const;
     Transaction::Role role() const;
     Transaction::TransactionFlags flags() const;
-    PkTransactionProgressModel* progressModel() const;
+    Q_INVOKABLE PkTransactionProgressModel* progressModel() const;
 
     PkTransaction::ExitStatus exitStatus() const;
     bool isFinished() const;

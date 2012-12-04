@@ -34,6 +34,7 @@
 
 #include <PackageModel.h>
 #include <PkTransaction.h>
+#include <PkStrings.h>
 #include <ApplicationSortFilterModel.h>
 
 #include <Transaction>
@@ -71,12 +72,15 @@ UpdaterApplet::~UpdaterApplet()
 {
 }
 
+Q_DECLARE_METATYPE(PackageKit::Transaction::Status)
+
 QGraphicsWidget *UpdaterApplet::graphicsWidget()
 {
     if (!m_declarativeWidget) {
         m_declarativeWidget = new Plasma::DeclarativeWidget(this);
 
         m_declarativeWidget->engine()->rootContext()->setContextProperty("Daemon", Daemon::global());
+        m_declarativeWidget->engine()->rootContext()->setContextProperty("PkStrings", new PkStrings);
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
         qmlRegisterType<PkTransaction>("org.kde.apper", 0, 1, "PkTransaction");
         qmlRegisterType<ApplicationSortFilterModel>("org.kde.apper", 0, 1, "ApplicationSortFilterModel");
@@ -84,6 +88,7 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
         qmlRegisterUncreatableType<PackageKit::Daemon>("org.packagekit", 0, 1, "Daemon", "Global");
         qRegisterMetaType<PackageKit::Transaction::Info>("PackageKit::Transaction::Info");
         qRegisterMetaType<PackageKit::Transaction::Exit>("PackageKit::Transaction::Exit");
+        qRegisterMetaType<PackageKit::Transaction::Status>("PackageKit::Transaction::Status");
 
         Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
         Plasma::Package package(QString(), "org.packagekit.updater", structure);

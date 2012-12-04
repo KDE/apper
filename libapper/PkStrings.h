@@ -25,26 +25,27 @@
 
 #include <Transaction>
 
-namespace PkStrings
+class KDE_EXPORT PkStrings : public QObject
 {
-    KDE_EXPORT QString finished(PackageKit::Transaction::Exit status);
-    KDE_EXPORT QString infoPresent(PackageKit::Transaction::Info info);
-    KDE_EXPORT QString infoPast(PackageKit::Transaction::Info info);
-    KDE_EXPORT QString error(PackageKit::Transaction::Error error);
-    KDE_EXPORT QString errorMessage(PackageKit::Transaction::Error error);
-    KDE_EXPORT QString message(PackageKit::Transaction::Message type);
-    KDE_EXPORT QString status(PackageKit::Transaction::Status status);
-    KDE_EXPORT QString statusPast(PackageKit::Transaction::Status status);
-    KDE_EXPORT QString groups(PackageKit::Transaction::Group group);
-    KDE_EXPORT QString info(PackageKit::Transaction::Info state);
-    KDE_EXPORT QString packageQuantity(bool updates, int packages, int selected);
-    KDE_EXPORT QString updateState(PackageKit::Transaction::UpdateState value);
-    KDE_EXPORT QString restartType(PackageKit::Transaction::Restart value);
-    KDE_EXPORT QString restartTypeFuture(PackageKit::Transaction::Restart value);
-    KDE_EXPORT QString action(PackageKit::Transaction::Role action);
-    KDE_EXPORT QString actionPast(PackageKit::Transaction::Role action);
-    KDE_EXPORT QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);
-    KDE_EXPORT QString daemonError(PackageKit::Transaction::InternalError value);
+    Q_OBJECT
+public slots:
+    static QString infoPresent(PackageKit::Transaction::Info info);
+    static QString infoPast(PackageKit::Transaction::Info info);
+    static QString error(PackageKit::Transaction::Error error);
+    static QString errorMessage(PackageKit::Transaction::Error error);
+    static QString message(PackageKit::Transaction::Message type);
+    static QString status(PackageKit::Transaction::Status status);
+    static QString statusPast(PackageKit::Transaction::Status status);
+    static QString groups(PackageKit::Transaction::Group group);
+    static QString info(PackageKit::Transaction::Info state);
+    static QString packageQuantity(bool updates, int packages, int selected);
+    static QString updateState(PackageKit::Transaction::UpdateState value);
+    static QString restartType(PackageKit::Transaction::Restart value);
+    static QString restartTypeFuture(PackageKit::Transaction::Restart value);
+    static QString action(PackageKit::Transaction::Role action);
+    static QString actionPast(PackageKit::Transaction::Role action);
+    static QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);
+    static QString daemonError(PackageKit::Transaction::InternalError value);
 };
 
 #endif

@@ -21,6 +21,8 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 Item {
     id: root
 
+    state: "SELECTION"
+
     property int minimumWidth: 373
     property int minimumHeight: 272
 
@@ -32,7 +34,31 @@ Item {
     }
 
     Updates {
-        id: updates
+        id: updatesView
         anchors.fill: parent
+        onUpdate: {
+            transactionView.update(packages);
+            root.state = "TRANSACTION";
+        }
+    }
+
+    Transaction {
+        id: transactionView
+        anchors.fill: parent
+    }
+
+    states: [
+        State {
+            name: "SELECTION"
+            PropertyChanges { target: transactionView; opacity: 0}
+        },
+        State {
+            name: "TRANSACTION"
+            PropertyChanges { target: updatesView; opacity: 0}
+        }
+    ]
+
+    transitions: Transition {
+        NumberAnimation { properties: "opacity"; easing.type: Easing.InOutQuad }
     }
 }
