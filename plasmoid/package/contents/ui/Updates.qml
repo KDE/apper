@@ -78,6 +78,7 @@ Item {
         model: Apper.PackageModel {
             id: updatesModel
             checkable: true
+            onChanged: updateAllCB.checked = updatesModel.allSelected();
         }
     }
 

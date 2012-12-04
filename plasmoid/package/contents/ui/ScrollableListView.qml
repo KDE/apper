@@ -43,6 +43,7 @@ Item {
             bottom: parent.bottom
         }
         highlight: highlighter
+        boundsBehavior: Flickable.StopAtBounds
     }
     Component {
         id: highlighter
