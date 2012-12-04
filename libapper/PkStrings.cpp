@@ -26,7 +26,7 @@
 
 using namespace PackageKit;
 
-QString PkStrings::status(Transaction::Status status)
+QString PkStrings::status(int status)
 {
     kDebug() << status;
     switch (status) {
