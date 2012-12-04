@@ -83,6 +83,7 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
         qmlRegisterType<PackageKit::Transaction>("org.packagekit", 0, 1, "Transaction");
         qmlRegisterUncreatableType<PackageKit::Daemon>("org.packagekit", 0, 1, "Daemon", "Global");
         qRegisterMetaType<PackageKit::Transaction::Info>("PackageKit::Transaction::Info");
+        qRegisterMetaType<PackageKit::Transaction::Exit>("PackageKit::Transaction::Exit");
 
         Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
         Plasma::Package package(QString(), "org.packagekit.updater", structure);

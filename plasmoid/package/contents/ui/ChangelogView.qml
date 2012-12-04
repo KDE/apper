@@ -20,10 +20,10 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.packagekit 0.1 as PackageKit
 
 Item {
-    id: root
+    id: changelog
 
     function deleteLater() {
-        root.destroy();
+        changelog.destroy();
     }
 
     width: parent.width

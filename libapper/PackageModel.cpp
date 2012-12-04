@@ -681,7 +681,11 @@ void PackageModel::toggleSelection(int index)
 {
     if (index < m_packages.count()) {
         InternalPackage package = m_packages[index];
-        checkPackage(package, !containsChecked(package.packageID));
+        if (containsChecked(package.packageID)) {
+            uncheckPackage(package.packageID, true);
+        } else {
+            checkPackage(package);
+        }
     }
 }
 
@@ -713,7 +717,7 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
         m_checkedPackages[pkgId] = package;
 
         // A checkable model does not have duplicated entries
-        if (emitDataChanged && !m_packages.isEmpty() && !m_checkable) {
+        if (emitDataChanged || !m_checkable || !m_packages.isEmpty()) {
             // This is a slow operation so in case the user
             // is unchecking all of the packages there is
             // no need to emit data changed for every item
@@ -745,7 +749,7 @@ void PackageModel::uncheckPackage(const QString &packageID,
             emit packageUnchecked(packageID);
         }
 
-        if (emitDataChanged && !m_checkable) {
+        if (emitDataChanged || !m_checkable) {
             // This is a slow operation so in case the user
             // is unchecking all of the packages there is
             // no need to emit data changed for every item
@@ -758,6 +762,7 @@ void PackageModel::uncheckPackage(const QString &packageID,
 
             // The model might not be displayed yet
             if (m_finished) {
+                kDebug();
                 emit changed(!m_checkedPackages.isEmpty());
             }
         }

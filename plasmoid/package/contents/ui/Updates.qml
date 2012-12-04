@@ -28,26 +28,34 @@ Item {
     clip: true
 
     function getUpdates() {
-        updateTransaction.getUpdates();
+        getUpdatesTransaction.getUpdates();
+    }
+
+    PackageKit.Transaction {
+        id: getUpdatesTransaction
     }
 
     Row {
         id: actionRow
+        spacing: 4
+        anchors.margins: 2
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.right: parent.right
+        PlasmaComponents.CheckBox {
+            id: updateAllCB
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            checked: rChecked
+            onClicked: updatesModel.setAllChecked(checked);
+        }
         Text {
             height: parent.height
-            width: parent.width - updateBT.width
-            horizontalAlignment: Text.AlignHCenter
+            width: parent.width - updateBT.width - updateAllCB.width - parent.spacing * 2
+            horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             text: updatesModel.selectionStateText
         }
-
-        Apper.PkTransaction {
-            id: updateTransaction
-        }
-
         PlasmaComponents.ToolButton {
             id: updateBT
             flat: true
@@ -60,12 +68,11 @@ Item {
     }
 
     ScrollableListView {
-        height: parent.height - actionRow.height
+        height: parent.height - actionRow.height - 4
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         delegate: UpdateItemDelegate {
-
         }
 
         model: Apper.PackageModel {
@@ -75,8 +82,8 @@ Item {
     }
 
     Component.onCompleted: {
-        updateTransaction.package.connect(updatesModel.addSelectedPackage);
-        updateTransaction.finished.connect(updatesModel.finished);
+        getUpdatesTransaction.package.connect(updatesModel.addSelectedPackage);
+        getUpdatesTransaction.finished.connect(updatesModel.finished);
         getUpdates();
     }
 }
