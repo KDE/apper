@@ -27,6 +27,10 @@ Item {
     anchors.fill: parent
     clip: true
 
+    function getUpdates() {
+        updateTransaction.getUpdates();
+    }
+
     Row {
         id: actionRow
         anchors.left: parent.left
@@ -40,7 +44,7 @@ Item {
             text: updatesModel.selectionStateText
         }
 
-        PackageKit.Transaction {
+        Apper.PkTransaction {
             id: updateTransaction
         }
 
@@ -50,7 +54,7 @@ Item {
             iconSource: "system-software-update"
             text:  i18n("Update")
             onClicked: {
-                updateTransaction.updatePackages(updatesModel.selectedPackagesToInstall(), PackageKit.Transaction.TransactionFlagOnlyTrusted | PackageKit.Transaction.TransactionFlagOnlyDownload)
+                updateTransaction.updatePackages(updatesModel.selectedPackagesToInstall());
             }
         }
     }
@@ -73,7 +77,6 @@ Item {
     Component.onCompleted: {
         updateTransaction.package.connect(updatesModel.addSelectedPackage);
         updateTransaction.finished.connect(updatesModel.finished);
-        updateTransaction.getUpdates();
-//        updatesModel.getUpdates(false, true);
+        getUpdates();
     }
 }

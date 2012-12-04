@@ -677,6 +677,14 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
     }
 }
 
+void PackageModel::toggleSelection(int index)
+{
+    if (index < m_packages.count()) {
+        InternalPackage package = m_packages[index];
+        checkPackage(package, !containsChecked(package.packageID));
+    }
+}
+
 QString PackageModel::selectionStateText() const
 {
     return headerData(NameCol, Qt::Horizontal).toString();

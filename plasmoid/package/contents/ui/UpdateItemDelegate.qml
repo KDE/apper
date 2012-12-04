@@ -93,6 +93,7 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 checked: rChecked
+                onClicked: updatesModel.toggleSelection(index)
             }
             QIconItem {
                 id: updateIcon
