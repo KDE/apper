@@ -189,7 +189,9 @@ void PkTransactionWidget::updateUi()
     Transaction::Status status = transaction->status();
     if (m_status != status) {
         m_status = status;
-        ui->currentL->setText(PkStrings::status(status));
+        ui->currentL->setText(PkStrings::status(status,
+                                                transaction->speed(),
+                                                transaction->downloadSizeRemaining()));
 
         KPixmapSequence sequence = KPixmapSequence(PkIcons::statusAnimation(status),
                                                    KIconLoader::SizeLarge);
@@ -198,19 +200,9 @@ void PkTransactionWidget::updateUi()
             d->busySeq->start();
         }
     } else if (status == Transaction::StatusDownload) {
-        uint speed = transaction->speed();
-        qulonglong downloadRemaining = transaction->downloadSizeRemaining();
-        if (speed != 0 && downloadRemaining != 0) {
-            ui->currentL->setText(i18n("Downloading at %1/s, %2 remaining",
-                                       KGlobal::locale()->formatByteSize(speed),
-                                       KGlobal::locale()->formatByteSize(downloadRemaining)));
-        } else if (speed != 0 && downloadRemaining == 0) {
-            ui->currentL->setText(i18n("Downloading at %1/s",
-                                         KGlobal::locale()->formatByteSize(speed)));
-        } else if (speed == 0 && downloadRemaining != 0) {
-            ui->currentL->setText(i18n("Downloading, %1 remaining",
-                                         KGlobal::locale()->formatByteSize(downloadRemaining)));
-        }
+        ui->currentL->setText(PkStrings::status(status,
+                                                transaction->speed(),
+                                                transaction->downloadSizeRemaining()));
     }
 
     Transaction::Role role = transaction->role();

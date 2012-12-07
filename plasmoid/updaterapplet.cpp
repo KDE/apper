@@ -34,6 +34,7 @@
 
 #include <PackageModel.h>
 #include <PkTransaction.h>
+#include <PkTransactionProgressModel.h>
 #include <PkStrings.h>
 #include <ApplicationSortFilterModel.h>
 
@@ -83,6 +84,7 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
         m_declarativeWidget->engine()->rootContext()->setContextProperty("PkStrings", new PkStrings);
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
         qmlRegisterType<PkTransaction>("org.kde.apper", 0, 1, "PkTransaction");
+        qmlRegisterType<PkTransactionProgressModel>("org.kde.apper", 0, 1, "PkTransactionProgressModel");
         qmlRegisterType<ApplicationSortFilterModel>("org.kde.apper", 0, 1, "ApplicationSortFilterModel");
         qmlRegisterType<PackageKit::Transaction>("org.packagekit", 0, 1, "Transaction");
         qmlRegisterUncreatableType<PackageKit::Daemon>("org.packagekit", 0, 1, "Daemon", "Global");

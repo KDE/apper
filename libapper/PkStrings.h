@@ -34,7 +34,7 @@ public slots:
     static QString error(PackageKit::Transaction::Error error);
     static QString errorMessage(PackageKit::Transaction::Error error);
     static QString message(PackageKit::Transaction::Message type);
-    static QString status(int status);
+    static QString status(int status, uint speed = 0, qulonglong downloadRemaining = 0);
     static QString statusPast(PackageKit::Transaction::Status status);
     static QString groups(PackageKit::Transaction::Group group);
     static QString info(PackageKit::Transaction::Info state);

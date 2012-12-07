@@ -173,7 +173,6 @@ void PkTransaction::removePackages(const QStringList &packages)
 
 void PkTransaction::updatePackages(const QStringList &packages)
 {
-    kDebug() << packages;
     if (Daemon::global()->actions() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
         d->packages = packages;

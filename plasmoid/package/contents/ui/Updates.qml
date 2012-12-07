@@ -73,12 +73,13 @@ Item {
         anchors.right: parent.right
         delegate: UpdateItemDelegate {
         }
-
+        view.currentIndex: -1
         model: Apper.PackageModel {
             id: updatesModel
             checkable: true
             onChanged: updateAllCB.checked = updatesModel.allSelected();
         }
+        followBottom: true
     }
 
     Component.onCompleted: {

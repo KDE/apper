@@ -34,8 +34,7 @@ Item {
     Apper.PkTransaction {
         id: updateTransaction
         onChanged: {
-            console.debug("changed " + status);
-            statusText.text = PkStrings.status(status);
+            statusText.text = PkStrings.status(status, speed, downloadSizeRemaining);
             transactionProgress.value = updateTransaction.percentage;
         }
     }
@@ -78,13 +77,16 @@ Item {
     }
 
     ScrollableListView {
+        property int progressWidth: 30
+        id: progressView
         height: parent.height - actionRow.height - 4
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        delegate: UpdateItemDelegate {
+        delegate: TransactionProgressDelegate {
         }
-
+        view.currentIndex: -1
         model: updateTransaction.progressModel()
+        followBottom: true
     }
 }

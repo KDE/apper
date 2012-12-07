@@ -21,15 +21,16 @@
 #include "PkStrings.h"
 
 #include <KLocale>
+#include <KGlobal>
 
 #include <KDebug>
 
 using namespace PackageKit;
 
-QString PkStrings::status(int status)
+QString PkStrings::status(int status, uint speed, qulonglong downloadRemaining)
 {
-    kDebug() << status;
-    switch (status) {
+    Transaction::Status statusEnum = static_cast<Transaction::Status>(status);
+    switch (statusEnum) {
     case Transaction::StatusUnknown:
         return i18nc("This is when the transaction status is not known",
                      "Unknown state");
@@ -51,9 +52,24 @@ QString PkStrings::status(int status)
     case Transaction::StatusRemove :
         return i18nc("transaction state, removing packages",
                      "Removing packages");
-    case Transaction::StatusDownload :
-        return i18nc("transaction state, downloading package files",
-                     "Downloading packages");
+    case Transaction::StatusDownload:
+        if (speed != 0 && downloadRemaining != 0) {
+            return i18nc("transaction state, downloading package files",
+                         "Downloading at %1/s, %2 remaining",
+                         KGlobal::locale()->formatByteSize(speed),
+                         KGlobal::locale()->formatByteSize(downloadRemaining));
+        } else if (speed != 0 && downloadRemaining == 0) {
+            return i18nc("transaction state, downloading package files",
+                         "Downloading at %1/s",
+                         KGlobal::locale()->formatByteSize(speed));
+        } else if (speed == 0 && downloadRemaining != 0) {
+            return i18nc("transaction state, downloading package files",
+                         "Downloading, %1 remaining",
+                         KGlobal::locale()->formatByteSize(downloadRemaining));
+        } else {
+            return i18nc("transaction state, downloading package files",
+                         "Downloading");
+        }
     case Transaction::StatusInstall :
         return i18nc("transaction state, installing packages",
                      "Installing packages");
@@ -139,7 +155,7 @@ QString PkStrings::status(int status)
         return i18nc("we are copying package files to prepare to install",
                      "Copying files");
     }
-    kWarning() << "status unrecognised: " << status;
+    kWarning() << "status unrecognised: " << statusEnum;
     return QString();
 }
 

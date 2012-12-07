@@ -32,6 +32,15 @@ using namespace PackageKit;
 PkTransactionProgressModel::PkTransactionProgressModel(QObject *parent) :
     QStandardItemModel(parent)
 {
+    QHash<int, QByteArray> roles = roleNames();
+    roles[RoleInfo] = "rInfo";
+    roles[RolePkgName] = "rPkgName";
+    roles[RolePkgSummary] = "rPkgSummary";
+    roles[RoleFinished] = "rFinished";
+    roles[RoleProgress] = "rProgress";
+    roles[RoleId] = "rId";
+    roles[RoleRepo] = "rRepo";
+    setRoleNames(roles);
 }
 
 PkTransactionProgressModel::~PkTransactionProgressModel()
@@ -56,7 +65,7 @@ void PkTransactionProgressModel::currentRepo(const QString &repoId, const QStrin
 void PkTransactionProgressModel::itemProgress(const QString &id, Transaction::Status status, uint percentage)
 {
     Q_UNUSED(status)
-
+kDebug() << id << status << percentage;
     PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
     if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
         return;
@@ -81,6 +90,7 @@ void PkTransactionProgressModel::clear()
 
 void PkTransactionProgressModel::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
+    kDebug() << packageID << info;
     PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
     if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
         return;
@@ -106,6 +116,8 @@ void PkTransactionProgressModel::currentPackage(PackageKit::Transaction::Info in
             // It's a new package create it and append it
             stdItem = new QStandardItem;
             stdItem->setText(PkStrings::infoPresent(info));
+            stdItem->setData(Transaction::packageName(packageID), RolePkgName);
+            stdItem->setData(summary, RolePkgSummary);
             stdItem->setData(qVariantFromValue(info), RoleInfo);
             stdItem->setData(0,         RoleProgress);
             stdItem->setData(false,     RoleFinished);

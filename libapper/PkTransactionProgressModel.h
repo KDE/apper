@@ -25,12 +25,16 @@
 
 #include <Transaction>
 
-class PkTransactionProgressModel: public QStandardItemModel
+#include <kdemacros.h>
+
+class KDE_EXPORT PkTransactionProgressModel: public QStandardItemModel
 {
     Q_OBJECT
 public:
     enum PackageRoles {
         RoleInfo = Qt::UserRole + 1,
+        RolePkgName,
+        RolePkgSummary,
         RoleFinished,
         RoleProgress,
         RoleId,
