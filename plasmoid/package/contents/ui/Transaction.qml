@@ -77,6 +77,8 @@ Item {
             id: transactionProgress
             anchors.left: parent.left
             anchors.right: parent.right
+            minimumValue: 0
+            maximumValue: 100
         }
     }
 

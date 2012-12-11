@@ -36,33 +36,53 @@ Item {
     }
 
     Component.onCompleted: {
-        Daemon.updatesChanged.connect(getUpdates);
         getUpdatesTransaction.package.connect(updatesModel.addSelectedPackage);
         getUpdatesTransaction.finished.connect(getUpdatesFinished);
-        getUpdates();
+
+        Daemon.updatesChanged.connect(getUpdates);
+        plasmoid.getUpdates.connect(getUpdates);
     }
 
     function getUpdates() {
-        state = "STATUS";
-        getUpdatesTransaction.cancel();
-        getUpdatesTransaction.reset();
-        updatesModel.clear();
-        getUpdatesTransaction.getUpdates();
+        if (checkedForUpdates) {
+            decideState();
+        } else {
+            console.debug("getUpdates -----------=-=-=++++++> ");
+            state = "STATUS";
+            getUpdatesTransaction.cancel();
+            getUpdatesTransaction.reset();
+            updatesModel.clear();
+            getUpdatesTransaction.getUpdates();
+        }
     }
 
     function getUpdatesFinished() {
+        checkedForUpdates = true;
         updatesModel.finished();
         updatesView.sortModel.sortNow();
         updatesModel.clearSelectedNotPresent();
-        if (updatesModel.rowCount() === 0) {
-            statusView.iconName = "security-high";
-            statusView.title = i18n("Your system is upda to date");
-            statusView.subTitle = i18n("Last cache check.....");
-            plasmoid.setActive(false);
-        } else {
-            plasmoid.setActive(true);
-            state = "SELECTION";
+        decideState();
+        console.debug("ICONIFIED -----------=-=-=++++++> ");
+    }
+
+    function decideState() {
+        if (state !== "TRANSACTION") {
+            if (updatesModel.rowCount() === 0) {
+                statusView.iconName = "security-high";
+                statusView.title = i18n("Your system is upda to date");
+                statusView.subTitle = i18n("Last cache check.....");
+                plasmoid.setActive(false);
+                state = "STATUS";
+            } else {
+                plasmoid.setActive(true);
+                state = "SELECTION";
+            }
         }
+    }
+
+    function updatesChanged() {
+        checkedForUpdates = false;
+        getUpdates();
     }
 
     PackageKit.Transaction {
@@ -86,6 +106,7 @@ Item {
         id: transactionView
         anchors.fill: parent
         onFinished: {
+
             getUpdates();
         }
     }

@@ -41,6 +41,9 @@
 #include <Transaction>
 #include <Daemon>
 
+#define FIVE_MIN 360000
+#define ONE_MIN   72000
+
 using namespace PackageKit;
 
 UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
@@ -48,6 +51,7 @@ UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
     m_declarativeWidget(0)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    setActive(false);
     setPopupIcon("kpackagekit-updates");
 
     m_updatesModel = new PackageModel(this);
@@ -56,7 +60,6 @@ UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
 
 void UpdaterApplet::init()
 {
-    kDebug() << formFactor();
     switch (formFactor()) {
     case Plasma::Horizontal:
     case Plasma::Vertical:
@@ -66,6 +69,8 @@ void UpdaterApplet::init()
         Plasma::ToolTipManager::self()->unregisterWidget(this);
         break;
     }
+
+    QTimer::singleShot(FIVE_MIN, this, SIGNAL(getUpdates()));
 
     PopupApplet::init();
 }
@@ -80,7 +85,7 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
 {
     if (!m_declarativeWidget) {
         m_declarativeWidget = new Plasma::DeclarativeWidget(this);
-
+kDebug();
         m_declarativeWidget->engine()->rootContext()->setContextProperty("Daemon", Daemon::global());
         m_declarativeWidget->engine()->rootContext()->setContextProperty("PkStrings", new PkStrings);
         m_declarativeWidget->engine()->rootContext()->setContextProperty("updatesModel", m_updatesModel);
@@ -154,11 +159,14 @@ void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)
             break;
         }
     }
+
+    if (!isIconified()) {
+        emit getUpdates();
+    }
 }
 
 void UpdaterApplet::popupEvent(bool show)
 {
-    kDebug() << show;
     if (show) {
         emit getUpdates();
     }
