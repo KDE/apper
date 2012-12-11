@@ -284,11 +284,11 @@ void Updater::getUpdatesFinished()
 
         if (lastTime < fifteen) {
             ui->titleL->setText(i18n("Your system is up to date"));
-            ui->descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(lastTime * 1000)));
+            ui->descriptionL->setText(i18n("Verified %1 ago", PkStrings::prettyFormatDuration(lastTime * 1000)));
             ui->iconL->setPixmap(KIcon("security-high").pixmap(128, 128));
         } else if (lastTime > fifteen && lastTime < tirty && lastTime != UINT_MAX) {
             ui->titleL->setText(i18n("You have no updates"));
-            ui->descriptionL->setText(i18n("Verified %1 ago", KGlobal::locale()->prettyFormatDuration(lastTime * 1000)));
+            ui->descriptionL->setText(i18n("Verified %1 ago", PkStrings::prettyFormatDuration(lastTime * 1000)));
             ui->iconL->setPixmap(KIcon("security-medium").pixmap(128, 128));
         } else {
             ui->titleL->setText(i18n("Last check for updates was more than a month ago"));

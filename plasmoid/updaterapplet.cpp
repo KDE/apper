@@ -85,7 +85,6 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
 {
     if (!m_declarativeWidget) {
         m_declarativeWidget = new Plasma::DeclarativeWidget(this);
-kDebug();
         m_declarativeWidget->engine()->rootContext()->setContextProperty("Daemon", Daemon::global());
         m_declarativeWidget->engine()->rootContext()->setContextProperty("PkStrings", new PkStrings);
         m_declarativeWidget->engine()->rootContext()->setContextProperty("updatesModel", m_updatesModel);
@@ -117,7 +116,11 @@ void UpdaterApplet::toolTipAboutToShow()
     }
 
     QString text;
-    text = i18np("You have one update", "You have %1 updates", m_updatesModel->rowCount());
+    if (m_updatesModel->rowCount() == 0) {
+        text = i18n("Your system is up to date");
+    } else {
+        text = i18np("You have one update", "You have %1 updates", m_updatesModel->rowCount());
+    }
     Plasma::ToolTipContent content(i18n("Software Updater"),
                                    text,
                                    KIcon("system-software-update"));

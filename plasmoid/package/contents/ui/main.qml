@@ -26,6 +26,11 @@ Item {
 
     property int minimumWidth: 373
     property int minimumHeight: 272
+    property int maximumWidth: 0
+    property int maximumHeight: 0
+    property int preferredWidth: 0
+    property int preferredHeight: 0
+
     property bool checkedForUpdates: false
 
     anchors.fill: parent
@@ -39,14 +44,12 @@ Item {
         getUpdatesTransaction.package.connect(updatesModel.addSelectedPackage);
         getUpdatesTransaction.finished.connect(getUpdatesFinished);
 
-        Daemon.updatesChanged.connect(getUpdates);
+        Daemon.updatesChanged.connect(updatesChanged);
         plasmoid.getUpdates.connect(getUpdates);
     }
 
     function getUpdates() {
-        if (checkedForUpdates) {
-            decideState();
-        } else {
+        if (!checkedForUpdates) {
             console.debug("getUpdates -----------=-=-=++++++> ");
             state = "STATUS";
             getUpdatesTransaction.cancel();
@@ -57,20 +60,47 @@ Item {
     }
 
     function getUpdatesFinished() {
+        console.debug("getUpdatesFinished()");
         checkedForUpdates = true;
         updatesModel.finished();
         updatesView.sortModel.sortNow();
         updatesModel.clearSelectedNotPresent();
         decideState();
-        console.debug("ICONIFIED -----------=-=-=++++++> ");
+
     }
 
     function decideState() {
+        console.debug("decideState() " + state);
         if (state !== "TRANSACTION") {
+            console.debug("decideState() " + updatesModel.rowCount());
             if (updatesModel.rowCount() === 0) {
-                statusView.iconName = "security-high";
-                statusView.title = i18n("Your system is upda to date");
-                statusView.subTitle = i18n("Last cache check.....");
+                console.debug("decideState() ZERO");
+                var role = PackageKit.Transaction.RoleRefreshCache;
+                console.debug("decideState() role " + role);
+                var lastTime = Daemon.getTimeSinceAction(role);
+                console.debug("decideState() lastTime " + lastTime);
+//                statusView.iconName = "security-high"
+//                statusView.title = i18n("Your system is upda to date");
+//                statusView.subTitle = i18n("Last cache check.....");
+                var fifteen = 1296000;
+                var tirty = 2592000;
+                console.debug("decideState() fifteen " + fifteen);
+                console.debug("decideState() tirty " + tirty);
+                if (lastTime < fifteen) {
+                    statusView.title = i18n("Your system is up to date");
+                    statusView.subTitle = i18n("Verified %1 ago", PkStrings.prettyFormatDuration(lastTime * 1000));
+                    statusView.iconName = "security-high";
+                } else if (lastTime > fifteen && lastTime < tirty && lastTime !== UINT_MAX) {
+                    statusView.title = i18n("You have no updates");
+                    statusView.subTitle = i18n("Verified %1 ago", PkStrings.prettyFormatDuration(lastTime * 1000));
+                    statusView.iconName = "security-medium";
+                } else {
+                    statusView.title = i18n("Last check for updates was more than a month ago");
+                    statusView.subTitle = i18n("It's strongly recommended that you check for new updates now");
+                    statusView.iconName = "security-low";
+                }
+
+
                 plasmoid.setActive(false);
                 state = "STATUS";
             } else {
@@ -106,8 +136,7 @@ Item {
         id: transactionView
         anchors.fill: parent
         onFinished: {
-
-            getUpdates();
+            decideState();
         }
     }
     StatusView {

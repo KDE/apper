@@ -46,6 +46,7 @@ public slots:
     static QString actionPast(PackageKit::Transaction::Role action);
     static QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);
     static QString daemonError(PackageKit::Transaction::InternalError value);
+    static QString prettyFormatDuration(unsigned long mSec);
 };
 
 #endif

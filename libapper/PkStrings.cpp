@@ -990,3 +990,8 @@ QString PkStrings::daemonError(Transaction::InternalError value)
     kWarning() << "value unrecognised: " << value;
     return i18n("An unknown error happened.");
 }
+
+QString PkStrings::prettyFormatDuration(unsigned long mSec)
+{
+    return KGlobal::locale()->prettyFormatDuration(mSec);
+}

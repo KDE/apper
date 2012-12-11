@@ -60,7 +60,7 @@ Item {
             id: titleText
             width: parent.width
             elide: Text.ElideRight
-            font.pointSize: font.pointSize * 1.5
+            font.pointSize: subTitleText.font.pointSize * 1.5
             horizontalAlignment: Text.AlignHCenter
             text: title
         }
@@ -71,5 +71,21 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             text: subTitle
         }
+    }
+
+    states: [
+        State {
+            name: "BUSY"
+            PropertyChanges { target: statusIcon; opacity: 0}
+        },
+        State {
+            name: "ICON"
+            PropertyChanges { target: busy; opacity: 0}
+            PropertyChanges { target: busy; running: false}
+        }
+    ]
+
+    transitions: Transition {
+        NumberAnimation { properties: "opacity"; easing.type: Easing.InOutQuad }
     }
 }
