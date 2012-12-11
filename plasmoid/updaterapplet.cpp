@@ -56,6 +56,7 @@ UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
 
 void UpdaterApplet::init()
 {
+    kDebug() << formFactor();
     switch (formFactor()) {
     case Plasma::Horizontal:
     case Plasma::Vertical:
@@ -82,6 +83,8 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
 
         m_declarativeWidget->engine()->rootContext()->setContextProperty("Daemon", Daemon::global());
         m_declarativeWidget->engine()->rootContext()->setContextProperty("PkStrings", new PkStrings);
+        m_declarativeWidget->engine()->rootContext()->setContextProperty("updatesModel", m_updatesModel);
+        m_declarativeWidget->engine()->rootContext()->setContextProperty("plasmoid", this);
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
         qmlRegisterType<PkTransaction>("org.kde.apper", 0, 1, "PkTransaction");
         qmlRegisterType<PkTransactionProgressModel>("org.kde.apper", 0, 1, "PkTransactionProgressModel");
@@ -91,6 +94,8 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
         qRegisterMetaType<PackageKit::Transaction::Info>("PackageKit::Transaction::Info");
         qRegisterMetaType<PackageKit::Transaction::Exit>("PackageKit::Transaction::Exit");
         qRegisterMetaType<PackageKit::Transaction::Status>("PackageKit::Transaction::Status");
+        qRegisterMetaType<PackageKit::Transaction::Role>("PackageKit::Transaction::Role");
+        qRegisterMetaType<PkTransaction::ExitStatus>("PkTransaction::ExitStatus");
 
         Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");
         Plasma::Package package(QString(), "org.packagekit.updater", structure);
@@ -127,6 +132,15 @@ void UpdaterApplet::toolTipAboutToShow()
     Plasma::ToolTipManager::self()->setContent(this, content);
 }
 
+void UpdaterApplet::setActive(bool active)
+{
+    if (active) {
+        setStatus(Plasma::ActiveStatus);
+    } else {
+        setStatus(Plasma::PassiveStatus);
+    }
+}
+
 void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & Plasma::FormFactorConstraint) {
@@ -139,6 +153,14 @@ void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)
             Plasma::ToolTipManager::self()->unregisterWidget(this);
             break;
         }
+    }
+}
+
+void UpdaterApplet::popupEvent(bool show)
+{
+    kDebug() << show;
+    if (show) {
+        emit getUpdates();
     }
 }
 

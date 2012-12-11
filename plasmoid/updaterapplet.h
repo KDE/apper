@@ -45,11 +45,16 @@ public:
     void init();
     QGraphicsWidget *graphicsWidget();
 
+signals:
+    void getUpdates();
+
 protected Q_SLOTS:
     void toolTipAboutToShow();
+    void setActive(bool active);
 
 protected:
     void constraintsEvent(Plasma::Constraints constraints);
+    virtual void popupEvent(bool show);
 
 private:
     Plasma::DeclarativeWidget *m_declarativeWidget;

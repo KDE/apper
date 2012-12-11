@@ -630,10 +630,9 @@ void PkTransaction::reject()
 
 void PkTransaction::showDialog(KDialog *dlg)
 {
-    kDebug() << dlg;
     PkTransactionWidget *widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
     if (!widget || widget->isCancelVisible()) {
-        dlg->setModal(true);
+        dlg->setModal(d->parentWindow);
         dlg->show();
     } else {
         dlg->setProperty("embedded", true);

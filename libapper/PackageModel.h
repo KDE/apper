@@ -86,11 +86,11 @@ public:
     Q_INVOKABLE QStringList selectedPackagesToInstall() const;
     Q_INVOKABLE QStringList selectedPackagesToRemove() const;
     unsigned long downloadSize() const;
-    void clear();
+    Q_INVOKABLE void clear();
     /**
      * This removes all selected packages that are not in the model
      */
-    void clearSelectedNotPresent();
+    Q_INVOKABLE void clearSelectedNotPresent();
 
     bool checkable() const;
     void setCheckable(bool checkable);

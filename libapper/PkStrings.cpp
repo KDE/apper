@@ -180,9 +180,10 @@ QString PkStrings::statusPast(Transaction::Status status)
     }
 }
 
-QString PkStrings::action(Transaction::Role action)
+QString PkStrings::action(int role)
 {
-    switch (action) {
+    Transaction::Role roleEnum = static_cast<Transaction::Role>(role);
+    switch (roleEnum) {
     case Transaction::RoleUnknown :
         return i18nc("The role of the transaction, in present tense", "Unknown role type");
     case Transaction::RoleGetDepends :
@@ -246,7 +247,7 @@ QString PkStrings::action(Transaction::Role action)
     case Transaction::RoleRepairSystem :
         return i18nc("The role of the transaction, in present tense", "Repairing system");
     }
-    kWarning() << "action unrecognised: " << action;
+    kWarning() << "action unrecognised: " << role;
     return QString();
 }
 
@@ -780,9 +781,10 @@ QString PkStrings::groups(Transaction::Group group)
     return QString();
 }
 
-QString PkStrings::info(Transaction::Info state)
+QString PkStrings::info(int state)
 {
-    switch (state) {
+    Transaction::Info stateEnum = static_cast<Transaction::Info>(state);
+    switch (stateEnum) {
     case Transaction::InfoLow :
         return i18nc("The type of update", "Trivial update");
     case Transaction::InfoNormal :

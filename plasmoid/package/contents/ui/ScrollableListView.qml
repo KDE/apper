@@ -28,25 +28,10 @@ Item {
     property alias interactive: list.interactive
     property alias currentIndex: list.currentIndex
     property alias view: list
-    property bool followBottom: false
     signal countChanged()
     
     Component.onCompleted: {
         list.countChanged.connect(countChanged)
-    }
-
-    MouseArea {
-        id: myMouse
-        anchors.fill: parent
-        hoverEnabled: true
-        onPressed: {
-            console.debug("MouseArea.onPressed: ");
-            followBottom = false;
-        }
-        onReleased: {
-            console.debug("MouseArea.onReleased: ");
-            followBottom = list.atYEnd;
-        }
     }
 
     ListView {
@@ -55,58 +40,12 @@ Item {
         clip: true
         anchors {
             left:   parent.left
-            right:  /*scrollBar.visible ? scrollBar.left :*/ parent.right
+            right:  scrollBar.visible ? scrollBar.left : parent.right
             top :   parent.top
             bottom: parent.bottom
         }
         highlight: highlighter
-//        view.onAdd: console.debug("onAdd: " + atYEnd);
         boundsBehavior: Flickable.StopAtBounds
-//            console.debug("onAdd: " + atYEnd);
-//            if (keepBottom) {
-//                view.positionViewAtEnd();
-//            }
-//        }
-        onContentHeightChanged: {
-            console.debug("onContentHeightChanged: " + atYEnd + "   followBottom " + followBottom);
-            if (followBottom) {
-                view.positionViewAtEnd();
-            }
-        }
-
-        onContentYChanged: {
-            console.debug("onContentYChanged: contentY:" + contentY + " heigh "+ contentHeight + " atend " + atYEnd + " mouse ");
-
-            followBottom = atYEnd;
-        }
-
-        onAtYEndChanged: {
-            console.debug("onAtYEndChanged: " + atYEnd);
-            if (atYEnd) {
-                followBottom = true;
-            }
-//            if (atYEnd) {
-//                followBottom = true;
-//            }
-//            if (followBottom && keepBottom && atYEnd === false) {
-//                positionViewAtEnd();
-//            }
-        }
-        onMovingVerticallyChanged: {
-            console.debug("onMovingVerticallyChanged: " + atYEnd);
-            if (followBottom) {
-                keepBottom = false;
-            }
-        }
-        onMovementEnded: {
-            console.debug("onMovementEnded: " + atYEnd);
-            if (followBottom) {
-                keepBottom = atYEnd;
-                if (keepBottom) {
-                    positionViewAtEnd();
-                }
-            }
-        }
     }
     Component {
         id: highlighter
@@ -123,16 +62,16 @@ Item {
             }
         }
     }
-//    PlasmaComponents.ScrollBar {
-//        id: scrollBar
-//        flickableItem: list
-//        anchors {
-//            right: parent.right
-//            top: list.top
-//            bottom: list.bottom
-//        }
-//        onPressedChanged: {
-//            console.debug("onPressed: " + pressed);
-//        }
-//    }
+    PlasmaComponents.ScrollBar {
+        id: scrollBar
+        flickableItem: list
+        anchors {
+            right: parent.right
+            top: list.top
+            bottom: list.bottom
+        }
+        onPressedChanged: {
+            console.debug("onPressed: " + pressed);
+        }
+    }
 }

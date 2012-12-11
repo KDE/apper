@@ -17,20 +17,61 @@
 
 import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.packagekit 0.1 as PackageKit
 
 Item {
     id: root
 
-    state: "SELECTION"
+    state: "STATUS"
 
     property int minimumWidth: 373
     property int minimumHeight: 272
+    property bool checkedForUpdates: false
 
     anchors.fill: parent
     clip: true
 
     PlasmaCore.Theme {
         id: theme
+    }
+
+    Component.onCompleted: {
+        Daemon.updatesChanged.connect(getUpdates);
+        getUpdatesTransaction.package.connect(updatesModel.addSelectedPackage);
+        getUpdatesTransaction.finished.connect(getUpdatesFinished);
+        getUpdates();
+    }
+
+    function getUpdates() {
+        state = "STATUS";
+        getUpdatesTransaction.cancel();
+        getUpdatesTransaction.reset();
+        updatesModel.clear();
+        getUpdatesTransaction.getUpdates();
+    }
+
+    function getUpdatesFinished() {
+        updatesModel.finished();
+        updatesView.sortModel.sortNow();
+        updatesModel.clearSelectedNotPresent();
+        if (updatesModel.rowCount() === 0) {
+            statusView.iconName = "security-high";
+            statusView.title = i18n("Your system is upda to date");
+            statusView.subTitle = i18n("Last cache check.....");
+            plasmoid.setActive(false);
+        } else {
+            plasmoid.setActive(true);
+            state = "SELECTION";
+        }
+    }
+
+    PackageKit.Transaction {
+        id: getUpdatesTransaction
+        onChanged: {
+            statusView.iconName = "";
+            statusView.title = PkStrings.action(role);
+            statusView.subTitle = PkStrings.status(status);
+        }
     }
 
     Updates {
@@ -41,9 +82,15 @@ Item {
             root.state = "TRANSACTION";
         }
     }
-
     Transaction {
         id: transactionView
+        anchors.fill: parent
+        onFinished: {
+            getUpdates();
+        }
+    }
+    StatusView {
+        id: statusView
         anchors.fill: parent
     }
 
@@ -51,9 +98,16 @@ Item {
         State {
             name: "SELECTION"
             PropertyChanges { target: transactionView; opacity: 0}
+            PropertyChanges { target: statusView; opacity: 0}
         },
         State {
             name: "TRANSACTION"
+            PropertyChanges { target: updatesView; opacity: 0}
+            PropertyChanges { target: statusView; opacity: 0}
+        },
+        State {
+            name: "STATUS"
+            PropertyChanges { target: transactionView; opacity: 0}
             PropertyChanges { target: updatesView; opacity: 0}
         }
     ]

@@ -37,12 +37,12 @@ public slots:
     static QString status(int status, uint speed = 0, qulonglong downloadRemaining = 0);
     static QString statusPast(PackageKit::Transaction::Status status);
     static QString groups(PackageKit::Transaction::Group group);
-    static QString info(PackageKit::Transaction::Info state);
+    static QString info(int state);
     static QString packageQuantity(bool updates, int packages, int selected);
     static QString updateState(PackageKit::Transaction::UpdateState value);
     static QString restartType(PackageKit::Transaction::Restart value);
     static QString restartTypeFuture(PackageKit::Transaction::Restart value);
-    static QString action(PackageKit::Transaction::Role action);
+    static QString action(int role);
     static QString actionPast(PackageKit::Transaction::Role action);
     static QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);
     static QString daemonError(PackageKit::Transaction::InternalError value);

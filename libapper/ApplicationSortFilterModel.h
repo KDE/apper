@@ -30,19 +30,26 @@
 
 using namespace PackageKit;
 
+class PackageModel;
 class KDE_EXPORT ApplicationSortFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(QDeclarativeItem* sourceModel READ sourceModelQML WRITE setSourceModelQML NOTIFY changed)
+    Q_PROPERTY(PackageModel* sourcePkgModel READ sourcePkgModel WRITE setSourcePkgModel NOTIFY changed)
+    Q_PROPERTY(Transaction::Info infoFilter READ infoFilter WRITE setInfoFilter NOTIFY changed)
+    Q_PROPERTY(bool applicationFilter READ applicationFilter WRITE setApplicationFilter NOTIFY changed)
 public:
     explicit ApplicationSortFilterModel(QObject *parent = 0);
 
-    QDeclarativeItem* sourceModelQML() const;
-    void setSourceModelQML(QDeclarativeItem *sourceModel);
+    PackageModel* sourcePkgModel() const;
+    void setSourcePkgModel(PackageModel *packageModel);
+
+    Transaction::Info infoFilter() const;
+    bool applicationFilter() const;
 
 public slots:
-    void filterByInfo(Transaction::Info info);
-    void filterApplications(bool enable);
+    void setInfoFilter(Transaction::Info info);
+    void setApplicationFilter(bool enable);
+    void sortNow();
 
 signals:
     void changed();

@@ -33,23 +33,33 @@ ApplicationSortFilterModel::ApplicationSortFilterModel(QObject *parent) :
     setSortRole(PackageModel::SortRole);
 }
 
-QDeclarativeItem *ApplicationSortFilterModel::sourceModelQML() const
+PackageModel *ApplicationSortFilterModel::sourcePkgModel() const
 {
-    return (QDeclarativeItem*) sourceModel();
+    return qobject_cast<PackageModel*>(sourceModel());
 }
 
-void ApplicationSortFilterModel::setSourceModelQML(QDeclarativeItem *sourceModel)
+void ApplicationSortFilterModel::setSourcePkgModel(PackageModel *packageModel)
 {
-    setSourceModel((QAbstractItemModel*) sourceModel);
+    setSourceModel(packageModel);
 }
 
-void ApplicationSortFilterModel::filterByInfo(Transaction::Info info)
+Transaction::Info ApplicationSortFilterModel::infoFilter() const
+{
+    return m_info;
+}
+
+bool ApplicationSortFilterModel::applicationFilter() const
+{
+    return m_applicationsOnly;
+}
+
+void ApplicationSortFilterModel::setInfoFilter(Transaction::Info info)
 {
     m_info = info;
     invalidate();
 }
 
-void ApplicationSortFilterModel::filterApplications(bool enable)
+void ApplicationSortFilterModel::setApplicationFilter(bool enable)
 {
     m_applicationsOnly = enable;
     invalidate();
@@ -86,4 +96,9 @@ bool ApplicationSortFilterModel::lessThan(const QModelIndex &left,
     }
 
     return QSortFilterProxyModel::lessThan(left, right);
+}
+
+void ApplicationSortFilterModel::sortNow()
+{
+    sort(0);
 }

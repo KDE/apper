@@ -170,7 +170,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(search()));
     filtersTB->setIcon(KIcon("view-filter"));
     ApplicationSortFilterModel *proxy = browseView->proxy();
-    proxy->filterApplications(m_filtersMenu->filterApplications());
+    proxy->setApplicationFilter(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(bool)),
             proxy, SLOT(filterApplications(bool)));
 

@@ -224,7 +224,7 @@ void Requirements::actionClicked(int type)
 {
     ApplicationSortFilterModel *proxy;
     proxy = qobject_cast<ApplicationSortFilterModel*>(ui->packageView->model());
-    proxy->filterByInfo(static_cast<Transaction::Info>(type));
+    proxy->setInfoFilter(static_cast<Transaction::Info>(type));
 }
 
 void Requirements::showUntrustedButton()
@@ -245,7 +245,7 @@ void Requirements::showUntrustedButton()
 
     ApplicationSortFilterModel *proxy;
     proxy = qobject_cast<ApplicationSortFilterModel*>(ui->packageView->model());
-    proxy->filterByInfo(Transaction::InfoUntrusted);
+    proxy->setInfoFilter(Transaction::InfoUntrusted);
 }
 
 #include "Requirements.moc"

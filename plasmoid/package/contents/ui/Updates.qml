@@ -27,20 +27,29 @@ Item {
     anchors.fill: parent
     clip: true
 
-    function getUpdates() {
-        getUpdatesTransaction.getUpdates();
+    property alias sortModel: appModel
+
+    function modelChanged() {
+        updateAllCB.checked = updatesModel.allSelected();
+        // Enable the update button if there are packages to install
+        updateBT.enabled = updatesModel.selectedPackagesToInstall().length;
     }
 
     signal update(variant packages);
 
-    PackageKit.Transaction {
-        id: getUpdatesTransaction
+    PlasmaCore.FrameSvgItem {
+        id: padding
+        imagePath: "widgets/viewitem"
+        prefix: "hover"
+        visible: false
     }
 
     Row {
         id: actionRow
         spacing: 4
-        anchors.margins: 2
+        anchors.leftMargin: padding.margins.left
+        anchors.topMargin: padding.margins.top
+        anchors.rightMargin: padding.margins.right
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.right: parent.right
@@ -60,31 +69,42 @@ Item {
         PlasmaComponents.ToolButton {
             id: updateBT
             flat: true
+            enabled: false
             iconSource: "system-software-update"
             text:  i18n("Update")
             onClicked: update(updatesModel.selectedPackagesToInstall());
         }
     }
 
+    Apper.ApplicationSortFilterModel {
+        id: appModel
+        sourcePkgModel: updatesModel
+    }
+
+    PlasmaCore.SvgItem {
+        id: headerSeparator
+        anchors.top: actionRow.bottom
+        svg: PlasmaCore.Svg {
+            id: lineSvg
+            imagePath: "widgets/line"
+        }
+        elementId: "horizontal-line"
+        height: lineSvg.elementSize("horizontal-line").height
+        width: parent.width
+    }
+
     ScrollableListView {
-        height: parent.height - actionRow.height - 4
+        height: parent.height - actionRow.height - padding.margins.top * 2
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         delegate: UpdateItemDelegate {
         }
         view.currentIndex: -1
-        model: Apper.PackageModel {
-            id: updatesModel
-            checkable: true
-            onChanged: updateAllCB.checked = updatesModel.allSelected();
-        }
-        followBottom: true
+        model: appModel
     }
 
     Component.onCompleted: {
-        getUpdatesTransaction.package.connect(updatesModel.addSelectedPackage);
-        getUpdatesTransaction.finished.connect(updatesModel.finished);
-        getUpdates();
+        updatesModel.changed.connect(modelChanged);
     }
 }

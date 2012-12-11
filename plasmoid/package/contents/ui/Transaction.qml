@@ -27,8 +27,15 @@ Item {
     anchors.fill: parent
     clip: true
 
+    property int progressWidth: 30
+    signal finished();
+
     function update(updates) {
         updateTransaction.updatePackages(updates);
+    }
+
+    Component.onCompleted: {
+        updateTransaction.finished.connect(finished);
     }
 
     Apper.PkTransaction {
@@ -70,23 +77,21 @@ Item {
             id: transactionProgress
             anchors.left: parent.left
             anchors.right: parent.right
-            minimumValue: 0
-            maximumValue: 100
-//            indeterminate: true
         }
     }
 
-    ScrollableListView {
-        property int progressWidth: 30
+    ListView {
         id: progressView
+        clip: true
         height: parent.height - actionRow.height - 4
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.right
+        anchors.margins: 4
         delegate: TransactionProgressDelegate {
         }
-        view.currentIndex: -1
+        boundsBehavior: Flickable.StopAtBounds
+        currentIndex: -1
         model: updateTransaction.progressModel()
-        followBottom: true
     }
 }

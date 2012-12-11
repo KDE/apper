@@ -762,7 +762,6 @@ void PackageModel::uncheckPackage(const QString &packageID,
 
             // The model might not be displayed yet
             if (m_finished) {
-                kDebug();
                 emit changed(!m_checkedPackages.isEmpty());
             }
         }

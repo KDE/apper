@@ -29,7 +29,7 @@ Item {
     width: parent.width
     height: busy.running ? busy.height : changelogText.paintedHeight
 
-    property string packageID: ""
+    property string packageID: null
 
     PackageKit.Transaction {
         id: transaction
