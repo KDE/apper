@@ -198,6 +198,9 @@ void PkTransaction::setupTransaction()
                 d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     }
 
+    // Clear the model to don't keep trash when reusing the transaction
+    d->progressModel->clear();
+
 #ifdef HAVE_DEBCONFKDE
     QString _tid = tid();
     QString socket;
