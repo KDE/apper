@@ -298,9 +298,6 @@ void PkTransaction::requeueTransaction()
         setExitStatus(Failed);
         return;
     }
-
-    // Avoid abusing resources
-    requires->deleteLater();
 }
 
 void PkTransaction::slotErrorCode(Transaction::Error error, const QString &details)

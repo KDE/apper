@@ -192,9 +192,10 @@ void TransactionWatcher::transactionChanged(Transaction *transaction, bool inter
         TransactionJob *job = new TransactionJob(transaction, this);
         connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
                 this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
-        job->start();
+        connect(job, SIGNAL(canceled()), this, SLOT(watchedCanceled()));
         m_tracker->registerJob(job);
         m_transactionJob[tid] = job;
+        job->start();
     }
 }
 
@@ -304,6 +305,23 @@ void TransactionWatcher::logout()
     KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmYes,
                                 shutdownType,
                                 KWorkSpace::ShutdownModeInteractive);
+}
+
+void TransactionWatcher::watchedCanceled()
+{
+    TransactionJob *job = qobject_cast<TransactionJob*>(sender());
+    if (job->isFinished()) {
+        job->deleteLater();
+        return;
+    }
+
+    Transaction::Role role = job->transaction()->role();
+    if (role != Transaction::RoleCancel &&
+            role != Transaction::RoleUnknown) {
+        m_tracker->unregisterJob(job);
+        m_tracker->registerJob(job);
+        job->start();
+    }
 }
 
 bool TransactionWatcher::isRunning()

@@ -31,15 +31,18 @@
 
 Q_DECLARE_METATYPE(PackageKit::Transaction::Error)
 
-TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
- : KJob(parent),
-   m_transaction(transaction),
-   m_status(Transaction::StatusUnknown),
-   m_role(Transaction::RoleUnknown),
-   m_percentage(0)
+TransactionJob::TransactionJob(Transaction *transaction, QObject *parent) :
+    KJob(parent),
+    m_transaction(transaction),
+    m_status(Transaction::StatusUnknown),
+    m_role(Transaction::RoleUnknown),
+    m_percentage(0),
+    m_speed(0),
+    m_downloadSizeRemainingTotal(0),
+    m_finished(false)
 {
     setCapabilities(Killable);
-    m_role = transaction->role();
+
     connect(transaction, SIGNAL(changed()), this, SLOT(updateJob()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(finished(PackageKit::Transaction::Exit)));
@@ -49,7 +52,6 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent)
             this, SLOT(package(PackageKit::Transaction::Info,QString,QString)));
     connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
             this, SLOT(repoDetail(QString,QString)));
-    kDebug();
 }
 
 TransactionJob::~TransactionJob()
@@ -69,6 +71,7 @@ void TransactionJob::finished(PackageKit::Transaction::Exit exit)
     if (exit == Transaction::ExitCancelled) {
         setError(KilledJobError);
     }
+    m_finished = true;
     emitResult();
 }
 
@@ -102,7 +105,7 @@ void TransactionJob::emitDescription()
 {
     QString details = m_details;
     if (details.isEmpty()) {
-        details = "...";
+        details = QLatin1String("...");
     }
 
     QString first = PkStrings::status(m_status);
@@ -111,20 +114,6 @@ void TransactionJob::emitDescription()
 
 void TransactionJob::updateJob()
 {
-    uint percentage = m_transaction->percentage();
-    if (percentage <= 100) {
-        emitPercent(percentage, 100);
-    } else if (m_percentage != 0) {
-        percentage = 0;
-        emitPercent(0, 0);
-    }
-    m_percentage = percentage;
-
-//     if (m_speed == 0) {
-//         m_speed = m_transaction->speed();
-//         emitSpeed(m_speed);
-//     }
-
     Transaction::Role role = m_transaction->role();
     if (m_role != role) {
         m_role = role;
@@ -137,13 +126,50 @@ void TransactionJob::updateJob()
         m_status = status;
         emitDescription();
     }
+
+    uint percentage = m_transaction->percentage();
+    if (percentage <= 100) {
+        emitPercent(percentage, 100);
+    } else if (m_percentage != 0) {
+        percentage = 0;
+        emitPercent(0, 0);
+    }
+    m_percentage = percentage;
+
+    uint speed = m_transaction->speed();
+    if (m_speed != speed) {
+        m_speed = speed;
+        emitSpeed(m_speed);
+    }
+
+    if (m_downloadSizeRemainingTotal == 0) {
+        m_downloadSizeRemainingTotal = m_transaction->downloadSizeRemaining();
+    }
+
+    if (m_downloadSizeRemainingTotal) {
+        qulonglong processed;
+        processed = m_downloadSizeRemainingTotal - m_transaction->downloadSizeRemaining();
+        emitPercent(processed, m_downloadSizeRemainingTotal);
+    }
 }
 
 void TransactionJob::start()
 {
-    kDebug();
+    m_role = Transaction::RoleUnknown;
+    m_speed = 0;
+    m_downloadSizeRemainingTotal = 0;
     m_details = Transaction::packageName(m_transaction->lastPackage());
     updateJob();
+}
+
+bool TransactionJob::isFinished() const
+{
+    return m_finished;
+}
+
+Transaction *TransactionJob::transaction() const
+{
+    return m_transaction;
 }
 
 bool TransactionJob::doKill()
@@ -151,10 +177,10 @@ bool TransactionJob::doKill()
     // emit the description so the Speed: xxx KiB/s
     // don't get confused to a destination URL
     emit description(this, PkStrings::action(m_role));
-    if (m_transaction->allowCancel()) {
-        m_transaction->cancel();
-    }
-    return false;
+    m_transaction->cancel();
+    emit canceled();
+
+    return m_transaction->role() == Transaction::RoleCancel;
 }
 
 #include "TransactionJob.moc"

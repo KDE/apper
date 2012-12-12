@@ -35,6 +35,8 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     m_untrustedButton(0),
     ui(new Ui::Requirements)
 {
+    setAttribute(Qt::WA_DeleteOnClose);
+
     ui->setupUi(mainWidget());
     connect(ui->confirmCB, SIGNAL(toggled(bool)), this, SLOT(on_confirmCB_Toggled(bool)));
 
@@ -59,7 +61,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     setInitialSize(QSize(600,600));
     KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
-//    restoreDialogSize(requirementsDialog);
+    restoreDialogSize(requirementsDialog);
 
     QButtonGroup *group = new QButtonGroup(this);
     connect(group, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));

@@ -55,6 +55,8 @@ private slots:
 
     void logout();
 
+    void watchedCanceled();
+
 private:
     void suppressSleep(bool enable, const QString &reason = QString());
 

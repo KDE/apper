@@ -37,6 +37,11 @@ public:
     ~TransactionJob();
 
     virtual void start();
+    bool isFinished() const;
+    Transaction *transaction() const;
+
+signals:
+    void canceled();
 
 private slots:
     void transactionDestroyed();
@@ -55,8 +60,10 @@ private:
     Transaction::Role m_role;
     uint          m_percentage;
     uint          m_speed;
+    qulonglong    m_downloadSizeRemainingTotal;
     QString       m_details;
     QStringList   m_packages;
+    bool m_finished;
 };
 
 #endif
