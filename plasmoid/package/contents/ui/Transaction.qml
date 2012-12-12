@@ -95,5 +95,6 @@ Item {
         boundsBehavior: Flickable.StopAtBounds
         currentIndex: -1
         model: updateTransaction.progressModel()
+        onCountChanged: positionViewAtEnd()
     }
 }

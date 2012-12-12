@@ -317,3 +317,16 @@ QIcon PkIcons::getPreloadedIcon(const QString &name)
     return icon;
 }
 
+QString PkIcons::lastCacheRefreshIconName(uint lastTime)
+{
+    unsigned long fifteen = 60 * 60 * 24 * 15;
+    unsigned long tirty = 60 * 60 * 24 * 30;
+
+    if (lastTime != UINT_MAX && lastTime < fifteen) {
+        return QLatin1String("security-high");
+    } else if (lastTime != UINT_MAX && lastTime > fifteen && lastTime < tirty) {
+        return QLatin1String("security-medium");
+    }
+    return QLatin1String("security-low");
+}
+

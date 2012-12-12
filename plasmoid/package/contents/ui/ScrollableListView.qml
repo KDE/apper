@@ -36,7 +36,6 @@ Item {
 
     ListView {
         id: list
-        property bool keepBottom: false
         clip: true
         anchors {
             left:   parent.left
@@ -69,9 +68,6 @@ Item {
             right: parent.right
             top: list.top
             bottom: list.bottom
-        }
-        onPressedChanged: {
-            console.debug("onPressed: " + pressed);
         }
     }
 }

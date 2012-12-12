@@ -279,22 +279,9 @@ void Updater::getUpdatesFinished()
         // Set the info page
         ui->stackedWidget->setCurrentIndex(1);
         uint lastTime = Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache);
-        unsigned long fifteen = 60 * 60 * 24 * 15;
-        unsigned long tirty = 60 * 60 * 24 * 30;
-
-        if (lastTime < fifteen) {
-            ui->titleL->setText(i18n("Your system is up to date"));
-            ui->descriptionL->setText(i18n("Verified %1 ago", PkStrings::prettyFormatDuration(lastTime * 1000)));
-            ui->iconL->setPixmap(KIcon("security-high").pixmap(128, 128));
-        } else if (lastTime > fifteen && lastTime < tirty && lastTime != UINT_MAX) {
-            ui->titleL->setText(i18n("You have no updates"));
-            ui->descriptionL->setText(i18n("Verified %1 ago", PkStrings::prettyFormatDuration(lastTime * 1000)));
-            ui->iconL->setPixmap(KIcon("security-medium").pixmap(128, 128));
-        } else {
-            ui->titleL->setText(i18n("Last check for updates was more than a month ago"));
-            ui->descriptionL->setText(i18n("It's strongly recommended that you check for new updates now"));
-            ui->iconL->setPixmap(KIcon("security-low").pixmap(128, 128));
-        }
+        ui->titleL->setText(PkStrings::lastCacheRefreshTitle(lastTime));
+        ui->descriptionL->setText(PkStrings::lastCacheRefreshSubTitle(lastTime));
+        ui->iconL->setPixmap(KIcon(PkIcons::lastCacheRefreshIconName(lastTime)).pixmap(128, 128));
     }
 }
 

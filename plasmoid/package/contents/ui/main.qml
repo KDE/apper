@@ -45,7 +45,7 @@ Item {
         getUpdatesTransaction.finished.connect(getUpdatesFinished);
 
         Daemon.updatesChanged.connect(updatesChanged);
-        plasmoid.getUpdates.connect(getUpdates);
+        UpdaterPlasmoid.getUpdates.connect(getUpdates);
     }
 
     function getUpdates() {
@@ -74,37 +74,14 @@ Item {
         if (state !== "TRANSACTION") {
             console.debug("decideState() " + updatesModel.rowCount());
             if (updatesModel.rowCount() === 0) {
-                console.debug("decideState() ZERO");
-                var role = PackageKit.Transaction.RoleRefreshCache;
-                console.debug("decideState() role " + role);
-                var lastTime = Daemon.getTimeSinceAction(role);
-                console.debug("decideState() lastTime " + lastTime);
-//                statusView.iconName = "security-high"
-//                statusView.title = i18n("Your system is upda to date");
-//                statusView.subTitle = i18n("Last cache check.....");
-                var fifteen = 1296000;
-                var tirty = 2592000;
-                console.debug("decideState() fifteen " + fifteen);
-                console.debug("decideState() tirty " + tirty);
-                if (lastTime < fifteen) {
-                    statusView.title = i18n("Your system is up to date");
-                    statusView.subTitle = i18n("Verified %1 ago", PkStrings.prettyFormatDuration(lastTime * 1000));
-                    statusView.iconName = "security-high";
-                } else if (lastTime > fifteen && lastTime < tirty && lastTime !== UINT_MAX) {
-                    statusView.title = i18n("You have no updates");
-                    statusView.subTitle = i18n("Verified %1 ago", PkStrings.prettyFormatDuration(lastTime * 1000));
-                    statusView.iconName = "security-medium";
-                } else {
-                    statusView.title = i18n("Last check for updates was more than a month ago");
-                    statusView.subTitle = i18n("It's strongly recommended that you check for new updates now");
-                    statusView.iconName = "security-low";
-                }
-
-
-                plasmoid.setActive(false);
+                var lastTime = UpdaterPlasmoid.getTimeSinceLastRefresh();
+                statusView.title = PkStrings.lastCacheRefreshTitle(lastTime);
+                statusView.subTitle = PkStrings.lastCacheRefreshSubTitle(lastTime);
+                statusView.iconName = PkIcons.lastCacheRefreshIconName(lastTime);
+                UpdaterPlasmoid.setActive(false);
                 state = "STATUS";
             } else {
-                plasmoid.setActive(true);
+                UpdaterPlasmoid.setActive(true);
                 state = "SELECTION";
             }
         }
@@ -136,6 +113,7 @@ Item {
         id: transactionView
         anchors.fill: parent
         onFinished: {
+            console.debug("Transaction onFinished() ");
             decideState();
         }
     }

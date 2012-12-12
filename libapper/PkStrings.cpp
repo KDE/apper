@@ -995,3 +995,26 @@ QString PkStrings::prettyFormatDuration(unsigned long mSec)
 {
     return KGlobal::locale()->prettyFormatDuration(mSec);
 }
+
+QString PkStrings::lastCacheRefreshTitle(uint lastTime)
+{
+    unsigned long fifteen = 60 * 60 * 24 * 15;
+    unsigned long tirty = 60 * 60 * 24 * 30;
+
+    if (lastTime != UINT_MAX && lastTime < fifteen) {
+        return i18n("Your system is up to date");
+    } else if (lastTime != UINT_MAX && lastTime > fifteen && lastTime < tirty) {
+        return i18n("You have no updates");
+    }
+    return i18n("Last check for updates was more than a month ago");
+}
+
+QString PkStrings::lastCacheRefreshSubTitle(uint lastTime)
+{
+    unsigned long tirty = 60 * 60 * 24 * 30;
+
+    if (lastTime != UINT_MAX && lastTime < tirty) {
+        return i18n("Verified %1 ago", PkStrings::prettyFormatDuration(lastTime * 1000));
+    }
+    return i18n("It's strongly recommended that you check for new updates now");
+}

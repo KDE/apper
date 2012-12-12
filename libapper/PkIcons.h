@@ -23,31 +23,36 @@
 #ifndef PK_ICONS_H
 #define PK_ICONS_H
 
+#include <QObject>
+
 #include <Transaction>
 #include <KIcon>
 
 #define KPK_ICON_SIZE 64
 
-class KDE_EXPORT PkIcons {
-    public:
-        static KIcon   groupsIcon(PackageKit::Transaction::Group group);
-        static QString statusIconName(PackageKit::Transaction::Status status);
-        static KIcon   statusIcon(PackageKit::Transaction::Status status);
-        static QString statusAnimation(PackageKit::Transaction::Status status);
-        static QString actionIconName(PackageKit::Transaction::Role role);
-        static KIcon   actionIcon(PackageKit::Transaction::Role role);
-        static KIcon   packageIcon(PackageKit::Transaction::Info state);
-        static QString restartIconName(PackageKit::Transaction::Restart type);
-        static KIcon   restartIcon(PackageKit::Transaction::Restart type);
-        static KIcon   getIcon(const QString &name);
-        static KIcon   getIcon(const QString &name, const QString &defaultName);
-        static QIcon   getPreloadedIcon(const QString &name);
+class KDE_EXPORT PkIcons : public QObject
+{
+    Q_OBJECT
+public slots:
+    static KIcon   groupsIcon(PackageKit::Transaction::Group group);
+    static QString statusIconName(PackageKit::Transaction::Status status);
+    static KIcon   statusIcon(PackageKit::Transaction::Status status);
+    static QString statusAnimation(PackageKit::Transaction::Status status);
+    static QString actionIconName(PackageKit::Transaction::Role role);
+    static KIcon   actionIcon(PackageKit::Transaction::Role role);
+    static KIcon   packageIcon(PackageKit::Transaction::Info state);
+    static QString restartIconName(PackageKit::Transaction::Restart type);
+    static KIcon   restartIcon(PackageKit::Transaction::Restart type);
+    static KIcon   getIcon(const QString &name);
+    static KIcon   getIcon(const QString &name, const QString &defaultName);
+    static QIcon   getPreloadedIcon(const QString &name);
+    static QString lastCacheRefreshIconName(uint lastTime);
 
-    private:
-        static void configure();
+private:
+    static void configure();
 
-        static QHash<QString, KIcon> cache;
-        static bool init;
+    static QHash<QString, KIcon> cache;
+    static bool init;
 };
 
 #endif

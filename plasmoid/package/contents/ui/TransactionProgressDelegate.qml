@@ -31,6 +31,8 @@ Item {
         id: line
         spacing: 4
         anchors.centerIn: parent
+        anchors.leftMargin: 2
+        anchors.rightMargin: 2
         width: parent.width
         PlasmaComponents.ProgressBar {
             id: itemProgress
@@ -61,7 +63,7 @@ Item {
         PlasmaComponents.Label {
             id: itemSummaryLabel
             height: parent.height
-            width: line.width - itemProgress.width - itemNameLabel.width - 4
+            width: line.width - itemProgress.width - itemNameLabel.width - 8
             font.pointSize: theme.smallestFont.pointSize
             color: "#99"+(theme.textColor.toString().substr(1))
             elide: Text.ElideRight
@@ -69,19 +71,10 @@ Item {
         }
     }
 
-ListView.onAdd: {
-    console.debug("ListView.onAdd.atYEnd: " + ListView.view.atYEnd + "   - " + progressView.followBottom);
-
-
-//    if (ListView.view.atYEnd === false) {
-//        ListView.view.positionViewAtEnd();
-//    }
-}
-
-//    ListView.onAdd: SequentialAnimation {
-//        PropertyAction { target: delegateItem; property: "height"; value: 0 }
-//        NumberAnimation { target: delegateItem; property: "height"; to: 55; duration: 250; easing.type: Easing.InOutQuad }
-//    }
+    ListView.onAdd: SequentialAnimation {
+        PropertyAction { target: delegateItem; property: "height"; value: 0 }
+        NumberAnimation { target: delegateItem; property: "height"; to: 55; duration: 250; easing.type: Easing.InOutQuad }
+    }
 
     ListView.onRemove: SequentialAnimation {
         PropertyAction { target: delegateItem; property: "ListView.delayRemove"; value: true }

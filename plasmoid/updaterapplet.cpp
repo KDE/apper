@@ -36,6 +36,7 @@
 #include <PkTransaction.h>
 #include <PkTransactionProgressModel.h>
 #include <PkStrings.h>
+#include <PkIcons.h>
 #include <ApplicationSortFilterModel.h>
 
 #include <Transaction>
@@ -87,8 +88,9 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
         m_declarativeWidget = new Plasma::DeclarativeWidget(this);
         m_declarativeWidget->engine()->rootContext()->setContextProperty("Daemon", Daemon::global());
         m_declarativeWidget->engine()->rootContext()->setContextProperty("PkStrings", new PkStrings);
+        m_declarativeWidget->engine()->rootContext()->setContextProperty("PkIcons", new PkIcons);
         m_declarativeWidget->engine()->rootContext()->setContextProperty("updatesModel", m_updatesModel);
-        m_declarativeWidget->engine()->rootContext()->setContextProperty("plasmoid", this);
+        m_declarativeWidget->engine()->rootContext()->setContextProperty("UpdaterPlasmoid", this);
         qmlRegisterType<PackageModel>("org.kde.apper", 0, 1, "PackageModel");
         qmlRegisterType<PkTransaction>("org.kde.apper", 0, 1, "PkTransaction");
         qmlRegisterType<PkTransactionProgressModel>("org.kde.apper", 0, 1, "PkTransactionProgressModel");
@@ -144,9 +146,14 @@ void UpdaterApplet::setActive(bool active)
 {
     if (active) {
         setStatus(Plasma::ActiveStatus);
-    } else {
+    } else if (status() != Plasma::PassiveStatus && status() != Plasma::NeedsAttentionStatus) {
         setStatus(Plasma::PassiveStatus);
     }
+}
+
+uint UpdaterApplet::getTimeSinceLastRefresh()
+{
+    return Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache);
 }
 
 void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)

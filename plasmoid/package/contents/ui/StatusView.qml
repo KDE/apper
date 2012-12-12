@@ -25,6 +25,7 @@ Item {
     property string title: ""
     property string subTitle: ""
     property string iconName: ""
+    property int iconSize: 128
 
     onIconNameChanged: {
         if (iconName === "") {
@@ -37,16 +38,16 @@ Item {
 
     PlasmaComponents.BusyIndicator {
         id: busy
-        width: 64
-        height: 64
+        width: iconSize
+        height: iconSize
         anchors.centerIn: parent
         running: true
     }
 
     QIconItem {
         id: statusIcon
-        width: 64
-        height: 64
+        width: iconSize
+        height: iconSize
         anchors.centerIn: parent
     }
 

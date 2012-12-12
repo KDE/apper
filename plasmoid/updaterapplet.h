@@ -51,6 +51,7 @@ signals:
 protected Q_SLOTS:
     void toolTipAboutToShow();
     void setActive(bool active);
+    uint getTimeSinceLastRefresh();
 
 protected:
     void constraintsEvent(Plasma::Constraints constraints);
