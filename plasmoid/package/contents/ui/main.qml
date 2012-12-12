@@ -78,6 +78,8 @@ Item {
                 state = "STATUS";
             } else {
                 UpdaterPlasmoid.setActive(true);
+                // Stops the busy cursor
+                statusView.state = "ICON";
                 state = "SELECTION";
             }
         }
