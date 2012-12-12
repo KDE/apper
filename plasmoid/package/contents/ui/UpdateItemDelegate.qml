@@ -24,10 +24,13 @@ import org.kde.qtextracomponents 0.1
 
 Item {
     id: updateItem
+    clip: true
     width: ListView.view.width
     height: items.height + padding.margins.top + padding.margins.bottom
     property bool expanded: ListView.isCurrentItem
     property bool updateChecked: rChecked
+
+    property variant changelog: null
 
     Behavior on height { PropertyAnimation {} }
 
@@ -46,15 +49,15 @@ Item {
     }
 
     onExpandedChanged: {
-        console.debug("expanded changed: " + index + " rPackageId " + rId);
         if (expanded) {
             var component = Qt.createComponent("ChangelogView.qml");
             if (component.status === Component.Ready) {
-                var details = component.createObject(actionRow, {"packageID" : rId});
-                updateItem.expandedChanged.connect(details.deleteLater);
+                changelog = component.createObject(actionRow);
             } else {
                 console.debug("Error creating details view: " + component.errorString());
             }
+        } else if (changelog) {
+            changelog.destroy();
         }
     }
     
@@ -63,17 +66,25 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: {
-            padding.opacity = 0.7;
+            if (expanded) {
+                padding.opacity = 1;
+            } else {
+                padding.opacity = 0.7;
+            }
         }
         onClicked: {
-            if (updateItem.ListView.view.currentIndex === index) {
+            if (expanded) {
                 updateItem.ListView.view.currentIndex = -1;
             } else {
                 updateItem.ListView.view.currentIndex = index;
             }
         }
         onExited: {
-            padding.opacity = 0;
+            if (expanded) {
+                padding.opacity = 0.9;
+            } else {
+                padding.opacity = 0;
+            }
         }
     }
         

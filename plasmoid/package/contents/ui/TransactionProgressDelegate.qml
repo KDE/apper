@@ -70,17 +70,4 @@ Item {
             text: rPkgSummary
         }
     }
-
-    ListView.onAdd: SequentialAnimation {
-        PropertyAction { target: delegateItem; property: "height"; value: 0 }
-        NumberAnimation { target: delegateItem; property: "height"; to: 55; duration: 250; easing.type: Easing.InOutQuad }
-    }
-
-    ListView.onRemove: SequentialAnimation {
-        PropertyAction { target: delegateItem; property: "ListView.delayRemove"; value: true }
-        NumberAnimation { target: delegateItem; property: "height"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
-
-        // Make sure delayRemove is set back to false so that the item can be destroyed
-        PropertyAction { target: delegateItem; property: "ListView.delayRemove"; value: false }
-    }
 }

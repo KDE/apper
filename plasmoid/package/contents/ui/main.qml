@@ -50,7 +50,6 @@ Item {
 
     function getUpdates() {
         if (!checkedForUpdates) {
-            console.debug("getUpdates -----------=-=-=++++++> ");
             state = "STATUS";
             getUpdatesTransaction.cancel();
             getUpdatesTransaction.reset();
@@ -60,19 +59,16 @@ Item {
     }
 
     function getUpdatesFinished() {
-        console.debug("getUpdatesFinished()");
         checkedForUpdates = true;
         updatesModel.finished();
         updatesView.sortModel.sortNow();
         updatesModel.clearSelectedNotPresent();
-        decideState();
+        decideState(false);
 
     }
 
-    function decideState() {
-        console.debug("decideState() " + state);
-        if (state !== "TRANSACTION") {
-            console.debug("decideState() " + updatesModel.rowCount());
+    function decideState(force) {
+        if (force || state !== "TRANSACTION") {
             if (updatesModel.rowCount() === 0) {
                 var lastTime = UpdaterPlasmoid.getTimeSinceLastRefresh();
                 statusView.title = PkStrings.lastCacheRefreshTitle(lastTime);
@@ -112,10 +108,7 @@ Item {
     Transaction {
         id: transactionView
         anchors.fill: parent
-        onFinished: {
-            console.debug("Transaction onFinished() ");
-            decideState();
-        }
+        onFinished: decideState(true)
     }
     StatusView {
         id: statusView

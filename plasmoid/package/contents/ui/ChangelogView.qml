@@ -20,35 +20,30 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.packagekit 0.1 as PackageKit
 
 Item {
-    id: changelog
-
-    function deleteLater() {
-        changelog.destroy();
-    }
-
+    id: changelogItem
+    state: "FETCHING"
     width: parent.width
-    height: busy.running ? busy.height : changelogText.paintedHeight
 
-    property string packageID: null
+    property string updatesList: ""
 
     PackageKit.Transaction {
         id: transaction
         onUpdateDetail: {
-            busy.running = false;
-            busy.visible = false;
-            console.debug("onPackageUpdateDetails: ");
-            console.debug(packageID);
-            console.debug(updateText);
-            console.debug(restart);
-            console.debug(state);
-            console.debug(issued);
-            if (restart === PackageKit.Transaction.RestartApplication) {
-                console.debug("RestartApplication: ");
-            } else {
-                console.debug("RestartNone not this: ");
+            for (var count = 0; count < updates.length; ++count) {
+                if (updatesList.length) {
+                    updatesList += ", "
+                }
+                updatesList += Daemon.packageName(updates[count]) + " - " + Daemon.packageVersion(updates[count]);
             }
 
-            changelogText.text = changelog;
+            if (updateText === "" || updateText === undefined) {
+                if (changelog !== "" && changelog !== undefined) {
+                    changelogText.text = changelog;
+                }
+            } else {
+                changelogText.text = updateText;
+            }
+            changelogItem.state = "DETAILS";
         }
     }
 
@@ -58,13 +53,49 @@ Item {
         running: true
     }
 
-    Text {
-        id: changelogText
-        width: parent.width
-        wrapMode: Text.WordWrap
+    Column {
+        id: detailsColumn
+        spacing: 2
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.leftMargin: updateCB.width
+        Text {
+            id: updateVersion
+            width: parent.width
+            text: i18n("Version: %1", rVersion)
+        }
+        Text {
+            id: updatesText
+            width: parent.width
+            text: i18n("Updates: %1", updatesList)
+        }
+        Text {
+            id: changelogText
+            width: parent.width
+            wrapMode: Text.Wrap
+        }
+    }
+
+    states: [
+        State {
+            name: "FETCHING"
+            PropertyChanges { target: detailsColumn; opacity: 0 }
+            PropertyChanges { target: changelogItem; height: busy.height }
+        },
+        State {
+            name: "DETAILS"
+            PropertyChanges { target: busy; opacity: 0 }
+            PropertyChanges { target: busy; running: false }
+            PropertyChanges { target: changelogItem; height: detailsColumn.height }
+        }
+    ]
+
+    transitions: Transition {
+        NumberAnimation { properties: "opacity"; easing.type: Easing.InOutQuad }
     }
 
     Component.onCompleted: {
-        transaction.getUpdateDetail(packageID);
+        transaction.getUpdateDetail(rId);
     }
 }

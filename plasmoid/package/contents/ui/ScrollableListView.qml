@@ -43,23 +43,7 @@ Item {
             top :   parent.top
             bottom: parent.bottom
         }
-        highlight: highlighter
         boundsBehavior: Flickable.StopAtBounds
-    }
-    Component {
-        id: highlighter
-        PlasmaCore.FrameSvgItem {
-            width: list.width
-            imagePath: "widgets/viewitem"
-            prefix: "hover"
-            opacity: 0.9
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 250
-                    easing.type: Easing.OutQuad
-                }
-            }
-        }
     }
     PlasmaComponents.ScrollBar {
         id: scrollBar
