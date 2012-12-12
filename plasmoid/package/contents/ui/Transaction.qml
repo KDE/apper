@@ -49,13 +49,12 @@ Item {
     Column {
         id: actionRow
         spacing: 4
-        anchors.margins: 2
+        anchors.margins: 4
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.right: parent.right
         Row {
             spacing: 4
-            anchors.margins: 2
             anchors.left: parent.left
             anchors.right: parent.right
             Text {
@@ -85,10 +84,10 @@ Item {
     ListView {
         id: progressView
         clip: true
-        height: parent.height - actionRow.height - 4
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.right
+        anchors.top: actionRow.bottom
         anchors.margins: 4
         delegate: TransactionProgressDelegate {
         }
