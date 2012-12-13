@@ -97,6 +97,8 @@ PkTransaction::PkTransaction(QWidget *parent) :
             d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
 
     // Required actions
+    connect(this, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+            SLOT(slotErrorCode(PackageKit::Transaction::Error,QString)));
     connect(this, SIGNAL(eulaRequired(QString,QString,QString,QString)),
             SLOT(slotEulaRequired(QString,QString,QString,QString)));
     connect(this, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
