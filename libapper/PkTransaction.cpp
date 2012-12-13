@@ -275,7 +275,7 @@ void PkTransaction::requeueTransaction()
         if (!requires->trusted()) {
             // Set only trusted to false, to do as the user asked
             // TODO test without this to check the fallback mode
-            setTrusted(false);
+//            setTrusted(false);
         }
     }
 

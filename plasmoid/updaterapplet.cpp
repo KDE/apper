@@ -128,19 +128,22 @@ void UpdaterApplet::toolTipAboutToShow()
                                    text,
                                    KIcon("system-software-update"));
 
+    Plasma::ToolTipManager::self()->setContent(this, content);
+}
+
+void UpdaterApplet::updateIcon()
+{
     QString icon = "kpackagekit-updates";
     for (int i = 0; i < m_updatesModel->rowCount(); ++i) {
         Transaction::Info info = m_updatesModel->index(i, 0).data(PackageModel::InfoRole).value<Transaction::Info>();
         if (info == Transaction::InfoSecurity) {
             icon = "kpackagekit-security";
             break;
-        } else if (info == Transaction::InfoSecurity) {
+        } else if (info == Transaction::InfoImportant) {
             icon = "kpackagekit-important";
         }
     }
     setPopupIcon(icon);
-
-    Plasma::ToolTipManager::self()->setContent(this, content);
 }
 
 void UpdaterApplet::setActive(bool active)

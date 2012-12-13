@@ -49,6 +49,7 @@ signals:
     void getUpdates();
 
 protected Q_SLOTS:
+    void updateIcon();
     void toolTipAboutToShow();
     void setActive(bool active);
     uint getTimeSinceLastRefresh();

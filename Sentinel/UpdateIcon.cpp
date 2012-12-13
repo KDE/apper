@@ -77,6 +77,8 @@ void UpdateIcon::checkForUpdates(bool system_ready)
     // get updates if we should display a notification or automatic update the system
     if (interval != Enum::Never || updateType == Enum::All || updateType == Enum::Security) {
         m_updateList.clear();
+        m_importantList.clear();
+        m_securityList.clear();
         m_getUpdatesT = new Transaction(this);
         m_getUpdatesT->setProperty(SYSTEM_READY, system_ready);
         connect(m_getUpdatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
@@ -98,11 +100,22 @@ void UpdateIcon::checkForUpdates(bool system_ready)
 void UpdateIcon::packageToUpdate(Transaction::Info info, const QString &packageID, const QString &summary)
 {
     Q_UNUSED(summary)
-    // Blocked updates are not instalable updates so there is no
-    // reason to show/count them
-    if (info != Transaction::InfoBlocked) {
-        m_updateList.append(packageID);
+
+    switch (info) {
+    case Transaction::InfoBlocked:
+        // Blocked updates are not instalable updates so there is no
+        // reason to show/count them
+        return;
+    case Transaction::InfoImportant:
+        m_importantList << packageID;
+        break;
+    case Transaction::InfoSecurity:
+        m_securityList << packageID;
+        break;
+    default:
+        break;
     }
+    m_updateList << packageID;
 }
 
 void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
@@ -153,15 +166,11 @@ void UpdateIcon::getUpdateFinished()
     if (!m_updateList.isEmpty()) {
         // Store all the security updates
         UpdateType type = Normal;
-        QStringList securityUpdateList;
-//        foreach(const QString &p, m_updateList) {
-//            if (p.info() == Transaction::InfoSecurity) {
-//                securityUpdateList.append(p);
-//                type = Security;
-//            } else if (type == Normal && p.info() == Transaction::InfoImportant) {
-//                type = Important;
-//            }
-//        }
+        if (!m_securityList.isEmpty()) {
+            type = Security;
+        } else if (!m_importantList.isEmpty()) {
+            type = Important;
+        }
 
         uint updateType;
         bool systemReady;
@@ -169,7 +178,8 @@ void UpdateIcon::getUpdateFinished()
         KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
         updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
         systemReady = sender()->property(SYSTEM_READY).toBool();
-        if (!systemReady && (updateType == Enum::All || (updateType == Enum::Security && !securityUpdateList.isEmpty()))) {
+        if (!systemReady &&
+                (updateType == Enum::All || (updateType == Enum::Security && !m_securityList.isEmpty()))) {
             kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
         }
 
@@ -195,13 +205,13 @@ void UpdateIcon::getUpdateFinished()
                 removeStatusNotifierItem();
                 return;
             }
-        } else if (systemReady && updateType == Enum::Security && !securityUpdateList.isEmpty()) {
+        } else if (systemReady && updateType == Enum::Security && !m_securityList.isEmpty()) {
             // Defaults to security
             Transaction *t = new Transaction(this);
             connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                     this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
             t->setProperty(SYSTEM_READY, systemReady);
-            t->updatePackages(securityUpdateList, Transaction::TransactionFlagOnlyTrusted);
+            t->updatePackages(m_securityList, Transaction::TransactionFlagOnlyTrusted);
             if (!t->error()) {
                 // Force the creation of a transaction Job
                 emit watchTransaction(t->tid(), true);

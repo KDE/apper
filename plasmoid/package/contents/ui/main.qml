@@ -65,6 +65,7 @@ Item {
         updatesModel.finished();
         updatesView.sortModel.sortNow();
         updatesModel.clearSelectedNotPresent();
+        UpdaterPlasmoid.updateIcon();
         decideState(false);
     }
 
