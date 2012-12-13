@@ -60,6 +60,7 @@ protected:
 private:
     Plasma::DeclarativeWidget *m_declarativeWidget;
     PackageModel *m_updatesModel;
+    bool m_initted;
 };
 
 K_EXPORT_PLASMA_APPLET(updater, UpdaterApplet)

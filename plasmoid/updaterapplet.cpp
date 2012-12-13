@@ -49,7 +49,8 @@ using namespace PackageKit;
 
 UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
     PopupApplet(parent, args),
-    m_declarativeWidget(0)
+    m_declarativeWidget(0),
+    m_initted(false)
 {
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     setActive(false);
@@ -170,8 +171,11 @@ void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)
         }
     }
 
-    if (!isIconified()) {
-        emit getUpdates();
+    if (!m_initted) {
+        m_initted = true;
+        if (!isIconified()) {
+            emit getUpdates();
+        }
     }
 }
 

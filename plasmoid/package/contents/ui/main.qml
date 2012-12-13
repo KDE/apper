@@ -25,12 +25,12 @@ Item {
 
     state: "BUSY"
 
-    property int minimumWidth: 373
-    property int minimumHeight: 272
-    property int maximumWidth: 0
+    property int minimumHeight: 270
+    property int minimumWidth: 370
     property int maximumHeight: 0
-    property int preferredWidth: 0
+    property int maximumWidth: 0
     property int preferredHeight: 0
+    property int preferredWidth: 0
 
     property bool checkedForUpdates: false
 
@@ -107,6 +107,7 @@ Item {
     }
 
     Column {
+        spacing: 4
         anchors.fill: parent
         anchors.margins: 4
         Item {
@@ -193,7 +194,6 @@ Item {
         },
         State {
             name: "BUSY"
-//            PropertyChanges { target: busyView; running: true }
             PropertyChanges { target: transactionView; opacity: 0 }
             PropertyChanges { target: updatesView; opacity: 0 }
             PropertyChanges { target: statusView; opacity: 0 }
