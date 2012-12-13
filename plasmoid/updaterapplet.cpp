@@ -179,6 +179,12 @@ void UpdaterApplet::popupEvent(bool show)
 {
     if (show) {
         emit getUpdates();
+    } else if (status() != Plasma::NeedsAttentionStatus &&
+               m_updatesModel->rowCount() == 0) {
+        // if the plasmoid was open and your updates
+        // were installed, after clicking the plasmoid
+        // icon, and hiding it the icon is kept at active status
+        setStatus(Plasma::PassiveStatus);
     }
 }
 

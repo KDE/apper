@@ -26,7 +26,8 @@ Item {
     id: delegateItem
     width: ListView.view.width
     height: line.height
-        
+    state: rRepo ? "REPO" : "PACKAGE"
+
     Row {
         id: line
         spacing: 4
@@ -40,12 +41,10 @@ Item {
             height: itemStatusLabel.paitedHeight + 4
             minimumValue: 0
             maximumValue: 100
-            value: rProgress
             PlasmaComponents.Label {
                 // 12 = 3 * spacing
                 id: itemStatusLabel
                 anchors.centerIn: parent
-                text: display
                 onPaintedWidthChanged: {
                     if (progressWidth < paintedWidth) {
                         progressWidth = paintedWidth + 8;
@@ -58,7 +57,6 @@ Item {
             id: itemNameLabel
             width: paintedWidth
             height: parent.height
-            text: rPkgName
         }
         PlasmaComponents.Label {
             id: itemSummaryLabel
@@ -67,7 +65,32 @@ Item {
             font.pointSize: theme.smallestFont.pointSize
             color: "#99"+(theme.textColor.toString().substr(1))
             elide: Text.ElideRight
-            text: rPkgSummary
         }
     }
+
+    PlasmaComponents.Label {
+        id: repoLabel
+        anchors.centerIn: parent
+        anchors.leftMargin: 2
+        anchors.rightMargin: 2
+        width: parent.width
+        height: parent.height
+        elide: Text.ElideRight
+    }
+
+    states: [
+        State {
+            name: "REPO"
+            PropertyChanges { target: line; opacity: 0 }
+            PropertyChanges { target: repoLabel; text: display }
+        },
+        State {
+            name: "PACKAGE"
+            PropertyChanges { target: repoLabel; opacity: 0 }
+            PropertyChanges { target: itemProgress; value: rProgress }
+            PropertyChanges { target: itemStatusLabel; text: display }
+            PropertyChanges { target: itemNameLabel; text: rPkgName }
+            PropertyChanges { target: itemSummaryLabel; text: rPkgSummary }
+        }
+    ]
 }

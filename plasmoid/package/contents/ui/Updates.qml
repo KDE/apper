@@ -35,8 +35,6 @@ Item {
         updateBT.enabled = updatesModel.selectedPackagesToInstall().length;
     }
 
-    signal update(variant packages);
-
     PlasmaCore.FrameSvgItem {
         id: padding
         imagePath: "widgets/viewitem"
@@ -45,8 +43,9 @@ Item {
     }
 
     Row {
-        id: actionRow
+        id: headerRow
         spacing: 4
+        height: updateAllCB.height
         anchors.leftMargin: padding.margins.left
         anchors.topMargin: padding.margins.top
         anchors.rightMargin: padding.margins.right
@@ -61,18 +60,10 @@ Item {
         }
         Text {
             height: parent.height
-            width: parent.width - updateBT.width - updateAllCB.width - parent.spacing * 2
+            width: parent.width - updateAllCB.width - parent.spacing
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             text: updatesModel.selectionStateText
-        }
-        PlasmaComponents.ToolButton {
-            id: updateBT
-            flat: true
-            enabled: false
-            iconSource: "system-software-update"
-            text:  i18n("Update")
-            onClicked: update(updatesModel.selectedPackagesToInstall());
         }
     }
 
@@ -83,7 +74,7 @@ Item {
 
     PlasmaCore.SvgItem {
         id: headerSeparator
-        anchors.top: actionRow.bottom
+        anchors.top: headerRow.bottom
         svg: PlasmaCore.Svg {
             id: lineSvg
             imagePath: "widgets/line"
@@ -94,7 +85,7 @@ Item {
     }
 
     ScrollableListView {
-        height: parent.height - actionRow.height - padding.margins.top * 2
+        height: parent.height - headerRow.height - padding.margins.top * 2
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.right

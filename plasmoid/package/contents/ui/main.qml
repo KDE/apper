@@ -17,12 +17,13 @@
 
 import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.packagekit 0.1 as PackageKit
 
 Item {
     id: root
 
-    state: "STATUS"
+    state: "BUSY"
 
     property int minimumWidth: 373
     property int minimumHeight: 272
@@ -50,21 +51,21 @@ Item {
 
     function getUpdates() {
         if (!checkedForUpdates) {
-            state = "STATUS";
+            busyView.running = true;
+            state = "BUSY";
             getUpdatesTransaction.cancel();
             getUpdatesTransaction.reset();
             updatesModel.clear();
             getUpdatesTransaction.getUpdates();
+            checkedForUpdates = true;
         }
     }
 
     function getUpdatesFinished() {
-        checkedForUpdates = true;
         updatesModel.finished();
         updatesView.sortModel.sortNow();
         updatesModel.clearSelectedNotPresent();
         decideState(false);
-
     }
 
     function decideState(force) {
@@ -74,13 +75,14 @@ Item {
                 statusView.title = PkStrings.lastCacheRefreshTitle(lastTime);
                 statusView.subTitle = PkStrings.lastCacheRefreshSubTitle(lastTime);
                 statusView.iconName = PkIcons.lastCacheRefreshIconName(lastTime);
+                state = "UPTODATE";
                 UpdaterPlasmoid.setActive(false);
-                state = "STATUS";
             } else {
                 UpdaterPlasmoid.setActive(true);
-                // Stops the busy cursor
-                statusView.state = "ICON";
-                state = "SELECTION";
+                statusView.iconName = "system-software-update";
+                statusView.title = i18np("There is one update", "There are %1 updates", updatesModel.rowCount(), updatesModel.rowCount());
+                statusView.subTitle = "";
+                state = "HAVEUPDATES";
             }
         }
     }
@@ -93,45 +95,126 @@ Item {
     PackageKit.Transaction {
         id: getUpdatesTransaction
         onChanged: {
-            statusView.iconName = "";
-            statusView.title = PkStrings.action(role);
-            statusView.subTitle = PkStrings.status(status);
+            busyView.title = PkStrings.action(role);
+            busyView.subTitle = PkStrings.status(status);
         }
     }
 
-    Updates {
-        id: updatesView
+    StatusView {
+        id: busyView
         anchors.fill: parent
-        onUpdate: {
-            transactionView.update(packages);
-            root.state = "TRANSACTION";
+        state: "BUSY"
+    }
+
+    Column {
+        anchors.fill: parent
+        anchors.margins: 4
+        Item {
+            height: parent.height - actionRow.height
+            width: parent.width
+            StatusView {
+                id: statusView
+                anchors.fill: parent
+            }
+            Updates {
+                id: updatesView
+                anchors.fill: parent
+            }
+        }
+        Row {
+            id: actionRow
+            spacing: 4
+            anchors.right: parent.right
+            PlasmaComponents.ToolButton {
+                id: refreshBT
+                flat: false
+                enabled: true
+                text:  i18n("Check for new updates")
+                onClicked: {
+                    transactionView.refreshCache();
+                    root.state = "TRANSACTION";
+                }
+            }
+            PlasmaComponents.ToolButton {
+                id: reviewBT
+                flat: false
+                enabled: true
+                text:  i18n("Review")
+                onClicked: root.state = "SELECTION"
+            }
+            PlasmaComponents.ToolButton {
+                id: updateBT
+                flat: false
+                enabled: true
+                text:  i18n("Install")
+                onClicked: {
+                    if (root.state === "HAVEUPDATES") {
+                        updatesModel.setAllChecked(true);
+                    }
+                    transactionView.update(updatesModel.selectedPackagesToInstall());
+                    root.state = "TRANSACTION";
+                }
+            }
         }
     }
+
     Transaction {
         id: transactionView
         anchors.fill: parent
-        onFinished: decideState(true)
-    }
-    StatusView {
-        id: statusView
-        anchors.fill: parent
+        onFinished: {
+            if (success) {
+                if (root.state !== "BUSY") {
+                    checkedForUpdates = false;
+                    getUpdates();
+                }
+            } else {
+                decideState(true);
+            }
+        }
     }
 
     states: [
         State {
             name: "SELECTION"
-            PropertyChanges { target: transactionView; opacity: 0}
-            PropertyChanges { target: statusView; opacity: 0}
+            PropertyChanges { target: transactionView; opacity: 0 }
+            PropertyChanges { target: statusView; opacity: 0 }
+            PropertyChanges { target: busyView; opacity: 0 }
+            PropertyChanges { target: reviewBT; opacity: 0 }
+            PropertyChanges { target: refreshBT; opacity: 0 }
         },
         State {
             name: "TRANSACTION"
-            PropertyChanges { target: updatesView; opacity: 0}
-            PropertyChanges { target: statusView; opacity: 0}
+            PropertyChanges { target: updatesView; opacity: 0 }
+            PropertyChanges { target: statusView; opacity: 0 }
+            PropertyChanges { target: busyView; opacity: 0 }
+            PropertyChanges { target: refreshBT; opacity: 0 }
+            PropertyChanges { target: reviewBT; opacity: 0 }
+            PropertyChanges { target: updateBT; opacity: 0 }
         },
         State {
-            name: "STATUS"
-            PropertyChanges { target: transactionView; opacity: 0}
-            PropertyChanges { target: updatesView; opacity: 0}
+            name: "BUSY"
+//            PropertyChanges { target: busyView; running: true }
+            PropertyChanges { target: transactionView; opacity: 0 }
+            PropertyChanges { target: updatesView; opacity: 0 }
+            PropertyChanges { target: statusView; opacity: 0 }
+            PropertyChanges { target: refreshBT; opacity: 0 }
+            PropertyChanges { target: reviewBT; opacity: 0 }
+            PropertyChanges { target: updateBT; opacity: 0 }
+        },
+        State {
+            name: "HAVEUPDATES"
+            PropertyChanges { target: busyView; opacity: 0 }
+            PropertyChanges { target: transactionView; opacity: 0 }
+            PropertyChanges { target: updatesView; opacity: 0 }
+            PropertyChanges { target: refreshBT; opacity: 0 }
+        },
+        State {
+            name: "UPTODATE"
+            PropertyChanges { target: busyView; opacity: 0 }
+            PropertyChanges { target: transactionView; opacity: 0 }
+            PropertyChanges { target: updatesView; opacity: 0 }
+            PropertyChanges { target: reviewBT; opacity: 0 }
+            PropertyChanges { target: updateBT; opacity: 0 }
         }
     ]
 

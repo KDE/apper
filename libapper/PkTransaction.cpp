@@ -78,7 +78,6 @@ PkTransaction::PkTransaction(QWidget *parent) :
     m_status(Transaction::StatusUnknown),
     d(new PkTransactionPrivate)
 {
-    kDebug() << status() << role();
     // for sanity we are finished till some transaction is set
     d->finished = true;
     d->simulateModel = 0;

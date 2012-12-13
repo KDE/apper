@@ -22,20 +22,20 @@ import org.kde.apper 0.1 as Apper
 import org.packagekit 0.1 as PackageKit
 
 Item {
-    id: transaction
+    id: transactionItem
 
     anchors.fill: parent
     clip: true
 
     property int progressWidth: 30
-    signal finished();
+    signal finished(bool success);
 
     function update(updates) {
         updateTransaction.updatePackages(updates);
     }
 
-    Component.onCompleted: {
-        updateTransaction.finished.connect(finished);
+    function refreshCache() {
+        updateTransaction.refreshCache(false);
     }
 
     Apper.PkTransaction {
@@ -44,6 +44,7 @@ Item {
             statusText.text = PkStrings.status(status, speed, downloadSizeRemaining);
             transactionProgress.value = updateTransaction.percentage;
         }
+        onFinished: transactionItem.finished(status === 0)
     }
 
     Column {
@@ -66,6 +67,7 @@ Item {
             }
             PlasmaComponents.ToolButton {
                 id: updateBT
+                flat: false
                 iconSource: "dialog-cancel"
                 text:  i18n("Cancel")
                 enabled: updateTransaction.allowCancel

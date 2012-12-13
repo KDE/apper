@@ -22,26 +22,20 @@ import org.kde.qtextracomponents 0.1
 Item {
     id: statusView
 
+    state: "ICON"
+
     property string title: ""
     property string subTitle: ""
     property string iconName: ""
     property int iconSize: 128
-
-    onIconNameChanged: {
-        if (iconName === "") {
-            state = "BUSY";
-        } else {
-            state = "ICON";
-            statusIcon.icon = QIcon(iconName);
-        }
-    }
+    property alias running: busy.running
 
     PlasmaComponents.BusyIndicator {
         id: busy
         width: iconSize
         height: iconSize
         anchors.centerIn: parent
-        running: true
+        running: false
     }
 
     QIconItem {
@@ -49,6 +43,7 @@ Item {
         width: iconSize
         height: iconSize
         anchors.centerIn: parent
+        icon: QIcon(iconName)
     }
 
     Column {
@@ -85,8 +80,4 @@ Item {
             PropertyChanges { target: busy; running: false}
         }
     ]
-
-    transitions: Transition {
-        NumberAnimation { properties: "opacity"; easing.type: Easing.InOutQuad }
-    }
 }
