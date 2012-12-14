@@ -147,7 +147,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
         QStringList restartPackages = transaction->property("restartPackages").toStringList();
 
         // Create the notification about this transaction
-        KNotification *notify = new KNotification("RestartRequired");
+        KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
         connect(notify, SIGNAL(activated(uint)), this, SLOT(logout()));
         connect(notify, SIGNAL(closed()), this, SLOT(decreaseRunning()));
         notify->setProperty("restartType", qVariantFromValue(type));
@@ -280,6 +280,7 @@ void TransactionWatcher::logout()
 {
     decreaseRunning();
 
+    kDebug() << "--------------;";
     KNotification *notify = qobject_cast<KNotification*>(sender());
     Transaction::Restart restartType;
     restartType = notify->property("restartType").value<Transaction::Restart>();
