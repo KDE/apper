@@ -21,8 +21,6 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "ui_Settings.h"
-
 #include <QWidget>
 #include <KPixmapSequenceOverlayPainter>
 
@@ -30,8 +28,12 @@
 
 using namespace PackageKit;
 
+namespace Ui {
+    class Settings;
+}
+
 class OriginModel;
-class Settings : public QWidget, private Ui::Settings
+class Settings : public QWidget
 {
     Q_OBJECT
 public:
@@ -56,6 +58,7 @@ private slots:
     void checkChanges();
 
 private:
+    Ui::Settings *ui;
     KPixmapSequenceOverlayPainter *m_busySeq;
     OriginModel *m_originModel;
     Transaction::Roles  m_roles;

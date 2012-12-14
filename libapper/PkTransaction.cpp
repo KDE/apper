@@ -71,7 +71,6 @@ public:
 
 PkTransaction::PkTransaction(QWidget *parent) :
     Transaction(parent),
-    m_trans(0),
     m_handlingActionRequired(false),
     m_showingError(false),
     m_exitStatus(Success),
@@ -198,9 +197,6 @@ void PkTransaction::setupTransaction()
         connect(this, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     }
-
-    // Clear the model to don't keep trash when reusing the transaction
-    d->progressModel->clear();
 
 #ifdef HAVE_DEBCONFKDE
     QString _tid = tid();
@@ -444,13 +440,13 @@ void PkTransaction::installSignature()
 }
 
 void PkTransaction::slotFinished(Transaction::Exit status)
-{
-    Transaction *trans = qobject_cast<Transaction*>(sender());
-    Requirements *requires = 0;
-    m_trans = 0;
+{   
+    // Clear the model to don't keep trash when reusing the transaction
+    d->progressModel->clear();
 
-    Transaction::Role role = trans->role();
-    switch (role) {
+    Requirements *requires = 0;
+    Transaction::Role _role = role();
+    switch (_role) {
     case Transaction::RoleInstallSignature:
     case Transaction::RoleAcceptEula:
         if (status == Transaction::ExitSuccess) {
@@ -463,7 +459,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
         break;
     }
 
-    kDebug() << status << role;
+    kDebug() << status << _role;
     d->finished = true;
     switch(status) {
     case Transaction::ExitSuccess:
@@ -497,10 +493,10 @@ void PkTransaction::slotFinished(Transaction::Exit status)
             bool showApp = transactionGroup.readEntry("ShowApplicationLauncher", true);
             if (showApp &&
                     !d->packagesToResolve.isEmpty() &&
-                    (role == Transaction::RoleInstallPackages ||
-                     role == Transaction::RoleInstallFiles ||
-                     role == Transaction::RoleRemovePackages ||
-                     role == Transaction::RoleUpdatePackages)) {
+                    (_role == Transaction::RoleInstallPackages ||
+                     _role == Transaction::RoleInstallFiles ||
+                     _role == Transaction::RoleRemovePackages ||
+                     _role == Transaction::RoleUpdatePackages)) {
                 // When installing files or updates that involves new packages
                 // try to resolve the available packages at simulation time
                 // to maybe show the user the new applications that where installed
@@ -520,7 +516,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
             } else if (showApp &&
                        d->launcher &&
                        !d->launcher->packages().isEmpty() &&
-                       role == Transaction::RoleResolve &&
+                       _role == Transaction::RoleResolve &&
                        d->originalRole != Transaction::RoleUnknown) {
                 // Let's try to find some desktop files
                 // TODO fix this too
@@ -535,14 +531,14 @@ void PkTransaction::slotFinished(Transaction::Exit status)
             } else if (showApp &&
                        d->launcher &&
                        d->launcher->hasApplications() &&
-                       role == Transaction::RoleGetFiles &&
+                       _role == Transaction::RoleGetFiles &&
                        d->originalRole != Transaction::RoleUnknown) {
 //                showDialog(d->launcher);
                 connect(d->launcher, SIGNAL(accepted()),
                         this, SLOT(setExitStatus()));
                 return;
-            } else if (role == Transaction::RoleAcceptEula ||
-                       role == Transaction::RoleInstallSignature) {
+            } else if (_role == Transaction::RoleAcceptEula ||
+                       _role == Transaction::RoleInstallSignature) {
                 kDebug() << "EULA or Signature accepted";
                 d->finished = false;
                 requeueTransaction();
@@ -552,35 +548,28 @@ void PkTransaction::slotFinished(Transaction::Exit status)
         }
         break;
     case Transaction::ExitNeedUntrusted:
-    case Transaction::ExitKeyRequired :
-    case Transaction::ExitEulaRequired :
-    case Transaction::ExitMediaChangeRequired :
+    case Transaction::ExitKeyRequired:
+    case Transaction::ExitEulaRequired:
+    case Transaction::ExitMediaChangeRequired:
         kDebug() << "finished KeyRequired or EulaRequired: " << status;
-//        ui->currentL->setText(PkStrings::status(Transaction::StatusSetup));
         if (!m_handlingActionRequired) {
             kDebug() << "Not Handling Required Action";
             setExitStatus(Failed);
         }
         break;
-    case Transaction::ExitCancelled :
-//        ui->progressBar->setMaximum(100);
-//        ui->progressBar->setValue(100);
+    case Transaction::ExitCancelled:
         // Avoid crash in case we are showing an error
         if (!m_showingError) {
             setExitStatus(Cancelled);
         }
         break;
-    case Transaction::ExitFailed :
+    case Transaction::ExitFailed:
         if (!m_handlingActionRequired && !m_showingError) {
-//            ui->progressBar->setMaximum(0);
-//            ui->progressBar->reset();
             kDebug() << "Yep, we failed.";
             setExitStatus(Failed);
         }
         break;
     default :
-//        ui->progressBar->setMaximum(100);
-//        ui->progressBar->setValue(100);
         kDebug() << "finished default" << status;
         setExitStatus(Failed);
         break;
@@ -645,7 +634,11 @@ void PkTransaction::showError(const QString &title, const QString &description, 
     PkTransactionWidget *widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
     if (!widget || widget->isCancelVisible()) {
         if (details.isEmpty()) {
-            KMessageBox::error(d->parentWindow, description, title);
+            if (d->parentWindow) {
+                KMessageBox::error(d->parentWindow, description, title);
+            } else {
+                KMessageBox::errorWId(0, description, title);
+            }
         } else {
             KMessageBox::detailedError(d->parentWindow, description, details, title);
         }

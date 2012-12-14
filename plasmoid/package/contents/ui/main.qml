@@ -112,7 +112,7 @@ Item {
         anchors.fill: parent
         anchors.margins: 4
         Item {
-            height: parent.height - actionRow.height
+            height: parent.height - actionRow.height - parent.anchors.margins
             width: parent.width
             StatusView {
                 id: statusView

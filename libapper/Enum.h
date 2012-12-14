@@ -31,6 +31,13 @@
 
 namespace Enum {
 
+typedef enum {
+    DistroNever,
+    DistroDevelopment,
+    DistroStable
+} DistroUpdate;
+const int DistroUpgradeDefault = DistroStable;
+
     typedef enum {
             None,
             Security,

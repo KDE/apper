@@ -106,7 +106,6 @@ private:
     void showError(const QString &title, const QString &description, const QString &details = QString());
     void showSorry(const QString &title, const QString &description, const QString &details = QString());
 
-    Transaction *m_trans;
     bool m_handlingActionRequired;
     bool m_showingError; //This might replace the above
     ExitStatus m_exitStatus;
