@@ -38,11 +38,9 @@ public:
     ~DBusInterface();
 
     void RefreshCache();
-    void CheckForUpdates(bool system_ready);
     void SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent);
 
 signals:
-    void checkForUpdates(bool system_ready);
     void refreshCache();
 
 private slots:

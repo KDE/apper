@@ -23,7 +23,6 @@
 #include "apperdadaptor.h"
 
 #include <QtDBus/QDBusConnection>
-#include <KNotification>
 
 #ifdef HAVE_DEBCONFKDE
 #include <KDialog>
@@ -34,8 +33,8 @@ using namespace PackageKit;
 
 #include <KDebug>
 
-DBusInterface::DBusInterface(QObject *parent)
-        : QObject(parent)
+DBusInterface::DBusInterface(QObject *parent) :
+    QObject(parent)
 {
     kDebug() << "Creating Helper";
     (void) new ApperdAdaptor(this);
@@ -57,11 +56,6 @@ DBusInterface::~DBusInterface()
 void DBusInterface::RefreshCache()
 {
     emit refreshCache();
-}
-
-void DBusInterface::CheckForUpdates(bool system_ready)
-{
-    emit checkForUpdates(system_ready);
 }
 
 void DBusInterface::SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent)

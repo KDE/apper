@@ -36,7 +36,7 @@ class TransactionWatcher : public QObject
 {
     Q_OBJECT
 public:
-    TransactionWatcher(QObject *parent = 0);
+    explicit TransactionWatcher(bool packagekitIsRunning, QObject *parent = 0);
     ~TransactionWatcher();
 
 public slots:

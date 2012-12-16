@@ -46,19 +46,14 @@ private slots:
 
     void transactionListChanged(const QStringList &tids);
     void updatesChanged();
-    void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
 
 private:
-    void callApperSentinel(const QString &method,
-                           const QList<QVariant> &arguments = QList<QVariant>());
     QDateTime getTimeSinceRefreshCache() const;
-    QString networkState() const;
     bool nameHasOwner(const QString &name, const QDBusConnection &connection) const;
     bool isSystemReady(bool ignoreBattery, bool ignoreMobile) const;
 
     bool m_actRefreshCacheChecked;
     bool m_canRefreshCache;
-    bool m_sentinelIsRunning;
     QDateTime m_lastRefreshCache;
     uint m_refreshCacheInterval;
     QTimer *m_qtimer;

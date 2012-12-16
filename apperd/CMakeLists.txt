@@ -29,3 +29,4 @@ target_link_libraries(kded_apperd
 
 install(TARGETS kded_apperd DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES apperd.notifyrc DESTINATION ${DATA_INSTALL_DIR}/apperd)
+install(FILES apperd.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kded)

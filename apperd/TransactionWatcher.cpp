@@ -42,7 +42,7 @@
 
 Q_DECLARE_METATYPE(Transaction::Error)
 
-TransactionWatcher::TransactionWatcher(QObject *parent) :
+TransactionWatcher::TransactionWatcher(bool packagekitIsRunning, QObject *parent) :
     QObject(parent),
     m_inhibitCookie(-1)
 {
@@ -52,13 +52,16 @@ TransactionWatcher::TransactionWatcher(QObject *parent) :
     connect(Daemon::global(), SIGNAL(transactionListChanged(QStringList)),
             this, SLOT(transactionListChanged(QStringList)));
 
-    // here we check whether a transaction job should be created or not
-    QList<QDBusObjectPath> paths = Daemon::global()->getTransactionList();
-    QStringList tids;
-    foreach (const QDBusObjectPath &path, paths) {
-        tids << path.path();
+    // if PackageKit is running check to see if there are running transactons already
+    if (packagekitIsRunning) {
+        // here we check whether a transaction job should be created or not
+        QList<QDBusObjectPath> paths = Daemon::global()->getTransactionList();
+        QStringList tids;
+        foreach (const QDBusObjectPath &path, paths) {
+            tids << path.path();
+        }
+        transactionListChanged(tids);
     }
-    transactionListChanged(tids);
 }
 
 TransactionWatcher::~TransactionWatcher()
