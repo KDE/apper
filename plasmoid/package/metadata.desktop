@@ -21,6 +21,7 @@ Name[sv]=Uppdateringar av programvara (QML)
 Name[uk]=Оновлення програм (QML)
 Name[wa]=Meteu a djoû des programes (QML)
 Name[x-test]=xxSoftware Updater (QML)xx
+Name[zh_CN]=软件更新程序(QML)
 Type=Service
 ServiceTypes=Plasma/Applet,Plasma/PopupApplet
 Icon=system-software-update
