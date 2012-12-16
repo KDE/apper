@@ -32,7 +32,7 @@ using namespace DebconfKde;
 class DBusInterface : public QObject, protected QDBusContext
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.ApperSentinel")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.apperd")
 public:
     DBusInterface(QObject *parent = 0);
     ~DBusInterface();

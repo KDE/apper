@@ -28,6 +28,4 @@ target_link_libraries(kded_apperd
 )
 
 install(TARGETS kded_apperd DESTINATION ${PLUGIN_INSTALL_DIR})
-
-include(MacroDBusAddActivationService)
-dbus_add_activation_service(org.kde.apperd.service.in)
+install(FILES apperd.notifyrc DESTINATION ${DATA_INSTALL_DIR}/apperd)

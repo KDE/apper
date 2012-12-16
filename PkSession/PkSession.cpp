@@ -18,12 +18,13 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "ApperSentinel.h"
+#include "PkSession.h"
 
 #include "PkInterface.h"
 
 #include <QStringBuilder>
 
+#include <KLocale>
 #include <KCmdLineArgs>
 #include <KDebug>
 
@@ -33,7 +34,7 @@
 
 using namespace PackageKit;
 
-ApperSentinel::ApperSentinel() :
+PkSession::PkSession() :
     KUniqueApplication()
 {
     m_pkInterface = new PkInterface(this);
@@ -54,7 +55,7 @@ ApperSentinel::ApperSentinel() :
     prepareToClose();
 }
 
-void ApperSentinel::prepareToClose()
+void PkSession::prepareToClose()
 {
     if (isRunning()) {
         kDebug() << "Stoping Timer";
@@ -65,7 +66,7 @@ void ApperSentinel::prepareToClose()
     }
 }
 
-bool ApperSentinel::isRunning()
+bool PkSession::isRunning()
 {
     if (m_pkInterface && m_pkInterface->isRunning()) {
         kDebug() << m_pkInterface;
@@ -75,7 +76,7 @@ bool ApperSentinel::isRunning()
     return false;
 }
 
-void ApperSentinel::close()
+void PkSession::close()
 {
     // This will run when the timer times out, we will check
     // again just to be sure.
@@ -85,11 +86,11 @@ void ApperSentinel::close()
     }
 }
 
-int ApperSentinel::newInstance()
+int PkSession::newInstance()
 {
     return 0;
 }
 
-ApperSentinel::~ApperSentinel()
+PkSession::~PkSession()
 {
 }

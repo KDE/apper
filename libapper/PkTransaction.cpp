@@ -204,9 +204,9 @@ void PkTransaction::setupTransaction()
     // Build a socket path like /tmp/1761_edeceabd_data_debconf
     socket = QLatin1String("/tmp") % _tid % QLatin1String("_debconf");
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall(QLatin1String("org.kde.ApperSentinel"),
+    message = QDBusMessage::createMethodCall(QLatin1String("org.kde.apperd"),
                                              QLatin1String("/"),
-                                             QLatin1String("org.kde.ApperSentinel"),
+                                             QLatin1String("org.kde.apperd"),
                                              QLatin1String("SetupDebconfDialog"));
     // Use our own cached tid to avoid crashes
     message << qVariantFromValue(_tid);

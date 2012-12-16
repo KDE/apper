@@ -74,7 +74,7 @@ message(STATUS "QPK includ dir: " ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagek
 add_subdirectory(libapper)
 add_subdirectory(ApperKCM)
 add_subdirectory(Apper)
-add_subdirectory(Sentinel)
+add_subdirectory(PkSession)
 add_subdirectory(apperd)
 add_subdirectory(Desktop)
 add_subdirectory(plasmoid)

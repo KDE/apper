@@ -18,7 +18,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "ApperSentinel.h"
+#include "PkSession.h"
 #include <version.h>
 
 #include <KDebug>
@@ -29,13 +29,13 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about("ApperSentinel",
+    KAboutData about("PkSession",
                      "apper",
                      ki18n("Apper"),
                      APP_VERSION,
                      ki18n("Apper Sentinel"),
                      KAboutData::License_GPL,
-                     ki18n("(C) 2008-2011 Daniel Nicoletti"));
+                     ki18n("(C) 2008-2012 Daniel Nicoletti"));
 
     about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti12@gmail.com", "http://dantti.wordpress.com" );
     about.addAuthor(ki18n("Trever Fischer"), KLocalizedString(), "wm161@wm161.net", "http://wm161.net");
@@ -45,11 +45,11 @@ int main(int argc, char **argv)
 
     KCmdLineArgs::init(argc, argv, &about);
 
-    if (!ApperSentinel::start()) {
-        //kDebug() << "ApperSentinel is already running!";
+    if (!PkSession::start()) {
+        //kDebug() << "PkSession is already running!";
         return 0;
     }
 
-    ApperSentinel app;
+    PkSession app;
     return app.exec();
 }

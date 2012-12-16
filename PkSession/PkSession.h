@@ -18,19 +18,19 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef APPER_SENTINEL_H
-#define APPER_SENTINEL_H
+#ifndef PKSESSION_H
+#define PKSESSION_H
 
 #include <KUniqueApplication>
 #include <QTimer>
 
 class PkInterface;
-class ApperSentinel : public KUniqueApplication
+class PkSession : public KUniqueApplication
 {
     Q_OBJECT
 public:
-    ApperSentinel();
-    virtual ~ApperSentinel();
+    PkSession();
+    virtual ~PkSession();
     int newInstance();
 
 private slots:
@@ -43,4 +43,4 @@ private:
     PkInterface *m_pkInterface;
 };
 
-#endif
+#endif // PKSESSION_H

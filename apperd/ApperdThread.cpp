@@ -33,6 +33,9 @@
 #include <KConfigGroup>
 #include <KDirWatch>
 #include <KProtocolManager>
+#include <KLocale>
+
+#include <QStringBuilder>
 
 #include <Solid/PowerManagement>
 
@@ -141,6 +144,9 @@ void ApperdThread::init()
 
     // read the current settings
     configFileChanged();
+
+    QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
+    Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     m_trayIcon = new TransactionWatcher(this);
 

@@ -144,6 +144,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
         KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
         connect(notify, SIGNAL(activated(uint)), this, SLOT(logout()));
         connect(notify, SIGNAL(closed()), this, SLOT(decreaseRunning()));
+        notify->setComponentData(KComponentData("apperd"));
         notify->setProperty("restartType", qVariantFromValue(type));
         notify->setPixmap(PkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         notify->setTitle(PkStrings::restartType(type));
