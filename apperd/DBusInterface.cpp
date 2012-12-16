@@ -20,7 +20,7 @@
 
 #include "DBusInterface.h"
 
-#include "appersentineladaptor.h"
+#include "apperdadaptor.h"
 
 #include <QtDBus/QDBusConnection>
 #include <KNotification>
@@ -38,8 +38,8 @@ DBusInterface::DBusInterface(QObject *parent)
         : QObject(parent)
 {
     kDebug() << "Creating Helper";
-    (void) new ApperSentinelAdaptor(this);
-    if (!QDBusConnection::sessionBus().registerService("org.kde.ApperSentinel")) {
+    (void) new ApperdAdaptor(this);
+    if (!QDBusConnection::sessionBus().registerService("org.kde.apperd")) {
         kDebug() << "another helper is already running";
         return;
     }

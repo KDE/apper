@@ -1,5 +1,3 @@
-find_package(KDE4Internal REQUIRED)
-
 set(apper_SRCS
     MainUi.cpp
     BackendDetails.cpp

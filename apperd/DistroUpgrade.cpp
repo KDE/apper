@@ -27,8 +27,9 @@
 #include <KDebug>
 
 DistroUpgrade::DistroUpgrade(QObject *parent) :
-    AbstractIsRunning(parent),
-    m_distroUpgradeProcess(0)
+    QObject(parent),
+    m_distroUpgradeProcess(0),
+    m_transaction(0)
 {
 }
 
@@ -38,24 +39,24 @@ DistroUpgrade::~DistroUpgrade()
 
 void DistroUpgrade::checkDistroUpgrades()
 {
-    if (!isRunning()) {
-        Transaction *t = new Transaction(this);
-        t->getDistroUpgrades();
-        if (!t->error()) {
-            connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
+    if (!m_transaction) {
+        m_transaction = new Transaction(this);
+        m_transaction->getDistroUpgrades();
+        if (!m_transaction->error()) {
+            connect(m_transaction, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
                     this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                    this, SLOT(decreaseRunning()));
-            increaseRunning();
+            connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                    this, SLOT(checkDistroFinished(PackageKit::Transaction::Exit,uint)));
+        } else {
+            m_transaction = 0;
         }
     }
 }
 
 void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
 {
-    Q_UNUSED(type)
+    // TODO make use of the type
     kDebug() << "Distro upgrade found!" << name << description;
-    increaseRunning();
 
     KNotification *notify = new KNotification("DistroUpgradeAvailable", 0, KNotification::Persistent);
 
@@ -75,6 +76,13 @@ void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, c
     notify->sendEvent();
 }
 
+void DistroUpgrade::checkDistroFinished(Transaction::Exit status, uint enlapsed)
+{
+    Q_UNUSED(status)
+    Q_UNUSED(enlapsed)
+    m_transaction = 0;
+}
+
 void DistroUpgrade::handleDistroUpgradeAction(uint action)
 {
     // get the sender cause there might be more than one
@@ -88,7 +96,6 @@ void DistroUpgrade::handleDistroUpgradeAction(uint action)
                 break;
             }
             m_distroUpgradeProcess = new QProcess;
-            increaseRunning();
             connect (m_distroUpgradeProcess, SIGNAL(error(QProcess::ProcessError)),
                     this, SLOT(distroUpgradeError(QProcess::ProcessError)));
             connect (m_distroUpgradeProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
@@ -97,6 +104,7 @@ void DistroUpgrade::handleDistroUpgradeAction(uint action)
             env << "DESKTOP=kde";
             m_distroUpgradeProcess->setEnvironment(env);
             m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
+            // TODO
 //             suppressSleep(true);
             break;
         // perhaps more actions needed in the future
@@ -107,7 +115,6 @@ void DistroUpgrade::handleDistroUpgradeAction(uint action)
 
 void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    decreaseRunning();
     KNotification *notify = new KNotification("DistroUpgradeFinished");
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
         notify->setPixmap(KIcon("security-high").pixmap(64, 64));

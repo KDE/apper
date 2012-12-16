@@ -43,7 +43,7 @@
 Q_DECLARE_METATYPE(Transaction::Error)
 
 TransactionWatcher::TransactionWatcher(QObject *parent) :
-    AbstractIsRunning(parent),
+    QObject(parent),
     m_inhibitCookie(-1)
 {
     m_tracker = new KUiServerJobTracker(this);
@@ -81,10 +81,6 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
 
         // release any cookie that we might have
         suppressSleep(false);
-
-        // the app can probably close now
-        // if some notification is being shown isRunning will return true
-        emit close();
     }
 }
 
@@ -141,8 +137,6 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
     m_transactionJob.remove(tid);
 
     if (exit == Transaction::ExitSuccess && !transaction->property("restartType").isNull()) {
-        increaseRunning();
-
         Transaction::Restart type = transaction->property("restartType").value<Transaction::Restart>();
         QStringList restartPackages = transaction->property("restartPackages").toStringList();
 
@@ -201,8 +195,6 @@ void TransactionWatcher::transactionChanged(Transaction *transaction, bool inter
 
 void TransactionWatcher::message(PackageKit::Transaction::Message type, const QString &message)
 {
-    increaseRunning();
-
     KNotification *notify;
     notify = new KNotification("TransactionMessage", 0, KNotification::Persistent);
     notify->setTitle(PkStrings::message(type));
@@ -216,8 +208,6 @@ void TransactionWatcher::message(PackageKit::Transaction::Message type, const QS
 
 void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QString &details)
 {
-    increaseRunning();
-
     KNotification *notify;
     notify = new KNotification("TransactionError", 0, KNotification::Persistent);
     notify->setText("<b>"+PkStrings::error(err)+"</b><br>"+PkStrings::errorMessage(err));
@@ -278,8 +268,6 @@ void TransactionWatcher::requireRestart(PackageKit::Transaction::Restart type, c
 
 void TransactionWatcher::logout()
 {
-    decreaseRunning();
-
     kDebug() << "--------------;";
     KNotification *notify = qobject_cast<KNotification*>(sender());
     Transaction::Restart restartType;
@@ -323,12 +311,6 @@ void TransactionWatcher::watchedCanceled()
         m_tracker->registerJob(job);
         job->start();
     }
-}
-
-bool TransactionWatcher::isRunning()
-{
-    return AbstractIsRunning::isRunning() ||
-            !m_transactions.isEmpty();
 }
 
 void TransactionWatcher::suppressSleep(bool enable, const QString &reason)

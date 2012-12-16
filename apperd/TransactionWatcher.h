@@ -21,7 +21,7 @@
 #ifndef TRANSACTION_WATCHER_H
 #define TRANSACTION_WATCHER_H
 
-#include "AbstractIsRunning.h"
+//#include "AbstractIsRunning.h"
 
 #include <kuiserverjobtracker.h>
 
@@ -32,14 +32,12 @@
 using namespace PackageKit;
 
 class TransactionJob;
-class TransactionWatcher : public AbstractIsRunning
+class TransactionWatcher : public QObject
 {
     Q_OBJECT
 public:
     TransactionWatcher(QObject *parent = 0);
     ~TransactionWatcher();
-
-    bool isRunning();
 
 public slots:
     void watchTransaction(const QDBusObjectPath &tid, bool interactive);

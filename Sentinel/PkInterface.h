@@ -51,7 +51,7 @@ public slots:
 
 private:
     void show(SessionTask *widget) const;
-    QHash<QString, QVariant> parseInteraction(const QString &interaction);
+//    QVariantHash parseInteraction(const QString &interaction);
     void InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction);
 };
 

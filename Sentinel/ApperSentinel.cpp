@@ -20,11 +20,6 @@
 
 #include "ApperSentinel.h"
 
-#include "RefreshCacheTask.h"
-#include "UpdateIcon.h"
-#include "DistroUpgrade.h"
-#include "TransactionWatcher.h"
-#include "DBusInterface.h"
 #include "PkInterface.h"
 
 #include <QStringBuilder>
@@ -36,11 +31,10 @@
 
 #define MINUTE 60000
 
-ApperSentinel::ApperSentinel()
- : KUniqueApplication(),
-   m_trayIcon(0),
-   m_updateIcon(0),
-   m_distroUpgrade(0)
+using namespace PackageKit;
+
+ApperSentinel::ApperSentinel() :
+    KUniqueApplication()
 {
     m_pkInterface = new PkInterface(this);
     connect(m_pkInterface, SIGNAL(close()),
@@ -56,36 +50,6 @@ ApperSentinel::ApperSentinel()
     m_closeT = new QTimer(this);
     connect(m_closeT, SIGNAL(timeout()),
             this, SLOT(close()));
-
-    m_trayIcon = new TransactionWatcher(this);
-    connect(m_trayIcon, SIGNAL(close()),
-            this, SLOT(prepareToClose()));
-
-    m_refreshCache = new RefreshCacheTask(this);
-    connect(m_refreshCache, SIGNAL(close()),
-            this, SLOT(prepareToClose()));
-
-    m_updateIcon = new UpdateIcon(this);
-    connect(m_updateIcon, SIGNAL(close()),
-            this, SLOT(prepareToClose()));
-
-    m_distroUpgrade = new DistroUpgrade(this);
-    connect(m_distroUpgrade, SIGNAL(close()),
-            this, SLOT(prepareToClose()));
-
-    m_interface = new DBusInterface(this);
-    // connect the update signal from DBus to our update and distro classes
-    connect(m_interface, SIGNAL(checkForUpdates(bool)),
-            m_updateIcon, SLOT(checkForUpdates(bool)));
-    connect(m_interface, SIGNAL(checkForUpdates(bool)),
-            m_distroUpgrade, SLOT(checkDistroUpgrades()));
-
-    connect(m_interface, SIGNAL(refreshCache()),
-            m_refreshCache, SLOT(refreshCache()));
-
-    // connect the watch transaction coming from the updater icon to our watcher
-    connect(m_updateIcon, SIGNAL(watchTransaction(QDBusObjectPath,bool)),
-            m_trayIcon, SLOT(watchTransaction(QDBusObjectPath,bool)));
 
     prepareToClose();
 }
@@ -103,24 +67,6 @@ void ApperSentinel::prepareToClose()
 
 bool ApperSentinel::isRunning()
 {
-    // check to see if no piece of code is running
-    if (m_trayIcon && m_trayIcon->isRunning()) {
-        kDebug() << m_trayIcon;
-        return true;
-    }
-    if (m_refreshCache && m_refreshCache->isRunning()) {
-        kDebug() << m_refreshCache;
-        return true;
-    }
-    if (m_updateIcon && m_updateIcon->isRunning()) {
-        kDebug() << m_updateIcon;
-        return true;
-    }
-    if (m_distroUpgrade && m_distroUpgrade->isRunning()) {
-        kDebug() << m_distroUpgrade;
-        return true;
-    }
-
     if (m_pkInterface && m_pkInterface->isRunning()) {
         kDebug() << m_pkInterface;
         return true;

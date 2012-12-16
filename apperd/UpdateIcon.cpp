@@ -44,10 +44,10 @@
 
 using namespace PackageKit;
 
-UpdateIcon::UpdateIcon(QObject* parent)
-    : AbstractIsRunning(parent),
-      m_getUpdatesT(0),
-      m_statusNotifierItem(0)
+UpdateIcon::UpdateIcon(QObject* parent) :
+    QObject(parent),
+    m_getUpdatesT(0),
+    m_statusNotifierItem(0)
 {
 }
 
@@ -68,7 +68,6 @@ void UpdateIcon::checkForUpdates(bool system_ready)
         return;
     }
 
-    increaseRunning();
     KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     uint interval = static_cast<uint>(checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault));
@@ -94,7 +93,6 @@ void UpdateIcon::checkForUpdates(bool system_ready)
     } else {
         removeStatusNotifierItem();
     }
-    decreaseRunning();
 }
 
 void UpdateIcon::packageToUpdate(Transaction::Info info, const QString &packageID, const QString &summary)
@@ -155,14 +153,11 @@ void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
         icon = "kpackagekit-updates";
     }
     m_statusNotifierItem->setIconByName(icon);
-
-    increaseRunning();
 }
 
 void UpdateIcon::getUpdateFinished()
 {
     m_getUpdatesT = 0;
-    decreaseRunning();
     if (!m_updateList.isEmpty()) {
         // Store all the security updates
         UpdateType type = Normal;
@@ -201,7 +196,6 @@ void UpdateIcon::getUpdateFinished()
                 autoInstallNotify->setPixmap(KIcon("plasmagik").pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
                 autoInstallNotify->sendEvent();
 
-                increaseRunning();
                 removeStatusNotifierItem();
                 return;
             }
@@ -223,7 +217,6 @@ void UpdateIcon::getUpdateFinished()
                 autoInstallNotify->setPixmap(KIcon(UPDATES_ICON).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
                 autoInstallNotify->sendEvent();
 
-                increaseRunning();
                 removeStatusNotifierItem();
                 return;
             }
@@ -238,8 +231,6 @@ void UpdateIcon::getUpdateFinished()
 
 void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
 {
-    // decrease first only because we want to check for updates again
-    decreaseRunning();
     KNotification *notify = new KNotification("UpdatesComplete");
     if (status == Transaction::ExitSuccess) {
         KIcon icon("task-complete");

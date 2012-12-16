@@ -24,13 +24,7 @@
 #include <KUniqueApplication>
 #include <QTimer>
 
-class RefreshCacheTask;
-class UpdateIcon;
-class DistroUpgrade;
-class TransactionWatcher;
-class DBusInterface;
 class PkInterface;
-
 class ApperSentinel : public KUniqueApplication
 {
     Q_OBJECT
@@ -46,13 +40,6 @@ private slots:
 private:
     bool isRunning();
     QTimer *m_closeT;
-
-    TransactionWatcher *m_trayIcon;
-    RefreshCacheTask *m_refreshCache;
-    UpdateIcon *m_updateIcon;
-    DistroUpgrade *m_distroUpgrade;
-
-    DBusInterface *m_interface;
     PkInterface *m_pkInterface;
 };
 

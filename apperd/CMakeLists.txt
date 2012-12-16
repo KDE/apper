@@ -1,11 +1,33 @@
-kde4_add_plugin(kded_apperd
+set(kded_apperd_SRCS
+    DistroUpgrade.cpp
+    DBusInterface.cpp
+    TransactionJob.cpp
+    TransactionWatcher.cpp
+    StatusNotifierItem.cpp
+    RefreshCacheTask.cpp
+    UpdateIcon.cpp
     ApperdThread.cpp
     apperd.cpp
 )
 
+qt4_add_dbus_adaptor(kded_apperd_SRCS
+    org.kde.apperd.xml
+    DBusInterface.h
+    DBusInterface
+)
+
+kde4_add_plugin(kded_apperd ${kded_apperd_SRCS})
+
 target_link_libraries(kded_apperd
     ${KDE4_KIO_LIBS}
     ${KDE4_SOLID_LIBS}
+    ${KDE4WORKSPACE_KWORKSPACE_LIBS}
+    ${QPACKAGEKIT2_LIBRARIES}
+    ${DEBCONF_KDE_LIB}
+    apper
 )
 
 install(TARGETS kded_apperd DESTINATION ${PLUGIN_INSTALL_DIR})
+
+include(MacroDBusAddActivationService)
+dbus_add_activation_service(org.kde.apperd.service.in)

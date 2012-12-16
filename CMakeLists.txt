@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
 find_package(KDE4 REQUIRED)
+find_package(KDE4Internal REQUIRED)
+find_package(KDE4Workspace REQUIRED)
 include (MacroLibrary)
 
 # Only for Debian based systems

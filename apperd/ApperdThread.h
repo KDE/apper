@@ -26,6 +26,11 @@
 #include <QDBusConnection>
 #include <QDateTime>
 
+class DBusInterface;
+class DistroUpgrade;
+class RefreshCacheTask;
+class TransactionWatcher;
+class UpdateIcon;
 class ApperdThread : public QObject
 {
     Q_OBJECT
@@ -58,6 +63,12 @@ private:
     uint m_refreshCacheInterval;
     QTimer *m_qtimer;
     QThread *m_thread;
+
+    DBusInterface *m_interface;
+    DistroUpgrade *m_distroUpgrade;
+    RefreshCacheTask *m_refreshCache;
+    TransactionWatcher *m_trayIcon;
+    UpdateIcon *m_updateIcon;
 };
 
 #endif // APPERDTHREAD_H

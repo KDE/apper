@@ -19,7 +19,14 @@
 
 #include "ApperdThread.h"
 
+#include "RefreshCacheTask.h"
+#include "UpdateIcon.h"
+#include "DistroUpgrade.h"
+#include "TransactionWatcher.h"
+#include "DBusInterface.h"
+
 #include <Enum.h>
+#include <Daemon>
 
 #include <KStandardDirs>
 #include <KConfig>
@@ -48,6 +55,8 @@
  * - Display Distro Upgrades
  * - Start Sentinel to keep an eye on running transactions
  */
+
+using namespace PackageKit;
 
 ApperdThread::ApperdThread(QObject *parent) :
     QObject(parent),
@@ -85,12 +94,8 @@ void ApperdThread::init()
     m_qtimer->start();
 
     // Watch for TransactionListChanged so we start sentinel
-    QDBusConnection::systemBus().connect(QLatin1String(""),
-                                         QLatin1String(""),
-                                         QLatin1String("org.freedesktop.PackageKit"),
-                                         QLatin1String("TransactionListChanged"),
-                                         this,
-                                         SLOT(transactionListChanged(QStringList)));
+    connect(Daemon::global(), SIGNAL(transactionListChanged(QStringList)),
+            this, SLOT(transactionListChanged(QStringList)));
 
     // Watch for UpdatesChanged so we display new updates
     QDBusConnection::systemBus().connect(QLatin1String(""),
@@ -136,6 +141,32 @@ void ApperdThread::init()
 
     // read the current settings
     configFileChanged();
+
+    m_trayIcon = new TransactionWatcher(this);
+
+    m_refreshCache = new RefreshCacheTask(this);
+
+    m_updateIcon = new UpdateIcon(this);
+    connect(Daemon::global(), SIGNAL(updatesChanged()),
+            m_updateIcon, SLOT(checkForUpdates(bool)));
+
+    m_distroUpgrade = new DistroUpgrade(this);
+    connect(Daemon::global(), SIGNAL(updatesChanged()),
+            m_distroUpgrade, SLOT(checkDistroUpgrades()));
+
+    m_interface = new DBusInterface(this);
+    // connect the update signal from DBus to our update and distro classes
+    connect(m_interface, SIGNAL(checkForUpdates(bool)),
+            m_updateIcon, SLOT(checkForUpdates(bool)));
+    connect(m_interface, SIGNAL(checkForUpdates(bool)),
+            m_distroUpgrade, SLOT(checkDistroUpgrades()));
+
+    connect(m_interface, SIGNAL(refreshCache()),
+            m_refreshCache, SLOT(refreshCache()));
+
+    // connect the watch transaction coming from the updater icon to our watcher
+    connect(m_updateIcon, SIGNAL(watchTransaction(QDBusObjectPath,bool)),
+            m_trayIcon, SLOT(watchTransaction(QDBusObjectPath,bool)));
 }
 
 // This is called every 5 minutes

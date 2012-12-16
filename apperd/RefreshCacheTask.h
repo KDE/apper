@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
- *   dantti12@gmail.com                                                    *
+ *   Copyright (C) 2012 by Daniel Nicoletti dantti12@gmail.com             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +17,32 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef DISTRO_UPGRADE_H
-#define DISTRO_UPGRADE_H
-
-#include "AbstractIsRunning.h"
-
-#include <QProcess>
+#ifndef REFRESHCACHETASK_H
+#define REFRESHCACHETASK_H
 
 #include <Transaction>
 
+#include <KNotification>
+
 using namespace PackageKit;
 
-class DistroUpgrade : public AbstractIsRunning
+class RefreshCacheTask : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    DistroUpgrade(QObject *parent = 0);
-    ~DistroUpgrade();
+    explicit RefreshCacheTask(QObject *parent = 0);
 
 public slots:
-    void checkDistroUpgrades();
+    void refreshCache();
 
 private slots:
-    void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);
-    void handleDistroUpgradeAction(uint action);
-    void distroUpgradeError(QProcess::ProcessError error);
-    void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void refreshCacheFinished(PackageKit::Transaction::Exit status, uint runtime);
+    void errorCode(PackageKit::Transaction::Error error, const QString &errorMessage);
+    void notificationClosed();
 
 private:
-    QProcess *m_distroUpgradeProcess;
+    KNotification *m_notification;
+    Transaction *m_transaction;
 };
 
-#endif
+#endif // REFRESHCACHETASK_H

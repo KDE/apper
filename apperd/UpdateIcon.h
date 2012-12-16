@@ -1,5 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Daniel Nicoletti dantti12@gmail.com             *
+ *   Copyright (C) 2008 by Trever Fischer                                  *
+ *   wm161@wm161.net                                                       *
+ *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,31 +20,53 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef REFRESHCACHETASK_H
-#define REFRESHCACHETASK_H
+#ifndef UPDATE_ICON_H
+#define UPDATE_ICON_H
 
-#include "AbstractIsRunning.h"
+//#include "AbstractIsRunning.h"
+
+#include <QStringList>
 
 #include <Transaction>
 
-#include <KNotification>
+using namespace PackageKit;
 
-class RefreshCacheTask : public AbstractIsRunning
+class StatusNotifierItem;
+class UpdateIcon : public QObject
 {
     Q_OBJECT
 public:
-    explicit RefreshCacheTask(QObject *parent = 0);
+    typedef enum{
+        Normal,
+        Important,
+        Security
+    } UpdateType;
+    UpdateIcon(QObject *parent = 0);
+    ~UpdateIcon();
+
+signals:
+    void watchTransaction(const QDBusObjectPath &tid, bool interactive);
 
 public slots:
-    void refreshCache();
+    void checkForUpdates(bool system_ready);
 
 private slots:
-    void refreshCacheFinished(PackageKit::Transaction::Exit status);
-    void errorCode(PackageKit::Transaction::Error error, const QString &errorMessage);
-    void notificationClosed();
+    void packageToUpdate(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
+    void getUpdateFinished();
+    void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
+
+    void showSettings();
+    void showUpdates();
+    void removeStatusNotifierItem();
 
 private:
-    KNotification *m_notification;
+    void updateStatusNotifierIcon(UpdateType type);
+
+    Transaction *m_getUpdatesT;
+    StatusNotifierItem *m_statusNotifierItem;
+    QStringList m_updateList;
+    QStringList m_importantList;
+    QStringList m_securityList;
 };
 
-#endif // REFRESHCACHETASK_H
+#endif

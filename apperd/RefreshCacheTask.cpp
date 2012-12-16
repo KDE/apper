@@ -34,42 +34,43 @@
 using namespace PackageKit;
 
 RefreshCacheTask::RefreshCacheTask(QObject *parent) :
-    AbstractIsRunning(parent)
+    QObject(parent),
+    m_transaction(0)
 {
 }
 
 void RefreshCacheTask::refreshCache()
 {
-    kDebug() << "isRunning" << isRunning();
-    if (!isRunning()) {
-        increaseRunning();
-        Transaction *t = new Transaction(this);
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+    kDebug();
+    if (!m_transaction) {
+        m_transaction = new Transaction(this);
+        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(refreshCacheFinished(PackageKit::Transaction::Exit)));
-        connect(t, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+        connect(m_transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
                 this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
 
         // Refresh Cache is false otherwise it will rebuild
         // the whole cache on Fedora
-        t->refreshCache(false);
-        if (t->error()) {
+        m_transaction->refreshCache(false);
+        if (m_transaction->error()) {
             m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
             connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
             KIcon icon("dialog-cancel");
             // use of QSize does the right thing
             m_notification->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-            m_notification->setText(PkStrings::daemonError(t->error()));
+            m_notification->setText(PkStrings::daemonError(m_transaction->error()));
             m_notification->sendEvent();
+        } else {
+            m_transaction = 0;
         }
     }
 }
 
-void RefreshCacheTask::refreshCacheFinished(PackageKit::Transaction::Exit status)
+void RefreshCacheTask::refreshCacheFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
-    if (status == Transaction::ExitSuccess || status == Transaction::ExitCancelled) {
-        // decrease first only because we want to check for updates again
-        decreaseRunning();
-    }
+    Q_UNUSED(status)
+    Q_UNUSED(runtime)
+    m_transaction = 0;
 }
 
 void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorMessage)
@@ -91,5 +92,4 @@ void RefreshCacheTask::notificationClosed()
 {
     m_notification->deleteLater();
     m_notification = 0;
-    decreaseRunning();
 }

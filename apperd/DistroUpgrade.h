@@ -1,7 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Trever Fischer                                  *
- *   wm161@wm161.net                                                       *
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,53 +18,35 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef UPDATE_ICON_H
-#define UPDATE_ICON_H
+#ifndef DISTRO_UPGRADE_H
+#define DISTRO_UPGRADE_H
 
-#include "AbstractIsRunning.h"
-
-#include <QStringList>
+#include <QProcess>
 
 #include <Transaction>
 
 using namespace PackageKit;
 
-class StatusNotifierItem;
-class UpdateIcon : public AbstractIsRunning
+class DistroUpgrade : public QObject
 {
     Q_OBJECT
 public:
-    typedef enum{
-        Normal,
-        Important,
-        Security
-    } UpdateType;
-    UpdateIcon(QObject *parent = 0);
-    ~UpdateIcon();
-
-signals:
-    void watchTransaction(const QDBusObjectPath &tid, bool interactive);
+    DistroUpgrade(QObject *parent = 0);
+    ~DistroUpgrade();
 
 public slots:
-    void checkForUpdates(bool system_ready);
+    void checkDistroUpgrades();
 
 private slots:
-    void packageToUpdate(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
-    void getUpdateFinished();
-    void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
-
-    void showSettings();
-    void showUpdates();
-    void removeStatusNotifierItem();
+    void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);
+    void checkDistroFinished(PackageKit::Transaction::Exit status, uint enlapsed);
+    void handleDistroUpgradeAction(uint action);
+    void distroUpgradeError(QProcess::ProcessError error);
+    void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
-    void updateStatusNotifierIcon(UpdateType type);
-
-    Transaction *m_getUpdatesT;
-    StatusNotifierItem *m_statusNotifierItem;
-    QStringList m_updateList;
-    QStringList m_importantList;
-    QStringList m_securityList;
+    QProcess *m_distroUpgradeProcess;
+    Transaction *m_transaction;
 };
 
 #endif
