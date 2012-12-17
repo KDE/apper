@@ -65,9 +65,8 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
-            PlasmaComponents.ToolButton {
+            PlasmaComponents.Button {
                 id: updateBT
-                flat: false
                 iconSource: "dialog-cancel"
                 text:  i18n("Cancel")
                 enabled: updateTransaction.allowCancel

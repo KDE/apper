@@ -42,7 +42,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusReply>
 #include <QtDBus/QDBusServiceWatcher>
-#include <QtDBus/QDBusInterface>
 #include <QThread>
 
 #include <limits.h>

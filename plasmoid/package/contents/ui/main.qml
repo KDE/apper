@@ -126,27 +126,21 @@ Item {
             id: actionRow
             spacing: 4
             anchors.right: parent.right
-            PlasmaComponents.ToolButton {
+            PlasmaComponents.Button {
                 id: refreshBT
-                flat: false
-                enabled: true
                 text:  i18n("Check for new updates")
                 onClicked: {
                     transactionView.refreshCache();
                     root.state = "TRANSACTION";
                 }
             }
-            PlasmaComponents.ToolButton {
+            PlasmaComponents.Button {
                 id: reviewBT
-                flat: false
-                enabled: true
                 text:  i18n("Review")
                 onClicked: root.state = "SELECTION"
             }
-            PlasmaComponents.ToolButton {
+            PlasmaComponents.Button {
                 id: updateBT
-                flat: false
-                enabled: true
                 text:  i18n("Install")
                 onClicked: {
                     if (root.state === "HAVEUPDATES") {
