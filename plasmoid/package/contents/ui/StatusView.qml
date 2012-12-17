@@ -28,14 +28,13 @@ Item {
     property string subTitle: ""
     property string iconName: ""
     property int iconSize: 128
-    property alias running: busy.running
 
     PlasmaComponents.BusyIndicator {
         id: busy
         width: iconSize
         height: iconSize
         anchors.centerIn: parent
-        running: false
+        running: statusView.opacity !== 0
     }
 
     QIconItem {

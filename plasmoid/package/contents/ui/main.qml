@@ -51,7 +51,6 @@ Item {
 
     function getUpdates() {
         if (!checkedForUpdates) {
-            busyView.running = true;
             state = "BUSY";
             getUpdatesTransaction.cancel();
             getUpdatesTransaction.reset();
