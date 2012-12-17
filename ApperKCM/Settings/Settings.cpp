@@ -217,9 +217,9 @@ void Settings::load()
 
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     uint distroUpgrade = checkUpdateGroup.readEntry("distroUpgrade", Enum::DistroUpgradeDefault);
-    int ret = ui->intervalCB->findData(distroUpgrade);
+    int ret = ui->distroIntervalCB->findData(distroUpgrade);
     if (ret == -1) {
-        ui->distroIntervalCB->setCurrentIndex(ui->intervalCB->findData(Enum::DistroUpgradeDefault));
+        ui->distroIntervalCB->setCurrentIndex(ui->distroIntervalCB->findData(Enum::DistroUpgradeDefault));
     } else {
         ui->distroIntervalCB->setCurrentIndex(ret);
     }
@@ -275,7 +275,7 @@ void Settings::save()
     transaction.writeEntry("ShowApplicationLauncher", ui->appLauncherCB->isChecked());
 
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    checkUpdateGroup.writeEntry("distroUpgrade", ui->intervalCB->itemData(ui->distroIntervalCB->currentIndex()).toUInt());
+    checkUpdateGroup.writeEntry("distroUpgrade", ui->distroIntervalCB->itemData(ui->distroIntervalCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("interval", ui->intervalCB->itemData(ui->intervalCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("checkUpdatesOnBattery", ui->checkUpdatesBatteryCB->isChecked());
     checkUpdateGroup.writeEntry("checkUpdatesOnMobile", ui->checkUpdatesMobileCB->isChecked());
