@@ -51,6 +51,7 @@ DBusInterface::DBusInterface(QObject *parent) :
 
 DBusInterface::~DBusInterface()
 {
+    kDebug() << "-------------DBusInterface-------------" << QThread::currentThreadId();
 }
 
 void DBusInterface::RefreshCache()

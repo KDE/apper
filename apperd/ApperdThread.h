@@ -20,8 +20,6 @@
 #ifndef APPERDTHREAD_H
 #define APPERDTHREAD_H
 
-#include <QThread>
-
 #include <QTimer>
 #include <QDBusConnection>
 #include <QDateTime>
@@ -54,10 +52,9 @@ private:
 
     bool m_actRefreshCacheChecked;
     bool m_canRefreshCache;
+    QVariantHash m_configs;
     QDateTime m_lastRefreshCache;
-    uint m_refreshCacheInterval;
     QTimer *m_qtimer;
-    QThread *m_thread;
 
     DBusInterface *m_interface;
     DistroUpgrade *m_distroUpgrade;

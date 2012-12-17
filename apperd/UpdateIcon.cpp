@@ -30,7 +30,6 @@
 
 #include <KLocale>
 #include <KNotification>
-#include <KConfigGroup>
 #include <KActionCollection>
 #include <KMenu>
 #include <KToolInvocation>
@@ -55,6 +54,11 @@ UpdateIcon::~UpdateIcon()
 {
 }
 
+void UpdateIcon::setConfig(const QVariantHash &configs)
+{
+    m_configs = configs;
+}
+
 void UpdateIcon::showSettings()
 {
     KToolInvocation::startServiceByDesktopName("apper_settings");
@@ -62,16 +66,15 @@ void UpdateIcon::showSettings()
 
 void UpdateIcon::checkForUpdates(bool system_ready)
 {
+    kDebug() << "-------------checkForUpdates-------------" << system_ready;
     // This is really necessary to don't bother the user with
     // tons of popups
     if (m_getUpdatesT) {
         return;
     }
 
-    KConfig config("apper");
-    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    uint interval = static_cast<uint>(checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault));
-    uint updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
+    uint interval = m_configs["interval"].value<uint>();
+    uint updateType = m_configs["autoUpdate"].value<uint>();
 
     // get updates if we should display a notification or automatic update the system
     if (interval != Enum::Never || updateType == Enum::All || updateType == Enum::Security) {
@@ -118,41 +121,41 @@ void UpdateIcon::packageToUpdate(Transaction::Info info, const QString &packageI
 
 void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
 {
-    if (!m_statusNotifierItem) {
-        m_statusNotifierItem = new StatusNotifierItem(this);
-        // Setup a menu with some actions
-        KMenu *menu = new KMenu;
-        menu->addTitle(KIcon(UPDATES_ICON), i18n("Apper"));
-        QAction *action;
-        action = menu->addAction(i18n("Review Updates"));
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(showUpdates()));
-        action = menu->addAction(i18n("Configure"));
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(showSettings()));
-        menu->addSeparator();
-        action = menu->addAction(i18n("Hide"));
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(removeStatusNotifierItem()));
-        m_statusNotifierItem->setContextMenu(menu);
-        // Show updates on the left click
-        connect(m_statusNotifierItem, SIGNAL(activateRequested(bool,QPoint)),
-                this, SLOT(showUpdates()));
-    }
+//    if (!m_statusNotifierItem) {
+//        m_statusNotifierItem = new StatusNotifierItem(this);
+//        // Setup a menu with some actions
+//        KMenu *menu = new KMenu;
+//        menu->addTitle(KIcon(UPDATES_ICON), i18n("Apper"));
+//        QAction *action;
+//        action = menu->addAction(i18n("Review Updates"));
+//        connect(action, SIGNAL(triggered(bool)),
+//                this, SLOT(showUpdates()));
+//        action = menu->addAction(i18n("Configure"));
+//        connect(action, SIGNAL(triggered(bool)),
+//                this, SLOT(showSettings()));
+//        menu->addSeparator();
+//        action = menu->addAction(i18n("Hide"));
+//        connect(action, SIGNAL(triggered(bool)),
+//                this, SLOT(removeStatusNotifierItem()));
+//        m_statusNotifierItem->setContextMenu(menu);
+//        // Show updates on the left click
+//        connect(m_statusNotifierItem, SIGNAL(activateRequested(bool,QPoint)),
+//                this, SLOT(showUpdates()));
+//    }
 
-    QString text;
-    text = i18np("You have one update", "You have %1 updates", m_updateList.size());
-    m_statusNotifierItem->setToolTip(UPDATES_ICON, text, QString());
+//    QString text;
+//    text = i18np("You have one update", "You have %1 updates", m_updateList.size());
+//    m_statusNotifierItem->setToolTip(UPDATES_ICON, text, QString());
 
-    QString icon;
-    if (type == Important) {
-        icon = "kpackagekit-important";
-    } else if (type == Security) {
-        icon = "kpackagekit-security";
-    } else {
-        icon = "kpackagekit-updates";
-    }
-    m_statusNotifierItem->setIconByName(icon);
+//    QString icon;
+//    if (type == Important) {
+//        icon = "kpackagekit-important";
+//    } else if (type == Security) {
+//        icon = "kpackagekit-security";
+//    } else {
+//        icon = "kpackagekit-updates";
+//    }
+//    m_statusNotifierItem->setIconByName(icon);
 }
 
 void UpdateIcon::getUpdateFinished()
@@ -167,11 +170,8 @@ void UpdateIcon::getUpdateFinished()
             type = Important;
         }
 
-        uint updateType;
         bool systemReady;
-        KConfig config("apper");
-        KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-        updateType = static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault));
+        uint updateType = m_configs["autoUpdate"].value<uint>();
         systemReady = sender()->property(SYSTEM_READY).toBool();
         if (!systemReady &&
                 (updateType == Enum::All || (updateType == Enum::Security && !m_securityList.isEmpty()))) {

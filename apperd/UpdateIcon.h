@@ -44,6 +44,8 @@ public:
     UpdateIcon(QObject *parent = 0);
     ~UpdateIcon();
 
+    void setConfig(const QVariantHash &configs);
+
 signals:
     void watchTransaction(const QDBusObjectPath &tid, bool interactive);
 
@@ -67,6 +69,7 @@ private:
     QStringList m_updateList;
     QStringList m_importantList;
     QStringList m_securityList;
+    QVariantHash m_configs;
 };
 
 #endif

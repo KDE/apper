@@ -33,7 +33,7 @@ int main(int argc, char **argv)
                      "apper",
                      ki18n("Apper"),
                      APP_VERSION,
-                     ki18n("Apper Sentinel"),
+                     ki18n("Apper PackageKit Session helper"),
                      KAboutData::License_GPL,
                      ki18n("(C) 2008-2012 Daniel Nicoletti"));
 

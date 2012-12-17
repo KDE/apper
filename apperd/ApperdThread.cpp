@@ -43,6 +43,7 @@
 #include <QtDBus/QDBusReply>
 #include <QtDBus/QDBusServiceWatcher>
 #include <QtDBus/QDBusInterface>
+#include <QThread>
 
 #include <limits.h>
 
@@ -63,36 +64,23 @@ using namespace PackageKit;
 
 ApperdThread::ApperdThread(QObject *parent) :
     QObject(parent),
-    m_actRefreshCacheChecked(false),
-    m_refreshCacheInterval(Enum::TimeIntervalDefault)
+    m_actRefreshCacheChecked(false)
 {
-    // Make all our init code run on the thread since
-    // the DBus calls were made blocking
-    QTimer::singleShot(0, this, SLOT(init()));
-
-    m_thread = new QThread(this);
-    moveToThread(m_thread);
-    m_thread->start();
 }
 
 ApperdThread::~ApperdThread()
 {
-    m_thread->quit();
-    m_thread->wait();
-    delete m_thread;
+    kDebug() << "-------------ApperdThread-------------" << QThread::currentThreadId();
+    delete m_updateIcon;
 }
 
 void ApperdThread::init()
 {
-    // This will prevent the user seeing updates again,
-    // PackageKit emits UpdatesChanges when we should display
-    // that information again
-    QTimer::singleShot(FIVE_MIN, this, SLOT(updatesChanged()));
-
+    kDebug() << "-------------init-------------" << QThread::currentThreadId();
     // This timer keeps polling to see if it has
     // to refresh the cache
     m_qtimer = new QTimer(this);
-    m_qtimer->setInterval(FIVE_MIN);
+    m_qtimer->setInterval(ONE_MIN);
     connect(m_qtimer, SIGNAL(timeout()), this, SLOT(poll()));
     m_qtimer->start();
 
@@ -105,6 +93,9 @@ void ApperdThread::init()
     connect(confWatch, SIGNAL(deleted(QString)), this, SLOT(configFileChanged()));
     confWatch->startScan();
 
+    // read the current settings
+    configFileChanged();
+
     QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
     Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
@@ -116,16 +107,14 @@ void ApperdThread::init()
     connect(Daemon::global(), SIGNAL(updatesChanged()),
             this, SLOT(updatesChanged()));
 
-    // read the current settings
-    configFileChanged();
-
     m_interface = new DBusInterface(this);
 
     m_refreshCache = new RefreshCacheTask(this);
     connect(m_interface, SIGNAL(refreshCache()),
             m_refreshCache, SLOT(refreshCache()));
 
-    m_updateIcon = new UpdateIcon(this);
+    m_updateIcon = new UpdateIcon;
+    m_updateIcon->setConfig(m_configs);
 
     m_distroUpgrade = new DistroUpgrade(this);
 
@@ -137,6 +126,15 @@ void ApperdThread::init()
     // connect the watch transaction coming from the updater icon to our watcher
     connect(m_updateIcon, SIGNAL(watchTransaction(QDBusObjectPath,bool)),
             m_trayIcon, SLOT(watchTransaction(QDBusObjectPath,bool)));
+kDebug() << "-------------init-------------" << packagekitIsRunning;
+    if (packagekitIsRunning) {
+        // If packagekit is already running go check
+        // for updates
+        updatesChanged();
+    } else {
+        // Initial check for updates
+        QTimer::singleShot(ONE_MIN, this, SLOT(updatesChanged()));
+    }
 }
 
 // This is called every 5 minutes
@@ -149,19 +147,15 @@ void ApperdThread::poll()
     }
 
     // If check for updates is active
-    if (m_refreshCacheInterval != Enum::Never) {
+    if (m_configs["interval"].value<uint>() != Enum::Never) {
         // Find out how many seconds passed since last refresh cache
         uint secsSinceLastRefresh;
         secsSinceLastRefresh = QDateTime::currentDateTime().toTime_t() - m_lastRefreshCache.toTime_t();
 
         // If lastRefreshCache is null it means that the cache was never refreshed
-        if (m_lastRefreshCache.isNull() || secsSinceLastRefresh > m_refreshCacheInterval) {
-            KConfig config("apper");
-            KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-            bool ignoreBattery;
-            bool ignoreMobile;
-            ignoreBattery = checkUpdateGroup.readEntry("checkUpdatesOnBattery", false);
-            ignoreMobile = checkUpdateGroup.readEntry("checkUpdatesOnMobile", false);
+        if (m_lastRefreshCache.isNull() || secsSinceLastRefresh > m_configs["interval"].value<uint>()) {
+            bool ignoreBattery = m_configs["checkUpdatesOnBattery"].value<bool>();
+            bool ignoreMobile = m_configs["checkUpdatesOnMobile"].value<bool>();
             if (isSystemReady(ignoreBattery, ignoreMobile)) {
                 m_refreshCache->refreshCache();
             }
@@ -176,13 +170,12 @@ void ApperdThread::configFileChanged()
 {
     KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    uint refreshCacheInterval;
-    refreshCacheInterval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
-    // Check if the refresh cache interval was changed
-    if (m_refreshCacheInterval != refreshCacheInterval) {
-        m_refreshCacheInterval = refreshCacheInterval;
-        kDebug() << "New refresh cache interval" << m_refreshCacheInterval;
-    }
+    m_configs["checkUpdatesOnBattery"] = checkUpdateGroup.readEntry("checkUpdatesOnBattery", false);
+    m_configs["checkUpdatesOnMobile"] = checkUpdateGroup.readEntry("checkUpdatesOnMobile", false);
+    m_configs["installUpdatesOnBattery"] = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
+    m_configs["installUpdatesOnMobile"] = checkUpdateGroup.readEntry("installUpdatesOnMobile", false);
+    m_configs["autoUpdate"] = checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault);
+    m_configs["interval"] = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
 }
 
 void ApperdThread::setProxy()
@@ -220,15 +213,12 @@ void ApperdThread::transactionListChanged(const QStringList &tids)
 // This is called when the list of updates changes
 void ApperdThread::updatesChanged()
 {
-    KConfig config("apper");
-    KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    bool ignoreBattery;
-    bool ignoreMobile;
-    ignoreBattery = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
-    ignoreMobile = checkUpdateGroup.readEntry("installUpdatesOnMobile", false);
+    bool ignoreBattery = m_configs["installUpdatesOnBattery"].value<bool>();
+    bool ignoreMobile = m_configs["installUpdatesOnBattery"].value<bool>();
 
     // Make sure the user sees the updates
     m_updateIcon->checkForUpdates(isSystemReady(ignoreBattery, ignoreMobile));
+    m_distroUpgrade->checkDistroUpgrades();
 }
 
 QDateTime ApperdThread::getTimeSinceRefreshCache() const

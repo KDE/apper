@@ -25,8 +25,6 @@
 #include <Daemon>
 
 #include <KIcon>
-#include <KConfig>
-#include <KConfigGroup>
 #include <KLocale>
 
 #include <KDebug>

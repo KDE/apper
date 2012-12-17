@@ -27,6 +27,8 @@ target_link_libraries(kded_apperd
     apper
 )
 
+set_target_properties(kded_apperd PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+
 install(TARGETS kded_apperd DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES apperd.notifyrc DESTINATION ${DATA_INSTALL_DIR}/apperd)
 install(FILES apperd.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kded)

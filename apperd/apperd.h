@@ -23,6 +23,8 @@
 
 #include <KDEDModule>
 
+#include <QThread>
+
 class ApperdThread;
 class ApperD : public KDEDModule
 {
@@ -32,6 +34,7 @@ public:
     ~ApperD();
 
 private:
+    QThread *m_thread;
     ApperdThread *m_apperThread;
 };
 
