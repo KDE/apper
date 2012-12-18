@@ -27,6 +27,9 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative>
 
+#include <QDBusConnection>
+#include <QDBusServiceWatcher>
+
 #include <Plasma/ToolTipManager>
 #include <Plasma/ToolTipContent>
 #include <Plasma/DeclarativeWidget>
@@ -177,6 +180,19 @@ void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)
     if (!m_initted) {
         m_initted = true;
         if (!isIconified()) {
+            // Register the org.kde.ApperUpdaterIcon interface
+            // so KDED can know that it doesn't need to show
+            // an popup with updates list
+            if (!registerService()) {
+                // in case registration fails due to another user or application running
+                // keep an eye on it so we can register when available
+                QDBusServiceWatcher *watcher;
+                watcher = new QDBusServiceWatcher(QLatin1String("org.kde.ApperUpdaterIcon"),
+                                                  QDBusConnection::systemBus(),
+                                                  QDBusServiceWatcher::WatchForUnregistration,
+                                                  this);
+                connect(watcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(registerService()));
+            }
             emit getUpdates();
         }
     }
@@ -193,6 +209,15 @@ void UpdaterApplet::popupEvent(bool show)
         // icon, and hiding it the icon is kept at active status
         setStatus(Plasma::PassiveStatus);
     }
+}
+
+bool UpdaterApplet::registerService()
+{
+    if (!QDBusConnection::systemBus().registerService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
+        kDebug() << "unable to register service to dbus";
+        return false;
+    }
+    return true;
 }
 
 #include "updaterapplet.moc"

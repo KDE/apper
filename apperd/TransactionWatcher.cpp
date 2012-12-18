@@ -67,7 +67,7 @@ TransactionWatcher::TransactionWatcher(bool packagekitIsRunning, QObject *parent
 TransactionWatcher::~TransactionWatcher()
 {
     // release any cookie that we might have
-    suppressSleep(false);
+    suppressSleep(false, m_inhibitCookie);
 }
 
 void TransactionWatcher::transactionListChanged(const QStringList &tids)
@@ -83,7 +83,7 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
         m_transactionJob.clear();
 
         // release any cookie that we might have
-        suppressSleep(false);
+        suppressSleep(false, m_inhibitCookie);
     }
 }
 
@@ -117,7 +117,7 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
                     this, SLOT(requireRestart(PackageKit::Transaction::Restart,QString)));
 
             // Don't let the system sleep while doing some sensible actions
-            suppressSleep(true, PkStrings::action(role));
+            suppressSleep(true, m_inhibitCookie, PkStrings::action(role));
         }
         connect(transaction, SIGNAL(changed()), this, SLOT(transactionChanged()));
         connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
@@ -317,21 +317,23 @@ void TransactionWatcher::watchedCanceled()
     }
 }
 
-void TransactionWatcher::suppressSleep(bool enable, const QString &reason)
+void TransactionWatcher::suppressSleep(bool enable, int &inhibitCookie, const QString &reason)
 {
+    if (inhibitCookie == -1) {
+        return;
+    }
+
     if (enable) {
-        if (m_inhibitCookie == -1) {
-            kDebug() << "Begin Suppressing Sleep";
-            m_inhibitCookie = Solid::PowerManagement::beginSuppressingSleep(reason);
-            if (m_inhibitCookie == -1) {
-                kDebug() << "Sleep suppression denied!";
-            }
+        kDebug() << "Begin Suppressing Sleep";
+        inhibitCookie = Solid::PowerManagement::beginSuppressingSleep(reason);
+        if (inhibitCookie == -1) {
+            kDebug() << "Sleep suppression denied!";
         }
-    } else if (m_inhibitCookie != -1) {
+    } else {
         kDebug() << "Stop Suppressing Sleep";
-        if (!Solid::PowerManagement::stopSuppressingSleep(m_inhibitCookie)) {
+        if (!Solid::PowerManagement::stopSuppressingSleep(inhibitCookie)) {
             kDebug() << "Stop failed: invalid cookie.";
         }
-        m_inhibitCookie = -1;
+        inhibitCookie = -1;
     }
 }

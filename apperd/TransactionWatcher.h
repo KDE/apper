@@ -56,7 +56,7 @@ private slots:
     void watchedCanceled();
 
 private:
-    void suppressSleep(bool enable, const QString &reason = QString());
+    static void suppressSleep(bool enable, int &inhibitCookie, const QString &reason = QString());
 
     // Hash of transactions we are watching
     QHash<QDBusObjectPath, Transaction*> m_transactions;

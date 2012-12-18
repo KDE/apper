@@ -34,6 +34,7 @@
 #include <KToolInvocation>
 
 #include <Solid/Device>
+#include <Solid/Battery>
 
 #include <config.h>
 
@@ -161,21 +162,21 @@ bool Settings::hasChanges() const
     KConfigGroup transaction(&config, "Transaction");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
     if (ui->distroIntervalCB->itemData(ui->distroIntervalCB->currentIndex()).toUInt() !=
-            static_cast<uint>(checkUpdateGroup.readEntry("distroUpgrade", Enum::DistroUpgradeDefault))
+            static_cast<uint>(checkUpdateGroup.readEntry(CFG_DISTRO_UPGRADE, Enum::DistroUpgradeDefault))
         ||
             ui->intervalCB->itemData(ui->intervalCB->currentIndex()).toUInt() !=
-            static_cast<uint>(checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault))
+            static_cast<uint>(checkUpdateGroup.readEntry(CFG_INTERVAL, Enum::TimeIntervalDefault))
         ||
-        ui->checkUpdatesBatteryCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnBattery", false)
+        ui->checkUpdatesBatteryCB->isChecked() != checkUpdateGroup.readEntry(CFG_CHECK_UP_BATTERY, DEFAULT_CHECK_UP_BATTERY)
         ||
-        ui->checkUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry("checkUpdatesOnMobile", false)
+        ui->checkUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry(CFG_CHECK_UP_MOBILE, DEFAULT_CHECK_UP_MOBILE)
         ||
         ui->autoCB->itemData(ui->autoCB->currentIndex()).toUInt() !=
-        static_cast<uint>(checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault))
+        static_cast<uint>(checkUpdateGroup.readEntry(CFG_AUTO_UP, Enum::AutoUpdateDefault))
         ||
-        ui->installUpdatesBatteryCB->isChecked()  != checkUpdateGroup.readEntry("installUpdatesOnBattery", false)
+        ui->installUpdatesBatteryCB->isChecked()  != checkUpdateGroup.readEntry(CFG_INSTALL_UP_BATTERY, DEFAULT_INSTALL_UP_BATTERY)
         ||
-        ui->installUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry("installUpdatesOnMobile", false)
+        ui->installUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry(CFG_INSTALL_UP_MOBILE, DEFAULT_INSTALL_UP_MOBILE)
         ||
         ((m_roles & Transaction::RoleGetRepoList) ? m_originModel->changed() : false)
         ||
@@ -216,7 +217,7 @@ void Settings::load()
     ui->appLauncherCB->setChecked(transaction.readEntry("ShowApplicationLauncher", true));
 
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    uint distroUpgrade = checkUpdateGroup.readEntry("distroUpgrade", Enum::DistroUpgradeDefault);
+    uint distroUpgrade = checkUpdateGroup.readEntry(CFG_DISTRO_UPGRADE, Enum::DistroUpgradeDefault);
     int ret = ui->distroIntervalCB->findData(distroUpgrade);
     if (ret == -1) {
         ui->distroIntervalCB->setCurrentIndex(ui->distroIntervalCB->findData(Enum::DistroUpgradeDefault));
@@ -224,7 +225,7 @@ void Settings::load()
         ui->distroIntervalCB->setCurrentIndex(ret);
     }
 
-    uint interval = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
+    uint interval = checkUpdateGroup.readEntry(CFG_INTERVAL, Enum::TimeIntervalDefault);
     ret = ui->intervalCB->findData(interval);
     if (ret == -1) {
         // this is if someone change the file by hand...
@@ -233,10 +234,10 @@ void Settings::load()
     } else {
         ui->intervalCB->setCurrentIndex(ret);
     }
-    ui->checkUpdatesBatteryCB->setChecked(checkUpdateGroup.readEntry("checkUpdatesOnBattery", false));
-    ui->checkUpdatesMobileCB->setChecked(checkUpdateGroup.readEntry("checkUpdatesOnMobile", false));
+    ui->checkUpdatesBatteryCB->setChecked(checkUpdateGroup.readEntry(CFG_CHECK_UP_BATTERY, DEFAULT_CHECK_UP_BATTERY));
+    ui->checkUpdatesMobileCB->setChecked(checkUpdateGroup.readEntry(CFG_CHECK_UP_MOBILE, DEFAULT_CHECK_UP_MOBILE));
 
-    uint autoUpdate = checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault);
+    uint autoUpdate = checkUpdateGroup.readEntry(CFG_AUTO_UP, Enum::AutoUpdateDefault);
     ret = ui->autoCB->findData(autoUpdate);
     if (ret == -1) {
         // this is if someone change the file by hand...
@@ -244,8 +245,8 @@ void Settings::load()
     } else {
         ui->autoCB->setCurrentIndex(ret);
     }
-    ui->installUpdatesBatteryCB->setChecked(checkUpdateGroup.readEntry("installUpdatesOnBattery", false));
-    ui->installUpdatesMobileCB->setChecked(checkUpdateGroup.readEntry("installUpdatesOnMobile", false));
+    ui->installUpdatesBatteryCB->setChecked(checkUpdateGroup.readEntry(CFG_INSTALL_UP_BATTERY, DEFAULT_INSTALL_UP_BATTERY));
+    ui->installUpdatesMobileCB->setChecked(checkUpdateGroup.readEntry(CFG_INSTALL_UP_MOBILE, DEFAULT_INSTALL_UP_MOBILE));
 
     // Load origns list
     if (m_roles & Transaction::RoleGetRepoList) {
@@ -256,6 +257,11 @@ void Settings::load()
     const QList<Solid::Device> listBattery = Solid::Device::listFromType(Solid::DeviceInterface::Battery, QString());
     bool notFound = true;
     foreach (const Solid::Device &device, listBattery) {
+        const Solid::Battery *battery = device.as<Solid::Battery>();
+        if (battery && battery->type() == Solid::Battery::PrimaryBattery) {
+            notFound = false;
+            break;
+        }
     }
 
     if (notFound) {

@@ -20,6 +20,8 @@
 
 #include "DistroUpgrade.h"
 
+#include <Enum.h>
+
 #include <KNotification>
 #include <KLocale>
 #include <KIcon>
@@ -37,8 +39,18 @@ DistroUpgrade::~DistroUpgrade()
 {
 }
 
+void DistroUpgrade::setConfig(const QVariantHash &configs)
+{
+    m_configs = configs;
+}
+
 void DistroUpgrade::checkDistroUpgrades()
 {
+    // Ignore check if the user disabled it
+    if (m_configs[CFG_DISTRO_UPGRADE].toInt() == Enum::DistroNever) {
+        return;
+    }
+
     if (!m_transaction) {
         m_transaction = new Transaction(this);
         m_transaction->getDistroUpgrades();
@@ -56,15 +68,27 @@ void DistroUpgrade::checkDistroUpgrades()
 void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
 {
     // TODO make use of the type
+    switch (m_configs[CFG_DISTRO_UPGRADE].toInt()) {
+    case Enum::DistroNever:
+        return;
+    case Enum::DistroStable:
+        if (type != Transaction::DistroUpgradeStable) {
+            // The user only wants to know about stable releases
+            return;
+        }
+    default:
+        break;
+    }
+
     kDebug() << "Distro upgrade found!" << name << description;
+    if (m_shownDistroUpgrades.contains(name)) {
+        // ignore distro upgrade if the user already saw it
+        return;
+    }
 
     KNotification *notify = new KNotification("DistroUpgradeAvailable", 0, KNotification::Persistent);
-
-    QString text;
-    text =  i18n("Distribution upgrade available") + "<br/>";
-    text += "<b>" + name + "</b><br/>";
-    text += description;
-    notify->setText(text);
+    notify->setTitle(i18n("Distribution upgrade available"));
+    notify->setText(description);
 
     QStringList actions;
     actions << i18n("Start upgrade now");
@@ -74,6 +98,7 @@ void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, c
     connect(notify, SIGNAL(closed()),
             this , SLOT(decreaseRunning()));
     notify->sendEvent();
+    m_shownDistroUpgrades << name;
 }
 
 void DistroUpgrade::checkDistroFinished(Transaction::Exit status, uint enlapsed)

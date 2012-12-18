@@ -73,8 +73,8 @@ void UpdateIcon::checkForUpdates(bool system_ready)
         return;
     }
 
-    uint interval = m_configs["interval"].value<uint>();
-    uint updateType = m_configs["autoUpdate"].value<uint>();
+    uint interval = m_configs[CFG_INTERVAL].value<uint>();
+    uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
 
     // get updates if we should display a notification or automatic update the system
     if (interval != Enum::Never || updateType == Enum::All || updateType == Enum::Security) {
@@ -162,7 +162,28 @@ void UpdateIcon::getUpdateFinished()
 {
     m_getUpdatesT = 0;
     if (!m_updateList.isEmpty()) {
-        // Store all the security updates
+        bool different = false;
+        if (m_oldUpdateList.size() != m_updateList.size()) {
+            different = true;
+        } else {
+            // The lists have the same size let's make sure
+            // all the packages are the same
+            foreach (const QString &packageId, m_updateList) {
+                if (!m_oldUpdateList.contains(packageId)) {
+                    different = true;
+                    break;
+                }
+            }
+        }
+
+        // if the lists are the same don't show
+        // a notification or try to upgrade again
+        if (!different) {
+            return;
+        }
+        m_oldUpdateList = m_updateList;
+
+        // Determine the update type
         UpdateType type = Normal;
         if (!m_securityList.isEmpty()) {
             type = Security;
@@ -171,7 +192,7 @@ void UpdateIcon::getUpdateFinished()
         }
 
         bool systemReady;
-        uint updateType = m_configs["autoUpdate"].value<uint>();
+        uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
         systemReady = sender()->property(SYSTEM_READY).toBool();
         if (!systemReady &&
                 (updateType == Enum::All || (updateType == Enum::Security && !m_securityList.isEmpty()))) {

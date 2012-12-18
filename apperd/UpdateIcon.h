@@ -66,6 +66,7 @@ private:
 
     Transaction *m_getUpdatesT;
     StatusNotifierItem *m_statusNotifierItem;
+    QStringList m_oldUpdateList;
     QStringList m_updateList;
     QStringList m_importantList;
     QStringList m_securityList;

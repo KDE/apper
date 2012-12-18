@@ -58,7 +58,11 @@ protected:
     void constraintsEvent(Plasma::Constraints constraints);
     virtual void popupEvent(bool show);
 
+private slots:
+    bool registerService();
+
 private:
+
     Plasma::DeclarativeWidget *m_declarativeWidget;
     PackageModel *m_updatesModel;
     bool m_initted;

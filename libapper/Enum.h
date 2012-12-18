@@ -29,6 +29,19 @@
 #define AUTOREMOVE false
 #endif // HAVE_AUTOREMOVE
 
+#define CFG_CHECK_UP_BATTERY   "checkUpdatesOnBattery"
+#define CFG_CHECK_UP_MOBILE    "checkUpdatesOnMobile"
+#define CFG_INSTALL_UP_BATTERY "installUpdatesOnBattery"
+#define CFG_INSTALL_UP_MOBILE  "installUpdatesOnMobile"
+#define CFG_AUTO_UP            "autoUpdate"
+#define CFG_INTERVAL           "interval"
+#define CFG_DISTRO_UPGRADE     "distroUpgrade"
+
+#define DEFAULT_CHECK_UP_BATTERY   false
+#define DEFAULT_CHECK_UP_MOBILE    false
+#define DEFAULT_INSTALL_UP_BATTERY false
+#define DEFAULT_INSTALL_UP_MOBILE  false
+
 namespace Enum {
 
 typedef enum {

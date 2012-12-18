@@ -69,13 +69,10 @@ ApperdThread::ApperdThread(QObject *parent) :
 
 ApperdThread::~ApperdThread()
 {
-    kDebug() << "-------------ApperdThread-------------" << QThread::currentThreadId();
-    delete m_updateIcon;
 }
 
 void ApperdThread::init()
 {
-    kDebug() << "-------------init-------------" << QThread::currentThreadId();
     // This timer keeps polling to see if it has
     // to refresh the cache
     m_qtimer = new QTimer(this);
@@ -112,10 +109,11 @@ void ApperdThread::init()
     connect(m_interface, SIGNAL(refreshCache()),
             m_refreshCache, SLOT(refreshCache()));
 
-    m_updateIcon = new UpdateIcon;
+    m_updateIcon = new UpdateIcon(this);
     m_updateIcon->setConfig(m_configs);
 
     m_distroUpgrade = new DistroUpgrade(this);
+    m_distroUpgrade->setConfig(m_configs);
 
     // if PackageKit is running check to see if there are running transactons already
     bool packagekitIsRunning = nameHasOwner(QLatin1String("org.freedesktop.PackageKit"),
@@ -125,7 +123,7 @@ void ApperdThread::init()
     // connect the watch transaction coming from the updater icon to our watcher
     connect(m_updateIcon, SIGNAL(watchTransaction(QDBusObjectPath,bool)),
             m_trayIcon, SLOT(watchTransaction(QDBusObjectPath,bool)));
-kDebug() << "-------------init-------------" << packagekitIsRunning;
+
     if (packagekitIsRunning) {
         // If packagekit is already running go check
         // for updates
@@ -146,15 +144,15 @@ void ApperdThread::poll()
     }
 
     // If check for updates is active
-    if (m_configs["interval"].value<uint>() != Enum::Never) {
+    if (m_configs[CFG_INTERVAL].value<uint>() != Enum::Never) {
         // Find out how many seconds passed since last refresh cache
         uint secsSinceLastRefresh;
         secsSinceLastRefresh = QDateTime::currentDateTime().toTime_t() - m_lastRefreshCache.toTime_t();
 
         // If lastRefreshCache is null it means that the cache was never refreshed
-        if (m_lastRefreshCache.isNull() || secsSinceLastRefresh > m_configs["interval"].value<uint>()) {
-            bool ignoreBattery = m_configs["checkUpdatesOnBattery"].value<bool>();
-            bool ignoreMobile = m_configs["checkUpdatesOnMobile"].value<bool>();
+        if (m_lastRefreshCache.isNull() || secsSinceLastRefresh > m_configs[CFG_INTERVAL].value<uint>()) {
+            bool ignoreBattery = m_configs[CFG_CHECK_UP_BATTERY].value<bool>();
+            bool ignoreMobile = m_configs[CFG_CHECK_UP_MOBILE].value<bool>();
             if (isSystemReady(ignoreBattery, ignoreMobile)) {
                 m_refreshCache->refreshCache();
             }
@@ -169,12 +167,13 @@ void ApperdThread::configFileChanged()
 {
     KConfig config("apper");
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    m_configs["checkUpdatesOnBattery"] = checkUpdateGroup.readEntry("checkUpdatesOnBattery", false);
-    m_configs["checkUpdatesOnMobile"] = checkUpdateGroup.readEntry("checkUpdatesOnMobile", false);
-    m_configs["installUpdatesOnBattery"] = checkUpdateGroup.readEntry("installUpdatesOnBattery", false);
-    m_configs["installUpdatesOnMobile"] = checkUpdateGroup.readEntry("installUpdatesOnMobile", false);
-    m_configs["autoUpdate"] = checkUpdateGroup.readEntry("autoUpdate", Enum::AutoUpdateDefault);
-    m_configs["interval"] = checkUpdateGroup.readEntry("interval", Enum::TimeIntervalDefault);
+    m_configs[CFG_CHECK_UP_BATTERY] = checkUpdateGroup.readEntry(CFG_CHECK_UP_BATTERY, DEFAULT_CHECK_UP_BATTERY);
+    m_configs[CFG_CHECK_UP_MOBILE] = checkUpdateGroup.readEntry(CFG_CHECK_UP_MOBILE, DEFAULT_CHECK_UP_MOBILE);
+    m_configs[CFG_INSTALL_UP_BATTERY] = checkUpdateGroup.readEntry(CFG_INSTALL_UP_BATTERY, DEFAULT_INSTALL_UP_BATTERY);
+    m_configs[CFG_INSTALL_UP_MOBILE] = checkUpdateGroup.readEntry(CFG_INSTALL_UP_MOBILE, DEFAULT_INSTALL_UP_MOBILE);
+    m_configs[CFG_AUTO_UP] = checkUpdateGroup.readEntry(CFG_AUTO_UP, Enum::AutoUpdateDefault);
+    m_configs[CFG_INTERVAL] = checkUpdateGroup.readEntry(CFG_INTERVAL, Enum::TimeIntervalDefault);
+    m_configs[CFG_DISTRO_UPGRADE] = checkUpdateGroup.readEntry(CFG_DISTRO_UPGRADE, Enum::DistroUpgradeDefault);
 }
 
 void ApperdThread::setProxy()
@@ -212,8 +211,8 @@ void ApperdThread::transactionListChanged(const QStringList &tids)
 // This is called when the list of updates changes
 void ApperdThread::updatesChanged()
 {
-    bool ignoreBattery = m_configs["installUpdatesOnBattery"].value<bool>();
-    bool ignoreMobile = m_configs["installUpdatesOnBattery"].value<bool>();
+    bool ignoreBattery = m_configs[CFG_INSTALL_UP_BATTERY].value<bool>();
+    bool ignoreMobile = m_configs[CFG_INSTALL_UP_MOBILE].value<bool>();
 
     // Make sure the user sees the updates
     m_updateIcon->checkForUpdates(isSystemReady(ignoreBattery, ignoreMobile));

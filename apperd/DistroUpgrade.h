@@ -34,6 +34,8 @@ public:
     DistroUpgrade(QObject *parent = 0);
     ~DistroUpgrade();
 
+    void setConfig(const QVariantHash &configs);
+
 public slots:
     void checkDistroUpgrades();
 
@@ -47,6 +49,8 @@ private slots:
 private:
     QProcess *m_distroUpgradeProcess;
     Transaction *m_transaction;
+    QVariantHash m_configs;
+    QStringList m_shownDistroUpgrades;
 };
 
 #endif
