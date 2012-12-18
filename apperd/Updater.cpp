@@ -143,13 +143,7 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
         }
         m_oldUpdateList = m_updateList;
 
-        // Determine the update type
-        UpdateType type = Normal;
-        if (!m_securityList.isEmpty()) {
-            type = Security;
-        } else if (!m_importantList.isEmpty()) {
-            type = Important;
-        }
+
 
         bool systemReady = false;
         uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
@@ -157,92 +151,37 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
             // if get updates failed the system is not ready
             systemReady = sender()->property(SYSTEM_READY).toBool();
         }
-        if (!systemReady &&
-                (updateType == Enum::All || (updateType == Enum::Security && !m_securityList.isEmpty()))) {
-            kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
-        }
 
         if (systemReady && updateType == Enum::All) {
             // update all
-            PkTransaction *t = new PkTransaction;
-            t->enableJobWatcher(true);
-            connect(t, SIGNAL(finished(PkTransaction::ExitStatus)),
-                    this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
-            t->setProperty(SYSTEM_READY, systemReady);
-            t->updatePackages(m_updateList);
-            if (!t->error()) {
-                // Force the creation of a transaction Job
-                emit watchTransaction(t->tid(), true);
-
-                //autoUpdatesInstalling(t);
-                KNotification *notify = new KNotification("AutoInstallingUpdates");
-                notify->setComponentData(KComponentData("apperd"));
-                notify->setText(i18n("Updates are being automatically installed."));
-                // use of QSize does the right thing
-                notify->setPixmap(KIcon("plasmagik").pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-                notify->sendEvent();
-
-                emit closeNotification();
+            bool ret;
+            ret = updatePackages(m_updateList,
+                                 false,
+                                 "plasmagik",
+                                 i18n("Updates are being automatically installed."));
+            if (ret) {
                 return;
             }
         } else if (systemReady && updateType == Enum::Security && !m_securityList.isEmpty()) {
             // Defaults to security
-            PkTransaction *t = new PkTransaction;
-            t->enableJobWatcher(true);
-            connect(t, SIGNAL(finished(PkTransaction::ExitStatus)),
-                    this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
-            t->setProperty(SYSTEM_READY, systemReady);
-            t->updatePackages(m_securityList);
-            if (!t->error()) {
-                // Force the creation of a transaction Job
-                emit watchTransaction(t->tid(), true);
-
-                //autoUpdatesInstalling(t);
-                KNotification *notify = new KNotification("AutoInstallingUpdates");
-                notify->setComponentData(KComponentData("apperd"));
-                notify->setText(i18n("Security updates are being automatically installed."));
-                // use of QSize does the right thing
-                notify->setPixmap(KIcon(UPDATES_ICON).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-                notify->sendEvent();
-
-                emit closeNotification();
+            bool ret;
+            ret = updatePackages(m_securityList,
+                                 false,
+                                 UPDATES_ICON,
+                                 i18n("Security updates are being automatically installed."));
+            if (ret) {
                 return;
             }
+        } else if (!systemReady &&
+                   (updateType == Enum::All || (updateType == Enum::Security && !m_securityList.isEmpty()))) {
+            kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
         }
 
-        // If an erro happened to creathe the auto update
-        // transactions show the update list
-        QString icon;
-        if (type == Important) {
-            icon = "security-medium";
-        } else if (type == Security) {
-            icon = "security-low";
-        } else {
-            icon = "system-software-update";
-        }
-
-        KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
-        notify->setComponentData(KComponentData("apperd"));
-        connect(notify, SIGNAL(action1Activated()), this, SLOT(showUpdates()));
-        connect(this, SIGNAL(closeNotification()), notify, SLOT(close()));
-        notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updateList.size()));
-        QStringList names;
-        foreach (const QString &packageId, m_updateList) {
-            names << Transaction::packageName(packageId);
-        }
-        QString text = names.join(QLatin1String(", "));
-        notify->setText(text);
-
-        QStringList actions;
-        actions << i18n("Review");
-        notify->setActions(actions);
-
-        // use of QSize does the right thing
-        notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-        notify->sendEvent();
+        // If an erro happened to create the auto update
+        // transaction show the update list
+        showUpdatesPopup();
     } else {
         m_oldUpdateList.clear();
-        emit closeNotification();
     }
 }
 
@@ -256,19 +195,19 @@ void Updater::autoUpdatesFinished(PkTransaction::ExitStatus status)
         notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
         notify->setText(i18n("System update was successful."));
         notify->sendEvent();
-        
-        // run get-updates again so that non auto-installed updates can be displayed
-        checkForUpdates(sender()->property(SYSTEM_READY).toBool());
     } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
         notify->setText(i18n("The automated software update failed."));
         notify->sendEvent();
+
+        // show updates popup
+        showUpdatesPopup();
     }
 }
 
-void Updater::showUpdates()
+void Updater::reviewUpdates()
 {
     // This must be called from the main thread...
     KToolInvocation::startServiceByDesktopName("apper_updates");
@@ -279,4 +218,59 @@ void Updater::serviceOwnerChanged(const QString &service, const QString &oldOwne
     Q_UNUSED(service)
     Q_UNUSED(oldOwner)
     m_hasAppletIconified = !newOwner.isEmpty();
+}
+
+void Updater::showUpdatesPopup()
+{
+    // Determine the update type
+    KIcon icon;
+    if (!m_securityList.isEmpty()) {
+        icon = KIcon("security-low");
+    } else if (!m_importantList.isEmpty()) {
+        icon = KIcon("security-medium");
+    } else {
+        icon = KIcon("system-software-update");
+    }
+
+    KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
+    notify->setComponentData(KComponentData("apperd"));
+    connect(notify, SIGNAL(action1Activated()), this, SLOT(reviewUpdates()));
+    notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updateList.size()));
+    QStringList names;
+    foreach (const QString &packageId, m_updateList) {
+        names << Transaction::packageName(packageId);
+    }
+    QString text = names.join(QLatin1String(", "));
+    notify->setText(text);
+
+    QStringList actions;
+    actions << i18n("Review");
+    notify->setActions(actions);
+
+    // use of QSize does the right thing
+    notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+    notify->sendEvent();
+}
+
+bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, const QString &icon, const QString &msg)
+{
+    // Defaults to security
+    PkTransaction *transaction = new PkTransaction;
+    transaction->enableJobWatcher(true);
+    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
+            this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
+    transaction->setProperty("DownloadOnly", downloadOnly);
+    transaction->updatePackages(packages);
+    if (!transaction->error()) {
+        //autoUpdatesInstalling(t);
+        KNotification *notify = new KNotification("AutoInstallingUpdates");
+        notify->setComponentData(KComponentData("apperd"));
+        notify->setText(msg);
+        // use of QSize does the right thing
+        notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+        notify->sendEvent();
+
+        return true;
+    }
+    return false;
 }

@@ -34,19 +34,10 @@ class Updater : public QObject
 {
     Q_OBJECT
 public:
-    typedef enum{
-        Normal,
-        Important,
-        Security
-    } UpdateType;
     Updater(QObject *parent = 0);
     ~Updater();
 
     void setConfig(const QVariantHash &configs);
-
-signals:
-    void watchTransaction(const QDBusObjectPath &tid, bool interactive);
-    void closeNotification();
 
 public slots:
     void checkForUpdates(bool system_ready);
@@ -55,10 +46,12 @@ private slots:
     void packageToUpdate(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void getUpdateFinished(PackageKit::Transaction::Exit exit);
     void autoUpdatesFinished(PkTransaction::ExitStatus exit);
-    void showUpdates();
+    void reviewUpdates();
     void serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner);
 
 private:
+    void showUpdatesPopup();
+    bool updatePackages(const QStringList &packages, bool downloadOnly, const QString &icon, const QString &msg);
     bool m_hasAppletIconified;
     Transaction *m_getUpdatesT;
     QStringList m_oldUpdateList;
