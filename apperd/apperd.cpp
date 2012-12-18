@@ -30,10 +30,10 @@ K_EXPORT_PLUGIN(ApperFactory("apperd"))
 ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
     KDEDModule(parent)
 {
-    m_thread = new QThread(this);
+//    m_thread = new QThread(this);
     m_apperThread = new ApperdThread;
-    m_apperThread->moveToThread(m_thread);
-    m_thread->start();
+//    m_apperThread->moveToThread(m_thread);
+//    m_thread->start();
 
     // Make all our init code run on the thread since
     // the DBus calls were made blocking
@@ -45,7 +45,7 @@ ApperD::~ApperD()
     // delete the apper thread code, don't use delete later since it has moved
     // to the stopped thread
     m_apperThread->deleteLater();
-    m_thread->quit();
-    m_thread->wait();
+//    m_thread->quit();
+//    m_thread->wait();
     delete m_thread;
 }

@@ -23,15 +23,12 @@
 #ifndef UPDATE_ICON_H
 #define UPDATE_ICON_H
 
-//#include "AbstractIsRunning.h"
+#include <Transaction>
 
 #include <QStringList>
 
-#include <Transaction>
-
 using namespace PackageKit;
 
-class StatusNotifierItem;
 class UpdateIcon : public QObject
 {
     Q_OBJECT
@@ -48,24 +45,21 @@ public:
 
 signals:
     void watchTransaction(const QDBusObjectPath &tid, bool interactive);
+    void closeNotification();
 
 public slots:
     void checkForUpdates(bool system_ready);
 
 private slots:
     void packageToUpdate(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
-    void getUpdateFinished();
+    void getUpdateFinished(PackageKit::Transaction::Exit exit);
     void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
-
-    void showSettings();
     void showUpdates();
-    void removeStatusNotifierItem();
+    void serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner);
 
 private:
-    void updateStatusNotifierIcon(UpdateType type);
-
+    bool m_hasAppletIconified;
     Transaction *m_getUpdatesT;
-    StatusNotifierItem *m_statusNotifierItem;
     QStringList m_oldUpdateList;
     QStringList m_updateList;
     QStringList m_importantList;

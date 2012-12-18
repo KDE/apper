@@ -41,7 +41,6 @@
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusReply>
-#include <QtDBus/QDBusServiceWatcher>
 #include <QThread>
 
 #include <limits.h>
@@ -76,7 +75,7 @@ void ApperdThread::init()
     // This timer keeps polling to see if it has
     // to refresh the cache
     m_qtimer = new QTimer(this);
-    m_qtimer->setInterval(ONE_MIN);
+    m_qtimer->setInterval(FIVE_MIN);
     connect(m_qtimer, SIGNAL(timeout()), this, SLOT(poll()));
     m_qtimer->start();
 
@@ -233,7 +232,7 @@ QDateTime ApperdThread::getTimeSinceRefreshCache() const
     }
 }
 
-bool ApperdThread::nameHasOwner(const QString &name, const QDBusConnection &connection) const
+bool ApperdThread::nameHasOwner(const QString &name, const QDBusConnection &connection)
 {
     QDBusMessage message;
     message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.DBus"),

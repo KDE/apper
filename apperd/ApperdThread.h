@@ -36,6 +36,8 @@ public:
     explicit ApperdThread(QObject *parent = 0);
     ~ApperdThread();
 
+    static bool nameHasOwner(const QString &name, const QDBusConnection &connection);
+
 private slots:
     void init();
     void poll();
@@ -47,7 +49,6 @@ private slots:
 
 private:
     QDateTime getTimeSinceRefreshCache() const;
-    bool nameHasOwner(const QString &name, const QDBusConnection &connection) const;
     bool isSystemReady(bool ignoreBattery, bool ignoreMobile) const;
 
     bool m_actRefreshCacheChecked;

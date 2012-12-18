@@ -270,9 +270,9 @@ KIcon PkIcons::packageIcon(Transaction::Info info)
     switch (info) {
     case Transaction::InfoBugfix      : return KIcon("script-error");
     case Transaction::InfoEnhancement : return KIcon("ktip");
-    case Transaction::InfoImportant   : return KIcon("security-low");
+    case Transaction::InfoImportant   : return KIcon("security-medium");
     case Transaction::InfoLow         : return KIcon("security-high");
-    case Transaction::InfoSecurity    : return KIcon("security-medium");
+    case Transaction::InfoSecurity    : return KIcon("security-low");
     case Transaction::InfoNormal      : return KIcon("emblem-new");
     case Transaction::InfoBlocked     : return KIcon("dialog-cancel");
     case Transaction::InfoAvailable   : return KIcon("package-download");

@@ -22,11 +22,13 @@
 
 #include "UpdateIcon.h"
 
-#include "StatusNotifierItem.h"
+#include "ApperdThread.h"
 
 #include <PkStrings.h>
 #include <PkIcons.h>
 #include <Enum.h>
+
+#include <QDBusServiceWatcher>
 
 #include <KLocale>
 #include <KNotification>
@@ -45,9 +47,20 @@ using namespace PackageKit;
 
 UpdateIcon::UpdateIcon(QObject* parent) :
     QObject(parent),
-    m_getUpdatesT(0),
-    m_statusNotifierItem(0)
+    m_getUpdatesT(0)
 {
+    // in case registration fails due to another user or application running
+    // keep an eye on it so we can register when available
+    QDBusServiceWatcher *watcher;
+    watcher = new QDBusServiceWatcher(QLatin1String("org.kde.ApperUpdaterIcon"),
+                                      QDBusConnection::systemBus(),
+                                      QDBusServiceWatcher::WatchForOwnerChange,
+                                      this);
+    connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
+
+    m_hasAppletIconified = ApperdThread::nameHasOwner(QLatin1String("org.kde.ApperUpdaterIcon"),
+                                                      QDBusConnection::systemBus());
 }
 
 UpdateIcon::~UpdateIcon()
@@ -59,42 +72,30 @@ void UpdateIcon::setConfig(const QVariantHash &configs)
     m_configs = configs;
 }
 
-void UpdateIcon::showSettings()
-{
-    KToolInvocation::startServiceByDesktopName("apper_settings");
-}
-
 void UpdateIcon::checkForUpdates(bool system_ready)
 {
+    uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
+
     kDebug() << "-------------checkForUpdates-------------" << system_ready;
-    // This is really necessary to don't bother the user with
-    // tons of popups
-    if (m_getUpdatesT) {
+    // Skip the check if one is already running or
+    // the plasmoid is in Icon form and the auto update type is None
+    if (m_getUpdatesT || (m_hasAppletIconified && updateType == Enum::None)) {
+        kDebug() << "-------------ignoring check-------------" << m_getUpdatesT << m_hasAppletIconified << updateType;
         return;
     }
 
-    uint interval = m_configs[CFG_INTERVAL].value<uint>();
-    uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
-
-    // get updates if we should display a notification or automatic update the system
-    if (interval != Enum::Never || updateType == Enum::All || updateType == Enum::Security) {
-        m_updateList.clear();
-        m_importantList.clear();
-        m_securityList.clear();
-        m_getUpdatesT = new Transaction(this);
-        m_getUpdatesT->setProperty(SYSTEM_READY, system_ready);
-        connect(m_getUpdatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                this, SLOT(packageToUpdate(PackageKit::Transaction::Info,QString,QString)));
-        connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(getUpdateFinished()));
-        m_getUpdatesT->getUpdates();
-        if (m_getUpdatesT->error()) {
-            m_getUpdatesT = 0;
-        } else {
-            return;
-        }
-    } else {
-        removeStatusNotifierItem();
+    m_updateList.clear();
+    m_importantList.clear();
+    m_securityList.clear();
+    m_getUpdatesT = new Transaction(this);
+    m_getUpdatesT->setProperty(SYSTEM_READY, system_ready);
+    connect(m_getUpdatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(packageToUpdate(PackageKit::Transaction::Info,QString,QString)));
+    connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            this, SLOT(getUpdateFinished(PackageKit::Transaction::Exit)));
+    m_getUpdatesT->getUpdates();
+    if (m_getUpdatesT->error()) {
+        m_getUpdatesT = 0;
     }
 }
 
@@ -119,46 +120,7 @@ void UpdateIcon::packageToUpdate(Transaction::Info info, const QString &packageI
     m_updateList << packageID;
 }
 
-void UpdateIcon::updateStatusNotifierIcon(UpdateType type)
-{
-//    if (!m_statusNotifierItem) {
-//        m_statusNotifierItem = new StatusNotifierItem(this);
-//        // Setup a menu with some actions
-//        KMenu *menu = new KMenu;
-//        menu->addTitle(KIcon(UPDATES_ICON), i18n("Apper"));
-//        QAction *action;
-//        action = menu->addAction(i18n("Review Updates"));
-//        connect(action, SIGNAL(triggered(bool)),
-//                this, SLOT(showUpdates()));
-//        action = menu->addAction(i18n("Configure"));
-//        connect(action, SIGNAL(triggered(bool)),
-//                this, SLOT(showSettings()));
-//        menu->addSeparator();
-//        action = menu->addAction(i18n("Hide"));
-//        connect(action, SIGNAL(triggered(bool)),
-//                this, SLOT(removeStatusNotifierItem()));
-//        m_statusNotifierItem->setContextMenu(menu);
-//        // Show updates on the left click
-//        connect(m_statusNotifierItem, SIGNAL(activateRequested(bool,QPoint)),
-//                this, SLOT(showUpdates()));
-//    }
-
-//    QString text;
-//    text = i18np("You have one update", "You have %1 updates", m_updateList.size());
-//    m_statusNotifierItem->setToolTip(UPDATES_ICON, text, QString());
-
-//    QString icon;
-//    if (type == Important) {
-//        icon = "kpackagekit-important";
-//    } else if (type == Security) {
-//        icon = "kpackagekit-security";
-//    } else {
-//        icon = "kpackagekit-updates";
-//    }
-//    m_statusNotifierItem->setIconByName(icon);
-}
-
-void UpdateIcon::getUpdateFinished()
+void UpdateIcon::getUpdateFinished(PackageKit::Transaction::Exit exit)
 {
     m_getUpdatesT = 0;
     if (!m_updateList.isEmpty()) {
@@ -191,9 +153,12 @@ void UpdateIcon::getUpdateFinished()
             type = Important;
         }
 
-        bool systemReady;
+        bool systemReady = false;
         uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
-        systemReady = sender()->property(SYSTEM_READY).toBool();
+        if (exit == Transaction::ExitSuccess) {
+            // if get updates failed the system is not ready
+            systemReady = sender()->property(SYSTEM_READY).toBool();
+        }
         if (!systemReady &&
                 (updateType == Enum::All || (updateType == Enum::Security && !m_securityList.isEmpty()))) {
             kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
@@ -211,13 +176,14 @@ void UpdateIcon::getUpdateFinished()
                 emit watchTransaction(t->tid(), true);
 
                 //autoUpdatesInstalling(t);
-                KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
-                autoInstallNotify->setText(i18n("Updates are being automatically installed."));
+                KNotification *notify = new KNotification("AutoInstallingUpdates");
+                notify->setComponentData(KComponentData("apperd"));
+                notify->setText(i18n("Updates are being automatically installed."));
                 // use of QSize does the right thing
-                autoInstallNotify->setPixmap(KIcon("plasmagik").pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-                autoInstallNotify->sendEvent();
+                notify->setPixmap(KIcon("plasmagik").pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+                notify->sendEvent();
 
-                removeStatusNotifierItem();
+                emit closeNotification();
                 return;
             }
         } else if (systemReady && updateType == Enum::Security && !m_securityList.isEmpty()) {
@@ -232,27 +198,57 @@ void UpdateIcon::getUpdateFinished()
                 emit watchTransaction(t->tid(), true);
 
                 //autoUpdatesInstalling(t);
-                KNotification *autoInstallNotify = new KNotification("AutoInstallingUpdates");
-                autoInstallNotify->setText(i18n("Security updates are being automatically installed."));
+                KNotification *notify = new KNotification("AutoInstallingUpdates");
+                notify->setComponentData(KComponentData("apperd"));
+                notify->setText(i18n("Security updates are being automatically installed."));
                 // use of QSize does the right thing
-                autoInstallNotify->setPixmap(KIcon(UPDATES_ICON).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-                autoInstallNotify->sendEvent();
+                notify->setPixmap(KIcon(UPDATES_ICON).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+                notify->sendEvent();
 
-                removeStatusNotifierItem();
+                emit closeNotification();
                 return;
             }
         }
 
-        // all failed let's update our icon
-        updateStatusNotifierIcon(type);
+        // If an erro happened to creathe the auto update
+        // transactions show the update list
+        QString icon;
+        if (type == Important) {
+            icon = "security-medium";
+        } else if (type == Security) {
+            icon = "security-low";
+        } else {
+            icon = "system-software-update";
+        }
+
+        KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
+        notify->setComponentData(KComponentData("apperd"));
+        connect(notify, SIGNAL(action1Activated()), this, SLOT(showUpdates()));
+        connect(this, SIGNAL(closeNotification()), notify, SLOT(close()));
+        notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updateList.size()));
+        QStringList names;
+        foreach (const QString &packageId, m_updateList) {
+            names << Daemon::packageName(packageId);
+        }
+        QString text = names.join(QLatin1String(", "));
+        notify->setText(text);
+
+        QStringList actions;
+        actions << i18n("Review");
+        notify->setActions(actions);
+
+        // use of QSize does the right thing
+        notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+        notify->sendEvent();
     } else {
-        removeStatusNotifierItem();
+        emit closeNotification();
     }
 }
 
 void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
 {
     KNotification *notify = new KNotification("UpdatesComplete");
+    notify->setComponentData(KComponentData("apperd"));
     if (status == Transaction::ExitSuccess) {
         KIcon icon("task-complete");
         // use of QSize does the right thing
@@ -273,13 +269,13 @@ void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
 
 void UpdateIcon::showUpdates()
 {
+    // This must be called from the main thread...
     KToolInvocation::startServiceByDesktopName("apper_updates");
 }
 
-void UpdateIcon::removeStatusNotifierItem()
+void UpdateIcon::serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner)
 {
-    if (m_statusNotifierItem) {
-        m_statusNotifierItem->deleteLater();
-        m_statusNotifierItem = 0;
-    }
+    Q_UNUSED(service)
+    Q_UNUSED(oldOwner)
+    m_hasAppletIconified = !newOwner.isEmpty();
 }

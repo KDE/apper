@@ -3,7 +3,6 @@ set(kded_apperd_SRCS
     DBusInterface.cpp
     TransactionJob.cpp
     TransactionWatcher.cpp
-    StatusNotifierItem.cpp
     RefreshCacheTask.cpp
     UpdateIcon.cpp
     ApperdThread.cpp

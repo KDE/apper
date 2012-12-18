@@ -201,6 +201,7 @@ void TransactionWatcher::message(PackageKit::Transaction::Message type, const QS
 {
     KNotification *notify;
     notify = new KNotification("TransactionMessage", 0, KNotification::Persistent);
+    notify->setComponentData(KComponentData("apperd"));
     notify->setTitle(PkStrings::message(type));
     notify->setText(message);
 
@@ -214,7 +215,9 @@ void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QSt
 {
     KNotification *notify;
     notify = new KNotification("TransactionError", 0, KNotification::Persistent);
-    notify->setText("<b>"+PkStrings::error(err)+"</b><br>"+PkStrings::errorMessage(err));
+    notify->setComponentData(KComponentData("apperd"));
+    notify->setTitle(PkStrings::error(err));
+    notify->setText(PkStrings::errorMessage(err));
     notify->setProperty("ErrorType", QVariant::fromValue(err));
     notify->setProperty("Details", details);
 
