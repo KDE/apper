@@ -4,7 +4,7 @@ set(kded_apperd_SRCS
     TransactionJob.cpp
     TransactionWatcher.cpp
     RefreshCacheTask.cpp
-    UpdateIcon.cpp
+    Updater.cpp
     ApperdThread.cpp
     apperd.cpp
 )

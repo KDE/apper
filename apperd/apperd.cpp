@@ -47,5 +47,5 @@ ApperD::~ApperD()
     m_apperThread->deleteLater();
 //    m_thread->quit();
 //    m_thread->wait();
-    delete m_thread;
+//    delete m_thread;
 }

@@ -20,7 +20,7 @@
 #include "ApperdThread.h"
 
 #include "RefreshCacheTask.h"
-#include "UpdateIcon.h"
+#include "Updater.h"
 #include "DistroUpgrade.h"
 #include "TransactionWatcher.h"
 #include "DBusInterface.h"
@@ -108,8 +108,8 @@ void ApperdThread::init()
     connect(m_interface, SIGNAL(refreshCache()),
             m_refreshCache, SLOT(refreshCache()));
 
-    m_updateIcon = new UpdateIcon(this);
-    m_updateIcon->setConfig(m_configs);
+    m_updater = new Updater(this);
+    m_updater->setConfig(m_configs);
 
     m_distroUpgrade = new DistroUpgrade(this);
     m_distroUpgrade->setConfig(m_configs);
@@ -120,7 +120,7 @@ void ApperdThread::init()
 
     m_trayIcon = new TransactionWatcher(packagekitIsRunning, this);
     // connect the watch transaction coming from the updater icon to our watcher
-    connect(m_updateIcon, SIGNAL(watchTransaction(QDBusObjectPath,bool)),
+    connect(m_updater, SIGNAL(watchTransaction(QDBusObjectPath,bool)),
             m_trayIcon, SLOT(watchTransaction(QDBusObjectPath,bool)));
 
     if (packagekitIsRunning) {
@@ -214,7 +214,7 @@ void ApperdThread::updatesChanged()
     bool ignoreMobile = m_configs[CFG_INSTALL_UP_MOBILE].value<bool>();
 
     // Make sure the user sees the updates
-    m_updateIcon->checkForUpdates(isSystemReady(ignoreBattery, ignoreMobile));
+    m_updater->checkForUpdates(isSystemReady(ignoreBattery, ignoreMobile));
     m_distroUpgrade->checkDistroUpgrades();
 }
 

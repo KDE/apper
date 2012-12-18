@@ -28,7 +28,7 @@ class DBusInterface;
 class DistroUpgrade;
 class RefreshCacheTask;
 class TransactionWatcher;
-class UpdateIcon;
+class Updater;
 class ApperdThread : public QObject
 {
     Q_OBJECT
@@ -61,7 +61,7 @@ private:
     DistroUpgrade *m_distroUpgrade;
     RefreshCacheTask *m_refreshCache;
     TransactionWatcher *m_trayIcon;
-    UpdateIcon *m_updateIcon;
+    Updater *m_updater;
 };
 
 #endif // APPERDTHREAD_H

@@ -20,7 +20,7 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "UpdateIcon.h"
+#include "Updater.h"
 
 #include "ApperdThread.h"
 
@@ -45,7 +45,7 @@
 
 using namespace PackageKit;
 
-UpdateIcon::UpdateIcon(QObject* parent) :
+Updater::Updater(QObject* parent) :
     QObject(parent),
     m_getUpdatesT(0)
 {
@@ -53,26 +53,26 @@ UpdateIcon::UpdateIcon(QObject* parent) :
     // keep an eye on it so we can register when available
     QDBusServiceWatcher *watcher;
     watcher = new QDBusServiceWatcher(QLatin1String("org.kde.ApperUpdaterIcon"),
-                                      QDBusConnection::systemBus(),
+                                      QDBusConnection::sessionBus(),
                                       QDBusServiceWatcher::WatchForOwnerChange,
                                       this);
     connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
             this, SLOT(serviceOwnerChanged(QString,QString,QString)));
 
     m_hasAppletIconified = ApperdThread::nameHasOwner(QLatin1String("org.kde.ApperUpdaterIcon"),
-                                                      QDBusConnection::systemBus());
+                                                      QDBusConnection::sessionBus());
 }
 
-UpdateIcon::~UpdateIcon()
+Updater::~Updater()
 {
 }
 
-void UpdateIcon::setConfig(const QVariantHash &configs)
+void Updater::setConfig(const QVariantHash &configs)
 {
     m_configs = configs;
 }
 
-void UpdateIcon::checkForUpdates(bool system_ready)
+void Updater::checkForUpdates(bool system_ready)
 {
     uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
 
@@ -99,7 +99,7 @@ void UpdateIcon::checkForUpdates(bool system_ready)
     }
 }
 
-void UpdateIcon::packageToUpdate(Transaction::Info info, const QString &packageID, const QString &summary)
+void Updater::packageToUpdate(Transaction::Info info, const QString &packageID, const QString &summary)
 {
     Q_UNUSED(summary)
 
@@ -120,7 +120,7 @@ void UpdateIcon::packageToUpdate(Transaction::Info info, const QString &packageI
     m_updateList << packageID;
 }
 
-void UpdateIcon::getUpdateFinished(PackageKit::Transaction::Exit exit)
+void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
 {
     m_getUpdatesT = 0;
     if (!m_updateList.isEmpty()) {
@@ -241,11 +241,12 @@ void UpdateIcon::getUpdateFinished(PackageKit::Transaction::Exit exit)
         notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
         notify->sendEvent();
     } else {
+        m_oldUpdateList.clear();
         emit closeNotification();
     }
 }
 
-void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
+void Updater::autoUpdatesFinished(PackageKit::Transaction::Exit status)
 {
     KNotification *notify = new KNotification("UpdatesComplete");
     notify->setComponentData(KComponentData("apperd"));
@@ -267,13 +268,13 @@ void UpdateIcon::autoUpdatesFinished(PackageKit::Transaction::Exit status)
     }
 }
 
-void UpdateIcon::showUpdates()
+void Updater::showUpdates()
 {
     // This must be called from the main thread...
     KToolInvocation::startServiceByDesktopName("apper_updates");
 }
 
-void UpdateIcon::serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner)
+void Updater::serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner)
 {
     Q_UNUSED(service)
     Q_UNUSED(oldOwner)

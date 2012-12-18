@@ -31,6 +31,9 @@ Item {
     property int maximumWidth: 0
     property int preferredHeight: 0
     property int preferredWidth: 0
+    property int implicitHeight: 0
+    property int implicitWidth: 0
+
 
     property bool checkedForUpdates: false
 
@@ -47,6 +50,12 @@ Item {
 
         Daemon.updatesChanged.connect(updatesChanged);
         UpdaterPlasmoid.getUpdates.connect(getUpdates);
+        UpdaterPlasmoid.checkForNewUpdates.connect(checkForNewUpdates);
+    }
+
+    function checkForNewUpdates() {
+        transactionView.refreshCache();
+        root.state = "TRANSACTION";
     }
 
     function getUpdates() {
@@ -129,10 +138,7 @@ Item {
             PlasmaComponents.Button {
                 id: refreshBT
                 text:  i18n("Check for new updates")
-                onClicked: {
-                    transactionView.refreshCache();
-                    root.state = "TRANSACTION";
-                }
+                onClicked: checkForNewUpdates()
             }
             PlasmaComponents.Button {
                 id: reviewBT

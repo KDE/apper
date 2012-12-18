@@ -55,6 +55,11 @@ UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
     m_declarativeWidget(0),
     m_initted(false)
 {
+    QAction *action = new QAction(i18n("Check for new updates"), this);
+    action->setIcon(KIcon("view-refresh"));
+    connect(action, SIGNAL(triggered()), this, SIGNAL(checkForNewUpdates()));
+    m_actions << action;
+
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
     setActive(false);
     setPopupIcon("kpackagekit-updates");
@@ -80,8 +85,18 @@ void UpdaterApplet::init()
     PopupApplet::init();
 }
 
+QList<QAction *> UpdaterApplet::contextualActions()
+{
+    return m_actions;
+}
+
 UpdaterApplet::~UpdaterApplet()
 {
+    // We need to unregister the service since
+    // plasma-desktop won't exit
+    if (!QDBusConnection::sessionBus().unregisterService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
+        kDebug() << "unable to unregister service to dbus";
+    }
 }
 
 Q_DECLARE_METATYPE(PackageKit::Transaction::Status)
@@ -213,7 +228,7 @@ void UpdaterApplet::popupEvent(bool show)
 
 bool UpdaterApplet::registerService()
 {
-    if (!QDBusConnection::systemBus().registerService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
+    if (!QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
         kDebug() << "unable to register service to dbus";
         return false;
     }

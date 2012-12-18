@@ -20,8 +20,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#ifndef UPDATE_ICON_H
-#define UPDATE_ICON_H
+#ifndef UPDATER_H
+#define UPDATER_H
 
 #include <Transaction>
 
@@ -29,7 +29,7 @@
 
 using namespace PackageKit;
 
-class UpdateIcon : public QObject
+class Updater : public QObject
 {
     Q_OBJECT
 public:
@@ -38,8 +38,8 @@ public:
         Important,
         Security
     } UpdateType;
-    UpdateIcon(QObject *parent = 0);
-    ~UpdateIcon();
+    Updater(QObject *parent = 0);
+    ~Updater();
 
     void setConfig(const QVariantHash &configs);
 

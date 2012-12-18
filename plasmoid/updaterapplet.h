@@ -43,10 +43,12 @@ public:
     ~UpdaterApplet();
 
     void init();
+    virtual QList<QAction*> contextualActions();
     QGraphicsWidget *graphicsWidget();
 
 signals:
     void getUpdates();
+    void checkForNewUpdates();
 
 protected Q_SLOTS:
     void updateIcon();
@@ -62,7 +64,7 @@ private slots:
     bool registerService();
 
 private:
-
+    QList<QAction*> m_actions;
     Plasma::DeclarativeWidget *m_declarativeWidget;
     PackageModel *m_updatesModel;
     bool m_initted;
