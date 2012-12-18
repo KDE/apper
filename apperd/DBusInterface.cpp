@@ -95,6 +95,11 @@ void DBusInterface::SetupDebconfDialog(const QString &tid, const QString &socket
 #endif //HAVE_DEBCONFKDE
 }
 
+void DBusInterface::WatchTransaction(const QDBusObjectPath &tid)
+{
+    emit watchTransaction(tid);
+}
+
 void DBusInterface::debconfActivate()
 {
 #ifdef HAVE_DEBCONFKDE

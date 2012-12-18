@@ -40,7 +40,7 @@ public:
     ~TransactionWatcher();
 
 public slots:
-    void watchTransaction(const QDBusObjectPath &tid, bool interactive);
+    void watchTransaction(const QDBusObjectPath &tid, bool interactive = true);
 
 private slots:
     void transactionListChanged(const QStringList &tids);

@@ -60,7 +60,7 @@ private:
     DBusInterface *m_interface;
     DistroUpgrade *m_distroUpgrade;
     RefreshCacheTask *m_refreshCache;
-    TransactionWatcher *m_trayIcon;
+    TransactionWatcher *m_transactionWatcher;
     Updater *m_updater;
 };
 

@@ -54,6 +54,7 @@ public:
     Transaction::Role role() const;
     Transaction::TransactionFlags flags() const;
     Q_INVOKABLE PkTransactionProgressModel* progressModel() const;
+    Q_INVOKABLE void enableJobWatcher(bool enable);
 
     PkTransaction::ExitStatus exitStatus() const;
     bool isFinished() const;
@@ -85,6 +86,7 @@ private slots:
     void installSignature();
     void acceptEula();
 
+    void slotChanged();
     void slotFinished(PackageKit::Transaction::Exit status);
     void slotErrorCode(PackageKit::Transaction::Error error, const QString &details);
     void slotEulaRequired(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement);

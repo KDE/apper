@@ -24,6 +24,7 @@
 #define UPDATER_H
 
 #include <Transaction>
+#include <PkTransaction.h>
 
 #include <QStringList>
 
@@ -53,7 +54,7 @@ public slots:
 private slots:
     void packageToUpdate(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void getUpdateFinished(PackageKit::Transaction::Exit exit);
-    void autoUpdatesFinished(PackageKit::Transaction::Exit exit);
+    void autoUpdatesFinished(PkTransaction::ExitStatus exit);
     void showUpdates();
     void serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner);
 

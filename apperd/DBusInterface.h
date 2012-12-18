@@ -21,6 +21,7 @@
 #define DBUS_INTERFACE_H
 
 #include <QtDBus/QDBusContext>
+#include <QDBusObjectPath>
 
 #include <config.h>
 
@@ -39,9 +40,11 @@ public:
 
     void RefreshCache();
     void SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent);
+    void WatchTransaction(const QDBusObjectPath &tid);
 
 signals:
     void refreshCache();
+    void watchTransaction(const QDBusObjectPath &tid);
 
 private slots:
     void debconfActivate();

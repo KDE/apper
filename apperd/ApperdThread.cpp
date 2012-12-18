@@ -118,10 +118,10 @@ void ApperdThread::init()
     bool packagekitIsRunning = nameHasOwner(QLatin1String("org.freedesktop.PackageKit"),
                                             QDBusConnection::systemBus());
 
-    m_trayIcon = new TransactionWatcher(packagekitIsRunning, this);
+    m_transactionWatcher = new TransactionWatcher(packagekitIsRunning, this);
     // connect the watch transaction coming from the updater icon to our watcher
-    connect(m_updater, SIGNAL(watchTransaction(QDBusObjectPath,bool)),
-            m_trayIcon, SLOT(watchTransaction(QDBusObjectPath,bool)));
+    connect(m_interface, SIGNAL(watchTransaction(QDBusObjectPath)),
+            m_transactionWatcher, SLOT(watchTransaction(QDBusObjectPath)));
 
     if (packagekitIsRunning) {
         // If packagekit is already running go check

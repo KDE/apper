@@ -56,6 +56,7 @@ class PkTransactionPrivate
 public:
     bool finished;
     bool allowDeps;
+    bool jobWatcher;
     Transaction::TransactionFlags flags;
     Transaction::Role role;
     Transaction::Role originalRole;
@@ -67,6 +68,7 @@ public:
     PackageModel *simulateModel;
     PkTransactionProgressModel *progressModel;
     QWidget *parentWindow;
+    QDBusObjectPath tid;
 };
 
 PkTransaction::PkTransaction(QWidget *parent) :
@@ -84,6 +86,7 @@ PkTransaction::PkTransaction(QWidget *parent) :
     d->originalRole = Transaction::RoleUnknown;
     d->role = Transaction::RoleUnknown;
     d->parentWindow = 0;
+    d->jobWatcher = false;
 
     // for sanity we are trusted till an error is given and the user accepts
     d->flags = Transaction::TransactionFlagOnlyTrusted;
@@ -96,6 +99,8 @@ PkTransaction::PkTransaction(QWidget *parent) :
             d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
 
     // Required actions
+    connect(this, SIGNAL(changed()),
+            SLOT(slotChanged()));
     connect(this, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
             SLOT(slotErrorCode(PackageKit::Transaction::Error,QString)));
     connect(this, SIGNAL(eulaRequired(QString,QString,QString,QString)),
@@ -376,6 +381,30 @@ void PkTransaction::acceptEula()
         }
     } else {
         kWarning() << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
+    }
+}
+
+void PkTransaction::slotChanged()
+{
+    if (!d->jobWatcher) {
+        return;
+    }
+
+    QDBusObjectPath _tid = tid();
+    if (d->tid != _tid) {
+        // if the transaction changed and
+        // the user wants the watcher send the tid
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall(QLatin1String("org.kde.apperd"),
+                                                 QLatin1String("/"),
+                                                 QLatin1String("org.kde.apperd"),
+                                                 QLatin1String("WatchTransaction"));
+        // Use our own cached tid to avoid crashes
+        message << qVariantFromValue(_tid);
+        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+        if (reply.type() != QDBusMessage::ReplyMessage) {
+            kWarning() << "Message did not receive a reply";
+        }
     }
 }
 
@@ -679,6 +708,11 @@ Transaction::TransactionFlags PkTransaction::flags() const
 PkTransactionProgressModel *PkTransaction::progressModel() const
 {
     return d->progressModel;
+}
+
+void PkTransaction::enableJobWatcher(bool enable)
+{
+    d->jobWatcher = enable;
 }
 
 #include "PkTransaction.moc"

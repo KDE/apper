@@ -38,8 +38,6 @@
 
 #include <KDebug>
 
-#include <Daemon>
-
 #define UPDATES_ICON "system-software-update"
 #define SYSTEM_READY "system_ready"
 
@@ -166,11 +164,12 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
 
         if (systemReady && updateType == Enum::All) {
             // update all
-            Transaction *t = new Transaction(this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                    this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
+            PkTransaction *t = new PkTransaction;
+            t->enableJobWatcher(true);
+            connect(t, SIGNAL(finished(PkTransaction::ExitStatus)),
+                    this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
             t->setProperty(SYSTEM_READY, systemReady);
-            t->updatePackages(m_updateList, Transaction::TransactionFlagOnlyTrusted);
+            t->updatePackages(m_updateList);
             if (!t->error()) {
                 // Force the creation of a transaction Job
                 emit watchTransaction(t->tid(), true);
@@ -188,11 +187,12 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
             }
         } else if (systemReady && updateType == Enum::Security && !m_securityList.isEmpty()) {
             // Defaults to security
-            Transaction *t = new Transaction(this);
-            connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                    this, SLOT(autoUpdatesFinished(PackageKit::Transaction::Exit)));
+            PkTransaction *t = new PkTransaction;
+            t->enableJobWatcher(true);
+            connect(t, SIGNAL(finished(PkTransaction::ExitStatus)),
+                    this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
             t->setProperty(SYSTEM_READY, systemReady);
-            t->updatePackages(m_securityList, Transaction::TransactionFlagOnlyTrusted);
+            t->updatePackages(m_securityList);
             if (!t->error()) {
                 // Force the creation of a transaction Job
                 emit watchTransaction(t->tid(), true);
@@ -228,7 +228,7 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
         notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updateList.size()));
         QStringList names;
         foreach (const QString &packageId, m_updateList) {
-            names << Daemon::packageName(packageId);
+            names << Transaction::packageName(packageId);
         }
         QString text = names.join(QLatin1String(", "));
         notify->setText(text);
@@ -246,11 +246,11 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
     }
 }
 
-void Updater::autoUpdatesFinished(PackageKit::Transaction::Exit status)
+void Updater::autoUpdatesFinished(PkTransaction::ExitStatus status)
 {
     KNotification *notify = new KNotification("UpdatesComplete");
     notify->setComponentData(KComponentData("apperd"));
-    if (status == Transaction::ExitSuccess) {
+    if (status == PkTransaction::Success) {
         KIcon icon("task-complete");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));

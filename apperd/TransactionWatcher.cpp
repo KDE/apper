@@ -126,7 +126,7 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
         transaction = m_transactions[tid];
     }
 
-    // force the firs changed or create a TransactionJob
+    // force the first changed or create a TransactionJob
     transactionChanged(transaction, interactive);
 }
 
