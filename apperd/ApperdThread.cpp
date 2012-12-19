@@ -39,7 +39,7 @@
 #include <QStringBuilder>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusReply>
-#include <QThread>
+#include <QDBusServiceWatcher>
 
 #include <limits.h>
 
@@ -61,7 +61,7 @@ using namespace Solid;
 
 ApperdThread::ApperdThread(QObject *parent) :
     QObject(parent),
-    m_actRefreshCacheChecked(false)
+    m_proxyChanged(true)
 {
 }
 
@@ -90,6 +90,14 @@ void ApperdThread::init()
     connect(confWatch, SIGNAL(deleted(QString)), this, SLOT(configFileChanged()));
     confWatch->startScan();
 
+    // Watch for changes in the KDE proxy settings
+    KDirWatch *proxyWatch = new KDirWatch(this);
+    proxyWatch->addFile(KStandardDirs::locateLocal("config", "kioslaverc"));
+    connect(proxyWatch, SIGNAL(dirty(QString)), this, SLOT(proxyChanged()));
+    connect(proxyWatch, SIGNAL(created(QString)), this, SLOT(proxyChanged()));
+    connect(proxyWatch, SIGNAL(deleted(QString)), this, SLOT(proxyChanged()));
+    proxyWatch->startScan();
+
     // read the current settings
     configFileChanged();
 
@@ -116,6 +124,15 @@ void ApperdThread::init()
     m_distroUpgrade = new DistroUpgrade(this);
     m_distroUpgrade->setConfig(m_configs);
 
+    // In case PackageKit is not running watch for it's registration to configure proxy
+    QDBusServiceWatcher *watcher;
+    watcher = new QDBusServiceWatcher(QLatin1String("org.freedesktop.PackageKit"),
+                                      QDBusConnection::systemBus(),
+                                      QDBusServiceWatcher::WatchForRegistration,
+                                      this);
+    connect(watcher, SIGNAL(serviceRegistered(QString)),
+            this, SLOT(setProxy()));
+
     // if PackageKit is running check to see if there are running transactons already
     bool packagekitIsRunning = nameHasOwner(QLatin1String("org.freedesktop.PackageKit"),
                                             QDBusConnection::systemBus());
@@ -126,6 +143,9 @@ void ApperdThread::init()
             m_transactionWatcher, SLOT(watchTransaction(QDBusObjectPath)));
 
     if (packagekitIsRunning) {
+        // PackageKit is running set the session Proxy
+        setProxy();
+
         // If packagekit is already running go check
         // for updates
         updatesChanged();
@@ -177,23 +197,51 @@ void ApperdThread::configFileChanged()
     m_configs[CFG_DISTRO_UPGRADE] = checkUpdateGroup.readEntry(CFG_DISTRO_UPGRADE, Enum::DistroUpgradeDefault);
 }
 
+void ApperdThread::proxyChanged()
+{
+    // We must reparse the configuration since the values are all cached
+    KProtocolManager::reparseConfiguration();
+
+    QHash<QString, QString> proxyConfig;
+    if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) {
+        proxyConfig["http"] = KProtocolManager::proxyFor("http");
+        proxyConfig["https"] = KProtocolManager::proxyFor("https");
+        proxyConfig["ftp"] = KProtocolManager::proxyFor("ftp");
+        proxyConfig["socks"] = KProtocolManager::proxyFor("socks");
+    }
+
+    // Check if the proxy settings really changed to avoid setting them twice
+    if (proxyConfig != m_proxyConfig) {
+        m_proxyConfig = proxyConfig;
+        m_proxyChanged = true;
+        setProxy();
+    }
+}
+
 void ApperdThread::setProxy()
 {
-    if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) {
-        // TODO how do I use the last two?
-        Daemon::global()->setProxy(KProtocolManager::proxyFor("http"),
-                                   KProtocolManager::proxyFor("https"),
-                                   KProtocolManager::proxyFor("ftp"),
-                                   KProtocolManager::proxyFor("socks"),
+    if (!m_proxyChanged) {
+        return;
+    }
+
+    // If we were called by the watcher it is because PackageKit is running
+    bool packagekitIsRunning = true;
+    QDBusServiceWatcher *watcher = qobject_cast<QDBusServiceWatcher*>(sender());
+    if (!watcher) {
+        packagekitIsRunning = nameHasOwner(QLatin1String("org.freedesktop.PackageKit"),
+                                           QDBusConnection::systemBus());
+    }
+
+    if (packagekitIsRunning) {
+        // Apply the proxy changes only if packagekit is running
+        // use value() to not insert items on the hash
+        Daemon::global()->setProxy(m_proxyConfig.value("http"),
+                                   m_proxyConfig.value("https"),
+                                   m_proxyConfig.value("ftp"),
+                                   m_proxyConfig.value("socks"),
                                    QString(),
                                    QString());
-    } else {
-        Daemon::global()->setProxy(QString(),
-                                   QString(),
-                                   QString(),
-                                   QString(),
-                                   QString(),
-                                   QString());
+        m_proxyChanged = false;
     }
 }
 

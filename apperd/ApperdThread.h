@@ -42,6 +42,7 @@ private slots:
     void init();
     void poll();
     void configFileChanged();
+    void proxyChanged();
     void setProxy();
 
     void transactionListChanged(const QStringList &tids);
@@ -52,9 +53,9 @@ private:
     QDateTime getTimeSinceRefreshCache() const;
     bool isSystemReady(bool ignoreBattery, bool ignoreMobile) const;
 
-    bool m_actRefreshCacheChecked;
-    bool m_canRefreshCache;
+    bool m_proxyChanged;
     QVariantHash m_configs;
+    QHash<QString, QString> m_proxyConfig;
     QDateTime m_lastRefreshCache;
     QTimer *m_qtimer;
 
