@@ -114,7 +114,7 @@
                <bool>true</bool>
               </property>
               <property name="text">
-               <string>Automatically install:</string>
+               <string>Automatically update:</string>
               </property>
               <property name="buddy">
                <cstring>autoCB</cstring>

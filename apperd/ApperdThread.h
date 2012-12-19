@@ -46,6 +46,7 @@ private slots:
 
     void transactionListChanged(const QStringList &tids);
     void updatesChanged();
+    void appShouldConserveResourcesChanged();
 
 private:
     QDateTime getTimeSinceRefreshCache() const;

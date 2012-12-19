@@ -48,7 +48,7 @@ public:
     Q_INVOKABLE void installPackages(const QStringList &packages);
     Q_INVOKABLE void installFiles(const QStringList &files);
     Q_INVOKABLE void removePackages(const QStringList &packages);
-    Q_INVOKABLE void updatePackages(const QStringList &packages);
+    Q_INVOKABLE void updatePackages(const QStringList &packages, bool downloadOnly = false);
 
     QString title() const;
     Transaction::Role role() const;

@@ -93,9 +93,10 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     ui->intervalCB->addItem(i18nc("Monthly refresh the package cache", "Monthly"), Enum::Monthly);
     ui->intervalCB->addItem(i18nc("Never refresh package cache", "Never"), Enum::Never);
 
+    ui->autoCB->addItem(i18nc("No updates will be automatically installed", "None"), Enum::None);
+    ui->autoCB->addItem(i18n("Download only"), Enum::DownloadOnly);
     ui->autoCB->addItem(i18n("Security only"), Enum::Security);
     ui->autoCB->addItem(i18n("All updates"), Enum::All);
-    ui->autoCB->addItem(i18nc("No updates will be automatically installed", "None"), Enum::None);
 
     connect(ui->autoConfirmCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
     connect(ui->appLauncherCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));

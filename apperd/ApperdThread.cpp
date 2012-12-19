@@ -34,11 +34,9 @@
 #include <KDirWatch>
 #include <KProtocolManager>
 #include <KLocale>
-
-#include <QStringBuilder>
-
 #include <Solid/PowerManagement>
 
+#include <QStringBuilder>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusReply>
 #include <QThread>
@@ -59,6 +57,7 @@
  */
 
 using namespace PackageKit;
+using namespace Solid;
 
 ApperdThread::ApperdThread(QObject *parent) :
     QObject(parent),
@@ -72,6 +71,9 @@ ApperdThread::~ApperdThread()
 
 void ApperdThread::init()
 {
+    connect(PowerManagement::notifier(), SIGNAL(appShouldConserveResourcesChanged(bool)),
+            this, SLOT(appShouldConserveResourcesChanged()));
+
     // This timer keeps polling to see if it has
     // to refresh the cache
     m_qtimer = new QTimer(this);
@@ -216,6 +218,16 @@ void ApperdThread::updatesChanged()
     // Make sure the user sees the updates
     m_updater->checkForUpdates(isSystemReady(ignoreBattery, ignoreMobile));
     m_distroUpgrade->checkDistroUpgrades();
+}
+
+void ApperdThread::appShouldConserveResourcesChanged()
+{
+    bool ignoreBattery = m_configs[CFG_INSTALL_UP_BATTERY].value<bool>();
+    bool ignoreMobile = m_configs[CFG_INSTALL_UP_MOBILE].value<bool>();
+
+    if (isSystemReady(ignoreBattery, ignoreMobile)) {
+        m_updater->setSystemReady();
+    }
 }
 
 QDateTime ApperdThread::getTimeSinceRefreshCache() const

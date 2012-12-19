@@ -51,21 +51,22 @@ typedef enum {
 } DistroUpdate;
 const int DistroUpgradeDefault = DistroStable;
 
-    typedef enum {
-            None,
-            Security,
-            All
-    } AutoUpdate;
-    const int AutoUpdateDefault = None;
+typedef enum {
+    None,
+    Security,
+    All,
+    DownloadOnly
+} AutoUpdate;
+const int AutoUpdateDefault = None;
 
-    typedef enum {
-            Never   =       0,
-            Hourly  =    3600,
-            Daily   =   86400,
-            Weekly  =  604800,
-            Monthly = 2592000 // 30 days
-    } TimeInterval;
-    const int TimeIntervalDefault = Daily;
+typedef enum {
+    Never   =       0,
+    Hourly  =    3600,
+    Daily   =   86400,
+    Weekly  =  604800,
+    Monthly = 2592000 // 30 days
+} TimeInterval;
+const int TimeIntervalDefault = Daily;
 
 }
 

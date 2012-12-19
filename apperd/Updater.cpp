@@ -39,7 +39,6 @@
 #include <KDebug>
 
 #define UPDATES_ICON "system-software-update"
-#define SYSTEM_READY "system_ready"
 
 using namespace PackageKit;
 
@@ -70,15 +69,22 @@ void Updater::setConfig(const QVariantHash &configs)
     m_configs = configs;
 }
 
-void Updater::checkForUpdates(bool system_ready)
+void Updater::setSystemReady()
 {
+    // System ready changed, maybe we can auto
+    // install some updates
+    m_systemReady = true;
+    getUpdateFinished();
+}
+
+void Updater::checkForUpdates(bool systemReady)
+{
+    m_systemReady = systemReady;
     uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
 
-    kDebug() << "-------------checkForUpdates-------------" << system_ready;
     // Skip the check if one is already running or
     // the plasmoid is in Icon form and the auto update type is None
     if (m_getUpdatesT || (m_hasAppletIconified && updateType == Enum::None)) {
-        kDebug() << "-------------ignoring check-------------" << m_getUpdatesT << m_hasAppletIconified << updateType;
         return;
     }
 
@@ -86,11 +92,10 @@ void Updater::checkForUpdates(bool system_ready)
     m_importantList.clear();
     m_securityList.clear();
     m_getUpdatesT = new Transaction(this);
-    m_getUpdatesT->setProperty(SYSTEM_READY, system_ready);
     connect(m_getUpdatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(packageToUpdate(PackageKit::Transaction::Info,QString,QString)));
     connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(getUpdateFinished(PackageKit::Transaction::Exit)));
+            this, SLOT(getUpdateFinished()));
     m_getUpdatesT->getUpdates();
     if (m_getUpdatesT->error()) {
         m_getUpdatesT = 0;
@@ -118,10 +123,12 @@ void Updater::packageToUpdate(Transaction::Info info, const QString &packageID, 
     m_updateList << packageID;
 }
 
-void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
+void Updater::getUpdateFinished()
 {
     m_getUpdatesT = 0;
     if (!m_updateList.isEmpty()) {
+        Transaction *transaction = qobject_cast<Transaction*>(sender());
+
         bool different = false;
         if (m_oldUpdateList.size() != m_updateList.size()) {
             different = true;
@@ -136,23 +143,16 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
             }
         }
 
+        // sender is not a transaction when we systemReady has changed
         // if the lists are the same don't show
         // a notification or try to upgrade again
-        if (!different) {
+        if (transaction && !different) {
             return;
         }
         m_oldUpdateList = m_updateList;
 
-
-
-        bool systemReady = false;
         uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
-        if (exit == Transaction::ExitSuccess) {
-            // if get updates failed the system is not ready
-            systemReady = sender()->property(SYSTEM_READY).toBool();
-        }
-
-        if (systemReady && updateType == Enum::All) {
+        if (m_systemReady && updateType == Enum::All) {
             // update all
             bool ret;
             ret = updatePackages(m_updateList,
@@ -162,7 +162,7 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
             if (ret) {
                 return;
             }
-        } else if (systemReady && updateType == Enum::Security && !m_securityList.isEmpty()) {
+        } else if (m_systemReady && updateType == Enum::Security && !m_securityList.isEmpty()) {
             // Defaults to security
             bool ret;
             ret = updatePackages(m_securityList,
@@ -172,14 +172,29 @@ void Updater::getUpdateFinished(PackageKit::Transaction::Exit exit)
             if (ret) {
                 return;
             }
-        } else if (!systemReady &&
-                   (updateType == Enum::All || (updateType == Enum::Security && !m_securityList.isEmpty()))) {
-            kDebug() << "Not auto updating packages updates, as we might be on battery or mobile connection";
+        } else if (m_systemReady && updateType == Enum::DownloadOnly) {
+            // Download all updates
+            bool ret;
+            ret = updatePackages(m_updateList,
+                                 true,
+                                 "download",
+                                 i18n("Updates are being automatically downloaded."));
+            if (ret) {
+                return;
+            }
+        } else if (!m_systemReady &&
+                   (updateType == Enum::All ||
+                    updateType == Enum::DownloadOnly ||
+                    (updateType == Enum::Security && !m_securityList.isEmpty()))) {
+            kDebug() << "Not auto updating or downloading, as we might be on battery or mobile connection";
         }
 
         // If an erro happened to create the auto update
         // transaction show the update list
-        showUpdatesPopup();
+        if (transaction) {
+            // The transaction is not valid if the systemReady changed
+            showUpdatesPopup();
+        }
     } else {
         m_oldUpdateList.clear();
     }
@@ -190,11 +205,16 @@ void Updater::autoUpdatesFinished(PkTransaction::ExitStatus status)
     KNotification *notify = new KNotification("UpdatesComplete");
     notify->setComponentData(KComponentData("apperd"));
     if (status == PkTransaction::Success) {
-        KIcon icon("task-complete");
-        // use of QSize does the right thing
-        notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-        notify->setText(i18n("System update was successful."));
-        notify->sendEvent();
+        if (sender()->property("DownloadOnly").toBool()) {
+            // We finished downloading show the updates to the user
+            showUpdatesPopup();
+        } else {
+            KIcon icon("task-complete");
+            // use of QSize does the right thing
+            notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+            notify->setText(i18n("System update was successful."));
+            notify->sendEvent();
+        }
     } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing
@@ -217,11 +237,17 @@ void Updater::serviceOwnerChanged(const QString &service, const QString &oldOwne
 {
     Q_UNUSED(service)
     Q_UNUSED(oldOwner)
+
     m_hasAppletIconified = !newOwner.isEmpty();
 }
 
 void Updater::showUpdatesPopup()
 {
+    if (m_hasAppletIconified) {
+        // ignore the call if the plasmoid is iconified
+        return;
+    }
+
     // Determine the update type
     KIcon icon;
     if (!m_securityList.isEmpty()) {
@@ -260,10 +286,14 @@ bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, con
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
     transaction->setProperty("DownloadOnly", downloadOnly);
-    transaction->updatePackages(packages);
+    transaction->updatePackages(packages, downloadOnly);
     if (!transaction->error()) {
-        //autoUpdatesInstalling(t);
-        KNotification *notify = new KNotification("AutoInstallingUpdates");
+        KNotification *notify;
+        if (downloadOnly) {
+            notify = new KNotification("DownloadingUpdates");
+        } else {
+            notify = new KNotification("AutoInstallingUpdates");
+        }
         notify->setComponentData(KComponentData("apperd"));
         notify->setText(msg);
         // use of QSize does the right thing

@@ -23,7 +23,6 @@
 #ifndef UPDATER_H
 #define UPDATER_H
 
-#include <Transaction>
 #include <PkTransaction.h>
 
 #include <QStringList>
@@ -38,13 +37,14 @@ public:
     ~Updater();
 
     void setConfig(const QVariantHash &configs);
+    void setSystemReady();
 
 public slots:
-    void checkForUpdates(bool system_ready);
+    void checkForUpdates(bool systemReady);
 
 private slots:
     void packageToUpdate(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
-    void getUpdateFinished(PackageKit::Transaction::Exit exit);
+    void getUpdateFinished();
     void autoUpdatesFinished(PkTransaction::ExitStatus exit);
     void reviewUpdates();
     void serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner);
@@ -52,7 +52,9 @@ private slots:
 private:
     void showUpdatesPopup();
     bool updatePackages(const QStringList &packages, bool downloadOnly, const QString &icon, const QString &msg);
+
     bool m_hasAppletIconified;
+    bool m_systemReady;
     Transaction *m_getUpdatesT;
     QStringList m_oldUpdateList;
     QStringList m_updateList;

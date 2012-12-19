@@ -176,12 +176,15 @@ void PkTransaction::removePackages(const QStringList &packages)
     }
 }
 
-void PkTransaction::updatePackages(const QStringList &packages)
+void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnly)
 {
     if (Daemon::global()->actions() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
+        if (downloadOnly) {
+            d->flags |= Transaction::TransactionFlagOnlyDownload;
+        }
 
         setupTransaction();
         Transaction::updatePackages(d->packages, d->flags);
