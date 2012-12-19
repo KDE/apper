@@ -9,7 +9,7 @@
     <doc:doc>
       <doc:description>
         <doc:para>
-          The interface used for querying the package database.
+          The interface used for quering the package database.
         </doc:para>
       </doc:description>
     </doc:doc>
@@ -225,7 +225,7 @@
         <doc:doc>
           <doc:summary>
             <doc:para>
-              An array of catalog filenames.
+              An array of catalog file names.
             </doc:para>
           </doc:summary>
         </doc:doc>
@@ -458,7 +458,7 @@
       <doc:doc>
         <doc:description>
           <doc:para>
-            Removes packages that provides the given local files.
+            Removes packages that provide the given local files.
           </doc:para>
         </doc:description>
       </doc:doc>
@@ -509,12 +509,12 @@
           </doc:para>
         </doc:description>
       </doc:doc>
-      <arg type="u" name="xid" direction="in">                                                                                                                                  
-        <doc:doc>                                                                                                                                                               
-          <doc:summary>                                                                                                                                                         
-            <doc:para>                                                                                                                                                          
-              The X window handle ID, used for focus stealing prevention and setting modality.                                                                                  
-            </doc:para>                                                                                                                                                         
+      <arg type="u" name="xid" direction="in">
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              The X window handle ID, used for focus stealing prevention and setting modality.
+            </doc:para>
           </doc:summary>
         </doc:doc>
       </arg>
