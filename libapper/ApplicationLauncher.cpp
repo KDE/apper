@@ -37,6 +37,7 @@ ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
 
     connect(ui->kdialogbuttonbox, SIGNAL(rejected()), this, SLOT(accept()));
     setButtons(KDialog::None);
+    setWindowIcon(KIcon("task-complete"));
 
     connect(ui->applicationsView, SIGNAL(clicked(QModelIndex)),
             this, SLOT(itemClicked(QModelIndex)));
@@ -92,6 +93,9 @@ bool ApplicationLauncher::hasApplications()
         }
     }
 
+    setWindowTitle(i18np("New application available",
+                         "New applications available",
+                         model->rowCount()));
     ui->label->setText(i18np("The following application was just installed. Click on it to launch:",
                              "The following applications were just installed. Click on them to launch:",
                              model->rowCount()));

@@ -21,7 +21,6 @@
 #include <config.h>
 
 #include "PkTransaction.h"
-//#include "ui_PkTransaction.h"
 
 #include <KLocale>
 #include <KMessageBox>
@@ -54,24 +53,22 @@
 class PkTransactionPrivate
 {
 public:
-    bool finished;
     bool allowDeps;
     bool jobWatcher;
     Transaction::TransactionFlags flags;
-    Transaction::Role role;
     Transaction::Role originalRole;
     Transaction::Error error;
     QStringList packages;
-    QStringList packagesToResolve;
     ApplicationLauncher *launcher;
     QStringList files;
+    QStringList newPackages;
     PackageModel *simulateModel;
     PkTransactionProgressModel *progressModel;
     QWidget *parentWindow;
     QDBusObjectPath tid;
 };
 
-PkTransaction::PkTransaction(QWidget *parent) :
+PkTransaction::PkTransaction(QObject *parent) :
     Transaction(parent),
     m_handlingActionRequired(false),
     m_showingError(false),
@@ -80,12 +77,10 @@ PkTransaction::PkTransaction(QWidget *parent) :
     d(new PkTransactionPrivate)
 {
     // for sanity we are finished till some transaction is set
-    d->finished = true;
     d->simulateModel = 0;
     d->launcher = 0;
     d->originalRole = Transaction::RoleUnknown;
-    d->role = Transaction::RoleUnknown;
-    d->parentWindow = 0;
+    d->parentWindow = qobject_cast<QWidget*>(parent);
     d->jobWatcher = false;
 
     // for sanity we are trusted till an error is given and the user accepts
@@ -492,7 +487,6 @@ void PkTransaction::slotFinished(Transaction::Exit status)
     }
 
     kDebug() << status << _role;
-    d->finished = true;
     switch(status) {
     case Transaction::ExitSuccess:
         // Check if we are just simulating
@@ -505,8 +499,8 @@ void PkTransaction::slotFinished(Transaction::Exit status)
             foreach (const QString &packageID, d->packages) {
                 d->simulateModel->removePackage(packageID);
             }
+            d->newPackages = d->simulateModel->packagesWithInfo(Transaction::InfoInstalling);
 
-            d->packagesToResolve.append(d->simulateModel->selectedPackagesToInstall());
             requires = new Requirements(d->simulateModel, d->parentWindow);
             connect(requires, SIGNAL(accepted()), this, SLOT(requeueTransaction()));
             connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
@@ -524,7 +518,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
             KConfigGroup transactionGroup(&config, "Transaction");
             bool showApp = transactionGroup.readEntry("ShowApplicationLauncher", true);
             if (showApp &&
-                    !d->packagesToResolve.isEmpty() &&
+                    !d->newPackages.isEmpty() &&
                     (_role == Transaction::RoleInstallPackages ||
                      _role == Transaction::RoleInstallFiles ||
                      _role == Transaction::RoleRemovePackages ||
@@ -532,48 +526,27 @@ void PkTransaction::slotFinished(Transaction::Exit status)
                 // When installing files or updates that involves new packages
                 // try to resolve the available packages at simulation time
                 // to maybe show the user the new applications that where installed
-                if (d->launcher == 0) {
-//                    d->launcher = new ApplicationLauncher(this);
+                if (d->launcher) {
+                    delete d->launcher;
                 }
+                d->launcher = new ApplicationLauncher(d->parentWindow);
+                connect(this, SIGNAL(files(QString,QStringList)),
+                        d->launcher, SLOT(files(QString,QStringList)));
 
-                // TODO fix this
-//                Transaction *transaction = new Transaction(this);
-//                connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-//                        d->launcher, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-//                setTransaction(transaction, Transaction::RoleResolve);
-//                transaction->resolve(d->packagesToResolve, Transaction::FilterInstalled);
-//                if (!transaction->error()) {
-//                    return; // avoid the exit code
-//                }
-            } else if (showApp &&
+                reset();
+                getFiles(d->newPackages);
+                d->newPackages.clear();
+                if (!error()) {
+                    return; // avoid the exit code
+                }
+            } else if (_role == Transaction::RoleGetFiles &&
                        d->launcher &&
-                       !d->launcher->packages().isEmpty() &&
-                       _role == Transaction::RoleResolve &&
-                       d->originalRole != Transaction::RoleUnknown) {
-                // Let's try to find some desktop files
-                // TODO fix this too
-//                Transaction *transaction = new Transaction(this);
-//                connect(transaction, SIGNAL(files(QString,QStringList)),
-//                        d->launcher, SLOT(files(QString,QStringList)));
-//                setTransaction(transaction, Transaction::RoleGetFiles);
-//                transaction->getFiles(d->launcher->packages());
-//                if (!transaction->error()) {
-//                    return; // avoid the exit code
-//                }
-            } else if (showApp &&
-                       d->launcher &&
-                       d->launcher->hasApplications() &&
-                       _role == Transaction::RoleGetFiles &&
-                       d->originalRole != Transaction::RoleUnknown) {
-//                showDialog(d->launcher);
+                       d->launcher->hasApplications()) {
+                // if we have a launcher and the laucher has applications
+                // show them to the user
+                showDialog(d->launcher);
                 connect(d->launcher, SIGNAL(accepted()),
                         this, SLOT(setExitStatus()));
-                return;
-            } else if (_role == Transaction::RoleAcceptEula ||
-                       _role == Transaction::RoleInstallSignature) {
-                kDebug() << "EULA or Signature accepted";
-                d->finished = false;
-                requeueTransaction();
                 return;
             }
             setExitStatus(Success);
@@ -617,7 +590,6 @@ bool PkTransaction::isFinished() const
 {
     kDebug() << status() << role();
     return status() == Transaction::StatusFinished;
-    //    return d->finished;
 }
 
 PackageModel *PkTransaction::simulateModel() const
@@ -637,6 +609,11 @@ void PkTransaction::setTrusted(bool trusted)
 void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
 {
     kDebug() << status;
+    if (d->launcher) {
+        d->launcher->deleteLater();
+        d->launcher = 0;
+    }
+
     m_exitStatus = status;
     if (!m_handlingActionRequired || !m_showingError) {
         emit finished(status);
@@ -645,7 +622,6 @@ void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
 
 void PkTransaction::reject()
 {
-    d->finished = true;
     setExitStatus(Cancelled);
 }
 
@@ -695,12 +671,7 @@ void PkTransaction::showSorry(const QString &title, const QString &description, 
 
 QString PkTransaction::title() const
 {
-    return PkStrings::action(d->role);
-}
-
-Transaction::Role PkTransaction::role() const
-{
-    return d->role;
+    return PkStrings::action(d->originalRole);
 }
 
 Transaction::TransactionFlags PkTransaction::flags() const

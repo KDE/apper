@@ -42,7 +42,7 @@ public:
         Failed,
         Cancelled
     } ExitStatus;
-    explicit PkTransaction(QWidget *parent = 0);
+    explicit PkTransaction(QObject *parent = 0);
     ~PkTransaction();
 
     Q_INVOKABLE void installPackages(const QStringList &packages);
@@ -51,7 +51,6 @@ public:
     Q_INVOKABLE void updatePackages(const QStringList &packages, bool downloadOnly = false);
 
     QString title() const;
-    Transaction::Role role() const;
     Transaction::TransactionFlags flags() const;
     Q_INVOKABLE PkTransactionProgressModel* progressModel() const;
     Q_INVOKABLE void enableJobWatcher(bool enable);

@@ -833,6 +833,18 @@ QStringList PackageModel::selectedPackagesToRemove() const
     return list;
 }
 
+QStringList PackageModel::packagesWithInfo(Transaction::Info info) const
+{
+    QStringList list;
+    foreach (const InternalPackage &package, m_packages) {
+        if (package.info == info) {
+            // Append to the list if the package matches the info value
+            list << package.packageID;
+        }
+    }
+    return list;
+}
+
 unsigned long PackageModel::downloadSize() const
 {
     unsigned long size = 0;

@@ -715,9 +715,9 @@ void ApperKCM::refreshCache()
     QWidget *currentWidget = stackedWidget->currentWidget();
     emit changed(false);
 
-    PkTransaction *transaction = new PkTransaction(this);
-    QWeakPointer<PkTransaction> pointer = transaction;
     PkTransactionWidget *transactionW = new PkTransactionWidget(this);
+    PkTransaction *transaction = new PkTransaction(transactionW);
+    QWeakPointer<PkTransaction> pointer = transaction;
     transactionW->setTransaction(transaction, Transaction::RoleRefreshCache);
 
     stackedWidget->addWidget(transactionW);
@@ -765,9 +765,9 @@ void ApperKCM::save()
     if (currentWidget == m_settingsPage) {
         m_settingsPage->save();
     } else {
-        PkTransaction *transaction = new PkTransaction(this);
-        QWeakPointer<PkTransaction> pointer = transaction;
         PkTransactionWidget *transactionW = new PkTransactionWidget(this);
+        PkTransaction *transaction = new PkTransaction(transactionW);
+        QWeakPointer<PkTransaction> pointer = transaction;
 
         stackedWidget->addWidget(transactionW);
         stackedWidget->setCurrentWidget(transactionW);
