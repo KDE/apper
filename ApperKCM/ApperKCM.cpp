@@ -172,7 +172,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     ApplicationSortFilterModel *proxy = browseView->proxy();
     proxy->setApplicationFilter(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(bool)),
-            proxy, SLOT(filterApplications(bool)));
+            proxy, SLOT(setApplicationFilter(bool)));
 
     //initialize the model, delegate, client and  connect it's signals
     m_browseModel = browseView->model();
