@@ -78,7 +78,16 @@ void TransactionWatcher::transactionListChanged(const QStringList &tids)
             watchTransaction(QDBusObjectPath(tid), false);
         }
     } else {
-        // There is no current transaction
+        // There is no current transaction, delete the jobs
+        foreach (TransactionJob *job, m_transactionJob) {
+            job->transactionDestroyed();
+            job->deleteLater();
+        }
+
+        // Avoid leaks delete the jobs
+        foreach (Transaction *transaction, m_transactions) {
+            transaction->deleteLater();
+        }
         m_transactions.clear();
         m_transactionJob.clear();
 
@@ -146,7 +155,6 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
         // Create the notification about this transaction
         KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
         connect(notify, SIGNAL(activated(uint)), this, SLOT(logout()));
-        connect(notify, SIGNAL(closed()), this, SLOT(decreaseRunning()));
         notify->setComponentData(KComponentData("apperd"));
         notify->setProperty("restartType", qVariantFromValue(type));
         notify->setPixmap(PkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
@@ -206,8 +214,6 @@ void TransactionWatcher::message(PackageKit::Transaction::Message type, const QS
     notify->setText(message);
 
     notify->setPixmap(KIcon("dialog-warning").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-    connect(notify, SIGNAL(closed()),
-            this, SLOT(decreaseRunning()));
     notify->sendEvent();
 }
 
@@ -227,8 +233,6 @@ void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QSt
     notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     connect(notify, SIGNAL(activated(uint)),
             this, SLOT(errorActivated(uint)));
-    connect(notify, SIGNAL(closed()),
-            this, SLOT(decreaseRunning()));
     notify->sendEvent();
 }
 
@@ -275,7 +279,6 @@ void TransactionWatcher::requireRestart(PackageKit::Transaction::Restart type, c
 
 void TransactionWatcher::logout()
 {
-    kDebug() << "--------------;";
     KNotification *notify = qobject_cast<KNotification*>(sender());
     Transaction::Restart restartType;
     restartType = notify->property("restartType").value<Transaction::Restart>();

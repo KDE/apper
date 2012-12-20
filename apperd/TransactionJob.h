@@ -40,11 +40,13 @@ public:
     bool isFinished() const;
     Transaction *transaction() const;
 
+public slots:
+    void transactionDestroyed();
+
 signals:
     void canceled();
 
 private slots:
-    void transactionDestroyed();
     void finished(PackageKit::Transaction::Exit exit = Transaction::ExitSuccess);
     void package(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void repoDetail(const QString &repoId, const QString &repoDescription);

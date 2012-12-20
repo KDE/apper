@@ -96,8 +96,6 @@ void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, c
     notify->setActions(actions);
     connect(notify, SIGNAL(activated(uint)),
             this, SLOT(handleDistroUpgradeAction(uint)));
-    connect(notify, SIGNAL(closed()),
-            this , SLOT(decreaseRunning()));
     notify->sendEvent();
     m_shownDistroUpgrades << name;
 }
