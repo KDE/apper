@@ -22,6 +22,8 @@
 
 #include <PkIcons.h>
 
+#include <QAction>
+
 #include <KLocale>
 #include <KMessageBox>
 #include <KColorScheme>
@@ -32,22 +34,17 @@
 
 #include <KDebug>
 
-DistroUpgrade::DistroUpgrade(QWidget *parent)
- : KTitleWidget(parent)
+DistroUpgrade::DistroUpgrade(QWidget *parent) :
+    KMessageWidget(parent)
 {
-    // only the model package has the right state
-    setText(i18n("Distribution upgrade available"));
-    setPixmap(PkIcons::getIcon("distro-upgrade"));
-    setWidget(m_distroUpgradeUL = new KUrlLabel(this));
-
-    connect(m_distroUpgradeUL, SIGNAL(leftClickedUrl()), SLOT(startDistroUpgrade()));
+    QAction *action = new QAction(i18n("Upgrade"), this);
+    connect(action, SIGNAL(triggered()), this, SLOT(startDistroUpgrade()));
+    addAction(action);
 }
 
 void DistroUpgrade::setName(const QString &name)
 {
-    m_distroUpgradeUL->setText(i18n("Upgrade to %1", name));
-    m_distroUpgradeUL->setUrl(i18n("Upgrade to %1", name));
-    m_distroUpgradeUL->setToolTip(i18n("Click to upgrade to %1", name));
+    setText(i18n("Distribution upgrade available: %1", name));
 }
 
 void DistroUpgrade::startDistroUpgrade()
@@ -77,14 +74,6 @@ void DistroUpgrade::startDistroUpgrade()
                 this, SLOT(distroUpgradeError(QProcess::ProcessError)));
         connect(m_distroUpgradeProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
                 this, SLOT(distroUpgradeFinished(int,QProcess::ExitStatus)));
-
-        m_distroUpgradeDialog = new KProgressDialog(this);
-        m_distroUpgradeDialog->setLabelText("Waiting for distribution upgrade to complete");
-        m_distroUpgradeDialog->showCancelButton(false);
-        m_distroUpgradeDialog->setModal(true);
-        m_distroUpgradeDialog->progressBar()->setMaximum(0); //Makes it a busy indicator
-        m_distroUpgradeDialog->progressBar()->setMinimum(0);
-        m_distroUpgradeDialog->show();
         QStringList env = QProcess::systemEnvironment();
         env << "DESKTOP=kde";
         m_distroUpgradeProcess->setEnvironment(env);
@@ -101,9 +90,6 @@ void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exi
     }
     m_distroUpgradeProcess->deleteLater();
     m_distroUpgradeProcess = 0;
-    m_distroUpgradeDialog->close();
-    m_distroUpgradeDialog->deleteLater();
-    m_distroUpgradeDialog = 0;
 }
 
 void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)

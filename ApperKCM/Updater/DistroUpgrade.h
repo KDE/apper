@@ -23,11 +23,9 @@
 
 #include <QProcess>
 
-#include <KTitleWidget>
-#include <KUrlLabel>
-#include <KProgressDialog>
+#include <KMessageWidget>
 
-class DistroUpgrade : public KTitleWidget
+class DistroUpgrade : public KMessageWidget
 {
     Q_OBJECT
 public:
@@ -43,9 +41,7 @@ private slots:
     void distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
-    KUrlLabel *m_distroUpgradeUL;
     QProcess *m_distroUpgradeProcess;
-    KProgressDialog *m_distroUpgradeDialog;
 };
 
 #endif

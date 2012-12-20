@@ -21,41 +21,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QScrollArea" name="distroUpgradesSA">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>100</height>
-      </size>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Sunken</enum>
-     </property>
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>522</width>
-        <height>94</height>
-       </rect>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout"/>
-     </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
+    <widget class="DistroUpgrade" name="distroUpgrade" native="true"/>
    </item>
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
@@ -239,6 +205,12 @@
    <class>UpdateDetails</class>
    <extends>QWidget</extends>
    <header>Updater/UpdateDetails.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DistroUpgrade</class>
+   <extends>QWidget</extends>
+   <header>Updater/DistroUpgrade.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

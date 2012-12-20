@@ -83,9 +83,12 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     ui->distroIntervalCB->addItem(i18nc("Inform about distribution upgrades",
                                         "Only stable"),
                                   Enum::DistroStable);
+    // Ignore unstable distros upgrades for now
+#ifndef false
     ui->distroIntervalCB->addItem(i18nc("Inform about distribution upgrades",
                                         "Stable and development"),
                                   Enum::DistroDevelopment);
+#endif
 
     ui->intervalCB->addItem(i18nc("Hourly refresh the package cache", "Hourly"), Enum::Hourly);
     ui->intervalCB->addItem(i18nc("Daily refresh the package cache", "Daily"), Enum::Daily);

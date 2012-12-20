@@ -96,8 +96,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     m_busySeq->setWidget(ui->packageView->viewport());
 
     // hide distro Upgrade container and line
-    ui->distroUpgradesSA->hide();
-    ui->line->hide();
+    ui->distroUpgrade->hide();
 
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "UpdateView");
@@ -208,22 +207,15 @@ void Updater::on_packageView_clicked(const QModelIndex &index)
 //That way, by default, users only see stable ones.
 void Updater::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
 {
+    // TODO name should be used to do a upgrade to a different type
+    Q_UNUSED(name)
     if (type != Transaction::DistroUpgradeStable) {
         // Ignore unstable distros upgrades for now
         return;
     }
 
-    if (ui->verticalLayout->count()) {
-        QFrame *frame = new QFrame(this);
-        frame->setFrameShape(QFrame::HLine);
-        ui->verticalLayout->insertWidget(0, frame);
-    }
-    DistroUpgrade *distro = new DistroUpgrade(this);
-    ui->verticalLayout->insertWidget(0, distro);
-    distro->setComment(description);
-    distro->setName(name);
-    ui->distroUpgradesSA->show();
-    ui->line->show();
+    ui->distroUpgrade->setName(description);
+    ui->distroUpgrade->animatedShow();
 }
 
 bool Updater::hasChanges() const
@@ -342,20 +334,16 @@ void Updater::getUpdates()
         m_busySeq->start();
     }
 
-    // Clean the distribution upgrades area
-    QLayoutItem *child;
-    while ((child = ui->verticalLayout->takeAt(0)) != 0) {
-        delete child->widget();
-        delete child;
-    }
-    ui->distroUpgradesSA->hide();
-    ui->line->hide();
+    // Hide the distribution upgrade information
+    ui->distroUpgrade->animatedHide();
 
     if (m_roles & Transaction::RoleGetDistroUpgrades) {
         // Check for distribution Upgrades
         Transaction *t = new Transaction(this);
         connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
                 this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
+        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                t, SLOT(deleteLater()));
         t->getDistroUpgrades();
     }
 }
