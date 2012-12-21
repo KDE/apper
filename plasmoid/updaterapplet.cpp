@@ -142,8 +142,8 @@ void UpdaterApplet::toolTipAboutToShow()
     } else {
         text = i18np("You have one update", "You have %1 updates", m_updatesModel->rowCount());
     }
-    Plasma::ToolTipContent content(i18n("Software Updater"),
-                                   text,
+    Plasma::ToolTipContent content(text,
+                                   QString(),
                                    KIcon("system-software-update"));
 
     Plasma::ToolTipManager::self()->setContent(this, content);
