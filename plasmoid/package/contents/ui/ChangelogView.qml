@@ -63,11 +63,13 @@ Item {
         PlasmaComponents.Label {
             id: updateVersion
             width: parent.width
+            wrapMode: Text.Wrap
             text: i18n("Version: %1", rVersion)
         }
         PlasmaComponents.Label {
             id: updatesText
             width: parent.width
+            wrapMode: Text.Wrap
             text: i18n("Updates: %1", updatesList)
         }
         PlasmaComponents.Label {

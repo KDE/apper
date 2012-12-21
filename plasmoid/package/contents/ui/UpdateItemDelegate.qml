@@ -87,7 +87,7 @@ Item {
             }
         }
     }
-        
+
     Column {
         id: items
         spacing: 8
@@ -98,17 +98,16 @@ Item {
             topMargin: padding.margins.top
             leftMargin: padding.margins.left
             rightMargin: padding.margins.right
-            bottomMargin: expanded ? padding.margins.bottom : 0
+            bottomMargin: padding.margins.bottom
         }
         Row {
             id: updateRow
             spacing: 4
-            width: parent.width - padding.margins.left - padding.margins.right
-            height: updateNameLabel.paintedHeight
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: updateCB.height
             PlasmaComponents.CheckBox {
                 id: updateCB
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
                 checked: updateChecked
                 onClicked: updatesModel.toggleSelection(index)
             }
@@ -138,7 +137,7 @@ Item {
             PlasmaComponents.Label {
                 id: pagesLabel
                 height: parent.height
-                width: updateRow.width - updateIcon.width - infoIcon.width - updateNameLabel.width - updateCB.width
+                width: updateRow.width - updateCB.width - updateIcon.width - infoIcon.width - updateNameLabel.width - updateRow.spacing * 4
                 font.pointSize: theme.smallestFont.pointSize
                 color: "#99"+(theme.textColor.toString().substr(1))
                 elide: Text.ElideRight
@@ -146,17 +145,17 @@ Item {
             }
         }
 
-        PlasmaCore.SvgItem {
-            id: headerSeparator
-            visible: expanded
-            svg: PlasmaCore.Svg {
-                id: lineSvg
-                imagePath: "widgets/line"
-            }
-            elementId: "horizontal-line"
-            height: lineSvg.elementSize("horizontal-line").height
-            width: parent.width
-        }
+//        PlasmaCore.SvgItem {
+//            id: headerSeparator
+//            visible: expanded
+//            svg: PlasmaCore.Svg {
+//                id: lineSvg
+//                imagePath: "widgets/line"
+//            }
+//            elementId: "horizontal-line"
+//            height: lineSvg.elementSize("horizontal-line").height
+//            width: parent.width
+//        }
 
         Item {
             id: actionRow
