@@ -140,6 +140,14 @@ Action=Sound|Popup
 
 [Event/DownloadingUpdates]
 Name=Updates are being downloaded
+Name[cs]=Aktualizace jsou stahovány
+Name[nl]=Elementen voor bijwerken worden gedownload
+Name[pt]=As actualizações estão a ser transferidas
+Name[pt_BR]=As atualizações estão sendo baixadas
+Name[sk]=Aktualizácie sa sťahujú
+Name[sv]=Uppdateringar håller på att laddas ner
+Name[uk]=Звантажуємо оновлення
+Name[x-test]=xxUpdates are being downloadedxx
 Action=Sound|Popup
 
 [Event/RestartRequired]
