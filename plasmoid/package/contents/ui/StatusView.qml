@@ -51,7 +51,7 @@ Item {
         anchors.top: busy.bottom
         anchors.right: parent.right
         spacing: 4
-        Text {
+        PlasmaComponents.Label {
             id: titleText
             width: parent.width
             elide: Text.ElideRight
@@ -59,7 +59,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             text: title
         }
-        Text {
+        PlasmaComponents.Label {
             id: subTitleText
             width: parent.width
             elide: Text.ElideRight

@@ -58,7 +58,7 @@ Item {
             spacing: 4
             anchors.left: parent.left
             anchors.right: parent.right
-            Text {
+            PlasmaComponents.Label {
                 id: statusText
                 height: parent.height
                 width: parent.width - updateBT.width - parent.spacing

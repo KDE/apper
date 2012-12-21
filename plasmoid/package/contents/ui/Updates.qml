@@ -58,7 +58,7 @@ Item {
             anchors.bottom: parent.bottom
             onClicked: updatesModel.setAllChecked(checked);
         }
-        Text {
+        PlasmaComponents.Label {
             height: parent.height
             width: parent.width - updateAllCB.width - parent.spacing
             horizontalAlignment: Text.AlignLeft

@@ -60,17 +60,17 @@ Item {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.leftMargin: updateCB.width
-        Text {
+        PlasmaComponents.Label {
             id: updateVersion
             width: parent.width
             text: i18n("Version: %1", rVersion)
         }
-        Text {
+        PlasmaComponents.Label {
             id: updatesText
             width: parent.width
             text: i18n("Updates: %1", updatesList)
         }
-        Text {
+        PlasmaComponents.Label {
             id: changelogText
             width: parent.width
             wrapMode: Text.Wrap
