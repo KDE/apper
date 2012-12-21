@@ -105,10 +105,11 @@ Item {
             spacing: 4
             anchors.left: parent.left
             anchors.right: parent.right
-            height: updateCB.height
+            height: updateCB.width
             PlasmaComponents.CheckBox {
                 id: updateCB
                 checked: updateChecked
+                height: width
                 onClicked: updatesModel.toggleSelection(index)
             }
             QIconItem {
