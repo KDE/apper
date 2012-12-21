@@ -90,7 +90,7 @@ Item {
 
     Column {
         id: items
-        spacing: 8
+        spacing: 4
         anchors {
             right: parent.right
             left: parent.left
@@ -145,17 +145,17 @@ Item {
             }
         }
 
-//        PlasmaCore.SvgItem {
-//            id: headerSeparator
-//            visible: expanded
-//            svg: PlasmaCore.Svg {
-//                id: lineSvg
-//                imagePath: "widgets/line"
-//            }
-//            elementId: "horizontal-line"
-//            height: lineSvg.elementSize("horizontal-line").height
-//            width: parent.width
-//        }
+        PlasmaCore.SvgItem {
+            id: headerSeparator
+            visible: expanded
+            svg: PlasmaCore.Svg {
+                id: lineSvg
+                imagePath: "widgets/line"
+            }
+            elementId: "horizontal-line"
+            height: lineSvg.elementSize("horizontal-line").height
+            width: parent.width
+        }
 
         Item {
             id: actionRow
