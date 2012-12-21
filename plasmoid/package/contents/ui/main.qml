@@ -25,7 +25,7 @@ Item {
 
     state: "BUSY"
 
-    property int minimumHeight: 270
+    property int minimumHeight: 320
     property int minimumWidth: 370
     property int maximumHeight: 0
     property int maximumWidth: 0

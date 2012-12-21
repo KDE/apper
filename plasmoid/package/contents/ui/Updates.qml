@@ -42,57 +42,60 @@ Item {
         visible: false
     }
 
-    Row {
-        id: headerRow
-        spacing: 4
-        height: updateAllCB.height
-        anchors.leftMargin: padding.margins.left
-        anchors.topMargin: padding.margins.top
-        anchors.rightMargin: padding.margins.right
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
-        PlasmaComponents.CheckBox {
-            id: updateAllCB
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            onClicked: updatesModel.setAllChecked(checked);
-        }
-        PlasmaComponents.Label {
-            height: parent.height
-            width: parent.width - updateAllCB.width - parent.spacing
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
-            text: updatesModel.selectionStateText
-        }
-    }
-
     Apper.ApplicationSortFilterModel {
         id: appModel
         sourcePkgModel: updatesModel
     }
 
-    PlasmaCore.SvgItem {
-        id: headerSeparator
-        anchors.top: headerRow.bottom
-        svg: PlasmaCore.Svg {
-            id: lineSvg
-            imagePath: "widgets/line"
-        }
-        elementId: "horizontal-line"
-        height: lineSvg.elementSize("horizontal-line").height
-        width: parent.width
-    }
+    Column {
+        spacing: 4
+        anchors.fill: parent
 
-    ScrollableListView {
-        height: parent.height - headerRow.height - padding.margins.top * 2
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        delegate: UpdateItemDelegate {
+        Row {
+            id: headerRow
+            spacing: 4
+            height: updateAllCB.height
+            anchors.leftMargin: padding.margins.left
+            anchors.rightMargin: padding.margins.right
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.right: parent.right
+            PlasmaComponents.CheckBox {
+                id: updateAllCB
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                onClicked: updatesModel.setAllChecked(checked);
+            }
+            PlasmaComponents.Label {
+                height: parent.height
+                width: parent.width - updateAllCB.width - parent.spacing
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                text: updatesModel.selectionStateText
+            }
         }
-        view.currentIndex: -1
-        model: appModel
+
+        PlasmaCore.SvgItem {
+            id: headerSeparator
+            svg: PlasmaCore.Svg {
+                id: lineSvg
+                imagePath: "widgets/line"
+            }
+            elementId: "horizontal-line"
+            height: lineSvg.elementSize("horizontal-line").height
+            width: parent.width
+        }
+
+        ScrollableListView {
+            height: parent.height - headerRow.height - parent.spacing * 2
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            delegate: UpdateItemDelegate {
+            }
+            view.currentIndex: -1
+            model: appModel
+        }
     }
 
     Component.onCompleted: {
