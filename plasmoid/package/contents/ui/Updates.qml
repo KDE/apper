@@ -54,7 +54,6 @@ Item {
         Row {
             id: headerRow
             spacing: 4
-            height: updateAllCB.height
             anchors.leftMargin: padding.margins.left
             anchors.rightMargin: padding.margins.right
             anchors.left: parent.left
@@ -62,15 +61,14 @@ Item {
             anchors.right: parent.right
             PlasmaComponents.CheckBox {
                 id: updateAllCB
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                anchors.verticalCenter: parent.verticalCenter
+                height: width
                 onClicked: updatesModel.setAllChecked(checked);
             }
             PlasmaComponents.Label {
-                height: parent.height
+                anchors.verticalCenter: parent.verticalCenter
                 width: parent.width - updateAllCB.width - parent.spacing
                 horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
                 text: updatesModel.selectionStateText
             }
         }

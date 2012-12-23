@@ -105,39 +105,38 @@ Item {
             spacing: 4
             anchors.left: parent.left
             anchors.right: parent.right
-            height: updateCB.width
             PlasmaComponents.CheckBox {
                 id: updateCB
+                anchors.verticalCenter: parent.verticalCenter
                 checked: updateChecked
                 height: width
                 onClicked: updatesModel.toggleSelection(index)
             }
             QIconItem {
                 id: updateIcon
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                anchors.verticalCenter: parent.verticalCenter
                 width: parent.height
                 height: parent.height
                 icon: QIcon(rIcon)
             }
             QIconItem {
                 id: infoIcon
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                anchors.verticalCenter: parent.verticalCenter
                 width: parent.height
                 height: parent.height
                 icon: rInfoIcon
             }
             PlasmaComponents.Label {
-                // 12 = 3 * spacing
                 id: updateNameLabel
+                anchors.verticalCenter: parent.verticalCenter
+                height: paintedHeight
                 width: paintedWidth
-                height: parent.height
                 text: rName
             }
             PlasmaComponents.Label {
                 id: pagesLabel
-                height: parent.height
+                anchors.verticalCenter: parent.verticalCenter
+                height: paintedHeight
                 width: updateRow.width - updateCB.width - updateIcon.width - infoIcon.width - updateNameLabel.width - updateRow.spacing * 4
                 font.pointSize: theme.smallestFont.pointSize
                 color: "#99"+(theme.textColor.toString().substr(1))
