@@ -178,6 +178,18 @@ uint UpdaterApplet::getTimeSinceLastRefresh()
     return Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache);
 }
 
+bool UpdaterApplet::isDifferent()
+{
+    QStringList updates;
+    updates = m_updatesModel->selectedPackagesToInstall();
+    updates.sort();
+    if (m_updates != updates) {
+        m_updates = updates;
+        return true;
+    }
+    return false;
+}
+
 void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & Plasma::FormFactorConstraint) {

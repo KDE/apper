@@ -55,6 +55,7 @@ protected Q_SLOTS:
     void toolTipAboutToShow();
     void setActive(bool active);
     uint getTimeSinceLastRefresh();
+    bool isDifferent();
 
 protected:
     void constraintsEvent(Plasma::Constraints constraints);
@@ -67,6 +68,7 @@ private:
     QList<QAction*> m_actions;
     Plasma::DeclarativeWidget *m_declarativeWidget;
     PackageModel *m_updatesModel;
+    QStringList m_updates;
     bool m_initted;
 };
 
