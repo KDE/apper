@@ -191,7 +191,7 @@ void UpdaterApplet::showPopupIfDifferent()
 
     if (m_updates != updates) {
         m_updates = updates;
-        if (m_registered && !updates.isEmpty()) {
+        if (m_registered && !updates.isEmpty() && !isPopupShowing()) {
             KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
             notify->setComponentData(KComponentData("apperd"));
             connect(notify, SIGNAL(action1Activated()), this, SIGNAL(reviewUpdates()));

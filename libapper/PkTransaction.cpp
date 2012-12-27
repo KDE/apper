@@ -176,9 +176,11 @@ void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnl
     if (Daemon::global()->actions() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
         d->packages = packages;
-        d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
         if (downloadOnly) {
-            d->flags |= Transaction::TransactionFlagOnlyDownload;
+            // Don't simulate if we are just downloading
+            d->flags = Transaction::TransactionFlagOnlyDownload;
+        } else {
+            d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
         }
 
         setupTransaction();
