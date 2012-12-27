@@ -251,9 +251,9 @@ void Updater::showUpdatesPopup()
     // Determine the update type
     KIcon icon;
     if (!m_securityList.isEmpty()) {
-        icon = KIcon("security-low");
+        icon = PkIcons::packageIcon(Transaction::InfoSecurity);
     } else if (!m_importantList.isEmpty()) {
-        icon = KIcon("security-medium");
+        icon = PkIcons::packageIcon(Transaction::InfoImportant);
     } else {
         icon = KIcon("system-software-update");
     }

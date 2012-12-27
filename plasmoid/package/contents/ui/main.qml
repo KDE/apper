@@ -92,6 +92,7 @@ Item {
                 statusView.title = i18np("There is one update", "There are %1 updates", updatesModel.rowCount(), updatesModel.rowCount());
                 statusView.subTitle = "";
                 state = "HAVEUPDATES";
+                UpdaterPlasmoid.showPopupIfDifferent();
             }
         }
     }

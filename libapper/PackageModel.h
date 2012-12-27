@@ -86,6 +86,7 @@ public:
     Q_INVOKABLE QStringList selectedPackagesToInstall() const;
     Q_INVOKABLE QStringList selectedPackagesToRemove() const;
     Q_INVOKABLE QStringList packagesWithInfo(PackageKit::Transaction::Info info) const;
+    Q_INVOKABLE QStringList packageIDs() const;
     unsigned long downloadSize() const;
     Q_INVOKABLE void clear();
     /**

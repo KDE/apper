@@ -49,27 +49,32 @@ public:
 signals:
     void getUpdates();
     void checkForNewUpdates();
+    void reviewUpdates();
+    void installUpdates();
 
 protected Q_SLOTS:
     void updateIcon();
     void toolTipAboutToShow();
     void setActive(bool active);
     uint getTimeSinceLastRefresh();
-    bool isDifferent();
+    void showPopupIfDifferent();
 
 protected:
     void constraintsEvent(Plasma::Constraints constraints);
     virtual void popupEvent(bool show);
 
 private slots:
-    bool registerService();
+    void registerService();
+    void unregisterService();
 
 private:
+    QTimer *m_getUpdatesTimer;
     QList<QAction*> m_actions;
     Plasma::DeclarativeWidget *m_declarativeWidget;
     PackageModel *m_updatesModel;
     QStringList m_updates;
     bool m_initted;
+    bool m_registered;
 };
 
 K_EXPORT_PLASMA_APPLET(updater, UpdaterApplet)

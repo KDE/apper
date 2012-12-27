@@ -1,5 +1,6 @@
 set(updaterapplet_SRCS
-    updaterapplet.cpp)
+    updaterapplet.cpp
+)
 
 kde4_add_plugin(plasma_applet_updater ${updaterapplet_SRCS})
 target_link_libraries(plasma_applet_updater

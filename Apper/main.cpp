@@ -33,9 +33,9 @@
 int invoke(const QString &method_name, const QStringList &args)
 {
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
-                                             "/org/freedesktop/PackageKit",
-                                             "org.freedesktop.PackageKit.Modify",
+    message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.PackageKit"),
+                                             QLatin1String("/org/freedesktop/PackageKit"),
+                                             QLatin1String("org.freedesktop.PackageKit.Modify"),
                                              method_name);
     message << (uint) 0;
     message << args;

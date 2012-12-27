@@ -845,6 +845,15 @@ QStringList PackageModel::packagesWithInfo(Transaction::Info info) const
     return list;
 }
 
+QStringList PackageModel::packageIDs() const
+{
+    QStringList list;
+    foreach (const InternalPackage &package, m_packages) {
+        list << package.packageID;
+    }
+    return list;
+}
+
 unsigned long PackageModel::downloadSize() const
 {
     unsigned long size = 0;
