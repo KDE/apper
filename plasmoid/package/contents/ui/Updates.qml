@@ -57,7 +57,6 @@ Item {
             anchors.leftMargin: padding.margins.left
             anchors.rightMargin: padding.margins.right
             anchors.left: parent.left
-            anchors.top: parent.top
             anchors.right: parent.right
             PlasmaComponents.CheckBox {
                 id: updateAllCB
@@ -87,7 +86,6 @@ Item {
         ScrollableListView {
             height: parent.height - headerRow.height - parent.spacing * 2
             anchors.left: parent.left
-            anchors.bottom: parent.bottom
             anchors.right: parent.right
             delegate: UpdateItemDelegate {
             }

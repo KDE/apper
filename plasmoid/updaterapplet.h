@@ -55,7 +55,7 @@ signals:
 protected Q_SLOTS:
     void updateIcon();
     void toolTipAboutToShow();
-    void setActive(bool active);
+    void setActive(bool active = true);
     uint getTimeSinceLastRefresh();
     void showPopupIfDifferent();
 

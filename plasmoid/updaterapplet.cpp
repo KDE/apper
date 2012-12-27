@@ -62,6 +62,7 @@ UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
     action->setIcon(KIcon("view-refresh"));
     connect(action, SIGNAL(triggered()), this, SIGNAL(checkForNewUpdates()));
     connect(action, SIGNAL(triggered()), this, SLOT(showPopup()));
+    connect(action, SIGNAL(triggered()), this, SLOT(setActive()));
     m_actions << action;
 
     setAspectRatioMode(Plasma::IgnoreAspectRatio);
@@ -194,6 +195,7 @@ void UpdaterApplet::showPopupIfDifferent()
         if (m_registered && !updates.isEmpty() && !isPopupShowing()) {
             KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
             notify->setComponentData(KComponentData("apperd"));
+            connect(notify, SIGNAL(activated(uint)), this, SLOT(showPopup()));
             connect(notify, SIGNAL(action1Activated()), this, SIGNAL(reviewUpdates()));
             connect(notify, SIGNAL(action2Activated()), this, SIGNAL(installUpdates()));
             notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updatesModel->rowCount()));

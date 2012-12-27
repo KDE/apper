@@ -51,10 +51,24 @@ Item {
         Daemon.updatesChanged.connect(updatesChanged);
         UpdaterPlasmoid.getUpdates.connect(getUpdates);
         UpdaterPlasmoid.checkForNewUpdates.connect(checkForNewUpdates);
+        UpdaterPlasmoid.reviewUpdates.connect(reviewUpdates);
+        UpdaterPlasmoid.installUpdates.connect(installUpdates);
     }
 
     function checkForNewUpdates() {
         transactionView.refreshCache();
+        root.state = "TRANSACTION";
+    }
+
+    function reviewUpdates() {
+        root.state = "SELECTION";
+    }
+
+    function installUpdates() {
+        if (root.state === "HAVEUPDATES") {
+            updatesModel.setAllChecked(true);
+        }
+        transactionView.update(updatesModel.selectedPackagesToInstall());
         root.state = "TRANSACTION";
     }
 
@@ -144,18 +158,12 @@ Item {
             PlasmaComponents.Button {
                 id: reviewBT
                 text:  i18n("Review")
-                onClicked: root.state = "SELECTION"
+                onClicked: reviewUpdates()
             }
             PlasmaComponents.Button {
                 id: updateBT
                 text:  i18n("Install")
-                onClicked: {
-                    if (root.state === "HAVEUPDATES") {
-                        updatesModel.setAllChecked(true);
-                    }
-                    transactionView.update(updatesModel.selectedPackagesToInstall());
-                    root.state = "TRANSACTION";
-                }
+                onClicked: installUpdates()
             }
         }
     }
