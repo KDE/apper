@@ -35,11 +35,6 @@ class UpdaterApplet : public Plasma::PopupApplet
 {
     Q_OBJECT
 public:
-    typedef enum{
-        Normal,
-        Important,
-        Security
-    } UpdateType;
     UpdaterApplet(QObject *parent, const QVariantList &args);
     ~UpdaterApplet();
 
