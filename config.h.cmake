@@ -16,4 +16,7 @@
 // Define the edit origins command.
 #cmakedefine EDIT_ORIGNS_DESKTOP_NAME "@EDIT_ORIGNS_DESKTOP_NAME@"
 
+// Define the Apper version.
+#cmakedefine APP_VERSION "@APP_VERSION@"
+
 #endif //CONFIG_H

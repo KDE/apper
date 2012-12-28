@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "PkSession.h"
-#include <version.h>
+#include <config.h>
 
 #include <KDebug>
 #include <KConfig>

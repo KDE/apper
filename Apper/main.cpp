@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "Apper.h"
-#include <version.h>
+#include <config.h>
 
 #include <QDBusMessage>
 #include <QDBusConnection>

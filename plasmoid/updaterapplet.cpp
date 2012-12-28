@@ -76,8 +76,6 @@ UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
     m_interface = new DBusUpdaterInterface(this);
     connect(m_interface, SIGNAL(reviewUpdates()), this, SIGNAL(reviewUpdates()));
     connect(m_interface, SIGNAL(reviewUpdates()), this, SLOT(showPopup()));
-    connect(m_interface, SIGNAL(installUpdates()), this, SIGNAL(installUpdates()));
-    connect(m_interface, SIGNAL(installUpdates()), this, SLOT(showPopup()));
 
     m_getUpdatesTimer = new QTimer(this);
     m_getUpdatesTimer->setInterval(1000);
@@ -97,7 +95,7 @@ void UpdaterApplet::init()
         break;
     }
 
-    QTimer::singleShot(FIVE_MIN, this, SIGNAL(getUpdates()));
+    QTimer::singleShot(ONE_MIN, this, SIGNAL(getUpdates()));
 
     PopupApplet::init();
 }

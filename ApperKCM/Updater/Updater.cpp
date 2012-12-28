@@ -25,8 +25,6 @@
 #include "DistroUpgrade.h"
 #include "CheckableHeader.h"
 
-#include <version.h>
-
 #include <KMenu>
 #include <KGenericFactory>
 #include <KPixmapSequence>

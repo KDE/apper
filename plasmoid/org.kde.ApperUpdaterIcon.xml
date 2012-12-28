@@ -3,7 +3,5 @@
    <interface name="org.kde.ApperUpdaterIcon">
        <method name="ReviewUpdates" >
        </method>
-       <method name="InstallUpdates" >
-       </method>
    </interface>
 </node>

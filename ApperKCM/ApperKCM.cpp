@@ -25,8 +25,6 @@
 #include <KGenericFactory>
 #include <KAboutData>
 
-#include <version.h>
-
 #include <KLocale>
 #include <KStandardDirs>
 #include <KMessageBox>

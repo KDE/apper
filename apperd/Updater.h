@@ -52,7 +52,7 @@ private slots:
 
 private:
     void showUpdatesPopup();
-    bool updatePackages(const QStringList &packages, bool downloadOnly, const QString &icon, const QString &msg);
+    bool updatePackages(const QStringList &packages, bool downloadOnly, const QString &icon = QString(), const QString &msg = QString());
 
     bool m_hasAppletIconified;
     bool m_systemReady;

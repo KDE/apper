@@ -34,7 +34,6 @@ public:
     bool isRegistered() const;
 
     void ReviewUpdates();
-    void InstallUpdates();
 
 public slots:
     void registerService();
@@ -42,7 +41,6 @@ public slots:
 
 signals:
     void reviewUpdates();
-    void installUpdates();
 
 private:
     bool m_registered;

@@ -48,11 +48,6 @@ void DBusUpdaterInterface::ReviewUpdates()
     emit reviewUpdates();
 }
 
-void DBusUpdaterInterface::InstallUpdates()
-{
-    emit installUpdates();
-}
-
 void DBusUpdaterInterface::registerService()
 {
     QDBusServiceWatcher *watcher = qobject_cast<QDBusServiceWatcher*>(sender());

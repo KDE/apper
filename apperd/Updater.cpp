@@ -218,7 +218,7 @@ void Updater::autoUpdatesFinished(PkTransaction::ExitStatus status)
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-        notify->setText(i18n("The automated software update failed."));
+        notify->setText(i18n("The software update failed."));
         notify->sendEvent();
 
         // show updates popup
@@ -247,21 +247,13 @@ void Updater::reviewUpdates()
 
 void Updater::installUpdates()
 {
-    if (m_hasAppletIconified) {
-        QDBusMessage message;
-        message = QDBusMessage::createMethodCall(QLatin1String("org.kde.ApperUpdaterIcon"),
-                                                 QLatin1String("/"),
-                                                 QLatin1String("org.kde.ApperUpdaterIcon"),
-                                                 QLatin1String("InstallUpdates"));
-        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-        if (reply.type() == QDBusMessage::ReplyMessage) {
-            return;
-        }
-        kWarning() << "Message did not receive a reply";
+    bool ret;
+    ret = updatePackages(m_updateList, false);
+    if (ret) {
+        return;
     }
 
-    // This must be called from the main thread...
-    KToolInvocation::startServiceByDesktopName("apper_updates");
+    reviewUpdates();
 }
 
 void Updater::serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner)
@@ -312,17 +304,19 @@ bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, con
     transaction->setProperty("DownloadOnly", downloadOnly);
     transaction->updatePackages(packages, downloadOnly);
     if (!transaction->error()) {
-        KNotification *notify;
-        if (downloadOnly) {
-            notify = new KNotification("DownloadingUpdates");
-        } else {
-            notify = new KNotification("AutoInstallingUpdates");
+        if (!icon.isNull()) {
+            KNotification *notify;
+            if (downloadOnly) {
+                notify = new KNotification("DownloadingUpdates");
+            } else {
+                notify = new KNotification("AutoInstallingUpdates");
+            }
+            notify->setComponentData(KComponentData("apperd"));
+            notify->setText(msg);
+            // use of QSize does the right thing
+            notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+            notify->sendEvent();
         }
-        notify->setComponentData(KComponentData("apperd"));
-        notify->setText(msg);
-        // use of QSize does the right thing
-        notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-        notify->sendEvent();
 
         return true;
     }
