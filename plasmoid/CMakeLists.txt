@@ -1,8 +1,16 @@
 set(updaterapplet_SRCS
+    DBusUpdaterInterface.cpp
     updaterapplet.cpp
 )
 
+qt4_add_dbus_adaptor(updaterapplet_SRCS
+    org.kde.ApperUpdaterIcon.xml
+    DBusUpdaterInterface.h
+    DBusUpdaterInterface
+)
+
 kde4_add_plugin(plasma_applet_updater ${updaterapplet_SRCS})
+
 target_link_libraries(plasma_applet_updater
     ${KDE4_PLASMA_LIBS}
     ${KDE4_KIO_LIBS}

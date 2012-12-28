@@ -98,9 +98,6 @@ void ApperdThread::init()
     connect(proxyWatch, SIGNAL(deleted(QString)), this, SLOT(proxyChanged()));
     proxyWatch->startScan();
 
-    // read the current settings
-    configFileChanged();
-
     QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
     Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
@@ -119,10 +116,11 @@ void ApperdThread::init()
             m_refreshCache, SLOT(refreshCache()));
 
     m_updater = new Updater(this);
-    m_updater->setConfig(m_configs);
 
     m_distroUpgrade = new DistroUpgrade(this);
-    m_distroUpgrade->setConfig(m_configs);
+
+    // read the current settings
+    configFileChanged();
 
     // In case PackageKit is not running watch for it's registration to configure proxy
     QDBusServiceWatcher *watcher;
@@ -195,6 +193,14 @@ void ApperdThread::configFileChanged()
     m_configs[CFG_AUTO_UP] = checkUpdateGroup.readEntry(CFG_AUTO_UP, Enum::AutoUpdateDefault);
     m_configs[CFG_INTERVAL] = checkUpdateGroup.readEntry(CFG_INTERVAL, Enum::TimeIntervalDefault);
     m_configs[CFG_DISTRO_UPGRADE] = checkUpdateGroup.readEntry(CFG_DISTRO_UPGRADE, Enum::DistroUpgradeDefault);
+    m_updater->setConfig(m_configs);
+    m_distroUpgrade->setConfig(m_configs);
+
+    KDirWatch *confWatch = qobject_cast<KDirWatch*>(sender());
+    if (confWatch) {
+        // Check for updates again since the config changed
+        updatesChanged();
+    }
 }
 
 void ApperdThread::proxyChanged()

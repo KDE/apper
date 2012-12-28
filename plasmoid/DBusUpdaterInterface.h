@@ -1,7 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007-2009 by Shawn Starr <shawn.starr@rogers.com>       *
- *   Copyright (C) 2012 by Luís Gabriel Lima <lampih@gmail.com>            *
- *   Copyright (C) 2012 by Daniel Nicoletti <dantti12@gmail.com>           *
+ *   Copyright (C) 2008-2012 Daniel Nicoletti <dantti12@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,59 +17,35 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef UPDATERAPPLET_H
-#define UPDATERAPPLET_H
+#ifndef DBUSUPDATERINTERFACE_H
+#define DBUSUPDATERINTERFACE_H
 
-#include <Plasma/PopupApplet>
+#include <QtDBus/QDBusContext>
+#include <QDBusObjectPath>
 
-namespace Plasma
-{
-    class DeclarativeWidget;
-}
-
-class PackageModel;
-class DBusUpdaterInterface;
-class UpdaterApplet : public Plasma::PopupApplet
+class DBusUpdaterInterface : public QObject, protected QDBusContext
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.ApperUpdaterIcon")
 public:
-    typedef enum{
-        Normal,
-        Important,
-        Security
-    } UpdateType;
-    UpdaterApplet(QObject *parent, const QVariantList &args);
-    ~UpdaterApplet();
+    DBusUpdaterInterface(QObject *parent = 0);
+    ~DBusUpdaterInterface();
 
-    void init();
-    virtual QList<QAction*> contextualActions();
-    QGraphicsWidget *graphicsWidget();
+    bool isRegistered() const;
+
+    void ReviewUpdates();
+    void InstallUpdates();
+
+public slots:
+    void registerService();
+    void unregisterService();
 
 signals:
-    void getUpdates();
-    void checkForNewUpdates();
     void reviewUpdates();
     void installUpdates();
 
-protected Q_SLOTS:
-    void updateIcon();
-    void toolTipAboutToShow();
-    void setActive(bool active = true);
-    uint getTimeSinceLastRefresh();
-
-protected:
-    void constraintsEvent(Plasma::Constraints constraints);
-    virtual void popupEvent(bool show);
-
 private:
-    QTimer *m_getUpdatesTimer;
-    QList<QAction*> m_actions;
-    Plasma::DeclarativeWidget *m_declarativeWidget;
-    PackageModel *m_updatesModel;
-    DBusUpdaterInterface *m_interface;
-    bool m_initted;
+    bool m_registered;
 };
 
-K_EXPORT_PLASMA_APPLET(updater, UpdaterApplet)
-
-#endif // UPDATERAPPLET_H
+#endif // DBUSUPDATERINTERFACE_H

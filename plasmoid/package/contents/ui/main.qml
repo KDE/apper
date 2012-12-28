@@ -34,7 +34,7 @@ Item {
     property int implicitHeight: 0
     property int implicitWidth: 0
 
-
+    property string futureAction: ""
     property bool checkedForUpdates: false
 
     anchors.fill: parent
@@ -52,7 +52,7 @@ Item {
         UpdaterPlasmoid.getUpdates.connect(getUpdates);
         UpdaterPlasmoid.checkForNewUpdates.connect(checkForNewUpdates);
         UpdaterPlasmoid.reviewUpdates.connect(reviewUpdates);
-        UpdaterPlasmoid.installUpdates.connect(installUpdates);
+        UpdaterPlasmoid.installUpdates.connect(slotInstallUpdates);
     }
 
     function checkForNewUpdates() {
@@ -61,15 +61,50 @@ Item {
     }
 
     function reviewUpdates() {
-        root.state = "SELECTION";
+        if (root.state !== "TRANSACTION") {
+            // If we are not checking for updates show
+            // the package selection
+            if (checkedForUpdates && root.state !== "BUSY") {
+                root.state = "SELECTION";
+            } else {
+                getUpdates();
+                futureAction = "REVIEW";
+            }
+        }
     }
 
-    function installUpdates() {
-        if (root.state === "HAVEUPDATES") {
+    function slotReviewUpdates() {
+        if (root.state !== "TRANSACTION") {
+            // If we are not checking for updates show
+            // the package selection
+            if (checkedForUpdates && root.state !== "BUSY") {
+                root.state = "SELECTION";
+            } else {
+                getUpdates();
+                futureAction = "REVIEW";
+            }
+        }
+    }
+
+    function installUpdates(checkAll) {
+        if (checkAll || root.state === "HAVEUPDATES") {
             updatesModel.setAllChecked(true);
         }
         transactionView.update(updatesModel.selectedPackagesToInstall());
         root.state = "TRANSACTION";
+    }
+
+    function slotInstallUpdates() {
+        if (root.state !== "TRANSACTION") {
+            // If we are not checking for updates show
+            // the package selection
+            if (checkedForUpdates && root.state !== "BUSY") {
+                installUpdates(true);
+            } else {
+                getUpdates();
+                futureAction = "INSTALL";
+            }
+        }
     }
 
     function getUpdates() {
@@ -105,8 +140,14 @@ Item {
                 statusView.iconName = "system-software-update";
                 statusView.title = i18np("There is one update", "There are %1 updates", updatesModel.rowCount(), updatesModel.rowCount());
                 statusView.subTitle = "";
-                state = "HAVEUPDATES";
-                UpdaterPlasmoid.showPopupIfDifferent();
+                if (futureAction === "REVIEW") {
+                    root.state = "SELECTION";
+                } else if (futureAction === "INSTALL") {
+                    installUpdates(true);
+                } else {
+                    root.state = "HAVEUPDATES";
+                }
+                futureAction = "";
             }
         }
     }
@@ -158,12 +199,12 @@ Item {
             PlasmaComponents.Button {
                 id: reviewBT
                 text:  i18n("Review")
-                onClicked: reviewUpdates()
+                onClicked: root.state = "SELECTION"
             }
             PlasmaComponents.Button {
                 id: updateBT
                 text:  i18n("Install")
-                onClicked: installUpdates()
+                onClicked: installUpdates(false)
             }
         }
     }

@@ -47,6 +47,7 @@ private slots:
     void getUpdateFinished();
     void autoUpdatesFinished(PkTransaction::ExitStatus exit);
     void reviewUpdates();
+    void installUpdates();
     void serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner);
 
 private:

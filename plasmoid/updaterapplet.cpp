@@ -22,6 +22,8 @@
 
 #include "updaterapplet.h"
 
+#include "DBusUpdaterInterface.h"
+
 #include <QtGui/QGraphicsLinearLayout>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
@@ -55,8 +57,7 @@ using namespace PackageKit;
 UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
     PopupApplet(parent, args),
     m_declarativeWidget(0),
-    m_initted(false),
-    m_registered(false)
+    m_initted(false)
 {
     QAction *action = new QAction(i18n("Check for new updates"), this);
     action->setIcon(KIcon("view-refresh"));
@@ -71,6 +72,12 @@ UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
 
     m_updatesModel = new PackageModel(this);
     m_updatesModel->setCheckable(true);
+
+    m_interface = new DBusUpdaterInterface(this);
+    connect(m_interface, SIGNAL(reviewUpdates()), this, SIGNAL(reviewUpdates()));
+    connect(m_interface, SIGNAL(reviewUpdates()), this, SLOT(showPopup()));
+    connect(m_interface, SIGNAL(installUpdates()), this, SIGNAL(installUpdates()));
+    connect(m_interface, SIGNAL(installUpdates()), this, SLOT(showPopup()));
 
     m_getUpdatesTimer = new QTimer(this);
     m_getUpdatesTimer->setInterval(1000);
@@ -102,7 +109,6 @@ QList<QAction *> UpdaterApplet::contextualActions()
 
 UpdaterApplet::~UpdaterApplet()
 {
-    unregisterService();
 }
 
 Q_DECLARE_METATYPE(PackageKit::Transaction::Status)
@@ -184,40 +190,6 @@ uint UpdaterApplet::getTimeSinceLastRefresh()
     return Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache);
 }
 
-void UpdaterApplet::showPopupIfDifferent()
-{
-    QStringList updates;
-    updates = m_updatesModel->selectedPackagesToInstall();
-    updates.sort();
-
-    if (m_updates != updates) {
-        m_updates = updates;
-        if (m_registered && !updates.isEmpty() && !isPopupShowing()) {
-            KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
-            notify->setComponentData(KComponentData("apperd"));
-            connect(notify, SIGNAL(activated(uint)), this, SLOT(showPopup()));
-            connect(notify, SIGNAL(action1Activated()), this, SIGNAL(reviewUpdates()));
-            connect(notify, SIGNAL(action2Activated()), this, SIGNAL(installUpdates()));
-            notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updatesModel->rowCount()));
-            QStringList names;
-            foreach (const QString &packageId, m_updatesModel->packageIDs()) {
-                names << Transaction::packageName(packageId);
-            }
-            QString text = names.join(QLatin1String(", "));
-            notify->setText(text);
-
-            QStringList actions;
-            actions << i18n("Review");
-            actions << i18n("Install");
-            notify->setActions(actions);
-
-            // use of QSize does the right thing
-            notify->setPixmap(KIcon("system-software-update").pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-            notify->sendEvent();
-        }
-    }
-}
-
 void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & Plasma::FormFactorConstraint) {
@@ -232,12 +204,12 @@ void UpdaterApplet::constraintsEvent(Plasma::Constraints constraints)
         }
     }
 
-    if (!m_registered && isIconified()) {
+    if (!m_interface->isRegistered() && isIconified()) {
         // Register the org.kde.ApperUpdaterIcon interface
         // so KDED can tell us to show the review list popup
-        registerService();
-    } else if (m_registered && !isIconified()) {
-        unregisterService();
+        m_interface->registerService();
+    } else if (m_interface->isRegistered() && !isIconified()) {
+        m_interface->unregisterService();
     }
 
     if (isIconified()) {
@@ -257,37 +229,6 @@ void UpdaterApplet::popupEvent(bool show)
         // were installed, after clicking the plasmoid
         // icon, and hiding it the icon is kept at active status
         setStatus(Plasma::PassiveStatus);
-    }
-}
-
-void UpdaterApplet::registerService()
-{
-    QDBusServiceWatcher *watcher = qobject_cast<QDBusServiceWatcher*>(sender());
-    if (!m_registered && !QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
-        kDebug() << "unable to register service to dbus";
-        if (!watcher) {
-            // in case registration fails due to another user or application running
-            // keep an eye on it so we can register when available
-            watcher = new QDBusServiceWatcher(QLatin1String("org.kde.ApperUpdaterIcon"),
-                                              QDBusConnection::systemBus(),
-                                              QDBusServiceWatcher::WatchForUnregistration,
-                                              this);
-            connect(watcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(registerService()));
-        }
-        m_registered = false;
-    } else {
-        m_registered = true;
-    }
-}
-
-void UpdaterApplet::unregisterService()
-{
-    // We need to unregister the service since
-    // plasma-desktop won't exit
-    if (QDBusConnection::sessionBus().unregisterService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
-        m_registered = false;
-    } else {
-        kDebug() << "unable to unregister service to dbus";
     }
 }
 

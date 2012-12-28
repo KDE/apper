@@ -29,6 +29,7 @@
 #include <Enum.h>
 
 #include <QDBusServiceWatcher>
+#include <QDBusMessage>
 
 #include <KLocale>
 #include <KNotification>
@@ -80,11 +81,10 @@ void Updater::setSystemReady()
 void Updater::checkForUpdates(bool systemReady)
 {
     m_systemReady = systemReady;
-    uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
 
     // Skip the check if one is already running or
     // the plasmoid is in Icon form and the auto update type is None
-    if (m_getUpdatesT || (m_hasAppletIconified && updateType == Enum::None)) {
+    if (m_getUpdatesT) {
         return;
     }
 
@@ -149,7 +149,6 @@ void Updater::getUpdateFinished()
         if (transaction && !different) {
             return;
         }
-        m_oldUpdateList = m_updateList;
 
         uint updateType = m_configs[CFG_AUTO_UP].value<uint>();
         if (m_systemReady && updateType == Enum::All) {
@@ -211,14 +210,14 @@ void Updater::autoUpdatesFinished(PkTransaction::ExitStatus status)
         } else {
             KIcon icon("task-complete");
             // use of QSize does the right thing
-            notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+            notify->setPixmap(icon.pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
             notify->setText(i18n("System update was successful."));
             notify->sendEvent();
         }
     } else {
         KIcon icon("dialog-cancel");
         // use of QSize does the right thing
-        notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+        notify->setPixmap(icon.pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         notify->setText(i18n("The automated software update failed."));
         notify->sendEvent();
 
@@ -229,6 +228,38 @@ void Updater::autoUpdatesFinished(PkTransaction::ExitStatus status)
 
 void Updater::reviewUpdates()
 {
+    if (m_hasAppletIconified) {
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall(QLatin1String("org.kde.ApperUpdaterIcon"),
+                                                 QLatin1String("/"),
+                                                 QLatin1String("org.kde.ApperUpdaterIcon"),
+                                                 QLatin1String("ReviewUpdates"));
+        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+        if (reply.type() == QDBusMessage::ReplyMessage) {
+            return;
+        }
+        kWarning() << "Message did not receive a reply";
+    }
+
+    // This must be called from the main thread...
+    KToolInvocation::startServiceByDesktopName("apper_updates");
+}
+
+void Updater::installUpdates()
+{
+    if (m_hasAppletIconified) {
+        QDBusMessage message;
+        message = QDBusMessage::createMethodCall(QLatin1String("org.kde.ApperUpdaterIcon"),
+                                                 QLatin1String("/"),
+                                                 QLatin1String("org.kde.ApperUpdaterIcon"),
+                                                 QLatin1String("InstallUpdates"));
+        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
+        if (reply.type() == QDBusMessage::ReplyMessage) {
+            return;
+        }
+        kWarning() << "Message did not receive a reply";
+    }
+
     // This must be called from the main thread...
     KToolInvocation::startServiceByDesktopName("apper_updates");
 }
@@ -243,24 +274,12 @@ void Updater::serviceOwnerChanged(const QString &service, const QString &oldOwne
 
 void Updater::showUpdatesPopup()
 {
-    if (m_hasAppletIconified) {
-        // ignore the call if the plasmoid is iconified
-        return;
-    }
-
-    // Determine the update type
-    KIcon icon;
-    if (!m_securityList.isEmpty()) {
-        icon = PkIcons::packageIcon(Transaction::InfoSecurity);
-    } else if (!m_importantList.isEmpty()) {
-        icon = PkIcons::packageIcon(Transaction::InfoImportant);
-    } else {
-        icon = KIcon("system-software-update");
-    }
+    m_oldUpdateList = m_updateList;
 
     KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
     notify->setComponentData(KComponentData("apperd"));
     connect(notify, SIGNAL(action1Activated()), this, SLOT(reviewUpdates()));
+    connect(notify, SIGNAL(action2Activated()), this, SLOT(installUpdates()));
     notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updateList.size()));
     QStringList names;
     foreach (const QString &packageId, m_updateList) {
@@ -271,15 +290,20 @@ void Updater::showUpdatesPopup()
 
     QStringList actions;
     actions << i18n("Review");
+    if (m_hasAppletIconified) {
+        actions << i18n("Install");
+    }
     notify->setActions(actions);
 
     // use of QSize does the right thing
-    notify->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+    notify->setPixmap(KIcon("system-software-update").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     notify->sendEvent();
 }
 
 bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, const QString &icon, const QString &msg)
 {
+    m_oldUpdateList = m_updateList;
+
     // Defaults to security
     PkTransaction *transaction = new PkTransaction;
     transaction->enableJobWatcher(true);
