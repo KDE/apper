@@ -146,6 +146,7 @@ Action=Sound|Popup
 Name=Updates are being downloaded
 Name[cs]=Aktualizace jsou stahovány
 Name[da]=Opdateringer downloades
+Name[de]=Die Aktualisierungen sind heruntergeladen worden
 Name[el]=Γίνεται λήψη των ενημερώσεων
 Name[et]=Uuenduste allalaadimine
 Name[ga]=Nuashonruithe á n-íosluchtú
@@ -287,6 +288,7 @@ Action=Sound|Popup
 [Event/TransactionMessage]
 Name=Message from the software manager
 Name[da]=Meddelelse fra softwarehåndteringen
+Name[de]=Eine Nachricht von der Softwareverwaltung
 Name[el]=Μήνυμα από το διαχειριστή λογισμικού
 Name[es]=Mensaje del gestor de software
 Name[et]=Teade tarkvarahaldurilt
