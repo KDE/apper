@@ -153,12 +153,14 @@ Name[ga]=Nuashonruithe á n-íosluchtú
 Name[hu]=A frissítések letöltésre kerülnek
 Name[nl]=Elementen voor bijwerken worden gedownload
 Name[pa]=ਅੱਪਡੇਟ ਡਾਊਨਲੋਡ ਕੀਤੇ ਜਾ ਰਹੇ ਹਨ
+Name[pl]=Uaktualnienia są pobierane
 Name[pt]=As actualizações estão a ser transferidas
 Name[pt_BR]=As atualizações estão sendo baixadas
 Name[sk]=Aktualizácie sa sťahujú
 Name[sl]=Posodobitve se prejemajo
 Name[sv]=Uppdateringar håller på att laddas ner
 Name[uk]=Звантажуємо оновлення
+Name[wa]=Les metaedjes a djoû sont-st a l' aberwetaedje
 Name[x-test]=xxUpdates are being downloadedxx
 Action=Sound|Popup
 
