@@ -156,6 +156,13 @@ void Settings::on_showOriginsCB_stateChanged(int state)
     if (!transaction->error()) {
         m_busySeq->start();
     }
+
+    KConfig config("apper");
+    KConfigGroup originsDialog(&config, "originsDialog");
+    bool showDevel = originsDialog.readEntry("showDevel", false);
+    if (showDevel != ui->showOriginsCB->isChecked()) {
+        originsDialog.writeEntry("showDevel", ui->showOriginsCB->isChecked());
+    }
 }
 
 bool Settings::hasChanges() const
@@ -254,7 +261,13 @@ void Settings::load()
 
     // Load origns list
     if (m_roles & Transaction::RoleGetRepoList) {
-        on_showOriginsCB_stateChanged(Qt::Unchecked);
+        KConfigGroup originsDialog(&config, "originsDialog");
+        bool showDevel = originsDialog.readEntry("showDevel", false);
+        ui->showOriginsCB->setChecked(showDevel);
+        on_showOriginsCB_stateChanged(ui->showOriginsCB->checkState());
+        ui->originTV->setEnabled(true);
+    } else {
+        ui->originTV->setEnabled(false);
     }
 
     // hide battery options if we are on a desktop computer

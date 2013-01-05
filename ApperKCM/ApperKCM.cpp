@@ -482,9 +482,10 @@ void ApperKCM::setPage(const QString &page)
             setButtons(KCModule::Default | KCModule::Apply);
             emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
             emit changed(false);
+            generalSettingsPB->setChecked(true);
+            stackedWidgetBar->setCurrentIndex(BAR_SETTINGS);
             stackedWidget->setCurrentWidget(m_settingsPage);
             m_settingsPage->load();
-            stackedWidgetBar->setCurrentIndex(BAR_SETTINGS);
             titleL->clear();
             backTB->setEnabled(true);
         }

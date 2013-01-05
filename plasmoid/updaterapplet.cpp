@@ -29,15 +29,10 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative>
 
-#include <QDBusConnection>
-#include <QDBusServiceWatcher>
-
 #include <Plasma/ToolTipManager>
 #include <Plasma/ToolTipContent>
 #include <Plasma/DeclarativeWidget>
 #include <Plasma/Package>
-
-#include <KNotification>
 
 #include <PackageModel.h>
 #include <PkTransaction.h>
