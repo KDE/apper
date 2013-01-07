@@ -20,7 +20,7 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.packagekit 0.1 as PackageKit
 
-Item {
+FocusScope {
     id: root
 
     state: "BUSY"

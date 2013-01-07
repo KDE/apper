@@ -216,6 +216,11 @@ void UpdaterApplet::popupEvent(bool show)
 {
     if (show) {
         emit getUpdates();
+
+        // THIS IS A HACK
+        // for some reason the active focus is not
+        // set when the popup is shown...
+        QTimer::singleShot(500, m_declarativeWidget->rootObject(), SLOT(forceActiveFocus()));
     } else if (status() != Plasma::NeedsAttentionStatus &&
                m_updatesModel->rowCount() == 0) {
         // if the plasmoid was open and your updates
