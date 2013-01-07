@@ -273,11 +273,17 @@ void Updater::showUpdatesPopup()
     connect(notify, SIGNAL(action1Activated()), this, SLOT(reviewUpdates()));
     connect(notify, SIGNAL(action2Activated()), this, SLOT(installUpdates()));
     notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updateList.size()));
-    QStringList names;
+    QString text;
     foreach (const QString &packageId, m_updateList) {
-        names << Transaction::packageName(packageId);
+        QString packageName = Transaction::packageName(packageId);
+        if (text.length() + packageName.length() > 150) {
+            text.append(QLatin1String(" ..."));
+            break;
+        } else if (!text.isNull()) {
+            text.append(QLatin1String(", "));
+        }
+        text.append(packageName);
     }
-    QString text = names.join(QLatin1String(", "));
     notify->setText(text);
 
     QStringList actions;
