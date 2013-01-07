@@ -21,7 +21,7 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.apper 0.1 as Apper
 import org.packagekit 0.1 as PackageKit
 
-Item {
+FocusScope {
     id: transactionItem
 
     anchors.fill: parent
@@ -67,6 +67,7 @@ Item {
             }
             PlasmaComponents.Button {
                 id: updateBT
+                focus: true
                 iconSource: "dialog-cancel"
                 text:  i18n("Cancel")
                 enabled: updateTransaction.allowCancel

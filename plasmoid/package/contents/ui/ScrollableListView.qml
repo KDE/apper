@@ -22,7 +22,7 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.qtextracomponents 0.1
 
-Item {
+FocusScope {
     property alias delegate: list.delegate
     property alias model: list.model
     property alias interactive: list.interactive
@@ -38,21 +38,23 @@ Item {
         id: list
         clip: true
         spacing: 0
+        focus: true
         anchors {
             left:   parent.left
-            right:  scrollBar.visible ? scrollBar.left : parent.right
+            right:  /*scrollBar.visible ? scrollBar.left :*/ parent.right
             top :   parent.top
             bottom: parent.bottom
         }
         boundsBehavior: Flickable.StopAtBounds
+//        snapMode: ListView.SnapOneItem
     }
-    PlasmaComponents.ScrollBar {
-        id: scrollBar
-        flickableItem: list
-        anchors {
-            right: parent.right
-            top: list.top
-            bottom: list.bottom
-        }
-    }
+//    PlasmaComponents.ScrollBar {
+//        id: scrollBar
+//        flickableItem: list
+//        anchors {
+//            right: parent.right
+//            top: parent.top
+//            bottom: parent.bottom
+//        }
+//    }
 }

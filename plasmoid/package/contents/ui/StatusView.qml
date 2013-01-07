@@ -31,13 +31,15 @@ Item {
 
     PlasmaComponents.BusyIndicator {
         id: busy
+        opacity: 0
         width: iconSize
         height: iconSize
         anchors.centerIn: parent
-        running: statusView.opacity !== 0
+        running: statusView.opacity !== 0 && opacity !== 0
     }
 
     QIconItem {
+        opacity: 0
         id: statusIcon
         width: iconSize
         height: iconSize
@@ -71,12 +73,11 @@ Item {
     states: [
         State {
             name: "BUSY"
-            PropertyChanges { target: statusIcon; opacity: 0}
+            PropertyChanges { target: busy; opacity: 1 }
         },
         State {
             name: "ICON"
-            PropertyChanges { target: busy; opacity: 0}
-            PropertyChanges { target: busy; running: false}
+            PropertyChanges { target: statusIcon; opacity: 1 }
         }
     ]
 }

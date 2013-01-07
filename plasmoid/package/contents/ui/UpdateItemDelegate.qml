@@ -27,17 +27,60 @@ Item {
     clip: true
     width: ListView.view.width
     height: items.height + padding.margins.top + padding.margins.bottom
-    property bool expanded: ListView.isCurrentItem
+    property bool currentItem: ListView.isCurrentItem
     property bool updateChecked: rChecked
 
-    property variant changelog: null
+    property variant changelog
 
     Behavior on height { PropertyAnimation {} }
 
-    // This is a HACK, for some
-    // reason when the user manually checks some updates,
-    // clicking to check/uncheck all doesn't work on those
-    onUpdateCheckedChanged: updateCB.checked = updateChecked;
+    // This is needed since when the user clicks the checkbox
+    // the checked property is unbinded from the rChecked value
+    // this makes sure we have the same value as the model
+    onUpdateCheckedChanged: updateCB.checked = updateChecked
+
+    Keys.onEnterPressed: toggleChangelog()
+    Keys.onReturnPressed: toggleChangelog()
+    Keys.onSpacePressed: updatesModel.toggleSelection(rId)
+
+    function updateSelection() {
+        if (currentItem && mouseArea.containsMouse) {
+            padding.opacity = 1;
+        } else if (currentItem) {
+            padding.opacity = 0.9;
+        } else if (mouseArea.containsMouse) {
+            padding.opacity = 0.7;
+        } else {
+           padding.opacity = 0;
+        }
+    }
+
+    function createChangelog() {
+        updateItem.ListView.view.currentIndex = index;
+        var component = Qt.createComponent("ChangelogView.qml");
+        if (component.status === Component.Ready) {
+            changelog = component.createObject(actionRow);
+        } else {
+            console.debug("Error creating details view: " + component.errorString());
+        }
+        expandButton.checked = true;
+    }
+
+    function destroyChangelog() {
+        if (changelog) {
+            changelog.destroy();
+            changelog = undefined;
+            expandButton.checked = false;
+        }
+    }
+
+    function toggleChangelog() {
+        if (changelog === undefined) {
+            createChangelog();
+        } else if (changelog) {
+            destroyChangelog();
+        }
+    }
 
     PlasmaCore.FrameSvgItem {
         id: padding
@@ -48,44 +91,28 @@ Item {
         anchors.fill: parent
     }
 
-    onExpandedChanged: {
-        if (expanded) {
-            var component = Qt.createComponent("ChangelogView.qml");
-            if (component.status === Component.Ready) {
-                changelog = component.createObject(actionRow);
-            } else {
-                console.debug("Error creating details view: " + component.errorString());
-            }
-        } else if (changelog) {
-            changelog.destroy();
+    onCurrentItemChanged: {
+        updateSelection()
+        if (!currentItem) {
+            destroyChangelog();
         }
     }
     
     MouseArea {
-        id: container
+        id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: {
-            if (expanded) {
-                padding.opacity = 1;
-            } else {
-                padding.opacity = 0.7;
-            }
-        }
+        onEntered: updateSelection()
         onClicked: {
-            if (expanded) {
+            if (currentItem) {
                 updateItem.ListView.view.currentIndex = -1;
             } else {
                 updateItem.ListView.view.currentIndex = index;
             }
+            updateItem.forceActiveFocus()
         }
-        onExited: {
-            if (expanded) {
-                padding.opacity = 0.9;
-            } else {
-                padding.opacity = 0;
-            }
-        }
+        onDoubleClicked: toggleChangelog()
+        onExited: updateSelection()
     }
 
     Column {
@@ -110,7 +137,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 checked: updateChecked
                 height: width
-                onClicked: updatesModel.toggleSelection(index)
+                onClicked: updatesModel.toggleSelection(rId)
             }
             QIconItem {
                 id: updateIcon
@@ -137,17 +164,28 @@ Item {
                 id: pagesLabel
                 anchors.verticalCenter: parent.verticalCenter
                 height: paintedHeight
-                width: updateRow.width - updateCB.width - updateIcon.width - infoIcon.width - updateNameLabel.width - updateRow.spacing * 4
+                width: updateRow.width - updateCB.width - updateIcon.width - infoIcon.width - updateNameLabel.width - expandButton.width - updateRow.spacing * 5
                 font.pointSize: theme.smallestFont.pointSize
                 color: "#99"+(theme.textColor.toString().substr(1))
                 elide: Text.ElideRight
                 text: rSummary
             }
+            PlasmaComponents.ToolButton {
+                id: expandButton
+                anchors.verticalCenter: parent.verticalCenter
+                width: theme.smallMediumIconSize
+                height: width
+                flat: false
+                iconSource: checked ? "list-remove" : "list-add"
+                checkable: true
+                checked: changelog !== undefined
+                onClicked: toggleChangelog()
+            }
         }
 
         PlasmaCore.SvgItem {
             id: headerSeparator
-            visible: expanded
+            visible: changelog !== undefined
             svg: PlasmaCore.Svg {
                 id: lineSvg
                 imagePath: "widgets/line"
@@ -159,7 +197,7 @@ Item {
 
         Item {
             id: actionRow
-            opacity: expanded ? 1 : 0
+            opacity: changelog !== undefined
             width: parent.width
             height: childrenRect.height
             clip: true
@@ -167,4 +205,3 @@ Item {
         }
     }
 }
-

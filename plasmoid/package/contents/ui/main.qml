@@ -34,7 +34,6 @@ Item {
     property int implicitHeight: 0
     property int implicitWidth: 0
 
-    property bool futureReview: false
     property bool checkedForUpdates: false
 
     anchors.fill: parent
@@ -67,15 +66,11 @@ Item {
                 root.state = "SELECTION";
             } else {
                 getUpdates();
-                futureReview = true;
             }
         }
     }
 
     function installUpdates() {
-        if (root.state === "HAVEUPDATES") {
-            updatesModel.setAllChecked(true);
-        }
         transactionView.update(updatesModel.selectedPackagesToInstall());
         root.state = "TRANSACTION";
     }
@@ -110,15 +105,7 @@ Item {
                 UpdaterPlasmoid.setActive(false);
             } else {
                 UpdaterPlasmoid.setActive(true);
-                statusView.iconName = "system-software-update";
-                statusView.title = i18np("There is one update", "There are %1 updates", updatesModel.rowCount(), updatesModel.rowCount());
-                statusView.subTitle = "";
-                if (futureReview) {
-                    root.state = "SELECTION";
-                    futureReview = false;
-                } else {
-                    root.state = "HAVEUPDATES";
-                }
+                root.state = "SELECTION";
             }
         }
     }
@@ -138,50 +125,41 @@ Item {
 
     StatusView {
         id: busyView
+        opacity: 0
         anchors.fill: parent
         state: "BUSY"
     }
 
     Column {
+        id: statusColumn
+        opacity: 0
         spacing: 4
         anchors.fill: parent
         anchors.margins: 4
-        Item {
-            height: parent.height - actionRow.height - parent.anchors.margins
+        StatusView {
+            id: statusView
+            height: parent.height - refreshBT.height - parent.anchors.margins
             width: parent.width
-            StatusView {
-                id: statusView
-                anchors.fill: parent
-            }
-            Updates {
-                id: updatesView
-                anchors.fill: parent
-            }
         }
-        Row {
-            id: actionRow
-            spacing: 4
+        PlasmaComponents.Button {
+            id: refreshBT
             anchors.right: parent.right
-            PlasmaComponents.Button {
-                id: refreshBT
-                text:  i18n("Check for new updates")
-                onClicked: checkForNewUpdates()
-            }
-            PlasmaComponents.Button {
-                id: reviewBT
-                text:  i18n("Review")
-                onClicked: root.state = "SELECTION"
-            }
-            PlasmaComponents.Button {
-                id: updateBT
-                text:  i18n("Install")
-                onClicked: installUpdates()
-            }
+            text:  i18n("Check for new updates")
+            iconSource: "system-software-update"
+            onClicked: checkForNewUpdates()
         }
+    }
+
+    Updates {
+        id: updatesView
+        opacity: 0
+        anchors.fill: parent
+        onUpdateClicked: installUpdates()
     }
 
     Transaction {
         id: transactionView
+        opacity: 0
         anchors.fill: parent
         onFinished: {
             if (success) {
@@ -198,44 +176,22 @@ Item {
     states: [
         State {
             name: "SELECTION"
-            PropertyChanges { target: transactionView; opacity: 0 }
-            PropertyChanges { target: statusView; opacity: 0 }
-            PropertyChanges { target: busyView; opacity: 0 }
-            PropertyChanges { target: reviewBT; opacity: 0 }
-            PropertyChanges { target: refreshBT; opacity: 0 }
+            PropertyChanges { target: updatesView; opacity: 1 }
+            PropertyChanges { target: updatesView; focus: true }
         },
         State {
             name: "TRANSACTION"
-            PropertyChanges { target: updatesView; opacity: 0 }
-            PropertyChanges { target: statusView; opacity: 0 }
-            PropertyChanges { target: busyView; opacity: 0 }
-            PropertyChanges { target: refreshBT; opacity: 0 }
-            PropertyChanges { target: reviewBT; opacity: 0 }
-            PropertyChanges { target: updateBT; opacity: 0 }
+            PropertyChanges { target: transactionView; opacity: 1 }
+            PropertyChanges { target: transactionView; focus: true }
         },
         State {
             name: "BUSY"
-            PropertyChanges { target: transactionView; opacity: 0 }
-            PropertyChanges { target: updatesView; opacity: 0 }
-            PropertyChanges { target: statusView; opacity: 0 }
-            PropertyChanges { target: refreshBT; opacity: 0 }
-            PropertyChanges { target: reviewBT; opacity: 0 }
-            PropertyChanges { target: updateBT; opacity: 0 }
-        },
-        State {
-            name: "HAVEUPDATES"
-            PropertyChanges { target: busyView; opacity: 0 }
-            PropertyChanges { target: transactionView; opacity: 0 }
-            PropertyChanges { target: updatesView; opacity: 0 }
-            PropertyChanges { target: refreshBT; opacity: 0 }
+            PropertyChanges { target: busyView; opacity: 1 }
         },
         State {
             name: "UPTODATE"
-            PropertyChanges { target: busyView; opacity: 0 }
-            PropertyChanges { target: transactionView; opacity: 0 }
-            PropertyChanges { target: updatesView; opacity: 0 }
-            PropertyChanges { target: reviewBT; opacity: 0 }
-            PropertyChanges { target: updateBT; opacity: 0 }
+            PropertyChanges { target: statusColumn; opacity: 1 }
+            PropertyChanges { target: statusColumn; focus: true }
         }
     ]
 

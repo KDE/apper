@@ -21,13 +21,14 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.apper 0.1 as Apper
 import org.packagekit 0.1 as PackageKit
 
-Item {
+FocusScope {
     id: updates
 
     anchors.fill: parent
     clip: true
 
     property alias sortModel: appModel
+    signal updateClicked()
 
     function modelChanged() {
         updateAllCB.checked = updatesModel.allSelected();
@@ -54,8 +55,8 @@ Item {
         Row {
             id: headerRow
             spacing: 4
+            // This margin is to align with the updates list check boxes
             anchors.leftMargin: padding.margins.left
-            anchors.rightMargin: padding.margins.right
             anchors.left: parent.left
             anchors.right: parent.right
             PlasmaComponents.CheckBox {
@@ -63,12 +64,22 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 height: width
                 onClicked: updatesModel.setAllChecked(checked);
+                KeyNavigation.tab: updateBT
+                KeyNavigation.backtab: updatesView
             }
             PlasmaComponents.Label {
                 anchors.verticalCenter: parent.verticalCenter
-                width: parent.width - updateAllCB.width - parent.spacing
+                width: parent.width - updateAllCB.width - updateBT.width - parent.spacing * 2
                 horizontalAlignment: Text.AlignLeft
                 text: updatesModel.selectionStateText
+            }
+            PlasmaComponents.Button {
+                id: updateBT
+                focus: true
+                anchors.verticalCenter: parent.verticalCenter
+                text:  i18n("Install")
+                KeyNavigation.tab: updatesView
+                KeyNavigation.backtab: updateAllCB
             }
         }
 
@@ -84,6 +95,7 @@ Item {
         }
 
         ScrollableListView {
+            id: updatesView
             height: parent.height - headerRow.height - parent.spacing * 2
             anchors.left: parent.left
             anchors.right: parent.right
@@ -91,10 +103,13 @@ Item {
             }
             view.currentIndex: -1
             model: appModel
+            KeyNavigation.tab: updateAllCB
+            KeyNavigation.backtab: updateBT
         }
     }
 
     Component.onCompleted: {
         updatesModel.changed.connect(modelChanged);
+        updateBT.clicked.connect(updateClicked);
     }
 }

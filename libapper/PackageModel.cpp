@@ -677,14 +677,16 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
     }
 }
 
-void PackageModel::toggleSelection(int index)
+void PackageModel::toggleSelection(const QString &packageID)
 {
-    if (index < m_packages.count()) {
-        InternalPackage package = m_packages[index];
-        if (containsChecked(package.packageID)) {
-            uncheckPackage(package.packageID, true);
-        } else {
-            checkPackage(package);
+    if (containsChecked(packageID)) {
+        uncheckPackage(packageID, true);
+    } else {
+        foreach (const InternalPackage &package, m_packages) {
+            if (package.packageID == packageID) {
+                checkPackage(package);
+                break;
+            }
         }
     }
 }

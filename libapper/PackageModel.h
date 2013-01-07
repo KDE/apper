@@ -134,7 +134,7 @@ public slots:
     void updateCurrentVersion(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
 
     void getUpdates(bool fetchCurrentVersions, bool selected);
-    void toggleSelection(int index);
+    void toggleSelection(const QString &packageID);
     QString selectionStateText() const;
 
 signals:
