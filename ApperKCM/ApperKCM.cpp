@@ -667,12 +667,12 @@ void ApperKCM::search()
     case Transaction::RoleResolve:
 #ifdef HAVE_APPSTREAM
         if (!m_searchCategory.isEmpty()) {
-            browseView->setParentCategory(m_searchParentCategory);
+            ui->browseView->setParentCategory(m_searchParentCategory);
             // WARNING the resolve might fail if the backend
             // has a low limit MaximumItemsToResolve
             m_searchTransaction->resolve(m_searchCategory, m_filtersMenu->filters());
         } else {
-            browseView->setParentCategory(m_searchParentCategory);
+            ui->browseView->setParentCategory(m_searchParentCategory);
             KMessageBox::sorry(this, i18n("Could not find an application that matched this category"));
             disconnectTransaction();
             m_searchTransaction = 0;
