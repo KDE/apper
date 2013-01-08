@@ -50,23 +50,24 @@ FocusScope {
     Column {
         id: actionRow
         spacing: 4
-        anchors.margins: 4
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
+        anchors.fill: parent
         Row {
+            id: labelButtonRow
             spacing: 4
             anchors.left: parent.left
             anchors.right: parent.right
             PlasmaComponents.Label {
                 id: statusText
-                height: parent.height
+                anchors.verticalCenter: parent.verticalCenter
+                height: paintedHeight
                 width: parent.width - updateBT.width - parent.spacing
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
             }
             PlasmaComponents.Button {
                 id: updateBT
+                anchors.verticalCenter: parent.verticalCenter
                 focus: true
                 iconSource: "dialog-cancel"
                 text:  i18n("Cancel")
@@ -81,21 +82,18 @@ FocusScope {
             minimumValue: 0
             maximumValue: 100
         }
-    }
-
-    ListView {
-        id: progressView
-        clip: true
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.top: actionRow.bottom
-        anchors.margins: 4
-        delegate: TransactionProgressDelegate {
+        ListView {
+            id: progressView
+            clip: true
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: parent.height - labelButtonRow.height - transactionProgress.height - parent.spacing * 2
+            delegate: TransactionProgressDelegate {
+            }
+            boundsBehavior: Flickable.StopAtBounds
+            currentIndex: -1
+            model: updateTransaction.progressModel()
+            onCountChanged: positionViewAtEnd()
         }
-        boundsBehavior: Flickable.StopAtBounds
-        currentIndex: -1
-        model: updateTransaction.progressModel()
-        onCountChanged: positionViewAtEnd()
     }
 }

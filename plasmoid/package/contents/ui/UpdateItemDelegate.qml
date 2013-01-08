@@ -134,6 +134,7 @@ Item {
             anchors.right: parent.right
             PlasmaComponents.CheckBox {
                 id: updateCB
+                focus: false
                 anchors.verticalCenter: parent.verticalCenter
                 checked: updateChecked
                 height: width
@@ -165,7 +166,6 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 height: paintedHeight
                 width: updateRow.width - updateCB.width - updateIcon.width - infoIcon.width - updateNameLabel.width - expandButton.width - updateRow.spacing * 5
-                font.pointSize: theme.smallestFont.pointSize
                 color: "#99"+(theme.textColor.toString().substr(1))
                 elide: Text.ElideRight
                 text: rSummary

@@ -53,16 +53,16 @@ Item {
             }
         }
         PlasmaComponents.Label {
-            // 12 = 3 * spacing
             id: itemNameLabel
+            anchors.verticalCenter: parent.verticalCenter
+            height: paintedHeight
             width: paintedWidth
-            height: parent.height
         }
         PlasmaComponents.Label {
             id: itemSummaryLabel
-            height: parent.height
+            anchors.verticalCenter: parent.verticalCenter
+            height: paintedHeight
             width: line.width - itemProgress.width - itemNameLabel.width - 8
-            font.pointSize: theme.smallestFont.pointSize
             color: "#99"+(theme.textColor.toString().substr(1))
             elide: Text.ElideRight
         }
