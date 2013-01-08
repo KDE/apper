@@ -44,11 +44,16 @@ Item {
     Keys.onSpacePressed: updatesModel.toggleSelection(rId)
 
     function updateSelection() {
-        if (currentItem && mouseArea.containsMouse) {
+        var containsMouse = false;
+        if (mouseArea.containsMouse || expandButtonMouse.containsMouse || updateCBMouse.containsMouse) {
+            containsMouse = true;
+        }
+
+        if (currentItem && containsMouse) {
             padding.opacity = 1;
         } else if (currentItem) {
             padding.opacity = 0.9;
-        } else if (mouseArea.containsMouse) {
+        } else if (containsMouse) {
             padding.opacity = 0.7;
         } else {
            padding.opacity = 0;
@@ -63,14 +68,12 @@ Item {
         } else {
             console.debug("Error creating details view: " + component.errorString());
         }
-        expandButton.checked = true;
     }
 
     function destroyChangelog() {
         if (changelog) {
             changelog.destroy();
             changelog = undefined;
-            expandButton.checked = false;
         }
     }
 
@@ -138,7 +141,14 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 checked: updateChecked
                 height: width
-                onClicked: updatesModel.toggleSelection(rId)
+                MouseArea {
+                    id: updateCBMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: updateSelection()
+                    onClicked: updatesModel.toggleSelection(rId)
+                    onExited: updateSelection()
+                }
             }
             QIconItem {
                 id: updateIcon
@@ -182,6 +192,14 @@ Item {
                 checked: changelog !== undefined
                 onClicked: toggleChangelog()
                 Behavior on opacity { PropertyAnimation {} }
+                MouseArea {
+                    id: expandButtonMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: updateSelection()
+                    onClicked: toggleChangelog()
+                    onExited: updateSelection()
+                }
             }
         }
 
