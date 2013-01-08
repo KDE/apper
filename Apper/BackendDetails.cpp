@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2012 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2013 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,71 +18,85 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 #include "BackendDetails.h"
+#include "ui_BackendDetails.h"
 
+#include <QStringBuilder>
 #include <KIcon>
 
 #include <Daemon>
 
 using namespace PackageKit;
 
-BackendDetails::BackendDetails(QWidget *parent)
-  : KDialog(parent)
+BackendDetails::BackendDetails(QWidget *parent) :
+    KDialog(parent),
+    ui(new Ui::BackendDetails)
 {
     setWindowTitle(i18n("Backend Details"));
 
-    setupUi(mainWidget());
+    ui->setupUi(mainWidget());
     setButtons(KDialog::Close);
     setWindowIcon(KIcon("help-about"));
 
+    // PackageKit
+    QString versionMajor = QString::number(Daemon::global()->versionMajor());
+    QString versionMinor = QString::number(Daemon::global()->versionMinor());
+    QString versionMicro = QString::number(Daemon::global()->versionMicro());
+    ui->pkVersionL->setText(versionMajor % QLatin1Char('.') % versionMinor % QLatin1Char('.') % versionMicro);
+
     // GENERAL - Setup backend name and author
-    nameL->setText(Daemon::global()->backendName());
-    descriptionL->setText(Daemon::global()->backendDescription());
-    authorL->setText(Daemon::global()->backendAuthor());
-    distroL->setText(Daemon::global()->distroID());
+    ui->nameL->setText(Daemon::global()->backendName());
+    ui->descriptionL->setText(Daemon::global()->backendDescription());
+    ui->authorL->setText(Daemon::global()->backendAuthor());
+    ui->distroL->setText(Daemon::global()->distroID());
 
     // METHODS - Setup backend supported methods
     Transaction::Roles actions = Daemon::global()->actions();
-    getUpdatesCB->setChecked(actions & Transaction::RoleGetUpdates);
-    getDistroUpgradesCB->setChecked(actions & Transaction::RoleGetDistroUpgrades);
-    refreshCacheCB->setChecked(actions & Transaction::RoleRefreshCache);
-    searchNameCB->setChecked(actions & Transaction::RoleSearchName);
-    searchDetailsCB->setChecked(actions & Transaction::RoleSearchDetails);
-    searchGroupCB->setChecked(actions & Transaction::RoleSearchGroup);
-    searchFileCB->setChecked(actions & Transaction::RoleSearchFile);
-    cancelCB->setChecked(actions & Transaction::RoleCancel);
-    resolveCB->setChecked(actions & Transaction::RoleResolve);
+    ui->getUpdatesCB->setChecked(actions & Transaction::RoleGetUpdates);
+    ui->getDistroUpgradesCB->setChecked(actions & Transaction::RoleGetDistroUpgrades);
+    ui->refreshCacheCB->setChecked(actions & Transaction::RoleRefreshCache);
+    ui->searchNameCB->setChecked(actions & Transaction::RoleSearchName);
+    ui->searchDetailsCB->setChecked(actions & Transaction::RoleSearchDetails);
+    ui->searchGroupCB->setChecked(actions & Transaction::RoleSearchGroup);
+    ui->searchFileCB->setChecked(actions & Transaction::RoleSearchFile);
+    ui->cancelCB->setChecked(actions & Transaction::RoleCancel);
+    ui->resolveCB->setChecked(actions & Transaction::RoleResolve);
 
-    updatePackageCB->setChecked(actions & Transaction::RoleUpdatePackages);
-    installPackageCB->setChecked(actions & Transaction::RoleInstallPackages);
-    removePackageCB->setChecked(actions & Transaction::RoleRemovePackages);
-    getDependsCB->setChecked(actions & Transaction::RoleGetDepends);
-    getRequiresCB->setChecked(actions & Transaction::RoleGetRequires);
-    getUpdateDetailCB->setChecked(actions & Transaction::RoleGetUpdateDetail);
-    getDescriptionCB->setChecked(actions & Transaction::RoleGetDetails);
-    getFilesCB->setChecked(actions & Transaction::RoleRefreshCache);
-    installFileCB->setChecked(actions & Transaction::RoleInstallFiles);
+    ui->updatePackageCB->setChecked(actions & Transaction::RoleUpdatePackages);
+    ui->installPackageCB->setChecked(actions & Transaction::RoleInstallPackages);
+    ui->removePackageCB->setChecked(actions & Transaction::RoleRemovePackages);
+    ui->getDependsCB->setChecked(actions & Transaction::RoleGetDepends);
+    ui->getRequiresCB->setChecked(actions & Transaction::RoleGetRequires);
+    ui->getUpdateDetailCB->setChecked(actions & Transaction::RoleGetUpdateDetail);
+    ui->getDescriptionCB->setChecked(actions & Transaction::RoleGetDetails);
+    ui->getFilesCB->setChecked(actions & Transaction::RoleRefreshCache);
+    ui->installFileCB->setChecked(actions & Transaction::RoleInstallFiles);
 
-    getRepositoryListCB->setChecked(actions & Transaction::RoleGetRepoList);
-    repositoryEnableCB->setChecked(actions & Transaction::RoleRepoEnable);
-    repositorySetEnableCB->setChecked(actions & Transaction::RoleRepoSetData);
-    whatProvidesCB->setChecked(actions & Transaction::RoleWhatProvides);
-    getPackagesCB->setChecked(actions & Transaction::RoleGetPackages);
-    repairSystemCB->setChecked(actions & Transaction::RoleRepairSystem);
-    upgradeSystemCB->setChecked(actions & Transaction::RoleUpgradeSystem);
+    ui->getRepositoryListCB->setChecked(actions & Transaction::RoleGetRepoList);
+    ui->repositoryEnableCB->setChecked(actions & Transaction::RoleRepoEnable);
+    ui->repositorySetEnableCB->setChecked(actions & Transaction::RoleRepoSetData);
+    ui->whatProvidesCB->setChecked(actions & Transaction::RoleWhatProvides);
+    ui->getPackagesCB->setChecked(actions & Transaction::RoleGetPackages);
+    ui->repairSystemCB->setChecked(actions & Transaction::RoleRepairSystem);
+    ui->upgradeSystemCB->setChecked(actions & Transaction::RoleUpgradeSystem);
 
     // FILTERS - Setup filters
     Transaction::Filters filters = Daemon::global()->filters();
-    installedCB->setChecked(filters & Transaction::FilterInstalled);
-    guiCB->setChecked(filters & Transaction::FilterGui);
+    ui->installedCB->setChecked(filters & Transaction::FilterInstalled);
+    ui->guiCB->setChecked(filters & Transaction::FilterGui);
 
-    developmentCB->setChecked(filters & Transaction::FilterDevel);
-    freeCB->setChecked(filters & Transaction::FilterFree);
+    ui->developmentCB->setChecked(filters & Transaction::FilterDevel);
+    ui->freeCB->setChecked(filters & Transaction::FilterFree);
 
-    visibleCB->setChecked(filters & Transaction::FilterVisible);
-    supportedCB->setChecked(filters & Transaction::FilterSupported);
+    ui->visibleCB->setChecked(filters & Transaction::FilterVisible);
+    ui->supportedCB->setChecked(filters & Transaction::FilterSupported);
 
-    newestCB->setChecked(filters & Transaction::FilterNewest);
-    archCB->setChecked(filters & Transaction::FilterNotArch);
+    ui->newestCB->setChecked(filters & Transaction::FilterNewest);
+    ui->archCB->setChecked(filters & Transaction::FilterNotArch);
+}
+
+BackendDetails::~BackendDetails()
+{
+    delete ui;
 }
 
 #include "BackendDetails.moc"
