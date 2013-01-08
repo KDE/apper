@@ -21,8 +21,6 @@
 #ifndef APPER_KCM_U
 #define APPER_KCM_U
 
-#include "ui_ApperKCM.h"
-
 #include <PkTransaction.h>
 
 #include <QtGui/QStandardItemModel>
@@ -37,13 +35,17 @@
 
 using namespace PackageKit;
 
+namespace Ui {
+    class ApperKCM;
+}
+
 class PackageModel;
 class FiltersMenu;
 class TransactionHistory;
 class CategoryModel;
 class Settings;
 class Updater;
-class ApperKCM : public KCModule, Ui::ApperKCM
+class ApperKCM : public KCModule
 {
     Q_OBJECT
     Q_PROPERTY(QString page READ page WRITE setPage USER true)
@@ -97,6 +99,7 @@ private:
     void setActionCancel(bool enabled);
     void keyPressEvent(QKeyEvent *event);
 
+    Ui::ApperKCM *ui;
     KToolBarPopupAction *m_genericActionK;
     QAction             *m_currentAction;
     CategoryModel       *m_groupsModel;
