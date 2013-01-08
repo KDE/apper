@@ -309,6 +309,9 @@ void ApperKCM::checkChanged()
             ui->stackedWidget->currentWidget() == ui->pageChanges ||
             ui->stackedWidget->currentWidget() == ui->pageBrowse) {
         hasChanges = m_browseModel->hasChanges();
+        if (!hasChanges && ui->stackedWidget->currentWidget() == ui->pageChanges) {
+            search();
+        }
         ui->changesPB->setEnabled(hasChanges);
     } else if (ui->stackedWidget->currentWidget() == m_updaterPage) {
         hasChanges = m_updaterPage->hasChanges();
