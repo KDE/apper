@@ -173,13 +173,15 @@ Item {
             PlasmaComponents.ToolButton {
                 id: expandButton
                 anchors.verticalCenter: parent.verticalCenter
-                width: theme.smallMediumIconSize
+                width: parent.height
                 height: width
+                opacity: padding.opacity !== 0
                 flat: false
                 iconSource: checked ? "list-remove" : "list-add"
                 checkable: true
                 checked: changelog !== undefined
                 onClicked: toggleChangelog()
+                Behavior on opacity { PropertyAnimation {} }
             }
         }
 
