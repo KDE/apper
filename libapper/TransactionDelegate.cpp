@@ -47,16 +47,19 @@ void TransactionDelegate::paint(QPainter *painter,
         int  progress = index.data(PkTransactionProgressModel::RoleProgress).toInt();
         QString text  = index.data(Qt::DisplayRole).toString();
 
-        QStyleOptionProgressBar progressBarOption;
-        progressBarOption.rect = option.rect;
+        QStyleOptionProgressBarV2 progressBarOption;
+        progressBarOption.state = QStyle::State_Enabled;
+        progressBarOption.direction = QApplication::layoutDirection();
+        progressBarOption.rect = opt1.rect;
+        progressBarOption.fontMetrics = QApplication::fontMetrics();
         progressBarOption.minimum = 0;
         progressBarOption.maximum = 100;
         progressBarOption.progress = progress;
+        progressBarOption.textAlignment = Qt::AlignCenter;
         progressBarOption.text = text;
         progressBarOption.textVisible = true;
 
-        QApplication::style()->drawControl(QStyle::CE_ProgressBar,
-                                        &progressBarOption, painter);
+        QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
     }
 }
 
