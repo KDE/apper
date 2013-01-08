@@ -204,7 +204,7 @@ void PkTransaction::setupTransaction()
     }
 
 #ifdef HAVE_DEBCONFKDE
-    QString _tid = tid();
+    QString _tid = tid().path();
     QString socket;
     // Build a socket path like /tmp/1761_edeceabd_data_debconf
     socket = QLatin1String("/tmp") % _tid % QLatin1String("_debconf");
@@ -216,7 +216,11 @@ void PkTransaction::setupTransaction()
     // Use our own cached tid to avoid crashes
     message << qVariantFromValue(_tid);
     message << qVariantFromValue(socket);
-    message << qVariantFromValue(static_cast<uint>(effectiveWinId()));
+    if (d->parentWindow) {
+        message << qVariantFromValue(static_cast<uint>(d->parentWindow->effectiveWinId()));
+    } else {
+        message << qVariantFromValue(0u);
+    }
     QDBusMessage reply = QDBusConnection::sessionBus().call(message);
     if (reply.type() != QDBusMessage::ReplyMessage) {
         kWarning() << "Message did not receive a reply";
