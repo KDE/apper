@@ -31,10 +31,12 @@ FocusScope {
     signal finished(bool success);
 
     function update(updates) {
+        updateTransaction.enableJobWatcher(true);
         updateTransaction.updatePackages(updates);
     }
 
     function refreshCache() {
+        updateTransaction.enableJobWatcher(false);
         updateTransaction.refreshCache(false);
     }
 

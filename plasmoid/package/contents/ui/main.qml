@@ -191,7 +191,7 @@ FocusScope {
         State {
             name: "UPTODATE"
             PropertyChanges { target: statusColumn; opacity: 1 }
-            PropertyChanges { target: statusColumn; focus: true }
+            PropertyChanges { target: refreshBT; focus: true }
         }
     ]
 
