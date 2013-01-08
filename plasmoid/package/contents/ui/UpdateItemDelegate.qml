@@ -41,7 +41,7 @@ Item {
 
     Keys.onEnterPressed: toggleChangelog()
     Keys.onReturnPressed: toggleChangelog()
-    Keys.onSpacePressed: updatesModel.toggleSelection(rId)
+    Keys.onSpacePressed: toggleSelection()
 
     function updateSelection() {
         var containsMouse = false;
@@ -60,8 +60,15 @@ Item {
         }
     }
 
+    function toggleSelection() {
+        updateItem.ListView.view.currentIndex = index;
+        updateItem.forceActiveFocus();
+        updatesModel.toggleSelection(rId)
+    }
+
     function createChangelog() {
         updateItem.ListView.view.currentIndex = index;
+        updateItem.forceActiveFocus();
         var component = Qt.createComponent("ChangelogView.qml");
         if (component.status === Component.Ready) {
             changelog = component.createObject(actionRow);
@@ -112,7 +119,7 @@ Item {
             } else {
                 updateItem.ListView.view.currentIndex = index;
             }
-            updateItem.forceActiveFocus()
+            updateItem.forceActiveFocus();
         }
         onDoubleClicked: toggleChangelog()
         onExited: updateSelection()
@@ -146,7 +153,7 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     onEntered: updateSelection()
-                    onClicked: updatesModel.toggleSelection(rId)
+                    onClicked: toggleSelection()
                     onExited: updateSelection()
                 }
             }
