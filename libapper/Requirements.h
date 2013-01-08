@@ -59,7 +59,7 @@ private:
     bool m_shouldShow;
     bool m_hideAutoConfirm;
     QToolButton *m_untrustedButton;
-    QList<QAbstractButton *> m_buttons;
+    QButtonGroup *m_buttonGroup;
     Ui::Requirements *ui;
 };
 

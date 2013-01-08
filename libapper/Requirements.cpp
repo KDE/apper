@@ -63,8 +63,8 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     restoreDialogSize(requirementsDialog);
 
-    QButtonGroup *group = new QButtonGroup(this);
-    connect(group, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
+    m_buttonGroup = new QButtonGroup(this);
+    connect(m_buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
 
     int count = 0;
     if (int c = model->countInfo(Transaction::InfoRemoving)) {
@@ -76,7 +76,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to remove", "%1 packages to remove", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
-        group->addButton(button, Transaction::InfoRemoving);
+        m_buttonGroup->addButton(button, Transaction::InfoRemoving);
         ui->verticalLayout->insertWidget(count++, button);
 
         m_hideAutoConfirm = true;
@@ -91,7 +91,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to downgrade", "%1 packages to downgrade", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRepairSystem));
-        group->addButton(button, Transaction::InfoDowngrading);
+        m_buttonGroup->addButton(button, Transaction::InfoDowngrading);
         ui->verticalLayout->insertWidget(count++, button);
 
         m_hideAutoConfirm = true;
@@ -106,7 +106,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to reinstall", "%1 packages to reinstall", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleRemovePackages));
-        group->addButton(button, Transaction::InfoReinstalling);
+        m_buttonGroup->addButton(button, Transaction::InfoReinstalling);
         ui->verticalLayout->insertWidget(count++, button);
     }
 
@@ -119,7 +119,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to install", "%1 packages to install", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleInstallPackages));
-        group->addButton(button, Transaction::InfoInstalling);
+        m_buttonGroup->addButton(button, Transaction::InfoInstalling);
         ui->verticalLayout->insertWidget(count++, button);
     }
 
@@ -132,7 +132,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         button->setText(i18np("1 package to update", "%1 packages to update", c));
         button->setIcon(PkIcons::actionIcon(Transaction::RoleUpdatePackages));
-        group->addButton(button, Transaction::InfoUpdating);
+        m_buttonGroup->addButton(button, Transaction::InfoUpdating);
         ui->verticalLayout->insertWidget(count++, button);
     }
 
@@ -149,10 +149,8 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         ui->verticalLayout->insertWidget(count++, m_untrustedButton);
     }
 
-    m_buttons = group->buttons();
-    if (!m_buttons.isEmpty()) {
-        QAbstractButton *button = m_buttons.first();
-        button->click();
+    if (!m_buttonGroup->buttons().isEmpty()) {
+        m_buttonGroup->buttons().first()->click();
 
         if (m_hideAutoConfirm) {
             ui->confirmCB->setVisible(false);
@@ -232,7 +230,7 @@ void Requirements::actionClicked(int type)
 void Requirements::showUntrustedButton()
 {
     // Clear the other buttons
-    foreach (QAbstractButton *button, m_buttons) {
+    foreach (QAbstractButton *button, m_buttonGroup->buttons()) {
         delete button;
     }
 
@@ -241,13 +239,9 @@ void Requirements::showUntrustedButton()
 
     ui->label->setText(i18n("You are about to install unsigned packages that can compromise your system, "
                             "as it is impossible to verify if the software came from a trusted source."));
-    QButtonGroup *group = new QButtonGroup(this);
     m_untrustedButton->setVisible(true);
-    group->addButton(m_untrustedButton);
-
-    ApplicationSortFilterModel *proxy;
-    proxy = qobject_cast<ApplicationSortFilterModel*>(ui->packageView->model());
-    proxy->setInfoFilter(Transaction::InfoUntrusted);
+    m_buttonGroup->addButton(m_untrustedButton, Transaction::InfoUntrusted);
+    m_untrustedButton->click();
 }
 
 #include "Requirements.moc"
