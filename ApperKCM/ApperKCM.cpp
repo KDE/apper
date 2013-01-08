@@ -370,7 +370,7 @@ void ApperKCM::on_actionFindFile_triggered()
     }
 }
 
-void ApperKCM::on_homeView_clicked(const QModelIndex &index)
+void ApperKCM::on_homeView_activated(const QModelIndex &index)
 {
     if (index.isValid()) {
         const QSortFilterProxyModel *proxy;
