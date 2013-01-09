@@ -54,6 +54,7 @@ public:
 signals:
     void allowCancel(bool enable);
     void titleChanged(const QString &title);
+    void titleChangedProgress(const QString &title);
     void dialog(KDialog *widget);
     void sorry(const QString &title, const QString &text, const QString &details);
     void error(const QString &title, const QString &text, const QString &details);

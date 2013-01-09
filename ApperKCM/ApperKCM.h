@@ -57,6 +57,7 @@ public:
 
 signals:
     void changed(bool state);
+    void caption(const QString &title = QString());
 
 public slots:
     void load();

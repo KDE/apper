@@ -25,8 +25,8 @@
 #include <KConfig>
 #include <KCModuleProxy>
 
-MainUi::MainUi(QWidget *parent)
-  : KCMultiDialog(parent),
+MainUi::MainUi(QWidget *parent) :
+    KCMultiDialog(parent),
     m_apperModule(0)
 {
     setCaption(QString());
@@ -45,6 +45,8 @@ MainUi::MainUi(QWidget *parent)
         KCModuleProxy *proxy = static_cast<KCModuleProxy*>(page->widget());
         if (proxy) {
             m_apperModule = proxy->realModule();
+            connect(m_apperModule, SIGNAL(caption(QString)),
+                    this, SLOT(setCaption(QString)));
         }
     } else {
         kWarning() << "Could not load kcm_apper.desktop!";

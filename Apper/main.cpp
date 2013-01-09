@@ -125,12 +125,6 @@ int main(int argc, char **argv)
         return invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
     }
 
-    if (!Apper::start())
-    {
-        qDebug() << "Apper is already running!";
-        return 0;
-    }
-
     Apper app;
 
     return app.exec();

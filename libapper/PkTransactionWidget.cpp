@@ -175,23 +175,30 @@ void PkTransactionWidget::updateUi()
     }
 
     uint percentage = transaction->percentage();
+    QString percentageString;
     if (percentage <= 100) {
-        ui->progressBar->setMaximum(100);
-        ui->progressBar->setValue(percentage);
+        if (ui->progressBar->value() != static_cast<int>(percentage)) {
+            ui->progressBar->setMaximum(100);
+            ui->progressBar->setValue(percentage);
+            percentageString = QString::number(percentage);
+        }
     } else if (ui->progressBar->maximum() != 0) {
         ui->progressBar->setMaximum(0);
         ui->progressBar->reset();
+        percentageString = QLatin1String("");
     }
 
     ui->progressBar->setRemaining(transaction->remainingTime());
 
     // Status & Speed
     Transaction::Status status = transaction->status();
+    uint speed = transaction->speed();
+    qulonglong downloadSizeRemaining = transaction->downloadSizeRemaining();
     if (m_status != status) {
         m_status = status;
         ui->currentL->setText(PkStrings::status(status,
-                                                transaction->speed(),
-                                                transaction->downloadSizeRemaining()));
+                                                speed,
+                                                downloadSizeRemaining));
 
         KPixmapSequence sequence = KPixmapSequence(PkIcons::statusAnimation(status),
                                                    KIconLoader::SizeLarge);
@@ -201,25 +208,51 @@ void PkTransactionWidget::updateUi()
         }
     } else if (status == Transaction::StatusDownload) {
         ui->currentL->setText(PkStrings::status(status,
-                                                transaction->speed(),
-                                                transaction->downloadSizeRemaining()));
+                                                speed,
+                                                downloadSizeRemaining));
     }
 
+    QString windowTitle;
+    QString windowTitleProgress;
+    KIcon windowIcon;
     Transaction::Role role = transaction->role();
-    if (d->role != role) {
-        QString windowTitle;
-        KIcon windowIcon;
-        if (role == Transaction::RoleUnknown) {
-            windowTitle  = PkStrings::status(Transaction::StatusSetup);
-            windowIcon = PkIcons::statusIcon(Transaction::StatusSetup);
+    if (role == Transaction::RoleUnknown) {
+        windowTitle  = PkStrings::status(Transaction::StatusSetup);
+        if (percentageString.isEmpty()) {
+            windowTitleProgress = PkStrings::status(status,
+                                                    speed,
+                                                    downloadSizeRemaining);
         } else {
-            windowTitle = PkStrings::action(role);
-            windowIcon = PkIcons::actionIcon(role);
+            QString statusText = PkStrings::status(status,
+                                                   speed,
+                                                   downloadSizeRemaining);
+            windowTitleProgress = i18n("%1 (%2%)", statusText, percentageString);
         }
+        windowIcon = PkIcons::statusIcon(Transaction::StatusSetup);
+    } else {
+        windowTitle = PkStrings::action(role);
+        if (percentageString.isEmpty()) {
+            windowTitleProgress = PkStrings::status(status,
+                                                    speed,
+                                                    downloadSizeRemaining);
+        } else {
+            QString statusText = PkStrings::status(status,
+                                                   speed,
+                                                   downloadSizeRemaining);
+            windowTitleProgress = i18n("%1 (%2%)", statusText, percentageString);
+        }
+        windowIcon = PkIcons::actionIcon(role);
+    }
+
+    if (d->role != role) {
         d->role = role;
         setWindowIcon(PkIcons::actionIcon(role));
         setWindowTitle(windowTitle);
+
         emit titleChanged(windowTitle);
+        emit titleChangedProgress(windowTitleProgress);
+    } else if (!percentageString.isNull()) {
+        emit titleChangedProgress(windowTitleProgress);
     }
 
     // check to see if we can cancel
