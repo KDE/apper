@@ -74,31 +74,32 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
 {
     bool ret = false;
     foreach (const QUrl &url, urls) {
-        if (files().contains(url.path())) {
+        QString path = QUrl::fromPercentEncoding(url.path().toUtf8());
+        if (files().contains(path)) {
             continue;
         }
 
-        QFileInfo fileInfo(url.path());
+        QFileInfo fileInfo(path);
         QStandardItem *item = 0;
         if (fileInfo.isFile()) {
-            KMimeType::Ptr mime = KMimeType::findByFileContent(url.path());
+            KMimeType::Ptr mime = KMimeType::findByFileContent(path);
             kDebug() << url << mime->name();
             foreach (const QString &mimeType, m_mimes) {
                 if (mime->is(mimeType)) {
                     ret = true;
 /*                    kDebug() << "Found Supported Mime" << mimeType << mime->iconName();*/
                     item = new QStandardItem(fileInfo.fileName());
-                    item->setData(url.path());
-                    item->setToolTip(url.path());
+                    item->setData(path);
+                    item->setToolTip(path);
                     item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime->iconName(),
-                                                                        KIconLoader::Desktop));
+                                                                          KIconLoader::Desktop));
                     break;
                 }
             }
 
             if (ret == false && m_mimes.isEmpty()) {
                 if (mime->name() == "application/x-desktop") {
-                    KService *service = new KService(url.path());
+                    KService *service = new KService(path);
                     item = new QStandardItem(service->name());
                     item->setData(true, Qt::UserRole);
                     item->setIcon(KIconLoader::global()->loadMimeTypeIcon(service->icon(),
@@ -108,20 +109,20 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
                     item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime->iconName(),
                                                                         KIconLoader::Desktop));
                 }
-                item->setData(url.path());
-                item->setToolTip(url.path());
+                item->setData(path);
+                item->setToolTip(path);
             } else if (ret == false && !m_mimes.isEmpty()) {
                 item = new QStandardItem(fileInfo.fileName());
-                item->setData(url.path());
-                item->setToolTip(url.path());
+                item->setData(path);
+                item->setToolTip(path);
                 item->setEnabled(false);
                 item->setIcon(KIconLoader::global()->loadIcon("dialog-cancel", KIconLoader::Desktop));
             }
         } else if (m_mimes.isEmpty()) {
             // It's not a file but we don't have a mime so it's ok
             item = new QStandardItem(fileInfo.fileName());
-            item->setData(url.path());
-            item->setToolTip(url.path());
+            item->setData(path);
+            item->setToolTip(path);
             item->setIcon(KIconLoader::global()->loadIcon("unknown", KIconLoader::Desktop));
         }
 
