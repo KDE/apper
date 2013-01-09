@@ -110,7 +110,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     connect(ui->browseView, SIGNAL(categoryActivated(QModelIndex)),
-            this, SLOT(on_homeView_clicked(QModelIndex)));
+            this, SLOT(on_homeView_activated(QModelIndex)));
 
     QMenu *findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method
