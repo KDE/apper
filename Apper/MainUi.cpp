@@ -39,7 +39,8 @@ MainUi::MainUi(QWidget *parent)
     // Set Apply and Cancel buttons
     setButtons(KDialog::Apply /*| KDialog::Help*/ | KDialog::Default | KDialog::Reset);
 
-    KPageWidgetItem *page = addModule("kcm_apper.desktop");
+    KPageWidgetItem *page = addModule(QLatin1String("kcm_apper.desktop"),
+                                      QStringList() << QLatin1String("apper"));
     if (page) {
         KCModuleProxy *proxy = static_cast<KCModuleProxy*>(page->widget());
         if (proxy) {

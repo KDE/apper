@@ -31,6 +31,7 @@
 #include <KMessageBox>
 #include <KFileItemDelegate>
 #include <KMenu>
+#include <KHelpMenu>
 #include <KTabBar>
 
 #include <PackageModel.h>
@@ -220,6 +221,13 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
             signalMapper, SLOT(map()));
     connect(signalMapper, SIGNAL(mapped(QString)),
             this, SLOT(setPage(QString)));
+
+    // Only show help menu if not on System Settings
+    if (!args.isEmpty()) {
+        // adds the help menu
+        KHelpMenu *helpMenu = new KHelpMenu(this);
+        menu->addMenu(helpMenu->menu());
+    }
 
     // Make sure the search bar is visible
     ui->stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
