@@ -23,7 +23,7 @@ import org.packagekit 0.1 as PackageKit
 FocusScope {
     id: root
 
-    state: "BUSY"
+    state: ""
 
     property int minimumHeight: 320
     property int minimumWidth: 370
