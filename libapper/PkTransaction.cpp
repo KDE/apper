@@ -395,7 +395,7 @@ void PkTransaction::slotChanged()
     }
 
     QDBusObjectPath _tid = tid();
-    if (d->tid != _tid) {
+    if (d->tid != _tid && !(d->flags & Transaction::TransactionFlagSimulate)) {
         // if the transaction changed and
         // the user wants the watcher send the tid
         QDBusMessage message;
