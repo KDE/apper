@@ -33,6 +33,7 @@
 #include <KMenu>
 #include <KHelpMenu>
 #include <KTabBar>
+#include <KCmdLineArgs>
 
 #include <PackageModel.h>
 #include <ApplicationSortFilterModel.h>
@@ -225,7 +226,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     // Only show help menu if not on System Settings
     if (!args.isEmpty()) {
         // adds the help menu
-        KHelpMenu *helpMenu = new KHelpMenu(this);
+        KHelpMenu *helpMenu = new KHelpMenu(this, KCmdLineArgs::aboutData());
         menu->addMenu(helpMenu->menu());
     }
 
