@@ -76,6 +76,7 @@ PackageDetails::PackageDetails(QWidget *parent)
    m_hasFileList(false)
 {
     ui->setupUi(this);
+    ui->hideTB->setIcon(KIcon("window-close"));
     connect(ui->hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 }
 

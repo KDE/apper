@@ -41,7 +41,7 @@ UpdateDetails::UpdateDetails(QWidget *parent)
    m_transaction(0)
 {
     setupUi(this);
-
+    hideTB->setIcon(KIcon("window-close"));
     connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
