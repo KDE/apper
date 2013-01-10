@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Software Updater
+Name[bs]=Nadograđivač softvera 
 Name[ca]=Actualitzador de programari
 Name[cs]=Aktualizace softwaru
 Name[da]=Softwareopdatering
@@ -27,6 +28,7 @@ Name[wa]=Meteu a djoû des programes
 Name[x-test]=xxSoftware Updaterxx
 Name[zh_CN]=软件更新程序
 Comment=Displays and updates software
+Comment[bs]=Prikazuje i nadograđuje softver
 Comment[ca]=Mostra i actualitza el programari
 Comment[cs]=Zobrazí a aktualizuje software
 Comment[da]=Viser og opdaterer software
