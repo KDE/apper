@@ -65,9 +65,6 @@ int main(int argc, char** argv)
     }
     args->clear();
 
-    // Initialize GObject type system
-    g_type_init();
-
     KApplication app;
 
     // Check if we have a package
