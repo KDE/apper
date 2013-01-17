@@ -412,7 +412,8 @@ void ApperKCM::on_homeView_activated(const QModelIndex &index)
                 }
             } else {
                 m_searchGroupCategory.clear();
-                m_searchGroup = index.data(CategoryModel::GroupRole).value<PackageKit::Transaction::Group>();
+                int groupRole = index.data(CategoryModel::GroupRole).toInt();
+                m_searchGroup = static_cast<PackageKit::Transaction::Group>(groupRole);
                 m_searchString = index.data().toString(); // Store the nice name to change the title
             }
         } else if (m_searchRole == Transaction::RoleGetUpdates) {
