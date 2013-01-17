@@ -25,6 +25,7 @@
 #include "OriginModel.h"
 
 #include <Enum.h>
+#include <PkStrings.h>
 
 #include <QTimer>
 #include <QSortFilterProxyModel>
@@ -59,6 +60,8 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     }
 
     m_originModel = new OriginModel(this);
+    connect(m_originModel, SIGNAL(refreshRepoList()),
+            SLOT(refreshRepoModel()));
     QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(m_originModel);
@@ -67,11 +70,7 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     // This is needed to keep the oring right
     ui->originTV->header()->setSortIndicator(0, Qt::AscendingOrder);
     proxy->sort(0);
-    if (m_roles & Transaction::RoleGetRepoList) {
-        // The data will be loaded when Load is called
-        connect(m_originModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                this, SLOT(checkChanges()));
-    } else {
+    if (!(m_roles & Transaction::RoleGetRepoList)) {
         // Disables the group box
         ui->originTV->setEnabled(false);
         ui->showOriginsCB->setEnabled(false);
@@ -134,6 +133,11 @@ void Settings::on_editOriginsPB_clicked()
 #endif //EDIT_ORIGNS_DESKTOP_NAME
 }
 
+void Settings::refreshRepoModel()
+{
+    on_showOriginsCB_stateChanged(ui->showOriginsCB->checkState());
+}
+
 // TODO update the repo list connecting to repo changed signal
 void Settings::on_showOriginsCB_stateChanged(int state)
 {
@@ -188,8 +192,6 @@ bool Settings::hasChanges() const
         ui->installUpdatesBatteryCB->isChecked()  != checkUpdateGroup.readEntry(CFG_INSTALL_UP_BATTERY, DEFAULT_INSTALL_UP_BATTERY)
         ||
         ui->installUpdatesMobileCB->isChecked() != checkUpdateGroup.readEntry(CFG_INSTALL_UP_MOBILE, DEFAULT_INSTALL_UP_MOBILE)
-        ||
-        ((m_roles & Transaction::RoleGetRepoList) ? m_originModel->changed() : false)
         ||
         ui->autoConfirmCB->isChecked() != !requirementsDialog.readEntry("autoConfirm", false)
         ||
@@ -264,7 +266,7 @@ void Settings::load()
         KConfigGroup originsDialog(&config, "originsDialog");
         bool showDevel = originsDialog.readEntry("showDevel", false);
         ui->showOriginsCB->setChecked(showDevel);
-        on_showOriginsCB_stateChanged(ui->showOriginsCB->checkState());
+        refreshRepoModel();
         ui->originTV->setEnabled(true);
     } else {
         ui->originTV->setEnabled(false);
@@ -306,15 +308,6 @@ void Settings::save()
     checkUpdateGroup.writeEntry("autoUpdate", ui->autoCB->itemData(ui->autoCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("installUpdatesOnBattery", ui->installUpdatesBatteryCB->isChecked());
     checkUpdateGroup.writeEntry("installUpdatesOnMobile", ui->installUpdatesMobileCB->isChecked());
-    // check to see if the backend support this
-    if (m_roles & Transaction::RoleGetRepoList) {
-        on_showOriginsCB_stateChanged(ui->showOriginsCB->checkState());
-        if (!m_originModel->save()) {
-            KMessageBox::sorry(this,
-                               i18n("You do not have the necessary privileges to perform this action."),
-                               i18n("Failed to set origin data"));
-        }
-    }
 }
 
 void Settings::defaults()
@@ -324,7 +317,6 @@ void Settings::defaults()
     ui->distroIntervalCB->setCurrentIndex(ui->distroIntervalCB->findData(Enum::DistroUpgradeDefault));
     ui->intervalCB->setCurrentIndex(ui->intervalCB->findData(Enum::TimeIntervalDefault));
     ui->autoCB->setCurrentIndex(ui->autoCB->findData(Enum::AutoUpdateDefault) );
-    m_originModel->clearChanges();
     checkChanges();
 }
 

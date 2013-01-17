@@ -23,20 +23,33 @@
 
 #include <QStandardItemModel>
 
+#include <Transaction>
+
 class OriginModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
+    enum {
+        RepoId = Qt::UserRole,
+        RepoInitialState
+    } RepoRole;
     OriginModel(QObject *parent = 0);
     ~OriginModel();
 
-    bool changed() const;
-    bool save();
-    void clearChanges();
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+    QVariantHash changes() const;
+
+signals:
+    void refreshRepoList();
 
 public slots:
     void addOriginItem(const QString &repo_id, const QString &details, bool enabled);
     void finished();
+
+private slots:
+    void errorCode(PackageKit::Transaction::Error error, const QString &details);
+    void setRepoFinished(PackageKit::Transaction::Exit exit);
 
 private:
     bool m_finished;

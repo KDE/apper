@@ -22,15 +22,12 @@
 
 #include <PkStrings.h>
 
-#include <KDebug>
 #include <KMessageBox>
 #include <KLocale>
 
-#include <QEventLoop>
+#include <KDebug>
 
 using namespace PackageKit;
-
-Q_DECLARE_METATYPE(Qt::CheckState)
 
 OriginModel::OriginModel(QObject *parent) :
     QStandardItemModel(parent),
@@ -44,6 +41,37 @@ OriginModel::~OriginModel()
 {
 }
 
+bool OriginModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (role == Qt::CheckStateRole && index.isValid()) {
+        Transaction *transaction = new Transaction(this);
+        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+                SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                SLOT(setRepoFinished(PackageKit::Transaction::Exit)));
+
+        transaction->repoEnable(index.data(RepoId).toString(),
+                                value.toBool());
+        if (transaction->error()) {
+            KMessageBox::sorry(0, PkStrings::daemonError(transaction->error()));
+        }
+    }
+    return false;
+}
+
+QVariantHash OriginModel::changes() const
+{
+    QVariantHash ret;
+    for (int i = 0; i < rowCount(); ++i) {
+        QStandardItem *repo = item(i);
+        bool currentState = repo->checkState();
+        if (currentState != repo->data(RepoInitialState).toBool()) {
+            ret[repo->data(RepoId).toString()] = currentState;
+        }
+    }
+    return ret;
+}
+
 void OriginModel::addOriginItem(const QString &repo_id, const QString &details, bool enabled)
 {
     if (m_finished) {
@@ -52,12 +80,11 @@ void OriginModel::addOriginItem(const QString &repo_id, const QString &details, 
         m_finished = false;
     }
 
-    Qt::CheckState state = enabled ? Qt::Checked : Qt::Unchecked;
     QStandardItem *item = new QStandardItem(details);
     item->setCheckable(true);
-    item->setCheckState(state);
-    item->setData(repo_id, Qt::UserRole);
-    item->setData(qVariantFromValue(state));
+    item->setCheckState(enabled ? Qt::Checked : Qt::Unchecked);
+    item->setData(repo_id, RepoId);
+    item->setData(enabled, RepoInitialState);
     appendRow(item);
 }
 
@@ -66,61 +93,19 @@ void OriginModel::finished()
     m_finished = true;
 }
 
-void OriginModel::clearChanges()
+void OriginModel::errorCode(PackageKit::Transaction::Error error, const QString &details)
 {
-    for (int i = 0; i < rowCount(); ++i) {
-        QStandardItem *repo = item(i);
-        if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
-            repo->setCheckState(repo->data().value<Qt::CheckState>());
-        }
+    if (error != Transaction::ErrorTransactionCancelled) {
+        KMessageBox::detailedSorry(0, PkStrings::errorMessage(error), details, PkStrings::error(error), KMessageBox::Notify);
     }
 }
 
-bool OriginModel::changed() const
+void OriginModel::setRepoFinished(Transaction::Exit exit)
 {
-    for (int i = 0; i < rowCount(); ++i) {
-        QStandardItem *repo = item(i);
-        if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
-            return true;
-        }
+    if (exit == Transaction::ExitSuccess) {
+        emit refreshRepoList();
     }
-    return false;
-}
-
-bool OriginModel::save()
-{
-    bool changed = false;
-    int rows = rowCount();
-    QEventLoop loop;
-    for (int i = 0; i < rows; ++i) {
-        QStandardItem *repo = item(i);
-        if (repo->checkState() != repo->data().value<Qt::CheckState>()) {
-            Transaction *transaction = new Transaction(this);
-            QWeakPointer<Transaction> pointer = transaction;
-            connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                    &loop, SLOT(quit()));
-            transaction->repoEnable(repo->data(Qt::UserRole).toString(),
-                          static_cast<bool>(repo->checkState()));
-            if (transaction->error()) {
-                KMessageBox::sorry(0, PkStrings::daemonError(transaction->error()));
-                return false;
-            }
-            loop.exec();
-            changed = true;
-
-            if (pointer.isNull()) {
-                // Avoid crashing when the application is quitting
-                return false;
-            }
-        }
-    }
-
-    // refresh the user cache if he or she enables/disables any of it
-    if (changed) {
-        // TODO ask to refresh the cache
-        // TODO emit refresh requested
-    }
-    return true;
+    sender()->deleteLater();
 }
 
 #include "OriginModel.moc"
