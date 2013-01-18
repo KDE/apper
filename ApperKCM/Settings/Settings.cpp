@@ -50,6 +50,13 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QAction *action = new QAction(i18n("Refresh Cache"), this);
+    connect(action, SIGNAL(triggered()), SIGNAL(refreshCache()));
+    connect(action, SIGNAL(triggered()), ui->messageWidget, SLOT(animatedHide()));
+    ui->messageWidget->addAction(action);
+    ui->messageWidget->setText(i18n("A repository was changed, it's highly recommended to refresh the cache"));
+    ui->messageWidget->hide();
+
     if (!(m_roles & Transaction::RoleRefreshCache)) {
         ui->intervalL->setEnabled(false);
         ui->intervalCB->setEnabled(false);
@@ -62,6 +69,8 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     m_originModel = new OriginModel(this);
     connect(m_originModel, SIGNAL(refreshRepoList()),
             SLOT(refreshRepoModel()));
+    connect(m_originModel, SIGNAL(refreshRepoList()),
+            ui->messageWidget, SLOT(animatedShow()));
     QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(m_originModel);

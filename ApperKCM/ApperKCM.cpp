@@ -488,6 +488,8 @@ void ApperKCM::setPage(const QString &page)
                 m_settingsPage = new Settings(m_roles, this);
                 connect(m_settingsPage, SIGNAL(changed(bool)),
                         this, SLOT(checkChanged()));
+                connect(m_settingsPage, SIGNAL(refreshCache()),
+                        SLOT(refreshCache()));
                 ui->stackedWidget->addWidget(m_settingsPage);
 
                 connect(ui->generalSettingsPB, SIGNAL(toggled(bool)),
@@ -748,6 +750,8 @@ void ApperKCM::refreshCache()
 {
     emit changed(false);
 
+    QWidget *currentWidget = ui->stackedWidget->currentWidget();
+
     PkTransactionWidget *transactionW = new PkTransactionWidget(this);
     connect(transactionW, SIGNAL(titleChangedProgress(QString)), this, SIGNAL(caption(QString)));
     QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
@@ -776,9 +780,16 @@ void ApperKCM::refreshCache()
         m_forceRefreshCache = transaction->exitStatus() == PkTransaction::Failed;
     }
 
-    // Go back to the updates page
-    m_updaterPage->getUpdates();
-    setPage("updates");
+    if (m_updaterPage) {
+        m_updaterPage->getUpdates();
+    }
+
+    if (currentWidget == m_settingsPage) {
+        setPage("settings");
+    } else {
+        setPage("updates");
+    }
+
     QTimer::singleShot(0, this, SLOT(checkChanged()));
 }
 

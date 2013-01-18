@@ -51,6 +51,7 @@ public slots:
 
 signals:
     void changed(bool state);
+    void refreshCache();
 
 private slots:
     void refreshRepoModel();
