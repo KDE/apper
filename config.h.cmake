@@ -10,6 +10,9 @@
 // Define if AppStream data is available.
 #cmakedefine HAVE_APPSTREAM
 
+// Define if screenshot provider
+#cmakedefine SCREENSHOT_PROVIDER "@SCREENSHOT_PROVIDER@"
+
 // Define the AppStream categories path.
 #cmakedefine AS_CATEGORIES_PATH "@AS_CATEGORIES_PATH@"
 

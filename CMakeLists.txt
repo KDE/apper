@@ -33,6 +33,13 @@ if (HAVE_APPSTREAM)
     message(STATUS "AppStream categories path: " ${AS_CATEGORIES_PATH})
 endif (HAVE_APPSTREAM)
 
+# command to edit the packages origins
+set(SCREENSHOT_PROVIDER "debian" CACHE STRING "Screen shots provider")
+if (SCREENSHOT_PROVIDER)
+    message(STATUS "Screen shots provider: " ${SCREENSHOT_PROVIDER})
+    message(STATUS "Screen shots provider possibilities are: debian, openSUSE")
+endif (SCREENSHOT_PROVIDER)
+
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
     find_package(DebconfKDE REQUIRED)
@@ -41,7 +48,7 @@ if (DEBCONF_SUPPORT)
     message(STATUS "Building with Debconf support")
 endif (DEBCONF_SUPPORT)
 
-set(APP_VERSION 0.8.0)
+set(APP_VERSION 0.8.1)
 
 # command to edit the packages origins
 set(EDIT_ORIGNS_DESKTOP_NAME "" CACHE STRING "Edit origins desktop name")

@@ -81,6 +81,8 @@ private:
     void fadeOut(FadeWidgets widgets);
     void setupDescription();
     QVector<QPair<QString, QString> > locateApplication(const QString &_relPath, const QString &menuId) const;
+    QString thumbnail(const QString &pkgName) const;
+    QString screenshot(const QString &pkgName) const;
 
     Ui::PackageDetails *ui;
     QActionGroup *m_actionGroup;

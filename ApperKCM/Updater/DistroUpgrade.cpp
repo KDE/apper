@@ -42,6 +42,10 @@ DistroUpgrade::DistroUpgrade(QWidget *parent) :
     addAction(action);
 }
 
+DistroUpgrade::~DistroUpgrade()
+{
+}
+
 void DistroUpgrade::setName(const QString &name)
 {
     setText(i18n("Distribution upgrade available: %1", name));
@@ -109,11 +113,6 @@ void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
                     i18n("The distribution upgrade process failed with an unknown error."));
             break;
     }
-}
-
-DistroUpgrade::~DistroUpgrade()
-{
-    kDebug() << "~DistroUpgrade()";
 }
 
 #include "DistroUpgrade.moc"

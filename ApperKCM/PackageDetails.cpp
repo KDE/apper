@@ -269,11 +269,9 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_currentIcon       = PkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
     m_appName           = index.data(PackageModel::NameRole).toString();
 
-#ifdef HAVE_APPSTREAM
-    m_currentScreenshot = AppStreamDb::instance()->thumbnail(Transaction::packageName(m_packageID));
+    m_currentScreenshot = thumbnail(Transaction::packageName(m_packageID));
     kDebug() << "current screenshot" << m_currentScreenshot;
-#endif
-    if (!m_currentScreenshot.isEmpty()) {
+    if (!m_currentScreenshot.isNull()) {
         if (m_screenshotPath.contains(m_currentScreenshot)) {
             display();
         } else {
@@ -297,21 +295,13 @@ void PackageDetails::setPackage(const QModelIndex &index)
 
 void PackageDetails::on_screenshotL_clicked()
 {
-    kDebug();
-#ifndef HAVE_APPSTREAM
-    return;
-#else
-    QString screenshot;
-
-    screenshot = AppStreamDb::instance()->screenshot(Transaction::packageName(m_packageID));
-    if (screenshot.isEmpty()) {
-        return;
+    QString url;
+    url = screenshot(Transaction::packageName(m_packageID));
+    if (!url.isNull()) {
+        ScreenShotViewer *view = new ScreenShotViewer(url);
+        view->setWindowTitle(m_appName);
+        view->show();
     }
-
-    ScreenShotViewer *view = new ScreenShotViewer(screenshot);
-    view->setWindowTitle(m_appName);
-    view->show();
-#endif
 }
 
 void PackageDetails::hidePackageVersion(bool hide)
@@ -715,6 +705,24 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
     }
 
     return ret;
+}
+
+QString PackageDetails::thumbnail(const QString &pkgName) const
+{
+    if (QLatin1String(SCREENSHOT_PROVIDER) == QLatin1String("openSUSE")) {
+        return QLatin1String("http://software.opensuse.org/package/thumbnail/") % pkgName % QLatin1String(".png");;
+    } else {
+        return QLatin1String("http://screenshots.debian.net/thumbnail/") % pkgName;
+    }
+}
+
+QString PackageDetails::screenshot(const QString &pkgName) const
+{
+    if (QLatin1String(SCREENSHOT_PROVIDER) == QLatin1String("openSUSE")) {
+        return QLatin1String("http://software.opensuse.org/package/screenshot/") % pkgName % QLatin1String(".png");
+    } else {
+        return QLatin1String("http://screenshots.debian.net/screenshot/") % pkgName;
+    }
 }
 
 void PackageDetails::description(const QString &packageID,
