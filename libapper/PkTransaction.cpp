@@ -515,7 +515,12 @@ void PkTransaction::slotFinished(Transaction::Exit status)
             foreach (const QString &packageID, d->packages) {
                 d->simulateModel->removePackage(packageID);
             }
+
             d->newPackages = d->simulateModel->packagesWithInfo(Transaction::InfoInstalling);
+            if (_role == Transaction::RoleInstallPackages) {
+                d->newPackages << d->packages;
+                d->newPackages.removeDuplicates();
+            }
 
             requires = new Requirements(d->simulateModel, d->parentWindow);
             requires->setDownloadSizeRemaining(d->downloadSizeRemaining);
@@ -562,8 +567,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
                 // if we have a launcher and the laucher has applications
                 // show them to the user
                 showDialog(d->launcher);
-                connect(d->launcher, SIGNAL(accepted()),
-                        this, SLOT(setExitStatus()));
+                connect(d->launcher, SIGNAL(finished()), SLOT(setExitStatus()));
                 return;
             }
             setExitStatus(Success);
