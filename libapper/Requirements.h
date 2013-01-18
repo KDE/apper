@@ -40,6 +40,7 @@ public:
 
     bool embedded() const;
     void setEmbedded(bool embedded);
+    void setDownloadSizeRemaining(qulonglong size);
     bool trusted() const;
 
 public slots:

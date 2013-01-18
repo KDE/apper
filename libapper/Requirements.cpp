@@ -26,6 +26,7 @@
 #include "ApplicationSortFilterModel.h"
 
 #include <QToolButton>
+#include <KPushButton>
 #include <KDebug>
 
 Requirements::Requirements(PackageModel *model, QWidget *parent) :
@@ -54,7 +55,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
 
     setCaption(i18n("Additional changes"));
     setWindowIcon(KIcon("dialog-warning"));
-    setButtons(KDialog::Ok | KDialog::Cancel);
+    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Help);
     setButtonText(KDialog::Ok, i18n("Continue"));
     // restore size
     setMinimumSize(QSize(600,480));
@@ -62,6 +63,10 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     restoreDialogSize(requirementsDialog);
+
+    button(KDialog::Help)->setFlat(true);
+    button(KDialog::Help)->setEnabled(false);
+    button(KDialog::Help)->setIcon(KIcon("download"));
 
     m_buttonGroup = new QButtonGroup(this);
     connect(m_buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
@@ -185,6 +190,21 @@ void Requirements::setEmbedded(bool embedded)
 {
     m_embed = embedded;
     ui->label->setVisible(!embedded);
+}
+
+void Requirements::setDownloadSizeRemaining(qulonglong size)
+{
+    if (size) {
+        QString text;
+        text = i18nc("how many bytes are required for download",
+                     "Need to get %1 of archives",
+                     KGlobal::locale()->formatByteSize(size));
+        button(KDialog::Help)->setText(text);
+        button(KDialog::Help)->setToolTip(text);
+        button(KDialog::Help)->show();
+    } else {
+        button(KDialog::Help)->hide();
+    }
 }
 
 bool Requirements::trusted() const

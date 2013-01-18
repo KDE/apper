@@ -750,8 +750,7 @@ void ApperKCM::refreshCache()
 
     PkTransactionWidget *transactionW = new PkTransactionWidget(this);
     connect(transactionW, SIGNAL(titleChangedProgress(QString)), this, SIGNAL(caption(QString)));
-    PkTransaction *transaction = new PkTransaction(transactionW);
-    QWeakPointer<PkTransaction> pointer = transaction;
+    QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
     transactionW->setTransaction(transaction, Transaction::RoleRefreshCache);
 
     ui->stackedWidget->addWidget(transactionW);
@@ -768,7 +767,7 @@ void ApperKCM::refreshCache()
     // wait for the end of transaction
     if (!transaction->isFinished()) {
         loop.exec();
-        if (pointer.isNull()) {
+        if (!transaction) {
             // Avoid crashing
             return;
         }
@@ -791,8 +790,7 @@ void ApperKCM::save()
     } else {
         PkTransactionWidget *transactionW = new PkTransactionWidget(this);
         connect(transactionW, SIGNAL(titleChangedProgress(QString)), this, SIGNAL(caption(QString)));
-        PkTransaction *transaction = new PkTransaction(transactionW);
-        QWeakPointer<PkTransaction> pointer = transaction;
+        QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
 
         ui->stackedWidget->addWidget(transactionW);
         ui->stackedWidget->setCurrentWidget(transactionW);
@@ -811,7 +809,7 @@ void ApperKCM::save()
             // wait for the end of transaction
             if (!transaction->isFinished()) {
                 loop.exec();
-                if (pointer.isNull()) {
+                if (!transaction) {
                     // Avoid crashing
                     return;
                 }
@@ -826,7 +824,7 @@ void ApperKCM::save()
                 // wait for the end of transaction
                 if (!transaction->isFinished()) {
                     loop.exec();
-                    if (pointer.isNull()) {
+                    if (!transaction) {
                         // Avoid crashing
                         return;
                     }
@@ -845,7 +843,7 @@ void ApperKCM::save()
                 // wait for the end of transaction
                 if (!transaction->isFinished()) {
                     loop.exec();
-                    if (pointer.isNull()) {
+                    if (!transaction) {
                         // Avoid crashing
                         return;
                     }
