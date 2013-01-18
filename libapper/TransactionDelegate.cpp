@@ -30,7 +30,8 @@
 using namespace PackageKit;
 
 TransactionDelegate::TransactionDelegate(QObject *parent) :
-    QStyledItemDelegate(parent)
+    QStyledItemDelegate(parent),
+    m_minWidth(0)
 {
 }
 
@@ -63,8 +64,6 @@ void TransactionDelegate::paint(QPainter *painter,
     }
 }
 
-static int minWidth = 0;
-
 QSize TransactionDelegate::sizeHint(const QStyleOptionViewItem &option,
                                     const QModelIndex &index) const
 {
@@ -74,10 +73,11 @@ QSize TransactionDelegate::sizeHint(const QStyleOptionViewItem &option,
     // The first column keeps resizing
     // this avoids it being smaller
     if (index.column() == 0) {
-        if (size.width() < minWidth) {
-            size.setWidth(minWidth);
+        if (size.width() < m_minWidth) {
+            size.setWidth(m_minWidth);
         } else {
-            minWidth = size.width();
+            TransactionDelegate *delegate = const_cast<TransactionDelegate*>(this);
+            delegate->m_minWidth = size.width();
         }
     }
     return size;
