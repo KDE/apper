@@ -45,7 +45,6 @@ private slots:
     void proxyChanged();
     void setProxy();
 
-    void transactionListChanged(const QStringList &tids);
     void updatesChanged();
     void appShouldConserveResourcesChanged();
 
