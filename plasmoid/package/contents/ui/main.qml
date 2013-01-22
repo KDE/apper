@@ -127,6 +127,7 @@ FocusScope {
         id: busyView
         opacity: 0
         anchors.fill: parent
+        anchors.margins: 4
         state: "BUSY"
     }
 
@@ -138,7 +139,7 @@ FocusScope {
         anchors.margins: 4
         StatusView {
             id: statusView
-            height: parent.height - refreshBT.height - parent.anchors.margins
+            height: parent.height - refreshBT.height - parent.anchors.margins - parent.spacing
             width: parent.width
         }
         PlasmaComponents.Button {
@@ -154,6 +155,7 @@ FocusScope {
         id: updatesView
         opacity: 0
         anchors.fill: parent
+        anchors.margins: 4
         onUpdateClicked: installUpdates()
     }
 
@@ -161,6 +163,7 @@ FocusScope {
         id: transactionView
         opacity: 0
         anchors.fill: parent
+        anchors.margins: 4
         onFinished: {
             if (success) {
                 if (root.state !== "BUSY") {
