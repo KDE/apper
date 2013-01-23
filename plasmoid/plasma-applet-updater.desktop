@@ -27,6 +27,7 @@ Name[uk]=Оновлення програм
 Name[wa]=Meteu a djoû des programes
 Name[x-test]=xxSoftware Updaterxx
 Name[zh_CN]=软件更新程序
+Name[zh_TW]=軟體更新程式
 Comment=Displays and updates software
 Comment[bs]=Prikazuje i nadograđuje softver
 Comment[ca]=Mostra i actualitza el programari
@@ -54,6 +55,7 @@ Comment[uk]=Програма для показу та виконання оно�
 Comment[wa]=Håyner eyet mete a djoû des programes
 Comment[x-test]=xxDisplays and updates softwarexx
 Comment[zh_CN]=显示和更新软件
+Comment[zh_TW]=顯示與更新軟體
 
 Icon=system-software-update
 Type=Service

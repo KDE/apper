@@ -172,6 +172,7 @@ Name[sv]=Uppdateringar håller på att laddas ner
 Name[uk]=Звантажуємо оновлення
 Name[wa]=Les metaedjes a djoû sont-st a l' aberwetaedje
 Name[x-test]=xxUpdates are being downloadedxx
+Name[zh_TW]=正在下載更新中
 Action=Sound|Popup
 
 [Event/RestartRequired]
@@ -325,6 +326,7 @@ Name[uk]=Повідомлення від засобу керування пак�
 Name[wa]=Messaedje do manaedjeu des programes
 Name[x-test]=xxMessage from the software managerxx
 Name[zh_CN]=软件管理器的信息
+Name[zh_TW]=軟體管理員來的訊息
 Action=Sound|Popup
 
 [Event/TransactionError]
