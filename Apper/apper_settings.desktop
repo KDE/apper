@@ -9,6 +9,7 @@ X-DBUS-ServiceName=org.kde.apper
 Name=Apper Settings
 Name[bs]=Postavke programa Apper
 Name[ca]=Arranjament de Apper
+Name[ca@valencia]=Arranjament d'Apper
 Name[cs]=Nastavení Apper
 Name[da]=Indstillinger for Apper
 Name[de]=Apper-Einstellungen

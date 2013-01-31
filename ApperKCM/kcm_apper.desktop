@@ -90,6 +90,7 @@ Comment[zh_TW]=取得、移除與更新軟體
 X-KDE-Keywords=install,uninstall,remove,software,applications,management,packages,packagekit,purge
 X-KDE-Keywords[bs]=install,uninstall,remove,software,applications,management,packages,packagekit,purge,instaliraj,deinstaliraj,aplikacija,upravljanje,paketi
 X-KDE-Keywords[ca]=instal·la,desinstal·la,elimina,programari,aplicacions,gestiona,paquets,packagekit,purga
+X-KDE-Keywords[ca@valencia]=instal·la,desinstal·la,elimina,programari,aplicacions,gestiona,paquets,packagekit,purga
 X-KDE-Keywords[da]=installér,afinstallér,fjern,software,programmer,håndtering,pakker,packagekit,purge
 X-KDE-Keywords[de]=Installieren,Deinstallieren,Entfernen,Software,Anwendungen,Programme,Pakete.Packagekit,Löschen
 X-KDE-Keywords[el]=εγκατάσταση,απεγκατάσταση,αφαίρεση,λογισμικό,εφαρμογές,διαχείριση,πακέτα,packagekit,διαγραφή

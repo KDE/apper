@@ -9,6 +9,7 @@ X-DBUS-ServiceName=org.kde.apper
 Name=Apper Updates
 Name[bs]=Nadogradnje programa Apper
 Name[ca]=Actualitzacions de Apper
+Name[ca@valencia]=Actualitzacions d'Apper
 Name[cs]=Aktualizace Apper
 Name[da]=Apper opdateringer
 Name[de]=Apper-Updater
