@@ -91,7 +91,10 @@ void PkTransactionProgressModel::clear()
 void PkTransactionProgressModel::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
     PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
-    if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
+    if (transaction &&
+            (transaction->flags() & Transaction::TransactionFlagSimulate ||
+             transaction->cachedRole() == Transaction::RoleResolve ||
+             transaction->cachedRole() == Transaction::RoleWhatProvides)) {
         return;
     }
 

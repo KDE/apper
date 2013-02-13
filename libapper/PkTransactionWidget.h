@@ -47,6 +47,7 @@ public:
 
     QString title() const;
     Transaction::Role role() const;
+    Transaction* transaction() const;
 
     bool isFinished() const;
     bool isCancelVisible() const;

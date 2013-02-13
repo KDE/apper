@@ -220,7 +220,8 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            transaction->resolve(resolve, Transaction::FilterArch | Transaction::FilterNewest);
+            transaction->resolve(resolve,
+                                 Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
             checkTransaction(transaction);
         } else if (!m_installProvides.isEmpty()) {
             // Continue resolving Install Provides
@@ -241,7 +242,7 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
             transaction->whatProvides(Transaction::ProvidesAny,
                                       provides,
-                                      Transaction::FilterArch | Transaction::FilterNewest);
+                                      Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
             checkTransaction(transaction);
         } else if (!m_installFiles.isEmpty()) {
             // Continue resolving Install Packages
@@ -260,7 +261,8 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            transaction->searchFiles(files, Transaction::FilterArch | Transaction::FilterNewest);
+            transaction->searchFiles(files,
+                                     Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
             checkTransaction(transaction);
         } else {
             // we are done resolving
@@ -278,16 +280,6 @@ void PkInstallCatalogs::checkTransaction(Transaction *transaction)
         QString msg(i18n("Failed to start resolve transaction"));
         setError(msg, PkStrings::daemonError(transaction->error()));
         sendErrorFinished(Failed, msg);
-    }
-}
-
-void PkInstallCatalogs::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)
-{
-    // When there are updates the package is available...
-    if (info != Transaction::InfoInstalled) {
-        SessionTask::addPackage(info, packageID, summary);
-    } else {
-        m_alreadyInstalled << Transaction::packageName(packageID);
     }
 }
 

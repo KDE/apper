@@ -51,6 +51,7 @@ public:
     Q_INVOKABLE void updatePackages(const QStringList &packages, bool downloadOnly = false);
 
     QString title() const;
+    Transaction::Role cachedRole() const;
     Transaction::TransactionFlags flags() const;
     Q_INVOKABLE PkTransactionProgressModel* progressModel() const;
     Q_INVOKABLE void enableJobWatcher(bool enable);

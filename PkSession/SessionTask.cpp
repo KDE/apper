@@ -116,13 +116,6 @@ SessionTask::~SessionTask()
 
 void SessionTask::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
-//    IPackage iPackage;
-//    iPackage.info = info;
-//    iPackage.packageID = packageID;
-//    iPackage.summary = summary;
-//    if (!m_foundPackages.contains(iPackage)) {
-//        m_foundPackages.append(iPackage);
-//    }
     m_model->addSelectedPackage(info, packageID, summary);
 }
 
@@ -130,11 +123,12 @@ void SessionTask::searchFinished(PkTransaction::ExitStatus status)
 {
     if (m_pkTransaction) {
         // Disconnect so it can be connected to commitFinished latter
-        disconnect(m_pkTransaction, SIGNAL(finished(PkTransaction::ExitStatus)),
+        disconnect(m_pkTransaction->transaction(), SIGNAL(finished(PkTransaction::ExitStatus)),
                    this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     }
 
     if (status == PkTransaction::Success) {
+        m_model->finished();
         if (m_model->rowCount() == 0) {
             notFound();
         } else {
@@ -151,7 +145,7 @@ void SessionTask::commitFinished(PkTransaction::ExitStatus status)
 {
     if (m_pkTransaction) {
         // Disconnect so it can be connected to something else latter
-        disconnect(m_pkTransaction, SIGNAL(finished(PkTransaction::ExitStatus)),
+        disconnect(m_pkTransaction->transaction(), SIGNAL(finished(PkTransaction::ExitStatus)),
                    this, SLOT(searchFinished(PkTransaction::ExitStatus)));
     }
 

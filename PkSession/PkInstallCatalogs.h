@@ -40,7 +40,6 @@ protected:
     virtual void search();
 
 protected slots:
-    virtual void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     virtual void searchFinished(PkTransaction::ExitStatus status);
 
 private slots:

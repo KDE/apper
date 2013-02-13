@@ -63,6 +63,7 @@ public:
     Transaction::TransactionFlags flags;
     Transaction::Role originalRole;
     Transaction::Error error;
+    Transaction::Role role;
     QStringList packages;
     ApplicationLauncher *launcher;
     QStringList files;
@@ -88,6 +89,7 @@ PkTransaction::PkTransaction(QObject *parent) :
     // for sanity we are trusted till an error is given and the user accepts
     d->flags = Transaction::TransactionFlagOnlyTrusted;
     d->originalRole = Transaction::RoleUnknown;
+    d->role = Transaction::RoleUnknown;
     d->error = Transaction::ErrorUnknown;
     d->launcher = 0;
     d->simulateModel = 0;
@@ -399,6 +401,7 @@ void PkTransaction::acceptEula()
 void PkTransaction::slotChanged()
 {
     d->downloadSizeRemaining = downloadSizeRemaining();
+    d->role = role();
 
     if (!d->jobWatcher) {
         return;
@@ -693,6 +696,11 @@ void PkTransaction::showSorry(const QString &title, const QString &description, 
 QString PkTransaction::title() const
 {
     return PkStrings::action(d->originalRole);
+}
+
+Transaction::Role PkTransaction::cachedRole() const
+{
+    return d->role;
 }
 
 Transaction::TransactionFlags PkTransaction::flags() const

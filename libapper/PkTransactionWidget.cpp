@@ -305,4 +305,9 @@ Transaction::Role PkTransactionWidget::role() const
     return d->role;
 }
 
+Transaction *PkTransactionWidget::transaction() const
+{
+    return m_trans;
+}
+
 #include "PkTransactionWidget.moc"
