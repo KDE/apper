@@ -486,12 +486,14 @@ void PkTransaction::installSignature()
 }
 
 void PkTransaction::slotFinished(Transaction::Exit status)
-{   
+{
     // Clear the model to don't keep trash when reusing the transaction
     d->progressModel->clear();
 
     Requirements *requires = 0;
     Transaction::Role _role = role();
+    kDebug() << status << _role;
+
     switch (_role) {
     case Transaction::RoleInstallSignature:
     case Transaction::RoleAcceptEula:
@@ -499,13 +501,13 @@ void PkTransaction::slotFinished(Transaction::Exit status)
             // if the required action was performed with success
             // requeue our main transaction
             requeueTransaction();
+            return;
         }
         break;
     default:
         break;
     }
 
-    kDebug() << status << _role;
     switch(status) {
     case Transaction::ExitSuccess:
         // Check if we are just simulating
