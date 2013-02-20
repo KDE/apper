@@ -43,6 +43,8 @@ private slots:
 private:
     KNotification *m_notification;
     Transaction *m_transaction;
+    Transaction::Error m_lastError;
+    QString m_lastErrorString;
 };
 
 #endif // REFRESHCACHETASK_H

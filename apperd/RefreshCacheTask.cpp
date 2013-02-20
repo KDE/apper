@@ -29,11 +29,10 @@
 
 #include <KDebug>
 
-using namespace PackageKit;
-
 RefreshCacheTask::RefreshCacheTask(QObject *parent) :
     QObject(parent),
-    m_transaction(0)
+    m_transaction(0),
+    m_lastError(Transaction::ErrorUnknown)
 {
 }
 
@@ -43,7 +42,7 @@ void RefreshCacheTask::refreshCache()
     if (!m_transaction) {
         m_transaction = new Transaction(this);
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(refreshCacheFinished(PackageKit::Transaction::Exit)));
+                this, SLOT(refreshCacheFinished(PackageKit::Transaction::Exit,uint)));
         connect(m_transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
                 this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
 
@@ -67,13 +66,21 @@ void RefreshCacheTask::refreshCache()
 
 void RefreshCacheTask::refreshCacheFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
-    Q_UNUSED(status)
     Q_UNUSED(runtime)
+
     m_transaction = 0;
+    if (status == Transaction::ExitSuccess) {
+        m_lastError = Transaction::ErrorUnknown;
+        m_lastErrorString.clear();
+    }
 }
 
 void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorMessage)
 {
+    if (m_lastError == error && m_lastErrorString == errorMessage) {
+        return;
+    }
+
     // Not decreasing and being Persistent
     // prevents multiple popups issued by
     // subsequent refresh cache tries
