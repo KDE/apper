@@ -41,8 +41,8 @@ private slots:
     void notificationClosed();
 
 private:
-    KNotification *m_notification;
     Transaction *m_transaction;
+    KNotification *m_notification;
     Transaction::Error m_lastError;
     QString m_lastErrorString;
 };

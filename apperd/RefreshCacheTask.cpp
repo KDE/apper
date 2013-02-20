@@ -32,6 +32,7 @@
 RefreshCacheTask::RefreshCacheTask(QObject *parent) :
     QObject(parent),
     m_transaction(0),
+    m_notification(0),
     m_lastError(Transaction::ErrorUnknown)
 {
 }
@@ -49,7 +50,7 @@ void RefreshCacheTask::refreshCache()
         // Refresh Cache is false otherwise it will rebuild
         // the whole cache on Fedora
         m_transaction->refreshCache(false);
-        if (m_transaction->error()) {
+        if (m_transaction->error() && !m_notification) {
             m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
             m_notification->setComponentData(KComponentData("apperd"));
             connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
@@ -77,13 +78,10 @@ void RefreshCacheTask::refreshCacheFinished(PackageKit::Transaction::Exit status
 
 void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorMessage)
 {
-    if (m_lastError == error && m_lastErrorString == errorMessage) {
+    if (m_notification || (m_lastError == error && m_lastErrorString == errorMessage)) {
         return;
     }
 
-    // Not decreasing and being Persistent
-    // prevents multiple popups issued by
-    // subsequent refresh cache tries
     m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
     m_notification->setComponentData(KComponentData("apperd"));
     connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
