@@ -4,6 +4,7 @@ Type=Service
 X-KDE-ServiceTypes=KDEDModule
 X-KDE-Library=apperd
 X-KDE-Kded-autoload=true
+X-KDE-Kded-phase=2
 
 Name=Apper Monitor
 Name[bs]=Monitor programa Apper
@@ -35,7 +36,7 @@ Name[sl]=Nadzornik Apper
 Name[sv]=Apper övervakning
 Name[tr]=Apper İzleyici
 Name[uk]=Монітор Apper
-Name[wa]=Corwaitoe d' Apper
+Name[wa]=Corwaitoe d' Apper
 Name[x-test]=xxApper Monitorxx
 Name[zh_CN]=Apper 监视器
 Name[zh_TW]=Apper 監視器
