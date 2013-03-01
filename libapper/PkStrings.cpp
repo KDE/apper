@@ -180,7 +180,7 @@ QString PkStrings::statusPast(Transaction::Status status)
     }
 }
 
-QString PkStrings::action(int role)
+QString PkStrings::action(int role, Transaction::TransactionFlags flags)
 {
     Transaction::Role roleEnum = static_cast<Transaction::Role>(role);
     switch (roleEnum) {
@@ -205,14 +205,34 @@ QString PkStrings::action(int role)
     case Transaction::RoleSearchName :
         return i18nc("The role of the transaction, in present tense", "Searching by package name");
     case Transaction::RoleRemovePackages :
+        if (flags & Transaction::TransactionFlagSimulate) {
+            return i18nc("The role of the transaction, in present tense", "Simulating removal");
+        } else if (flags & Transaction::TransactionFlagOnlyDownload) {
+            return i18nc("The role of the transaction, in present tense", "Downloading packages");
+        }
         return i18nc("The role of the transaction, in present tense", "Removing");
     case Transaction::RoleInstallPackages :
+        if (flags & Transaction::TransactionFlagSimulate) {
+            return i18nc("The role of the transaction, in present tense", "Simulating install");
+        } else if (flags & Transaction::TransactionFlagOnlyDownload) {
+            return i18nc("The role of the transaction, in present tense", "Downloading packages");
+        }
         return i18nc("The role of the transaction, in present tense", "Installing");
     case Transaction::RoleInstallFiles :
+        if (flags & Transaction::TransactionFlagSimulate) {
+            return i18nc("The role of the transaction, in present tense", "Simulating file install");
+        } else if (flags & Transaction::TransactionFlagOnlyDownload) {
+            return i18nc("The role of the transaction, in present tense", "Downloading required packages");
+        }
         return i18nc("The role of the transaction, in present tense", "Installing file");
     case Transaction::RoleRefreshCache :
         return i18nc("The role of the transaction, in present tense", "Refreshing package cache");
     case Transaction::RoleUpdatePackages :
+        if (flags & Transaction::TransactionFlagSimulate) {
+            return i18nc("The role of the transaction, in present tense", "Simulating update");
+        } else if (flags & Transaction::TransactionFlagOnlyDownload) {
+            return i18nc("The role of the transaction, in present tense", "Downloading updates");
+        }
         return i18nc("The role of the transaction, in present tense", "Updating packages");
     case Transaction::RoleCancel :
         return i18nc("The role of the transaction, in present tense", "Canceling");

@@ -112,11 +112,13 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
         m_transactions[tid] = transaction;
 
         Transaction::Role role = transaction->role();
-        if (role == Transaction::RoleInstallPackages ||
-                role == Transaction::RoleInstallFiles    ||
-                role == Transaction::RoleRemovePackages  ||
-                role == Transaction::RoleUpdatePackages  ||
-                role == Transaction::RoleUpgradeSystem) {
+        Transaction::TransactionFlags flags = transaction->transactionFlags();
+        if (!(flags & Transaction::TransactionFlagOnlyDownload || flags & Transaction::TransactionFlagSimulate) &&
+                (role == Transaction::RoleInstallPackages ||
+                 role == Transaction::RoleInstallFiles    ||
+                 role == Transaction::RoleRemovePackages  ||
+                 role == Transaction::RoleUpdatePackages  ||
+                 role == Transaction::RoleUpgradeSystem)) {
             // AVOID showing messages and restart requires when
             // the user was just simulating an instalation
             // TODO fix yum backend
@@ -126,7 +128,7 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
                     this, SLOT(requireRestart(PackageKit::Transaction::Restart,QString)));
 
             // Don't let the system sleep while doing some sensible actions
-            suppressSleep(true, m_inhibitCookie, PkStrings::action(role));
+            suppressSleep(true, m_inhibitCookie, PkStrings::action(role, flags));
         }
         connect(transaction, SIGNAL(changed()), this, SLOT(transactionChanged()));
         connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),

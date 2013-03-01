@@ -230,7 +230,7 @@ void PkTransactionWidget::updateUi()
         }
         windowIcon = PkIcons::statusIcon(Transaction::StatusSetup);
     } else {
-        windowTitle = PkStrings::action(role);
+        windowTitle = PkStrings::action(role, transaction->transactionFlags());
         if (percentageString.isEmpty()) {
             windowTitleProgress = PkStrings::status(status,
                                                     speed,
@@ -293,11 +293,6 @@ void PkTransactionWidget::rangeChanged(int min, int max)
     if (m_keepScrollBarAtBottom && scrollBar->value() != max) {
         scrollBar->setValue(max);
     }
-}
-
-QString PkTransactionWidget::title() const
-{
-    return PkStrings::action(d->role);
 }
 
 Transaction::Role PkTransactionWidget::role() const

@@ -34,8 +34,9 @@ Q_DECLARE_METATYPE(PackageKit::Transaction::Error)
 TransactionJob::TransactionJob(Transaction *transaction, QObject *parent) :
     KJob(parent),
     m_transaction(transaction),
-    m_status(Transaction::StatusUnknown),
-    m_role(Transaction::RoleUnknown),
+    m_status(transaction->status()),
+    m_role(transaction->role()),
+    m_flags(transaction->transactionFlags()),
     m_percentage(0),
     m_speed(0),
     m_downloadSizeRemainingTotal(0),
@@ -67,7 +68,7 @@ void TransactionJob::finished(PackageKit::Transaction::Exit exit)
 {
     // emit the description so the Speed: xxx KiB/s
     // don't get confused to a destination URL
-    emit description(this, PkStrings::action(m_role));
+    emit description(this, PkStrings::action(m_role, m_flags));
     if (exit == Transaction::ExitCancelled) {
         setError(KilledJobError);
     }
@@ -98,7 +99,7 @@ void TransactionJob::repoDetail(const QString &repoId, const QString &repoDescri
 {
     Q_UNUSED(repoId)
     QString first = PkStrings::status(m_status);
-    emit description(this, PkStrings::action(m_role), qMakePair(first, repoDescription));
+    emit description(this, PkStrings::action(m_role, m_flags), qMakePair(first, repoDescription));
 }
 
 void TransactionJob::emitDescription()
@@ -109,14 +110,16 @@ void TransactionJob::emitDescription()
     }
 
     QString first = PkStrings::status(m_status);
-    emit description(this, PkStrings::action(m_role), qMakePair(first, details));
+    emit description(this, PkStrings::action(m_role, m_flags), qMakePair(first, details));
 }
 
 void TransactionJob::updateJob()
 {
     Transaction::Role role = m_transaction->role();
-    if (m_role != role) {
+    Transaction::TransactionFlags flags = m_transaction->transactionFlags();
+    if (m_role != role || m_flags != flags) {
         m_role = role;
+        m_flags = flags;
         emitDescription();
     }
 
@@ -176,7 +179,7 @@ bool TransactionJob::doKill()
 {
     // emit the description so the Speed: xxx KiB/s
     // don't get confused to a destination URL
-    emit description(this, PkStrings::action(m_role));
+    emit description(this, PkStrings::action(m_role, m_flags));
     m_transaction->cancel();
     emit canceled();
 

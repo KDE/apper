@@ -60,6 +60,7 @@ private:
     Transaction  *m_transaction;
     Transaction::Status  m_status;
     Transaction::Role m_role;
+    Transaction::TransactionFlags m_flags;
     uint          m_percentage;
     uint          m_speed;
     qulonglong    m_downloadSizeRemainingTotal;

@@ -42,7 +42,7 @@ public slots:
     static QString updateState(PackageKit::Transaction::UpdateState value);
     static QString restartType(PackageKit::Transaction::Restart value);
     static QString restartTypeFuture(PackageKit::Transaction::Restart value);
-    static QString action(int role);
+    static QString action(int role, PackageKit::Transaction::TransactionFlags flags);
     static QString actionPast(PackageKit::Transaction::Role action);
     static QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);
     static QString daemonError(PackageKit::Transaction::InternalError value);

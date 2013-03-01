@@ -697,7 +697,7 @@ void PkTransaction::showSorry(const QString &title, const QString &description, 
 
 QString PkTransaction::title() const
 {
-    return PkStrings::action(d->originalRole);
+    return PkStrings::action(d->originalRole, d->flags);
 }
 
 Transaction::Role PkTransaction::cachedRole() const

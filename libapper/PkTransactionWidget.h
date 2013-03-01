@@ -45,7 +45,6 @@ public:
     void setTransaction(PkTransaction *trans, Transaction::Role role);
     void hideCancelButton();
 
-    QString title() const;
     Transaction::Role role() const;
     Transaction* transaction() const;
 
