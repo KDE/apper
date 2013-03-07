@@ -1,5 +1,5 @@
 pkg_check_modules(GLIB2 REQUIRED glib-2.0>=2.36)
-pkg_check_modules(LISTALLER REQUIRED listaller-glib>=0.5.6)
+pkg_check_modules(LISTALLER REQUIRED listaller-glib>=0.5.7)
 pkg_check_modules(GEE REQUIRED gee-1.0>=0.6)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}

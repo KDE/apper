@@ -41,23 +41,23 @@ class SetupWizardPrivate
 {
 public:
     SetupWizardPrivate()
-        : liSetup(NULL)
+        : setup(NULL)
     {
-        PAGE_COUNT = -1;
+        preparationPageCount = -1;
     }
 
     ~SetupWizardPrivate()
     {
-        if (liSetup != NULL)
-            g_object_unref (liSetup);
+        if (setup != NULL)
+            g_object_unref (setup);
     }
 
-    int PAGE_COUNT;
+    int preparationPageCount;
 
     // Listaller structures
-    ListallerSetup *liSetup;
+    ListallerSetup *setup;
     ListallerAppItem *appID;
-    ListallerIPKSecurityInfo *secInfo;
+    ListallerIPKControl *metaInfo;
 
     // UI components
     InfoWidget *infoPage;
@@ -170,11 +170,13 @@ SetupWizard::~SetupWizard()
 
 bool SetupWizard::constructWizardLayout()
 {
-    if (d->PAGE_COUNT > 1)
+    if (d->preparationPageCount > 1)
         return true;
 
-    if (d->PAGE_COUNT == 0)
+    if (d->preparationPageCount == 0) {
 	ui->stackedWidget->addWidget(d->infoPage);
+    }
+
 
     if (d->appID == NULL) {
         kDebug() << "AppID was NULL!";
@@ -193,6 +195,7 @@ bool SetupWizard::constructWizardLayout()
                             "Please do only install this software if you <b>trust the "
                             "publisher and the author</b> of it."));
     ui->stackedWidget->addWidget(introP);
+    d->preparationPageCount = 1;
 
     // Setup details page
     SimplePage *detailsP = new SimplePage(this);
@@ -204,7 +207,8 @@ bool SetupWizard::constructWizardLayout()
     securityWidget->setLayout(secWgLayout);
     QLabel *pix = new QLabel(detailsP);
 
-    ListallerSecurityLevel secLev = listaller_ipk_security_info_get_level(d->secInfo);
+    ListallerIPKSecurityInfo *secInfo = listaller_setup_get_security_info(d->setup);
+    ListallerSecurityLevel secLev = listaller_ipk_security_info_get_level(secInfo);
     if (secLev == LISTALLER_SECURITY_LEVEL_HIGH)
         pix->setPixmap(KIcon("security-high").pixmap (32, 32));
     else if (secLev == LISTALLER_SECURITY_LEVEL_MEDIUM)
@@ -217,9 +221,9 @@ bool SetupWizard::constructWizardLayout()
         pix->setPixmap(KIcon("task-reject").pixmap (32, 32));
     secWgLayout->addWidget(pix);
 
-    QLabel *secInfo = new QLabel(detailsP);
-    secInfo->setText(QString::fromUtf8(listaller_ipk_security_info_get_level_as_string(d->secInfo)));
-    secWgLayout->addWidget(secInfo);
+    QLabel *secInfoL = new QLabel(detailsP);
+    secInfoL->setText(QString::fromUtf8(listaller_ipk_security_info_get_level_as_sentence(secInfo)));
+    secWgLayout->addWidget(secInfoL);
 
     QPushButton *infoBtn = new QPushButton (detailsP);
     infoBtn->setIcon(KIcon("dialog-information"));
@@ -236,8 +240,8 @@ bool SetupWizard::constructWizardLayout()
     d->sharedInstallCb->setText(i18n("Install for all users"));
 
     // Check if current package allows shared installations (if not disable the checkbox)
-    ListallerIPKInstallMode modes = listaller_setup_supported_install_modes (d->liSetup);
-    if (listaller_setup_get_install_mode (d->liSetup) == LISTALLER_IPK_INSTALL_MODE_SHARED)
+    ListallerIPKInstallMode modes = listaller_setup_supported_install_modes (d->setup);
+    if (listaller_setup_get_install_mode (d->setup) == LISTALLER_IPK_INSTALL_MODE_SHARED)
         d->sharedInstallCb->setChecked(true);
     if (listaller_ipk_install_mode_is_all_set(modes, LISTALLER_IPK_INSTALL_MODE_PRIVATE))
         d->sharedInstallCb->setEnabled(true);
@@ -247,6 +251,7 @@ bool SetupWizard::constructWizardLayout()
     connect(d->sharedInstallCb, SIGNAL(toggled(bool)), this, SLOT(sharedInstallCbToggled(bool)));
     detailsP->addWidget(d->sharedInstallCb);
     ui->stackedWidget->addWidget(detailsP);
+    d->preparationPageCount++;
 
     // Application description page
     SimplePage *descP = new SimplePage(this);
@@ -254,16 +259,21 @@ bool SetupWizard::constructWizardLayout()
     descP->setDescription(i18n("Description"));
     descP->setDetails(listaller_app_item_get_description(d->appID));
     ui->stackedWidget->addWidget(descP);
+    d->preparationPageCount++;
 
     // License page
-    ListallerAppLicense appLicense;
-    listaller_app_item_get_license(d->appID, &appLicense);
-    LicensePage *licenseP = new LicensePage(this);
-    licenseP->setTitle(i18n("Software license"));
-    licenseP->setDescription(i18n("Please read the following terms and conditions carefully!"));
-    licenseP->setLicenseText(QString::fromUtf8(appLicense.text));
-    connect(licenseP, SIGNAL(licenseAccepted(bool)), this, SLOT(licenseAccepted(bool)));
-    ui->stackedWidget->addWidget(licenseP);
+    // (don't add the license page, if user does not have to accept it (during installation))
+    if (listaller_ipk_control_get_user_accept_license(d->metaInfo)) {
+        ListallerAppLicense appLicense;
+        listaller_app_item_get_license(d->appID, &appLicense);
+        LicensePage *licenseP = new LicensePage(this);
+        licenseP->setTitle(i18n("Software license"));
+        licenseP->setDescription(i18n("Please read the following terms and conditions carefully!"));
+        licenseP->setLicenseText(QString::fromUtf8(appLicense.text));
+        connect(licenseP, SIGNAL(licenseAccepted(bool)), this, SLOT(licenseAccepted(bool)));
+        ui->stackedWidget->addWidget(licenseP);
+	d->preparationPageCount++;
+    }
 
     // Setup exec page
     d->execPage = new SimplePage(this);
@@ -273,8 +283,8 @@ bool SetupWizard::constructWizardLayout()
     d->progressBar->setMinimumHeight(40);
     d->execPage->addWidget(d->progressBar);
     ui->stackedWidget->addWidget(d->execPage);
+    d->preparationPageCount++;
 
-    d->PAGE_COUNT = 5;
     setCurrentPage(introP);
 
     return true;
@@ -300,7 +310,7 @@ void SetupWizard::setCurrentPage(QWidget* widget)
 void SetupWizard::runInstallation()
 {
     //
-    QString pkgStr = QString::fromUtf8(listaller_setup_get_replaced_native_packs (d->liSetup));
+    QString pkgStr = QString::fromUtf8(listaller_setup_get_replaced_native_packs (d->setup));
     QStringList pkgs = pkgStr.split('\n');
     if (!pkgStr.isEmpty()) {
         KMessageBox::informationList(this, i18n("Installing this package will make the following native packages obsolete. You might consider removing them manually."),
@@ -308,7 +318,7 @@ void SetupWizard::runInstallation()
     }
 
     // We now show the install dialog, so run the installation now!
-    listaller_setup_run_installation(d->liSetup);
+    listaller_setup_run_installation(d->setup);
 }
 
 
@@ -318,19 +328,24 @@ void SetupWizard::slotButtonClicked(int button)
         // We go forward
 
         int index = ui->stackedWidget->currentIndex();
-        if (index < d->PAGE_COUNT) {
+        if (index < d->preparationPageCount) {
             index++;
             ui->stackedWidget->setCurrentIndex(index);
         }
 
-        if (index == d->PAGE_COUNT) {
+        if (index == d->preparationPageCount-1) {
+            setButtonText(KDialog::Ok, i18n("Install"));
+            setButtonIcon(KDialog::Ok, KIcon("dialog-ok-apply"));
+        }
+
+        if (index == d->preparationPageCount) {
             // We can install the software now, so disable prev/fwd & abort buttons
             enableButton(KDialog::User1, false);
             enableButton(KDialog::Ok, false);
             enableButton(KDialog::Cancel, false);
 
-	    ui->stackedWidget->update();
-	    runInstallation();
+            ui->stackedWidget->update();
+            runInstallation();
         }
 
     } else if (button == KDialog::User1) {
@@ -357,10 +372,10 @@ bool SetupWizard::initialize()
     bool ret;
 
     // Create a new Listaller application setup instance
-    d->liSetup = listaller_setup_new (m_ipkFName.toUtf8());
+    d->setup = listaller_setup_new (m_ipkFName.toUtf8());
     // Only connect to simple error handling at first
     uint signal_error;
-    signal_error = g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code_simple, this);
+    signal_error = g_signal_connect (d->setup, "error-code", (GCallback) on_lisetup_error_code_simple, this);
 
     // Create info page to notify about errors
     d->infoPage = new InfoWidget(this);
@@ -368,22 +383,22 @@ bool SetupWizard::initialize()
     ui->stackedWidget->addWidget(d->infoPage);
 
     // Initialize the setup, required to have an AppItem present
-    ret = listaller_setup_initialize(d->liSetup);
+    ret = listaller_setup_initialize(d->setup);
     if (ret) {
-        d->appID = listaller_setup_get_current_application(d->liSetup);
-        d->secInfo = listaller_setup_get_security_info(d->liSetup);
+        d->appID = listaller_setup_get_current_application(d->setup);
+        d->metaInfo = listaller_setup_get_control(d->setup);
     }
     if (!ret)
         return false;
 
     // Disconnect the simple error handler
     // (we can use the bigger error dialog then, because Setup is initialized and UI constructed)
-    g_signal_handler_disconnect (d->liSetup, signal_error);
+    g_signal_handler_disconnect (d->setup, signal_error);
     // Now connect all signals
-    g_signal_connect (d->liSetup, "message", (GCallback) on_lisetup_message, this);
-    g_signal_connect (d->liSetup, "status-changed", (GCallback) on_lisetup_status_changed, this);
-    g_signal_connect (d->liSetup, "progress", (GCallback) on_lisetup_progress, this);
-    g_signal_connect (d->liSetup, "error-code", (GCallback) on_lisetup_error_code, this);
+    g_signal_connect (d->setup, "message", (GCallback) on_lisetup_message, this);
+    g_signal_connect (d->setup, "status-changed", (GCallback) on_lisetup_status_changed, this);
+    g_signal_connect (d->setup, "progress", (GCallback) on_lisetup_progress, this);
+    g_signal_connect (d->setup, "error-code", (GCallback) on_lisetup_error_code, this);
 
     // Build layout of our setup wizard
     constructWizardLayout();
@@ -409,17 +424,18 @@ void SetupWizard::sharedInstallCbToggled(bool shared)
         }
     }
     if (shared)
-        listaller_setup_set_install_mode (d->liSetup, LISTALLER_IPK_INSTALL_MODE_SHARED);
+        listaller_setup_set_install_mode (d->setup, LISTALLER_IPK_INSTALL_MODE_SHARED);
     else
-        listaller_setup_set_install_mode (d->liSetup, LISTALLER_IPK_INSTALL_MODE_PRIVATE);
+        listaller_setup_set_install_mode (d->setup, LISTALLER_IPK_INSTALL_MODE_PRIVATE);
 }
 
 void SetupWizard::securityInfoBtnClicked()
 {
     // fix all caracters in user-names string to display it
-    QString userNames = QString::fromUtf8(listaller_ipk_security_info_get_user_names(d->secInfo)).replace ('<', '[').replace('>', ']').replace('\n', "<br>");
+    ListallerIPKSecurityInfo *secInfo = listaller_setup_get_security_info(d->setup);
+    QString userNames = QString::fromUtf8(listaller_ipk_security_info_get_user_names(secInfo)).replace ('<', '[').replace('>', ']').replace('\n', "<br>");
 
-    QString infoText = i18n("This package has the following security level: <b>%1</b>", QString::fromUtf8(listaller_ipk_security_info_get_level_as_string(d->secInfo)));
+    QString infoText = i18n("This package has the following security level: <b>%1</b>", QString::fromUtf8(listaller_ipk_security_info_get_level_as_string(secInfo)));
     infoText += "<br>";
     infoText += i18n("It was signed with a key belonging to these user-ids: %1", "<br>" + userNames);
     infoText += "<br>";
