@@ -45,6 +45,7 @@ FocusScope {
 
     Component.onCompleted: {
         getUpdatesTransaction.package.connect(updatesModel.addSelectedPackage);
+        getUpdatesTransaction.errorCode.connect(errorCode);
         getUpdatesTransaction.finished.connect(getUpdatesFinished);
 
         Daemon.updatesChanged.connect(updatesChanged);
@@ -55,7 +56,15 @@ FocusScope {
 
     function checkForNewUpdates() {
         transactionView.refreshCache();
-        root.state = "TRANSACTION";
+        var error = transactionView.transaction.internalError;
+        if (error) {
+            statusView.title = PkStrings.daemonError(error);
+            statusView.subTitle = transactionView.transaction.internalErrorMessage;
+            statusView.iconName = "dialog-error";
+            root.state = "MESSAGE";
+        } else {
+            root.state = "TRANSACTION";
+        }
     }
 
     function reviewUpdates() {
@@ -82,8 +91,24 @@ FocusScope {
             getUpdatesTransaction.reset();
             updatesModel.clear();
             getUpdatesTransaction.getUpdates();
-            checkedForUpdates = true;
+            var error = getUpdatesTransaction.internalError;
+            if (error) {
+                statusView.title = PkStrings.daemonError(error);
+                statusView.subTitle = getUpdatesTransaction.internalErrorMessage;
+                statusView.iconName = "dialog-error";
+                state = "MESSAGE";
+            } else {
+                checkedForUpdates = true;
+            }
         }
+    }
+
+    function errorCode() {
+        statusView.title = i18n("Failed to get updates");
+        statusView.subTitle = PkStrings.daemonError(error);
+        statusView.iconName = "dialog-error";
+        state = "MESSAGE";
+        UpdaterPlasmoid.setActive(false);
     }
 
     function getUpdatesFinished() {
@@ -101,7 +126,7 @@ FocusScope {
                 statusView.title = PkStrings.lastCacheRefreshTitle(lastTime);
                 statusView.subTitle = PkStrings.lastCacheRefreshSubTitle(lastTime);
                 statusView.iconName = PkIcons.lastCacheRefreshIconName(lastTime);
-                state = "UPTODATE";
+                state = "MESSAGE";
                 UpdaterPlasmoid.setActive(false);
             } else {
                 UpdaterPlasmoid.setActive(true);
@@ -192,7 +217,7 @@ FocusScope {
             PropertyChanges { target: busyView; opacity: 1 }
         },
         State {
-            name: "UPTODATE"
+            name: "MESSAGE"
             PropertyChanges { target: statusColumn; opacity: 1 }
             PropertyChanges { target: refreshBT; focus: true }
         }

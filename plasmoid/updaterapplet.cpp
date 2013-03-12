@@ -121,10 +121,6 @@ QGraphicsWidget *UpdaterApplet::graphicsWidget()
         qmlRegisterType<ApplicationSortFilterModel>("org.kde.apper", 0, 1, "ApplicationSortFilterModel");
         qmlRegisterType<PackageKit::Transaction>("org.packagekit", 0, 1, "Transaction");
         qmlRegisterUncreatableType<PackageKit::Daemon>("org.packagekit", 0, 1, "Daemon", "Global");
-        qRegisterMetaType<PackageKit::Transaction::Info>("PackageKit::Transaction::Info");
-        qRegisterMetaType<PackageKit::Transaction::Exit>("PackageKit::Transaction::Exit");
-        qRegisterMetaType<PackageKit::Transaction::Status>("PackageKit::Transaction::Status");
-        qRegisterMetaType<PackageKit::Transaction::Role>("PackageKit::Transaction::Role");
         qRegisterMetaType<PkTransaction::ExitStatus>("PkTransaction::ExitStatus");
 
         Plasma::PackageStructure::Ptr structure = Plasma::PackageStructure::load("Plasma/Generic");

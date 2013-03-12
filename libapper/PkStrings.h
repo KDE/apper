@@ -45,7 +45,7 @@ public slots:
     static QString action(int role, PackageKit::Transaction::TransactionFlags flags);
     static QString actionPast(PackageKit::Transaction::Role action);
     static QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);
-    static QString daemonError(PackageKit::Transaction::InternalError value);
+    static QString daemonError(int value);
     static QString prettyFormatDuration(unsigned long mSec);
     static QString lastCacheRefreshTitle(uint lastTime);
     static QString lastCacheRefreshSubTitle(uint lastTime);

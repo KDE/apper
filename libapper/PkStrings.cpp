@@ -981,9 +981,10 @@ QString PkStrings::message(Transaction::Message value)
     return QString();
 }
 
-QString PkStrings::daemonError(Transaction::InternalError value)
+QString PkStrings::daemonError(int value)
 {
-    switch (value) {
+    Transaction::InternalError statusEnum = static_cast<Transaction::InternalError>(value);
+    switch (statusEnum) {
     case Transaction::InternalErrorFailedAuth :
         return i18n("You do not have the necessary privileges to perform this action.");
     case Transaction::InternalErrorNoTid :
@@ -1002,8 +1003,9 @@ QString PkStrings::daemonError(Transaction::InternalError value)
         return i18n("This function is not yet supported.");
     case Transaction::InternalErrorDaemonUnreachable :
         return i18n("Could not talk to packagekitd.");
+    case Transaction::InternalErrorFailed:
+        return i18n("Error talking to packagekitd.");
     case Transaction::InternalErrorNone:
-    case Transaction::InternalErrorFailed :
     case Transaction::InternalErrorUnkown :
         return i18n("An unknown error happened.");
     }

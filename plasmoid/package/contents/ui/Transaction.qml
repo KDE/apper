@@ -28,6 +28,8 @@ FocusScope {
     clip: true
 
     property int progressWidth: 30
+    property alias transaction: updateTransaction
+
     signal finished(bool success);
 
     function update(updates) {
