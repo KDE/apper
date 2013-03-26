@@ -109,7 +109,7 @@ void UpdateDetails::setPackage(const QString &packageId, Transaction::Info updat
     connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(display()));
     m_transaction->getUpdateDetail(m_packageId);
-    Transaction::InternalError error = m_transaction->error();
+    Transaction::InternalError error = m_transaction->internalError();
     if (error) {
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(display()));

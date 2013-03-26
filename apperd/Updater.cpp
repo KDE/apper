@@ -97,7 +97,7 @@ void Updater::checkForUpdates(bool systemReady)
     connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(getUpdateFinished()));
     m_getUpdatesT->getUpdates();
-    if (m_getUpdatesT->error()) {
+    if (m_getUpdatesT->internalError()) {
         m_getUpdatesT = 0;
     }
 }
@@ -309,7 +309,7 @@ bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, con
             this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
     transaction->setProperty("DownloadOnly", downloadOnly);
     transaction->updatePackages(packages, downloadOnly);
-    if (!transaction->error()) {
+    if (!transaction->internalError()) {
         if (!icon.isNull()) {
             KNotification *notify;
             if (downloadOnly) {

@@ -718,7 +718,7 @@ void ApperKCM::search()
         return;
     }
 
-    Transaction::InternalError error = m_searchTransaction->error();
+    Transaction::InternalError error = m_searchTransaction->internalError();
     if (error) {
         setCurrentActionEnabled(true);
         disconnectTransaction();

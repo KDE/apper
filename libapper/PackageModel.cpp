@@ -668,7 +668,7 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
     // get all updates
     transaction->getUpdates();
 
-    Transaction::InternalError error = transaction->error();
+    Transaction::InternalError error = transaction->internalError();
     if (error) {
         transaction->deleteLater();
 //        KMessageBox::sorry(this, PkStrings::daemonError(error));

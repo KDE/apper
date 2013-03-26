@@ -87,10 +87,10 @@ void PkInstallMimeTypes::search()
     transaction->whatProvides(Transaction::ProvidesMimetype,
                               mimeTypes,
                               Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-    if (transaction->error()) {
+    if (transaction->internalError()) {
         if (showWarning()) {
             setError(i18n("Failed to search for provides"),
-                     PkStrings::daemonError(transaction->error()));
+                     PkStrings::daemonError(transaction->internalError()));
         }
         sendErrorFinished(Failed, "Failed to search for provides");
     }

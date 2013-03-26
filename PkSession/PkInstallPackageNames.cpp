@@ -93,10 +93,10 @@ void PkInstallPackageNames::search()
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     transaction->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
-    if (transaction->error()) {
+    if (transaction->internalError()) {
         QString msg(i18n("Failed to start resolve transaction"));
         if (showWarning()) {
-            setError(msg, PkStrings::daemonError(transaction->error()));
+            setError(msg, PkStrings::daemonError(transaction->internalError()));
         }
         sendErrorFinished(Failed, msg);
     }

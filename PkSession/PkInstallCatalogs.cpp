@@ -276,9 +276,9 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
 
 void PkInstallCatalogs::checkTransaction(Transaction *transaction)
 {
-    if (transaction->error()) {
+    if (transaction->internalError()) {
         QString msg(i18n("Failed to start resolve transaction"));
-        setError(msg, PkStrings::daemonError(transaction->error()));
+        setError(msg, PkStrings::daemonError(transaction->internalError()));
         sendErrorFinished(Failed, msg);
     }
 }

@@ -54,7 +54,7 @@ void DistroUpgrade::checkDistroUpgrades()
     if (!m_transaction) {
         m_transaction = new Transaction(this);
         m_transaction->getDistroUpgrades();
-        if (!m_transaction->error()) {
+        if (!m_transaction->internalError()) {
             connect(m_transaction, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
                     this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
             connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),

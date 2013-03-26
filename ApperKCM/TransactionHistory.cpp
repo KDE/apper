@@ -77,8 +77,8 @@ void TransactionHistory::refreshList()
     connect(transaction, SIGNAL(transaction(PackageKit::Transaction*)),
             m_transactionModel, SLOT(addTransaction(PackageKit::Transaction*)));
     transaction->getOldTransactions(0);
-    if (transaction->error()) {
-        KMessageBox::sorry(this, PkStrings::daemonError(transaction->error()));
+    if (transaction->internalError()) {
+        KMessageBox::sorry(this, PkStrings::daemonError(transaction->internalError()));
     }
 
     // Refresh time

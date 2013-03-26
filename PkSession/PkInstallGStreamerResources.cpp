@@ -132,10 +132,10 @@ void PkInstallGStreamerResources::search()
     transaction->whatProvides(Transaction::ProvidesCodec,
                               m_resources,
                               Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-    if (transaction->error()) {
+    if (transaction->internalError()) {
         QString msg(i18n("Failed to search for provides"));
         if (showWarning()) {
-            setError(msg, PkStrings::daemonError(transaction->error()));
+            setError(msg, PkStrings::daemonError(transaction->internalError()));
         }
         sendErrorFinished(Failed, msg);
     }

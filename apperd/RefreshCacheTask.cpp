@@ -50,14 +50,14 @@ void RefreshCacheTask::refreshCache()
         // Refresh Cache is false otherwise it will rebuild
         // the whole cache on Fedora
         m_transaction->refreshCache(false);
-        if (m_transaction->error() && !m_notification) {
+        if (m_transaction->internalError() && !m_notification) {
             m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
             m_notification->setComponentData(KComponentData("apperd"));
             connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
             KIcon icon("dialog-cancel");
             // use of QSize does the right thing
             m_notification->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-            m_notification->setText(PkStrings::daemonError(m_transaction->error()));
+            m_notification->setText(PkStrings::daemonError(m_transaction->internalError()));
             m_notification->sendEvent();
         } else {
             m_transaction = 0;

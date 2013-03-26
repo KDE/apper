@@ -135,9 +135,9 @@ void PkTransaction::installFiles(const QStringList &files)
 
         setupTransaction();
         Transaction::installFiles(files, d->flags);
-        if (error()) {
+        if (internalError()) {
             showSorry(i18n("Failed to simulate file install"),
-                      PkStrings::daemonError(error()));
+                      PkStrings::daemonError(internalError()));
         }
     } else {
         showError(i18n("Current backend does not support installing files."), i18n("Error"));
@@ -153,9 +153,9 @@ void PkTransaction::installPackages(const QStringList &packages)
 
         setupTransaction();
         Transaction::installPackages(d->packages, d->flags);
-        if (error()) {
+        if (internalError()) {
             showSorry(i18n("Failed to simulate package install"),
-                      PkStrings::daemonError(error()));
+                      PkStrings::daemonError(internalError()));
         }
     } else {
         showError(i18n("Current backend does not support installing packages."), i18n("Error"));
@@ -172,9 +172,9 @@ void PkTransaction::removePackages(const QStringList &packages)
 
         setupTransaction();
         Transaction::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
-        if (error()) {
+        if (internalError()) {
             showSorry(i18n("Failed to simulate package removal"),
-                      PkStrings::daemonError(error()));
+                      PkStrings::daemonError(internalError()));
         }
     } else {
         showError(i18n("The current backend does not support removing packages."), i18n("Error"));
@@ -195,9 +195,9 @@ void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnl
 
         setupTransaction();
         Transaction::updatePackages(d->packages, d->flags);
-        if (error()) {
+        if (internalError()) {
             showSorry(i18n("Failed to simulate package update"),
-                      PkStrings::daemonError(error()));
+                      PkStrings::daemonError(internalError()));
         }
     } else {
         showError(i18n("The current backend does not support updating packages."), i18n("Error"));
@@ -244,9 +244,9 @@ void PkTransaction::installPackages()
 {
     setupTransaction();
     Transaction::installPackages(d->packages, d->flags);
-    if (error()) {
+    if (internalError()) {
         showSorry(i18n("Failed to install package"),
-                  PkStrings::daemonError(error()));
+                  PkStrings::daemonError(internalError()));
     }
 }
 
@@ -254,10 +254,10 @@ void PkTransaction::installFiles()
 {
     setupTransaction();
     Transaction::installFiles(d->files, d->flags);
-    if (error()) {
+    if (internalError()) {
         showSorry(i18np("Failed to install file",
                         "Failed to install files", d->files.size()),
-                  PkStrings::daemonError(error()));
+                  PkStrings::daemonError(internalError()));
     }
 }
 
@@ -265,9 +265,9 @@ void PkTransaction::removePackages()
 {
     setupTransaction();
     Transaction::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
-    if (error()) {
+    if (internalError()) {
         showSorry(i18n("Failed to remove package"),
-                  PkStrings::daemonError(error()));
+                  PkStrings::daemonError(internalError()));
     }
 }
 
@@ -275,9 +275,9 @@ void PkTransaction::updatePackages()
 {
     setupTransaction();
     Transaction::updatePackages(d->packages, d->flags);
-    if (error()) {
+    if (internalError()) {
         showSorry(i18n("Failed to update package"),
-                  PkStrings::daemonError(error()));
+                  PkStrings::daemonError(internalError()));
     }
 }
 
@@ -389,9 +389,9 @@ void PkTransaction::acceptEula()
         kDebug() << "Accepting EULA" << eula->id();
         reset();
         Transaction::acceptEula(eula->id());
-        if (error()) {
+        if (internalError()) {
             showSorry(i18n("Failed to install signature"),
-                      PkStrings::daemonError(error()));
+                      PkStrings::daemonError(internalError()));
         }
     } else {
         kWarning() << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
@@ -476,9 +476,9 @@ void PkTransaction::installSignature()
         kDebug() << "Installing Signature" << repoSig->keyID();
         reset();
         Transaction::installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID());
-        if (error()) {
+        if (internalError()) {
             showSorry(i18n("Failed to install signature"),
-                      PkStrings::daemonError(error()));
+                      PkStrings::daemonError(internalError()));
         }
     } else {
         kWarning() << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
@@ -563,7 +563,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
                 reset();
                 getFiles(d->newPackages);
                 d->newPackages.clear();
-                if (!error()) {
+                if (!internalError()) {
                     return; // avoid the exit code
                 }
             } else if (_role == Transaction::RoleGetFiles &&

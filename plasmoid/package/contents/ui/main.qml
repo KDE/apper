@@ -143,7 +143,7 @@ FocusScope {
     PackageKit.Transaction {
         id: getUpdatesTransaction
         onChanged: {
-            busyView.title = PkStrings.action(role);
+            busyView.title = PkStrings.action(role, transactionFlags);
             busyView.subTitle = PkStrings.status(status);
         }
     }

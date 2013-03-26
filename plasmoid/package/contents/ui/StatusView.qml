@@ -24,49 +24,55 @@ Item {
 
     state: "ICON"
 
-    property string title: ""
-    property string subTitle: ""
+    property alias title: titleText.text
+    property alias subTitle: subTitleText.text
     property string iconName: ""
     property int iconSize: 128
-
-    PlasmaComponents.BusyIndicator {
-        id: busy
-        opacity: 0
-        width: iconSize
-        height: iconSize
-        anchors.centerIn: parent
-        running: statusView.opacity !== 0 && opacity !== 0
-    }
-
-    QIconItem {
-        opacity: 0
-        id: statusIcon
-        width: iconSize
-        height: iconSize
-        anchors.centerIn: parent
-        icon: QIcon(iconName)
-    }
+    property alias preferedHeight: column.height
 
     Column {
-        id: textColumn
-        anchors.left: parent.left
-        anchors.top: busy.bottom
-        anchors.right: parent.right
+        id: column
+        width: parent.width
+        anchors.centerIn: parent
         spacing: 4
-        PlasmaComponents.Label {
-            id: titleText
-            width: parent.width
-            elide: Text.ElideRight
-            font.pointSize: subTitleText.font.pointSize * 1.5
-            horizontalAlignment: Text.AlignHCenter
-            text: title
+        Item {
+            id: image
+            width: iconSize
+            height: iconSize
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            PlasmaComponents.BusyIndicator {
+                id: busy
+                opacity: 0
+                anchors.fill: parent
+                running: statusView.opacity !== 0 && opacity !== 0
+            }
+            QIconItem {
+                id: statusIcon
+                opacity: 0
+                anchors.fill: parent
+                icon: QIcon(iconName)
+            }
         }
-        PlasmaComponents.Label {
-            id: subTitleText
+        Column {
+            id: textColumn
             width: parent.width
-            elide: Text.ElideRight
-            horizontalAlignment: Text.AlignHCenter
-            text: subTitle
+            spacing: 4
+            PlasmaComponents.Label {
+                id: titleText
+                width: parent.width
+                height: paintedHeight
+                elide: Text.ElideRight
+                font.pointSize: subTitleText.font.pointSize * 1.5
+                horizontalAlignment: Text.AlignHCenter
+            }
+            PlasmaComponents.Label {
+                id: subTitleText
+                width: parent.width
+                height: paintedHeight
+                elide: Text.ElideRight
+                horizontalAlignment: Text.AlignHCenter
+            }
         }
     }
 

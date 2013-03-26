@@ -84,11 +84,11 @@ void PkInstallProvideFiles::search()
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     transaction->searchFiles(m_args, Transaction::FilterArch | Transaction::FilterNewest);
-    if (transaction->error()) {
+    if (transaction->internalError()) {
         QString msg = i18n("Failed to start search file transaction");
         if (showWarning()) {
             setError(msg,
-                     PkStrings::daemonError(transaction->error()));
+                     PkStrings::daemonError(transaction->internalError()));
         }
         sendErrorFinished(Failed, msg);
     }

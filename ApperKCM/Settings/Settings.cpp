@@ -166,7 +166,7 @@ void Settings::on_showOriginsCB_stateChanged(int state)
         transaction->getRepoList(Transaction::FilterNotDevel);
     }
 
-    if (!transaction->error()) {
+    if (!transaction->internalError()) {
         m_busySeq->start();
     }
 

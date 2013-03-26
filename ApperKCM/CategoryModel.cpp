@@ -94,7 +94,7 @@ CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *pare
         connect(trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SIGNAL(finished()));
         trans->getCategories();
-        if (trans->error()) {
+        if (trans->internalError()) {
             fillWithStandardGroups();
         }
     } else {

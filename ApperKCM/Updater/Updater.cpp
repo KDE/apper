@@ -316,7 +316,7 @@ void Updater::getUpdates()
     // get all updates
     m_updatesT->getUpdates();
 
-    Transaction::InternalError error = m_updatesT->error();
+    Transaction::InternalError error = m_updatesT->internalError();
     if (error) {
         disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(getUpdatesFinished()));

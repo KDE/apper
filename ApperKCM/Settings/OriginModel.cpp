@@ -52,8 +52,8 @@ bool OriginModel::setData(const QModelIndex &index, const QVariant &value, int r
 
         transaction->repoEnable(index.data(RepoId).toString(),
                                 value.toBool());
-        if (transaction->error()) {
-            KMessageBox::sorry(0, PkStrings::daemonError(transaction->error()));
+        if (transaction->internalError()) {
+            KMessageBox::sorry(0, PkStrings::daemonError(transaction->internalError()));
         }
     }
     return false;

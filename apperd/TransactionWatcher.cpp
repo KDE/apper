@@ -102,7 +102,7 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
     if (!m_transactions.contains(tid)) {
         // Check if the current transaction is still the same
         transaction = new Transaction(tid, this);
-        if (transaction->error()) {
+        if (transaction->internalError()) {
             qWarning() << "Could not create a transaction for the path:" << tid.path();
             delete transaction;
             return;

@@ -70,9 +70,9 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
                               search,
                               Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
 
-    if (transaction->error()) {
+    if (transaction->internalError()) {
         QString msg(i18n("Failed to search for provides"));
-        setError(msg, PkStrings::daemonError(transaction->error()));
+        setError(msg, PkStrings::daemonError(transaction->internalError()));
         sendErrorFinished(InternalError, msg);
     }
 }

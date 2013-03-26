@@ -408,7 +408,7 @@ void PackageDetails::actionActivated(QAction *action)
     }
     kDebug() <<"transaction running";
 
-    PackageKit::Transaction::InternalError error = m_transaction->error();
+    PackageKit::Transaction::InternalError error = m_transaction->internalError();
     if (error) {
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(finished()));

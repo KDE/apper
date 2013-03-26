@@ -50,7 +50,7 @@ PkSearchFile::PkSearchFile(const QString &file_name,
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     transaction->searchFiles(m_fileName, Transaction::FilterNewest);
-    Transaction::InternalError error = transaction->error();
+    Transaction::InternalError error = transaction->internalError();
     if (error) {
         QString msg = i18n("Failed to start search file transaction");
         if (showWarning()) {

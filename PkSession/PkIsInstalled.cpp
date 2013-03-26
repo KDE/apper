@@ -42,11 +42,11 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     transaction->resolve(m_packageName, Transaction::FilterInstalled);
-    if (transaction->error()) {
+    if (transaction->internalError()) {
         QString msg = i18n("Failed to start resolve transaction");
         if (showWarning()) {
             setError(msg,
-                     PkStrings::daemonError(transaction->error()));
+                     PkStrings::daemonError(transaction->internalError()));
         }
         sendErrorFinished(Failed, msg);
     }
