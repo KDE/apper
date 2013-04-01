@@ -146,6 +146,8 @@ void UpdateDetails::hide()
 
 void UpdateDetails::display()
 {
+    kDebug() << sender();
+
     // set transaction to 0 as if PK crashes
     // UpdateDetails won't be emmited
     m_transaction = 0;
@@ -162,6 +164,8 @@ void UpdateDetails::display()
 
         m_fadeDetails->setDirection(QAbstractAnimation::Forward);
         m_fadeDetails->start();
+    } else if (m_currentDescription.isEmpty()) {
+        updateDetailFinished();
     }
 }
 

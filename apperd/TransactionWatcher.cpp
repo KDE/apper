@@ -40,8 +40,6 @@
 
 #include <Daemon>
 
-Q_DECLARE_METATYPE(Transaction::Error)
-
 TransactionWatcher::TransactionWatcher(bool packagekitIsRunning, QObject *parent) :
     QObject(parent),
     m_inhibitCookie(-1)

@@ -104,8 +104,6 @@ UpdaterApplet::~UpdaterApplet()
 {
 }
 
-Q_DECLARE_METATYPE(PackageKit::Transaction::Status)
-
 QGraphicsWidget *UpdaterApplet::graphicsWidget()
 {
     if (!m_declarativeWidget) {

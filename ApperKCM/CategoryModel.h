@@ -70,6 +70,4 @@ private:
     QModelIndex  m_rootIndex;
 };
 
-Q_DECLARE_METATYPE(PackageKit::Transaction::Group)
-
 #endif

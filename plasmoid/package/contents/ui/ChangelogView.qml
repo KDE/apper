@@ -26,6 +26,14 @@ Item {
 
     property string updatesList: ""
 
+    function transactionFinished() {
+        if (status != PackageKit.Transaction.ExitSuccess || changelogItem.state != "DETAILS") {
+            statusView.title = i18n("Failed to get update details");
+            statusView.subTitle = transaction.internalErrorMessage;
+            changelogItem.state = "ERROR";
+        }
+    }
+
     PackageKit.Transaction {
         id: transaction
         onUpdateDetail: {
@@ -49,14 +57,6 @@ Item {
             busyView.title = PkStrings.action(role, transactionFlags);
             busyView.subTitle = PkStrings.status(status);
         }
-        onFinished: console.debug("onFinished ");
-        onDestroy: console.debug("onDestroy ");
-//            if (status != PackageKit.Transaction.ExitSuccess || changelogItem.state != "DETAILS") {
-//                statusView.title = i18n("Failed to get update details");
-//                statusView.subTitle = transaction.internalErrorMessage;
-//                changelogItem.state = "ERROR";
-//            }
-//        }
     }
 
     StatusView {
@@ -129,6 +129,7 @@ Item {
     }
 
     Component.onCompleted: {
+        transaction.finished.connect(transactionFinished);
         transaction.getUpdateDetail(rId);
         var error = transaction.internalError;
         if (error) {

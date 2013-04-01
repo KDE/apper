@@ -29,8 +29,6 @@
 
 #include <KDebug>
 
-Q_DECLARE_METATYPE(PackageKit::Transaction::Error)
-
 TransactionJob::TransactionJob(Transaction *transaction, QObject *parent) :
     KJob(parent),
     m_transaction(transaction),

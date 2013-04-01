@@ -67,6 +67,4 @@ private:
     KUiServerJobTracker *m_tracker;
 };
 
-Q_DECLARE_METATYPE(PackageKit::Transaction::Restart)
-
 #endif
