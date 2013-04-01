@@ -33,7 +33,7 @@ class IntroDialog : public QWidget
 {
     Q_OBJECT
 public:
-    IntroDialog(QWidget *parent = 0);
+    explicit IntroDialog(QWidget *parent = 0);
     ~IntroDialog();
 
     void setDescription(const QString &description);

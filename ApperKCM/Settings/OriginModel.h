@@ -33,7 +33,7 @@ public:
         RepoId = Qt::UserRole,
         RepoInitialState
     } RepoRole;
-    OriginModel(QObject *parent = 0);
+    explicit OriginModel(QObject *parent = 0);
     ~OriginModel();
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);

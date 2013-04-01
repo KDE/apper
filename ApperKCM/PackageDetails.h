@@ -39,7 +39,7 @@ namespace Ui {
 class PackageModel;
 class PackageDetails : public QWidget
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     enum FadeWidget {
         FadeNone       = 0x0,
@@ -47,7 +47,7 @@ public:
         FadeScreenshot = 0x2
     };
     Q_DECLARE_FLAGS(FadeWidgets, FadeWidget)
-    PackageDetails(QWidget *parent = 0);
+    explicit PackageDetails(QWidget *parent = 0);
     ~PackageDetails();
 
     void init(PackageKit::Transaction::Roles roles);

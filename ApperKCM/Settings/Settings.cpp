@@ -18,9 +18,8 @@
  *   Boston, MA 02110-1301, USA.                                           *
  ***************************************************************************/
 
-#include "ui_Settings.h"
-
 #include "Settings.h"
+#include "ui_Settings.h"
 
 #include "OriginModel.h"
 

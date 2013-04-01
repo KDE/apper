@@ -36,7 +36,7 @@ class LicensePage : public QWidget
 {
     Q_OBJECT
 public:
-    LicensePage(QWidget *parent = 0);
+    explicit LicensePage(QWidget *parent = 0);
     ~LicensePage();
 
     void setTitle(const QString& title);

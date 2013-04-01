@@ -29,7 +29,7 @@ class DistroUpgrade : public KMessageWidget
 {
     Q_OBJECT
 public:
-    DistroUpgrade(QWidget *parent = 0);
+    explicit DistroUpgrade(QWidget *parent = 0);
     ~DistroUpgrade();
 
     void setName(const QString &name);

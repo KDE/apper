@@ -35,7 +35,7 @@ class DBusInterface : public QObject, protected QDBusContext
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.apperd")
 public:
-    DBusInterface(QObject *parent = 0);
+    explicit DBusInterface(QObject *parent = 0);
     ~DBusInterface();
 
     void RefreshCache();

@@ -31,7 +31,7 @@ class BrowseView : public QWidget, Ui::BrowseView
 {
     Q_OBJECT
 public:
-    BrowseView(QWidget *parent = 0);
+    explicit BrowseView(QWidget *parent = 0);
     ~BrowseView();
 
     void init(PackageKit::Transaction::Roles roles);

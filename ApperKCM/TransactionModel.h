@@ -34,7 +34,7 @@ class TransactionModel : public QStandardItemModel
 Q_OBJECT
 
 public:
-    TransactionModel(QObject *parent = 0);
+    explicit TransactionModel(QObject *parent = 0);
 
     void clear();
 

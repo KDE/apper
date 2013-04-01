@@ -32,7 +32,7 @@ class SimplePage : public QWidget
 {
     Q_OBJECT
 public:
-    SimplePage(QWidget *parent = 0);
+    explicit SimplePage(QWidget *parent = 0);
     ~SimplePage();
 
     void setTitle(const QString& title);

@@ -51,7 +51,7 @@ class KDE_EXPORT AppStreamDb : public QObject {
         QString screenshot(const QString &pkgName) const;
 
     private:
-        AppStreamDb(QObject *parent = 0);
+        explicit AppStreamDb(QObject *parent = 0);
         Xapian::Database m_xapianDB;
 
         QHash<QString, Application> m_appInfo;

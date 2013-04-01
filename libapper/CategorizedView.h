@@ -27,7 +27,7 @@ class KDE_EXPORT CategorizedView : public KCategorizedView
 {
     Q_OBJECT
 public:
-    CategorizedView(QWidget *parent = 0);
+    explicit CategorizedView(QWidget *parent = 0);
 
     virtual void setModel(QAbstractItemModel *model);
 };

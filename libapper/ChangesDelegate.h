@@ -35,7 +35,7 @@ class KDE_EXPORT ChangesDelegate: public KExtendableItemDelegate
     Q_OBJECT
 
 public:
-    ChangesDelegate(QAbstractItemView *parent);
+    explicit ChangesDelegate(QAbstractItemView *parent);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;

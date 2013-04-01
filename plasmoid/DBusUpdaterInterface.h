@@ -28,7 +28,7 @@ class DBusUpdaterInterface : public QObject, protected QDBusContext
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.ApperUpdaterIcon")
 public:
-    DBusUpdaterInterface(QObject *parent = 0);
+    explicit DBusUpdaterInterface(QObject *parent = 0);
     ~DBusUpdaterInterface();
 
     bool isRegistered() const;

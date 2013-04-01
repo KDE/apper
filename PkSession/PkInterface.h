@@ -31,7 +31,7 @@ class PkInterface : public AbstractIsRunning, protected QDBusContext
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.PackageKit")
 public:
-    PkInterface(QObject *parent = 0);
+    explicit PkInterface(QObject *parent = 0);
     ~PkInterface();
 
 public slots:

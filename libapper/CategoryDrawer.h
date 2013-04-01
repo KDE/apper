@@ -29,7 +29,7 @@ class QStyleOption;
 class CategoryDrawer : public KCategoryDrawerV3
 {
 public:
-    CategoryDrawer(KCategorizedView *view);
+    explicit CategoryDrawer(KCategorizedView *view);
 
     virtual void drawCategory(const QModelIndex &index,
                               int sortRole,

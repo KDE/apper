@@ -28,7 +28,7 @@ class MainUi : public KCMultiDialog
 {
     Q_OBJECT
 public:
-    MainUi(QWidget *parent = 0);
+    explicit MainUi(QWidget *parent = 0);
     ~MainUi();
 
     void showAll();

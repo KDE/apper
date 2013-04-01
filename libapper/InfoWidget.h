@@ -33,7 +33,7 @@ class KDE_EXPORT InfoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    InfoWidget(QWidget *parent = 0);
+    explicit InfoWidget(QWidget *parent = 0);
     ~InfoWidget();
 
     void setDescription(const QString &description);

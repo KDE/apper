@@ -27,7 +27,7 @@ class TransactionFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    TransactionFilterModel(QObject *parent = 0);
+    explicit TransactionFilterModel(QObject *parent = 0);
     ~TransactionFilterModel();
 
 protected:
