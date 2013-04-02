@@ -27,7 +27,7 @@ Item {
     property string updatesList: ""
 
     function transactionFinished() {
-        if (status != PackageKit.Transaction.ExitSuccess || changelogItem.state != "DETAILS") {
+        if (changelogItem.state != "DETAILS") {
             statusView.title = i18n("Failed to get update details");
             statusView.subTitle = transaction.internalErrorMessage;
             changelogItem.state = "ERROR";
