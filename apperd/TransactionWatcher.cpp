@@ -139,6 +139,25 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
     transactionChanged(transaction, interactive);
 }
 
+void TransactionWatcher::showRebootNotificationApt() {
+    // Create the notification about this transaction
+    KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
+    connect(notify, SIGNAL(activated(uint)), this, SLOT(logout()));
+    notify->setComponentData(KComponentData("apperd"));
+
+    QString text("<b>" + i18n("The system update has completed") + "</b>");
+    text.append("<br/>" + PkStrings::restartType(Transaction::RestartSystem));
+    notify->setPixmap(PkIcons::restartIcon(Transaction::RestartSystem).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+    notify->setText(text);
+
+    // TODO RestartApplication should be handled differently
+    QStringList actions;
+    actions << i18n("Restart");
+    notify->setActions(actions);
+
+    notify->sendEvent();
+}
+
 void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
 {
     // check if the transaction emitted any require restart

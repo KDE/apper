@@ -29,6 +29,8 @@ class DistroUpgrade;
 class RefreshCacheTask;
 class TransactionWatcher;
 class Updater;
+class reboot_listener_t;
+
 class ApperdThread : public QObject
 {
     Q_OBJECT
@@ -63,6 +65,9 @@ private:
     RefreshCacheTask *m_refreshCache;
     TransactionWatcher *m_transactionWatcher;
     Updater *m_updater;
+
+    // Apt reboot listener
+    reboot_listener_t *m_AptRebootListener;
 };
 
 #endif // APPERDTHREAD_H

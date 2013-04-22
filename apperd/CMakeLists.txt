@@ -5,6 +5,7 @@ set(kded_apperd_SRCS
     TransactionWatcher.cpp
     RefreshCacheTask.cpp
     Updater.cpp
+    RebootListener.cpp
     ApperdThread.cpp
     apperd.cpp
 )

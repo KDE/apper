@@ -24,6 +24,7 @@
 #include "DistroUpgrade.h"
 #include "TransactionWatcher.h"
 #include "DBusInterface.h"
+#include "RebootListener.h"
 
 #include <Enum.h>
 #include <Daemon>
@@ -61,7 +62,8 @@ using namespace Solid;
 
 ApperdThread::ApperdThread(QObject *parent) :
     QObject(parent),
-    m_proxyChanged(true)
+    m_proxyChanged(true),
+    m_AptRebootListener(new reboot_listener_t(this))
 {
 }
 
@@ -130,9 +132,14 @@ void ApperdThread::init()
                                             QDBusConnection::systemBus());
 
     m_transactionWatcher = new TransactionWatcher(packagekitIsRunning, this);
+
     // connect the watch transaction coming from the updater icon to our watcher
     connect(m_interface, SIGNAL(watchTransaction(QDBusObjectPath)),
             m_transactionWatcher, SLOT(watchTransaction(QDBusObjectPath)));
+
+     // listen to Debian/Apt reboot signals from other sources (apt)
+    connect(m_AptRebootListener, SIGNAL(request_reboot()), m_transactionWatcher, SLOT(showRebootNotificationApt()));
+    QTimer::singleShot(2 /*minutes*/ * 60 /*seconds*/ * 1000 /*msec*/, m_AptRebootListener, SLOT(check_for_reboot()));
 
     if (packagekitIsRunning) {
         // PackageKit is running set the session Proxy
