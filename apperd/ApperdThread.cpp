@@ -63,7 +63,7 @@ using namespace Solid;
 ApperdThread::ApperdThread(QObject *parent) :
     QObject(parent),
     m_proxyChanged(true),
-    m_AptRebootListener(new reboot_listener_t(this))
+    m_AptRebootListener(new AptRebootListener(this))
 {
 }
 
@@ -138,8 +138,8 @@ void ApperdThread::init()
             m_transactionWatcher, SLOT(watchTransaction(QDBusObjectPath)));
 
      // listen to Debian/Apt reboot signals from other sources (apt)
-    connect(m_AptRebootListener, SIGNAL(request_reboot()), m_transactionWatcher, SLOT(showRebootNotificationApt()));
-    QTimer::singleShot(2 /*minutes*/ * 60 /*seconds*/ * 1000 /*msec*/, m_AptRebootListener, SLOT(check_for_reboot()));
+    connect(m_AptRebootListener, SIGNAL(requestReboot()), m_transactionWatcher, SLOT(showRebootNotificationApt()));
+    QTimer::singleShot(2 /*minutes*/ * 60 /*seconds*/ * 1000 /*msec*/, m_AptRebootListener, SLOT(checkForReboot()));
 
     if (packagekitIsRunning) {
         // PackageKit is running set the session Proxy
