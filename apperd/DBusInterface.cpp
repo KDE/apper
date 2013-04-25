@@ -70,7 +70,7 @@ void DBusInterface::SetupDebconfDialog(const QString &tid, const QString &socket
         // Create the Transaction object to delete
         // the DebconfGui class when the transaction finishes
         Transaction *transaction = new Transaction(QDBusObjectPath(tid));
-        if (transaction->error()) {
+        if (transaction->internalError()) {
             transaction->deleteLater();
             return;
         }
