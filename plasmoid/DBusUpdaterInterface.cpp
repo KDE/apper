@@ -35,7 +35,9 @@ DBusUpdaterInterface::DBusUpdaterInterface(QObject *parent) :
 
 DBusUpdaterInterface::~DBusUpdaterInterface()
 {
-    unregisterService();
+    if (m_registered) {
+        unregisterService();
+    }
 }
 
 bool DBusUpdaterInterface::isRegistered() const

@@ -87,8 +87,8 @@ bool ApplicationSortFilterModel::filterAcceptsRow(int source_row, const QModelIn
 bool ApplicationSortFilterModel::lessThan(const QModelIndex &left,
                                           const QModelIndex &right) const
 {
-    bool leftIsPackage = sourceModel()->data(left, PackageModel::IsPackageRole).toBool();
-    bool rightIsPackage = sourceModel()->data(right, PackageModel::IsPackageRole).toBool();
+    bool leftIsPackage = left.data(PackageModel::IsPackageRole).toBool();
+    bool rightIsPackage = left.data(PackageModel::IsPackageRole).toBool();
 
     if (leftIsPackage != rightIsPackage) {
         // If the right item is a package the left should move right
