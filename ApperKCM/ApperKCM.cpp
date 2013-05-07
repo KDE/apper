@@ -64,7 +64,7 @@
 KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
 
 K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperKCM>();)
-K_EXPORT_PLUGIN(ApperFactory("kcm_apper"))
+K_EXPORT_PLUGIN(ApperFactory("kcm_apper", "apper"))
 
 ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     KCModule(ApperFactory::componentData(), parent, args),
@@ -81,16 +81,15 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_searchRole(Transaction::RoleUnknown)
 {
     KAboutData *aboutData;
-    aboutData = new KAboutData("apper",
+    aboutData = new KAboutData("kcm_apper",
                                "apper",
                                ki18n("Application Manager"),
                                APP_VERSION,
                                ki18n("KDE interface for managing software"),
                                KAboutData::License_GPL,
-                               ki18n("(C) 2008-2011 Daniel Nicoletti"));
+                               ki18n("(C) 2008-2013 Daniel Nicoletti"));
     setAboutData(aboutData);
     setButtons(Apply);
-    KGlobal::insertCatalog(QLatin1String("apper"));
 
     // store the actions supported by the backend
     m_roles = Daemon::global()->actions();

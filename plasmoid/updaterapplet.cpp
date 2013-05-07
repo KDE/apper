@@ -54,6 +54,8 @@ UpdaterApplet::UpdaterApplet(QObject *parent, const QVariantList &args) :
     m_declarativeWidget(0),
     m_initted(false)
 {
+    KGlobal::insertCatalog(QLatin1String("apper"));
+
     QAction *action = new QAction(i18n("Check for new updates"), this);
     action->setIcon(KIcon("view-refresh"));
     connect(action, SIGNAL(triggered()), this, SIGNAL(checkForNewUpdates()));
