@@ -25,7 +25,7 @@
 #include <KDebug>
 
 K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperD>();)
-K_EXPORT_PLUGIN(ApperFactory("apperd"))
+K_EXPORT_PLUGIN(ApperFactory("apperd", "apper"))
 
 ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
     KDEDModule(parent)
