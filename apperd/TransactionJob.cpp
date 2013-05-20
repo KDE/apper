@@ -71,7 +71,7 @@ void TransactionJob::finished(PackageKit::Transaction::Exit exit)
     // emit the description so the Speed: xxx KiB/s
     // don't get confused to a destination URL
     emit description(this, PkStrings::action(m_role, m_flags));
-    if (exit == Transaction::ExitCancelled) {
+    if (exit == Transaction::ExitCancelled || exit == Transaction::ExitFailed) {
         setError(KilledJobError);
     }
     m_finished = true;

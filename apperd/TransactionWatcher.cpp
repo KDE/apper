@@ -70,27 +70,13 @@ TransactionWatcher::~TransactionWatcher()
 
 void TransactionWatcher::transactionListChanged(const QStringList &tids)
 {
-    kDebug() << tids.size();
-    if (!tids.isEmpty()) {
+    if (tids.isEmpty()) {
+        // release any cookie that we might have
+        suppressSleep(false, m_inhibitCookie);
+    } else {
         foreach (const QString &tid, tids) {
             watchTransaction(QDBusObjectPath(tid), false);
         }
-    } else {
-        // There is no current transaction, delete the jobs
-        foreach (TransactionJob *job, m_transactionJob) {
-            job->transactionDestroyed();
-            job->deleteLater();
-        }
-
-        // Avoid leaks delete the jobs
-        foreach (Transaction *transaction, m_transactions) {
-            transaction->deleteLater();
-        }
-        m_transactions.clear();
-        m_transactionJob.clear();
-
-        // release any cookie that we might have
-        suppressSleep(false, m_inhibitCookie);
     }
 }
 
