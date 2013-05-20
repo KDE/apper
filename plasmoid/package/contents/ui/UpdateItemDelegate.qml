@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import Qt 4.7
+import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.qtextracomponents 0.1
@@ -56,7 +56,7 @@ Item {
         } else if (containsMouse) {
             padding.opacity = 0.7;
         } else {
-           padding.opacity = 0;
+            padding.opacity = 0;
         }
     }
 
@@ -113,6 +113,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: updateSelection()
+        onExited: updateSelection()
         onClicked: {
             if (currentItem) {
                 updateItem.ListView.view.currentIndex = -1;
@@ -122,7 +123,6 @@ Item {
             updateItem.forceActiveFocus();
         }
         onDoubleClicked: toggleChangelog()
-        onExited: updateSelection()
     }
 
     Column {
