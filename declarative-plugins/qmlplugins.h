@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2012 Daniel Nicoletti <dantti12@gmail.com>         *
+ *   Copyright (C) 2012-2013 by Daniel Nicoletti <dantti12@gmail.com>      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,33 +17,16 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef DBUSUPDATERINTERFACE_H
-#define DBUSUPDATERINTERFACE_H
+#ifndef APPER_PLUGINS_H
+#define APPER_PLUGINS_H
 
-#include <QtDBus/QDBusContext>
-#include <QDBusObjectPath>
+#include <QtDeclarative/QDeclarativeExtensionPlugin>
 
-class DBusUpdaterInterface : public QObject, protected QDBusContext
+class QmlPlugins : public QDeclarativeExtensionPlugin
 {
-    Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.ApperUpdaterIcon")
 public:
-    explicit DBusUpdaterInterface(QObject *parent = 0);
-    ~DBusUpdaterInterface();
-
-    bool isRegistered() const;
-
-    void ReviewUpdates();
-
-public slots:
-    void registerService();
-    void unregisterService();
-
-signals:
-    void reviewUpdates();
-
-private:
-    bool m_registered;
+    virtual void registerTypes(const char *uri);
+    virtual void initializeEngine(QDeclarativeEngine *engine, const char *uri);
 };
 
-#endif // DBUSUPDATERINTERFACE_H
+#endif // APPER_PLUGINS_H

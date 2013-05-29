@@ -17,7 +17,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.packagekit 0.1 as PackageKit
+import org.kde.apper 0.1 as Apper
 
 Item {
     id: changelogItem
@@ -34,7 +34,7 @@ Item {
         }
     }
 
-    PackageKit.Transaction {
+    Apper.Transaction {
         id: transaction
         onUpdateDetail: {
             for (var count = 0; count < updates.length; ++count) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012  Daniel Nicoletti <dantti12@gmail.com>
+ * Copyright 2012-2013  Daniel Nicoletti <dantti12@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,7 +19,6 @@ import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.apper 0.1 as Apper
-import org.packagekit 0.1 as PackageKit
 
 FocusScope {
     id: updates

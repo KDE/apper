@@ -52,6 +52,7 @@ void DBusUpdaterInterface::ReviewUpdates()
 
 void DBusUpdaterInterface::registerService()
 {
+    kDebug();
     QDBusServiceWatcher *watcher = qobject_cast<QDBusServiceWatcher*>(sender());
     if (!m_registered && !QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
         kDebug() << "unable to register service to dbus";
@@ -65,6 +66,7 @@ void DBusUpdaterInterface::registerService()
             connect(watcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(registerService()));
         }
         m_registered = false;
+        emit registeredChanged();
     } else {
         if (!QDBusConnection::sessionBus().registerObject("/", this)) {
             kDebug() << "unable to register service interface to dbus";
@@ -72,6 +74,7 @@ void DBusUpdaterInterface::registerService()
         }
 
         m_registered = true;
+        emit registeredChanged();
     }
 }
 
@@ -81,6 +84,7 @@ void DBusUpdaterInterface::unregisterService()
     // plasma-desktop won't exit
     if (QDBusConnection::sessionBus().unregisterService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
         m_registered = false;
+        emit registeredChanged();
     } else {
         kDebug() << "unable to unregister service to dbus";
     }

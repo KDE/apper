@@ -35,7 +35,7 @@ int main(int argc, char **argv)
                      APP_VERSION,
                      ki18n("Apper PackageKit Session helper"),
                      KAboutData::License_GPL,
-                     ki18n("(C) 2008-2012 Daniel Nicoletti"));
+                     ki18n("(C) 2008-2013 Daniel Nicoletti"));
 
     about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti12@gmail.com", "http://dantti.wordpress.com" );
     about.addAuthor(ki18n("Trever Fischer"), KLocalizedString(), "wm161@wm161.net", "http://wm161.net");
