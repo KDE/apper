@@ -26,5 +26,5 @@
 #install(FILES plasma-applet-updater.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 #install(DIRECTORY package/ DESTINATION ${DATA_INSTALL_DIR}/plasma/packages/org.packagekit.updater)
 
-install(FILES package/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR} RENAME plasma-applet-updater.desktop)
+install(FILES package/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR} RENAME plasma-applet-org.packagekit.updater.desktop)
 install(DIRECTORY package/ DESTINATION ${DATA_INSTALL_DIR}/plasma/plasmoids/org.packagekit.updater)
