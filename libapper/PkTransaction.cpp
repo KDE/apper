@@ -204,6 +204,12 @@ void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnl
     }
 }
 
+void PkTransaction::refreshCache(bool force)
+{
+    reset();
+    Transaction::refreshCache(force);
+}
+
 void PkTransaction::setupTransaction()
 {
     reset();
@@ -649,6 +655,16 @@ void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
 void PkTransaction::reject()
 {
     setExitStatus(Cancelled);
+}
+
+void PkTransaction::reset()
+{
+    // Clear the model to don't keep trash when reusing the transaction
+    d->progressModel->clear();
+
+    Transaction::reset();
+
+    emit changed();
 }
 
 void PkTransaction::showDialog(KDialog *dlg)

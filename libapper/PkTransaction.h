@@ -49,6 +49,8 @@ public:
     Q_INVOKABLE void installFiles(const QStringList &files);
     Q_INVOKABLE void removePackages(const QStringList &packages);
     Q_INVOKABLE void updatePackages(const QStringList &packages, bool downloadOnly = false);
+    Q_INVOKABLE void refreshCache(bool force);
+
 
     QString title() const;
     Transaction::Role cachedRole() const;
@@ -102,6 +104,7 @@ private slots:
 
     void setExitStatus(PkTransaction::ExitStatus status = PkTransaction::Success);
     void reject();
+    void reset();
 
 private:
     void showDialog(KDialog *dialog);
