@@ -231,9 +231,9 @@ void PkTransaction::setupTransaction()
     } else {
         message << qVariantFromValue(0u);
     }
-    QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-    if (reply.type() != QDBusMessage::ReplyMessage) {
-        kWarning() << "Message did not receive a reply";
+
+    if (!QDBusConnection::sessionBus().send(message)) {
+        kWarning() << "Failed to put SetupDebconfDialog message in DBus queue";
     }
 
     setHints(QLatin1String("frontend-socket=") % socket);
@@ -409,6 +409,7 @@ void PkTransaction::slotChanged()
 
     QDBusObjectPath _tid = tid();
     if (d->tid != _tid && !(d->flags & Transaction::TransactionFlagSimulate)) {
+        d->tid = _tid;
         // if the transaction changed and
         // the user wants the watcher send the tid
         QDBusMessage message;
@@ -418,9 +419,8 @@ void PkTransaction::slotChanged()
                                                  QLatin1String("WatchTransaction"));
         // Use our own cached tid to avoid crashes
         message << qVariantFromValue(_tid);
-        QDBusMessage reply = QDBusConnection::sessionBus().call(message);
-        if (reply.type() != QDBusMessage::ReplyMessage) {
-            kWarning() << "Message did not receive a reply";
+        if (!QDBusConnection::sessionBus().send(message)) {
+            kWarning() << "Failed to put WatchTransaction on the DBus queue";
         }
     }
 }
