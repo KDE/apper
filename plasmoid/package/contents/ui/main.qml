@@ -36,8 +36,8 @@ FocusScope {
     property int implicitWidth: 0
 
     property bool checkedForUpdates: false
-    property string tooltipText: ""
-    property string tooltipIcon: ""
+    property string tooltipText: i18n("Software Updates")
+    property string tooltipIcon: "kpackagekit-updates"
 
     property Component compactRepresentation: CompactRepresentation {
         text: tooltipText
@@ -59,6 +59,7 @@ FocusScope {
         Daemon.updatesChanged.connect(updatesChanged);
 
         // This allows the plasmoid to shrink when the layout changes
+        plasmoid.status = "PassiveStatus"
         plasmoid.aspectRatioMode = IgnoreAspectRatio
         plasmoid.popupEvent.connect(popupEventSlot)
         plasmoid.setAction('checkForNewUpdates', i18n("Check for new updates"), 'view-refresh')
@@ -128,7 +129,7 @@ FocusScope {
         statusView.subTitle = PkStrings.daemonError(error);
         statusView.iconName = "dialog-error";
         state = "MESSAGE";
-        plasmoidStatus = "PassiveStatus"
+        plasmoid.status = "PassiveStatus"
     }
 
     function getUpdatesFinished() {
@@ -147,9 +148,9 @@ FocusScope {
                 statusView.subTitle = PkStrings.lastCacheRefreshSubTitle(lastTime);
                 statusView.iconName = PkIcons.lastCacheRefreshIconName(lastTime);
                 state = "MESSAGE";
-                plasmoidStatus = "PassiveStatus"
+                plasmoid.status = "PassiveStatus"
             } else {
-                plasmoidStatus = "ActiveStatus"
+                plasmoid.status = "ActiveStatus"
                 root.state = "SELECTION";
             }
         }
