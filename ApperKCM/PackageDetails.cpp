@@ -709,20 +709,12 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
 
 QString PackageDetails::thumbnail(const QString &pkgName) const
 {
-    if (QLatin1String(SCREENSHOT_PROVIDER) == QLatin1String("openSUSE")) {
-        return QLatin1String("http://software.opensuse.org/package/thumbnail/") % pkgName % QLatin1String(".png");;
-    } else {
-        return QLatin1String("http://screenshots.debian.net/thumbnail/") % pkgName;
-    }
+    return AppStream::instance()->thumbnail(pkgName) % QLatin1String(".png");
 }
 
 QString PackageDetails::screenshot(const QString &pkgName) const
 {
-    if (QLatin1String(SCREENSHOT_PROVIDER) == QLatin1String("openSUSE")) {
-        return QLatin1String("http://software.opensuse.org/package/screenshot/") % pkgName % QLatin1String(".png");
-    } else {
-        return QLatin1String("http://screenshots.debian.net/screenshot/") % pkgName;
-    }
+    return AppStream::instance()->screenshot(pkgName) % QLatin1String(".png");
 }
 
 void PackageDetails::description(const QString &packageID,

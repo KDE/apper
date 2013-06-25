@@ -26,13 +26,6 @@ option(LISTALLER "Build Apper with app install" OFF)
 set(HAVE_LISTALLER ${LISTALLER})
 message(STATUS "Building Apper with Listaller modules: " ${LISTALLER})
 
-# command to edit the packages origins
-set(SCREENSHOT_PROVIDER "debian" CACHE STRING "Screen shots provider")
-if (SCREENSHOT_PROVIDER)
-    message(STATUS "Screen shots provider: " ${SCREENSHOT_PROVIDER})
-    message(STATUS "Screen shots provider possibilities are: debian, openSUSE")
-endif (SCREENSHOT_PROVIDER)
-
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
     find_package(DebconfKDE REQUIRED)
