@@ -52,7 +52,7 @@
 #include <config.h>
 
 #ifdef HAVE_APPSTREAM
-#include <AppStream/AppStreamDb.h>
+#include <AppStream.h>
 #endif
 
 #include "GraphicsOpacityDropShadowEffect.h"

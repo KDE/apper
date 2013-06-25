@@ -9,7 +9,7 @@ ELSE(CMAKE_SIZEOF_VOID_P EQUAL 4)
 ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
 
 set(libapper_SRCS
-    AppStream/CategoryMatcher.cpp
+    CategoryMatcher.cpp
     PkIcons.cpp
     PkStrings.cpp
     ApplicationLauncher.cpp
@@ -32,10 +32,10 @@ set(libapper_SRCS
 )
 
 if(APPSTREAM)
-    find_package(Xapian 1.2 REQUIRED)
-    add_definitions("-fexceptions")
+    pkg_check_modules(GLIB2 REQUIRED glib-2.0>=2.36)
+    pkg_check_modules(APPSTREAM REQUIRED appstream>=0.3)
 
-    set(libapper_SRCS ${libapper_SRCS} AppStream/AppStreamDb.cpp)
+    set(libapper_SRCS ${libapper_SRCS} AppStream.cpp)
 endif()
 
 kde4_add_ui_files(libapper_SRCS
@@ -49,11 +49,16 @@ kde4_add_ui_files(libapper_SRCS
 
 kde4_add_library(apper SHARED ${libapper_SRCS})
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR}
+		    ${GLIB2_INCLUDE_DIR}
+		    ${APPSTREAM_INCLUDE_DIRS}
+)
+
 target_link_libraries(apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${QPACKAGEKIT2_LIBRARIES}
-    ${XAPIAN_LIBRARIES}
+    ${APPSTREAM_LIBRARIES}
 )
 
 install(TARGETS apper DESTINATION ${LIB_INSTALL_DIR}/apper)

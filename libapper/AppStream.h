@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Daniel Nicoletti <dantti12@gmail.com>           *
- *   Copyright (C) 2012 by Matthias Klumpp <matthias@tenstral.net>         *
+ *   Copyright (C) 2012-2013 by Matthias Klumpp <matthias@tenstral.net>    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU General Public License as        *
@@ -19,8 +19,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef APPSTREAMDB_H
-#define APPSTREAMDB_H
+#ifndef APPSTREAM_H
+#define APPSTREAM_H
 
 #include "CategoryMatcher.h"
 
@@ -29,11 +29,13 @@
 
 #include <kdemacros.h>
 
-#undef slots
-#include <xapian.h>
-#define slots
+struct _AppstreamDatabase;
+typedef struct _AppstreamDatabase AppstreamDatabase;
 
-class KDE_EXPORT AppStreamDb : public QObject {
+struct _AppstreamScreenshotService;
+typedef struct _AppstreamScreenshotService AppstreamScreenshotService;
+
+class KDE_EXPORT AppStream : public QObject {
     public:
         struct Application {
             QString name;
@@ -42,7 +44,8 @@ class KDE_EXPORT AppStreamDb : public QObject {
             QString id;
             QStringList categories;
         };
-        static AppStreamDb* instance();
+        static AppStream* instance();
+        virtual ~AppStream();
 
         QList<Application> applications(const QString &pkgName) const;
         QString genericIcon(const QString &pkgName) const;
@@ -51,13 +54,12 @@ class KDE_EXPORT AppStreamDb : public QObject {
         QString screenshot(const QString &pkgName) const;
 
     private:
-        explicit AppStreamDb(QObject *parent = 0);
-        Xapian::Database m_xapianDB;
+        explicit AppStream(QObject *parent = 0);
+        AppstreamDatabase *m_asDB;
+	AppstreamScreenshotService *m_asScreenshots;
 
         QHash<QString, Application> m_appInfo;
-        static AppStreamDb         *m_instance;
-
-        void processXapianDoc (Xapian::Document doc);
+        static AppStream         *m_instance;
 };
 
-#endif // APPSTREAMDB_H
+#endif // APPSTREAM_H

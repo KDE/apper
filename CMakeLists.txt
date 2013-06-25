@@ -26,13 +26,6 @@ option(LISTALLER "Build Apper with app install" OFF)
 set(HAVE_LISTALLER ${LISTALLER})
 message(STATUS "Building Apper with Listaller modules: " ${LISTALLER})
 
-if (HAVE_APPSTREAM)
-    # path to the categories.xml menus
-    set(AS_CATEGORIES_PATH "${CMAKE_INSTALL_PREFIX}/share/app-info"
-        CACHE STRING "AppStream categories path")
-    message(STATUS "AppStream categories path: " ${AS_CATEGORIES_PATH})
-endif (HAVE_APPSTREAM)
-
 # command to edit the packages origins
 set(SCREENSHOT_PROVIDER "debian" CACHE STRING "Screen shots provider")
 if (SCREENSHOT_PROVIDER)

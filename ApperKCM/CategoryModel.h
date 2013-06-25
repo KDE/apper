@@ -27,7 +27,7 @@
 
 #include <Transaction>
 
-#include <AppStream/CategoryMatcher.h>
+#include <CategoryMatcher.h>
 
 class CategoryModel : public QStandardItemModel
 {

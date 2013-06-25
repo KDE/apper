@@ -43,7 +43,7 @@
 #include <PkTransactionWidget.h>
 
 #ifdef HAVE_APPSTREAM
-#include <AppStream/AppStreamDb.h>
+#include <AppStream.h>
 #endif
 
 #include <KDebug>
@@ -396,7 +396,7 @@ void ApperKCM::on_homeView_activated(const QModelIndex &index)
         if (m_searchRole == Transaction::RoleResolve) {
 #ifdef HAVE_APPSTREAM
             CategoryMatcher parser = index.data(CategoryModel::CategoryRole).value<CategoryMatcher>();
-            m_searchCategory = AppStreamDb::instance()->findPkgNames(parser);
+            m_searchCategory = AppStream::instance()->findPkgNames(parser);
 #endif // HAVE_APPSTREAM
         } else if (m_searchRole == Transaction::RoleSearchGroup) {
             if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
