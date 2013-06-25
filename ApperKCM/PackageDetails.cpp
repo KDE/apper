@@ -709,12 +709,12 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
 
 QString PackageDetails::thumbnail(const QString &pkgName) const
 {
-    return AppStream::instance()->thumbnail(pkgName) % QLatin1String(".png");
+    return AppStream::instance()->thumbnail(pkgName);
 }
 
 QString PackageDetails::screenshot(const QString &pkgName) const
 {
-    return AppStream::instance()->screenshot(pkgName) % QLatin1String(".png");
+    return AppStream::instance()->screenshot(pkgName);
 }
 
 void PackageDetails::description(const QString &packageID,

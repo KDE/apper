@@ -60,12 +60,12 @@ AppStream::AppStream(QObject *parent)
     }
 
     // cache application data (we might use the db directly, later (making use of AppstreamSearchQuery))
-    GArray *appArray = NULL;
+    GPtrArray *appArray = NULL;
     appArray = appstream_database_get_all_applications(m_asDB);
 
     for (uint i = 0; i < appArray->len; i++) {
         AppstreamAppInfo *appInfo;
-        appInfo = g_array_index(appArray, AppstreamAppInfo*, i);
+        appInfo = (AppstreamAppInfo*) g_ptr_array_index(appArray, i);
 
         Application app;
         // Application name
@@ -87,15 +87,16 @@ AppStream::AppStream(QObject *parent)
         int clen;
         gchar **cats = appstream_app_info_get_categories(appInfo, &clen);
         if (cats != NULL) {
+            app.categories = QStringList();
             for (int j = 0; j < clen; j++) {
-                app.categories << QString::fromUtf8(cats[i]);
+                app.categories << QString::fromUtf8(cats[j]);
             }
         }
         g_strfreev(cats);
 
         m_appInfo.insertMulti(pkgName, app);
     }
-    g_array_unref(appArray);
+    g_ptr_array_unref(appArray);
 
 #endif //HAVE_APPSTREAM
 }
