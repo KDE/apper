@@ -36,7 +36,7 @@ QHash<QString, KIcon> PkIcons::cache = QHash<QString, KIcon>();
 
 void PkIcons::configure()
 {
-    KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-install/icons/");
+    KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-info/icons/", "/usr/share/app-install/icons/");
     KIconLoader::global()->reconfigure("apper", 0);
     PkIcons::init = true;
 }

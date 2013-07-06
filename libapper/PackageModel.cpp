@@ -143,6 +143,8 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 
 #ifdef HAVE_APPSTREAM
         iPackage.icon = AppStream::instance()->genericIcon(Transaction::packageName(packageID));
+        if (iPackage.icon.isEmpty())
+            iPackage.icon = Transaction::packageIcon(packageID);
         if (m_checkable) {
             // in case of updates model only check if it's an app
             applications = AppStream::instance()->applications(Transaction::packageName(packageID));
