@@ -46,6 +46,7 @@ class KDE_EXPORT AppStream : public QObject {
         };
         static AppStream* instance();
         virtual ~AppStream();
+        bool open();
 
         QList<Application> applications(const QString &pkgName) const;
         QString genericIcon(const QString &pkgName) const;

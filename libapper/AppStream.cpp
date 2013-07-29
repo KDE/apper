@@ -37,8 +37,10 @@ AppStream* AppStream::m_instance = 0;
 
 AppStream* AppStream::instance()
 {
-    if(!m_instance)
+    if(!m_instance) {
         m_instance = new AppStream(qApp);
+        m_instance->open();
+    }
 
     return m_instance;
 }
@@ -47,21 +49,36 @@ AppStream::AppStream(QObject *parent)
  : QObject(parent)
 {
 #ifdef HAVE_APPSTREAM
-    bool ret;
-
     // create new AppStream database and screenshot service
     m_asDB = appstream_database_new();
     m_asScreenshots = appstream_screenshot_service_new();
+#endif //HAVE_APPSTREAM
+}
 
-    ret = appstream_database_open(m_asDB);
+AppStream::~AppStream()
+{
+#ifdef HAVE_APPSTREAM
+    g_object_unref(m_asDB);
+    g_object_unref(m_asScreenshots);
+#endif
+}
+
+bool AppStream::open()
+{
+#ifdef HAVE_APPSTREAM
+    bool ret = appstream_database_open(m_asDB);
     if (!ret) {
         qWarning("Unable to open AppStream Xapian database!");
-        return;
+        return false;
     }
 
     // cache application data (we might use the db directly, later (making use of AppstreamSearchQuery))
-    GPtrArray *appArray = NULL;
+    GPtrArray *appArray;
     appArray = appstream_database_get_all_applications(m_asDB);
+    if (appArray == NULL) {
+	qWarning("AppStream application array way NULL! (This should never happen)");
+	return false;
+    }
 
     for (uint i = 0; i < appArray->len; i++) {
         AppstreamAppInfo *appInfo;
@@ -98,14 +115,9 @@ AppStream::AppStream(QObject *parent)
     }
     g_ptr_array_unref(appArray);
 
-#endif //HAVE_APPSTREAM
-}
-
-AppStream::~AppStream()
-{
-#ifdef HAVE_APPSTREAM
-    g_object_unref(m_asDB);
-    g_object_unref(m_asScreenshots);
+    return true;
+#else
+    return false;
 #endif
 }
 
