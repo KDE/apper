@@ -305,6 +305,11 @@ void PkTransaction::requeueTransaction()
         d->simulateModel = 0;
     }
 
+    // We are not handling any required action yet for the requeued transaction.
+    // Without this a second license agreement f.e. does not get shown,
+    // see http://bugs.kde.org/show_bug.cgi?id=326619
+    d->handlingActionRequired = false;
+
     switch (d->originalRole) {
     case Transaction::RoleRemovePackages:
         removePackages();
