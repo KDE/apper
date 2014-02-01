@@ -322,6 +322,7 @@ Action=Sound|Popup
 
 [Event/TransactionMessage]
 Name=Message from the software manager
+Name[bs]=Poruka od menadžera softvera
 Name[da]=Meddelelse fra softwarehåndteringen
 Name[de]=Eine Nachricht von der Softwareverwaltung
 Name[el]=Μήνυμα από το διαχειριστή λογισμικού
