@@ -159,6 +159,7 @@ Action=Sound|Popup
 [Event/DownloadingUpdates]
 Name=Updates are being downloaded
 Name[bs]=Nadogradnje su preuzete
+Name[ca]=S'estan baixant les actualitzacions
 Name[cs]=Aktualizace jsou stahovány
 Name[da]=Opdateringer downloades
 Name[de]=Die Aktualisierungen sind heruntergeladen worden
@@ -323,6 +324,7 @@ Action=Sound|Popup
 [Event/TransactionMessage]
 Name=Message from the software manager
 Name[bs]=Poruka od menadžera softvera
+Name[ca]=Missatge des del gestor de programari
 Name[da]=Meddelelse fra softwarehåndteringen
 Name[de]=Eine Nachricht von der Softwareverwaltung
 Name[el]=Μήνυμα από το διαχειριστή λογισμικού
