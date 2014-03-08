@@ -740,6 +740,21 @@ void PackageDetails::description(const QString &packageID,
     m_detailsUrl = url;
     m_detailsSize = size;
     m_hasDetails = true;
+
+#ifdef HAVE_APPSTREAM
+    // check if we have application details from Appstream data
+    // FIXME: The whole AppStream handling sucks badly, since it was added later
+    // and on to of the package-based model. So we can't respect the "multiple apps
+    // in one package" case here.
+    QList<AppStream::Application> apps;
+    apps = AppStream::instance()->applications(Transaction::packageName(packageID));
+    foreach (const AppStream::Application &app, apps) {
+        if (!app.description.isEmpty()) {
+            m_detailsDetail = app.description;
+            break;
+        }
+    }
+#endif
 }
 
 void PackageDetails::finished()

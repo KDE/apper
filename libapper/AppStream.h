@@ -40,6 +40,7 @@ class KDE_EXPORT AppStream : public QObject {
         struct Application {
             QString name;
             QString summary;
+            QString description;
             QString icon;
             QString id;
             QStringList categories;

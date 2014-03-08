@@ -76,8 +76,8 @@ bool AppStream::open()
     GPtrArray *appArray;
     appArray = appstream_database_get_all_applications(m_asDB);
     if (appArray == NULL) {
-	qWarning("AppStream application array way NULL! (This should never happen)");
-	return false;
+        qWarning("AppStream application array way NULL! (This should never happen)");
+        return false;
     }
 
     for (uint i = 0; i < appArray->len; i++) {
@@ -96,6 +96,9 @@ bool AppStream::open()
 
         // Summary
         app.summary = QString::fromUtf8(appstream_app_info_get_summary(appInfo));
+
+        // Description
+        app.description = QString::fromUtf8(appstream_app_info_get_description(appInfo));
 
         // Application stock icon
         app.icon = QString::fromUtf8(appstream_app_info_get_icon(appInfo));
