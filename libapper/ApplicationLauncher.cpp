@@ -74,20 +74,18 @@ bool ApplicationLauncher::hasApplications()
 
     QStandardItem *item;
     foreach (const QString &desktop, m_files) {
-        // we create a new KService because findByDestopPath
+        // we use KService to parse the .desktop file because findByDestopPath
         // might fail because the Sycoca database is not up to date yet.
-        KService *service = new KService(desktop);
-        if (service->isApplication() &&
-           !service->noDisplay() &&
-           !service->exec().isEmpty())
+        KService service(desktop);
+        if (service.isApplication() &&
+           !service.noDisplay() &&
+           !service.exec().isEmpty())
         {
-            QString name;
-            name = service->genericName().isEmpty() ?
-                        service->property("Name").toString() :
-                        service->property("Name").toString() + " - " + service->genericName();
+            QString name = service.genericName().isEmpty() ? service.name()
+                                                           : service.name() + " - " + service.genericName();
             item = new QStandardItem(name);
-            item->setIcon(KIcon(service->icon()));
-            item->setData(service->desktopEntryPath(), Qt::UserRole);
+            item->setIcon(KIcon(service.icon()));
+            item->setData(service.entryPath(), Qt::UserRole);
             item->setFlags(Qt::ItemIsEnabled);
             model->appendRow(item);
         }
