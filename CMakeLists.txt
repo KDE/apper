@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
-find_package(KDE4 REQUIRED)
-find_package(KDE4Internal REQUIRED)
-find_package(KDE4Workspace REQUIRED)
-include (MacroLibrary)
+#find_package(KDE4 REQUIRED)
+#find_package(KDE4Internal REQUIRED)
+#find_package(KDE4Workspace REQUIRED)
+#include (MacroLibrary)
 
 # Only for Debian based systems
 option(DEBCONF_SUPPORT "Build Apper with debconf support" OFF)
@@ -47,10 +47,10 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 include(FindPkgConfig)
-set(QPACKAGEKIT_MIN_VERSION 0.8.8)
-pkg_check_modules(QPACKAGEKIT2 REQUIRED packagekit-qt2>=${QPACKAGEKIT_MIN_VERSION})
-macro_log_feature(QPACKAGEKIT2_FOUND "packagekit-qt2" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
-include(KDE4Defaults)
+set(PACKAGEKIT_QT_MIN_VERSION 0.9.0)
+find_package(PackageKitQt5_0 0.9.0 REQUIRED)
+message(STATUS "packagekit-qt2" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
+#include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS}
     ${KDE_DEFINITIONS})
@@ -58,21 +58,19 @@ add_definitions(${QT_DEFINITIONS}
 include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${KDE4_INCLUDES}
-    ${QPACKAGEKIT2_INCLUDE_DIRS}
-    ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2
+    ${PackageKitQt5_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libapper)
 
-message(STATUS "QPK includ dir: " ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2)
+message(STATUS "PackageKit include dir: " ${PackageKitQt5_INCLUDE_DIR})
 
-add_subdirectory(libapper)
-add_subdirectory(ApperKCM)
-add_subdirectory(Apper)
-add_subdirectory(PkSession)
-add_subdirectory(apperd)
-add_subdirectory(declarative-plugins)
-add_subdirectory(plasmoid)
-add_subdirectory(doc)
-if(LISTALLER)
-    add_subdirectory(AppSetup)
-endif()
+#add_subdirectory(libapper)
+#add_subdirectory(ApperKCM)
+#add_subdirectory(Apper)
+#add_subdirectory(PkSession)
+#add_subdirectory(apperd)
+#add_subdirectory(declarative-plugins)
+#add_subdirectory(plasmoid)
+#add_subdirectory(doc)
+#if(LISTALLER)
+#    add_subdirectory(AppSetup)
+#endif()
