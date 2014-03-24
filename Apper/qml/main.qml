@@ -14,9 +14,8 @@ ApplicationWindow {
 
     function removeForwardHistory() {
         // Remove history forward to the current location
-        console.debug("count: "+ historyModel.count + " currentindex:" + mainView.currentIndex)
         if (goNext.enabled) {
-            historyModel.remove(mainView.currentIndex + 1, historyModel.count - mainView.currentIndex + 1)
+            historyModel.remove(mainView.currentIndex + 1, historyModel.count - (mainView.currentIndex + 1))
         }
     }
 
@@ -31,7 +30,7 @@ ApplicationWindow {
             ToolButton {
                 id: goNext
                 iconName: "go-next"
-                enabled: mainView.currentIndex + 1 > historyModel.count
+                enabled: mainView.currentIndex + 1 < historyModel.count
                 onClicked: mainView.currentIndex = mainView.currentIndex + 1
             }
 
@@ -40,12 +39,13 @@ ApplicationWindow {
                 onAccepted: {
                     console.debug(text)
                     var currentPage = historyModel.get(mainView.currentIndex)
-                    if (currentPage.kind === "search" && currentPage.query === text) {
+                    if (currentPage.kind === "search" && currentPage.search === text) {
                         console.debug("Same query, ignoring...")
+                        return
                     }
 
                     removeForwardHistory()
-                    historyModel.append({"kind": "search", "query": text})
+                    historyModel.append({"kind": "search", "search": text})
                     mainView.currentIndex = historyModel.count - 1
                 }
             }
@@ -71,7 +71,7 @@ ApplicationWindow {
         delegate: Text {
             height: ListView.view.height
             width: ListView.view.width
-            text: model.kind + " query" + model.query
+            text: model.kind + ", search string: " + model.search
         }
 //        onAdd: currentIndex = historyModel.count
 //        onAdd: {
