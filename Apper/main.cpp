@@ -21,14 +21,15 @@
 #include "Apper.h"
 #include <config.h>
 
+#include <QCommandLineParser>
 #include <QDBusMessage>
 #include <QDBusConnection>
 
-#include <KDebug>
-#include <KConfig>
-#include <KAboutData>
-#include <KCmdLineArgs>
-#include <KUrl>
+#include <QDebug>
+//#include <KConfig>
+//#include <KAboutData>
+//#include <KCmdLineArgs>
+//#include <KUrl>
 
 int invoke(const QString &method_name, const QStringList &args)
 {
@@ -49,83 +50,113 @@ int invoke(const QString &method_name, const QStringList &args)
 
 int main(int argc, char **argv)
 {
-    KAboutData about("apper",
-                     "apper", // DO NOT change this catalog unless you know it will not break translations!
-                     ki18n("Apper"),
-                     APP_VERSION,
-                     ki18n("Apper is an Application to Get and Manage Software"),
-                     KAboutData::License_GPL,
-                     ki18n("(C) 2008-2013 Daniel Nicoletti"));
+    Q_INIT_RESOURCE(application);
 
-    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
-    about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"), "@");
-    about.setProgramIconName("applications-other");
+//    KAboutData about("apper",
+//                     "apper", // DO NOT change this catalog unless you know it will not break translations!
+//                     ki18n("Apper"),
+//                     APP_VERSION,
+//                     ki18n("Apper is an Application to Get and Manage Software"),
+//                     KAboutData::License_GPL,
+//                     ki18n("(C) 2008-2013 Daniel Nicoletti"));
+    QApplication app(argc, argv);
 
-    KCmdLineArgs::init(argc, argv, &about);
+    QCoreApplication::setOrganizationName("KDE");
+    QCoreApplication::setOrganizationDomain("kde.org");
+    QCoreApplication::setApplicationName("Apper");
+    QCoreApplication::setApplicationVersion(APP_VERSION);
 
-    KCmdLineOptions options;
-    options.add("updates", ki18n("Show updates"));
-    options.add("settings", ki18n("Show settings"));
-    options.add("backend-details", ki18n("Show backend details"));
-    options.add("install-mime-type <mime-type>", ki18n("Mime type installer"));
-    options.add("install-package-name <name>", ki18n("Package name installer"));
-    options.add("install-provide-file <file>", ki18n("Single file installer"));
-    options.add("install-font-resource <lang>", ki18n("Font resource installer"));
-    options.add("install-catalog <file>", ki18n("Catalog installer"));
-    options.add("remove-package-by-file <filename>", ki18n("Single package remover"));
-    options.add("+[package]", ki18n("Package file to install"));
-    KCmdLineArgs::addCmdLineOptions(options);
-    Apper::addCmdLineOptions();
+//    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
+//    about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"), "@");
+//    about.setProgramIconName("applications-other");
 
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+//    KCmdLineArgs::init(argc, argv, &about);
 
-    if (args->count()) {
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QCoreApplication::translate("main",
+                                                                 "Apper is an Application to Get and Manage Software"));
+    parser.addHelpOption();
+
+    QCommandLineOption updatesOption(QStringList() << "updates",
+                                     QCoreApplication::translate("main", "Show updates"));
+    parser.addOption(updatesOption);
+
+    QCommandLineOption settingsOption(QStringList() << "settings",
+                                     QCoreApplication::translate("main", "Show settings"));
+    parser.addOption(settingsOption);
+
+    QCommandLineOption backendOption(QStringList() << "backend-details",
+                                     QCoreApplication::translate("main", "Show backend details"));
+    parser.addOption(backendOption);
+
+//    KCmdLineOptions options;
+//    options.add("updates", ki18n("Show updates"));
+//    options.add("settings", ki18n("Show settings"));
+//    options.add("backend-details", ki18n("Show backend details"));
+//    options.add("install-mime-type <mime-type>", ki18n("Mime type installer"));
+//    options.add("install-package-name <name>", ki18n("Package name installer"));
+//    options.add("install-provide-file <file>", ki18n("Single file installer"));
+//    options.add("install-font-resource <lang>", ki18n("Font resource installer"));
+//    options.add("install-catalog <file>", ki18n("Catalog installer"));
+//    options.add("remove-package-by-file <filename>", ki18n("Single package remover"));
+//    options.add("+[package]", ki18n("Package file to install"));
+//    KCmdLineArgs::addCmdLineOptions(options);
+//    Apper::addCmdLineOptions();
+
+    parser.process(app);
+
+    const QStringList &args = parser.positionalArguments();
+//    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+    if (args.size()) {
         // grab the list of files
-        QStringList urls;
-        for (int i = 0; i < args->count(); i++) {
-            urls << args->url(i).url();
-        }
+//        QStringList urls;
+//        for (int i = 0; i < args.size(); i++) {
+//            urls << args.url(i).url();
+//        }
 
         // TODO remote files are copied to /tmp
         // what will happen if we call the other process to
         // install and this very one closes? will the files
         // in /tmp be deleted?
-        return invoke("InstallPackageFiles", urls);
+        return invoke("InstallPackageFiles", args);
     }
 
-    if (args->isSet("install-mime-type")) {
-        return invoke("InstallMimeTypes", args->getOptionList("install-mime-type"));
-    }
+//    if (args->isSet("install-mime-type")) {
+//        return invoke("InstallMimeTypes", args->getOptionList("install-mime-type"));
+//    }
 
-    if (args->isSet("install-package-name")) {
-        return invoke("InstallPackageNames", args->getOptionList("install-package-name"));
-    }
+//    if (args->isSet("install-package-name")) {
+//        return invoke("InstallPackageNames", args->getOptionList("install-package-name"));
+//    }
 
-    if (args->isSet("install-provide-file")) {
-        return invoke("InstallProvideFiles", args->getOptionList("install-provide-file"));
-    }
+//    if (args->isSet("install-provide-file")) {
+//        return invoke("InstallProvideFiles", args->getOptionList("install-provide-file"));
+//    }
 
-    if (args->isSet("install-font-resource")) {
-        QStringList fonts;
-        foreach (const QString &font, args->getOptionList("install-font-resource")) {
-            if (font.startsWith(QLatin1String(":lang="))) {
-                fonts << font;
-            } else {
-                fonts << QString(":lang=%1").arg(font);
-            }
-        }
-        return invoke("InstallFontconfigResources", fonts);
-    }
+//    if (args->isSet("install-font-resource")) {
+//        QStringList fonts;
+//        foreach (const QString &font, args->getOptionList("install-font-resource")) {
+//            if (font.startsWith(QLatin1String(":lang="))) {
+//                fonts << font;
+//            } else {
+//                fonts << QString(":lang=%1").arg(font);
+//            }
+//        }
+//        return invoke("InstallFontconfigResources", fonts);
+//    }
 
-    if (args->isSet("install-catalog")) {
-        return invoke("InstallCatalogs", args->getOptionList("install-catalog"));
-    }
+//    if (args->isSet("install-catalog")) {
+//        return invoke("InstallCatalogs", args->getOptionList("install-catalog"));
+//    }
 
-    if (args->isSet("remove-package-by-file")) {
-        return invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
-    }
+//    if (args->isSet("remove-package-by-file")) {
+//        return invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
+//    }
 
-    Apper app;
+    Apper apper;
+
+//    apper.showSettings();
 
     return app.exec();
 }

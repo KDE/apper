@@ -20,29 +20,44 @@
 
 #include "Apper.h"
 
-#include "BackendDetails.h"
-#include "MainUi.h"
+//#include "BackendDetails.h"
+//#include "MainUi.h"
 
-#include <KGlobal>
-#include <KStartupInfo>
-#include <KCmdLineArgs>
-#include <KStandardDirs>
-#include <KConfig>
-#include <KConfigGroup>
-#include <KCModuleInfo>
-#include <KWindowSystem>
-#include <KDebug>
+//#include <KGlobal>
+//#include <KStartupInfo>
+//#include <KCmdLineArgs>
+//#include <KStandardDirs>
+//#include <KConfig>
+//#include <KConfigGroup>
+//#include <KCModuleInfo>
+//#include <KWindowSystem>
+//#include <KDebug>
+
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QQmlApplicationEngine>
+
 #include <QStringList>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QTimer>
+#include <QStandardPaths>
+#include <QDebug>
 
 Apper::Apper()
- : KUniqueApplication(),
-   m_pkUi(0),
+ : QObject(),
+//   m_pkUi(0),
    m_running(0)
-{
-    setQuitOnLastWindowClosed(false);
+{/*
+    m_view = new QQuickView;
+    m_view->setResizeMode(QQuickView::SizeRootObjectToView);
+//    m_view->setColor(QColor(Qt::transparent));
+//    m_view->accessibleRoot();
+//    m_view
+    m_view->setSource(QUrl(QLatin1String("qrc:/qml/main.qml")));
+    m_view->show();*/
+
+    QQmlApplicationEngine *engine = new QQmlApplicationEngine(QUrl(QLatin1String("qrc:/qml/main.qml")));
 }
 
 Apper::~Apper()
@@ -52,17 +67,17 @@ Apper::~Apper()
 void Apper::appClose()
 {
     //check whether we can close
-    if (!m_running && !m_pkUi) {
-        quit();
-    }
+//    if (!m_running && !m_pkUi) {
+//        quit();
+//    }
 }
 
 void Apper::kcmFinished()
 {
     // kcm is finished we set to 0 to be able to quit
-    m_pkUi->deleteLater();
-    m_pkUi = 0;
-    appClose();
+//    m_pkUi->deleteLater();
+//    m_pkUi = 0;
+//    appClose();
 }
 
 void Apper::decreaseAndKillRunning()
@@ -72,111 +87,111 @@ void Apper::decreaseAndKillRunning()
     appClose();
 }
 
-int Apper::newInstance()
-{
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    bool notSet = true;
-    if (args->count()) {
-        // grab the list of files
-        QStringList urls;
-        for (int i = 0; i < args->count(); i++) {
-            urls << args->url(i).url();
-        }
+//int Apper::newInstance()
+//{
+//    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+//    bool notSet = true;
+//    if (args->count()) {
+//        // grab the list of files
+//        QStringList urls;
+//        for (int i = 0; i < args->count(); i++) {
+//            urls << args->url(i).url();
+//        }
 
-        // TODO remote files are copied to /tmp
-        // what will happen if we call the other process to
-        // install and this very one closes? will the files
-        // in /tmp be deleted?
-        invoke("InstallPackageFiles", urls);
-        notSet = false;
-    }
+//        // TODO remote files are copied to /tmp
+//        // what will happen if we call the other process to
+//        // install and this very one closes? will the files
+//        // in /tmp be deleted?
+//        invoke("InstallPackageFiles", urls);
+//        notSet = false;
+//    }
 
-    if (args->isSet("updates")) {
-//         kDebug() << "SHOW UPDATES!";
-        QTimer::singleShot(0, this, SLOT(showUpdates()));
-        notSet = false;
-    }
-    if (args->isSet("settings")) {
-//         kDebug() << "SHOW SETTINGS!";
-        QTimer::singleShot(0, this, SLOT(showSettings()));
-        notSet = false;
-    }
+//    if (args->isSet("updates")) {
+////         kDebug() << "SHOW UPDATES!";
+//        QTimer::singleShot(0, this, SLOT(showUpdates()));
+//        notSet = false;
+//    }
+//    if (args->isSet("settings")) {
+////         kDebug() << "SHOW SETTINGS!";
+//        QTimer::singleShot(0, this, SLOT(showSettings()));
+//        notSet = false;
+//    }
 
-    if (args->isSet("install-mime-type")) {
-        invoke("InstallMimeTypes", args->getOptionList("install-mime-type"));
-        notSet = false;
-    }
+//    if (args->isSet("install-mime-type")) {
+//        invoke("InstallMimeTypes", args->getOptionList("install-mime-type"));
+//        notSet = false;
+//    }
 
-    if (args->isSet("install-package-name")) {
-        invoke("InstallPackageNames", args->getOptionList("install-package-name"));
-        notSet = false;
-    }
+//    if (args->isSet("install-package-name")) {
+//        invoke("InstallPackageNames", args->getOptionList("install-package-name"));
+//        notSet = false;
+//    }
 
-    if (args->isSet("install-provide-file")) {
-        invoke("InstallProvideFiles", args->getOptionList("install-provide-file"));
-        notSet = false;
-    }
+//    if (args->isSet("install-provide-file")) {
+//        invoke("InstallProvideFiles", args->getOptionList("install-provide-file"));
+//        notSet = false;
+//    }
 
-    if (args->isSet("install-catalog")) {
-        invoke("InstallCatalogs", args->getOptionList("install-catalog"));
-        notSet = false;
-    }
+//    if (args->isSet("install-catalog")) {
+//        invoke("InstallCatalogs", args->getOptionList("install-catalog"));
+//        notSet = false;
+//    }
 
-    if (args->isSet("remove-package-by-file")) {
-        invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
-        notSet = false;
-    }
+//    if (args->isSet("remove-package-by-file")) {
+//        invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
+//        notSet = false;
+//    }
 
-    if (args->isSet("backend-details")) {
-        BackendDetails *helper;
-        helper = new BackendDetails;
-        connect(helper, SIGNAL(finished()), this, SLOT(decreaseAndKillRunning()));
-        QTimer::singleShot(0, helper, SLOT(show()));
-        m_running++;
-        notSet = false;
-    }
+//    if (args->isSet("backend-details")) {
+//        BackendDetails *helper;
+//        helper = new BackendDetails;
+//        connect(helper, SIGNAL(finished()), this, SLOT(decreaseAndKillRunning()));
+//        QTimer::singleShot(0, helper, SLOT(show()));
+//        m_running++;
+//        notSet = false;
+//    }
 
-    if (notSet) {
-//         kDebug() << "SHOW UI!";
-        QTimer::singleShot(0, this, SLOT(showUi()));
-    }
+//    if (notSet) {
+////         kDebug() << "SHOW UI!";
+//        QTimer::singleShot(0, this, SLOT(showUi()));
+//    }
 
-    args->clear();
-    return 0;
-}
+//    args->clear();
+//    return 0;
+//}
 
 void Apper::showUi()
 {
-    if (!m_pkUi) {
-        m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT (kcmFinished()));
-    }
-    // Show all
-    m_pkUi->showAll();
-    m_pkUi->show();
-    KWindowSystem::forceActiveWindow(m_pkUi->winId());
+//    if (!m_pkUi) {
+//        m_pkUi = new MainUi();
+//        connect(m_pkUi, SIGNAL(finished()), this, SLOT (kcmFinished()));
+//    }
+//    // Show all
+//    m_pkUi->showAll();
+//    m_pkUi->show();
+//    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void Apper::showUpdates()
 {
-    if (!m_pkUi) {
-        m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
-    }
-    m_pkUi->showUpdates();
-    m_pkUi->show();
-    KWindowSystem::forceActiveWindow(m_pkUi->winId());
+//    if (!m_pkUi) {
+//        m_pkUi = new MainUi();
+//        connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
+//    }
+//    m_pkUi->showUpdates();
+//    m_pkUi->show();
+//    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void Apper::showSettings()
 {
-    if (!m_pkUi) {
-        m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
-    }
-    m_pkUi->showSettings();
-    m_pkUi->show();
-    KWindowSystem::forceActiveWindow(m_pkUi->winId());
+//    if (!m_pkUi) {
+//        m_pkUi = new MainUi();
+//        connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
+//    }
+//    m_pkUi->showSettings();
+//    m_pkUi->show();
+//    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void Apper::invoke(const QString &method_name, const QStringList &args)
@@ -197,4 +212,4 @@ void Apper::invoke(const QString &method_name, const QStringList &args)
     QTimer::singleShot(0, this, SLOT(appClose()));
 }
 
-#include "Apper.moc"
+#include "moc_Apper.cpp"

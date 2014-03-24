@@ -8,6 +8,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mod
 #find_package(KDE4Workspace REQUIRED)
 #include (MacroLibrary)
 
+find_package(Qt5 COMPONENTS
+    Core
+    DBus
+    Quick
+    Widgets
+)
+
+## CMakeLists for NetworkManagerQt library
+set(CMAKE_AUTOMOC ON)
+
+# As moc files are generated in the binary dir, tell CMake
+# to always look for includes there:
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 # Only for Debian based systems
 option(DEBCONF_SUPPORT "Build Apper with debconf support" OFF)
 
@@ -52,8 +66,9 @@ find_package(PackageKitQt5_0 0.9.0 REQUIRED)
 message(STATUS "packagekit-qt2" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
 #include(KDE4Defaults)
 
-add_definitions(${QT_DEFINITIONS}
-    ${KDE_DEFINITIONS})
+add_definitions(
+    ${QT_DEFINITIONS}
+)
 
 include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -65,7 +80,7 @@ message(STATUS "PackageKit include dir: " ${PackageKitQt5_INCLUDE_DIR})
 
 #add_subdirectory(libapper)
 #add_subdirectory(ApperKCM)
-#add_subdirectory(Apper)
+add_subdirectory(Apper)
 #add_subdirectory(PkSession)
 #add_subdirectory(apperd)
 #add_subdirectory(declarative-plugins)

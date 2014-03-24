@@ -21,8 +21,8 @@
 #ifndef MAIN_UI_H
 #define MAIN_UI_H
 
-#include <KCMultiDialog>
-#include <KCModuleProxy>
+//#include <KCMultiDialog>
+//#include <KCModuleProxy>
 
 class MainUi : public KCMultiDialog
 {

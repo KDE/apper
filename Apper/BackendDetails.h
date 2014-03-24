@@ -21,13 +21,13 @@
 #ifndef BACKEND_DETAILS_H
 #define BACKEND_DETAILS_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace Ui {
     class BackendDetails;
 }
 
-class BackendDetails : public KDialog
+class BackendDetails : public QDialog
 {
     Q_OBJECT
 public:

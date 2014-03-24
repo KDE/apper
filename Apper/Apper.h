@@ -21,10 +21,11 @@
 #ifndef APPER_H
 #define APPER_H
 
-#include <KUniqueApplication>
+#include <QApplication>
+#include <QQuickView>
 
 class MainUi;
-class Apper : public KUniqueApplication
+class Apper : public QObject
 {
 Q_OBJECT
 
@@ -32,7 +33,7 @@ public:
     Apper();
     virtual ~Apper();
 
-    virtual int newInstance();
+//    virtual int newInstance();
 
 private slots:
     void appClose();
@@ -43,7 +44,8 @@ private slots:
     void showSettings();
 
 private:
-    MainUi *m_pkUi;
+//    MainUi *m_pkUi;
+    QQuickView *m_view;
     void invoke(const QString &method_name, const QStringList &args);
 
     int m_running;

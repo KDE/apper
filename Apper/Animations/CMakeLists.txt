@@ -1,1 +1,1 @@
-kde4_install_icons( ${DATA_INSTALL_DIR}/apper/icons )
+#kde4_install_icons( ${DATA_INSTALL_DIR}/apper/icons )

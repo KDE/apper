@@ -1,32 +1,36 @@
+file(GLOB QML_SRC qml/*.qml qml/*.js)
+
 set(apper_SRCS
-    MainUi.cpp
-    BackendDetails.cpp
+    ${QML_SRC}
+#    MainUi.cpp
+#    BackendDetails.cpp
     Apper.cpp
     main.cpp
 )
 
-kde4_add_ui_files(apper_SRCS
-    BackendDetails.ui
+qt5_add_resources(apper_SRCS
+    application.qrc
+    OPTIONS -compress 3 -threshold 3
 )
 
-kde4_add_executable(apper_executable
+add_executable(apper_executable
     ${apper_SRCS}
 )
 
+qt5_use_modules(apper_executable Quick DBus Widgets)
+
 target_link_libraries(apper_executable
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KUTILS_LIBS}
-    ${QPACKAGEKIT2_LIBRARIES}
-    apper
+    ${PackageKitQt5_0_LIBRARIES}
+#    apper
 )
 
 set_target_properties(apper_executable PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
 
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/apper_executable DESTINATION ${BIN_INSTALL_DIR} RENAME apper)
-install(FILES apper.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES apper_installer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES apper_settings.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES apper_updates.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+#install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/apper_executable DESTINATION ${BIN_INSTALL_DIR} RENAME apper)
+#install(FILES apper.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+#install(FILES apper_installer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+#install(FILES apper_settings.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+#install(FILES apper_updates.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 add_subdirectory(Icons)
 add_subdirectory(Animations)
