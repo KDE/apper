@@ -62,13 +62,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
 
 include(FindPkgConfig)
 set(PACKAGEKIT_QT_MIN_VERSION 0.9.0)
-find_package(PackageKitQt5_0 0.9.0 REQUIRED)
-message(STATUS "packagekit-qt2" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
-#include(KDE4Defaults)
-
-add_definitions(
-    ${QT_DEFINITIONS}
-)
+find_package(PackageKitQt5 ${PACKAGEKIT_QT_MIN_VERSION} REQUIRED)
+message(STATUS "PackagekitQt5, The PackageKit Qt library - http://www.packagekit.org, found: " ${PACKAGEKIT_QT_MIN_VERSION})
 
 include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -76,9 +71,7 @@ include_directories(${CMAKE_SOURCE_DIR}
     ${PackageKitQt5_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libapper)
 
-message(STATUS "PackageKit include dir: " ${PackageKitQt5_INCLUDE_DIR})
-
-#add_subdirectory(libapper)
+add_subdirectory(libapper)
 #add_subdirectory(ApperKCM)
 add_subdirectory(Apper)
 #add_subdirectory(PkSession)

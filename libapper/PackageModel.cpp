@@ -23,28 +23,32 @@
 #include <config.h>
 
 #include "PackageModel.h"
-#include <PkStrings.h>
+//#include <PkStrings.h>
 
 #include <QPainter>
 #include <QStringBuilder>
 
-#include <KIconLoader>
-#include <KDebug>
-#include <PkIcons.h>
-#include <KLocale>
-#include <KCategorizedSortFilterProxyModel>
+//#include <KIconLoader>
+//#include <KDebug>
+//#include <PkIcons.h>
+//#include <KLocale>
+//#include <KCategorizedSortFilterProxyModel>
+#include <QDebug>
 
 #ifdef HAVE_APPSTREAM
 #include <AppStream.h>
 #endif
 
 #ifndef HAVE_APPSTREAM
-#include <QSqlDatabase>
-#include <QSqlQuery>
+//#include <QSqlDatabase>
+//#include <QSqlQuery>
 #endif
 
 #define ICON_SIZE 22
 #define OVERLAY_SIZE 16
+
+#include <Daemon>
+#include <Details>
 
 using namespace PackageKit;
 
@@ -55,23 +59,27 @@ PackageModel::PackageModel(QObject *parent)
   m_fetchSizesTransaction(0),
   m_fetchInstalledVersionsTransaction(0)
 {
-    m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
+//    m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 
-    QHash<int, QByteArray> roles = roleNames();
-    roles[SortRole] = "rSort";
-    roles[NameRole] = "rName";
-    roles[SummaryRole] = "rSummary";
-    roles[VersionRole] = "rVersion";
-    roles[ArchRole] = "rArch";
-    roles[IconRole] = "rIcon";
-    roles[IdRole] = "rId";
-    roles[CheckStateRole] = "rChecked";
-    roles[InfoRole] = "rInfo";
-    roles[ApplicationId] = "rApplicationId";
-    roles[IsPackageRole] = "rIsPackageRole";
-    roles[PackageName] = "rPackageName";
-    roles[InfoIconRole] = "rInfoIcon";
-    setRoleNames(roles);
+    m_roles[Qt::DisplayRole] = "name";
+    m_roles[SortRole] = "rSort";
+    m_roles[NameRole] = "rName";
+    m_roles[SummaryRole] = "rSummary";
+    m_roles[VersionRole] = "rVersion";
+    m_roles[ArchRole] = "rArch";
+    m_roles[IconRole] = "rIcon";
+    m_roles[IdRole] = "rId";
+    m_roles[CheckStateRole] = "rChecked";
+    m_roles[InfoRole] = "rInfo";
+    m_roles[ApplicationId] = "rApplicationId";
+    m_roles[IsPackageRole] = "rIsPackageRole";
+    m_roles[PackageName] = "rPackageName";
+    m_roles[InfoIconRole] = "rInfoIcon";
+}
+
+QHash<int, QByteArray> PackageModel::roleNames() const
+{
+    return m_roles;
 }
 
 void PackageModel::addSelectedPackagesFromModel(PackageModel *model)
@@ -94,6 +102,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
         break;
     }
 
+    qDebug() << packageID;
 #ifdef HAVE_APPSTREAM
     QList<AppStream::Application> applications;
     if (!m_checkable) {
@@ -162,17 +171,17 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             iPackage.isPackage = true;
         } else {
             iPackage.isPackage = false;
-            QSqlDatabase db = QSqlDatabase::database();
-            QSqlQuery query(db);
-            query.prepare("SELECT filename FROM cache WHERE package = :name");
-            query.bindValue(":name", Transaction::packageName(packageID));
-            if (query.exec()) {
-                if (query.next()) {
-                    QString filename = query.value(0).toString();
-                    filename.remove(QRegExp(".desktop$")).remove(QRegExp("^/.*/"));
-                    iPackage.appId = filename;
-                }
-            }
+//            QSqlDatabase db = QSqlDatabase::database();
+//            QSqlQuery query(db);
+//            query.prepare("SELECT filename FROM cache WHERE package = :name");
+//            query.bindValue(":name", Transaction::packageName(packageID));
+//            if (query.exec()) {
+//                if (query.next()) {
+//                    QString filename = query.value(0).toString();
+//                    filename.remove(QRegExp(".desktop$")).remove(QRegExp("^/.*/"));
+//                    iPackage.appId = filename;
+//                }
+//            }
         }
 #endif // HAVE_APPSTREAM
 
@@ -198,30 +207,30 @@ QVariant PackageModel::headerData(int section, Qt::Orientation orientation, int 
         switch (section) {
         case NameCol:
             if (m_checkable) {
-                ret = PkStrings::packageQuantity(true,
-                                                 m_packages.size(),
-                                                 m_checkedPackages.size());
+//                ret = PkStrings::packageQuantity(true,
+//                                                 m_packages.size(),
+//                                                 m_checkedPackages.size());
             } else {
-                ret = i18n("Name");
+//                ret = i18n("Name");
             }
             break;
         case VersionCol:
-            ret = i18n("Version");
+//            ret = i18n("Version");
             break;
         case CurrentVersionCol:
-            ret = i18n("Installed Version");
+//            ret = i18n("Installed Version");
             break;
         case ArchCol:
-            ret = i18n("Arch");
+//            ret = i18n("Arch");
             break;
         case OriginCol:
-            ret = i18n("Origin");
+//            ret = i18n("Origin");
             break;
         case SizeCol:
-            ret = i18n("Size");
+//            ret = i18n("Size");
             break;
         case ActionCol:
-            ret = i18n("Action");
+//            ret = i18n("Action");
             break;
         }
     }
@@ -280,17 +289,17 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             QPixmap icon = QPixmap(44, ICON_SIZE);
             icon.fill(Qt::transparent);
             if (!package.icon.isNull()) {
-                QPixmap pixmap = KIconLoader::global()->loadIcon(package.icon,
-                                                                 KIconLoader::NoGroup,
-                                                                 ICON_SIZE,
-                                                                 KIconLoader::DefaultState,
-                                                                 QStringList(),
-                                                                 0L,
-                                                                 true);
-                if (!pixmap.isNull()) {
-                    QPainter painter(&icon);
-                    painter.drawPixmap(QPoint(2, 0), pixmap);
-                }
+//                QPixmap pixmap = KIconLoader::global()->loadIcon(package.icon,
+//                                                                 KIconLoader::NoGroup,
+//                                                                 ICON_SIZE,
+//                                                                 KIconLoader::DefaultState,
+//                                                                 QStringList(),
+//                                                                 0L,
+//                                                                 true);
+//                if (!pixmap.isNull()) {
+//                    QPainter painter(&icon);
+//                    painter.drawPixmap(QPoint(2, 0), pixmap);
+//                }
             }
 
             if (package.info == Transaction::InfoInstalled ||
@@ -301,12 +310,12 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
                 startPoint = QPoint(44 - OVERLAY_SIZE, 4);
                 painter.drawPixmap(startPoint, m_installedEmblem);
             } else if (m_checkable) {
-                QIcon emblemIcon = PkIcons::packageIcon(package.info);
-                QPainter painter(&icon);
-                QPoint startPoint;
-                // bottom right corner
-                startPoint = QPoint(44 - OVERLAY_SIZE, 4);
-                painter.drawPixmap(startPoint, emblemIcon.pixmap(OVERLAY_SIZE, OVERLAY_SIZE));
+//                QIcon emblemIcon = PkIcons::packageIcon(package.info);
+//                QPainter painter(&icon);
+//                QPoint startPoint;
+//                // bottom right corner
+//                startPoint = QPoint(44 - OVERLAY_SIZE, 4);
+//                painter.drawPixmap(startPoint, emblemIcon.pixmap(OVERLAY_SIZE, OVERLAY_SIZE));
             }
             return icon;
         }
@@ -314,9 +323,9 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             return Transaction::packageName(package.packageID);
         case Qt::ToolTipRole:
             if (m_checkable) {
-                return PkStrings::info(package.info);
+//                return PkStrings::info(package.info);
             } else {
-                return i18n("Version: %1\nArchitecture: %2", package.version, package.arch);
+//                return i18n("Version: %1\nArchitecture: %2", package.version, package.arch);
             }
         }
     } else if (role == Qt::DisplayRole) {
@@ -329,7 +338,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         } else if (index.column() == OriginCol) {
             return package.repo;
         } else if (index.column() == SizeCol) {
-            return package.size ? KGlobal::locale()->formatByteSize(package.size) : QString();
+//            return package.size ? KGlobal::locale()->formatByteSize(package.size) : QString();
         }
     } else if (index.column() == SizeCol && role == Qt::TextAlignmentRole) {
         return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
@@ -359,20 +368,20 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         return package.repo;
     case InfoRole:
         return qVariantFromValue(package.info);
-    case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
-        if (package.info == Transaction::InfoInstalled ||
-            package.info == Transaction::InfoCollectionInstalled) {
-            return i18n("To be Removed");
-        } else {
-            return i18n("To be Installed");
-        }
-    case KCategorizedSortFilterProxyModel::CategorySortRole:
+//    case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
+//        if (package.info == Transaction::InfoInstalled ||
+//            package.info == Transaction::InfoCollectionInstalled) {
+//            return i18n("To be Removed");
+//        } else {
+//            return i18n("To be Installed");
+//        }
+//    case KCategorizedSortFilterProxyModel::CategorySortRole:
         // USING 0 here seems to let things unsorted
-        return package.isPackage ? 1 : 0; // Packages comes after applications
+//        return package.isPackage ? 1 : 0; // Packages comes after applications
     case ApplicationId:
         return package.appId;
-    case InfoIconRole:
-        return PkIcons::packageIcon(package.info);
+//    case InfoIconRole:
+//        return PkIcons::packageIcon(package.info);
     default:
         return QVariant();
     }
@@ -489,11 +498,14 @@ void PackageModel::uncheckAvailablePackages()
 
 void PackageModel::finished()
 {
+    qDebug() << Q_FUNC_INFO << sender();
     Transaction *trans = qobject_cast<Transaction*>(sender());
     if (trans) {
+        qDebug() << Q_FUNC_INFO << trans->internalErrorMessage();
+
         // When pkd dies this method is called twice
         // pk-qt2 bug..
-        trans->disconnect(this, SLOT(finished()));
+//        trans->disconnect(this, SLOT(finished()));
     }
 
     // The whole structure is about to change
@@ -516,12 +528,12 @@ void PackageModel::fetchSizes()
         pkgs << p.packageID;
     }
     if (!pkgs.isEmpty()) {
-        m_fetchSizesTransaction = new Transaction(this);
-        connect(m_fetchSizesTransaction, SIGNAL(details(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)),
-                this, SLOT(updateSize(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)));
+        m_fetchSizesTransaction = PackageKit::Daemon::getDetails(pkgs);
+        connect(m_fetchSizesTransaction, SIGNAL(details(PackageKit::Details)),
+                this, SLOT(updateSize(PackageKit::Details)));
         connect(m_fetchSizesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(fetchSizesFinished()));
-        m_fetchSizesTransaction->getDetails(pkgs);
+//        m_fetchSizesTransaction->getDetails(pkgs);
     }
 }
 
@@ -539,31 +551,27 @@ void PackageModel::fetchSizesFinished()
     emit changed(!m_checkedPackages.isEmpty());
 }
 
-void PackageModel::updateSize(const QString &packageID,
-                              const QString &license,
-                              PackageKit::Transaction::Group group,
-                              const QString &detail,
-                              const QString &url,
-                              qulonglong size)
+void PackageModel::updateSize(const Details &details)
 {
-    Q_UNUSED(license)
-    Q_UNUSED(group)
-    Q_UNUSED(detail)
-    Q_UNUSED(url)
+    qDebug() << Q_FUNC_INFO << details.size();
+//    Q_UNUSED(license)
+//    Q_UNUSED(group)
+//    Q_UNUSED(detail)
+//    Q_UNUSED(url)
 
     // if size is 0 don't waste time looking for the package
-    if (size == 0) {
+    if (details.size() == 0) {
         return;
     }
 
     for (int i = 0; i < m_packages.size(); ++i) {
-        if (packageID == m_packages[i].packageID) {
-            m_packages[i].size = size;
+        if (details.packageId() == m_packages[i].packageID) {
+            m_packages[i].size = details.size();
             if (m_checkable) {
                 // updates the checked packages as well
-                if (m_checkedPackages.contains(packageID)) {
+                if (m_checkedPackages.contains(details.packageId())) {
                     // Avoid checking packages that aren't checked
-                    m_checkedPackages[packageID].size = size;
+                    m_checkedPackages[details.packageId()].size = details.size();
                 }
                 break;
             }
@@ -595,12 +603,11 @@ void PackageModel::fetchCurrentVersions()
     }
 
     if (!pkgs.isEmpty()) {
-        m_fetchInstalledVersionsTransaction = new Transaction(this);
+        m_fetchInstalledVersionsTransaction = Daemon::resolve(pkgs, Transaction::FilterInstalled);
         connect(m_fetchInstalledVersionsTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 this, SLOT(updateCurrentVersion(PackageKit::Transaction::Info,QString,QString)));
         connect(m_fetchInstalledVersionsTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(fetchCurrentVersionsFinished()));
-        m_fetchInstalledVersionsTransaction->resolve(pkgs, Transaction::FilterInstalled);
     }
 }
 
@@ -644,7 +651,8 @@ void PackageModel::updateCurrentVersion(Transaction::Info info, const QString &p
 void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
 {
     clear();
-    Transaction *transaction = new Transaction(this);
+    qDebug() << fetchCurrentVersions << selected;
+    Transaction *transaction = Daemon::getUpdates();
     if (selected) {
         connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 this, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
@@ -652,8 +660,8 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
         connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     }
-    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+//    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+//            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
 //    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
 //            m_busySeq, SLOT(stop()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
@@ -668,7 +676,7 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
 //    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
 //            this, SLOT(getUpdatesFinished()));
     // get all updates
-    transaction->getUpdates();
+//    transaction->getUpdates();
 
     Transaction::InternalError error = transaction->internalError();
     if (error) {

@@ -9,26 +9,26 @@ ELSE(CMAKE_SIZEOF_VOID_P EQUAL 4)
 ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
 
 set(libapper_SRCS
-    CategoryMatcher.cpp
-    PkIcons.cpp
-    PkStrings.cpp
-    ApplicationLauncher.cpp
-    ApplicationsDelegate.cpp
-    ApplicationSortFilterModel.cpp
-    CategoryDrawer.cpp
-    ChangesDelegate.cpp
-    TransactionDelegate.cpp
-    PkTransaction.cpp
-    PkTransactionWidget.cpp
-    PkTransactionProgressModel.cpp
-    RepoSig.cpp
-    LicenseAgreement.cpp
+#     CategoryMatcher.cpp
+#     PkIcons.cpp
+#     PkStrings.cpp
+#     ApplicationLauncher.cpp
+#     ApplicationsDelegate.cpp
+#     ApplicationSortFilterModel.cpp
+#     CategoryDrawer.cpp
+#     ChangesDelegate.cpp
+#     TransactionDelegate.cpp
+#     PkTransaction.cpp
+#     PkTransactionWidget.cpp
+#     PkTransactionProgressModel.cpp
+#     RepoSig.cpp
+#     LicenseAgreement.cpp
     PackageModel.cpp
-    CustomProgressBar.cpp
-    Requirements.cpp
-    PackageImportance.cpp
-    CategorizedView.cpp
-    InfoWidget.cpp
+#     CustomProgressBar.cpp
+#     Requirements.cpp
+#     PackageImportance.cpp
+#     CategorizedView.cpp
+#     InfoWidget.cpp
 )
 
 if(APPSTREAM)
@@ -38,26 +38,27 @@ if(APPSTREAM)
     set(libapper_SRCS ${libapper_SRCS} AppStream.cpp)
 endif()
 
-kde4_add_ui_files(libapper_SRCS
-    ApplicationLauncher.ui
-    PkTransactionWidget.ui
-    RepoSig.ui
-    LicenseAgreement.ui
-    Requirements.ui
-    InfoWidget.ui
-)
+# add_ui_files(libapper_SRCS
+#     ApplicationLauncher.ui
+#     PkTransactionWidget.ui
+#     RepoSig.ui
+#     LicenseAgreement.ui
+#     Requirements.ui
+#     InfoWidget.ui
+# )
 
-kde4_add_library(apper SHARED ${libapper_SRCS})
+add_library(apper SHARED ${libapper_SRCS})
+qt5_use_modules(apper DBus Core Widgets)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}
-		    ${GLIB2_INCLUDE_DIR}
-		    ${APPSTREAM_INCLUDE_DIRS}
-)
+#include_directories(${CMAKE_CURRENT_BINARY_DIR}
+#		    ${GLIB2_INCLUDE_DIR}
+#		    ${APPSTREAM_INCLUDE_DIRS}
+#)
 
 target_link_libraries(apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
-    ${QPACKAGEKIT2_LIBRARIES}
+    ${PackageKitQt5_LIBRARIES}
     ${APPSTREAM_LIBRARIES}
 )
 

@@ -12,15 +12,19 @@ ApplicationWindow {
 
     SystemPalette { id: sysPalette }
 
-    function removeForwardHistory() {
+    function addPage(dict) {
         // Remove history forward to the current location
         if (goNext.enabled) {
             historyModel.remove(mainView.currentIndex + 1, historyModel.count - (mainView.currentIndex + 1))
         }
+
+        historyModel.append(dict)
     }
 
     toolBar: ToolBar {
         RowLayout {
+            anchors.fill: parent
+
             ToolButton {
                 iconName: "go-previous"
                 enabled: mainView.currentIndex
@@ -36,17 +40,33 @@ ApplicationWindow {
 
             TextField {
                 id: searchText
+                focus: true
                 onAccepted: {
-                    console.debug(text)
+                    selectAll()
                     var currentPage = historyModel.get(mainView.currentIndex)
-                    if (currentPage.kind === "search" && currentPage.search === text) {
-                        console.debug("Same query, ignoring...")
+                    if (currentPage.page === "Search.qml" && currentPage.query === text) {
                         return
                     }
 
-                    removeForwardHistory()
-                    historyModel.append({"kind": "search", "search": text})
-                    mainView.currentIndex = historyModel.count - 1
+                    addPage({"page": "Search.qml", "query": text})
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            ToolButton {
+                id: home
+                iconName: "system-software-update"
+                text: qsTr("Updates")
+                onClicked: {
+                    var currentPage = historyModel.get(mainView.currentIndex)
+                    if (currentPage.page === "Updates.qml") {
+                        return
+                    }
+
+                    addPage({"page": "Updates.qml"})
                 }
             }
         }
@@ -56,10 +76,9 @@ ApplicationWindow {
         id: historyModel
 
         ListElement {
-            kind: "home"
-            cost: 2.45
+            page: "Home.qml"
+            query: "none"
         }
-//        onItemsInserted: mainView.currentIndex = historyModel.count - 1
     }
 
     ListView {
@@ -67,15 +86,13 @@ ApplicationWindow {
         anchors.fill: parent
         interactive: false
         orientation: ListView.Horizontal
+        highlightMoveDuration: 500
         model: historyModel
-        delegate: Text {
+        delegate: Page {
             height: ListView.view.height
             width: ListView.view.width
-            text: model.kind + ", search string: " + model.search
         }
-//        onAdd: currentIndex = historyModel.count
-//        onAdd: {
-//            currentIndex = historyModel.count
-//        }
+
+        onCountChanged: currentIndex = historyModel.count - 1
     }
 }

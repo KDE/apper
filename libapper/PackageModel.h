@@ -22,13 +22,12 @@
 #define PACKAGE_MODEL_H
 
 #include <QAbstractItemModel>
-#include <QAbstractItemView>
 #include <QMetaObject>
-#include <KIcon>
+#include <QIcon>
 
 #include <Transaction>
 
-class KDE_EXPORT PackageModel : public QAbstractItemModel
+class PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(bool checkable READ checkable WRITE setCheckable NOTIFY changed)
@@ -74,6 +73,8 @@ public:
     } InternalPackage;
 
     explicit PackageModel(QObject *parent = 0);
+
+    virtual QHash<int,QByteArray> roleNames() const;
 
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -122,12 +123,7 @@ public slots:
 
     void fetchSizes();
     void fetchSizesFinished();
-    void updateSize(const QString &packageID,
-                    const QString &license,
-                    PackageKit::Transaction::Group group,
-                    const QString &detail,
-                    const QString &url,
-                    qulonglong size);
+    void updateSize(const PackageKit::Details &details);
 
     void fetchCurrentVersions();
     void fetchCurrentVersionsFinished();
@@ -152,6 +148,7 @@ private:
     QHash<QString, InternalPackage> m_checkedPackages;
     PackageKit::Transaction *m_fetchSizesTransaction;
     PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
+    QHash<int, QByteArray> m_roles;
 };
 
 #endif

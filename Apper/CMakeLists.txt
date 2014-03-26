@@ -21,7 +21,7 @@ qt5_use_modules(apper_executable Quick DBus Widgets)
 
 target_link_libraries(apper_executable
     ${PackageKitQt5_0_LIBRARIES}
-#    apper
+    apper
 )
 
 set_target_properties(apper_executable PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)

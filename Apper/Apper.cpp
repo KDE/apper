@@ -44,6 +44,10 @@
 #include <QStandardPaths>
 #include <QDebug>
 
+#include <PackageModel.h>
+
+#include <qqml.h>
+
 Apper::Apper()
  : QObject(),
 //   m_pkUi(0),
@@ -56,6 +60,8 @@ Apper::Apper()
 //    m_view
     m_view->setSource(QUrl(QLatin1String("qrc:/qml/main.qml")));
     m_view->show();*/
+
+    qmlRegisterType<PackageModel>("org.packagekit", 1, 0, "PackageModel");
 
     QQmlApplicationEngine *engine = new QQmlApplicationEngine(QUrl(QLatin1String("qrc:/qml/main.qml")));
 }
