@@ -51,7 +51,6 @@ AppStream::AppStream(QObject *parent)
 #ifdef HAVE_APPSTREAM
     // create new AppStream database and screenshot service
     m_asDB = as_database_new();
-    // m_asScreenshots = as_screenshot_service_new();
 #endif //HAVE_APPSTREAM
 }
 
@@ -59,7 +58,6 @@ AppStream::~AppStream()
 {
 #ifdef HAVE_APPSTREAM
     g_object_unref(m_asDB);
-    //g_object_unref(m_asScreenshots);
 #endif
 }
 
@@ -82,10 +80,12 @@ bool AppStream::open()
 
     for (uint i = 0; i < cptArray->len; i++) {
         AsComponent *cpt;
+        GPtrArray *sshot_array;
+        AsScreenshot *sshot;
         cpt = (AsComponent*) g_ptr_array_index(cptArray, i);
-		// we only want desktop apps at time
-        if (as_component_get_ctype (cpt) != AS_COMPONENT_TYPE_DESKTOP_APP)
-			continue;
+        // we only want desktop apps at time
+        if (as_component_get_kind (cpt) != AS_COMPONENT_KIND_DESKTOP_APP)
+            continue;
 
         Application app;
         // Application name
@@ -95,7 +95,7 @@ bool AppStream::open()
         QString pkgName = QString::fromUtf8(as_component_get_pkgname(cpt));
 
         // Desktop file
-        app.id = QString::fromUtf8(as_component_get_desktop_file(cpt));
+        app.id = QString::fromUtf8(as_component_get_idname(cpt));
 
         // Summary
         app.summary = QString::fromUtf8(as_component_get_summary(cpt));
@@ -116,6 +116,34 @@ bool AppStream::open()
         }
         g_strfreev(cats);
 
+        // add default screenshot urls
+        sshot_array = as_component_get_screenshots (cpt);
+
+        // find default screenshot, if possible
+        sshot = NULL;
+        for (uint i = 0; i < sshot_array->len; i++) {
+            sshot = (AsScreenshot*) g_ptr_array_index (sshot_array, 0);
+            if (as_screenshot_get_kind (sshot) == AS_SCREENSHOT_KIND_DEFAULT)
+                break;
+        }
+
+        if (sshot != NULL) {
+            GPtrArray *imgs;
+            imgs = as_screenshot_get_images (sshot);
+            for (uint i = 0; i < imgs->len; i++) {
+                AsImage *img;
+                img = (AsImage*) g_ptr_array_index (imgs, i);
+                if ((as_image_get_kind (img) == AS_IMAGE_KIND_SOURCE) && (app.screenshot.isEmpty())) {
+                    app.screenshot = QString::fromUtf8(as_image_get_url (img));
+                } else if ((as_image_get_kind (img) == AS_IMAGE_KIND_THUMBNAIL) && (app.thumbnail.isEmpty())) {
+                    app.thumbnail = QString::fromUtf8(as_image_get_url (img));
+                }
+
+                if ((!app.screenshot.isEmpty()) && (!app.thumbnail.isEmpty()))
+                    break;
+            }
+        }
+
         m_appInfo.insertMulti(pkgName, app);
     }
     g_ptr_array_unref(cptArray);
@@ -128,7 +156,7 @@ bool AppStream::open()
 
 QList<AppStream::Application> AppStream::applications(const QString &pkgName) const
 {
-    return m_appInfo.values(pkgName);;
+    return m_appInfo.values(pkgName);
 }
 
 QString AppStream::genericIcon(const QString &pkgName) const
@@ -163,9 +191,13 @@ QStringList AppStream::findPkgNames(const CategoryMatcher &parser) const
 QString AppStream::thumbnail(const QString &pkgName) const
 {
 #ifdef HAVE_APPSTREAM
-    // FIXME
-    const gchar *url = ""; // as_screenshot_service_get_thumbnail_url(m_asScreenshots, pkgName.toLatin1().data());
-    return QLatin1String(url);
+    QString url = "";
+    if (m_appInfo.contains(pkgName)) {
+        Application app = m_appInfo.value(pkgName);
+        url = app.thumbnail;
+    }
+
+    return url;
 #else
     Q_UNUSED(pkgName)
     return QString();
@@ -175,9 +207,13 @@ QString AppStream::thumbnail(const QString &pkgName) const
 QString AppStream::screenshot(const QString &pkgName) const
 {
 #ifdef HAVE_APPSTREAM
-    // FIXME
-    const gchar *url = ""; // as_screenshot_service_get_screenshot_url(m_asScreenshots, pkgName.toLatin1().data());
-    return QLatin1String(url);
+    QString url = "";
+    if (m_appInfo.contains(pkgName)) {
+        Application app = m_appInfo.value(pkgName);
+        url = app.screenshot;
+    }
+
+    return url;
 #else
     Q_UNUSED(pkgName)
     return QString();

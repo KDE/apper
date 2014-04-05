@@ -44,6 +44,8 @@ class KDE_EXPORT AppStream : public QObject {
             QString icon;
             QString id;
             QStringList categories;
+            QString screenshot;
+            QString thumbnail;
         };
         static AppStream* instance();
         virtual ~AppStream();
