@@ -27,6 +27,7 @@ install(FILES apper.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES apper_installer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES apper_settings.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES apper_updates.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(FILES apper.appdata.xml DESTINATION share/appdata)
 
 add_subdirectory(Icons)
 add_subdirectory(Animations)

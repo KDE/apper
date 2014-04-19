@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>apper.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <project_license>GPL-2+</project_license>
+  <name>Apper</name>
+  <summary>KDE package management tool</summary>
+  <description>
+    <p>
+      Apper is a graphical management tool for packages and applications
+      shipped with a Linux distribution.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Distribution-agnostic management of software packages</li>
+      <li>Application management for users unexperienced with packages</li>
+      <li>Editor for software sources and PackageKit settings</li>
+      <li>System software updates notifier and installer</li>
+	  <li>Close integration with the KDE Plasma desktop</li>
+    </ul>
+  </description>
+  <screenshots>
+    <screenshot type="default" width="883" height="656">http://people.freedesktop.org/~mak/appstream/upstream-work/screenshots/apper-1.png</screenshot>
+  </screenshots>
+  <url type="homepage">https://projects.kde.org/projects/extragear/sysadmin/apper/</url>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=apper</url>
+  <project_group>KDE</project_group>
+  <provides>
+    <binary>apper</binary>
+  </provides>
+</component>
