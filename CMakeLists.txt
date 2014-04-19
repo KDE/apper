@@ -47,9 +47,11 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 include(FindPkgConfig)
-set(QPACKAGEKIT_MIN_VERSION 0.8.8)
-pkg_check_modules(QPACKAGEKIT2 REQUIRED packagekit-qt2>=${QPACKAGEKIT_MIN_VERSION})
-macro_log_feature(QPACKAGEKIT2_FOUND "packagekit-qt2" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
+
+find_package(PackageKitQt4 0.9.0 REQUIRED)
+#set(QPACKAGEKIT_MIN_VERSION 0.9.0)
+#pkg_check_modules(PackageKitQt4 REQUIRED packagekit-qt4>=${QPACKAGEKIT_MIN_VERSION})
+#macro_log_feature(PackageKitQt4_FOUND "packagekit-qt4" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
 include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS}
@@ -59,11 +61,10 @@ include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${KDE4_INCLUDES}
-    ${QPACKAGEKIT2_INCLUDE_DIRS}
-    ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2
+    ${PackageKitQt4_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libapper)
 
-message(STATUS "QPK includ dir: " ${QPACKAGEKIT2_INCLUDEDIR}/PackageKit/packagekit-qt2)
+message(STATUS "PackageKit include dir: " ${PackageKitQt4_INCLUDE_DIR})
 
 add_subdirectory(libapper)
 add_subdirectory(ApperKCM)
