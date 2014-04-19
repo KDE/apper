@@ -15,7 +15,7 @@ find_package(Qt5 COMPONENTS
     Widgets
 )
 
-## CMakeLists for NetworkManagerQt library
+## Enable Qt's automoc generator
 set(CMAKE_AUTOMOC ON)
 
 # As moc files are generated in the binary dir, tell CMake
