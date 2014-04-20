@@ -57,7 +57,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 target_link_libraries(apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
-    ${QPACKAGEKIT2_LIBRARIES}
+    ${QT_QTSQL_LIBRARY}
+    ${PackageKitQt4_LIBRARIES}
     ${APPSTREAM_LIBRARIES}
 )
 

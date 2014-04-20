@@ -46,8 +46,6 @@ private slots:
     void modelChanged();
 
 private:
-    void checkTransaction(Transaction *trans);
-
     QStringList  m_installPackages;
     QStringList  m_installProvides;
     QStringList  m_installFiles;

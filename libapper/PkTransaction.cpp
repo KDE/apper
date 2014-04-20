@@ -72,10 +72,11 @@ public:
     PkTransactionProgressModel *progressModel;
     QWidget *parentWindow;
     QDBusObjectPath tid;
+    Transaction *transaction;
 };
 
 PkTransaction::PkTransaction(QObject *parent) :
-    Transaction(parent),
+    QObject(parent),
     d(new PkTransactionPrivate)
 {
     // for sanity we are finished till some transaction is set
@@ -95,28 +96,7 @@ PkTransaction::PkTransaction(QObject *parent) :
     d->simulateModel = 0;
     d->progressModel = new PkTransactionProgressModel(this);
     d->parentWindow = qobject_cast<QWidget*>(parent);
-
-    connect(this, SIGNAL(repoDetail(QString,QString,bool)),
-            d->progressModel, SLOT(currentRepo(QString,QString,bool)));
-    connect(this, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
-    connect(this, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
-            d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
-
-    // Required actions
-    connect(this, SIGNAL(changed()),
-            SLOT(slotChanged()));
-    connect(this, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            SLOT(slotErrorCode(PackageKit::Transaction::Error,QString)));
-    connect(this, SIGNAL(eulaRequired(QString,QString,QString,QString)),
-            SLOT(slotEulaRequired(QString,QString,QString,QString)));
-    connect(this, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
-            SLOT(slotMediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
-    connect(this, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
-            SLOT(slotRepoSignature(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
-
-    connect(this, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            SLOT(slotFinished(PackageKit::Transaction::Exit)));
+    d->transaction = 0;
 }
 
 PkTransaction::~PkTransaction()
@@ -128,17 +108,12 @@ PkTransaction::~PkTransaction()
 
 void PkTransaction::installFiles(const QStringList &files)
 {
-    if (Daemon::global()->actions() & Transaction::RoleInstallFiles) {
+    if (Daemon::global()->roles() & Transaction::RoleInstallFiles) {
         d->originalRole = Transaction::RoleInstallFiles;
         d->files = files;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
-        setupTransaction();
-        Transaction::installFiles(files, d->flags);
-        if (internalError()) {
-            showSorry(i18n("Failed to simulate file install"),
-                      PkStrings::daemonError(internalError()));
-        }
+        setupTransaction(Daemon::installFiles(files, d->flags));
     } else {
         showError(i18n("Current backend does not support installing files."), i18n("Error"));
     }
@@ -146,17 +121,12 @@ void PkTransaction::installFiles(const QStringList &files)
 
 void PkTransaction::installPackages(const QStringList &packages)
 {
-    if (Daemon::global()->actions() & Transaction::RoleInstallPackages) {
+    if (Daemon::global()->roles() & Transaction::RoleInstallPackages) {
         d->originalRole = Transaction::RoleInstallPackages;
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
-        setupTransaction();
-        Transaction::installPackages(d->packages, d->flags);
-        if (internalError()) {
-            showSorry(i18n("Failed to simulate package install"),
-                      PkStrings::daemonError(internalError()));
-        }
+        setupTransaction(Daemon::installPackages(d->packages, d->flags));
     } else {
         showError(i18n("Current backend does not support installing packages."), i18n("Error"));
     }
@@ -164,18 +134,13 @@ void PkTransaction::installPackages(const QStringList &packages)
 
 void PkTransaction::removePackages(const QStringList &packages)
 {
-    if (Daemon::global()->actions() & Transaction::RoleRemovePackages) {
+    if (Daemon::global()->roles() & Transaction::RoleRemovePackages) {
         d->originalRole = Transaction::RoleRemovePackages;
         d->allowDeps = false; // Default to avoid dependencies removal unless simulate says so
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
-        setupTransaction();
-        Transaction::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
-        if (internalError()) {
-            showSorry(i18n("Failed to simulate package removal"),
-                      PkStrings::daemonError(internalError()));
-        }
+        setupTransaction(Daemon::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags));
     } else {
         showError(i18n("The current backend does not support removing packages."), i18n("Error"));
     }
@@ -183,7 +148,7 @@ void PkTransaction::removePackages(const QStringList &packages)
 
 void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnly)
 {
-    if (Daemon::global()->actions() & Transaction::RoleUpdatePackages) {
+    if (Daemon::global()->roles() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
         d->packages = packages;
         if (downloadOnly) {
@@ -193,12 +158,7 @@ void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnl
             d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
         }
 
-        setupTransaction();
-        Transaction::updatePackages(d->packages, d->flags);
-        if (internalError()) {
-            showSorry(i18n("Failed to simulate package update"),
-                      PkStrings::daemonError(internalError()));
-        }
+        setupTransaction(Daemon::updatePackages(d->packages, d->flags));
     } else {
         showError(i18n("The current backend does not support updating packages."), i18n("Error"));
     }
@@ -207,84 +167,27 @@ void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnl
 void PkTransaction::refreshCache(bool force)
 {
     reset();
-    Transaction::refreshCache(force);
-}
-
-void PkTransaction::setupTransaction()
-{
-    reset();
-    if (d->flags & Transaction::TransactionFlagSimulate) {
-        d->simulateModel = new PackageModel(this);
-        connect(this, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    }
-
-#ifdef HAVE_DEBCONFKDE
-    QString _tid = tid().path();
-    QString socket;
-    // Build a socket path like /tmp/1761_edeceabd_data_debconf
-    socket = QLatin1String("/tmp") % _tid % QLatin1String("_debconf");
-    QDBusMessage message;
-    message = QDBusMessage::createMethodCall(QLatin1String("org.kde.apperd"),
-                                             QLatin1String("/"),
-                                             QLatin1String("org.kde.apperd"),
-                                             QLatin1String("SetupDebconfDialog"));
-    // Use our own cached tid to avoid crashes
-    message << qVariantFromValue(_tid);
-    message << qVariantFromValue(socket);
-    if (d->parentWindow) {
-        message << qVariantFromValue(static_cast<uint>(d->parentWindow->effectiveWinId()));
-    } else {
-        message << qVariantFromValue(0u);
-    }
-
-    if (!QDBusConnection::sessionBus().send(message)) {
-        kWarning() << "Failed to put SetupDebconfDialog message in DBus queue";
-    }
-
-    setHints(QLatin1String("frontend-socket=") % socket);
-#endif //HAVE_DEBCONFKDE
+    setupTransaction(Daemon::refreshCache(force));
 }
 
 void PkTransaction::installPackages()
 {
-    setupTransaction();
-    Transaction::installPackages(d->packages, d->flags);
-    if (internalError()) {
-        showSorry(i18n("Failed to install package"),
-                  PkStrings::daemonError(internalError()));
-    }
+    setupTransaction(Daemon::installPackages(d->packages, d->flags));
 }
 
 void PkTransaction::installFiles()
 {
-    setupTransaction();
-    Transaction::installFiles(d->files, d->flags);
-    if (internalError()) {
-        showSorry(i18np("Failed to install file",
-                        "Failed to install files", d->files.size()),
-                  PkStrings::daemonError(internalError()));
-    }
+    setupTransaction(Daemon::installFiles(d->files, d->flags));
 }
 
 void PkTransaction::removePackages()
 {
-    setupTransaction();
-    Transaction::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags);
-    if (internalError()) {
-        showSorry(i18n("Failed to remove package"),
-                  PkStrings::daemonError(internalError()));
-    }
+    setupTransaction(Daemon::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags));
 }
 
 void PkTransaction::updatePackages()
 {
-    setupTransaction();
-    Transaction::updatePackages(d->packages, d->flags);
-    if (internalError()) {
-        showSorry(i18n("Failed to update package"),
-                  PkStrings::daemonError(internalError()));
-    }
+    setupTransaction(Daemon::updatePackages(d->packages, d->flags));
 }
 
 void PkTransaction::requeueTransaction()
@@ -399,11 +302,7 @@ void PkTransaction::acceptEula()
     if (eula) {
         kDebug() << "Accepting EULA" << eula->id();
         reset();
-        Transaction::acceptEula(eula->id());
-        if (internalError()) {
-            showSorry(i18n("Failed to install signature"),
-                      PkStrings::daemonError(internalError()));
-        }
+        setupTransaction(Daemon::acceptEula(eula->id()));
     } else {
         kWarning() << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
     }
@@ -411,14 +310,14 @@ void PkTransaction::acceptEula()
 
 void PkTransaction::slotChanged()
 {
-    d->downloadSizeRemaining = downloadSizeRemaining();
-    d->role = role();
+    d->downloadSizeRemaining = d->transaction->downloadSizeRemaining();
+    d->role = d->transaction->role();
 
     if (!d->jobWatcher) {
         return;
     }
 
-    QDBusObjectPath _tid = tid();
+    QDBusObjectPath _tid = d->transaction->tid();
     if (d->tid != _tid && !(d->flags & Transaction::TransactionFlagSimulate)) {
         d->tid = _tid;
         // if the transaction changed and
@@ -486,11 +385,7 @@ void PkTransaction::installSignature()
     if (repoSig)  {
         kDebug() << "Installing Signature" << repoSig->keyID();
         reset();
-        Transaction::installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID());
-        if (internalError()) {
-            showSorry(i18n("Failed to install signature"),
-                      PkStrings::daemonError(internalError()));
-        }
+        setupTransaction(Daemon::installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID()));
     } else {
         kWarning() << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
     }
@@ -502,7 +397,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
     d->progressModel->clear();
 
     Requirements *requires = 0;
-    Transaction::Role _role = role();
+    Transaction::Role _role = d->transaction->role();
     kDebug() << status << _role;
 
     switch (_role) {
@@ -572,11 +467,9 @@ void PkTransaction::slotFinished(Transaction::Exit status)
                         d->launcher, SLOT(files(QString,QStringList)));
 
                 reset();
-                getFiles(d->newPackages);
+                setupTransaction(Daemon::getFiles(d->newPackages));
                 d->newPackages.clear();
-                if (!internalError()) {
-                    return; // avoid the exit code
-                }
+                return; // avoid the exit code
             } else if (_role == Transaction::RoleGetFiles &&
                        d->launcher &&
                        d->launcher->hasApplications()) {
@@ -625,13 +518,58 @@ PkTransaction::ExitStatus PkTransaction::exitStatus() const
 
 bool PkTransaction::isFinished() const
 {
-    kDebug() << status() << role();
-    return status() == Transaction::StatusFinished;
+    kDebug() << d->transaction->status() << d->transaction->role();
+    return d->transaction->status() == Transaction::StatusFinished;
 }
 
 PackageModel *PkTransaction::simulateModel() const
 {
     return d->simulateModel;
+}
+
+uint PkTransaction::percentage() const
+{
+    return d->transaction->percentage();
+}
+
+uint PkTransaction::remainingTime() const
+{
+    return d->transaction->remainingTime();
+}
+
+uint PkTransaction::speed() const
+{
+    return d->transaction->speed();
+}
+
+qulonglong PkTransaction::downloadSizeRemaining() const
+{
+    return d->transaction->downloadSizeRemaining();
+}
+
+Transaction::Status PkTransaction::status() const
+{
+    return d->transaction->status();
+}
+
+Transaction::Role PkTransaction::role() const
+{
+    return d->transaction->role();
+}
+
+bool PkTransaction::allowCancel() const
+{
+    return d->transaction->allowCancel();
+}
+
+Transaction::TransactionFlags PkTransaction::transactionFlags() const
+{
+    return d->transaction->transactionFlags();
+}
+
+void PkTransaction::cancel()
+{
+    d->transaction->cancel();
 }
 
 void PkTransaction::setTrusted(bool trusted)
@@ -667,9 +605,67 @@ void PkTransaction::reset()
     // Clear the model to don't keep trash when reusing the transaction
     d->progressModel->clear();
 
-    Transaction::reset();
-
     emit changed();
+}
+
+void PkTransaction::setupTransaction(Transaction *transaction)
+{
+    reset();
+
+    d->transaction = transaction;
+    connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
+            d->progressModel, SLOT(currentRepo(QString,QString,bool)));
+    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(transaction, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
+            d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
+
+    // Required actions
+    connect(transaction, SIGNAL(changed()),
+            SLOT(slotChanged()));
+    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+            SLOT(slotErrorCode(PackageKit::Transaction::Error,QString)));
+    connect(transaction, SIGNAL(eulaRequired(QString,QString,QString,QString)),
+            SLOT(slotEulaRequired(QString,QString,QString,QString)));
+    connect(transaction, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
+            SLOT(slotMediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
+    connect(transaction, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
+            SLOT(slotRepoSignature(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
+
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            SLOT(slotFinished(PackageKit::Transaction::Exit)));
+
+    if (d->flags & Transaction::TransactionFlagSimulate) {
+        d->simulateModel = new PackageModel(this);
+        connect(d->transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    }
+
+#ifdef HAVE_DEBCONFKDE
+    QString _tid = tid().path();
+    QString socket;
+    // Build a socket path like /tmp/1761_edeceabd_data_debconf
+    socket = QLatin1String("/tmp") % _tid % QLatin1String("_debconf");
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall(QLatin1String("org.kde.apperd"),
+                                             QLatin1String("/"),
+                                             QLatin1String("org.kde.apperd"),
+                                             QLatin1String("SetupDebconfDialog"));
+    // Use our own cached tid to avoid crashes
+    message << qVariantFromValue(_tid);
+    message << qVariantFromValue(socket);
+    if (d->parentWindow) {
+        message << qVariantFromValue(static_cast<uint>(d->parentWindow->effectiveWinId()));
+    } else {
+        message << qVariantFromValue(0u);
+    }
+
+    if (!QDBusConnection::sessionBus().send(message)) {
+        kWarning() << "Failed to put SetupDebconfDialog message in DBus queue";
+    }
+
+    setHints(QLatin1String("frontend-socket=") % socket);
+#endif //HAVE_DEBCONFKDE
 }
 
 void PkTransaction::showDialog(KDialog *dlg)

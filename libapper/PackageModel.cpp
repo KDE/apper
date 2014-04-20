@@ -25,6 +25,8 @@
 #include "PackageModel.h"
 #include <PkStrings.h>
 
+#include <Daemon>
+
 #include <QPainter>
 #include <QStringBuilder>
 
@@ -516,12 +518,11 @@ void PackageModel::fetchSizes()
         pkgs << p.packageID;
     }
     if (!pkgs.isEmpty()) {
-        m_fetchSizesTransaction = new Transaction(this);
+        m_fetchSizesTransaction = Daemon::getDetails(pkgs);
         connect(m_fetchSizesTransaction, SIGNAL(details(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)),
                 this, SLOT(updateSize(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)));
         connect(m_fetchSizesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(fetchSizesFinished()));
-        m_fetchSizesTransaction->getDetails(pkgs);
     }
 }
 
@@ -595,12 +596,11 @@ void PackageModel::fetchCurrentVersions()
     }
 
     if (!pkgs.isEmpty()) {
-        m_fetchInstalledVersionsTransaction = new Transaction(this);
+        m_fetchInstalledVersionsTransaction = Daemon::resolve(pkgs, Transaction::FilterInstalled);;
         connect(m_fetchInstalledVersionsTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 this, SLOT(updateCurrentVersion(PackageKit::Transaction::Info,QString,QString)));
         connect(m_fetchInstalledVersionsTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(fetchCurrentVersionsFinished()));
-        m_fetchInstalledVersionsTransaction->resolve(pkgs, Transaction::FilterInstalled);
     }
 }
 
@@ -644,7 +644,7 @@ void PackageModel::updateCurrentVersion(Transaction::Info info, const QString &p
 void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
 {
     clear();
-    Transaction *transaction = new Transaction(this);
+    Transaction *transaction = Daemon::getUpdates();
     if (selected) {
         connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 this, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
@@ -668,15 +668,6 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
 //    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
 //            this, SLOT(getUpdatesFinished()));
     // get all updates
-    transaction->getUpdates();
-
-    Transaction::InternalError error = transaction->internalError();
-    if (error) {
-        transaction->deleteLater();
-//        KMessageBox::sorry(this, PkStrings::daemonError(error));
-    } else {
-//        m_busySeq->start();
-    }
 }
 
 void PackageModel::toggleSelection(const QString &packageID)

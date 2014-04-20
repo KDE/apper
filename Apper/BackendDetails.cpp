@@ -50,7 +50,7 @@ BackendDetails::BackendDetails(QWidget *parent) :
     ui->distroL->setText(Daemon::global()->distroID());
 
     // METHODS - Setup backend supported methods
-    Transaction::Roles actions = Daemon::global()->actions();
+    Transaction::Roles actions = Daemon::global()->roles();// TODO this is async now
     ui->getUpdatesCB->setChecked(actions & Transaction::RoleGetUpdates);
     ui->getDistroUpgradesCB->setChecked(actions & Transaction::RoleGetDistroUpgrades);
     ui->refreshCacheCB->setChecked(actions & Transaction::RoleRefreshCache);
@@ -64,8 +64,8 @@ BackendDetails::BackendDetails(QWidget *parent) :
     ui->updatePackageCB->setChecked(actions & Transaction::RoleUpdatePackages);
     ui->installPackageCB->setChecked(actions & Transaction::RoleInstallPackages);
     ui->removePackageCB->setChecked(actions & Transaction::RoleRemovePackages);
-    ui->getDependsCB->setChecked(actions & Transaction::RoleGetDepends);
-    ui->getRequiresCB->setChecked(actions & Transaction::RoleGetRequires);
+    ui->getDependsCB->setChecked(actions & Transaction::RoleDependsOn);
+    ui->getRequiresCB->setChecked(actions & Transaction::RoleRequiredBy);
     ui->getUpdateDetailCB->setChecked(actions & Transaction::RoleGetUpdateDetail);
     ui->getDescriptionCB->setChecked(actions & Transaction::RoleGetDetails);
     ui->getFilesCB->setChecked(actions & Transaction::RoleRefreshCache);

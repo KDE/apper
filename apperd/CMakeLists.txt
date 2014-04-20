@@ -22,7 +22,7 @@ target_link_libraries(kded_apperd
     ${KDE4_KIO_LIBS}
     ${KDE4_SOLID_LIBS}
     ${KDE4WORKSPACE_KWORKSPACE_LIBS}
-    ${QPACKAGEKIT2_LIBRARIES}
+    ${PackageKitQt4_LIBRARIES}
     ${DEBCONF_KDE_LIB}
     apper
 )

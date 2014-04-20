@@ -86,17 +86,15 @@ CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *pare
 //                              "const QString &summary",
 //                              "dialog-cancel");
 #else
+    QDBusPendingReply<QList<QDBusObjectPath> > transactions = Daemon::getTransactionList();
+    transactions.waitForFinished();
     if (m_roles & Transaction::RoleGetCategories
-        && Daemon::global()->getTransactionList().isEmpty()) {
-        Transaction *trans = new Transaction(this);
+        && transactions.value().isEmpty()) {
+        Transaction *trans = Daemon::getCategories();
         connect(trans, SIGNAL(category(QString,QString,QString,QString,QString)),
                 this, SLOT(category(QString,QString,QString,QString,QString)));
         connect(trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SIGNAL(finished()));
-        trans->getCategories();
-        if (trans->internalError()) {
-            fillWithStandardGroups();
-        }
     } else {
         fillWithStandardGroups();
     }

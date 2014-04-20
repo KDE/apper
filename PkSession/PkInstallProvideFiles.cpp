@@ -22,6 +22,8 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
+#include <Daemon>
+
 #include <PkStrings.h>
 
 #include <KLocale>
@@ -78,20 +80,13 @@ PkInstallProvideFiles::~PkInstallProvideFiles()
 void PkInstallProvideFiles::search()
 {
     PkTransaction *transaction = new PkTransaction(this);
+    transaction->setupTransaction(Daemon::searchFiles(m_args,
+                                                      Transaction::FilterArch | Transaction::FilterNewest));
     setTransaction(Transaction::RoleSearchFile, transaction);
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    transaction->searchFiles(m_args, Transaction::FilterArch | Transaction::FilterNewest);
-    if (transaction->internalError()) {
-        QString msg = i18n("Failed to start search file transaction");
-        if (showWarning()) {
-            setError(msg,
-                     PkStrings::daemonError(transaction->internalError()));
-        }
-        sendErrorFinished(Failed, msg);
-    }
 }
 
 void PkInstallProvideFiles::notFound()

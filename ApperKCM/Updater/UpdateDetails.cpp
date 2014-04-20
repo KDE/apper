@@ -20,6 +20,7 @@
 
 #include "UpdateDetails.h"
 
+#include <Daemon>
 #include <PkStrings.h>
 
 #include <KMessageBox>
@@ -103,30 +104,22 @@ void UpdateDetails::setPackage(const QString &packageId, Transaction::Info updat
                    this, SLOT(display()));
     }
 
-    m_transaction = new Transaction(this);
+    m_transaction = Daemon::getUpdateDetail(m_packageId);
     connect(m_transaction, SIGNAL(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)),
             this, SLOT(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)));
     connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(display()));
-    m_transaction->getUpdateDetail(m_packageId);
-    Transaction::InternalError error = m_transaction->internalError();
-    if (error) {
-        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   this, SLOT(display()));
-        m_transaction = 0;
-        KMessageBox::sorry(this, PkStrings::daemonError(error));
-    } else {
-        if (maximumSize().height() == 0) {
-            // Expand the panel
-            m_expandPanel->setDirection(QAbstractAnimation::Forward);
-            m_expandPanel->start();
-        } else if (m_fadeDetails->currentValue().toReal() != 0) {
-            // Hide the old description
-            m_fadeDetails->setDirection(QAbstractAnimation::Backward);
-            m_fadeDetails->start();
-        }
-        m_busySeq->start();
+
+    if (maximumSize().height() == 0) {
+        // Expand the panel
+        m_expandPanel->setDirection(QAbstractAnimation::Forward);
+        m_expandPanel->start();
+    } else if (m_fadeDetails->currentValue().toReal() != 0) {
+        // Hide the old description
+        m_fadeDetails->setDirection(QAbstractAnimation::Backward);
+        m_fadeDetails->start();
     }
+    m_busySeq->start();
 }
 
 void UpdateDetails::hide()

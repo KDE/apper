@@ -97,10 +97,10 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         ui->descriptionW->setWidgetResizable(true);
     }
 
-    if (roles & PackageKit::Transaction::RoleGetDepends) {
+    if (roles & PackageKit::Transaction::RoleDependsOn) {
         action = menu->addAction(i18n("Depends On"));
         action->setCheckable(true);
-        action->setData(PackageKit::Transaction::RoleGetDepends);
+        action->setData(PackageKit::Transaction::RoleDependsOn);
         m_actionGroup->addAction(action);
         // Sets a transparent background
         QWidget *actionsViewport = ui->dependsOnLV->viewport();
@@ -126,10 +126,10 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
         ui->dependsOnLV->header()->hideSection(PackageModel::SizeCol);
     }
 
-    if (roles & PackageKit::Transaction::RoleGetRequires) {
+    if (roles & PackageKit::Transaction::RoleRequiredBy) {
         action = menu->addAction(i18n("Required By"));
         action->setCheckable(true);
-        action->setData(PackageKit::Transaction::RoleGetRequires);
+        action->setData(PackageKit::Transaction::RoleRequiredBy);
         m_actionGroup->addAction(action);
         // Sets a transparent background
         QWidget *actionsViewport = ui->requiredByLV->viewport();
@@ -352,13 +352,13 @@ void PackageDetails::actionActivated(QAction *action)
             return;
         }
         break;
-    case PackageKit::Transaction::RoleGetDepends:
+    case PackageKit::Transaction::RoleDependsOn:
         if (m_hasDepends) {
             display();
             return;
         }
         break;
-    case PackageKit::Transaction::RoleGetRequires:
+    case PackageKit::Transaction::RoleRequiredBy:
         if (m_hasRequires) {
             display();
             return;
@@ -373,51 +373,44 @@ void PackageDetails::actionActivated(QAction *action)
     }
 
     // we don't have the data
-    m_transaction = new PackageKit::Transaction(this);
     kDebug() << "New transaction";
-    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(finished()));
     switch (role) {
     case PackageKit::Transaction::RoleGetDetails:
+        m_transaction = Daemon::getDetails(m_packageID);
         connect(m_transaction, SIGNAL(details(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)),
                 this, SLOT(description(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)));
-        m_transaction->getDetails(m_packageID);
         break;
-    case PackageKit::Transaction::RoleGetDepends:
+    case PackageKit::Transaction::RoleDependsOn:
         m_dependsModel->clear();
+        m_transaction = Daemon::dependsOn(m_packageID, PackageKit::Transaction::FilterNone, false);
         connect(m_transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 m_dependsModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_dependsModel, SLOT(finished()));
-        m_transaction->getDepends(m_packageID, PackageKit::Transaction::FilterNone, false);
         break;
-    case PackageKit::Transaction::RoleGetRequires:
+    case PackageKit::Transaction::RoleRequiredBy:
         m_requiresModel->clear();
+        m_transaction = Daemon::requiredBy(m_packageID, PackageKit::Transaction::FilterNone, false);
         connect(m_transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 m_requiresModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 m_requiresModel, SLOT(finished()));
-        m_transaction->getRequires(m_packageID, PackageKit::Transaction::FilterNone, false);
         break;
     case PackageKit::Transaction::RoleGetFiles:
         m_currentFileList.clear();
+        m_transaction = Daemon::getFiles(m_packageID);
         connect(m_transaction, SIGNAL(files(QString,QStringList)),
                 this, SLOT(files(QString,QStringList)));
-        m_transaction->getFiles(m_packageID);
         break;
+    default:
+        qWarning() << Q_FUNC_INFO << "Oops, unhandled role, please report" << role;
+        return;
     }
+    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            this, SLOT(finished()));
     kDebug() <<"transaction running";
 
-    PackageKit::Transaction::InternalError error = m_transaction->internalError();
-    if (error) {
-        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   this, SLOT(finished()));
-        m_transaction = 0;
-        kDebug() << "transaction running" << error << PkStrings::daemonError(error);
-        KMessageBox::sorry(this, PkStrings::daemonError(error));
-    } else {
-        m_busySeq->start();
-    }
+    m_busySeq->start();
 }
 
 void PackageDetails::resultJob(KJob *job)
@@ -486,7 +479,7 @@ void PackageDetails::display()
                     fadeIn = true;
                 }
                 break;
-            case PackageKit::Transaction::RoleGetDepends:
+            case PackageKit::Transaction::RoleDependsOn:
                 if (m_hasDepends) {
                     if (ui->stackedWidget->currentWidget() != ui->pageDepends) {
                         ui->stackedWidget->setCurrentWidget(ui->pageDepends);
@@ -494,7 +487,7 @@ void PackageDetails::display()
                     fadeIn = true;
                 }
                 break;
-            case PackageKit::Transaction::RoleGetRequires:
+            case PackageKit::Transaction::RoleRequiredBy:
                 if (m_hasRequires) {
                     if (ui->stackedWidget->currentWidget() != ui->pageRequired) {
                         ui->stackedWidget->setCurrentWidget(ui->pageRequired);
@@ -710,6 +703,7 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
 QString PackageDetails::thumbnail(const QString &pkgName) const
 {
 #ifndef HAVE_APPSTREAM
+    Q_UNUSED(pkgName)
     return QString();
 #else
     return AppStream::instance()->thumbnail(pkgName);
@@ -719,6 +713,7 @@ QString PackageDetails::thumbnail(const QString &pkgName) const
 QString PackageDetails::screenshot(const QString &pkgName) const
 {
 #ifndef HAVE_APPSTREAM
+    Q_UNUSED(pkgName)
     return QString();
 #else
     return AppStream::instance()->screenshot(pkgName);
@@ -773,9 +768,9 @@ void PackageDetails::finished()
             m_hasDetails = true;
         } else if (transaction->role() == PackageKit::Transaction::RoleGetFiles) {
             m_hasFileList = true;
-        } else if (transaction->role() == PackageKit::Transaction::RoleGetRequires) {
+        } else if (transaction->role() == PackageKit::Transaction::RoleRequiredBy) {
             m_hasRequires = true;
-        } else if (transaction->role() == PackageKit::Transaction::RoleGetDepends) {
+        } else if (transaction->role() == PackageKit::Transaction::RoleDependsOn) {
             m_hasDepends  = true;
         } else {
             return;

@@ -168,7 +168,7 @@ void PkTransactionWidget::unsetTransaction()
 void PkTransactionWidget::updateUi()
 {
     // sets the action icon to be the window icon
-    Transaction *transaction = qobject_cast<Transaction*>(sender());
+    PkTransaction *transaction = qobject_cast<PkTransaction*>(sender());
     if (transaction == 0 && (transaction = m_trans) == 0) {
         kWarning() << "no transaction object";
         return;
@@ -300,7 +300,7 @@ Transaction::Role PkTransactionWidget::role() const
     return d->role;
 }
 
-Transaction *PkTransactionWidget::transaction() const
+PkTransaction *PkTransactionWidget::transaction() const
 {
     return m_trans;
 }

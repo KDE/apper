@@ -37,7 +37,7 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
 {
     setWindowTitle(i18n("Install Packages Files"));
 
-    if (Daemon::global()->actions() & Transaction::RoleInstallFiles) {
+    if (Daemon::global()->roles() & Transaction::RoleInstallFiles) {
         m_introDialog = new IntroDialog(this);
         m_introDialog->acceptDrops(i18n("You can drop more files in here"));
 

@@ -27,6 +27,8 @@
 
 #include <KDebug>
 
+#include <Daemon>
+
 #include "IntroDialog.h"
 
 PkInstallPackageNames::PkInstallPackageNames(uint xid,
@@ -87,19 +89,12 @@ PkInstallPackageNames::~PkInstallPackageNames()
 void PkInstallPackageNames::search()
 {
     PkTransaction *transaction = new PkTransaction(this);
+    transaction->setupTransaction(Daemon::resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest));
     setTransaction(Transaction::RoleResolve, transaction);
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    transaction->resolve(m_packages, Transaction::FilterArch | Transaction::FilterNewest);
-    if (transaction->internalError()) {
-        QString msg(i18n("Failed to start resolve transaction"));
-        if (showWarning()) {
-            setError(msg, PkStrings::daemonError(transaction->internalError()));
-        }
-        sendErrorFinished(Failed, msg);
-    }
 }
 
 void PkInstallPackageNames::notFound()

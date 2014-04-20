@@ -32,7 +32,7 @@ using namespace PackageKit;
 class PackageModel;
 class PkTransactionPrivate;
 class PkTransactionProgressModel;
-class KDE_EXPORT PkTransaction : public Transaction
+class KDE_EXPORT PkTransaction : public QObject
 {
     Q_OBJECT
     Q_ENUMS(ExitStatus)
@@ -44,6 +44,8 @@ public:
     } ExitStatus;
     explicit PkTransaction(QObject *parent = 0);
     ~PkTransaction();
+
+    void setupTransaction(Transaction *transaction);
 
     Q_INVOKABLE void installPackages(const QStringList &packages);
     Q_INVOKABLE void installFiles(const QStringList &files);
@@ -63,7 +65,17 @@ public:
 
     PackageModel* simulateModel() const;
 
+    uint percentage() const;
+    uint remainingTime() const;
+    uint speed() const;
+    qulonglong downloadSizeRemaining() const;
+    Transaction::Status status() const;
+    Transaction::Role role() const;
+    bool allowCancel() const;
+    Transaction::TransactionFlags transactionFlags() const;
+
 public slots:
+    void cancel();
     void setTrusted(bool trusted);
     /**
      * When mediaChangeRequired(), eulaRequired() or repoSignatureRequired()
@@ -77,9 +89,9 @@ signals:
     void sorry(const QString &title, const QString &text, const QString &details);
     void errorMessage(const QString &title, const QString &text, const QString &details);
     void dialog(KDialog *widget);
+    void changed();
 
 private slots:
-    void setupTransaction();
     void installPackages();
     void installFiles();
     void removePackages();

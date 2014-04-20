@@ -20,6 +20,8 @@
 
 #include "PkSearchFile.h"
 
+#include <Daemon>
+
 #include <PkStrings.h>
 #include <PackageModel.h>
 
@@ -44,21 +46,12 @@ PkSearchFile::PkSearchFile(const QString &file_name,
     }
 
     PkTransaction *transaction = new PkTransaction(this);
+    transaction->setupTransaction(Daemon::searchFiles(m_fileName, Transaction::FilterNewest));
     setTransaction(Transaction::RoleSearchFile, transaction);
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    transaction->searchFiles(m_fileName, Transaction::FilterNewest);
-    Transaction::InternalError error = transaction->internalError();
-    if (error) {
-        QString msg = i18n("Failed to start search file transaction");
-        if (showWarning()) {
-            setError(msg,
-                     PkStrings::daemonError(error));
-        }
-        sendErrorFinished(Failed, msg);
-    }
 }
 
 PkSearchFile::~PkSearchFile()

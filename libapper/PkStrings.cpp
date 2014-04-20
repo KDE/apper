@@ -186,13 +186,13 @@ QString PkStrings::action(int role, Transaction::TransactionFlags flags)
     switch (roleEnum) {
     case Transaction::RoleUnknown :
         return i18nc("The role of the transaction, in present tense", "Unknown role type");
-    case Transaction::RoleGetDepends :
+    case Transaction::RoleDependsOn :
         return i18nc("The role of the transaction, in present tense", "Getting dependencies");
     case Transaction::RoleGetUpdateDetail :
         return i18nc("The role of the transaction, in present tense", "Getting update detail");
     case Transaction::RoleGetDetails :
         return i18nc("The role of the transaction, in present tense", "Getting details");
-    case Transaction::RoleGetRequires :
+    case Transaction::RoleRequiredBy :
         return i18nc("The role of the transaction, in present tense", "Getting requires");
     case Transaction::RoleGetUpdates :
         return i18nc("The role of the transaction, in present tense", "Getting updates");
@@ -276,13 +276,13 @@ QString PkStrings::actionPast(Transaction::Role action)
     switch (action) {
     case Transaction::RoleUnknown:
         return i18nc("The role of the transaction, in past tense", "Unknown role type");
-    case Transaction::RoleGetDepends :
+    case Transaction::RoleDependsOn :
         return i18nc("The role of the transaction, in past tense", "Got dependencies");
     case Transaction::RoleGetUpdateDetail :
         return i18nc("The role of the transaction, in past tense", "Got update detail");
     case Transaction::RoleGetDetails :
         return i18nc("The role of the transaction, in past tense", "Got details");
-    case Transaction::RoleGetRequires :
+    case Transaction::RoleRequiredBy :
         return i18nc("The role of the transaction, in past tense", "Got requires");
     case Transaction::RoleGetUpdates :
         return i18nc("The role of the transaction, in past tense", "Got updates");

@@ -295,7 +295,7 @@ void Updater::getUpdates()
     ui->packageView->setHeaderHidden(true);
     m_updatesModel->clear();
     ui->updateDetails->hide();
-    m_updatesT = new Transaction(this);
+    m_updatesT = Daemon::getUpdates();
     connect(m_updatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             m_updatesModel, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
     connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
@@ -313,8 +313,6 @@ void Updater::getUpdates()
     }
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(getUpdatesFinished()));
-    // get all updates
-    m_updatesT->getUpdates();
 
     Transaction::InternalError error = m_updatesT->internalError();
     if (error) {
@@ -337,12 +335,11 @@ void Updater::getUpdates()
 
     if (m_roles & Transaction::RoleGetDistroUpgrades) {
         // Check for distribution Upgrades
-        Transaction *t = new Transaction(this);
+        Transaction *t = Daemon::getDistroUpgrades();
         connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
                 this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
         connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 t, SLOT(deleteLater()));
-        t->getDistroUpgrades();
     }
 }
 

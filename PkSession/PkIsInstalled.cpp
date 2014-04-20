@@ -20,6 +20,8 @@
 
 #include "PkIsInstalled.h"
 
+#include <Daemon>
+
 #include <PkStrings.h>
 
 #include <KLocale>
@@ -36,20 +38,12 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
     setWindowTitle(i18n("Querying if a Package is Installed"));
 
     PkTransaction *transaction = new PkTransaction(this);
+    transaction->setupTransaction(Daemon::resolve(m_packageName, Transaction::FilterInstalled));
     setTransaction(Transaction::RoleResolve, transaction);
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    transaction->resolve(m_packageName, Transaction::FilterInstalled);
-    if (transaction->internalError()) {
-        QString msg = i18n("Failed to start resolve transaction");
-        if (showWarning()) {
-            setError(msg,
-                     PkStrings::daemonError(transaction->internalError()));
-        }
-        sendErrorFinished(Failed, msg);
-    }
 }
 
 PkIsInstalled::~PkIsInstalled()

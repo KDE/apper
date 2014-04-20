@@ -22,6 +22,7 @@
 #include "ui_Settings.h"
 
 #include "OriginModel.h"
+#include <Daemon>
 
 #include <Enum.h>
 #include <PkStrings.h>
@@ -149,7 +150,9 @@ void Settings::refreshRepoModel()
 // TODO update the repo list connecting to repo changed signal
 void Settings::on_showOriginsCB_stateChanged(int state)
 {
-    Transaction *transaction = new Transaction(this);
+    Transaction *transaction;
+    transaction = Daemon::getRepoList(state == Qt::Checked ?
+                                          Transaction::FilterNone : Transaction::FilterNotDevel);
     connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
             m_originModel, SLOT(addOriginItem(QString,QString,bool)));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
@@ -159,15 +162,7 @@ void Settings::on_showOriginsCB_stateChanged(int state)
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(checkChanges()));
 
-    if (state == Qt::Checked) {
-        transaction->getRepoList(Transaction::FilterNone);
-    } else {
-        transaction->getRepoList(Transaction::FilterNotDevel);
-    }
-
-    if (!transaction->internalError()) {
-        m_busySeq->start();
-    }
+    m_busySeq->start();
 
     KConfig config("apper");
     KConfigGroup originsDialog(&config, "originsDialog");
