@@ -604,8 +604,6 @@ void PkTransaction::reset()
 {
     // Clear the model to don't keep trash when reusing the transaction
     d->progressModel->clear();
-
-    emit changed();
 }
 
 void PkTransaction::setupTransaction(Transaction *transaction)
@@ -621,7 +619,32 @@ void PkTransaction::setupTransaction(Transaction *transaction)
             d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
 
     // Required actions
-    connect(transaction, SIGNAL(changed()),
+    connect(transaction, SIGNAL(allowCancelChanged()),
+            SIGNAL(allowCancelChanged()));
+    connect(transaction, SIGNAL(downloadSizeRemainingChanged()),
+            SIGNAL(downloadSizeRemainingChanged()));
+    connect(transaction, SIGNAL(elapsedTimeChanged()),
+            SIGNAL(elapsedTimeChanged()));
+    connect(transaction, SIGNAL(isCallerActiveChanged()),
+            SIGNAL(isCallerActiveChanged()));
+    connect(transaction, SIGNAL(lastPackageChanged()),
+            SIGNAL(lastPackageChanged()));
+    connect(transaction, SIGNAL(percentageChanged()),
+            SIGNAL(percentageChanged()));
+    connect(transaction, SIGNAL(remainingTimeChanged()),
+            SIGNAL(remainingTimeChanged()));
+    connect(transaction, SIGNAL(roleChanged()),
+            SIGNAL(roleChanged()));
+    connect(transaction, SIGNAL(speedChanged()),
+            SIGNAL(speedChanged()));
+    connect(transaction, SIGNAL(statusChanged()),
+            SIGNAL(statusChanged()));
+    connect(transaction, SIGNAL(transactionFlagsChanged()),
+            SIGNAL(transactionFlagsChanged()));
+    connect(transaction, SIGNAL(uidChanged()),
+            SIGNAL(uidChanged()));
+
+    connect(transaction, SIGNAL(downloadSizeRemainingChanged()),
             SLOT(slotChanged()));
     connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
             SLOT(slotErrorCode(PackageKit::Transaction::Error,QString)));

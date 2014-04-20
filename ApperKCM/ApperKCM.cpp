@@ -744,6 +744,7 @@ void ApperKCM::refreshCache()
     PkTransactionWidget *transactionW = new PkTransactionWidget(this);
     connect(transactionW, SIGNAL(titleChangedProgress(QString)), this, SIGNAL(caption(QString)));
     QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
+    transaction->refreshCache(m_forceRefreshCache);
     transactionW->setTransaction(transaction, Transaction::RoleRefreshCache);
 
     ui->stackedWidget->addWidget(transactionW);
@@ -755,7 +756,6 @@ void ApperKCM::refreshCache()
 
     QEventLoop loop;
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
-    transaction->refreshCache(m_forceRefreshCache);
 
     // wait for the end of transaction
     if (!transaction->isFinished()) {
@@ -803,8 +803,8 @@ void ApperKCM::save()
         QEventLoop loop;
         connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
         if (currentWidget == m_updaterPage) {
-            transactionW->setTransaction(transaction, Transaction::RoleUpdatePackages);
             transaction->updatePackages(m_updaterPage->packagesToUpdate());
+            transactionW->setTransaction(transaction, Transaction::RoleUpdatePackages);
 
             // wait for the end of transaction
             if (!transaction->isFinished()) {
@@ -818,8 +818,8 @@ void ApperKCM::save()
             // install then remove packages
             QStringList installPackages = m_browseModel->selectedPackagesToInstall();
             if (!installPackages.isEmpty()) {
-                transactionW->setTransaction(transaction, Transaction::RoleInstallPackages);
                 transaction->installPackages(installPackages);
+                transactionW->setTransaction(transaction, Transaction::RoleInstallPackages);
 
                 // wait for the end of transaction
                 if (!transaction->isFinished()) {
@@ -837,8 +837,8 @@ void ApperKCM::save()
 
             QStringList removePackages = m_browseModel->selectedPackagesToRemove();
             if (!removePackages.isEmpty()) {
-                transactionW->setTransaction(transaction, Transaction::RoleRemovePackages);
                 transaction->removePackages(removePackages);
+                transactionW->setTransaction(transaction, Transaction::RoleRemovePackages);
 
                 // wait for the end of transaction
                 if (!transaction->isFinished()) {

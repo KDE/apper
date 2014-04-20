@@ -89,7 +89,19 @@ signals:
     void sorry(const QString &title, const QString &text, const QString &details);
     void errorMessage(const QString &title, const QString &text, const QString &details);
     void dialog(KDialog *widget);
-    void changed();
+
+    void allowCancelChanged();
+    void isCallerActiveChanged();
+    void downloadSizeRemainingChanged();
+    void elapsedTimeChanged();
+    void lastPackageChanged();
+    void percentageChanged();
+    void remainingTimeChanged();
+    void roleChanged();
+    void speedChanged();
+    void statusChanged();
+    void transactionFlagsChanged();
+    void uidChanged();
 
 private slots:
     void installPackages();

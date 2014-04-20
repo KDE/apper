@@ -313,22 +313,7 @@ void Updater::getUpdates()
     }
     connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(getUpdatesFinished()));
-
-    Transaction::InternalError error = m_updatesT->internalError();
-    if (error) {
-        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   this, SLOT(getUpdatesFinished()));
-        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   m_busySeq, SLOT(stop()));
-        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   m_updatesModel, SLOT(finished()));
-        disconnect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   m_updatesModel, SLOT(fetchSizes()));
-        m_updatesT = 0;
-        KMessageBox::sorry(this, PkStrings::daemonError(error));
-    } else {
-        m_busySeq->start();
-    }
+    m_busySeq->start();
 
     // Hide the distribution upgrade information
     ui->distroUpgrade->animatedHide();
