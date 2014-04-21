@@ -519,8 +519,8 @@ void PackageModel::fetchSizes()
     }
     if (!pkgs.isEmpty()) {
         m_fetchSizesTransaction = Daemon::getDetails(pkgs);
-        connect(m_fetchSizesTransaction, SIGNAL(details(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)),
-                this, SLOT(updateSize(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)));
+        connect(m_fetchSizesTransaction, SIGNAL(details(PackageKit::Details)),
+                SLOT(updateSize(PackageKit::Details)));
         connect(m_fetchSizesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(fetchSizesFinished()));
     }
@@ -540,31 +540,23 @@ void PackageModel::fetchSizesFinished()
     emit changed(!m_checkedPackages.isEmpty());
 }
 
-void PackageModel::updateSize(const QString &packageID,
-                              const QString &license,
-                              PackageKit::Transaction::Group group,
-                              const QString &detail,
-                              const QString &url,
-                              qulonglong size)
+void PackageModel::updateSize(const PackageKit::Details &details)
 {
-    Q_UNUSED(license)
-    Q_UNUSED(group)
-    Q_UNUSED(detail)
-    Q_UNUSED(url)
-
     // if size is 0 don't waste time looking for the package
+    qulonglong size  = details.size();
     if (size == 0) {
         return;
     }
 
     for (int i = 0; i < m_packages.size(); ++i) {
-        if (packageID == m_packages[i].packageID) {
+        const QString &packageId = details.packageId();
+        if (packageId == m_packages[i].packageID) {
             m_packages[i].size = size;
             if (m_checkable) {
                 // updates the checked packages as well
-                if (m_checkedPackages.contains(packageID)) {
+                if (m_checkedPackages.contains(packageId)) {
                     // Avoid checking packages that aren't checked
-                    m_checkedPackages[packageID].size = size;
+                    m_checkedPackages[packageId].size = size;
                 }
                 break;
             }

@@ -324,8 +324,8 @@ void PackageDetails::actionActivated(QAction *action)
     // disconnect the transaction
     // so that we don't get old data
     if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(details(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)),
-                   this, SLOT(description(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)));
+        disconnect(m_transaction, SIGNAL(details(PackageKit::Details)),
+                   this, SLOT(description(PackageKit::Details)));
         disconnect(m_transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                    m_dependsModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
         disconnect(m_transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
@@ -342,12 +342,7 @@ void PackageDetails::actionActivated(QAction *action)
     switch (role) {
     case PackageKit::Transaction::RoleGetDetails:
         if (m_hasDetails) {
-            description(m_detailsPackageID,
-                        m_detailsLicense,
-                        m_detailsGroup,
-                        m_detailsDetail,
-                        m_detailsUrl,
-                        m_detailsSize);
+            description(m_details);
             display();
             return;
         }
@@ -377,8 +372,8 @@ void PackageDetails::actionActivated(QAction *action)
     switch (role) {
     case PackageKit::Transaction::RoleGetDetails:
         m_transaction = Daemon::getDetails(m_packageID);
-        connect(m_transaction, SIGNAL(details(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)),
-                this, SLOT(description(QString,QString,PackageKit::Transaction::Group,QString,QString,qulonglong)));
+        connect(m_transaction, SIGNAL(details(PackageKit::Details)),
+                SLOT(description(PackageKit::Details)));
         break;
     case PackageKit::Transaction::RoleDependsOn:
         m_dependsModel->clear();
@@ -558,16 +553,16 @@ void PackageDetails::setupDescription()
         ui->iconL->clear();
     }
 
-    if (!m_detailsDetail.isEmpty()) {
-        ui->descriptionL->setText(m_detailsDetail.replace('\n', "<br>"));
+    if (!m_details.description().isEmpty()) {
+        ui->descriptionL->setText(m_details.description().replace('\n', "<br>"));
         ui->descriptionL->show();
     } else {
         ui->descriptionL->clear();
     }
 
-    if (!m_detailsUrl.isEmpty()) {
-        ui->homepageL->setText("<a href=\"" + m_detailsUrl + "\">" +
-                               m_detailsUrl + "</a>");
+    if (!m_details.url().isEmpty()) {
+        ui->homepageL->setText("<a href=\"" + m_details.url() + "\">" +
+                               m_details.url() + "</a>");
         ui->homepageL->show();
     } else {
         ui->homepageL->hide();
@@ -606,31 +601,31 @@ void PackageDetails::setupDescription()
 // //                     + "</td></tr>";
 //     }
 
-    if (!m_detailsLicense.isEmpty() && m_detailsLicense != "unknown") {
+    if (!m_details.license().isEmpty() && m_details.license() != "unknown") {
         // We have a license, check if we have and should show show package version
-        if (!m_hideVersion && !Transaction::packageVersion(m_detailsPackageID).isEmpty()) {
-            ui->licenseL->setText(Transaction::packageVersion(m_detailsPackageID) + " - " + m_detailsLicense);
+        if (!m_hideVersion && !Transaction::packageVersion(m_details.packageId()).isEmpty()) {
+            ui->licenseL->setText(Transaction::packageVersion(m_details.packageId()) + " - " + m_details.license());
         } else {
-            ui->licenseL->setText(m_detailsLicense);
+            ui->licenseL->setText(m_details.license());
         }
         ui->licenseL->show();
     } else if (!m_hideVersion) {
-        ui->licenseL->setText(Transaction::packageVersion(m_detailsPackageID));
+        ui->licenseL->setText(Transaction::packageVersion(m_details.packageId()));
         ui->licenseL->show();
     } else {
         ui->licenseL->hide();
     }
 
-    if (m_detailsSize > 0) {
-        QString size = KGlobal::locale()->formatByteSize(m_detailsSize);
-        if (!m_hideArch && !Transaction::packageArch(m_detailsPackageID).isEmpty()) {
-            ui->sizeL->setText(size % QLatin1String(" (") % Transaction::packageArch(m_detailsPackageID) % QLatin1Char(')'));
+    if (m_details.size() > 0) {
+        QString size = KGlobal::locale()->formatByteSize(m_details.size());
+        if (!m_hideArch && !Transaction::packageArch(m_details.packageId()).isEmpty()) {
+            ui->sizeL->setText(size % QLatin1String(" (") % Transaction::packageArch(m_details.packageId()) % QLatin1Char(')'));
         } else {
             ui->sizeL->setText(size);
         }
         ui->sizeL->show();
-    } else if (!m_hideArch && !Transaction::packageArch(m_detailsPackageID).isEmpty()) {
-        ui->sizeL->setText(Transaction::packageArch(m_detailsPackageID));
+    } else if (!m_hideArch && !Transaction::packageArch(m_details.packageId()).isEmpty()) {
+        ui->sizeL->setText(Transaction::packageArch(m_details.packageId()));
     } else {
         ui->sizeL->hide();
     }
@@ -720,20 +715,10 @@ QString PackageDetails::screenshot(const QString &pkgName) const
 #endif
 }
 
-void PackageDetails::description(const QString &packageID,
-                                 const QString &license,
-                                 PackageKit::Transaction::Group group,
-                                 const QString &detail,
-                                 const QString &url,
-                                 qulonglong size)
+void PackageDetails::description(const PackageKit::Details &details)
 {
-    kDebug() << packageID;
-    m_detailsPackageID = packageID;
-    m_detailsLicense = license;
-    m_detailsGroup = group;
-    m_detailsDetail = detail;
-    m_detailsUrl = url;
-    m_detailsSize = size;
+    kDebug() << details;
+    m_details = details;
     m_hasDetails = true;
 
 #ifdef HAVE_APPSTREAM

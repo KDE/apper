@@ -114,7 +114,8 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
             // Don't let the system sleep while doing some sensible actions
             suppressSleep(true, m_inhibitCookie, PkStrings::action(role, flags));
         }
-        connect(transaction, SIGNAL(changed()), this, SLOT(transactionChanged()));
+        connect(transaction, SIGNAL(isCallerActiveChanged()),
+                SLOT(transactionChanged()));
         connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(finished(PackageKit::Transaction::Exit)));
     } else {
@@ -148,8 +149,9 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
 {
     // check if the transaction emitted any require restart
     Transaction *transaction = qobject_cast<Transaction*>(sender());
-    QDBusObjectPath tid = transaction->tid();
-    disconnect(transaction, SIGNAL(changed()), this, SLOT(transactionChanged()));
+    QDBusObjectPath tid = transaction->tid();    
+    disconnect(transaction, SIGNAL(isCallerActiveChanged()),
+               this, SLOT(transactionChanged()));
     m_transactions.remove(tid);
     m_transactionJob.remove(tid);
 

@@ -27,6 +27,7 @@
 #include <KIcon>
 
 #include <Transaction>
+#include <Details>
 
 class KDE_EXPORT PackageModel : public QAbstractItemModel
 {
@@ -122,12 +123,7 @@ public slots:
 
     void fetchSizes();
     void fetchSizesFinished();
-    void updateSize(const QString &packageID,
-                    const QString &license,
-                    PackageKit::Transaction::Group group,
-                    const QString &detail,
-                    const QString &url,
-                    qulonglong size);
+    void updateSize(const PackageKit::Details &details);
 
     void fetchCurrentVersions();
     void fetchCurrentVersionsFinished();

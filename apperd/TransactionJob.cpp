@@ -42,7 +42,20 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent) :
 {
     setCapabilities(Killable);
 
-    connect(transaction, SIGNAL(changed()), this, SLOT(updateJob()));
+    connect(transaction, SIGNAL(roleChanged()),
+            SLOT(updateJob()));
+    connect(transaction, SIGNAL(statusChanged()),
+            SLOT(updateJob()));
+    connect(transaction, SIGNAL(downloadSizeRemainingChanged()),
+            SLOT(updateJob()));
+    connect(transaction, SIGNAL(transactionFlagsChanged()),
+            SLOT(updateJob()));
+    connect(transaction, SIGNAL(percentageChanged()),
+            SLOT(updateJob()));
+    connect(transaction, SIGNAL(roleChanged()),
+            SLOT(updateJob()));
+    connect(transaction, SIGNAL(speedChanged()),
+            SLOT(updateJob()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(finished(PackageKit::Transaction::Exit)));
     connect(transaction, SIGNAL(destroy()),
