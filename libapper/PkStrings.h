@@ -34,7 +34,7 @@ public slots:
     static QString error(PackageKit::Transaction::Error error);
     static QString errorMessage(PackageKit::Transaction::Error error);
     static QString message(PackageKit::Transaction::Message type);
-    static QString status(int status, uint speed = 0, qulonglong downloadRemaining = 0);
+    static QString status(PackageKit::Transaction::Status status, uint speed = 0, qulonglong downloadRemaining = 0);
     static QString statusPast(PackageKit::Transaction::Status status);
     static QString groups(PackageKit::Transaction::Group group);
     static QString info(int state);
@@ -42,7 +42,7 @@ public slots:
     static QString updateState(PackageKit::Transaction::UpdateState value);
     static QString restartType(PackageKit::Transaction::Restart value);
     static QString restartTypeFuture(PackageKit::Transaction::Restart value);
-    static QString action(int role, PackageKit::Transaction::TransactionFlags flags);
+    static QString action(PackageKit::Transaction::Role role, PackageKit::Transaction::TransactionFlags flags);
     static QString actionPast(PackageKit::Transaction::Role action);
     static QString mediaMessage(PackageKit::Transaction::MediaType value, const QString &text);
     static QString daemonError(int value);

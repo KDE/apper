@@ -166,7 +166,6 @@ void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnl
 
 void PkTransaction::refreshCache(bool force)
 {
-    reset();
     setupTransaction(Daemon::refreshCache(force));
 }
 
@@ -301,7 +300,6 @@ void PkTransaction::acceptEula()
 
     if (eula) {
         kDebug() << "Accepting EULA" << eula->id();
-        reset();
         setupTransaction(Daemon::acceptEula(eula->id()));
     } else {
         kWarning() << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
@@ -310,14 +308,15 @@ void PkTransaction::acceptEula()
 
 void PkTransaction::slotChanged()
 {
-    d->downloadSizeRemaining = d->transaction->downloadSizeRemaining();
-    d->role = d->transaction->role();
+    Transaction *transaction = qobject_cast<Transaction*>(sender());
+    d->downloadSizeRemaining = transaction->downloadSizeRemaining();
+    d->role = transaction->role();
 
     if (!d->jobWatcher) {
         return;
     }
 
-    QDBusObjectPath _tid = d->transaction->tid();
+    QDBusObjectPath _tid = transaction->tid();
     if (d->tid != _tid && !(d->flags & Transaction::TransactionFlagSimulate)) {
         d->tid = _tid;
         // if the transaction changed and
@@ -384,7 +383,6 @@ void PkTransaction::installSignature()
 
     if (repoSig)  {
         kDebug() << "Installing Signature" << repoSig->keyID();
-        reset();
         setupTransaction(Daemon::installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID()));
     } else {
         kWarning() << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
@@ -397,7 +395,8 @@ void PkTransaction::slotFinished(Transaction::Exit status)
     d->progressModel->clear();
 
     Requirements *requires = 0;
-    Transaction::Role _role = d->transaction->role();
+    Transaction::Role _role = qobject_cast<Transaction*>(sender())->role();
+    d->transaction = 0; // Will be deleted later
     kDebug() << status << _role;
 
     switch (_role) {
@@ -466,7 +465,6 @@ void PkTransaction::slotFinished(Transaction::Exit status)
                 connect(this, SIGNAL(files(QString,QStringList)),
                         d->launcher, SLOT(files(QString,QStringList)));
 
-                reset();
                 setupTransaction(Daemon::getFiles(d->newPackages));
                 d->newPackages.clear();
                 return; // avoid the exit code
@@ -529,47 +527,83 @@ PackageModel *PkTransaction::simulateModel() const
 
 uint PkTransaction::percentage() const
 {
-    return d->transaction->percentage();
+    if (d->transaction) {
+        return d->transaction->percentage();
+    }
+    return 0;
 }
 
 uint PkTransaction::remainingTime() const
 {
-    return d->transaction->remainingTime();
+    if (d->transaction) {
+        return d->transaction->remainingTime();
+    }
+    return 0;
 }
 
 uint PkTransaction::speed() const
 {
-    return d->transaction->speed();
+    if (d->transaction) {
+        return d->transaction->speed();
+    }
+    return 0;
 }
 
 qulonglong PkTransaction::downloadSizeRemaining() const
 {
-    return d->transaction->downloadSizeRemaining();
+    if (d->transaction) {
+        return d->transaction->downloadSizeRemaining();
+    }
+    return 0;
 }
 
 Transaction::Status PkTransaction::status() const
 {
-    return d->transaction->status();
+    if (d->transaction) {
+        return d->transaction->status();
+    }
+    return Transaction::StatusUnknown;
 }
 
 Transaction::Role PkTransaction::role() const
 {
-    return d->transaction->role();
+    if (d->transaction) {
+        return d->transaction->role();
+    }
+    return Transaction::RoleUnknown;
 }
 
 bool PkTransaction::allowCancel() const
 {
-    return d->transaction->allowCancel();
+    if (d->transaction) {
+        return d->transaction->allowCancel();
+    }
+    return false;
 }
 
 Transaction::TransactionFlags PkTransaction::transactionFlags() const
 {
-    return d->transaction->transactionFlags();
+    if (d->transaction) {
+        return d->transaction->transactionFlags();
+    }
+    return Transaction::TransactionFlagNone;
+}
+
+void PkTransaction::getUpdateDetail(const QString &packageID)
+{
+    setupTransaction(Daemon::getUpdateDetail(packageID));
+}
+
+void PkTransaction::getUpdates()
+{
+    setupTransaction(Daemon::getUpdates());
 }
 
 void PkTransaction::cancel()
 {
-    d->transaction->cancel();
+    if (d->transaction) {
+        d->transaction->cancel();
+    }
 }
 
 void PkTransaction::setTrusted(bool trusted)
@@ -600,23 +634,29 @@ void PkTransaction::reject()
     setExitStatus(Cancelled);
 }
 
-void PkTransaction::reset()
+void PkTransaction::setupTransaction(Transaction *transaction)
 {
     // Clear the model to don't keep trash when reusing the transaction
     d->progressModel->clear();
-}
-
-void PkTransaction::setupTransaction(Transaction *transaction)
-{
-    reset();
 
     d->transaction = transaction;
-    connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
-            d->progressModel, SLOT(currentRepo(QString,QString,bool)));
+    if (!(transaction->transactionFlags() & Transaction::TransactionFlagSimulate) &&
+            transaction->role() != Transaction::RoleGetUpdates &&
+            transaction->role() != Transaction::RoleGetUpdateDetail) {
+        connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
+                d->progressModel, SLOT(currentRepo(QString,QString,bool)));
+        connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+                d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
+        connect(transaction, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
+                d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
+    }
+
+    connect(transaction, SIGNAL(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)),
+            SIGNAL(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)));
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
-    connect(transaction, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
-            d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
+            SIGNAL(package(PackageKit::Transaction::Info,QString,QString)));
+    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+            SIGNAL(errorCode(PackageKit::Transaction::Error,QString)));
 
     // Required actions
     connect(transaction, SIGNAL(allowCancelChanged()),

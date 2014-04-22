@@ -109,7 +109,6 @@ FocusScope {
         if (!checkedForUpdates) {
             state = "BUSY";
             getUpdatesTransaction.cancel();
-            getUpdatesTransaction.reset();
             updatesModel.clear();
             getUpdatesTransaction.getUpdates();
             var error = getUpdatesTransaction.internalError;
@@ -196,12 +195,8 @@ FocusScope {
         onTriggered: getUpdates()
     }
 
-    Apper.Transaction {
+    Apper.PkTransaction {
         id: getUpdatesTransaction
-        onChanged: {
-            busyView.title = PkStrings.action(role, transactionFlags);
-            busyView.subTitle = PkStrings.status(status);
-        }
     }
 
     StatusView {
@@ -210,6 +205,8 @@ FocusScope {
         anchors.fill: parent
         anchors.margins: 4
         state: "BUSY"
+        title: PkStrings.action(getUpdatesTransaction.role, getUpdatesTransaction.transactionFlags)
+        subTitle: PkStrings.status(getUpdatesTransaction.status)
     }
 
     Column {

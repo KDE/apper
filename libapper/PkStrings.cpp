@@ -27,10 +27,9 @@
 
 using namespace PackageKit;
 
-QString PkStrings::status(int status, uint speed, qulonglong downloadRemaining)
+QString PkStrings::status(Transaction::Status status, uint speed, qulonglong downloadRemaining)
 {
-    Transaction::Status statusEnum = static_cast<Transaction::Status>(status);
-    switch (statusEnum) {
+    switch (status) {
     case Transaction::StatusUnknown:
         return i18nc("This is when the transaction status is not known",
                      "Unknown state");
@@ -155,7 +154,7 @@ QString PkStrings::status(int status, uint speed, qulonglong downloadRemaining)
         return i18nc("we are copying package files to prepare to install",
                      "Copying files");
     }
-    kWarning() << "status unrecognised: " << statusEnum;
+    kWarning() << "status unrecognised: " << status;
     return QString();
 }
 
@@ -180,10 +179,9 @@ QString PkStrings::statusPast(Transaction::Status status)
     }
 }
 
-QString PkStrings::action(int role, Transaction::TransactionFlags flags)
+QString PkStrings::action(Transaction::Role role, Transaction::TransactionFlags flags)
 {
-    Transaction::Role roleEnum = static_cast<Transaction::Role>(role);
-    switch (roleEnum) {
+    switch (role) {
     case Transaction::RoleUnknown :
         return i18nc("The role of the transaction, in present tense", "Unknown role type");
     case Transaction::RoleDependsOn :
@@ -363,7 +361,7 @@ QString PkStrings::infoPresent(Transaction::Info info)
     case Transaction::InfoDecompressing :
         return i18n("Decompressing");
     default :
-        kWarning() << "info unrecognised: " << info;
+        kWarning() << "info unrecognised:" << info;
         return QString();
     }
 }

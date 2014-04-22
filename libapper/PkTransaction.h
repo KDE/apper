@@ -65,16 +65,33 @@ public:
 
     PackageModel* simulateModel() const;
 
+    Q_PROPERTY(uint percentage READ percentage NOTIFY percentageChanged)
     uint percentage() const;
+
+    Q_PROPERTY(uint remainingTime READ remainingTime NOTIFY remainingTimeChanged)
     uint remainingTime() const;
+
+    Q_PROPERTY(uint speed READ speed NOTIFY speedChanged)
     uint speed() const;
+
+    Q_PROPERTY(qulonglong downloadSizeRemaining READ downloadSizeRemaining NOTIFY downloadSizeRemainingChanged)
     qulonglong downloadSizeRemaining() const;
+
+    Q_PROPERTY(PackageKit::Transaction::Status status READ status NOTIFY statusChanged)
     Transaction::Status status() const;
+
+    Q_PROPERTY(PackageKit::Transaction::Role role READ role NOTIFY roleChanged)
     Transaction::Role role() const;
+
+    Q_PROPERTY(bool allowCancel READ allowCancel NOTIFY allowCancelChanged)
     bool allowCancel() const;
+
+    Q_PROPERTY(PackageKit::Transaction::TransactionFlags transactionFlags READ transactionFlags NOTIFY transactionFlagsChanged)
     Transaction::TransactionFlags transactionFlags() const;
 
 public slots:
+    void getUpdateDetail(const QString &packageID);
+    void getUpdates();
     void cancel();
     void setTrusted(bool trusted);
     /**
@@ -84,6 +101,20 @@ public slots:
     void requeueTransaction();
 
 signals:
+    void package(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
+    void updateDetail(const QString &packageID,
+                      const QStringList &updates,
+                      const QStringList &obsoletes,
+                      const QStringList &vendorUrls,
+                      const QStringList &bugzillaUrls,
+                      const QStringList &cveUrls,
+                      PackageKit::Transaction::Restart restart,
+                      const QString &updateText,
+                      const QString &changelog,
+                      PackageKit::Transaction::UpdateState state,
+                      const QDateTime &issued,
+                      const QDateTime &updated);
+    void errorCode(PackageKit::Transaction::Error error, const QString &details);
     void finished(PkTransaction::ExitStatus status);
     void titleChanged(const QString &title);
     void sorry(const QString &title, const QString &text, const QString &details);
@@ -128,7 +159,6 @@ private slots:
 
     void setExitStatus(PkTransaction::ExitStatus status = PkTransaction::Success);
     void reject();
-    void reset();
 
 private:
     void showDialog(KDialog *dialog);

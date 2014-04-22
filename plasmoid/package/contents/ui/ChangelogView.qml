@@ -34,7 +34,7 @@ Item {
         }
     }
 
-    Apper.Transaction {
+    Apper.PkTransaction {
         id: transaction
         onUpdateDetail: {
             for (var count = 0; count < updates.length; ++count) {
@@ -53,10 +53,6 @@ Item {
             }
             changelogItem.state = "DETAILS";
         }
-        onChanged: {
-            busyView.title = PkStrings.action(role, transactionFlags);
-            busyView.subTitle = PkStrings.status(status);
-        }
     }
 
     StatusView {
@@ -67,6 +63,8 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         state: "BUSY"
         iconSize: 32
+        title: PkStrings.action(transaction.role, transaction.transactionFlags)
+        subTitle: PkStrings.status(transaction.status)
     }
 
     StatusView {
