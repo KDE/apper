@@ -49,13 +49,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
 include(FindPkgConfig)
 
 find_package(PackageKitQt4 0.9.0 REQUIRED)
-#set(QPACKAGEKIT_MIN_VERSION 0.9.0)
-#pkg_check_modules(PackageKitQt4 REQUIRED packagekit-qt4>=${QPACKAGEKIT_MIN_VERSION})
-#macro_log_feature(PackageKitQt4_FOUND "packagekit-qt4" "The Qt library to use PackageKit" "http://www.packagekit.org" TRUE ${QPACKAGEKIT_MIN_VERSION} "")
 include(KDE4Defaults)
 
 add_definitions(${QT_DEFINITIONS}
     ${KDE_DEFINITIONS})
+
+add_definitions("-std=gnu++11")
 
 include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
