@@ -85,6 +85,7 @@ private:
     QModelIndex   m_index;
     QString m_packageID;
     PackageKit::Details m_details;
+    QString m_detailsDescription;
 
     QString       m_appName;
 

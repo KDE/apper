@@ -553,8 +553,8 @@ void PackageDetails::setupDescription()
         ui->iconL->clear();
     }
 
-    if (!m_details.description().isEmpty()) {
-        ui->descriptionL->setText(m_details.description().replace('\n', "<br>"));
+    if (!m_detailsDescription.isEmpty()) {
+        ui->descriptionL->setText(m_detailsDescription.replace('\n', "<br>"));
         ui->descriptionL->show();
     } else {
         ui->descriptionL->clear();
@@ -719,6 +719,7 @@ void PackageDetails::description(const PackageKit::Details &details)
 {
     kDebug() << details;
     m_details = details;
+    m_detailsDescription = details.description();
     m_hasDetails = true;
 
 #ifdef HAVE_APPSTREAM
@@ -730,7 +731,7 @@ void PackageDetails::description(const PackageKit::Details &details)
     apps = AppStream::instance()->applications(Transaction::packageName(packageID));
     foreach (const AppStream::Application &app, apps) {
         if (!app.description.isEmpty()) {
-            m_detailsDetail = app.description;
+            m_detailsDescription = app.description;
             break;
         }
     }
