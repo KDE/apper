@@ -40,9 +40,6 @@ TransactionModel::TransactionModel(QObject *parent)
 void TransactionModel::clear()
 {
     QStandardItemModel::clear();
-    while (m_transactions.size()) {
-        delete m_transactions.takeFirst();
-    }
     setHorizontalHeaderItem(0, new QStandardItem(i18n("Date")));
     setHorizontalHeaderItem(1, new QStandardItem(i18n("Action")));
     setHorizontalHeaderItem(2, new QStandardItem(i18n("Details")));
@@ -86,7 +83,7 @@ void TransactionModel::addTransaction(PackageKit::Transaction *trans)
     QList<QStandardItem *> line;
     line << dateI << roleI << detailsI << userI << appI;
     appendRow(line);
-    m_transactions << trans;
+    delete trans;
 }
 
 QString TransactionModel::getDetailsLocalized(const QString &data) const

@@ -26,9 +26,6 @@
 
 using namespace PackageKit;
 
-namespace PackageKit {
-    class Transaction;
-}
 class TransactionModel : public QStandardItemModel
 {
 Q_OBJECT
@@ -44,8 +41,6 @@ public slots:
 private:
     QString getDetailsLocalized(const QString &data) const;
     QString getTypeLine(const QStringList &lines, Transaction::Status status) const;
-
-    QList<PackageKit::Transaction *> m_transactions;
 };
 
 #endif
