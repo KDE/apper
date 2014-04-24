@@ -188,7 +188,8 @@ QString PkStrings::action(Transaction::Role role, Transaction::TransactionFlags 
         return i18nc("The role of the transaction, in present tense", "Getting dependencies");
     case Transaction::RoleGetUpdateDetail :
         return i18nc("The role of the transaction, in present tense", "Getting update detail");
-    case Transaction::RoleGetDetails :
+    case Transaction::RoleGetDetails:
+    case Transaction::RoleGetDetailsLocal:
         return i18nc("The role of the transaction, in present tense", "Getting details");
     case Transaction::RoleRequiredBy :
         return i18nc("The role of the transaction, in present tense", "Getting requires");
@@ -242,7 +243,8 @@ QString PkStrings::action(Transaction::Role role, Transaction::TransactionFlags 
         return i18nc("The role of the transaction, in present tense", "Setting repository data");
     case Transaction::RoleResolve :
         return i18nc("The role of the transaction, in present tense", "Resolving");
-    case Transaction::RoleGetFiles :
+    case Transaction::RoleGetFiles:
+    case Transaction::RoleGetFilesLocal:
         return i18nc("The role of the transaction, in present tense", "Getting file list");
     case Transaction::RoleWhatProvides :
         return i18nc("The role of the transaction, in present tense", "Getting what provides");
@@ -264,6 +266,8 @@ QString PkStrings::action(Transaction::Role role, Transaction::TransactionFlags 
         return i18nc("The role of the transaction, in present tense", "Upgrading system");
     case Transaction::RoleRepairSystem :
         return i18nc("The role of the transaction, in present tense", "Repairing system");
+    case Transaction::RoleRepoRemove:
+        return i18nc("The role of the transaction, in present tense", "Removing repository");
     }
     kWarning() << "action unrecognised: " << role;
     return QString();
@@ -278,7 +282,8 @@ QString PkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Got dependencies");
     case Transaction::RoleGetUpdateDetail :
         return i18nc("The role of the transaction, in past tense", "Got update detail");
-    case Transaction::RoleGetDetails :
+    case Transaction::RoleGetDetails:
+    case Transaction::RoleGetDetailsLocal:
         return i18nc("The role of the transaction, in past tense", "Got details");
     case Transaction::RoleRequiredBy :
         return i18nc("The role of the transaction, in past tense", "Got requires");
@@ -312,7 +317,8 @@ QString PkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Set repository data");
     case Transaction::RoleResolve :
         return i18nc("The role of the transaction, in past tense", "Resolved");
-    case Transaction::RoleGetFiles :
+    case Transaction::RoleGetFiles:
+    case Transaction::RoleGetFilesLocal:
         return i18nc("The role of the transaction, in past tense", "Got file list");
     case Transaction::RoleWhatProvides :
         return i18nc("The role of the transaction, in past tense", "Got what provides");
@@ -334,6 +340,8 @@ QString PkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Upgraded system");
     case Transaction::RoleRepairSystem:
         return i18nc("The role of the transaction, in past tense", "Repaired system");
+    case Transaction::RoleRepoRemove:
+        return i18nc("The role of the transaction, in past tense", "Removed repository");
     }
     kWarning() << "action unrecognised: " << action;
     return QString();
