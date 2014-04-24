@@ -58,8 +58,6 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent) :
             SLOT(updateJob()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(finished(PackageKit::Transaction::Exit)));
-    connect(transaction, SIGNAL(destroy()),
-            this, SLOT(transactionDestroyed()));
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(package(PackageKit::Transaction::Info,QString,QString)));
     connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
@@ -68,11 +66,6 @@ TransactionJob::TransactionJob(Transaction *transaction, QObject *parent) :
 
 TransactionJob::~TransactionJob()
 {
-}
-
-void TransactionJob::transactionDestroyed()
-{
-    finished(Transaction::ExitKilled);
 }
 
 void TransactionJob::finished(PackageKit::Transaction::Exit exit)

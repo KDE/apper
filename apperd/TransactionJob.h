@@ -40,9 +40,6 @@ public:
     bool isFinished() const;
     Transaction *transaction() const;
 
-public slots:
-    void transactionDestroyed();
-
 signals:
     void canceled();
 

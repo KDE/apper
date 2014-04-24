@@ -41,6 +41,7 @@ public:
 
 public slots:
     void watchTransaction(const QDBusObjectPath &tid, bool interactive = true);
+    void transactionReady();
     void showRebootNotificationApt();
 
 private slots:

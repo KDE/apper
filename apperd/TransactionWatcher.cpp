@@ -86,44 +86,48 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
     if (!m_transactions.contains(tid)) {
         // Check if the current transaction is still the same
         transaction = new Transaction(tid);
-//        if (transaction->internalError()) {
-//            qWarning() << "Could not create a transaction for the path:" << tid.path();
-//            delete transaction;
-//            return;
-//        }
-
-        // Store the transaction id
-        m_transactions[tid] = transaction;
-
-        Transaction::Role role = transaction->role();
-        Transaction::TransactionFlags flags = transaction->transactionFlags();
-        if (!(flags & Transaction::TransactionFlagOnlyDownload || flags & Transaction::TransactionFlagSimulate) &&
-                (role == Transaction::RoleInstallPackages ||
-                 role == Transaction::RoleInstallFiles    ||
-                 role == Transaction::RoleRemovePackages  ||
-                 role == Transaction::RoleUpdatePackages  ||
-                 role == Transaction::RoleUpgradeSystem)) {
-            // AVOID showing messages and restart requires when
-            // the user was just simulating an instalation
-            // TODO fix yum backend
-            connect(transaction, SIGNAL(message(PackageKit::Transaction::Message,QString)),
-                    this, SLOT(message(PackageKit::Transaction::Message,QString)));
-            connect(transaction, SIGNAL(requireRestart(PackageKit::Transaction::Restart,QString)),
-                    this, SLOT(requireRestart(PackageKit::Transaction::Restart,QString)));
-
-            // Don't let the system sleep while doing some sensible actions
-            suppressSleep(true, m_inhibitCookie, PkStrings::action(role, flags));
-        }
-        connect(transaction, SIGNAL(isCallerActiveChanged()),
-                SLOT(transactionChanged()));
+        connect(transaction, SIGNAL(roleChanged()), this, SLOT(transactionReady()));
         connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(finished(PackageKit::Transaction::Exit)));
+
+        // Store the transaction id
+        m_transactions[tid] = transaction;        
     } else {
         transaction = m_transactions[tid];
+
+        if (transaction->role() != Transaction::RoleUnknown) {
+            // force the first changed or create a TransactionJob
+            transactionChanged(transaction, interactive);
+        }
+    }
+}
+
+void TransactionWatcher::transactionReady()
+{
+    Transaction *transaction = qobject_cast<Transaction*>(sender());
+
+    Transaction::Role role = transaction->role();
+    Transaction::TransactionFlags flags = transaction->transactionFlags();
+    if (!(flags & Transaction::TransactionFlagOnlyDownload || flags & Transaction::TransactionFlagSimulate) &&
+            (role == Transaction::RoleInstallPackages ||
+             role == Transaction::RoleInstallFiles    ||
+             role == Transaction::RoleRemovePackages  ||
+             role == Transaction::RoleUpdatePackages  ||
+             role == Transaction::RoleUpgradeSystem)) {
+        // AVOID showing messages and restart requires when
+        // the user was just simulating an instalation
+        connect(transaction, SIGNAL(message(PackageKit::Transaction::Message,QString)),
+                this, SLOT(message(PackageKit::Transaction::Message,QString)));
+        connect(transaction, SIGNAL(requireRestart(PackageKit::Transaction::Restart,QString)),
+                this, SLOT(requireRestart(PackageKit::Transaction::Restart,QString)));
+
+        // Don't let the system sleep while doing some sensible actions
+        suppressSleep(true, m_inhibitCookie, PkStrings::action(role, flags));
     }
 
-    // force the first changed or create a TransactionJob
-    transactionChanged(transaction, interactive);
+    connect(transaction, SIGNAL(isCallerActiveChanged()),
+            SLOT(transactionChanged()));
+
 }
 
 void TransactionWatcher::showRebootNotificationApt() {
@@ -150,8 +154,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
     // check if the transaction emitted any require restart
     Transaction *transaction = qobject_cast<Transaction*>(sender());
     QDBusObjectPath tid = transaction->tid();    
-    disconnect(transaction, SIGNAL(isCallerActiveChanged()),
-               this, SLOT(transactionChanged()));
+    transaction->disconnect(this);
     m_transactions.remove(tid);
     m_transactionJob.remove(tid);
 
