@@ -92,7 +92,13 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     setButtons(Apply);
 
     // store the actions supported by the backend
-    m_roles = Daemon::global()->roles(); //TODO this is asyc now
+    QEventLoop loop;
+    connect(Daemon::global(), SIGNAL(isRunningChanged()),
+            &loop, SLOT(quit()));
+    if (!Daemon::isRunning()) {
+        loop.exec();
+    }
+    m_roles = Daemon::roles(); //TODO this is asyc now
 
     // Set the current locale
     QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
