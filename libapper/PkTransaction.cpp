@@ -705,7 +705,7 @@ void PkTransaction::setupTransaction(Transaction *transaction)
     }
 
 #ifdef HAVE_DEBCONFKDE
-    QString _tid = tid().path();
+    QString _tid = transaction->tid().path();
     QString socket;
     // Build a socket path like /tmp/1761_edeceabd_data_debconf
     socket = QLatin1String("/tmp") % _tid % QLatin1String("_debconf");
@@ -727,7 +727,7 @@ void PkTransaction::setupTransaction(Transaction *transaction)
         kWarning() << "Failed to put SetupDebconfDialog message in DBus queue";
     }
 
-    setHints(QLatin1String("frontend-socket=") % socket);
+    transaction->setHints(QLatin1String("frontend-socket=") % socket);
 #endif //HAVE_DEBCONFKDE
 }
 
