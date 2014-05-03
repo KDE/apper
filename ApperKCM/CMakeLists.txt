@@ -33,7 +33,7 @@ target_link_libraries(kcm_apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KUTILS_LIBS}
-    ${QPACKAGEKIT2_LIBRARIES}
+    ${PackageKitQt4_LIBRARIES}
     ${KDE4_SOLID_LIBS}
     apper
 )

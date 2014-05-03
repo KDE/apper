@@ -20,6 +20,8 @@
 
 #include "DistroUpgrade.h"
 
+#include <Daemon>
+
 #include <Enum.h>
 
 #include <KNotification>
@@ -52,16 +54,12 @@ void DistroUpgrade::checkDistroUpgrades()
     }
 
     if (!m_transaction) {
-        m_transaction = new Transaction(this);
-        m_transaction->getDistroUpgrades();
-        if (!m_transaction->internalError()) {
-            connect(m_transaction, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
-                    this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
-            connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                    this, SLOT(checkDistroFinished(PackageKit::Transaction::Exit,uint)));
-        } else {
-            m_transaction = 0;
-        }
+        m_transaction = Daemon::getDistroUpgrades();
+        connect(m_transaction, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
+                this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
+        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                this, SLOT(checkDistroFinished(PackageKit::Transaction::Exit,uint)));
+
     }
 }
 

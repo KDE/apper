@@ -35,6 +35,8 @@
 #include <Daemon>
 #include <QDeclarativeEngine>
 
+static const KCatalogLoader loader(QLatin1String("apper"));
+
 void QmlPlugins::registerTypes(const char* uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.apper"));

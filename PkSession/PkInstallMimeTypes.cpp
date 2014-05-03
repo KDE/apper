@@ -22,6 +22,8 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
+#include <Daemon>
+
 #include <PkStrings.h>
 
 #include <KLocale>
@@ -79,21 +81,15 @@ void PkInstallMimeTypes::search()
 {
     QStringList mimeTypes = m_model->files();
     PkTransaction *transaction = new PkTransaction(this);
+    Transaction *t;
+    t = Daemon::whatProvides(mimeTypes,
+                             Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+    transaction->setupTransaction(t);
     setTransaction(Transaction::RoleWhatProvides, transaction);
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    transaction->whatProvides(Transaction::ProvidesMimetype,
-                              mimeTypes,
-                              Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-    if (transaction->internalError()) {
-        if (showWarning()) {
-            setError(i18n("Failed to search for provides"),
-                     PkStrings::daemonError(transaction->internalError()));
-        }
-        sendErrorFinished(Failed, "Failed to search for provides");
-    }
 }
 
 void PkInstallMimeTypes::notFound()

@@ -37,8 +37,10 @@ AppStream* AppStream::m_instance = 0;
 
 AppStream* AppStream::instance()
 {
-    if(!m_instance)
+    if(!m_instance) {
         m_instance = new AppStream(qApp);
+        m_instance->open();
+    }
 
     return m_instance;
 }
@@ -47,57 +49,8 @@ AppStream::AppStream(QObject *parent)
  : QObject(parent)
 {
 #ifdef HAVE_APPSTREAM
-    bool ret;
-
     // create new AppStream database and screenshot service
-    m_asDB = appstream_database_new();
-    m_asScreenshots = appstream_screenshot_service_new();
-
-    ret = appstream_database_open(m_asDB);
-    if (!ret) {
-        qWarning("Unable to open AppStream Xapian database!");
-        return;
-    }
-
-    // cache application data (we might use the db directly, later (making use of AppstreamSearchQuery))
-    GPtrArray *appArray = NULL;
-    appArray = appstream_database_get_all_applications(m_asDB);
-
-    for (uint i = 0; i < appArray->len; i++) {
-        AppstreamAppInfo *appInfo;
-        appInfo = (AppstreamAppInfo*) g_ptr_array_index(appArray, i);
-
-        Application app;
-        // Application name
-        app.name = QString::fromUtf8(appstream_app_info_get_name(appInfo));
-
-        // Package name
-        QString pkgName = QString::fromUtf8(appstream_app_info_get_pkgname(appInfo));
-
-        // Desktop file
-        app.id = QString::fromUtf8(appstream_app_info_get_desktop_file(appInfo));
-
-        // Summary
-        app.summary = QString::fromUtf8(appstream_app_info_get_summary(appInfo));
-
-        // Application stock icon
-        app.icon = QString::fromUtf8(appstream_app_info_get_icon(appInfo));
-
-        // Application categories
-        int clen;
-        gchar **cats = appstream_app_info_get_categories(appInfo, &clen);
-        if (cats != NULL) {
-            app.categories = QStringList();
-            for (int j = 0; j < clen; j++) {
-                app.categories << QString::fromUtf8(cats[j]);
-            }
-        }
-        g_strfreev(cats);
-
-        m_appInfo.insertMulti(pkgName, app);
-    }
-    g_ptr_array_unref(appArray);
-
+    m_asDB = as_database_new();
 #endif //HAVE_APPSTREAM
 }
 
@@ -105,13 +58,105 @@ AppStream::~AppStream()
 {
 #ifdef HAVE_APPSTREAM
     g_object_unref(m_asDB);
-    g_object_unref(m_asScreenshots);
+#endif
+}
+
+bool AppStream::open()
+{
+#ifdef HAVE_APPSTREAM
+    bool ret = as_database_open(m_asDB);
+    if (!ret) {
+        qWarning("Unable to open AppStream Xapian database!");
+        return false;
+    }
+
+    // cache application data (we might use the db directly, later (making use of AppstreamSearchQuery))
+    GPtrArray *cptArray;
+    cptArray = as_database_get_all_components(m_asDB);
+    if (cptArray == NULL) {
+        qWarning("AppStream application array way NULL! (This should never happen)");
+        return false;
+    }
+
+    for (uint i = 0; i < cptArray->len; i++) {
+        AsComponent *cpt;
+        GPtrArray *sshot_array;
+        AsScreenshot *sshot;
+        cpt = (AsComponent*) g_ptr_array_index(cptArray, i);
+        // we only want desktop apps at time
+        if (as_component_get_kind (cpt) != AS_COMPONENT_KIND_DESKTOP_APP)
+            continue;
+
+        Application app;
+        // Application name
+        app.name = QString::fromUtf8(as_component_get_name(cpt));
+
+        // Package name
+        QString pkgName = QString::fromUtf8(as_component_get_pkgname(cpt));
+
+        // Desktop file
+        app.id = QString::fromUtf8(as_component_get_idname(cpt));
+
+        // Summary
+        app.summary = QString::fromUtf8(as_component_get_summary(cpt));
+
+        // Description
+        app.description = QString::fromUtf8(as_component_get_description(cpt));
+
+        // Application stock icon
+        app.icon = QString::fromUtf8(as_component_get_icon(cpt));
+
+        // Application categories
+        gchar **cats = as_component_get_categories(cpt);
+        if (cats != NULL) {
+            app.categories = QStringList();
+            for (int j = 0; cats[j] != NULL; j++) {
+                app.categories << QString::fromUtf8(cats[j]);
+            }
+        }
+        g_strfreev(cats);
+
+        // add default screenshot urls
+        sshot_array = as_component_get_screenshots (cpt);
+
+        // find default screenshot, if possible
+        sshot = NULL;
+        for (uint i = 0; i < sshot_array->len; i++) {
+            sshot = (AsScreenshot*) g_ptr_array_index (sshot_array, 0);
+            if (as_screenshot_get_kind (sshot) == AS_SCREENSHOT_KIND_DEFAULT)
+                break;
+        }
+
+        if (sshot != NULL) {
+            GPtrArray *imgs;
+            imgs = as_screenshot_get_images (sshot);
+            for (uint i = 0; i < imgs->len; i++) {
+                AsImage *img;
+                img = (AsImage*) g_ptr_array_index (imgs, i);
+                if ((as_image_get_kind (img) == AS_IMAGE_KIND_SOURCE) && (app.screenshot.isEmpty())) {
+                    app.screenshot = QString::fromUtf8(as_image_get_url (img));
+                } else if ((as_image_get_kind (img) == AS_IMAGE_KIND_THUMBNAIL) && (app.thumbnail.isEmpty())) {
+                    app.thumbnail = QString::fromUtf8(as_image_get_url (img));
+                }
+
+                if ((!app.screenshot.isEmpty()) && (!app.thumbnail.isEmpty()))
+                    break;
+            }
+        }
+
+        m_appInfo.insertMulti(pkgName, app);
+    }
+    g_ptr_array_unref(cptArray);
+
+    return true;
+#else
+    return false;
 #endif
 }
 
 QList<AppStream::Application> AppStream::applications(const QString &pkgName) const
 {
-    return m_appInfo.values(pkgName);;
+    return m_appInfo.values(pkgName);
 }
 
 QString AppStream::genericIcon(const QString &pkgName) const
@@ -146,8 +191,13 @@ QStringList AppStream::findPkgNames(const CategoryMatcher &parser) const
 QString AppStream::thumbnail(const QString &pkgName) const
 {
 #ifdef HAVE_APPSTREAM
-    const gchar *url = appstream_screenshot_service_get_thumbnail_url(m_asScreenshots, pkgName.toLatin1().data());
-    return QLatin1String(url);
+    QString url = "";
+    if (m_appInfo.contains(pkgName)) {
+        Application app = m_appInfo.value(pkgName);
+        url = app.thumbnail;
+    }
+
+    return url;
 #else
     Q_UNUSED(pkgName)
     return QString();
@@ -157,8 +207,13 @@ QString AppStream::thumbnail(const QString &pkgName) const
 QString AppStream::screenshot(const QString &pkgName) const
 {
 #ifdef HAVE_APPSTREAM
-    const gchar *url = appstream_screenshot_service_get_screenshot_url(m_asScreenshots, pkgName.toLatin1().data());
-    return QLatin1String(url);
+    QString url = "";
+    if (m_appInfo.contains(pkgName)) {
+        Application app = m_appInfo.value(pkgName);
+        url = app.screenshot;
+    }
+
+    return url;
 #else
     Q_UNUSED(pkgName)
     return QString();

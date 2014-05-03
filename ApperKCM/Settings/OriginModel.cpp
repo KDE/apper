@@ -20,6 +20,7 @@
 
 #include "OriginModel.h"
 
+#include <Daemon>
 #include <PkStrings.h>
 
 #include <KMessageBox>
@@ -44,17 +45,12 @@ OriginModel::~OriginModel()
 bool OriginModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == Qt::CheckStateRole && index.isValid()) {
-        Transaction *transaction = new Transaction(this);
+        Transaction *transaction = Daemon::repoEnable(index.data(RepoId).toString(),
+                                                      value.toBool());
         connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
                 SLOT(errorCode(PackageKit::Transaction::Error,QString)));
         connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 SLOT(setRepoFinished(PackageKit::Transaction::Exit)));
-
-        transaction->repoEnable(index.data(RepoId).toString(),
-                                value.toBool());
-        if (transaction->internalError()) {
-            KMessageBox::sorry(0, PkStrings::daemonError(transaction->internalError()));
-        }
     }
     return false;
 }

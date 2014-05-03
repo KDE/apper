@@ -14,7 +14,7 @@ kde4_add_library(apperplugin SHARED ${apper_qml_plugin_SRCS})
 target_link_libraries(apperplugin
     ${QT_QTDECLARATIVE_LIBRARY}
     ${KDE4_KDEUI_LIBS}
-    ${QPACKAGEKIT2_LIBRARIES}
+    ${PackageKitQt4_LIBRARIES}
     apper
 )
 

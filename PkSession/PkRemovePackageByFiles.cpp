@@ -23,6 +23,8 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
+#include <Daemon>
+
 #include <PkStrings.h>
 
 #include <KLocale>
@@ -118,20 +120,12 @@ void PkRemovePackageByFiles::searchFinished(PkTransaction::ExitStatus status)
             QString file = m_files.takeFirst();
 
             PkTransaction *transaction = new PkTransaction(this);
+            transaction->setupTransaction(Daemon::searchFiles(file, Transaction::FilterInstalled));
             setTransaction(Transaction::RoleSearchFile, transaction);
             connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            transaction->searchFiles(file, Transaction::FilterInstalled);
-            if (transaction->internalError()) {
-                QString msg(i18n("Failed to start search file transaction"));
-                if (showWarning()) {
-                    setError(msg,
-                             PkStrings::daemonError(transaction->internalError()));
-                }
-                sendErrorFinished(Failed, "Failed to search for package");
-            }
         } else {
             // we are done resolving
             SessionTask::searchFinished(status);

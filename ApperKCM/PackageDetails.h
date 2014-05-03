@@ -22,6 +22,7 @@
 #define PACKAGE_DETAILS_H
 
 #include <Transaction>
+#include <Details>
 
 #include <KPixmapSequenceOverlayPainter>
 #include <KJob>
@@ -65,12 +66,7 @@ signals:
 private slots:
     void on_screenshotL_clicked();
     void actionActivated(QAction *action);
-    void description(const QString &packageID,
-                     const QString &license,
-                     PackageKit::Transaction::Group group,
-                     const QString &detail,
-                     const QString &url,
-                     qulonglong size);
+    void description(const PackageKit::Details &details);
     void files(const QString &packageID, const QStringList &files);
     void finished();
     void resultJob(KJob *);
@@ -88,12 +84,8 @@ private:
     QActionGroup *m_actionGroup;
     QModelIndex   m_index;
     QString m_packageID;
-    QString m_detailsPackageID;
-    QString m_detailsLicense;
-    PackageKit::Transaction::Group m_detailsGroup;
-    QString m_detailsDetail;
-    QString m_detailsUrl;
-    qulonglong m_detailsSize;
+    PackageKit::Details m_details;
+    QString m_detailsDescription;
 
     QString       m_appName;
 

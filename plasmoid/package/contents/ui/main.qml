@@ -107,20 +107,11 @@ FocusScope {
 
     function getUpdates() {
         if (!checkedForUpdates) {
-            state = "BUSY";
-            getUpdatesTransaction.cancel();
-            getUpdatesTransaction.reset();
-            updatesModel.clear();
-            getUpdatesTransaction.getUpdates();
-            var error = getUpdatesTransaction.internalError;
-            if (error) {
-                statusView.title = PkStrings.daemonError(error);
-                statusView.subTitle = getUpdatesTransaction.internalErrorMessage;
-                statusView.iconName = "dialog-error";
-                state = "MESSAGE";
-            } else {
-                checkedForUpdates = true;
-            }
+            state = "BUSY"
+            getUpdatesTransaction.cancel()
+            updatesModel.clear()
+            getUpdatesTransaction.getUpdates()
+            checkedForUpdates = true
         }
     }
 
@@ -134,8 +125,8 @@ FocusScope {
 
     function getUpdatesFinished() {
         updatesModel.finished();
-        updatesView.sortModel.sortNow();
         updatesModel.clearSelectedNotPresent();
+        updatesView.sortModel.sortNow();
         updateIcon();
         decideState(false);
     }
@@ -196,12 +187,8 @@ FocusScope {
         onTriggered: getUpdates()
     }
 
-    Apper.Transaction {
+    Apper.PkTransaction {
         id: getUpdatesTransaction
-        onChanged: {
-            busyView.title = PkStrings.action(role, transactionFlags);
-            busyView.subTitle = PkStrings.status(status);
-        }
     }
 
     StatusView {
@@ -210,6 +197,8 @@ FocusScope {
         anchors.fill: parent
         anchors.margins: 4
         state: "BUSY"
+        title: PkStrings.action(getUpdatesTransaction.role, getUpdatesTransaction.transactionFlags)
+        subTitle: PkStrings.status(getUpdatesTransaction.status)
     }
 
     Column {

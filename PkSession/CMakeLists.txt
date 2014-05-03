@@ -40,7 +40,7 @@ kde4_add_executable(apper-pk-session
 target_link_libraries(apper-pk-session
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
-    ${QPACKAGEKIT2_LIBRARIES}
+    ${PackageKitQt4_LIBRARIES}
     ${QT_QTXMLPATTERNS_LIBRARY}
     apper
 )

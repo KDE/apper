@@ -33,7 +33,7 @@ set(libapper_SRCS
 
 if(APPSTREAM)
     pkg_check_modules(GLIB2 REQUIRED glib-2.0>=2.36)
-    pkg_check_modules(APPSTREAM REQUIRED appstream>=0.3.1)
+    pkg_check_modules(APPSTREAM REQUIRED appstream>=0.6)
 
     set(libapper_SRCS ${libapper_SRCS} AppStream.cpp)
 endif()

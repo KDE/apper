@@ -118,16 +118,16 @@ void PkInstallCatalogs::search()
     QString arch = parts.at(2);
 
     QStringList rxActions;
-    Transaction::Roles actions = Daemon::global()->actions();
-    if (actions & Transaction::RoleResolve) {
+    Transaction::Roles roles = Daemon::global()->roles();
+    if (roles & Transaction::RoleResolve) {
         rxActions << "InstallPackages";
     }
 
-    if (actions & Transaction::RoleWhatProvides) {
+    if (roles & Transaction::RoleWhatProvides) {
         rxActions << "InstallProvides";
     }
 
-    if (actions & Transaction::RoleSearchFile) {
+    if (roles & Transaction::RoleSearchFile) {
         rxActions << "InstallFiles";
     }
 
@@ -215,14 +215,15 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             kDebug() << "m_installPackages" << m_maxResolve << m_installPackages.size() << resolve.size();
 
             PkTransaction *transaction = new PkTransaction(this);
+            Transaction *t;
+            t = Daemon::resolve(resolve,
+                                Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+            transaction->setupTransaction(t);
             setTransaction(Transaction::RoleResolve, transaction);
             connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            transaction->resolve(resolve,
-                                 Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-            checkTransaction(transaction);
         } else if (!m_installProvides.isEmpty()) {
             // Continue resolving Install Provides
             QStringList provides;
@@ -235,15 +236,15 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             kDebug() << "m_installProvides" <<  m_maxResolve << m_installProvides.size() << provides.size();
 
             PkTransaction *transaction = new PkTransaction(this);
+            Transaction *t;
+            t = Daemon::whatProvides(provides,
+                                     Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+            transaction->setupTransaction(t);
             setTransaction(Transaction::RoleWhatProvides, transaction);
             connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            transaction->whatProvides(Transaction::ProvidesAny,
-                                      provides,
-                                      Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-            checkTransaction(transaction);
         } else if (!m_installFiles.isEmpty()) {
             // Continue resolving Install Packages
             QStringList files;
@@ -256,14 +257,15 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
             kDebug() << "m_installFiles" << m_maxResolve << m_installFiles.size() << files.size();
 
             PkTransaction *transaction = new PkTransaction(this);
+            Transaction *t;
+            t = Daemon::searchFiles(files,
+                                    Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+            transaction->setupTransaction(t);
             setTransaction(Transaction::RoleSearchFile, transaction);
             connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
                     this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
             connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                     this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-            transaction->searchFiles(files,
-                                     Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-            checkTransaction(transaction);
         } else {
             // we are done resolving
             SessionTask::searchFinished(status);
@@ -271,15 +273,6 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
     } else {
         // we got an error...
         SessionTask::searchFinished(status);
-    }
-}
-
-void PkInstallCatalogs::checkTransaction(Transaction *transaction)
-{
-    if (transaction->internalError()) {
-        QString msg(i18n("Failed to start resolve transaction"));
-        setError(msg, PkStrings::daemonError(transaction->internalError()));
-        sendErrorFinished(Failed, msg);
     }
 }
 

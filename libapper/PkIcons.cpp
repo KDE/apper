@@ -180,14 +180,16 @@ QString PkIcons::actionIconName(Transaction::Role role)
     case Transaction::RoleCancel                  : return "process-stop";
     case Transaction::RoleDownloadPackages        : return "package-download";
     case Transaction::RoleGetCategories           : return "package-info";
-    case Transaction::RoleGetDepends              : return "package-info";
+    case Transaction::RoleDependsOn               : return "package-info";
     case Transaction::RoleGetDetails              : return "package-info";
+    case Transaction::RoleGetDetailsLocal         : return "package-info";
     case Transaction::RoleGetDistroUpgrades       : return "distro-upgrade";
     case Transaction::RoleGetFiles                : return "search-package";
+    case Transaction::RoleGetFilesLocal           : return "search-package";
     case Transaction::RoleGetOldTransactions      : return "package-info";
     case Transaction::RoleGetPackages             : return "package-packages";
     case Transaction::RoleGetRepoList             : return "package-orign";
-    case Transaction::RoleGetRequires             : return "package-info";
+    case Transaction::RoleRequiredBy              : return "package-info";
     case Transaction::RoleGetUpdateDetail         : return "package-info";
     case Transaction::RoleGetUpdates              : return "package-info";
     case Transaction::RoleInstallFiles            : return "package-installed";
@@ -197,6 +199,7 @@ QString PkIcons::actionIconName(Transaction::Role role)
     case Transaction::RoleRemovePackages          : return "package-removed";
     case Transaction::RoleRepoEnable              : return "package-orign";
     case Transaction::RoleRepoSetData             : return "package-orign";
+    case Transaction::RoleRepoRemove              : return "package-orign";
     case Transaction::RoleResolve                 : return "search-package";
     case Transaction::RoleSearchDetails           : return "search-package";
     case Transaction::RoleSearchFile              : return "search-package";

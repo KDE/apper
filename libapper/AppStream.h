@@ -29,23 +29,27 @@
 
 #include <kdemacros.h>
 
-struct _AppstreamDatabase;
-typedef struct _AppstreamDatabase AppstreamDatabase;
+struct _AsDatabase;
+typedef struct _AsDatabase AsDatabase;
 
-struct _AppstreamScreenshotService;
-typedef struct _AppstreamScreenshotService AppstreamScreenshotService;
+struct _AsScreenshotService;
+typedef struct _AsScreenshotService AsScreenshotService;
 
 class KDE_EXPORT AppStream : public QObject {
     public:
         struct Application {
             QString name;
             QString summary;
+            QString description;
             QString icon;
             QString id;
             QStringList categories;
+            QString screenshot;
+            QString thumbnail;
         };
         static AppStream* instance();
         virtual ~AppStream();
+        bool open();
 
         QList<Application> applications(const QString &pkgName) const;
         QString genericIcon(const QString &pkgName) const;
@@ -55,8 +59,7 @@ class KDE_EXPORT AppStream : public QObject {
 
     private:
         explicit AppStream(QObject *parent = 0);
-        AppstreamDatabase *m_asDB;
-	AppstreamScreenshotService *m_asScreenshots;
+        AsDatabase *m_asDB;
 
         QHash<QString, Application> m_appInfo;
         static AppStream         *m_instance;

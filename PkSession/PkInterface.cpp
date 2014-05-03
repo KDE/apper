@@ -39,6 +39,8 @@
 #include "PkIsInstalled.h"
 #include "PkSearchFile.h"
 
+#include <Daemon>
+
 #include <KDebug>
 
 using namespace PackageKit;
@@ -46,6 +48,22 @@ using namespace PackageKit;
 PkInterface::PkInterface(QObject *parent) :
     AbstractIsRunning(parent)
 {
+    if (!Daemon::isRunning()) {
+        QTimer timer;
+        timer.setInterval(5000);
+        QEventLoop loop;
+        connect(Daemon::global(), SIGNAL(isRunningChanged()),
+                &loop, SLOT(quit()));
+        connect(&timer, SIGNAL(timeout()),
+                &loop, SLOT(quit()));
+        loop.exec();
+        if (!Daemon::isRunning()) {
+            kWarning() << "Packagekit didn't start";
+            qApp->quit();
+            return;
+        }
+    }
+
     kDebug() << "Creating Helper";
     (void) new ModifyAdaptor(this);
     (void) new QueryAdaptor(this);

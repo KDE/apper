@@ -21,6 +21,7 @@
 #include "PkInstallGStreamerResources.h"
 
 #include "IntroDialog.h"
+#include <Daemon>
 
 #include <PkStrings.h>
 
@@ -124,21 +125,15 @@ PkInstallGStreamerResources::~PkInstallGStreamerResources()
 void PkInstallGStreamerResources::search()
 {
     PkTransaction *transaction = new PkTransaction(this);
+    Transaction *t;
+    t = Daemon::whatProvides(m_resources,
+                             Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
+    transaction->setupTransaction(t);
     setTransaction(Transaction::RoleWhatProvides, transaction);
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    transaction->whatProvides(Transaction::ProvidesCodec,
-                              m_resources,
-                              Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
-    if (transaction->internalError()) {
-        QString msg(i18n("Failed to search for provides"));
-        if (showWarning()) {
-            setError(msg, PkStrings::daemonError(transaction->internalError()));
-        }
-        sendErrorFinished(Failed, msg);
-    }
 }
 
 void PkInstallGStreamerResources::notFound()

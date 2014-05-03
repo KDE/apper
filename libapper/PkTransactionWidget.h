@@ -46,7 +46,7 @@ public:
     void hideCancelButton();
 
     Transaction::Role role() const;
-    Transaction* transaction() const;
+    PkTransaction* transaction() const;
 
     bool isFinished() const;
     bool isCancelVisible() const;

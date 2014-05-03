@@ -24,6 +24,8 @@
 
 #include "ApperdThread.h"
 
+#include <Daemon>
+
 #include <PkStrings.h>
 #include <PkIcons.h>
 #include <Enum.h>
@@ -91,15 +93,11 @@ void Updater::checkForUpdates(bool systemReady)
     m_updateList.clear();
     m_importantList.clear();
     m_securityList.clear();
-    m_getUpdatesT = new Transaction(this);
+    m_getUpdatesT = Daemon::getUpdates();
     connect(m_getUpdatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(packageToUpdate(PackageKit::Transaction::Info,QString,QString)));
     connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(getUpdateFinished()));
-    m_getUpdatesT->getUpdates();
-    if (m_getUpdatesT->internalError()) {
-        m_getUpdatesT = 0;
-    }
 }
 
 void Updater::packageToUpdate(Transaction::Info info, const QString &packageID, const QString &summary)
@@ -304,27 +302,24 @@ bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, con
 
     // Defaults to security
     PkTransaction *transaction = new PkTransaction;
+    transaction->setProperty("DownloadOnly", downloadOnly);
     transaction->enableJobWatcher(true);
+    transaction->updatePackages(packages, downloadOnly);
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
-    transaction->setProperty("DownloadOnly", downloadOnly);
-    transaction->updatePackages(packages, downloadOnly);
-    if (!transaction->internalError()) {
-        if (!icon.isNull()) {
-            KNotification *notify;
-            if (downloadOnly) {
-                notify = new KNotification("DownloadingUpdates");
-            } else {
-                notify = new KNotification("AutoInstallingUpdates");
-            }
-            notify->setComponentData(KComponentData("apperd"));
-            notify->setText(msg);
-            // use of QSize does the right thing
-            notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
-            notify->sendEvent();
+    if (!icon.isNull()) {
+        KNotification *notify;
+        if (downloadOnly) {
+            notify = new KNotification("DownloadingUpdates");
+        } else {
+            notify = new KNotification("AutoInstallingUpdates");
         }
-
-        return true;
+        notify->setComponentData(KComponentData("apperd"));
+        notify->setText(msg);
+        // use of QSize does the right thing
+        notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+        notify->sendEvent();
     }
-    return false;
+
+    return true;
 }

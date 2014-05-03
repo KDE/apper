@@ -20,6 +20,8 @@
 
 #include "PkInstallPrinterDrivers.h"
 
+#include <Daemon>
+
 #include <PkStrings.h>
 
 #include <KLocale>
@@ -61,20 +63,15 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
     }
 
     PkTransaction *transaction = new PkTransaction(this);
+    Transaction *t;
+    t = Daemon::whatProvides(search,
+                             Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
+    transaction->setupTransaction(t);
     setTransaction(Transaction::RoleWhatProvides, transaction);
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
             this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
     connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
             this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    transaction->whatProvides(Transaction::ProvidesPostscriptDriver,
-                              search,
-                              Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
-
-    if (transaction->internalError()) {
-        QString msg(i18n("Failed to search for provides"));
-        setError(msg, PkStrings::daemonError(transaction->internalError()));
-        sendErrorFinished(InternalError, msg);
-    }
 }
 
 PkInstallPrinterDrivers::~PkInstallPrinterDrivers()

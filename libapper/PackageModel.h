@@ -26,6 +26,7 @@
 #include <QIcon>
 
 #include <Transaction>
+#include <Details>
 
 class PackageModel : public QAbstractItemModel
 {
@@ -141,11 +142,12 @@ private:
     QList<InternalPackage> internalSelectedPackages() const;
     bool containsChecked(const QString &pid) const;
 
-    bool                            m_finished;
+    bool                            m_finished = true;
     bool                            m_checkable;
     QPixmap                         m_installedEmblem;
     QVector<InternalPackage>        m_packages;
     QHash<QString, InternalPackage> m_checkedPackages;
+    PackageKit::Transaction *m_getUpdatesTransaction = 0;
     PackageKit::Transaction *m_fetchSizesTransaction;
     PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
     QHash<int, QByteArray> m_roles;

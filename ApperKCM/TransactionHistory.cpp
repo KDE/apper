@@ -73,13 +73,9 @@ void TransactionHistory::refreshList()
 {
     // Refresh transaction list
     m_transactionModel->clear();
-    Transaction *transaction = new Transaction(this);
+    Transaction *transaction = Daemon::getOldTransactions(0);
     connect(transaction, SIGNAL(transaction(PackageKit::Transaction*)),
             m_transactionModel, SLOT(addTransaction(PackageKit::Transaction*)));
-    transaction->getOldTransactions(0);
-    if (transaction->internalError()) {
-        KMessageBox::sorry(this, PkStrings::daemonError(transaction->internalError()));
-    }
 
     // Refresh time
     QString text;

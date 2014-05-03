@@ -43,10 +43,7 @@ FocusScope {
 
     Apper.PkTransaction {
         id: updateTransaction
-        onChanged: {
-            statusText.text = PkStrings.status(status, speed, downloadSizeRemaining);
-            transactionProgress.value = updateTransaction.percentage;
-        }
+        onPercentageChanged: updateTransaction.percentage
         onFinished: transactionItem.finished(status === 0)
     }
 
@@ -67,6 +64,7 @@ FocusScope {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
+                text: PkStrings.status(updateTransaction.status, updateTransaction.speed, updateTransaction.downloadSizeRemaining)
             }
             PlasmaComponents.Button {
                 id: updateBT
@@ -84,6 +82,7 @@ FocusScope {
             anchors.right: parent.right
             minimumValue: 0
             maximumValue: 100
+            value: updateTransaction.percentage
         }
         ListView {
             id: progressView

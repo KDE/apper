@@ -48,7 +48,7 @@ if (DEBCONF_SUPPORT)
     message(STATUS "Building with Debconf support")
 endif (DEBCONF_SUPPORT)
 
-set(APP_VERSION 0.8.1)
+set(APP_VERSION 0.9.0)
 
 # command to edit the packages origins
 set(EDIT_ORIGNS_DESKTOP_NAME "" CACHE STRING "Edit origins desktop name")
@@ -65,11 +65,14 @@ set(PACKAGEKIT_QT_MIN_VERSION 0.9.0)
 find_package(PackageKitQt5 ${PACKAGEKIT_QT_MIN_VERSION} REQUIRED)
 message(STATUS "PackagekitQt5, The PackageKit Qt library - http://www.packagekit.org, found: " ${PACKAGEKIT_QT_MIN_VERSION})
 
+add_definitions("-std=gnu++11")
+
 include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${PackageKitQt5_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libapper)
+
 
 add_subdirectory(libapper)
 #add_subdirectory(ApperKCM)

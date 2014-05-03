@@ -92,7 +92,13 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     setButtons(Apply);
 
     // store the actions supported by the backend
-    m_roles = Daemon::global()->actions();
+    QEventLoop loop;
+    connect(Daemon::global(), SIGNAL(isRunningChanged()),
+            &loop, SLOT(quit()));
+    if (!Daemon::isRunning()) {
+        loop.exec();
+    }
+    m_roles = Daemon::roles(); //TODO this is asyc now
 
     // Set the current locale
     QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
@@ -638,37 +644,22 @@ void ApperKCM::search()
     disconnectTransaction();
 
     // search
-    m_searchTransaction = new Transaction(this);
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            ui->browseView->busyCursor(), SLOT(stop()));
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(finished()));
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            m_browseModel, SLOT(finished()));
-    if (ui->browseView->isShowingSizes()) {
-        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                m_browseModel, SLOT(fetchSizes()));
-    }
-    connect(m_searchTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            m_browseModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
     switch (m_searchRole) {
     case Transaction::RoleSearchName:
-        m_searchTransaction->searchNames(m_searchString, m_filtersMenu->filters());
+        m_searchTransaction = Daemon::searchNames(m_searchString, m_filtersMenu->filters());
         emit caption(m_searchString);
         break;
     case Transaction::RoleSearchDetails:
-        m_searchTransaction->searchDetails(m_searchString, m_filtersMenu->filters());
+        m_searchTransaction = Daemon::searchDetails(m_searchString, m_filtersMenu->filters());
         emit caption(m_searchString);
         break;
     case Transaction::RoleSearchFile:
-        m_searchTransaction->searchFiles(m_searchString, m_filtersMenu->filters());
+        m_searchTransaction = Daemon::searchFiles(m_searchString, m_filtersMenu->filters());
         emit caption(m_searchString);
         break;
     case Transaction::RoleSearchGroup:
         if (m_searchGroupCategory.isEmpty()) {
-            m_searchTransaction->searchGroup(m_searchGroup, m_filtersMenu->filters());
+            m_searchTransaction = Daemon::searchGroup(m_searchGroup, m_filtersMenu->filters());
             // m_searchString has the group nice name
             emit caption(m_searchString);
         } else {
@@ -677,7 +668,7 @@ void ApperKCM::search()
 #ifndef HAVE_APPSTREAM
             if (m_searchGroupCategory.startsWith('@') ||
                 m_searchGroupCategory.startsWith(QLatin1String("repo:"))) {
-                m_searchTransaction->searchGroup(m_searchGroupCategory, m_filtersMenu->filters());
+                m_searchTransaction = Daemon::searchGroup(m_searchGroupCategory, m_filtersMenu->filters());
             }
 #endif
             // else the transaction is useless
@@ -686,9 +677,9 @@ void ApperKCM::search()
     case Transaction::RoleGetPackages:
         // we want all the installed ones
         ui->browseView->disableExportInstalledPB();
+        m_searchTransaction = Daemon::getPackages(Transaction::FilterInstalled | m_filtersMenu->filters());
         connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 ui->browseView, SLOT(enableExportInstalledPB()));
-        m_searchTransaction->getPackages(Transaction::FilterInstalled | m_filtersMenu->filters());
         emit caption(i18n("Installed Software"));
         break;
     case Transaction::RoleResolve:
@@ -697,7 +688,7 @@ void ApperKCM::search()
             ui->browseView->setParentCategory(m_searchParentCategory);
             // WARNING the resolve might fail if the backend
             // has a low limit MaximumItemsToResolve
-            m_searchTransaction->resolve(m_searchCategory, m_filtersMenu->filters());
+            m_searchTransaction = Daemon::resolve(m_searchCategory, m_filtersMenu->filters());
             emit caption(m_searchParentCategory.data().toString());
         } else {
             ui->browseView->setParentCategory(m_searchParentCategory);
@@ -716,27 +707,32 @@ void ApperKCM::search()
         m_searchTransaction = 0;
         return;
     }
-
-    Transaction::InternalError error = m_searchTransaction->internalError();
-    if (error) {
-        setCurrentActionEnabled(true);
-        disconnectTransaction();
-        m_searchTransaction = 0;
-        kDebug() << "InternalError" << error;
-        KMessageBox::sorry(this, PkStrings::daemonError(error));
-    } else {
-        // cleans the models
-        m_browseModel->clear();
-
-        ui->browseView->showInstalledPanel(m_searchRole == Transaction::RoleGetPackages);
-        ui->browseView->busyCursor()->start();
-
-        ui->backTB->setEnabled(true);
-        setCurrentActionCancel(true);
-        setCurrentActionEnabled(m_searchTransaction->allowCancel());
-
-        ui->stackedWidget->setCurrentWidget(ui->pageBrowse);
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            ui->browseView->busyCursor(), SLOT(stop()));
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            this, SLOT(finished()));
+    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            m_browseModel, SLOT(finished()));
+    if (ui->browseView->isShowingSizes()) {
+        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+                m_browseModel, SLOT(fetchSizes()));
     }
+    connect(m_searchTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            m_browseModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+
+    // cleans the models
+    m_browseModel->clear();
+
+    ui->browseView->showInstalledPanel(m_searchRole == Transaction::RoleGetPackages);
+    ui->browseView->busyCursor()->start();
+
+    ui->backTB->setEnabled(true);
+    setCurrentActionCancel(true);
+    setCurrentActionEnabled(m_searchTransaction->allowCancel());
+
+    ui->stackedWidget->setCurrentWidget(ui->pageBrowse);
 }
 
 void ApperKCM::changed()
@@ -754,6 +750,7 @@ void ApperKCM::refreshCache()
     PkTransactionWidget *transactionW = new PkTransactionWidget(this);
     connect(transactionW, SIGNAL(titleChangedProgress(QString)), this, SIGNAL(caption(QString)));
     QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
+    transaction->refreshCache(m_forceRefreshCache);
     transactionW->setTransaction(transaction, Transaction::RoleRefreshCache);
 
     ui->stackedWidget->addWidget(transactionW);
@@ -765,7 +762,6 @@ void ApperKCM::refreshCache()
 
     QEventLoop loop;
     connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
-    transaction->refreshCache(m_forceRefreshCache);
 
     // wait for the end of transaction
     if (!transaction->isFinished()) {
@@ -813,8 +809,8 @@ void ApperKCM::save()
         QEventLoop loop;
         connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
         if (currentWidget == m_updaterPage) {
-            transactionW->setTransaction(transaction, Transaction::RoleUpdatePackages);
             transaction->updatePackages(m_updaterPage->packagesToUpdate());
+            transactionW->setTransaction(transaction, Transaction::RoleUpdatePackages);
 
             // wait for the end of transaction
             if (!transaction->isFinished()) {
@@ -828,8 +824,8 @@ void ApperKCM::save()
             // install then remove packages
             QStringList installPackages = m_browseModel->selectedPackagesToInstall();
             if (!installPackages.isEmpty()) {
-                transactionW->setTransaction(transaction, Transaction::RoleInstallPackages);
                 transaction->installPackages(installPackages);
+                transactionW->setTransaction(transaction, Transaction::RoleInstallPackages);
 
                 // wait for the end of transaction
                 if (!transaction->isFinished()) {
@@ -847,8 +843,8 @@ void ApperKCM::save()
 
             QStringList removePackages = m_browseModel->selectedPackagesToRemove();
             if (!removePackages.isEmpty()) {
-                transactionW->setTransaction(transaction, Transaction::RoleRemovePackages);
                 transaction->removePackages(removePackages);
+                transactionW->setTransaction(transaction, Transaction::RoleRemovePackages);
 
                 // wait for the end of transaction
                 if (!transaction->isFinished()) {

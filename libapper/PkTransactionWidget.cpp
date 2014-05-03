@@ -135,7 +135,22 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
         ui->progressView->header()->setResizeMode(2, QHeaderView::Stretch);
     }
 
-    connect(trans, SIGNAL(changed()), this, SLOT(updateUi()));
+    connect(m_trans, SIGNAL(percentageChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(speedChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(statusChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(downloadSizeRemainingChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(remainingTimeChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(roleChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(transactionFlagsChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(allowCancelChanged()),
+            SLOT(updateUi()));
 
     // Forward signals:
     connect(m_trans, SIGNAL(sorry(QString,QString,QString)),
@@ -145,11 +160,6 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
     connect(m_trans, SIGNAL(dialog(KDialog*)),
             this, SIGNAL(dialog(KDialog*)));
 
-    // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
-    connect(m_trans, SIGNAL(changed()),
-            this, SLOT(updateUi()));
-
-    // DISCONNECT ALL THESE SIGNALS BEFORE SETTING A NEW ONE
 
     // sets ui
     updateUi();
@@ -161,14 +171,28 @@ void PkTransactionWidget::unsetTransaction()
         return;
     }
 
-    disconnect(m_trans, SIGNAL(changed()),
-               this, SLOT(updateUi()));
+    connect(m_trans, SIGNAL(percentageChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(speedChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(statusChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(downloadSizeRemainingChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(remainingTimeChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(roleChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(transactionFlagsChanged()),
+            SLOT(updateUi()));
+    connect(m_trans, SIGNAL(allowCancelChanged()),
+            SLOT(updateUi()));
 }
 
 void PkTransactionWidget::updateUi()
 {
     // sets the action icon to be the window icon
-    Transaction *transaction = qobject_cast<Transaction*>(sender());
+    PkTransaction *transaction = qobject_cast<PkTransaction*>(sender());
     if (transaction == 0 && (transaction = m_trans) == 0) {
         kWarning() << "no transaction object";
         return;
@@ -300,7 +324,7 @@ Transaction::Role PkTransactionWidget::role() const
     return d->role;
 }
 
-Transaction *PkTransactionWidget::transaction() const
+PkTransaction *PkTransactionWidget::transaction() const
 {
     return m_trans;
 }
