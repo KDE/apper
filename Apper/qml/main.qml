@@ -1,5 +1,5 @@
-import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick 2.2
+import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 
 ApplicationWindow {
@@ -15,10 +15,16 @@ ApplicationWindow {
     function addPage(dict) {
         // Remove history forward to the current location
         if (goNext.enabled) {
-            historyModel.remove(mainView.currentIndex + 1, historyModel.count - (mainView.currentIndex + 1))
+            historyModel.remove(mainView.depth, historyModel.count - mainView.depth)
         }
 
         historyModel.append(dict)
+        createPage(historyModel.count - 1)
+    }
+
+    function createPage(index) {
+        var dict = historyModel.get(index)
+        mainView.push({"item": Qt.resolvedUrl(dict.page), "properties": dict})
     }
 
     toolBar: ToolBar {
@@ -27,15 +33,15 @@ ApplicationWindow {
 
             ToolButton {
                 iconName: "go-previous"
-                enabled: mainView.currentIndex
-                onClicked: mainView.currentIndex = mainView.currentIndex - 1
+                enabled: mainView.depth > 1
+                onClicked: mainView.pop()
             }
 
             ToolButton {
                 id: goNext
                 iconName: "go-next"
-                enabled: mainView.currentIndex + 1 < historyModel.count
-                onClicked: mainView.currentIndex = mainView.currentIndex + 1
+                enabled: mainView.depth < historyModel.count
+                onClicked: createPage(mainView.depth)
             }
 
             TextField {
@@ -81,18 +87,41 @@ ApplicationWindow {
         }
     }
 
-    ListView {
+    StackView {
         id: mainView
-        anchors.fill: parent
-        interactive: false
-        orientation: ListView.Horizontal
-        highlightMoveDuration: 500
-        model: historyModel
-        delegate: Page {
-            height: ListView.view.height
-            width: ListView.view.width
+
+        initialItem: Qt.resolvedUrl("Home.qml")
+
+        Rectangle {
+            anchors.fill: parent
+            color: sysPalette.base
         }
 
-        onCountChanged: currentIndex = historyModel.count - 1
+        delegate: StackViewDelegate {
+            function transitionFinished(properties)
+            {
+                properties.exitItem.opacity = 1
+            }
+
+            pushTransition: StackViewTransition {
+                PropertyAnimation {
+                    target: enterItem
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                }
+                PropertyAnimation {
+                    target: exitItem
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                }
+            }
+        }
+    }
+
+    Component.onCompleted: {
+
+        console.debug("mainView.depth changed: " + mainView.depth)
     }
 }

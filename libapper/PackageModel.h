@@ -33,6 +33,7 @@ class PackageModel : public QAbstractItemModel
     Q_OBJECT
     Q_PROPERTY(bool checkable READ checkable WRITE setCheckable NOTIFY changed)
     Q_PROPERTY(QString selectionStateText READ selectionStateText NOTIFY changed)
+    Q_PROPERTY(int count READ rowCount NOTIFY rowCountChanged)
 public:
     enum {
         NameCol = 0,
@@ -137,6 +138,7 @@ public slots:
 signals:
     void changed(bool value);
     void packageUnchecked(const QString &packageID);
+    void rowCountChanged();
 
 private:
     QList<InternalPackage> internalSelectedPackages() const;

@@ -45,6 +45,7 @@
 #include <QDebug>
 
 #include <PackageModel.h>
+#include <ApplicationSortFilterModel.h>
 
 #include <qqml.h>
 
@@ -62,6 +63,7 @@ Apper::Apper()
     m_view->show();*/
 
     qmlRegisterType<PackageModel>("org.packagekit", 1, 0, "PackageModel");
+    qmlRegisterType<ApplicationSortFilterModel>("org.packagekit", 1, 0, "ApplicationSortFilterModel");
 
     QQmlApplicationEngine *engine = new QQmlApplicationEngine(QUrl(QLatin1String("qrc:/qml/main.qml")));
 }

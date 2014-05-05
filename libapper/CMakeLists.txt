@@ -14,7 +14,7 @@ set(libapper_SRCS
 #     PkStrings.cpp
 #     ApplicationLauncher.cpp
 #     ApplicationsDelegate.cpp
-#     ApplicationSortFilterModel.cpp
+     ApplicationSortFilterModel.cpp
 #     CategoryDrawer.cpp
 #     ChangesDelegate.cpp
 #     TransactionDelegate.cpp

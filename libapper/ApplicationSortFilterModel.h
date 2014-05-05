@@ -22,21 +22,18 @@
 
 #include <QSortFilterProxyModel>
 
-#include <QDeclarativeItem>
-
 #include <Transaction>
-
-#include <kdemacros.h>
 
 using namespace PackageKit;
 
 class PackageModel;
-class KDE_EXPORT ApplicationSortFilterModel : public QSortFilterProxyModel
+class ApplicationSortFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(PackageModel* sourcePkgModel READ sourcePkgModel WRITE setSourcePkgModel NOTIFY changed)
     Q_PROPERTY(Transaction::Info infoFilter READ infoFilter WRITE setInfoFilter NOTIFY changed)
-    Q_PROPERTY(bool applicationFilter READ applicationFilter WRITE setApplicationFilter NOTIFY changed)
+    Q_PROPERTY(bool applicationsOnly READ applicationFilter WRITE setApplicationFilter NOTIFY changed)
+    Q_PROPERTY(bool packagesOnly MEMBER m_packagesOnly NOTIFY changed)
 public:
     explicit ApplicationSortFilterModel(QObject *parent = 0);
 
@@ -59,7 +56,8 @@ private:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
     Transaction::Info m_info;
-    bool m_applicationsOnly;
+    bool m_applicationsOnly = false;
+    bool m_packagesOnly = false;
 };
 
 #endif // APPLICATIONSORTFILTERMODEL_H

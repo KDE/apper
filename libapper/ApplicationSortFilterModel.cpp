@@ -21,7 +21,7 @@
 
 #include "PackageModel.h"
 
-#include <KDebug>
+#include <QDebug>
 
 ApplicationSortFilterModel::ApplicationSortFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent),
@@ -76,7 +76,8 @@ bool ApplicationSortFilterModel::filterAcceptsRow(int source_row, const QModelIn
     }
 
     // If we are filtering by Applications check if it is an application
-    if (m_applicationsOnly && index.data(PackageModel::IsPackageRole).toBool()) {
+    bool isPackage = index.data(PackageModel::IsPackageRole).toBool();
+    if (m_applicationsOnly && isPackage || m_packagesOnly && !isPackage) {
         return false;
     }
 

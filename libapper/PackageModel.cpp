@@ -63,15 +63,15 @@ PackageModel::PackageModel(QObject *parent)
 {
 //    m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 
-    m_roles[Qt::DisplayRole] = "name";
+    m_roles[Qt::DisplayRole] = "roleName";
     m_roles[SortRole] = "rSort";
     m_roles[NameRole] = "rName";
-    m_roles[SummaryRole] = "rSummary";
+    m_roles[SummaryRole] = "roleSummary";
     m_roles[VersionRole] = "rVersion";
     m_roles[ArchRole] = "rArch";
     m_roles[IconRole] = "rIcon";
-    m_roles[IdRole] = "rId";
-    m_roles[CheckStateRole] = "rChecked";
+    m_roles[IdRole] = "roleId";
+    m_roles[CheckStateRole] = "roleChecked";
     m_roles[InfoRole] = "rInfo";
     m_roles[ApplicationId] = "rApplicationId";
     m_roles[IsPackageRole] = "rIsPackageRole";
@@ -109,7 +109,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
         break;
     }
 
-    qDebug() << packageID;
+//    qDebug() << packageID;
 #ifdef HAVE_APPSTREAM
     QList<AppStream::Application> applications;
     if (!m_checkable) {
@@ -464,6 +464,8 @@ void PackageModel::clear()
         m_getUpdatesTransaction->cancel();
     }
     endRemoveRows();
+
+    emit rowCountChanged();
 }
 
 void PackageModel::clearSelectedNotPresent()
@@ -526,6 +528,7 @@ void PackageModel::finished()
     m_finished = true;
     endInsertRows();
 
+    emit rowCountChanged();
     emit changed(!m_checkedPackages.isEmpty());
 }
 
@@ -667,8 +670,8 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
         connect(m_getUpdatesTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
                 this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
     }
-    connect(m_getUpdatesTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+//    connect(m_getUpdatesTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+//            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
 //    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
 //            m_busySeq, SLOT(stop()));
 //    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
@@ -681,7 +684,7 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
                 this, SLOT(fetchCurrentVersions()));
     }
     connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(getUpdatesFinished()));
+            this, SLOT(finished()));
     // get all updates
 }
 
