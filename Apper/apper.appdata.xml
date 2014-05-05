@@ -18,6 +18,7 @@
   <name xml:lang="x-test">xxApperxx</name>
   <summary>KDE application and package management tool</summary>
   <summary xml:lang="cs">Nástroj KDE pro správu aplikací a balíčků</summary>
+  <summary xml:lang="de">KDE-Dienstprogramm für Paketverwaltung</summary>
   <summary xml:lang="fi">KDE:n sovellusten ja pakettien hallintatyökalu</summary>
   <summary xml:lang="nl">Hulpmiddel voor beheer van pakketten van KDE toepassingen</summary>
   <summary xml:lang="pl">Narzędzie do zarządzania aplikacjami i pakietami KDE</summary>
@@ -34,6 +35,7 @@
       provided by a Linux distribution.
     </p>
     <p xml:lang="cs">Apper je grafický nástroj pro správu balíčků a aplikací poskytovaných linuxovou distribucí.</p>
+    <p xml:lang="de">Apper ist ein graphisches Verwaltungsprogramm für Software-Pakete und Anwendungen, die von Linux-Distributionen angeboten werden.</p>
     <p xml:lang="fi">Apper on graafinen hallintatyökalu Linux-jakelun tarjoamille paketeille ja sovelluksille.</p>
     <p xml:lang="nl">Apper is een grafisch hulpmiddel voor beheer van pakketten en toepassingen geleverd door een Linux-distributie.</p>
     <p xml:lang="pl">Apper jest graficznym narzędziem do zarządzania pakietami i aplikacjami dostarczanymi wraz z dystrybucjami Linuksa.</p>
@@ -48,6 +50,7 @@
       date by installing updates.
     </p>
     <p xml:lang="cs">Umožňuje instalaci nového softwaru stejně jako udržování systému aktuálního za pomocí instalace aktualizací.</p>
+    <p xml:lang="de">Ermöglicht die Installation neuer Software und die Aktualisierung des Systems durch Installation von Aktualisierungen.</p>
     <p xml:lang="fi">Apperilla voi asentaa uusia ohjelmia sekä pitää järjestelmän ajan tasalla asentamalla päivitykset.</p>
     <p xml:lang="nl">Het stelt u in staat nieuwe software te installeren evenals het systeem bij de tijd te houden door elementen voor bijwerken te installeren.</p>
     <p xml:lang="pl">Umożliwia zarówno wgrywanie nowego oprogramowania, jak i utrzymywanie systemu na czasie poprzez wgrywanie uaktualnień.</p>
@@ -59,6 +62,7 @@
     <p xml:lang="x-test">xxIt allows installing new software as well as keeping the system up to date by installing updates.xx</p>
     <p>Features:</p>
     <p xml:lang="cs">Vlastnosti:</p>
+    <p xml:lang="de">Leistungsmerkmale:</p>
     <p xml:lang="fi">Ominaisuudet:</p>
     <p xml:lang="nl">Mogelijkheden:</p>
     <p xml:lang="pl">Cechy:</p>
@@ -72,6 +76,7 @@
     <ul>
       <li>Distribution-agnostic management of software packages</li>
       <li xml:lang="cs">Na distribuci nezávislá správa balíčků softwaru</li>
+      <li xml:lang="de">Verwaltung von Software-Paketen unabhängig von der verwendeten Distribution</li>
       <li xml:lang="fi">Jakeluriippumaton ohjelmapakettien hallinta</li>
       <li xml:lang="nl">Beheer van software pakketten ongeacht de distributie</li>
       <li xml:lang="pl">Agnostyczne względem dystrybucji rozpowszechnianie pakietów oprogramowania</li>
@@ -83,6 +88,7 @@
       <li xml:lang="x-test">xxDistribution-agnostic management of software packagesxx</li>
       <li>Application management for users unexperienced with packages</li>
       <li xml:lang="cs">Správa aplikací pro uživatele, jež nemají zkušenosti s balíčky</li>
+      <li xml:lang="de">Verwaltung von Anwendungen für Benutzer ohne Erfahrung mit Paketverwaltungen</li>
       <li xml:lang="fi">Sovellusten hallinta käyttäjille, joilla ei ole kokemusta paketeista</li>
       <li xml:lang="nl">Beheer van toepassingen voor gebruikers zonder ervaring met pakketten</li>
       <li xml:lang="pl">Zarządzanie aplikacjami dla użytkowników bez doświadczenia w pakietach</li>
@@ -94,6 +100,7 @@
       <li xml:lang="x-test">xxApplication management for users unexperienced with packagesxx</li>
       <li>Editor for software sources and PackageKit settings</li>
       <li xml:lang="cs">Editor zdrojů softwaru a nastavení PackageKitu</li>
+      <li xml:lang="de">Editor für Paketquellen und Einstellungen für PackageKit</li>
       <li xml:lang="fi">Ohjelmalähteiden ja PackageKit-asetusten muokkaus</li>
       <li xml:lang="nl">Bewerker voor softwarebronnen en instellingen van PackageKit</li>
       <li xml:lang="pl">Edytor dla źródeł oprogramowania oraz ustawień PackageKit</li>
@@ -104,6 +111,7 @@
       <li xml:lang="uk">Редактор джерел програмного забезпечення та параметрів PackageKit.</li>
       <li xml:lang="x-test">xxEditor for software sources and PackageKit settingsxx</li>
       <li>System software updates notifier and installer</li>
+      <li xml:lang="de">Benachrichtigung und Installation von Software-Aktualisierungen des Systems</li>
       <li xml:lang="fi">Järjestelmäohjelmiston päivitysten ilmoitin ja asennin</li>
       <li xml:lang="nl">Melder van elementen voor bijwerken van software en toepassing voor installeren</li>
       <li xml:lang="pl">Wgrywanie i powiadamianie o uaktualnieniach systemu</li>
@@ -115,6 +123,7 @@
       <li xml:lang="x-test">xxSystem software updates notifier and installerxx</li>
       <li>Close integration with the KDE Plasma desktop</li>
       <li xml:lang="cs">Integrace s grafickým prostředím KDE Plasma</li>
+      <li xml:lang="de">Einbindung in die KDE-Plasma-Arbeitsfläche</li>
       <li xml:lang="fi">Hyvä KDE Plasma-työpöydän integraatio</li>
       <li xml:lang="nl">Nauwe integratie met het bureaublad KDE Plasma</li>
       <li xml:lang="pl">Ścisła jednolitość z pulpitem Plazmy KDE</li>
