@@ -20,19 +20,6 @@
 
 #include "Apper.h"
 
-//#include "BackendDetails.h"
-//#include "MainUi.h"
-
-//#include <KGlobal>
-//#include <KStartupInfo>
-//#include <KCmdLineArgs>
-//#include <KStandardDirs>
-//#include <KConfig>
-//#include <KConfigGroup>
-//#include <KCModuleInfo>
-//#include <KWindowSystem>
-//#include <KDebug>
-
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQmlApplicationEngine>
@@ -44,10 +31,7 @@
 #include <QStandardPaths>
 #include <QDebug>
 
-#include <PackageModel.h>
-#include <ApplicationSortFilterModel.h>
-
-#include <qqml.h>
+#include <Daemon>
 
 Apper::Apper()
  : QObject(),
@@ -62,14 +46,36 @@ Apper::Apper()
     m_view->setSource(QUrl(QLatin1String("qrc:/qml/main.qml")));
     m_view->show();*/
 
-    qmlRegisterType<PackageModel>("org.packagekit", 1, 0, "PackageModel");
-    qmlRegisterType<ApplicationSortFilterModel>("org.packagekit", 1, 0, "ApplicationSortFilterModel");
-
-    QQmlApplicationEngine *engine = new QQmlApplicationEngine(QUrl(QLatin1String("qrc:/qml/main.qml")));
+    QQmlApplicationEngine *engine = new QQmlApplicationEngine;
+    engine->rootContext()->setContextProperty("PkHelper", this);
+    engine->load(QUrl(QLatin1String("qrc:/qml/BackendDetails.qml")));
 }
 
 Apper::~Apper()
 {
+}
+
+bool Apper::supportRole(PackageKit::Transaction::Roles roles, Transaction::Role role)
+{
+//    qDebug() << role << Transaction::RoleRepoRemove << " Transaction::RoleGetOldTransactions supported: " << (roles & role);
+//    if (role == Transaction::RoleGetUpdates) {
+//    } else {
+//    }
+//    if (Daemon::filters() & Transaction::FilterApplication) {
+//        qDebug() << (Daemon::filters() & Transaction::FilterApplication);
+//    }
+    if (role == 0) {
+        qDebug() << "Unknown role called";
+    }
+    return roles & role;
+}
+
+bool Apper::supportFilter(Transaction::Filters filters, Transaction::Filter filter)
+{
+    qDebug() << filter << Transaction::FilterApplication << (Daemon::filters() & filter);
+//    if (Daemon::filters() & Transaction::FilterApplication) {
+//    }
+    return filters & filter;
 }
 
 void Apper::appClose()

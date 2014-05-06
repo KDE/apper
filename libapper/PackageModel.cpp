@@ -688,6 +688,25 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
     // get all updates
 }
 
+void PackageModel::getInstalled()
+{
+    clear();
+    m_getUpdatesTransaction = Daemon::getPackages(Transaction::FilterInstalled);
+    connect(m_getUpdatesTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+//    connect(m_getUpdatesTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
+//            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+//    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+//            m_busySeq, SLOT(stop()));
+//    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+//            this, SLOT(finished()));
+    // This is required to estimate download size
+    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            this, SLOT(fetchSizes()));
+    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
+            this, SLOT(finished()));
+}
+
 void PackageModel::toggleSelection(const QString &packageID)
 {
     if (containsChecked(packageID)) {

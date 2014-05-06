@@ -24,6 +24,10 @@
 #include <QApplication>
 #include <QQuickView>
 
+#include <Transaction>
+
+using namespace PackageKit;
+
 class MainUi;
 class Apper : public QObject
 {
@@ -34,6 +38,9 @@ public:
     virtual ~Apper();
 
 //    virtual int newInstance();
+
+    Q_INVOKABLE bool supportRole(Transaction::Roles roles, Transaction::Role role);
+    Q_INVOKABLE bool supportFilter(Transaction::Filters filters, Transaction::Filter filter);
 
 private slots:
     void appClose();

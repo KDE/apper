@@ -24,12 +24,16 @@
 #include <QCommandLineParser>
 #include <QDBusMessage>
 #include <QDBusConnection>
+#include <QJSEngine>
+#include <qqml.h>
 
 #include <QDebug>
-//#include <KConfig>
-//#include <KAboutData>
-//#include <KCmdLineArgs>
-//#include <KUrl>
+
+#include <Daemon>
+#include <Transaction>
+
+#include <PackageModel.h>
+#include <ApplicationSortFilterModel.h>
 
 int invoke(const QString &method_name, const QStringList &args)
 {
@@ -46,6 +50,14 @@ int invoke(const QString &method_name, const QStringList &args)
     // smarticon is activated
     QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::Block);
     return reply.type() == QDBusMessage::ErrorMessage ? 1 : 0;
+}
+
+static QObject *pk_daemon_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+
+    return PackageKit::Daemon::global();
 }
 
 int main(int argc, char **argv)
@@ -65,6 +77,20 @@ int main(int argc, char **argv)
     QCoreApplication::setOrganizationDomain("kde.org");
     QCoreApplication::setApplicationName("Apper");
     QCoreApplication::setApplicationVersion(APP_VERSION);
+
+    // PackageKit Types
+    qmlRegisterSingletonType<Daemon>("PackageKit", 1, 0, "Daemon", pk_daemon_provider);
+    qmlRegisterUncreatableType<Transaction>("PackageKit", 1, 0, "Transaction",
+                                            QObject::tr("Transaction objects can only be created by the Daemon methods"));
+    qRegisterMetaType<Transaction::Role>("Transaction::Role");
+    qRegisterMetaType<Transaction::Roles>("Transaction::Roles");
+    qRegisterMetaType<Transaction::Filter>("Transaction::Filter");
+    qRegisterMetaType<Transaction::Filters>("Transaction::Filters");
+//    qmlRegisterUncreatableType<Transaction::Roles>("PackageKit", 1, 0, "Transaction::Roles", "");
+
+    // Apper Types
+    qmlRegisterType<PackageModel>("Apper", 1, 0, "PackageModel");
+    qmlRegisterType<ApplicationSortFilterModel>("Apper", 1, 0, "ApplicationSortFilterModel");
 
 //    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
 //    about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"), "@");

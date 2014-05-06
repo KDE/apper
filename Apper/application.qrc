@@ -4,5 +4,8 @@
         <file>qml/Page.qml</file>
         <file>qml/Updates.qml</file>
         <file>qml/UpdateDelegate.qml</file>
+        <file>qml/Home.qml</file>
+        <file>qml/Installed.qml</file>
+        <file>qml/BackendDetails.qml</file>
     </qresource>
 </RCC>

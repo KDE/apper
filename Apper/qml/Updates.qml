@@ -2,7 +2,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 
-import org.packagekit 1.0
+import Apper 1.0
 
 ScrollView {
     id: root

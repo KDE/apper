@@ -44,6 +44,42 @@ ApplicationWindow {
                 onClicked: createPage(mainView.depth)
             }
 
+            Item {
+                Layout.fillWidth: true
+            }
+
+            ToolButton {
+                id: installedBt
+//                iconName: "system-software-update"
+                text: qsTr("Installed")
+                onClicked: {
+                    var currentPage = historyModel.get(mainView.currentIndex)
+                    if (currentPage.page === "Installed.qml") {
+                        return
+                    }
+
+                    addPage({"page": "Installed.qml"})
+                }
+            }
+
+            ToolButton {
+                id: home
+//                iconName: "system-software-update"
+                text: qsTr("Updates")
+                onClicked: {
+                    var currentPage = historyModel.get(mainView.currentIndex)
+                    if (currentPage.page === "Updates.qml") {
+                        return
+                    }
+
+                    addPage({"page": "Updates.qml"})
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+
             TextField {
                 id: searchText
                 focus: true
@@ -55,24 +91,6 @@ ApplicationWindow {
                     }
 
                     addPage({"page": "Search.qml", "query": text})
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-
-            ToolButton {
-                id: home
-                iconName: "system-software-update"
-                text: qsTr("Updates")
-                onClicked: {
-                    var currentPage = historyModel.get(mainView.currentIndex)
-                    if (currentPage.page === "Updates.qml") {
-                        return
-                    }
-
-                    addPage({"page": "Updates.qml"})
                 }
             }
         }
