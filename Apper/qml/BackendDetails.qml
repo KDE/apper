@@ -94,7 +94,7 @@ ApplicationWindow {
                     checked: PkHelper.supportRole(Pk.Daemon.roles, Pk.Transaction.RoleGetDetails)
                 }
                 CheckBox{
-                    text: qsTr("Get details")
+                    text: qsTr("Get details local")
                     enabled: false
                     checked: PkHelper.supportRole(Pk.Daemon.roles, Pk.Transaction.RoleGetDetailsLocal)
                 }
@@ -222,11 +222,6 @@ ApplicationWindow {
                     enabled: false
                     checked: PkHelper.supportRole(Pk.Daemon.roles, Pk.Transaction.RoleUpdatePackages)
                 }
-                CheckBox{
-                    text: qsTr("Upgrade system")
-                    enabled: false
-                    checked: PkHelper.supportRole(Pk.Daemon.roles, Pk.Transaction.RoleUpgradeSystem)
-                }
 
                 CheckBox{
                     text: qsTr("What provides")
@@ -241,7 +236,7 @@ ApplicationWindow {
             Layout.fillWidth: true
             title: qsTr("Supported Query Filters")
             GridLayout {
-                columns: 3
+                columns: 4
                 CheckBox{
                     text: qsTr("Application")
                     enabled: false

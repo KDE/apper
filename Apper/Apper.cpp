@@ -57,24 +57,11 @@ Apper::~Apper()
 
 bool Apper::supportRole(PackageKit::Transaction::Roles roles, Transaction::Role role)
 {
-//    qDebug() << role << Transaction::RoleRepoRemove << " Transaction::RoleGetOldTransactions supported: " << (roles & role);
-//    if (role == Transaction::RoleGetUpdates) {
-//    } else {
-//    }
-//    if (Daemon::filters() & Transaction::FilterApplication) {
-//        qDebug() << (Daemon::filters() & Transaction::FilterApplication);
-//    }
-    if (role == 0) {
-        qDebug() << "Unknown role called";
-    }
     return roles & role;
 }
 
 bool Apper::supportFilter(Transaction::Filters filters, Transaction::Filter filter)
 {
-    qDebug() << filter << Transaction::FilterApplication << (Daemon::filters() & filter);
-//    if (Daemon::filters() & Transaction::FilterApplication) {
-//    }
     return filters & filter;
 }
 
