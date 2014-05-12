@@ -95,7 +95,7 @@ bool AppStream::open()
         QString pkgName = QString::fromUtf8(as_component_get_pkgname(cpt));
 
         // Desktop file
-        app.id = QString::fromUtf8(as_component_get_idname(cpt));
+        app.id = QString::fromUtf8(as_component_get_id(cpt));
 
         // Summary
         app.summary = QString::fromUtf8(as_component_get_summary(cpt));
