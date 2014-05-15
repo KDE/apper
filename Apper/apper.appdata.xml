@@ -14,6 +14,7 @@
   <name xml:lang="pt-BR">Apper</name>
   <name xml:lang="ro">Apper</name>
   <name xml:lang="sk">Apper</name>
+  <name xml:lang="sl">Apper</name>
   <name xml:lang="sv">Apper</name>
   <name xml:lang="uk">Apper</name>
   <name xml:lang="x-test">xxApperxx</name>
@@ -28,6 +29,7 @@
   <summary xml:lang="pt-BR">Ferramenta de gerenciamento de aplicativos e pacotes do KDE</summary>
   <summary xml:lang="ro">Unealtă KDE peu gestiunea aplicațiilor și pachetelor</summary>
   <summary xml:lang="sk">KDE aplikácia a nástroj na správu balíkov</summary>
+  <summary xml:lang="sl">Program za KDE in orodje za upravljanje s paketi</summary>
   <summary xml:lang="sv">KDE-program och pakethanteringsverktyg</summary>
   <summary xml:lang="uk">Програма KDE для керування пакунками</summary>
   <summary xml:lang="x-test">xxKDE application and package management toolxx</summary>
@@ -45,6 +47,7 @@
     <p xml:lang="pt">O Apper é uma ferramenta gráfica de gestão dos pacotes e aplicações oferecidos por uma distribuição de Linux.</p>
     <p xml:lang="pt-BR">O Apper é uma ferramenta gráfica de gerenciamento dos pacotes e aplicativos oferecidos por uma distribuição de Linux.</p>
     <p xml:lang="sk">Apper je grafický nástroj na správu balíkov a aplikácií poskytovaných Linuxovými distribúciami.</p>
+    <p xml:lang="sl">Apper je grafično orodje za upravljanje paketov in programov, ki jih ponuja vaša distribucija Linuxa.</p>
     <p xml:lang="sv">Apper är ett grafiskt hanteringsverktyg för paket och program som tillhandahålls av en Linux-distribution.</p>
     <p xml:lang="uk">Apper — графічний інтерфейс для керування пакунками та програмами, які є частиною дистрибутива Linux.</p>
     <p xml:lang="x-test">xxApper is a graphical management tool for packages and applications provided by a Linux distribution.xx</p>
@@ -61,6 +64,7 @@
     <p xml:lang="pt">Permite a instalação de aplicações novas, assim como manter o sistema actualizado através da instalação das actualizações.</p>
     <p xml:lang="pt-BR">Permite a instalação de novos aplicativos e mantém o sistema atualizado.</p>
     <p xml:lang="sk">Umožní vám inštalovanie nového softvéru ako aj udržanie vášho systému aktuálneho inštalovaním aktualizácií.</p>
+    <p xml:lang="sl">Dovoljuje nameščanje novih programov kot tudi vzdrževanje posodobljenega sistema z nameščanjem posodobitev.</p>
     <p xml:lang="sv">Det tillåter att ny programvara installeras, samt att hålla systemet uppdaterat genom att installera uppdateringar.</p>
     <p xml:lang="uk">Ця програма надає змогу встановлювати нове програмне забезпечення та підтримувати актуальність системи шляхом встановлення оновлень.</p>
     <p xml:lang="x-test">xxIt allows installing new software as well as keeping the system up to date by installing updates.xx</p>
@@ -75,6 +79,7 @@
     <p xml:lang="pt-BR">Funcionalidades:</p>
     <p xml:lang="ro">Caracteristici:</p>
     <p xml:lang="sk">Funkcie:</p>
+    <p xml:lang="sl">Zmožnosti:</p>
     <p xml:lang="sv">Funktioner:</p>
     <p xml:lang="uk">Можливості:</p>
     <p xml:lang="x-test">xxFeatures:xx</p>
@@ -89,6 +94,7 @@
       <li xml:lang="pt">Gestão agnóstica da distribuição dos pacotes de aplicações</li>
       <li xml:lang="pt-BR">Gerenciamento independentemente da distribuição dos pacotes de aplicativos</li>
       <li xml:lang="sk">Distribučno-agnostická správa softvérových balíkov</li>
+      <li xml:lang="sl">Upravljanje programskih paketov neodvisno od distribucije</li>
       <li xml:lang="sv">Hantering av programvarupaket oberoende av distribution</li>
       <li xml:lang="uk">Однаковий для усіх дистрибутивів інтерфейс для керування пакунками програмного забезпечення.</li>
       <li xml:lang="x-test">xxDistribution-agnostic management of software packagesxx</li>
@@ -102,6 +108,7 @@
       <li xml:lang="pt">Gestão de aplicações para utilizadores pouco habituados aos pacotes</li>
       <li xml:lang="pt-BR">Gerenciamento de aplicativos para usuários com pouca experiência no tratamento de pacotes</li>
       <li xml:lang="sk">Správa aplikácií pre používateľov bez skúseností s balíkmi</li>
+      <li xml:lang="sl">Upravljanje programov za uporabnike, ki nimajo izkušenj s paketi</li>
       <li xml:lang="sv">Programhantering för användare som är ovana vid paket</li>
       <li xml:lang="uk">Доступ до керування пакунками навіть для користувачів без досвіду.</li>
       <li xml:lang="x-test">xxApplication management for users unexperienced with packagesxx</li>
@@ -115,6 +122,7 @@
       <li xml:lang="pt">Editor de fontes de aplicações e da configuração do PackageKit</li>
       <li xml:lang="pt-BR">Editor de fontes de aplicativos e das configurações do PackageKit</li>
       <li xml:lang="sk">Editor softvérových zdrojov a nastavenia PackageKit</li>
+      <li xml:lang="sl">Urejanje programskih virov in nastavljanje PackageKit</li>
       <li xml:lang="sv">Editor för programvarukällor och PackageKit-inställningar</li>
       <li xml:lang="uk">Редактор джерел програмного забезпечення та параметрів PackageKit.</li>
       <li xml:lang="x-test">xxEditor for software sources and PackageKit settingsxx</li>
@@ -127,6 +135,7 @@
       <li xml:lang="pt">Notificação e instalação das actualizações de aplicações do sistema</li>
       <li xml:lang="pt-BR">Notificação e instalação das atualizações de aplicativos do sistema</li>
       <li xml:lang="sk">Pripomienkovač a inštalátor systémových softvérových aktualizácií</li>
+      <li xml:lang="sl">Nameščanje in obveščanje o posodobitvah programske opreme</li>
       <li xml:lang="sv">Underrättelse vid uppdateringar och installation av systemprogramvara</li>
       <li xml:lang="uk">Засоби сповіщення та встановлення оновлень програмного забезпечення системи.</li>
       <li xml:lang="x-test">xxSystem software updates notifier and installerxx</li>
@@ -140,6 +149,7 @@
       <li xml:lang="pt">Integração próxima com o ambiente de trabalho Plasma</li>
       <li xml:lang="pt-BR">Integração com o ambiente de trabalho Plasma</li>
       <li xml:lang="sk">Blízka integrácia s pracovnou plochou KDE Plasma</li>
+      <li xml:lang="sl">Vključitev v namizno okolje KDE Plasma</li>
       <li xml:lang="sv">Nära integrering med KDE:s Plasma-skrivbord</li>
       <li xml:lang="uk">Тісна інтеграція зі стільничним середовищем Плазми KDE.</li>
       <li xml:lang="x-test">xxClose integration with the KDE Plasma desktopxx</li>
