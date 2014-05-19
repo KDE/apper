@@ -18,14 +18,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <glib-object.h>
+#include <listaller.h>
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KApplication>
 #include <KMessageBox>
 #include <QFileInfo>
-#include <glib-object.h>
-#include <listaller.h>
 
 #include "SetupWizard.h"
 

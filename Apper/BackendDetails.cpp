@@ -77,7 +77,6 @@ BackendDetails::BackendDetails(QWidget *parent) :
     ui->whatProvidesCB->setChecked(actions & Transaction::RoleWhatProvides);
     ui->getPackagesCB->setChecked(actions & Transaction::RoleGetPackages);
     ui->repairSystemCB->setChecked(actions & Transaction::RoleRepairSystem);
-    ui->upgradeSystemCB->setChecked(actions & Transaction::RoleUpgradeSystem);
 
     // FILTERS - Setup filters
     Transaction::Filters filters = Daemon::global()->filters();

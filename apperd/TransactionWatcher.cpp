@@ -91,7 +91,7 @@ void TransactionWatcher::watchTransaction(const QDBusObjectPath &tid, bool inter
                 this, SLOT(finished(PackageKit::Transaction::Exit)));
 
         // Store the transaction id
-        m_transactions[tid] = transaction;        
+        m_transactions[tid] = transaction;
     } else {
         transaction = m_transactions[tid];
 
@@ -112,8 +112,7 @@ void TransactionWatcher::transactionReady()
             (role == Transaction::RoleInstallPackages ||
              role == Transaction::RoleInstallFiles    ||
              role == Transaction::RoleRemovePackages  ||
-             role == Transaction::RoleUpdatePackages  ||
-             role == Transaction::RoleUpgradeSystem)) {
+             role == Transaction::RoleUpdatePackages)) {
         // AVOID showing messages and restart requires when
         // the user was just simulating an instalation
         connect(transaction, SIGNAL(message(PackageKit::Transaction::Message,QString)),
@@ -153,7 +152,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
 {
     // check if the transaction emitted any require restart
     Transaction *transaction = qobject_cast<Transaction*>(sender());
-    QDBusObjectPath tid = transaction->tid();    
+    QDBusObjectPath tid = transaction->tid();
     transaction->disconnect(this);
     m_transactions.remove(tid);
     m_transactionJob.remove(tid);

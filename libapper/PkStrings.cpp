@@ -262,8 +262,6 @@ QString PkStrings::action(Transaction::Role role, Transaction::TransactionFlags 
         return i18nc("The role of the transaction, in present tense", "Getting categories");
     case Transaction::RoleGetOldTransactions :
         return i18nc("The role of the transaction, in present tense", "Getting old transactions");
-    case Transaction::RoleUpgradeSystem :
-        return i18nc("The role of the transaction, in present tense", "Upgrading system");
     case Transaction::RoleRepairSystem :
         return i18nc("The role of the transaction, in present tense", "Repairing system");
     case Transaction::RoleRepoRemove:
@@ -336,8 +334,6 @@ QString PkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Got categories");
     case Transaction::RoleGetOldTransactions :
         return i18nc("The role of the transaction, in past tense", "Got old transactions");
-    case Transaction::RoleUpgradeSystem :
-        return i18nc("The role of the transaction, in past tense", "Upgraded system");
     case Transaction::RoleRepairSystem:
         return i18nc("The role of the transaction, in past tense", "Repaired system");
     case Transaction::RoleRepoRemove:
@@ -853,8 +849,8 @@ QString PkStrings::packageQuantity(bool updates, int packages, int selected)
                           "1 Update", "%1 Updates",
                           packages);
         } else {
-            return i18nc("Type of update, in the case it's just an update", "%1, %2", 
-                         i18ncp("Part of: %1 Updates, %1 Selected", "%1 Update", "%1 Updates", packages), 
+            return i18nc("Type of update, in the case it's just an update", "%1, %2",
+                         i18ncp("Part of: %1 Updates, %1 Selected", "%1 Update", "%1 Updates", packages),
                          i18ncp("Part of: %1 Updates, %1 Selected", "%1 Selected", "%1 Selected", selected));
         }
     } else {

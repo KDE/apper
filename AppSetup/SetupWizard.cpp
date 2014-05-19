@@ -18,6 +18,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <listaller.h>
 #include "SetupWizard.h"
 #include "ui_SetupWizard.h"
 
@@ -31,7 +32,6 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KGlobalSettings>
-#include <listaller.h>
 
 #include "InfoWidget.h"
 #include "SimplePage.h"
@@ -82,7 +82,8 @@ void on_lisetup_status_changed(GObject *sender, ListallerStatusItem *status, Set
     ListallerStatusEnum statusType = listaller_status_item_get_status(status);
 
     if (statusType == LISTALLER_STATUS_ENUM_INSTALLATION_FINISHED) {
-        QString appName = QString::fromUtf8(listaller_app_item_get_full_name(d->appID));
+        AsComponent *info = listaller_app_item_get_info (d->appID);
+        QString appName = QString::fromUtf8(as_component_get_name (info));
         d->infoPage->reset();
         d->infoPage->setWindowTitle(i18n("Installation finished!"));
         d->infoPage->setDescription(i18n("%1 has been installed successfully!", appName));
@@ -183,7 +184,8 @@ bool SetupWizard::constructWizardLayout()
         return false;
     }
 
-    QString appName = listaller_app_item_get_full_name(d->appID);
+    AsComponent *info = listaller_app_item_get_info (d->appID);
+    QString appName = as_component_get_name(info);
 
     // Welcome page
     SimplePage *introP = new SimplePage(this);
@@ -257,7 +259,7 @@ bool SetupWizard::constructWizardLayout()
     SimplePage *descP = new SimplePage(this);
     descP->setTitle(i18n("Application description"));
     descP->setDescription(i18n("Description"));
-    descP->setDetails(listaller_app_item_get_description(d->appID));
+    descP->setDetails(as_component_get_description(info));
     ui->stackedWidget->addWidget(descP);
     d->preparationPageCount++;
 
