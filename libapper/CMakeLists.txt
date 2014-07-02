@@ -50,10 +50,12 @@ endif()
 add_library(apper SHARED ${libapper_SRCS})
 qt5_use_modules(apper DBus Core Widgets)
 
-#include_directories(${CMAKE_CURRENT_BINARY_DIR}
-#		    ${GLIB2_INCLUDE_DIR}
-#		    ${APPSTREAM_INCLUDE_DIRS}
-#)
+if(APPSTREAM)
+    include_directories(${CMAKE_CURRENT_BINARY_DIR}
+	    	    ${GLIB2_INCLUDE_DIR}
+		        ${APPSTREAM_INCLUDE_DIRS}
+    )
+endif()
 
 target_link_libraries(apper
     ${KDE4_KDEUI_LIBS}

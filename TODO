@@ -20,3 +20,6 @@ A quick list of things that need to be done.
 
 - Add a DBus interface to KpkTransactions so that when the user
   clicks on the systray we don't get duplicated windows
+
+- Migrated KDE4 relative thing to KDE5
+  (Leslie Zhai)

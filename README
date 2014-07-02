@@ -1,0 +1,13 @@
+Dependence
+----------
+
+appstream https://gitorious.org/appstream/appstream/
+
+Build && Install
+----------------
+
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DAPPSTREAM=ON
+make
+sudo make install
