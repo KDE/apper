@@ -203,6 +203,7 @@
   <url type="homepage">https://projects.kde.org/projects/extragear/sysadmin/apper/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=apper</url>
   <project_group>KDE</project_group>
+  <developer_name>The KDE Community</developer_name>
   <provides>
     <binary>apper</binary>
   </provides>
