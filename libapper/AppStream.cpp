@@ -82,6 +82,7 @@ bool AppStream::open()
         AsComponent *cpt;
         GPtrArray *sshot_array;
         AsScreenshot *sshot;
+        gchar **pkgs;
         cpt = (AsComponent*) g_ptr_array_index(cptArray, i);
         // we only want desktop apps at time
         if (as_component_get_kind (cpt) != AS_COMPONENT_KIND_DESKTOP_APP)
@@ -92,7 +93,10 @@ bool AppStream::open()
         app.name = QString::fromUtf8(as_component_get_name(cpt));
 
         // Package name
-        QString pkgName = QString::fromUtf8(as_component_get_pkgname(cpt));
+        pkgs = as_component_get_pkgnames(cpt);
+        QString pkgName;
+        if (pkgs != NULL)
+            pkgName = QString::fromUtf8(pkgs[0]);
 
         // Desktop file
         app.id = QString::fromUtf8(as_component_get_id(cpt));
