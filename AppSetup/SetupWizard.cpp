@@ -82,7 +82,7 @@ void on_lisetup_status_changed(GObject *sender, ListallerStatusItem *status, Set
     ListallerStatusEnum statusType = listaller_status_item_get_status(status);
 
     if (statusType == LISTALLER_STATUS_ENUM_INSTALLATION_FINISHED) {
-        AsComponent *info = listaller_app_item_get_info (d->appID);
+        AsComponent *info = listaller_app_item_get_metainfo (d->appID);
         QString appName = QString::fromUtf8(as_component_get_name (info));
         d->infoPage->reset();
         d->infoPage->setWindowTitle(i18n("Installation finished!"));
@@ -184,7 +184,7 @@ bool SetupWizard::constructWizardLayout()
         return false;
     }
 
-    AsComponent *info = listaller_app_item_get_info (d->appID);
+    AsComponent *info = listaller_app_item_get_metainfo (d->appID);
     QString appName = as_component_get_name(info);
 
     // Welcome page
