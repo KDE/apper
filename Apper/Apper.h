@@ -31,10 +31,9 @@ using namespace PackageKit;
 class MainUi;
 class Apper : public QObject
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
-    Apper();
+    Apper(bool showDetails);
     virtual ~Apper();
 
 //    virtual int newInstance();
@@ -55,7 +54,7 @@ private:
     QQuickView *m_view;
     void invoke(const QString &method_name, const QStringList &args);
 
-    int m_running;
+    int m_running = 0;
     bool m_init;
 };
 

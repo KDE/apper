@@ -33,10 +33,7 @@
 
 #include <Daemon>
 
-Apper::Apper()
- : QObject(),
-//   m_pkUi(0),
-   m_running(0)
+Apper::Apper(bool showDetails)
 {/*
     m_view = new QQuickView;
     m_view->setResizeMode(QQuickView::SizeRootObjectToView);
@@ -48,7 +45,11 @@ Apper::Apper()
 
     QQmlApplicationEngine *engine = new QQmlApplicationEngine;
     engine->rootContext()->setContextProperty("PkHelper", this);
-    engine->load(QUrl(QLatin1String("qrc:/qml/BackendDetails.qml")));
+    if (showDetails) {
+        engine->load(QUrl(QLatin1String("qrc:/qml/BackendDetails.qml")));
+    } else {
+        engine->load(QUrl(QLatin1String("qrc:/qml/main.qml")));
+    }
 }
 
 Apper::~Apper()

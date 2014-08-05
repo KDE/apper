@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 //                     ki18n("(C) 2008-2013 Daniel Nicoletti"));
     QApplication app(argc, argv);
 
-    QCoreApplication::setOrganizationName("KDE");
+    QCoreApplication::setOrganizationName("kde");
     QCoreApplication::setOrganizationDomain("kde.org");
     QCoreApplication::setApplicationName("Apper");
     QCoreApplication::setApplicationVersion(APP_VERSION);
@@ -180,7 +180,7 @@ int main(int argc, char **argv)
 //        return invoke("RemovePackageByFiles", args->getOptionList("remove-package-by-file"));
 //    }
 
-    Apper apper;
+    Apper apper(parser.isSet(backendOption));
 
 //    apper.showSettings();
 
