@@ -234,6 +234,8 @@
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=apper</url>
   <project_group>KDE</project_group>
   <developer_name>The KDE Community</developer_name>
+  <developer_name xml:lang="ca">La comunitat KDE</developer_name>
+  <developer_name xml:lang="da">KDE-fællesskabet</developer_name>
   <developer_name xml:lang="de">Die KDE-Gemeinschaft</developer_name>
   <developer_name xml:lang="en-GB">The KDE Community</developer_name>
   <developer_name xml:lang="es">La Comunidad de KDE</developer_name>
