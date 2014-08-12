@@ -92,20 +92,13 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     setButtons(Apply);
 
     // store the actions supported by the backend
-    QEventLoop loop;
-    connect(Daemon::global(), SIGNAL(isRunningChanged()),
-            &loop, SLOT(quit()));
-    if (!Daemon::isRunning()) {
-        loop.exec();
-    }
-    m_roles = Daemon::roles(); //TODO this is asyc now
+    connect(Daemon::global(), SIGNAL(changed()), this, SLOT(daemonChanged()));
 
     // Set the current locale
     QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
     Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     ui->setupUi(this);
-    ui->browseView->init(m_roles);
 
     // Browse TAB
     ui->backTB->setIcon(KIcon("go-previous"));
@@ -124,22 +117,19 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     toolBar->addAction(m_genericActionK);
 
     // Add actions that the backend supports
-    if (m_roles & Transaction::RoleSearchName) {
-        findMenu->addAction(ui->actionFindName);
-        setCurrentAction(ui->actionFindName);
+    findMenu->addAction(ui->actionFindName);
+    setCurrentAction(ui->actionFindName);
+
+    findMenu->addAction(ui->actionFindDescription);
+    if (!m_currentAction) {
+        setCurrentAction(ui->actionFindDescription);
     }
-    if (m_roles & Transaction::RoleSearchDetails) {
-        findMenu->addAction(ui->actionFindDescription);
-        if (!m_currentAction) {
-            setCurrentAction(ui->actionFindDescription);
-        }
+
+    findMenu->addAction(ui->actionFindFile);
+    if (!m_currentAction) {
+        setCurrentAction(ui->actionFindFile);
     }
-    if (m_roles & Transaction::RoleSearchFile) {
-        findMenu->addAction(ui->actionFindFile);
-        if (!m_currentAction) {
-            setCurrentAction(ui->actionFindFile);
-        }
-    }
+
 
     // If no action was set we can't use this search
     if (m_currentAction == 0) {
@@ -161,7 +151,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     }
 
     // Create the groups model
-    m_groupsModel = new CategoryModel(m_roles, this);
+    m_groupsModel = new CategoryModel(this);
     ui->browseView->setCategoryModel(m_groupsModel);
     connect(m_groupsModel, SIGNAL(finished()),
             this, SLOT(setupHomeModel()));
@@ -173,7 +163,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     ui->homeView->setItemDelegate(delegate);
 
     // install the backend filters
-    ui->filtersTB->setMenu(m_filtersMenu = new FiltersMenu(Daemon::global()->filters(), this));
+    ui->filtersTB->setMenu(m_filtersMenu = new FiltersMenu(this));
     connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(search()));
     ui->filtersTB->setIcon(KIcon("view-filter"));
     ApplicationSortFilterModel *proxy = ui->browseView->proxy();
@@ -346,6 +336,26 @@ void ApperKCM::errorCode(PackageKit::Transaction::Error error, const QString &de
 ApperKCM::~ApperKCM()
 {
     delete ui;
+}
+
+void ApperKCM::daemonChanged()
+{
+    Transaction::Roles roles = Daemon::roles();
+    if (m_roles == roles) {
+        return;
+    }
+    m_roles = roles;
+
+    // Add actions that the backend supports
+    ui->actionFindName->setEnabled(roles & Transaction::RoleSearchName);
+    ui->actionFindDescription->setEnabled(roles & Transaction::RoleSearchDetails);
+    ui->actionFindFile->setEnabled(roles & Transaction::RoleSearchFile);
+
+    ui->browseView->init(roles);
+
+    m_groupsModel->setRoles(roles);
+
+    m_filtersMenu->setFilters(Daemon::filters());
 }
 
 void ApperKCM::on_actionFindName_triggered()

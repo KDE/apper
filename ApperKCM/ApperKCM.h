@@ -60,6 +60,7 @@ signals:
     void caption(const QString &title = QString());
 
 public slots:
+    void daemonChanged();
     void load();
     void save();
     void defaults();

@@ -78,108 +78,88 @@ PackageDetails::PackageDetails(QWidget *parent)
     ui->setupUi(this);
     ui->hideTB->setIcon(KIcon("window-close"));
     connect(ui->hideTB, SIGNAL(clicked()), this, SLOT(hide()));
-}
 
-void PackageDetails::init(PackageKit::Transaction::Roles roles)
-{
-    kDebug();
     KMenu *menu = new KMenu(i18n("Display"), this);
     m_actionGroup = new QActionGroup(this);
-    QAction *action = 0;
 
     // we check to see which roles are supported by the backend
     // if so we ask for information and create the containers
-    if (roles & PackageKit::Transaction::RoleGetDetails) {
-        action = menu->addAction(i18n("Description"));
-        action->setCheckable(true);
-        action->setData(PackageKit::Transaction::RoleGetDetails);
-        m_actionGroup->addAction(action);
-        ui->descriptionW->setWidgetResizable(true);
-    }
+    descriptionAction = menu->addAction(i18n("Description"));
+    descriptionAction->setCheckable(true);
+    descriptionAction->setData(PackageKit::Transaction::RoleGetDetails);
+    m_actionGroup->addAction(descriptionAction);
+    ui->descriptionW->setWidgetResizable(true);
 
-    if (roles & PackageKit::Transaction::RoleDependsOn) {
-        action = menu->addAction(i18n("Depends On"));
-        action->setCheckable(true);
-        action->setData(PackageKit::Transaction::RoleDependsOn);
-        m_actionGroup->addAction(action);
-        // Sets a transparent background
-        QWidget *actionsViewport = ui->dependsOnLV->viewport();
-        QPalette palette = actionsViewport->palette();
-        palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
-        palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
-        actionsViewport->setPalette(palette);
+    dependsOnAction = menu->addAction(i18n("Depends On"));
+    dependsOnAction->setCheckable(true);
+    dependsOnAction->setData(PackageKit::Transaction::RoleDependsOn);
+    m_actionGroup->addAction(dependsOnAction);
+    // Sets a transparent background
+    QWidget *dependsViewport = ui->dependsOnLV->viewport();
+    QPalette dependsPalette = dependsViewport->palette();
+    dependsPalette.setColor(dependsViewport->backgroundRole(), Qt::transparent);
+    dependsPalette.setColor(dependsViewport->foregroundRole(), dependsPalette.color(QPalette::WindowText));
+    dependsViewport->setPalette(dependsPalette);
 
-        m_dependsModel = new PackageModel(this);
-        m_dependsProxy = new QSortFilterProxyModel(this);
-        m_dependsProxy->setDynamicSortFilter(true);
-        m_dependsProxy->setSortRole(PackageModel::SortRole);
-        m_dependsProxy->setSourceModel(m_dependsModel);
-        ui->dependsOnLV->setModel(m_dependsProxy);
-        ui->dependsOnLV->sortByColumn(0, Qt::AscendingOrder);
-        ui->dependsOnLV->header()->setDefaultAlignment(Qt::AlignCenter);
-        ui->dependsOnLV->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
-        ui->dependsOnLV->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
-        ui->dependsOnLV->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
-        ui->dependsOnLV->header()->hideSection(PackageModel::ActionCol);
-        ui->dependsOnLV->header()->hideSection(PackageModel::CurrentVersionCol);
-        ui->dependsOnLV->header()->hideSection(PackageModel::OriginCol);
-        ui->dependsOnLV->header()->hideSection(PackageModel::SizeCol);
-    }
+    m_dependsModel = new PackageModel(this);
+    m_dependsProxy = new QSortFilterProxyModel(this);
+    m_dependsProxy->setDynamicSortFilter(true);
+    m_dependsProxy->setSortRole(PackageModel::SortRole);
+    m_dependsProxy->setSourceModel(m_dependsModel);
+    ui->dependsOnLV->setModel(m_dependsProxy);
+    ui->dependsOnLV->sortByColumn(0, Qt::AscendingOrder);
+    ui->dependsOnLV->header()->setDefaultAlignment(Qt::AlignCenter);
+    ui->dependsOnLV->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+    ui->dependsOnLV->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    ui->dependsOnLV->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
+    ui->dependsOnLV->header()->hideSection(PackageModel::ActionCol);
+    ui->dependsOnLV->header()->hideSection(PackageModel::CurrentVersionCol);
+    ui->dependsOnLV->header()->hideSection(PackageModel::OriginCol);
+    ui->dependsOnLV->header()->hideSection(PackageModel::SizeCol);
 
-    if (roles & PackageKit::Transaction::RoleRequiredBy) {
-        action = menu->addAction(i18n("Required By"));
-        action->setCheckable(true);
-        action->setData(PackageKit::Transaction::RoleRequiredBy);
-        m_actionGroup->addAction(action);
-        // Sets a transparent background
-        QWidget *actionsViewport = ui->requiredByLV->viewport();
-        QPalette palette = actionsViewport->palette();
-        palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
-        palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
-        actionsViewport->setPalette(palette);
+    requiredByAction = menu->addAction(i18n("Required By"));
+    requiredByAction->setCheckable(true);
+    requiredByAction->setData(PackageKit::Transaction::RoleRequiredBy);
+    m_actionGroup->addAction(requiredByAction);
+    // Sets a transparent background
+    QWidget *requiredViewport = ui->requiredByLV->viewport();
+    QPalette requiredPalette = requiredViewport->palette();
+    requiredPalette.setColor(requiredViewport->backgroundRole(), Qt::transparent);
+    requiredPalette.setColor(requiredViewport->foregroundRole(), requiredPalette.color(QPalette::WindowText));
+    requiredViewport->setPalette(requiredPalette);
 
-        m_requiresModel = new PackageModel(this);
-        m_requiresProxy = new QSortFilterProxyModel(this);
-        m_requiresProxy->setDynamicSortFilter(true);
-        m_requiresProxy->setSortRole(PackageModel::SortRole);
-        m_requiresProxy->setSourceModel(m_requiresModel);
-        ui->requiredByLV->setModel(m_requiresProxy);
-        ui->requiredByLV->sortByColumn(0, Qt::AscendingOrder);
-        ui->requiredByLV->header()->setDefaultAlignment(Qt::AlignCenter);
-        ui->requiredByLV->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
-        ui->requiredByLV->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
-        ui->requiredByLV->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
-        ui->requiredByLV->header()->hideSection(PackageModel::ActionCol);
-        ui->requiredByLV->header()->hideSection(PackageModel::CurrentVersionCol);
-        ui->requiredByLV->header()->hideSection(PackageModel::OriginCol);
-        ui->requiredByLV->header()->hideSection(PackageModel::SizeCol);
-    }
+    m_requiresModel = new PackageModel(this);
+    m_requiresProxy = new QSortFilterProxyModel(this);
+    m_requiresProxy->setDynamicSortFilter(true);
+    m_requiresProxy->setSortRole(PackageModel::SortRole);
+    m_requiresProxy->setSourceModel(m_requiresModel);
+    ui->requiredByLV->setModel(m_requiresProxy);
+    ui->requiredByLV->sortByColumn(0, Qt::AscendingOrder);
+    ui->requiredByLV->header()->setDefaultAlignment(Qt::AlignCenter);
+    ui->requiredByLV->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+    ui->requiredByLV->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    ui->requiredByLV->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
+    ui->requiredByLV->header()->hideSection(PackageModel::ActionCol);
+    ui->requiredByLV->header()->hideSection(PackageModel::CurrentVersionCol);
+    ui->requiredByLV->header()->hideSection(PackageModel::OriginCol);
+    ui->requiredByLV->header()->hideSection(PackageModel::SizeCol);
 
-    if (roles & PackageKit::Transaction::RoleGetFiles) {
-        action = menu->addAction(i18n("File List"));
-        action->setCheckable(true);
-        action->setData(PackageKit::Transaction::RoleGetFiles);
-        m_actionGroup->addAction(action);
-        // Sets a transparent background
-        QWidget *actionsViewport = ui->filesPTE->viewport();
-        QPalette palette = actionsViewport->palette();
-        palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
-        palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
-        actionsViewport->setPalette(palette);
-    }
+    fileListAction = menu->addAction(i18n("File List"));
+    fileListAction->setCheckable(true);
+    fileListAction->setData(PackageKit::Transaction::RoleGetFiles);
+    m_actionGroup->addAction(fileListAction);
+    // Sets a transparent background
+    QWidget *actionsViewport = ui->filesPTE->viewport();
+    QPalette palette = actionsViewport->palette();
+    palette.setColor(actionsViewport->backgroundRole(), Qt::transparent);
+    palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
+    actionsViewport->setPalette(palette);
 
-    // Check to se if we have any action
-    if (m_actionGroup->actions().isEmpty()) {
-        ui->menuTB->hide();
-    } else {
-        action = m_actionGroup->actions().first();
-        action->setChecked(true);
-        connect(m_actionGroup, SIGNAL(triggered(QAction*)),
-                this, SLOT(actionActivated(QAction*)));
-        // Set the menu
-        ui->menuTB->setMenu(menu);
-        ui->menuTB->setIcon(KIcon("help-about"));
-    }
+    // Set the menu
+    ui->menuTB->setMenu(menu);
+    ui->menuTB->setIcon(KIcon("help-about"));
+    connect(m_actionGroup, SIGNAL(triggered(QAction*)),
+            this, SLOT(actionActivated(QAction*)));
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
@@ -231,6 +211,49 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
     m_expandPanel->addAnimation(anim1);
     m_expandPanel->addAnimation(anim2);
     connect(m_expandPanel, SIGNAL(finished()), this, SLOT(display()));
+}
+
+void PackageDetails::init(PackageKit::Transaction::Roles roles)
+{
+    kDebug();
+
+    bool setChecked = true;
+    if (roles & PackageKit::Transaction::RoleGetDetails) {
+        descriptionAction->setEnabled(true);
+        descriptionAction->setChecked(setChecked);
+        setChecked = false;
+    } else {
+        descriptionAction->setEnabled(false);
+        descriptionAction->setChecked(false);
+    }
+
+    if (roles & PackageKit::Transaction::RoleDependsOn) {
+        dependsOnAction->setEnabled(true);
+        dependsOnAction->setChecked(setChecked);
+        setChecked = false;
+    } else {
+        dependsOnAction->setEnabled(false);
+        dependsOnAction->setChecked(false);
+    }
+
+    if (roles & PackageKit::Transaction::RoleRequiredBy) {
+        requiredByAction->setEnabled(true);
+        requiredByAction->setChecked(setChecked);
+        setChecked = false;
+    } else {
+        requiredByAction->setEnabled(false);
+        requiredByAction->setChecked(false);
+    }
+
+    if (roles & PackageKit::Transaction::RoleGetFiles) {
+        fileListAction->setEnabled(true);
+        fileListAction->setChecked(setChecked);
+        setChecked = false;
+    } else {
+        fileListAction->setEnabled(false);
+        fileListAction->setChecked(false);
+    }
+
 }
 
 PackageDetails::~PackageDetails()

@@ -47,11 +47,6 @@ BrowseView::BrowseView(QWidget *parent)
     setupUi(this);
     connect(categoryView, SIGNAL(clicked(QModelIndex)),
             this, SIGNAL(categoryActivated(QModelIndex)));
-}
-
-void BrowseView::init(Transaction::Roles roles)
-{
-    packageDetails->init(roles);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
@@ -90,7 +85,7 @@ void BrowseView::init(Transaction::Roles roles)
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
     connect(m_showPackageVersion, SIGNAL(toggled(bool)), this, SLOT(showVersions(bool)));
-    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowApplicationVersions", true));    
+    m_showPackageVersion->setChecked(viewGroup.readEntry("ShowApplicationVersions", true));
 
     // Arch
     packageView->header()->setSectionHidden(PackageModel::ArchCol, true);
@@ -117,6 +112,11 @@ void BrowseView::init(Transaction::Roles roles)
     // Ensure the index is visible when the packageDetails appears
     connect(packageDetails, SIGNAL(ensureVisible(QModelIndex)),
             this, SLOT(ensureVisible(QModelIndex)));
+}
+
+void BrowseView::init(Transaction::Roles roles)
+{
+    packageDetails->init(roles);
 }
 
 BrowseView::~BrowseView()

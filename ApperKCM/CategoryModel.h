@@ -39,9 +39,10 @@ public:
         GroupRole,
         CategoryRole
     } Roles;
-    explicit CategoryModel(PackageKit::Transaction::Roles roles, QObject *parent = 0);
+    explicit CategoryModel(QObject *parent = 0);
     ~CategoryModel();
 
+    void setRoles(PackageKit::Transaction::Roles roles);
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     void setRootIndex(const QModelIndex &index);

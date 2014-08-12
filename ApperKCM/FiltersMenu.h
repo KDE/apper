@@ -30,8 +30,10 @@ class FiltersMenu : public QMenu
 {
 Q_OBJECT
 public:
-    explicit FiltersMenu(Transaction::Filters filters, QWidget *parent = 0);
+    explicit FiltersMenu(QWidget *parent = 0);
     ~FiltersMenu();
+
+    void setFilters(Transaction::Filters filters);
 
     Transaction::Filters filters() const;
     bool filterApplications() const;
@@ -39,6 +41,18 @@ public:
 signals:
     void filtersChanged();
     void filterApplications(bool checked);
+
+    void enableCollections(bool enable);
+    void enableInstalled(bool enabled);
+    void enableDevelopment(bool enabled);
+    void enableGraphical(bool enabled);
+    void enableFree(bool enabled);
+    void enableSupported(bool enabled);
+    void enableSource(bool enable);
+    void enableBasenameNewestArchSeparator(bool enable);
+    void enableBasename(bool enable);
+    void enableNewest(bool enable);
+    void enableArch(bool enable);
 
 private:
     QAction *m_applications;

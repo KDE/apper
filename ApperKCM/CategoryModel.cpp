@@ -42,9 +42,8 @@
 
 using namespace PackageKit;
 
-CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *parent) :
-    QStandardItemModel(parent),
-    m_roles(roles)
+CategoryModel::CategoryModel(QObject *parent) :
+    QStandardItemModel(parent)
 {
     QStandardItem *item;
     item = new QStandardItem(i18n("Installed Software"));
@@ -86,6 +85,20 @@ CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *pare
 //                              "const QString &summary",
 //                              "dialog-cancel");
 #else
+
+#endif //HAVE_APPSTREAM
+    QTimer::singleShot(0, this, SIGNAL(finished()));
+}
+
+CategoryModel::~CategoryModel()
+{
+}
+
+void CategoryModel::setRoles(Transaction::Roles roles)
+{
+    m_roles = roles;
+    removeRows(2, rowCount() - 2);
+
     QDBusPendingReply<QList<QDBusObjectPath> > transactions = Daemon::getTransactionList();
     transactions.waitForFinished();
     if (m_roles & Transaction::RoleGetCategories
@@ -98,12 +111,6 @@ CategoryModel::CategoryModel(PackageKit::Transaction::Roles roles, QObject *pare
     } else {
         fillWithStandardGroups();
     }
-#endif //HAVE_APPSTREAM
-    QTimer::singleShot(0, this, SIGNAL(finished()));
-}
-
-CategoryModel::~CategoryModel()
-{
 }
 
 QModelIndex CategoryModel::index(int row, int column, const QModelIndex &parent) const

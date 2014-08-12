@@ -87,6 +87,11 @@ private:
     PackageKit::Details m_details;
     QString m_detailsDescription;
 
+    QAction *descriptionAction;
+    QAction *dependsOnAction;
+    QAction *requiredByAction;
+    QAction *fileListAction;
+
     QString       m_appName;
 
     QParallelAnimationGroup       *m_expandPanel;
