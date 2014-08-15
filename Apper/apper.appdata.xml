@@ -231,6 +231,13 @@
     </screenshot>
     <screenshot>
       <caption>The main window showing a description of the selected package</caption>
+      <caption xml:lang="ca">La finestra principal de Apper mostrant una descripció del paquet seleccionat</caption>
+      <caption xml:lang="nl">Het hoofdvenster dat een beschrijving toont van het geselecteerde pakket</caption>
+      <caption xml:lang="pl">Okno główne wyświetlające opis wybranego pakietu</caption>
+      <caption xml:lang="sk">Hlavné okno zobrazuje popis vybraného balíka</caption>
+      <caption xml:lang="sv">Huvudfönstret som visar en beskrivning av det markerade paketet</caption>
+      <caption xml:lang="uk">Головне вікно, у якому буде показано опис позначеного пакунка.</caption>
+      <caption xml:lang="x-test">xxThe main window showing a description of the selected packagexx</caption>
       <image>https://userbase.kde.org/images.userbase/0/07/Apper-window1.png</image>
     </screenshot>
   </screenshots>
