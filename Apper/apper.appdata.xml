@@ -232,6 +232,7 @@
     <screenshot>
       <caption>The main window showing a description of the selected package</caption>
       <caption xml:lang="ca">La finestra principal de Apper mostrant una descripció del paquet seleccionat</caption>
+      <caption xml:lang="fi">Pääikkuna näyttämässä valitun paketin kuvausta</caption>
       <caption xml:lang="nl">Het hoofdvenster dat een beschrijving toont van het geselecteerde pakket</caption>
       <caption xml:lang="pl">Okno główne wyświetlające opis wybranego pakietu</caption>
       <caption xml:lang="pt-BR">Janela principal mostrando uma descrição do pacote selecionado</caption>
