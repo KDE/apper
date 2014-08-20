@@ -236,8 +236,10 @@
       <caption xml:lang="fi">Pääikkuna näyttämässä valitun paketin kuvausta</caption>
       <caption xml:lang="nl">Het hoofdvenster dat een beschrijving toont van het geselecteerde pakket</caption>
       <caption xml:lang="pl">Okno główne wyświetlające opis wybranego pakietu</caption>
+      <caption xml:lang="pt">A janela principal, que mostra uma descrição do pacote seleccionado</caption>
       <caption xml:lang="pt-BR">Janela principal mostrando uma descrição do pacote selecionado</caption>
       <caption xml:lang="sk">Hlavné okno zobrazuje popis vybraného balíka</caption>
+      <caption xml:lang="sl">Glavno okno, ki prikazuje opis izbranega paketa</caption>
       <caption xml:lang="sv">Huvudfönstret som visar en beskrivning av det markerade paketet</caption>
       <caption xml:lang="uk">Головне вікно, у якому буде показано опис позначеного пакунка.</caption>
       <caption xml:lang="x-test">xxThe main window showing a description of the selected packagexx</caption>
