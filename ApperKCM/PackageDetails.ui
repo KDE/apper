@@ -17,7 +17,16 @@
    </sizepolicy>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item row="2" column="1" colspan="3">
@@ -55,7 +64,16 @@
      </property>
      <widget class="QWidget" name="pageDescription">
       <layout class="QGridLayout" name="gridLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item row="0" column="0">
@@ -92,7 +110,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>530</width>
+            <width>528</width>
             <height>209</height>
            </rect>
           </property>
@@ -268,7 +286,16 @@
      </widget>
      <widget class="QWidget" name="pageDepends">
       <layout class="QGridLayout" name="gridLayout_4">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item row="0" column="0">
@@ -297,7 +324,16 @@
      </widget>
      <widget class="QWidget" name="pageRequired">
       <layout class="QGridLayout" name="gridLayout_5">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item row="0" column="0">
@@ -326,7 +362,16 @@
      </widget>
      <widget class="QWidget" name="pageFiles">
       <layout class="QGridLayout" name="gridLayout_6">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item row="0" column="0">
@@ -346,7 +391,7 @@
    <item row="0" column="3" rowspan="2">
     <widget class="QPushButton" name="menuTB">
      <property name="text">
-      <string notr="true">More...</string>
+      <string>More...</string>
      </property>
      <property name="flat">
       <bool>true</bool>
