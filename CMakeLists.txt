@@ -34,7 +34,7 @@ if (DEBCONF_SUPPORT)
     message(STATUS "Building with Debconf support")
 endif (DEBCONF_SUPPORT)
 
-set(APP_VERSION 0.9.0)
+set(APP_VERSION 0.9.1)
 
 # command to edit the packages origins
 set(EDIT_ORIGNS_DESKTOP_NAME "" CACHE STRING "Edit origins desktop name")
