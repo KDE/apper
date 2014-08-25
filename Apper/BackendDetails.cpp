@@ -37,6 +37,21 @@ BackendDetails::BackendDetails(QWidget *parent) :
     setButtons(KDialog::Close);
     setWindowIcon(KIcon("help-about"));
 
+    // update information about PackageKit backend
+    connect(Daemon::global(), SIGNAL(changed()), this, SLOT(daemonChanged()));
+
+    if (Daemon::global()->isRunning()) {
+        daemonChanged();
+    }
+}
+
+BackendDetails::~BackendDetails()
+{
+    delete ui;
+}
+
+void BackendDetails::daemonChanged()
+{
     // PackageKit
     QString versionMajor = QString::number(Daemon::global()->versionMajor());
     QString versionMinor = QString::number(Daemon::global()->versionMinor());
@@ -91,11 +106,6 @@ BackendDetails::BackendDetails(QWidget *parent) :
 
     ui->newestCB->setChecked(filters & Transaction::FilterNewest);
     ui->archCB->setChecked(filters & Transaction::FilterNotArch);
-}
-
-BackendDetails::~BackendDetails()
-{
-    delete ui;
 }
 
 #include "BackendDetails.moc"

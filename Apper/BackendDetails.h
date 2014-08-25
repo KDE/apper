@@ -34,6 +34,9 @@ public:
     explicit BackendDetails(QWidget *parent = 0);
     ~BackendDetails();
 
+private Q_SLOTS:
+    void daemonChanged();
+
 private:
     Ui::BackendDetails *ui;
 };
