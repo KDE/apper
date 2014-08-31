@@ -235,6 +235,7 @@
       <caption xml:lang="en-GB">The main window showing a description of the selected package</caption>
       <caption xml:lang="es">La ventana principal con una descripción del paquete seleccionado</caption>
       <caption xml:lang="fi">Pääikkuna näyttämässä valitun paketin kuvausta</caption>
+      <caption xml:lang="it">La finestra principale mostra una descrizione del pacchetto selezionato</caption>
       <caption xml:lang="nl">Het hoofdvenster dat een beschrijving toont van het geselecteerde pakket</caption>
       <caption xml:lang="pl">Okno główne wyświetlające opis wybranego pakietu</caption>
       <caption xml:lang="pt">A janela principal, que mostra uma descrição do pacote seleccionado</caption>
@@ -257,6 +258,7 @@
   <developer_name xml:lang="en-GB">The KDE Community</developer_name>
   <developer_name xml:lang="es">La Comunidad de KDE</developer_name>
   <developer_name xml:lang="fi">KDE-yhteisö</developer_name>
+  <developer_name xml:lang="it">La Comunità di KDE</developer_name>
   <developer_name xml:lang="nl">De KDE gemeenschap</developer_name>
   <developer_name xml:lang="pl">Społeczność KDE</developer_name>
   <developer_name xml:lang="pt">A Comunidade do KDE</developer_name>
