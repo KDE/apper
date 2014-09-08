@@ -1,7 +1,7 @@
 pkg_check_modules(GLIB2 REQUIRED glib-2.0>=2.36)
 pkg_check_modules(LISTALLER REQUIRED listaller-glib>=0.5.8)
 pkg_check_modules(APPSTREAM REQUIRED appstream>=0.6.2)
-pkg_check_modules(GEE REQUIRED gee-1.0>=0.6)
+pkg_check_modules(GEE REQUIRED gee-0.8>=0.10)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 		    ${GLIB2_INCLUDE_DIR}
