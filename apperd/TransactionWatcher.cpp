@@ -199,7 +199,13 @@ void TransactionWatcher::transactionChanged(Transaction *transaction, bool inter
     }
 
     // If the
-    if (!m_transactionJob.contains(tid) && interactive) {
+    Transaction::Role role = transaction->role();
+    if (!m_transactionJob.contains(tid) && interactive &&
+        (role == Transaction::RoleInstallPackages ||
+         role == Transaction::RoleInstallFiles ||
+         role == Transaction::RoleRemovePackages ||
+         role == Transaction::RoleUpdatePackages ||
+         role == Transaction::RoleUpgradeSystem )) {
         TransactionJob *job = new TransactionJob(transaction, this);
         connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
                 this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
