@@ -19,7 +19,6 @@
  */
 
 #include <glib-object.h>
-#include <listaller.h>
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KDebug>
@@ -31,9 +30,9 @@
 
 int main(int argc, char** argv)
 {
-    KAboutData aboutData("apper-appsetup", "apper", ki18n("KDE Application Installer"), "0.1",
+    KAboutData aboutData("apper-appsetup", "apper", ki18n("KDE Application Installer"), "0.2",
                          ki18n("KDE Application Installer"), KAboutData::License_GPL,
-                         ki18n("(C) 2012, Matthias Klumpp"));
+                         ki18n("(C) 2014, Matthias Klumpp"));
 
     aboutData.addAuthor(ki18nc("@info:credit", "Daniel Nicoletti"), ki18n("Developer"),
                         "dantti12@gmail.com");
@@ -50,10 +49,6 @@ int main(int argc, char** argv)
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    // Set if we are in verbose mode
-    listaller_set_verbose_mode(args->isSet("verbose"));
-    listaller_add_log_domain("KDEAppSetup");
-
     QString fname;
     for(int i = 0; i < args->count(); i++) {
         fname = args->arg(i);
@@ -69,17 +64,14 @@ int main(int argc, char** argv)
 
     // Check if we have a package
     if (fname.isEmpty()) {
-        KMessageBox::sorry (0, i18n("Sorry, we didn't get an existing IPK package as parameter."),
+        KMessageBox::sorry (0, i18n("We did not receive a path to an IPK package as parameter."),
                             i18n("Package not found!"));
         return 1;
     }
 
     // Create & run the setup wizard
-    bool ret;
-    SetupWizard *wizard = new SetupWizard(fname);
-    ret = wizard->initialize();
-    if (!ret)
-        return 4;
+    SetupWizard *wizard = new SetupWizard();
+    wizard->initialize(fname);
     wizard->show();
     return app.exec();
 }

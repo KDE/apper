@@ -3,7 +3,7 @@ Type=Application
 Icon=applications-other
 Exec=apper-appsetup %F
 
-Name=Listaller Package Installer
+Name=Limba Package Installer
 Name[bs]=Listaller instalater paketa
 Name[ca]=Instal·lador de paquets llista-ho tot
 Name[ca@valencia]=Instal·lador de paquets llista-ho tot
@@ -76,7 +76,7 @@ GenericName[wa]=Astaleu di programes di ticès pårteyes
 GenericName[x-test]=xx3rd-party software installerxx
 GenericName[zh_CN]=第三方软件安装程序
 GenericName[zh_TW]=第三方軟體安裝器
-Comment=Tool to install new 3rd-party software
+Comment=Tool to install software from 3rd-party sources
 Comment[bs]=Alat za instalaciju Softvera koga je razvila treća strana
 Comment[ca]=Eina per instal·lar programari nou de terceres parts
 Comment[ca@valencia]=Eina per instal·lar programari nou de terceres parts
@@ -115,7 +115,6 @@ Comment[zh_CN]=安装第三方软件的工具
 Comment[zh_TW]=安裝新的第三方軟體的工具
 
 Categories=Qt;KDE;System;Settings;PackageManager;
-MimeType=application/x-app-package;
+MimeType=application/x-ipk-package;
 StartupNotify=true
 NoDisplay=true
-X-Publisher=KDE Project

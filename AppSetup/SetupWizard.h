@@ -33,12 +33,12 @@ class SetupWizard : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SetupWizard(const QString& ipkFName, QWidget *parent = 0);
+    explicit SetupWizard(QWidget *parent = 0);
     virtual ~SetupWizard();
 
     virtual void slotButtonClicked(int button);
 
-    bool initialize();
+    bool initialize(const QString& ipkFName);
 
     void setCurrentPage(QWidget *widget);
 
@@ -46,13 +46,12 @@ public:
 
 private slots:
     void currentPageChanged(int index);
-    void licenseAccepted(bool accepted);
-    void sharedInstallCbToggled(bool shared);
     void securityInfoBtnClicked();
     void updatePallete();
 
 private:
     bool constructWizardLayout();
+    void showError(const QString& details);
 
     void runInstallation();
 

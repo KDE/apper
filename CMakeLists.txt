@@ -21,10 +21,10 @@ option(APPSTREAM "Build Apper with AppStream support" OFF)
 set(HAVE_APPSTREAM ${APPSTREAM})
 message(STATUS "Building Apper with AppStream support: " ${APPSTREAM})
 
-# Enable support for Listaller cross-distro application installer
-option(LISTALLER "Build Apper with app install" OFF)
-set(HAVE_LISTALLER ${LISTALLER})
-message(STATUS "Building Apper with Listaller modules: " ${LISTALLER})
+# Enable support for Limba packages
+option(LIMBA "Build Apper with app install" OFF)
+set(HAVE_LIMBA ${LIMBA})
+message(STATUS "Building Apper with Limba support: " ${LIMBA})
 
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
@@ -73,6 +73,6 @@ add_subdirectory(apperd)
 add_subdirectory(declarative-plugins)
 add_subdirectory(plasmoid)
 add_subdirectory(doc)
-if(LISTALLER)
+if(LIMBA)
     add_subdirectory(AppSetup)
 endif()
