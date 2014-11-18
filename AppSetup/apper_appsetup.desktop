@@ -4,6 +4,13 @@ Icon=applications-other
 Exec=apper-appsetup %F
 
 Name=Limba Package Installer
+Name[fi]=Limba-pakettiasennusohjelma
+Name[nl]=Installatieprogramma van pakketten Limba
+Name[pt]=Instalador de Pacotes Limba
+Name[pt_BR]=Instalador de pacotes Limba
+Name[sk]=Inštalátor balíkov Limba
+Name[uk]=Програма для встановлення пакунків Limba
+Name[x-test]=xxLimba Package Installerxx
 GenericName=3rd-party software installer
 GenericName[bs]=Softverski instaler koga je razvila treća strana
 GenericName[ca]=Instal·lador de programari de terceres parts
@@ -42,6 +49,13 @@ GenericName[x-test]=xx3rd-party software installerxx
 GenericName[zh_CN]=第三方软件安装程序
 GenericName[zh_TW]=第三方軟體安裝器
 Comment=Tool to install software from 3rd-party sources
+Comment[fi]=Työkalu ohjelmien asentamiseen kolmannen osapuolen lähteistä
+Comment[nl]=Hulpmiddel voor het installeren van software uit bronnen van derden
+Comment[pt]=Uma ferramenta para instalar aplicações de terceiros
+Comment[pt_BR]=Ferramenta para instalar software de terceiros
+Comment[sk]=Nástroj na inštaláciu softvéru od tretích strán
+Comment[uk]=Інструмент для встановлення програмного забезпечення зі сторонніх джерел
+Comment[x-test]=xxTool to install software from 3rd-party sourcesxx
 
 Categories=Qt;KDE;System;Settings;PackageManager;
 MimeType=application/x-ipk-package;
