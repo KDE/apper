@@ -58,6 +58,6 @@ Comment[uk]=Інструмент для встановлення програм�
 Comment[x-test]=xxTool to install software from 3rd-party sourcesxx
 
 Categories=Qt;KDE;System;Settings;PackageManager;
-MimeType=application/x-ipk-package;
+MimeType=application/x-ipk;
 StartupNotify=true
 NoDisplay=true

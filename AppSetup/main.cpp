@@ -18,7 +18,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <glib-object.h>
+#include <limba.h>
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KDebug>
@@ -48,6 +48,9 @@ int main(int argc, char** argv)
     KCmdLineArgs::addCmdLineOptions(options);
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+    // Set if we are in verbose mode
+    li_set_verbose_mode(args->isSet("verbose"));
 
     QString fname;
     for(int i = 0; i < args->count(); i++) {

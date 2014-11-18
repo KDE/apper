@@ -305,7 +305,6 @@ bool SetupWizard::initialize(const QString& ipkFName)
     GError *error = NULL;
     AsMetadata *mdata;
     gchar *data;
-    LiPackage *pkg;
 
     // Create a new installer instance
     d->setup = li_installer_new ();
@@ -323,17 +322,17 @@ bool SetupWizard::initialize(const QString& ipkFName)
         return false;
     }
 
-    pkg = li_installer_get_package (d->setup);
-    data = li_package_get_appstream_data (pkg);
+    data = li_installer_get_appstream_data (d->setup);
     mdata = as_metadata_new ();
     d->cpt = as_metadata_parse_data (mdata, data, &error);
+    g_free (data);
     g_object_unref (mdata);
     if (error != NULL) {
         this->showError(QString::fromUtf8(error->message));
         g_error_free (error);
         return false;
     }
-    d->pki = li_package_get_info (pkg);
+    d->pki = li_installer_get_package_info (d->setup);
 
     // Build layout of our setup wizard
     constructWizardLayout();
