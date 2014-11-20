@@ -50,6 +50,7 @@ GenericName[x-test]=xx3rd-party software installerxx
 GenericName[zh_CN]=第三方软件安装程序
 GenericName[zh_TW]=第三方軟體安裝器
 Comment=Tool to install software from 3rd-party sources
+Comment[cs]=Nástroj pro instalaci softwaru třetích stran
 Comment[de]=Anwendung zur Installation der Software von Drittanbietern
 Comment[fi]=Työkalu ohjelmien asentamiseen kolmannen osapuolen lähteistä
 Comment[nl]=Hulpmiddel voor het installeren van software uit bronnen van derden
