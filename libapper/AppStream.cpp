@@ -108,7 +108,7 @@ bool AppStream::open()
         app.description = QString::fromUtf8(as_component_get_description(cpt));
 
         // Application stock icon
-        app.icon = QString::fromUtf8(as_component_get_icon(cpt));
+        app.icon_url = QString::fromUtf8(as_component_get_icon_url_for_size (cpt, 64, 64));
 
         // Application categories
         gchar **cats = as_component_get_categories(cpt);
@@ -167,8 +167,8 @@ QString AppStream::genericIcon(const QString &pkgName) const
 {
     if (m_appInfo.contains(pkgName)) {
         foreach (const Application &app, applications(pkgName)) {
-            if (!app.icon.isEmpty()) {
-                return app.icon;
+            if (!app.icon_url.isEmpty()) {
+                return app.icon_url;
             }
         }
     }

@@ -124,7 +124,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             } else {
                 iPackage.summary = app.summary;
             }
-            iPackage.icon  = app.icon;
+            iPackage.icon  = app.icon_url;
             iPackage.appId = app.id;
             iPackage.size  = 0;
 
@@ -287,13 +287,21 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             QPixmap icon = QPixmap(44, ICON_SIZE);
             icon.fill(Qt::transparent);
             if (!package.icon.isNull()) {
-                QPixmap pixmap = KIconLoader::global()->loadIcon(package.icon,
+                QPixmap pixmap;
+                if (package.icon.startsWith("/")) {
+                    pixmap = QPixmap();
+                    pixmap.load(package.icon);
+                    pixmap = pixmap.scaledToHeight(ICON_SIZE);
+                } else {
+                    pixmap = KIconLoader::global()->loadIcon(package.icon,
                                                                  KIconLoader::NoGroup,
                                                                  ICON_SIZE,
                                                                  KIconLoader::DefaultState,
                                                                  QStringList(),
                                                                  0L,
                                                                  true);
+                }
+
                 if (!pixmap.isNull()) {
                     QPainter painter(&icon);
                     painter.drawPixmap(QPoint(2, 0), pixmap);

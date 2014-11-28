@@ -41,7 +41,7 @@ class KDE_EXPORT AppStream : public QObject {
             QString name;
             QString summary;
             QString description;
-            QString icon;
+            QString icon_url;
             QString id;
             QStringList categories;
             QString screenshot;
