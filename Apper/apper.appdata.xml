@@ -266,6 +266,7 @@
   <project_group>KDE</project_group>
   <developer_name>The KDE Community</developer_name>
   <developer_name xml:lang="ca">La comunitat KDE</developer_name>
+  <developer_name xml:lang="cs">Komunita KDE</developer_name>
   <developer_name xml:lang="da">KDE-fællesskabet</developer_name>
   <developer_name xml:lang="de">Die KDE-Gemeinschaft</developer_name>
   <developer_name xml:lang="el">Η Κοινότητα του KDE</developer_name>
