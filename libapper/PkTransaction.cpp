@@ -108,47 +108,47 @@ PkTransaction::~PkTransaction()
 
 void PkTransaction::installFiles(const QStringList &files)
 {
-    if (Daemon::global()->roles() & Transaction::RoleInstallFiles) {
+//    if (Daemon::global()->roles() & Transaction::RoleInstallFiles) {
         d->originalRole = Transaction::RoleInstallFiles;
         d->files = files;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
         setupTransaction(Daemon::installFiles(files, d->flags));
-    } else {
-        showError(i18n("Current backend does not support installing files."), i18n("Error"));
-    }
+//    } else {
+//        showError(i18n("Current backend does not support installing files."), i18n("Error"));
+//    }
 }
 
 void PkTransaction::installPackages(const QStringList &packages)
 {
-    if (Daemon::global()->roles() & Transaction::RoleInstallPackages) {
+//    if (Daemon::global()->roles() & Transaction::RoleInstallPackages) {
         d->originalRole = Transaction::RoleInstallPackages;
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
         setupTransaction(Daemon::installPackages(d->packages, d->flags));
-    } else {
-        showError(i18n("Current backend does not support installing packages."), i18n("Error"));
-    }
+//    } else {
+//        showError(i18n("Current backend does not support installing packages."), i18n("Error"));
+//    }
 }
 
 void PkTransaction::removePackages(const QStringList &packages)
 {
-    if (Daemon::global()->roles() & Transaction::RoleRemovePackages) {
+//    if (Daemon::global()->roles() & Transaction::RoleRemovePackages) {
         d->originalRole = Transaction::RoleRemovePackages;
         d->allowDeps = false; // Default to avoid dependencies removal unless simulate says so
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
         setupTransaction(Daemon::removePackages(d->packages, d->allowDeps, AUTOREMOVE, d->flags));
-    } else {
-        showError(i18n("The current backend does not support removing packages."), i18n("Error"));
-    }
+//    } else {
+//        showError(i18n("The current backend does not support removing packages."), i18n("Error"));
+//    }
 }
 
 void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnly)
 {
-    if (Daemon::global()->roles() & Transaction::RoleUpdatePackages) {
+//    if (Daemon::global()->roles() & Transaction::RoleUpdatePackages) {
         d->originalRole = Transaction::RoleUpdatePackages;
         d->packages = packages;
         if (downloadOnly) {
@@ -159,9 +159,9 @@ void PkTransaction::updatePackages(const QStringList &packages, bool downloadOnl
         }
 
         setupTransaction(Daemon::updatePackages(d->packages, d->flags));
-    } else {
-        showError(i18n("The current backend does not support updating packages."), i18n("Error"));
-    }
+//    } else {
+//        showError(i18n("The current backend does not support updating packages."), i18n("Error"));
+//    }
 }
 
 void PkTransaction::refreshCache(bool force)
