@@ -520,9 +520,11 @@ void PackageModel::finished()
     }
 
     // The whole structure is about to change
-    beginInsertRows(QModelIndex(), 0, m_packages.size() - 1);
-    m_finished = true;
-    endInsertRows();
+    if (!m_packages.isEmpty()) {
+        beginInsertRows(QModelIndex(), 0, m_packages.size() - 1);
+        m_finished = true;
+        endInsertRows();
+    }
 
     emit changed(!m_checkedPackages.isEmpty());
 }
