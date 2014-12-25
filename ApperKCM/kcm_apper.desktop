@@ -49,7 +49,6 @@ Name[tr]=Yazılım Yönetimi
 Name[ug]=يۇمشاق دېتال باشقۇرۇش
 Name[uk]=Керування програмами
 Name[wa]=Manaedjmint des programes
-Name[x-test]=xxSoftware Managementxx
 Name[zh_CN]=软件管理
 Name[zh_TW]=軟體管理
 
@@ -89,7 +88,6 @@ Comment[sv]=Hämta, ta bort och uppdatera programvara
 Comment[tr]=Yazılım Ekle, Kaldır ve Güncelle
 Comment[uk]=Встановлення, вилучення і оновлення програмного забезпечення
 Comment[wa]=Cweri, oister eyet mete a djoû des programes
-Comment[x-test]=xxGet, Remove and Update Softwarexx
 Comment[zh_CN]=获取、删除和更新软件
 Comment[zh_TW]=取得、移除與更新軟體
 
@@ -125,6 +123,5 @@ X-KDE-Keywords[sv]=installera,avinstallera,ta bort,programvara,program,hantering
 X-KDE-Keywords[tr]=yükle,kaldır,sil,yazılım,uygulamalar,yönetim,paketler,packagekit,temizle
 X-KDE-Keywords[uk]=install,uninstall,remove,software,applications,management,packages,packagekit,purge,встановлення,встановити,вилучення,вилучити,програма,програми,програмного забезпечення,керування,пакунки,повне вилучення,остаточне вилучення
 X-KDE-Keywords[wa]=astaler,dizastaler,oister,disfacer,porgame,aplicåcions,manaedjmint,pacaedjes,packagekit,purge
-X-KDE-Keywords[x-test]=xxinstall,uninstall,remove,software,applications,management,packages,packagekit,purgexx
 X-KDE-Keywords[zh_CN]=install,uninstall,remove,software,applications,management,packages,packagekit,purge
 X-KDE-Keywords[zh_TW]=install,uninstall,remove,software,applications,management,packages,packagekit,purge
