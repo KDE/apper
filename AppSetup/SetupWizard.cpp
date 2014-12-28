@@ -136,8 +136,8 @@ bool SetupWizard::constructWizardLayout()
     SimplePage *introP = new SimplePage(this);
     introP->setTitle(i18n("Welcome!"));
     introP->setDescription(i18n("Welcome to the installation of %1!", appName));
-    introP->setDetails(i18n("Please be careful while installing 3rd-party applications.<br>"
-                            "They may eventually <b>damage</b> your system or "
+    introP->setDetails(i18n("Please be careful while installing a 3rd-party application.<br>"
+                            "It might eventually <b>damage</b> your system or "
                             "have <b>malicious behaviour</b>, like spying out your passwords.<br>"
                             "Please do only install this software if you <b>trust its "
                             "publisher</b>."));
@@ -153,35 +153,22 @@ bool SetupWizard::constructWizardLayout()
     QHBoxLayout *secWgLayout = new QHBoxLayout();
     securityWidget->setLayout(secWgLayout);
 
-#if 0
     QLabel *pix = new QLabel(detailsP);
 
-    ListallerIPKSecurityInfo *secInfo = listaller_setup_get_security_info(d->setup);
-    ListallerSecurityLevel secLev = listaller_ipk_security_info_get_level(secInfo);
-    if (secLev == LISTALLER_SECURITY_LEVEL_HIGH)
+    LiTrustLevel trust = li_installer_get_package_trust_level(d->setup);
+    if (trust == LI_TRUST_LEVEL_HIGH)
         pix->setPixmap(KIcon("security-high").pixmap (32, 32));
-    else if (secLev == LISTALLER_SECURITY_LEVEL_MEDIUM)
+    else if ((trust == LI_TRUST_LEVEL_LOW) || (trust == LI_TRUST_LEVEL_MEDIUM))
         pix->setPixmap(KIcon("security-medium").pixmap (32, 32));
-    else if (secLev == LISTALLER_SECURITY_LEVEL_LOW)
-        pix->setPixmap(KIcon("security-low").pixmap (32, 32));
-    else if (secLev == LISTALLER_SECURITY_LEVEL_DANGEROUS)
+    else if ((trust == LI_TRUST_LEVEL_NONE) || (trust == LI_TRUST_LEVEL_INVALID))
         pix->setPixmap(KIcon("security-low").pixmap (32, 32));
     else
         pix->setPixmap(KIcon("task-reject").pixmap (32, 32));
     secWgLayout->addWidget(pix);
 
     QLabel *secInfoL = new QLabel(detailsP);
-    secInfoL->setText(QString::fromUtf8(listaller_ipk_security_info_get_level_as_sentence(secInfo)));
+    secInfoL->setText(QString::fromUtf8(li_trust_level_to_text(trust)));
     secWgLayout->addWidget(secInfoL);
-#endif
-
-    QPushButton *infoBtn = new QPushButton (detailsP);
-    infoBtn->setIcon(KIcon("dialog-information"));
-    infoBtn->setFlat(true);
-    infoBtn->setMinimumWidth(16);
-    infoBtn->setMinimumHeight(16);
-    connect(infoBtn, SIGNAL(clicked()), this, SLOT(securityInfoBtnClicked()));
-    secWgLayout->addWidget(infoBtn);
 
     // Install mode select checkbox
     secWgLayout->addStretch();
@@ -191,10 +178,13 @@ bool SetupWizard::constructWizardLayout()
     d->preparationPageCount++;
 
     // Application description page
+    QString desc = as_component_get_description(d->cpt);
+    if (desc.isEmpty())
+        desc = as_component_get_summary(d->cpt);
     SimplePage *descP = new SimplePage(this);
     descP->setTitle(i18n("Application description"));
     descP->setDescription(i18n("Description"));
-    descP->setDetails(as_component_get_description(d->cpt));
+    descP->setDetails(desc);
     ui->stackedWidget->addWidget(descP);
     d->preparationPageCount++;
 
@@ -338,24 +328,6 @@ bool SetupWizard::initialize(const QString& ipkFName)
     constructWizardLayout();
 
     return true;
-}
-
-void SetupWizard::securityInfoBtnClicked()
-{
-    QString infoText = "TODO";
-#if 0
-    // fix all caracters in user-names string to display it
-    ListallerIPKSecurityInfo *secInfo = listaller_setup_get_security_info(d->setup);
-    QString userNames = QString::fromUtf8(listaller_ipk_security_info_get_user_names(secInfo)).replace ('<', '[').replace('>', ']').replace('\n', "<br>");
-
-    QString infoText = i18n("This package has the following security level: <b>%1</b>", QString::fromUtf8(listaller_ipk_security_info_get_level_as_string(secInfo)));
-    infoText += "<br>";
-    infoText += i18n("It was signed with a key belonging to these user-ids: %1", "<br>" + userNames);
-    infoText += "<br>";
-    // TODO: Add the remaining infotmation too
-#endif
-
-    KMessageBox::information(this, infoText, i18n("Security hints"));
 }
 
 void SetupWizard::updatePallete()

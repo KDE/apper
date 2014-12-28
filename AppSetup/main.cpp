@@ -38,7 +38,7 @@ int main(int argc, char** argv)
                         "dantti12@gmail.com");
     aboutData.addAuthor(ki18nc("@info:credit", "Matthias Klumpp"), ki18n("Developer"),
                         "matthias@tenstral.net");
-    aboutData.setProductName("apper/listaller");
+    aboutData.setProductName("apper/limba");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
     // Add --verbose as commandline option

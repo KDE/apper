@@ -46,7 +46,6 @@ public:
 
 private slots:
     void currentPageChanged(int index);
-    void securityInfoBtnClicked();
     void updatePallete();
 
 private:
