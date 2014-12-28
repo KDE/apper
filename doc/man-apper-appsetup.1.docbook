@@ -18,7 +18,7 @@
       <email>dantti12@gmail.com</email>
 </author>
 </authorgroup>
-<date>2012-02-24</date>
+<date>2014-08-24</date>
 <productname>K Desktop Environment</productname>
 </refentryinfo>
 
@@ -29,7 +29,7 @@
 
 <refnamediv>
 <refname><command>apper-appsetup</command></refname>
-<refpurpose>A Listaller application installer KDE GUI</refpurpose>
+<refpurpose>A Limba application installer KDE GUI</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -47,8 +47,8 @@
 <para>Apper is the &kde; interface for PackageKit</para>
 <para>Apper is able to manage packages, applications and updates in a cross-distribution way thanks to the PackageKit project.</para>
 <para>It is providing Linux users a single application that they can learn and use in whatever distribution they are.</para>
-<para>This small helper application provides a GUI interface for the distro-agnostic Listaller application installer, which makes
-	it possible to install Listaller packages using Apper.</para>
+<para>This small helper application provides a GUI interface for the distro-agnostic Limba application installer, which makes
+	it possible to install Limba packages using Apper.</para>
 
 </refsect1>
 
