@@ -22,7 +22,7 @@ set(HAVE_APPSTREAM ${APPSTREAM})
 message(STATUS "Building Apper with AppStream support: " ${APPSTREAM})
 
 # Enable support for Limba packages
-option(LIMBA "Build Apper with app install" OFF)
+option(LIMBA "Build Apper with Limba bundle support" OFF)
 set(HAVE_LIMBA ${LIMBA})
 message(STATUS "Building Apper with Limba support: " ${LIMBA})
 
