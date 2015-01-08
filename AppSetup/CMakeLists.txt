@@ -2,7 +2,7 @@
 
 pkg_check_modules(GLIB2 REQUIRED glib-2.0>=2.36)
 pkg_check_modules(LIMBA REQUIRED limba>=0.2.0)
-pkg_check_modules(APPSTREAM REQUIRED appstream>=0.7.4)
+pkg_check_modules(APPSTREAM REQUIRED appstream>=0.7.6)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 		    ${GLIB2_INCLUDE_DIR}

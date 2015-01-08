@@ -314,15 +314,17 @@ bool SetupWizard::initialize(const QString& ipkFName)
 
     data = li_installer_get_appstream_data (d->setup);
     mdata = as_metadata_new ();
-    d->cpt = as_metadata_parse_data (mdata, data, &error);
+    as_metadata_parse_data (mdata, data, &error);
     g_free (data);
-    g_object_unref (mdata);
     if (error != NULL) {
         this->showError(QString::fromUtf8(error->message));
         g_error_free (error);
+        g_object_unref (mdata);
         return false;
     }
+    d->cpt = g_object_ref (as_metadata_get_component (mdata));
     d->pki = li_installer_get_package_info (d->setup);
+    g_object_unref (mdata);
 
     // Build layout of our setup wizard
     constructWizardLayout();
