@@ -108,7 +108,7 @@ bool AppStream::open()
         app.description = QString::fromUtf8(as_component_get_description(cpt));
 
         // Application stock icon
-        app.icon_url = QString::fromUtf8(as_component_get_icon_url_for_size (cpt, 64, 64));
+        app.icon_url = QString::fromUtf8(as_component_get_icon_url (cpt, 64, 64));
 
         // Application categories
         gchar **cats = as_component_get_categories(cpt);
