@@ -125,6 +125,6 @@ X-KDE-Keywords[sv]=installera,avinstallera,ta bort,programvara,program,hantering
 X-KDE-Keywords[tr]=yükle,kaldır,sil,yazılım,uygulamalar,yönetim,paketler,packagekit,temizle
 X-KDE-Keywords[uk]=install,uninstall,remove,software,applications,management,packages,packagekit,purge,встановлення,встановити,вилучення,вилучити,програма,програми,програмного забезпечення,керування,пакунки,повне вилучення,остаточне вилучення
 X-KDE-Keywords[wa]=astaler,dizastaler,oister,disfacer,porgame,aplicåcions,manaedjmint,pacaedjes,packagekit,purge
-X-KDE-Keywords[x-test]=xxinstall,uninstall,remove,software,applications,management,packages,packagekit,purgexx
+X-KDE-Keywords[x-test]=xxinstallxx,xxuninstallxx,xxremovexx,xxsoftwarexx,xxapplicationsxx,xxmanagementxx,xxpackagesxx,xxpackagekitxx,xxpurgexx
 X-KDE-Keywords[zh_CN]=install,uninstall,remove,software,applications,management,packages,packagekit,purge
 X-KDE-Keywords[zh_TW]=install,uninstall,remove,software,applications,management,packages,packagekit,purge
