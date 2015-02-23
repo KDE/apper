@@ -4,6 +4,7 @@ Icon=applications-other
 Exec=apper-appsetup %F
 
 Name=Limba Package Installer
+Name[bs]=Listaller instalater paketa
 Name[ca]=Instal·lador de paquets Limba
 Name[da]=Installationsprogram til Limba-pakker
 Name[de]=Limba-Pakeinstallationsprogramm
@@ -62,6 +63,7 @@ GenericName[x-test]=xx3rd-party software installerxx
 GenericName[zh_CN]=第三方软件安装程序
 GenericName[zh_TW]=第三方軟體安裝器
 Comment=Tool to install software from 3rd-party sources
+Comment[bs]=Alat za instalaciju Softvera koga je razvila treća strana
 Comment[ca]=Eina per instal·lar programari de fonts de terceres parts
 Comment[cs]=Nástroj pro instalaci softwaru třetích stran
 Comment[da]=Værktøj til at installere software fra 3.partskilder
