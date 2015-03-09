@@ -169,7 +169,7 @@ PackageDetails::PackageDetails(QWidget *parent)
     // Setup the opacit effect that makes the descriptio transparent
     // after finished it checks in display() to see if it shouldn't show
     // up again. The property animation is always the same, the only different thing
-    // is the the Forward or Backward property
+    // is the Forward or Backward property
     QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(ui->stackedWidget);
     effect->setOpacity(0);
     ui->stackedWidget->setGraphicsEffect(effect);
