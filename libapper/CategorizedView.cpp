@@ -37,6 +37,8 @@ CategorizedView::CategorizedView(QWidget *parent)
 void CategorizedView::setModel(QAbstractItemModel *model)
 {
     KCategorizedView::setModel(model);
+// Don't set a fixed grid as this breaks the layout. Let Qt figure out the size itself
+#if 0
     //     KFileItemDelegate *delegate = qobject_cast<KFileItemDelegate*>(itemDelegate());
 //     kDebug() << delegate->maximumSize();
 //     if (delegate) {
@@ -53,4 +55,5 @@ void CategorizedView::setModel(QAbstractItemModel *model)
         setGridSize(QSize(maxWidth, maxHeight ));
 //         delegate->setMaximumSize(QSize(maxWidth, maxHeight));
 // //     }
+#endif
 }
