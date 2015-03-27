@@ -37,7 +37,7 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
 {
     setWindowTitle(i18n("Install Packages Files"));
 
-    if (Daemon::global()->roles() & Transaction::RoleInstallFiles) {
+//    if (Daemon::global()->roles() & Transaction::RoleInstallFiles) {
         m_introDialog = new IntroDialog(this);
         m_introDialog->acceptDrops(i18n("You can drop more files in here"));
 
@@ -48,10 +48,10 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
         setMainWidget(m_introDialog);
 
         modelChanged();
-    } else {
-        setError(i18n("Not Supported"),
-                 i18n("Your current backend does not support installing files"));
-    }
+//    } else {
+//        setError(i18n("Not Supported"),
+//                 i18n("Your current backend does not support installing files"));
+//    }
 }
 
 PkInstallPackageFiles::~PkInstallPackageFiles()
