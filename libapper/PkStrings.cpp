@@ -158,6 +158,11 @@ QString PkStrings::status(Transaction::Status status, uint speed, qulonglong dow
     return QString();
 }
 
+QString PkStrings::status(int status, uint speed, qulonglong downloadRemaining)
+{
+    return PkStrings::status(static_cast<Transaction::Status>(status), speed, downloadRemaining);
+}
+
 QString PkStrings::statusPast(Transaction::Status status)
 {
     switch (status) {
@@ -269,6 +274,11 @@ QString PkStrings::action(Transaction::Role role, Transaction::TransactionFlags 
     }
     kWarning() << "action unrecognised: " << role;
     return QString();
+}
+
+QString PkStrings::action(int role, int flags)
+{
+    return PkStrings::action(static_cast<Transaction::Role>(role), static_cast<Transaction::TransactionFlags>(flags));
 }
 
 QString PkStrings::actionPast(Transaction::Role action)

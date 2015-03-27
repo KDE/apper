@@ -49,6 +49,9 @@ public slots:
     static QString prettyFormatDuration(unsigned long mSec);
     static QString lastCacheRefreshTitle(uint lastTime);
     static QString lastCacheRefreshSubTitle(uint lastTime);
+// the following are needed to be able to use the functions from QML (bug#344639)
+    static QString status(int status, uint speed = 0, qulonglong downloadRemaining = 0);
+    static QString action(int role, int flags);
 };
 
 #endif
