@@ -29,7 +29,9 @@ Item {
     function transactionFinished() {
         if (changelogItem.state != "DETAILS") {
             statusView.title = i18n("Failed to get update details");
-            statusView.subTitle = transaction.internalErrorMessage;
+            if (transaction.internalErrorMessage !== undefined) {
+                statusView.subTitle = transaction.internalErrorMessage;
+            }
             changelogItem.state = "ERROR";
         }
     }
@@ -132,7 +134,9 @@ Item {
         var error = transaction.internalError;
         if (error) {
             statusView.title = PkStrings.daemonError(error);
-            statusView.subTitle = transaction.internalErrorMessage;
+            if (transaction.internalErrorMessage !== undefined) {
+                statusView.subTitle = transaction.internalErrorMessage;
+            }
             changelogItem.state = "ERROR";
         }
     }
