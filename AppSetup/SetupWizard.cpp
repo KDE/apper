@@ -322,7 +322,9 @@ bool SetupWizard::initialize(const QString& ipkFName)
         g_object_unref (mdata);
         return false;
     }
-    d->cpt = g_object_ref (as_metadata_get_component (mdata));
+
+    d->cpt = as_metadata_get_component (mdata);
+    g_object_ref (d->cpt);
     d->pki = li_installer_get_package_info (d->setup);
     g_object_unref (mdata);
 
