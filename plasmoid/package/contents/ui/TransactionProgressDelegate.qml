@@ -38,7 +38,7 @@ Item {
         PlasmaComponents.ProgressBar {
             id: itemProgress
             width: progressWidth
-            height: itemStatusLabel.paitedHeight + 4
+            height: itemStatusLabel.paintedHeight + 4
             minimumValue: 0
             maximumValue: 100
             PlasmaComponents.Label {
