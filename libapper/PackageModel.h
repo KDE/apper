@@ -48,6 +48,7 @@ public:
         SortRole = Qt::UserRole,
         NameRole,
         SummaryRole,
+        RepoRole,
         VersionRole,
         ArchRole,
         IconRole,

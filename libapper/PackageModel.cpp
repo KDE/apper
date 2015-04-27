@@ -67,8 +67,9 @@ PackageModel::PackageModel(QObject *parent)
     m_roles[SortRole] = "rSort";
     m_roles[NameRole] = "rName";
     m_roles[SummaryRole] = "roleSummary";
-    m_roles[VersionRole] = "rVersion";
-    m_roles[ArchRole] = "rArch";
+    m_roles[RepoRole] = "roleRepo";
+    m_roles[VersionRole] = "roleVersion";
+    m_roles[ArchRole] = "roleArch";
     m_roles[IconRole] = "rIcon";
     m_roles[IdRole] = "roleId";
     m_roles[CheckStateRole] = "roleChecked";
@@ -372,6 +373,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
     case ArchRole:
         return package.arch;
     case OriginCol:
+    case RepoRole:
         return package.repo;
     case InfoRole:
         return qVariantFromValue(package.info);

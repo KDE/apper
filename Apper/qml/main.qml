@@ -12,6 +12,8 @@ ApplicationWindow {
 
     SystemPalette { id: sysPalette }
 
+    color: sysPalette.window
+
     function addPage(dict) {
         // Remove history forward to the current location
         if (goNext.enabled) {
@@ -109,11 +111,6 @@ ApplicationWindow {
         id: mainView
 
         initialItem: Qt.resolvedUrl("Home.qml")
-
-        Rectangle {
-            anchors.fill: parent
-            color: sysPalette.base
-        }
 
         delegate: StackViewDelegate {
             function transitionFinished(properties)

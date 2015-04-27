@@ -7,13 +7,14 @@ import Apper 1.0
 ScrollView {
     id: root
 
-    ColumnLayout {
-        width: root.viewport.width - 10
-        x: 5
-        y: 5
+    ListView {
+        id: updatesView
+        width: root.viewport.width
 
-        Rectangle {
-            Layout.fillWidth: true
+        property int col1: 0
+
+        header: Rectangle {
+            width: parent.width
             height: topLayout.height + 10
             color: sysPalette.window
             RowLayout {
@@ -32,50 +33,42 @@ ScrollView {
             }
         }
 
-        PackageModel {
-            id: pkgModel
+        delegate: UpdateDelegate {
+            width: ListView.view.width
         }
 
-        GroupBox {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            visible: appsRepeater.count
-            title: qsTr("Applications")
-
-            ColumnLayout {
-                Repeater {
-                    id: appsRepeater
-                    property int col1: 0
-                    delegate: UpdateDelegate {
-                        width: parent.width
-                    }
-                    model: ApplicationSortFilterModel {
-                        sourcePkgModel: pkgModel
-                        applicationsOnly: true
-                    }
-                }
+        model: ApplicationSortFilterModel {
+            sourcePkgModel: PackageModel {
+                id: pkgModel
             }
         }
 
-        GroupBox {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            visible: pkgsRepeater.count
-            title: qsTr("System Packages")
+        // The delegate for each section header
+        Component {
+            id: sectionHeading
+            Rectangle {
+//                width: container.width
+                height: childrenRect.height
+                color: sysPalette.window
 
-            ColumnLayout {
-                Repeater {
-                    id: pkgsRepeater
-                    delegate: UpdateDelegate {
-                        width: parent.width
-                    }
-                    model: ApplicationSortFilterModel {
-                        sourcePkgModel: pkgModel
-                        packagesOnly: true
-                    }
+                CheckBox {
+                    id: systemPackages
+                    visible: section == "true"
+                    text: "System Packages"
+                }
+
+                Text {
+                    visible: !systemPackages.visible
+                    text: "Application"
+                    font.bold: true
+                    font.pixelSize: 20
                 }
             }
         }
+        spacing: 5
+
+        section.property: "rIsPackageRole"
+        section.delegate: sectionHeading
     }
 
     Component.onCompleted: {
