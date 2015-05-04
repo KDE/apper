@@ -1,18 +1,44 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.0
 
 import Apper 1.0
 
-TableView {
-    TableViewColumn{ role: "roleName"  ; title: "Package" ; width: 100 }
-    TableViewColumn{ role: "roleSummary"  ; title: "Summary" ; width: 100 }
-    TableViewColumn{ role: "roleVersion"  ; title: "Version" ; width: 100 }
-    TableViewColumn{ role: "roleVersion"  ; title: "Version" ; width: 100 }
+ScrollView {
+    id: root
 
-    model: ApplicationSortFilterModel {
-        sourcePkgModel: PackageModel {
-            id: pkgModel
+    ListView {
+        width: root.viewport.width
+
+        header: Rectangle {
+            width: parent.width
+            height: topLayout.height + 10
+            color: sysPalette.window
+            RowLayout {
+                id: topLayout
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: 5
+                Label {
+                    Layout.fillWidth: true
+                    text: qsTr("You have %1 updates").arg(pkgModel.count)
+                }
+                Button {
+                    text: qsTr("Update All")
+                }
+            }
+        }
+
+        model: ApplicationSortFilterModel {
+            sourcePkgModel: PackageModel {
+                id: pkgModel
+            }
+            applicationsOnly: false
+        }
+
+        delegate: UpdateDelegate {
+            width: ListView.view.width
         }
     }
 

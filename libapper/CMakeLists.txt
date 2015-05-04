@@ -31,13 +31,6 @@ set(libapper_SRCS
 #     InfoWidget.cpp
 )
 
-if(APPSTREAM)
-    pkg_check_modules(GLIB2 REQUIRED glib-2.0>=2.36)
-    pkg_check_modules(APPSTREAM REQUIRED appstream>=0.6)
-
-    set(libapper_SRCS ${libapper_SRCS} AppStream.cpp)
-endif()
-
 # add_ui_files(libapper_SRCS
 #     ApplicationLauncher.ui
 #     PkTransactionWidget.ui
@@ -58,10 +51,8 @@ if(APPSTREAM)
 endif()
 
 target_link_libraries(apper
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KIO_LIBS}
     ${PackageKitQt5_LIBRARIES}
-    ${APPSTREAM_LIBRARIES}
+    AppstreamQt
 )
 
 install(TARGETS apper DESTINATION ${LIB_INSTALL_DIR}/apper)

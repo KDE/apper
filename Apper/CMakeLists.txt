@@ -1,5 +1,7 @@
 file(GLOB QML_SRC qml/*.qml qml/*.js)
 
+include_directories(${AppstreamQt_INCLUDES})
+
 set(apper_SRCS
     ${QML_SRC}
 #    MainUi.cpp
@@ -21,6 +23,7 @@ qt5_use_modules(apper_executable Quick DBus Widgets)
 
 target_link_libraries(apper_executable
     ${PackageKitQt5_0_LIBRARIES}
+    AppstreamQt
     apper
 )
 

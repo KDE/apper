@@ -37,14 +37,7 @@
 //#include <KCategorizedSortFilterProxyModel>
 #include <QDebug>
 
-#ifdef HAVE_APPSTREAM
-#include <AppStream.h>
-#endif
-
-#ifndef HAVE_APPSTREAM
-//#include <QSqlDatabase>
-//#include <QSqlQuery>
-#endif
+#include <AppstreamQt/database.h>
 
 #define ICON_SIZE 22
 #define OVERLAY_SIZE 16
@@ -78,6 +71,18 @@ PackageModel::PackageModel(QObject *parent)
     m_roles[IsPackageRole] = "rIsPackageRole";
     m_roles[PackageName] = "rPackageName";
     m_roles[InfoIconRole] = "rInfoIcon";
+
+    as = new Appstream::Database(QStringLiteral("/var/cache/app-info/xapian"));
+    if (!as->open()) {
+        qDebug() << "Failed to open Appstream database";
+        delete as;
+        as = 0;
+    }
+    QList<Appstream::Component> apps = as->allComponents();
+    qDebug() << apps.size() << "all Appstream database";
+//    foreach (const Appstream::Component &app, apps) {
+//        qDebug() << "name" << app.name() << app.packageNames() << app.id();
+//    }
 }
 
 QHash<int, QByteArray> PackageModel::roleNames() const
@@ -111,12 +116,15 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
     }
 
 //    qDebug() << packageID;
-#ifdef HAVE_APPSTREAM
-    QList<AppStream::Application> applications;
+    QList<Appstream::Component> applications;
     if (!m_checkable) {
-        applications = AppStream::instance()->applications(Transaction::packageName(packageID));
+        if (as) {
+            applications = as->findComponentsByPackageName(Transaction::packageName(packageID));
+//            applications = as->findComponentsByPackageName("shotwell-common");
+        }
 
-        foreach (const AppStream::Application &app, applications) {
+        foreach (const Appstream::Component &app, applications) {
+                        qDebug() << app.name() << app.summary() << app.kind();
             InternalPackage iPackage;
             iPackage.info = info;
             iPackage.packageID = packageID;
@@ -124,18 +132,18 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             iPackage.arch = Transaction::packageArch(packageID);
             iPackage.repo = Transaction::packageData(packageID);
             iPackage.isPackage = false;
-            if (app.name.isEmpty()) {
+            if (app.name().isEmpty()) {
                 iPackage.displayName = Transaction::packageName(packageID);
             } else {
-                iPackage.displayName = app.name;
+                iPackage.displayName = app.name();
             }
-            if (app.summary.isEmpty()) {
+            if (app.summary().isEmpty()) {
                 iPackage.summary = summary;
             } else {
-                iPackage.summary = app.summary;
+                iPackage.summary = app.summary();
             }
-            iPackage.icon  = app.icon;
-            iPackage.appId = app.id;
+            iPackage.icon  = app.icon();
+            iPackage.appId = app.id();
             iPackage.size  = 0;
 
             if (selected) {
@@ -146,8 +154,6 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
     }
 
     if (applications.isEmpty()) {
-#endif //HAVE_APPSTREAM
-
         InternalPackage iPackage;
         iPackage.info = info;
         iPackage.packageID = packageID;
@@ -157,50 +163,14 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
         iPackage.repo = Transaction::packageData(packageID);
         iPackage.summary = summary;
         iPackage.size = 0;
-
-#ifdef HAVE_APPSTREAM
-        iPackage.icon = AppStream::instance()->genericIcon(Transaction::packageName(packageID));
-        if (iPackage.icon.isEmpty())
-            iPackage.icon = Transaction::packageIcon(packageID);
-        if (m_checkable) {
-            // in case of updates model only check if it's an app
-            applications = AppStream::instance()->applications(Transaction::packageName(packageID));
-            if (!applications.isEmpty() || !Transaction::packageIcon(packageID).isEmpty()) {
-                iPackage.isPackage = false;
-            } else {
-                iPackage.isPackage = true;
-            }
-        } else {
-            iPackage.isPackage = true;
-        }
-#else
-        iPackage.icon = Transaction::packageIcon(packageID);
-        if (iPackage.icon.isEmpty()) {
-            iPackage.isPackage = true;
-        } else {
-            iPackage.isPackage = false;
-//            QSqlDatabase db = QSqlDatabase::database();
-//            QSqlQuery query(db);
-//            query.prepare("SELECT filename FROM cache WHERE package = :name");
-//            query.bindValue(":name", Transaction::packageName(packageID));
-//            if (query.exec()) {
-//                if (query.next()) {
-//                    QString filename = query.value(0).toString();
-//                    filename.remove(QRegExp(".desktop$")).remove(QRegExp("^/.*/"));
-//                    iPackage.appId = filename;
-//                }
-//            }
-        }
-#endif // HAVE_APPSTREAM
+        iPackage.isPackage = true;
 
         if (selected) {
             checkPackage(iPackage, false);
         }
         m_packages.append(iPackage);
 
-#ifdef HAVE_APPSTREAM
     }
-#endif // HAVE_APPSTREAM
 }
 
 void PackageModel::addSelectedPackage(Transaction::Info info, const QString &packageID, const QString &summary)

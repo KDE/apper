@@ -15,6 +15,8 @@ find_package(Qt5 COMPONENTS
     Widgets
 )
 
+find_package(AppstreamQt 1.1 REQUIRED)
+
 ## Enable Qt's automoc generator
 set(CMAKE_AUTOMOC ON)
 
@@ -29,11 +31,6 @@ option(DEBCONF_SUPPORT "Build Apper with debconf support" OFF)
 option(AUTOREMOVE "Build Apper with auto remove enabled" OFF)
 set(HAVE_AUTOREMOVE ${AUTOREMOVE})
 message(STATUS "Building Apper with auto remove: " ${AUTOREMOVE})
-
-# AppStream application management support
-option(APPSTREAM "Build Apper with AppStream support" OFF)
-set(HAVE_APPSTREAM ${APPSTREAM})
-message(STATUS "Building Apper with AppStream support: " ${APPSTREAM})
 
 # Enable support for Listaller cross-distro application installer
 option(LISTALLER "Build Apper with app install" OFF)

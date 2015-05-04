@@ -1,5 +1,5 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.0
 
 import Apper 1.0
@@ -7,11 +7,8 @@ import Apper 1.0
 ScrollView {
     id: root
 
-    ListView {
-        id: updatesView
+    GridView {
         width: root.viewport.width
-
-        property int col1: 0
 
         header: Rectangle {
             width: parent.width
@@ -33,42 +30,54 @@ ScrollView {
             }
         }
 
-        delegate: UpdateDelegate {
-            width: ListView.view.width
-        }
-
         model: ApplicationSortFilterModel {
             sourcePkgModel: PackageModel {
                 id: pkgModel
             }
+            applicationsOnly: true
         }
 
-        // The delegate for each section header
-        Component {
-            id: sectionHeading
-            Rectangle {
-//                width: container.width
-                height: childrenRect.height
-                color: sysPalette.window
+        footer: ListView {
+            id: updatesView
+            height: contentHeight
 
-                CheckBox {
-                    id: systemPackages
-                    visible: section == "true"
-                    text: "System Packages"
-                }
+            property int col1: 0
 
-                Text {
-                    visible: !systemPackages.visible
-                    text: "Application"
-                    font.bold: true
-                    font.pixelSize: 20
+            delegate: UpdateDelegate {
+                width: ListView.view.width
+            }
+
+            model: ApplicationSortFilterModel {
+                sourcePkgModel: pkgModel
+            }
+
+            // The delegate for each section header
+            Component {
+                id: sectionHeading
+                Rectangle {
+                    //                width: container.width
+                    height: childrenRect.height
+                    color: sysPalette.window
+
+                    CheckBox {
+                        id: systemPackages
+                        visible: section == "true"
+                        text: "System Packages"
+                    }
+
+                    Text {
+                        visible: !systemPackages.visible
+                        text: "Application"
+                        font.bold: true
+                        font.pixelSize: 20
+                    }
                 }
             }
-        }
-        spacing: 5
+            spacing: 5
 
-        section.property: "rIsPackageRole"
-        section.delegate: sectionHeading
+            section.property: "rIsPackageRole"
+            section.delegate: sectionHeading
+        }
     }
 
     Component.onCompleted: {

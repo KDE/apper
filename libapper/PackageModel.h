@@ -28,6 +28,10 @@
 #include <Transaction>
 #include <Details>
 
+namespace Appstream {
+class Database;
+}
+
 class PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -155,6 +159,8 @@ private:
     PackageKit::Transaction *m_fetchSizesTransaction;
     PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
     QHash<int, QByteArray> m_roles;
+
+    Appstream::Database *as = 0;
 };
 
 #endif

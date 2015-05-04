@@ -8,5 +8,6 @@
         <file>qml/Installed.qml</file>
         <file>qml/BackendDetails.qml</file>
         <file>qml/History.qml</file>
+        <file>qml/Search.qml</file>
     </qresource>
 </RCC>

@@ -10,17 +10,7 @@ GridLayout {
         id: checkBox
         checked: model.roleChecked
         onClicked: pkgModel.toggleSelection(roleId)
-        Rectangle {
-            anchors.fill: parent
-            z: -1
-            color: "blue"
-        }
     }
-    Label {
-        Layout.columnSpan: 4
-        text: roleSummary
-    }
-
     Label {
         text: roleName + "/" + roleRepo
     }
@@ -32,6 +22,11 @@ GridLayout {
     }
     Item {
         Layout.fillWidth: true
+    }
+
+    Label {
+        Layout.columnSpan: 4
+        text: roleSummary
     }
 }
 
