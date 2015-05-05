@@ -63,7 +63,7 @@ PackageModel::PackageModel(QObject *parent)
     m_roles[RepoRole] = "roleRepo";
     m_roles[VersionRole] = "roleVersion";
     m_roles[ArchRole] = "roleArch";
-    m_roles[IconRole] = "rIcon";
+    m_roles[IconRole] = "roleIcon";
     m_roles[IdRole] = "roleId";
     m_roles[CheckStateRole] = "roleChecked";
     m_roles[InfoRole] = "rInfo";
@@ -72,7 +72,7 @@ PackageModel::PackageModel(QObject *parent)
     m_roles[PackageName] = "rPackageName";
     m_roles[InfoIconRole] = "rInfoIcon";
 
-    as = new Appstream::Database(QStringLiteral("/var/cache/app-info/xapian"));
+    as = new Appstream::Database;
     if (!as->open()) {
         qDebug() << "Failed to open Appstream database";
         delete as;
@@ -124,7 +124,6 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
         }
 
         foreach (const Appstream::Component &app, applications) {
-                        qDebug() << app.name() << app.summary() << app.kind();
             InternalPackage iPackage;
             iPackage.info = info;
             iPackage.packageID = packageID;
@@ -142,7 +141,9 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             } else {
                 iPackage.summary = app.summary();
             }
-            iPackage.icon  = app.icon();
+//            iPackage.icon  = app.icon();
+            iPackage.icon = app.iconUrl(QSize(64,64)).toString();
+            qDebug() << app.iconUrl(QSize(64,64)) << app.icon();
             iPackage.appId = app.id();
             iPackage.size  = 0;
 

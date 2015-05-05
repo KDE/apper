@@ -31,8 +31,10 @@ ScrollView {
         }
 
         model: ApplicationSortFilterModel {
+            id: sortModel
             sourcePkgModel: PackageModel {
                 id: pkgModel
+                onCountChanged: sortModel.sortNow()
             }
             applicationsOnly: false
         }

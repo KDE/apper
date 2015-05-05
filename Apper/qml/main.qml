@@ -12,7 +12,7 @@ ApplicationWindow {
 
     SystemPalette { id: sysPalette }
 
-    color: sysPalette.window
+    color: sysPalette.base
 
     function addPage(dict) {
         // Remove history forward to the current location
