@@ -30,11 +30,7 @@
 #include <QPainter>
 #include <QStringBuilder>
 
-//#include <KIconLoader>
-//#include <KDebug>
-//#include <PkIcons.h>
-//#include <KLocale>
-//#include <KCategorizedSortFilterProxyModel>
+#include <QIcon>
 #include <QDebug>
 
 #include <AppstreamQt/database.h>
@@ -54,11 +50,8 @@ PackageModel::PackageModel(QObject *parent)
   m_fetchSizesTransaction(0),
   m_fetchInstalledVersionsTransaction(0)
 {
-//    m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
-
-    m_roles[Qt::DisplayRole] = "roleName";
-    m_roles[SortRole] = "rSort";
-    m_roles[NameRole] = "rName";
+    m_roles[SortRole] = "roleSort";
+    m_roles[NameRole] = "roleName";
     m_roles[SummaryRole] = "roleSummary";
     m_roles[RepoRole] = "roleRepo";
     m_roles[VersionRole] = "roleVersion";
@@ -66,11 +59,10 @@ PackageModel::PackageModel(QObject *parent)
     m_roles[IconRole] = "roleIcon";
     m_roles[IdRole] = "roleId";
     m_roles[CheckStateRole] = "roleChecked";
-    m_roles[InfoRole] = "rInfo";
-    m_roles[ApplicationId] = "rApplicationId";
-    m_roles[IsPackageRole] = "rIsPackageRole";
-    m_roles[PackageName] = "rPackageName";
-    m_roles[InfoIconRole] = "rInfoIcon";
+    m_roles[InfoRole] = "roleInfo";
+    m_roles[ApplicationId] = "roleAppId";
+    m_roles[IsPackageRole] = "roleIsPkg";
+    m_roles[PackageName] = "rolePkgName";
 
     as = new Appstream::Database;
     if (!as->open()) {
@@ -117,32 +109,52 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 
 //    qDebug() << packageID;
     QList<Appstream::Component> applications;
+    const QString &name = Transaction::packageName(packageID);
     if (!m_checkable) {
         if (as) {
-            applications = as->findComponentsByPackageName(Transaction::packageName(packageID));
-//            applications = as->findComponentsByPackageName("shotwell-common");
+            applications = as->findComponentsByPackageName(name);
+        }
+
+        bool hasDescription = false;
+        foreach (const Appstream::Component &app, applications) {
+            if (!app.description().isEmpty()) {
+                hasDescription = true;
+                break;
+            }
         }
 
         foreach (const Appstream::Component &app, applications) {
+            if (hasDescription && app.description().isEmpty()) {
+                continue;
+            }
+
             InternalPackage iPackage;
             iPackage.info = info;
             iPackage.packageID = packageID;
+            iPackage.name = name;
             iPackage.version = Transaction::packageVersion(packageID);
             iPackage.arch = Transaction::packageArch(packageID);
             iPackage.repo = Transaction::packageData(packageID);
             iPackage.isPackage = false;
             if (app.name().isEmpty()) {
-                iPackage.displayName = Transaction::packageName(packageID);
+                iPackage.displayName = name;
             } else {
                 iPackage.displayName = app.name();
             }
-            if (app.summary().isEmpty()) {
-                iPackage.summary = summary;
-            } else {
+
+            if (!app.description().isEmpty()) {
+                iPackage.summary = app.description();
+            } else if (!app.summary().isEmpty()) {
                 iPackage.summary = app.summary();
+            } else {
+                iPackage.summary = summary;
             }
+
 //            iPackage.icon  = app.icon();
             iPackage.icon = app.iconUrl(QSize(64,64)).toString();
+            if (iPackage.icon.isEmpty()) {
+//                iPackage.icon = QIcon::fromTheme("package")..
+            }
             qDebug() << app.iconUrl(QSize(64,64)) << app.icon();
             iPackage.appId = app.id();
             iPackage.size  = 0;
@@ -158,7 +170,8 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
         InternalPackage iPackage;
         iPackage.info = info;
         iPackage.packageID = packageID;
-        iPackage.displayName = Transaction::packageName(packageID);
+        iPackage.displayName = name;
+        iPackage.name = name;
         iPackage.version = Transaction::packageVersion(packageID);
         iPackage.arch = Transaction::packageArch(packageID);
         iPackage.repo = Transaction::packageData(packageID);
@@ -177,43 +190,6 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 void PackageModel::addSelectedPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
     addPackage(info, packageID, summary, true);
-}
-
-QVariant PackageModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    QVariant ret;
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch (section) {
-        case NameCol:
-            if (m_checkable) {
-//                ret = PkStrings::packageQuantity(true,
-//                                                 m_packages.size(),
-//                                                 m_checkedPackages.size());
-            } else {
-//                ret = i18n("Name");
-            }
-            break;
-        case VersionCol:
-//            ret = i18n("Version");
-            break;
-        case CurrentVersionCol:
-//            ret = i18n("Installed Version");
-            break;
-        case ArchCol:
-//            ret = i18n("Arch");
-            break;
-        case OriginCol:
-//            ret = i18n("Origin");
-            break;
-        case SizeCol:
-//            ret = i18n("Size");
-            break;
-        case ActionCol:
-//            ret = i18n("Action");
-            break;
-        }
-    }
-    return ret;
 }
 
 int PackageModel::rowCount(const QModelIndex &parent) const
@@ -248,120 +224,33 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
 
     const InternalPackage &package = m_packages[index.row()];
 
-    if (index.column() == NameCol) {
-        switch (role) {
-        case Qt::CheckStateRole:
-            if (!m_checkable) {
-                return QVariant();
-            }
-        case CheckStateRole:
-            if (containsChecked(package.packageID)) {
-                return Qt::Checked;
-            }
-            return Qt::Unchecked;
-        case IsPackageRole:
-            return package.isPackage;
-        case Qt::DisplayRole:
-            return package.displayName;
-        case Qt::DecorationRole:
-        {
-            QPixmap icon = QPixmap(44, ICON_SIZE);
-            icon.fill(Qt::transparent);
-            if (!package.icon.isNull()) {
-//                QPixmap pixmap = KIconLoader::global()->loadIcon(package.icon,
-//                                                                 KIconLoader::NoGroup,
-//                                                                 ICON_SIZE,
-//                                                                 KIconLoader::DefaultState,
-//                                                                 QStringList(),
-//                                                                 0L,
-//                                                                 true);
-//                if (!pixmap.isNull()) {
-//                    QPainter painter(&icon);
-//                    painter.drawPixmap(QPoint(2, 0), pixmap);
-//                }
-            }
-
-            if (package.info == Transaction::InfoInstalled ||
-                package.info == Transaction::InfoCollectionInstalled) {
-                QPainter painter(&icon);
-                QPoint startPoint;
-                // bottom right corner
-                startPoint = QPoint(44 - OVERLAY_SIZE, 4);
-                painter.drawPixmap(startPoint, m_installedEmblem);
-            } else if (m_checkable) {
-//                QIcon emblemIcon = PkIcons::packageIcon(package.info);
-//                QPainter painter(&icon);
-//                QPoint startPoint;
-//                // bottom right corner
-//                startPoint = QPoint(44 - OVERLAY_SIZE, 4);
-//                painter.drawPixmap(startPoint, emblemIcon.pixmap(OVERLAY_SIZE, OVERLAY_SIZE));
-            }
-            return icon;
-        }
-        case PackageName:
-            return Transaction::packageName(package.packageID);
-        case Qt::ToolTipRole:
-            if (m_checkable) {
-//                return PkStrings::info(package.info);
-            } else {
-//                return i18n("Version: %1\nArchitecture: %2", package.version, package.arch);
-            }
-        }
-    } else if (role == Qt::DisplayRole) {
-        if (index.column() == VersionCol) {
-            return package.version;
-        } else if (index.column() == CurrentVersionCol) {
-                return package.currentVersion;
-        } else if (index.column() == ArchCol) {
-            return package.arch;
-        } else if (index.column() == OriginCol) {
-            return package.repo;
-        } else if (index.column() == SizeCol) {
-//            return package.size ? KGlobal::locale()->formatByteSize(package.size) : QString();
-        }
-    } else if (index.column() == SizeCol && role == Qt::TextAlignmentRole) {
-        return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
-    }
-
     switch (role) {
     case IconRole:
         return package.icon;
     case SortRole:
         return QString(package.displayName % QLatin1Char(' ') % package.version % QLatin1Char(' ') % package.arch);
+    case IsPackageRole:
+        return package.isPackage;
     case CheckStateRole:
-        if (containsChecked(package.packageID)) {
-            return Qt::Checked;
-        }
-        return Qt::Unchecked;
+        return containsChecked(package.packageID) ? Qt::Checked : Qt::Unchecked;
     case IdRole:
         return package.packageID;
     case NameRole:
         return package.displayName;
+    case PackageName:
+        return package.name;
     case SummaryRole:
         return package.summary;
     case VersionRole:
         return package.version;
     case ArchRole:
         return package.arch;
-    case OriginCol:
     case RepoRole:
         return package.repo;
     case InfoRole:
         return qVariantFromValue(package.info);
-//    case KCategorizedSortFilterProxyModel::CategoryDisplayRole:
-//        if (package.info == Transaction::InfoInstalled ||
-//            package.info == Transaction::InfoCollectionInstalled) {
-//            return i18n("To be Removed");
-//        } else {
-//            return i18n("To be Installed");
-//        }
-//    case KCategorizedSortFilterProxyModel::CategorySortRole:
-        // USING 0 here seems to let things unsorted
-//        return package.isPackage ? 1 : 0; // Packages comes after applications
     case ApplicationId:
         return package.appId;
-//    case InfoIconRole:
-//        return PkIcons::packageIcon(package.info);
     default:
         return QVariant();
     }
@@ -369,39 +258,10 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool PackageModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    if (role == Qt::CheckStateRole && m_packages.size() > index.row()) {
-        if (value.toBool()) {
-            checkPackage(m_packages[index.row()]);
-        } else {
-            uncheckPackage(m_packages[index.row()].packageID);
-        }
-
-        emit changed(!m_checkedPackages.isEmpty());
-
-        return true;
-    }
-    return false;
-}
-
-Qt::ItemFlags PackageModel::flags(const QModelIndex &index) const
-{
-    if (index.column() == NameCol) {
-        return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | QAbstractItemModel::flags(index);
-    }
-    return QAbstractItemModel::flags(index);
-}
-
 int PackageModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    if (m_checkable) {
-        // when the model is checkable the action column is not shown
-        return ActionCol;
-    } else {
-        return ActionCol + 1;
-    }
+    return 1;
 }
 
 void PackageModel::removePackage(const QString &packageID)
@@ -535,7 +395,7 @@ void PackageModel::fetchSizesFinished()
     }
     // emit this after all is changed otherwise on large models it will
     // be hell slow...
-    emit dataChanged(createIndex(0, SizeCol), createIndex(m_packages.size(), SizeCol));
+    emit dataChanged(createIndex(0, 0), createIndex(m_packages.size(), 0));
     emit changed(!m_checkedPackages.isEmpty());
 }
 
@@ -560,16 +420,11 @@ void PackageModel::updateSize(const PackageKit::Details &details)
                 break;
             }
 
-#ifdef HAVE_APPSTREAM
             if (m_checkable) {
                 // checkable models don't have duplicated package ids
                 // so don't waste time scanning all list
                 break;
             }
-#else
-            // Without AppStream we don't have duplicated package ids
-            break;
-#endif // HAVE_APPSTREAM
         }
     }
 }
@@ -605,7 +460,7 @@ void PackageModel::fetchCurrentVersionsFinished()
     }
     // emit this after all is changed otherwise on large models it will
     // be hell slow...
-    emit dataChanged(createIndex(0, CurrentVersionCol), createIndex(m_packages.size(), CurrentVersionCol));
+    emit dataChanged(createIndex(0, 0), createIndex(m_packages.size(), 0));
     emit changed(!m_checkedPackages.isEmpty());
 }
 
@@ -692,11 +547,6 @@ void PackageModel::toggleSelection(const QString &packageID)
             }
         }
     }
-}
-
-QString PackageModel::selectionStateText() const
-{
-    return headerData(NameCol, Qt::Horizontal).toString();
 }
 
 bool PackageModel::hasChanges() const

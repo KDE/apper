@@ -8,24 +8,22 @@ ScrollView {
     id: root
 
     ListView {
+        id: installedView
         width: root.viewport.width
 
-        header: Rectangle {
-            width: parent.width
-            height: topLayout.height + 10
-            color: sysPalette.window
-            RowLayout {
-                id: topLayout
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.margins: 5
-                Label {
-                    Layout.fillWidth: true
-                    text: qsTr("You have %1 updates").arg(pkgModel.count)
-                }
-                Button {
-                    text: qsTr("Update All")
+        property int versionCol: 100
+
+        Component {
+            id: sectionHeading
+            Rectangle {
+                width: ListView.view.width
+                height: childrenRect.height
+                color: "lightsteelblue"
+
+                Text {
+                    text: section === "f" ? qsTr("Applications") : qsTr("System Packages")
+                    font.bold: true
+                    font.pixelSize: 20
                 }
             }
         }
@@ -42,6 +40,10 @@ ScrollView {
         delegate: UpdateDelegate {
             width: ListView.view.width
         }
+
+        section.property: "roleIsPkg"
+        section.criteria: ViewSection.FirstCharacter
+        section.delegate: sectionHeading
     }
 
     Component.onCompleted: {

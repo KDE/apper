@@ -36,18 +36,8 @@ class PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(bool checkable READ checkable WRITE setCheckable NOTIFY changed)
-    Q_PROPERTY(QString selectionStateText READ selectionStateText NOTIFY changed)
     Q_PROPERTY(int count READ rowCount NOTIFY rowCountChanged)
 public:
-    enum {
-        NameCol = 0,
-        VersionCol,
-        CurrentVersionCol,
-        ArchCol,
-        OriginCol,
-        SizeCol,
-        ActionCol
-    };
     enum {
         SortRole = Qt::UserRole,
         NameRole,
@@ -62,10 +52,10 @@ public:
         ApplicationId,
         IsPackageRole,
         PackageName,
-        InfoIconRole
     };
     typedef struct {
         QString    displayName;
+        QString    name;
         QString    version;
         QString    arch;
         QString    repo;
@@ -86,9 +76,6 @@ public:
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     Q_INVOKABLE bool allSelected() const;
     Q_INVOKABLE QStringList selectedPackagesToInstall() const;
@@ -139,7 +126,6 @@ public slots:
     void getUpdates(bool fetchCurrentVersions, bool selected);
     void getInstalled();
     void toggleSelection(const QString &packageID);
-    QString selectionStateText() const;
 
 signals:
     void changed(bool value);

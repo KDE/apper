@@ -20,6 +20,8 @@
 
 #include "Apper.h"
 
+#include "iconprovider.h"
+
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQmlApplicationEngine>
@@ -50,6 +52,7 @@ Apper::Apper(bool showDetails)
     } else {
         engine->load(QUrl(QLatin1String("qrc:/qml/main.qml")));
     }
+    engine->addImageProvider(QLatin1String("icon"), new IconProvider);
 }
 
 Apper::~Apper()

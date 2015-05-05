@@ -85,8 +85,7 @@ bool ApplicationSortFilterModel::filterAcceptsRow(int source_row, const QModelIn
     return true;
 }
 
-bool ApplicationSortFilterModel::lessThan(const QModelIndex &left,
-                                          const QModelIndex &right) const
+bool ApplicationSortFilterModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     bool leftIsPackage = left.data(PackageModel::IsPackageRole).toBool();
     bool rightIsPackage = right.data(PackageModel::IsPackageRole).toBool();

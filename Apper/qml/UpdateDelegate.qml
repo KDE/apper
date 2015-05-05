@@ -4,55 +4,81 @@ import QtQuick.Layouts 1.0
 
 Item {
     id: root
-    height: contentGrid.height + 10
+    height: contentGrid.height + 20
     width: ListView.view.width
+
+    property int maxColSize: root.width - iconImage.width - actionBt.width - 40
 
     GridLayout {
         id: contentGrid
         anchors.centerIn: parent
-        width: parent.width - 10
-        columns: 3
-        rowSpacing: 0
-        CheckBox {
-            Layout.rowSpan: 2
-            id: checkBox
-            checked: model.roleChecked
-            onClicked: pkgModel.toggleSelection(roleId)
-        }
+        width: parent.width - 20
+        columns: 4
 
-        Image {
-            height: checkBox.height
+        Item {
+            Layout.rowSpan: 3
+            id: iconImage
+            height: nameLabel.height + versionLabel.height * 2
             width: height
-            visible: !rIsPackageRole
+
+            Image {
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectFit
+                source: roleIcon.length ? roleIcon : "image://icon/applications-other"
+                asynchronous: true
+            }
+        }
+
+        Label {
+            Layout.columnSpan: 2
+            id: nameLabel
+            elide: Text.ElideRight
+            font.pointSize: versionLabel.font.pointSize * 1.3
+            text: roleName
+        }
+
+        Button {
+            id: actionBt
+            Layout.rowSpan: 3
+            Layout.alignment: Qt.AlignVCenter
+            text: qsTr("Remove")
+        }
+
+        Label {
+            Layout.preferredWidth: width
+            width: installedView.versionCol
+            id: versionLabel
+            elide: Text.ElideRight
+            text: roleArch === "all" ? roleVersion : roleVersion + " / " + roleArch
+        }
+
+        Label {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
             Layout.rowSpan: 2
-            source: roleIcon
-            asynchronous: true
+            elide: Text.ElideRight
+            text: roleSummary
+            wrapMode: Text.WordWrap
         }
 
-        RowLayout {
-            Label {
-                text: roleName
-                font.pointSize: font.pointSize * 1.3
-            }
-            Label {
-                Layout.fillWidth: true
-                text: roleSummary
-            }
+        Item {}
+
+        Label {
+            Layout.preferredWidth: width
+            width: installedView.versionCol
+            id: repoLabel
+            elide: Text.ElideRight
+            text: roleRepo
         }
 
-        RowLayout {
-            Label {
-                Layout.fillWidth: true
-                text: roleSummary
-            }
-            Label {
-                text: roleVersion
-            }
-            Label {
-                text: roleRepo
-            }
-            Label {
-                text: roleArch
+        Component.onCompleted: {
+            var width = Math.max(versionLabel.implicitWidth, repoLabel.implicitWidth)
+            if (width > installedView.versionCol) {
+                if (width > maxColSize) {
+                    installedView.versionCol = maxColSize
+                } else {
+                    installedView.versionCol = width
+                }
             }
         }
     }
@@ -61,8 +87,17 @@ Item {
     Rectangle {
         z: -1
         anchors.centerIn: parent
-        height: parent.height - 10
+        height: parent.height - 5
         width: parent.width - 10
-        color: ListView.currentItem ? sysPalette.highlight : sysPalette.alternateBase
+        color: root.ListView.isCurrentItem ? sysPalette.highlight : sysPalette.alternateBase
+
+        MouseArea {
+            z: 1
+            anchors.fill: parent
+            onClicked: {
+                console.debug(index)
+                root.ListView.currentIndex = index
+            }
+        }
     }
 }
