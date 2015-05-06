@@ -9,15 +9,14 @@ GridView {
 
     focus: true
 
-//    property real gridCenter: height * 0.5 - cellWidth / 2
-    property bool showPackages: false
+    property int columns: root.viewport.width / cellWidth
 
     SystemPalette { id: sysPalette }
 
     Component {
         id: sectionHeading
         Item {
-            visible: pkgModel.packageCount
+            visible: pkgModel.packageCount && pkgModel.applicationCount
             width: softwareListView.width
             height: childrenRect.height + 5
 
@@ -30,10 +29,15 @@ GridView {
 
     model: PackageModel {
         id: pkgModel
+        viewColumns: columns
+        onCountChanged: {
+            if (pkgModel.packageCount && !pkgModel.applicationCount) {
+                showPackages = true
+            }
+        }
     }
 
-    delegate: UpdateDelegate {
-    }
+    delegate: UpdateDelegate {}
 
     cellHeight: 50
     cellWidth: 200

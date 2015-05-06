@@ -40,6 +40,7 @@ class PackageModel : public QAbstractItemModel
     Q_PROPERTY(int count READ rowCount NOTIFY rowCountChanged)
     Q_PROPERTY(int packageCount MEMBER m_packageCount NOTIFY rowCountChanged)
     Q_PROPERTY(int applicationCount MEMBER m_applicationCount NOTIFY rowCountChanged)
+    Q_PROPERTY(int viewColumns MEMBER m_viewColumns WRITE setViewColumns NOTIFY rowCountChanged)
 public:
     enum {
         SortRole = Qt::UserRole,
@@ -55,6 +56,7 @@ public:
         ApplicationId,
         IsPackageRole,
         PackageName,
+        VisibleRole
     };
     typedef struct {
         QString    displayName;
@@ -69,6 +71,7 @@ public:
         QString    appId;
         QString    currentVersion;
         bool       isPackage;
+        bool       visible = false;
         double     size;
     } InternalPackage;
 
@@ -95,6 +98,7 @@ public:
     bool checkable() const;
     void setCheckable(bool checkable);
     void setShowPackages(bool show);
+    void setViewColumns(int columns);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
@@ -138,6 +142,7 @@ signals:
     void rowCountChanged();
 
 private:
+    void fixColumns();
     QList<InternalPackage> internalSelectedPackages() const;
     bool containsChecked(const QString &pid) const;
 
@@ -148,6 +153,7 @@ private:
     QList<InternalPackage>        m_packages;
     int m_packageCount = 0;
     int m_applicationCount = 0;
+    int m_viewColumns = 0;
     QHash<QString, InternalPackage> m_checkedPackages;
     PackageKit::Transaction *m_getUpdatesTransaction = 0;
     PackageKit::Transaction *m_fetchSizesTransaction;

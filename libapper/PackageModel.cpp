@@ -23,22 +23,15 @@
 #include <config.h>
 
 #include "PackageModel.h"
-//#include <PkStrings.h>
 
 #include <Daemon>
 
-#include <QPainter>
 #include <QStringBuilder>
 
-#include <QIcon>
 #include <QDebug>
 
 #include <AppstreamQt/database.h>
 
-#define ICON_SIZE 22
-#define OVERLAY_SIZE 16
-
-#include <Daemon>
 #include <Details>
 
 using namespace PackageKit;
@@ -63,6 +56,7 @@ PackageModel::PackageModel(QObject *parent)
     m_roles[ApplicationId] = "roleAppId";
     m_roles[IsPackageRole] = "roleIsPkg";
     m_roles[PackageName] = "rolePkgName";
+    m_roles[VisibleRole] = "roleVisible";
 
     as = new Appstream::Database;
     if (!as->open()) {
@@ -135,7 +129,11 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             iPackage.version = Transaction::packageVersion(packageID);
             iPackage.arch = Transaction::packageArch(packageID);
             iPackage.repo = Transaction::packageData(packageID);
+            if (iPackage.repo.startsWith(QLatin1String("installed:"))) {
+                iPackage.repo = iPackage.repo.section(QLatin1Char(':'), 1, 1);
+            }
             iPackage.isPackage = false;
+            iPackage.visible = true;
             if (app.name().isEmpty()) {
                 iPackage.displayName = name;
             } else {
@@ -148,12 +146,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
                 iPackage.summary = summary;
             }
 
-//            iPackage.icon  = app.icon();
             iPackage.icon = app.iconUrl(QSize(64,64)).toString();
-            if (iPackage.icon.isEmpty()) {
-//                iPackage.icon = QIcon::fromTheme("package")..
-            }
-            qDebug() << app.iconUrl(QSize(64,64)) << app.icon();
             iPackage.appId = app.id();
             iPackage.size  = 0;
 
@@ -176,6 +169,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
         iPackage.summary = summary;
         iPackage.size = 0;
         iPackage.isPackage = true;
+        iPackage.visible = true;
 
         if (selected) {
             checkPackage(iPackage, false);
@@ -249,6 +243,8 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         return qVariantFromValue(package.info);
     case ApplicationId:
         return package.appId;
+    case VisibleRole:
+        return package.visible;
     default:
         return QVariant();
     }
@@ -379,6 +375,8 @@ void PackageModel::finished()
 
     emit rowCountChanged();
     emit changed(!m_checkedPackages.isEmpty());
+
+    fixColumns();
 }
 
 void PackageModel::fetchSizes()
@@ -562,6 +560,34 @@ void PackageModel::toggleSelection(const QString &packageID)
                 break;
             }
         }
+    }
+}
+
+void PackageModel::fixColumns()
+{
+    if (!m_finished) {
+        return;
+    }
+
+    int needed = m_applicationCount % m_viewColumns;
+    int diff = m_packages.size() - m_applicationCount - m_packageCount;
+
+    if (diff > needed) {
+        // we need to remove empty packages
+        int removeCount = diff - needed;
+        beginRemoveRows(QModelIndex(), m_applicationCount, removeCount);
+        for (int i = 0; i < removeCount; ++i) {
+            m_packages.removeAt(m_applicationCount + i);
+        }
+        endRemoveRows();
+    } else if (diff < needed) {
+        // we need to insert empty packages
+        int insertCount = needed - diff;
+        beginInsertRows(QModelIndex(), m_applicationCount, insertCount);
+        for (int i = 0; i < insertCount; ++i) {
+            m_packages.insert(m_applicationCount, InternalPackage());
+        }
+        endInsertRows();
     }
 }
 
@@ -773,4 +799,11 @@ void PackageModel::setShowPackages(bool show)
     }
 }
 
-#include "PackageModel.moc"
+void PackageModel::setViewColumns(int columns)
+{
+    if (m_viewColumns != columns) {
+        m_viewColumns = columns;
+
+        fixColumns();
+    }
+}

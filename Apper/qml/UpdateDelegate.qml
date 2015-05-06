@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.0
 
 Item {
     id: root
+    visible: roleVisible
     height: contentGrid.height + contentGrid.rowSpacing * 2
     width: contentGrid.width + contentGrid.rowSpacing * 2
 
@@ -27,11 +28,6 @@ Item {
                 cache: true
                 source: roleIcon.length ? roleIcon : "image://icon/applications-other"
                 asynchronous: true
-                Rectangle {
-                    anchors.fill: parent
-                    color: "blue"
-                    z:-1
-                }
             }
         }
 
@@ -113,7 +109,6 @@ Item {
         z: 1
         anchors.fill: contentGrid
         onClicked: {
-            console.debug(index)
             softwareListView.currentIndex = index
         }
     }
