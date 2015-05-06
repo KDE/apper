@@ -9,5 +9,7 @@
         <file>qml/BackendDetails.qml</file>
         <file>qml/History.qml</file>
         <file>qml/Search.qml</file>
+        <file>qml/SoftwareDetails.qml</file>
+        <file>qml/SoftwareListView.qml</file>
     </qresource>
 </RCC>

@@ -142,9 +142,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
                 iPackage.displayName = app.name();
             }
 
-            if (!app.description().isEmpty()) {
-                iPackage.summary = app.description();
-            } else if (!app.summary().isEmpty()) {
+            if (!app.summary().isEmpty()) {
                 iPackage.summary = app.summary();
             } else {
                 iPackage.summary = summary;
@@ -162,7 +160,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             if (selected) {
                 checkPackage(iPackage, false);
             }
-            m_packages.append(iPackage);
+            m_packages.insert(m_applicationCount++, iPackage);
         }
     }
 
@@ -183,7 +181,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             checkPackage(iPackage, false);
         }
         m_packages.append(iPackage);
-
+        ++m_packageCount;
     }
 }
 
@@ -222,7 +220,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    const InternalPackage &package = m_packages[index.row()];
+    const InternalPackage &package = m_packages.at(index.row());
 
     switch (role) {
     case IconRole:
@@ -272,7 +270,7 @@ void PackageModel::removePackage(const QString &packageID)
         if (iPackage.packageID == packageID &&
                 iPackage.info != Transaction::InfoUntrusted) {
             beginRemoveRows(QModelIndex(), i, i);
-            m_packages.remove(i);
+            m_packages.removeAt(i);
             endRemoveRows();
 
             // since we removed one entry we don't
@@ -289,6 +287,8 @@ void PackageModel::clear()
     beginRemoveRows(QModelIndex(), 0, m_packages.size());
     m_finished = false;
     m_packages.clear();
+    m_packageCount = 0;
+    m_applicationCount = 0;
     m_fetchSizesTransaction = 0;
     m_fetchInstalledVersionsTransaction = 0;
 
@@ -344,6 +344,15 @@ void PackageModel::uncheckAvailablePackages()
     }
 }
 
+bool appsFirst(const PackageModel::InternalPackage &p1, const PackageModel::InternalPackage &p2)
+{
+    if (p1.isPackage != p2.isPackage) {
+        return p2.isPackage;
+    }
+
+    return QString::compare(p1.displayName, p2.displayName, Qt::CaseInsensitive) < 0;
+}
+
 void PackageModel::finished()
 {
     qDebug() << Q_FUNC_INFO << sender();
@@ -356,8 +365,15 @@ void PackageModel::finished()
 //        trans->disconnect(this, SLOT(finished()));
     }
 
+    qSort(m_packages.begin(), m_packages.end(), appsFirst);
+
     // The whole structure is about to change
-    beginInsertRows(QModelIndex(), 0, m_packages.size() - 1);
+    if (m_showSystemPackages) {
+        beginInsertRows(QModelIndex(), 0, m_packages.size() - 1);
+    } else {
+        beginInsertRows(QModelIndex(), 0, m_applicationCount - 1);
+    }
+
     m_finished = true;
     endInsertRows();
 
@@ -730,7 +746,31 @@ bool PackageModel::allSelected() const
 
 void PackageModel::setCheckable(bool checkable)
 {
-    m_checkable = checkable;
+    if (m_checkable != checkable) {
+        m_checkable = checkable;
+        emit changed(checkable);
+    }
+}
+
+void PackageModel::setShowPackages(bool show)
+{
+    if (m_showSystemPackages != show) {
+        m_showSystemPackages = show;
+
+
+        // The whole structure is about to change
+        if (m_showSystemPackages) {
+            beginInsertRows(QModelIndex(), m_applicationCount, m_packages.size() - 1);
+            endInsertRows();
+        } else {
+            beginRemoveRows(QModelIndex(), m_applicationCount, m_packages.size() - 1);
+            endRemoveRows();
+        }
+        emit rowCountChanged();
+
+
+        emit showPackagesChanged(show);
+    }
 }
 
 #include "PackageModel.moc"

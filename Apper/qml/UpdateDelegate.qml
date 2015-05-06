@@ -4,100 +4,117 @@ import QtQuick.Layouts 1.0
 
 Item {
     id: root
-    height: contentGrid.height + 20
-    width: ListView.view.width
+    height: contentGrid.height + contentGrid.rowSpacing * 2
+    width: contentGrid.width + contentGrid.rowSpacing * 2
 
-    property int maxColSize: root.width - iconImage.width - actionBt.width - 40
+    property bool isCurrent: GridView.isCurrentItem
 
     GridLayout {
         id: contentGrid
         anchors.centerIn: parent
-        width: parent.width - 20
-        columns: 4
+        width: actionBt.width * 3 + iconImage.width * 4 + 4 * rowSpacing
+        columns: 3
 
         Item {
             Layout.rowSpan: 3
             id: iconImage
-            height: nameLabel.height + versionLabel.height * 2
+            height: nameLabel.height + versionLabel.height + repoLabel.height + contentGrid.rowSpacing * 2
             width: height
 
             Image {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
+                cache: true
                 source: roleIcon.length ? roleIcon : "image://icon/applications-other"
                 asynchronous: true
+                Rectangle {
+                    anchors.fill: parent
+                    color: "blue"
+                    z:-1
+                }
             }
         }
 
         Label {
             Layout.columnSpan: 2
+            Layout.fillWidth: true
             id: nameLabel
             elide: Text.ElideRight
-            font.pointSize: versionLabel.font.pointSize * 1.3
-            text: roleName
-        }
-
-        Button {
-            id: actionBt
-            Layout.rowSpan: 3
-            Layout.alignment: Qt.AlignVCenter
-            text: qsTr("Remove")
-        }
-
-        Label {
-            Layout.preferredWidth: width
-            width: installedView.versionCol
-            id: versionLabel
-            elide: Text.ElideRight
-            text: roleArch === "all" ? roleVersion : roleVersion + " / " + roleArch
+            textFormat: Text.StyledText
+            maximumLineCount: 1
+            color: isCurrent ? sysPalette.highlightedText : sysPalette.text
+            text: "<b>" + roleName + "</b> " + roleSummary
         }
 
         Label {
             Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.rowSpan: 2
+            id: versionLabel
             elide: Text.ElideRight
-            text: roleSummary
-            wrapMode: Text.WordWrap
+            maximumLineCount: 1
+            color: isCurrent ? sysPalette.highlightedText : sysPalette.text
+            text: roleVersion + " / " + roleArch
         }
 
-        Item {}
+        Item {
+            Layout.rowSpan: 2
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignBottom
+            id: actionBt
+//            text: qsTr("Remove")
+        }
+
+//        Button {
+//            Layout.rowSpan: 2
+//            Layout.alignment: Qt.AlignBottom
+//            id: actionBt
+//            text: qsTr("Remove")
+//        }
 
         Label {
-            Layout.preferredWidth: width
-            width: installedView.versionCol
+            Layout.fillWidth: true
             id: repoLabel
             elide: Text.ElideRight
+            color: isCurrent ? sysPalette.highlightedText : sysPalette.text
             text: roleRepo
         }
 
-        Component.onCompleted: {
-            var width = Math.max(versionLabel.implicitWidth, repoLabel.implicitWidth)
-            if (width > installedView.versionCol) {
-                if (width > maxColSize) {
-                    installedView.versionCol = maxColSize
-                } else {
-                    installedView.versionCol = width
-                }
-            }
+//        Item {
+//            Layout.columnSpan: contentGrid.columns
+//            Layout.fillHeight: true
+////            Layout.alignment: Qt.AlignBottom
+////            id: actionBt
+////            text: qsTr("Remove")
+//        }
+    }
+
+    Component.onCompleted: {
+        if (index > 1) {
+            return
+        }
+
+        if (contentGrid.height > softwareListView.cellHeight) {
+            softwareListView.cellHeight = contentGrid.height + contentGrid.rowSpacing * 4
+        }
+
+        if (contentGrid.width > softwareListView.cellWidth) {
+            softwareListView.cellWidth = contentGrid.width + contentGrid.rowSpacing * 6
         }
     }
 
-    SystemPalette { id: sysPalette }
     Rectangle {
         z: -1
         anchors.centerIn: parent
-        height: parent.height - 5
-        width: parent.width - 10
-        color: root.ListView.isCurrentItem ? sysPalette.highlight : sysPalette.alternateBase
+        height: parent.height - contentGrid.rowSpacing
+        width: parent.width - contentGrid.rowSpacing
+        color: isCurrent ? sysPalette.highlight : "transparent"
+    }
 
-        MouseArea {
-            z: 1
-            anchors.fill: parent
-            onClicked: {
-                console.debug(index)
-                root.ListView.currentIndex = index
-            }
+    MouseArea {
+        z: 1
+        anchors.fill: contentGrid
+        onClicked: {
+            console.debug(index)
+            softwareListView.currentIndex = index
         }
     }
 }

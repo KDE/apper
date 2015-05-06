@@ -36,7 +36,10 @@ class PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(bool checkable READ checkable WRITE setCheckable NOTIFY changed)
+    Q_PROPERTY(bool showPackages MEMBER m_showSystemPackages WRITE setShowPackages NOTIFY showPackagesChanged)
     Q_PROPERTY(int count READ rowCount NOTIFY rowCountChanged)
+    Q_PROPERTY(int packageCount MEMBER m_packageCount NOTIFY rowCountChanged)
+    Q_PROPERTY(int applicationCount MEMBER m_applicationCount NOTIFY rowCountChanged)
 public:
     enum {
         SortRole = Qt::UserRole,
@@ -91,6 +94,7 @@ public:
 
     bool checkable() const;
     void setCheckable(bool checkable);
+    void setShowPackages(bool show);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
@@ -129,6 +133,7 @@ public slots:
 
 signals:
     void changed(bool value);
+    void showPackagesChanged(bool value);
     void packageUnchecked(const QString &packageID);
     void rowCountChanged();
 
@@ -139,7 +144,10 @@ private:
     bool                            m_finished = true;
     bool                            m_checkable;
     QPixmap                         m_installedEmblem;
-    QVector<InternalPackage>        m_packages;
+    bool m_showSystemPackages = false;
+    QList<InternalPackage>        m_packages;
+    int m_packageCount = 0;
+    int m_applicationCount = 0;
     QHash<QString, InternalPackage> m_checkedPackages;
     PackageKit::Transaction *m_getUpdatesTransaction = 0;
     PackageKit::Transaction *m_fetchSizesTransaction;
