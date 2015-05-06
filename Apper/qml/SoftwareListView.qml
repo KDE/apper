@@ -46,4 +46,11 @@ GridView {
     Component.onCompleted: {
         pkgModel.getInstalled()
     }
+
+    BusyIndicator {
+        z: -1
+        visible: running
+        anchors.centerIn: parent
+        running: !pkgModel.running
+    }
 }

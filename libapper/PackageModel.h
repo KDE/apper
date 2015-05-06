@@ -41,6 +41,7 @@ class PackageModel : public QAbstractItemModel
     Q_PROPERTY(int packageCount MEMBER m_packageCount NOTIFY rowCountChanged)
     Q_PROPERTY(int applicationCount MEMBER m_applicationCount NOTIFY rowCountChanged)
     Q_PROPERTY(int viewColumns MEMBER m_viewColumns WRITE setViewColumns NOTIFY rowCountChanged)
+    Q_PROPERTY(bool running READ running NOTIFY rowCountChanged)
 public:
     enum {
         SortRole = Qt::UserRole,
@@ -95,6 +96,7 @@ public:
      */
     Q_INVOKABLE void clearSelectedNotPresent();
 
+    bool running() const;
     bool checkable() const;
     void setCheckable(bool checkable);
     void setShowPackages(bool show);
@@ -105,7 +107,8 @@ public:
 
 public slots:
     void addSelectedPackagesFromModel(PackageModel *model);
-    void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected = false);
+    void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
+    void processPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected);
     void addSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void removePackage(const QString &packageID);
 
@@ -155,7 +158,7 @@ private:
     int m_applicationCount = 0;
     int m_viewColumns = 0;
     QHash<QString, InternalPackage> m_checkedPackages;
-    PackageKit::Transaction *m_getUpdatesTransaction = 0;
+    PackageKit::Transaction *m_transaction = 0;
     PackageKit::Transaction *m_fetchSizesTransaction;
     PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
     QHash<int, QByteArray> m_roles;

@@ -80,12 +80,17 @@ void PackageModel::addSelectedPackagesFromModel(PackageModel *model)
 {
     QList<InternalPackage> packages = model->internalSelectedPackages();
     foreach (const InternalPackage &package, packages) {
-        addPackage(package.info, package.packageID, package.summary, true);
+        processPackage(package.info, package.packageID, package.summary, true);
     }
     finished();
 }
 
-void PackageModel::addPackage(Transaction::Info info, const QString &packageID, const QString &summary, bool selected)
+void PackageModel::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)
+{
+    processPackage(info, packageID, summary, false);
+}
+
+void PackageModel::processPackage(Transaction::Info info, const QString &packageID, const QString &summary, bool selected)
 {
     if (m_finished) {
         qDebug() << Q_FUNC_INFO << "we are finished calling clear";
@@ -181,7 +186,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 
 void PackageModel::addSelectedPackage(Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    addPackage(info, packageID, summary, true);
+    processPackage(info, packageID, summary, true);
 }
 
 int PackageModel::rowCount(const QModelIndex &parent) const
@@ -288,9 +293,9 @@ void PackageModel::clear()
     m_fetchSizesTransaction = 0;
     m_fetchInstalledVersionsTransaction = 0;
 
-    if (m_getUpdatesTransaction) {
-        m_getUpdatesTransaction->disconnect(this);
-        m_getUpdatesTransaction->cancel();
+    if (m_transaction) {
+        m_transaction->disconnect(this);
+        m_transaction->cancel();
     }
     endRemoveRows();
 
@@ -313,6 +318,11 @@ void PackageModel::clearSelectedNotPresent()
             uncheckPackage(package.packageID);
         }
     }
+}
+
+bool PackageModel::running() const
+{
+    return m_transaction;
 }
 
 bool PackageModel::checkable() const
@@ -354,8 +364,8 @@ void PackageModel::finished()
     qDebug() << Q_FUNC_INFO << sender();
     Transaction *trans = qobject_cast<Transaction*>(sender());
     qDebug() << Q_FUNC_INFO << trans << sender();
-    if (trans /*== m_getUpdatesTransaction*/) {
-//        m_getUpdatesTransaction = 0;
+    if (trans /*== m_transaction*/) {
+//        m_transaction = 0;
         // When pkd dies this method is called twice
         // pk-qt2 bug..
 //        trans->disconnect(this, SLOT(finished()));
@@ -504,49 +514,30 @@ void PackageModel::updateCurrentVersion(Transaction::Info info, const QString &p
 void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
 {
     clear();
-    m_getUpdatesTransaction = Daemon::getUpdates();
+    m_transaction = Daemon::getUpdates();
     if (selected) {
-        connect(m_getUpdatesTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                this, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
+        connect(m_transaction, &Transaction::package, this, &PackageModel::addSelectedPackage);
     } else {
-        connect(m_getUpdatesTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+        connect(m_transaction, &Transaction::package, this, &PackageModel::addPackage);
     }
-//    connect(m_getUpdatesTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-//            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
-//    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-//            m_busySeq, SLOT(stop()));
-//    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-//            this, SLOT(finished()));
+
     // This is required to estimate download size
-    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(fetchSizes()));
+    connect(m_transaction, &Transaction::finished, this, &PackageModel::fetchSizes);
+
     if (fetchCurrentVersions) {
-        connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(fetchCurrentVersions()));
+        connect(m_transaction, &Transaction::finished, this, &PackageModel::fetchCurrentVersions);
     }
-    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(finished()));
-    // get all updates
+    connect(m_transaction, &Transaction::finished, this, &PackageModel::finished);
 }
 
 void PackageModel::getInstalled()
 {
     clear();
-    m_getUpdatesTransaction = Daemon::getPackages(Transaction::FilterInstalled);
-    connect(m_getUpdatesTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-//    connect(m_getUpdatesTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-//            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
-//    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-//            m_busySeq, SLOT(stop()));
-//    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-//            this, SLOT(finished()));
+    m_transaction = Daemon::getPackages(Transaction::FilterInstalled);
+    connect(m_transaction, &Transaction::package, this, &PackageModel::addPackage);
+
     // This is required to estimate download size
-    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(fetchSizes()));
-    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(finished()));
+    connect(m_transaction, &Transaction::finished, this, &PackageModel::finished);
 }
 
 void PackageModel::toggleSelection(const QString &packageID)

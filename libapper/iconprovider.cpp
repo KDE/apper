@@ -11,7 +11,6 @@ IconProvider::IconProvider() :
 
 QPixmap IconProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    qDebug() << requestedSize << id << size;
     QPixmap ret;
     QIcon  icon = QIcon::fromTheme(id);
     if (!icon.isNull()) {
@@ -30,7 +29,6 @@ QPixmap IconProvider::requestPixmap(const QString &id, QSize *size, const QSize 
             scaleSize.setWidth(scaleSize.height());
         }
 
-        qDebug() << scaleSize;
         ret = icon.pixmap(scaleSize);
     }
 
