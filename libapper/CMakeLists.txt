@@ -42,7 +42,7 @@ set(libapper_SRCS
 # )
 
 add_library(apper SHARED ${libapper_SRCS})
-qt5_use_modules(apper DBus Core Widgets)
+qt5_use_modules(apper DBus Core Widgets Quick)
 
 if(APPSTREAM)
     include_directories(${CMAKE_CURRENT_BINARY_DIR}

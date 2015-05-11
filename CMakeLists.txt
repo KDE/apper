@@ -40,8 +40,8 @@ message(STATUS "Building Apper with Listaller modules: " ${LISTALLER})
 if (DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
     find_package(DebconfKDE REQUIRED)
-    macro_bool_to_01(DebconfKDE_FOUND HAVE_DEBCONFKDE)
-    macro_log_feature(DebconfKDE_FOUND "DebconfKDE" "The KDE frontend for debconf" "http://websvn.kde.org" FALSE "" "Library used for showing debconf questions.")
+    #macro_bool_to_01(DebconfKDE_FOUND HAVE_DEBCONFKDE)
+    #macro_log_feature(DebconfKDE_FOUND "DebconfKDE" "The KDE frontend for debconf" "http://websvn.kde.org" FALSE "" "Library used for showing debconf questions.")
     message(STATUS "Building with Debconf support")
 endif (DEBCONF_SUPPORT)
 
