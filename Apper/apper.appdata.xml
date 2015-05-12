@@ -15,6 +15,7 @@
   <name xml:lang="es">Apper</name>
   <name xml:lang="fi">Apper</name>
   <name xml:lang="fr">Apper</name>
+  <name xml:lang="gl">Apper</name>
   <name xml:lang="hu">Apper</name>
   <name xml:lang="it">Apper</name>
   <name xml:lang="nds">Apper</name>
@@ -40,6 +41,7 @@
   <summary xml:lang="es">Herramienta de gestión de aplicaciones y paquetes de KDE</summary>
   <summary xml:lang="fi">KDE:n sovellusten ja pakettien hallintatyökalu</summary>
   <summary xml:lang="fr">Outil KDE de gestion des applications et des paquets</summary>
+  <summary xml:lang="gl">Ferramenta de KDE para xestionar programas e paquetes</summary>
   <summary xml:lang="hu">KDE alkalmazás és csomagkezelő eszköz</summary>
   <summary xml:lang="it">Strumento di gestione dei pacchetti e delle applicazioni di KDE</summary>
   <summary xml:lang="nds">KDE sien Programm- un Paketpleeg-Warktüüch</summary>
@@ -69,6 +71,7 @@
     <p xml:lang="es">Apper es una herramienta gráfica para gestión de los paquetes y de los aplicaciones proporcionadas por una distribución de Linux.</p>
     <p xml:lang="fi">Apper on graafinen hallintatyökalu Linux-jakelun tarjoamille paketeille ja sovelluksille.</p>
     <p xml:lang="fr">Apper est une interface graphique pour gérer les applications et les paquets fournis par une distribution Linux.</p>
+    <p xml:lang="gl">Apper é unha ferramenta gráfica de xestión de paquetes para paquetes e programas que fornecen as distribucións de Linux.</p>
     <p xml:lang="hu">Az Apper egy grafikus kezelőeszköz a Linux disztribúció által szolgáltatott csomagokhoz és alkalmazásokhoz.</p>
     <p xml:lang="it">Apper è uno strumento a interfaccia grafica per la gestione dei pacchetti e delle applicazioni fornite da una distribuzione Linux.</p>
     <p xml:lang="nds">Apper is en graafsch Pleegwarktüüch för de Paketen un Programmen, de en Distributschoon praastellt.</p>
@@ -96,6 +99,7 @@
     <p xml:lang="es">Permite instalar nuevo software, así como mantener el sistema al día, instalando actualizaciones.</p>
     <p xml:lang="fi">Apperilla voi asentaa uusia ohjelmia sekä pitää järjestelmän ajan tasalla asentamalla päivitykset.</p>
     <p xml:lang="fr">Ceci permet d'installer de nouveaux logiciels et de maintenir à jour ceux déjà installés.</p>
+    <p xml:lang="gl">Permite instalar novos programas e manter o sistema ao día mediante a instalación de actualizacións.</p>
     <p xml:lang="hu">Lehetővé teszi új szoftverek telepítését, valamit a rendszer naprakészen tartását frissítések telepítésével.</p>
     <p xml:lang="it">Consente di installare nuovo software e di mantenere aggiornato il sistema tramite aggiornamenti.</p>
     <p xml:lang="nds">Du kannst dor nieg Paketen mit installeren un Opfrischen för't Systeem inspelen.</p>
@@ -120,6 +124,7 @@
     <p xml:lang="es">Características:</p>
     <p xml:lang="fi">Ominaisuudet:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
+    <p xml:lang="gl">Funcionalidades:</p>
     <p xml:lang="hu">Szolgáltatások:</p>
     <p xml:lang="it">Caratteristiche:</p>
     <p xml:lang="nds">Markmalen:</p>
@@ -146,6 +151,7 @@
       <li xml:lang="es">Gestión de los paquetes de software independiente de la distribución</li>
       <li xml:lang="fi">Jakeluriippumaton ohjelmapakettien hallinta</li>
       <li xml:lang="fr">Gestion des paquets logiciels de manière agnostique à la distribution</li>
+      <li xml:lang="gl">Non é específico de ningunha distribución.</li>
       <li xml:lang="hu">Szoftvercsomagok disztribúció-agnosztikus kezelése</li>
       <li xml:lang="it">Gestione dei pacchetti software indipendente dalla distribuzione</li>
       <li xml:lang="nds">Distributschoon-Unafhängig Pleeg vun Software-Paketen</li>
@@ -170,6 +176,7 @@
       <li xml:lang="es">Gestión de aplicaciones para usuarios sin experiencia en el manejo de paquetes</li>
       <li xml:lang="fi">Sovellusten hallinta käyttäjille, joilla ei ole kokemusta paketeista</li>
       <li xml:lang="fr">Application de gestion de paquets pour utilisateurs débutants</li>
+      <li xml:lang="gl">Xestión de programas para usuarios sen experiencia con paquetes.</li>
       <li xml:lang="hu">Alkalmazáskezelés a csomagokban tapasztalatlan felhasználóknak</li>
       <li xml:lang="it">Gestione delle applicazioni per gli utenti con poca esperienza sui pacchetti</li>
       <li xml:lang="nds">Programmpleeg för Brukers, de nich veel vun Paketen af weet.</li>
@@ -194,6 +201,7 @@
       <li xml:lang="es">Editor de fuentes de software y preferencias de PackageKit</li>
       <li xml:lang="fi">Ohjelmalähteiden ja PackageKit-asetusten muokkaus</li>
       <li xml:lang="fr">Éditeur pour les sources d'applications et le paramétrage de Packagekit</li>
+      <li xml:lang="gl">Editor de fontes de software e configuración de PackageKit.</li>
       <li xml:lang="hu">Szerkesztő a szoftverforrásokhoz és PackageKit beállításokhoz</li>
       <li xml:lang="it">Editor delle fonti software e delle impostazioni di PackageKit</li>
       <li xml:lang="nds">Editor för Software-Borns un PackageKit-Instellen</li>
@@ -217,6 +225,7 @@
       <li xml:lang="es">Notificador e instalador de las actualizaciones del software del sistema</li>
       <li xml:lang="fi">Järjestelmäohjelmiston päivitysten ilmoitin ja asennin</li>
       <li xml:lang="fr">Notification système de mise à jour ou d'installation</li>
+      <li xml:lang="gl">Notificador e instalador de actualizacións de software do sistema.</li>
       <li xml:lang="hu">Rendszerszoftver frissítések értesítő és telepítő</li>
       <li xml:lang="it">Gestore di sistema per la notifica e l'installazione degli aggiornamenti software</li>
       <li xml:lang="nds">Gifft Bescheed över Software-Opfrischen un installeert de ok</li>
@@ -241,6 +250,7 @@
       <li xml:lang="es">Alta integración con el escritorio Plasma de KDE</li>
       <li xml:lang="fi">Hyvä KDE Plasma-työpöydän integraatio</li>
       <li xml:lang="fr">Intégration avec le bureau Plasma de KDE</li>
+      <li xml:lang="gl">Intégrase moi ben co escritorio Plasma de KDE.</li>
       <li xml:lang="hu">Szoros integráció a KDE Plasma asztallal</li>
       <li xml:lang="it">Stretta integrazione col desktop Plasma di KDE</li>
       <li xml:lang="nds">Drang Integreren mit den KDE-Plasma-Schriefdisch</li>
@@ -271,6 +281,7 @@
       <caption xml:lang="es">La ventana principal con una descripción del paquete seleccionado</caption>
       <caption xml:lang="fi">Pääikkuna näyttämässä valitun paketin kuvausta</caption>
       <caption xml:lang="fr">La fenêtre principale, qui affiche une description du paquet sélectionné</caption>
+      <caption xml:lang="gl">A xanela principal mostra a descrición do paquete seleccionado.</caption>
       <caption xml:lang="hu">A főablak a kijelölt csomag leírását jeleníti meg</caption>
       <caption xml:lang="it">La finestra principale mostra una descrizione del pacchetto selezionato</caption>
       <caption xml:lang="nl">Het hoofdvenster dat een beschrijving toont van het geselecteerde pakket</caption>
@@ -300,6 +311,7 @@
   <developer_name xml:lang="es">La Comunidad de KDE</developer_name>
   <developer_name xml:lang="fi">KDE-yhteisö</developer_name>
   <developer_name xml:lang="fr">La communauté KDE</developer_name>
+  <developer_name xml:lang="gl">A comunidade de KDE</developer_name>
   <developer_name xml:lang="hu">A KDE közösség</developer_name>
   <developer_name xml:lang="it">La Comunità di KDE</developer_name>
   <developer_name xml:lang="nl">De KDE gemeenschap</developer_name>
