@@ -273,7 +273,7 @@
     <screenshot>
       <caption>The main window showing a description of the selected package</caption>
       <caption xml:lang="bs">Glavni prozor prikazuje opis označenog paketa</caption>
-      <caption xml:lang="ca">La finestra principal de Apper mostrant una descripció del paquet seleccionat</caption>
+      <caption xml:lang="ca">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
       <caption xml:lang="da">Hovedvinduet viser en beskrivelse af den valgte pakke</caption>
       <caption xml:lang="de">Das  Hauptfenster mit einer Beschreibung des ausgewählten Pakets</caption>
       <caption xml:lang="el">Το κύριο παράθυρο εμφανίζει μια περιγραφή του επιλεγμένου πακέτου</caption>
