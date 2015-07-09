@@ -39,10 +39,10 @@ public:
     void setConfig(const QVariantHash &configs);
     void setSystemReady();
 
-public slots:
+public Q_SLOTS:
     void checkForUpdates(bool systemReady);
 
-private slots:
+private Q_SLOTS:
     void packageToUpdate(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void getUpdateFinished();
     void autoUpdatesFinished(PkTransaction::ExitStatus exit);

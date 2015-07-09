@@ -41,10 +41,10 @@ public:
     void acceptDrops(const QString &toolTip);
     bool canContinue() const;
 
-signals:
+Q_SIGNALS:
     void continueChanged(bool enable);
 
-private slots:
+private Q_SLOTS:
     void selectionChanged();
 
 private:

@@ -43,7 +43,7 @@ protected:
 protected slots:
     void searchFinished(PkTransaction::ExitStatus status);
 
-private slots:
+private Q_SLOTS:
     void modelChanged();
 
 private:

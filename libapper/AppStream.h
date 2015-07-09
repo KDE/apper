@@ -35,7 +35,7 @@ typedef struct _AsDatabase AsDatabase;
 struct _AsScreenshotService;
 typedef struct _AsScreenshotService AsScreenshotService;
 
-class KDE_EXPORT AppStream : public QObject {
+class Q_DECL_EXPORT AppStream : public QObject {
     public:
         struct Application {
             QString name;

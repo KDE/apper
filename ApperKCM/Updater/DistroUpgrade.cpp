@@ -24,7 +24,7 @@
 
 #include <QAction>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KColorScheme>
 

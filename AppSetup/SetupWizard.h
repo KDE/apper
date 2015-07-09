@@ -44,7 +44,7 @@ public:
 
     SetupWizardPrivate *getPriv() { return d; };
 
-private slots:
+private Q_SLOTS:
     void currentPageChanged(int index);
     void updatePallete();
 

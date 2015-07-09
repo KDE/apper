@@ -34,7 +34,7 @@ public:
     explicit PkInterface(QObject *parent = 0);
     ~PkInterface();
 
-public slots:
+public Q_SLOTS:
     void InstallCatalogs(uint xid, const QStringList &files, const QString &interaction);
     void InstallFontconfigResources(uint xid, const QStringList &resources, const QString &interaction);
     void InstallGStreamerResources(uint xid, const QStringList &resources, const QString &interaction);

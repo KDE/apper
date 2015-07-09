@@ -23,8 +23,10 @@
 
 #include <QStandardItemModel>
 #include <KToolInvocation>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
+#include <KService>
+#include <KConfig>
 
 ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
     KDialog(parent),
@@ -37,7 +39,7 @@ ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
 
     connect(ui->kdialogbuttonbox, SIGNAL(rejected()), this, SLOT(accept()));
     setButtons(KDialog::None);
-    setWindowIcon(KIcon("task-complete"));
+    setWindowIcon(QIcon::fromTheme("task-complete"));
 
     connect(ui->applicationsView, SIGNAL(clicked(QModelIndex)),
             this, SLOT(itemClicked(QModelIndex)));
@@ -84,7 +86,7 @@ bool ApplicationLauncher::hasApplications()
             QString name = service.genericName().isEmpty() ? service.name()
                                                            : service.name() + " - " + service.genericName();
             item = new QStandardItem(name);
-            item->setIcon(KIcon(service.icon()));
+            item->setIcon(QIcon::fromTheme(service.icon()));
             item->setData(service.entryPath(), Qt::UserRole);
             item->setFlags(Qt::ItemIsEnabled);
             model->appendRow(item);

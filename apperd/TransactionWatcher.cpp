@@ -27,7 +27,7 @@
 #include <PackageImportance.h>
 
 #include <KNotification>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <kworkspace/kworkspace.h>

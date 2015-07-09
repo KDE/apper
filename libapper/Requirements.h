@@ -43,13 +43,13 @@ public:
     void setDownloadSizeRemaining(qulonglong size);
     bool trusted() const;
 
-public slots:
+public Q_SLOTS:
     bool shouldShow() const;
 
-protected slots:
+protected Q_SLOTS:
      virtual void slotButtonClicked(int button);
 
-private slots:
+private Q_SLOTS:
     void on_confirmCB_Toggled(bool checked);
     void actionClicked(int type);
 

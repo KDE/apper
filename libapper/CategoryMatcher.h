@@ -28,7 +28,7 @@
 
 #include <kdemacros.h>
 
-class KDE_EXPORT CategoryMatcher
+class Q_DECL_EXPORT CategoryMatcher
 {
 public:
     typedef enum {

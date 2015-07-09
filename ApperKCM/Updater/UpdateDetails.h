@@ -41,10 +41,10 @@ public:
 
     void setPackage(const QString &packageId, Transaction::Info updateInfo);
 
-public slots:
+public Q_SLOTS:
     void hide();
 
-private slots:
+private Q_SLOTS:
     void updateDetail(const QString &packageID,
                       const QStringList &updates,
                       const QStringList &obsoletes,

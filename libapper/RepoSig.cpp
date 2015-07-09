@@ -21,7 +21,7 @@
 #include "RepoSig.h"
 #include "ui_RepoSig.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KDebug>
 

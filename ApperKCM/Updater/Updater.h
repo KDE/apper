@@ -47,17 +47,17 @@ public:
     bool hasChanges() const;
     QStringList packagesToUpdate() const;
 
-signals:
+Q_SIGNALS:
     void changed(bool);
     void refreshCache();
     void downloadSize(const QString &message);
 
-public slots:
+public Q_SLOTS:
     void load();
 
     void getUpdates();
 
-private slots:
+private Q_SLOTS:
     void on_packageView_customContextMenuRequested(const QPoint &pos);
 
     void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);

@@ -36,7 +36,7 @@ public:
     explicit ScreenShotViewer(const QString &url, QWidget *parent = 0);
     ~ScreenShotViewer();
 
-private slots:
+private Q_SLOTS:
     void resultJob(KJob *);
     void fadeIn();
 

@@ -26,7 +26,7 @@
 
 #include <KDebug>
 #include <PkIcons.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMimeType>
 #include <KIconLoader>
 #include <KService>

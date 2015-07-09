@@ -21,7 +21,6 @@
 #include "InfoWidget.h"
 #include "ui_InfoWidget.h"
 
-#include <QGroupBox>
 
 #include <KTextBrowser>
 #include <KDebug>

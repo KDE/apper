@@ -34,7 +34,7 @@ public:
 
     bool isRunning() const;
 
-signals:
+Q_SIGNALS:
     void close();
 
 protected slots:

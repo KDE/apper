@@ -23,7 +23,7 @@
 
 #include <KCategorizedView>
 
-class KDE_EXPORT CategorizedView : public KCategorizedView
+class Q_DECL_EXPORT CategorizedView : public KCategorizedView
 {
     Q_OBJECT
 public:

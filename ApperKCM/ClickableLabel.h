@@ -29,7 +29,7 @@ Q_OBJECT
 public:
     explicit ClickableLabel(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-signals:
+Q_SIGNALS:
     void clicked();
 
 protected:

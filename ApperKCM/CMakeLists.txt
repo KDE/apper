@@ -18,7 +18,7 @@ set(kcm_apper_SRCS
     ApperKCM.cpp
 )
 
-kde4_add_ui_files(kcm_apper_SRCS
+qt5_wrap_ui(kcm_apper_SRCS
     Settings/Settings.ui
     Updater/UpdateDetails.ui
     Updater/Updater.ui
@@ -28,7 +28,8 @@ kde4_add_ui_files(kcm_apper_SRCS
     ApperKCM.ui
 )
 
-kde4_add_plugin(kcm_apper ${kcm_apper_SRCS})
+add_library(kcm_apper MODULE ${kcm_apper_SRCS})
+
 target_link_libraries(kcm_apper
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}

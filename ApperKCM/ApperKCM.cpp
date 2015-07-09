@@ -26,7 +26,7 @@
 #include <KGenericFactory>
 #include <KAboutData>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KFileItemDelegate>

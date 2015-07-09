@@ -22,7 +22,7 @@
 
 #include <KUser>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 
 #include <PkIcons.h>

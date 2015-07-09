@@ -39,7 +39,7 @@ public:
 private:
     virtual void commit();
 
-private slots:
+private Q_SLOTS:
     void transactionFinished(PkTransaction::ExitStatus status);
     void modelChanged();
 

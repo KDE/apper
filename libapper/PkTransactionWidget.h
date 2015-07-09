@@ -35,7 +35,7 @@ namespace Ui {
 
 class PkTransaction;
 class PkTransactionWidgetPrivate;
-class KDE_EXPORT PkTransactionWidget : public QWidget
+class Q_DECL_EXPORT PkTransactionWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -51,7 +51,7 @@ public:
     bool isFinished() const;
     bool isCancelVisible() const;
 
-signals:
+Q_SIGNALS:
     void allowCancel(bool enable);
     void titleChanged(const QString &title);
     void titleChangedProgress(const QString &title);
@@ -59,10 +59,10 @@ signals:
     void sorry(const QString &title, const QString &text, const QString &details);
     void error(const QString &title, const QString &text, const QString &details);
 
-public slots:
+public Q_SLOTS:
     void cancel();
 
-private slots:
+private Q_SLOTS:
     void updateUi();
 
     void reject();

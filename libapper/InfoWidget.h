@@ -22,14 +22,13 @@
 #define INFO_WIDGET_H
 
 #include <QWidget>
-#include <QAbstractItemModel>
 #include <KIcon>
 
 namespace Ui {
     class InfoWidget;
 }
 
-class KDE_EXPORT InfoWidget : public QWidget
+class Q_DECL_EXPORT InfoWidget : public QWidget
 {
     Q_OBJECT
 public:

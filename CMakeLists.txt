@@ -1,13 +1,40 @@
 project(Apper)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
+set(APP_VERSION 0.9.2)
+
+set (QT_MIN_VERSION "5.2.0")
+
+find_package(ECM REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
-find_package(KDE4 REQUIRED)
-find_package(KDE4Internal REQUIRED)
-find_package(KDE4Workspace REQUIRED)
-include (MacroLibrary)
+include(FindPkgConfig)
+include(KDEInstallDirs)
+include(KDECompilerSettings)
+include(KDECMakeSettings)
+include(FeatureSummary)
+include(ECMInstallIcons)
 
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core DBus Widgets Quick Sql)
+
+# Load the frameworks we need
+find_package(KF5 REQUIRED COMPONENTS
+  Config
+  DocTools
+  GuiAddons
+  I18n
+  KCMUtils
+  DBusAddons
+  KIO
+  KDELibs4Support
+)
+
+find_package(PackageKitQt5 0.9.0 REQUIRED)
+
+#
+# Options
+#
 # Only for Debian based systems
 option(DEBCONF_SUPPORT "Build Apper with debconf support" OFF)
 
@@ -26,41 +53,64 @@ option(LIMBA "Build Apper with Limba bundle support" OFF)
 set(HAVE_LIMBA ${LIMBA})
 message(STATUS "Building Apper with Limba support: " ${LIMBA})
 
-if (DEBCONF_SUPPORT)
-    # Tries to find the package, when it finds it HAVE_DEBCONFKDE is set in config.h
-    find_package(DebconfKDE REQUIRED)
-    macro_bool_to_01(DebconfKDE_FOUND HAVE_DEBCONFKDE)
-    macro_log_feature(DebconfKDE_FOUND "DebconfKDE" "The KDE frontend for debconf" "http://websvn.kde.org" FALSE "" "Library used for showing debconf questions.")
-    message(STATUS "Building with Debconf support")
-endif (DEBCONF_SUPPORT)
+option(MAINTAINER "Enable maintainer mode" OFF)
 
-set(APP_VERSION 0.9.2)
+if(DEBCONF_SUPPORT)
+    # Tries to find the package, when it finds it, set HAVE_DEBCONFKDE
+    find_package(DebconfKDE REQUIRED)
+    #macro_log_feature(DebconfKDE_FOUND "DebconfKDE" "The KDE frontend for debconf" "http://websvn.kde.org" FALSE "" "Library used for showing debconf questions.")
+    message(STATUS "Building with Debconf support")
+    add_definitions("-DHAVE_DEBCONFKDE")
+endif(DEBCONF_SUPPORT)
 
 # command to edit the packages origins
 set(EDIT_ORIGNS_DESKTOP_NAME "" CACHE STRING "Edit origins desktop name")
 if (EDIT_ORIGNS_DESKTOP_NAME)
     message(STATUS "Edit origins desktop name: " ${EDIT_ORIGNS_DESKTOP_NAME})
-endif (EDIT_ORIGNS_DESKTOP_NAME)
+endif(EDIT_ORIGNS_DESKTOP_NAME)
 
 # Generate config.h
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-include(FindPkgConfig)
-
-find_package(PackageKitQt4 0.9.0 REQUIRED)
-include(KDE4Defaults)
-
-add_definitions(${QT_DEFINITIONS}
-    ${KDE_DEFINITIONS})
+#
+# Add definitions
+#
+set(MAINTAINER_CFLAGS "")
+if(MAINTAINER)
+	set(MAINTAINER_CFLAGS "-Werror -Wall -Wcast-align -Wno-uninitialized -Wempty-body -Wformat-security -Winit-self -Wno-deprecated-declarations")
+	if (CMAKE_COMPILER_IS_GNUCC)
+		execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+                OUTPUT_VARIABLE GCC_VERSION)
+		if (GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
+			set(MAINTAINER_CFLAGS ${MAINTAINER_CFLAGS} "-fdiagnostics-color=auto")
+		endif()
+	endif()
+endif(MAINTAINER)
+add_definitions(${MAINTAINER_CFLAGS})
 
 add_definitions("-std=gnu++11")
+add_definitions(
+  -DQT_USE_QSTRINGBUILDER
+  -DQT_NO_CAST_TO_ASCII
+  -DQT_NO_CAST_FROM_ASCII
+  -DQT_STRICT_ITERATORS
+  -DQT_NO_URL_CAST_FROM_STRING
+  -DQT_NO_CAST_FROM_BYTEARRAY
+  -DQT_NO_SIGNALS_SLOTS_KEYWORDS
+  -DQT_USE_FAST_OPERATOR_PLUS
+)
+
+# FIXME: Temporary for porting
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_NO_KEYWORDS)
+
+#
+#
 
 include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${KDE4_INCLUDES}
-    ${PackageKitQt4_INCLUDE_DIR}
+    ${PackageKitQt5_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libapper)
 
 message(STATUS "PackageKit include dir: " ${PackageKitQt4_INCLUDE_DIR})

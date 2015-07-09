@@ -28,7 +28,7 @@
 #include <KIO/Job>
 
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "ClickableLabel.h"
 

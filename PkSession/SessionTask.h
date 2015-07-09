@@ -82,7 +82,7 @@ public:
     QWidget* mainWidget();
     uint parentWId() const;
 
-public slots:
+public Q_SLOTS:
     void enableButtonOk(bool state);
     void setMainWidget(QWidget *widget);
 
@@ -114,7 +114,7 @@ protected slots:
     virtual void searchFinished(PkTransaction::ExitStatus status);
     virtual void commitFinished(PkTransaction::ExitStatus status);
 
-private slots:
+private Q_SLOTS:
     void updatePallete();
     void setDialog(KDialog *dialog);
 

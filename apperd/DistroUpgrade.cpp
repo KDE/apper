@@ -25,7 +25,7 @@
 #include <Enum.h>
 
 #include <KNotification>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIcon>
 
 #include <KDebug>

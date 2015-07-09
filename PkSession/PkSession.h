@@ -33,7 +33,7 @@ public:
     virtual ~PkSession();
     int newInstance();
 
-private slots:
+private Q_SLOTS:
     void prepareToClose();
     void close();
 

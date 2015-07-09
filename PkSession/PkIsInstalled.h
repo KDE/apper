@@ -33,7 +33,7 @@ public:
                   QWidget *parent = 0);
     ~PkIsInstalled();
 
-private slots:
+private Q_SLOTS:
     void searchFinished(PkTransaction::ExitStatus status);
 
 private:

@@ -28,13 +28,13 @@
 #include <Daemon>
 
 #include <QPainter>
-#include <QStringBuilder>
 
 #include <KIconLoader>
 #include <KDebug>
 #include <PkIcons.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCategorizedSortFilterProxyModel>
+#include <KGlobal>
 
 #ifdef HAVE_APPSTREAM
 #include <AppStream.h>

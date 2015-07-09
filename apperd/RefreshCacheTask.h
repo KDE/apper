@@ -32,10 +32,10 @@ class RefreshCacheTask : public QObject
 public:
     explicit RefreshCacheTask(QObject *parent = 0);
 
-public slots:
+public Q_SLOTS:
     void refreshCache();
 
-private slots:
+private Q_SLOTS:
     void refreshCacheFinished(PackageKit::Transaction::Exit status, uint runtime);
     void errorCode(PackageKit::Transaction::Error error, const QString &errorMessage);
     void notificationClosed();

@@ -48,13 +48,13 @@ public:
     void cleanUi();
     bool isShowingSizes() const;
 
-signals:
+Q_SIGNALS:
     void categoryActivated(const QModelIndex &index);
 
-public slots:
+public Q_SLOTS:
     void enableExportInstalledPB();
 
-private slots:
+private Q_SLOTS:
     void showVersions(bool enabled);
     void showArchs(bool enabled);
     void showOrigins(bool enabled);

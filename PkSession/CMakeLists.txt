@@ -1,3 +1,4 @@
+
 set(pksession_SRCS
     AbstractIsRunning.cpp
     FilesModel.cpp
@@ -21,19 +22,19 @@ set(pksession_SRCS
     main.cpp
 )
 
-qt4_add_dbus_adaptor(pksession_SRCS
+qt5_add_dbus_adaptor(pksession_SRCS
     org.freedesktop.PackageKit.xml
     PkInterface.h
     PkInterface
 )
 
-kde4_add_ui_files(pksession_SRCS
+qt5_wrap_ui(pksession_SRCS
     IntroDialog.ui
     ReviewChanges.ui
     SessionTask.ui
 )
 
-kde4_add_executable(apper-pk-session
+add_executable(apper-pk-session
     ${pksession_SRCS}
 )
 

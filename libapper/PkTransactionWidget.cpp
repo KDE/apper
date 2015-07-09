@@ -23,17 +23,14 @@
 #include "PkTransactionWidget.h"
 #include "ui_PkTransactionWidget.h"
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 #include <KPushButton>
-#include <KService>
 #include <KPixmapSequence>
 #include <KPixmapSequenceOverlayPainter>
+#include <KIconLoader>
 
 #include <KDebug>
 
-#include <QStringBuilder>
-#include <QPropertyAnimation>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 #include <QScrollBar>
@@ -152,7 +149,7 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
     connect(m_trans, SIGNAL(allowCancelChanged()),
             SLOT(updateUi()));
 
-    // Forward signals:
+    // Forward Q_SIGNALS:
     connect(m_trans, SIGNAL(sorry(QString,QString,QString)),
             this, SIGNAL(sorry(QString,QString,QString)));
     connect(m_trans, SIGNAL(errorMessage(QString,QString,QString)),
@@ -238,7 +235,7 @@ void PkTransactionWidget::updateUi()
 
     QString windowTitle;
     QString windowTitleProgress;
-    KIcon windowIcon;
+    QIcon windowIcon;
     Transaction::Role role = transaction->role();
     if (role == Transaction::RoleUnknown) {
         windowTitle  = PkStrings::status(Transaction::StatusSetup);

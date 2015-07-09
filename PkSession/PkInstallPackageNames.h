@@ -39,7 +39,7 @@ protected:
     virtual void notFound();
     virtual void searchFailed();
 
-private slots:
+private Q_SLOTS:
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
 
 private:

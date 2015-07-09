@@ -5,11 +5,11 @@ set(apper_SRCS
     main.cpp
 )
 
-kde4_add_ui_files(apper_SRCS
+qt5_wrap_ui(apper_SRCS
     BackendDetails.ui
 )
 
-kde4_add_executable(apper_executable
+add_executable(apper_executable
     ${apper_SRCS}
 )
 

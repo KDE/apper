@@ -28,8 +28,8 @@
 CategoryDrawer::CategoryDrawer(KCategorizedView *view)
  : KCategoryDrawerV3(view)
 {
-    setLeftMargin( 7 );
-    setRightMargin( 7 );
+    //! setLeftMargin( 7 );
+    //! setRightMargin( 7 );
 }
 
 void CategoryDrawer::drawCategory(const QModelIndex &index,

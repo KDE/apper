@@ -21,8 +21,9 @@
 #include "ApplicationsDelegate.h"
 
 #include <KDebug>
-#include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
+#include <QPushButton>
+#include <QApplication>
 
 #include "PackageModel.h"
 #include "PkIcons.h"

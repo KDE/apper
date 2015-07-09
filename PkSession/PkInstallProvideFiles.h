@@ -38,7 +38,7 @@ protected:
     virtual void search();
     virtual void notFound();
 
-private slots:
+private Q_SLOTS:
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
 
 private:

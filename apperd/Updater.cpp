@@ -33,7 +33,7 @@
 #include <QDBusServiceWatcher>
 #include <QDBusMessage>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KNotification>
 #include <KActionCollection>
 #include <KMenu>

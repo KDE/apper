@@ -39,7 +39,7 @@
 #include <QStringBuilder>
 
 #include <KWindowSystem>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobalSettings>
 #include <KPushButton>
 

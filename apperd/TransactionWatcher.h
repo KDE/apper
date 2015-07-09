@@ -39,12 +39,12 @@ public:
     explicit TransactionWatcher(bool packagekitIsRunning, QObject *parent = 0);
     ~TransactionWatcher();
 
-public slots:
+public Q_SLOTS:
     void watchTransaction(const QDBusObjectPath &tid, bool interactive = true);
     void transactionReady();
     void showRebootNotificationApt();
 
-private slots:
+private Q_SLOTS:
     void transactionListChanged(const QStringList &tids);
     void message(PackageKit::Transaction::Message type, const QString &message);
     void errorCode(PackageKit::Transaction::Error, const QString &);

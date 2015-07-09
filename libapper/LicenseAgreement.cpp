@@ -21,7 +21,7 @@
 #include "LicenseAgreement.h"
 #include "ui_LicenseAgreement.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <Transaction>
 

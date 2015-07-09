@@ -49,10 +49,10 @@ public:
     bool setParentIndex();
     bool hasParent() const;
 
-signals:
+Q_SIGNALS:
     void finished();
 
-private slots:
+private Q_SLOTS:
     void category(const QString &parentId,
                   const QString &categoryId,
                   const QString &name,

@@ -32,10 +32,10 @@ public:
     explicit TransactionHistory(QWidget *parent = 0);
     ~TransactionHistory();
 
-public slots:
+public Q_SLOTS:
     void setFilterRegExp(const QString &regexp);
 
-private slots:
+private Q_SLOTS:
     void on_treeView_customContextMenuRequested(const QPoint &pos);
     void refreshList();
 

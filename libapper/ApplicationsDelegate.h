@@ -30,7 +30,7 @@
 /**
  * Delegate for displaying the packages
  */
-class KDE_EXPORT ApplicationsDelegate: public QStyledItemDelegate
+class Q_DECL_EXPORT ApplicationsDelegate: public QStyledItemDelegate
 {
     Q_OBJECT
 

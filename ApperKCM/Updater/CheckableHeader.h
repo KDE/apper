@@ -32,11 +32,11 @@ public:
     int sectionSizeHint(int logicalIndex) const;
     QSize sizeHint() const;
 
-public slots:
+public Q_SLOTS:
     void setCheckState(Qt::CheckState state);
     void setCheckBoxVisible(bool visible);
 
-signals:
+Q_SIGNALS:
     void toggled(bool checked);
 
 protected:

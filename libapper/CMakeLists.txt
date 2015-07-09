@@ -38,7 +38,7 @@ if(APPSTREAM)
     set(libapper_SRCS ${libapper_SRCS} AppStream.cpp)
 endif()
 
-kde4_add_ui_files(libapper_SRCS
+qt5_wrap_ui(libapper_SRCS
     ApplicationLauncher.ui
     PkTransactionWidget.ui
     RepoSig.ui
@@ -47,7 +47,7 @@ kde4_add_ui_files(libapper_SRCS
     InfoWidget.ui
 )
 
-kde4_add_library(apper SHARED ${libapper_SRCS})
+add_library(apper SHARED ${libapper_SRCS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 		    ${GLIB2_INCLUDE_DIR}
@@ -55,11 +55,15 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 )
 
 target_link_libraries(apper
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KIO_LIBS}
+    KF5::WidgetsAddons
+    KF5::KIOFileWidgets
+    KF5::KDELibs4Support
+    KF5::IconThemes
     ${QT_QTSQL_LIBRARY}
-    ${PackageKitQt4_LIBRARIES}
+    ${PackageKitQt5_LIBRARIES}
     ${APPSTREAM_LIBRARIES}
 )
+
+qt5_use_modules(apper Quick Core Sql)
 
 install(TARGETS apper DESTINATION ${LIB_INSTALL_DIR}/apper)

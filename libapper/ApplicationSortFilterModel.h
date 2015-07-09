@@ -22,7 +22,6 @@
 
 #include <QSortFilterProxyModel>
 
-#include <QDeclarativeItem>
 
 #include <Transaction>
 
@@ -31,7 +30,7 @@
 using namespace PackageKit;
 
 class PackageModel;
-class KDE_EXPORT ApplicationSortFilterModel : public QSortFilterProxyModel
+class Q_DECL_EXPORT ApplicationSortFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(PackageModel* sourcePkgModel READ sourcePkgModel WRITE setSourcePkgModel NOTIFY changed)
@@ -46,12 +45,12 @@ public:
     Transaction::Info infoFilter() const;
     bool applicationFilter() const;
 
-public slots:
+public Q_SLOTS:
     void setInfoFilter(Transaction::Info info);
     void setApplicationFilter(bool enable);
     void sortNow();
 
-signals:
+Q_SIGNALS:
     void changed();
 
 private:

@@ -23,7 +23,6 @@
 #include "CategoryDrawer.h"
 
 #include <KFileItemDelegate>
-#include <QSortFilterProxyModel>
 #include <KDebug>
 
 CategorizedView::CategorizedView(QWidget *parent)

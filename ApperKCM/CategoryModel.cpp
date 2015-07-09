@@ -29,7 +29,7 @@
 #include <PkIcons.h>
 
 #include <KCategorizedSortFilterProxyModel>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KServiceGroup>
 #include <KDesktopFile>
 #include <KConfigGroup>

@@ -23,7 +23,7 @@
 #include "IntroDialog.h"
 #include "FilesModel.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 
 #include <Daemon>

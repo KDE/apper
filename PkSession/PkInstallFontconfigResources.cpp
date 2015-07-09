@@ -28,7 +28,7 @@
 #include <QXmlQuery>
 #include <QFile>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 
 PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,

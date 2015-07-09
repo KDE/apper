@@ -22,7 +22,6 @@
 #define APPLICATION_LAUNCHER_H
 
 #include <KDialog>
-#include <KService>
 #include <QModelIndex>
 
 #include <Transaction>
@@ -31,7 +30,7 @@ namespace Ui {
     class ApplicationLauncher;
 }
 
-class KDE_EXPORT ApplicationLauncher : public KDialog
+class Q_DECL_EXPORT ApplicationLauncher : public KDialog
 {
     Q_OBJECT
     Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)
@@ -45,11 +44,11 @@ public:
     QStringList packages() const;
     bool hasApplications();
 
-public slots:
+public Q_SLOTS:
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void files(const QString &packageID, const QStringList &files);
 
-private slots:
+private Q_SLOTS:
     void itemClicked(const QModelIndex &index);
     void on_showCB_toggled(bool checked);
 

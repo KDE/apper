@@ -22,20 +22,17 @@
 
 #include "PkTransaction.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KPushButton>
-#include <KService>
 #include <KPixmapSequence>
-#include <KPixmapSequenceOverlayPainter>
+#include <KConfig>
 
 #include <KDebug>
 
-#include <QStringBuilder>
-#include <QPropertyAnimation>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
-#include <QtGui/QTreeView>
+#include <QTreeView>
 
 #include <Daemon>
 

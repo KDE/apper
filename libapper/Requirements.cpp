@@ -28,6 +28,7 @@
 #include <QToolButton>
 #include <KPushButton>
 #include <KDebug>
+#include <KGlobal>
 
 Requirements::Requirements(PackageModel *model, QWidget *parent) :
     KDialog(parent),
@@ -54,7 +55,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     m_hideAutoConfirm = false;
 
     setCaption(i18n("Additional changes"));
-    setWindowIcon(KIcon("dialog-warning"));
+    setWindowIcon(QIcon::fromTheme("dialog-warning"));
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Help);
     setButtonText(KDialog::Ok, i18n("Continue"));
     // restore size
@@ -66,7 +67,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
 
     button(KDialog::Help)->setFlat(true);
     button(KDialog::Help)->setEnabled(false);
-    button(KDialog::Help)->setIcon(KIcon("download"));
+    button(KDialog::Help)->setIcon(QIcon::fromTheme("download"));
 
     m_buttonGroup = new QButtonGroup(this);
     connect(m_buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
@@ -149,7 +150,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         m_untrustedButton->setIconSize(QSize(32, 32));
         m_untrustedButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         m_untrustedButton->setText(i18np("1 untrusted package", "%1 untrusted packages", c));
-        m_untrustedButton->setIcon(KIcon("security-low"));
+        m_untrustedButton->setIcon(QIcon::fromTheme("security-low"));
         m_untrustedButton->setVisible(false);
         ui->verticalLayout->insertWidget(count++, m_untrustedButton);
     }

@@ -35,7 +35,7 @@ public:
                        QWidget *parent = 0);
     ~PkInstallMimeTypes();
 
-private slots:
+private Q_SLOTS:
     virtual void search();
     virtual void notFound();
 

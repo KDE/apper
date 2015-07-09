@@ -24,7 +24,7 @@
 
 #include <PkStrings.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 
 PkIsInstalled::PkIsInstalled(const QString &package_name,

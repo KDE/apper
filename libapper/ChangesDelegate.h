@@ -30,7 +30,7 @@
 /**
  * Delegate for displaying the packages
  */
-class KDE_EXPORT ChangesDelegate: public KExtendableItemDelegate
+class Q_DECL_EXPORT ChangesDelegate: public KExtendableItemDelegate
 {
     Q_OBJECT
 
@@ -46,7 +46,7 @@ public:
     void setExtendPixmapWidth(int width);
     void setViewport(QWidget *viewport);
 
-signals:
+Q_SIGNALS:
     void showExtendItem(const QModelIndex &index);
 
 private:

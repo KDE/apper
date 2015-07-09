@@ -23,7 +23,7 @@
 #include <PkStrings.h>
 #include <PkIcons.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 #include <KNotification>
 

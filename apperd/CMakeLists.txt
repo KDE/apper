@@ -1,3 +1,4 @@
+
 set(kded_apperd_SRCS
     DistroUpgrade.cpp
     DBusInterface.cpp
@@ -10,13 +11,13 @@ set(kded_apperd_SRCS
     apperd.cpp
 )
 
-qt4_add_dbus_adaptor(kded_apperd_SRCS
+qt5_add_dbus_adaptor(kded_apperd_SRCS
     org.kde.apperd.xml
     DBusInterface.h
     DBusInterface
 )
 
-kde4_add_plugin(kded_apperd ${kded_apperd_SRCS})
+add_library(kded_apperd MODULE ${kded_apperd_SRCS})
 
 target_link_libraries(kded_apperd
     ${KDE4_KIO_LIBS}

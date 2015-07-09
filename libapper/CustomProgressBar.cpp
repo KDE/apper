@@ -20,7 +20,7 @@
 
 #include "CustomProgressBar.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 
 CustomProgressBar::CustomProgressBar(QWidget *parent)

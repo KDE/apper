@@ -55,18 +55,18 @@ public:
     
     QString page() const;
 
-signals:
+Q_SIGNALS:
     void changed(bool state);
     void caption(const QString &title = QString());
 
-public slots:
+public Q_SLOTS:
     void daemonChanged();
     void load();
     void save();
     void defaults();
     void setPage(const QString &page);
 
-private slots:
+private Q_SLOTS:
     void search();
     void setupHomeModel();
     void genericActionKTriggered();

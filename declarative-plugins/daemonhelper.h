@@ -28,7 +28,7 @@ class DaemonHelper : public QObject
 public:
     explicit DaemonHelper(QObject *parent = 0);
 
-public slots:
+public Q_SLOTS:
     uint getTimeSinceLastRefresh();
 };
 

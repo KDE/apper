@@ -37,11 +37,11 @@ public:
 
     PackageModel* model() const;
 
-signals:
+Q_SIGNALS:
     void hasSelectedPackages(bool has);
     void successfullyRemoved();
 
-private slots:
+private Q_SLOTS:
     void selectionChanged();
 
 private:

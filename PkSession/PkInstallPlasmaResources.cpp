@@ -27,7 +27,7 @@
 #include <PkStrings.h>
 
 #include <QStandardItemModel>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KDebug>
 

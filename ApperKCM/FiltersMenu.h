@@ -38,7 +38,7 @@ public:
     Transaction::Filters filters() const;
     bool filterApplications() const;
 
-signals:
+Q_SIGNALS:
     void filtersChanged();
     void filterApplications(bool checked);
 

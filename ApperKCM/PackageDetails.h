@@ -57,13 +57,13 @@ public:
     void hidePackageVersion(bool hide);
     void hidePackageArch(bool hide);
 
-public slots:
+public Q_SLOTS:
     void hide();
 
-signals:
+Q_SIGNALS:
     void ensureVisible(const QModelIndex &index);
 
-private slots:
+private Q_SLOTS:
     void on_screenshotL_clicked();
     void actionActivated(QAction *action);
     void description(const PackageKit::Details &details);

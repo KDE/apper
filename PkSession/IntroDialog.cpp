@@ -24,7 +24,7 @@
 
 #include <PkStrings.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <KDebug>

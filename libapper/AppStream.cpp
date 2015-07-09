@@ -26,11 +26,7 @@
 #include "AppStream.h"
 
 #include <QApplication>
-#include <QVariant>
-#include <QStringBuilder>
 
-#include <KLocale>
-#include <KGlobal>
 #include <KDebug>
 
 AppStream* AppStream::m_instance = 0;

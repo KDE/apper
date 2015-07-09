@@ -23,13 +23,11 @@
 
 #include <QAbstractItemModel>
 #include <QAbstractItemView>
-#include <QMetaObject>
-#include <KIcon>
 
 #include <Transaction>
 #include <Details>
 
-class KDE_EXPORT PackageModel : public QAbstractItemModel
+class Q_DECL_EXPORT PackageModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(bool checkable READ checkable WRITE setCheckable NOTIFY changed)
@@ -101,7 +99,7 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
 
-public slots:
+public Q_SLOTS:
     void addSelectedPackagesFromModel(PackageModel *model);
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected = false);
     void addSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
@@ -133,7 +131,7 @@ public slots:
     void toggleSelection(const QString &packageID);
     QString selectionStateText() const;
 
-signals:
+Q_SIGNALS:
     void changed(bool value);
     void packageUnchecked(const QString &packageID);
 

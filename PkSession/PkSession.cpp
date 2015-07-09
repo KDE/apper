@@ -24,7 +24,7 @@
 
 #include <QStringBuilder>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCmdLineArgs>
 #include <KDebug>
 

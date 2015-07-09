@@ -23,7 +23,7 @@
 
 #include <KDebug>
 #include <KConfig>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAboutData>
 #include <KCmdLineArgs>
 

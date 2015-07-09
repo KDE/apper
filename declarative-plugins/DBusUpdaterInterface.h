@@ -36,11 +36,11 @@ public:
 
     void ReviewUpdates();
 
-public slots:
+public Q_SLOTS:
     void registerService();
     void unregisterService();
 
-signals:
+Q_SIGNALS:
     void reviewUpdates();
     void registeredChanged();
 

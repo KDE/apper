@@ -42,18 +42,18 @@ public:
 
     bool hasChanges() const;
 
-public slots:
+public Q_SLOTS:
     void load();
     void save();
     void defaults();
     void showGeneralSettings();
     void showRepoSettings();
 
-signals:
+Q_SIGNALS:
     void changed(bool state);
     void refreshCache();
 
-private slots:
+private Q_SLOTS:
     void refreshRepoModel();
     void on_showOriginsCB_stateChanged(int state);
     void on_editOriginsPB_clicked();

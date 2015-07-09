@@ -40,14 +40,14 @@ public:
 
     QVariantHash changes() const;
 
-signals:
+Q_SIGNALS:
     void refreshRepoList();
 
-public slots:
+public Q_SLOTS:
     void addOriginItem(const QString &repo_id, const QString &details, bool enabled);
     void finished();
 
-private slots:
+private Q_SLOTS:
     void errorCode(PackageKit::Transaction::Error error, const QString &details);
     void setRepoFinished(PackageKit::Transaction::Exit exit);
 

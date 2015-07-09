@@ -20,7 +20,6 @@
 
 #include "PkTransactionProgressModel.h"
 
-#include <KLocale>
 #include <KDebug>
 
 #include <PkStrings.h>

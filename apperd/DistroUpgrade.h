@@ -36,10 +36,10 @@ public:
 
     void setConfig(const QVariantHash &configs);
 
-public slots:
+public Q_SLOTS:
     void checkDistroUpgrades();
 
-private slots:
+private Q_SLOTS:
     void distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description);
     void checkDistroFinished(PackageKit::Transaction::Exit status, uint enlapsed);
     void handleDistroUpgradeAction(uint action);

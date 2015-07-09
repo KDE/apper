@@ -32,7 +32,7 @@ using namespace PackageKit;
 class PackageModel;
 class PkTransactionPrivate;
 class PkTransactionProgressModel;
-class KDE_EXPORT PkTransaction : public QObject
+class Q_DECL_EXPORT PkTransaction : public QObject
 {
     Q_OBJECT
     Q_ENUMS(ExitStatus)
@@ -89,7 +89,7 @@ public:
     Q_PROPERTY(PackageKit::Transaction::TransactionFlags transactionFlags READ transactionFlags NOTIFY transactionFlagsChanged)
     Transaction::TransactionFlags transactionFlags() const;
 
-public slots:
+public Q_SLOTS:
     void getUpdateDetail(const QString &packageID);
     void getUpdates();
     void cancel();
@@ -100,7 +100,7 @@ public slots:
      */
     void requeueTransaction();
 
-signals:
+Q_SIGNALS:
     void package(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void updateDetail(const QString &packageID,
                       const QStringList &updates,
@@ -134,7 +134,7 @@ signals:
     void transactionFlagsChanged();
     void uidChanged();
 
-private slots:
+private Q_SLOTS:
     void installPackages();
     void installFiles();
     void removePackages();

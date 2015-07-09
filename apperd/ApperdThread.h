@@ -40,7 +40,7 @@ public:
 
     static bool nameHasOwner(const QString &name, const QDBusConnection &connection);
 
-private slots:
+private Q_SLOTS:
     void init();
     void poll();
     void configFileChanged();

@@ -20,7 +20,7 @@
 
 #include "PkStrings.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 
 #include <KDebug>

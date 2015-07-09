@@ -35,7 +35,7 @@ public:
 
     void clear();
 
-public slots:
+public Q_SLOTS:
     void addTransaction(PackageKit::Transaction *trans);
 
 private:

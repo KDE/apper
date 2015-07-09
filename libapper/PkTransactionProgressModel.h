@@ -27,7 +27,7 @@
 
 #include <kdemacros.h>
 
-class KDE_EXPORT PkTransactionProgressModel: public QStandardItemModel
+class Q_DECL_EXPORT PkTransactionProgressModel: public QStandardItemModel
 {
     Q_OBJECT
 public:
@@ -45,7 +45,7 @@ public:
 
     void clear();
 
-public slots:
+public Q_SLOTS:
     void currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void currentRepo(const QString &repoId, const QString &description, bool enabled);
     void itemProgress(const QString &id, PackageKit::Transaction::Status status, uint percentage);

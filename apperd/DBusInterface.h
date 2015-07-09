@@ -42,11 +42,11 @@ public:
     void SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent);
     void WatchTransaction(const QDBusObjectPath &tid);
 
-signals:
+Q_SIGNALS:
     void refreshCache();
     void watchTransaction(const QDBusObjectPath &tid);
 
-private slots:
+private Q_SLOTS:
     void debconfActivate();
     void transactionFinished();
 

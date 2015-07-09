@@ -25,7 +25,7 @@
 #include <PkStrings.h>
 #include <PackageModel.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KDebug>
 

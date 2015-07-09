@@ -24,7 +24,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 
 FiltersMenu::FiltersMenu(QWidget *parent)
  : QMenu(parent)

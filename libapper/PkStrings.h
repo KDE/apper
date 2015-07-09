@@ -25,10 +25,10 @@
 
 #include <Transaction>
 
-class KDE_EXPORT PkStrings : public QObject
+class Q_DECL_EXPORT PkStrings : public QObject
 {
     Q_OBJECT
-public slots:
+public Q_SLOTS:
     static QString infoPresent(PackageKit::Transaction::Info info);
     static QString infoPast(PackageKit::Transaction::Info info);
     static QString error(PackageKit::Transaction::Error error);

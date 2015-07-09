@@ -34,7 +34,7 @@ public:
 
     void setName(const QString &name);
 
-private slots:
+private Q_SLOTS:
     void startDistroUpgrade();
 
     void distroUpgradeError(QProcess::ProcessError);

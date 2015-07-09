@@ -22,7 +22,11 @@
 
 #include <KDebug>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
+#include <QApplication>
+#include <QPushButton>
+#include <QTreeView>
+#include <QHeaderView>
 
 #include "PackageModel.h"
 #include "PkIcons.h"
@@ -242,8 +246,9 @@ void ChangesDelegate::paint(QPainter *painter,
     // compose the top line
     // Collections does not have version and arch
     if (option.state & QStyle::State_MouseOver && !pkgCollection) {
-        pkgName = pkgName + " - " + pkgVersion + (pkgArch.isNull() ? NULL : " (" + pkgArch + ')');
+        //! pkgName = pkgName + " - " + pkgVersion + (pkgArch.isNull() ? NULL : " (" + pkgArch + ')');
     }
+
     // draw the top line
     int topTextHeight = QFontInfo(local_option_title.font).pixelSize();
     p.setFont(local_option_title.font);
