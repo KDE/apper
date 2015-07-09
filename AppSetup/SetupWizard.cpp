@@ -29,11 +29,11 @@
 #include <QAction>
 #include <QProgressBar>
 #include <QCheckBox>
-#include <KPushButton>
-#include <KMenuBar>
+#include <QPushButton>
 #include <KDebug>
 #include <KMessageBox>
 #include <KGlobalSettings>
+#include <KLocalizedString>
 
 #include "InfoWidget.h"
 #include "SimplePage.h"

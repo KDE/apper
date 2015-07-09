@@ -1,13 +1,16 @@
 project(Apper)
 cmake_minimum_required(VERSION 3.0)
 
-set(APP_VERSION 0.9.2)
+set(APP_VERSION 0.9.3)
 
 set (QT_MIN_VERSION "5.2.0")
 
 find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include(FindPkgConfig)
 include(KDEInstallDirs)
@@ -16,7 +19,7 @@ include(KDECMakeSettings)
 include(FeatureSummary)
 include(ECMInstallIcons)
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core DBus Widgets Quick Sql)
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core DBus Widgets Quick Sql XmlPatterns)
 
 # Load the frameworks we need
 find_package(KF5 REQUIRED COMPONENTS
@@ -27,9 +30,11 @@ find_package(KF5 REQUIRED COMPONENTS
   KCMUtils
   DBusAddons
   KIO
+  Notifications
   KDELibs4Support
 )
-
+find_package(LibKWorkspace REQUIRED)
+find_package(KDED REQUIRED)
 find_package(PackageKitQt5 0.9.0 REQUIRED)
 
 #
@@ -58,9 +63,8 @@ option(MAINTAINER "Enable maintainer mode" OFF)
 if(DEBCONF_SUPPORT)
     # Tries to find the package, when it finds it, set HAVE_DEBCONFKDE
     find_package(DebconfKDE REQUIRED)
-    #macro_log_feature(DebconfKDE_FOUND "DebconfKDE" "The KDE frontend for debconf" "http://websvn.kde.org" FALSE "" "Library used for showing debconf questions.")
     message(STATUS "Building with Debconf support")
-    add_definitions("-DHAVE_DEBCONFKDE")
+    set(HAVE_DEBCONF ${DEBCONF_SUPPORT})
 endif(DEBCONF_SUPPORT)
 
 # command to edit the packages origins
@@ -126,3 +130,5 @@ add_subdirectory(doc)
 if(LIMBA)
     add_subdirectory(AppSetup)
 endif()
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

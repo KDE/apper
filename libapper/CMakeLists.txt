@@ -1,4 +1,4 @@
-#Set the correct compiler options
+# Set the correct compiler options
 IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
    # 32 bit
    MESSAGE(STATUS "Apper detected that you use a 32 bit processor.")
@@ -47,14 +47,14 @@ qt5_wrap_ui(libapper_SRCS
     InfoWidget.ui
 )
 
-add_library(apper SHARED ${libapper_SRCS})
+add_library(apper_private SHARED ${libapper_SRCS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
-		    ${GLIB2_INCLUDE_DIR}
-		    ${APPSTREAM_INCLUDE_DIRS}
+    ${GLIB2_INCLUDE_DIR}
+    ${APPSTREAM_INCLUDE_DIRS}
 )
 
-target_link_libraries(apper
+target_link_libraries(apper_private
     KF5::WidgetsAddons
     KF5::KIOFileWidgets
     KF5::KDELibs4Support
@@ -64,6 +64,6 @@ target_link_libraries(apper
     ${APPSTREAM_LIBRARIES}
 )
 
-qt5_use_modules(apper Quick Core Sql)
+qt5_use_modules(apper_private Quick Core Sql)
 
-install(TARGETS apper DESTINATION ${LIB_INSTALL_DIR}/apper)
+install(TARGETS apper_private DESTINATION ${CMAKE_INSTALL_LIBDIR}/apper)

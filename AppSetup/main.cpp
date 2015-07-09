@@ -20,51 +20,58 @@
 
 #include <limba.h>
 #include <KAboutData>
-#include <KCmdLineArgs>
+
 #include <KDebug>
-#include <KApplication>
+
 #include <KMessageBox>
 #include <QFileInfo>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+#include "config.h"
 
 #include "SetupWizard.h"
 
 int main(int argc, char** argv)
 {
-    KAboutData aboutData("apper-appsetup", "apper", ki18n("KDE Application Installer"), "0.2",
-                         ki18n("KDE Application Installer"), KAboutData::License_GPL,
-                         ki18n("(C) 2014, Matthias Klumpp"));
+    KAboutData aboutData("apper-appsetup",
+                "apper",
+                APP_VERSION,
+                i18n("KDE Application Installer"),
+                KAboutLicense::LicenseKey::GPL);
 
-    aboutData.addAuthor(ki18nc("@info:credit", "Daniel Nicoletti"), ki18n("Developer"),
+    aboutData.addAuthor(i18nc("@info:credit", "Daniel Nicoletti"), i18n("Developer"),
                         "dantti12@gmail.com");
-    aboutData.addAuthor(ki18nc("@info:credit", "Matthias Klumpp"), ki18n("Developer"),
+    aboutData.addAuthor(i18nc("@info:credit", "Matthias Klumpp"), i18n("Developer"),
                         "matthias@tenstral.net");
     aboutData.setProductName("apper/limba");
 
-    KCmdLineArgs::init(argc, argv, &aboutData);
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
     // Add --verbose as commandline option
-    KCmdLineOptions options;
-    options.add("verbose", ki18n("Show verbose information"));
-    options.add("+file", ki18n("IPK package filename"));
-    KCmdLineArgs::addCmdLineOptions(options);
-
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("verbose"), i18n("Show verbose information")));
+    parser.addPositionalArgument(QLatin1String("file"), i18n("IPK package filename"));
 
     // Set if we are in verbose mode
-    li_set_verbose_mode(args->isSet("verbose"));
+    li_set_verbose_mode(parser.isSet("verbose"));
 
     QString fname;
-    for(int i = 0; i < args->count(); i++) {
-        fname = args->arg(i);
+    for(int i = 0; i < parser.positionalArguments().count(); i++) {
+        fname = parser.positionalArguments()[i];
         QFileInfo file(fname);
         if (!file.exists())
             fname = "";
         else
             break;
     }
-    args->clear();
-
-    KApplication app;
-
+    
     // Check if we have a package
     if (fname.isEmpty()) {
         KMessageBox::sorry (0, i18n("We did not receive a path to an IPK package as parameter."),

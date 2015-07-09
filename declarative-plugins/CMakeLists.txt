@@ -14,12 +14,14 @@ qt5_add_dbus_adaptor(apper_qml_plugin_SRCS
 add_library(apperplugin SHARED ${apper_qml_plugin_SRCS})
 target_link_libraries(apperplugin
     ${QT_QTDECLARATIVE_LIBRARY}
-    ${KDE4_KDEUI_LIBS}
-    ${PackageKitQt4_LIBRARIES}
-    apper
+    KF5::WidgetsAddons
+    ${PackageKitQt5_LIBRARIES}
+    apper_private
 )
 
-set_target_properties(apperplugin PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+qt5_use_modules(apperplugin Quick Core)
 
-install(TARGETS apperplugin DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/apper)
-install(FILES qmldir DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/apper)
+set_target_properties(apperplugin PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
+
+install(TARGETS apperplugin DESTINATION ${CMAKE_INSTALL_QTQUICKIMPORTSDIR}/org/kde/apper)
+install(FILES qmldir DESTINATION ${CMAKE_INSTALL_QTQUICKIMPORTSDIR}/org/kde/apper)

@@ -69,7 +69,7 @@ void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorM
     }
 
     m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
-    m_notification->setComponentData(KComponentData("apperd"));
+    m_notification->setComponentName("apperd");
     connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
     KIcon icon("dialog-cancel");
     // use of QSize does the right thing

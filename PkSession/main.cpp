@@ -29,21 +29,22 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData about("PkSession",
+    KAboutData aboutData("PkSession",
                      "apper",
-                     ki18n("Apper"),
                      APP_VERSION,
-                     ki18n("Apper PackageKit Session helper"),
-                     KAboutData::License_GPL,
-                     ki18n("(C) 2008-2013 Daniel Nicoletti"));
+                     i18n("Apper PackageKit Session helper"),
+                     KAboutLicense::GPL);
 
-    about.addAuthor(ki18n("Daniel Nicoletti"), KLocalizedString(), "dantti12@gmail.com", "http://dantti.wordpress.com" );
-    about.addAuthor(ki18n("Trever Fischer"), KLocalizedString(), "wm161@wm161.net", "http://wm161.net");
+    aboutData.addAuthor(i18n("Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com" );
+    aboutData.addAuthor(i18n("Trever Fischer"), QString(), "wm161@wm161.net", "http://wm161.net");
 
-    about.addCredit(ki18n("Adrien Bustany"), ki18n("libpackagekit-qt and other stuff"),"@");
-    about.setProgramIconName("applications-other");
+    aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"),"@");
+    aboutData.setProgramIconName("applications-other");
+    KAboutData::setApplicationData(aboutData);
 
-    KCmdLineArgs::init(argc, argv, &about);
+    //! KCmdLineArgs::init(argc, argv);
+	Q_UNUSED(argc);
+	Q_UNUSED(argv);
 
     if (!PkSession::start()) {
         //kDebug() << "PkSession is already running!";

@@ -22,8 +22,8 @@
 #include "daemonhelper.h"
 #include "DBusUpdaterInterface.h"
 
-#include <QtDeclarative/QDeclarativeItem>
-#include <QtDeclarative/QDeclarativeContext>
+#include <QQuickItem>
+#include <QQmlContext>
 
 #include <PackageModel.h>
 #include <PkTransaction.h>
@@ -31,11 +31,10 @@
 #include <ApplicationSortFilterModel.h>
 #include <PkStrings.h>
 #include <PkIcons.h>
+#include <KLocalizedString>
 
 #include <Daemon>
-#include <QDeclarativeEngine>
-
-static const KCatalogLoader loader(QLatin1String("apper"));
+#include <QQmlEngine>
 
 void QmlPlugins::registerTypes(const char* uri)
 {
@@ -71,15 +70,15 @@ void QmlPlugins::registerTypes(const char* uri)
 
 }
 
-void QmlPlugins::initializeEngine(QDeclarativeEngine *engine, const char *uri)
+void QmlPlugins::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_UNUSED(uri)
     Q_ASSERT(uri == QLatin1String("org.kde.apper"));
+
+    KLocalizedString::setApplicationDomain("apper");
 
     engine->rootContext()->setContextProperty("Daemon", Daemon::global());
     engine->rootContext()->setContextProperty("PkStrings", new PkStrings);
     engine->rootContext()->setContextProperty("PkIcons", new PkIcons);
     engine->rootContext()->setContextProperty("DaemonHelper", new DaemonHelper);
 }
-
-Q_EXPORT_PLUGIN2(apper, QmlPlugins)

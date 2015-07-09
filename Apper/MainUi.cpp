@@ -24,20 +24,21 @@
 #include <KDebug>
 #include <KConfig>
 #include <KCModuleProxy>
+#include <KConfigGroup>
+#include <KDialog>
 
 MainUi::MainUi(QWidget *parent) :
     KCMultiDialog(parent),
     m_apperModule(0)
 {
-    setCaption(QString());
-    setWindowIcon(KIcon("applications-other"));
+    setWindowIcon(QIcon::fromTheme("applications-other"));
 
     KConfig config("apper");
     KConfigGroup configGroup(&config, "MainUi");
-    restoreDialogSize(configGroup);
+    //! restoreDialogSize(configGroup);
 
     // Set Apply and Cancel buttons
-    setButtons(KDialog::Apply /*| KDialog::Help*/ | KDialog::Default | KDialog::Reset);
+    setStandardButtons(QDialogButtonBox::Apply /*| KDialog::Help*/ | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset);
 
     KPageWidgetItem *page = addModule(QLatin1String("kcm_apper.desktop"),
                                       QStringList() << QLatin1String("apper"));
@@ -58,7 +59,7 @@ MainUi::~MainUi()
     // save size
     KConfig config("apper");
     KConfigGroup configGroup(&config, "MainUi");
-    saveDialogSize(configGroup);
+    //! saveDialogSize(configGroup);
 }
 
 void MainUi::showAll()

@@ -36,9 +36,10 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QTimer>
+#include <QUrl>
 
-Apper::Apper()
- : KUniqueApplication(),
+Apper::Apper(int argc, char **argv)
+ : QApplication(argc, argv),
    m_pkUi(0),
    m_running(0)
 {

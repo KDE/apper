@@ -37,7 +37,7 @@ public:
 Q_SIGNALS:
     void close();
 
-protected slots:
+protected Q_SLOTS:
     void increaseRunning();
     void decreaseRunning();
 

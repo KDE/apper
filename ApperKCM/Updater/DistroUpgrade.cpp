@@ -30,7 +30,6 @@
 
 #include <solid/powermanagement.h>
 #include <solid/device.h>
-#include <solid/acadapter.h>
 
 #include <KDebug>
 
@@ -53,14 +52,15 @@ void DistroUpgrade::setName(const QString &name)
 
 void DistroUpgrade::startDistroUpgrade()
 {
-    QList<Solid::Device> powerPlugs = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter);
+    //! QList<Solid::Device> powerPlugs = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter);
     bool pluggedIn = true;
     bool hasBattery = Solid::Device::listFromType(Solid::DeviceInterface::Battery).size()>0;
-    foreach(const Solid::Device &dev, powerPlugs) {
-        if (!dev.as<Solid::AcAdapter>()->isPlugged()) {
-            pluggedIn = false;
-        }
-    }
+
+    //! foreach(const Solid::Device &dev, powerPlugs) {
+    //!    if (!dev.as<Solid::AcAdapter>()->isPlugged()) {
+    //!        pluggedIn = false;
+    //!    }
+    //! }
 
     QString warning = i18n("You are about to upgrade your distribution to the latest version. "
                            "This is usually a very lengthy process and takes a lot longer than "

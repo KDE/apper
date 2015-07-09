@@ -105,7 +105,7 @@ protected:
     bool sendMessageFinished(const QDBusMessage &message);
     QString parentTitle;
 
-protected slots:
+protected Q_SLOTS:
     void setTitle(const QString &title);
     void setInfo(const QString &title, const QString &text, const QString &details = QString());
     void setError(const QString &title, const QString &text, const QString &details = QString());

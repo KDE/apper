@@ -34,6 +34,7 @@
 #include <KHelpMenu>
 #include <KTabBar>
 #include <KCmdLineArgs>
+#include <QToolBar>
 
 #include <PackageModel.h>
 #include <ApplicationSortFilterModel.h>
@@ -67,7 +68,7 @@ K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperKCM>();)
 K_EXPORT_PLUGIN(ApperFactory("kcm_apper", "apper"))
 
 ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
-    KCModule(ApperFactory::componentData(), parent, args),
+    KCModule(parent, args),
     ui(new Ui::ApperKCM),
     m_currentAction(0),
     m_groupsProxyModel(0),
@@ -83,11 +84,11 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     KAboutData *aboutData;
     aboutData = new KAboutData("kcm_apper",
                                "apper",
-                               ki18n("Application Manager"),
                                APP_VERSION,
-                               ki18n("KDE interface for managing software"),
-                               KAboutData::License_GPL,
-                               ki18n("(C) 2008-2013 Daniel Nicoletti"));
+                               i18n("KDE interface for managing software"),
+                               KAboutLicense::LicenseKey::GPL);
+    aboutData->addAuthor(i18n("(C) 2008-2013 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
+    aboutData->addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
     setAboutData(aboutData);
     setButtons(Apply);
 
@@ -221,8 +222,8 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     // Only show help menu if not on System Settings
     if (!args.isEmpty()) {
         // adds the help menu
-        KHelpMenu *helpMenu = new KHelpMenu(this, KCmdLineArgs::aboutData());
-        menu->addMenu(helpMenu->menu());
+        //! KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData());
+        //! menu->addMenu(helpMenu->menu());
     }
 
     // Make sure the search bar is visible

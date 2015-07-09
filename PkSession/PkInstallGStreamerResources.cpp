@@ -57,7 +57,7 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
         }
 
         QStandardItem *item = new QStandardItem(codec.section('|', 0, 0));
-        item->setIcon(KIcon("x-kde-nsplugin-generated").pixmap(32, 32));
+        item->setIcon(QIcon::fromTheme("x-kde-nsplugin-generated").pixmap(32, 32));
         item->setFlags(Qt::ItemIsEnabled);
         model->appendRow(item);
 

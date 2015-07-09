@@ -49,3 +49,5 @@ ApperD::~ApperD()
 //    m_thread->wait();
 //    delete m_thread;
 }
+
+#include "apperd.moc"

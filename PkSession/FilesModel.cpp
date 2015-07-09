@@ -27,7 +27,8 @@
 #include <KDebug>
 #include <PkIcons.h>
 #include <KLocalizedString>
-#include <KMimeType>
+#include <QMimeType>
+#include <QMimeDatabase>
 #include <KIconLoader>
 #include <KService>
 
@@ -38,18 +39,18 @@ FilesModel::FilesModel(const QStringList &files, const QStringList &mimes, QObje
     if (!files.isEmpty()) {
         QList<QUrl> urls;
         foreach (const QString &file, files) {
-            urls << file;
+            urls << QUrl(file);
         }
         insertFiles(urls);
     } else if (!mimes.isEmpty()) {
+        QMimeDatabase db;
         // we are searching for mimetypes
-        foreach (const QString &mime, mimes) {
-            KMimeType::Ptr mimePtr = KMimeType::mimeType(mime);
-            // Make sure we have a pointer
-            if (mimePtr && mimePtr->isValid()) {
-                QStandardItem *item = new QStandardItem(mime);
-                item->setData(mime);
-                item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mimePtr->iconName(),
+        foreach (const QString &mimeName, mimes) {
+            QMimeType mime = db.mimeTypeForName(mimeName);
+            if (mime.isValid()) {
+                QStandardItem *item = new QStandardItem(mimeName);
+                item->setData(mimeName);
+                item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime.iconName(),
                                                                       KIconLoader::Desktop));
                 appendRow(item);
             }
@@ -82,23 +83,24 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
         QFileInfo fileInfo(path);
         QStandardItem *item = 0;
         if (fileInfo.isFile()) {
-            KMimeType::Ptr mime = KMimeType::findByFileContent(path);
-            kDebug() << url << mime->name();
+            QMimeDatabase db;
+            QMimeType mime = db.mimeTypeForFile(path, QMimeDatabase::MatchContent);
+            kDebug() << url << mime.name();
             foreach (const QString &mimeType, m_mimes) {
-                if (mime->is(mimeType)) {
+                if (mime.name() == mimeType) {
                     ret = true;
 /*                    kDebug() << "Found Supported Mime" << mimeType << mime->iconName();*/
                     item = new QStandardItem(fileInfo.fileName());
                     item->setData(path);
                     item->setToolTip(path);
-                    item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime->iconName(),
+                    item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime.iconName(),
                                                                           KIconLoader::Desktop));
                     break;
                 }
             }
 
             if (ret == false && m_mimes.isEmpty()) {
-                if (mime->name() == "application/x-desktop") {
+                if (mime.name() == "application/x-desktop") {
                     KService *service = new KService(path);
                     item = new QStandardItem(service->name());
                     item->setData(true, Qt::UserRole);
@@ -106,7 +108,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
                                                                           KIconLoader::Desktop));
                 } else {
                     item = new QStandardItem(fileInfo.fileName());
-                    item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime->iconName(),
+                    item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime.iconName(),
                                                                         KIconLoader::Desktop));
                 }
                 item->setData(path);

@@ -25,10 +25,13 @@
 
 #include <KMessageBox>
 #include <KPixmapSequence>
+#include <KLocalizedString>
+#include <KGlobal>
 
 #include <QAbstractAnimation>
 #include <QGraphicsOpacityEffect>
 #include <QStringBuilder>
+#include <KIconLoader>
 
 #include <Transaction>
 
@@ -42,7 +45,7 @@ UpdateDetails::UpdateDetails(QWidget *parent)
    m_transaction(0)
 {
     setupUi(this);
-    hideTB->setIcon(KIcon("window-close"));
+    hideTB->setIcon(QIcon::fromTheme("window-close"));
     connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);

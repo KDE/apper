@@ -29,6 +29,7 @@ class ApperdThread;
 class ApperD : public KDEDModule
 {
     Q_OBJECT
+
 public:
     ApperD(QObject *parent, const QList<QVariant>&);
     ~ApperD();

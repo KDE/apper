@@ -20,6 +20,7 @@
 
 #include "ScreenShotViewer.h"
 
+#include <QIcon>
 #include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
@@ -27,7 +28,7 @@
 #include <KPixmapSequence>
 #include <KIO/Job>
 
-#include <KIcon>
+#include <KIconLoader>
 #include <KLocalizedString>
 
 #include "ClickableLabel.h"
@@ -45,14 +46,14 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
     setFrameShadow(Plain);
     setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     setWidget(m_screenshotL);
-    setWindowIcon(KIcon("layer-visible-on"));
+    setWindowIcon(QIcon::fromTheme("layer-visible-on"));
 
     KTemporaryFile *tempFile = new KTemporaryFile;
     tempFile->setPrefix("appgetfull");
     tempFile->setSuffix(".png");
     tempFile->open();
-    KIO::FileCopyJob *job = KIO::file_copy(url,
-                                            tempFile->fileName(),
+    KIO::FileCopyJob *job = KIO::file_copy(QUrl(url),
+                                            QUrl(tempFile->fileName()),
                                             -1,
                                             KIO::Overwrite | KIO::HideProgressInfo);
     connect(job, SIGNAL(result(KJob*)),

@@ -32,10 +32,15 @@
 #include <KFileDialog>
 #include <KPixmapSequence>
 #include <KMenu>
+#include <KIconLoader>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KLocalizedString>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QAbstractItemView>
+#include <QScrollBar>
 
 #include <KDebug>
 
@@ -275,7 +280,7 @@ void BrowseView::on_exportInstalledPB_clicked()
     // We will assume the installed model
     // is populated since the user is seeing it.
     QString fileName;
-    fileName = KFileDialog::getSaveFileName(KUrl(),
+    fileName = KFileDialog::getSaveFileName(QUrl(),
                                             "*.catalog",
                                             this,
                                             QString(),
@@ -300,7 +305,7 @@ void BrowseView::on_exportInstalledPB_clicked()
 void BrowseView::on_importInstalledPB_clicked()
 {
     QString fileName;
-    fileName = KFileDialog::getOpenFileName(KUrl(), "*.catalog", this);
+    fileName = KFileDialog::getOpenFileName(QUrl(), "*.catalog", this);
     if (fileName.isEmpty()) {
         return;
     }

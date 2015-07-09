@@ -33,6 +33,11 @@
 #include <KMessageBox>
 #include <KPixmapSequence>
 #include <KToolInvocation>
+#include <KLocalizedString>
+#include <KIconLoader>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KGlobal>
 
 #include <Solid/Device>
 #include <Solid/Battery>

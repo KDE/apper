@@ -20,13 +20,15 @@
 #ifndef APPER_PLUGINS_H
 #define APPER_PLUGINS_H
 
-#include <QtDeclarative/QDeclarativeExtensionPlugin>
+#include <QQmlExtensionPlugin>
 
-class QmlPlugins : public QDeclarativeExtensionPlugin
+class QmlPlugins : public QQmlExtensionPlugin
 {
+    Q_PLUGIN_METADATA(IID "org.kde.Apper")
+
 public:
     virtual void registerTypes(const char *uri);
-    virtual void initializeEngine(QDeclarativeEngine *engine, const char *uri);
+    virtual void initializeEngine(QQmlEngine *engine, const char *uri);
 };
 
 #endif // APPER_PLUGINS_H

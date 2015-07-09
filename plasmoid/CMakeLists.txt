@@ -20,11 +20,11 @@
 #    apper
 #)
 
-#set_target_properties(plasma_applet_updater PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+#set_target_properties(plasma_applet_updater PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
 
 #install(TARGETS plasma_applet_updater DESTINATION ${PLUGIN_INSTALL_DIR})
-#install(FILES plasma-applet-updater.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+#install(FILES plasma-applet-updater.desktop DESTINATION ${CMAKE_INSTALL_KSERVICES5DIR})
 #install(DIRECTORY package/ DESTINATION ${DATA_INSTALL_DIR}/plasma/packages/org.packagekit.updater)
 
-install(FILES package/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR} RENAME plasma-applet-org.packagekit.updater.desktop)
-install(DIRECTORY package/ DESTINATION ${DATA_INSTALL_DIR}/plasma/plasmoids/org.packagekit.updater)
+install(FILES package/metadata.desktop DESTINATION ${CMAKE_INSTALL_KSERVICES5DIR} RENAME plasma-applet-org.packagekit.updater.desktop)
+install(DIRECTORY package/ DESTINATION ${CMAKE_INSTALL_DATADIR}/plasma/plasmoids/org.packagekit.updater)

@@ -200,20 +200,20 @@ void Updater::getUpdateFinished()
 void Updater::autoUpdatesFinished(PkTransaction::ExitStatus status)
 {
     KNotification *notify = new KNotification("UpdatesComplete");
-    notify->setComponentData(KComponentData("apperd"));
+    notify->setComponentName("apperd");
     if (status == PkTransaction::Success) {
         if (sender()->property("DownloadOnly").toBool()) {
             // We finished downloading show the updates to the user
             showUpdatesPopup();
         } else {
-            KIcon icon("task-complete");
+            QIcon icon = QIcon::fromTheme("task-complete");
             // use of QSize does the right thing
             notify->setPixmap(icon.pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
             notify->setText(i18n("System update was successful."));
             notify->sendEvent();
         }
     } else {
-        KIcon icon("dialog-cancel");
+        QIcon icon = QIcon::fromTheme("dialog-cancel");
         // use of QSize does the right thing
         notify->setPixmap(icon.pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         notify->setText(i18n("The software update failed."));
@@ -267,7 +267,7 @@ void Updater::showUpdatesPopup()
     m_oldUpdateList = m_updateList;
 
     KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
-    notify->setComponentData(KComponentData("apperd"));
+    notify->setComponentName("apperd");
     connect(notify, SIGNAL(action1Activated()), this, SLOT(reviewUpdates()));
     connect(notify, SIGNAL(action2Activated()), this, SLOT(installUpdates()));
     notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updateList.size()));
@@ -292,7 +292,7 @@ void Updater::showUpdatesPopup()
     notify->setActions(actions);
 
     // use of QSize does the right thing
-    notify->setPixmap(KIcon("system-software-update").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+    notify->setPixmap(QIcon::fromTheme("system-software-update").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     notify->sendEvent();
 }
 
@@ -314,10 +314,10 @@ bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, con
         } else {
             notify = new KNotification("AutoInstallingUpdates");
         }
-        notify->setComponentData(KComponentData("apperd"));
+        notify->setComponentName("apperd");
         notify->setText(msg);
         // use of QSize does the right thing
-        notify->setPixmap(KIcon(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
+        notify->setPixmap(QIcon::fromTheme(icon).pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
         notify->sendEvent();
     }
 

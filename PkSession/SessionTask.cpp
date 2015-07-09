@@ -42,6 +42,7 @@
 #include <KLocalizedString>
 #include <KGlobalSettings>
 #include <KPushButton>
+#include <KGlobal>
 
 #include <KDebug>
 

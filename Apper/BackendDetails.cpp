@@ -21,7 +21,7 @@
 #include "ui_BackendDetails.h"
 
 #include <QStringBuilder>
-#include <KIcon>
+#include <KLocalizedString>
 
 #include <Daemon>
 
@@ -35,7 +35,7 @@ BackendDetails::BackendDetails(QWidget *parent) :
 
     ui->setupUi(mainWidget());
     setButtons(KDialog::Close);
-    setWindowIcon(KIcon("help-about"));
+    setWindowIcon(QIcon::fromTheme("help-about"));
 
     // update information about PackageKit backend
     connect(Daemon::global(), SIGNAL(changed()), this, SLOT(daemonChanged()));

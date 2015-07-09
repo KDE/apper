@@ -29,12 +29,14 @@
 #include <KNotification>
 #include <KLocalizedString>
 #include <KMessageBox>
-
-#include <kworkspace/kworkspace.h>
+#include <KNotification>
+#include <KComponentData>
 
 #include <Solid/PowerManagement>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
+
+#include <kworkspace5/kworkspace.h>
 
 #include <KDebug>
 
@@ -133,7 +135,7 @@ void TransactionWatcher::showRebootNotificationApt() {
     // Create the notification about this transaction
     KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
     connect(notify, SIGNAL(activated(uint)), this, SLOT(logout()));
-    notify->setComponentData(KComponentData("apperd"));
+    notify->setComponentName("apperd");
 
     QString text("<b>" + i18n("The system update has completed") + "</b>");
     text.append("<br/>" + PkStrings::restartType(Transaction::RestartSystem));
@@ -164,7 +166,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
         // Create the notification about this transaction
         KNotification *notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
         connect(notify, SIGNAL(activated(uint)), this, SLOT(logout()));
-        notify->setComponentData(KComponentData("apperd"));
+        notify->setComponentName("apperd");
         notify->setProperty("restartType", qVariantFromValue(type));
         notify->setPixmap(PkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         notify->setTitle(PkStrings::restartType(type));
@@ -218,11 +220,11 @@ void TransactionWatcher::message(PackageKit::Transaction::Message type, const QS
 {
     KNotification *notify;
     notify = new KNotification("TransactionMessage", 0, KNotification::Persistent);
-    notify->setComponentData(KComponentData("apperd"));
+    notify->setComponentName("apperd");
     notify->setTitle(PkStrings::message(type));
     notify->setText(message);
 
-    notify->setPixmap(KIcon("dialog-warning").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+    notify->setPixmap(QIcon::fromTheme("dialog-warning").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     notify->sendEvent();
 }
 
@@ -230,7 +232,7 @@ void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QSt
 {
     KNotification *notify;
     notify = new KNotification("TransactionError", 0, KNotification::Persistent);
-    notify->setComponentData(KComponentData("apperd"));
+    notify->setComponentName("apperd");
     notify->setTitle(PkStrings::error(err));
     notify->setText(PkStrings::errorMessage(err));
     notify->setProperty("ErrorType", QVariant::fromValue(err));
@@ -239,7 +241,7 @@ void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QSt
     QStringList actions;
     actions << i18n("Details");
     notify->setActions(actions);
-    notify->setPixmap(KIcon("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+    notify->setPixmap(QIcon::fromTheme("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     connect(notify, SIGNAL(activated(uint)),
             this, SLOT(errorActivated(uint)));
     notify->sendEvent();

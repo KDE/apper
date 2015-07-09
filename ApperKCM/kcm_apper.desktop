@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Service
-Exec=kcmshell4 kcm_apper
+Exec=kcmshell5 kcm_apper
 Icon=applications-other
 
 X-KDE-Library=kcm_apper

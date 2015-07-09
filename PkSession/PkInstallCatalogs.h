@@ -39,7 +39,7 @@ public:
 protected:
     virtual void search();
 
-protected slots:
+protected Q_SLOTS:
     virtual void searchFinished(PkTransaction::ExitStatus status);
 
 private Q_SLOTS:

@@ -39,16 +39,19 @@ add_executable(apper-pk-session
 )
 
 target_link_libraries(apper-pk-session
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${PackageKitQt4_LIBRARIES}
-    ${QT_QTXMLPATTERNS_LIBRARY}
-    apper
+    KF5::WidgetsAddons
+    KF5::KIOFileWidgets
+    KF5::KDELibs4Support
+    KF5::IconThemes
+    ${PackageKitQt5_LIBRARIES}
+    apper_private
 )
 
-set_target_properties(apper-pk-session PROPERTIES INSTALL_RPATH ${LIB_INSTALL_DIR}/apper)
+qt5_use_modules(apper-pk-session Core XmlPatterns)
 
-install(TARGETS apper-pk-session DESTINATION ${LIBEXEC_INSTALL_DIR})
+set_target_properties(apper-pk-session PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
+
+install(TARGETS apper-pk-session DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
 
 include(MacroDBusAddActivationService)
 dbus_add_activation_service(org.freedesktop.PackageKit.service.in)

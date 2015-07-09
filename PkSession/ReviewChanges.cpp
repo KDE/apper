@@ -23,6 +23,7 @@
 
 #include <PackageModel.h>
 #include <ChangesDelegate.h>
+#include <KLocalizedString>
 
 #include <KCategorizedSortFilterProxyModel>
 

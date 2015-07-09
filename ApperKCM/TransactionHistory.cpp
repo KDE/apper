@@ -30,6 +30,8 @@
 
 #include <KMenu>
 #include <KMessageBox>
+#include <KLocalizedString>
+#include <KGlobal>
 
 #include <KDebug>
 

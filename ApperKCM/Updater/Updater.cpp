@@ -29,6 +29,8 @@
 #include <KGenericFactory>
 #include <KPixmapSequence>
 #include <KAboutData>
+#include <KIconLoader>
+#include <KConfigGroup>
 
 #include <ApplicationsDelegate.h>
 #include <PkStrings.h>

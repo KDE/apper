@@ -85,7 +85,7 @@ void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, c
     }
 
     KNotification *notify = new KNotification("DistroUpgradeAvailable", 0, KNotification::Persistent);
-    notify->setComponentData(KComponentData("apperd"));
+    notify->setComponentName("apperd");
     notify->setTitle(i18n("Distribution upgrade available"));
     notify->setText(description);
 
@@ -138,7 +138,7 @@ void DistroUpgrade::handleDistroUpgradeAction(uint action)
 void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     KNotification *notify = new KNotification("DistroUpgradeFinished");
-    notify->setComponentData(KComponentData("apperd"));
+    notify->setComponentName("apperd");
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
         notify->setPixmap(KIcon("security-high").pixmap(64, 64));
         notify->setText(i18n("Distribution upgrade finished. "));
@@ -159,7 +159,7 @@ void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
     QString text;
 
     KNotification *notify = new KNotification("DistroUpgradeError");
-    notify->setComponentData(KComponentData("apperd"));
+    notify->setComponentName("apperd");
     switch(error) {
         case QProcess::FailedToStart:
             text = i18n("The distribution upgrade process failed to start.");

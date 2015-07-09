@@ -36,6 +36,7 @@
 #include <KProtocolManager>
 #include <KLocalizedString>
 #include <Solid/PowerManagement>
+#include <KGlobal>
 
 #include <QStringBuilder>
 #include <QtDBus/QDBusConnection>

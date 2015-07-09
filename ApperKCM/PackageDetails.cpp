@@ -29,6 +29,8 @@
 
 #include <KMessageBox>
 
+#include <KSycocaEntry>
+#include <KIconLoader>
 #include <KService>
 #include <KServiceGroup>
 #include <KDesktopFile>
@@ -76,7 +78,7 @@ PackageDetails::PackageDetails(QWidget *parent)
    m_hasFileList(false)
 {
     ui->setupUi(this);
-    ui->hideTB->setIcon(KIcon("window-close"));
+    ui->hideTB->setIcon(QIcon::fromTheme("window-close"));
     connect(ui->hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 
     KMenu *menu = new KMenu(i18n("Display"), this);
@@ -157,7 +159,7 @@ PackageDetails::PackageDetails(QWidget *parent)
 
     // Set the menu
     ui->menuTB->setMenu(menu);
-    ui->menuTB->setIcon(KIcon("help-about"));
+    ui->menuTB->setIcon(QIcon::fromTheme("help-about"));
     connect(m_actionGroup, SIGNAL(triggered(QAction*)),
             this, SLOT(actionActivated(QAction*)));
 
@@ -302,8 +304,8 @@ void PackageDetails::setPackage(const QModelIndex &index)
             tempFile->setPrefix("appget");
             tempFile->setSuffix(".png");
             tempFile->open();
-            KIO::FileCopyJob *job = KIO::file_copy(m_currentScreenshot,
-                                                   tempFile->fileName(),
+            KIO::FileCopyJob *job = KIO::file_copy(QUrl(m_currentScreenshot),
+                                                   QUrl(tempFile->fileName()),
                                                    -1,
                                                    KIO::Overwrite | KIO::HideProgressInfo);
             connect(job, SIGNAL(result(KJob*)),
@@ -669,15 +671,18 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
         return ret;
     }
 
-    const KServiceGroup::List list = root->entries(false /* sorted */,
+    KServiceGroup::List list = root->entries(false /* sorted */,
                                                    true /* exclude no display entries */,
                                                    false /* allow separators */);
 
-    for (KServiceGroup::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
-        const KSycocaEntry::Ptr p = (*it);
+    //! TODO: Port to KF5 properly
+    Q_UNUSED(menuId)
+#if 0
+    for (KServiceGroup::List::ConstIterator it = list.begin(); it != list.end(); it++) {
+        KSycocaEntry::Ptr = (*it);
 
         if (p->isType(KST_KService)) {
-            const KService::Ptr service = KService::Ptr::staticCast(p);
+            KService *service = static_cast<KService *>(p.get());
 
             if (service->noDisplay()) {
                 continue;
@@ -693,7 +698,7 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
                 return ret;
             }
         } else if (p->isType(KST_KServiceGroup)) {
-            const KServiceGroup::Ptr serviceGroup = KServiceGroup::Ptr::staticCast(p);
+            KServiceGroup *serviceGroup = static_cast<KServiceGroup *>(p.get());
 
             if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0) {
                 continue;
@@ -714,6 +719,7 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
             continue;
         }
     }
+#endif
 
     return ret;
 }
