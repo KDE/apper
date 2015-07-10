@@ -29,10 +29,10 @@ class Apper : public QApplication
     Q_OBJECT
 
 public:
-    Apper(int argc, char **argv);
+    Apper(int& argc, char** argv);
     virtual ~Apper();
 
-    virtual int newInstance();
+    void activate(const QStringList& arguments, const QString& workingDirectory);
 
 private Q_SLOTS:
     void appClose();

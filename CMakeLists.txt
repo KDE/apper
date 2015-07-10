@@ -1,7 +1,7 @@
 project(Apper)
 cmake_minimum_required(VERSION 3.0)
 
-set(APP_VERSION 0.9.3)
+set(APPER_VERSION 0.9.3)
 
 set (QT_MIN_VERSION "5.2.0")
 
@@ -82,22 +82,20 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake
 #
 set(MAINTAINER_CFLAGS "")
 if(MAINTAINER)
-	set(MAINTAINER_CFLAGS "-Werror -Wall -Wcast-align -Wno-uninitialized -Wempty-body -Wformat-security -Winit-self -Wno-deprecated-declarations")
-	if (CMAKE_COMPILER_IS_GNUCC)
-		execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+    set(MAINTAINER_CFLAGS "-Werror -Wall -Wcast-align -Wno-uninitialized -Wempty-body -Wformat-security -Winit-self -Wno-deprecated-declarations")
+    if (CMAKE_COMPILER_IS_GNUCC)
+        execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-		if (GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
-			set(MAINTAINER_CFLAGS ${MAINTAINER_CFLAGS} "-fdiagnostics-color=auto")
-		endif()
-	endif()
+        if (GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
+            set(MAINTAINER_CFLAGS ${MAINTAINER_CFLAGS} "-fdiagnostics-color=auto")
+        endif()
+    endif()
 endif(MAINTAINER)
 add_definitions(${MAINTAINER_CFLAGS})
 
 add_definitions("-std=gnu++11")
 add_definitions(
   -DQT_USE_QSTRINGBUILDER
-  -DQT_NO_CAST_TO_ASCII
-  -DQT_NO_CAST_FROM_ASCII
   -DQT_STRICT_ITERATORS
   -DQT_NO_URL_CAST_FROM_STRING
   -DQT_NO_CAST_FROM_BYTEARRAY
@@ -105,20 +103,18 @@ add_definitions(
   -DQT_USE_FAST_OPERATOR_PLUS
 )
 
-# FIXME: Temporary for porting
-remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_NO_KEYWORDS)
-
 #
+# Global includes
 #
-
 include_directories(${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${PackageKitQt5_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libapper)
 
-message(STATUS "PackageKit include dir: " ${PackageKitQt4_INCLUDE_DIR})
-
+#
+# Subcomponents
+#
 add_subdirectory(libapper)
 add_subdirectory(ApperKCM)
 add_subdirectory(Apper)

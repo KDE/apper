@@ -1,3 +1,4 @@
+# CMakeLists for the kded component
 
 set(kded_apperd_SRCS
     DistroUpgrade.cpp

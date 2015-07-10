@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 {
     KAboutData aboutData("apper-appsetup",
                 "apper",
-                APP_VERSION,
+                APPER_VERSION,
                 i18n("KDE Application Installer"),
                 KAboutLicense::LicenseKey::GPL);
 

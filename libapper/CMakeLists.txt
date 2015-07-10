@@ -1,3 +1,5 @@
+# CMakeLists for Apper private shared library
+
 # Set the correct compiler options
 IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
    # 32 bit
@@ -33,7 +35,7 @@ set(libapper_SRCS
 
 if(APPSTREAM)
     pkg_check_modules(GLIB2 REQUIRED glib-2.0>=2.36)
-    pkg_check_modules(APPSTREAM REQUIRED appstream>=0.6.2)
+    pkg_check_modules(APPSTREAM REQUIRED appstream>=0.8.2)
 
     set(libapper_SRCS ${libapper_SRCS} AppStream.cpp)
 endif()

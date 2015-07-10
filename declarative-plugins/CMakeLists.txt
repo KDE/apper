@@ -1,3 +1,4 @@
+# CMakeLists for Apper QML plugin
 
 set(apper_qml_plugin_SRCS
    DBusUpdaterInterface.cpp

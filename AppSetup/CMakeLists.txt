@@ -1,4 +1,4 @@
-# CMakeLists for Apper-AppSetup
+# CMakeLists for Apper AppSetup
 
 pkg_check_modules(GLIB2 REQUIRED glib-2.0>=2.36)
 pkg_check_modules(LIMBA REQUIRED limba>=0.2.0)

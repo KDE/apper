@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 {
     KAboutData aboutData("PkSession",
                      "apper",
-                     APP_VERSION,
+                     APPER_VERSION,
                      i18n("Apper PackageKit Session helper"),
                      KAboutLicense::GPL);
 

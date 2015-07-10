@@ -305,7 +305,7 @@ bool SetupWizard::initialize(const QString& ipkFName)
     ui->stackedWidget->addWidget(d->infoPage);
 
     // Load the package file, required to have metadata
-    li_installer_open_file(d->setup, ipkFName.toUtf8(), &error);
+    li_installer_open_file(d->setup, ipkFName.toUtf8().data(), &error);
     if (error != NULL) {
         this->showError(QString::fromUtf8(error->message));
         g_error_free (error);

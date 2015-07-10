@@ -262,7 +262,6 @@ void CategoryModel::fillWithServiceGroups()
 
 void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent)
 {
-//     kDebug() << 1 << xml.name();
     QString icon = parentIcon;
     QStandardItem *item = 0;
     while(!xml.atEnd() &&
@@ -272,15 +271,14 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
         if(xml.tokenType() == QXmlStreamReader::StartElement) {
             if (xml.name() == QLatin1String("Menu")) {
                 xml.readNext();
-//                 kDebug() << "Found Menu";
                 parseMenu(xml, icon, item);
             } else if (xml.name() == QLatin1String("Name")) {
                 QString name = xml.readElementText();
                 if (!item) {
-                    item = new QStandardItem(i18n(name.toUtf8()));
+                    item = new QStandardItem(i18n(name.toUtf8().data()));
                     item->setDragEnabled(false);
                 } else if (item->text().isEmpty()) {
-                    item->setText(i18n(name.toUtf8()));
+                    item->setText(i18n(name.toUtf8().data()));
                 }
             } else if (xml.name() == QLatin1String("Icon")) {
                 if (!item) {
@@ -296,7 +294,6 @@ void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, 
                     icon = _icon;
                 }
             } else if (xml.name() == QLatin1String("Categories")) {
-//                 kDebug() << "Found Categories           ";
                 QList<CategoryMatcher> categories;
                 categories = parseCategories(xml);
                 if (!categories.isEmpty()) {

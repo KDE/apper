@@ -1,3 +1,4 @@
+# CMakeLists for Apper PackageKit Session Interface
 
 set(pksession_SRCS
     AbstractIsRunning.cpp
@@ -55,4 +56,3 @@ install(TARGETS apper-pk-session DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
 
 include(MacroDBusAddActivationService)
 dbus_add_activation_service(org.freedesktop.PackageKit.service.in)
-

@@ -1,3 +1,4 @@
+# CMakeLists for the Apper KDE control module (KCM)
 
 set(kcm_apper_SRCS
     Settings/Settings.cpp

@@ -1,3 +1,5 @@
+# CMakeLists for the apper executable and misc data
+
 set(apper_SRCS
     MainUi.cpp
     BackendDetails.cpp
@@ -15,8 +17,8 @@ add_executable(apper
 
 target_link_libraries(apper
     KF5::KCMUtils
-    KF5::KDELibs4Support
     KF5::IconThemes
+    KF5::DBusAddons
     ${PackageKitQt5_LIBRARIES}
     apper_private
 )

@@ -84,7 +84,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     KAboutData *aboutData;
     aboutData = new KAboutData("kcm_apper",
                                "apper",
-                               APP_VERSION,
+                               APPER_VERSION,
                                i18n("KDE interface for managing software"),
                                KAboutLicense::LicenseKey::GPL);
     aboutData->addAuthor(i18n("(C) 2008-2013 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");

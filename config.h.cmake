@@ -7,8 +7,11 @@
 // Define if your backend have autoremove feature.
 #cmakedefine HAVE_AUTOREMOVE
 
-// Define if AppStream data is available.
+// Define if AppStream is available.
 #cmakedefine HAVE_APPSTREAM
+
+// Define if Limba is available.
+#cmakedefine HAVE_LIMBA
 
 // Define if screenshot provider
 #cmakedefine SCREENSHOT_PROVIDER "@SCREENSHOT_PROVIDER@"
@@ -20,6 +23,6 @@
 #cmakedefine EDIT_ORIGNS_DESKTOP_NAME "@EDIT_ORIGNS_DESKTOP_NAME@"
 
 // Define the Apper version.
-#cmakedefine APP_VERSION "@APP_VERSION@"
+#cmakedefine APPER_VERSION "@APPER_VERSION@"
 
 #endif //CONFIG_H
