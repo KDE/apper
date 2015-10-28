@@ -27,6 +27,7 @@ FocusScope {
     clip: true
 
     property int progressWidth: 30
+    property int cacheAge: 600
     property alias transaction: updateTransaction
 
     signal finished(bool success);
@@ -38,6 +39,7 @@ FocusScope {
 
     function refreshCache() {
         updateTransaction.enableJobWatcher(false);
+        DaemonHelper.setCacheAge(cacheAge);
         updateTransaction.refreshCache(false);
     }
 

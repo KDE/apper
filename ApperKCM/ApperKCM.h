@@ -119,6 +119,7 @@ private:
     FiltersMenu *m_filtersMenu;
     Transaction::Roles m_roles;
     bool m_forceRefreshCache;
+    uint m_cacheAge;
 
     TransactionHistory *m_history;
 

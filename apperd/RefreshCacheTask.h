@@ -44,6 +44,7 @@ private:
     Transaction *m_transaction;
     KNotification *m_notification;
     Transaction::Error m_lastError;
+    uint m_cacheAge;
     QString m_lastErrorString;
 };
 

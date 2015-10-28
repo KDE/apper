@@ -78,6 +78,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_findIcon("edit-find"),
     m_cancelIcon("dialog-cancel"),
     m_forceRefreshCache(false),
+    m_cacheAge(600),
     m_history(0),
     m_searchRole(Transaction::RoleUnknown)
 {
@@ -761,6 +762,7 @@ void ApperKCM::refreshCache()
     PkTransactionWidget *transactionW = new PkTransactionWidget(this);
     connect(transactionW, SIGNAL(titleChangedProgress(QString)), this, SIGNAL(caption(QString)));
     QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
+    Daemon::setHints (QLatin1String("cache-age=")+QString::number(m_cacheAge));
     transaction->refreshCache(m_forceRefreshCache);
     transactionW->setTransaction(transaction, Transaction::RoleRefreshCache);
 

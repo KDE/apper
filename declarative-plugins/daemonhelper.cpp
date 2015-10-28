@@ -32,3 +32,8 @@ uint DaemonHelper::getTimeSinceLastRefresh()
 {
     return Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache);
 }
+
+void DaemonHelper::setCacheAge (int age)
+{
+   Daemon::setHints(QLatin1String("cache-age=")+QString::number(age));
+}

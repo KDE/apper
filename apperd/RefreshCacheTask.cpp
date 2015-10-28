@@ -33,7 +33,8 @@ RefreshCacheTask::RefreshCacheTask(QObject *parent) :
     QObject(parent),
     m_transaction(0),
     m_notification(0),
-    m_lastError(Transaction::ErrorUnknown)
+    m_lastError(Transaction::ErrorUnknown),
+    m_cacheAge(3600)
 {
 }
 
@@ -43,6 +44,7 @@ void RefreshCacheTask::refreshCache()
     if (!m_transaction) {
         // Refresh Cache is false otherwise it will rebuild
         // the whole cache on Fedora
+        Daemon::setHints (QLatin1String("cache-age=")+QString::number(m_cacheAge));
         m_transaction = Daemon::refreshCache(false);
         connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                 this, SLOT(refreshCacheFinished(PackageKit::Transaction::Exit,uint)));

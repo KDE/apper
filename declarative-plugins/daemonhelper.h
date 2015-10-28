@@ -30,6 +30,7 @@ public:
 
 public Q_SLOTS:
     uint getTimeSinceLastRefresh();
+    void setCacheAge (int age);
 };
 
 #endif // DAEMONHELPER_H
