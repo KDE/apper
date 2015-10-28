@@ -133,7 +133,7 @@ void PkTransaction::removePackages(const QStringList &packages)
 {
 //    if (Daemon::global()->roles() & Transaction::RoleRemovePackages) {
         d->originalRole = Transaction::RoleRemovePackages;
-        d->allowDeps = false; // Default to avoid dependencies removal unless simulate says so
+        d->allowDeps = true; // *was* false, Default to avoid dependencies removal unless simulate says so, except for https://bugs.kde.org/show_bug.cgi?id=315063
         d->packages = packages;
         d->flags = Transaction::TransactionFlagOnlyTrusted | Transaction::TransactionFlagSimulate;
 
