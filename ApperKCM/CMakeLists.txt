@@ -35,6 +35,7 @@ add_library(kcm_apper MODULE ${kcm_apper_SRCS})
 target_link_libraries(kcm_apper
     KF5::WidgetsAddons
     KF5::KIOFileWidgets
+    KF5::KCMUtils
     KF5::KDELibs4Support
     KF5::IconThemes
     ${PackageKitQt5_LIBRARIES}
