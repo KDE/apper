@@ -27,11 +27,14 @@ target_link_libraries(kded_apperd
     KF5::IconThemes
     KF5::Notifications
     KF5::DBusAddons
-    DebconfKDE::Main
     ${PackageKitQt5_LIBRARIES}
     kworkspace5
     apper_private
 )
+
+if(DEBCONF_SUPPORT)
+target_link_libraries(kded_apperd DebconfKDE::Main)
+endif(DEBUCONF_SUPPORT)
 
 set_target_properties(kded_apperd PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
 
