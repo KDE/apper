@@ -155,7 +155,7 @@ bool SetupWizard::constructWizardLayout()
 
     QLabel *pix = new QLabel(detailsP);
 
-    LiTrustLevel trust = li_installer_get_package_trust_level(d->setup);
+    LiTrustLevel trust = li_installer_get_package_trust_level(d->setup, NULL);
     if (trust == LI_TRUST_LEVEL_HIGH)
         pix->setPixmap(KIcon("security-high").pixmap (32, 32));
     else if ((trust == LI_TRUST_LEVEL_LOW) || (trust == LI_TRUST_LEVEL_MEDIUM))
@@ -314,7 +314,7 @@ bool SetupWizard::initialize(const QString& ipkFName)
 
     data = li_installer_get_appstream_data (d->setup);
     mdata = as_metadata_new ();
-    as_metadata_parse_data (mdata, data, &error);
+    as_metadata_parse (mdata, data, AS_FORMAT_KIND_XML, &error);
     g_free (data);
     if (error != NULL) {
         this->showError(QString::fromUtf8(error->message));
