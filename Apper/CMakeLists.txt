@@ -26,11 +26,11 @@ target_link_libraries(apper
 set_target_properties(apper PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
 
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/apper DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES apper.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
-install(FILES apper_installer.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
-install(FILES apper_settings.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
-install(FILES apper_updates.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
-install(FILES apper.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
+install(FILES org.kde.apper.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
+install(FILES org.kde.apper_installer.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
+install(FILES org.kde.apper_settings.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
+install(FILES org.kde.apper_updates.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
+install(FILES org.kde.apper.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
 
 add_subdirectory(Icons)
 add_subdirectory(Animations)
