@@ -29,8 +29,7 @@
 
 #include <kdemacros.h>
 
-struct _AsDatabase;
-typedef struct _AsDatabase AsDatabase;
+struct _AsPool;
 
 struct _AsScreenshotService;
 typedef struct _AsScreenshotService AsScreenshotService;
@@ -59,7 +58,7 @@ class Q_DECL_EXPORT AppStream : public QObject {
 
     private:
         explicit AppStream(QObject *parent = 0);
-        AsDatabase *m_asDB;
+        _AsPool *m_pool;
 
         QHash<QString, Application> m_appInfo;
         static AppStream         *m_instance;

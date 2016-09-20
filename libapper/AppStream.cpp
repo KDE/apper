@@ -45,43 +45,43 @@ AppStream::AppStream(QObject *parent)
  : QObject(parent)
 {
 #ifdef HAVE_APPSTREAM
-    // create new AppStream database and screenshot service
-    m_asDB = as_database_new();
+    // create new AppStream metadata pool
+    m_pool = as_pool_new();
 #endif //HAVE_APPSTREAM
 }
 
 AppStream::~AppStream()
 {
 #ifdef HAVE_APPSTREAM
-    g_object_unref(m_asDB);
+    g_object_unref(m_pool);
 #endif
 }
 
 bool AppStream::open()
 {
 #ifdef HAVE_APPSTREAM
-    bool ret = as_database_open(m_asDB);
-    if (!ret) {
-        qWarning("Unable to open AppStream Xapian database!");
+    g_autoptr(GError) error = NULL;
+
+    as_pool_load (m_pool, NULL, &error);
+    if (error != NULL) {
+        qWarning("Unable to open AppStream metadata pool: %s", error->message);
         return false;
     }
 
-    // cache application data (we might use the db directly, later (making use of AppstreamSearchQuery))
-    GPtrArray *cptArray;
-    cptArray = as_database_get_all_components(m_asDB);
+    // cache application data (we should actually search the data directly via as_pool_search()...)
+    auto cptArray = as_pool_get_components(m_pool);
     if (cptArray == NULL) {
         qWarning("AppStream application array way NULL! (This should never happen)");
         return false;
     }
 
     for (uint i = 0; i < cptArray->len; i++) {
-        AsComponent *cpt;
-        GPtrArray *sshot_array;
-        AsScreenshot *sshot;
-        gchar **pkgs;
-        cpt = (AsComponent*) g_ptr_array_index(cptArray, i);
-        // we only want desktop apps at time
-        if (as_component_get_kind (cpt) != AS_COMPONENT_KIND_DESKTOP_APP)
+        auto cpt = AS_COMPONENT (g_ptr_array_index(cptArray, i));
+        // we only want apps at time
+        auto cptKind = as_component_get_kind (cpt);
+        if ((cptKind != AS_COMPONENT_KIND_DESKTOP_APP) &&
+            (cptKind != AS_COMPONENT_KIND_CONSOLE_APP) &&
+            (cptKind != AS_COMPONENT_KIND_WEB_APP))
             continue;
 
         Application app;
@@ -89,10 +89,10 @@ bool AppStream::open()
         app.name = QString::fromUtf8(as_component_get_name(cpt));
 
         // Package name
-        pkgs = as_component_get_pkgnames(cpt);
+        auto pkgnameC = as_component_get_pkgname(cpt);
         QString pkgName;
-        if (pkgs != NULL)
-            pkgName = QString::fromUtf8(pkgs[0]);
+        if (pkgnameC != NULL)
+            pkgName = QString::fromUtf8(pkgnameC);
 
         // Desktop file
         app.id = QString::fromUtf8(as_component_get_id(cpt));
@@ -104,35 +104,36 @@ bool AppStream::open()
         app.description = QString::fromUtf8(as_component_get_description(cpt));
 
         // Application stock icon
-        app.icon_url = QString::fromUtf8(as_component_get_icon_url (cpt, 64, 64));
+        auto icons = as_component_get_icons(cpt);
+        for (uint i = 0; i < icons->len; i++) {
+            auto icon = AS_ICON (g_ptr_array_index (icons, i));
+            if (as_icon_get_kind (icon) != AS_ICON_KIND_STOCK)
+                 app.icon_url = QString::fromUtf8(as_icon_get_filename (icon));
+        }
 
         // Application categories
-        gchar **cats = as_component_get_categories(cpt);
-        if (cats != NULL) {
-            app.categories = QStringList();
-            for (int j = 0; cats[j] != NULL; j++) {
-                app.categories << QString::fromUtf8(cats[j]);
-            }
+        app.categories = QStringList();
+        auto cats = as_component_get_categories(cpt);
+        for (uint i = 0; i < cats->len; i++) {
+            auto category = (const gchar*) g_ptr_array_index (cats, i);
+            app.categories << QString::fromUtf8(category);
         }
-        g_strfreev(cats);
 
         // add default screenshot urls
-        sshot_array = as_component_get_screenshots (cpt);
+        auto scrs = as_component_get_screenshots (cpt);
 
-        // find default screenshot, if possible
-        sshot = NULL;
-        for (uint i = 0; i < sshot_array->len; i++) {
-            sshot = (AsScreenshot*) g_ptr_array_index (sshot_array, 0);
-            if (as_screenshot_get_kind (sshot) == AS_SCREENSHOT_KIND_DEFAULT)
+        // find default screenshot, if possible (otherwise we get a random one)
+        AsScreenshot *scr = NULL;
+        for (uint i = 0; i < scrs->len; i++) {
+            scr = AS_SCREENSHOT (g_ptr_array_index (scrs, i));
+            if (as_screenshot_get_kind (scr) == AS_SCREENSHOT_KIND_DEFAULT)
                 break;
         }
 
-        if (sshot != NULL) {
-            GPtrArray *imgs;
-            imgs = as_screenshot_get_images (sshot);
+        if (scr != NULL) {
+            auto imgs = as_screenshot_get_images (scr);
             for (uint i = 0; i < imgs->len; i++) {
-                AsImage *img;
-                img = (AsImage*) g_ptr_array_index (imgs, i);
+                auto img = AS_IMAGE (g_ptr_array_index (imgs, i));
                 if ((as_image_get_kind (img) == AS_IMAGE_KIND_SOURCE) && (app.screenshot.isEmpty())) {
                     app.screenshot = QString::fromUtf8(as_image_get_url (img));
                 } else if ((as_image_get_kind (img) == AS_IMAGE_KIND_THUMBNAIL) && (app.thumbnail.isEmpty())) {
@@ -146,7 +147,6 @@ bool AppStream::open()
 
         m_appInfo.insertMulti(pkgName, app);
     }
-    g_ptr_array_unref(cptArray);
 
     return true;
 #else
