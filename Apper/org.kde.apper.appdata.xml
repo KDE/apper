@@ -31,6 +31,7 @@
   <name xml:lang="sv">Apper</name>
   <name xml:lang="uk">Apper</name>
   <name xml:lang="x-test">xxApperxx</name>
+  <name xml:lang="zh-CN">Apper</name>
   <name xml:lang="zh-TW">Apper</name>
   <summary>KDE application and package management tool</summary>
   <summary xml:lang="bs">KDE aplikacija i alat za upravljanje paketom</summary>
@@ -148,6 +149,7 @@
     <p xml:lang="sv">Funktioner:</p>
     <p xml:lang="uk">Можливості:</p>
     <p xml:lang="x-test">xxFeatures:xx</p>
+    <p xml:lang="zh-CN">功能：</p>
     <p xml:lang="zh-TW">功能：</p>
     <ul>
       <li>Distribution-agnostic management of software packages</li>
