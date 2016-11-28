@@ -7,7 +7,7 @@ set(apper_SRCS
     main.cpp
 )
 
-qt5_wrap_ui(apper_SRCS
+ki18n_wrap_ui(apper_SRCS
     BackendDetails.ui
 )
 

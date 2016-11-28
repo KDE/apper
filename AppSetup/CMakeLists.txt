@@ -15,7 +15,7 @@ set(AppSetup_SRCS main.cpp
     SimplePage.cpp
 )
 
-qt5_wrap_ui(AppSetup_SRCS
+ki18n_wrap_ui(AppSetup_SRCS
     SetupWizard.ui
     SimplePage.ui
 )

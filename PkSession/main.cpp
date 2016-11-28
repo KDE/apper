@@ -29,6 +29,8 @@
 
 int main(int argc, char **argv)
 {
+    KLocalizedString::setApplicationDomain("apper");
+
     KAboutData aboutData("PkSession",
                      "apper",
                      APPER_VERSION,

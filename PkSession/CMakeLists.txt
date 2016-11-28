@@ -29,7 +29,7 @@ qt5_add_dbus_adaptor(pksession_SRCS
     PkInterface
 )
 
-qt5_wrap_ui(pksession_SRCS
+ki18n_wrap_ui(pksession_SRCS
     IntroDialog.ui
     ReviewChanges.ui
     SessionTask.ui

@@ -1,5 +1,7 @@
 # CMakeLists for Apper private shared library
 
+add_definitions(-DTRANSLATION_DOMAIN=\"apper\")
+
 # Set the correct compiler options
 IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
    # 32 bit
@@ -40,7 +42,7 @@ if(APPSTREAM)
     set(libapper_SRCS ${libapper_SRCS} AppStream.cpp)
 endif()
 
-qt5_wrap_ui(libapper_SRCS
+ki18n_wrap_ui(libapper_SRCS
     ApplicationLauncher.ui
     PkTransactionWidget.ui
     RepoSig.ui

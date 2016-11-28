@@ -35,6 +35,8 @@
 
 int main(int argc, char** argv)
 {
+    KLocalizedString::setApplicationDomain("apper");
+
     KAboutData aboutData("apper-appsetup",
                 "apper",
                 APPER_VERSION,

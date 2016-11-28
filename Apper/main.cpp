@@ -35,6 +35,8 @@
 
 int main(int argc, char **argv)
 {
+    KLocalizedString::setApplicationDomain("apper");
+
     KAboutData aboutData("apper",
                      "apper", // DO NOT change this catalog unless you know it will not break translations!
                      APPER_VERSION,
