@@ -31,6 +31,7 @@ Name[sv]=Limba paketinstallation
 Name[tr]=Limba Paket Yükleyici
 Name[uk]=Програма для встановлення пакунків Limba
 Name[x-test]=xxLimba Package Installerxx
+Name[zh_TW]=Limba 套件安裝程式
 GenericName=3rd-party software installer
 GenericName[bs]=Softverski instaler koga je razvila treća strana
 GenericName[ca]=Instal·lador de programari de terceres parts
@@ -98,6 +99,7 @@ Comment[sv]=Program för att installera programvara från tredje part
 Comment[tr]=Üçüncü parti yazılımları yüklemek için bir araç
 Comment[uk]=Інструмент для встановлення програмного забезпечення зі сторонніх джерел
 Comment[x-test]=xxTool to install software from 3rd-party sourcesxx
+Comment[zh_TW]=從第三方來源安裝軟體的工具
 
 Categories=Qt;KDE;System;Settings;PackageManager;
 MimeType=application/x-ipk;
