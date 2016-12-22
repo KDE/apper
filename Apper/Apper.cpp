@@ -155,7 +155,7 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
     if (parser.isSet("backend-details")) {
         BackendDetails *helper;
         helper = new BackendDetails;
-        connect(helper, SIGNAL(finished()), this, SLOT(decreaseAndKillRunning()));
+        connect(helper, SIGNAL(finished(int)), this, SLOT(decreaseAndKillRunning()));
         QTimer::singleShot(0, helper, SLOT(show()));
         m_running++;
         return;
@@ -169,7 +169,7 @@ void Apper::showUi()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT (kcmFinished()));
+        connect(m_pkUi, SIGNAL(finished(int)), this, SLOT (kcmFinished()));
     }
     // Show all
     m_pkUi->showAll();
@@ -181,7 +181,7 @@ void Apper::showUpdates()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
+        connect(m_pkUi, SIGNAL(finished(int)), this, SLOT(kcmFinished()));
     }
     m_pkUi->showUpdates();
     m_pkUi->show();
@@ -192,7 +192,7 @@ void Apper::showSettings()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished()), this, SLOT(kcmFinished()));
+        connect(m_pkUi, SIGNAL(finished(int)), this, SLOT(kcmFinished()));
     }
     m_pkUi->showSettings();
     m_pkUi->show();
