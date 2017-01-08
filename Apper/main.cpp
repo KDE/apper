@@ -44,7 +44,7 @@ int main(int argc, char **argv)
                      KAboutLicense::LicenseKey::GPL);
     aboutData.addAuthor(i18n("Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
     aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"), "@");
-    aboutData.setProgramIconName("applications-other");
+    aboutData.setProgramIconName("system-software-install");
 
     Apper app(argc, argv);
     KAboutData::setApplicationData(aboutData);

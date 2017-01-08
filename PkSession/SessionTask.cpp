@@ -67,7 +67,7 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
             this, SLOT(updatePallete()));
     updatePallete();
 
-    setWindowIcon(KIcon("applications-other"));
+    setWindowIcon(KIcon("system-software-install"));
     setButtons(KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
     setButtonIcon(KDialog::Ok, KIcon("go-next"));

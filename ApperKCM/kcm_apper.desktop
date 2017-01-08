@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 Exec=kcmshell5 kcm_apper
-Icon=applications-other
+Icon=system-software-install
 
 X-KDE-Library=kcm_apper
 X-KDE-ParentApp=kcontrol

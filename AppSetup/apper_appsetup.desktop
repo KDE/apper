@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Icon=applications-other
+Icon=system-software-install
 Exec=apper-appsetup %F
 
 Name=Limba Package Installer

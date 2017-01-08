@@ -80,7 +80,7 @@ SetupWizard::SetupWizard(QWidget *parent)
             this, SLOT(updatePallete()));
     updatePallete();
 
-    setWindowIcon(KIcon("applications-other"));
+    setWindowIcon(KIcon("system-software-install"));
     setButtons(KDialog::User1 | KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
     setButtonIcon(KDialog::Ok, KIcon("go-next"));

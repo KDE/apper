@@ -31,7 +31,7 @@ MainUi::MainUi(QWidget *parent) :
     KCMultiDialog(parent),
     m_apperModule(0)
 {
-    setWindowIcon(QIcon::fromTheme("applications-other"));
+    setWindowIcon(QIcon::fromTheme("system-software-install"));
 
     KConfig config("apper");
     KConfigGroup configGroup(&config, "MainUi");

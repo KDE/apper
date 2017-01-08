@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     aboutData.addAuthor(i18n("Trever Fischer"), QString(), "wm161@wm161.net", "http://wm161.net");
 
     aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"),"@");
-    aboutData.setProgramIconName("applications-other");
+    aboutData.setProgramIconName("system-software-install");
     KAboutData::setApplicationData(aboutData);
 
     //! KCmdLineArgs::init(argc, argv);

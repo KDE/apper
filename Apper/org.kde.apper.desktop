@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Icon=applications-other
+Icon=system-software-install
 Exec=apper
 X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper

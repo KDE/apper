@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Icon=applications-other
+Icon=system-software-install
 Exec=apper --settings
 NoDisplay=true
 X-DBUS-StartupType=Unique
