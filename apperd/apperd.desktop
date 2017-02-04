@@ -7,6 +7,7 @@ X-KDE-Kded-autoload=true
 X-KDE-Kded-phase=2
 
 Name=Apper Monitor
+Name[ast]=Monitor d'Apper
 Name[bs]=Monitor programa Apper
 Name[ca]=Monitor Apper
 Name[ca@valencia]=Monitor Apper
@@ -46,6 +47,7 @@ Name[zh_CN]=Apper 监视器
 Name[zh_TW]=Apper 監視器
 
 Comment=Watch transactions and Notify about Software Updates
+Comment[ast]=Mira les transaiciones y avisa tocante a anovamientos de software
 Comment[bs]=Prati transakcije i informiši o nadogradnjama softvera
 Comment[ca]=Mira les transaccions i comunica sobre actualitzacions de programari
 Comment[ca@valencia]=Mira les transaccions i comunica sobre actualitzacions de programari
