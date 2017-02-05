@@ -11,6 +11,7 @@ X-KDE-System-Settings-Parent-Category=computer-administration
 X-KDE-System-Settings-Parent-Category-V2=system-administration
 
 Name=Software Management
+Name[ar]=إدارة البرمجيّات
 Name[ast]=Xestión de software
 Name[bg]=Управление на софтуер
 Name[bs]=Upravljanje softverom
@@ -55,6 +56,7 @@ Name[zh_CN]=软件管理
 Name[zh_TW]=軟體管理
 
 Comment=Get, Remove and Update Software
+Comment[ar]=اجلب برمجيّات، وأزلها وحدّثها
 Comment[ast]=Consigui, desanicia y anueva software
 Comment[bg]=Инсталиране, премахване и обновяване на програми
 Comment[bs]=Dobavi, ukloni i nadogradi softver
@@ -97,6 +99,7 @@ Comment[zh_CN]=获取、删除和更新软件
 Comment[zh_TW]=取得、移除與更新軟體
 
 X-KDE-Keywords=install,uninstall,remove,software,applications,management,packages,packagekit,purge
+X-KDE-Keywords[ar]=install,uninstall,remove,software,applications,management,packages,packagekit,purge,تثبيت,إزالة,ازالة,برمجيّة,برمجية,برمجيات,إدارة,ادارة,حزمة,حزم
 X-KDE-Keywords[ast]=instalar,instalación,desinstalar,desinstalación,software,aplicación, aplicaciones, packagekit,purgar
 X-KDE-Keywords[bs]=install,uninstall,remove,software,applications,management,packages,packagekit,purge,instaliraj,deinstaliraj,aplikacija,upravljanje,paketi
 X-KDE-Keywords[ca]=instal·la,desinstal·la,elimina,programari,aplicacions,gestiona,paquets,packagekit,purga
