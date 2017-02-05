@@ -4,6 +4,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
   <name>Apper</name>
+  <name xml:lang="ar">آپر</name>
   <name xml:lang="ast">Apper</name>
   <name xml:lang="bs">Apper</name>
   <name xml:lang="ca">Apper</name>
@@ -34,6 +35,7 @@
   <name xml:lang="zh-CN">Apper</name>
   <name xml:lang="zh-TW">Apper</name>
   <summary>KDE application and package management tool</summary>
+  <summary xml:lang="ar">أداة «كدي» لإدارة التّطبيقات والحزم</summary>
   <summary xml:lang="ast">Ferramienta KDE de xestión d'aplicaciones y paquetes</summary>
   <summary xml:lang="bs">KDE aplikacija i alat za upravljanje paketom</summary>
   <summary xml:lang="ca">Eina de gestió d'aplicacions i paquets del KDE</summary>
@@ -67,6 +69,7 @@
       Apper is a graphical management tool for packages and applications
       provided by a Linux distribution.
     </p>
+    <p xml:lang="ar">«آپر» هي أداة إدارة رسوميّة للحزم والتّطبيقات التي توفّرها توزيعة لينكس.</p>
     <p xml:lang="ast">Apper ye una ferramienta de xestión gráfica pa paquetes y aplicaciones forníos por una distribución Linux.</p>
     <p xml:lang="bs">Apper je grafički alat za upravljanje paketima i aplikacijama obezbjeđenim od strane Linux distribucije.</p>
     <p xml:lang="ca">L'Apper és una eina de gestió gràfica per paquets i aplicacions proporcionats per una distribució Linux.</p>
@@ -98,6 +101,7 @@
       It allows installing new software as well as keeping the system up to
       date by installing updates.
     </p>
+    <p xml:lang="ar">يسمح لك «آپر» بتثبيت برمجيّات جديد كما وإبقاء النّظام محدّثًا بتثبيت التّحديثات.</p>
     <p xml:lang="ast">Permite instalar software nuevu amás de caltener anováu'l sistema instalando anovamientos.</p>
     <p xml:lang="bs">Dopušta instaliranje novog softvera kao i održavanje sistema instaliranjem ažuriranja.</p>
     <p xml:lang="ca">Permet instal·lar programari nou i també mantenir el sistema al dia instal·lant les actualitzacions.</p>
@@ -126,6 +130,7 @@
     <p xml:lang="x-test">xxIt allows installing new software as well as keeping the system up to date by installing updates.xx</p>
     <p xml:lang="zh-TW">它可以安裝新軟體，或更新軟體。</p>
     <p>Features:</p>
+    <p xml:lang="ar">الميزات:</p>
     <p xml:lang="ast">Carauterístiques</p>
     <p xml:lang="bs">Svojstva:</p>
     <p xml:lang="ca">Característiques:</p>
@@ -157,6 +162,7 @@
     <p xml:lang="zh-TW">功能：</p>
     <ul>
       <li>Distribution-agnostic management of software packages</li>
+      <li xml:lang="ar">إدارة حزم برمجيّات التّوزيعة</li>
       <li xml:lang="bs">Distribucijsko-nevezano upravljanje softverskim paketima</li>
       <li xml:lang="ca">Gestió de paquets de programari independent de la distribució</li>
       <li xml:lang="ca-valencia">Gestió de paquets de programari independent de la distribució</li>
@@ -184,6 +190,7 @@
       <li xml:lang="x-test">xxDistribution-agnostic management of software packagesxx</li>
       <li xml:lang="zh-TW">軟體套件管理，不管發行套件為何</li>
       <li>Application management for users unexperienced with packages</li>
+      <li xml:lang="ar">إدارة التّطبيقات لمن ليس لديه خبرة مع الحزم</li>
       <li xml:lang="ast">Xestión d'aplicaciones pa usuarios inespertos pa con paquetes</li>
       <li xml:lang="bs">Upravljanje aplikacijom za korisnike bez iskustva sa paketima</li>
       <li xml:lang="ca">Gestió d'aplicacions per usuaris sense experiència amb els paquets</li>
@@ -212,6 +219,7 @@
       <li xml:lang="x-test">xxApplication management for users unexperienced with packagesxx</li>
       <li xml:lang="zh-TW">讓不熟悉軟體管理的使用者可以輕鬆管理軟體</li>
       <li>Editor for software sources and PackageKit settings</li>
+      <li xml:lang="ar">محرّر لمصادر البرمجيّات وإعدادات «عدّة الحزم»</li>
       <li xml:lang="ast">Editor pa fontes de software y axustes de PackageKit</li>
       <li xml:lang="bs">Uređivač izvora softvera i PackageKit postavki</li>
       <li xml:lang="ca">Editor per fonts de programari i paràmetres del PackageKit</li>
@@ -240,6 +248,7 @@
       <li xml:lang="x-test">xxEditor for software sources and PackageKit settingsxx</li>
       <li xml:lang="zh-TW">編輯軟體來源設定</li>
       <li>System software updates notifier and installer</li>
+      <li xml:lang="ar">مُخطر لتحديثات برمجيّات النّظام وتثبيتها</li>
       <li xml:lang="ast">Avisador ya instalador anovamientos de software del sistema</li>
       <li xml:lang="bs">Obavještenja i instalacijski program ažuriranja sistemskog softvera</li>
       <li xml:lang="ca">Notificador i instal·lador d'actualitzacions de programari del sistema</li>
@@ -267,6 +276,7 @@
       <li xml:lang="x-test">xxSystem software updates notifier and installerxx</li>
       <li xml:lang="zh-TW">系統軟體更新通知與安裝</li>
       <li>Close integration with the KDE Plasma desktop</li>
+      <li xml:lang="ar">التّكامل مع سطح مكتب «بلازما»</li>
       <li xml:lang="bs">Zatvori integraciju sa KDE Plazma radnom površinom</li>
       <li xml:lang="ca">Integració estreta amb l'escriptori Plasma del KDE</li>
       <li xml:lang="ca-valencia">Integració estreta amb l'escriptori Plasma del KDE</li>
@@ -301,6 +311,7 @@
     </screenshot>
     <screenshot>
       <caption>The main window showing a description of the selected package</caption>
+      <caption xml:lang="ar">النّافذة الرّئيسيّة تعرض وصفًا للحزمة المحدّدة</caption>
       <caption xml:lang="ast">La ventana principal qu'amuesa una descripción del paquete esbilláu</caption>
       <caption xml:lang="bs">Glavni prozor prikazuje opis označenog paketa</caption>
       <caption xml:lang="ca">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
@@ -333,6 +344,7 @@
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=apper</url>
   <project_group>KDE</project_group>
   <developer_name>The KDE Community</developer_name>
+  <developer_name xml:lang="ar">مجتمع «كدي»</developer_name>
   <developer_name xml:lang="ast">La comunidá KDE</developer_name>
   <developer_name xml:lang="bs">KDE zajednica</developer_name>
   <developer_name xml:lang="ca">La comunitat KDE</developer_name>
