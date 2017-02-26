@@ -39,11 +39,6 @@ void TransactionDelegate::paint(QPainter *painter,
                                 const QStyleOptionViewItem &option,
                                 const QModelIndex &index) const
 {
-    QStyleOptionViewItemV4 opt1(option);
-    if (opt1.state & QStyle::State_HasFocus) {
-        opt1.state ^= QStyle::State_HasFocus;
-    }
-    QStyledItemDelegate::paint(painter, opt1, index);
     if (index.column() == 0 && !index.data(PkTransactionProgressModel::RoleRepo).toBool()) {
         int  progress = index.data(PkTransactionProgressModel::RoleProgress).toInt();
         QString text  = index.data(Qt::DisplayRole).toString();
@@ -51,7 +46,7 @@ void TransactionDelegate::paint(QPainter *painter,
         QStyleOptionProgressBarV2 progressBarOption;
         progressBarOption.state = QStyle::State_Enabled;
         progressBarOption.direction = QApplication::layoutDirection();
-        progressBarOption.rect = opt1.rect;
+        progressBarOption.rect = option.rect;
         progressBarOption.fontMetrics = QApplication::fontMetrics();
         progressBarOption.minimum = 0;
         progressBarOption.maximum = 100;
@@ -61,6 +56,12 @@ void TransactionDelegate::paint(QPainter *painter,
         progressBarOption.textVisible = true;
 
         QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
+    } else {
+        QStyleOptionViewItemV4 opt1(option);
+        if (opt1.state & QStyle::State_HasFocus) {
+            opt1.state ^= QStyle::State_HasFocus;
+        }
+        QStyledItemDelegate::paint(painter, opt1, index);
     }
 }
 
