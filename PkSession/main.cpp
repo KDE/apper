@@ -21,14 +21,21 @@
 #include "PkSession.h"
 #include <config.h>
 
-#include <KDebug>
-#include <KConfig>
-#include <KLocalizedString>
+#include <QApplication>
+#include <QDebug>
+#include <QIcon>
+#include <QSessionManager>
+
 #include <KAboutData>
-#include <KCmdLineArgs>
+#include <KConfig>
+#include <KDBusService>
+#include <KLocalizedString>
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
+    app.setWindowIcon(QIcon::fromTheme("system-software-install"));
+
     KLocalizedString::setApplicationDomain("apper");
 
     KAboutData aboutData("PkSession",
@@ -41,18 +48,16 @@ int main(int argc, char **argv)
     aboutData.addAuthor(i18n("Trever Fischer"), QString(), "wm161@wm161.net", "http://wm161.net");
 
     aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"),"@");
-    aboutData.setProgramIconName("system-software-install");
     KAboutData::setApplicationData(aboutData);
 
-    //! KCmdLineArgs::init(argc, argv);
-	Q_UNUSED(argc);
-	Q_UNUSED(argv);
+    // Let's ensure we only have one PkSession at any one time on the same session
+    KDBusService service(KDBusService::Unique);
+    auto disableSessionManagement = [](QSessionManager &sm) {
+        sm.setRestartHint(QSessionManager::RestartNever);
+    };
+    QObject::connect(&app, &QGuiApplication::commitDataRequest, disableSessionManagement);
+    QObject::connect(&app, &QGuiApplication::saveStateRequest, disableSessionManagement);
 
-    if (!PkSession::start()) {
-        //kDebug() << "PkSession is already running!";
-        return 0;
-    }
-
-    PkSession app;
+    PkSession session;
     return app.exec();
 }

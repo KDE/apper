@@ -22,6 +22,7 @@
 
 #include "PkInterface.h"
 
+#include <QApplication>
 #include <QStringBuilder>
 
 #include <KLocalizedString>
@@ -35,8 +36,8 @@
 
 using namespace PackageKit;
 
-PkSession::PkSession() :
-    KUniqueApplication()
+PkSession::PkSession(QObject* parent)
+    : QObject(parent)
 {
     m_pkInterface = new PkInterface(this);
     connect(m_pkInterface, SIGNAL(close()),
@@ -46,7 +47,7 @@ PkSession::PkSession() :
     Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     // this enables not quitting when closing a transaction ui
-    setQuitOnLastWindowClosed(false);
+    qApp->setQuitOnLastWindowClosed(false);
 
     // create the close timer and connect it's signal
     m_closeT = new QTimer(this);
@@ -83,7 +84,7 @@ void PkSession::close()
     // again just to be sure.
     if (!isRunning()) {
         kDebug() << "Closed by Timer";
-        quit();
+        qApp->quit();
     }
 }
 

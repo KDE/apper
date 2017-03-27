@@ -21,15 +21,15 @@
 #ifndef PKSESSION_H
 #define PKSESSION_H
 
-#include <KUniqueApplication>
+#include <QObject>
 #include <QTimer>
 
 class PkInterface;
-class PkSession : public KUniqueApplication
+class PkSession : public QObject
 {
     Q_OBJECT
 public:
-    PkSession();
+    explicit PkSession(QObject* parent = 0);
     virtual ~PkSession();
     int newInstance();
 
