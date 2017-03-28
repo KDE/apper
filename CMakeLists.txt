@@ -147,5 +147,6 @@ endif(BUILD_PLASMOID)
 if(LIMBA)
     add_subdirectory(AppSetup)
 endif()
+add_subdirectory(doc)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
