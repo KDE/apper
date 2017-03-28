@@ -41,6 +41,15 @@ find_package(LibKWorkspace REQUIRED)
 #
 # Options
 #
+
+# The various parts of Apper that can be built, or not.
+option(BUILD_APPER "Build the Apper application" ON)
+option(BUILD_APPERKCM "Build the Apper KDE Control Module" ON)
+option(BUILD_APPERD "Build the Apper daemon" ON)
+option(BUILD_DECLARATIVE "Build the Qt Quick plugins" ON)
+option(BUILD_PKSESSION "Build the PkSession helper application" ON)
+option(BUILD_PLASMOID "Build the update notifier plasmoid" ON)
+
 # Only for Debian based systems
 option(DEBCONF_SUPPORT "Build Apper with debconf support" OFF)
 
@@ -117,13 +126,24 @@ include_directories(${CMAKE_SOURCE_DIR}
 # Subcomponents
 #
 add_subdirectory(libapper)
-add_subdirectory(ApperKCM)
-add_subdirectory(Apper)
-add_subdirectory(PkSession)
-add_subdirectory(apperd)
-add_subdirectory(declarative-plugins)
-add_subdirectory(plasmoid)
-add_subdirectory(doc)
+if(BUILD_APPERKCM)
+    add_subdirectory(ApperKCM)
+endif(BUILD_APPERKCM)
+if(BUILD_APPER)
+    add_subdirectory(Apper)
+endif(BUILD_APPER)
+if(BUILD_PKSESSION)
+    add_subdirectory(PkSession)
+endif(BUILD_PKSESSION)
+if(BUILD_APPERD)
+    add_subdirectory(apperd)
+endif(BUILD_APPERD)
+if(BUILD_DECLARATIVE)
+    add_subdirectory(declarative-plugins)
+endif(BUILD_DECLARATIVE)
+if(BUILD_PLASMOID)
+    add_subdirectory(plasmoid)
+endif(BUILD_PLASMOID)
 if(LIMBA)
     add_subdirectory(AppSetup)
 endif()
