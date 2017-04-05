@@ -35,6 +35,7 @@
 
 int main(int argc, char **argv)
 {
+    Apper app(argc, argv);
     KLocalizedString::setApplicationDomain("apper");
 
     KAboutData aboutData("apper",
@@ -46,7 +47,6 @@ int main(int argc, char **argv)
     aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"), "@");
     aboutData.setProgramIconName("system-software-install");
 
-    Apper app(argc, argv);
     KAboutData::setApplicationData(aboutData);
 
     app.activate(app.arguments(), QDir::currentPath());
