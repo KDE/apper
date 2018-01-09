@@ -75,7 +75,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         index.column() == PackageModel::ArchCol ||
         index.column() == PackageModel::OriginCol ||
         index.column() == PackageModel::SizeCol) {
-        QStyleOptionViewItemV4 opt(option);
+        QStyleOptionViewItem opt(option);
         if (opt.state & QStyle::State_HasFocus) {
             opt.state ^= QStyle::State_HasFocus;
         }
@@ -85,7 +85,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         return;
     } else if (index.column() == PackageModel::NameCol) {
         bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
-        QStyleOptionViewItemV4 opt1(option);
+        QStyleOptionViewItem opt1(option);
         if (opt1.state & QStyle::State_HasFocus) {
             opt1.state ^= QStyle::State_HasFocus;
         }
@@ -100,7 +100,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         painter->restore();
 
         // a new option for the summary
-        QStyleOptionViewItemV4 opt(option);
+        QStyleOptionViewItem opt(option);
         if (leftToRight) {
             opt.rect.setLeft(size.width() + 1);
         } else {
@@ -116,7 +116,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         p.translate(-opt.rect.topLeft());
 
         QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
-        opt.viewItemPosition = QStyleOptionViewItemV4::Middle;
+        opt.viewItemPosition = QStyleOptionViewItem::Middle;
         painter->save();
         style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
         painter->restore();
@@ -192,7 +192,7 @@ void ApplicationsDelegate::paint(QPainter *painter,
         return;
     } else if (index.column() == PackageModel::ActionCol) {
         bool pkgChecked = index.data(PackageModel::CheckStateRole).toBool();
-        QStyleOptionViewItemV4 opt(option);
+        QStyleOptionViewItem opt(option);
         if (opt.state & QStyle::State_HasFocus) {
             opt.state ^= QStyle::State_HasFocus;
         }
@@ -266,8 +266,8 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
     }
 
     const QWidget *widget = 0;
-    if (const QStyleOptionViewItemV4 *v4 = qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option)) {
-        widget = v4->widget;
+    if (const QStyleOptionViewItem *v = qstyleoption_cast<const QStyleOptionViewItem *>(&option)) {
+        widget = v->widget;
     }
 
     QStyle *style = widget ? widget->style() : QApplication::style();
@@ -275,7 +275,7 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
     // make sure that we have the right event type
     if ((event->type() == QEvent::MouseButtonRelease)
         || (event->type() == QEvent::MouseButtonDblClick)) {
-        QStyleOptionViewItemV4 viewOpt(option);
+        QStyleOptionViewItem viewOpt(option);
         initStyleOption(&viewOpt, index);
         QRect checkRect = style->subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &viewOpt, widget);
         QMouseEvent *me = static_cast<QMouseEvent*>(event);

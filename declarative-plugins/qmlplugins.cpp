@@ -56,7 +56,7 @@ void QmlPlugins::registerTypes(const char* uri)
     qRegisterMetaType<PackageKit::Transaction::Error>("PackageKit::Transaction::Error");
     qRegisterMetaType<PackageKit::Transaction::Exit>("PackageKit::Transaction::Exit");
     qRegisterMetaType<PackageKit::Transaction::Filter>("PackageKit::Transaction::Filter");
-    qRegisterMetaType<PackageKit::Transaction::Message>("PackageKit::Transaction::Message");
+//    qRegisterMetaType<PackageKit::Transaction::Message>("PackageKit::Transaction::Message");
     qRegisterMetaType<PackageKit::Transaction::Status>("PackageKit::Transaction::Status");
     qRegisterMetaType<PackageKit::Transaction::MediaType>("PackageKit::Transaction::MediaType");
     qRegisterMetaType<PackageKit::Transaction::DistroUpgrade>("PackageKit::Transaction::DistroUpgrade");

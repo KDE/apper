@@ -55,16 +55,16 @@ QString PkStrings::status(Transaction::Status status, uint speed, qulonglong dow
         if (speed != 0 && downloadRemaining != 0) {
             return i18nc("transaction state, downloading package files",
                          "Downloading at %1/s, %2 remaining",
-                         KGlobal::locale()->formatByteSize(speed),
-                         KGlobal::locale()->formatByteSize(downloadRemaining));
+                         KLocale::global()->formatByteSize(speed),
+                         KLocale::global()->formatByteSize(downloadRemaining));
         } else if (speed != 0 && downloadRemaining == 0) {
             return i18nc("transaction state, downloading package files",
                          "Downloading at %1/s",
-                         KGlobal::locale()->formatByteSize(speed));
+                         KLocale::global()->formatByteSize(speed));
         } else if (speed == 0 && downloadRemaining != 0) {
             return i18nc("transaction state, downloading package files",
                          "Downloading, %1 remaining",
-                         KGlobal::locale()->formatByteSize(downloadRemaining));
+                         KLocale::global()->formatByteSize(downloadRemaining));
         } else {
             return i18nc("transaction state, downloading package files",
                          "Downloading");
@@ -950,48 +950,48 @@ QString PkStrings::mediaMessage(Transaction::MediaType value, const QString &tex
     return i18n("Please insert the medium labeled '%1', and press continue.", text);
 }
 
-QString PkStrings::message(Transaction::Message value)
-{
-    switch (value) {
-    case Transaction::MessageBrokenMirror :
-        return i18n("A mirror is possibly broken");
-    case Transaction::MessageConnectionRefused :
-        return i18n("The connection was refused");
-    case Transaction::MessageParameterInvalid :
-        return i18n("The parameter was invalid");
-    case Transaction::MessagePriorityInvalid :
-        return i18n("The priority was invalid");
-    case Transaction::MessageBackendError :
-        return i18n("Backend warning");
-    case Transaction::MessageDaemonError :
-        return i18n("Daemon warning");
-    case Transaction::MessageCacheBeingRebuilt :
-        return i18n("The package list cache is being rebuilt");
-    case Transaction::MessageUntrustedPackage :
-        return i18n("An untrusted package was installed");
-    case Transaction::MessageNewerPackageExists :
-        return i18n("A newer package exists");
-    case Transaction::MessageCouldNotFindPackage :
-        return i18n("Could not find package");
-    case Transaction::MessageConfigFilesChanged :
-        return i18n("Configuration files were changed");
-    case Transaction::MessagePackageAlreadyInstalled :
-        return i18n("Package is already installed");
-    case Transaction::MessageAutoremoveIgnored :
-        return i18n("Automatic cleanup is being ignored");
-    case Transaction::MessageRepoMetadataDownloadFailed :
-        return i18n("Software source download failed");
-    case Transaction::MessageRepoForDevelopersOnly :
-        return i18n("This software source is for developers only");
-    case Transaction::MessageOtherUpdatesHeldBack :
-        return i18n("Other updates have been held back");
-    case Transaction::MessageUnknown:
-        kWarning() << "message(Enum::UnknownMessageType)";
-        return QString();
-    }
-    kWarning() << "value unrecognised: " << value;
-    return QString();
-}
+//QString PkStrings::message(Transaction::Message value)
+//{
+//    switch (value) {
+//    case Transaction::MessageBrokenMirror :
+//        return i18n("A mirror is possibly broken");
+//    case Transaction::MessageConnectionRefused :
+//        return i18n("The connection was refused");
+//    case Transaction::MessageParameterInvalid :
+//        return i18n("The parameter was invalid");
+//    case Transaction::MessagePriorityInvalid :
+//        return i18n("The priority was invalid");
+//    case Transaction::MessageBackendError :
+//        return i18n("Backend warning");
+//    case Transaction::MessageDaemonError :
+//        return i18n("Daemon warning");
+//    case Transaction::MessageCacheBeingRebuilt :
+//        return i18n("The package list cache is being rebuilt");
+//    case Transaction::MessageUntrustedPackage :
+//        return i18n("An untrusted package was installed");
+//    case Transaction::MessageNewerPackageExists :
+//        return i18n("A newer package exists");
+//    case Transaction::MessageCouldNotFindPackage :
+//        return i18n("Could not find package");
+//    case Transaction::MessageConfigFilesChanged :
+//        return i18n("Configuration files were changed");
+//    case Transaction::MessagePackageAlreadyInstalled :
+//        return i18n("Package is already installed");
+//    case Transaction::MessageAutoremoveIgnored :
+//        return i18n("Automatic cleanup is being ignored");
+//    case Transaction::MessageRepoMetadataDownloadFailed :
+//        return i18n("Software source download failed");
+//    case Transaction::MessageRepoForDevelopersOnly :
+//        return i18n("This software source is for developers only");
+//    case Transaction::MessageOtherUpdatesHeldBack :
+//        return i18n("Other updates have been held back");
+//    case Transaction::MessageUnknown:
+//        kWarning() << "message(Enum::UnknownMessageType)";
+//        return QString();
+//    }
+//    kWarning() << "value unrecognised: " << value;
+//    return QString();
+//}
 
 QString PkStrings::daemonError(int value)
 {
@@ -1027,7 +1027,7 @@ QString PkStrings::daemonError(int value)
 
 QString PkStrings::prettyFormatDuration(unsigned long mSec)
 {
-    return KGlobal::locale()->prettyFormatDuration(mSec);
+    return KLocale::global()->prettyFormatDuration(mSec);
 }
 
 QString PkStrings::lastCacheRefreshTitle(uint lastTime)

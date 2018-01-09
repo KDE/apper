@@ -46,7 +46,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void transactionListChanged(const QStringList &tids);
-    void message(PackageKit::Transaction::Message type, const QString &message);
+//    void message(PackageKit::Transaction::Message type, const QString &message);
     void errorCode(PackageKit::Transaction::Error, const QString &);
     void errorActivated(uint action);
     void requireRestart(PackageKit::Transaction::Restart type, const QString &packageID);

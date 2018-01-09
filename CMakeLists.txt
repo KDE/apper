@@ -35,7 +35,7 @@ find_package(KF5 REQUIRED COMPONENTS
 )
 find_package(LibKWorkspace REQUIRED)
 find_package(KDED REQUIRED)
-find_package(PackageKitQt5 0.9.0 REQUIRED)
+find_package(PackageKitQt5 1.0.0 REQUIRED)
 find_package(LibKWorkspace REQUIRED)
 
 #

@@ -101,7 +101,7 @@ void ApperdThread::init()
     connect(proxyWatch, SIGNAL(deleted(QString)), this, SLOT(proxyChanged()));
     proxyWatch->startScan();
 
-    QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
+    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
     Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     connect(Daemon::global(), SIGNAL(updatesChanged()),

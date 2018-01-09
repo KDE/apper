@@ -164,21 +164,16 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             iPackage.isPackage = true;
         }
 #else
-        iPackage.icon = Transaction::packageIcon(packageID);
-        if (iPackage.icon.isEmpty()) {
-            iPackage.isPackage = true;
-        } else {
-            iPackage.isPackage = false;
-            QSqlDatabase db = QSqlDatabase::database();
-            QSqlQuery query(db);
-            query.prepare("SELECT filename FROM cache WHERE package = :name");
-            query.bindValue(":name", Transaction::packageName(packageID));
-            if (query.exec()) {
-                if (query.next()) {
-                    QString filename = query.value(0).toString();
-                    filename.remove(QRegExp(".desktop$")).remove(QRegExp("^/.*/"));
-                    iPackage.appId = filename;
-                }
+        iPackage.isPackage = false;
+        QSqlDatabase db = QSqlDatabase::database();
+        QSqlQuery query(db);
+        query.prepare("SELECT filename FROM cache WHERE package = :name");
+        query.bindValue(":name", Transaction::packageName(packageID));
+        if (query.exec()) {
+            if (query.next()) {
+                QString filename = query.value(0).toString();
+                filename.remove(QRegExp(".desktop$")).remove(QRegExp("^/.*/"));
+                iPackage.appId = filename;
             }
         }
 #endif // HAVE_APPSTREAM
@@ -344,7 +339,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         } else if (index.column() == OriginCol) {
             return package.repo;
         } else if (index.column() == SizeCol) {
-            return package.size ? KGlobal::locale()->formatByteSize(package.size) : QString();
+            return package.size ? KLocale::global()->formatByteSize(package.size) : QString();
         }
     } else if (index.column() == SizeCol && role == Qt::TextAlignmentRole) {
         return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);

@@ -216,17 +216,17 @@ void TransactionWatcher::transactionChanged(Transaction *transaction, bool inter
     }
 }
 
-void TransactionWatcher::message(PackageKit::Transaction::Message type, const QString &message)
-{
-    KNotification *notify;
-    notify = new KNotification("TransactionMessage", 0, KNotification::Persistent);
-    notify->setComponentName("apperd");
-    notify->setTitle(PkStrings::message(type));
-    notify->setText(message);
+//void TransactionWatcher::message(PackageKit::Transaction::Message type, const QString &message)
+//{
+//    KNotification *notify;
+//    notify = new KNotification("TransactionMessage", 0, KNotification::Persistent);
+//    notify->setComponentName("apperd");
+//    notify->setTitle(PkStrings::message(type));
+//    notify->setText(message);
 
-    notify->setPixmap(QIcon::fromTheme("dialog-warning").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
-    notify->sendEvent();
-}
+//    notify->setPixmap(QIcon::fromTheme("dialog-warning").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+//    notify->sendEvent();
+//}
 
 void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QString &details)
 {
