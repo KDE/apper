@@ -40,11 +40,6 @@
 #include <AppStream.h>
 #endif
 
-#ifndef HAVE_APPSTREAM
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#endif
-
 #define ICON_SIZE 22
 #define OVERLAY_SIZE 16
 
@@ -164,18 +159,7 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             iPackage.isPackage = true;
         }
 #else
-        iPackage.isPackage = false;
-        QSqlDatabase db = QSqlDatabase::database();
-        QSqlQuery query(db);
-        query.prepare("SELECT filename FROM cache WHERE package = :name");
-        query.bindValue(":name", Transaction::packageName(packageID));
-        if (query.exec()) {
-            if (query.next()) {
-                QString filename = query.value(0).toString();
-                filename.remove(QRegExp(".desktop$")).remove(QRegExp("^/.*/"));
-                iPackage.appId = filename;
-            }
-        }
+        iPackage.isPackage = true;
 #endif // HAVE_APPSTREAM
 
         if (selected) {
@@ -268,6 +252,10 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             if (!m_checkable) {
                 return QVariant();
             }
+            if (containsChecked(package.packageID)) {
+                return Qt::Checked;
+            }
+            return Qt::Unchecked;
         case CheckStateRole:
             if (containsChecked(package.packageID)) {
                 return Qt::Checked;
@@ -289,12 +277,12 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
                     pixmap = pixmap.scaledToHeight(ICON_SIZE);
                 } else {
                     pixmap = KIconLoader::global()->loadIcon(package.icon,
-                                                                 KIconLoader::NoGroup,
-                                                                 ICON_SIZE,
-                                                                 KIconLoader::DefaultState,
-                                                                 QStringList(),
-                                                                 0L,
-                                                                 true);
+                                                             KIconLoader::NoGroup,
+                                                             ICON_SIZE,
+                                                             KIconLoader::DefaultState,
+                                                             QStringList(),
+                                                             0L,
+                                                             true);
                 }
 
                 if (!pixmap.isNull()) {

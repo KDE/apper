@@ -38,7 +38,7 @@ BackendDetails::BackendDetails(QWidget *parent) :
     setWindowIcon(QIcon::fromTheme("help-about"));
 
     // update information about PackageKit backend
-    connect(Daemon::global(), SIGNAL(changed()), this, SLOT(daemonChanged()));
+    connect(Daemon::global(), &Daemon::changed, this, &BackendDetails::daemonChanged);
 
     if (Daemon::global()->isRunning()) {
         daemonChanged();

@@ -119,11 +119,11 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
     }
 
     if (parser.isSet("updates")) {
-        QTimer::singleShot(0, this, SLOT(showUpdates()));
+        QTimer::singleShot(0, this, &Apper::showUpdates);
         return;
     }
     if (parser.isSet("settings")) {
-        QTimer::singleShot(0, this, SLOT(showSettings()));
+        QTimer::singleShot(0, this, &Apper::showSettings);
         return;
     }
 
@@ -153,23 +153,22 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
     }
 
     if (parser.isSet("backend-details")) {
-        BackendDetails *helper;
-        helper = new BackendDetails;
-        connect(helper, SIGNAL(finished(int)), this, SLOT(decreaseAndKillRunning()));
-        QTimer::singleShot(0, helper, SLOT(show()));
+        auto helper = new BackendDetails;
+        connect(helper, &BackendDetails::finished, this, &Apper::decreaseAndKillRunning);
+        QTimer::singleShot(0, helper, &BackendDetails::show);
         m_running++;
         return;
     }
 
     // If we are here, we neet to show/activate the main UI
-    QTimer::singleShot(0, this, SLOT(showUi()));
+    QTimer::singleShot(0, this, &Apper::showUi);
 }
 
 void Apper::showUi()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished(int)), this, SLOT (kcmFinished()));
+        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
     }
     // Show all
     m_pkUi->showAll();
@@ -181,7 +180,7 @@ void Apper::showUpdates()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished(int)), this, SLOT(kcmFinished()));
+        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
     }
     m_pkUi->showUpdates();
     m_pkUi->show();
@@ -192,7 +191,7 @@ void Apper::showSettings()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, SIGNAL(finished(int)), this, SLOT(kcmFinished()));
+        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
     }
     m_pkUi->showSettings();
     m_pkUi->show();
@@ -202,11 +201,11 @@ void Apper::showSettings()
 void Apper::invoke(const QString &method_name, const QStringList &args)
 {
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
-                                             "/org/freedesktop/PackageKit",
-                                             "org.freedesktop.PackageKit.Modify",
+    message = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.PackageKit"),
+                                             QStringLiteral("/org/freedesktop/PackageKit"),
+                                             QStringLiteral("org.freedesktop.PackageKit.Modify"),
                                              method_name);
-    message << (uint) 0;
+    message << uint(0);
     message << args;
     message << QString();
 
@@ -214,7 +213,7 @@ void Apper::invoke(const QString &method_name, const QStringList &args)
     // smarticon is activated
     QDBusConnection::sessionBus().call(message, QDBus::BlockWithGui);
 
-    QTimer::singleShot(0, this, SLOT(appClose()));
+    QTimer::singleShot(0, this, &Apper::appClose);
 }
 
 #include "Apper.moc"

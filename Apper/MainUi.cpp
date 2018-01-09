@@ -43,11 +43,10 @@ MainUi::MainUi(QWidget *parent) :
     KPageWidgetItem *page = addModule(QLatin1String("kcm_apper.desktop"),
                                       QStringList() << QLatin1String("apper"));
     if (page) {
-        KCModuleProxy *proxy = static_cast<KCModuleProxy*>(page->widget());
+        auto proxy = static_cast<KCModuleProxy*>(page->widget());
         if (proxy) {
             m_apperModule = proxy->realModule();
-            connect(m_apperModule, SIGNAL(caption(QString)),
-                    this, SLOT(setCaption(QString)));
+            connect(m_apperModule, &KCModule::windowTitleChanged, this, &MainUi::setWindowTitle);
         }
     } else {
         kWarning() << "Could not load kcm_apper.desktop!";
