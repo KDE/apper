@@ -44,7 +44,7 @@
 #include <QStringBuilder>
 
 #include <KIO/Job>
-#include <KMenu>
+#include <QMenu>
 
 #include <KDebug>
 

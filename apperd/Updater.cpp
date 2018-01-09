@@ -36,7 +36,6 @@
 #include <KLocalizedString>
 #include <KNotification>
 #include <KActionCollection>
-#include <KMenu>
 #include <KToolInvocation>
 
 #include <KDebug>

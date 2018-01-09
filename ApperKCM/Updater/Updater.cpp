@@ -25,7 +25,7 @@
 #include "DistroUpgrade.h"
 #include "CheckableHeader.h"
 
-#include <KMenu>
+#include <QMenu>
 #include <KGenericFactory>
 #include <KPixmapSequence>
 #include <KAboutData>
@@ -332,7 +332,7 @@ void Updater::getUpdates()
 
 void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
-    auto menu = new KMenu(this);
+    auto menu = new QMenu(this);
     menu->addAction(m_showPackageVersion);
     menu->addAction(m_showPackageCurrentVersion);
     menu->addAction(m_showPackageArch);

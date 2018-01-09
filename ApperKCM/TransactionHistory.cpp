@@ -28,7 +28,7 @@
 
 #include <Daemon>
 
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KGlobal>
@@ -63,10 +63,10 @@ void TransactionHistory::setFilterRegExp(const QString &regexp)
 
 void TransactionHistory::on_treeView_customContextMenuRequested(const QPoint &pos)
 {
-    KMenu *menu = new KMenu(this);
+    auto menu = new QMenu(this);
     QAction *action;
     action = menu->addAction(i18n("Refresh transactions list"));
-    connect(action, SIGNAL(triggered(bool)), this, SLOT(refreshList()));
+    connect(action, &QAction::triggered, this, &TransactionHistory::refreshList);
     menu->exec(treeView->viewport()->mapToGlobal(pos));
     delete menu;
 }
@@ -76,8 +76,7 @@ void TransactionHistory::refreshList()
     // Refresh transaction list
     m_transactionModel->clear();
     Transaction *transaction = Daemon::getOldTransactions(0);
-    connect(transaction, SIGNAL(transaction(PackageKit::Transaction*)),
-            m_transactionModel, SLOT(addTransaction(PackageKit::Transaction*)));
+    connect(transaction, &Transaction::transaction, m_transactionModel, &TransactionModel::addTransaction);
 
     // Refresh time
     QString text;

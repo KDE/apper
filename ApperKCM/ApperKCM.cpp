@@ -30,7 +30,6 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KFileItemDelegate>
-#include <KMenu>
 #include <KHelpMenu>
 #include <KTabBar>
 #include <KCmdLineArgs>
@@ -204,7 +203,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
 
     ui->changesPB->setIcon(QIcon::fromTheme("edit-redo"));
 
-    auto menu = new KMenu(this);
+    auto menu = new QMenu(this);
     ui->settingsTB->setMenu(menu);
     ui->settingsTB->setIcon(QIcon::fromTheme("preferences-other"));
     auto signalMapper = new QSignalMapper(this);

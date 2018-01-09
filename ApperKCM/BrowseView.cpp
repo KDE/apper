@@ -31,7 +31,7 @@
 
 #include <KFileDialog>
 #include <KPixmapSequence>
-#include <KMenu>
+#include <QMenu>
 #include <KIconLoader>
 #include <KConfig>
 #include <KConfigGroup>
@@ -178,7 +178,7 @@ void BrowseView::showSizes(bool enabled)
 
 void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
-    auto menu = new KMenu(this);
+    auto menu = new QMenu(this);
     menu->addAction(m_showPackageVersion);
     menu->addAction(m_showPackageArch);
     menu->addAction(m_showPackageOrigin);
