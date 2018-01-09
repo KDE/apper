@@ -30,7 +30,7 @@ InfoWidget::InfoWidget(QWidget *parent) :
     ui(new Ui::InfoWidget)
 {
     ui->setupUi(this);
-    ui->iconL->setPixmap(KIcon("dialog-warning").pixmap(128, 128));
+    ui->iconL->setPixmap(QIcon::fromTheme("dialog-warning").pixmap(128, 128));
 }
 
 InfoWidget::~InfoWidget()
@@ -38,7 +38,7 @@ InfoWidget::~InfoWidget()
     delete ui;
 }
 
-void InfoWidget::setIcon(const KIcon &icon)
+void InfoWidget::setIcon(const QIcon &icon)
 {
     ui->iconL->setPixmap(icon.pixmap(128, 128));
 }
@@ -51,7 +51,7 @@ void InfoWidget::setDescription(const QString &description)
 void InfoWidget::setDetails(const QString &details)
 {
     if (!details.isEmpty()) {
-        KTextBrowser *browser = new KTextBrowser(this);
+        auto browser = new QTextBrowser(this);
         browser->setFrameShape(QFrame::NoFrame);
         browser->setFrameShadow(QFrame::Plain);
         browser->setStyleSheet("QTextEdit {\nbackground-color: transparent;\n};");
@@ -71,7 +71,7 @@ void InfoWidget::addWidget(QWidget *widget)
 
 void InfoWidget::reset()
 {
-    ui->iconL->setPixmap(KIcon("dialog-information").pixmap(128, 128));
+    ui->iconL->setPixmap(QIcon::fromTheme("dialog-information").pixmap(128, 128));
     setWindowTitle("");
     setDescription("");
     setDetails("");

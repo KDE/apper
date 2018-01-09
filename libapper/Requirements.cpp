@@ -199,7 +199,7 @@ void Requirements::setDownloadSizeRemaining(qulonglong size)
         QString text;
         text = i18nc("how many bytes are required for download",
                      "Need to get %1 of archives",
-                     KGlobal::locale()->formatByteSize(size));
+                     KLocale::global()->formatByteSize(size));
         button(KDialog::Help)->setText(text);
         button(KDialog::Help)->setToolTip(text);
         button(KDialog::Help)->show();

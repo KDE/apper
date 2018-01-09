@@ -81,7 +81,7 @@ PackageDetails::PackageDetails(QWidget *parent)
     ui->hideTB->setIcon(QIcon::fromTheme("window-close"));
     connect(ui->hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 
-    KMenu *menu = new KMenu(i18n("Display"), this);
+    auto menu = new QMenu(i18n("Display"), this);
     m_actionGroup = new QActionGroup(this);
 
     // we check to see which roles are supported by the backend
@@ -300,16 +300,13 @@ void PackageDetails::setPackage(const QModelIndex &index)
         if (m_screenshotPath.contains(m_currentScreenshot)) {
             display();
         } else {
-            KTemporaryFile *tempFile = new KTemporaryFile;
-            tempFile->setPrefix("appget");
-            tempFile->setSuffix(".png");
+            auto tempFile = new QTemporaryFile;
             tempFile->open();
             KIO::FileCopyJob *job = KIO::file_copy(QUrl(m_currentScreenshot),
                                                    QUrl(tempFile->fileName()),
                                                    -1,
                                                    KIO::Overwrite | KIO::HideProgressInfo);
-            connect(job, SIGNAL(result(KJob*)),
-                    this, SLOT(resultJob(KJob*)));
+            connect(job, &KIO::FileCopyJob::result, this, &PackageDetails::resultJob);
         }
     }
 
@@ -642,7 +639,7 @@ void PackageDetails::setupDescription()
     }
 
     if (m_details.size() > 0) {
-        QString size = KGlobal::locale()->formatByteSize(m_details.size());
+        QString size = KLocale::global()->formatByteSize(m_details.size());
         if (!m_hideArch && !Transaction::packageArch(m_details.packageId()).isEmpty()) {
             ui->sizeL->setText(size % QLatin1String(" (") % Transaction::packageArch(m_details.packageId()) % QLatin1Char(')'));
         } else {

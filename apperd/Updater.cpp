@@ -51,13 +51,11 @@ Updater::Updater(QObject* parent) :
 {
     // in case registration fails due to another user or application running
     // keep an eye on it so we can register when available
-    QDBusServiceWatcher *watcher;
-    watcher = new QDBusServiceWatcher(QLatin1String("org.kde.ApperUpdaterIcon"),
-                                      QDBusConnection::sessionBus(),
-                                      QDBusServiceWatcher::WatchForOwnerChange,
-                                      this);
-    connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
+    auto watcher = new QDBusServiceWatcher(QLatin1String("org.kde.ApperUpdaterIcon"),
+                                           QDBusConnection::sessionBus(),
+                                           QDBusServiceWatcher::WatchForOwnerChange,
+                                           this);
+    connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged, this, &Updater::serviceOwnerChanged);
 
     m_hasAppletIconified = ApperdThread::nameHasOwner(QLatin1String("org.kde.ApperUpdaterIcon"),
                                                       QDBusConnection::sessionBus());

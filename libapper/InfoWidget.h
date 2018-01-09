@@ -22,7 +22,7 @@
 #define INFO_WIDGET_H
 
 #include <QWidget>
-#include <KIcon>
+#include <QIcon>
 
 namespace Ui {
     class InfoWidget;
@@ -36,7 +36,7 @@ public:
     ~InfoWidget();
 
     void setDescription(const QString &description);
-    void setIcon(const KIcon &icon);
+    void setIcon(const QIcon &icon);
     void setDetails(const QString &details);
     void addWidget(QWidget *widget);
     void reset();

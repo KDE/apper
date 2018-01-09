@@ -67,13 +67,13 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
             this, SLOT(updatePallete()));
     updatePallete();
 
-    setWindowIcon(KIcon("system-software-install"));
+    setWindowIcon(QIcon::fromTheme("system-software-install"));
     setButtons(KDialog::Ok | KDialog::Cancel);
     setButtonText(KDialog::Ok, i18n("Continue"));
-    setButtonIcon(KDialog::Ok, KIcon("go-next"));
+    setButtonIcon(KDialog::Ok, QIcon::fromTheme("go-next"));
     enableButtonOk(false);
 
-    QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
+    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
     Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     // Defaults to always
@@ -240,7 +240,7 @@ void SessionTask::setError(const QString &title, const QString &text, const QStr
     InfoWidget *info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
-    info->setIcon(KIcon("dialog-error"));
+    info->setIcon(QIcon::fromTheme("dialog-error"));
     info->setDetails(details);
     setMainWidget(info);
     setButtons(KDialog::Close);
@@ -259,7 +259,7 @@ void SessionTask::setFinish(const QString &title, const QString &text, QWidget *
     InfoWidget *info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
-    info->setIcon(KIcon("dialog-ok-apply"));
+    info->setIcon(QIcon::fromTheme("dialog-ok-apply"));
     info->addWidget(widget);
     setMainWidget(info);
     setButtons(KDialog::Close);

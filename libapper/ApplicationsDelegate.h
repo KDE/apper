@@ -21,11 +21,9 @@
 #ifndef APPLICATIONS_DELEGATE_H
 #define APPLICATIONS_DELEGATE_H
 
-#include <QtCore/QtCore>
-#include <QtGui/QtGui>
 #include <QStyledItemDelegate>
 
-#include <KIcon>
+#include <QIcon>
 
 /**
  * Delegate for displaying the packages
@@ -49,14 +47,14 @@ private:
     bool insideButton(const QRect &rect, const QPoint &pos) const;
 
     QWidget *m_viewport;
-    KIcon    m_packageIcon;
-    KIcon    m_installIcon;
+    QIcon    m_packageIcon;
+    QIcon    m_installIcon;
     QString  m_installString;
-    KIcon    m_removeIcon;
+    QIcon    m_removeIcon;
     QString  m_removeString;
-    KIcon    m_undoIcon;
+    QIcon    m_undoIcon;
     QString  m_undoString;
-    KIcon    m_checkedIcon;
+    QIcon    m_checkedIcon;
     QSize    m_buttonSize;
     QSize    m_buttonIconSize;
     bool     m_checkable;

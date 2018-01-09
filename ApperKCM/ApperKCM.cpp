@@ -35,6 +35,8 @@
 #include <KTabBar>
 #include <KCmdLineArgs>
 #include <QToolBar>
+#include <QSignalMapper>
+#include <QTimer>
 
 #include <PackageModel.h>
 #include <ApplicationSortFilterModel.h>
@@ -75,8 +77,8 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_settingsPage(0),
     m_updaterPage(0),
     m_searchTransaction(0),
-    m_findIcon("edit-find"),
-    m_cancelIcon("dialog-cancel"),
+    m_findIcon(QIcon::fromTheme("edit-find")),
+    m_cancelIcon(QIcon::fromTheme("dialog-cancel")),
     m_forceRefreshCache(false),
     m_cacheAge(600),
     m_history(0),
@@ -97,13 +99,13 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     connect(Daemon::global(), SIGNAL(changed()), this, SLOT(daemonChanged()));
 
     // Set the current locale
-    QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
+    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
     Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     ui->setupUi(this);
 
     // Browse TAB
-    ui->backTB->setIcon(KIcon("go-previous"));
+    ui->backTB->setIcon(QIcon::fromTheme("go-previous"));
 
     // create our toolbar
     QToolBar *toolBar = new QToolBar(this);
@@ -167,7 +169,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     // install the backend filters
     ui->filtersTB->setMenu(m_filtersMenu = new FiltersMenu(this));
     connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(search()));
-    ui->filtersTB->setIcon(KIcon("view-filter"));
+    ui->filtersTB->setIcon(QIcon::fromTheme("view-filter"));
     ApplicationSortFilterModel *proxy = ui->browseView->proxy();
     proxy->setApplicationFilter(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, SIGNAL(filterApplications(bool)),
@@ -200,20 +202,20 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     connect(m_changesModel, SIGNAL(packageUnchecked(QString)),
             m_browseModel, SLOT(uncheckPackage(QString)));
 
-    ui->changesPB->setIcon(KIcon("edit-redo"));
+    ui->changesPB->setIcon(QIcon::fromTheme("edit-redo"));
 
-    KMenu *menu = new KMenu(this);
+    auto menu = new KMenu(this);
     ui->settingsTB->setMenu(menu);
-    ui->settingsTB->setIcon(KIcon("preferences-other"));
-    QSignalMapper *signalMapper = new QSignalMapper(this);
+    ui->settingsTB->setIcon(QIcon::fromTheme("preferences-other"));
+    auto signalMapper = new QSignalMapper(this);
     QAction *action;
-    action = menu->addAction(KIcon("view-history"), i18n("History"));
+    action = menu->addAction(QIcon::fromTheme("view-history"), i18n("History"));
     signalMapper->setMapping(action, "history");
     connect(action, SIGNAL(triggered()),
             signalMapper, SLOT(map()));
     connect(signalMapper, SIGNAL(mapped(QString)),
             this, SLOT(setPage(QString)));
-    action = menu->addAction(KIcon("preferences-other"), i18n("Settings"));
+    action = menu->addAction(QIcon::fromTheme("preferences-other"), i18n("Settings"));
     signalMapper->setMapping(action, "settings");
     connect(action, SIGNAL(triggered()),
             signalMapper, SLOT(map()));
@@ -294,8 +296,8 @@ void ApperKCM::setCurrentActionCancel(bool cancel)
         ui->actionFindFile->setText(i18n("Find by f&ile name"));
         ui->actionFindDescription->setText(i18n("Find by &description"));
         // Define actions icon
-        ui->actionFindFile->setIcon(KIcon("document-open"));
-        ui->actionFindDescription->setIcon(KIcon("document-edit"));
+        ui->actionFindFile->setIcon(QIcon::fromTheme("document-open"));
+        ui->actionFindDescription->setIcon(QIcon::fromTheme("document-edit"));
         ui->actionFindName->setIcon(m_findIcon);
         m_genericActionK->setIcon(m_findIcon);
         if (m_currentAction) {
@@ -541,7 +543,7 @@ void ApperKCM::setPage(const QString &page)
                 connect(m_updaterPage, SIGNAL(changed(bool)),
                         this, SLOT(checkChanged()));
                 ui->stackedWidget->addWidget(m_updaterPage);
-                ui->checkUpdatesPB->setIcon(KIcon("view-refresh"));
+                ui->checkUpdatesPB->setIcon(QIcon::fromTheme("view-refresh"));
                 connect(ui->checkUpdatesPB, SIGNAL(clicked(bool)),
                         this, SLOT(refreshCache()));
             }

@@ -27,7 +27,6 @@
 
 #include <KCModule>
 #include <KCModuleProxy>
-#include <KIcon>
 #include <KToolBarPopupAction>
 #include <KCategorizedSortFilterProxyModel>
 
@@ -113,8 +112,8 @@ private:
 
     Transaction *m_searchTransaction;
 
-    KIcon m_findIcon;
-    KIcon m_cancelIcon;
+    QIcon m_findIcon;
+    QIcon m_cancelIcon;
 
     FiltersMenu *m_filtersMenu;
     Transaction::Roles m_roles;

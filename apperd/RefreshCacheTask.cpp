@@ -24,7 +24,6 @@
 
 #include <Daemon>
 
-#include <KIcon>
 #include <KLocalizedString>
 
 #include <KDebug>
@@ -73,7 +72,7 @@ void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorM
     m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
     m_notification->setComponentName("apperd");
     connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
-    KIcon icon("dialog-cancel");
+    QIcon icon = QIcon::fromTheme("dialog-cancel");
     // use of QSize does the right thing
     m_notification->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
     m_notification->setTitle(PkStrings::error(error));

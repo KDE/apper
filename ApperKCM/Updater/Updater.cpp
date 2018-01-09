@@ -239,7 +239,7 @@ void Updater::checkEnableUpdateButton()
     unsigned long dwSize = m_updatesModel->downloadSize();
     if (dwSize) {
         emit downloadSize(i18n("Estimated download size: %1",
-                               KGlobal::locale()->formatByteSize(dwSize)));
+                               KLocale::global()->formatByteSize(dwSize)));
     } else {
         emit downloadSize(QString());
     }
@@ -273,7 +273,7 @@ void Updater::getUpdatesFinished()
         uint lastTime = Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache);
         ui->titleL->setText(PkStrings::lastCacheRefreshTitle(lastTime));
         ui->descriptionL->setText(PkStrings::lastCacheRefreshSubTitle(lastTime));
-        ui->iconL->setPixmap(KIcon(PkIcons::lastCacheRefreshIconName(lastTime)).pixmap(128, 128));
+        ui->iconL->setPixmap(QIcon::fromTheme(PkIcons::lastCacheRefreshIconName(lastTime)).pixmap(128, 128));
     }
 }
 
@@ -332,7 +332,7 @@ void Updater::getUpdates()
 
 void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
-    KMenu *menu = new KMenu(this);
+    auto menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
     menu->addAction(m_showPackageCurrentVersion);
     menu->addAction(m_showPackageArch);
@@ -340,7 +340,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     menu->addAction(m_showPackageSize);
     QAction *action;
     action = menu->addAction(i18n("Check for new updates"));
-    action->setIcon(KIcon("view-refresh"));
+    action->setIcon(QIcon::fromTheme("view-refresh"));
     connect(action, SIGNAL(triggered(bool)),
             this, SIGNAL(refreshCache()));
     menu->exec(ui->packageView->viewport()->mapToGlobal(pos));

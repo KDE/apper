@@ -237,7 +237,7 @@ void CategoryModel::fillWithStandardGroups()
 void CategoryModel::fillWithServiceGroups()
 {
 #ifdef AS_CATEGORIES_PATH
-    KGlobal::locale()->insertCatalog("gnome-menus");
+    KLocale::global()->insertCatalog("gnome-menus");
     QFile file(QString(AS_CATEGORIES_PATH) + "/categories.xml");
      if (!file.open(QIODevice::ReadOnly)) {
          kDebug() << "Failed to open file";

@@ -26,7 +26,7 @@
 
 #include <KNotification>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 
 #include <KDebug>
 
@@ -108,7 +108,7 @@ void DistroUpgrade::checkDistroFinished(Transaction::Exit status, uint enlapsed)
 void DistroUpgrade::handleDistroUpgradeAction(uint action)
 {
     // get the sender cause there might be more than one
-    KNotification *notify = qobject_cast<KNotification*>(sender());
+    auto notify = qobject_cast<KNotification*>(sender());
     switch(action) {
         case 1:
             // Check to see if there isn't another process running
@@ -137,13 +137,13 @@ void DistroUpgrade::handleDistroUpgradeAction(uint action)
 
 void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    KNotification *notify = new KNotification("DistroUpgradeFinished");
+    auto notify = new KNotification("DistroUpgradeFinished");
     notify->setComponentName("apperd");
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
-        notify->setPixmap(KIcon("security-high").pixmap(64, 64));
+        notify->setPixmap(QIcon::fromTheme("security-high").pixmap(64, 64));
         notify->setText(i18n("Distribution upgrade finished. "));
     } else if (exitStatus == QProcess::NormalExit) {
-        notify->setPixmap(KIcon("dialog-warning").pixmap(64, 64));
+        notify->setPixmap(QIcon::fromTheme("dialog-warning").pixmap(64, 64));
         notify->setText(i18n("Distribution upgrade process exited with code %1.", exitCode));
     }/* else {
         notify->setText(i18n("Distribution upgrade didn't exit normally, the process probably crashed. "));
@@ -158,7 +158,7 @@ void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
 {
     QString text;
 
-    KNotification *notify = new KNotification("DistroUpgradeError");
+    auto notify = new KNotification("DistroUpgradeError");
     notify->setComponentName("apperd");
     switch(error) {
         case QProcess::FailedToStart:
@@ -171,7 +171,7 @@ void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
             text = i18n("The distribution upgrade process failed with an unknown error.");
             break;
     }
-    notify->setPixmap(KIcon("dialog-error").pixmap(64,64));
+    notify->setPixmap(QIcon::fromTheme("dialog-error").pixmap(64,64));
     notify->setText(text);
     notify->sendEvent();
 }

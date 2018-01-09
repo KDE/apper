@@ -55,7 +55,7 @@ void TransactionModel::addTransaction(PackageKit::Transaction *trans)
     QStandardItem *userI    = new QStandardItem;
     QStandardItem *appI     = new QStandardItem;
 
-    dateI->setText(KGlobal::locale()->formatDate(trans->timespec().date()));
+    dateI->setText(KLocale::global()->formatDate(trans->timespec().date()));
     // this is for the filterSort model
     dateI->setData(trans->timespec(), Qt::UserRole);
     dateI->setEditable(false);

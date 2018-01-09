@@ -22,7 +22,6 @@
 
 #include <QWidget>
 #include <QAbstractItemModel>
-#include <KIcon>
 
 namespace Ui {
     class SimplePage;

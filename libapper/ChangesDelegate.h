@@ -21,11 +21,7 @@
 #ifndef CHANGES_DELEGATE_H
 #define CHANGES_DELEGATE_H
 
-#include <QtCore/QtCore>
-#include <QtGui/QtGui>
 #include <KExtendableItemDelegate>
-
-#include <KIcon>
 
 /**
  * Delegate for displaying the packages
@@ -54,15 +50,15 @@ private:
     bool insideButton(const QRect &rect, const QPoint &pos) const;
 
     QWidget *m_viewport;
-    KIcon    m_packageIcon;
-    KIcon    m_collectionIcon;
-    KIcon    m_installIcon;
+    QIcon    m_packageIcon;
+    QIcon    m_collectionIcon;
+    QIcon    m_installIcon;
     QString  m_installString;
-    KIcon    m_removeIcon;
+    QIcon    m_removeIcon;
     QString  m_removeString;
-    KIcon    m_undoIcon;
+    QIcon    m_undoIcon;
     QString  m_undoString;
-    KIcon    m_checkedIcon;
+    QIcon    m_checkedIcon;
     int      m_extendPixmapWidth;
     QSize    m_buttonSize;
     QSize    m_buttonIconSize;

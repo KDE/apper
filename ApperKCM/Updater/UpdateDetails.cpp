@@ -208,13 +208,13 @@ void UpdateDetails::updateDetail(const QString &packageID,
     if (!issued.isNull() && !updated.isNull()) {
         description += "<p>" +
                        i18n("This notification was issued on %1 and last updated on %2.",
-                            KGlobal::locale()->formatDateTime(issued, KLocale::ShortDate),
-                            KGlobal::locale()->formatDateTime(updated, KLocale::ShortDate)) +
+                            KLocale::global()->formatDateTime(issued, KLocale::ShortDate),
+                            KLocale::global()->formatDateTime(updated, KLocale::ShortDate)) +
                        "</p>";
     } else if (!issued.isNull()) {
         description += "<p>" +
                        i18n("This notification was issued on %1.",
-                            KGlobal::locale()->formatDateTime(issued, KLocale::ShortDate)) +
+                            KLocale::global()->formatDateTime(issued, KLocale::ShortDate)) +
                        "</p>";
     }
 

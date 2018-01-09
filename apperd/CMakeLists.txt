@@ -23,8 +23,6 @@ add_library(kded_apperd MODULE ${kded_apperd_SRCS})
 target_link_libraries(kded_apperd
     KF5::WidgetsAddons
     KF5::KIOFileWidgets
-    KF5::KDELibs4Support
-    KF5::IconThemes
     KF5::Notifications
     KF5::DBusAddons
     ${PackageKitQt5_LIBRARIES}

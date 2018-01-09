@@ -28,6 +28,8 @@
 #include <QTreeView>
 #include <QHeaderView>
 
+#include <QPainter>
+
 #include "PackageModel.h"
 #include "PkIcons.h"
 
@@ -79,15 +81,15 @@ ChangesDelegate::ChangesDelegate(QAbstractItemView *parent) :
 }
 
 void ChangesDelegate::paint(QPainter *painter,
-                        const QStyleOptionViewItem &option,
-                        const QModelIndex &index) const
+                            const QStyleOptionViewItem &option,
+                            const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
     }
     bool leftToRight = (painter->layoutDirection() == Qt::LeftToRight);
 
-    QStyleOptionViewItemV4 opt(option);
+    QStyleOptionViewItem opt(option);
     QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
     painter->save();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
@@ -396,7 +398,7 @@ bool ChangesDelegate::editorEvent(QEvent *event,
 
     // We need move the option rect left because KExtendableItemDelegate
     // drew the extendPixmap
-    QStyleOptionViewItemV4 opt(option);
+    QStyleOptionViewItem opt(option);
     if (QApplication::isRightToLeft()) {
         opt.rect.setRight(option.rect.right() - m_extendPixmapWidth);
     } else {

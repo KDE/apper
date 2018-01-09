@@ -79,8 +79,8 @@ BrowseView::BrowseView(QWidget *parent)
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     packageView->setItemDelegate(delegate);
 
-    exportInstalledPB->setIcon(KIcon("document-export"));
-    importInstalledPB->setIcon(KIcon("document-import"));
+    exportInstalledPB->setIcon(QIcon::fromTheme("document-export"));
+    importInstalledPB->setIcon(QIcon::fromTheme("document-import"));
 
     KConfig config("apper");
     KConfigGroup viewGroup(&config, "BrowseView");
@@ -178,7 +178,7 @@ void BrowseView::showSizes(bool enabled)
 
 void BrowseView::on_packageView_customContextMenuRequested(const QPoint &pos)
 {
-    KMenu *menu = new KMenu(this);
+    auto menu = new KMenu(this);
     menu->addAction(m_showPackageVersion);
     menu->addAction(m_showPackageArch);
     menu->addAction(m_showPackageOrigin);

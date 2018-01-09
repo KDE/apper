@@ -43,7 +43,7 @@ PkSession::PkSession(QObject* parent)
     connect(m_pkInterface, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
-    QString locale(KGlobal::locale()->language() % QLatin1Char('.') % KGlobal::locale()->encoding());
+    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
     Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     // this enables not quitting when closing a transaction ui

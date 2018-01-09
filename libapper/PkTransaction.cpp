@@ -285,7 +285,7 @@ void PkTransaction::slotEulaRequired(const QString &eulaID, const QString &packa
         d->handlingActionRequired = true;
     }
 
-    LicenseAgreement *eula = new LicenseAgreement(eulaID, packageID, vendor, licenseAgreement, d->parentWindow);
+    auto eula = new LicenseAgreement(eulaID, packageID, vendor, licenseAgreement, d->parentWindow);
     connect(eula, SIGNAL(yesClicked()), this, SLOT(acceptEula()));
     connect(eula, SIGNAL(rejected()), this, SLOT(reject()));
     showDialog(eula);
@@ -730,7 +730,7 @@ void PkTransaction::setupTransaction(Transaction *transaction)
 
 void PkTransaction::showDialog(KDialog *dlg)
 {
-    PkTransactionWidget *widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
+    auto widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
     if (!widget || widget->isCancelVisible()) {
         dlg->setModal(d->parentWindow);
         dlg->show();

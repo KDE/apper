@@ -25,6 +25,9 @@
 #include <QPushButton>
 #include <QApplication>
 
+#include <QPainter>
+#include <QMouseEvent>
+
 #include "PackageModel.h"
 #include "PkIcons.h"
 

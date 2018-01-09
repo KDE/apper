@@ -25,7 +25,6 @@
 #include "PkIcons.h"
 
 #include <KIconLoader>
-#include <KStandardDirs>
 
 #include <KDebug>
 #include <KGlobal>
@@ -37,8 +36,10 @@ QHash<QString, QIcon> PkIcons::cache = QHash<QString, QIcon>();
 
 void PkIcons::configure()
 {
-    KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-info/icons/", "/usr/share/app-install/icons/");
-    KIconLoader::global()->reconfigure("apper");
+    QIcon::setThemeSearchPaths(QIcon::themeSearchPaths() +
+                               QStringList{"xdgdata-pixmap", "/usr/share/app-info/icons/", "/usr/share/app-install/icons/"});
+//    KStandardDirs:: KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-info/icons/", "/usr/share/app-install/icons/");
+//    KIconLoader::global()->reconfigure("apper");
     PkIcons::init = true;
 }
 
