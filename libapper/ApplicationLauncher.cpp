@@ -132,4 +132,4 @@ void ApplicationLauncher::on_showCB_toggled(bool checked)
     config.sync();
 }
 
-#include "ApplicationLauncher.moc"
+#include "moc_ApplicationLauncher.cpp"

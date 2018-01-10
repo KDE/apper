@@ -46,4 +46,4 @@ void CustomProgressBar::setRemaining(uint remaining)
     m_remaining = remaining;
 }
 
-#include "CustomProgressBar.moc"
+#include "moc_CustomProgressBar.cpp"

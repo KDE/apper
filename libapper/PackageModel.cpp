@@ -870,5 +870,3 @@ void PackageModel::setCheckable(bool checkable)
 {
     m_checkable = checkable;
 }
-
-#include "PackageModel.moc"

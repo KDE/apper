@@ -797,4 +797,4 @@ void PkTransaction::enableJobWatcher(bool enable)
     d->jobWatcher = enable;
 }
 
-#include "PkTransaction.moc"
+#include "moc_PkTransaction.cpp"

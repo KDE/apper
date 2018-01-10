@@ -343,4 +343,4 @@ QSize ApplicationsDelegate::sizeHint(const QStyleOptionViewItem &option,
     return size;
 }
 
-#include "ApplicationsDelegate.moc"
+#include "moc_ApplicationsDelegate.cpp"

@@ -1052,3 +1052,5 @@ QString PkStrings::lastCacheRefreshSubTitle(uint lastTime)
     }
     return i18n("It's strongly recommended that you check for new updates now");
 }
+
+#include "moc_PkStrings.cpp"

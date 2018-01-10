@@ -265,4 +265,4 @@ void Requirements::showUntrustedButton()
     m_untrustedButton->click();
 }
 
-#include "Requirements.moc"
+#include "moc_Requirements.cpp"

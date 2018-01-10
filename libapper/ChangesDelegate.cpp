@@ -433,4 +433,4 @@ QSize ChangesDelegate::sizeHint(const QStyleOptionViewItem &option, const QModel
     return ret;
 }
 
-#include "ChangesDelegate.moc"
+#include "moc_ChangesDelegate.cpp"

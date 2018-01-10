@@ -332,3 +332,4 @@ QString PkIcons::lastCacheRefreshIconName(uint lastTime)
     return QLatin1String("security-low");
 }
 
+#include "moc_PkIcons.cpp"

@@ -326,4 +326,4 @@ PkTransaction *PkTransactionWidget::transaction() const
     return m_trans;
 }
 
-#include "PkTransactionWidget.moc"
+#include "moc_PkTransactionWidget.cpp"

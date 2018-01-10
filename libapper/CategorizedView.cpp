@@ -56,3 +56,5 @@ void CategorizedView::setModel(QAbstractItemModel *model)
 // //     }
 #endif
 }
+
+#include "moc_CategorizedView.cpp"

@@ -43,7 +43,7 @@ void TransactionDelegate::paint(QPainter *painter,
         int  progress = index.data(PkTransactionProgressModel::RoleProgress).toInt();
         QString text  = index.data(Qt::DisplayRole).toString();
 
-        QStyleOptionProgressBarV2 progressBarOption;
+        QStyleOptionProgressBar progressBarOption;
         progressBarOption.state = QStyle::State_Enabled;
         progressBarOption.direction = QApplication::layoutDirection();
         progressBarOption.rect = option.rect;
@@ -57,7 +57,7 @@ void TransactionDelegate::paint(QPainter *painter,
 
         QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
     } else {
-        QStyleOptionViewItemV4 opt1(option);
+        QStyleOptionViewItem opt1(option);
         if (opt1.state & QStyle::State_HasFocus) {
             opt1.state ^= QStyle::State_HasFocus;
         }
@@ -84,4 +84,4 @@ QSize TransactionDelegate::sizeHint(const QStyleOptionViewItem &option,
     return size;
 }
 
-#include "TransactionDelegate.moc"
+#include "moc_TransactionDelegate.cpp"

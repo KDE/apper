@@ -76,3 +76,5 @@ QString RepoSig::packageID() const
 {
     return m_packageID;
 }
+
+#include "moc_RepoSig.cpp"

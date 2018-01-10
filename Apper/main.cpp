@@ -29,12 +29,13 @@
 #include <KAboutData>
 #include <KLocalizedString>
 
+#include <QIcon>
 #include <QDir>
-#include <QCommandLineParser>
-#include <QCommandLineOption>
 
 int main(int argc, char **argv)
 {
+    QApplication::setWindowIcon(QIcon::fromTheme("system-software-install"));
+
     Apper app(argc, argv);
     KLocalizedString::setApplicationDomain("apper");
 
@@ -45,7 +46,6 @@ int main(int argc, char **argv)
                      KAboutLicense::LicenseKey::GPL);
     aboutData.addAuthor(i18n("Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
     aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"), "@");
-    aboutData.setProgramIconName("system-software-install");
 
     KAboutData::setApplicationData(aboutData);
 

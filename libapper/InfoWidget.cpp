@@ -22,7 +22,7 @@
 #include "ui_InfoWidget.h"
 
 
-#include <KTextBrowser>
+#include <QTextBrowser>
 #include <KDebug>
 
 InfoWidget::InfoWidget(QWidget *parent) :
@@ -77,4 +77,4 @@ void InfoWidget::reset()
     setDetails("");
 }
 
-#include "InfoWidget.moc"
+#include "moc_InfoWidget.cpp"

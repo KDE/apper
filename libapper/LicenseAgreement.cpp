@@ -41,7 +41,7 @@ LicenseAgreement::LicenseAgreement(const QString &eulaID, const QString &package
     setPlainCaption(i18n("License Agreement Required"));
     ui->title->setText(i18n("License required for %1 by %2", Transaction::packageName(packageID), vendor));
 
-    ui->ktextbrowser->setText(licenseAgreement);
+    ui->textbrowser->setText(licenseAgreement);
 }
 
 LicenseAgreement::~LicenseAgreement()
@@ -54,4 +54,4 @@ QString LicenseAgreement::id() const
     return m_id;
 }
 
-#include "LicenseAgreement.moc"
+#include "moc_LicenseAgreement.cpp"
