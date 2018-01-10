@@ -38,7 +38,7 @@ RepoSig::RepoSig(const QString &packageID,
                  const QString &keyTimestamp,
                  PackageKit::Transaction::SigType type,
                  QWidget *parent) :
-    KDialog(parent),
+    QDialog(parent),
     m_sigType(type),
     m_keyID(keyId),
     m_packageID(packageID),
@@ -46,10 +46,9 @@ RepoSig::RepoSig(const QString &packageID,
 {
     Q_UNUSED(keyFingerprint)
     Q_UNUSED(keyTimestamp)
-    ui->setupUi(mainWidget());
+    ui->setupUi(this);
 
-    setButtons(KDialog::Cancel | KDialog::Yes);
-    setPlainCaption(i18n("Software signature is required"));
+    setWindowTitle(i18n("Software signature is required"));
 
     ui->repoNameL->setText(repoName);
     ui->sigUrlL->setText(keyUrl);

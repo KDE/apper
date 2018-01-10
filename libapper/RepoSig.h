@@ -29,7 +29,7 @@ namespace Ui {
     class RepoSig;
 }
 
-class RepoSig : public KDialog
+class RepoSig : public QDialog
 {
     Q_OBJECT
 public:
