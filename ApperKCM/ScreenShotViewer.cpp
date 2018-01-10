@@ -48,16 +48,15 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
     setWidget(m_screenshotL);
     setWindowIcon(QIcon::fromTheme("layer-visible-on"));
 
-    KTemporaryFile *tempFile = new KTemporaryFile;
-    tempFile->setPrefix("appgetfull");
-    tempFile->setSuffix(".png");
+    auto tempFile = new QTemporaryFile;
+//    tempFile->setPrefix("appgetfull");
+//    tempFile->setSuffix(".png");
     tempFile->open();
     KIO::FileCopyJob *job = KIO::file_copy(QUrl(url),
                                             QUrl(tempFile->fileName()),
                                             -1,
                                             KIO::Overwrite | KIO::HideProgressInfo);
-    connect(job, SIGNAL(result(KJob*)),
-            this, SLOT(resultJob(KJob*)));
+    connect(job, &KIO::FileCopyJob::result, this, &ScreenShotViewer::resultJob);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
@@ -75,7 +74,7 @@ ScreenShotViewer::~ScreenShotViewer()
 void ScreenShotViewer::resultJob(KJob *job)
 {
     m_busySeq->stop();
-    KIO::FileCopyJob *fJob = qobject_cast<KIO::FileCopyJob*>(job);
+    auto fJob = qobject_cast<KIO::FileCopyJob*>(job);
     if (!fJob->error()) {
         m_screenshot = QPixmap(fJob->destUrl().toLocalFile());
 
