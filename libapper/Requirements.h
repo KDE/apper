@@ -30,7 +30,7 @@ namespace Ui {
 }
 
 class PackageModel;
-class Requirements : public KDialog
+class Requirements : public QDialog
 {
     Q_OBJECT
     Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)

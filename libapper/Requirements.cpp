@@ -31,7 +31,7 @@
 #include <KGlobal>
 
 Requirements::Requirements(PackageModel *model, QWidget *parent) :
-    KDialog(parent),
+    QDialog(parent),
     m_embed(false),
     m_shouldShow(true),
     m_untrustedButton(0),
@@ -39,7 +39,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
 {
     setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->setupUi(mainWidget());
+    ui->setupUi(this);
     connect(ui->confirmCB, SIGNAL(toggled(bool)), this, SLOT(on_confirmCB_Toggled(bool)));
 
     ApplicationSortFilterModel *proxy = new ApplicationSortFilterModel(this);
@@ -54,20 +54,23 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
 
     m_hideAutoConfirm = false;
 
-    setCaption(i18n("Additional changes"));
+    setWindowTitle(i18n("Additional changes"));
     setWindowIcon(QIcon::fromTheme("dialog-warning"));
-    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Help);
-    setButtonText(KDialog::Ok, i18n("Continue"));
+//    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Help);
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(i18n("Continue"));
+//    setButtonText(KDialog::Ok, i18n("Continue"));
     // restore size
     setMinimumSize(QSize(600,480));
-    setInitialSize(QSize(600,600));
+//    setInitialSize(QSize(600,600));
     KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
-    restoreDialogSize(requirementsDialog);
+//    restoreGeometry(requirementsDialog.readEntry("geometry").toByteArray());
+//    restoreDialogSize(requirementsDialog);
 
-    button(KDialog::Help)->setFlat(true);
-    button(KDialog::Help)->setEnabled(false);
-    button(KDialog::Help)->setIcon(QIcon::fromTheme("download"));
+    QPushButton *help = ui->buttonBox->button(QDialogButtonBox::Help);
+    help->setFlat(true);
+    help->setEnabled(false);
+    help->setIcon(QIcon::fromTheme("download"));
 
     m_buttonGroup = new QButtonGroup(this);
     connect(m_buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
@@ -177,7 +180,7 @@ Requirements::~Requirements()
 {
     KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
-    saveDialogSize(requirementsDialog);
+    requirementsDialog.writeEntry("geometry", saveGeometry());
 
     delete ui;
 }
@@ -195,16 +198,17 @@ void Requirements::setEmbedded(bool embedded)
 
 void Requirements::setDownloadSizeRemaining(qulonglong size)
 {
+    QPushButton *help = ui->buttonBox->button(QDialogButtonBox::Help);
     if (size) {
         QString text;
         text = i18nc("how many bytes are required for download",
                      "Need to get %1 of archives",
                      KLocale::global()->formatByteSize(size));
-        button(KDialog::Help)->setText(text);
-        button(KDialog::Help)->setToolTip(text);
-        button(KDialog::Help)->show();
+        help->setText(text);
+        help->setToolTip(text);
+        help->show();
     } else {
-        button(KDialog::Help)->hide();
+        help->hide();
     }
 }
 
@@ -219,15 +223,16 @@ bool Requirements::shouldShow() const
     return (m_shouldShow && !ui->confirmCB->isChecked());
 }
 
-void Requirements::slotButtonClicked(int button)
+void Requirements::slotButtonClicked(int)
 {
-    if (button == KDialog::Ok &&
-            m_untrustedButton &&
-            !m_untrustedButton->isVisible()) {
-        showUntrustedButton();
-    } else {
-        KDialog::slotButtonClicked(button);
-    }
+    // FIXME
+//    if (button == KDialog::Ok &&
+//            m_untrustedButton &&
+//            !m_untrustedButton->isVisible()) {
+//        showUntrustedButton();
+//    } else {
+//        KDialog::slotButtonClicked(button);
+//    }
 }
 
 void Requirements::on_confirmCB_Toggled(bool checked)
