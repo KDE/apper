@@ -728,7 +728,7 @@ void PkTransaction::setupTransaction(Transaction *transaction)
 #endif //HAVE_DEBCONFKDE
 }
 
-void PkTransaction::showDialog(KDialog *dlg)
+void PkTransaction::showDialog(QDialog *dlg)
 {
     auto widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
     if (!widget || widget->isCancelVisible()) {

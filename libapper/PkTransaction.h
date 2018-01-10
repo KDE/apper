@@ -23,7 +23,7 @@
 
 #include <QObject>
 #include <kdemacros.h>
-#include <KDialog>
+#include <QDialog>
 
 #include <Transaction>
 
@@ -119,7 +119,7 @@ Q_SIGNALS:
     void titleChanged(const QString &title);
     void sorry(const QString &title, const QString &text, const QString &details);
     void errorMessage(const QString &title, const QString &text, const QString &details);
-    void dialog(KDialog *widget);
+    void dialog(QDialog *widget);
 
     void allowCancelChanged();
     void isCallerActiveChanged();
@@ -161,7 +161,7 @@ private Q_SLOTS:
     void reject();
 
 private:
-    void showDialog(KDialog *dialog);
+    void showDialog(QDialog *dialog);
     void showError(const QString &title, const QString &description, const QString &details = QString());
     void showSorry(const QString &title, const QString &description, const QString &details = QString());
 

@@ -17,7 +17,16 @@
    </sizepolicy>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item row="0" column="0" colspan="2">
@@ -74,7 +83,7 @@ background: transparent;
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="KDialogButtonBox" name="kdialogbuttonbox">
+    <widget class="QDialogButtonBox" name="kdialogbuttonbox">
      <property name="standardButtons">
       <set>QDialogButtonBox::Close</set>
      </property>
@@ -82,13 +91,6 @@ background: transparent;
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KDialogButtonBox</class>
-   <extends>QDialogButtonBox</extends>
-   <header>kdialogbuttonbox.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -27,22 +27,21 @@
 #include <KDebug>
 #include <KService>
 #include <KConfig>
+#include <KConfigGroup>
 
 ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
-    KDialog(parent),
+    QDialog(parent),
     m_embed(false),
     ui(new Ui::ApplicationLauncher)
 {
-    ui->setupUi(mainWidget());
-    connect(ui->showCB, SIGNAL(toggled(bool)), this, SLOT(on_showCB_toggled(bool)));
+    ui->setupUi(this);
+    connect(ui->showCB, &QCheckBox::toggled, this, &ApplicationLauncher::on_showCB_toggled);
     setObjectName("ApplicationLauncher");
 
-    connect(ui->kdialogbuttonbox, SIGNAL(rejected()), this, SLOT(accept()));
-    setButtons(KDialog::None);
+    connect(ui->kdialogbuttonbox, &QDialogButtonBox::rejected, this, &ApplicationLauncher::accept);
     setWindowIcon(QIcon::fromTheme("task-complete"));
 
-    connect(ui->applicationsView, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(itemClicked(QModelIndex)));
+    connect(ui->applicationsView, &QListView::clicked, this, &ApplicationLauncher::itemClicked);
 }
 
 ApplicationLauncher::~ApplicationLauncher()
@@ -75,7 +74,7 @@ bool ApplicationLauncher::hasApplications()
     m_files.removeDuplicates();
 
     QStandardItem *item;
-    foreach (const QString &desktop, m_files) {
+    for (const QString &desktop : m_files) {
         // we use KService to parse the .desktop file because findByDestopPath
         // might fail because the Sycoca database is not up to date yet.
         KService service(desktop);

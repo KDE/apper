@@ -21,7 +21,7 @@
 #ifndef APPLICATION_LAUNCHER_H
 #define APPLICATION_LAUNCHER_H
 
-#include <KDialog>
+#include <QDialog>
 #include <QModelIndex>
 
 #include <Transaction>
@@ -30,7 +30,7 @@ namespace Ui {
     class ApplicationLauncher;
 }
 
-class Q_DECL_EXPORT ApplicationLauncher : public KDialog
+class Q_DECL_EXPORT ApplicationLauncher : public QDialog
 {
     Q_OBJECT
     Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)
