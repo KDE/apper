@@ -34,11 +34,13 @@
 #include <KDesktopFile>
 #include <KConfigGroup>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <Daemon>
 
 #include <config.h>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER)
 
 using namespace PackageKit;
 
@@ -131,8 +133,9 @@ int CategoryModel::rowCount(const QModelIndex &parent) const
 
 void CategoryModel::setRootIndex(const QModelIndex &index)
 {
+    beginResetModel();
     m_rootIndex = index;
-    reset();
+    endResetModel();
     emit finished();
 }
 
@@ -158,7 +161,7 @@ void CategoryModel::category(const QString &parentId,
                              const QString &summary,
                              const QString &icon)
 {
-    kDebug() << parentId << categoryId << name << summary << icon;
+    qCDebug(APPER) << parentId << categoryId << name << summary << icon;
     QStandardItem *item = new QStandardItem(name);
     item->setDragEnabled(false);
     item->setData(Transaction::RoleSearchGroup, SearchRole);
@@ -209,7 +212,7 @@ void CategoryModel::fillWithStandardGroups()
 {
     // Get the groups
     m_groups = Daemon::global()->groups();
-    kDebug();
+    qCDebug(APPER);
     QStandardItem *item;
     for (int i = 1; i < 64; ++i) {
         if (m_groups & i) {
@@ -240,7 +243,7 @@ void CategoryModel::fillWithServiceGroups()
     KLocale::global()->insertCatalog("gnome-menus");
     QFile file(QString(AS_CATEGORIES_PATH) + "/categories.xml");
      if (!file.open(QIODevice::ReadOnly)) {
-         kDebug() << "Failed to open file";
+         qCDebug(APPER) << "Failed to open file";
          fillWithStandardGroups();
          return;
     }
@@ -249,7 +252,7 @@ void CategoryModel::fillWithServiceGroups()
     while(xml.readNextStartElement() && !xml.hasError()) {
         // Read next element.
         if(xml.tokenType() == QXmlStreamReader::StartDocument) {
-//             kDebug() << "StartDocument";
+//             qCDebug(APPER) << "StartDocument";
             continue;
         }
 

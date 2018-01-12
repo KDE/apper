@@ -23,7 +23,7 @@
 #include "CategoryDrawer.h"
 
 #include <KFileItemDelegate>
-#include <KDebug>
+#include <QLoggingCategory>
 
 CategorizedView::CategorizedView(QWidget *parent)
     : KCategorizedView(parent)

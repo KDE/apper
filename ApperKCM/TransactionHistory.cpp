@@ -31,9 +31,9 @@
 #include <QMenu>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KGlobal>
+#include <KFormat>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 TransactionHistory::TransactionHistory(QWidget *parent)
  : QWidget(parent)
@@ -46,7 +46,7 @@ TransactionHistory::TransactionHistory(QWidget *parent)
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setFilterKeyColumn(-1);
     treeView->setModel(m_proxyModel);
-    treeView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    treeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     // Get the data
     refreshList();
@@ -81,7 +81,8 @@ void TransactionHistory::refreshList()
     // Refresh time
     QString text;
     uint time = Daemon::global()->getTimeSinceAction(Transaction::RoleRefreshCache) * 1000;
-    text = i18n("Time since last cache refresh: %1", KLocale::global()->prettyFormatDuration(time));
+//    text = i18n("Time since last cache refresh: %1", KLocale::global()->prettyFormatDuration(time));
+    text = i18n("Time since last cache refresh: %1", KFormat().formatDuration(time));
     timeCacheLabel->setText(text);
 }
 

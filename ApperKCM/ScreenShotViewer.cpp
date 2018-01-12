@@ -24,7 +24,7 @@
 #include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KPixmapSequence>
 #include <KIO/Job>
 

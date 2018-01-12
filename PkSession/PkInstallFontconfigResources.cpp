@@ -29,7 +29,9 @@
 #include <QFile>
 
 #include <KLocalizedString>
-#include <KDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
                                                            const QStringList &resources,
@@ -55,13 +57,13 @@ PkInstallFontconfigResources::PkInstallFontconfigResources(uint xid,
         // TODO add name field from /usr/share/xml/iso-codes/iso_639.xml into model
         if (!font.startsWith(QLatin1String(":lang="))) {
             errors << QString("not recognised prefix: '%1'").arg(font);
-            kWarning() << QString("not recognised prefix: '%1'").arg(font);
+            qCWarning(APPER_SESSION) << QString("not recognised prefix: '%1'").arg(font);
             continue;
         }
         int size = font.size();
         if (size < 7 || size > 20) {
             errors << QString("lang tag malformed: '%1'").arg(font);
-            kWarning() << QString("lang tag malformed: '%1'").arg(font);
+            qCWarning(APPER_SESSION) << QString("lang tag malformed: '%1'").arg(font);
             continue;
         }
 

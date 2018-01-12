@@ -27,7 +27,7 @@
 
 #include <KCategorizedSortFilterProxyModel>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 ReviewChanges::ReviewChanges(PackageModel *model, QWidget *parent) :
     QWidget(parent),

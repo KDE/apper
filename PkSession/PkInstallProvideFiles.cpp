@@ -28,7 +28,7 @@
 
 #include <KLocalizedString>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
                                              const QStringList &files,

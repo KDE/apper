@@ -24,13 +24,15 @@
 #include <QUrl>
 #include <QFileInfo>
 
-#include <KDebug>
+#include <QLoggingCategory>
 #include <PkIcons.h>
 #include <KLocalizedString>
 #include <QMimeType>
 #include <QMimeDatabase>
 #include <KIconLoader>
 #include <KService>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 FilesModel::FilesModel(const QStringList &files, const QStringList &mimes, QObject *parent)
 : QStandardItemModel(parent),
@@ -85,7 +87,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
         if (fileInfo.isFile()) {
             QMimeDatabase db;
             QMimeType mime = db.mimeTypeForFile(path, QMimeDatabase::MatchContent);
-            kDebug() << url << mime.name();
+            qCDebug(APPER_SESSION) << url << mime.name();
             foreach (const QString &mimeType, m_mimes) {
                 if (mime.name() == mimeType) {
                     ret = true;

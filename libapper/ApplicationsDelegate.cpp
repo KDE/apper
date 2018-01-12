@@ -20,7 +20,7 @@
 
 #include "ApplicationsDelegate.h"
 
-#include <KDebug>
+#include <QLoggingCategory>
 #include <KLocalizedString>
 #include <QPushButton>
 #include <QApplication>

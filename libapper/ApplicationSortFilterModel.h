@@ -25,7 +25,7 @@
 
 #include <Transaction>
 
-#include <kdemacros.h>
+//#include <kdemacros.h>
 
 using namespace PackageKit;
 

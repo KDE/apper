@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>LicenseAgreement</class>
- <widget class="QWidget" name="LicenseAgreement">
+ <widget class="QDialog" name="LicenseAgreement">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,6 +14,9 @@
    <string>License Agreement Required</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0">
+    <widget class="QTextBrowser" name="textbrowser"/>
+   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="title">
      <property name="font">
@@ -31,9 +34,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QTextBrowser" name="textbrowser"/>
-   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
@@ -41,6 +41,13 @@
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

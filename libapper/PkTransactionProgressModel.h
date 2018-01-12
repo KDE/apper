@@ -25,7 +25,7 @@
 
 #include <Transaction>
 
-#include <kdemacros.h>
+//#include <kdemacros.h>
 
 class Q_DECL_EXPORT PkTransactionProgressModel: public QStandardItemModel
 {
@@ -44,6 +44,8 @@ public:
     ~PkTransactionProgressModel();
 
     void clear();
+
+    virtual QHash<int,QByteArray> roleNames() const override;
 
 public Q_SLOTS:
     void currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);

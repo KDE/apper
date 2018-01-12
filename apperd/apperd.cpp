@@ -21,8 +21,10 @@
 #include "apperd.h"
 #include "ApperdThread.h"
 
-#include <KGenericFactory>
-#include <KDebug>
+#include <KPluginFactory>
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(APPER_DAEMON, "apper.daemon")
 
 K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperD>();)
 K_EXPORT_PLUGIN(ApperFactory("apperd", "apper"))

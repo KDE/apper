@@ -26,7 +26,7 @@
 #include "CheckableHeader.h"
 
 #include <QMenu>
-#include <KGenericFactory>
+//#include <KGenericFactory>
 #include <KPixmapSequence>
 #include <KAboutData>
 #include <KIconLoader>
@@ -40,9 +40,11 @@
 
 #include <QDBusConnection>
 
-#include <KGlobalSettings>
+#include <KConfig>
+#include <KFormat>
+//#include <KGlobalSettings>
 #include <KMessageBox>
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <Daemon>
 
@@ -55,8 +57,8 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 {
     ui->setupUi(this);
     updatePallete();
-    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-            this, SLOT(updatePallete()));
+//    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+//            this, SLOT(updatePallete()));
 
     m_updatesModel = new PackageModel(this);
     m_updatesModel->setCheckable(true);
@@ -81,12 +83,12 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     ui->packageView->setHeader(m_header);
 
     // This must be set AFTER the model is set, otherwise it doesn't work
-    m_header->setResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
-    m_header->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
-    m_header->setResizeMode(PackageModel::CurrentVersionCol, QHeaderView::ResizeToContents);
-    m_header->setResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
-    m_header->setResizeMode(PackageModel::OriginCol, QHeaderView::ResizeToContents);
-    m_header->setResizeMode(PackageModel::SizeCol, QHeaderView::ResizeToContents);
+    m_header->setSectionResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
+    m_header->setSectionResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    m_header->setSectionResizeMode(PackageModel::CurrentVersionCol, QHeaderView::ResizeToContents);
+    m_header->setSectionResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
+    m_header->setSectionResizeMode(PackageModel::OriginCol, QHeaderView::ResizeToContents);
+    m_header->setSectionResizeMode(PackageModel::SizeCol, QHeaderView::ResizeToContents);
     m_header->setStretchLastSection(false);
 
     // Setup the busy cursor
@@ -239,7 +241,7 @@ void Updater::checkEnableUpdateButton()
     unsigned long dwSize = m_updatesModel->downloadSize();
     if (dwSize) {
         emit downloadSize(i18n("Estimated download size: %1",
-                               KLocale::global()->formatByteSize(dwSize)));
+                               KFormat().formatByteSize(dwSize)));
     } else {
         emit downloadSize(QString());
     }

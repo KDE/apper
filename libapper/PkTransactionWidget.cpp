@@ -24,12 +24,12 @@
 #include "ui_PkTransactionWidget.h"
 
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 #include <KPixmapSequence>
 #include <KPixmapSequenceOverlayPainter>
 #include <KIconLoader>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -48,6 +48,8 @@
 #include "TransactionDelegate.h"
 #include "PkTransactionProgressModel.h"
 #include "PackageModel.h"
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_LIB)
 
 class PkTransactionWidgetPrivate
 {
@@ -122,14 +124,14 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
     if (role == Transaction::RoleRefreshCache) {
         trans->progressModel()->setColumnCount(1);
         ui->progressView->setModel(trans->progressModel());
-        ui->progressView->header()->setResizeMode(0, QHeaderView::Stretch);
+        ui->progressView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
     } else {
         trans->progressModel()->setColumnCount(3);
         ui->progressView->setModel(trans->progressModel());
         ui->progressView->header()->reset();
-        ui->progressView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-        ui->progressView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-        ui->progressView->header()->setResizeMode(2, QHeaderView::Stretch);
+        ui->progressView->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+        ui->progressView->header()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+        ui->progressView->header()->setSectionResizeMode(2, QHeaderView::Stretch);
     }
 
     connect(m_trans, SIGNAL(percentageChanged()),
@@ -191,7 +193,7 @@ void PkTransactionWidget::updateUi()
     // sets the action icon to be the window icon
     PkTransaction *transaction = qobject_cast<PkTransaction*>(sender());
     if (transaction == 0 && (transaction = m_trans) == 0) {
-        kWarning() << "no transaction object";
+        qCWarning(APPER_LIB) << "no transaction object";
         return;
     }
 

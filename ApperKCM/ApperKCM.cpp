@@ -23,16 +23,16 @@
 
 #include <config.h>
 
-#include <KGenericFactory>
+//#include <KGenericFactory>
 #include <KAboutData>
 
 #include <KLocalizedString>
-#include <KStandardDirs>
+#include <QStandardPaths>
 #include <KMessageBox>
 #include <KFileItemDelegate>
 #include <KHelpMenu>
-#include <KTabBar>
-#include <KCmdLineArgs>
+#include <QTabBar>
+//#include <KCmdLineArgs>
 #include <QToolBar>
 #include <QSignalMapper>
 #include <QTimer>
@@ -48,7 +48,7 @@
 #include <AppStream.h>
 #endif
 
-#include <KDebug>
+#include <QLoggingCategory>
 #include <Daemon>
 
 #include "FiltersMenu.h"
@@ -58,12 +58,14 @@
 #include "Settings/Settings.h"
 #include "Updater/Updater.h"
 
+Q_LOGGING_CATEGORY(APPER, "apper")
+
 #define BAR_SEARCH   0
 #define BAR_UPDATE   1
 #define BAR_SETTINGS 2
 #define BAR_TITLE    3
 
-KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
+//KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
 
 K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperKCM>();)
 K_EXPORT_PLUGIN(ApperFactory("kcm_apper", "apper"))
@@ -98,8 +100,9 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     connect(Daemon::global(), SIGNAL(changed()), this, SLOT(daemonChanged()));
 
     // Set the current locale
-    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
-    Daemon::global()->setHints(QLatin1String("locale=") % locale);
+    //TODO FIXME
+//    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
+//    Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     ui->setupUi(this);
 
@@ -158,7 +161,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     ui->browseView->setCategoryModel(m_groupsModel);
     connect(m_groupsModel, SIGNAL(finished()),
             this, SLOT(setupHomeModel()));
-    ui->homeView->setSpacing(KDialog::spacingHint());
+//    ui->homeView->setSpacing(QDialog::spacingHint());
     ui->homeView->viewport()->setAttribute(Qt::WA_Hover);
 
     KFileItemDelegate *delegate = new KFileItemDelegate(this);
@@ -411,7 +414,7 @@ void ApperKCM::on_homeView_activated(const QModelIndex &index)
 
         // cache the search
         m_searchRole = static_cast<Transaction::Role>(index.data(CategoryModel::SearchRole).toUInt());
-        kDebug() << m_searchRole << index.data(CategoryModel::CategoryRole).toString();
+        qCDebug(APPER) << m_searchRole << index.data(CategoryModel::CategoryRole).toString();
         if (m_searchRole == Transaction::RoleResolve) {
 #ifdef HAVE_APPSTREAM
             CategoryMatcher parser = index.data(CategoryModel::CategoryRole).value<CategoryMatcher>();
@@ -714,7 +717,7 @@ void ApperKCM::search()
         break;
 #endif
     default:
-        kWarning() << "Search type not defined yet";
+        qCWarning(APPER) << "Search type not defined yet";
         emit caption();
         disconnectTransaction();
         m_searchTransaction = 0;

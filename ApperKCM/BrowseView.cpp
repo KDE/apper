@@ -29,7 +29,7 @@
 
 #include <Daemon>
 
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KPixmapSequence>
 #include <QMenu>
 #include <KIconLoader>
@@ -42,7 +42,7 @@
 #include <QAbstractItemView>
 #include <QScrollBar>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 using namespace PackageKit;
 
@@ -66,12 +66,12 @@ BrowseView::BrowseView(QWidget *parent)
     packageView->sortByColumn(PackageModel::NameCol, Qt::AscendingOrder);
     packageView->header()->setDefaultAlignment(Qt::AlignCenter);
     packageView->header()->setStretchLastSection(false);
-    packageView->header()->setResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
-    packageView->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(PackageModel::OriginCol, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(PackageModel::SizeCol, QHeaderView::ResizeToContents);
-    packageView->header()->setResizeMode(PackageModel::ActionCol, QHeaderView::ResizeToContents);
+    packageView->header()->setSectionResizeMode(PackageModel::NameCol, QHeaderView::Stretch);
+    packageView->header()->setSectionResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    packageView->header()->setSectionResizeMode(PackageModel::ArchCol, QHeaderView::ResizeToContents);
+    packageView->header()->setSectionResizeMode(PackageModel::OriginCol, QHeaderView::ResizeToContents);
+    packageView->header()->setSectionResizeMode(PackageModel::SizeCol, QHeaderView::ResizeToContents);
+    packageView->header()->setSectionResizeMode(PackageModel::ActionCol, QHeaderView::ResizeToContents);
 
     // Hide current Version since it's useless for us
     packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, true);
@@ -280,11 +280,10 @@ void BrowseView::on_exportInstalledPB_clicked()
     // We will assume the installed model
     // is populated since the user is seeing it.
     QString fileName;
-    fileName = KFileDialog::getSaveFileName(QUrl(),
-                                            "*.catalog",
-                                            this,
+    fileName = QFileDialog::getSaveFileName(this,
+                                            i18n("Export installed packages"),
                                             QString(),
-                                            KFileDialog::ConfirmOverwrite);
+                                            QStringLiteral("*.catalog"));
     if (fileName.isEmpty()) {
         return;
     }
@@ -305,7 +304,10 @@ void BrowseView::on_exportInstalledPB_clicked()
 void BrowseView::on_importInstalledPB_clicked()
 {
     QString fileName;
-    fileName = KFileDialog::getOpenFileName(QUrl(), "*.catalog", this);
+    fileName = QFileDialog::getOpenFileName(this,
+                                            i18n("Install packages from catalog"),
+                                            QString(),
+                                            QStringLiteral("*.catalog"));
     if (fileName.isEmpty()) {
         return;
     }

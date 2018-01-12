@@ -26,7 +26,7 @@
 #include <QStringList>
 #include <QList>
 
-#include <kdemacros.h>
+//#include <kdemacros.h>
 
 class Q_DECL_EXPORT CategoryMatcher
 {

@@ -30,7 +30,7 @@
 #include <KLocalizedString>
 #include <KService>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
                                                const QStringList &files,

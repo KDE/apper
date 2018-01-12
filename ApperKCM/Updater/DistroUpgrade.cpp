@@ -28,16 +28,16 @@
 #include <KMessageBox>
 #include <KColorScheme>
 
-#include <solid/powermanagement.h>
+//#include <solid/powermanagement.h>
 #include <solid/device.h>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 DistroUpgrade::DistroUpgrade(QWidget *parent) :
     KMessageWidget(parent)
 {
-    QAction *action = new QAction(i18n("Upgrade"), this);
-    connect(action, SIGNAL(triggered()), this, SLOT(startDistroUpgrade()));
+    auto action = new QAction(i18n("Upgrade"), this);
+    connect(action, &QAction::triggered, this, &DistroUpgrade::startDistroUpgrade);
     addAction(action);
 }
 

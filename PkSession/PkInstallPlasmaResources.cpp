@@ -29,7 +29,7 @@
 #include <QStandardItemModel>
 #include <KLocalizedString>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
                                                    const QStringList &resources,

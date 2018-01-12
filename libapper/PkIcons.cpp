@@ -26,8 +26,11 @@
 
 #include <KIconLoader>
 
-#include <KDebug>
-#include <KGlobal>
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(APPER_LIB, "apper.lib")
+
+//#include <KGlobal>
 
 using namespace PackageKit;
 
@@ -116,7 +119,7 @@ QString PkIcons::statusIconName(Transaction::Status status)
     case Transaction::StatusCheckLibraries       : return "package-info";
     case Transaction::StatusCopyFiles            : return "package-info";
     }
-    kDebug() << "status icon unrecognised: " << status;
+    qCDebug(APPER_LIB) << "status icon unrecognised: " << status;
     return "help-browser";
 }
 
@@ -164,7 +167,7 @@ QString PkIcons::statusAnimation(Transaction::Status status)
     case Transaction::StatusWait                : return "pk-waiting";
     case Transaction::StatusWaitingForAuth      : return "dialog-password";
     case Transaction::StatusScanProcessList     : return "utilities-system-monitor";
-    default                              : kDebug() << "status icon unrecognised: " << status;
+    default                              : qCDebug(APPER_LIB) << "status icon unrecognised: " << status;
         return "help-browser";
     }
 }
@@ -209,7 +212,7 @@ QString PkIcons::actionIconName(Transaction::Role role)
     case Transaction::RoleWhatProvides            : return "search-package";
     case Transaction::RoleRepairSystem            : return "package-rollback";
     }
-    kDebug() << "action unrecognised: " << role;
+    qCDebug(APPER_LIB) << "action unrecognised: " << role;
     return "applications-other";
 }
 
@@ -260,7 +263,7 @@ QIcon PkIcons::groupsIcon(Transaction::Group group)
     case Transaction::GroupVendor          : return QIcon::fromTheme("application-certificate");
     case Transaction::GroupNewest          : return QIcon::fromTheme("dialog-information");
     }
-    kDebug() << "group unrecognised: " << group;
+    qCDebug(APPER_LIB) << "group unrecognised: " << group;
     return QIcon::fromTheme("unknown");
 }
 
@@ -313,7 +316,7 @@ QIcon PkIcons::getPreloadedIcon(const QString &name)
         PkIcons::configure();
     }
 
-    kDebug() << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup, true);
+    qCDebug(APPER_LIB) << KIconLoader::global()->iconPath(name, KIconLoader::NoGroup, true);
     QIcon icon;
     icon.addPixmap(QIcon::fromTheme(name).pixmap(48, 48));
     return icon;

@@ -20,7 +20,9 @@
 
 #include "PackageImportance.h"
 
-#include <KDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_LIB)
 
 int PackageImportance::restartImportance(Transaction::Restart type)
 {
@@ -39,6 +41,6 @@ int PackageImportance::restartImportance(Transaction::Restart type)
     case Transaction::RestartSecuritySystem:
         return 5;
     }
-    kWarning() << "restart type unrecognised: " << type;
+    qCWarning(APPER_LIB) << "restart type unrecognised: " << type;
     return 0;
 }

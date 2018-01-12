@@ -22,8 +22,8 @@
 #define PK_TRANSACTION_WIDGET_H
 
 #include <QWidget>
-#include <KDialog>
-#include <kdemacros.h>
+#include <QDialog>
+//#include <kdemacros.h>
 
 #include <Transaction>
 
@@ -55,7 +55,7 @@ Q_SIGNALS:
     void allowCancel(bool enable);
     void titleChanged(const QString &title);
     void titleChangedProgress(const QString &title);
-    void dialog(KDialog *widget);
+    void dialog(QDialog *widget);
     void sorry(const QString &title, const QString &text, const QString &details);
     void error(const QString &title, const QString &text, const QString &details);
 

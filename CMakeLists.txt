@@ -1,9 +1,7 @@
 project(Apper)
 cmake_minimum_required(VERSION 3.0)
 
-set(APPER_VERSION 0.9.3)
-
-set (QT_MIN_VERSION "5.2.0")
+set(APPER_VERSION 1.0.0)
 
 find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
@@ -19,7 +17,7 @@ include(KDECMakeSettings)
 include(FeatureSummary)
 include(ECMInstallIcons)
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core DBus Widgets Quick Sql XmlPatterns)
+find_package(Qt5 5.2.0 CONFIG REQUIRED Core DBus Widgets Quick Sql XmlPatterns)
 
 # Load the frameworks we need
 find_package(KF5 REQUIRED COMPONENTS
@@ -31,12 +29,11 @@ find_package(KF5 REQUIRED COMPONENTS
   DBusAddons
   KIO
   Notifications
-  KDELibs4Support
+  IconThemes
 )
 find_package(LibKWorkspace REQUIRED)
 find_package(KDED REQUIRED)
 find_package(PackageKitQt5 1.0.0 REQUIRED)
-find_package(LibKWorkspace REQUIRED)
 
 #
 # Options

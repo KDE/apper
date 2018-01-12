@@ -24,7 +24,8 @@
 #include <QDBusMessage>
 #include <QDBusConnection>
 
-#include <KDebug>
+#include <QLoggingCategory>
+
 #include <KConfig>
 #include <KAboutData>
 #include <KLocalizedString>

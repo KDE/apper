@@ -28,13 +28,13 @@
 using namespace PackageKit;
 
 BackendDetails::BackendDetails(QWidget *parent) :
-    KDialog(parent),
+    QDialog(parent),
     ui(new Ui::BackendDetails)
 {
     setWindowTitle(i18n("Backend Details"));
 
-    ui->setupUi(mainWidget());
-    setButtons(KDialog::Close);
+    ui->setupUi(this);
+//    setButtons(KDialog::Close);
     setWindowIcon(QIcon::fromTheme("help-about"));
 
     // update information about PackageKit backend

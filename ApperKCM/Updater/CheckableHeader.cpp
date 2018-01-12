@@ -24,7 +24,7 @@
 #include <QApplication>
 #include <QMouseEvent>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #define UNIVERSAL_PADDING 3
 

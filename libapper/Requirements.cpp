@@ -26,9 +26,11 @@
 #include "ApplicationSortFilterModel.h"
 
 #include <QToolButton>
-#include <KPushButton>
-#include <KDebug>
-#include <KGlobal>
+#include <QPushButton>
+#include <QLoggingCategory>
+#include <KFormat>
+#include <KConfig>
+#include <KConfigGroup>
 
 Requirements::Requirements(PackageModel *model, QWidget *parent) :
     QDialog(parent),
@@ -45,7 +47,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     ApplicationSortFilterModel *proxy = new ApplicationSortFilterModel(this);
     proxy->setSourceModel(model);
     ui->packageView->setModel(proxy);
-    ui->packageView->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+    ui->packageView->header()->setSectionResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
     ui->packageView->header()->hideSection(PackageModel::ActionCol);
     ui->packageView->header()->hideSection(PackageModel::ArchCol);
     ui->packageView->header()->hideSection(PackageModel::CurrentVersionCol);
@@ -200,10 +202,11 @@ void Requirements::setDownloadSizeRemaining(qulonglong size)
 {
     QPushButton *help = ui->buttonBox->button(QDialogButtonBox::Help);
     if (size) {
+        KFormat f;
         QString text;
         text = i18nc("how many bytes are required for download",
                      "Need to get %1 of archives",
-                     KLocale::global()->formatByteSize(size));
+                     f.formatByteSize(size));
         help->setText(text);
         help->setToolTip(text);
         help->show();

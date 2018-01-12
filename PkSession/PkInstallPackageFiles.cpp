@@ -24,9 +24,11 @@
 #include "FilesModel.h"
 
 #include <KLocalizedString>
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <Daemon>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
                                              const QStringList &files,
@@ -99,7 +101,7 @@ void PkInstallPackageFiles::commit()
 
 void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status)
 {
-     kDebug() << "Finished.";
+     qCDebug(APPER_SESSION) << "Finished.";
      switch (status) {
      case PkTransaction::Success :
          if (showFinished()) {

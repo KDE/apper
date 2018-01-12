@@ -24,7 +24,7 @@
 
 #include <QtDBus/QDBusConnection>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 DBusUpdaterInterface::DBusUpdaterInterface(QObject *parent) :
     QObject(parent),
@@ -52,10 +52,10 @@ void DBusUpdaterInterface::ReviewUpdates()
 
 void DBusUpdaterInterface::registerService()
 {
-    kDebug();
+//    kDebug();
     QDBusServiceWatcher *watcher = qobject_cast<QDBusServiceWatcher*>(sender());
     if (!m_registered && !QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.ApperUpdaterIcon"))) {
-        kDebug() << "unable to register service to dbus";
+//        kDebug() << "unable to register service to dbus";
         if (!watcher) {
             // in case registration fails due to another user or application running
             // keep an eye on it so we can register when available
@@ -69,7 +69,7 @@ void DBusUpdaterInterface::registerService()
         emit registeredChanged();
     } else {
         if (!QDBusConnection::sessionBus().registerObject("/", this)) {
-            kDebug() << "unable to register service interface to dbus";
+//            kDebug() << "unable to register service interface to dbus";
             return;
         }
 
@@ -86,6 +86,6 @@ void DBusUpdaterInterface::unregisterService()
         m_registered = false;
         emit registeredChanged();
     } else {
-        kDebug() << "unable to unregister service to dbus";
+//        kDebug() << "unable to unregister service to dbus";
     }
 }

@@ -28,7 +28,7 @@
 
 #include <KLocalizedString>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 PkInstallMimeTypes::PkInstallMimeTypes(uint xid,
                                       const QStringList &mime_types,

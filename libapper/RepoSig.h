@@ -21,7 +21,7 @@
 #ifndef REPO_SIG_H
 #define REPO_SIG_H
 
-#include <KDialog>
+#include <QDialog>
 
 #include <Transaction>
 

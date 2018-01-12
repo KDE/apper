@@ -21,9 +21,9 @@
 #include "TransactionModel.h"
 
 #include <KUser>
-#include <KGlobal>
+#include <KFormat>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <PkIcons.h>
 #include <PkStrings.h>
@@ -55,7 +55,7 @@ void TransactionModel::addTransaction(PackageKit::Transaction *trans)
     QStandardItem *userI    = new QStandardItem;
     QStandardItem *appI     = new QStandardItem;
 
-    dateI->setText(KLocale::global()->formatDate(trans->timespec().date()));
+    dateI->setText(QLocale::system().toString(trans->timespec().date()));
     // this is for the filterSort model
     dateI->setData(trans->timespec(), Qt::UserRole);
     dateI->setEditable(false);

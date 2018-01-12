@@ -20,26 +20,20 @@
 
 #include "PkTransactionProgressModel.h"
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <PkStrings.h>
 
 #include "PkTransaction.h"
+
+Q_DECLARE_LOGGING_CATEGORY(APP_LIB)
 
 using namespace PackageKit;
 
 PkTransactionProgressModel::PkTransactionProgressModel(QObject *parent) :
     QStandardItemModel(parent)
 {
-    QHash<int, QByteArray> roles = roleNames();
-    roles[RoleInfo] = "rInfo";
-    roles[RolePkgName] = "rPkgName";
-    roles[RolePkgSummary] = "rPkgSummary";
-    roles[RoleFinished] = "rFinished";
-    roles[RoleProgress] = "rProgress";
-    roles[RoleId] = "rId";
-    roles[RoleRepo] = "rRepo";
-    setRoleNames(roles);
+
 }
 
 PkTransactionProgressModel::~PkTransactionProgressModel()
@@ -85,6 +79,19 @@ void PkTransactionProgressModel::itemProgress(const QString &id, Transaction::St
 void PkTransactionProgressModel::clear()
 {
     removeRows(0, rowCount());
+}
+
+QHash<int, QByteArray> PkTransactionProgressModel::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+    roles[RoleInfo] = "rInfo";
+    roles[RolePkgName] = "rPkgName";
+    roles[RolePkgSummary] = "rPkgSummary";
+    roles[RoleFinished] = "rFinished";
+    roles[RoleProgress] = "rProgress";
+    roles[RoleId] = "rId";
+    roles[RoleRepo] = "rRepo";
+    return roles;
 }
 
 void PkTransactionProgressModel::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)

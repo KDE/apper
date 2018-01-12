@@ -21,7 +21,7 @@
 #ifndef PK_STRINGS_H
 #define PK_STRINGS_H
 
-#include <kdemacros.h>
+//#include <kdemacros.h>
 
 #include <Transaction>
 

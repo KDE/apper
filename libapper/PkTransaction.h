@@ -22,7 +22,7 @@
 #define PK_TRANSACTION_H
 
 #include <QObject>
-#include <kdemacros.h>
+//#include <kdemacros.h>
 #include <QDialog>
 
 #include <Transaction>

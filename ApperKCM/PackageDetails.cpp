@@ -34,7 +34,7 @@
 #include <KService>
 #include <KServiceGroup>
 #include <KDesktopFile>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KPixmapSequence>
 #include <QTextDocument>
 #include <QPlainTextEdit>
@@ -43,10 +43,11 @@
 #include <QAbstractAnimation>
 #include <QStringBuilder>
 
+#include <KFormat>
 #include <KIO/Job>
 #include <QMenu>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <Daemon>
 #include <Transaction>
@@ -63,6 +64,8 @@
 #define FINAL_HEIGHT 210
 
 using namespace PackageKit;
+
+Q_DECLARE_LOGGING_CATEGORY(APPER)
 
 Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 
@@ -111,9 +114,9 @@ PackageDetails::PackageDetails(QWidget *parent)
     ui->dependsOnLV->setModel(m_dependsProxy);
     ui->dependsOnLV->sortByColumn(0, Qt::AscendingOrder);
     ui->dependsOnLV->header()->setDefaultAlignment(Qt::AlignCenter);
-    ui->dependsOnLV->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
-    ui->dependsOnLV->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
-    ui->dependsOnLV->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
+    ui->dependsOnLV->header()->setSectionResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+    ui->dependsOnLV->header()->setSectionResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    ui->dependsOnLV->header()->setSectionResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
     ui->dependsOnLV->header()->hideSection(PackageModel::ActionCol);
     ui->dependsOnLV->header()->hideSection(PackageModel::CurrentVersionCol);
     ui->dependsOnLV->header()->hideSection(PackageModel::OriginCol);
@@ -138,9 +141,9 @@ PackageDetails::PackageDetails(QWidget *parent)
     ui->requiredByLV->setModel(m_requiresProxy);
     ui->requiredByLV->sortByColumn(0, Qt::AscendingOrder);
     ui->requiredByLV->header()->setDefaultAlignment(Qt::AlignCenter);
-    ui->requiredByLV->header()->setResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
-    ui->requiredByLV->header()->setResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
-    ui->requiredByLV->header()->setResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
+    ui->requiredByLV->header()->setSectionResizeMode(PackageModel::NameCol, QHeaderView::ResizeToContents);
+    ui->requiredByLV->header()->setSectionResizeMode(PackageModel::VersionCol, QHeaderView::ResizeToContents);
+    ui->requiredByLV->header()->setSectionResizeMode(PackageModel::ArchCol, QHeaderView::Stretch);
     ui->requiredByLV->header()->hideSection(PackageModel::ActionCol);
     ui->requiredByLV->header()->hideSection(PackageModel::CurrentVersionCol);
     ui->requiredByLV->header()->hideSection(PackageModel::OriginCol);
@@ -217,7 +220,7 @@ PackageDetails::PackageDetails(QWidget *parent)
 
 void PackageDetails::init(PackageKit::Transaction::Roles roles)
 {
-    kDebug();
+//    qCDebug();
 
     bool setChecked = true;
     if (roles & PackageKit::Transaction::RoleGetDetails) {
@@ -264,7 +267,7 @@ PackageDetails::~PackageDetails()
 
 void PackageDetails::setPackage(const QModelIndex &index)
 {
-    kDebug() << index;
+    qCDebug(APPER) << index;
     QString appId = index.data(PackageModel::ApplicationId).toString();
     QString packageID = index.data(PackageModel::IdRole).toString();
 
@@ -288,14 +291,14 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_hasFileList = false;
     m_hasRequires = false;
     m_hasDepends  = false;
-    kDebug() << "appId" << appId << "m_package" << m_packageID;
+    qCDebug(APPER) << "appId" << appId << "m_package" << m_packageID;
 
     QString pkgIconPath = index.data(PackageModel::IconRole).toString();
     m_currentIcon       = PkIcons::getIcon(pkgIconPath, QString()).pixmap(64, 64);
     m_appName           = index.data(PackageModel::NameRole).toString();
 
     m_currentScreenshot = thumbnail(Transaction::packageName(m_packageID));
-    kDebug() << "current screenshot" << m_currentScreenshot;
+    qCDebug(APPER) << "current screenshot" << m_currentScreenshot;
     if (!m_currentScreenshot.isNull()) {
         if (m_screenshotPath.contains(m_currentScreenshot)) {
             display();
@@ -341,7 +344,7 @@ void PackageDetails::actionActivated(QAction *action)
     // don't fade the screenshot
     // if the package changed setPackage() fades both
     fadeOut(FadeStacked);
-    kDebug();
+    qCDebug(APPER);
 
     // disconnect the transaction
     // so that we don't get old data
@@ -390,7 +393,7 @@ void PackageDetails::actionActivated(QAction *action)
     }
 
     // we don't have the data
-    kDebug() << "New transaction";
+    qCDebug(APPER) << "New transaction";
     switch (role) {
     case PackageKit::Transaction::RoleGetDetails:
         m_transaction = Daemon::getDetails(m_packageID);
@@ -425,7 +428,7 @@ void PackageDetails::actionActivated(QAction *action)
     }
     connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(finished()));
-    kDebug() <<"transaction running";
+    qCDebug(APPER) <<"transaction running";
 
     m_busySeq->start();
 }
@@ -639,7 +642,7 @@ void PackageDetails::setupDescription()
     }
 
     if (m_details.size() > 0) {
-        QString size = KLocale::global()->formatByteSize(m_details.size());
+        QString size = KFormat().formatByteSize(m_details.size());
         if (!m_hideArch && !Transaction::packageArch(m_details.packageId()).isEmpty()) {
             ui->sizeL->setText(size % QLatin1String(" (") % Transaction::packageArch(m_details.packageId()) % QLatin1Char(')'));
         } else {
@@ -685,13 +688,13 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
                 continue;
             }
 
-//             kDebug() << menuId << service->menuId();
+//             qCDebug(APPER) << menuId << service->menuId();
             if (service->menuId() == menuId) {
                 QPair<QString, QString> pair;
                 pair.first  = service->name();
                 pair.second = service->icon();
                 ret << pair;
-//                 kDebug() << "FOUND!";
+//                 qCDebug(APPER) << "FOUND!";
                 return ret;
             }
         } else if (p->isType(KST_KServiceGroup)) {
@@ -743,7 +746,7 @@ QString PackageDetails::screenshot(const QString &pkgName) const
 
 void PackageDetails::description(const PackageKit::Details &details)
 {
-    kDebug() << details;
+    qCDebug(APPER) << details;
     m_details = details;
     m_detailsDescription = details.description();
     m_hasDetails = true;
@@ -773,9 +776,9 @@ void PackageDetails::finished()
 
     PackageKit::Transaction *transaction;
     transaction = qobject_cast<PackageKit::Transaction*>(sender());
-    kDebug();
+    qCDebug(APPER);
     if (transaction) {
-        kDebug() << transaction->role() << PackageKit::Transaction::RoleGetDetails;
+        qCDebug(APPER) << transaction->role() << PackageKit::Transaction::RoleGetDetails;
         if (transaction->role() == PackageKit::Transaction::RoleGetDetails) {
             m_hasDetails = true;
         } else if (transaction->role() == PackageKit::Transaction::RoleGetFiles) {

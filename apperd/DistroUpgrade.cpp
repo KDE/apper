@@ -28,7 +28,9 @@
 #include <KLocalizedString>
 #include <QIcon>
 
-#include <KDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_DAEMON)
 
 DistroUpgrade::DistroUpgrade(QObject *parent) :
     QObject(parent),
@@ -78,7 +80,7 @@ void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, c
         break;
     }
 
-    kDebug() << "Distro upgrade found!" << name << description;
+    qCDebug(APPER_DAEMON) << "Distro upgrade found!" << name << description;
     if (m_shownDistroUpgrades.contains(name)) {
         // ignore distro upgrade if the user already saw it
         return;

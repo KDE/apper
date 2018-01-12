@@ -30,11 +30,11 @@
 #include <QPainter>
 
 #include <KIconLoader>
-#include <KDebug>
+#include <QLoggingCategory>
 #include <PkIcons.h>
 #include <KLocalizedString>
 #include <KCategorizedSortFilterProxyModel>
-#include <KGlobal>
+#include <KFormat>
 
 #ifdef HAVE_APPSTREAM
 #include <AppStream.h>
@@ -54,21 +54,19 @@ PackageModel::PackageModel(QObject *parent)
 {
     m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
 
-    QHash<int, QByteArray> roles = roleNames();
-    roles[SortRole] = "rSort";
-    roles[NameRole] = "rName";
-    roles[SummaryRole] = "rSummary";
-    roles[VersionRole] = "rVersion";
-    roles[ArchRole] = "rArch";
-    roles[IconRole] = "rIcon";
-    roles[IdRole] = "rId";
-    roles[CheckStateRole] = "rChecked";
-    roles[InfoRole] = "rInfo";
-    roles[ApplicationId] = "rApplicationId";
-    roles[IsPackageRole] = "rIsPackageRole";
-    roles[PackageName] = "rPackageName";
-    roles[InfoIconRole] = "rInfoIcon";
-    setRoleNames(roles);
+    m_roles[SortRole] = "rSort";
+    m_roles[NameRole] = "rName";
+    m_roles[SummaryRole] = "rSummary";
+    m_roles[VersionRole] = "rVersion";
+    m_roles[ArchRole] = "rArch";
+    m_roles[IconRole] = "rIcon";
+    m_roles[IdRole] = "rId";
+    m_roles[CheckStateRole] = "rChecked";
+    m_roles[InfoRole] = "rInfo";
+    m_roles[ApplicationId] = "rApplicationId";
+    m_roles[IsPackageRole] = "rIsPackageRole";
+    m_roles[PackageName] = "rPackageName";
+    m_roles[InfoIconRole] = "rInfoIcon";
 }
 
 void PackageModel::addSelectedPackagesFromModel(PackageModel *model)
@@ -238,6 +236,11 @@ QModelIndex PackageModel::parent(const QModelIndex &index) const
     return QModelIndex();
 }
 
+QHash<int, QByteArray> PackageModel::roleNames() const
+{
+    return m_roles;
+}
+
 QVariant PackageModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -327,7 +330,8 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
         } else if (index.column() == OriginCol) {
             return package.repo;
         } else if (index.column() == SizeCol) {
-            return package.size ? KLocale::global()->formatByteSize(package.size) : QString();
+            KFormat f;
+            return package.size ? f.formatByteSize(package.size) : QString();
         }
     } else if (index.column() == SizeCol && role == Qt::TextAlignmentRole) {
         return static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);

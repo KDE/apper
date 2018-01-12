@@ -61,8 +61,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 target_link_libraries(apper_private
     KF5::WidgetsAddons
     KF5::KIOFileWidgets
-    KF5::KDELibs4Support
     KF5::IconThemes
+    KF5::I18n
     ${QT_QTSQL_LIBRARY}
     ${PackageKitQt5_LIBRARIES}
     ${APPSTREAM_LIBRARIES}

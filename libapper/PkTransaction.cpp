@@ -24,11 +24,12 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KPushButton>
+#include <QPushButton>
 #include <KPixmapSequence>
 #include <KConfig>
+#include <KConfigGroup>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -46,6 +47,8 @@
 #include "Requirements.h"
 #include "PkTransactionProgressModel.h"
 #include "PkTransactionWidget.h"
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_LIB)
 
 class PkTransactionPrivate
 {
@@ -230,7 +233,7 @@ void PkTransaction::requeueTransaction()
 
 void PkTransaction::slotErrorCode(Transaction::Error error, const QString &details)
 {
-    kDebug() << "errorCode: " << error << details;
+    qCDebug(APPER_LIB) << "errorCode: " << error << details;
     d->error = error;
 
     if (d->handlingActionRequired) {
@@ -296,10 +299,10 @@ void PkTransaction::acceptEula()
     LicenseAgreement *eula = qobject_cast<LicenseAgreement*>(sender());
 
     if (eula) {
-        kDebug() << "Accepting EULA" << eula->id();
+        qCDebug(APPER_LIB) << "Accepting EULA" << eula->id();
         setupTransaction(Daemon::acceptEula(eula->id()));
     } else {
-        kWarning() << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
+        qCWarning(APPER_LIB) << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
     }
 }
 
@@ -326,7 +329,7 @@ void PkTransaction::slotChanged()
         // Use our own cached tid to avoid crashes
         message << qVariantFromValue(_tid);
         if (!QDBusConnection::sessionBus().send(message)) {
-            kWarning() << "Failed to put WatchTransaction on the DBus queue";
+            qCWarning(APPER_LIB) << "Failed to put WatchTransaction on the DBus queue";
         }
     }
 }
@@ -379,10 +382,10 @@ void PkTransaction::installSignature()
     RepoSig *repoSig = qobject_cast<RepoSig*>(sender());
 
     if (repoSig)  {
-        kDebug() << "Installing Signature" << repoSig->keyID();
+        qCDebug(APPER_LIB) << "Installing Signature" << repoSig->keyID();
         setupTransaction(Daemon::installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID()));
     } else {
-        kWarning() << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
+        qCWarning(APPER_LIB) << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
     }
 }
 
@@ -394,7 +397,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
     Requirements *requires = 0;
     Transaction::Role _role = qobject_cast<Transaction*>(sender())->role();
     d->transaction = 0; // Will be deleted later
-    kDebug() << status << _role;
+    qCDebug(APPER_LIB) << status << _role;
 
     switch (_role) {
     case Transaction::RoleInstallSignature:
@@ -481,9 +484,9 @@ void PkTransaction::slotFinished(Transaction::Exit status)
     case Transaction::ExitKeyRequired:
     case Transaction::ExitEulaRequired:
     case Transaction::ExitMediaChangeRequired:
-        kDebug() << "finished KeyRequired or EulaRequired: " << status;
+        qCDebug(APPER_LIB) << "finished KeyRequired or EulaRequired: " << status;
         if (!d->handlingActionRequired) {
-            kDebug() << "Not Handling Required Action";
+            qCDebug(APPER_LIB) << "Not Handling Required Action";
             setExitStatus(Failed);
         }
         break;
@@ -495,12 +498,12 @@ void PkTransaction::slotFinished(Transaction::Exit status)
         break;
     case Transaction::ExitFailed:
         if (!d->handlingActionRequired && !d->showingError) {
-            kDebug() << "Yep, we failed.";
+            qCDebug(APPER_LIB) << "Yep, we failed.";
             setExitStatus(Failed);
         }
         break;
     default :
-        kDebug() << "finished default" << status;
+        qCDebug(APPER_LIB) << "finished default" << status;
         setExitStatus(Failed);
         break;
     }
@@ -513,7 +516,7 @@ PkTransaction::ExitStatus PkTransaction::exitStatus() const
 
 bool PkTransaction::isFinished() const
 {
-    kDebug() << d->transaction->status() << d->transaction->role();
+    qCDebug(APPER_LIB) << d->transaction->status() << d->transaction->role();
     return d->transaction->status() == Transaction::StatusFinished;
 }
 
@@ -614,7 +617,7 @@ void PkTransaction::setTrusted(bool trusted)
 
 void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
 {
-    kDebug() << status;
+    qCDebug(APPER_LIB) << status;
     if (d->launcher) {
         d->launcher->deleteLater();
         d->launcher = 0;
@@ -721,7 +724,7 @@ void PkTransaction::setupTransaction(Transaction *transaction)
     }
 
     if (!QDBusConnection::sessionBus().send(message)) {
-        kWarning() << "Failed to put SetupDebconfDialog message in DBus queue";
+        qCWarning(APPER_LIB) << "Failed to put SetupDebconfDialog message in DBus queue";
     }
 
     transaction->setHints(QLatin1String("frontend-socket=") % socket);

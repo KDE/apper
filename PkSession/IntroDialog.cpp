@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <QWeakPointer>
 #include <QFileInfo>

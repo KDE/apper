@@ -38,7 +38,9 @@
 #include <KActionCollection>
 #include <KToolInvocation>
 
-#include <KDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_DAEMON)
 
 #define UPDATES_ICON "system-software-update"
 
@@ -180,7 +182,7 @@ void Updater::getUpdateFinished()
                    (updateType == Enum::All ||
                     updateType == Enum::DownloadOnly ||
                     (updateType == Enum::Security && !m_securityList.isEmpty()))) {
-            kDebug() << "Not auto updating or downloading, as we might be on battery or mobile connection";
+            qCDebug(APPER_DAEMON) << "Not auto updating or downloading, as we might be on battery or mobile connection";
         }
 
         // If an erro happened to create the auto update
@@ -233,7 +235,7 @@ void Updater::reviewUpdates()
         if (reply.type() == QDBusMessage::ReplyMessage) {
             return;
         }
-        kWarning() << "Message did not receive a reply";
+        qCWarning(APPER_DAEMON) << "Message did not receive a reply";
     }
 
     // This must be called from the main thread...

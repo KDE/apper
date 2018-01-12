@@ -25,7 +25,7 @@
 #include <PkTransaction.h>
 
 #include <QDBusMessage>
-#include <KDialog>
+#include <QDialog>
 
 namespace Ui {
     class SessionTask;
@@ -34,7 +34,7 @@ namespace Ui {
 class PackageModel;
 class ReviewChanges;
 class PkTransactionWidget;
-class SessionTask : public KDialog
+class SessionTask : public QDialog
 {
     Q_OBJECT
     Q_ENUMS(Errors)
@@ -116,7 +116,7 @@ protected Q_SLOTS:
 
 private Q_SLOTS:
     void updatePallete();
-    void setDialog(KDialog *dialog);
+    void setDialog(QDialog *dialog);
 
 private:
     void removePackages();

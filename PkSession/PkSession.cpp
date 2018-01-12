@@ -26,13 +26,17 @@
 #include <QStringBuilder>
 
 #include <KLocalizedString>
-#include <KCmdLineArgs>
-#include <KDebug>
-#include <KGlobal>
+//#include <KCmdLineArgs>
+//#include <KDebug>
+//#include <KGlobal>
+
+#include <QLoggingCategory>
 
 #include <Daemon>
 
 #define MINUTE 60000
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 using namespace PackageKit;
 
@@ -43,8 +47,8 @@ PkSession::PkSession(QObject* parent)
     connect(m_pkInterface, SIGNAL(close()),
             this, SLOT(prepareToClose()));
 
-    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
-    Daemon::global()->setHints(QLatin1String("locale=") % locale);
+//    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
+//    Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     // this enables not quitting when closing a transaction ui
     qApp->setQuitOnLastWindowClosed(false);
@@ -60,10 +64,10 @@ PkSession::PkSession(QObject* parent)
 void PkSession::prepareToClose()
 {
     if (isRunning()) {
-        kDebug() << "Stoping Timer";
+        qCDebug(APPER_SESSION) << "Stoping Timer";
         m_closeT->stop();
     } else {
-        kDebug() << "Starting Timer: " << MINUTE;
+        qCDebug(APPER_SESSION) << "Starting Timer: " << MINUTE;
         m_closeT->start(MINUTE);
     }
 }
@@ -71,7 +75,7 @@ void PkSession::prepareToClose()
 bool PkSession::isRunning()
 {
     if (m_pkInterface && m_pkInterface->isRunning()) {
-        kDebug() << m_pkInterface;
+        qCDebug(APPER_SESSION) << m_pkInterface;
         return true;
     }
 
@@ -83,7 +87,7 @@ void PkSession::close()
     // This will run when the timer times out, we will check
     // again just to be sure.
     if (!isRunning()) {
-        kDebug() << "Closed by Timer";
+        qCDebug(APPER_SESSION) << "Closed by Timer";
         qApp->quit();
     }
 }

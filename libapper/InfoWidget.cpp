@@ -23,7 +23,7 @@
 
 
 #include <QTextBrowser>
-#include <KDebug>
+#include <QLoggingCategory>
 
 InfoWidget::InfoWidget(QWidget *parent) :
     QWidget(parent),

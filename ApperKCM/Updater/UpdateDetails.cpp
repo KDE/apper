@@ -26,7 +26,7 @@
 #include <KMessageBox>
 #include <KPixmapSequence>
 #include <KLocalizedString>
-#include <KGlobal>
+#include <KFormat>
 
 #include <QAbstractAnimation>
 #include <QGraphicsOpacityEffect>
@@ -35,9 +35,11 @@
 
 #include <Transaction>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #define FINAL_HEIGHT 160
+
+Q_DECLARE_LOGGING_CATEGORY(APPER)
 
 UpdateDetails::UpdateDetails(QWidget *parent)
  : QWidget(parent),
@@ -142,7 +144,7 @@ void UpdateDetails::hide()
 
 void UpdateDetails::display()
 {
-    kDebug() << sender();
+    qCDebug(APPER) << sender();
 
     // set transaction to 0 as if PK crashes
     // UpdateDetails won't be emmited
@@ -208,13 +210,13 @@ void UpdateDetails::updateDetail(const QString &packageID,
     if (!issued.isNull() && !updated.isNull()) {
         description += "<p>" +
                        i18n("This notification was issued on %1 and last updated on %2.",
-                            KLocale::global()->formatDateTime(issued, KLocale::ShortDate),
-                            KLocale::global()->formatDateTime(updated, KLocale::ShortDate)) +
+                            QLocale::system().toString(issued, QLocale::ShortFormat),
+                            QLocale::system().toString(updated, QLocale::ShortFormat)) +
                        "</p>";
     } else if (!issued.isNull()) {
         description += "<p>" +
                        i18n("This notification was issued on %1.",
-                            KLocale::global()->formatDateTime(issued, KLocale::ShortDate)) +
+                            QLocale::system().toString(issued, QLocale::ShortFormat)) +
                        "</p>";
     }
 

@@ -20,10 +20,10 @@
 
 #include "ChangesDelegate.h"
 
-#include <KDebug>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <QApplication>
+#include <QLoggingCategory>
 #include <QPushButton>
 #include <QTreeView>
 #include <QHeaderView>
@@ -40,6 +40,8 @@
 #define UNIVERSAL_PADDING 4
 #define FADE_LENGTH 16
 #define MAIN_ICON_SIZE 32
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_LIB)
 
 using namespace PackageKit;
 
@@ -379,7 +381,7 @@ bool ChangesDelegate::editorEvent(QEvent *event,
         optBt.rect.setTop(optBt.rect.top() + ((calcItemHeight(option) - m_buttonSize.height()) / 2));
         optBt.rect.setSize(m_buttonSize);
 
-        kDebug() << point << option.rect.left() << option << insideButton(optBt.rect, point);
+        qCDebug(APPER_LIB) << point << option.rect.left() << option << insideButton(optBt.rect, point);
 //         kDebug() << view->visualRect(index);
         if (insideButton(optBt.rect, point)) {
             return model->setData(index,

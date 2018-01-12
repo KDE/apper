@@ -99,6 +99,8 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
 
+    virtual QHash<int,QByteArray> roleNames() const override;
+
 public Q_SLOTS:
     void addSelectedPackagesFromModel(PackageModel *model);
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected = false);
@@ -147,6 +149,7 @@ private:
     PackageKit::Transaction *m_getUpdatesTransaction = 0;
     PackageKit::Transaction *m_fetchSizesTransaction;
     PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
+    QHash<int, QByteArray> m_roles;
 };
 
 #endif

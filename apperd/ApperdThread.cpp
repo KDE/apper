@@ -29,14 +29,14 @@
 #include <Enum.h>
 #include <Daemon>
 
-#include <KStandardDirs>
+//#include <KStandardDirs>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDirWatch>
 #include <KProtocolManager>
 #include <KLocalizedString>
-#include <Solid/PowerManagement>
-#include <KGlobal>
+//#include <Solid/PowerManagement>
+#include <KFormat>
 
 #include <QStringBuilder>
 #include <QtDBus/QDBusConnection>
@@ -45,7 +45,9 @@
 
 #include <limits.h>
 
-#include <KDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_DAEMON)
 
 #define FIVE_MIN 360000
 #define ONE_MIN   72000
@@ -59,7 +61,7 @@
  */
 
 using namespace PackageKit;
-using namespace Solid;
+//using namespace Solid;
 
 ApperdThread::ApperdThread(QObject *parent) :
     QObject(parent),
@@ -74,8 +76,8 @@ ApperdThread::~ApperdThread()
 
 void ApperdThread::init()
 {
-    connect(PowerManagement::notifier(), SIGNAL(appShouldConserveResourcesChanged(bool)),
-            this, SLOT(appShouldConserveResourcesChanged()));
+//    connect(PowerManagement::notifier(), SIGNAL(appShouldConserveResourcesChanged(bool)),
+//            this, SLOT(appShouldConserveResourcesChanged()));
 
     // This timer keeps polling to see if it has
     // to refresh the cache
@@ -87,7 +89,7 @@ void ApperdThread::init()
     //check if any changes to the file occour
     //this also prevents from reading when a checkUpdate happens
     KDirWatch *confWatch = new KDirWatch(this);
-    confWatch->addFile(KStandardDirs::locateLocal("config", "apper"));
+//    confWatch->addFile(KStandardDirs::locateLocal("config", "apper"));
     connect(confWatch, SIGNAL(dirty(QString)), this, SLOT(configFileChanged()));
     connect(confWatch, SIGNAL(created(QString)), this, SLOT(configFileChanged()));
     connect(confWatch, SIGNAL(deleted(QString)), this, SLOT(configFileChanged()));
@@ -95,14 +97,14 @@ void ApperdThread::init()
 
     // Watch for changes in the KDE proxy settings
     KDirWatch *proxyWatch = new KDirWatch(this);
-    proxyWatch->addFile(KStandardDirs::locateLocal("config", "kioslaverc"));
+//    proxyWatch->addFile(KStandardDirs::locateLocal("config", "kioslaverc"));
     connect(proxyWatch, SIGNAL(dirty(QString)), this, SLOT(proxyChanged()));
     connect(proxyWatch, SIGNAL(created(QString)), this, SLOT(proxyChanged()));
     connect(proxyWatch, SIGNAL(deleted(QString)), this, SLOT(proxyChanged()));
     proxyWatch->startScan();
 
-    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
-    Daemon::global()->setHints(QLatin1String("locale=") % locale);
+//    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
+//    Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
     connect(Daemon::global(), SIGNAL(updatesChanged()),
             SLOT(updatesChanged()));
@@ -310,24 +312,24 @@ bool ApperdThread::isSystemReady(bool ignoreBattery, bool ignoreMobile) const
 {
     // First check if we should conserve resources
     // check how applications should behave (e.g. on battery power)
-    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
-        kDebug() << "System is not ready, application should conserve resources";
+//    if (!ignoreBattery && Solid::PowerManagement::appShouldConserveResources()) {
+        qCDebug(APPER_DAEMON) << "System is not ready, application should conserve resources";
         // This was fixed for KDElibs 4.8.5
         return false;
-    }
+//    }
 
     // TODO it would be nice is Solid provided this
     // so we wouldn't be waking up PackageKit for this Solid task.
     Daemon::Network network = Daemon::global()->networkState();
     // test whether network is connected
     if (network == Daemon::NetworkOffline || network == Daemon::NetworkUnknown) {
-        kDebug() << "System is not ready, network state" << network;
+        qCDebug(APPER_DAEMON) << "System is not ready, network state" << network;
         return false;
     }
 
     // check how applications should behave (e.g. on battery power)
     if (!ignoreMobile && network == Daemon::NetworkMobile) {
-        kDebug() << "System is not ready, network state" << network;
+        qCDebug(APPER_DAEMON) << "System is not ready, network state" << network;
         return false;
     }
 

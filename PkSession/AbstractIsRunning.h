@@ -21,7 +21,7 @@
 #ifndef ABSTRACT_IS_RUNNING_H
 #define ABSTRACT_IS_RUNNING_H
 
-#include <kdemacros.h>
+//#include <kdemacros.h>
 
 #include <QObject>
 

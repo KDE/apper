@@ -22,12 +22,14 @@
 #include "ui_ApplicationLauncher.h"
 
 #include <QStandardItemModel>
+#include <QLoggingCategory>
 #include <KToolInvocation>
 #include <KLocalizedString>
-#include <KDebug>
 #include <KService>
 #include <KConfig>
 #include <KConfigGroup>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_LIB)
 
 ApplicationLauncher::ApplicationLauncher(QWidget *parent) :
     QDialog(parent),
@@ -59,7 +61,7 @@ void ApplicationLauncher::setEmbedded(bool embedded)
     m_embed = embedded;
     ui->showCB->setVisible(!embedded);
     ui->kdialogbuttonbox->setVisible(!embedded);
-    kDebug() << embedded;
+    qCDebug(APPER_LIB) << embedded;
 }
 
 QStringList ApplicationLauncher::packages() const

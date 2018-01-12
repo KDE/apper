@@ -27,11 +27,13 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <QFile>
 
 #include <Daemon>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 PkInstallCatalogs::PkInstallCatalogs(uint xid,
                                      const QStringList &files,
@@ -212,7 +214,7 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
                 resolve.append(m_installPackages.takeFirst());
                 ++count;
             }
-            kDebug() << "m_installPackages" << m_maxResolve << m_installPackages.size() << resolve.size();
+            qCDebug(APPER_SESSION) << "m_installPackages" << m_maxResolve << m_installPackages.size() << resolve.size();
 
             PkTransaction *transaction = new PkTransaction(this);
             Transaction *t;
@@ -233,7 +235,7 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
                 provides.append(m_installProvides.takeFirst());
                 ++count;
             }
-            kDebug() << "m_installProvides" <<  m_maxResolve << m_installProvides.size() << provides.size();
+            qCDebug(APPER_SESSION) << "m_installProvides" <<  m_maxResolve << m_installProvides.size() << provides.size();
 
             PkTransaction *transaction = new PkTransaction(this);
             Transaction *t;
@@ -254,7 +256,7 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
                 files.append(m_installFiles.takeFirst());
                 ++count;
             }
-            kDebug() << "m_installFiles" << m_maxResolve << m_installFiles.size() << files.size();
+            qCDebug(APPER_SESSION) << "m_installFiles" << m_maxResolve << m_installFiles.size() << files.size();
 
             PkTransaction *transaction = new PkTransaction(this);
             Transaction *t;

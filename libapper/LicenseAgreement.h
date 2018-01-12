@@ -21,13 +21,13 @@
 #ifndef LICENSE_AGREEMENT_H
 #define LICENSE_AGREEMENT_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace Ui {
     class LicenseAgreement;
 }
 
-class LicenseAgreement : public KDialog
+class LicenseAgreement : public QDialog
 {
     Q_OBJECT
 public:

@@ -25,7 +25,7 @@
 #include <KLocalizedString>
 #include <QStandardItemModel>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include <Daemon>
 

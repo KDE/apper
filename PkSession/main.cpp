@@ -31,6 +31,10 @@
 #include <KDBusService>
 #include <KLocalizedString>
 
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(APPER_SESSION, "apper.session")
+
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);

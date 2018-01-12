@@ -28,7 +28,7 @@
 #include <QStandardItemModel>
 #include <KLocalizedString>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
                                                          const QStringList &resources,

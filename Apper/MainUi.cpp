@@ -21,11 +21,15 @@
 #include "MainUi.h"
 
 #include <QLayout>
-#include <KDebug>
+#include <QLoggingCategory>
+
 #include <KConfig>
 #include <KCModuleProxy>
 #include <KConfigGroup>
-#include <KDialog>
+#include <QIcon>
+#include <QDialog>
+
+Q_LOGGING_CATEGORY(APPER, "apper")
 
 MainUi::MainUi(QWidget *parent) :
     KCMultiDialog(parent),
@@ -49,7 +53,7 @@ MainUi::MainUi(QWidget *parent) :
             connect(m_apperModule, &KCModule::windowTitleChanged, this, &MainUi::setWindowTitle);
         }
     } else {
-        kWarning() << "Could not load kcm_apper.desktop!";
+        qCWarning(APPER) << "Could not load kcm_apper.desktop!";
     }
 }
 

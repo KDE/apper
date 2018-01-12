@@ -24,10 +24,12 @@
 #include <PkIcons.h>
 
 #include <KLocalizedString>
-#include <KGlobal>
+//#include <KGlobal>
 #include <KNotification>
 
-#include <KDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_DAEMON)
 
 TransactionJob::TransactionJob(Transaction *transaction, QObject *parent) :
     KJob(parent),

@@ -26,7 +26,7 @@
 
 #include <KLocalizedString>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 RefreshCacheTask::RefreshCacheTask(QObject *parent) :
     QObject(parent),
@@ -39,7 +39,7 @@ RefreshCacheTask::RefreshCacheTask(QObject *parent) :
 
 void RefreshCacheTask::refreshCache()
 {
-    kDebug();
+//    kDebug();
     if (!m_transaction) {
         // Refresh Cache is false otherwise it will rebuild
         // the whole cache on Fedora

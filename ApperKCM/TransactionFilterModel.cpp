@@ -21,7 +21,7 @@
 #include "TransactionFilterModel.h"
 
 #include <QDateTime>
-#include <KDebug>
+#include <QLoggingCategory>
 
 TransactionFilterModel::TransactionFilterModel(QObject *parent)
   : QSortFilterProxyModel(parent)

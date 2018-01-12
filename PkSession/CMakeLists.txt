@@ -42,7 +42,6 @@ add_executable(apper-pk-session
 target_link_libraries(apper-pk-session
     KF5::WidgetsAddons
     KF5::KIOFileWidgets
-    KF5::KDELibs4Support
     KF5::IconThemes
     KF5::DBusAddons
     ${PackageKitQt5_LIBRARIES}

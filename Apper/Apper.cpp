@@ -23,14 +23,14 @@
 #include "BackendDetails.h"
 #include "MainUi.h"
 
-#include <KGlobal>
-#include <KStartupInfo>
-#include <KStandardDirs>
+//#include <KGlobal>
+//#include <KStartupInfo>
+//#include <KStandardDirs>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KCModuleInfo>
-#include <KWindowSystem>
-#include <KDebug>
+//#include <KWindowSystem>
+//#include <KDebug>
 #include <QStringList>
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -39,6 +39,7 @@
 #include <KDBusService>
 #include <KAboutData>
 #include <QCommandLineParser>
+#include <KLocalizedString>
 
 Apper::Apper(int& argc, char** argv)
  : QApplication(argc, argv),
@@ -173,7 +174,7 @@ void Apper::showUi()
     // Show all
     m_pkUi->showAll();
     m_pkUi->show();
-    KWindowSystem::forceActiveWindow(m_pkUi->winId());
+//    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void Apper::showUpdates()
@@ -184,7 +185,7 @@ void Apper::showUpdates()
     }
     m_pkUi->showUpdates();
     m_pkUi->show();
-    KWindowSystem::forceActiveWindow(m_pkUi->winId());
+//    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void Apper::showSettings()
@@ -195,7 +196,7 @@ void Apper::showSettings()
     }
     m_pkUi->showSettings();
     m_pkUi->show();
-    KWindowSystem::forceActiveWindow(m_pkUi->winId());
+//    KWindowSystem::forceActiveWindow(m_pkUi->winId());
 }
 
 void Apper::invoke(const QString &method_name, const QStringList &args)

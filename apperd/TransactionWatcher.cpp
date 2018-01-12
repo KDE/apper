@@ -30,17 +30,18 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KNotification>
-#include <KComponentData>
+//#include <KComponentData>
 
-#include <Solid/PowerManagement>
+//#include <Solid/PowerManagement>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 
 #include <kworkspace5/kworkspace.h>
-
-#include <KDebug>
-
 #include <Daemon>
+
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_DAEMON)
 
 TransactionWatcher::TransactionWatcher(bool packagekitIsRunning, QObject *parent) :
     QObject(parent),
@@ -307,7 +308,7 @@ void TransactionWatcher::logout()
         shutdownType = KWorkSpace::ShutdownTypeLogout;
         break;
     default:
-        kWarning() << "Unknown restart type:" << restartType;
+        qCWarning(APPER_DAEMON) << "Unknown restart type:" << restartType;
         return;
     }
 
@@ -341,16 +342,16 @@ void TransactionWatcher::suppressSleep(bool enable, int &inhibitCookie, const QS
     }
 
     if (enable) {
-        kDebug() << "Begin Suppressing Sleep";
-        inhibitCookie = Solid::PowerManagement::beginSuppressingSleep(reason);
+        qCDebug(APPER_DAEMON) << "Begin Suppressing Sleep";
+//        inhibitCookie = Solid::PowerManagement::beginSuppressingSleep(reason);
         if (inhibitCookie == -1) {
-            kDebug() << "Sleep suppression denied!";
+            qCDebug(APPER_DAEMON) << "Sleep suppression denied!";
         }
     } else {
-        kDebug() << "Stop Suppressing Sleep";
-        if (!Solid::PowerManagement::stopSuppressingSleep(inhibitCookie)) {
-            kDebug() << "Stop failed: invalid cookie.";
-        }
+        qCDebug(APPER_DAEMON) << "Stop Suppressing Sleep";
+//        if (!Solid::PowerManagement::stopSuppressingSleep(inhibitCookie)) {
+            qCDebug(APPER_DAEMON) << "Stop failed: invalid cookie.";
+//        }
         inhibitCookie = -1;
     }
 }

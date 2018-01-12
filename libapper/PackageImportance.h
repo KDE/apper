@@ -21,7 +21,7 @@
 #ifndef PACKAGE_IMPORTANCE_H
 #define PACKAGE_IMPORTANCE_H
 
-#include <kdemacros.h>
+//#include <kdemacros.h>
 
 #include <Transaction>
 
@@ -29,7 +29,7 @@ using namespace PackageKit;
 
 namespace PackageImportance
 {
-    KDE_EXPORT int restartImportance(PackageKit::Transaction::Restart type);
+    Q_DECL_EXPORT int restartImportance(PackageKit::Transaction::Restart type);
 };
 
 #endif

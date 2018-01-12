@@ -26,7 +26,7 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 using namespace PackageKit;
 

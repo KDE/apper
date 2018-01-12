@@ -27,7 +27,9 @@
 
 #include <KLocalizedString>
 
-#include <KDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 PkSearchFile::PkSearchFile(const QString &file_name,
                            const QString &interaction,
@@ -72,7 +74,7 @@ void PkSearchFile::searchSuccess()
     QDBusMessage reply = m_message.createReply();
     reply << installed;
     reply << Transaction::packageName(packageID);
-    kDebug() << reply;
+    qCDebug(APPER_SESSION) << reply;
     sendMessageFinished(reply);
 }
 

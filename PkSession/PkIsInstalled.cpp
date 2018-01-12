@@ -25,7 +25,9 @@
 #include <PkStrings.h>
 
 #include <KLocalizedString>
-#include <KDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 PkIsInstalled::PkIsInstalled(const QString &package_name,
                              const QString &interaction,
@@ -52,7 +54,7 @@ PkIsInstalled::~PkIsInstalled()
 
 void PkIsInstalled::searchFinished(PkTransaction::ExitStatus status)
 {
-    kDebug();
+    qCDebug(APPER_SESSION);
     if (status == PkTransaction::Success) {
         QDBusMessage reply = m_message.createReply();
         reply << (bool) foundPackagesSize();

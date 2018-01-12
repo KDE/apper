@@ -30,15 +30,15 @@
 using namespace PackageKit;
 
 LicenseAgreement::LicenseAgreement(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement, QWidget *parent) :
-    KDialog(parent),
+    QDialog(parent),
     m_id(eulaID),
     ui(new Ui::LicenseAgreement)
 {
-    ui->setupUi(mainWidget());
+    ui->setupUi(this);
 
-    setButtons(KDialog::Cancel | KDialog::Yes);
-    setButtonText(KDialog::Yes, i18n("Accept Agreement"));
-    setPlainCaption(i18n("License Agreement Required"));
+//    setButtons(KDialog::Cancel | KDialog::Yes);
+//    setButtonText(KDialog::Yes, i18n("Accept Agreement"));
+    setWindowTitle(i18n("License Agreement Required"));
     ui->title->setText(i18n("License required for %1 by %2", Transaction::packageName(packageID), vendor));
 
     ui->textbrowser->setText(licenseAgreement);

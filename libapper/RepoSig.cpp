@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 #include "PkStrings.h"
 

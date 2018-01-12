@@ -22,7 +22,7 @@
 
 #include <Daemon>
 
-#include <KDebug>
+#include <QLoggingCategory>
 
 using namespace PackageKit;
 
@@ -39,15 +39,15 @@ AbstractIsRunning::~AbstractIsRunning()
 void AbstractIsRunning::increaseRunning()
 {
     m_running++;
-    kDebug();
+//    kDebug();
 }
 
 void AbstractIsRunning::decreaseRunning()
 {
     m_running--;
-    kDebug();
+//    kDebug();
     if (!isRunning()) {
-        kDebug() << "Is not Running anymore";
+//        kDebug() << "Is not Running anymore";
         emit close();
     }
 }
