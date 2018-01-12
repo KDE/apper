@@ -355,5 +355,3 @@ Transaction::Filters FiltersMenu::filters() const
     }
     return filters;
 }
-
-#include "FiltersMenu.moc"

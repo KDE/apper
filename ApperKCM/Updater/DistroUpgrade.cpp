@@ -114,5 +114,3 @@ void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
             break;
     }
 }
-
-#include "DistroUpgrade.moc"

@@ -100,7 +100,6 @@ if(MAINTAINER)
 endif(MAINTAINER)
 add_definitions(${MAINTAINER_CFLAGS})
 
-add_definitions("-std=gnu++11")
 add_definitions(
   -DQT_USE_QSTRINGBUILDER
   -DQT_STRICT_ITERATORS

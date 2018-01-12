@@ -103,6 +103,7 @@ public:
 
 public Q_SLOTS:
     void addSelectedPackagesFromModel(PackageModel *model);
+    void addNotSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary, bool selected = false);
     void addSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void removePackage(const QString &packageID);

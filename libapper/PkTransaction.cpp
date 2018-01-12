@@ -371,7 +371,7 @@ void PkTransaction::slotRepoSignature(const QString &packageID,
         d->handlingActionRequired = true;
     }
 
-    RepoSig *repoSig = new RepoSig(packageID, repoName, keyUrl, keyUserid, keyId, keyFingerprint, keyTimestamp, type, d->parentWindow);
+    auto repoSig = new RepoSig(packageID, repoName, keyUrl, keyUserid, keyId, keyFingerprint, keyTimestamp, type, d->parentWindow);
     connect(repoSig, SIGNAL(yesClicked()), this, SLOT(installSignature()));
     connect(repoSig, SIGNAL(rejected()), this, SLOT(reject()));
     showDialog(repoSig);
@@ -434,8 +434,8 @@ void PkTransaction::slotFinished(Transaction::Exit status)
 
             requires = new Requirements(d->simulateModel, d->parentWindow);
             requires->setDownloadSizeRemaining(d->downloadSizeRemaining);
-            connect(requires, SIGNAL(accepted()), this, SLOT(requeueTransaction()));
-            connect(requires, SIGNAL(rejected()), this, SLOT(reject()));
+            connect(requires, &Requirements::accepted, this, &PkTransaction::requeueTransaction);
+            connect(requires, &Requirements::rejected, this, &PkTransaction::reject);
             if (requires->shouldShow()) {
                 showDialog(requires);
             } else {
@@ -474,7 +474,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
                 // if we have a launcher and the laucher has applications
                 // show them to the user
                 showDialog(d->launcher);
-                connect(d->launcher, SIGNAL(finished()), SLOT(setExitStatus()));
+                connect(d->launcher, &ApplicationLauncher::finished, this, &PkTransaction::setExitStatus);
                 return;
             }
             setExitStatus(Success);
@@ -615,7 +615,7 @@ void PkTransaction::setTrusted(bool trusted)
     }
 }
 
-void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
+void PkTransaction::setExitStatus(int status)
 {
     qCDebug(APPER_LIB) << status;
     if (d->launcher) {
@@ -623,9 +623,9 @@ void PkTransaction::setExitStatus(PkTransaction::ExitStatus status)
         d->launcher = 0;
     }
 
-    d->exitStatus = status;
+    d->exitStatus = static_cast<PkTransaction::ExitStatus>(status);
     if (!d->handlingActionRequired || !d->showingError) {
-        emit finished(status);
+        emit finished(d->exitStatus);
     }
 }
 
@@ -643,65 +643,40 @@ void PkTransaction::setupTransaction(Transaction *transaction)
     if (!(transaction->transactionFlags() & Transaction::TransactionFlagSimulate) &&
             transaction->role() != Transaction::RoleGetUpdates &&
             transaction->role() != Transaction::RoleGetUpdateDetail) {
-        connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
-                d->progressModel, SLOT(currentRepo(QString,QString,bool)));
-        connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                d->progressModel, SLOT(currentPackage(PackageKit::Transaction::Info,QString,QString)));
-        connect(transaction, SIGNAL(itemProgress(QString,PackageKit::Transaction::Status,uint)),
-                d->progressModel, SLOT(itemProgress(QString,PackageKit::Transaction::Status,uint)));
+        connect(transaction, &Transaction::repoDetail, d->progressModel, &PkTransactionProgressModel::currentRepo);
+        connect(transaction, &Transaction::package, d->progressModel, &PkTransactionProgressModel::currentPackage);
+        connect(transaction, &Transaction::itemProgress, d->progressModel, &PkTransactionProgressModel::itemProgress);
     }
 
-    connect(transaction, SIGNAL(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)),
-            SIGNAL(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)));
-    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            SIGNAL(package(PackageKit::Transaction::Info,QString,QString)));
-    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            SIGNAL(errorCode(PackageKit::Transaction::Error,QString)));
+    connect(transaction, &Transaction::updateDetail, this, &PkTransaction::updateDetail);
+    connect(transaction, &Transaction::package, this, &PkTransaction::package);
+    connect(transaction, &Transaction::errorCode, this, &PkTransaction::errorCode);
 
     // Required actions
-    connect(transaction, SIGNAL(allowCancelChanged()),
-            SIGNAL(allowCancelChanged()));
-    connect(transaction, SIGNAL(downloadSizeRemainingChanged()),
-            SIGNAL(downloadSizeRemainingChanged()));
-    connect(transaction, SIGNAL(elapsedTimeChanged()),
-            SIGNAL(elapsedTimeChanged()));
-    connect(transaction, SIGNAL(isCallerActiveChanged()),
-            SIGNAL(isCallerActiveChanged()));
-    connect(transaction, SIGNAL(lastPackageChanged()),
-            SIGNAL(lastPackageChanged()));
-    connect(transaction, SIGNAL(percentageChanged()),
-            SIGNAL(percentageChanged()));
-    connect(transaction, SIGNAL(remainingTimeChanged()),
-            SIGNAL(remainingTimeChanged()));
-    connect(transaction, SIGNAL(roleChanged()),
-            SIGNAL(roleChanged()));
-    connect(transaction, SIGNAL(speedChanged()),
-            SIGNAL(speedChanged()));
-    connect(transaction, SIGNAL(statusChanged()),
-            SIGNAL(statusChanged()));
-    connect(transaction, SIGNAL(transactionFlagsChanged()),
-            SIGNAL(transactionFlagsChanged()));
-    connect(transaction, SIGNAL(uidChanged()),
-            SIGNAL(uidChanged()));
+    connect(transaction, &Transaction::allowCancelChanged, this, &PkTransaction::allowCancelChanged);
+    connect(transaction, &Transaction::downloadSizeRemainingChanged, this, &PkTransaction::downloadSizeRemainingChanged);
+    connect(transaction, &Transaction::elapsedTimeChanged, this, &PkTransaction::elapsedTimeChanged);
+    connect(transaction, &Transaction::isCallerActiveChanged, this, &PkTransaction::isCallerActiveChanged);
+    connect(transaction, &Transaction::lastPackageChanged, this, &PkTransaction::lastPackageChanged);
+    connect(transaction, &Transaction::percentageChanged, this, &PkTransaction::percentageChanged);
+    connect(transaction, &Transaction::remainingTimeChanged, this, &PkTransaction::remainingTimeChanged);
+    connect(transaction, &Transaction::roleChanged, this, &PkTransaction::roleChanged);
+    connect(transaction, &Transaction::speedChanged, this, &PkTransaction::speedChanged);
+    connect(transaction, &Transaction::statusChanged, this, &PkTransaction::statusChanged);
+    connect(transaction, &Transaction::transactionFlagsChanged, this, &PkTransaction::transactionFlagsChanged);
+    connect(transaction, &Transaction::uidChanged, this, &PkTransaction::uidChanged);
 
-    connect(transaction, SIGNAL(downloadSizeRemainingChanged()),
-            SLOT(slotChanged()));
-    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            SLOT(slotErrorCode(PackageKit::Transaction::Error,QString)));
-    connect(transaction, SIGNAL(eulaRequired(QString,QString,QString,QString)),
-            SLOT(slotEulaRequired(QString,QString,QString,QString)));
-    connect(transaction, SIGNAL(mediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)),
-            SLOT(slotMediaChangeRequired(PackageKit::Transaction::MediaType,QString,QString)));
-    connect(transaction, SIGNAL(repoSignatureRequired(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)),
-            SLOT(slotRepoSignature(QString,QString,QString,QString,QString,QString,QString,PackageKit::Transaction::SigType)));
+    connect(transaction, &Transaction::downloadSizeRemainingChanged, this, &PkTransaction::slotChanged);
+    connect(transaction, &Transaction::errorCode, this, &PkTransaction::slotErrorCode);
+    connect(transaction, &Transaction::eulaRequired, this, &PkTransaction::slotEulaRequired);
+    connect(transaction, &Transaction::mediaChangeRequired, this, &PkTransaction::slotMediaChangeRequired);
+    connect(transaction, &Transaction::repoSignatureRequired, this, &PkTransaction::slotRepoSignature);
 
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            SLOT(slotFinished(PackageKit::Transaction::Exit)));
+    connect(transaction, &Transaction::finished, this, &PkTransaction::slotFinished);
 
     if (d->flags & Transaction::TransactionFlagSimulate) {
         d->simulateModel = new PackageModel(this);
-        connect(d->transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                d->simulateModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+        connect(d->transaction, &Transaction::package, d->simulateModel, &PackageModel::addNotSelectedPackage);
     }
 
 #ifdef HAVE_DEBCONFKDE

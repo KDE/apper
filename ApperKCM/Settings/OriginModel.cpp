@@ -103,5 +103,3 @@ void OriginModel::setRepoFinished(Transaction::Exit exit)
     }
     sender()->deleteLater();
 }
-
-#include "OriginModel.moc"

@@ -33,5 +33,3 @@ void ClickableLabel::mouseReleaseEvent(QMouseEvent *event)
     QLabel::mousePressEvent(event);
     emit clicked();
 }
-
-#include "ClickableLabel.moc"

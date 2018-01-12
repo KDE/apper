@@ -339,5 +339,3 @@ void Settings::showRepoSettings()
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
-
-#include "Settings.moc"

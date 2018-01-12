@@ -118,6 +118,7 @@ QString PkIcons::statusIconName(Transaction::Status status)
     case Transaction::StatusCheckExecutableFiles : return "package-info";
     case Transaction::StatusCheckLibraries       : return "package-info";
     case Transaction::StatusCopyFiles            : return "package-info";
+    case Transaction::StatusRunHook              : return "package-info";
     }
     qCDebug(APPER_LIB) << "status icon unrecognised: " << status;
     return "help-browser";
@@ -211,6 +212,7 @@ QString PkIcons::actionIconName(Transaction::Role role)
     case Transaction::RoleUpdatePackages          : return "package-update";
     case Transaction::RoleWhatProvides            : return "search-package";
     case Transaction::RoleRepairSystem            : return "package-rollback";
+    case Transaction::StatusRunHook               : return "package-info";
     }
     qCDebug(APPER_LIB) << "action unrecognised: " << role;
     return "applications-other";

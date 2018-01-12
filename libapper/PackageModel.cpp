@@ -71,11 +71,16 @@ PackageModel::PackageModel(QObject *parent)
 
 void PackageModel::addSelectedPackagesFromModel(PackageModel *model)
 {
-    QList<InternalPackage> packages = model->internalSelectedPackages();
-    foreach (const InternalPackage &package, packages) {
+    const QList<InternalPackage> packages = model->internalSelectedPackages();
+    for (const InternalPackage &package : packages) {
         addPackage(package.info, package.packageID, package.summary, true);
     }
     finished();
+}
+
+void PackageModel::addNotSelectedPackage(Transaction::Info info, const QString &packageID, const QString &summary)
+{
+    addPackage(info, packageID, summary);
 }
 
 void PackageModel::addPackage(Transaction::Info info, const QString &packageID, const QString &summary, bool selected)

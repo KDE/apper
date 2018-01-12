@@ -157,7 +157,7 @@ private Q_SLOTS:
                            const QString &keyTimestamp,
                            PackageKit::Transaction::SigType type);
 
-    void setExitStatus(PkTransaction::ExitStatus status = PkTransaction::Success);
+    void setExitStatus(int status = PkTransaction::Success);
     void reject();
 
 private:

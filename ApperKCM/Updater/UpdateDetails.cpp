@@ -342,5 +342,3 @@ void UpdateDetails::updateDetailFinished()
         descriptionKTB->setPlainText(i18n("No update description was found."));
     }
 }
-
-#include "UpdateDetails.moc"

@@ -174,5 +174,3 @@ void CheckableHeader::setCheckBoxVisible(bool visible)
     m_visible = visible;
     headerDataChanged(Qt::Horizontal, 0, 0);
 }
-
-#include "CheckableHeader.moc"

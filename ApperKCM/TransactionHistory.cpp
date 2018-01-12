@@ -85,5 +85,3 @@ void TransactionHistory::refreshList()
     text = i18n("Time since last cache refresh: %1", KFormat().formatDuration(time));
     timeCacheLabel->setText(text);
 }
-
-#include "TransactionHistory.moc"

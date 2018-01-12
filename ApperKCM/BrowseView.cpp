@@ -336,5 +336,3 @@ void BrowseView::enableExportInstalledPB()
 {
     exportInstalledPB->setEnabled(true);
 }
-
-#include "BrowseView.moc"

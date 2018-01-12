@@ -102,7 +102,9 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     // Set the current locale
     //TODO FIXME
 //    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
-//    Daemon::global()->setHints(QLatin1String("locale=") % locale);
+    Daemon::global()->setHints(QLatin1String("locale=") + QLocale::system().name());
+
+    qCDebug(APPER) << Q_FUNC_INFO << QLocale::system().name();
 
     ui->setupUi(this);
 

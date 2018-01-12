@@ -357,5 +357,3 @@ void Updater::errorCode(PackageKit::Transaction::Error error, const QString &det
                                PkStrings::error(error),
                                KMessageBox::Notify);
 }
-
-#include "Updater.moc"
