@@ -28,29 +28,32 @@
 #include <QTimer>
 #include <QFile>
 
-static const char reboot_required_path[] = "/run/reboot-required";
+static const QString reboot_required_path = QStringLiteral("/run/reboot-required");
 
-AptRebootListener::AptRebootListener(QObject* parent): QObject(parent) {
-  m_watcher = new KDirWatch(this);
-  m_watcher->addFile(QString::fromLatin1(reboot_required_path));
-  connect(m_watcher,SIGNAL(created(QString)),this,SLOT(slotDirectoryChanged(QString)));
-  m_timer = new QTimer(this);
-  m_timer->setSingleShot(true);
-  m_timer->setInterval(500);
-  connect(m_timer,SIGNAL(timeout()),SIGNAL(requestReboot()));
+AptRebootListener::AptRebootListener(QObject *parent): QObject(parent)
+{
+    m_watcher = new KDirWatch(this);
+    m_watcher->addFile(reboot_required_path);
+    connect(m_watcher, &KDirWatch::created, this, &AptRebootListener::slotDirectoryChanged);
+    m_timer = new QTimer(this);
+    m_timer->setSingleShot(true);
+    m_timer->setInterval(500);
+    connect(m_timer, &QTimer::timeout, this, &AptRebootListener::requestReboot);
 }
 
-void AptRebootListener::checkForReboot() {
-  if(QFile::exists(QString::fromLatin1(reboot_required_path))) {
-    m_timer->start();
-  }
+void AptRebootListener::checkForReboot()
+{
+    if (QFile::exists(reboot_required_path)) {
+        m_timer->start();
+    }
 }
 
 
-void AptRebootListener::slotDirectoryChanged(const QString& path) {
-  if(path==QLatin1String(reboot_required_path)) {
-     m_timer->start();
-  }
+void AptRebootListener::slotDirectoryChanged(const QString &path)
+{
+    if (path == reboot_required_path) {
+        m_timer->start();
+    }
 }
 
 #include <RebootListener.moc>

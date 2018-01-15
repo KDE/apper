@@ -106,10 +106,8 @@ void CategoryModel::setRoles(Transaction::Roles roles)
     if (m_roles & Transaction::RoleGetCategories
         && transactions.value().isEmpty()) {
         Transaction *trans = Daemon::getCategories();
-        connect(trans, SIGNAL(category(QString,QString,QString,QString,QString)),
-                this, SLOT(category(QString,QString,QString,QString,QString)));
-        connect(trans, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SIGNAL(finished()));
+        connect(trans, &Transaction::category, this, &CategoryModel::category);
+        connect(trans, &Transaction::finished, this, &CategoryModel::finished);
     } else {
         fillWithStandardGroups();
     }
@@ -162,7 +160,7 @@ void CategoryModel::category(const QString &parentId,
                              const QString &icon)
 {
     qCDebug(APPER) << parentId << categoryId << name << summary << icon;
-    QStandardItem *item = new QStandardItem(name);
+    auto item = new QStandardItem(name);
     item->setDragEnabled(false);
     item->setData(Transaction::RoleSearchGroup, SearchRole);
     item->setData(categoryId, GroupRole);
@@ -191,7 +189,7 @@ void CategoryModel::category(const QString &parentId,
 
 QStandardItem* CategoryModel::findCategory(const QString &categoryId, const QModelIndex &parent) const
 {
-    QStandardItem *ret = 0;
+    QStandardItem *ret = nullptr;
     for (int i = 0; i < rowCount(parent); i++) {
         QModelIndex group = index(i, 0, parent);
         if (group.data(SearchRole).toUInt() == Transaction::RoleSearchGroup

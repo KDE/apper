@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -191,7 +191,7 @@ void PkTransaction::updatePackages()
 
 void PkTransaction::requeueTransaction()
 {
-    Requirements *requires = qobject_cast<Requirements *>(sender());
+    auto requires = qobject_cast<Requirements *>(sender());
     if (requires) {
         // As we have requires allow deps removal
         d->allowDeps = true;
@@ -289,14 +289,14 @@ void PkTransaction::slotEulaRequired(const QString &eulaID, const QString &packa
     }
 
     auto eula = new LicenseAgreement(eulaID, packageID, vendor, licenseAgreement, d->parentWindow);
-    connect(eula, SIGNAL(yesClicked()), this, SLOT(acceptEula()));
-    connect(eula, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(eula, &LicenseAgreement::accepted, this, &PkTransaction::acceptEula);
+    connect(eula, &LicenseAgreement::rejected, this, &PkTransaction::reject);
     showDialog(eula);
 }
 
 void PkTransaction::acceptEula()
 {
-    LicenseAgreement *eula = qobject_cast<LicenseAgreement*>(sender());
+    auto eula = qobject_cast<LicenseAgreement*>(sender());
 
     if (eula) {
         qCDebug(APPER_LIB) << "Accepting EULA" << eula->id();
@@ -308,7 +308,7 @@ void PkTransaction::acceptEula()
 
 void PkTransaction::slotChanged()
 {
-    Transaction *transaction = qobject_cast<Transaction*>(sender());
+    auto transaction = qobject_cast<Transaction*>(sender());
     d->downloadSizeRemaining = transaction->downloadSizeRemaining();
     d->role = transaction->role();
 
@@ -372,14 +372,14 @@ void PkTransaction::slotRepoSignature(const QString &packageID,
     }
 
     auto repoSig = new RepoSig(packageID, repoName, keyUrl, keyUserid, keyId, keyFingerprint, keyTimestamp, type, d->parentWindow);
-    connect(repoSig, SIGNAL(yesClicked()), this, SLOT(installSignature()));
-    connect(repoSig, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(repoSig, &RepoSig::accepted, this, &PkTransaction::installSignature);
+    connect(repoSig, &RepoSig::rejected, this, &PkTransaction::reject);
     showDialog(repoSig);
 }
 
 void PkTransaction::installSignature()
 {
-    RepoSig *repoSig = qobject_cast<RepoSig*>(sender());
+    auto repoSig = qobject_cast<RepoSig*>(sender());
 
     if (repoSig)  {
         qCDebug(APPER_LIB) << "Installing Signature" << repoSig->keyID();
@@ -422,7 +422,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
             d->simulateModel->finished();
 
             // Remove the transaction packages
-            foreach (const QString &packageID, d->packages) {
+            for (const QString &packageID : qAsConst(d->packages)) {
                 d->simulateModel->removePackage(packageID);
             }
 
@@ -462,8 +462,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
                     delete d->launcher;
                 }
                 d->launcher = new ApplicationLauncher(d->parentWindow);
-                connect(this, SIGNAL(files(QString,QStringList)),
-                        d->launcher, SLOT(files(QString,QStringList)));
+                connect(d->transaction, &Transaction::files, d->launcher, &ApplicationLauncher::files);
 
                 setupTransaction(Daemon::getFiles(d->newPackages));
                 d->newPackages.clear();
@@ -720,7 +719,7 @@ void PkTransaction::showDialog(QDialog *dlg)
 
 void PkTransaction::showError(const QString &title, const QString &description, const QString &details)
 {
-    PkTransactionWidget *widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
+    auto widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
     if (!widget || widget->isCancelVisible()) {
         if (details.isEmpty()) {
             if (d->parentWindow) {
@@ -738,7 +737,7 @@ void PkTransaction::showError(const QString &title, const QString &description, 
 
 void PkTransaction::showSorry(const QString &title, const QString &description, const QString &details)
 {
-    PkTransactionWidget *widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
+    auto widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
     if (!widget || widget->isCancelVisible()) {
         if (details.isEmpty()) {
             KMessageBox::sorry(d->parentWindow, description, title);

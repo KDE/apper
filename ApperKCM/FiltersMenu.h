@@ -56,7 +56,7 @@ Q_SIGNALS:
 
 private:
     QAction *m_applications;
-    QList<QAction*> m_actions;
+    QVector<QAction*> m_actions;
     QHash<QAction *, Transaction::Filter> m_filtersAction;
 };
 

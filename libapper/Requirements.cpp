@@ -75,11 +75,11 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     help->setIcon(QIcon::fromTheme("download"));
 
     m_buttonGroup = new QButtonGroup(this);
-    connect(m_buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(actionClicked(int)));
+    connect(m_buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &Requirements::actionClicked);
 
     int count = 0;
     if (int c = model->countInfo(Transaction::InfoRemoving)) {
-        QToolButton *button = new QToolButton(this);
+        auto button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
@@ -94,7 +94,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     }
 
     if (int c = model->countInfo(Transaction::InfoDowngrading)) {
-        QToolButton *button = new QToolButton(this);
+        auto button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
@@ -109,7 +109,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     }
 
     if (int c = model->countInfo(Transaction::InfoReinstalling)) {
-        QToolButton *button = new QToolButton(this);
+        auto button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
@@ -122,7 +122,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     }
 
     if (int c = model->countInfo(Transaction::InfoInstalling)) {
-        QToolButton *button = new QToolButton(this);
+        auto button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
@@ -135,7 +135,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     }
 
     if (int c = model->countInfo(Transaction::InfoUpdating)) {
-        QToolButton *button = new QToolButton(this);
+        auto button = new QToolButton(this);
         button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         button->setCheckable(true);
         button->setAutoRaise(true);
@@ -251,17 +251,14 @@ void Requirements::on_confirmCB_Toggled(bool checked)
 
 void Requirements::actionClicked(int type)
 {
-    ApplicationSortFilterModel *proxy;
-    proxy = qobject_cast<ApplicationSortFilterModel*>(ui->packageView->model());
+    auto proxy = qobject_cast<ApplicationSortFilterModel*>(ui->packageView->model());
     proxy->setInfoFilter(static_cast<Transaction::Info>(type));
 }
 
 void Requirements::showUntrustedButton()
 {
     // Clear the other buttons
-    foreach (QAbstractButton *button, m_buttonGroup->buttons()) {
-        delete button;
-    }
+    qDeleteAll(m_buttonGroup->buttons());
 
     // Hide the auto confirm button since we will be showing this dialog anyway
     ui->confirmCB->setVisible(false);

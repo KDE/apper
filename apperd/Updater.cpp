@@ -93,10 +93,8 @@ void Updater::checkForUpdates(bool systemReady)
     m_importantList.clear();
     m_securityList.clear();
     m_getUpdatesT = Daemon::getUpdates();
-    connect(m_getUpdatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            this, SLOT(packageToUpdate(PackageKit::Transaction::Info,QString,QString)));
-    connect(m_getUpdatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(getUpdateFinished()));
+    connect(m_getUpdatesT, &Transaction::package, this, &Updater::packageToUpdate);
+    connect(m_getUpdatesT, &Transaction::finished, this, &Updater::getUpdateFinished);
 }
 
 void Updater::packageToUpdate(Transaction::Info info, const QString &packageID, const QString &summary)
@@ -124,7 +122,7 @@ void Updater::getUpdateFinished()
 {
     m_getUpdatesT = 0;
     if (!m_updateList.isEmpty()) {
-        Transaction *transaction = qobject_cast<Transaction*>(sender());
+        auto transaction = qobject_cast<Transaction*>(sender());
 
         bool different = false;
         if (m_oldUpdateList.size() != m_updateList.size()) {
@@ -132,7 +130,8 @@ void Updater::getUpdateFinished()
         } else {
             // The lists have the same size let's make sure
             // all the packages are the same
-            foreach (const QString &packageId, m_updateList) {
+            const QStringList updates = m_updateList;
+            for (const QString &packageId : updates) {
                 if (!m_oldUpdateList.contains(packageId)) {
                     different = true;
                     break;
@@ -198,7 +197,7 @@ void Updater::getUpdateFinished()
 
 void Updater::autoUpdatesFinished(PkTransaction::ExitStatus status)
 {
-    KNotification *notify = new KNotification("UpdatesComplete");
+    auto notify = new KNotification("UpdatesComplete");
     notify->setComponentName("apperd");
     if (status == PkTransaction::Success) {
         if (sender()->property("DownloadOnly").toBool()) {
@@ -265,14 +264,15 @@ void Updater::showUpdatesPopup()
 {
     m_oldUpdateList = m_updateList;
 
-    KNotification *notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
+    auto notify = new KNotification("ShowUpdates", 0, KNotification::Persistent);
     notify->setComponentName("apperd");
-    connect(notify, SIGNAL(action1Activated()), this, SLOT(reviewUpdates()));
-    connect(notify, SIGNAL(action2Activated()), this, SLOT(installUpdates()));
+    connect(notify, &KNotification::action1Activated, this, &Updater::reviewUpdates);
+    connect(notify, &KNotification::action2Activated, this, &Updater::installUpdates);
     notify->setTitle(i18np("There is one new update", "There are %1 new updates", m_updateList.size()));
     QString text;
-    foreach (const QString &packageId, m_updateList) {
-        QString packageName = Transaction::packageName(packageId);
+    const QStringList updates = m_updateList;
+    for (const QString &packageId : updates) {
+        const QString packageName = Transaction::packageName(packageId);
         if (text.length() + packageName.length() > 150) {
             text.append(QLatin1String(" ..."));
             break;
@@ -300,12 +300,11 @@ bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, con
     m_oldUpdateList = m_updateList;
 
     // Defaults to security
-    PkTransaction *transaction = new PkTransaction;
+    auto transaction = new PkTransaction;
     transaction->setProperty("DownloadOnly", downloadOnly);
     transaction->enableJobWatcher(true);
     transaction->updatePackages(packages, downloadOnly);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(autoUpdatesFinished(PkTransaction::ExitStatus)));
+    connect(transaction, &PkTransaction::finished, this, &Updater::autoUpdatesFinished);
     if (!icon.isNull()) {
         KNotification *notify;
         if (downloadOnly) {

@@ -44,8 +44,7 @@ PkRemovePackageByFiles::PkRemovePackageByFiles(uint xid,
     m_introDialog = new IntroDialog(this);
     m_introDialog->acceptDrops(i18n("You can drop more files in here"));
     m_model = new FilesModel(files, QStringList(), this);
-    connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(modelChanged()));
+    connect(m_model, &FilesModel::rowsInserted, this, &PkRemovePackageByFiles::modelChanged);
     m_introDialog->setModel(m_model);
     setMainWidget(m_introDialog);
 
@@ -119,13 +118,11 @@ void PkRemovePackageByFiles::searchFinished(PkTransaction::ExitStatus status)
         if (!m_files.isEmpty()) {
             QString file = m_files.takeFirst();
 
-            PkTransaction *transaction = new PkTransaction(this);
+            auto transaction = new PkTransaction(this);
             transaction->setupTransaction(Daemon::searchFiles(file, Transaction::FilterInstalled));
             setTransaction(Transaction::RoleSearchFile, transaction);
-            connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-                    this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-            connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                    this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+            connect(transaction, &PkTransaction::finished, this, &PkRemovePackageByFiles::searchFinished, Qt::UniqueConnection);
+            connect(transaction, &PkTransaction::package, this, &PkRemovePackageByFiles::addPackage);
         } else {
             // we are done resolving
             SessionTask::searchFinished(status);

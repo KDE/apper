@@ -40,15 +40,14 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
 {
     setWindowTitle(i18n("Install Plasma Resources"));
 
-    IntroDialog *introDialog = new IntroDialog(this);
-    QStandardItemModel *model = new QStandardItemModel(this);
+    auto introDialog = new IntroDialog(this);
+    auto model = new QStandardItemModel(this);
     introDialog->setModel(model);
-    connect(introDialog, SIGNAL(continueChanged(bool)),
-            this, SLOT(enableButtonOk(bool)));
+    connect(introDialog, &IntroDialog::continueChanged, this, &PkInstallPlasmaResources::enableButtonOk);
     setMainWidget(introDialog);
 
     // Resources are strings like "dataengine-weather"
-    foreach (const QString &service, resources) {
+    for (const QString &service : resources) {
         QString prettyService = service;
         if (service.startsWith(QLatin1String("dataengine-"))) {
             prettyService = i18n("%1 data engine", service.mid(11));
@@ -56,7 +55,7 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
             prettyService = i18n("%1 script engine", service.mid(13));
         }
 
-        QStandardItem *item = new QStandardItem(prettyService);
+        auto item = new QStandardItem(prettyService);
         item->setIcon(QIcon::fromTheme("application-x-plasma").pixmap(32, 32));
         item->setFlags(Qt::ItemIsEnabled);
         model->appendRow(item);
@@ -89,16 +88,14 @@ PkInstallPlasmaResources::~PkInstallPlasmaResources()
 
 void PkInstallPlasmaResources::search()
 {
-    PkTransaction *transaction = new PkTransaction(this);
+    auto transaction = new PkTransaction(this);
     Transaction *t;
     t = Daemon::whatProvides(m_resources,
                              Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
     transaction->setupTransaction(t);
     setTransaction(Transaction::RoleWhatProvides, transaction);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(transaction, &PkTransaction::finished, this, &PkInstallPlasmaResources::searchFinished, Qt::UniqueConnection);
+    connect(transaction, &PkTransaction::package, this, &PkInstallPlasmaResources::addPackage);
 }
 
 void PkInstallPlasmaResources::notFound()

@@ -44,8 +44,7 @@ PkSession::PkSession(QObject* parent)
     : QObject(parent)
 {
     m_pkInterface = new PkInterface(this);
-    connect(m_pkInterface, SIGNAL(close()),
-            this, SLOT(prepareToClose()));
+    connect(m_pkInterface, &PkInterface::close, this, &PkSession::prepareToClose);
 
 //    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
 //    Daemon::global()->setHints(QLatin1String("locale=") % locale);
@@ -55,8 +54,7 @@ PkSession::PkSession(QObject* parent)
 
     // create the close timer and connect it's signal
     m_closeT = new QTimer(this);
-    connect(m_closeT, SIGNAL(timeout()),
-            this, SLOT(close()));
+    connect(m_closeT, &QTimer::timeout, this, &PkSession::close);
 
     prepareToClose();
 }

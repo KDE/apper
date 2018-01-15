@@ -43,12 +43,10 @@ void RefreshCacheTask::refreshCache()
     if (!m_transaction) {
         // Refresh Cache is false otherwise it will rebuild
         // the whole cache on Fedora
-        Daemon::setHints (QLatin1String("cache-age=")+QString::number(m_cacheAge));
+        Daemon::setHints (QLatin1String("cache-age=") + QString::number(m_cacheAge));
         m_transaction = Daemon::refreshCache(false);
-        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(refreshCacheFinished(PackageKit::Transaction::Exit,uint)));
-        connect(m_transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-                this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+        connect(m_transaction, &Transaction::finished, this, &RefreshCacheTask::refreshCacheFinished);
+        connect(m_transaction, &Transaction::errorCode, this, &RefreshCacheTask::errorCode);
     }
 }
 
@@ -71,7 +69,7 @@ void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorM
 
     m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
     m_notification->setComponentName("apperd");
-    connect(m_notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
+    connect(m_notification, &KNotification::closed, this, &RefreshCacheTask::notificationClosed);
     QIcon icon = QIcon::fromTheme("dialog-cancel");
     // use of QSize does the right thing
     m_notification->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));

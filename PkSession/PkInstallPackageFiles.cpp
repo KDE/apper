@@ -45,8 +45,7 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
 
         m_model = new FilesModel(files, Daemon::global()->mimeTypes(), this);
         m_introDialog->setModel(m_model);
-        connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                this, SLOT(modelChanged()));
+        connect(m_model, &FilesModel::rowsInserted, this, &PkInstallPackageFiles::modelChanged);
         setMainWidget(m_introDialog);
 
         modelChanged();
@@ -92,10 +91,9 @@ void PkInstallPackageFiles::modelChanged()
 
 void PkInstallPackageFiles::commit()
 {
-    PkTransaction *transaction = new PkTransaction(this);
+    auto transaction = new PkTransaction(this);
     setTransaction(Transaction::RoleInstallFiles, transaction);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(transactionFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
+    connect(transaction, &PkTransaction::finished, this, &PkInstallPackageFiles::transactionFinished, Qt::UniqueConnection);
     transaction->installFiles(m_model->files());
 }
 

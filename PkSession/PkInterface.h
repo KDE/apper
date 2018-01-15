@@ -50,7 +50,7 @@ public Q_SLOTS:
     bool SearchFile(const QString &file_name, const QString &interaction, QString &package_name);
 
 private:
-    void show(SessionTask *widget) const;
+    void show(SessionTask *widget);
 //    QVariantHash parseInteraction(const QString &interaction);
     void InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction);
 };

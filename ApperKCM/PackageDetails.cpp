@@ -774,8 +774,7 @@ void PackageDetails::finished()
     }
     m_transaction = 0;
 
-    PackageKit::Transaction *transaction;
-    transaction = qobject_cast<PackageKit::Transaction*>(sender());
+    auto transaction = qobject_cast<PackageKit::Transaction*>(sender());
     qCDebug(APPER);
     if (transaction) {
         qCDebug(APPER) << transaction->role() << PackageKit::Transaction::RoleGetDetails;

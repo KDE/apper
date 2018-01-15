@@ -35,5 +35,5 @@ uint DaemonHelper::getTimeSinceLastRefresh()
 
 void DaemonHelper::setCacheAge (int age)
 {
-   Daemon::setHints(QLatin1String("cache-age=")+QString::number(age));
+    Daemon::setHints(QLatin1String("cache-age=") + QString::number(age));
 }

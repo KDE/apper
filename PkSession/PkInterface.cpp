@@ -54,10 +54,8 @@ PkInterface::PkInterface(QObject *parent) :
         QTimer timer;
         timer.setInterval(5000);
         QEventLoop loop;
-        connect(Daemon::global(), SIGNAL(isRunningChanged()),
-                &loop, SLOT(quit()));
-        connect(&timer, SIGNAL(timeout()),
-                &loop, SLOT(quit()));
+        connect(Daemon::global(), &Daemon::isRunningChanged, &loop, &QEventLoop::quit);
+        connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
         loop.exec();
         if (!Daemon::isRunning()) {
             qCWarning(APPER_SESSION) << "Packagekit didn't start";
@@ -86,106 +84,71 @@ PkInterface::~PkInterface()
 
 void PkInterface::InstallCatalogs(uint xid, const QStringList &files, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << files << interaction;
-    setDelayedReply(true);
-    PkInstallCatalogs *task;
-    task = new PkInstallCatalogs(xid, files, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallCatalogs(xid, files, interaction, message());
     show(task);
 }
 
 void PkInterface::InstallFontconfigResources(uint xid, const QStringList &resources, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << resources << interaction;
-    setDelayedReply(true);
-    PkInstallFontconfigResources *task;
-    task = new PkInstallFontconfigResources(xid, resources, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallFontconfigResources(xid, resources, interaction, message());
     show(task);
 }
 
 void PkInterface::InstallGStreamerResources(uint xid, const QStringList &resources, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << resources << interaction;
-    setDelayedReply(true);
-    PkInstallGStreamerResources *task;
-    task = new PkInstallGStreamerResources(xid, resources, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallGStreamerResources(xid, resources, interaction, message());
     show(task);
 }
 
 void PkInterface::InstallMimeTypes(uint xid, const QStringList &mime_types, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << mime_types << interaction;
-    setDelayedReply(true);
-    PkInstallMimeTypes *task = new PkInstallMimeTypes(xid, mime_types, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallMimeTypes(xid, mime_types, interaction, message());
     show(task);
 }
 
 void PkInterface::InstallPackageFiles(uint xid, const QStringList &files, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << files << interaction;
-    setDelayedReply(true);
-    PkInstallPackageFiles *task = new PkInstallPackageFiles(xid, files, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallPackageFiles(xid, files, interaction, message());
     show(task);
 }
 
 void PkInterface::InstallPackageNames(uint xid, const QStringList &packages, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << packages << interaction;
-    setDelayedReply(true);
-    PkInstallPackageNames *task = new PkInstallPackageNames(xid, packages, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallPackageNames(xid, packages, interaction, message());
     show(task);
 }
 
 void PkInterface::InstallProvideFiles(uint xid, const QStringList &files, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << files << interaction;
-    setDelayedReply(true);
-    PkInstallProvideFiles *task = new PkInstallProvideFiles(xid, files, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallProvideFiles(xid, files, interaction, message());
     show(task);
 }
 
 void PkInterface::RemovePackageByFiles(uint xid, const QStringList &files, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << files << interaction;
-    setDelayedReply(true);
-    PkRemovePackageByFiles *task = new PkRemovePackageByFiles(xid, files, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkRemovePackageByFiles(xid, files, interaction, message());
     show(task);
 }
 
 void PkInterface::InstallPrinterDrivers(uint xid, const QStringList &resources, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << resources << interaction;
-    setDelayedReply(true);
-    PkInstallPrinterDrivers *task;
-    task = new PkInstallPrinterDrivers(xid, resources, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallPrinterDrivers(xid, resources, interaction, message());
     show(task);
 }
 
 void PkInterface::InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction)
 {
-    increaseRunning();
     qCDebug(APPER_SESSION) << xid << resources << interaction;
-    setDelayedReply(true);
-    PkInstallPlasmaResources *task;
-    task = new PkInstallPlasmaResources(xid, resources, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkInstallPlasmaResources(xid, resources, interaction, message());
     show(task);
 }
 
@@ -208,10 +171,7 @@ void PkInterface::InstallResources(uint xid, const QString &type, const QStringL
 //Query
 bool PkInterface::IsInstalled(const QString &package_name, const QString &interaction)
 {
-    increaseRunning();
-    setDelayedReply(true);
-    PkIsInstalled *task = new PkIsInstalled(package_name, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkIsInstalled(package_name, interaction, message());
     show(task);
     // This is discarted
     return false;
@@ -220,17 +180,18 @@ bool PkInterface::IsInstalled(const QString &package_name, const QString &intera
 bool PkInterface::SearchFile(const QString &file_name, const QString &interaction, QString &package_name)
 {
     Q_UNUSED(package_name)
-    increaseRunning();
-    setDelayedReply(true);
-    PkSearchFile *task = new PkSearchFile(file_name, interaction, message());
-    connect(task, SIGNAL(finished()), this, SLOT(decreaseRunning()));
+    auto task = new PkSearchFile(file_name, interaction, message());
     show(task);
     // This is discarted
     return false;
 }
 
-void PkInterface::show(SessionTask *widget) const
+void PkInterface::show(SessionTask *widget)
 {
+    increaseRunning();
+    setDelayedReply(true);
+
+    connect(widget, &SessionTask::finished, this, &PkInterface::decreaseRunning);
     if (widget->parentWId()) {
         // Check before showing if the widget has
         // a parent, otherwise it should not be modal

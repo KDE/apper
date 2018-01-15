@@ -47,10 +47,8 @@ bool OriginModel::setData(const QModelIndex &index, const QVariant &value, int r
     if (role == Qt::CheckStateRole && index.isValid()) {
         Transaction *transaction = Daemon::repoEnable(index.data(RepoId).toString(),
                                                       value.toBool());
-        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-                SLOT(errorCode(PackageKit::Transaction::Error,QString)));
-        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                SLOT(setRepoFinished(PackageKit::Transaction::Exit)));
+        connect(transaction, &Transaction::errorCode, this, &OriginModel::errorCode);
+        connect(transaction, &Transaction::finished, this, &OriginModel::setRepoFinished);
     }
     return false;
 }
@@ -76,7 +74,7 @@ void OriginModel::addOriginItem(const QString &repo_id, const QString &details, 
         m_finished = false;
     }
 
-    QStandardItem *item = new QStandardItem(details);
+    auto item = new QStandardItem(details);
     item->setCheckable(true);
     item->setCheckState(enabled ? Qt::Checked : Qt::Unchecked);
     item->setData(repo_id, RepoId);

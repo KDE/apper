@@ -39,24 +39,23 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
 {
     setWindowTitle(i18n("Install GStreamer Resources"));
 
-    IntroDialog *introDialog = new IntroDialog(this);
-    QStandardItemModel *model = new QStandardItemModel(this);
+    auto introDialog = new IntroDialog(this);
+    auto model = new QStandardItemModel(this);
     introDialog->setModel(model);
-    connect(introDialog, SIGNAL(continueChanged(bool)),
-            this, SLOT(enableButtonOk(bool)));
+    connect(introDialog, &IntroDialog::continueChanged, this, &PkInstallGStreamerResources::enableButtonOk);
     setMainWidget(introDialog);
 
     bool encoder = false;
     bool decoder = false;
     // Resources are strings like "ID3 tag|gstreamer0.10(decoder-application/x-id3)()(64bit)"
-    foreach (const QString &codec, resources) {
+    for (const QString &codec : resources) {
         if (codec.contains("|gstreamer0.10(decoder")) {
             decoder = true;
         } else if (codec.contains("|gstreamer0.10(encoder")) {
             encoder = true;
         }
 
-        QStandardItem *item = new QStandardItem(codec.section('|', 0, 0));
+        auto item = new QStandardItem(codec.section('|', 0, 0));
         item->setIcon(QIcon::fromTheme("x-kde-nsplugin-generated").pixmap(32, 32));
         item->setFlags(Qt::ItemIsEnabled);
         model->appendRow(item);
@@ -124,16 +123,14 @@ PkInstallGStreamerResources::~PkInstallGStreamerResources()
 
 void PkInstallGStreamerResources::search()
 {
-    PkTransaction *transaction = new PkTransaction(this);
+    auto transaction = new PkTransaction(this);
     Transaction *t;
     t = Daemon::whatProvides(m_resources,
                              Transaction::FilterNotInstalled | Transaction::FilterArch | Transaction::FilterNewest);
     transaction->setupTransaction(t);
     setTransaction(Transaction::RoleWhatProvides, transaction);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(transaction, &PkTransaction::finished, this, &PkInstallGStreamerResources::searchFinished, Qt::UniqueConnection);
+    connect(transaction, &PkTransaction::package, this, &PkInstallGStreamerResources::addPackage);
 }
 
 void PkInstallGStreamerResources::notFound()

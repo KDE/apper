@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -85,19 +85,18 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_history(0),
     m_searchRole(Transaction::RoleUnknown)
 {
-    KAboutData *aboutData;
-    aboutData = new KAboutData("kcm_apper",
-                               "apper",
-                               APPER_VERSION,
-                               i18n("KDE interface for managing software"),
-                               KAboutLicense::LicenseKey::GPL);
-    aboutData->addAuthor(i18n("(C) 2008-2013 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
+    auto aboutData = new KAboutData("kcm_apper",
+                                    "apper",
+                                    APPER_VERSION,
+                                    i18n("KDE interface for managing software"),
+                                    KAboutLicense::LicenseKey::GPL);
+    aboutData->addAuthor(i18n("(C) 2008-2018 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
     aboutData->addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
     setAboutData(aboutData);
     setButtons(Apply);
 
     // store the actions supported by the backend
-    connect(Daemon::global(), SIGNAL(changed()), this, SLOT(daemonChanged()));
+    connect(Daemon::global(), &Daemon::changed, this, &ApperKCM::daemonChanged);
 
     // Set the current locale
     //TODO FIXME
@@ -116,10 +115,9 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     ui->gridLayout_2->addWidget(toolBar);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    connect(ui->browseView, SIGNAL(categoryActivated(QModelIndex)),
-            this, SLOT(on_homeView_activated(QModelIndex)));
+    connect(ui->browseView, &BrowseView::categoryActivated, this, &ApperKCM::on_homeView_activated);
 
-    QMenu *findMenu = new QMenu(this);
+    auto findMenu = new QMenu(this);
     // find is just a generic name in case we don't have any search method
     m_genericActionK = new KToolBarPopupAction(m_findIcon, i18n("Find"), this);
     toolBar->addAction(m_genericActionK);
@@ -154,15 +152,13 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
             toolBar->removeAction(m_genericActionK);
             toolBar->addAction(m_currentAction);
         }
-        connect(m_genericActionK, SIGNAL(triggered()),
-                this, SLOT(genericActionKTriggered()));
+        connect(m_genericActionK, &KToolBarPopupAction::triggered, this, &ApperKCM::genericActionKTriggered);
     }
 
     // Create the groups model
     m_groupsModel = new CategoryModel(this);
     ui->browseView->setCategoryModel(m_groupsModel);
-    connect(m_groupsModel, SIGNAL(finished()),
-            this, SLOT(setupHomeModel()));
+    connect(m_groupsModel, &CategoryModel::finished, this, &ApperKCM::setupHomeModel);
 //    ui->homeView->setSpacing(QDialog::spacingHint());
     ui->homeView->viewport()->setAttribute(Qt::WA_Hover);
 
@@ -172,12 +168,11 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
 
     // install the backend filters
     ui->filtersTB->setMenu(m_filtersMenu = new FiltersMenu(this));
-    connect(m_filtersMenu, SIGNAL(filtersChanged()), this, SLOT(search()));
+    connect(m_filtersMenu, &FiltersMenu::filtersChanged, this, &ApperKCM::search);
     ui->filtersTB->setIcon(QIcon::fromTheme("view-filter"));
     ApplicationSortFilterModel *proxy = ui->browseView->proxy();
     proxy->setApplicationFilter(m_filtersMenu->filterApplications());
-    connect(m_filtersMenu, SIGNAL(filterApplications(bool)),
-            proxy, SLOT(setApplicationFilter(bool)));
+    connect(m_filtersMenu, QOverload<bool>::of(&FiltersMenu::filterApplications), proxy, &ApplicationSortFilterModel::setApplicationFilter);
 
     //initialize the model, delegate, client and  connect it's signals
     m_browseModel = ui->browseView->model();
@@ -185,7 +180,7 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     // CHANGES TAB
     ui->changesView->viewport()->setAttribute(Qt::WA_Hover);
     m_changesModel = new PackageModel(this);
-    KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
+    auto changedProxy = new KCategorizedSortFilterProxyModel(this);
     changedProxy->setSourceModel(m_changesModel);
     changedProxy->setDynamicSortFilter(true);
     changedProxy->setCategorizedModel(true);
@@ -193,38 +188,34 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     changedProxy->setSortRole(PackageModel::SortRole);
     changedProxy->sort(0);
     ui->changesView->setModel(changedProxy);
-    ChangesDelegate *changesDelegate = new ChangesDelegate(ui->changesView);
+    auto changesDelegate = new ChangesDelegate(ui->changesView);
     changesDelegate->setExtendPixmapWidth(0);
     ui->changesView->setItemDelegate(changesDelegate);
 
     // Connect this signal to keep track of changes
-    connect(m_browseModel, SIGNAL(changed(bool)), this, SLOT(checkChanged()));
+    connect(m_browseModel, &PackageModel::changed, this, &ApperKCM::checkChanged);
 
     // packageUnchecked from changes model
-    connect(m_changesModel, SIGNAL(packageUnchecked(QString)),
-            m_changesModel, SLOT(removePackage(QString)));
-    connect(m_changesModel, SIGNAL(packageUnchecked(QString)),
-            m_browseModel, SLOT(uncheckPackage(QString)));
+    connect(m_changesModel, &PackageModel::packageUnchecked, m_changesModel, &PackageModel::removePackage);
+    connect(m_changesModel, &PackageModel::packageUnchecked, m_browseModel, &PackageModel::uncheckPackageDefault);
 
     ui->changesPB->setIcon(QIcon::fromTheme("edit-redo"));
 
     auto menu = new QMenu(this);
     ui->settingsTB->setMenu(menu);
     ui->settingsTB->setIcon(QIcon::fromTheme("preferences-other"));
+
     auto signalMapper = new QSignalMapper(this);
+    connect(signalMapper, QOverload<const QString &>::of(&QSignalMapper::mapped), this, &ApperKCM::setPage);
+
     QAction *action;
     action = menu->addAction(QIcon::fromTheme("view-history"), i18n("History"));
     signalMapper->setMapping(action, "history");
-    connect(action, SIGNAL(triggered()),
-            signalMapper, SLOT(map()));
-    connect(signalMapper, SIGNAL(mapped(QString)),
-            this, SLOT(setPage(QString)));
+    connect(action, &QAction::triggered, signalMapper, QOverload<>::of(&QSignalMapper::map));
+
     action = menu->addAction(QIcon::fromTheme("preferences-other"), i18n("Settings"));
     signalMapper->setMapping(action, "settings");
-    connect(action, SIGNAL(triggered()),
-            signalMapper, SLOT(map()));
-    connect(signalMapper, SIGNAL(mapped(QString)),
-            this, SLOT(setPage(QString)));
+    connect(action, &QAction::triggered, signalMapper, QOverload<>::of(&QSignalMapper::map));
 
     // Only show help menu if not on System Settings
     if (!args.isEmpty()) {
@@ -371,8 +362,8 @@ void ApperKCM::on_actionFindName_triggered()
     setCurrentAction(ui->actionFindName);
     if (!ui->searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchRole    = Transaction::RoleSearchName;
-        m_searchString  = ui->searchKLE->text();
+        m_searchRole   = Transaction::RoleSearchName;
+        m_searchString = ui->searchKLE->text();
         // create the main transaction
         search();
     }
@@ -383,8 +374,8 @@ void ApperKCM::on_actionFindDescription_triggered()
     setCurrentAction(ui->actionFindDescription);
     if (!ui->searchKLE->text().isEmpty()) {
         // cache the search
-        m_searchRole    = Transaction::RoleSearchDetails;
-        m_searchString  = ui->searchKLE->text();
+        m_searchRole   = Transaction::RoleSearchDetails;
+        m_searchString = ui->searchKLE->text();
         // create the main transaction
         search();
     }
@@ -405,8 +396,7 @@ void ApperKCM::on_actionFindFile_triggered()
 void ApperKCM::on_homeView_activated(const QModelIndex &index)
 {
     if (index.isValid()) {
-        const QSortFilterProxyModel *proxy;
-        proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
+        const auto proxy = qobject_cast<const QSortFilterProxyModel*>(index.model());
         // If the cast failed it's the index came from browseView
         if (proxy) {
             m_searchParentCategory = proxy->mapToSource(index);
@@ -496,7 +486,7 @@ QString ApperKCM::page() const
 
 void ApperKCM::setPage(const QString &page)
 {
-    PkTransaction *transaction = qobject_cast<PkTransaction*>(ui->stackedWidget->currentWidget());
+    auto transaction = qobject_cast<PkTransaction*>(ui->stackedWidget->currentWidget());
     if (transaction) {
         return;
     }
@@ -509,16 +499,12 @@ void ApperKCM::setPage(const QString &page)
 
             if (m_settingsPage == 0) {
                 m_settingsPage = new Settings(m_roles, this);
-                connect(m_settingsPage, SIGNAL(changed(bool)),
-                        this, SLOT(checkChanged()));
-                connect(m_settingsPage, SIGNAL(refreshCache()),
-                        SLOT(refreshCache()));
+                connect(m_settingsPage, &Settings::changed, this, &ApperKCM::checkChanged);
+                connect(m_settingsPage, &Settings::refreshCache, this, &ApperKCM::refreshCache);
                 ui->stackedWidget->addWidget(m_settingsPage);
 
-                connect(ui->generalSettingsPB, SIGNAL(toggled(bool)),
-                        m_settingsPage, SLOT(showGeneralSettings()));
-                connect(ui->repoSettingsPB, SIGNAL(toggled(bool)),
-                        m_settingsPage, SLOT(showRepoSettings()));
+                connect(ui->generalSettingsPB, &QPushButton::toggled, m_settingsPage, &Settings::showGeneralSettings);
+                connect(ui->repoSettingsPB, &QPushButton::toggled, m_settingsPage, &Settings::showRepoSettings);
             }
             checkChanged();
             setButtons(KCModule::Default | KCModule::Apply);
@@ -540,16 +526,12 @@ void ApperKCM::setPage(const QString &page)
 
             if (m_updaterPage == 0) {
                 m_updaterPage = new Updater(m_roles, this);
-                connect(m_updaterPage, SIGNAL(refreshCache()),
-                        this, SLOT(refreshCache()));
-                connect(m_updaterPage, SIGNAL(downloadSize(QString)),
-                        ui->downloadL, SLOT(setText(QString)));
-                connect(m_updaterPage, SIGNAL(changed(bool)),
-                        this, SLOT(checkChanged()));
+                connect(m_updaterPage, &Updater::refreshCache, this, &ApperKCM::refreshCache);
+                connect(m_updaterPage, &Updater::downloadSize, ui->downloadL, &QLabel::setText);
+                connect(m_updaterPage, &Updater::changed, this, &ApperKCM::checkChanged);
                 ui->stackedWidget->addWidget(m_updaterPage);
                 ui->checkUpdatesPB->setIcon(QIcon::fromTheme("view-refresh"));
-                connect(ui->checkUpdatesPB, SIGNAL(clicked(bool)),
-                        this, SLOT(refreshCache()));
+                connect(ui->checkUpdatesPB, &QPushButton::clicked, this, &ApperKCM::refreshCache);
             }
 
             checkChanged();
@@ -567,8 +549,7 @@ void ApperKCM::setPage(const QString &page)
     } else if (page == QLatin1String("history")) {
         m_history = new TransactionHistory(this);
         ui->searchKLE->clear();
-        connect(ui->searchKLE, SIGNAL(textChanged(QString)),
-                m_history, SLOT(setFilterRegExp(QString)));
+        connect(ui->searchKLE, &QLineEdit::textChanged, m_history, &TransactionHistory::setFilterRegExp);
         ui->stackedWidget->addWidget(m_history);
         ui->stackedWidget->setCurrentWidget(m_history);
         ui->backTB->setEnabled(true);
@@ -637,18 +618,12 @@ void ApperKCM::disconnectTransaction()
         // Disconnect everything so that the model don't store
         // wrong data
         m_searchTransaction->cancel();
-        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   ui->browseView->busyCursor(), SLOT(stop()));
-        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   this, SLOT(finished()));
-        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   m_browseModel, SLOT(finished()));
-        disconnect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   m_browseModel, SLOT(fetchSizes()));
-        disconnect(m_searchTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                   m_browseModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-        disconnect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-                   this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+        disconnect(m_searchTransaction, &Transaction::finished, ui->browseView->busyCursor(), &KPixmapSequenceOverlayPainter::stop);
+        disconnect(m_searchTransaction, &Transaction::finished, this, &ApperKCM::finished);
+        disconnect(m_searchTransaction, &Transaction::finished, m_browseModel, &PackageModel::finished);
+        disconnect(m_searchTransaction, &Transaction::finished, m_browseModel, &PackageModel::fetchSizes);
+        disconnect(m_searchTransaction, &Transaction::package, m_browseModel, &PackageModel::addNotSelectedPackage);
+        disconnect(m_searchTransaction, &Transaction::errorCode, this, &ApperKCM::errorCode);
     }
 }
 
@@ -684,7 +659,7 @@ void ApperKCM::search()
             ui->browseView->setParentCategory(m_searchParentCategory);
             emit caption(m_searchParentCategory.data().toString());
 #ifndef HAVE_APPSTREAM
-            if (m_searchGroupCategory.startsWith('@') ||
+            if (m_searchGroupCategory.startsWith(QLatin1Char('@')) ||
                 m_searchGroupCategory.startsWith(QLatin1String("repo:"))) {
                 m_searchTransaction = Daemon::searchGroup(m_searchGroupCategory, m_filtersMenu->filters());
             }
@@ -696,8 +671,7 @@ void ApperKCM::search()
         // we want all the installed ones
         ui->browseView->disableExportInstalledPB();
         m_searchTransaction = Daemon::getPackages(Transaction::FilterInstalled | m_filtersMenu->filters());
-        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                ui->browseView, SLOT(enableExportInstalledPB()));
+        connect(m_searchTransaction, &Transaction::finished, ui->browseView, &BrowseView::enableExportInstalledPB);
         emit caption(i18n("Installed Software"));
         break;
     case Transaction::RoleResolve:
@@ -725,20 +699,15 @@ void ApperKCM::search()
         m_searchTransaction = 0;
         return;
     }
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            ui->browseView->busyCursor(), SLOT(stop()));
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(finished()));
-    connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            m_browseModel, SLOT(finished()));
+    connect(m_searchTransaction, &Transaction::finished, ui->browseView->busyCursor(), &KPixmapSequenceOverlayPainter::stop);
+    connect(m_searchTransaction, &Transaction::finished, this, &ApperKCM::finished);
+    connect(m_searchTransaction, &Transaction::finished, m_browseModel, &PackageModel::finished);
+
     if (ui->browseView->isShowingSizes()) {
-        connect(m_searchTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                m_browseModel, SLOT(fetchSizes()));
+        connect(m_searchTransaction, &Transaction::finished, m_browseModel, &PackageModel::fetchSizes);
     }
-    connect(m_searchTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            m_browseModel, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
-    connect(m_searchTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
+    connect(m_searchTransaction, &Transaction::package, m_browseModel, &PackageModel::addNotSelectedPackage);
+    connect(m_searchTransaction, &Transaction::errorCode, this, &ApperKCM::errorCode);
 
     // cleans the models
     m_browseModel->clear();
@@ -765,8 +734,8 @@ void ApperKCM::refreshCache()
 
     QWidget *currentWidget = ui->stackedWidget->currentWidget();
 
-    PkTransactionWidget *transactionW = new PkTransactionWidget(this);
-    connect(transactionW, SIGNAL(titleChangedProgress(QString)), this, SIGNAL(caption(QString)));
+    auto transactionW = new PkTransactionWidget(this);
+    connect(transactionW, &PkTransactionWidget::titleChangedProgress, this, &ApperKCM::caption);
     QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
     Daemon::setHints (QLatin1String("cache-age=")+QString::number(m_cacheAge));
     transaction->refreshCache(m_forceRefreshCache);
@@ -776,11 +745,10 @@ void ApperKCM::refreshCache()
     ui->stackedWidget->setCurrentWidget(transactionW);
     ui->stackedWidgetBar->setCurrentIndex(BAR_TITLE);
     ui->backTB->setEnabled(false);
-    connect(transactionW, SIGNAL(titleChanged(QString)),
-            ui->titleL, SLOT(setText(QString)));
+    connect(transactionW, &PkTransactionWidget::titleChanged, ui->titleL, &QLabel::setText);
 
     QEventLoop loop;
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
+    connect(transaction, &PkTransaction::finished, &loop, &QEventLoop::quit);
 
     // wait for the end of transaction
     if (!transaction->isFinished()) {
@@ -804,7 +772,7 @@ void ApperKCM::refreshCache()
         setPage("updates");
     }
 
-    QTimer::singleShot(0, this, SLOT(checkChanged()));
+    QTimer::singleShot(0, this, &ApperKCM::checkChanged);
 }
 
 void ApperKCM::save()
@@ -813,20 +781,19 @@ void ApperKCM::save()
     if (currentWidget == m_settingsPage) {
         m_settingsPage->save();
     } else {
-        PkTransactionWidget *transactionW = new PkTransactionWidget(this);
-        connect(transactionW, SIGNAL(titleChangedProgress(QString)), this, SIGNAL(caption(QString)));
+        auto transactionW = new PkTransactionWidget(this);
+        connect(transactionW, &PkTransactionWidget::titleChangedProgress, this, &ApperKCM::caption);
         QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
 
         ui->stackedWidget->addWidget(transactionW);
         ui->stackedWidget->setCurrentWidget(transactionW);
         ui->stackedWidgetBar->setCurrentIndex(BAR_TITLE);
         ui->backTB->setEnabled(false);
-        connect(transactionW, SIGNAL(titleChanged(QString)),
-                ui->titleL, SLOT(setText(QString)));
+        connect(transactionW, &PkTransactionWidget::titleChanged, ui->titleL, &QLabel::setText);
         emit changed(false);
 
         QEventLoop loop;
-        connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)), &loop, SLOT(quit()));
+        connect(transaction, &PkTransaction::finished, &loop, &QEventLoop::quit);
         if (currentWidget == m_updaterPage) {
             transaction->updatePackages(m_updaterPage->packagesToUpdate());
             transactionW->setTransaction(transaction, Transaction::RoleUpdatePackages);
@@ -888,7 +855,7 @@ void ApperKCM::save()
             // install then remove packages
             search();
         }
-        QTimer::singleShot(0, this, SLOT(checkChanged()));
+        QTimer::singleShot(0, this, &ApperKCM::checkChanged);
     }
 }
 

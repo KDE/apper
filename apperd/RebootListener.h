@@ -30,18 +30,22 @@ class KDirWatch;
 class QTimer;
 
 class AptRebootListener : public QObject {
-  Q_OBJECT
-  public:
-   AptRebootListener(QObject* parent=0);
-  Q_SIGNALS:
-   void requestReboot();
-  public Q_SLOTS:
-   void checkForReboot();
-  private Q_SLOTS:
-   void slotDirectoryChanged(const QString& path);
-  private:
-   KDirWatch* m_watcher;
-   QTimer* m_timer;
+    Q_OBJECT
+public:
+    AptRebootListener(QObject* parent = nullptr);
+
+Q_SIGNALS:
+    void requestReboot();
+
+public Q_SLOTS:
+    void checkForReboot();
+
+private Q_SLOTS:
+    void slotDirectoryChanged(const QString &path);
+
+private:
+    KDirWatch *m_watcher;
+    QTimer *m_timer;
 };
 
 #endif // REBOOT_LISTENER_H

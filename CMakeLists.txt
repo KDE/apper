@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(FeatureSummary)
 include(ECMInstallIcons)
 
-find_package(Qt5 5.2.0 CONFIG REQUIRED Core DBus Widgets Quick Sql XmlPatterns)
+find_package(Qt5 5.7.0 CONFIG REQUIRED Core DBus Widgets Quick Sql XmlPatterns)
 
 # Load the frameworks we need
 find_package(KF5 REQUIRED COMPONENTS

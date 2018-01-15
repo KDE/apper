@@ -35,8 +35,8 @@ TransactionFilterModel::~TransactionFilterModel()
 bool TransactionFilterModel::lessThan(const QModelIndex &left,
                                          const QModelIndex &right) const
 {
-    QVariant leftData = sourceModel()->data(left, Qt::UserRole);
-    QVariant rightData = sourceModel()->data(right, Qt::UserRole);
+    const QVariant leftData = sourceModel()->data(left, Qt::UserRole);
+    const QVariant rightData = sourceModel()->data(right, Qt::UserRole);
 
     if (leftData.type() == QVariant::DateTime) {
         return leftData.toDateTime() < rightData.toDateTime();

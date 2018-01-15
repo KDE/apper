@@ -57,14 +57,14 @@ bool CategoryMatcher::match(const QStringList &categories) const
         ret = categories.contains(m_term);
         break;
     case And:
-        foreach (const CategoryMatcher &parser, m_child) {
+        for (const CategoryMatcher &parser : m_child) {
             if (!(ret = parser.match(categories))) {
                 break;
             }
         }
         break;
     case Or:
-        foreach (const CategoryMatcher &parser, m_child) {
+        for (const CategoryMatcher &parser : m_child) {
             if ((ret = parser.match(categories))) {
                 break;
             }
@@ -72,7 +72,7 @@ bool CategoryMatcher::match(const QStringList &categories) const
         break;
     case Not:
         // We match like And but negating
-        foreach (const CategoryMatcher &parser, m_child) {
+        for (const CategoryMatcher &parser : m_child) {
             if (!(ret = !parser.match(categories))) {
                 break;
             }

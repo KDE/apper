@@ -27,8 +27,7 @@
 using namespace PackageKit;
 
 AbstractIsRunning::AbstractIsRunning(QObject *parent) :
-    QObject(parent),
-    m_running(0)
+    QObject(parent)
 {
 }
 

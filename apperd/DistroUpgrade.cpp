@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -57,11 +57,8 @@ void DistroUpgrade::checkDistroUpgrades()
 
     if (!m_transaction) {
         m_transaction = Daemon::getDistroUpgrades();
-        connect(m_transaction, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
-                this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
-        connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(checkDistroFinished(PackageKit::Transaction::Exit,uint)));
-
+        connect(m_transaction, &Transaction::distroUpgrade, this, &DistroUpgrade::distroUpgrade);
+        connect(m_transaction, &Transaction::finished, this, &DistroUpgrade::checkDistroFinished);
     }
 }
 
@@ -86,7 +83,7 @@ void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, c
         return;
     }
 
-    KNotification *notify = new KNotification("DistroUpgradeAvailable", 0, KNotification::Persistent);
+    auto notify = new KNotification("DistroUpgradeAvailable", 0, KNotification::Persistent);
     notify->setComponentName("apperd");
     notify->setTitle(i18n("Distribution upgrade available"));
     notify->setText(description);
@@ -120,14 +117,12 @@ void DistroUpgrade::handleDistroUpgradeAction(uint action)
                 break;
             }
             m_distroUpgradeProcess = new QProcess;
-            connect (m_distroUpgradeProcess, SIGNAL(error(QProcess::ProcessError)),
-                    this, SLOT(distroUpgradeError(QProcess::ProcessError)));
-            connect (m_distroUpgradeProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-                    this, SLOT(distroUpgradeFinished(int,QProcess::ExitStatus)));
+            connect (m_distroUpgradeProcess, &QProcess::errorOccurred, this, &DistroUpgrade::distroUpgradeError);
+            connect (m_distroUpgradeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &DistroUpgrade::distroUpgradeFinished);
             QStringList env = QProcess::systemEnvironment();
-            env << "DESKTOP=kde";
+            env.append(QStringLiteral("DESKTOP=kde"));
             m_distroUpgradeProcess->setEnvironment(env);
-            m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
+            m_distroUpgradeProcess->start(QStringLiteral("/usr/share/PackageKit/pk-upgrade-distro.sh"));
             // TODO
 //             suppressSleep(true);
             break;
@@ -178,4 +173,4 @@ void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
     notify->sendEvent();
 }
 
-#include "DistroUpgrade.moc"
+#include "moc_DistroUpgrade.cpp"

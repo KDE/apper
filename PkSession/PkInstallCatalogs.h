@@ -52,7 +52,7 @@ private:
     QString      m_interaction;
     QDBusMessage m_message;
     QStringList  m_alreadyInstalled;
-    int          m_maxResolve;
+    int          m_maxResolve = 100;
     IntroDialog *m_introDialog;
     FilesModel  *m_model;
 };

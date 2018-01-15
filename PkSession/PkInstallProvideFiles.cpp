@@ -40,11 +40,10 @@ PkInstallProvideFiles::PkInstallProvideFiles(uint xid,
 {
     setWindowTitle(i18n("Install Packages that Provides Files"));
 
-    IntroDialog *introDialog = new IntroDialog(this);
-    FilesModel *model = new FilesModel(files, QStringList(), this);
+    auto introDialog = new IntroDialog(this);
+    auto model = new FilesModel(files, QStringList(), this);
     introDialog->setModel(model);
-    connect(introDialog, SIGNAL(continueChanged(bool)),
-            this, SLOT(enableButtonOk(bool)));
+    connect(introDialog, &IntroDialog::continueChanged, this, &PkInstallProvideFiles::enableButtonOk);
     setMainWidget(introDialog);
 
     if (m_args.isEmpty()) {
@@ -79,14 +78,12 @@ PkInstallProvideFiles::~PkInstallProvideFiles()
 
 void PkInstallProvideFiles::search()
 {
-    PkTransaction *transaction = new PkTransaction(this);
+    auto transaction = new PkTransaction(this);
     transaction->setupTransaction(Daemon::searchFiles(m_args,
                                                       Transaction::FilterArch | Transaction::FilterNewest));
     setTransaction(Transaction::RoleSearchFile, transaction);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(transaction, &PkTransaction::finished, this, &PkInstallProvideFiles::searchFinished, Qt::UniqueConnection);
+    connect(transaction, &PkTransaction::package, this, &PkInstallProvideFiles::addPackage);
 }
 
 void PkInstallProvideFiles::notFound()

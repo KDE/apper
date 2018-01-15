@@ -29,7 +29,7 @@ CategorizedView::CategorizedView(QWidget *parent)
     : KCategorizedView(parent)
 {
     setWordWrap(true);
-    CategoryDrawer *drawer = new CategoryDrawer(this);
+    auto drawer = new CategoryDrawer(this);
     setCategoryDrawer(drawer);
 }
 

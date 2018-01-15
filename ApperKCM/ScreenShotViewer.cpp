@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -53,9 +53,9 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
 //    tempFile->setSuffix(".png");
     tempFile->open();
     KIO::FileCopyJob *job = KIO::file_copy(QUrl(url),
-                                            QUrl(tempFile->fileName()),
-                                            -1,
-                                            KIO::Overwrite | KIO::HideProgressInfo);
+                                           QUrl(tempFile->fileName()),
+                                           -1,
+                                           KIO::Overwrite | KIO::HideProgressInfo);
     connect(job, &KIO::FileCopyJob::result, this, &ScreenShotViewer::resultJob);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
@@ -84,7 +84,7 @@ void ScreenShotViewer::resultJob(KJob *job)
         anim1->setEndValue(m_screenshot.size());
         anim1->setEasingCurve(QEasingCurve::OutCubic);
 
-        connect(anim1, SIGNAL(finished()), this, SLOT(fadeIn()));
+        connect(anim1, &QPropertyAnimation::finished, this, &ScreenShotViewer::fadeIn);
         anim1->start();
     } else {
         m_screenshotL->setText(i18n("Could not find screen shot."));
@@ -93,9 +93,9 @@ void ScreenShotViewer::resultJob(KJob *job)
 
 void ScreenShotViewer::fadeIn()
 {
-    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(m_screenshotL);
+    auto effect = new QGraphicsOpacityEffect(m_screenshotL);
     effect->setOpacity(0);
-    QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
+    auto anim = new QPropertyAnimation(effect, "opacity");
     anim->setDuration(500);
     anim->setStartValue(qreal(0));
     anim->setEndValue(qreal(1));

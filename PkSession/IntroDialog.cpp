@@ -52,8 +52,7 @@ IntroDialog::~IntroDialog()
 void IntroDialog::setModel(QAbstractItemModel *model)
 {
     ui->listView->setModel(model);
-    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(selectionChanged()));
+    connect(model, &QAbstractItemModel::dataChanged, this, &IntroDialog::selectionChanged);
 }
 
 void IntroDialog::acceptDrops(const QString &toolTip)

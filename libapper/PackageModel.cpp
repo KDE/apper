@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *   Copyright (C) 2008 by Trever Fischer                                  *
  *   wm161@wm161.net                                                       *
@@ -459,9 +459,10 @@ void PackageModel::clear()
 
 void PackageModel::clearSelectedNotPresent()
 {
-    foreach (const InternalPackage &package, m_checkedPackages) {
+    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
         bool notFound = true;
-        foreach (const InternalPackage &iPackage, m_packages) {
+        const QVector<InternalPackage> packages = m_packages;
+        for (const InternalPackage &iPackage : packages) {
             if (iPackage.packageID == package.packageID) {
                 notFound = false;
                 break;
@@ -482,7 +483,7 @@ bool PackageModel::checkable() const
 
 void PackageModel::uncheckInstalledPackages()
 {
-    foreach (const InternalPackage &package, m_checkedPackages) {
+    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
         if (package.info == Transaction::InfoInstalled ||
                 package.info == Transaction::InfoCollectionInstalled) {
             uncheckPackage(package.packageID, true);
@@ -492,7 +493,7 @@ void PackageModel::uncheckInstalledPackages()
 
 void PackageModel::uncheckAvailablePackages()
 {
-    foreach (const InternalPackage &package, m_checkedPackages) {
+    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
         if (package.info == Transaction::InfoAvailable ||
                 package.info == Transaction::InfoCollectionAvailable) {
             uncheckPackage(package.packageID, true);
@@ -502,13 +503,13 @@ void PackageModel::uncheckAvailablePackages()
 
 void PackageModel::finished()
 {
-    Transaction *trans = qobject_cast<Transaction*>(sender());
+    auto trans = qobject_cast<Transaction*>(sender());
     qDebug() << Q_FUNC_INFO << trans << sender();
     if (trans /*== m_getUpdatesTransaction*/) {
 //        m_getUpdatesTransaction = 0;
         // When pkd dies this method is called twice
         // pk-qt2 bug..
-        trans->disconnect(this, SLOT(finished()));
+        disconnect(trans, &Transaction::finished, this, &PackageModel::finished);
     }
 
     // The whole structure is about to change
@@ -529,25 +530,23 @@ void PackageModel::fetchSizes()
 
     // get package size
     QStringList pkgs;
-    foreach (const InternalPackage &p, m_packages) {
+    for (const InternalPackage &p : qAsConst(m_packages)) {
         pkgs << p.packageID;
     }
     if (!pkgs.isEmpty()) {
         m_fetchSizesTransaction = Daemon::getDetails(pkgs);
-        connect(m_fetchSizesTransaction, SIGNAL(details(PackageKit::Details)),
-                SLOT(updateSize(PackageKit::Details)));
-        connect(m_fetchSizesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(fetchSizesFinished()));
+        connect(m_fetchSizesTransaction, &Transaction::details, this, &PackageModel::updateSize);
+        connect(m_fetchSizesTransaction, &Transaction::finished, this, &PackageModel::fetchSizesFinished);
     }
 }
 
 void PackageModel::fetchSizesFinished()
 {
-    Transaction *trans = qobject_cast<Transaction*>(sender());
+    auto trans = qobject_cast<Transaction*>(sender());
     if (trans) {
         // When pkd dies this method is called twice
         // pk-qt2 bug..
-        trans->disconnect(this, SLOT(fetchSizesFinished()));
+        disconnect(trans, &Transaction::finished, this, &PackageModel::fetchSizesFinished);
     }
     // emit this after all is changed otherwise on large models it will
     // be hell slow...
@@ -598,26 +597,24 @@ void PackageModel::fetchCurrentVersions()
 
     // get package current version
     QStringList pkgs;
-    foreach (const InternalPackage &p, m_packages) {
+    for (const InternalPackage &p : qAsConst(m_packages)) {
         pkgs << Transaction::packageName(p.packageID);
     }
 
     if (!pkgs.isEmpty()) {
         m_fetchInstalledVersionsTransaction = Daemon::resolve(pkgs, Transaction::FilterInstalled);;
-        connect(m_fetchInstalledVersionsTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                this, SLOT(updateCurrentVersion(PackageKit::Transaction::Info,QString,QString)));
-        connect(m_fetchInstalledVersionsTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(fetchCurrentVersionsFinished()));
+        connect(m_fetchInstalledVersionsTransaction, &Transaction::package, this, &PackageModel::updateCurrentVersion);
+        connect(m_fetchInstalledVersionsTransaction, &Transaction::finished, this, &PackageModel::fetchCurrentVersionsFinished);
     }
 }
 
 void PackageModel::fetchCurrentVersionsFinished()
 {
-    Transaction *trans = qobject_cast<Transaction*>(sender());
+    auto trans = qobject_cast<Transaction*>(sender());
     if (trans) {
         // When pkd dies this method is called twice
         // pk-qt2 bug..
-        trans->disconnect(this, SLOT(fetchCurrentVersionsFinished()));
+        disconnect(trans, &Transaction::finished, this, &PackageModel::fetchCurrentVersionsFinished);
     }
     // emit this after all is changed otherwise on large models it will
     // be hell slow...
@@ -653,25 +650,21 @@ void PackageModel::getUpdates(bool fetchCurrentVersions, bool selected)
     clear();
     m_getUpdatesTransaction = Daemon::getUpdates();
     if (selected) {
-        connect(m_getUpdatesTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                this, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
+        connect(m_getUpdatesTransaction, &Transaction::package, this, &PackageModel::addSelectedPackage);
     } else {
-        connect(m_getUpdatesTransaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-                this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+        connect(m_getUpdatesTransaction, &Transaction::package, this, &PackageModel::addNotSelectedPackage);
     }
-    connect(m_getUpdatesTransaction, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
 //    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
 //            m_busySeq, SLOT(stop()));
 //    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
 //            this, SLOT(finished()));
     // This is required to estimate download size
-    connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(fetchSizes()));
+    connect(m_getUpdatesTransaction, &Transaction::finished, this, &PackageModel::fetchSizes);
+
     if (fetchCurrentVersions) {
-        connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(fetchCurrentVersions()));
+        connect(m_getUpdatesTransaction, &Transaction::finished, this, &PackageModel::fetchCurrentVersions);
     }
+
     connect(m_getUpdatesTransaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
             this, SLOT(getUpdatesFinished()));
     // get all updates
@@ -682,7 +675,7 @@ void PackageModel::toggleSelection(const QString &packageID)
     if (containsChecked(packageID)) {
         uncheckPackage(packageID, true);
     } else {
-        foreach (const InternalPackage &package, m_packages) {
+        for (const InternalPackage &package : qAsConst(m_packages)) {
             if (package.packageID == packageID) {
                 checkPackage(package);
                 break;
@@ -704,7 +697,7 @@ bool PackageModel::hasChanges() const
 int PackageModel::countInfo(PackageKit::Transaction::Info info) const
 {
     int ret = 0;
-    foreach (const InternalPackage &package, m_packages) {
+    for (const InternalPackage &package : qAsConst(m_packages)) {
         if (package.info == info) {
             ++ret;
         }
@@ -736,6 +729,11 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
             }
         }
     }
+}
+
+void PackageModel::uncheckPackageDefault(const QString &packageID)
+{
+    uncheckPackage(packageID);
 }
 
 void PackageModel::uncheckPackage(const QString &packageID,
@@ -793,14 +791,14 @@ void PackageModel::setAllChecked(bool checked)
 {
     if (checked) {
         m_checkedPackages.clear();
-        foreach (const InternalPackage &package, m_packages) {
+        for (const InternalPackage &package : qAsConst(m_packages)) {
             checkPackage(package, false);
         }
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
     } else {
         // This is a very slow operation, which in here we try to optimize
-        foreach (const InternalPackage &package, m_checkedPackages) {
+        for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
             uncheckPackage(package.packageID, true, false);
         }
         emit dataChanged(createIndex(0, 0),
@@ -812,7 +810,7 @@ void PackageModel::setAllChecked(bool checked)
 QStringList PackageModel::selectedPackagesToInstall() const
 {
     QStringList list;
-    foreach (const InternalPackage &package, m_checkedPackages) {
+    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
         if (package.info != Transaction::InfoInstalled &&
                 package.info != Transaction::InfoCollectionInstalled) {
             // append the packages are not installed
@@ -825,7 +823,7 @@ QStringList PackageModel::selectedPackagesToInstall() const
 QStringList PackageModel::selectedPackagesToRemove() const
 {
     QStringList list;
-    foreach (const InternalPackage &package, m_checkedPackages) {
+    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
         if (package.info == Transaction::InfoInstalled ||
                 package.info == Transaction::InfoCollectionInstalled) {
             // check what packages are installed and marked to be removed
@@ -838,7 +836,7 @@ QStringList PackageModel::selectedPackagesToRemove() const
 QStringList PackageModel::packagesWithInfo(Transaction::Info info) const
 {
     QStringList list;
-    foreach (const InternalPackage &package, m_packages) {
+    for (const InternalPackage &package : qAsConst(m_packages)) {
         if (package.info == info) {
             // Append to the list if the package matches the info value
             list << package.packageID;
@@ -850,7 +848,7 @@ QStringList PackageModel::packagesWithInfo(Transaction::Info info) const
 QStringList PackageModel::packageIDs() const
 {
     QStringList list;
-    foreach (const InternalPackage &package, m_packages) {
+    for (const InternalPackage &package : qAsConst(m_packages)) {
         list << package.packageID;
     }
     return list;
@@ -859,7 +857,7 @@ QStringList PackageModel::packageIDs() const
 unsigned long PackageModel::downloadSize() const
 {
     unsigned long size = 0;
-    foreach (const InternalPackage &package, m_checkedPackages) {
+    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
         size += package.size;
     }
     return size;
@@ -867,7 +865,7 @@ unsigned long PackageModel::downloadSize() const
 
 bool PackageModel::allSelected() const
 {
-    foreach (const InternalPackage &package, m_packages) {
+    for (const InternalPackage &package : qAsConst(m_packages)) {
         if (!containsChecked(package.packageID)) {
             return false;
         }

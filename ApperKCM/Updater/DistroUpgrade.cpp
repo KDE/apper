@@ -74,10 +74,9 @@ void DistroUpgrade::startDistroUpgrade()
 
     if (KMessageBox::warningContinueCancel(this,warning) == KMessageBox::Continue) {
         m_distroUpgradeProcess = new QProcess;
-        connect(m_distroUpgradeProcess, SIGNAL(error(QProcess::ProcessError)),
-                this, SLOT(distroUpgradeError(QProcess::ProcessError)));
-        connect(m_distroUpgradeProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-                this, SLOT(distroUpgradeFinished(int,QProcess::ExitStatus)));
+        connect(m_distroUpgradeProcess, &QProcess::errorOccurred, this, &DistroUpgrade::distroUpgradeError);
+        connect(m_distroUpgradeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                this, &DistroUpgrade::distroUpgradeFinished);
         QStringList env = QProcess::systemEnvironment();
         env << "DESKTOP=kde";
         m_distroUpgradeProcess->setEnvironment(env);

@@ -44,12 +44,12 @@ void PkTransactionProgressModel::currentRepo(const QString &repoId, const QStrin
 {
     Q_UNUSED(enabled)
 
-    PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
+    auto transaction = qobject_cast<PkTransaction *>(sender());
     if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
         return;
     }
 
-    QStandardItem *stdItem = new QStandardItem(description);
+    auto stdItem = new QStandardItem(description);
     stdItem->setData(repoId, RoleId);
     stdItem->setData(true,   RoleRepo);
     appendRow(stdItem);
@@ -59,7 +59,7 @@ void PkTransactionProgressModel::itemProgress(const QString &id, Transaction::St
 {
     Q_UNUSED(status)
 
-    PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
+    auto transaction = qobject_cast<PkTransaction *>(sender());
     if (transaction && transaction->flags() & Transaction::TransactionFlagSimulate) {
         return;
     }
@@ -96,7 +96,7 @@ QHash<int, QByteArray> PkTransactionProgressModel::roleNames() const
 
 void PkTransactionProgressModel::currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
 {
-    PkTransaction *transaction = qobject_cast<PkTransaction *>(sender());
+    auto transaction = qobject_cast<PkTransaction *>(sender());
     if (transaction &&
             (transaction->flags() & Transaction::TransactionFlagSimulate ||
              transaction->cachedRole() == Transaction::RoleResolve ||

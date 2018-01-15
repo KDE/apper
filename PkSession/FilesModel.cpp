@@ -40,17 +40,17 @@ FilesModel::FilesModel(const QStringList &files, const QStringList &mimes, QObje
 {
     if (!files.isEmpty()) {
         QList<QUrl> urls;
-        foreach (const QString &file, files) {
+        for (const QString &file : files) {
             urls << QUrl(file);
         }
         insertFiles(urls);
     } else if (!mimes.isEmpty()) {
         QMimeDatabase db;
         // we are searching for mimetypes
-        foreach (const QString &mimeName, mimes) {
+        for (const QString &mimeName : mimes) {
             QMimeType mime = db.mimeTypeForName(mimeName);
             if (mime.isValid()) {
-                QStandardItem *item = new QStandardItem(mimeName);
+                auto item = new QStandardItem(mimeName);
                 item->setData(mimeName);
                 item->setIcon(KIconLoader::global()->loadMimeTypeIcon(mime.iconName(),
                                                                       KIconLoader::Desktop));
@@ -76,7 +76,7 @@ bool FilesModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int 
 bool FilesModel::insertFiles(const QList<QUrl> &urls)
 {
     bool ret = false;
-    foreach (const QUrl &url, urls) {
+    for (const QUrl &url : urls) {
         QString path = QUrl::fromPercentEncoding(url.path().toUtf8());
         if (files().contains(path)) {
             continue;
@@ -88,7 +88,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
             QMimeDatabase db;
             QMimeType mime = db.mimeTypeForFile(path, QMimeDatabase::MatchContent);
             qCDebug(APPER_SESSION) << url << mime.name();
-            foreach (const QString &mimeType, m_mimes) {
+            for (const QString &mimeType : qAsConst(m_mimes)) {
                 if (mime.name() == mimeType) {
                     ret = true;
 /*                    kDebug() << "Found Supported Mime" << mimeType << mime->iconName();*/
@@ -103,7 +103,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
 
             if (ret == false && m_mimes.isEmpty()) {
                 if (mime.name() == "application/x-desktop") {
-                    KService *service = new KService(path);
+                    auto service = new KService(path);
                     item = new QStandardItem(service->name());
                     item->setData(true, Qt::UserRole);
                     item->setIcon(KIconLoader::global()->loadMimeTypeIcon(service->icon(),
@@ -139,7 +139,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
 
 QStringList FilesModel::mimeTypes() const
 {
-    return QStringList() << "text/uri-list";
+    return { QStringLiteral("text/uri-list") };
 }
 
 Qt::DropActions FilesModel::supportedDropActions() const

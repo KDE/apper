@@ -55,9 +55,9 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QAction *action = new QAction(i18n("Refresh Cache"), this);
-    connect(action, SIGNAL(triggered()), SIGNAL(refreshCache()));
-    connect(action, SIGNAL(triggered()), ui->messageWidget, SLOT(animatedHide()));
+    auto action = new QAction(i18n("Refresh Cache"), this);
+    connect(action, &QAction::triggered, this, &Settings::refreshCache);
+    connect(action, &QAction::triggered, ui->messageWidget, &KMessageWidget::animatedHide);
     ui->messageWidget->addAction(action);
     ui->messageWidget->setText(i18n("A repository was changed, it's highly recommended to refresh the cache"));
     ui->messageWidget->hide();
@@ -72,11 +72,9 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     }
 
     m_originModel = new OriginModel(this);
-    connect(m_originModel, SIGNAL(refreshRepoList()),
-            SLOT(refreshRepoModel()));
-    connect(m_originModel, SIGNAL(refreshRepoList()),
-            ui->messageWidget, SLOT(animatedShow()));
-    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    connect(m_originModel, &OriginModel::refreshRepoList, this, &Settings::refreshRepoModel);
+    connect(m_originModel, &OriginModel::refreshRepoList, ui->messageWidget, &KMessageWidget::animatedShow);
+    auto proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(m_originModel);
     ui->originTV->setModel(proxy);
@@ -114,15 +112,15 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     ui->autoCB->addItem(i18n("Security only"), Enum::Security);
     ui->autoCB->addItem(i18n("All updates"), Enum::All);
 
-    connect(ui->autoConfirmCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
-    connect(ui->appLauncherCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
-    connect(ui->distroIntervalCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
-    connect(ui->intervalCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
-    connect(ui->checkUpdatesBatteryCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
-    connect(ui->checkUpdatesMobileCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
-    connect(ui->autoCB, SIGNAL(currentIndexChanged(int)), this, SLOT(checkChanges()));
-    connect(ui->installUpdatesBatteryCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
-    connect(ui->installUpdatesMobileCB, SIGNAL(stateChanged(int)), this, SLOT(checkChanges()));
+    connect(ui->autoConfirmCB, &QCheckBox::stateChanged, this, &Settings::checkChanges);
+    connect(ui->appLauncherCB, &QCheckBox::stateChanged, this, &Settings::checkChanges);
+    connect(ui->distroIntervalCB, QOverload<int>::of(&KComboBox::currentIndexChanged), this, &Settings::checkChanges);
+    connect(ui->intervalCB, QOverload<int>::of(&KComboBox::currentIndexChanged), this, &Settings::checkChanges);
+    connect(ui->checkUpdatesBatteryCB, &QCheckBox::stateChanged, this, &Settings::checkChanges);
+    connect(ui->checkUpdatesMobileCB, &QCheckBox::stateChanged, this, &Settings::checkChanges);
+    connect(ui->autoCB, QOverload<int>::of(&KComboBox::currentIndexChanged), this, &Settings::checkChanges);
+    connect(ui->installUpdatesBatteryCB, &QCheckBox::stateChanged, this, &Settings::checkChanges);
+    connect(ui->installUpdatesMobileCB, &QCheckBox::stateChanged, this, &Settings::checkChanges);
 
     // Setup the busy cursor
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
@@ -155,17 +153,12 @@ void Settings::refreshRepoModel()
 // TODO update the repo list connecting to repo changed signal
 void Settings::on_showOriginsCB_stateChanged(int state)
 {
-    Transaction *transaction;
-    transaction = Daemon::getRepoList(state == Qt::Checked ?
-                                          Transaction::FilterNone : Transaction::FilterNotDevel);
-    connect(transaction, SIGNAL(repoDetail(QString,QString,bool)),
-            m_originModel, SLOT(addOriginItem(QString,QString,bool)));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            m_originModel, SLOT(finished()));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            m_busySeq, SLOT(stop()));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(checkChanges()));
+    Transaction *transaction = Daemon::getRepoList(state == Qt::Checked ?
+                                                       Transaction::FilterNone : Transaction::FilterNotDevel);
+    connect(transaction, &Transaction::repoDetail, m_originModel, &OriginModel::addOriginItem);
+    connect(transaction, &Transaction::finished, m_originModel, &OriginModel::finished);
+    connect(transaction, &Transaction::finished, m_busySeq, &KPixmapSequenceOverlayPainter::stop);
+    connect(transaction, &Transaction::finished, this, &Settings::checkChanges);
 
     m_busySeq->start();
 
@@ -285,7 +278,7 @@ void Settings::load()
     // hide battery options if we are on a desktop computer
     const QList<Solid::Device> listBattery = Solid::Device::listFromType(Solid::DeviceInterface::Battery, QString());
     bool notFound = true;
-    foreach (const Solid::Device &device, listBattery) {
+    for (const Solid::Device &device : listBattery) {
         const Solid::Battery *battery = device.as<Solid::Battery>();
         if (battery && battery->type() == Solid::Battery::PrimaryBattery) {
             notFound = false;

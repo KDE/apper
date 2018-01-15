@@ -47,13 +47,11 @@ PkSearchFile::PkSearchFile(const QString &file_name,
         return;
     }
 
-    PkTransaction *transaction = new PkTransaction(this);
+    auto transaction = new PkTransaction(this);
     transaction->setupTransaction(Daemon::searchFiles(m_fileName, Transaction::FilterNewest));
     setTransaction(Transaction::RoleSearchFile, transaction);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(transaction, &PkTransaction::finished, this, &PkSearchFile::searchFinished, Qt::UniqueConnection);
+    connect(transaction, &PkTransaction::package, this, &PkSearchFile::addPackage);
 }
 
 PkSearchFile::~PkSearchFile()

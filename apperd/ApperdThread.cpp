@@ -83,7 +83,7 @@ void ApperdThread::init()
     // to refresh the cache
     m_qtimer = new QTimer(this);
     m_qtimer->setInterval(FIVE_MIN);
-    connect(m_qtimer, SIGNAL(timeout()), this, SLOT(poll()));
+    connect(m_qtimer, &QTimer::timeout, this, &ApperdThread::poll);
     m_qtimer->start();
 
     //check if any changes to the file occour
@@ -106,14 +106,12 @@ void ApperdThread::init()
 //    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
 //    Daemon::global()->setHints(QLatin1String("locale=") % locale);
 
-    connect(Daemon::global(), SIGNAL(updatesChanged()),
-            SLOT(updatesChanged()));
+    connect(Daemon::global(), &Daemon::updatesChanged, this, &ApperdThread::updatesChanged);
 
     m_interface = new DBusInterface(this);
 
     m_refreshCache = new RefreshCacheTask(this);
-    connect(m_interface, SIGNAL(refreshCache()),
-            m_refreshCache, SLOT(refreshCache()));
+    connect(m_interface, &DBusInterface::refreshCache, m_refreshCache, &RefreshCacheTask::refreshCache);
 
     m_updater = new Updater(this);
 
@@ -123,12 +121,11 @@ void ApperdThread::init()
     configFileChanged();
 
     // In case PackageKit is not running watch for it's registration to configure proxy
-    QDBusServiceWatcher *watcher;
-    watcher = new QDBusServiceWatcher(QLatin1String("org.freedesktop.PackageKit"),
-                                      QDBusConnection::systemBus(),
-                                      QDBusServiceWatcher::WatchForRegistration,
-                                      this);
-    connect(watcher, SIGNAL(serviceRegistered(QString)), SLOT(setProxy()));
+    auto watcher = new QDBusServiceWatcher(QLatin1String("org.freedesktop.PackageKit"),
+                                           QDBusConnection::systemBus(),
+                                           QDBusServiceWatcher::WatchForRegistration,
+                                           this);
+    connect(watcher, &QDBusServiceWatcher::serviceRegistered, this, &ApperdThread::setProxy);
 
     // if PackageKit is running check to see if there are running transactons already
     bool packagekitIsRunning = nameHasOwner(QLatin1String("org.freedesktop.PackageKit"),
@@ -137,11 +134,10 @@ void ApperdThread::init()
     m_transactionWatcher = new TransactionWatcher(packagekitIsRunning, this);
 
     // connect the watch transaction coming from the updater icon to our watcher
-    connect(m_interface, SIGNAL(watchTransaction(QDBusObjectPath)),
-            m_transactionWatcher, SLOT(watchTransaction(QDBusObjectPath)));
+    connect(m_interface, &DBusInterface::watchTransaction, m_transactionWatcher, &TransactionWatcher::watchTransactionInteractive);
 
      // listen to Debian/Apt reboot signals from other sources (apt)
-    connect(m_AptRebootListener, SIGNAL(requestReboot()), m_transactionWatcher, SLOT(showRebootNotificationApt()));
+    connect(m_AptRebootListener, &AptRebootListener::requestReboot, m_transactionWatcher, &TransactionWatcher::showRebootNotificationApt);
     QTimer::singleShot(2 /*minutes*/ * 60 /*seconds*/ * 1000 /*msec*/, m_AptRebootListener, SLOT(checkForReboot()));
 
     if (packagekitIsRunning) {
@@ -236,7 +232,7 @@ void ApperdThread::setProxy()
 
     // If we were called by the watcher it is because PackageKit is running
     bool packagekitIsRunning = true;
-    QDBusServiceWatcher *watcher = qobject_cast<QDBusServiceWatcher*>(sender());
+    auto watcher = qobject_cast<QDBusServiceWatcher*>(sender());
     if (!watcher) {
         packagekitIsRunning = nameHasOwner(QLatin1String("org.freedesktop.PackageKit"),
                                            QDBusConnection::systemBus());

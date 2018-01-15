@@ -39,7 +39,7 @@ ReviewChanges::ReviewChanges(PackageModel *model, QWidget *parent) :
 
     //initialize the model, delegate, client and  connect it's signals
     ui->packageView->viewport()->setAttribute(Qt::WA_Hover);
-    KCategorizedSortFilterProxyModel *changedProxy = new KCategorizedSortFilterProxyModel(this);
+    auto changedProxy = new KCategorizedSortFilterProxyModel(this);
     changedProxy->setSourceModel(m_model);
     changedProxy->setCategorizedModel(true);
     changedProxy->sort(0);
@@ -52,12 +52,11 @@ ReviewChanges::ReviewChanges(PackageModel *model, QWidget *parent) :
                          "The following packages were found",
                          m_model->rowCount()));
 
-    ChangesDelegate *delegate = new ChangesDelegate(ui->packageView);
+    auto delegate = new ChangesDelegate(ui->packageView);
     delegate->setExtendPixmapWidth(0);
     ui->packageView->setItemDelegate(delegate);
 
-    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(selectionChanged()));
+    connect(m_model, &PackageModel::dataChanged, this, &ReviewChanges::selectionChanged);
 }
 
 ReviewChanges::~ReviewChanges()

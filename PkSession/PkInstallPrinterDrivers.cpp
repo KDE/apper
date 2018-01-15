@@ -41,11 +41,11 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
     setWindowTitle(i18n("Install Printer Drivers"));
     // TODO confirm operation
     QStringList search;
-    foreach (const QString &deviceid, m_resources) {
+    for (const QString &deviceid : resources) {
         QString mfg, mdl;
-        QStringList fields = deviceid.split(';');
-        foreach (const QString &field, fields) {
-            QString keyvalue = field.trimmed();
+        const QStringList fields = deviceid.split(';');
+        for (const QString &field : fields) {
+            const QString keyvalue = field.trimmed();
             if (keyvalue.startsWith(QLatin1String("MFG:"))) {
                 mfg = keyvalue.mid(4);
             } else if (keyvalue.startsWith(QLatin1String("MDL:"))) {
@@ -62,16 +62,14 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
         }
     }
 
-    PkTransaction *transaction = new PkTransaction(this);
+    auto transaction = new PkTransaction(this);
     Transaction *t;
     t = Daemon::whatProvides(search,
                              Transaction::FilterNotInstalled | Transaction::FilterArch |  Transaction::FilterNewest);
     transaction->setupTransaction(t);
     setTransaction(Transaction::RoleWhatProvides, transaction);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(transaction, &PkTransaction::finished, this, &PkInstallPrinterDrivers::searchFinished, Qt::UniqueConnection);
+    connect(transaction, &PkTransaction::package, this, &PkInstallPrinterDrivers::addPackage);
 }
 
 PkInstallPrinterDrivers::~PkInstallPrinterDrivers()

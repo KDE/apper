@@ -39,13 +39,11 @@ PkIsInstalled::PkIsInstalled(const QString &package_name,
 {
     setWindowTitle(i18n("Querying if a Package is Installed"));
 
-    PkTransaction *transaction = new PkTransaction(this);
+    auto transaction = new PkTransaction(this);
     transaction->setupTransaction(Daemon::resolve(m_packageName, Transaction::FilterInstalled));
     setTransaction(Transaction::RoleResolve, transaction);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(searchFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
-    connect(transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            this, SLOT(addPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(transaction, &PkTransaction::finished, this, &PkIsInstalled::searchFinished, Qt::UniqueConnection);
+    connect(transaction, &PkTransaction::package, this, &PkIsInstalled::addPackage);
 }
 
 PkIsInstalled::~PkIsInstalled()

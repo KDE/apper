@@ -40,12 +40,12 @@ DBusInterface::DBusInterface(QObject *parent) :
 {
     qCDebug(APPER_DAEMON) << "Creating Helper";
     (void) new ApperdAdaptor(this);
-    if (!QDBusConnection::sessionBus().registerService("org.kde.apperd")) {
+    if (!QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.apperd"))) {
         qCDebug(APPER_DAEMON) << "another helper is already running";
         return;
     }
 
-    if (!QDBusConnection::sessionBus().registerObject("/", this)) {
+    if (!QDBusConnection::sessionBus().registerObject(QStringLiteral("/"), this)) {
         qCDebug(APPER_DAEMON) << "unable to register service interface to dbus";
         return;
     }
@@ -71,10 +71,9 @@ void DBusInterface::SetupDebconfDialog(const QString &tid, const QString &socket
     } else {
         // Create the Transaction object to delete
         // the DebconfGui class when the transaction finishes
-        Transaction *transaction = new Transaction(QDBusObjectPath(tid));
+        auto transaction = new Transaction(QDBusObjectPath(tid));
         transaction->setProperty("socketPath", socketPath);
-        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                this, SLOT(transactionFinished()));
+        connect(transaction, &Transaction::finished, this, &DBusInterface::transactionFinished);
 
         // Setup the Debconf dialog
         gui = new DebconfGui(socketPath);

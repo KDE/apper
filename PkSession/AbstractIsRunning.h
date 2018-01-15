@@ -42,7 +42,7 @@ protected Q_SLOTS:
     void decreaseRunning();
 
 private:
-    int m_running;
+    int m_running = 0;
 };
 
 #endif

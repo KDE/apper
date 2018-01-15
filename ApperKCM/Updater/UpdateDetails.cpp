@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -48,7 +48,7 @@ UpdateDetails::UpdateDetails(QWidget *parent)
 {
     setupUi(this);
     hideTB->setIcon(QIcon::fromTheme("window-close"));
-    connect(hideTB, SIGNAL(clicked()), this, SLOT(hide()));
+    connect(hideTB, &QToolButton::clicked, this, &UpdateDetails::hide);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
     m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
@@ -61,22 +61,22 @@ UpdateDetails::UpdateDetails(QWidget *parent)
     palette.setColor(actionsViewport->foregroundRole(), palette.color(QPalette::WindowText));
     actionsViewport->setPalette(palette);
 
-    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(descriptionKTB);
+    auto effect = new QGraphicsOpacityEffect(descriptionKTB);
     effect->setOpacity(0);
     descriptionKTB->setGraphicsEffect(effect);
     m_fadeDetails = new QPropertyAnimation(effect, "opacity", this);
     m_fadeDetails->setDuration(500);
     m_fadeDetails->setStartValue(qreal(0));
     m_fadeDetails->setEndValue(qreal(1));
-    connect(m_fadeDetails, SIGNAL(finished()), this, SLOT(display()));
+    connect(m_fadeDetails, &QPropertyAnimation::finished, this, &UpdateDetails::display);
 
 
-    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize", this);
+    auto anim1 = new QPropertyAnimation(this, "maximumSize", this);
     anim1->setDuration(500);
     anim1->setEasingCurve(QEasingCurve::OutQuart);
     anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
     anim1->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
-    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize", this);
+    auto anim2 = new QPropertyAnimation(this, "minimumSize", this);
     anim2->setDuration(500);
     anim2->setEasingCurve(QEasingCurve::OutQuart);
     anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
@@ -85,7 +85,7 @@ UpdateDetails::UpdateDetails(QWidget *parent)
     m_expandPanel = new QParallelAnimationGroup(this);
     m_expandPanel->addAnimation(anim1);
     m_expandPanel->addAnimation(anim2);
-    connect(m_expandPanel, SIGNAL(finished()), this, SLOT(display()));
+    connect(m_expandPanel, &QParallelAnimationGroup::finished, this, &UpdateDetails::display);
 
 }
 
@@ -103,17 +103,13 @@ void UpdateDetails::setPackage(const QString &packageId, Transaction::Info updat
     m_updateInfo = updateInfo;
     m_currentDescription.clear();
     if (m_transaction) {
-        disconnect(m_transaction, SIGNAL(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)),
-                   this, SLOT(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)));
-        disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                   this, SLOT(display()));
+        disconnect(m_transaction, &Transaction::updateDetail, this, &UpdateDetails::updateDetail);
+        disconnect(m_transaction, &Transaction::finished, this, &UpdateDetails::display);
     }
 
     m_transaction = Daemon::getUpdateDetail(m_packageId);
-    connect(m_transaction, SIGNAL(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)),
-            this, SLOT(updateDetail(QString,QStringList,QStringList,QStringList,QStringList,QStringList,PackageKit::Transaction::Restart,QString,QString,PackageKit::Transaction::UpdateState,QDateTime,QDateTime)));
-    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(display()));
+    connect(m_transaction, &Transaction::updateDetail, this, &UpdateDetails::updateDetail);
+    connect(m_transaction, &Transaction::finished, this, &UpdateDetails::display);
 
     if (maximumSize().height() == 0) {
         // Expand the panel
@@ -299,7 +295,7 @@ void UpdateDetails::updateDetail(const QString &packageID,
     if (!updates.isEmpty()) {
         description += "<p>" + i18n("Updates:") + "<br/>";
         QStringList _updates;
-        foreach (const QString &pid, updates) {
+        for (const QString &pid : updates) {
              _updates += QString::fromUtf8("\xE2\x80\xA2 ") + Transaction::packageName(pid) + " - " + Transaction::packageVersion(pid);
         }
         description += _updates.join("<br/>") + "</p>";
@@ -309,7 +305,7 @@ void UpdateDetails::updateDetail(const QString &packageID,
     if (obsoletes.size()) {
         description += "<p></b>" + i18n("Obsoletes:") + "</b><br/>";
         QStringList _obsoletes;
-        foreach (const QString &pid, obsoletes) {
+        for (const QString &pid : obsoletes) {
              _obsoletes += QString::fromUtf8("\xE2\x80\xA2 ") + Transaction::packageName(pid) + " - " + Transaction::packageVersion(pid);
         }
         description += _obsoletes.join("<br>/") + "</p>";
@@ -327,7 +323,7 @@ void UpdateDetails::updateDetail(const QString &packageID,
 QString UpdateDetails::getLinkList(const QStringList &urls) const
 {
     QString ret;
-    foreach (const QString &url, urls) {
+    for (const QString &url : urls) {
         if (!ret.isEmpty()) {
             ret += "<br/>";
         }

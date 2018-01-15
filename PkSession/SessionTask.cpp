@@ -128,8 +128,7 @@ void SessionTask::searchFinished(PkTransaction::ExitStatus status)
 {
     if (m_pkTransaction) {
         // Disconnect so it can be connected to commitFinished latter
-        disconnect(m_pkTransaction->transaction(), SIGNAL(finished(PkTransaction::ExitStatus)),
-                   this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+        disconnect(m_pkTransaction->transaction(), &PkTransaction::finished, this, &SessionTask::searchFinished);
     }
 
     if (status == PkTransaction::Success) {
@@ -151,8 +150,7 @@ void SessionTask::commitFinished(PkTransaction::ExitStatus status)
 {
     if (m_pkTransaction) {
         // Disconnect so it can be connected to something else latter
-        disconnect(m_pkTransaction->transaction(), SIGNAL(finished(PkTransaction::ExitStatus)),
-                   this, SLOT(searchFinished(PkTransaction::ExitStatus)));
+        disconnect(m_pkTransaction->transaction(), &PkTransaction::finished, this, &SessionTask::searchFinished);
     }
 
     if (status == PkTransaction::Success) {
@@ -199,7 +197,7 @@ void SessionTask::setDialog(QDialog *dialog)
 //                dialog, SLOT(deleteLater()));
 
         // Make sure we see the last widget and title
-        QSignalMapper *mapper = new QSignalMapper(this);
+        auto mapper = new QSignalMapper(this);
         mapper->setMapping(this, widget);
         connect(this, SIGNAL(okClicked()),
                 mapper, SLOT(map()));
@@ -225,7 +223,7 @@ QWidget* SessionTask::mainWidget()
 
 void SessionTask::setInfo(const QString &title, const QString &text, const QString &details)
 {
-    InfoWidget *info = new InfoWidget(this);
+    auto info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
     info->setDetails(details);
@@ -243,7 +241,7 @@ void SessionTask::setInfo(const QString &title, const QString &text, const QStri
 
 void SessionTask::setError(const QString &title, const QString &text, const QString &details)
 {
-    InfoWidget *info = new InfoWidget(this);
+    auto info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
     info->setIcon(QIcon::fromTheme("dialog-error"));
@@ -376,10 +374,9 @@ void SessionTask::commit()
             sendErrorFinished(Failed, "to install or remove due to empty lists");
         } else if (!installPackages.isEmpty()) {
             // Install Packages
-            PkTransaction *transaction = new PkTransaction(this);
+            auto transaction = new PkTransaction(this);
             setTransaction(Transaction::RoleInstallPackages, transaction);
-            connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-                    this, SLOT(commitFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
+            connect(transaction, &PkTransaction::finished, this, &SessionTask::commitFinished, Qt::UniqueConnection);
             transaction->installPackages(installPackages);
         } else {
             // Remove them
@@ -391,10 +388,9 @@ void SessionTask::commit()
 void SessionTask::removePackages()
 {
     // Remove Packages
-    PkTransaction *transaction = new PkTransaction(this);
+    auto transaction = new PkTransaction(this);
     setTransaction(Transaction::RoleRemovePackages, transaction);
-    connect(transaction, SIGNAL(finished(PkTransaction::ExitStatus)),
-            this, SLOT(commitFinished(PkTransaction::ExitStatus)), Qt::UniqueConnection);
+    connect(transaction, &PkTransaction::finished, this, &SessionTask::commitFinished, Qt::UniqueConnection);
     transaction->removePackages(m_removePackages);
     m_removePackages.clear();
 }
@@ -422,8 +418,7 @@ void SessionTask::searchSuccess()
     qCDebug(APPER_SESSION) << "virtual method called";
     enableButtonOk(true);
     m_reviewChanges = new ReviewChanges(m_model, this);
-    connect(m_reviewChanges, SIGNAL(hasSelectedPackages(bool)),
-            this, SLOT(enableButtonOk(bool)));
+    connect(m_reviewChanges, &ReviewChanges::hasSelectedPackages, this, &SessionTask::enableButtonOk);
     setMainWidget(m_reviewChanges);
 }
 
@@ -596,8 +591,7 @@ void SessionTask::setTransaction(Transaction::Role role, PkTransaction *t)
         m_pkTransaction->hideCancelButton();
 
         ui->stackedWidget->addWidget(m_pkTransaction);
-        connect(m_pkTransaction, SIGNAL(titleChanged(QString)),
-                this, SLOT(setTitle(QString)));
+        connect(m_pkTransaction, &PkTransactionWidget::titleChanged, this, &SessionTask::setTitle);
         connect(this, SIGNAL(cancelClicked()),
                 m_pkTransaction, SLOT(cancel()));
         connect(m_pkTransaction, SIGNAL(dialog(KDialog*)),

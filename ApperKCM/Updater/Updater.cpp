@@ -62,7 +62,7 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
     m_updatesModel = new PackageModel(this);
     m_updatesModel->setCheckable(true);
-    ApplicationSortFilterModel *proxyModel = new ApplicationSortFilterModel(this);
+    auto proxyModel = new ApplicationSortFilterModel(this);
     proxyModel->setSourceModel(m_updatesModel);
     ui->packageView->setModel(proxyModel);
 
@@ -70,13 +70,11 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     m_delegate->setCheckable(true);
     ui->packageView->setItemDelegate(m_delegate);
     ui->packageView->sortByColumn(PackageModel::NameCol, Qt::AscendingOrder);
-    connect(m_updatesModel, SIGNAL(changed(bool)),
-            this, SLOT(checkEnableUpdateButton()));
+    connect(m_updatesModel, &PackageModel::changed, this, &Updater::checkEnableUpdateButton);
 
     //initialize the model, delegate, client and  connect it's signals
     m_header = new CheckableHeader(Qt::Horizontal, this);
-    connect(m_header, SIGNAL(toggled(bool)),
-            m_updatesModel, SLOT(setAllChecked(bool)));
+    connect(m_header, &CheckableHeader::toggled, m_updatesModel, &PackageModel::setAllChecked);
     m_header->setCheckBoxVisible(false);
     m_header->setDefaultAlignment(Qt::AlignCenter);
     ui->packageView->setHeaderHidden(false);
@@ -107,35 +105,35 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     ui->packageView->header()->setSectionHidden(PackageModel::VersionCol, true);
     m_showPackageVersion = new QAction(i18n("Show Versions"), this);
     m_showPackageVersion->setCheckable(true);
-    connect(m_showPackageVersion, SIGNAL(toggled(bool)), this, SLOT(showVersions(bool)));
+    connect(m_showPackageVersion, &QAction::toggled, this, &Updater::showVersions);
     m_showPackageVersion->setChecked(viewGroup.readEntry("ShowVersions", true));
 
     // versions
     ui->packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, true);
     m_showPackageCurrentVersion = new QAction(i18n("Show Current Versions"), this);
     m_showPackageCurrentVersion->setCheckable(true);
-    connect(m_showPackageCurrentVersion, SIGNAL(toggled(bool)), this, SLOT(showCurrentVersions(bool)));
+    connect(m_showPackageCurrentVersion, &QAction::toggled, this, &Updater::showCurrentVersions);
     m_showPackageCurrentVersion->setChecked(viewGroup.readEntry("ShowCurrentVersions", false));
 
     // Arch
     ui->packageView->header()->setSectionHidden(PackageModel::ArchCol, true);
     m_showPackageArch = new QAction(i18n("Show Architectures"), this);
     m_showPackageArch->setCheckable(true);
-    connect(m_showPackageArch, SIGNAL(toggled(bool)), this, SLOT(showArchs(bool)));
+    connect(m_showPackageArch, &QAction::toggled, this, &Updater::showArchs);
     m_showPackageArch->setChecked(viewGroup.readEntry("ShowArchs", false));
 
     // Origin
     ui->packageView->header()->setSectionHidden(PackageModel::OriginCol, true);
     m_showPackageOrigin = new QAction(i18n("Show Origins"), this);
     m_showPackageOrigin->setCheckable(true);
-    connect(m_showPackageOrigin, SIGNAL(toggled(bool)), this, SLOT(showOrigins(bool)));
+    connect(m_showPackageOrigin, &QAction::toggled, this, &Updater::showOrigins);
     m_showPackageOrigin->setChecked(viewGroup.readEntry("ShowOrigins", false));
 
     // Sizes
     ui->packageView->header()->setSectionHidden(PackageModel::SizeCol, true);
     m_showPackageSize = new QAction(i18n("Show Sizes"), this);
     m_showPackageSize->setCheckable(true);
-    connect(m_showPackageSize, SIGNAL(toggled(bool)), this, SLOT(showSizes(bool)));
+    connect(m_showPackageSize, &QAction::toggled, this, &Updater::showSizes);
     m_showPackageSize->setChecked(viewGroup.readEntry("ShowSizes", true));
 }
 
@@ -201,7 +199,7 @@ void Updater::updatePallete()
 void Updater::on_packageView_clicked(const QModelIndex &index)
 {
     QString pkgId = index.data(PackageModel::IdRole).toString();
-    Transaction::Info pkgInfo = index.data(PackageModel::InfoRole).value<Transaction::Info>();
+    auto pkgInfo = index.data(PackageModel::InfoRole).value<Transaction::Info>();
     ui->updateDetails->setPackage(pkgId, pkgInfo);
 }
 
@@ -300,23 +298,18 @@ void Updater::getUpdates()
     m_updatesModel->clear();
     ui->updateDetails->hide();
     m_updatesT = Daemon::getUpdates();
-    connect(m_updatesT, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
-            m_updatesModel, SLOT(addSelectedPackage(PackageKit::Transaction::Info,QString,QString)));
-    connect(m_updatesT, SIGNAL(errorCode(PackageKit::Transaction::Error,QString)),
-            this, SLOT(errorCode(PackageKit::Transaction::Error,QString)));
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            m_busySeq, SLOT(stop()));
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            m_updatesModel, SLOT(finished()));
+    connect(m_updatesT, &Transaction::package, m_updatesModel, &PackageModel::addSelectedPackage);
+    connect(m_updatesT, &Transaction::errorCode, this, &Updater::errorCode);
+    connect(m_updatesT, &Transaction::finished, m_busySeq, &KPixmapSequenceOverlayPainter::stop);
+    connect(m_updatesT, &Transaction::finished, m_updatesModel, &PackageModel::finished);
+
     // This is required to estimate download size
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            m_updatesModel, SLOT(fetchSizes()));
+    connect(m_updatesT, &Transaction::finished, m_updatesModel, &PackageModel::fetchSizes);
+
     if (m_showPackageCurrentVersion->isChecked()) {
-        connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                m_updatesModel, SLOT(fetchCurrentVersions()));
+        connect(m_updatesT, &Transaction::finished, m_updatesModel, &PackageModel::fetchCurrentVersions);
     }
-    connect(m_updatesT, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-            this, SLOT(getUpdatesFinished()));
+    connect(m_updatesT, &Transaction::finished, this, &Updater::getUpdatesFinished);
     m_busySeq->start();
 
     // Hide the distribution upgrade information
@@ -325,10 +318,8 @@ void Updater::getUpdates()
     if (m_roles & Transaction::RoleGetDistroUpgrades) {
         // Check for distribution Upgrades
         Transaction *t = Daemon::getDistroUpgrades();
-        connect(t, SIGNAL(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)),
-                this, SLOT(distroUpgrade(PackageKit::Transaction::DistroUpgrade,QString,QString)));
-        connect(t, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
-                t, SLOT(deleteLater()));
+        connect(m_updatesT, &Transaction::distroUpgrade, this, &Updater::distroUpgrade);
+        connect(m_updatesT, &Transaction::finished, t, &Transaction::deleteLater);
     }
 }
 
@@ -343,8 +334,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     QAction *action;
     action = menu->addAction(i18n("Check for new updates"));
     action->setIcon(QIcon::fromTheme("view-refresh"));
-    connect(action, SIGNAL(triggered(bool)),
-            this, SIGNAL(refreshCache()));
+    connect(action, &QAction::triggered, this, &Updater::refreshCache);
     menu->exec(ui->packageView->viewport()->mapToGlobal(pos));
     delete menu;
 }

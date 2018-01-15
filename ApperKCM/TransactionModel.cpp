@@ -49,11 +49,11 @@ void TransactionModel::clear()
 
 void TransactionModel::addTransaction(PackageKit::Transaction *trans)
 {
-    QStandardItem *dateI    = new QStandardItem;
-    QStandardItem *roleI    = new QStandardItem;
-    QStandardItem *detailsI = new QStandardItem;
-    QStandardItem *userI    = new QStandardItem;
-    QStandardItem *appI     = new QStandardItem;
+    auto dateI    = new QStandardItem;
+    auto roleI    = new QStandardItem;
+    auto detailsI = new QStandardItem;
+    auto userI    = new QStandardItem;
+    auto appI     = new QStandardItem;
 
     dateI->setText(QLocale::system().toString(trans->timespec().date()));
     // this is for the filterSort model
@@ -80,15 +80,19 @@ void TransactionModel::addTransaction(PackageKit::Transaction *trans)
     appI->setText(trans->cmdline());
     appI->setEditable(false);
 
-    QList<QStandardItem *> line;
-    line << dateI << roleI << detailsI << userI << appI;
-    appendRow(line);
+    appendRow({
+                  dateI,
+                  roleI,
+                  detailsI,
+                  userI,
+                  appI
+              });
     delete trans;
 }
 
 QString TransactionModel::getDetailsLocalized(const QString &data) const
 {
-    QStringList lines = data.split('\n');
+    QStringList lines = data.split(QLatin1Char('\n'));
     QStringList ret;
 
     QString text;
@@ -107,35 +111,35 @@ QString TransactionModel::getDetailsLocalized(const QString &data) const
         ret << text;
     }
 
-    return ret.join("\n");
+    return ret.join(QLatin1Char('\n'));
 }
 
 QString TransactionModel::getTypeLine(const QStringList &lines, Transaction::Status status) const
 {
     QStringList text;
-    foreach(const QString &line, lines) {
-        QStringList sections = line.split('\t');
+    for (const QString &line : lines) {
+        const QStringList sections = line.split(QLatin1Char('\t'));
         if (sections.size() > 1) {
             switch (status) {
                 case Transaction::StatusInstall:
-                    if (sections.at(0) != "installing") {
+                    if (sections.at(0) != QLatin1String("installing")) {
                         continue;
                     }
                     break;
                 case Transaction::StatusRemove:
-                    if (sections.at(0) != "removing") {
+                    if (sections.at(0) != QLatin1String("removing")) {
                         continue;
                     }
                     break;
                 case Transaction::StatusUpdate:
-                    if (sections.at(0) != "updating") {
+                    if (sections.at(0) != QLatin1String("updating")) {
                         continue;
                     }
                     break;
                 default:
                     continue;
             }
-            QStringList packageData = sections.at(1).split(';');
+            QStringList packageData = sections.at(1).split(QLatin1Char(';'));
             if (packageData.size()) {
                 text << packageData.at(0);
             }
@@ -144,7 +148,7 @@ QString TransactionModel::getTypeLine(const QStringList &lines, Transaction::Sta
 
     if (text.size()) {
         // TODO make the status BOLD
-        return PkStrings::statusPast(status) + ": " + text.join(", ");
+        return PkStrings::statusPast(status) + QLatin1String(": ") + text.join(QLatin1String(", "));
     } else {
         return QString();
     }

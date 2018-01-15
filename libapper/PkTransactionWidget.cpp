@@ -79,16 +79,13 @@ PkTransactionWidget::PkTransactionWidget(QWidget *parent) :
 
     // Connect stuff from the progressView
     QScrollBar *scrollBar = ui->progressView->verticalScrollBar();
-    connect(scrollBar, SIGNAL(sliderMoved(int)),
-            this, SLOT(followBottom(int)));
-    connect(scrollBar, SIGNAL(valueChanged(int)),
-            this, SLOT(followBottom(int)));
-    connect(scrollBar, SIGNAL(rangeChanged(int,int)),
-            this, SLOT(rangeChanged(int,int)));
+    connect(scrollBar, &QScrollBar::sliderMoved, this, &PkTransactionWidget::followBottom);
+    connect(scrollBar, &QScrollBar::valueChanged, this, &PkTransactionWidget::followBottom);
+    connect(scrollBar, &QScrollBar::rangeChanged, this, &PkTransactionWidget::rangeChanged);
 
     ui->progressView->setItemDelegate(new TransactionDelegate(this));
     
-    connect(ui->cancelButton, SIGNAL(rejected()), this, SLOT(cancel()));
+    connect(ui->cancelButton, &QDialogButtonBox::rejected, this, &PkTransactionWidget::cancel);
 }
 
 PkTransactionWidget::~PkTransactionWidget()
@@ -134,31 +131,19 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
         ui->progressView->header()->setSectionResizeMode(2, QHeaderView::Stretch);
     }
 
-    connect(m_trans, SIGNAL(percentageChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(speedChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(statusChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(downloadSizeRemainingChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(remainingTimeChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(roleChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(transactionFlagsChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(allowCancelChanged()),
-            SLOT(updateUi()));
+    connect(m_trans, &PkTransaction::percentageChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::speedChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::statusChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::downloadSizeRemainingChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::remainingTimeChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::roleChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::allowCancelChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::transactionFlagsChanged, this, &PkTransactionWidget::updateUi);
 
     // Forward Q_SIGNALS:
-    connect(m_trans, SIGNAL(sorry(QString,QString,QString)),
-            this, SIGNAL(sorry(QString,QString,QString)));
-    connect(m_trans, SIGNAL(errorMessage(QString,QString,QString)),
-            SIGNAL(error(QString,QString,QString)));
-    connect(m_trans, SIGNAL(dialog(KDialog*)),
-            this, SIGNAL(dialog(KDialog*)));
-
+    connect(m_trans, &PkTransaction::sorry, this, &PkTransactionWidget::sorry);
+    connect(m_trans, &PkTransaction::errorMessage, this, &PkTransactionWidget::error);
+    connect(m_trans, &PkTransaction::dialog, this, &PkTransactionWidget::dialog);
 
     // sets ui
     updateUi();
@@ -170,28 +155,20 @@ void PkTransactionWidget::unsetTransaction()
         return;
     }
 
-    connect(m_trans, SIGNAL(percentageChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(speedChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(statusChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(downloadSizeRemainingChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(remainingTimeChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(roleChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(transactionFlagsChanged()),
-            SLOT(updateUi()));
-    connect(m_trans, SIGNAL(allowCancelChanged()),
-            SLOT(updateUi()));
+    connect(m_trans, &PkTransaction::percentageChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::speedChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::statusChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::downloadSizeRemainingChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::remainingTimeChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::roleChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::allowCancelChanged, this, &PkTransactionWidget::updateUi);
+    connect(m_trans, &PkTransaction::transactionFlagsChanged, this, &PkTransactionWidget::updateUi);
 }
 
 void PkTransactionWidget::updateUi()
 {
     // sets the action icon to be the window icon
-    PkTransaction *transaction = qobject_cast<PkTransaction*>(sender());
+    auto transaction = qobject_cast<PkTransaction*>(sender());
     if (transaction == 0 && (transaction = m_trans) == 0) {
         qCWarning(APPER_LIB) << "no transaction object";
         return;
