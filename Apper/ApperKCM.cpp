@@ -36,6 +36,7 @@
 #include <QToolBar>
 #include <QSignalMapper>
 #include <QTimer>
+#include <QPointer>
 
 #include <PackageModel.h>
 #include <ApplicationSortFilterModel.h>
@@ -67,11 +68,11 @@ Q_LOGGING_CATEGORY(APPER, "apper")
 
 //KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
 
-K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperKCM>();)
-K_EXPORT_PLUGIN(ApperFactory("kcm_apper", "apper"))
+//K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperKCM>();)
+//K_EXPORT_PLUGIN(ApperFactory("kcm_apper", "apper"))
 
-ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
-    KCModule(parent, args),
+ApperKCM::ApperKCM(QWidget *parent) :
+    QWidget(parent),
     ui(new Ui::ApperKCM),
     m_currentAction(0),
     m_groupsProxyModel(0),
@@ -85,15 +86,15 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     m_history(0),
     m_searchRole(Transaction::RoleUnknown)
 {
-    auto aboutData = new KAboutData("kcm_apper",
-                                    "apper",
-                                    APPER_VERSION,
-                                    i18n("KDE interface for managing software"),
-                                    KAboutLicense::LicenseKey::GPL);
-    aboutData->addAuthor(i18n("(C) 2008-2018 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
-    aboutData->addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
-    setAboutData(aboutData);
-    setButtons(Apply);
+//    auto aboutData = new KAboutData("kcm_apper",
+//                                    "apper",
+//                                    APPER_VERSION,
+//                                    i18n("KDE interface for managing software"),
+//                                    KAboutLicense::LicenseKey::GPL);
+//    aboutData->addAuthor(i18n("(C) 2008-2018 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
+//    aboutData->addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
+//    setAboutData(aboutData);
+//    setButtons(Apply);
 
     // store the actions supported by the backend
     connect(Daemon::global(), &Daemon::changed, this, &ApperKCM::daemonChanged);
@@ -218,11 +219,11 @@ ApperKCM::ApperKCM(QWidget *parent, const QVariantList &args) :
     connect(action, &QAction::triggered, signalMapper, QOverload<>::of(&QSignalMapper::map));
 
     // Only show help menu if not on System Settings
-    if (!args.isEmpty()) {
+//    if (!args.isEmpty()) {
         // adds the help menu
         //! KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData());
         //! menu->addMenu(helpMenu->menu());
-    }
+//    }
 
     // Make sure the search bar is visible
     ui->stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
@@ -507,7 +508,7 @@ void ApperKCM::setPage(const QString &page)
                 connect(ui->repoSettingsPB, &QPushButton::toggled, m_settingsPage, &Settings::showRepoSettings);
             }
             checkChanged();
-            setButtons(KCModule::Default | KCModule::Apply);
+//            setButtons(KCModule::Default | KCModule::Apply);
             emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
             emit changed(false);
             ui->generalSettingsPB->setChecked(true);
@@ -589,7 +590,7 @@ void ApperKCM::on_backTB_clicked()
         if (!canChangePage()) {
             return;
         }
-        setButtons(Apply);
+//        setButtons(Apply);
         emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
         ui->stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
         checkChanged();
@@ -899,7 +900,7 @@ void ApperKCM::keyPressEvent(QKeyEvent *event)
         m_currentAction->trigger();
         return;
     }
-    KCModule::keyPressEvent(event);
+//    KCModule::keyPressEvent(event);
 }
 
 void ApperKCM::closeEvent(QCloseEvent *event)

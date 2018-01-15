@@ -28,7 +28,7 @@
 //#include <KStandardDirs>
 #include <KConfig>
 #include <KConfigGroup>
-#include <KCModuleInfo>
+//#include <KCModuleInfo>
 //#include <KWindowSystem>
 //#include <KDebug>
 #include <QStringList>
@@ -169,7 +169,7 @@ void Apper::showUi()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
+//        connect(m_pkUi, &MainUi::abou, this, &Apper::kcmFinished);
     }
     // Show all
     m_pkUi->showAll();
@@ -181,7 +181,7 @@ void Apper::showUpdates()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
+//        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
     }
     m_pkUi->showUpdates();
     m_pkUi->show();
@@ -192,7 +192,7 @@ void Apper::showSettings()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
+//        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
     }
     m_pkUi->showSettings();
     m_pkUi->show();

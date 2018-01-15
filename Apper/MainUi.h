@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,10 +21,10 @@
 #ifndef MAIN_UI_H
 #define MAIN_UI_H
 
-#include <KCMultiDialog>
-#include <KCModuleProxy>
+#include <QMainWindow>
 
-class MainUi : public KCMultiDialog
+class ApperKCM;
+class MainUi : public QMainWindow
 {
     Q_OBJECT
 public:
@@ -36,7 +36,7 @@ public:
     void showSettings();
 
 private:
-    KCModule *m_apperModule;
+    ApperKCM *m_apperModule;
 };
 
 #endif

@@ -1,6 +1,23 @@
 # CMakeLists for the apper executable and misc data
 
 set(apper_SRCS
+    Settings/Settings.cpp
+    Settings/OriginModel.cpp
+    Updater/UpdateDetails.cpp
+    Updater/DistroUpgrade.cpp
+    Updater/CheckableHeader.cpp
+    Updater/Updater.cpp
+    FiltersMenu.cpp
+    ClickableLabel.cpp
+    ScreenShotViewer.cpp
+    PackageDetails.cpp
+    GraphicsOpacityDropShadowEffect.cpp
+    CategoryModel.cpp
+    BrowseView.cpp
+    TransactionModel.cpp
+    TransactionFilterModel.cpp
+    TransactionHistory.cpp
+    ApperKCM.cpp
     MainUi.cpp
     BackendDetails.cpp
     Apper.cpp
@@ -9,6 +26,13 @@ set(apper_SRCS
 
 ki18n_wrap_ui(apper_SRCS
     BackendDetails.ui
+    Settings/Settings.ui
+    Updater/UpdateDetails.ui
+    Updater/Updater.ui
+    PackageDetails.ui
+    BrowseView.ui
+    TransactionHistory.ui
+    ApperKCM.ui
 )
 
 add_executable(apper
@@ -16,7 +40,6 @@ add_executable(apper
 )
 
 target_link_libraries(apper
-    KF5::KCMUtils
     KF5::IconThemes
     KF5::DBusAddons
     ${PackageKitQt5_LIBRARIES}

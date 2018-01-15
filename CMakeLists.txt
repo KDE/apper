@@ -41,7 +41,6 @@ find_package(PackageKitQt5 1.0.0 REQUIRED)
 
 # The various parts of Apper that can be built, or not.
 option(BUILD_APPER "Build the Apper application" ON)
-option(BUILD_APPERKCM "Build the Apper KDE Control Module" ON)
 option(BUILD_APPERD "Build the Apper daemon" ON)
 option(BUILD_DECLARATIVE "Build the Qt Quick plugins" ON)
 option(BUILD_PKSESSION "Build the PkSession helper application" ON)
@@ -122,9 +121,6 @@ include_directories(${CMAKE_SOURCE_DIR}
 # Subcomponents
 #
 add_subdirectory(libapper)
-if(BUILD_APPERKCM)
-    add_subdirectory(ApperKCM)
-endif(BUILD_APPERKCM)
 if(BUILD_APPER)
     add_subdirectory(Apper)
 endif(BUILD_APPER)

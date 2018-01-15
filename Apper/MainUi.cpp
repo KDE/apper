@@ -24,37 +24,42 @@
 #include <QLoggingCategory>
 
 #include <KConfig>
-#include <KCModuleProxy>
+//#include <KCModuleProxy>
 #include <KConfigGroup>
 #include <QIcon>
 #include <QDialog>
 
-Q_LOGGING_CATEGORY(APPER, "apper")
+#include "ApperKCM.h"
+
+//Q_LOGGING_CATEGORY(APPER, "apper")
+Q_DECLARE_LOGGING_CATEGORY(APPER)
 
 MainUi::MainUi(QWidget *parent) :
-    KCMultiDialog(parent),
+    QMainWindow(parent),
     m_apperModule(0)
 {
     setWindowIcon(QIcon::fromTheme("system-software-install"));
 
-    KConfig config("apper");
-    KConfigGroup configGroup(&config, "MainUi");
+//    KConfig config("apper");
+//    KConfigGroup configGroup(&config, "MainUi");
     //! restoreDialogSize(configGroup);
 
     // Set Apply and Cancel buttons
-    setStandardButtons(QDialogButtonBox::Apply /*| KDialog::Help*/ | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset);
+//    setStandardButtons(QDialogButtonBox::Apply /*| KDialog::Help*/ | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset);
 
-    KPageWidgetItem *page = addModule(QLatin1String("kcm_apper.desktop"),
-                                      QStringList() << QLatin1String("apper"));
-    if (page) {
-        auto proxy = static_cast<KCModuleProxy*>(page->widget());
-        if (proxy) {
-            m_apperModule = proxy->realModule();
-            connect(m_apperModule, &KCModule::windowTitleChanged, this, &MainUi::setWindowTitle);
-        }
-    } else {
-        qCWarning(APPER) << "Could not load kcm_apper.desktop!";
-    }
+//    KPageWidgetItem *page = addModule(QLatin1String("kcm_apper.desktop"),
+//                                      QStringList() << QLatin1String("apper"));
+    m_apperModule = new ApperKCM(this);
+    setCentralWidget(m_apperModule);
+//    if (page) {
+//        auto proxy = static_cast<KCModuleProxy*>(page->widget());
+//        if (proxy) {
+//            m_apperModule = proxy->realModule();
+//            connect(m_apperModule, &KCModule::windowTitleChanged, this, &MainUi::setWindowTitle);
+//        }
+//    } else {
+//        qCWarning(APPER) << "Could not load kcm_apper.desktop!";
+//    }
 }
 
 MainUi::~MainUi()

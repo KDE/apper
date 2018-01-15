@@ -25,8 +25,8 @@
 
 #include <QtGui/QStandardItemModel>
 
-#include <KCModule>
-#include <KCModuleProxy>
+//#include <KCModule>
+//#include <KCModuleProxy>
 #include <KToolBarPopupAction>
 #include <KCategorizedSortFilterProxyModel>
 
@@ -44,12 +44,12 @@ class TransactionHistory;
 class CategoryModel;
 class Settings;
 class Updater;
-class ApperKCM : public KCModule
+class ApperKCM : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(QString page READ page WRITE setPage USER true)
 public:
-    ApperKCM(QWidget *parent, const QVariantList &args);
+    ApperKCM(QWidget *parent);
     ~ApperKCM();
     
     QString page() const;
