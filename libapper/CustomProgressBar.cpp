@@ -35,9 +35,7 @@ CustomProgressBar::~CustomProgressBar()
 QString CustomProgressBar::text() const
 {
     if (m_remaining) {
-        KFormat f;
-//        return i18n("%1 remaining", f.prettyFormatDuration(m_remaining * 1000));
-        return i18n("%1 remaining", f.formatDuration(m_remaining * 1000));
+        return i18n("%1 remaining", KFormat().formatSpelloutDuration(m_remaining * 1000));
     } else {
         return QProgressBar::text();
     }

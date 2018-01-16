@@ -253,6 +253,12 @@ void PkTransaction::slotErrorCode(Transaction::Error error, const QString &detai
     case Transaction::ErrorCannotInstallRepoUnsigned:
     case Transaction::ErrorCannotUpdateRepoUnsigned:
     {
+        if (d->role == Transaction::RoleRefreshCache) {
+            // We are not installing anything
+            KMessageBox::information(d->parentWindow, details, PkStrings::error(error));
+            return;
+        }
+
         d->handlingActionRequired = true;
         int ret = KMessageBox::warningYesNo(d->parentWindow,
                                             i18n("You are about to install unsigned packages that can compromise your system, "

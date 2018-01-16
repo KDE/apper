@@ -243,9 +243,7 @@ void Settings::load()
     ret = ui->intervalCB->findData(interval);
     if (ret == -1) {
         // this is if someone change the file by hand...
-        KFormat f;
-//        ui->intervalCB->addItem(KLocale::global()->prettyFormatDuration(interval * 1000), interval);
-        ui->intervalCB->addItem(f.formatDuration(interval * 1000), interval);
+        ui->intervalCB->addItem(KFormat().formatSpelloutDuration(interval * 1000), interval);
         ui->intervalCB->setCurrentIndex(ui->intervalCB->count() - 1);
     } else {
         ui->intervalCB->setCurrentIndex(ret);

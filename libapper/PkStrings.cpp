@@ -159,6 +159,9 @@ QString PkStrings::status(Transaction::Status status, uint speed, qulonglong dow
     case Transaction::StatusCopyFiles :
         return i18nc("we are copying package files to prepare to install",
                      "Copying files");
+    case Transaction::StatusRunHook :
+        return i18nc("we are running hooks pre or post transaction",
+                     "Running hooks");
     }
     qCWarning(APPER_LIB) << "status unrecognised: " << status;
     return QString();
@@ -277,6 +280,8 @@ QString PkStrings::action(Transaction::Role role, Transaction::TransactionFlags 
         return i18nc("The role of the transaction, in present tense", "Repairing system");
     case Transaction::RoleRepoRemove:
         return i18nc("The role of the transaction, in present tense", "Removing repository");
+    case Transaction::RoleUpgradeSystem:
+        return i18nc("The role of the transaction, in present tense", "Upgrading the system");
     }
     qCWarning(APPER_LIB) << "action unrecognised: " << role;
     return QString();
@@ -354,6 +359,8 @@ QString PkStrings::actionPast(Transaction::Role action)
         return i18nc("The role of the transaction, in past tense", "Repaired system");
     case Transaction::RoleRepoRemove:
         return i18nc("The role of the transaction, in past tense", "Removed repository");
+    case Transaction::RoleUpgradeSystem:
+        return i18nc("The role of the transaction, in past tense", "Upgraded the system");
     }
     qCWarning(APPER_LIB) << "action unrecognised: " << action;
     return QString();
@@ -1033,8 +1040,8 @@ QString PkStrings::daemonError(int value)
 
 QString PkStrings::prettyFormatDuration(unsigned long mSec)
 {
-    KFormat f;
-    return f.formatDuration(mSec);
+
+    return KFormat().formatSpelloutDuration(mSec);
 }
 
 QString PkStrings::lastCacheRefreshTitle(uint lastTime)
