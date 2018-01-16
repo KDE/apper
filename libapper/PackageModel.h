@@ -115,6 +115,9 @@ public Q_SLOTS:
     void uncheckPackage(const QString &packageID,
                         bool forceEmitUnchecked = false,
                         bool emitDataChanged = true);
+    void uncheckPackageLogic(const QString &packageID,
+                             bool forceEmitUnchecked = false,
+                             bool emitDataChanged = true);
     bool hasChanges() const;
     int countInfo(PackageKit::Transaction::Info info) const;
 

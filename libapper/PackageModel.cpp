@@ -459,10 +459,12 @@ void PackageModel::clear()
 
 void PackageModel::clearSelectedNotPresent()
 {
-    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
+    auto it = m_checkedPackages.begin();
+    while (it != m_checkedPackages.end()) {
+        const InternalPackage &package = it.value();
+
         bool notFound = true;
-        const QVector<InternalPackage> packages = m_packages;
-        for (const InternalPackage &iPackage : packages) {
+        for (const InternalPackage &iPackage : qAsConst(m_packages)) {
             if (iPackage.packageID == package.packageID) {
                 notFound = false;
                 break;
@@ -471,7 +473,10 @@ void PackageModel::clearSelectedNotPresent()
 
         if (notFound) {
             // Uncheck the package If it's not in the model
-            uncheckPackage(package.packageID);
+            m_checkedPackages.erase(it);
+            uncheckPackageLogic(package.packageID);
+        } else {
+            ++it;
         }
     }
 }
@@ -483,20 +488,30 @@ bool PackageModel::checkable() const
 
 void PackageModel::uncheckInstalledPackages()
 {
-    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
+    auto it = m_checkedPackages.begin();
+    while (it != m_checkedPackages.end()) {
+        const InternalPackage &package = it.value();
         if (package.info == Transaction::InfoInstalled ||
                 package.info == Transaction::InfoCollectionInstalled) {
-            uncheckPackage(package.packageID, true);
+            it = m_checkedPackages.erase(it);
+            uncheckPackageLogic(it.key(), true);
+        } else {
+            ++it;
         }
     }
 }
 
 void PackageModel::uncheckAvailablePackages()
 {
-    for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
+    auto it = m_checkedPackages.begin();
+    while (it != m_checkedPackages.end()) {
+        const InternalPackage &package = it.value();
         if (package.info == Transaction::InfoAvailable ||
                 package.info == Transaction::InfoCollectionAvailable) {
-            uncheckPackage(package.packageID, true);
+            it = m_checkedPackages.erase(it);
+            uncheckPackageLogic(it.key(), true);
+        } else {
+            ++it;
         }
     }
 }
@@ -563,7 +578,7 @@ void PackageModel::updateSize(const PackageKit::Details &details)
     }
 
     for (int i = 0; i < m_packages.size(); ++i) {
-        const QString &packageId = details.packageId();
+        const QString packageId = details.packageId();
         if (packageId == m_packages[i].packageID) {
             m_packages[i].size = size;
             if (m_checkable) {
@@ -740,30 +755,36 @@ void PackageModel::uncheckPackage(const QString &packageID,
                                   bool forceEmitUnchecked,
                                   bool emitDataChanged)
 {
-    if (containsChecked(packageID)) {
-        m_checkedPackages.remove(packageID);
-        if (forceEmitUnchecked || sender() == 0) {
-            // The package might be removed by rmSelectedPackage
-            // If we don't copy it the browse model won't uncheck there
-            // right package
-            emit packageUnchecked(packageID);
+    auto it = m_checkedPackages.find(packageID);
+    if (it != m_checkedPackages.end()) {
+        m_checkedPackages.erase(it);
+        uncheckPackageLogic(packageID, forceEmitUnchecked, emitDataChanged);
+    }
+}
+
+void PackageModel::uncheckPackageLogic(const QString &packageID, bool forceEmitUnchecked, bool emitDataChanged)
+{
+    if (forceEmitUnchecked || sender() == 0) {
+        // The package might be removed by rmSelectedPackage
+        // If we don't copy it the browse model won't uncheck there
+        // right package
+        emit packageUnchecked(packageID);
+    }
+
+    if (emitDataChanged || !m_checkable) {
+        // This is a slow operation so in case the user
+        // is unchecking all of the packages there is
+        // no need to emit data changed for every item
+        for (int i = 0; i < m_packages.size(); ++i) {
+            if (m_packages[i].packageID == packageID) {
+                QModelIndex index = createIndex(i, 0);
+                emit dataChanged(index, index);
+            }
         }
 
-        if (emitDataChanged || !m_checkable) {
-            // This is a slow operation so in case the user
-            // is unchecking all of the packages there is
-            // no need to emit data changed for every item
-            for (int i = 0; i < m_packages.size(); ++i) {
-                if (m_packages[i].packageID == packageID) {
-                    QModelIndex index = createIndex(i, 0);
-                    emit dataChanged(index, index);
-                }
-            }
-
-            // The model might not be displayed yet
-            if (m_finished) {
-                emit changed(!m_checkedPackages.isEmpty());
-            }
+        // The model might not be displayed yet
+        if (m_finished) {
+            emit changed(!m_checkedPackages.isEmpty());
         }
     }
 }
@@ -781,9 +802,6 @@ QList<PackageModel::InternalPackage> PackageModel::internalSelectedPackages() co
 
 bool PackageModel::containsChecked(const QString &pid) const
 {
-    if (m_checkedPackages.isEmpty()) {
-        return false;
-    }
     return m_checkedPackages.contains(pid);
 }
 
@@ -797,9 +815,10 @@ void PackageModel::setAllChecked(bool checked)
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
     } else {
-        // This is a very slow operation, which in here we try to optimize
-        for (const InternalPackage &package : qAsConst(m_checkedPackages)) {
-            uncheckPackage(package.packageID, true, false);
+        auto it = m_checkedPackages.begin();
+        while (it != m_checkedPackages.end()) {
+            uncheckPackageLogic(it.key(), true, false);
+            it = m_checkedPackages.erase(it);
         }
         emit dataChanged(createIndex(0, 0),
                          createIndex(m_packages.size(), 0));
