@@ -212,7 +212,7 @@ QString PkIcons::actionIconName(Transaction::Role role)
     case Transaction::RoleUpdatePackages          : return "package-update";
     case Transaction::RoleWhatProvides            : return "search-package";
     case Transaction::RoleRepairSystem            : return "package-rollback";
-    case Transaction::StatusRunHook               : return "package-info";
+    case Transaction::RoleUpgradeSystem           : return "package-update";
     }
     qCDebug(APPER_LIB) << "action unrecognised: " << role;
     return "applications-other";
