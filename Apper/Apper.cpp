@@ -48,7 +48,7 @@ Apper::Apper(int& argc, char** argv)
 {
     setQuitOnLastWindowClosed(false);
 
-    KDBusService *service = new KDBusService(KDBusService::Unique);
+    auto service = new KDBusService(KDBusService::Unique);
     connect(this, &Apper::aboutToQuit, service, &KDBusService::deleteLater);
     connect(service, &KDBusService::activateRequested, this, &Apper::activate);
 }
@@ -87,15 +87,34 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
     QCommandLineParser parser;
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("updates"), i18n("Show updates")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("settings"), i18n("Show settings")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("backend-details"), i18n("Show backend details")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("type"), i18n("Mime type installer"), QLatin1String("mime-type")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("name"), i18n("Package name installer"), QLatin1String("name")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("file"), i18n("Single file installer"), QLatin1String("file")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("resource"), i18n("Font resource installer"), QLatin1String("lang")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("catalog"), i18n("Catalog installer"), QLatin1String("file")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("file"), i18n("Single package remover"), QLatin1String("filename")));
+
+    QCommandLineOption updatesOpt(QStringList() << QLatin1String("updates"), i18n("Show updates"));
+    parser.addOption(updatesOpt);
+
+    QCommandLineOption settingsOpt(QStringList() << QLatin1String("settings"), i18n("Show settings"));
+    parser.addOption(settingsOpt);
+
+    QCommandLineOption backendOpt(QStringList() << QLatin1String("backend-details"), i18n("Show backend details"));
+    parser.addOption(backendOpt);
+
+    QCommandLineOption mimeTypeOpt(QStringList() << QLatin1String("install-mime-type"), i18n("Mime type installer"), QLatin1String("mime-type"));
+    parser.addOption(mimeTypeOpt);
+
+    QCommandLineOption nameOpt(QStringList() << QLatin1String("install-package-name"), i18n("Package name installer"), QLatin1String("name"));
+    parser.addOption(nameOpt);
+
+    QCommandLineOption fileOpt(QStringList() << QLatin1String("file"), i18n("Single file installer"), QLatin1String("file"));
+    parser.addOption(fileOpt);
+
+    QCommandLineOption resourceOpt(QStringList() << QLatin1String("resource"), i18n("Font resource installer"), QLatin1String("lang"));
+    parser.addOption(resourceOpt);
+
+    QCommandLineOption catalogOpt(QStringList() << QLatin1String("install-catalog"), i18n("Catalog installer"), QLatin1String("file"));
+    parser.addOption(catalogOpt);
+
+    QCommandLineOption removeOpt(QStringList() << QLatin1String("remove-package-by-file"), i18n("Single package remover"), QLatin1String("filename"));
+    parser.addOption(removeOpt);
+
     parser.addPositionalArgument(QLatin1String("[package]"), i18n("Package file to install"));
 
     KAboutData::applicationData().setupCommandLine(&parser);
@@ -119,22 +138,22 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
         return;
     }
 
-    if (parser.isSet("updates")) {
+    if (parser.isSet(updatesOpt)) {
         QTimer::singleShot(0, this, &Apper::showUpdates);
         return;
     }
-    if (parser.isSet("settings")) {
+    if (parser.isSet(settingsOpt)) {
         QTimer::singleShot(0, this, &Apper::showSettings);
         return;
     }
 
-    if (parser.isSet("install-mime-type")) {
-        invoke("InstallMimeTypes", parser.values("install-mime-type"));
+    if (parser.isSet(mimeTypeOpt)) {
+        invoke("InstallMimeTypes", parser.values(mimeTypeOpt));
         return;
     }
 
-    if (parser.isSet("install-package-name")) {
-        invoke("InstallPackageNames", parser.values("install-package-name"));
+    if (parser.isSet(nameOpt)) {
+        invoke("InstallPackageNames", parser.values(nameOpt));
         return;
     }
 
@@ -143,19 +162,19 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
         return;
     }
 
-    if (parser.isSet("install-catalog")) {
-        invoke("InstallCatalogs", parser.values("install-catalog"));
+    if (parser.isSet(catalogOpt)) {
+        invoke("InstallCatalogs", parser.values(catalogOpt));
         return;
     }
 
-    if (parser.isSet("remove-package-by-file")) {
-        invoke("RemovePackageByFiles", parser.values("remove-package-by-file"));
+    if (parser.isSet(removeOpt)) {
+        invoke("RemovePackageByFiles", parser.values(removeOpt));
         return;
     }
 
-    if (parser.isSet("backend-details")) {
+    if (parser.isSet(backendOpt)) {
         auto helper = new BackendDetails;
-        connect(helper, &BackendDetails::finished, this, &Apper::decreaseAndKillRunning);
+        connect(helper, &BackendDetails::rejected, this, &Apper::decreaseAndKillRunning);
         QTimer::singleShot(0, helper, &BackendDetails::show);
         m_running++;
         return;

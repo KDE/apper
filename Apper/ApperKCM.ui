@@ -354,6 +354,13 @@
          </property>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="standardButtons">
+          <set>QDialogButtonBox::Apply|QDialogButtonBox::RestoreDefaults</set>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="pageBrowse">

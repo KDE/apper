@@ -86,6 +86,8 @@ ApperKCM::ApperKCM(QWidget *parent) :
     m_history(0),
     m_searchRole(Transaction::RoleUnknown)
 {
+    ui->setupUi(this);
+
 //    auto aboutData = new KAboutData("kcm_apper",
 //                                    "apper",
 //                                    APPER_VERSION,
@@ -95,6 +97,7 @@ ApperKCM::ApperKCM(QWidget *parent) :
 //    aboutData->addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
 //    setAboutData(aboutData);
 //    setButtons(Apply);
+    ui->buttonBox->setStandardButtons(QDialogButtonBox::NoButton);
 
     // store the actions supported by the backend
     connect(Daemon::global(), &Daemon::changed, this, &ApperKCM::daemonChanged);
@@ -104,13 +107,11 @@ ApperKCM::ApperKCM(QWidget *parent) :
 
     qCDebug(APPER) << Q_FUNC_INFO << QLocale::system().name();
 
-    ui->setupUi(this);
-
     // Browse TAB
     ui->backTB->setIcon(QIcon::fromTheme("go-previous"));
 
     // create our toolbar
-    QToolBar *toolBar = new QToolBar(this);
+    auto toolBar = new QToolBar(this);
     ui->gridLayout_2->addWidget(toolBar);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
@@ -506,6 +507,7 @@ void ApperKCM::setPage(const QString &page)
                 connect(ui->repoSettingsPB, &QPushButton::toggled, m_settingsPage, &Settings::showRepoSettings);
             }
             checkChanged();
+            ui->buttonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Reset);
 //            setButtons(KCModule::Default | KCModule::Apply);
             emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
             emit changed(false);
@@ -589,6 +591,7 @@ void ApperKCM::on_backTB_clicked()
             return;
         }
 //        setButtons(Apply);
+        ui->buttonBox->setStandardButtons(QDialogButtonBox::Apply);
         emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
         ui->stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
         checkChanged();
