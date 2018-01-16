@@ -23,7 +23,6 @@
 #include "PkInterface.h"
 
 #include <QApplication>
-#include <QStringBuilder>
 
 #include <KLocalizedString>
 //#include <KCmdLineArgs>
@@ -46,8 +45,7 @@ PkSession::PkSession(QObject* parent)
     m_pkInterface = new PkInterface(this);
     connect(m_pkInterface, &PkInterface::close, this, &PkSession::prepareToClose);
 
-//    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
-//    Daemon::global()->setHints(QLatin1String("locale=") % locale);
+    Daemon::global()->setHints(QLatin1String("locale=") + QLocale::system().name() + QLatin1String(".UTF-8"));
 
     // this enables not quitting when closing a transaction ui
     qApp->setQuitOnLastWindowClosed(false);

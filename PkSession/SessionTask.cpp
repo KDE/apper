@@ -76,9 +76,7 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
 //    setButtonIcon(KDialog::Ok, QIcon::fromTheme("go-next"));
     enableButtonOk(false);
 
-    //TODO FIXME
-//    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
-//    Daemon::global()->setHints(QLatin1String("locale=") % locale);
+    Daemon::global()->setHints(QLatin1String("locale=") + QLocale::system().name() + QLatin1String(".UTF-8"));
 
     // Defaults to always
     m_interactions = ConfirmSearch

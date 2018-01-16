@@ -38,7 +38,6 @@
 //#include <Solid/PowerManagement>
 #include <KFormat>
 
-#include <QStringBuilder>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusReply>
 #include <QDBusServiceWatcher>
@@ -103,8 +102,7 @@ void ApperdThread::init()
     connect(proxyWatch, SIGNAL(deleted(QString)), this, SLOT(proxyChanged()));
     proxyWatch->startScan();
 
-//    QString locale(KLocale::global()->language() % QLatin1Char('.') % KLocale::global()->encoding());
-//    Daemon::global()->setHints(QLatin1String("locale=") % locale);
+    Daemon::global()->setHints(QLatin1String("locale=") + QLocale::system().name() + QLatin1String(".UTF-8"));
 
     connect(Daemon::global(), &Daemon::updatesChanged, this, &ApperdThread::updatesChanged);
 
