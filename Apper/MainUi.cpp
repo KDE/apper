@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,14 +24,13 @@
 #include <QLoggingCategory>
 
 #include <KConfig>
-//#include <KCModuleProxy>
 #include <KConfigGroup>
 #include <QIcon>
 #include <QDialog>
+#include <KLocalizedString>
 
 #include "ApperKCM.h"
 
-//Q_LOGGING_CATEGORY(APPER, "apper")
 Q_DECLARE_LOGGING_CATEGORY(APPER)
 
 MainUi::MainUi(QWidget *parent) :
@@ -39,35 +38,20 @@ MainUi::MainUi(QWidget *parent) :
     m_apperModule(0)
 {
     setWindowIcon(QIcon::fromTheme("system-software-install"));
+    setWindowTitle(i18n("Apper"));
 
-//    KConfig config("apper");
-//    KConfigGroup configGroup(&config, "MainUi");
-    //! restoreDialogSize(configGroup);
+    KConfig config("apper");
+    KConfigGroup configGroup(&config, "MainUi");
+    restoreGeometry(configGroup.readEntry("geometry", QByteArray()));
+    restoreState(configGroup.readEntry("state", QByteArray()));
 
-    // Set Apply and Cancel buttons
-//    setStandardButtons(QDialogButtonBox::Apply /*| KDialog::Help*/ | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset);
-
-//    KPageWidgetItem *page = addModule(QLatin1String("kcm_apper.desktop"),
-//                                      QStringList() << QLatin1String("apper"));
     m_apperModule = new ApperKCM(this);
     setCentralWidget(m_apperModule);
-//    if (page) {
-//        auto proxy = static_cast<KCModuleProxy*>(page->widget());
-//        if (proxy) {
-//            m_apperModule = proxy->realModule();
-//            connect(m_apperModule, &KCModule::windowTitleChanged, this, &MainUi::setWindowTitle);
-//        }
-//    } else {
-//        qCWarning(APPER) << "Could not load kcm_apper.desktop!";
-//    }
+    connect(m_apperModule, &ApperKCM::caption, this, &MainUi::setWindowTitle);
 }
 
 MainUi::~MainUi()
 {
-    // save size
-    KConfig config("apper");
-    KConfigGroup configGroup(&config, "MainUi");
-    //! saveDialogSize(configGroup);
 }
 
 void MainUi::showAll()
@@ -89,6 +73,17 @@ void MainUi::showSettings()
     if (m_apperModule) {
         m_apperModule->setProperty("page", "settings");
     }
+}
+
+void MainUi::closeEvent(QCloseEvent *event)
+{
+    KConfig config("apper");
+    KConfigGroup configGroup(&config, "MainUi");
+    configGroup.writeEntry("geometry", saveGeometry());
+    configGroup.writeEntry("state", saveState());
+    QMainWindow::closeEvent(event);
+
+    emit finished();
 }
 
 #include "MainUi.moc"

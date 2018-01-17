@@ -58,9 +58,8 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
 
     setWindowTitle(i18n("Additional changes"));
     setWindowIcon(QIcon::fromTheme("dialog-warning"));
-//    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Help);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(i18n("Continue"));
-//    setButtonText(KDialog::Ok, i18n("Continue"));
+
     // restore size
     setMinimumSize(QSize(600,480));
 //    setInitialSize(QSize(600,600));
@@ -69,10 +68,9 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
 //    restoreGeometry(requirementsDialog.readEntry("geometry").toByteArray());
 //    restoreDialogSize(requirementsDialog);
 
-    QPushButton *help = ui->buttonBox->button(QDialogButtonBox::Help);
-    help->setFlat(true);
-    help->setEnabled(false);
-    help->setIcon(QIcon::fromTheme("download"));
+    ui->downloadT->hide();
+    ui->downloadI->hide();
+    ui->downloadI->setPixmap(QIcon::fromTheme(QLatin1String("download")).pixmap(32, 32));
 
     m_buttonGroup = new QButtonGroup(this);
     connect(m_buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &Requirements::actionClicked);
@@ -200,18 +198,16 @@ void Requirements::setEmbedded(bool embedded)
 
 void Requirements::setDownloadSizeRemaining(qulonglong size)
 {
-    QPushButton *help = ui->buttonBox->button(QDialogButtonBox::Help);
     if (size) {
-        KFormat f;
-        QString text;
-        text = i18nc("how many bytes are required for download",
-                     "Need to get %1 of archives",
-                     f.formatByteSize(size));
-        help->setText(text);
-        help->setToolTip(text);
-        help->show();
+        QString text = i18nc("how many bytes are required for download",
+                             "Need to get %1 of archives",
+                             KFormat().formatByteSize(size));
+        ui->downloadT->setText(text);
+        ui->downloadT->show();
+        ui->downloadI->show();
     } else {
-        help->hide();
+        ui->downloadT->hide();
+        ui->downloadI->hide();
     }
 }
 

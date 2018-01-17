@@ -40,13 +40,14 @@ int main(int argc, char **argv)
     Apper app(argc, argv);
     KLocalizedString::setApplicationDomain("apper");
 
-    KAboutData aboutData("apper",
-                     "apper", // DO NOT change this catalog unless you know it will not break translations!
-                     APPER_VERSION,
-                     i18n("Apper is an application to get and manage software"),
-                     KAboutLicense::LicenseKey::GPL);
-    aboutData.addAuthor(i18n("Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
+    KAboutData aboutData("apper", // DO NOT change this catalog unless you know it will not break translations!
+                         i18n("Apper"),
+                         APPER_VERSION,
+                         i18n("Apper is an application to get and manage software"),
+                         KAboutLicense::LicenseKey::GPL);
+    aboutData.addAuthor(i18n("(C) 2008-2018 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
     aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"), "@");
+    aboutData.addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
 
     KAboutData::setApplicationData(aboutData);
 

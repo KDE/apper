@@ -80,7 +80,7 @@ private Q_SLOTS:
 private:
     Ui::Updater          *ui;
     Transaction::Roles    m_roles;
-    bool                  m_selected;
+    bool                  m_selected = true;
     PackageModel         *m_updatesModel;
     ApplicationsDelegate *m_delegate;
     CheckableHeader      *m_header;
@@ -89,7 +89,7 @@ private:
     QAction              *m_showPackageArch;
     QAction              *m_showPackageOrigin;
     QAction              *m_showPackageSize;
-    Transaction          *m_updatesT;
+    Transaction          *m_updatesT = nullptr;
     KPixmapSequenceOverlayPainter *m_busySeq;
 };
 

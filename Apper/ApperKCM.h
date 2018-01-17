@@ -67,7 +67,7 @@ private Q_SLOTS:
     void genericActionKTriggered();
 
     void on_backTB_clicked();
-    void on_changesPB_clicked();
+    void showReviewPages();
 
     void on_actionFindName_triggered();
     void on_actionFindDescription_triggered();

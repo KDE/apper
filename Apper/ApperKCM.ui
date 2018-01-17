@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>411</width>
-    <height>322</height>
+    <width>481</width>
+    <height>353</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -38,6 +38,118 @@
    <property name="verticalSpacing">
     <number>0</number>
    </property>
+   <item row="0" column="1">
+    <widget class="QToolButton" name="backTB">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Back</string>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="4">
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="pageHome">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="CategorizedView" name="homeView">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::DragDrop</enum>
+         </property>
+         <property name="textElideMode">
+          <enum>Qt::ElideNone</enum>
+         </property>
+         <property name="viewMode">
+          <enum>QListView::IconMode</enum>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="pageBrowse">
+      <layout class="QGridLayout" name="gridLayout_4">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="BrowseView" name="browseView" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="pageChanges">
+      <layout class="QGridLayout" name="gridLayout_5">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="CategorizedView" name="changesView">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="verticalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
    <item row="0" column="2">
     <widget class="QStackedWidget" name="stackedWidgetBar">
      <property name="sizePolicy">
@@ -146,19 +258,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="changesPB">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Pending Changes</string>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QToolButton" name="settingsTB">
          <property name="popupMode">
           <enum>QToolButton::InstantPopup</enum>
@@ -188,6 +287,22 @@
         <widget class="Line" name="line_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="updatePB">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Update</string>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -295,7 +410,7 @@
        <item>
         <widget class="QLabel" name="titleL">
          <property name="text">
-          <string notr="true">Some Title</string>
+          <string notr="true"/>
          </property>
         </widget>
        </item>
@@ -303,121 +418,8 @@
      </widget>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QToolButton" name="backTB">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Back</string>
-     </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="QStackedWidget" name="stackedWidget">
-     <widget class="QWidget" name="pageHome">
-      <layout class="QGridLayout" name="gridLayout_3">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="CategorizedView" name="homeView">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="dragDropMode">
-          <enum>QAbstractItemView::DragDrop</enum>
-         </property>
-         <property name="textElideMode">
-          <enum>Qt::ElideNone</enum>
-         </property>
-         <property name="viewMode">
-          <enum>QListView::IconMode</enum>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QDialogButtonBox" name="buttonBox">
-         <property name="standardButtons">
-          <set>QDialogButtonBox::Apply|QDialogButtonBox::RestoreDefaults</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pageBrowse">
-      <layout class="QGridLayout" name="gridLayout_4">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="BrowseView" name="browseView" native="true"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pageChanges">
-      <layout class="QGridLayout" name="gridLayout_5">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="CategorizedView" name="changesView">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="showDropIndicator" stdset="0">
-          <bool>false</bool>
-         </property>
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
-         <property name="verticalScrollMode">
-          <enum>QAbstractItemView::ScrollPerPixel</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
+   <item row="2" column="0" colspan="4">
+    <widget class="KMessageWidget" name="reviewMessage" native="true"/>
    </item>
   </layout>
   <action name="actionFindName">
@@ -438,6 +440,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>KMessageWidget</class>
+   <extends>QWidget</extends>
+   <header>KMessageWidget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>CategorizedView</class>
    <extends>QListView</extends>
    <header>CategorizedView.h</header>
@@ -449,6 +457,18 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>searchKLE</tabstop>
+  <tabstop>backTB</tabstop>
+  <tabstop>filtersTB</tabstop>
+  <tabstop>settingsTB</tabstop>
+  <tabstop>checkUpdatesPB</tabstop>
+  <tabstop>generalSettingsPB</tabstop>
+  <tabstop>repoSettingsPB</tabstop>
+  <tabstop>homeView</tabstop>
+  <tabstop>changesView</tabstop>
+  <tabstop>updatePB</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

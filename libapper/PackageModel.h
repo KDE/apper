@@ -109,9 +109,11 @@ public Q_SLOTS:
     void addSelectedPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     void removePackage(const QString &packageID);
 
+    void checkAll();
     void setAllChecked(bool checked);
     void checkPackage(const PackageModel::InternalPackage &package,
                       bool emitDataChanged = true);
+    void uncheckAll();
     void uncheckPackageDefault(const QString &packageID);
     void uncheckPackage(const QString &packageID,
                         bool forceEmitUnchecked = false,

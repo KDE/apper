@@ -34,7 +34,7 @@ OriginModel::OriginModel(QObject *parent) :
     QStandardItemModel(parent),
     m_finished(true)
 {
-    setHorizontalHeaderLabels(QStringList() << i18n("Origin of Packages"));
+    setHorizontalHeaderLabels({ i18n("Origin of Packages") });
 }
 
 

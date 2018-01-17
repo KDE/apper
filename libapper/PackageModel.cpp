@@ -436,6 +436,17 @@ void PackageModel::removePackage(const QString &packageID)
     }
 }
 
+void PackageModel::checkAll()
+{
+    m_checkedPackages.clear();
+    for (const InternalPackage &package : qAsConst(m_packages)) {
+        checkPackage(package, false);
+    }
+    emit dataChanged(createIndex(0, 0),
+                     createIndex(m_packages.size(), 0));
+    emit changed(!m_checkedPackages.isEmpty());
+}
+
 void PackageModel::clear()
 {
     qDebug() << Q_FUNC_INFO;
@@ -488,8 +499,9 @@ void PackageModel::uncheckInstalledPackages()
         const InternalPackage &package = it.value();
         if (package.info == Transaction::InfoInstalled ||
                 package.info == Transaction::InfoCollectionInstalled) {
+            const QString pkgId = it.key();
             it = m_checkedPackages.erase(it);
-            uncheckPackageLogic(it.key(), true);
+            uncheckPackageLogic(pkgId, true);
         } else {
             ++it;
         }
@@ -503,8 +515,9 @@ void PackageModel::uncheckAvailablePackages()
         const InternalPackage &package = it.value();
         if (package.info == Transaction::InfoAvailable ||
                 package.info == Transaction::InfoCollectionAvailable) {
+            const QString pkgId = it.key();
             it = m_checkedPackages.erase(it);
-            uncheckPackageLogic(it.key(), true);
+            uncheckPackageLogic(pkgId, true);
         } else {
             ++it;
         }
@@ -741,6 +754,19 @@ void PackageModel::checkPackage(const InternalPackage &package, bool emitDataCha
     }
 }
 
+void PackageModel::uncheckAll()
+{
+    auto it = m_checkedPackages.begin();
+    while (it != m_checkedPackages.end()) {
+        const QString pkgId = it.key();
+        it = m_checkedPackages.erase(it);
+        uncheckPackageLogic(pkgId, true, false);
+    }
+    emit dataChanged(createIndex(0, 0),
+                     createIndex(m_packages.size(), 0));
+    emit changed(!m_checkedPackages.isEmpty());
+}
+
 void PackageModel::uncheckPackageDefault(const QString &packageID)
 {
     uncheckPackage(packageID);
@@ -803,22 +829,10 @@ bool PackageModel::containsChecked(const QString &pid) const
 void PackageModel::setAllChecked(bool checked)
 {
     if (checked) {
-        m_checkedPackages.clear();
-        for (const InternalPackage &package : qAsConst(m_packages)) {
-            checkPackage(package, false);
-        }
-        emit dataChanged(createIndex(0, 0),
-                         createIndex(m_packages.size(), 0));
+        checkAll();
     } else {
-        auto it = m_checkedPackages.begin();
-        while (it != m_checkedPackages.end()) {
-            uncheckPackageLogic(it.key(), true, false);
-            it = m_checkedPackages.erase(it);
-        }
-        emit dataChanged(createIndex(0, 0),
-                         createIndex(m_packages.size(), 0));
+        uncheckAll();
     }
-    emit changed(!m_checkedPackages.isEmpty());
 }
 
 QStringList PackageModel::selectedPackagesToInstall() const

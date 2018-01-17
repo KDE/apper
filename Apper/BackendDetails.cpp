@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2013 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -31,11 +31,10 @@ BackendDetails::BackendDetails(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::BackendDetails)
 {
-    setWindowTitle(i18n("Backend Details"));
-
     ui->setupUi(this);
-//    setButtons(KDialog::Close);
-    setWindowIcon(QIcon::fromTheme("help-about"));
+
+    setWindowTitle(i18n("Backend Details"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("help-about")));
 
     // update information about PackageKit backend
     connect(Daemon::global(), &Daemon::changed, this, &BackendDetails::daemonChanged);

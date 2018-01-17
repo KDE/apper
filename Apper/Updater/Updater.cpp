@@ -42,18 +42,17 @@
 
 #include <KConfig>
 #include <KFormat>
-//#include <KGlobalSettings>
 #include <KMessageBox>
 #include <QLoggingCategory>
 
 #include <Daemon>
 
+Q_DECLARE_LOGGING_CATEGORY(APPER)
+
 Updater::Updater(Transaction::Roles roles, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Updater),
-    m_roles(roles),
-    m_selected(true),
-    m_updatesT(0)
+    m_roles(roles)
 {
     ui->setupUi(this);
     updatePallete();
@@ -225,6 +224,7 @@ bool Updater::hasChanges() const
 
 void Updater::checkEnableUpdateButton()
 {
+    qCDebug(APPER) << "updates has changes" << hasChanges();
     emit changed(hasChanges());
     int selectedSize = m_updatesModel->selectedPackagesToInstall().size();
     int updatesSize = m_updatesModel->rowCount();
@@ -335,12 +335,6 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     action = menu->addAction(i18n("Check for new updates"));
     action->setIcon(QIcon::fromTheme("view-refresh"));
     connect(action, &QAction::triggered, this, &Updater::refreshCache);
-
-    action = menu->addAction(i18n("Update"));
-    action->setIcon(QIcon::fromTheme("update"));
-    connect(action, &QAction::triggered, this, &Updater::installUpdates);
-    connect(this, &Updater::changed, action, &QAction::setEnabled);
-
     menu->exec(ui->packageView->viewport()->mapToGlobal(pos));
     delete menu;
 }

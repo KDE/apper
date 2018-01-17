@@ -125,16 +125,16 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
 
     if (args.count()) {
         // grab the list of files
-        QStringList urls;
-        for (int i = 0; i < args.count(); i++) {
-            urls << args[i];
-        }
+//        QStringList urls;
+//        for (int i = 0; i < args.count(); i++) {
+//            urls << args[i];
+//        }
 
         // TODO remote files are copied to /tmp
         // what will happen if we call the other process to
         // install and this very one closes? will the files
         // in /tmp be deleted?
-        invoke("InstallPackageFiles", urls);
+        invoke("InstallPackageFiles", args);
         return;
     }
 
@@ -188,7 +188,7 @@ void Apper::showUi()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-//        connect(m_pkUi, &MainUi::abou, this, &Apper::kcmFinished);
+        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
     }
     // Show all
     m_pkUi->showAll();
@@ -200,7 +200,7 @@ void Apper::showUpdates()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-//        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
+        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
     }
     m_pkUi->showUpdates();
     m_pkUi->show();
@@ -211,7 +211,7 @@ void Apper::showSettings()
 {
     if (!m_pkUi) {
         m_pkUi = new MainUi();
-//        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
+        connect(m_pkUi, &MainUi::finished, this, &Apper::kcmFinished);
     }
     m_pkUi->showSettings();
     m_pkUi->show();

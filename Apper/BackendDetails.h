@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2013 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -34,7 +34,6 @@ public:
     explicit BackendDetails(QWidget *parent = 0);
     ~BackendDetails();
 
-private Q_SLOTS:
     void daemonChanged();
 
 private:

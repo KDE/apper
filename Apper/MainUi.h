@@ -35,6 +35,12 @@ public:
     void showUpdates();
     void showSettings();
 
+Q_SIGNALS:
+    void finished();
+
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private:
     ApperKCM *m_apperModule;
 };

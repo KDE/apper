@@ -66,11 +66,6 @@ Q_LOGGING_CATEGORY(APPER, "apper")
 #define BAR_SETTINGS 2
 #define BAR_TITLE    3
 
-//KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Transaction, Filter)
-
-//K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperKCM>();)
-//K_EXPORT_PLUGIN(ApperFactory("kcm_apper", "apper"))
-
 ApperKCM::ApperKCM(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ApperKCM),
@@ -78,17 +73,6 @@ ApperKCM::ApperKCM(QWidget *parent) :
     m_cancelIcon(QIcon::fromTheme("dialog-cancel"))
 {
     ui->setupUi(this);
-
-//    auto aboutData = new KAboutData("kcm_apper",
-//                                    "apper",
-//                                    APPER_VERSION,
-//                                    i18n("KDE interface for managing software"),
-//                                    KAboutLicense::LicenseKey::GPL);
-//    aboutData->addAuthor(i18n("(C) 2008-2018 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
-//    aboutData->addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
-//    setAboutData(aboutData);
-//    setButtons(Apply);
-    ui->buttonBox->setStandardButtons(QDialogButtonBox::Apply);
 
     // store the actions supported by the backend
     connect(Daemon::global(), &Daemon::changed, this, &ApperKCM::daemonChanged);
@@ -188,7 +172,29 @@ ApperKCM::ApperKCM(QWidget *parent) :
     connect(m_changesModel, &PackageModel::packageUnchecked, m_changesModel, &PackageModel::removePackage);
     connect(m_changesModel, &PackageModel::packageUnchecked, m_browseModel, &PackageModel::uncheckPackageDefault);
 
-    ui->changesPB->setIcon(QIcon::fromTheme("edit-redo"));
+    ui->reviewMessage->setIcon(QIcon::fromTheme("edit-redo"));
+    ui->reviewMessage->setText(i18n("Some software changes were made"));
+    auto reviewAction = new QAction(i18n("Review"), this);
+    connect(reviewAction, &QAction::triggered, this, &ApperKCM::showReviewPages);
+    ui->reviewMessage->addAction(reviewAction);
+    auto discardAction = new QAction(i18n("Discard"), this);
+    connect(discardAction, &QAction::triggered, m_browseModel, &PackageModel::uncheckAll);
+    ui->reviewMessage->addAction(discardAction);
+    auto applyAction = new QAction(i18n("Apply"), this);
+    connect(applyAction, &QAction::triggered, this, &ApperKCM::save);
+    ui->reviewMessage->addAction(applyAction);
+    ui->reviewMessage->setCloseButtonVisible(false);
+    ui->reviewMessage->hide();
+    connect(ui->reviewMessage, &KMessageWidget::showAnimationFinished, this, [this] () {
+        if (!ui->reviewMessage->property("HasChanges").toBool()) {
+            ui->reviewMessage->animatedHide();
+        }
+    });
+    connect(ui->reviewMessage, &KMessageWidget::hideAnimationFinished, this, [this] () {
+        if (ui->reviewMessage->property("HasChanges").toBool()) {
+            ui->reviewMessage->animatedShow();
+        }
+    });
 
     auto menu = new QMenu(this);
     ui->settingsTB->setMenu(menu);
@@ -206,12 +212,8 @@ ApperKCM::ApperKCM(QWidget *parent) :
     signalMapper->setMapping(action, "settings");
     connect(action, &QAction::triggered, signalMapper, QOverload<>::of(&QSignalMapper::map));
 
-    // Only show help menu if not on System Settings
-//    if (!args.isEmpty()) {
-        // adds the help menu
-        //! KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData());
-        //! menu->addMenu(helpMenu->menu());
-//    }
+    auto helpMenu = new KHelpMenu(this, KAboutData::applicationData());
+    menu->addMenu(helpMenu->menu());
 
     // Make sure the search bar is visible
     ui->stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
@@ -304,7 +306,16 @@ void ApperKCM::checkChanged()
         if (!hasChanges && ui->stackedWidget->currentWidget() == ui->pageChanges) {
             search();
         }
-        ui->changesPB->setEnabled(hasChanges);
+        if (hasChanges) {
+            if (!ui->reviewMessage->isHideAnimationRunning() && !ui->reviewMessage->isShowAnimationRunning()) {
+                ui->reviewMessage->animatedShow();
+            }
+        } else {
+            if (!ui->reviewMessage->isHideAnimationRunning() && !ui->reviewMessage->isShowAnimationRunning()) {
+                ui->reviewMessage->animatedHide();
+            }
+        }
+        ui->reviewMessage->setProperty("HasChanges", hasChanges);
     } else if (ui->stackedWidget->currentWidget() == m_updaterPage) {
         hasChanges = m_updaterPage->hasChanges();
     } else if (ui->stackedWidget->currentWidget() == m_settingsPage) {
@@ -515,7 +526,7 @@ void ApperKCM::setPage(const QString &page)
                 return;
             }
 
-            if (m_updaterPage == 0) {
+            if (m_updaterPage == nullptr) {
                 m_updaterPage = new Updater(m_roles, this);
                 connect(m_updaterPage, &Updater::refreshCache, this, &ApperKCM::refreshCache);
                 connect(m_updaterPage, &Updater::downloadSize, ui->downloadL, &QLabel::setText);
@@ -523,6 +534,10 @@ void ApperKCM::setPage(const QString &page)
                 ui->stackedWidget->addWidget(m_updaterPage);
                 ui->checkUpdatesPB->setIcon(QIcon::fromTheme("view-refresh"));
                 connect(ui->checkUpdatesPB, &QPushButton::clicked, this, &ApperKCM::refreshCache);
+
+                ui->updatePB->setIcon(QIcon::fromTheme(QLatin1String("system-software-update")));
+                connect(ui->updatePB, &QPushButton::clicked, this, &ApperKCM::save);
+                connect(m_updaterPage, &Updater::changed, ui->updatePB, &QPushButton::setEnabled);
             }
 
             checkChanged();
@@ -580,8 +595,6 @@ void ApperKCM::on_backTB_clicked()
         if (!canChangePage()) {
             return;
         }
-//        setButtons(Apply);
-        ui->buttonBox->setStandardButtons(QDialogButtonBox::Apply);
         emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
         ui->stackedWidgetBar->setCurrentIndex(BAR_SEARCH);
         checkChanged();
@@ -595,7 +608,7 @@ void ApperKCM::on_backTB_clicked()
     emit caption();
 }
 
-void ApperKCM::on_changesPB_clicked()
+void ApperKCM::showReviewPages()
 {
     m_changesModel->clear();
     m_changesModel->addSelectedPackagesFromModel(m_browseModel);
@@ -773,6 +786,8 @@ void ApperKCM::save()
     if (currentWidget == m_settingsPage) {
         m_settingsPage->save();
     } else {
+        ui->reviewMessage->hide();
+
         auto transactionW = new PkTransactionWidget(this);
         connect(transactionW, &PkTransactionWidget::titleChangedProgress, this, &ApperKCM::caption);
         QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
