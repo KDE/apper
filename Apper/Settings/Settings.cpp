@@ -46,6 +46,8 @@
 
 #include <QLoggingCategory>
 
+Q_DECLARE_LOGGING_CATEGORY(APPER)
+
 using namespace PackageKit;
 
 Settings::Settings(Transaction::Roles roles, QWidget *parent) :
@@ -121,6 +123,17 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
     connect(ui->autoCB, QOverload<int>::of(&KComboBox::currentIndexChanged), this, &Settings::checkChanges);
     connect(ui->installUpdatesBatteryCB, &QCheckBox::stateChanged, this, &Settings::checkChanges);
     connect(ui->installUpdatesMobileCB, &QCheckBox::stateChanged, this, &Settings::checkChanges);
+
+    // Setup buttons
+    QPushButton *apply = ui->buttonBox->button(QDialogButtonBox::Apply);
+    apply->setEnabled(false);
+    connect(apply, &QPushButton::clicked, this, &Settings::save);
+    connect(this, &Settings::changed, apply, &QPushButton::setEnabled);
+
+    QPushButton *reset = ui->buttonBox->button(QDialogButtonBox::Reset);
+//    reset->setEnabled(false);
+    connect(reset, &QPushButton::clicked, this, &Settings::defaults);
+//    connect(this, &Settings::changed, reset, &QPushButton::setDisabled);
 
     // Setup the busy cursor
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
@@ -292,6 +305,8 @@ void Settings::load()
 
 void Settings::save()
 {
+    qCDebug(APPER) << "Saving settings";
+
     KConfig config("apper");
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
@@ -309,10 +324,14 @@ void Settings::save()
     checkUpdateGroup.writeEntry("autoUpdate", ui->autoCB->itemData(ui->autoCB->currentIndex()).toUInt());
     checkUpdateGroup.writeEntry("installUpdatesOnBattery", ui->installUpdatesBatteryCB->isChecked());
     checkUpdateGroup.writeEntry("installUpdatesOnMobile", ui->installUpdatesMobileCB->isChecked());
+
+    emit changed(false);
 }
 
 void Settings::defaults()
 {
+    qCDebug(APPER) << "Restoring default settings";
+
     ui->autoConfirmCB->setChecked(true);
     ui->appLauncherCB->setChecked(true);
     ui->distroIntervalCB->setCurrentIndex(ui->distroIntervalCB->findData(Enum::DistroUpgradeDefault));

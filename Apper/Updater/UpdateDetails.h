@@ -63,9 +63,9 @@ private Q_SLOTS:
 private:
     QString getLinkList(const QStringList &urls) const;
 
-    bool m_show;
+    bool m_show = false;
     QString m_packageId;
-    Transaction *m_transaction;
+    Transaction *m_transaction = nullptr;
     QString m_currentDescription;
     Transaction::Info m_updateInfo;
     KPixmapSequenceOverlayPainter *m_busySeq;

@@ -102,18 +102,20 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
 #ifdef HAVE_APPSTREAM
     QList<AppStream::Application> applications;
     if (!m_checkable) {
-        applications = AppStream::instance()->applications(Transaction::packageName(packageID));
+        const QString packageName = Transaction::packageName(packageID);
+//        applications = AppStream::instance()->applications(packageName);
 
-        foreach (const AppStream::Application &app, applications) {
+        for (const AppStream::Application &app : applications) {
             InternalPackage iPackage;
             iPackage.info = info;
             iPackage.packageID = packageID;
+            iPackage.pkgName = packageName;
             iPackage.version = Transaction::packageVersion(packageID);
             iPackage.arch = Transaction::packageArch(packageID);
             iPackage.repo = Transaction::packageData(packageID);
             iPackage.isPackage = false;
             if (app.name.isEmpty()) {
-                iPackage.displayName = Transaction::packageName(packageID);
+                iPackage.displayName = packageName;
             } else {
                 iPackage.displayName = app.name;
             }
@@ -139,30 +141,23 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
         InternalPackage iPackage;
         iPackage.info = info;
         iPackage.packageID = packageID;
-        iPackage.displayName = Transaction::packageName(packageID);
+        iPackage.pkgName = Transaction::packageName(packageID);
+        iPackage.displayName = iPackage.pkgName;
         iPackage.version = Transaction::packageVersion(packageID);
         iPackage.arch = Transaction::packageArch(packageID);
         iPackage.repo = Transaction::packageData(packageID);
         iPackage.summary = summary;
-        iPackage.size = 0;
 
 #ifdef HAVE_APPSTREAM
-        iPackage.icon = AppStream::instance()->genericIcon(Transaction::packageName(packageID));
-        if (iPackage.icon.isEmpty())
-            iPackage.icon = Transaction::packageIcon(packageID);
+//        iPackage.icon = AppStream::instance()->genericIcon(iPackage.pkgName);
+
         if (m_checkable) {
             // in case of updates model only check if it's an app
-            applications = AppStream::instance()->applications(Transaction::packageName(packageID));
-            if (!applications.isEmpty() || !Transaction::packageIcon(packageID).isEmpty()) {
+//            applications = AppStream::instance()->applications(iPackage.pkgName);
+            if (!applications.isEmpty()) {
                 iPackage.isPackage = false;
-            } else {
-                iPackage.isPackage = true;
             }
-        } else {
-            iPackage.isPackage = true;
         }
-#else
-        iPackage.isPackage = true;
 #endif // HAVE_APPSTREAM
 
         if (selected) {
@@ -317,7 +312,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             return icon;
         }
         case PackageName:
-            return Transaction::packageName(package.packageID);
+            return package.pkgName;
         case Qt::ToolTipRole:
             if (m_checkable) {
                 return PkStrings::info(package.info);
@@ -613,7 +608,7 @@ void PackageModel::fetchCurrentVersions()
     // get package current version
     QStringList pkgs;
     for (const InternalPackage &p : qAsConst(m_packages)) {
-        pkgs << Transaction::packageName(p.packageID);
+        pkgs << p.pkgName;
     }
 
     if (!pkgs.isEmpty()) {
@@ -644,7 +639,7 @@ void PackageModel::updateCurrentVersion(Transaction::Info info, const QString &p
     // if current version is empty don't waste time looking
     if (!Transaction::packageVersion(packageID).isEmpty()) {
         for (int i = 0; i < m_packages.size(); ++i) {
-            if (Transaction::packageName(packageID) == Transaction::packageName(m_packages[i].packageID) &&
+            if (Transaction::packageName(packageID) == m_packages[i].pkgName &&
                 Transaction::packageArch(packageID) == m_packages[i].arch) {
                 m_packages[i].currentVersion = Transaction::packageVersion(packageID);
                 if (m_checkable) {

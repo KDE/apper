@@ -42,16 +42,14 @@
 Q_DECLARE_LOGGING_CATEGORY(APPER)
 
 UpdateDetails::UpdateDetails(QWidget *parent)
- : QWidget(parent),
-   m_show(false),
-   m_transaction(0)
+    : QWidget(parent)
 {
     setupUi(this);
     hideTB->setIcon(QIcon::fromTheme("window-close"));
     connect(hideTB, &QToolButton::clicked, this, &UpdateDetails::hide);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setSequence(KPixmapSequence(QIcon::fromTheme("process-working").pixmap(KIconLoader::SizeSmallMedium)));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(this);
 

@@ -730,7 +730,7 @@ QString PackageDetails::thumbnail(const QString &pkgName) const
     Q_UNUSED(pkgName)
     return QString();
 #else
-    return AppStream::instance()->thumbnail(pkgName);
+    return QString();//AppStream::instance()->thumbnail(pkgName);
 #endif
 }
 
@@ -740,7 +740,7 @@ QString PackageDetails::screenshot(const QString &pkgName) const
     Q_UNUSED(pkgName)
     return QString();
 #else
-    return AppStream::instance()->screenshot(pkgName);
+    return QString();// AppStream::instance()->screenshot(pkgName);
 #endif
 }
 
@@ -757,8 +757,8 @@ void PackageDetails::description(const PackageKit::Details &details)
     // and on to of the package-based model. So we can't respect the "multiple apps
     // in one package" case here.
     QList<AppStream::Application> apps;
-    apps = AppStream::instance()->applications(Transaction::packageName(m_packageID));
-    foreach (const AppStream::Application &app, apps) {
+//    apps = AppStream::instance()->applications(Transaction::packageName(m_packageID));
+    for (const AppStream::Application &app : apps) {
         if (!app.description.isEmpty()) {
             m_detailsDescription = app.description;
             break;

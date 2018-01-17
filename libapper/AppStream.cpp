@@ -21,13 +21,11 @@
 
 #include <config.h>
 
-#include <appstream.h>
+#include <AppStreamQt/pool.h>
 
 #include "AppStream.h"
 
 #include <QApplication>
-
-#include <KDebug>
 
 AppStream* AppStream::m_instance = 0;
 
@@ -46,7 +44,7 @@ AppStream::AppStream(QObject *parent)
 {
 #ifdef HAVE_APPSTREAM
     // create new AppStream metadata pool
-    m_pool = as_pool_new();
+    m_pool = APPSTREAMQT_();
 #endif //HAVE_APPSTREAM
 }
 

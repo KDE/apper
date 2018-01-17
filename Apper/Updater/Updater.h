@@ -48,6 +48,7 @@ public:
     QStringList packagesToUpdate() const;
 
 Q_SIGNALS:
+    void installUpdates();
     void changed(bool);
     void refreshCache();
     void downloadSize(const QString &message);

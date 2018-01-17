@@ -23,10 +23,6 @@
 
 #include <PkTransaction.h>
 
-#include <QtGui/QStandardItemModel>
-
-//#include <KCModule>
-//#include <KCModuleProxy>
 #include <KToolBarPopupAction>
 #include <KCategorizedSortFilterProxyModel>
 
@@ -102,28 +98,28 @@ private:
 
     Ui::ApperKCM *ui;
     KToolBarPopupAction *m_genericActionK;
-    QAction             *m_currentAction;
+    QAction             *m_currentAction = nullptr;
     CategoryModel       *m_groupsModel;
-    KCategorizedSortFilterProxyModel *m_groupsProxyModel;
+    KCategorizedSortFilterProxyModel *m_groupsProxyModel = nullptr;
     PackageModel     *m_browseModel;
     PackageModel     *m_changesModel;
-    Settings            *m_settingsPage;
-    Updater             *m_updaterPage;
+    Settings            *m_settingsPage = nullptr;
+    Updater             *m_updaterPage = nullptr;
 
-    Transaction *m_searchTransaction;
+    Transaction *m_searchTransaction = nullptr;
 
     QIcon m_findIcon;
     QIcon m_cancelIcon;
 
     FiltersMenu *m_filtersMenu;
     Transaction::Roles m_roles;
-    bool m_forceRefreshCache;
-    uint m_cacheAge;
+    bool m_forceRefreshCache = false;
+    uint m_cacheAge = 600;
 
-    TransactionHistory *m_history;
+    TransactionHistory *m_history = nullptr;
 
     // Old search cache
-    Transaction::Role    m_searchRole;
+    Transaction::Role m_searchRole = Transaction::RoleUnknown;
     QString       m_searchString;
     QString       m_searchGroupCategory;
     PackageKit::Transaction::Group   m_searchGroup;

@@ -27,8 +27,6 @@
 #include <QObject>
 #include <QHash>
 
-#include <kdemacros.h>
-
 struct _AsPool;
 
 struct _AsScreenshotService;

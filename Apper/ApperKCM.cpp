@@ -74,17 +74,8 @@ Q_LOGGING_CATEGORY(APPER, "apper")
 ApperKCM::ApperKCM(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ApperKCM),
-    m_currentAction(0),
-    m_groupsProxyModel(0),
-    m_settingsPage(0),
-    m_updaterPage(0),
-    m_searchTransaction(0),
     m_findIcon(QIcon::fromTheme("edit-find")),
-    m_cancelIcon(QIcon::fromTheme("dialog-cancel")),
-    m_forceRefreshCache(false),
-    m_cacheAge(600),
-    m_history(0),
-    m_searchRole(Transaction::RoleUnknown)
+    m_cancelIcon(QIcon::fromTheme("dialog-cancel"))
 {
     ui->setupUi(this);
 
@@ -97,15 +88,13 @@ ApperKCM::ApperKCM(QWidget *parent) :
 //    aboutData->addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
 //    setAboutData(aboutData);
 //    setButtons(Apply);
-    ui->buttonBox->setStandardButtons(QDialogButtonBox::NoButton);
+    ui->buttonBox->setStandardButtons(QDialogButtonBox::Apply);
 
     // store the actions supported by the backend
     connect(Daemon::global(), &Daemon::changed, this, &ApperKCM::daemonChanged);
 
     // Set the current locale
     Daemon::global()->setHints(QLatin1String("locale=") + QLocale::system().name() + QLatin1String(".UTF-8"));
-
-    qCDebug(APPER) << Q_FUNC_INFO << QLocale::system().name();
 
     // Browse TAB
     ui->backTB->setIcon(QIcon::fromTheme("go-previous"));
@@ -159,7 +148,7 @@ ApperKCM::ApperKCM(QWidget *parent) :
     m_groupsModel = new CategoryModel(this);
     ui->browseView->setCategoryModel(m_groupsModel);
     connect(m_groupsModel, &CategoryModel::finished, this, &ApperKCM::setupHomeModel);
-//    ui->homeView->setSpacing(QDialog::spacingHint());
+    ui->homeView->setSpacing(10);
     ui->homeView->viewport()->setAttribute(Qt::WA_Hover);
 
     KFileItemDelegate *delegate = new KFileItemDelegate(this);
@@ -410,7 +399,7 @@ void ApperKCM::on_homeView_activated(const QModelIndex &index)
         if (m_searchRole == Transaction::RoleResolve) {
 #ifdef HAVE_APPSTREAM
             CategoryMatcher parser = index.data(CategoryModel::CategoryRole).value<CategoryMatcher>();
-            m_searchCategory = AppStream::instance()->findPkgNames(parser);
+//            m_searchCategory = AppStream::instance()->findPkgNames(parser);
 #endif // HAVE_APPSTREAM
         } else if (m_searchRole == Transaction::RoleSearchGroup) {
             if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
@@ -507,7 +496,8 @@ void ApperKCM::setPage(const QString &page)
                 connect(ui->repoSettingsPB, &QPushButton::toggled, m_settingsPage, &Settings::showRepoSettings);
             }
             checkChanged();
-            ui->buttonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Reset);
+//            ui->buttonBox->clear();
+//            ui->buttonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Reset);
 //            setButtons(KCModule::Default | KCModule::Apply);
             emit changed(true); // THIS IS DUMB setButtons only take effect after changed goes true
             emit changed(false);

@@ -59,6 +59,7 @@ public:
     };
     typedef struct {
         QString    displayName;
+        QString    pkgName;
         QString    version;
         QString    arch;
         QString    repo;
@@ -68,8 +69,8 @@ public:
         QString    icon;
         QString    appId;
         QString    currentVersion;
-        bool       isPackage;
-        double     size;
+        bool       isPackage = true;
+        double     size = 0;
     } InternalPackage;
 
     explicit PackageModel(QObject *parent = 0);

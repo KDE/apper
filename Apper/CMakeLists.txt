@@ -18,6 +18,7 @@ set(apper_SRCS
     TransactionFilterModel.cpp
     TransactionHistory.cpp
     ApperKCM.cpp
+    ApperKCM.h
     MainUi.cpp
     BackendDetails.cpp
     Apper.cpp
