@@ -29,7 +29,7 @@
 #include <Enum.h>
 #include <Daemon>
 
-//#include <KStandardDirs>
+#include <QStandardPaths>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDirWatch>
@@ -87,16 +87,16 @@ void ApperdThread::init()
 
     //check if any changes to the file occour
     //this also prevents from reading when a checkUpdate happens
-    KDirWatch *confWatch = new KDirWatch(this);
-//    confWatch->addFile(KStandardDirs::locateLocal("config", "apper"));
+    auto confWatch = new KDirWatch(this);
+    confWatch->addFile(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/apper"));
     connect(confWatch, SIGNAL(dirty(QString)), this, SLOT(configFileChanged()));
     connect(confWatch, SIGNAL(created(QString)), this, SLOT(configFileChanged()));
     connect(confWatch, SIGNAL(deleted(QString)), this, SLOT(configFileChanged()));
     confWatch->startScan();
 
     // Watch for changes in the KDE proxy settings
-    KDirWatch *proxyWatch = new KDirWatch(this);
-//    proxyWatch->addFile(KStandardDirs::locateLocal("config", "kioslaverc"));
+    auto proxyWatch = new KDirWatch(this);
+    confWatch->addFile(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/kioslaverc"));
     connect(proxyWatch, SIGNAL(dirty(QString)), this, SLOT(proxyChanged()));
     connect(proxyWatch, SIGNAL(created(QString)), this, SLOT(proxyChanged()));
     connect(proxyWatch, SIGNAL(deleted(QString)), this, SLOT(proxyChanged()));

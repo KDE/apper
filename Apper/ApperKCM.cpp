@@ -530,7 +530,7 @@ void ApperKCM::setPage(const QString &page)
                 m_updaterPage = new Updater(m_roles, this);
                 connect(m_updaterPage, &Updater::refreshCache, this, &ApperKCM::refreshCache);
                 connect(m_updaterPage, &Updater::downloadSize, ui->downloadL, &QLabel::setText);
-                connect(m_updaterPage, &Updater::changed, this, &ApperKCM::checkChanged);
+//                connect(m_updaterPage, &Updater::changed, this, &ApperKCM::checkChanged);
                 ui->stackedWidget->addWidget(m_updaterPage);
                 ui->checkUpdatesPB->setIcon(QIcon::fromTheme("view-refresh"));
                 connect(ui->checkUpdatesPB, &QPushButton::clicked, this, &ApperKCM::refreshCache);

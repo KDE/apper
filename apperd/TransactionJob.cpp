@@ -179,10 +179,12 @@ bool TransactionJob::doKill()
     // emit the description so the Speed: xxx KiB/s
     // don't get confused to a destination URL
     emit description(this, PkStrings::action(m_role, m_flags));
-    m_transaction->cancel();
+    QDBusPendingReply<> reply = m_transaction->cancel();
+    reply.waitForFinished();
+    qCDebug(APPER_DAEMON) << "Transaction cancel operation result" << m_transaction->tid().path() << reply.error();
     emit canceled();
 
-    return m_transaction->role() == Transaction::RoleCancel;
+    return !reply.isError() && m_transaction->role() == Transaction::RoleCancel;
 }
 
 #include "TransactionJob.moc"
