@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -35,8 +35,8 @@
 Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 FilesModel::FilesModel(const QStringList &files, const QStringList &mimes, QObject *parent)
-: QStandardItemModel(parent),
-  m_mimes(mimes)
+    : QStandardItemModel(parent)
+    ,  m_mimes(mimes)
 {
     if (!files.isEmpty()) {
         QList<QUrl> urls;
@@ -77,7 +77,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
 {
     bool ret = false;
     for (const QUrl &url : urls) {
-        QString path = QUrl::fromPercentEncoding(url.path().toUtf8());
+        const QString path = QUrl::fromPercentEncoding(url.path().toLatin1());
         if (files().contains(path)) {
             continue;
         }
@@ -91,7 +91,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
             for (const QString &mimeType : qAsConst(m_mimes)) {
                 if (mime.name() == mimeType) {
                     ret = true;
-/*                    kDebug() << "Found Supported Mime" << mimeType << mime->iconName();*/
+                    qCDebug(APPER_SESSION) << "Found Supported Mime" << mimeType << mime.iconName();
                     item = new QStandardItem(fileInfo.fileName());
                     item->setData(path);
                     item->setToolTip(path);
@@ -102,7 +102,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
             }
 
             if (ret == false && m_mimes.isEmpty()) {
-                if (mime.name() == "application/x-desktop") {
+                if (mime.name() == QLatin1String("application/x-desktop")) {
                     auto service = new KService(path);
                     item = new QStandardItem(service->name());
                     item->setData(true, Qt::UserRole);
@@ -176,4 +176,4 @@ bool FilesModel::onlyApplications() const
     return true;
 }
 
-#include "FilesModel.moc"
+#include "moc_FilesModel.cpp"

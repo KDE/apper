@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,6 +24,8 @@
 
 #include <QLoggingCategory>
 
+Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
+
 using namespace PackageKit;
 
 AbstractIsRunning::AbstractIsRunning(QObject *parent) :
@@ -38,15 +40,15 @@ AbstractIsRunning::~AbstractIsRunning()
 void AbstractIsRunning::increaseRunning()
 {
     m_running++;
-//    kDebug();
+    qCDebug(APPER_SESSION) << "Increase running" << m_running;
 }
 
 void AbstractIsRunning::decreaseRunning()
 {
     m_running--;
-//    kDebug();
+    qCDebug(APPER_SESSION) << "Decrease running" << m_running;
     if (!isRunning()) {
-//        kDebug() << "Is not Running anymore";
+        qCDebug(APPER_SESSION) << "All tasks completed";
         emit close();
     }
 }

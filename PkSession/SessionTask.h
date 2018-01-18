@@ -74,16 +74,21 @@ public:
     bool showFinished() const;
     bool showWarning() const;
 
-    virtual void slotButtonClicked(int button);
-
     Interactions interactions() const;
     uint timeout() const;
 
     QWidget* mainWidget();
     uint parentWId() const;
 
+    void slotContinueClicked();
+    void slotCancelClicked();
+
+Q_SIGNALS:
+    void continueClicked();
+    void cancelClicked();
+
 public Q_SLOTS:
-    void enableButtonOk(bool state);
+    void enableButtonOk(bool enable);
     void setMainWidget(QWidget *widget);
 
 protected:
@@ -96,6 +101,7 @@ protected:
     virtual void commitFailed();
     virtual void commitSuccess(QWidget *widget = 0);
 
+    void showCloseButton();
     bool foundPackages() const;
     int  foundPackagesSize() const;
     PackageModel* model() const;
@@ -134,8 +140,8 @@ private:
     uint m_timeout;
     PackageModel *m_model;
     QStringList m_removePackages;
-    ReviewChanges *m_reviewChanges;
-    PkTransactionWidget *m_pkTransaction;
+    ReviewChanges *m_reviewChanges = nullptr;
+    PkTransactionWidget *m_pkTransaction = nullptr;
     Ui::SessionTask *ui;
 };
 

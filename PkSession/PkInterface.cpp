@@ -67,12 +67,12 @@ PkInterface::PkInterface(QObject *parent) :
     qCDebug(APPER_SESSION) << "Creating Helper";
     (void) new ModifyAdaptor(this);
     (void) new QueryAdaptor(this);
-    if (!QDBusConnection::sessionBus().registerService("org.freedesktop.PackageKit")) {
+    if (!QDBusConnection::sessionBus().registerService(QLatin1String("org.freedesktop.PackageKit"))) {
         qCDebug(APPER_SESSION) << "unable to register service to dbus";
         return;
     }
 
-    if (!QDBusConnection::sessionBus().registerObject("/org/freedesktop/PackageKit", this)) {
+    if (!QDBusConnection::sessionBus().registerObject(QLatin1String("/org/freedesktop/PackageKit"), this)) {
         qCDebug(APPER_SESSION) << "unable to register object to dbus";
         return;
     }
@@ -85,94 +85,84 @@ PkInterface::~PkInterface()
 void PkInterface::InstallCatalogs(uint xid, const QStringList &files, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << files << interaction;
-    auto task = new PkInstallCatalogs(xid, files, interaction, message());
-    show(task);
+    show(new PkInstallCatalogs(xid, files, interaction, message()));
 }
 
 void PkInterface::InstallFontconfigResources(uint xid, const QStringList &resources, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << resources << interaction;
-    auto task = new PkInstallFontconfigResources(xid, resources, interaction, message());
-    show(task);
+    show(new PkInstallFontconfigResources(xid, resources, interaction, message()));
 }
 
 void PkInterface::InstallGStreamerResources(uint xid, const QStringList &resources, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << resources << interaction;
-    auto task = new PkInstallGStreamerResources(xid, resources, interaction, message());
-    show(task);
+    show(new PkInstallGStreamerResources(xid, resources, interaction, message()));
 }
 
 void PkInterface::InstallMimeTypes(uint xid, const QStringList &mime_types, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << mime_types << interaction;
-    auto task = new PkInstallMimeTypes(xid, mime_types, interaction, message());
-    show(task);
+    show(new PkInstallMimeTypes(xid, mime_types, interaction, message()));
 }
 
 void PkInterface::InstallPackageFiles(uint xid, const QStringList &files, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << files << interaction;
-    auto task = new PkInstallPackageFiles(xid, files, interaction, message());
-    show(task);
+    show(new PkInstallPackageFiles(xid, files, interaction, message()));
 }
 
 void PkInterface::InstallPackageNames(uint xid, const QStringList &packages, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << packages << interaction;
-    auto task = new PkInstallPackageNames(xid, packages, interaction, message());
-    show(task);
+    show(new PkInstallPackageNames(xid, packages, interaction, message()));
 }
 
 void PkInterface::InstallProvideFiles(uint xid, const QStringList &files, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << files << interaction;
-    auto task = new PkInstallProvideFiles(xid, files, interaction, message());
-    show(task);
+    show(new PkInstallProvideFiles(xid, files, interaction, message()));
 }
 
 void PkInterface::RemovePackageByFiles(uint xid, const QStringList &files, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << files << interaction;
-    auto task = new PkRemovePackageByFiles(xid, files, interaction, message());
-    show(task);
+    show(new PkRemovePackageByFiles(xid, files, interaction, message()));
 }
 
 void PkInterface::InstallPrinterDrivers(uint xid, const QStringList &resources, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << resources << interaction;
-    auto task = new PkInstallPrinterDrivers(xid, resources, interaction, message());
-    show(task);
+    show(new PkInstallPrinterDrivers(xid, resources, interaction, message()));
 }
 
 void PkInterface::InstallPlasmaResources(uint xid, const QStringList &resources, const QString &interaction)
 {
     qCDebug(APPER_SESSION) << xid << resources << interaction;
-    auto task = new PkInstallPlasmaResources(xid, resources, interaction, message());
-    show(task);
+    show(new PkInstallPlasmaResources(xid, resources, interaction, message()));
 }
 
 void PkInterface::InstallResources(uint xid, const QString &type, const QStringList &resources, const QString &interaction)
 {
-    if (type == "codec")
+    if (type == QLatin1String("codec")) {
         InstallGStreamerResources(xid, resources, interaction);
-    else if (type == "mimetype")
+    } else if (type == QLatin1String("mimetype")) {
         InstallMimeTypes(xid, resources, interaction);
-    else if (type == "font")
+    } else if (type == QLatin1String("font")) {
         InstallFontconfigResources(xid, resources, interaction);
-    else if (type == "postscript-driver")
+    } else if (type == QLatin1String("postscript-driver")) {
         InstallPrinterDrivers(xid, resources, interaction);
-    else if (type == "plasma-service")
+    } else if (type == QLatin1String("plasma-service")) {
         InstallPlasmaResources(xid, resources, interaction);
-    else
-        sendErrorReply("org.freedesktop.PackageKit.Failed", "Unsupported resource type");
+    } else {
+        sendErrorReply(QStringLiteral("org.freedesktop.PackageKit.Failed"), QStringLiteral("Unsupported resource type"));
+    }
 }
 
 //Query
 bool PkInterface::IsInstalled(const QString &package_name, const QString &interaction)
 {
-    auto task = new PkIsInstalled(package_name, interaction, message());
-    show(task);
+    show(new PkIsInstalled(package_name, interaction, message()));
     // This is discarted
     return false;
 }
@@ -180,8 +170,7 @@ bool PkInterface::IsInstalled(const QString &package_name, const QString &intera
 bool PkInterface::SearchFile(const QString &file_name, const QString &interaction, QString &package_name)
 {
     Q_UNUSED(package_name)
-    auto task = new PkSearchFile(file_name, interaction, message());
-    show(task);
+    show(new PkSearchFile(file_name, interaction, message()));
     // This is discarted
     return false;
 }

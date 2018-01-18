@@ -40,6 +40,7 @@ add_executable(apper-pk-session
 )
 
 target_link_libraries(apper-pk-session
+    Qt5::XmlPatterns
     KF5::WidgetsAddons
     KF5::KIOFileWidgets
     KF5::IconThemes
@@ -47,8 +48,6 @@ target_link_libraries(apper-pk-session
     ${PackageKitQt5_LIBRARIES}
     apper_private
 )
-
-qt5_use_modules(apper-pk-session Core XmlPatterns)
 
 set_target_properties(apper-pk-session PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
 

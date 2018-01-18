@@ -57,8 +57,6 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
     QDialog(parent),
     m_xid(xid),
     m_message(message),
-    m_reviewChanges(0),
-    m_pkTransaction(0),
     ui(new Ui::SessionTask)
 {
     ui->setupUi(this);
@@ -71,10 +69,16 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
     updatePallete();
 
     setWindowIcon(QIcon::fromTheme("system-software-install"));
-//    setButtons(KDialog::Ok | KDialog::Cancel);
-//    setButtonText(KDialog::Ok, i18n("Continue"));
-//    setButtonIcon(KDialog::Ok, QIcon::fromTheme("go-next"));
+    QPushButton *okButton = ui->buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setText(i18n("Continue"));
+    okButton->setIcon(QIcon::fromTheme("go-next"));
     enableButtonOk(false);
+    connect(okButton, &QPushButton::clicked, this, &SessionTask::slotContinueClicked);
+
+    QPushButton *cancelButton = ui->buttonBox->button(QDialogButtonBox::Cancel);
+    connect(cancelButton, &QPushButton::clicked, this, &SessionTask::slotCancelClicked);
+
+
 
     Daemon::global()->setHints(QLatin1String("locale=") + QLocale::system().name() + QLatin1String(".UTF-8"));
 
@@ -133,14 +137,15 @@ void SessionTask::searchFinished(PkTransaction::ExitStatus status)
         m_model->finished();
         if (m_model->rowCount() == 0) {
             notFound();
+            showCloseButton();
         } else {
             searchSuccess();
         }
     } else if (status == PkTransaction::Cancelled) {
-        // TODO PORT
-//        slotButtonClicked(KDialog::Cancel);
+        cancelClicked();
     } else {
         searchFailed();
+        showCloseButton();
     }
 }
 
@@ -156,12 +161,13 @@ void SessionTask::commitFinished(PkTransaction::ExitStatus status)
             removePackages();
         } else {
             commitSuccess();
+            showCloseButton();
         }
     } else if (status == PkTransaction::Cancelled) {
-        // TODO PORT
-//        slotButtonClicked(KDialog::Cancel);
+        cancelClicked();
     } else {
         commitFailed();
+        showCloseButton();
     }
 }
 
@@ -185,10 +191,10 @@ void SessionTask::setDialog(QDialog *dialog)
         commitSuccess(dialog);
     } else {
         // Set the new ones
-//        setMainWidget(dialog->mainWidget());
+        setMainWidget(dialog);
 //        setTitle(dialog->windowTitle()); // must come after
-//        connect(this, SIGNAL(okClicked()),
-//                dialog, SLOT(accept()));
+        connect(this, &SessionTask::continueClicked, dialog, &QDialog::accept);
+//        connect(this, &SessionTask::continueClicked, dia, &QDialog::accept);
 //        connect(this, SIGNAL(okClicked()),
 //                dialog->mainWidget(), SLOT(deleteLater()));
 //        connect(this, SIGNAL(okClicked()),
@@ -197,10 +203,8 @@ void SessionTask::setDialog(QDialog *dialog)
         // Make sure we see the last widget and title
         auto mapper = new QSignalMapper(this);
         mapper->setMapping(this, widget);
-        connect(this, SIGNAL(okClicked()),
-                mapper, SLOT(map()));
-        connect(mapper, SIGNAL(mapped(QWidget*)),
-                this, SLOT(setMainWidget(QWidget*)));
+        connect(this, &SessionTask::continueClicked, mapper, QOverload<>::of(&QSignalMapper::map));
+        connect(mapper, QOverload<QWidget*>::of(&QSignalMapper::mapped), this, &SessionTask::setMainWidget);
         enableButtonOk(true);
     }
 }
@@ -426,7 +430,7 @@ void SessionTask::commitFailed()
     // This should not be used to display stuff as the transaction should
     // emit error() or info()
 //    setInfo(i18n("Failed to commit transaction"),
-//            PkStrings::errorMessage(m_pkTransaction->error()));
+//            PkStrings::errsearchFailedorMessage(m_pkTransaction->error()));
     sendErrorFinished(Failed, i18n("Transaction did not finish with success"));
 }
 
@@ -437,23 +441,12 @@ void SessionTask::commitSuccess(QWidget *widget)
     finishTaskOk();
 }
 
-void SessionTask::slotButtonClicked(int button)
+void SessionTask::showCloseButton()
 {
-    if (button == QDialogButtonBox::Ok) {
-//        qCDebug(APPER_SESSION) << mainWidget()->objectName();
-        if (qobject_cast<IntroDialog*>(mainWidget())) {
-            enableButtonOk(false);
-            search();
-        } else if (qobject_cast<ReviewChanges*>(mainWidget())) {
-            enableButtonOk(false);
-            commit();
-        } else {
-//            emit okClicked();
-        }
-    } else {
-//        KDialog::slotButtonClicked(button);
-        sendErrorFinished(Cancelled, "Aborted by the user");
-    }
+    ui->buttonBox->setStandardButtons(QDialogButtonBox::Close);
+    QPushButton *closeBt = ui->buttonBox->button(QDialogButtonBox::Close);
+    closeBt->setDefault(true);
+    connect(closeBt, &QPushButton::clicked, this, &SessionTask::accept);
 }
 
 void SessionTask::sendErrorFinished(DBusError error, const QString &msg)
@@ -461,23 +454,22 @@ void SessionTask::sendErrorFinished(DBusError error, const QString &msg)
     QString dbusError;
     switch (error) {
     case Failed:
-        dbusError = "org.freedesktop.PackageKit.Failed";
+        dbusError = QLatin1String("org.freedesktop.PackageKit.Failed");
         break;
     case InternalError:
-        dbusError = "org.freedesktop.PackageKit.InternalError";
+        dbusError = QLatin1String("org.freedesktop.PackageKit.InternalError");
         break;
     case NoPackagesFound:
-        dbusError = "org.freedesktop.PackageKit.NoPackagesFound";
+        dbusError = QLatin1String("org.freedesktop.PackageKit.NoPackagesFound");
         break;
     case Forbidden:
-        dbusError = "org.freedesktop.PackageKit.Forbidden";
+        dbusError = QLatin1String("org.freedesktop.PackageKit.Forbidden");
         break;
     case Cancelled:
-        dbusError = "org.freedesktop.PackageKit.Cancelled";
+        dbusError = QLatin1String("org.freedesktop.PackageKit.Cancelled");
         break;
     }
-    QDBusMessage reply;
-    reply = m_message.createErrorReply(dbusError, msg);
+    QDBusMessage reply = m_message.createErrorReply(dbusError, msg);
     QDBusConnection::sessionBus().send(reply);
 }
 
@@ -492,12 +484,34 @@ uint SessionTask::parentWId() const
     return m_xid;
 }
 
-void SessionTask::enableButtonOk(bool state)
+void SessionTask::slotContinueClicked()
 {
-//    KDialog::enableButtonOk(state);
-    if (state) {
+    if (qobject_cast<IntroDialog*>(mainWidget())) {
+        enableButtonOk(false);
+        search();
+    } else if (qobject_cast<ReviewChanges*>(mainWidget())) {
+        enableButtonOk(false);
+        commit();
+    } else {
+//        emit okClicked();
+    }
+}
+
+void SessionTask::slotCancelClicked()
+{
+    emit cancelClicked();
+    sendErrorFinished(Cancelled, "Aborted by the user");
+    reject();
+
+}
+
+void SessionTask::enableButtonOk(bool enable)
+{
+    QPushButton *okButton = ui->buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setEnabled(enable);
+    if (enable) {
         // When enabling the Continue button put focus on it
-//        button(KDialog::Ok)->setFocus();
+        okButton->setFocus();
     }
 }
 
@@ -590,16 +604,11 @@ void SessionTask::setTransaction(Transaction::Role role, PkTransaction *t)
 
         ui->stackedWidget->addWidget(m_pkTransaction);
         connect(m_pkTransaction, &PkTransactionWidget::titleChanged, this, &SessionTask::setTitle);
-        connect(this, SIGNAL(cancelClicked()),
-                m_pkTransaction, SLOT(cancel()));
-        connect(m_pkTransaction, SIGNAL(dialog(KDialog*)),
-                this, SLOT(setDialog(KDialog*)));
-        connect(m_pkTransaction, SIGNAL(sorry(QString,QString,QString)),
-                this, SLOT(setInfo(QString,QString,QString)));
-        connect(m_pkTransaction, SIGNAL(error(QString,QString,QString)),
-                this, SLOT(setError(QString,QString,QString)));
+        connect(this, &SessionTask::cancelClicked, m_pkTransaction, &PkTransactionWidget::cancel);
+        connect(m_pkTransaction, &PkTransactionWidget::dialog, this, &SessionTask::setDialog);
+        connect(m_pkTransaction, &PkTransactionWidget::sorry, this, &SessionTask::setInfo);
+        connect(m_pkTransaction, &PkTransactionWidget::error, this, &SessionTask::setError);
     }
-
     if (t) {
         m_pkTransaction->setTransaction(t, role);
 //        setTitle(m_pkTransaction->title());

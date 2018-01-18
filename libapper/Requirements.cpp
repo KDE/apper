@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -34,15 +34,13 @@
 
 Requirements::Requirements(PackageModel *model, QWidget *parent) :
     QDialog(parent),
-    m_embed(false),
-    m_shouldShow(true),
-    m_untrustedButton(0),
     ui(new Ui::Requirements)
 {
+    ui->setupUi(this);
+
     setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->setupUi(this);
-    connect(ui->confirmCB, SIGNAL(toggled(bool)), this, SLOT(on_confirmCB_Toggled(bool)));
+    connect(ui->confirmCB, &QCheckBox::toggled, this, &Requirements::confirmCBChanged);
 
     ApplicationSortFilterModel *proxy = new ApplicationSortFilterModel(this);
     proxy->setSourceModel(model);
@@ -53,8 +51,6 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     ui->packageView->header()->hideSection(PackageModel::CurrentVersionCol);
     ui->packageView->header()->hideSection(PackageModel::OriginCol);
     ui->packageView->header()->hideSection(PackageModel::SizeCol);
-
-    m_hideAutoConfirm = false;
 
     setWindowTitle(i18n("Additional changes"));
     setWindowIcon(QIcon::fromTheme("dialog-warning"));
@@ -234,7 +230,7 @@ void Requirements::slotButtonClicked(int)
 //    }
 }
 
-void Requirements::on_confirmCB_Toggled(bool checked)
+void Requirements::confirmCBChanged(bool checked)
 {
     KConfig config("apper");
     KConfigGroup requirementsDialog(&config, "requirementsDialog");

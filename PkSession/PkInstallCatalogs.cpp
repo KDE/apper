@@ -59,9 +59,9 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
         }
     }
 
-    QStringList mimes;
-    mimes << "application/x-catalog";
-    mimes << "text/plain";
+    const QStringList mimes{
+        QLatin1String("application/x-catalog"), QLatin1String("text/plain")
+    };
     m_introDialog = new IntroDialog(this);
     m_introDialog->acceptDrops(i18n("You can drop more catalogs in here"));
     m_model = new FilesModel(files, mimes, this);
@@ -78,7 +78,7 @@ PkInstallCatalogs::~PkInstallCatalogs()
 
 void PkInstallCatalogs::modelChanged()
 {
-    QStringList files = m_model->files();
+    const QStringList files = m_model->files();
     enableButtonOk(!files.isEmpty());
     QString description;
     if (files.isEmpty()) {
@@ -107,28 +107,28 @@ void PkInstallCatalogs::modelChanged()
 
 void PkInstallCatalogs::search()
 {
-    QString distroId = Daemon::global()->distroID();
-    QStringList parts = distroId.split(';');
+    const QString distroId = Daemon::global()->distroID();
+    const QStringList parts = distroId.split(QLatin1Char(';'));
     if (parts.size() != 3) {
         sendErrorFinished(Failed, "invalid distribution id, please fill a bug against you distribution backend");
         return;
     }
-    QString distro = parts.at(0);
-    QString version = parts.at(1);
-    QString arch = parts.at(2);
+    const QString distro = parts.at(0);
+    const QString version = parts.at(1);
+    const QString arch = parts.at(2);
 
     QStringList rxActions;
     Transaction::Roles roles = Daemon::global()->roles();
     if (roles & Transaction::RoleResolve) {
-        rxActions << "InstallPackages";
+        rxActions << QLatin1String("InstallPackages");
     }
 
     if (roles & Transaction::RoleWhatProvides) {
-        rxActions << "InstallProvides";
+        rxActions << QLatin1String("InstallProvides");
     }
 
     if (roles & Transaction::RoleSearchFile) {
-        rxActions << "InstallFiles";
+        rxActions << QLatin1String("InstallFiles");
     }
 
     if (rxActions.isEmpty()) {

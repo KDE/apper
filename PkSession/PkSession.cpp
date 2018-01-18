@@ -25,9 +25,6 @@
 #include <QApplication>
 
 #include <KLocalizedString>
-//#include <KCmdLineArgs>
-//#include <KDebug>
-//#include <KGlobal>
 
 #include <QLoggingCategory>
 
@@ -39,10 +36,9 @@ Q_DECLARE_LOGGING_CATEGORY(APPER_SESSION)
 
 using namespace PackageKit;
 
-PkSession::PkSession(QObject* parent)
-    : QObject(parent)
+PkSession::PkSession(QObject* parent) : QObject(parent)
+  , m_pkInterface(new PkInterface(this))
 {
-    m_pkInterface = new PkInterface(this);
     connect(m_pkInterface, &PkInterface::close, this, &PkSession::prepareToClose);
 
     Daemon::global()->setHints(QLatin1String("locale=") + QLocale::system().name() + QLatin1String(".UTF-8"));

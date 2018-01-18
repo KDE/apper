@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -29,7 +29,7 @@ class PkSession : public QObject
 {
     Q_OBJECT
 public:
-    explicit PkSession(QObject* parent = 0);
+    explicit PkSession(QObject* parent = nullptr);
     virtual ~PkSession();
     int newInstance();
 

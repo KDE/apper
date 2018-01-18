@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -39,7 +39,7 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
 {
     setWindowTitle(i18n("Install Packages Files"));
 
-//    if (Daemon::global()->roles() & Transaction::RoleInstallFiles) {
+    if (Daemon::global()->roles() & Transaction::RoleInstallFiles) {
         m_introDialog = new IntroDialog(this);
         m_introDialog->acceptDrops(i18n("You can drop more files in here"));
 
@@ -49,10 +49,10 @@ PkInstallPackageFiles::PkInstallPackageFiles(uint xid,
         setMainWidget(m_introDialog);
 
         modelChanged();
-//    } else {
-//        setError(i18n("Not Supported"),
-//                 i18n("Your current backend does not support installing files"));
-//    }
+    } else {
+        setError(i18n("Not Supported"),
+                 i18n("Your current backend does not support installing files"));
+    }
 }
 
 PkInstallPackageFiles::~PkInstallPackageFiles()
@@ -61,7 +61,7 @@ PkInstallPackageFiles::~PkInstallPackageFiles()
 
 void PkInstallPackageFiles::modelChanged()
 {
-    QStringList files = m_model->files();
+    const QStringList files = m_model->files();
     enableButtonOk(!files.isEmpty());
 
     QString description;

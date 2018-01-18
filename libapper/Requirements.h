@@ -50,16 +50,16 @@ protected Q_SLOTS:
      virtual void slotButtonClicked(int button);
 
 private Q_SLOTS:
-    void on_confirmCB_Toggled(bool checked);
     void actionClicked(int type);
 
 private:
+    void confirmCBChanged(bool checked);
     void showUntrustedButton();
 
-    bool m_embed;
-    bool m_shouldShow;
-    bool m_hideAutoConfirm;
-    QToolButton *m_untrustedButton;
+    bool m_embed = false;
+    bool m_shouldShow = true;
+    bool m_hideAutoConfirm = false;
+    QToolButton *m_untrustedButton = nullptr;
     QButtonGroup *m_buttonGroup;
     Ui::Requirements *ui;
 };
