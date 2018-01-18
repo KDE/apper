@@ -45,11 +45,11 @@ UpdateDetails::UpdateDetails(QWidget *parent)
     : QWidget(parent)
 {
     setupUi(this);
-    hideTB->setIcon(QIcon::fromTheme("window-close"));
+    hideTB->setIcon(QIcon::fromTheme(QLatin1String("window-close")));
     connect(hideTB, &QToolButton::clicked, this, &UpdateDetails::hide);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence(QIcon::fromTheme("process-working").pixmap(KIconLoader::SizeSmallMedium)));
+    m_busySeq->setSequence(KPixmapSequence(QIcon::fromTheme(QLatin1String("process-working")).pixmap(KIconLoader::SizeSmallMedium)));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(this);
 
@@ -179,139 +179,137 @@ void UpdateDetails::updateDetail(const QString &packageID,
 
     // update type (ie Security Update)
     if (m_updateInfo == Transaction::InfoEnhancement) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("This update will add new features and expand functionality.") +
-                       "</p>";
+                       QLatin1String("</p>");
     } else if (m_updateInfo == Transaction::InfoBugfix) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("This update will fix bugs and other non-critical problems.") +
-                       "</p>";
+                       QLatin1String("</p>");
     } else if (m_updateInfo == Transaction::InfoImportant) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("This update is important as it may solve critical problems.") +
-                       "</p>";
+                       QLatin1String("</p>");
     } else if (m_updateInfo == Transaction::InfoSecurity) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("This update is needed to fix a security vulnerability with this package.") +
-                       "</p>";
+                       QLatin1String("</p>");
     } else if (m_updateInfo == Transaction::InfoBlocked) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("This update is blocked.") +
-                       "</p>";
+                       QLatin1String("</p>");
     }
 
     // Issued and Updated
     if (!issued.isNull() && !updated.isNull()) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("This notification was issued on %1 and last updated on %2.",
                             QLocale::system().toString(issued, QLocale::ShortFormat),
                             QLocale::system().toString(updated, QLocale::ShortFormat)) +
-                       "</p>";
+                       QLatin1String("</p>");
     } else if (!issued.isNull()) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("This notification was issued on %1.",
                             QLocale::system().toString(issued, QLocale::ShortFormat)) +
-                       "</p>";
+                       QLatin1String("</p>");
     }
 
     // Description
     if (!updateText.isEmpty()) {
         QString _updateText = updateText;
-        _updateText.replace('\n', "<br/>");
-        _updateText.replace(' ', "&nbsp;");
-        description += "<p>" +
-                       _updateText +
-                       "</p>";
+        _updateText.replace(QLatin1Char('\n'), QLatin1String("<br/>"));
+        _updateText.replace(QLatin1Char(' '), QLatin1String("&nbsp;"));
+        description += QLatin1String("<p>") + _updateText + QLatin1String("</p>");
     }
 
     // links
     //  Vendor
     if (!vendorUrls.isEmpty()) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18np("For more information about this update please visit this website:",
                              "For more information about this update please visit these websites:",
-                             vendorUrls.size()) + "<br/>" +
+                             vendorUrls.size()) + QLatin1String("<br/>") +
                        getLinkList(vendorUrls) +
-                       "</p>";
+                       QLatin1String("</p>");
     }
 
     //  Bugzilla
     if (!bugzillaUrls.isEmpty()) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18np("For more information about bugs fixed by this update please visit this website:",
                              "For more information about bugs fixed by this update please visit these websites:",
-                             bugzillaUrls.size()) + "<br/>" +
+                             bugzillaUrls.size()) + QLatin1String("<br>") +
                        getLinkList(bugzillaUrls) +
-                       "</p>";
+                       QLatin1String("</p>");
     }
 
     //  CVE
     if (!cveUrls.isEmpty()) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18np("For more information about this security update please visit this website:",
                              "For more information about this security update please visit these websites:",
-                             cveUrls.size()) + "<br/>" +
+                             cveUrls.size()) + QLatin1String("<br>") +
                        getLinkList(cveUrls) +
-                       "</p>";
+                       QLatin1String("</p>");
     }
 
     // Notice (about the need for a reboot)
     if (restart == Transaction::RestartSystem) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("The computer will have to be restarted after the update for the changes to take effect.") +
-                       "</p>";
+                       QLatin1String("</p>");
     } else if (restart == Transaction::RestartSession) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("You will need to log out and back in after the update for the changes to take effect.") +
-                       "</p>";
+                       QLatin1String("</p>");
     }
 
     // State
     if (state == Transaction::UpdateStateUnstable) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("The classification of this update is unstable which means it is not designed for production use.") +
-                       "</p>";
+                       QLatin1String("</p>");
     } else if (state == Transaction::UpdateStateTesting) {
-        description += "<p>" +
+        description += QLatin1String("<p>") +
                        i18n("This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter.") +
-                       "</p>";
+                       QLatin1String("</p>");
     }
 
     // only show changelog if we didn't have any update text
     if (updateText.isEmpty() && !changelog.isEmpty()) {
         QString _changelog = changelog;
-        _changelog.replace('\n', "<br/>");
-        _changelog.replace(' ', "&nbsp;");
-        description += "<p>" +
+        _changelog.replace(QLatin1Char('\n'), QLatin1String("<br/>"));
+        _changelog.replace(QLatin1Char(' '), QLatin1String("&nbsp;"));
+        description += QLatin1String("<p>") +
                        i18n("The developer logs will be shown as no description is available for this update:") +
-                       "<br/>" +
+                       QLatin1String("<br>") +
                        _changelog +
-                       "</p>";
+                       QLatin1String("</p>");
     }
 
     // Updates (lists of packages that are updated)
     if (!updates.isEmpty()) {
-        description += "<p>" + i18n("Updates:") + "<br/>";
+        description += QLatin1String("<p>") + i18n("Updates:") + QLatin1String("<br>");
         QStringList _updates;
         for (const QString &pid : updates) {
-             _updates += QString::fromUtf8("\xE2\x80\xA2 ") + Transaction::packageName(pid) + " - " + Transaction::packageVersion(pid);
+             _updates += QString::fromUtf8("\xE2\x80\xA2 ") + Transaction::packageName(pid) + QLatin1String(" - ") + Transaction::packageVersion(pid);
         }
-        description += _updates.join("<br/>") + "</p>";
+        description += _updates.join(QLatin1String("<br>")) + QLatin1String("</p>");
     }
 
     // Obsoletes (lists of packages that are obsoleted)
     if (obsoletes.size()) {
-        description += "<p></b>" + i18n("Obsoletes:") + "</b><br/>";
+        description += QLatin1String("<p></b>") + i18n("Obsoletes:") + QLatin1String("</b><br/>");
         QStringList _obsoletes;
         for (const QString &pid : obsoletes) {
-             _obsoletes += QString::fromUtf8("\xE2\x80\xA2 ") + Transaction::packageName(pid) + " - " + Transaction::packageVersion(pid);
+             _obsoletes += QString::fromUtf8("\xE2\x80\xA2 ") + Transaction::packageName(pid) + QLatin1String(" - ") + Transaction::packageVersion(pid);
         }
-        description += _obsoletes.join("<br>/") + "</p>";
+        description += _obsoletes.join(QLatin1String("<br>/")) + QLatin1String("</p>");
     }
 
     // Repository (this is the repository the package comes from)
     if (!Transaction::packageData(packageID).isEmpty()) {
-         description += "<p>" + i18n("Repository: %1", Transaction::packageData(packageID)) + "</p>";
+         description += QLatin1String("<p>") + i18n("Repository: %1", Transaction::packageData(packageID)) + QLatin1String("</p>");
     }
 
     m_currentDescription = description;
@@ -323,7 +321,7 @@ QString UpdateDetails::getLinkList(const QStringList &urls) const
     QString ret;
     for (const QString &url : urls) {
         if (!ret.isEmpty()) {
-            ret += "<br/>";
+            ret += QLatin1String("<br>");
         }
         ret += QString::fromUtf8(" \xE2\x80\xA2 <a href=\"") % url % QLatin1String("\">") % url % QLatin1String("</a>");
     }

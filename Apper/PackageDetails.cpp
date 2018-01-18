@@ -81,7 +81,7 @@ PackageDetails::PackageDetails(QWidget *parent)
    m_hasFileList(false)
 {
     ui->setupUi(this);
-    ui->hideTB->setIcon(QIcon::fromTheme("window-close"));
+    ui->hideTB->setIcon(QIcon::fromTheme(QLatin1String("window-close")));
     connect(ui->hideTB, SIGNAL(clicked()), this, SLOT(hide()));
 
     auto menu = new QMenu(i18n("Display"), this);
@@ -162,12 +162,12 @@ PackageDetails::PackageDetails(QWidget *parent)
 
     // Set the menu
     ui->menuTB->setMenu(menu);
-    ui->menuTB->setIcon(QIcon::fromTheme("help-about"));
+    ui->menuTB->setIcon(QIcon::fromTheme(QLatin1String("help-about")));
     connect(m_actionGroup, SIGNAL(triggered(QAction*)),
             this, SLOT(actionActivated(QAction*)));
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setSequence(KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(ui->stackedWidget);
 
@@ -522,7 +522,7 @@ void PackageDetails::display()
                         ui->filesPTE->insertPlainText(i18n("No files were found."));
                     } else {
                         m_currentFileList.sort();
-                        ui->filesPTE->insertPlainText(m_currentFileList.join("\n"));
+                        ui->filesPTE->insertPlainText(m_currentFileList.join(QLatin1Char('\n')));
                     }
 
                     if (ui->stackedWidget->currentWidget() != ui->pageFiles) {
@@ -579,15 +579,15 @@ void PackageDetails::setupDescription()
     }
 
     if (!m_detailsDescription.isEmpty()) {
-        ui->descriptionL->setText(m_detailsDescription.replace('\n', "<br>"));
+        ui->descriptionL->setText(m_detailsDescription.replace(QLatin1Char('\n'), QLatin1String("<br>")));
         ui->descriptionL->show();
     } else {
         ui->descriptionL->clear();
     }
 
     if (!m_details.url().isEmpty()) {
-        ui->homepageL->setText("<a href=\"" + m_details.url() + "\">" +
-                               m_details.url() + "</a>");
+        ui->homepageL->setText(QLatin1String("<a href=\"") + m_details.url() + QLatin1String("\">") +
+                               m_details.url() + QLatin1String("</a>"));
         ui->homepageL->show();
     } else {
         ui->homepageL->hide();
@@ -604,14 +604,14 @@ void PackageDetails::setupDescription()
         ui->pathL->hide();
     } else {
         QString path;
-        path.append(QString("<img width=\"16\" heigh=\"16\"src=\"%1\"/>")
-                    .arg(KIconLoader::global()->iconPath("kde", KIconLoader::Small)));
-        path.append(QString("&nbsp;%1 <img width=\"16\" heigh=\"16\" src=\"%2\"/>&nbsp;%3")
+        path.append(QString(QLatin1String("<img width=\"16\" heigh=\"16\"src=\"%1\"/>"))
+                    .arg(KIconLoader::global()->iconPath(QLatin1String("kde"), KIconLoader::Small)));
+        path.append(QString(QLatin1String("&nbsp;%1 <img width=\"16\" heigh=\"16\" src=\"%2\"/>&nbsp;%3"))
                     .arg(QString::fromUtf8("➜"))
-                    .arg(KIconLoader::global()->iconPath("applications-other", KIconLoader::Small))
+                    .arg(KIconLoader::global()->iconPath(QLatin1String("applications-other"), KIconLoader::Small))
                     .arg(i18n("Applications")));
         for (int i = 0; i < ret.size(); i++) {
-            path.append(QString("&nbsp;%1&nbsp;<img width=\"16\" heigh=\"16\" src=\"%2\"/>&nbsp;%3")
+            path.append(QString(QLatin1String("&nbsp;%1&nbsp;<img width=\"16\" heigh=\"16\" src=\"%2\"/>&nbsp;%3"))
                         .arg(QString::fromUtf8("➜"))
                         .arg(KIconLoader::global()->iconPath(ret.at(i).second, KIconLoader::Small))
                         .arg(ret.at(i).first));
@@ -626,10 +626,10 @@ void PackageDetails::setupDescription()
 // //                     + "</td></tr>";
 //     }
 
-    if (!m_details.license().isEmpty() && m_details.license() != "unknown") {
+    if (!m_details.license().isEmpty() && m_details.license() != QLatin1String("unknown")) {
         // We have a license, check if we have and should show show package version
         if (!m_hideVersion && !Transaction::packageVersion(m_details.packageId()).isEmpty()) {
-            ui->licenseL->setText(Transaction::packageVersion(m_details.packageId()) + " - " + m_details.license());
+            ui->licenseL->setText(Transaction::packageVersion(m_details.packageId()) + QLatin1String(" - ") + m_details.license());
         } else {
             ui->licenseL->setText(m_details.license());
         }

@@ -35,19 +35,19 @@
 
 int main(int argc, char **argv)
 {
-    QApplication::setWindowIcon(QIcon::fromTheme("system-software-install"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("system-software-install")));
 
     Apper app(argc, argv);
     KLocalizedString::setApplicationDomain("apper");
 
-    KAboutData aboutData("apper", // DO NOT change this catalog unless you know it will not break translations!
+    KAboutData aboutData(QLatin1String("apper"), // DO NOT change this catalog unless you know it will not break translations!
                          i18n("Apper"),
-                         APPER_VERSION,
+                         QLatin1String(APPER_VERSION),
                          i18n("Apper is an application to get and manage software"),
                          KAboutLicense::LicenseKey::GPL);
-    aboutData.addAuthor(i18n("(C) 2008-2018 Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com");
-    aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"), "@");
-    aboutData.addAuthor(i18n("Matthias Klumpp"), QString(), QStringLiteral("matthias@tenstral.net"));
+    aboutData.addAuthor(i18n("(C) 2008-2018 Daniel Nicoletti"), QString(), QLatin1String("dantti12@gmail.com"), QLatin1String("http://dantti.wordpress.com"));
+    aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"), QLatin1String("@"));
+    aboutData.addAuthor(i18n("Matthias Klumpp"), QString(), QLatin1String("matthias@tenstral.net"));
 
     KAboutData::setApplicationData(aboutData);
 

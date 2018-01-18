@@ -47,8 +47,8 @@ PkInstallCatalogs::PkInstallCatalogs(uint xid,
     setWindowTitle(i18n("Install Packages Catalogs"));
 
     // Find out how many packages PackageKit is able to resolve
-    QFile file("/etc/PackageKit/PackageKit.conf");
-    QRegExp rx("\\s*MaximumItemsToResolve=(\\d+)", Qt::CaseSensitive);
+    QFile file(QLatin1String("/etc/PackageKit/PackageKit.conf"));
+    QRegExp rx(QLatin1String("\\s*MaximumItemsToResolve=(\\d+)"), Qt::CaseSensitive);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
         while (!in.atEnd()) {
@@ -110,7 +110,7 @@ void PkInstallCatalogs::search()
     const QString distroId = Daemon::global()->distroID();
     const QStringList parts = distroId.split(QLatin1Char(';'));
     if (parts.size() != 3) {
-        sendErrorFinished(Failed, "invalid distribution id, please fill a bug against you distribution backend");
+        sendErrorFinished(Failed, QLatin1String("invalid distribution id, please fill a bug against you distribution backend"));
         return;
     }
     const QString distro = parts.at(0);
@@ -138,7 +138,7 @@ void PkInstallCatalogs::search()
                     i18n("Your backend does not support any of the needed "
                          "methods to install a catalog"));
         }
-        sendErrorFinished(Failed, "not supported by backend");
+        sendErrorFinished(Failed, QLatin1String("not supported by backend"));
         return;
     }
 
@@ -148,7 +148,8 @@ void PkInstallCatalogs::search()
     // matches after '=' but ';' at the end
     QString pattern;
     pattern = QString(
-                "^(%1)(?:\\((?:.*%2[^;]*(?:;(?:.*%3[^;]*(?:;(?:.*%4[^;]*)?)?)?)?)?\\))?=(.*[^;$])").arg(rxActions.join("|")).arg(distro).arg(version).arg(arch);
+                QLatin1String("^(%1)(?:\\((?:.*%2[^;]*(?:;(?:.*%3[^;]*(?:;(?:.*%4[^;]*)?)?)?)?)?\\))?=(.*[^;$])"))
+            .arg(rxActions.join(QLatin1Char('|')), distro, version, arch);
     QRegExp rx(pattern, Qt::CaseInsensitive);
 
     QStringList filesFailedToOpen;
@@ -161,9 +162,9 @@ void PkInstallCatalogs::search()
                 while (!in.atEnd()) {
                     if (rx.indexIn(in.readLine()) != -1) {
                         if (rx.cap(1).compare(QLatin1String("InstallPackages"), Qt::CaseInsensitive) == 0) {
-                            m_installPackages.append(rx.cap(2).split(';'));
+                            m_installPackages.append(rx.cap(2).split(QLatin1Char(';')));
                         } else if (rx.cap(1).compare(QLatin1String("InstallProvides"), Qt::CaseInsensitive) == 0) {
-                            m_installProvides.append(rx.cap(2).split(';'));
+                            m_installProvides.append(rx.cap(2).split(QLatin1Char(';')));
                         } else if (rx.cap(1).compare(QLatin1String("InstallFiles"), Qt::CaseInsensitive) == 0) {
                             m_installFiles.append(rx.cap(2).split(QLatin1Char(';')));
                         }
@@ -185,7 +186,7 @@ void PkInstallCatalogs::search()
                            i18np("Catalog %2 failed to open",
                                  "Catalogs %2 failed to open",
                                  filesFailedToOpen.size(),
-                                 filesFailedToOpen.join(",")),
+                                 filesFailedToOpen.join(QLatin1Char(','))),
                            i18n("Failed to open"));
     }
 

@@ -277,7 +277,7 @@ void PkTransaction::slotErrorCode(Transaction::Error error, const QString &detai
     }
     default:
         d->showingError = true;
-        showSorry(PkStrings::error(error), PkStrings::errorMessage(error), QString(details).replace('\n', "<br>"));
+        showSorry(PkStrings::error(error), PkStrings::errorMessage(error), QString(details).replace(QLatin1Char('\n'), QLatin1String("<br>")));
 
         // when we receive an error we are done
         setExitStatus(Failed);
@@ -452,7 +452,7 @@ void PkTransaction::slotFinished(Transaction::Exit status)
                 requeueTransaction();
             }
         } else {
-            KConfig config("apper");
+            KConfig config(QLatin1String("apper"));
             KConfigGroup transactionGroup(&config, "Transaction");
             bool showApp = transactionGroup.readEntry("ShowApplicationLauncher", true);
             if (showApp &&

@@ -46,7 +46,7 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
     setFrameShadow(Plain);
     setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     setWidget(m_screenshotL);
-    setWindowIcon(QIcon::fromTheme("layer-visible-on"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("layer-visible-on")));
 
     auto tempFile = new QTemporaryFile;
 //    tempFile->setPrefix("appgetfull");
@@ -59,7 +59,7 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
     connect(job, &KIO::FileCopyJob::result, this, &ScreenShotViewer::resultJob);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setSequence(KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(m_screenshotL);
     m_busySeq->start();

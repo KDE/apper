@@ -49,18 +49,18 @@ PkInstallGStreamerResources::PkInstallGStreamerResources(uint xid,
     bool decoder = false;
     // Resources are strings like "ID3 tag|gstreamer0.10(decoder-application/x-id3)()(64bit)"
     for (const QString &codec : resources) {
-        if (codec.contains("|gstreamer0.10(decoder")) {
+        if (codec.contains(QLatin1String("|gstreamer0.10(decoder"))) {
             decoder = true;
-        } else if (codec.contains("|gstreamer0.10(encoder")) {
+        } else if (codec.contains(QLatin1String("|gstreamer0.10(encoder"))) {
             encoder = true;
         }
 
-        auto item = new QStandardItem(codec.section('|', 0, 0));
-        item->setIcon(QIcon::fromTheme("x-kde-nsplugin-generated").pixmap(32, 32));
+        auto item = new QStandardItem(codec.section(QLatin1Char('|'), 0, 0));
+        item->setIcon(QIcon::fromTheme(QLatin1String("x-kde-nsplugin-generated")).pixmap(32, 32));
         item->setFlags(Qt::ItemIsEnabled);
         model->appendRow(item);
 
-        m_resources << codec.section('|', 1, -1);
+        m_resources << codec.section(QLatin1Char('|'), 1, -1);
     }
 
 
@@ -141,7 +141,7 @@ void PkInstallGStreamerResources::notFound()
                 i18n("Could not find plugin "
                      "in any configured software source"));
     }
-    sendErrorFinished(NoPackagesFound, "failed to find codec");
+    sendErrorFinished(NoPackagesFound, QLatin1String("failed to find codec"));
 }
 
 #include "PkInstallGStreamerResources.moc"

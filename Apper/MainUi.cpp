@@ -37,10 +37,10 @@ MainUi::MainUi(QWidget *parent) :
     QMainWindow(parent),
     m_apperModule(0)
 {
-    setWindowIcon(QIcon::fromTheme("system-software-install"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("system-software-install")));
     setWindowTitle(i18n("Apper"));
 
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup configGroup(&config, "MainUi");
     restoreGeometry(configGroup.readEntry("geometry", QByteArray()));
     restoreState(configGroup.readEntry("state", QByteArray()));
@@ -57,27 +57,27 @@ MainUi::~MainUi()
 void MainUi::showAll()
 {
     if (m_apperModule) {
-        m_apperModule->setProperty("page", "home");
+        m_apperModule->setProperty("page", QLatin1String("home"));
     }
 }
 
 void MainUi::showUpdates()
 {
     if (m_apperModule) {
-        m_apperModule->setProperty("page", "updates");
+        m_apperModule->setProperty("page", QLatin1String("updates"));
     }
 }
 
 void MainUi::showSettings()
 {
     if (m_apperModule) {
-        m_apperModule->setProperty("page", "settings");
+        m_apperModule->setProperty("page", QLatin1String("settings"));
     }
 }
 
 void MainUi::closeEvent(QCloseEvent *event)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup configGroup(&config, "MainUi");
     configGroup.writeEntry("geometry", saveGeometry());
     configGroup.writeEntry("state", saveState());

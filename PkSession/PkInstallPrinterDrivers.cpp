@@ -43,7 +43,7 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
     QStringList search;
     for (const QString &deviceid : resources) {
         QString mfg, mdl;
-        const QStringList fields = deviceid.split(';');
+        const QStringList fields = deviceid.split(QLatin1Char(';'));
         for (const QString &field : fields) {
             const QString keyvalue = field.trimmed();
             if (keyvalue.startsWith(QLatin1String("MFG:"))) {
@@ -56,8 +56,8 @@ PkInstallPrinterDrivers::PkInstallPrinterDrivers(uint xid,
         if (!mfg.isEmpty() && !mdl.isEmpty()) {
             QString prov;
             QTextStream out(&prov);
-            out << mfg.toLower().replace(' ', '_') << ';'
-                << mdl.toLower().replace(' ', '_') << ';';
+            out << mfg.toLower().replace(QLatin1Char(' '), QLatin1Char('_')) << QLatin1Char(';')
+                << mdl.toLower().replace(QLatin1Char(' '), QLatin1Char('_')) << QLatin1Char(';');
             search << prov;
         }
     }
@@ -83,7 +83,7 @@ void PkInstallPrinterDrivers::notFound()
                 i18n("Could not find printer driver "
                      "in any configured software source"));
     }
-    sendErrorFinished(NoPackagesFound, "failed to find printer driver");
+    sendErrorFinished(NoPackagesFound, QLatin1String("failed to find printer driver"));
 }
 
 #include "PkInstallPrinterDrivers.moc"

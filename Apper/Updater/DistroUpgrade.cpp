@@ -67,9 +67,9 @@ void DistroUpgrade::startDistroUpgrade()
                            "simply upgrading your packages.");
 
     if (!pluggedIn) {
-        warning += ' ' + i18n("It is recommended to plug in your computer before proceeding.");
+        warning += QLatin1Char(' ') + i18n("It is recommended to plug in your computer before proceeding.");
     } else if (hasBattery) {
-        warning += ' ' + i18n("It is recommended that you keep your computer plugged in while the upgrade is being performed.");
+        warning += QLatin1Char(' ') + i18n("It is recommended that you keep your computer plugged in while the upgrade is being performed.");
     }
 
     if (KMessageBox::warningContinueCancel(this,warning) == KMessageBox::Continue) {
@@ -78,9 +78,9 @@ void DistroUpgrade::startDistroUpgrade()
         connect(m_distroUpgradeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
                 this, &DistroUpgrade::distroUpgradeFinished);
         QStringList env = QProcess::systemEnvironment();
-        env << "DESKTOP=kde";
+        env << QLatin1String("DESKTOP=kde");
         m_distroUpgradeProcess->setEnvironment(env);
-        m_distroUpgradeProcess->start("/usr/share/PackageKit/pk-upgrade-distro.sh");
+        m_distroUpgradeProcess->start(QLatin1String("/usr/share/PackageKit/pk-upgrade-distro.sh"));
     }
 }
 

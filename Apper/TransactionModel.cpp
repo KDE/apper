@@ -70,7 +70,7 @@ void TransactionModel::addTransaction(PackageKit::Transaction *trans)
     KUser user(trans->uid());
     QString display;
     if (!user.property(KUser::FullName).toString().isEmpty()) {
-        display = user.property(KUser::FullName).toString() + " (" + user.loginName() + ')';
+        display = user.property(KUser::FullName).toString() + QLatin1String(" (") + user.loginName() + QLatin1Char(')');
     } else {
         display = user.loginName();
     }

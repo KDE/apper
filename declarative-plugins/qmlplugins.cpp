@@ -38,7 +38,7 @@
 
 void QmlPlugins::registerTypes(const char* uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.apper"));
+//    Q_ASSERT(uri == QString(QLatin1String("org.kde.apper")));
 
     qmlRegisterType<DaemonHelper>(uri, 0, 1, "DaemonHelper");
     qmlRegisterType<DBusUpdaterInterface>(uri, 0, 1, "DBusUpdaterInterface");
@@ -47,7 +47,7 @@ void QmlPlugins::registerTypes(const char* uri)
     qmlRegisterType<PkTransactionProgressModel>(uri, 0, 1, "PkTransactionProgressModel");
     qmlRegisterType<ApplicationSortFilterModel>(uri, 0, 1, "ApplicationSortFilterModel");
     qmlRegisterType<PackageKit::Transaction>(uri, 0, 1, "Transaction");
-    qmlRegisterUncreatableType<PackageKit::Daemon>(uri, 0, 1, "Daemon", "Global");
+    qmlRegisterUncreatableType<PackageKit::Daemon>(uri, 0, 1, "Daemon", QLatin1String("Global"));
     qRegisterMetaType<PkTransaction::ExitStatus>("PkTransaction::ExitStatus");
     qRegisterMetaType<PackageKit::Daemon::Network>("PackageKit::Daemon::Network");
     qRegisterMetaType<PackageKit::Daemon::Authorize>("PackageKit::Daemon::Authorize");
@@ -73,12 +73,12 @@ void QmlPlugins::registerTypes(const char* uri)
 void QmlPlugins::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_UNUSED(uri)
-    Q_ASSERT(uri == QLatin1String("org.kde.apper"));
+//    Q_ASSERT(uri == QLatin1String("org.kde.apper"));
 
     KLocalizedString::setApplicationDomain("apper");
 
-    engine->rootContext()->setContextProperty("Daemon", Daemon::global());
-    engine->rootContext()->setContextProperty("PkStrings", new PkStrings);
-    engine->rootContext()->setContextProperty("PkIcons", new PkIcons);
-    engine->rootContext()->setContextProperty("DaemonHelper", new DaemonHelper);
+    engine->rootContext()->setContextProperty(QLatin1String("Daemon"), Daemon::global());
+    engine->rootContext()->setContextProperty(QLatin1String("PkStrings"), new PkStrings);
+    engine->rootContext()->setContextProperty(QLatin1String("PkIcons"), new PkIcons);
+    engine->rootContext()->setContextProperty(QLatin1String("DaemonHelper"), new DaemonHelper);
 }

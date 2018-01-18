@@ -49,25 +49,25 @@ ChangesDelegate::ChangesDelegate(QAbstractItemView *parent) :
     KExtendableItemDelegate(parent),
     m_viewport(parent->viewport()),
     // loads it here to be faster when displaying items
-    m_packageIcon("package"),
-    m_collectionIcon("package-orign"),
-    m_installIcon("dialog-cancel"),
+    m_packageIcon(QIcon::fromTheme(QLatin1String("package"))),
+    m_collectionIcon(QIcon::fromTheme(QLatin1String("package-orign"))),
+    m_installIcon(QIcon::fromTheme(QLatin1String("dialog-cancel"))),
     m_installString(i18n("Do not Install")),
-    m_removeIcon("dialog-cancel"),
+    m_removeIcon(QIcon::fromTheme(QLatin1String("dialog-cancel"))),
     m_removeString(i18n("Do not Remove")),
-    m_undoIcon("edit-undo"),
+    m_undoIcon(QIcon::fromTheme(QLatin1String("edit-undo"))),
     m_undoString(i18n("Deselect")),
-    m_checkedIcon("dialog-ok-apply")
+    m_checkedIcon(QIcon::fromTheme(QLatin1String("dialog-ok-apply")))
 {
     // maybe rename or copy it to package-available
     if (QApplication::isRightToLeft()) {
-        setExtendPixmap(SmallIcon("arrow-left"));
+        setExtendPixmap(SmallIcon(QLatin1String("arrow-left")));
     } else {
-        setExtendPixmap(SmallIcon("arrow-right"));
+        setExtendPixmap(SmallIcon(QLatin1String("arrow-right")));
     }
-    setContractPixmap(SmallIcon("arrow-down"));
+    setContractPixmap(SmallIcon(QLatin1String("arrow-down")));
     // store the size of the extend pixmap to know how much we should move
-    m_extendPixmapWidth = SmallIcon("arrow-right").size().width();
+    m_extendPixmapWidth = SmallIcon(QLatin1String("arrow-right")).size().width();
 
     QPushButton button, button2;
     button.setText(m_installString);

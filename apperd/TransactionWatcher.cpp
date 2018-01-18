@@ -135,12 +135,12 @@ void TransactionWatcher::transactionReady()
 
 void TransactionWatcher::showRebootNotificationApt() {
     // Create the notification about this transaction
-    auto notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
+    auto notify = new KNotification(QLatin1String("RestartRequired"), 0, KNotification::Persistent);
     connect(notify, QOverload<uint>::of(&KNotification::activated), this, &TransactionWatcher::logout);
-    notify->setComponentName("apperd");
+    notify->setComponentName(QLatin1String("apperd"));
 
-    QString text("<b>" + i18n("The system update has completed") + "</b>");
-    text.append("<br/>" + PkStrings::restartType(Transaction::RestartSystem));
+    QString text(QLatin1String("<b>") + i18n("The system update has completed") + QLatin1String("</b>"));
+    text.append(QLatin1String("<br>") + PkStrings::restartType(Transaction::RestartSystem));
     notify->setPixmap(PkIcons::restartIcon(Transaction::RestartSystem).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     notify->setText(text);
 
@@ -166,9 +166,9 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
         QStringList restartPackages = transaction->property("restartPackages").toStringList();
 
         // Create the notification about this transaction
-        auto notify = new KNotification("RestartRequired", 0, KNotification::Persistent);
+        auto notify = new KNotification(QLatin1String("RestartRequired"), 0, KNotification::Persistent);
         connect(notify, QOverload<uint>::of(&KNotification::activated), this, &TransactionWatcher::logout);
-        notify->setComponentName("apperd");
+        notify->setComponentName(QLatin1String("apperd"));
         notify->setProperty("restartType", qVariantFromValue(type));
         notify->setPixmap(PkIcons::restartIcon(type).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
         notify->setTitle(PkStrings::restartType(type));
@@ -219,8 +219,8 @@ void TransactionWatcher::transactionChanged(Transaction *transaction, bool inter
 
 void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QString &details)
 {
-    auto notify = new KNotification("TransactionError", 0, KNotification::Persistent);
-    notify->setComponentName("apperd");
+    auto notify = new KNotification(QLatin1String("TransactionError"), 0, KNotification::Persistent);
+    notify->setComponentName(QLatin1String("apperd"));
     notify->setTitle(PkStrings::error(err));
     notify->setText(PkStrings::errorMessage(err));
     notify->setProperty("ErrorType", QVariant::fromValue(err));
@@ -229,7 +229,7 @@ void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QSt
     QStringList actions;
     actions << i18n("Details");
     notify->setActions(actions);
-    notify->setPixmap(QIcon::fromTheme("dialog-error").pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
+    notify->setPixmap(QIcon::fromTheme(QLatin1String("dialog-error")).pixmap(KPK_ICON_SIZE, KPK_ICON_SIZE));
     connect(notify, QOverload<uint>::of(&KNotification::activated), this, &TransactionWatcher::errorActivated);
     notify->sendEvent();
 }
@@ -244,7 +244,7 @@ void TransactionWatcher::errorActivated(uint action)
         QString details = notify->property("Details").toString();
         KMessageBox::detailedSorry(0,
                                    PkStrings::errorMessage(error),
-                                   details.replace('\n', "<br />"),
+                                   details.replace(QLatin1Char('\n'), QLatin1String("<br>")),
                                    PkStrings::error(error),
                                    KMessageBox::Notify);
     }

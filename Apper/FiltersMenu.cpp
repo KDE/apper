@@ -30,7 +30,7 @@ FiltersMenu::FiltersMenu(QWidget *parent)
  : QMenu(parent)
 {
     // Loads the filter menu settings
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
     auto menuCollections = new QMenu(i18n("Collections"), this);
@@ -273,7 +273,7 @@ FiltersMenu::FiltersMenu(QWidget *parent)
 
 FiltersMenu::~FiltersMenu()
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup filterMenuGroup(&config, "FilterMenu");
 
     // For usability we will only save ViewInGroups settings and Newest filter,

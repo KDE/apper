@@ -69,8 +69,8 @@ Q_LOGGING_CATEGORY(APPER, "apper")
 ApperKCM::ApperKCM(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ApperKCM),
-    m_findIcon(QIcon::fromTheme("edit-find")),
-    m_cancelIcon(QIcon::fromTheme("dialog-cancel"))
+    m_findIcon(QIcon::fromTheme(QLatin1String("edit-find"))),
+    m_cancelIcon(QIcon::fromTheme(QLatin1String("dialog-cancel")))
 {
     ui->setupUi(this);
 
@@ -81,7 +81,7 @@ ApperKCM::ApperKCM(QWidget *parent) :
     Daemon::global()->setHints(QLatin1String("locale=") + QLocale::system().name() + QLatin1String(".UTF-8"));
 
     // Browse TAB
-    ui->backTB->setIcon(QIcon::fromTheme("go-previous"));
+    ui->backTB->setIcon(QIcon::fromTheme(QLatin1String("go-previous")));
 
     // create our toolbar
     auto toolBar = new QToolBar(this);
@@ -142,7 +142,7 @@ ApperKCM::ApperKCM(QWidget *parent) :
     // install the backend filters
     ui->filtersTB->setMenu(m_filtersMenu = new FiltersMenu(this));
     connect(m_filtersMenu, &FiltersMenu::filtersChanged, this, &ApperKCM::search);
-    ui->filtersTB->setIcon(QIcon::fromTheme("view-filter"));
+    ui->filtersTB->setIcon(QIcon::fromTheme(QLatin1String("view-filter")));
     ApplicationSortFilterModel *proxy = ui->browseView->proxy();
     proxy->setApplicationFilter(m_filtersMenu->filterApplications());
     connect(m_filtersMenu, QOverload<bool>::of(&FiltersMenu::filterApplications), proxy, &ApplicationSortFilterModel::setApplicationFilter);
@@ -172,7 +172,7 @@ ApperKCM::ApperKCM(QWidget *parent) :
     connect(m_changesModel, &PackageModel::packageUnchecked, m_changesModel, &PackageModel::removePackage);
     connect(m_changesModel, &PackageModel::packageUnchecked, m_browseModel, &PackageModel::uncheckPackageDefault);
 
-    ui->reviewMessage->setIcon(QIcon::fromTheme("edit-redo"));
+    ui->reviewMessage->setIcon(QIcon::fromTheme(QLatin1String("edit-redo")));
     ui->reviewMessage->setText(i18n("Some software changes were made"));
     auto reviewAction = new QAction(i18n("Review"), this);
     connect(reviewAction, &QAction::triggered, this, &ApperKCM::showReviewPages);
@@ -198,18 +198,18 @@ ApperKCM::ApperKCM(QWidget *parent) :
 
     auto menu = new QMenu(this);
     ui->settingsTB->setMenu(menu);
-    ui->settingsTB->setIcon(QIcon::fromTheme("preferences-other"));
+    ui->settingsTB->setIcon(QIcon::fromTheme(QLatin1String("preferences-other")));
 
     auto signalMapper = new QSignalMapper(this);
     connect(signalMapper, QOverload<const QString &>::of(&QSignalMapper::mapped), this, &ApperKCM::setPage);
 
     QAction *action;
-    action = menu->addAction(QIcon::fromTheme("view-history"), i18n("History"));
-    signalMapper->setMapping(action, "history");
+    action = menu->addAction(QIcon::fromTheme(QLatin1String("view-history")), i18n("History"));
+    signalMapper->setMapping(action, QLatin1String("history"));
     connect(action, &QAction::triggered, signalMapper, QOverload<>::of(&QSignalMapper::map));
 
-    action = menu->addAction(QIcon::fromTheme("preferences-other"), i18n("Settings"));
-    signalMapper->setMapping(action, "settings");
+    action = menu->addAction(QIcon::fromTheme(QLatin1String("preferences-other")), i18n("Settings"));
+    signalMapper->setMapping(action, QLatin1String("settings"));
     connect(action, &QAction::triggered, signalMapper, QOverload<>::of(&QSignalMapper::map));
 
     auto helpMenu = new KHelpMenu(this, KAboutData::applicationData());
@@ -282,8 +282,8 @@ void ApperKCM::setCurrentActionCancel(bool cancel)
         ui->actionFindFile->setText(i18n("Find by f&ile name"));
         ui->actionFindDescription->setText(i18n("Find by &description"));
         // Define actions icon
-        ui->actionFindFile->setIcon(QIcon::fromTheme("document-open"));
-        ui->actionFindDescription->setIcon(QIcon::fromTheme("document-edit"));
+        ui->actionFindFile->setIcon(QIcon::fromTheme(QLatin1String("document-open")));
+        ui->actionFindDescription->setIcon(QIcon::fromTheme(QLatin1String("document-edit")));
         ui->actionFindName->setIcon(m_findIcon);
         m_genericActionK->setIcon(m_findIcon);
         if (m_currentAction) {
@@ -415,7 +415,7 @@ void ApperKCM::on_homeView_activated(const QModelIndex &index)
         } else if (m_searchRole == Transaction::RoleSearchGroup) {
             if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
                 QString category = index.data(CategoryModel::GroupRole).toString();
-                if (category.startsWith('@') ||
+                if (category.startsWith(QLatin1Char('@')) ||
                     (category.startsWith(QLatin1String("repo:")) && category.size() > 5)) {
                     m_searchGroupCategory = category;
                 } else {
@@ -430,7 +430,7 @@ void ApperKCM::on_homeView_activated(const QModelIndex &index)
                 m_searchString = index.data().toString(); // Store the nice name to change the title
             }
         } else if (m_searchRole == Transaction::RoleGetUpdates) {
-            setPage("updates");
+            setPage(QLatin1String("updates"));
             return;
         }
 
@@ -532,7 +532,7 @@ void ApperKCM::setPage(const QString &page)
                 connect(m_updaterPage, &Updater::downloadSize, ui->downloadL, &QLabel::setText);
 //                connect(m_updaterPage, &Updater::changed, this, &ApperKCM::checkChanged);
                 ui->stackedWidget->addWidget(m_updaterPage);
-                ui->checkUpdatesPB->setIcon(QIcon::fromTheme("view-refresh"));
+                ui->checkUpdatesPB->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
                 connect(ui->checkUpdatesPB, &QPushButton::clicked, this, &ApperKCM::refreshCache);
 
                 ui->updatePB->setIcon(QIcon::fromTheme(QLatin1String("system-software-update")));
@@ -772,9 +772,9 @@ void ApperKCM::refreshCache()
     }
 
     if (currentWidget == m_settingsPage) {
-        setPage("settings");
+        setPage(QLatin1String("settings"));
     } else {
-        setPage("updates");
+        setPage(QLatin1String("updates"));
     }
 
     QTimer::singleShot(0, this, &ApperKCM::checkChanged);
@@ -857,7 +857,7 @@ void ApperKCM::save()
         transaction->deleteLater();
         if (currentWidget == m_updaterPage) {
             m_updaterPage->getUpdates();
-            setPage("updates");
+            setPage(QLatin1String("updates"));
         } else {
             // install then remove packages
             search();

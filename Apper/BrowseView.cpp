@@ -53,7 +53,7 @@ BrowseView::BrowseView(QWidget *parent)
     connect(categoryView, &QListView::clicked, this, &BrowseView::categoryActivated);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setSequence(KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(packageView->viewport());
 
@@ -78,10 +78,10 @@ BrowseView::BrowseView(QWidget *parent)
     ApplicationsDelegate *delegate = new ApplicationsDelegate(packageView);
     packageView->setItemDelegate(delegate);
 
-    exportInstalledPB->setIcon(QIcon::fromTheme("document-export"));
-    importInstalledPB->setIcon(QIcon::fromTheme("document-import"));
+    exportInstalledPB->setIcon(QIcon::fromTheme(QLatin1String("document-export")));
+    importInstalledPB->setIcon(QIcon::fromTheme(QLatin1String("document-import")));
 
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "BrowseView");
 
     // Version
@@ -138,7 +138,7 @@ PackageModel* BrowseView::model() const
 
 void BrowseView::showVersions(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "BrowseView");
     viewGroup.writeEntry("ShowApplicationVersions", enabled);
     packageView->header()->setSectionHidden(PackageModel::VersionCol, !enabled);
@@ -147,7 +147,7 @@ void BrowseView::showVersions(bool enabled)
 
 void BrowseView::showArchs(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "BrowseView");
     viewGroup.writeEntry("ShowApplicationArchitectures", enabled);
     packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
@@ -156,7 +156,7 @@ void BrowseView::showArchs(bool enabled)
 
 void BrowseView::showOrigins(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "BrowseView");
     viewGroup.writeEntry("ShowApplicationOrigins", enabled);
     packageView->header()->setSectionHidden(PackageModel::OriginCol, !enabled);
@@ -164,7 +164,7 @@ void BrowseView::showOrigins(bool enabled)
 
 void BrowseView::showSizes(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "BrowseView");
     viewGroup.writeEntry("ShowPackageSizes", enabled);
     packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
@@ -241,7 +241,7 @@ bool BrowseView::goBack()
         // if it's valid we need to know if it wasn't a  PK root category
         if (index.data(CategoryModel::GroupRole).type() == QVariant::String) {
             QString category = index.data(CategoryModel::GroupRole).toString();
-            if (!category.startsWith('@')) {
+            if (!category.startsWith(QLatin1Char('@'))) {
                 return true;
             }
         }
@@ -312,10 +312,10 @@ void BrowseView::on_importInstalledPB_clicked()
 
     // send a DBus message to install this catalog
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall("org.freedesktop.PackageKit",
-                                             "/org/freedesktop/PackageKit",
-                                             "org.freedesktop.PackageKit.Modify",
-                                             "InstallCatalogs");
+    message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.PackageKit"),
+                                             QLatin1String("/org/freedesktop/PackageKit"),
+                                             QLatin1String("org.freedesktop.PackageKit.Modify"),
+                                             QLatin1String("InstallCatalogs"));
     message << static_cast<uint>(effectiveWinId());
     message << (QStringList() << fileName);
     message << QString();

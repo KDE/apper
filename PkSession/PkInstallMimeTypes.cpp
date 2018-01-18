@@ -96,7 +96,7 @@ void PkInstallMimeTypes::notFound()
         setInfo(msg, i18n("No new applications can be found "
                           "to handle this type of file"));
     }
-    sendErrorFinished(NoPackagesFound, "nothing was found to handle mime type");
+    sendErrorFinished(NoPackagesFound, QLatin1String("nothing was found to handle mime type"));
 }
 
 //setTitle(i18np("Application that can open this type of file",

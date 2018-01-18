@@ -53,13 +53,13 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
     ui->packageView->header()->hideSection(PackageModel::SizeCol);
 
     setWindowTitle(i18n("Additional changes"));
-    setWindowIcon(QIcon::fromTheme("dialog-warning"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("dialog-warning")));
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(i18n("Continue"));
 
     // restore size
     setMinimumSize(QSize(600,480));
 //    setInitialSize(QSize(600,600));
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
 //    restoreGeometry(requirementsDialog.readEntry("geometry").toByteArray());
 //    restoreDialogSize(requirementsDialog);
@@ -149,7 +149,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
         m_untrustedButton->setIconSize(QSize(32, 32));
         m_untrustedButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         m_untrustedButton->setText(i18np("1 untrusted package", "%1 untrusted packages", c));
-        m_untrustedButton->setIcon(QIcon::fromTheme("security-low"));
+        m_untrustedButton->setIcon(QIcon::fromTheme(QLatin1String("security-low")));
         m_untrustedButton->setVisible(false);
         ui->verticalLayout->insertWidget(count++, m_untrustedButton);
     }
@@ -174,7 +174,7 @@ Requirements::Requirements(PackageModel *model, QWidget *parent) :
 
 Requirements::~Requirements()
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     requirementsDialog.writeEntry("geometry", saveGeometry());
 
@@ -232,7 +232,7 @@ void Requirements::slotButtonClicked(int)
 
 void Requirements::confirmCBChanged(bool checked)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
 
     if (!m_hideAutoConfirm) {

@@ -137,7 +137,7 @@ Settings::Settings(Transaction::Roles roles, QWidget *parent) :
 
     // Setup the busy cursor
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setSequence(KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(ui->originTV->viewport());
 
@@ -175,7 +175,7 @@ void Settings::on_showOriginsCB_stateChanged(int state)
 
     m_busySeq->start();
 
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup originsDialog(&config, "originsDialog");
     bool showDevel = originsDialog.readEntry("showDevel", false);
     if (showDevel != ui->showOriginsCB->isChecked()) {
@@ -185,7 +185,7 @@ void Settings::on_showOriginsCB_stateChanged(int state)
 
 bool Settings::hasChanges() const
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     KConfigGroup transaction(&config, "Transaction");
@@ -235,7 +235,7 @@ void Settings::checkChanges()
 
 void Settings::load()
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     ui->autoConfirmCB->setChecked(!requirementsDialog.readEntry("autoConfirm", false));
@@ -307,7 +307,7 @@ void Settings::save()
 {
     qCDebug(APPER) << "Saving settings";
 
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
 
     KConfigGroup requirementsDialog(&config, "requirementsDialog");
     requirementsDialog.writeEntry("autoConfirm", !ui->autoConfirmCB->isChecked());

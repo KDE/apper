@@ -111,7 +111,7 @@ void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status
          finishTaskOk();
          break;
      case PkTransaction::Cancelled :
-         sendErrorFinished(Cancelled, "Aborted");
+         sendErrorFinished(Cancelled, QLatin1String("Aborted"));
          break;
      case PkTransaction::Failed :
          if (showWarning()) {

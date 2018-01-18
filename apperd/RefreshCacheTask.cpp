@@ -67,10 +67,10 @@ void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorM
         return;
     }
 
-    m_notification = new KNotification("TransactionFailed", KNotification::Persistent, this);
-    m_notification->setComponentName("apperd");
+    m_notification = new KNotification(QLatin1String("TransactionFailed"), KNotification::Persistent, this);
+    m_notification->setComponentName(QLatin1String("apperd"));
     connect(m_notification, &KNotification::closed, this, &RefreshCacheTask::notificationClosed);
-    QIcon icon = QIcon::fromTheme("dialog-cancel");
+    QIcon icon = QIcon::fromTheme(QLatin1String("dialog-cancel"));
     // use of QSize does the right thing
     m_notification->setPixmap(icon.pixmap(QSize(KPK_ICON_SIZE, KPK_ICON_SIZE)));
     m_notification->setTitle(PkStrings::error(error));

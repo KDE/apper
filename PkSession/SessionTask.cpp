@@ -68,10 +68,10 @@ SessionTask::SessionTask(uint xid, const QString &interaction, const QDBusMessag
 //            this, SLOT(updatePallete()));
     updatePallete();
 
-    setWindowIcon(QIcon::fromTheme("system-software-install"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("system-software-install")));
     QPushButton *okButton = ui->buttonBox->button(QDialogButtonBox::Ok);
     okButton->setText(i18n("Continue"));
-    okButton->setIcon(QIcon::fromTheme("go-next"));
+    okButton->setIcon(QIcon::fromTheme(QLatin1String("go-next")));
     enableButtonOk(false);
     connect(okButton, &QPushButton::clicked, this, &SessionTask::slotContinueClicked);
 
@@ -246,7 +246,7 @@ void SessionTask::setError(const QString &title, const QString &text, const QStr
     auto info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
-    info->setIcon(QIcon::fromTheme("dialog-error"));
+    info->setIcon(QIcon::fromTheme(QLatin1String("dialog-error")));
     info->setDetails(details);
     setMainWidget(info);
 //    setButtons(KDialog::Close);
@@ -265,7 +265,7 @@ void SessionTask::setFinish(const QString &title, const QString &text, QWidget *
     auto info = new InfoWidget(this);
     info->setWindowTitle(title);
     info->setDescription(text);
-    info->setIcon(QIcon::fromTheme("dialog-ok-apply"));
+    info->setIcon(QIcon::fromTheme(QLatin1String("dialog-ok-apply")));
     info->addWidget(widget);
     setMainWidget(info);
 //    setButtons(KDialog::Close);
@@ -291,17 +291,17 @@ void SessionTask::setExec(const QString &exec)
 bool SessionTask::pathIsTrusted(const QString &exec)
 {
     // special case the plugin helper -- it's trusted
-    return exec == "/usr/libexec/gst-install-plugins-helper" ||
-           exec == "/usr/libexec/pk-gstreamer-install" ||
-           exec == "/usr/bin/gstreamer-codec-install" ||
-           exec == "/usr/lib/packagekit/pk-gstreamer-install" ||
-           exec == "/usr/bin/plasma-desktop" ||
-           exec == "/usr/bin/apper";
+    return exec == QLatin1String("/usr/libexec/gst-install-plugins-helper") ||
+           exec == QLatin1String("/usr/libexec/pk-gstreamer-install") ||
+           exec == QLatin1String("/usr/bin/gstreamer-codec-install") ||
+           exec == QLatin1String("/usr/lib/packagekit/pk-gstreamer-install") ||
+           exec == QLatin1String("/usr/bin/plasma-desktop") ||
+           exec == QLatin1String("/usr/bin/apper");
 }
 
 QString SessionTask::getCmdLine(uint pid)
 {
-    QFile file(QString("/proc/%1/cmdline").arg(pid));
+    QFile file(QString(QLatin1String("/proc/%1/cmdline")).arg(pid));
     QString line;
     if (file.open(QFile::ReadOnly)) {
         char buf[1024];
@@ -309,7 +309,7 @@ QString SessionTask::getCmdLine(uint pid)
         if (lineLength != -1) {
             // the line is available in buf
             line = QString::fromLocal8Bit(buf);
-            if (!line.contains("(deleted)")) {
+            if (!line.contains(QLatin1String("(deleted)"))) {
                 return line;
             }
         }
@@ -320,9 +320,9 @@ QString SessionTask::getCmdLine(uint pid)
 uint SessionTask::getPidSystem()
 {
     QDBusMessage msg;
-    msg = QDBusMessage::createMethodCall("org.freedesktop.DBus",
-                                         "/org/freedesktop/DBus/Bus",
-                                         "org.freedesktop.DBus",
+    msg = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.DBus"),
+                                         QLatin1String("/org/freedesktop/DBus/Bus"),
+                                         QLatin1String("org.freedesktop.DBus"),
                                          QLatin1String("GetConnectionUnixProcessID"));
     msg << m_message.service();
     QDBusMessage reply = QDBusConnection::systemBus().call(msg);
@@ -340,9 +340,9 @@ uint SessionTask::getPidSystem()
 uint SessionTask::getPidSession()
 {
     QDBusMessage msg;
-    msg = QDBusMessage::createMethodCall("org.freedesktop.DBus",
-                                         "/org/freedesktop/DBus/Bus",
-                                         "org.freedesktop.DBus",
+    msg = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.DBus"),
+                                         QLatin1String("/org/freedesktop/DBus/Bus"),
+                                         QLatin1String("org.freedesktop.DBus"),
                                          QLatin1String("GetConnectionUnixProcessID"));
     msg << m_message.service();
     QDBusMessage reply = QDBusConnection::sessionBus().call(msg);
@@ -373,7 +373,7 @@ void SessionTask::commit()
         if (installPackages.isEmpty() && m_removePackages.isEmpty()) {
             setInfo(i18n("There are no packages to Install or Remove"),
                     i18n("This action should not happen"));
-            sendErrorFinished(Failed, "to install or remove due to empty lists");
+            sendErrorFinished(Failed, QLatin1String("to install or remove due to empty lists"));
         } else if (!installPackages.isEmpty()) {
             // Install Packages
             auto transaction = new PkTransaction(this);
@@ -404,7 +404,7 @@ void SessionTask::notFound()
         setInfo(i18n("Could not find"),
                 i18n("No packages were found that meet the request"));
     }
-    sendErrorFinished(NoPackagesFound, "no package found");
+    sendErrorFinished(NoPackagesFound, QLatin1String("no package found"));
 }
 
 void SessionTask::searchFailed()
@@ -412,7 +412,7 @@ void SessionTask::searchFailed()
     qCDebug(APPER_SESSION) << "virtual method called";
     setInfo(i18n("Failed to find"),
             i18n("No packages were found that meet the request"));
-    sendErrorFinished(Failed, "failed to search");
+    sendErrorFinished(Failed, QLatin1String("failed to search"));
 }
 
 void SessionTask::searchSuccess()
@@ -500,7 +500,7 @@ void SessionTask::slotContinueClicked()
 void SessionTask::slotCancelClicked()
 {
     emit cancelClicked();
-    sendErrorFinished(Cancelled, "Aborted by the user");
+    sendErrorFinished(Cancelled, QLatin1String("Aborted by the user"));
     reject();
 
 }
@@ -517,62 +517,62 @@ void SessionTask::enableButtonOk(bool enable)
 
 void SessionTask::parseInteraction(const QString &interaction)
 {
-    QStringList interactions = interaction.split(',');
+    QStringList interactions = interaction.split(QLatin1Char(','));
 
     // Enable or disable all options
-    if (interactions.contains("always")) {
+    if (interactions.contains(QLatin1String("always"))) {
         m_interactions = ConfirmSearch
                        | ConfirmDeps
                        | ConfirmInstall
                        | Progress
                        | Finished
                        | Warning;
-    } else if (interactions.contains("never")) {
+    } else if (interactions.contains(QLatin1String("never"))) {
         m_interactions = 0;
     }
 
     // show custom options
-    if (interactions.contains("show-confirm-search")) {
+    if (interactions.contains(QLatin1String("show-confirm-search"))) {
         m_interactions |= ConfirmSearch;
     }
-    if (interactions.contains("show-confirm-deps")) {
+    if (interactions.contains(QLatin1String("show-confirm-deps"))) {
         m_interactions |= ConfirmDeps;
     }
-    if (interactions.contains("show-confirm-install")) {
+    if (interactions.contains(QLatin1String("show-confirm-install"))) {
         m_interactions |= ConfirmInstall;
     }
-    if (interactions.contains("show-progress")) {
+    if (interactions.contains(QLatin1String("show-progress"))) {
         m_interactions |= Progress;
     }
-    if (interactions.contains("show-finished")) {
+    if (interactions.contains(QLatin1String("show-finished"))) {
         m_interactions |= Finished;
     }
-    if (interactions.contains("show-warning")) {
+    if (interactions.contains(QLatin1String("show-warning"))) {
         m_interactions |= Warning;
     }
 
     // hide custom options
-    if (interactions.contains("hide-confirm-search")) {
+    if (interactions.contains(QLatin1String("hide-confirm-search"))) {
         m_interactions &= ~ConfirmSearch;
     }
-    if (interactions.contains("hide-confirm-deps")) {
+    if (interactions.contains(QLatin1String("hide-confirm-deps"))) {
         m_interactions &= ~ConfirmDeps;
     }
-    if (interactions.contains("hide-confirm-install")) {
+    if (interactions.contains(QLatin1String("hide-confirm-install"))) {
         m_interactions &= ~ConfirmInstall;
     }
-    if (interactions.contains("hide-progress")) {
+    if (interactions.contains(QLatin1String("hide-progress"))) {
         m_interactions &= ~Progress;
     }
-    if (interactions.contains("hide-finished")) {
+    if (interactions.contains(QLatin1String("hide-finished"))) {
         m_interactions &= ~Finished;
     }
-    if (interactions.contains("hide-warning")) {
+    if (interactions.contains(QLatin1String("hide-warning"))) {
         m_interactions &= ~Warning;
     }
 
     int index;
-    QRegExp rx("^timeout=(\\d+)$");
+    QRegExp rx(QLatin1String("^timeout=(\\d+)$"));
     index = interactions.indexOf(rx);
     if (index != -1) {
         if (rx.indexIn(interactions.at(index)) != -1) {

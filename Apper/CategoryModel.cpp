@@ -53,7 +53,7 @@ CategoryModel::CategoryModel(QObject *parent) :
     item->setData(Transaction::RoleGetPackages, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
-    item->setIcon(QIcon::fromTheme("dialog-ok-apply"));
+    item->setIcon(QIcon::fromTheme(QLatin1String("dialog-ok-apply")));
     appendRow(item);
 
     item = new QStandardItem(i18n("Updates"));
@@ -61,7 +61,7 @@ CategoryModel::CategoryModel(QObject *parent) :
     item->setData(Transaction::RoleGetUpdates, SearchRole);
     item->setData(i18n("Lists"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(0, KCategorizedSortFilterProxyModel::CategorySortRole);
-    item->setIcon(QIcon::fromTheme("system-software-update"));
+    item->setIcon(QIcon::fromTheme(QLatin1String("system-software-update")));
     appendRow(item);
 
 #ifdef HAVE_APPSTREAM
@@ -167,7 +167,7 @@ void CategoryModel::category(const QString &parentId,
     item->setData(i18n("Categories"), KCategorizedSortFilterProxyModel::CategoryDisplayRole);
     item->setData(2, KCategorizedSortFilterProxyModel::CategorySortRole);
     item->setToolTip(summary);
-    item->setIcon(QIcon("/usr/share/pixmaps/comps/" + icon + ".png"));
+    item->setIcon(QIcon(QLatin1String("/usr/share/pixmaps/comps/") + icon + QLatin1String(".png")));
 
     if (parentId.isEmpty()) {
         appendRow(item);

@@ -57,7 +57,7 @@ private:
     QIcon    m_checkedIcon;
     QSize    m_buttonSize;
     QSize    m_buttonIconSize;
-    bool     m_checkable;
+    bool     m_checkable = false;
 };
 
 #endif

@@ -137,12 +137,12 @@ void PkRemovePackageByFiles::notFound()
 {
     if (showWarning()) {
         QStringList files = m_model->files();
-        setInfo(i18n("Could not find %1", files.join(", ")),
+        setInfo(i18n("Could not find %1", files.join(QLatin1String(", "))),
                 i18np("The file could not be found in any installed package",
                       "The files could not be found in any installed package",
                       files.size()));
     }
-    sendErrorFinished(NoPackagesFound, "no package found");
+    sendErrorFinished(NoPackagesFound, QLatin1String("no package found"));
 }
 
 #include "PkRemovePackageByFiles.moc"

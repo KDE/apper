@@ -30,7 +30,7 @@ InfoWidget::InfoWidget(QWidget *parent) :
     ui(new Ui::InfoWidget)
 {
     ui->setupUi(this);
-    ui->iconL->setPixmap(QIcon::fromTheme("dialog-warning").pixmap(128, 128));
+    ui->iconL->setPixmap(QIcon::fromTheme(QLatin1String("dialog-warning")).pixmap(128, 128));
 }
 
 InfoWidget::~InfoWidget()
@@ -54,7 +54,7 @@ void InfoWidget::setDetails(const QString &details)
         auto browser = new QTextBrowser(this);
         browser->setFrameShape(QFrame::NoFrame);
         browser->setFrameShadow(QFrame::Plain);
-        browser->setStyleSheet("QTextEdit {\nbackground-color: transparent;\n};");
+        browser->setStyleSheet(QLatin1String("QTextEdit {\nbackground-color: transparent;\n};"));
         browser->setText(details);
         ui->descriptionLayout->addWidget(browser);
         ui->descriptionLayout->insertSpacing(0, 20);
@@ -71,10 +71,10 @@ void InfoWidget::addWidget(QWidget *widget)
 
 void InfoWidget::reset()
 {
-    ui->iconL->setPixmap(QIcon::fromTheme("dialog-information").pixmap(128, 128));
-    setWindowTitle("");
-    setDescription("");
-    setDetails("");
+    ui->iconL->setPixmap(QIcon::fromTheme(QLatin1String("dialog-information")).pixmap(128, 128));
+    setWindowTitle(QLatin1String(""));
+    setDescription(QLatin1String(""));
+    setDetails(QLatin1String(""));
 }
 
 #include "moc_InfoWidget.cpp"

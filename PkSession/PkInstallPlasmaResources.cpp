@@ -56,7 +56,7 @@ PkInstallPlasmaResources::PkInstallPlasmaResources(uint xid,
         }
 
         auto item = new QStandardItem(prettyService);
-        item->setIcon(QIcon::fromTheme("application-x-plasma").pixmap(32, 32));
+        item->setIcon(QIcon::fromTheme(QLatin1String("application-x-plasma")).pixmap(32, 32));
         item->setFlags(Qt::ItemIsEnabled);
         model->appendRow(item);
 

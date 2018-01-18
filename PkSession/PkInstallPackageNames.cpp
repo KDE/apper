@@ -50,7 +50,7 @@ PkInstallPackageNames::PkInstallPackageNames(uint xid,
 
     for (const QString &package : packages) {
         QStandardItem *item = new QStandardItem(package);
-        item->setIcon(QIcon::fromTheme("package-x-generic").pixmap(32, 32));
+        item->setIcon(QIcon::fromTheme(QLatin1String("package-x-generic")).pixmap(32, 32));
         item->setFlags(Qt::ItemIsEnabled);
         model->appendRow(item);
     }
@@ -102,23 +102,23 @@ void PkInstallPackageNames::notFound()
                     i18np("The package %2 is already installed",
                           "The packages %2 are already installed",
                           m_alreadyInstalled.size(),
-                          m_alreadyInstalled.join(",")));
+                          m_alreadyInstalled.join(QLatin1Char(','))));
         }
-        sendErrorFinished(Failed, "package already found");
+        sendErrorFinished(Failed, QLatin1String("package already found"));
     } else {
         if (showWarning()) {
-            setInfo(i18n("Could not find %1", m_packages.join(", ")),
+            setInfo(i18n("Could not find %1", m_packages.join(QLatin1String(", "))),
                     i18np("The package could not be found in any software source",
                           "The packages could not be found in any software source",
                           m_packages.size()));
         }
-        sendErrorFinished(NoPackagesFound, "no package found");
+        sendErrorFinished(NoPackagesFound, QLatin1String("no package found"));
     }
 }
 
 void PkInstallPackageNames::searchFailed()
 {
-    sendErrorFinished(Failed, "failed to resolve package name");
+    sendErrorFinished(Failed, QLatin1String("failed to resolve package name"));
 }
 
 void PkInstallPackageNames::addPackage(Transaction::Info info, const QString &packageID, const QString &summary)

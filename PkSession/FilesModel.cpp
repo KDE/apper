@@ -120,14 +120,14 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
                 item->setData(path);
                 item->setToolTip(path);
                 item->setEnabled(false);
-                item->setIcon(KIconLoader::global()->loadIcon("dialog-cancel", KIconLoader::Desktop));
+                item->setIcon(KIconLoader::global()->loadIcon(QLatin1String("dialog-cancel"), KIconLoader::Desktop));
             }
         } else if (m_mimes.isEmpty()) {
             // It's not a file but we don't have a mime so it's ok
             item = new QStandardItem(fileInfo.fileName());
             item->setData(path);
             item->setToolTip(path);
-            item->setIcon(KIconLoader::global()->loadIcon("unknown", KIconLoader::Desktop));
+            item->setIcon(KIconLoader::global()->loadIcon(QLatin1String("unknown"), KIconLoader::Desktop));
         }
 
         if (item) {

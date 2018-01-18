@@ -52,7 +52,7 @@ PackageModel::PackageModel(QObject *parent)
   m_fetchSizesTransaction(0),
   m_fetchInstalledVersionsTransaction(0)
 {
-    m_installedEmblem = PkIcons::getIcon("dialog-ok-apply", QString()).pixmap(16, 16);
+    m_installedEmblem = PkIcons::getIcon(QLatin1String("dialog-ok-apply"), QString()).pixmap(16, 16);
 
     m_roles[SortRole] = "rSort";
     m_roles[NameRole] = "rName";
@@ -274,7 +274,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
             icon.fill(Qt::transparent);
             if (!package.icon.isNull()) {
                 QPixmap pixmap;
-                if (package.icon.startsWith("/")) {
+                if (package.icon.startsWith(QLatin1String("/"))) {
                     pixmap = QPixmap();
                     pixmap.load(package.icon);
                     pixmap = pixmap.scaledToHeight(ICON_SIZE);

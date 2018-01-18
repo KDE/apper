@@ -40,7 +40,9 @@ QHash<QString, QIcon> PkIcons::cache = QHash<QString, QIcon>();
 void PkIcons::configure()
 {
     QIcon::setThemeSearchPaths(QIcon::themeSearchPaths() +
-                               QStringList{"xdgdata-pixmap", "/usr/share/app-info/icons/", "/usr/share/app-install/icons/"});
+                               QStringList{QLatin1String("xdgdata-pixmap"),
+                                           QLatin1String("/usr/share/app-info/icons/"),
+                                           QLatin1String("/usr/share/app-install/icons/")});
 //    KStandardDirs:: KGlobal::dirs()->addResourceDir("xdgdata-pixmap", "/usr/share/app-info/icons/", "/usr/share/app-install/icons/");
 //    KIconLoader::global()->reconfigure("apper");
     PkIcons::init = true;
@@ -82,46 +84,46 @@ QString PkIcons::statusIconName(Transaction::Status status)
         PkIcons::configure();
     }
     switch (status) {
-    case Transaction::StatusUnknown              : return "help-browser";
+    case Transaction::StatusUnknown              : return QLatin1String("help-browser");
     case Transaction::StatusCancel               :
-    case Transaction::StatusCleanup              : return "package-clean-up";
-    case Transaction::StatusCommit               : return "package-working";//TODO needs a better icon
-    case Transaction::StatusDepResolve           : return "package-info";
+    case Transaction::StatusCleanup              : return QLatin1String("package-clean-up");
+    case Transaction::StatusCommit               : return QLatin1String("package-working");//TODO needs a better icon
+    case Transaction::StatusDepResolve           : return QLatin1String("package-info");
     case Transaction::StatusDownloadChangelog    :
     case Transaction::StatusDownloadFilelist     :
     case Transaction::StatusDownloadGroup        :
-    case Transaction::StatusDownloadPackagelist  : return "refresh-cache";
-    case Transaction::StatusDownload             : return "package-download";
+    case Transaction::StatusDownloadPackagelist  : return QLatin1String("refresh-cache");
+    case Transaction::StatusDownload             : return QLatin1String("package-download");
     case Transaction::StatusDownloadRepository   :
-    case Transaction::StatusDownloadUpdateinfo   : return "refresh-cache";
-    case Transaction::StatusFinished             : return "package-clean-up";
-    case Transaction::StatusGeneratePackageList  : return "refresh-cache";
-    case Transaction::StatusWaitingForLock       : return "dialog-password";
-    case Transaction::StatusWaitingForAuth       : return "dialog-password";//IMPROVE ME
-    case Transaction::StatusInfo                 : return "package-info";
-    case Transaction::StatusInstall              : return "kpk-package-add";
-    case Transaction::StatusLoadingCache         : return "refresh-cache";
-    case Transaction::StatusObsolete             : return "package-clean-up";
-    case Transaction::StatusQuery                : return "search-package";
-    case Transaction::StatusRefreshCache         : return "refresh-cache";
-    case Transaction::StatusRemove               : return "package-removed";
-    case Transaction::StatusRepackaging          : return "package-clean-up";
-    case Transaction::StatusRequest              : return "search-package";
-    case Transaction::StatusRunning              : return "package-working";
-    case Transaction::StatusScanApplications     : return "search-package";
-    case Transaction::StatusSetup                : return "package-working";
+    case Transaction::StatusDownloadUpdateinfo   : return QLatin1String("refresh-cache");
+    case Transaction::StatusFinished             : return QLatin1String("package-clean-up");
+    case Transaction::StatusGeneratePackageList  : return QLatin1String("refresh-cache");
+    case Transaction::StatusWaitingForLock       : return QLatin1String("dialog-password");
+    case Transaction::StatusWaitingForAuth       : return QLatin1String("dialog-password");//IMPROVE ME
+    case Transaction::StatusInfo                 : return QLatin1String("package-info");
+    case Transaction::StatusInstall              : return QLatin1String("kpk-package-add");
+    case Transaction::StatusLoadingCache         : return QLatin1String("refresh-cache");
+    case Transaction::StatusObsolete             : return QLatin1String("package-clean-up");
+    case Transaction::StatusQuery                : return QLatin1String("search-package");
+    case Transaction::StatusRefreshCache         : return QLatin1String("refresh-cache");
+    case Transaction::StatusRemove               : return QLatin1String("package-removed");
+    case Transaction::StatusRepackaging          : return QLatin1String("package-clean-up");
+    case Transaction::StatusRequest              : return QLatin1String("search-package");
+    case Transaction::StatusRunning              : return QLatin1String("package-working");
+    case Transaction::StatusScanApplications     : return QLatin1String("search-package");
+    case Transaction::StatusSetup                : return QLatin1String("package-working");
     case Transaction::StatusSigCheck             :
-    case Transaction::StatusTestCommit           : return "package-info";//TODO needs a better icon
-    case Transaction::StatusUpdate               : return "package-update";
-    case Transaction::StatusWait                 : return "package-wait";
-    case Transaction::StatusScanProcessList      : return "package-info";
-    case Transaction::StatusCheckExecutableFiles : return "package-info";
-    case Transaction::StatusCheckLibraries       : return "package-info";
-    case Transaction::StatusCopyFiles            : return "package-info";
-    case Transaction::StatusRunHook              : return "package-info";
+    case Transaction::StatusTestCommit           : return QLatin1String("package-info");//TODO needs a better icon
+    case Transaction::StatusUpdate               : return QLatin1String("package-update");
+    case Transaction::StatusWait                 : return QLatin1String("package-wait");
+    case Transaction::StatusScanProcessList      : return QLatin1String("package-info");
+    case Transaction::StatusCheckExecutableFiles : return QLatin1String("package-info");
+    case Transaction::StatusCheckLibraries       : return QLatin1String("package-info");
+    case Transaction::StatusCopyFiles            : return QLatin1String("package-info");
+    case Transaction::StatusRunHook              : return QLatin1String("package-info");
     }
     qCDebug(APPER_LIB) << "status icon unrecognised: " << status;
-    return "help-browser";
+    return QLatin1String("help-browser");
 }
 
 QIcon PkIcons::statusIcon(Transaction::Status status)
@@ -135,41 +137,41 @@ QString PkIcons::statusAnimation(Transaction::Status status)
         PkIcons::configure();
     }
     switch (status) {
-    case Transaction::StatusUnknown             : return "help-browser";
+    case Transaction::StatusUnknown             : return QLatin1String("help-browser");
     case Transaction::StatusCancel              :
-    case Transaction::StatusCleanup             : return "pk-cleaning-up";
+    case Transaction::StatusCleanup             : return QLatin1String("pk-cleaning-up");
     case Transaction::StatusCommit              :
-    case Transaction::StatusDepResolve          : return "pk-testing";
+    case Transaction::StatusDepResolve          : return QLatin1String("pk-testing");
     case Transaction::StatusDownloadChangelog   :
     case Transaction::StatusDownloadFilelist    :
     case Transaction::StatusDownloadGroup       :
-    case Transaction::StatusDownloadPackagelist : return "pk-refresh-cache";
-    case Transaction::StatusDownload            : return "pk-downloading";
+    case Transaction::StatusDownloadPackagelist : return QLatin1String("pk-refresh-cache");
+    case Transaction::StatusDownload            : return QLatin1String("pk-downloading");
     case Transaction::StatusDownloadRepository  :
-    case Transaction::StatusDownloadUpdateinfo  : return "pk-refresh-cache";
-    case Transaction::StatusFinished            : return "pk-cleaning-up";
-    case Transaction::StatusGeneratePackageList : return "pk-searching";
-    case Transaction::StatusWaitingForLock      : return "pk-waiting";
-    case Transaction::StatusInfo                : return "package-working";
-    case Transaction::StatusInstall             : return "pk-installing";
-    case Transaction::StatusLoadingCache        : return "pk-refresh-cache";
-    case Transaction::StatusObsolete            : return "pk-cleaning-up";
-    case Transaction::StatusQuery               : return "pk-searching";
-    case Transaction::StatusRefreshCache        : return "pk-refresh-cache";
-    case Transaction::StatusRemove              : return "package-removed";//TODO do the animation
-    case Transaction::StatusRepackaging         : return "pk-searching";
-    case Transaction::StatusRequest             : return "process-working";
-    case Transaction::StatusRunning             : return "pk-testing";
-    case Transaction::StatusScanApplications    : return "pk-searching";
-    case Transaction::StatusSetup               : return "pk-searching";
-    case Transaction::StatusSigCheck            : return "package-info";
-    case Transaction::StatusTestCommit          : return "pk-testing";
-    case Transaction::StatusUpdate              : return "pk-installing";
-    case Transaction::StatusWait                : return "pk-waiting";
-    case Transaction::StatusWaitingForAuth      : return "dialog-password";
-    case Transaction::StatusScanProcessList     : return "utilities-system-monitor";
+    case Transaction::StatusDownloadUpdateinfo  : return QLatin1String("pk-refresh-cache");
+    case Transaction::StatusFinished            : return QLatin1String("pk-cleaning-up");
+    case Transaction::StatusGeneratePackageList : return QLatin1String("pk-searching");
+    case Transaction::StatusWaitingForLock      : return QLatin1String("pk-waiting");
+    case Transaction::StatusInfo                : return QLatin1String("package-working");
+    case Transaction::StatusInstall             : return QLatin1String("pk-installing");
+    case Transaction::StatusLoadingCache        : return QLatin1String("pk-refresh-cache");
+    case Transaction::StatusObsolete            : return QLatin1String("pk-cleaning-up");
+    case Transaction::StatusQuery               : return QLatin1String("pk-searching");
+    case Transaction::StatusRefreshCache        : return QLatin1String("pk-refresh-cache");
+    case Transaction::StatusRemove              : return QLatin1String("package-removed");//TODO do the animation
+    case Transaction::StatusRepackaging         : return QLatin1String("pk-searching");
+    case Transaction::StatusRequest             : return QLatin1String("process-working");
+    case Transaction::StatusRunning             : return QLatin1String("pk-testing");
+    case Transaction::StatusScanApplications    : return QLatin1String("pk-searching");
+    case Transaction::StatusSetup               : return QLatin1String("pk-searching");
+    case Transaction::StatusSigCheck            : return QLatin1String("package-info");
+    case Transaction::StatusTestCommit          : return QLatin1String("pk-testing");
+    case Transaction::StatusUpdate              : return QLatin1String("pk-installing");
+    case Transaction::StatusWait                : return QLatin1String("pk-waiting");
+    case Transaction::StatusWaitingForAuth      : return QLatin1String("dialog-password");
+    case Transaction::StatusScanProcessList     : return QLatin1String("utilities-system-monitor");
     default                              : qCDebug(APPER_LIB) << "status icon unrecognised: " << status;
-        return "help-browser";
+        return QLatin1String("help-browser");
     }
 }
 
@@ -179,43 +181,43 @@ QString PkIcons::actionIconName(Transaction::Role role)
         PkIcons::configure();
     }
     switch (role) {
-    case Transaction::RoleUnknown                 : return "applications-other";
-    case Transaction::RoleAcceptEula              : return "package-info";
-    case Transaction::RoleCancel                  : return "process-stop";
-    case Transaction::RoleDownloadPackages        : return "package-download";
-    case Transaction::RoleGetCategories           : return "package-info";
-    case Transaction::RoleDependsOn               : return "package-info";
-    case Transaction::RoleGetDetails              : return "package-info";
-    case Transaction::RoleGetDetailsLocal         : return "package-info";
-    case Transaction::RoleGetDistroUpgrades       : return "distro-upgrade";
-    case Transaction::RoleGetFiles                : return "search-package";
-    case Transaction::RoleGetFilesLocal           : return "search-package";
-    case Transaction::RoleGetOldTransactions      : return "package-info";
-    case Transaction::RoleGetPackages             : return "package-packages";
-    case Transaction::RoleGetRepoList             : return "package-orign";
-    case Transaction::RoleRequiredBy              : return "package-info";
-    case Transaction::RoleGetUpdateDetail         : return "package-info";
-    case Transaction::RoleGetUpdates              : return "package-info";
-    case Transaction::RoleInstallFiles            : return "package-installed";
-    case Transaction::RoleInstallPackages         : return "package-installed";
-    case Transaction::RoleInstallSignature        : return "package-installed";
-    case Transaction::RoleRefreshCache            : return "refresh-cache";
-    case Transaction::RoleRemovePackages          : return "package-removed";
-    case Transaction::RoleRepoEnable              : return "package-orign";
-    case Transaction::RoleRepoSetData             : return "package-orign";
-    case Transaction::RoleRepoRemove              : return "package-orign";
-    case Transaction::RoleResolve                 : return "search-package";
-    case Transaction::RoleSearchDetails           : return "search-package";
-    case Transaction::RoleSearchFile              : return "search-package";
-    case Transaction::RoleSearchGroup             : return "search-package";
-    case Transaction::RoleSearchName              : return "search-package";
-    case Transaction::RoleUpdatePackages          : return "package-update";
-    case Transaction::RoleWhatProvides            : return "search-package";
-    case Transaction::RoleRepairSystem            : return "package-rollback";
-    case Transaction::RoleUpgradeSystem           : return "package-update";
+    case Transaction::RoleUnknown                 : return QLatin1String("applications-other");
+    case Transaction::RoleAcceptEula              : return QLatin1String("package-info");
+    case Transaction::RoleCancel                  : return QLatin1String("process-stop");
+    case Transaction::RoleDownloadPackages        : return QLatin1String("package-download");
+    case Transaction::RoleGetCategories           : return QLatin1String("package-info");
+    case Transaction::RoleDependsOn               : return QLatin1String("package-info");
+    case Transaction::RoleGetDetails              : return QLatin1String("package-info");
+    case Transaction::RoleGetDetailsLocal         : return QLatin1String("package-info");
+    case Transaction::RoleGetDistroUpgrades       : return QLatin1String("distro-upgrade");
+    case Transaction::RoleGetFiles                : return QLatin1String("search-package");
+    case Transaction::RoleGetFilesLocal           : return QLatin1String("search-package");
+    case Transaction::RoleGetOldTransactions      : return QLatin1String("package-info");
+    case Transaction::RoleGetPackages             : return QLatin1String("package-packages");
+    case Transaction::RoleGetRepoList             : return QLatin1String("package-orign");
+    case Transaction::RoleRequiredBy              : return QLatin1String("package-info");
+    case Transaction::RoleGetUpdateDetail         : return QLatin1String("package-info");
+    case Transaction::RoleGetUpdates              : return QLatin1String("package-info");
+    case Transaction::RoleInstallFiles            : return QLatin1String("package-installed");
+    case Transaction::RoleInstallPackages         : return QLatin1String("package-installed");
+    case Transaction::RoleInstallSignature        : return QLatin1String("package-installed");
+    case Transaction::RoleRefreshCache            : return QLatin1String("refresh-cache");
+    case Transaction::RoleRemovePackages          : return QLatin1String("package-removed");
+    case Transaction::RoleRepoEnable              : return QLatin1String("package-orign");
+    case Transaction::RoleRepoSetData             : return QLatin1String("package-orign");
+    case Transaction::RoleRepoRemove              : return QLatin1String("package-orign");
+    case Transaction::RoleResolve                 : return QLatin1String("search-package");
+    case Transaction::RoleSearchDetails           : return QLatin1String("search-package");
+    case Transaction::RoleSearchFile              : return QLatin1String("search-package");
+    case Transaction::RoleSearchGroup             : return QLatin1String("search-package");
+    case Transaction::RoleSearchName              : return QLatin1String("search-package");
+    case Transaction::RoleUpdatePackages          : return QLatin1String("package-update");
+    case Transaction::RoleWhatProvides            : return QLatin1String("search-package");
+    case Transaction::RoleRepairSystem            : return QLatin1String("package-rollback");
+    case Transaction::RoleUpgradeSystem           : return QLatin1String("package-update");
     }
     qCDebug(APPER_LIB) << "action unrecognised: " << role;
-    return "applications-other";
+    return QLatin1String("applications-other");
 }
 
 QIcon PkIcons::actionIcon(Transaction::Role role)
@@ -229,44 +231,44 @@ QIcon PkIcons::groupsIcon(Transaction::Group group)
         PkIcons::configure();
     }
     switch (group) {
-    case Transaction::GroupUnknown         : return QIcon::fromTheme("unknown");
-    case Transaction::GroupAccessibility   : return QIcon::fromTheme("preferences-desktop-accessibility");
-    case Transaction::GroupAccessories     : return QIcon::fromTheme("applications-accessories");
-    case Transaction::GroupAdminTools      : return QIcon::fromTheme("dialog-password");
-    case Transaction::GroupCommunication   : return QIcon::fromTheme("network-workgroup");//FIXME
-    case Transaction::GroupDesktopGnome    : return QIcon::fromTheme("kpk-desktop-gnome");
-    case Transaction::GroupDesktopKde      : return QIcon::fromTheme("kde");
-    case Transaction::GroupDesktopOther    : return QIcon::fromTheme("user-desktop");
-    case Transaction::GroupDesktopXfce     : return QIcon::fromTheme("kpk-desktop-xfce");
-    case Transaction::GroupDocumentation   : return QIcon::fromTheme("accessories-dictionary");//FIXME
-    case Transaction::GroupEducation       : return QIcon::fromTheme("applications-education");
-    case Transaction::GroupElectronics     : return QIcon::fromTheme("media-flash");
-    case Transaction::GroupFonts           : return QIcon::fromTheme("preferences-desktop-font");
-    case Transaction::GroupGames           : return QIcon::fromTheme("applications-games");
-    case Transaction::GroupGraphics        : return QIcon::fromTheme("applications-graphics");
-    case Transaction::GroupInternet        : return QIcon::fromTheme("applications-internet");
-    case Transaction::GroupLegacy          : return QIcon::fromTheme("media-floppy");
-    case Transaction::GroupLocalization    : return QIcon::fromTheme("applications-education-language");
-    case Transaction::GroupMaps            : return QIcon::fromTheme("Maps");//FIXME
-    case Transaction::GroupCollections     : return QIcon::fromTheme("package-orign");
-    case Transaction::GroupMultimedia      : return QIcon::fromTheme("applications-multimedia");
-    case Transaction::GroupNetwork         : return QIcon::fromTheme("network-wired");
-    case Transaction::GroupOffice          : return QIcon::fromTheme("applications-office");
-    case Transaction::GroupOther           : return QIcon::fromTheme("applications-other");
-    case Transaction::GroupPowerManagement : return QIcon::fromTheme("battery");
-    case Transaction::GroupProgramming     : return QIcon::fromTheme("applications-development");
-    case Transaction::GroupPublishing      : return QIcon::fromTheme("accessories-text-editor");
-    case Transaction::GroupRepos           : return QIcon::fromTheme("application-x-compressed-tar");
-    case Transaction::GroupScience         : return QIcon::fromTheme("applications-science");
-    case Transaction::GroupSecurity        : return QIcon::fromTheme("security-high");
-    case Transaction::GroupServers         : return QIcon::fromTheme("network-server");
-    case Transaction::GroupSystem          : return QIcon::fromTheme("applications-system");
-    case Transaction::GroupVirtualization  : return QIcon::fromTheme("cpu");
-    case Transaction::GroupVendor          : return QIcon::fromTheme("application-certificate");
-    case Transaction::GroupNewest          : return QIcon::fromTheme("dialog-information");
+    case Transaction::GroupUnknown         : return QIcon::fromTheme(QLatin1String("unknown"));
+    case Transaction::GroupAccessibility   : return QIcon::fromTheme(QLatin1String("preferences-desktop-accessibility"));
+    case Transaction::GroupAccessories     : return QIcon::fromTheme(QLatin1String("applications-accessories"));
+    case Transaction::GroupAdminTools      : return QIcon::fromTheme(QLatin1String("dialog-password"));
+    case Transaction::GroupCommunication   : return QIcon::fromTheme(QLatin1String("network-workgroup"));//FIXME
+    case Transaction::GroupDesktopGnome    : return QIcon::fromTheme(QLatin1String("kpk-desktop-gnome"));
+    case Transaction::GroupDesktopKde      : return QIcon::fromTheme(QLatin1String("kde"));
+    case Transaction::GroupDesktopOther    : return QIcon::fromTheme(QLatin1String("user-desktop"));
+    case Transaction::GroupDesktopXfce     : return QIcon::fromTheme(QLatin1String("kpk-desktop-xfce"));
+    case Transaction::GroupDocumentation   : return QIcon::fromTheme(QLatin1String("accessories-dictionary"));//FIXME
+    case Transaction::GroupEducation       : return QIcon::fromTheme(QLatin1String("applications-education"));
+    case Transaction::GroupElectronics     : return QIcon::fromTheme(QLatin1String("media-flash"));
+    case Transaction::GroupFonts           : return QIcon::fromTheme(QLatin1String("preferences-desktop-font"));
+    case Transaction::GroupGames           : return QIcon::fromTheme(QLatin1String("applications-games"));
+    case Transaction::GroupGraphics        : return QIcon::fromTheme(QLatin1String("applications-graphics"));
+    case Transaction::GroupInternet        : return QIcon::fromTheme(QLatin1String("applications-internet"));
+    case Transaction::GroupLegacy          : return QIcon::fromTheme(QLatin1String("media-floppy"));
+    case Transaction::GroupLocalization    : return QIcon::fromTheme(QLatin1String("applications-education-language"));
+    case Transaction::GroupMaps            : return QIcon::fromTheme(QLatin1String("Maps"));//FIXME
+    case Transaction::GroupCollections     : return QIcon::fromTheme(QLatin1String("package-orign"));
+    case Transaction::GroupMultimedia      : return QIcon::fromTheme(QLatin1String("applications-multimedia"));
+    case Transaction::GroupNetwork         : return QIcon::fromTheme(QLatin1String("network-wired"));
+    case Transaction::GroupOffice          : return QIcon::fromTheme(QLatin1String("applications-office"));
+    case Transaction::GroupOther           : return QIcon::fromTheme(QLatin1String("applications-other"));
+    case Transaction::GroupPowerManagement : return QIcon::fromTheme(QLatin1String("battery"));
+    case Transaction::GroupProgramming     : return QIcon::fromTheme(QLatin1String("applications-development"));
+    case Transaction::GroupPublishing      : return QIcon::fromTheme(QLatin1String("accessories-text-editor"));
+    case Transaction::GroupRepos           : return QIcon::fromTheme(QLatin1String("application-x-compressed-tar"));
+    case Transaction::GroupScience         : return QIcon::fromTheme(QLatin1String("applications-science"));
+    case Transaction::GroupSecurity        : return QIcon::fromTheme(QLatin1String("security-high"));
+    case Transaction::GroupServers         : return QIcon::fromTheme(QLatin1String("network-server"));
+    case Transaction::GroupSystem          : return QIcon::fromTheme(QLatin1String("applications-system"));
+    case Transaction::GroupVirtualization  : return QIcon::fromTheme(QLatin1String("cpu"));
+    case Transaction::GroupVendor          : return QIcon::fromTheme(QLatin1String("application-certificate"));
+    case Transaction::GroupNewest          : return QIcon::fromTheme(QLatin1String("dialog-information"));
     }
     qCDebug(APPER_LIB) << "group unrecognised: " << group;
-    return QIcon::fromTheme("unknown");
+    return QIcon::fromTheme(QLatin1String("unknown"));
 }
 
 QIcon PkIcons::packageIcon(Transaction::Info info)
@@ -275,16 +277,16 @@ QIcon PkIcons::packageIcon(Transaction::Info info)
         PkIcons::configure();
     }
     switch (info) {
-    case Transaction::InfoBugfix      : return QIcon::fromTheme("script-error");
-    case Transaction::InfoEnhancement : return QIcon::fromTheme("ktip");
-    case Transaction::InfoImportant   : return QIcon::fromTheme("security-medium");
-    case Transaction::InfoLow         : return QIcon::fromTheme("security-high");
-    case Transaction::InfoSecurity    : return QIcon::fromTheme("security-low");
-    case Transaction::InfoNormal      : return QIcon::fromTheme("emblem-new");
-    case Transaction::InfoBlocked     : return QIcon::fromTheme("dialog-cancel");
-    case Transaction::InfoAvailable   : return QIcon::fromTheme("package-download");
-    case Transaction::InfoInstalled   : return QIcon::fromTheme("package-installed");
-    default                    : return QIcon::fromTheme("package");
+    case Transaction::InfoBugfix      : return QIcon::fromTheme(QLatin1String("script-error"));
+    case Transaction::InfoEnhancement : return QIcon::fromTheme(QLatin1String("ktip"));
+    case Transaction::InfoImportant   : return QIcon::fromTheme(QLatin1String("security-medium"));
+    case Transaction::InfoLow         : return QIcon::fromTheme(QLatin1String("security-high"));
+    case Transaction::InfoSecurity    : return QIcon::fromTheme(QLatin1String("security-low"));
+    case Transaction::InfoNormal      : return QIcon::fromTheme(QLatin1String("emblem-new"));
+    case Transaction::InfoBlocked     : return QIcon::fromTheme(QLatin1String("dialog-cancel"));
+    case Transaction::InfoAvailable   : return QIcon::fromTheme(QLatin1String("package-download"));
+    case Transaction::InfoInstalled   : return QIcon::fromTheme(QLatin1String("package-installed"));
+    default                    : return QIcon::fromTheme(QLatin1String("package"));
     }
 }
 
@@ -297,14 +299,14 @@ QString PkIcons::restartIconName(Transaction::Restart type)
     // will not be able to load them
     switch (type) {
     case Transaction::RestartSecuritySystem  :
-    case Transaction::RestartSystem          : return "system-reboot";
+    case Transaction::RestartSystem          : return QLatin1String("system-reboot");
     case Transaction::RestartSecuritySession :
-    case Transaction::RestartSession         : return "system-log-out";
-    case Transaction::RestartApplication     : return "process-stop";
+    case Transaction::RestartSession         : return QLatin1String("system-log-out");
+    case Transaction::RestartApplication     : return QLatin1String("process-stop");
     case Transaction::RestartNone            :
     case Transaction::RestartUnknown         : break;
     }
-    return "";
+    return QLatin1String("");
 }
 
 QIcon PkIcons::restartIcon(Transaction::Restart type)

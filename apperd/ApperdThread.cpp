@@ -161,14 +161,14 @@ void ApperdThread::poll()
     }
 
     // If check for updates is active
-    if (m_configs[CFG_INTERVAL].value<uint>() != Enum::Never) {
+    if (m_configs[QLatin1String(CFG_INTERVAL)].value<uint>() != Enum::Never) {
         // Find out how many seconds passed since last refresh cache
         qint64 msecsSinceLastRefresh = (QDateTime::currentDateTime().toMSecsSinceEpoch() - m_lastRefreshCache.toMSecsSinceEpoch()) / 1000;
 
         // If lastRefreshCache is null it means that the cache was never refreshed
-        if (m_lastRefreshCache.isNull() || msecsSinceLastRefresh > m_configs[CFG_INTERVAL].value<uint>()) {
-            bool ignoreBattery = m_configs[CFG_CHECK_UP_BATTERY].value<bool>();
-            bool ignoreMobile = m_configs[CFG_CHECK_UP_MOBILE].value<bool>();
+        if (m_lastRefreshCache.isNull() || msecsSinceLastRefresh > m_configs[QLatin1String(CFG_INTERVAL)].value<uint>()) {
+            bool ignoreBattery = m_configs[QLatin1String(CFG_CHECK_UP_BATTERY)].value<bool>();
+            bool ignoreMobile = m_configs[QLatin1String(CFG_CHECK_UP_MOBILE)].value<bool>();
             if (isSystemReady(ignoreBattery, ignoreMobile)) {
                 m_refreshCache->refreshCache();
             }
@@ -181,15 +181,15 @@ void ApperdThread::poll()
 
 void ApperdThread::configFileChanged()
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup checkUpdateGroup(&config, "CheckUpdate");
-    m_configs[CFG_CHECK_UP_BATTERY] = checkUpdateGroup.readEntry(CFG_CHECK_UP_BATTERY, DEFAULT_CHECK_UP_BATTERY);
-    m_configs[CFG_CHECK_UP_MOBILE] = checkUpdateGroup.readEntry(CFG_CHECK_UP_MOBILE, DEFAULT_CHECK_UP_MOBILE);
-    m_configs[CFG_INSTALL_UP_BATTERY] = checkUpdateGroup.readEntry(CFG_INSTALL_UP_BATTERY, DEFAULT_INSTALL_UP_BATTERY);
-    m_configs[CFG_INSTALL_UP_MOBILE] = checkUpdateGroup.readEntry(CFG_INSTALL_UP_MOBILE, DEFAULT_INSTALL_UP_MOBILE);
-    m_configs[CFG_AUTO_UP] = checkUpdateGroup.readEntry(CFG_AUTO_UP, Enum::AutoUpdateDefault);
-    m_configs[CFG_INTERVAL] = checkUpdateGroup.readEntry(CFG_INTERVAL, Enum::TimeIntervalDefault);
-    m_configs[CFG_DISTRO_UPGRADE] = checkUpdateGroup.readEntry(CFG_DISTRO_UPGRADE, Enum::DistroUpgradeDefault);
+    m_configs[QLatin1String(CFG_CHECK_UP_BATTERY)] = checkUpdateGroup.readEntry(CFG_CHECK_UP_BATTERY, DEFAULT_CHECK_UP_BATTERY);
+    m_configs[QLatin1String(CFG_CHECK_UP_MOBILE)] = checkUpdateGroup.readEntry(CFG_CHECK_UP_MOBILE, DEFAULT_CHECK_UP_MOBILE);
+    m_configs[QLatin1String(CFG_INSTALL_UP_BATTERY)] = checkUpdateGroup.readEntry(CFG_INSTALL_UP_BATTERY, DEFAULT_INSTALL_UP_BATTERY);
+    m_configs[QLatin1String(CFG_INSTALL_UP_MOBILE)] = checkUpdateGroup.readEntry(CFG_INSTALL_UP_MOBILE, DEFAULT_INSTALL_UP_MOBILE);
+    m_configs[QLatin1String(CFG_AUTO_UP)] = checkUpdateGroup.readEntry(CFG_AUTO_UP, Enum::AutoUpdateDefault);
+    m_configs[QLatin1String(CFG_INTERVAL)] = checkUpdateGroup.readEntry(CFG_INTERVAL, Enum::TimeIntervalDefault);
+    m_configs[QLatin1String(CFG_DISTRO_UPGRADE)] = checkUpdateGroup.readEntry(CFG_DISTRO_UPGRADE, Enum::DistroUpgradeDefault);
     m_updater->setConfig(m_configs);
     m_distroUpgrade->setConfig(m_configs);
 
@@ -207,10 +207,10 @@ void ApperdThread::proxyChanged()
 
     QHash<QString, QString> proxyConfig;
     if (KProtocolManager::proxyType() == KProtocolManager::ManualProxy) {
-        proxyConfig["http"] = KProtocolManager::proxyFor("http");
-        proxyConfig["https"] = KProtocolManager::proxyFor("https");
-        proxyConfig["ftp"] = KProtocolManager::proxyFor("ftp");
-        proxyConfig["socks"] = KProtocolManager::proxyFor("socks");
+        proxyConfig[QLatin1String("http")] = KProtocolManager::proxyFor(QLatin1String("http"));
+        proxyConfig[QLatin1String("https")] = KProtocolManager::proxyFor(QLatin1String("https"));
+        proxyConfig[QLatin1String("ftp")] = KProtocolManager::proxyFor(QLatin1String("ftp"));
+        proxyConfig[QLatin1String("socks")] = KProtocolManager::proxyFor(QLatin1String("socks"));
     }
 
     // Check if the proxy settings really changed to avoid setting them twice
@@ -238,10 +238,10 @@ void ApperdThread::setProxy()
     if (packagekitIsRunning) {
         // Apply the proxy changes only if packagekit is running
         // use value() to not insert items on the hash
-        Daemon::global()->setProxy(m_proxyConfig.value("http"),
-                                   m_proxyConfig.value("https"),
-                                   m_proxyConfig.value("ftp"),
-                                   m_proxyConfig.value("socks"),
+        Daemon::global()->setProxy(m_proxyConfig.value(QLatin1String("http")),
+                                   m_proxyConfig.value(QLatin1String("https")),
+                                   m_proxyConfig.value(QLatin1String("ftp")),
+                                   m_proxyConfig.value(QLatin1String("socks")),
                                    QString(),
                                    QString());
         m_proxyChanged = false;
@@ -257,8 +257,8 @@ void ApperdThread::updatesChanged()
         m_lastRefreshCache = lastCacheRefresh;
     }
 
-    bool ignoreBattery = m_configs[CFG_INSTALL_UP_BATTERY].value<bool>();
-    bool ignoreMobile = m_configs[CFG_INSTALL_UP_MOBILE].value<bool>();
+    bool ignoreBattery = m_configs[QLatin1String(CFG_INSTALL_UP_BATTERY)].value<bool>();
+    bool ignoreMobile = m_configs[QLatin1String(CFG_INSTALL_UP_MOBILE)].value<bool>();
 
     // Make sure the user sees the updates
     m_updater->checkForUpdates(isSystemReady(ignoreBattery, ignoreMobile));
@@ -267,8 +267,8 @@ void ApperdThread::updatesChanged()
 
 void ApperdThread::appShouldConserveResourcesChanged()
 {
-    bool ignoreBattery = m_configs[CFG_INSTALL_UP_BATTERY].value<bool>();
-    bool ignoreMobile = m_configs[CFG_INSTALL_UP_MOBILE].value<bool>();
+    bool ignoreBattery = m_configs[QLatin1String(CFG_INSTALL_UP_BATTERY)].value<bool>();
+    bool ignoreMobile = m_configs[QLatin1String(CFG_INSTALL_UP_MOBILE)].value<bool>();
 
     if (isSystemReady(ignoreBattery, ignoreMobile)) {
         m_updater->setSystemReady();

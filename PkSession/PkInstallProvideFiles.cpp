@@ -94,7 +94,7 @@ void PkInstallProvideFiles::notFound()
                     i18n("The %1 package already provides this file",
                          m_alreadyInstalled));
         }
-        sendErrorFinished(Failed, "already provided");
+        sendErrorFinished(Failed, QLatin1String("already provided"));
     } else {
         if (showWarning()) {
             setInfo(i18n("Failed to find package"),
@@ -102,7 +102,7 @@ void PkInstallProvideFiles::notFound()
                           "The files could not be found in any packages",
                           m_args.size()));
         }
-        sendErrorFinished(NoPackagesFound, "no files found");
+        sendErrorFinished(NoPackagesFound, QLatin1String("no files found"));
     }
 }
 

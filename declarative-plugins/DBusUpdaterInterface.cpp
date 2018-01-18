@@ -68,7 +68,7 @@ void DBusUpdaterInterface::registerService()
         m_registered = false;
         emit registeredChanged();
     } else {
-        if (!QDBusConnection::sessionBus().registerObject("/", this)) {
+        if (!QDBusConnection::sessionBus().registerObject(QLatin1String("/"), this)) {
 //            kDebug() << "unable to register service interface to dbus";
             return;
         }

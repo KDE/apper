@@ -134,7 +134,7 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
         // what will happen if we call the other process to
         // install and this very one closes? will the files
         // in /tmp be deleted?
-        invoke("InstallPackageFiles", args);
+        invoke(QLatin1String("InstallPackageFiles"), args);
         return;
     }
 
@@ -148,27 +148,27 @@ void Apper::activate(const QStringList& arguments, const QString& workingDirecto
     }
 
     if (parser.isSet(mimeTypeOpt)) {
-        invoke("InstallMimeTypes", parser.values(mimeTypeOpt));
+        invoke(QLatin1String("InstallMimeTypes"), parser.values(mimeTypeOpt));
         return;
     }
 
     if (parser.isSet(nameOpt)) {
-        invoke("InstallPackageNames", parser.values(nameOpt));
+        invoke(QLatin1String("InstallPackageNames"), parser.values(nameOpt));
         return;
     }
 
-    if (parser.isSet("install-provide-file")) {
-        invoke("InstallProvideFiles", parser.values("install-provide-file"));
+    if (parser.isSet(QLatin1String("install-provide-file"))) {
+        invoke(QLatin1String("InstallProvideFiles"), parser.values(QLatin1String("install-provide-file")));
         return;
     }
 
     if (parser.isSet(catalogOpt)) {
-        invoke("InstallCatalogs", parser.values(catalogOpt));
+        invoke(QLatin1String("InstallCatalogs"), parser.values(catalogOpt));
         return;
     }
 
     if (parser.isSet(removeOpt)) {
-        invoke("RemovePackageByFiles", parser.values(removeOpt));
+        invoke(QLatin1String("RemovePackageByFiles"), parser.values(removeOpt));
         return;
     }
 

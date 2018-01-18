@@ -51,7 +51,7 @@ void DistroUpgrade::setConfig(const QVariantHash &configs)
 void DistroUpgrade::checkDistroUpgrades()
 {
     // Ignore check if the user disabled it
-    if (m_configs[CFG_DISTRO_UPGRADE].toInt() == Enum::DistroNever) {
+    if (m_configs[QLatin1String(CFG_DISTRO_UPGRADE)].toInt() == Enum::DistroNever) {
         return;
     }
 
@@ -65,7 +65,7 @@ void DistroUpgrade::checkDistroUpgrades()
 void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, const QString &name, const QString &description)
 {
     // TODO make use of the type
-    switch (m_configs[CFG_DISTRO_UPGRADE].toInt()) {
+    switch (m_configs[QLatin1String(CFG_DISTRO_UPGRADE)].toInt()) {
     case Enum::DistroNever:
         return;
     case Enum::DistroStable:
@@ -83,8 +83,8 @@ void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, c
         return;
     }
 
-    auto notify = new KNotification("DistroUpgradeAvailable", 0, KNotification::Persistent);
-    notify->setComponentName("apperd");
+    auto notify = new KNotification(QLatin1String("DistroUpgradeAvailable"), 0, KNotification::Persistent);
+    notify->setComponentName(QLatin1String("apperd"));
     notify->setTitle(i18n("Distribution upgrade available"));
     notify->setText(description);
 
@@ -134,13 +134,13 @@ void DistroUpgrade::handleDistroUpgradeAction(uint action)
 
 void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    auto notify = new KNotification("DistroUpgradeFinished");
-    notify->setComponentName("apperd");
+    auto notify = new KNotification(QLatin1String("DistroUpgradeFinished"));
+    notify->setComponentName(QLatin1String("apperd"));
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
-        notify->setPixmap(QIcon::fromTheme("security-high").pixmap(64, 64));
+        notify->setPixmap(QIcon::fromTheme(QLatin1String("security-high")).pixmap(64, 64));
         notify->setText(i18n("Distribution upgrade finished. "));
     } else if (exitStatus == QProcess::NormalExit) {
-        notify->setPixmap(QIcon::fromTheme("dialog-warning").pixmap(64, 64));
+        notify->setPixmap(QIcon::fromTheme(QLatin1String("dialog-warning")).pixmap(64, 64));
         notify->setText(i18n("Distribution upgrade process exited with code %1.", exitCode));
     }/* else {
         notify->setText(i18n("Distribution upgrade didn't exit normally, the process probably crashed. "));
@@ -155,8 +155,8 @@ void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
 {
     QString text;
 
-    auto notify = new KNotification("DistroUpgradeError");
-    notify->setComponentName("apperd");
+    auto notify = new KNotification(QLatin1String("DistroUpgradeError"));
+    notify->setComponentName(QLatin1String("apperd"));
     switch(error) {
         case QProcess::FailedToStart:
             text = i18n("The distribution upgrade process failed to start.");
@@ -168,7 +168,7 @@ void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)
             text = i18n("The distribution upgrade process failed with an unknown error.");
             break;
     }
-    notify->setPixmap(QIcon::fromTheme("dialog-error").pixmap(64,64));
+    notify->setPixmap(QIcon::fromTheme(QLatin1String("dialog-error")).pixmap(64,64));
     notify->setText(text);
     notify->sendEvent();
 }

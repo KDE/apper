@@ -38,20 +38,20 @@ Q_LOGGING_CATEGORY(APPER_SESSION, "apper.session")
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    app.setWindowIcon(QIcon::fromTheme("system-software-install"));
+    app.setWindowIcon(QIcon::fromTheme(QLatin1String("system-software-install")));
 
     KLocalizedString::setApplicationDomain("apper");
 
-    KAboutData aboutData("PkSession",
-                     "apper",
-                     APPER_VERSION,
+    KAboutData aboutData(QLatin1String("PkSession"),
+                     QLatin1String("apper"),
+                     QLatin1String(APPER_VERSION),
                      i18n("Apper PackageKit Session helper"),
                      KAboutLicense::GPL);
 
-    aboutData.addAuthor(i18n("Daniel Nicoletti"), QString(), "dantti12@gmail.com", "http://dantti.wordpress.com" );
-    aboutData.addAuthor(i18n("Trever Fischer"), QString(), "wm161@wm161.net", "http://wm161.net");
+    aboutData.addAuthor(i18n("Daniel Nicoletti"), QString(), QLatin1String("dantti12@gmail.com"), QLatin1String("http://dantti.wordpress.com"));
+    aboutData.addAuthor(i18n("Trever Fischer"), QString(), QLatin1String("wm161@wm161.net"), QLatin1String("http://wm161.net"));
 
-    aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"),"@");
+    aboutData.addCredit(i18n("Adrien Bustany"), i18n("libpackagekit-qt and other stuff"), QLatin1String("@"));
     KAboutData::setApplicationData(aboutData);
 
     // Let's ensure we only have one PkSession at any one time on the same session

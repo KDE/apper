@@ -40,14 +40,13 @@ ApplicationsDelegate::ApplicationsDelegate(QAbstractItemView *parent)
   : QStyledItemDelegate(parent),
     m_viewport(parent->viewport()),
     // loads it here to be faster when displaying items
-    m_installIcon("go-down"),
+    m_installIcon(QIcon::fromTheme(QLatin1String("go-down"))),
     m_installString(i18n("Install")),
-    m_removeIcon("edit-delete"),
+    m_removeIcon(QIcon::fromTheme(QLatin1String("edit-delete"))),
     m_removeString(i18n("Remove")),
-    m_undoIcon("edit-undo"),
+    m_undoIcon(QIcon::fromTheme(QLatin1String("edit-undo"))),
     m_undoString(i18n("Deselect")),
-    m_checkedIcon("dialog-ok"),
-    m_checkable(false)
+    m_checkedIcon(QIcon::fromTheme(QLatin1String("dialog-ok")))
 {
     m_viewport->setAttribute(Qt::WA_Hover, true);
     QPushButton button, button2;

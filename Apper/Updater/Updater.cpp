@@ -90,14 +90,14 @@ Updater::Updater(Transaction::Roles roles, QWidget *parent) :
 
     // Setup the busy cursor
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence("process-working", KIconLoader::SizeSmallMedium));
+    m_busySeq->setSequence(KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(ui->packageView->viewport());
 
     // hide distro Upgrade container and line
     ui->distroUpgrade->hide();
 
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "UpdateView");
 
     // versions
@@ -143,7 +143,7 @@ Updater::~Updater()
 
 void Updater::showVersions(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowVersions", enabled);
     ui->packageView->header()->setSectionHidden(PackageModel::VersionCol, !enabled);
@@ -151,7 +151,7 @@ void Updater::showVersions(bool enabled)
 
 void Updater::showCurrentVersions(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowCurrentVersions", enabled);
     ui->packageView->header()->setSectionHidden(PackageModel::CurrentVersionCol, !enabled);
@@ -162,7 +162,7 @@ void Updater::showCurrentVersions(bool enabled)
 
 void Updater::showArchs(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowArchs", enabled);
     ui->packageView->header()->setSectionHidden(PackageModel::ArchCol, !enabled);
@@ -170,7 +170,7 @@ void Updater::showArchs(bool enabled)
 
 void Updater::showOrigins(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("showOrigins", enabled);
     ui->packageView->header()->setSectionHidden(PackageModel::OriginCol, !enabled);
@@ -178,7 +178,7 @@ void Updater::showOrigins(bool enabled)
 
 void Updater::showSizes(bool enabled)
 {
-    KConfig config("apper");
+    KConfig config(QLatin1String("apper"));
     KConfigGroup viewGroup(&config, "UpdateView");
     viewGroup.writeEntry("ShowSizes", enabled);
     ui->packageView->header()->setSectionHidden(PackageModel::SizeCol, !enabled);
@@ -333,7 +333,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
     menu->addAction(m_showPackageSize);
     QAction *action;
     action = menu->addAction(i18n("Check for new updates"));
-    action->setIcon(QIcon::fromTheme("view-refresh"));
+    action->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
     connect(action, &QAction::triggered, this, &Updater::refreshCache);
     menu->exec(ui->packageView->viewport()->mapToGlobal(pos));
     delete menu;
