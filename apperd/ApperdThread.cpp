@@ -163,11 +163,10 @@ void ApperdThread::poll()
     // If check for updates is active
     if (m_configs[CFG_INTERVAL].value<uint>() != Enum::Never) {
         // Find out how many seconds passed since last refresh cache
-        uint secsSinceLastRefresh;
-        secsSinceLastRefresh = QDateTime::currentDateTime().toTime_t() - m_lastRefreshCache.toTime_t();
+        qint64 msecsSinceLastRefresh = (QDateTime::currentDateTime().toMSecsSinceEpoch() - m_lastRefreshCache.toMSecsSinceEpoch()) / 1000;
 
         // If lastRefreshCache is null it means that the cache was never refreshed
-        if (m_lastRefreshCache.isNull() || secsSinceLastRefresh > m_configs[CFG_INTERVAL].value<uint>()) {
+        if (m_lastRefreshCache.isNull() || msecsSinceLastRefresh > m_configs[CFG_INTERVAL].value<uint>()) {
             bool ignoreBattery = m_configs[CFG_CHECK_UP_BATTERY].value<bool>();
             bool ignoreMobile = m_configs[CFG_CHECK_UP_MOBILE].value<bool>();
             if (isSystemReady(ignoreBattery, ignoreMobile)) {
