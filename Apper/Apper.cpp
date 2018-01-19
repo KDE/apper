@@ -221,9 +221,9 @@ void Apper::showSettings()
 void Apper::invoke(const QString &method_name, const QStringList &args)
 {
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.PackageKit"),
-                                             QStringLiteral("/org/freedesktop/PackageKit"),
-                                             QStringLiteral("org.freedesktop.PackageKit.Modify"),
+    message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.PackageKit"),
+                                             QLatin1String("/org/freedesktop/PackageKit"),
+                                             QLatin1String("org.freedesktop.PackageKit.Modify"),
                                              method_name);
     message << uint(0);
     message << args;
