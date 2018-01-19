@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -321,10 +321,9 @@ void PackageDetails::setPackage(const QModelIndex &index)
 
 void PackageDetails::on_screenshotL_clicked()
 {
-    QString url;
-    url = screenshot(Transaction::packageName(m_packageID));
-    if (!url.isNull()) {
-        ScreenShotViewer *view = new ScreenShotViewer(url);
+    const QUrl url = screenshot(Transaction::packageName(m_packageID));
+    if (!url.isEmpty()) {
+        auto view = new ScreenShotViewer(url);
         view->setWindowTitle(m_appName);
         view->show();
     }
@@ -735,13 +734,13 @@ QString PackageDetails::thumbnail(const QString &pkgName) const
 #endif
 }
 
-QString PackageDetails::screenshot(const QString &pkgName) const
+QUrl PackageDetails::screenshot(const QString &pkgName) const
 {
 #ifndef HAVE_APPSTREAM
     Q_UNUSED(pkgName)
-    return QString();
+    return QUrl();
 #else
-    return QString();// AppStream::instance()->screenshot(pkgName);
+    return AppStreamHelper::instance()->screenshot(pkgName);
 #endif
 }
 
@@ -757,11 +756,10 @@ void PackageDetails::description(const PackageKit::Details &details)
     // FIXME: The whole AppStream handling sucks badly, since it was added later
     // and on to of the package-based model. So we can't respect the "multiple apps
     // in one package" case here.
-    QList<AppStream::Application> apps;
-//    apps = AppStream::instance()->applications(Transaction::packageName(m_packageID));
-    for (const AppStream::Application &app : apps) {
-        if (!app.description.isEmpty()) {
-            m_detailsDescription = app.description;
+    const QList<AppStream::Component> apps = AppStreamHelper::instance()->applications(Transaction::packageName(m_packageID));
+    for (const AppStream::Component &app : apps) {
+        if (!app.description().isEmpty()) {
+            m_detailsDescription = app.description();
             break;
         }
     }

@@ -25,8 +25,8 @@ target_link_libraries(kded_apperd
     KF5::KIOFileWidgets
     KF5::Notifications
     KF5::DBusAddons
-    ${PackageKitQt5_LIBRARIES}
     PW::KWorkspace
+    PK::packagekitqt5
     apper_private
 )
 

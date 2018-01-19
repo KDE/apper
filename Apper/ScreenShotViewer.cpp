@@ -33,7 +33,7 @@
 
 #include "ClickableLabel.h"
 
-ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
+ScreenShotViewer::ScreenShotViewer(const QUrl &url, QWidget *parent)
  : QScrollArea(parent)
 {
     m_screenshotL = new ClickableLabel(this);
@@ -52,7 +52,7 @@ ScreenShotViewer::ScreenShotViewer(const QString &url, QWidget *parent)
 //    tempFile->setPrefix("appgetfull");
 //    tempFile->setSuffix(".png");
     tempFile->open();
-    KIO::FileCopyJob *job = KIO::file_copy(QUrl(url),
+    KIO::FileCopyJob *job = KIO::file_copy(url,
                                            QUrl(tempFile->fileName()),
                                            -1,
                                            KIO::Overwrite | KIO::HideProgressInfo);

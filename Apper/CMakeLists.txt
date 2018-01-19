@@ -43,7 +43,7 @@ add_executable(apper
 target_link_libraries(apper
     KF5::IconThemes
     KF5::DBusAddons
-    ${PackageKitQt5_LIBRARIES}
+    PK::packagekitqt5
     apper_private
 )
 

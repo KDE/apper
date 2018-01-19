@@ -24,42 +24,36 @@
 
 #include "CategoryMatcher.h"
 
+#include <AppStreamQt/component.h>
+
 #include <QObject>
 #include <QHash>
 
-struct _AsPool;
+namespace AppStream {
+class Pool;
+}
 
 struct _AsScreenshotService;
 typedef struct _AsScreenshotService AsScreenshotService;
 
-class Q_DECL_EXPORT AppStream : public QObject {
+class Q_DECL_EXPORT AppStreamHelper : public QObject {
     public:
-        struct Application {
-            QString name;
-            QString summary;
-            QString description;
-            QString icon_url;
-            QString id;
-            QStringList categories;
-            QString screenshot;
-            QString thumbnail;
-        };
-        static AppStream* instance();
-        virtual ~AppStream();
+        static AppStreamHelper* instance();
+        virtual ~AppStreamHelper();
         bool open();
 
-        QList<Application> applications(const QString &pkgName) const;
+        QList<AppStream::Component> applications(const QString &pkgName) const;
         QString genericIcon(const QString &pkgName) const;
         QStringList findPkgNames(const CategoryMatcher &parser) const;
         QString thumbnail(const QString &pkgName) const;
-        QString screenshot(const QString &pkgName) const;
+        QUrl screenshot(const QString &pkgName) const;
 
     private:
-        explicit AppStream(QObject *parent = 0);
-        _AsPool *m_pool;
+        explicit AppStreamHelper(QObject *parent = 0);
+        AppStream::Pool *m_pool;
 
-        QHash<QString, Application> m_appInfo;
-        static AppStream         *m_instance;
+        QHash<QString, AppStream::Component> m_appInfo;
+        static AppStreamHelper         *m_instance;
 };
 
 #endif // APPSTREAM_H

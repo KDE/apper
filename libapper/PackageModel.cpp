@@ -37,6 +37,7 @@
 #include <KFormat>
 
 #ifdef HAVE_APPSTREAM
+#include <AppStreamQt/icon.h>
 #include <AppStream.h>
 #endif
 
@@ -44,6 +45,8 @@
 #define OVERLAY_SIZE 16
 
 using namespace PackageKit;
+
+Q_DECLARE_LOGGING_CATEGORY(APPER_LIB)
 
 PackageModel::PackageModel(QObject *parent)
 : QAbstractItemModel(parent),
@@ -100,12 +103,12 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
     }
 
 #ifdef HAVE_APPSTREAM
-    QList<AppStream::Application> applications;
+    QList<AppStream::Component> applications;
     if (!m_checkable) {
         const QString packageName = Transaction::packageName(packageID);
-//        applications = AppStream::instance()->applications(packageName);
+        applications = AppStreamHelper::instance()->applications(packageName);
 
-        for (const AppStream::Application &app : applications) {
+        for (const AppStream::Component &app : applications) {
             InternalPackage iPackage;
             iPackage.info = info;
             iPackage.packageID = packageID;
@@ -114,18 +117,27 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
             iPackage.arch = Transaction::packageArch(packageID);
             iPackage.repo = Transaction::packageData(packageID);
             iPackage.isPackage = false;
-            if (app.name.isEmpty()) {
+            if (app.name().isEmpty()) {
                 iPackage.displayName = packageName;
             } else {
-                iPackage.displayName = app.name;
+                iPackage.displayName = app.name();
             }
-            if (app.summary.isEmpty()) {
+            if (app.summary().isEmpty()) {
                 iPackage.summary = summary;
             } else {
-                iPackage.summary = app.summary;
+                iPackage.summary = app.summary();
             }
-            iPackage.icon  = app.icon_url;
-            iPackage.appId = app.id;
+
+            const QList<AppStream::Icon> icons = app.icons();
+            for (const AppStream::Icon &icon : icons) {
+                if (icon.url().isEmpty()) {
+                    iPackage.icon = icon.name();
+                } else {
+                    iPackage.icon = icon.url().toLocalFile();
+                }
+                break;
+            }
+            iPackage.appId = app.id();
             iPackage.size  = 0;
 
             if (selected) {
@@ -149,11 +161,11 @@ void PackageModel::addPackage(Transaction::Info info, const QString &packageID, 
         iPackage.summary = summary;
 
 #ifdef HAVE_APPSTREAM
-//        iPackage.icon = AppStream::instance()->genericIcon(iPackage.pkgName);
+        iPackage.icon = AppStreamHelper::instance()->genericIcon(iPackage.pkgName);
 
         if (m_checkable) {
             // in case of updates model only check if it's an app
-//            applications = AppStream::instance()->applications(iPackage.pkgName);
+            applications = AppStreamHelper::instance()->applications(iPackage.pkgName);
             if (!applications.isEmpty()) {
                 iPackage.isPackage = false;
             }

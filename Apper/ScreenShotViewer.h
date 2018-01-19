@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2010 by Daniel Nicoletti                           *
+ *   Copyright (C) 2009-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -33,7 +33,7 @@ class ScreenShotViewer : public QScrollArea
 {
 Q_OBJECT
 public:
-    explicit ScreenShotViewer(const QString &url, QWidget *parent = 0);
+    explicit ScreenShotViewer(const QUrl &url, QWidget *parent = nullptr);
     ~ScreenShotViewer();
 
 private Q_SLOTS:
