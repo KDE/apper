@@ -23,7 +23,6 @@
 
 #include <config.h>
 
-//#include <KGenericFactory>
 #include <KAboutData>
 
 #include <KLocalizedString>
@@ -32,7 +31,6 @@
 #include <KFileItemDelegate>
 #include <KHelpMenu>
 #include <QTabBar>
-//#include <KCmdLineArgs>
 #include <QToolBar>
 #include <QSignalMapper>
 #include <QTimer>
@@ -742,7 +740,7 @@ void ApperKCM::refreshCache()
     auto transactionW = new PkTransactionWidget(this);
     connect(transactionW, &PkTransactionWidget::titleChangedProgress, this, &ApperKCM::caption);
     QPointer<PkTransaction> transaction = new PkTransaction(transactionW);
-    Daemon::setHints (QLatin1String("cache-age=")+QString::number(m_cacheAge));
+    Daemon::setHints(QLatin1String("cache-age=")+QString::number(m_cacheAge));
     transaction->refreshCache(m_forceRefreshCache);
     transactionW->setTransaction(transaction, Transaction::RoleRefreshCache);
 

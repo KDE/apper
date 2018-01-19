@@ -263,6 +263,7 @@ void PackageDetails::init(PackageKit::Transaction::Roles roles)
 
 PackageDetails::~PackageDetails()
 {
+    delete ui;
 }
 
 void PackageDetails::setPackage(const QModelIndex &index)
