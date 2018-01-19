@@ -295,21 +295,12 @@ void PkTransaction::slotEulaRequired(const QString &eulaID, const QString &packa
     }
 
     auto eula = new LicenseAgreement(eulaID, packageID, vendor, licenseAgreement, d->parentWindow);
-    connect(eula, &LicenseAgreement::accepted, this, &PkTransaction::acceptEula);
-    connect(eula, &LicenseAgreement::rejected, this, &PkTransaction::reject);
-    showDialog(eula);
-}
-
-void PkTransaction::acceptEula()
-{
-    auto eula = qobject_cast<LicenseAgreement*>(sender());
-
-    if (eula) {
+    connect(eula, &LicenseAgreement::accepted, this, [this, eula] () {
         qCDebug(APPER_LIB) << "Accepting EULA" << eula->id();
         setupTransaction(Daemon::acceptEula(eula->id()));
-    } else {
-        qCWarning(APPER_LIB) << "something is broken, slot is bound to LicenseAgreement but signalled from elsewhere.";
-    }
+    });
+    connect(eula, &LicenseAgreement::rejected, this, &PkTransaction::reject);
+    showDialog(eula);
 }
 
 void PkTransaction::slotChanged()
@@ -378,21 +369,12 @@ void PkTransaction::slotRepoSignature(const QString &packageID,
     }
 
     auto repoSig = new RepoSig(packageID, repoName, keyUrl, keyUserid, keyId, keyFingerprint, keyTimestamp, type, d->parentWindow);
-    connect(repoSig, &RepoSig::accepted, this, &PkTransaction::installSignature);
-    connect(repoSig, &RepoSig::rejected, this, &PkTransaction::reject);
-    showDialog(repoSig);
-}
-
-void PkTransaction::installSignature()
-{
-    auto repoSig = qobject_cast<RepoSig*>(sender());
-
-    if (repoSig)  {
+    connect(repoSig, &RepoSig::accepted, this, [this, repoSig] () {
         qCDebug(APPER_LIB) << "Installing Signature" << repoSig->keyID();
         setupTransaction(Daemon::installSignature(repoSig->sigType(), repoSig->keyID(), repoSig->packageID()));
-    } else {
-        qCWarning(APPER_LIB) << "something is broken, slot is bound to RepoSig but signalled from elsewhere.";
-    }
+    });
+    connect(repoSig, &RepoSig::rejected, this, &PkTransaction::reject);
+    showDialog(repoSig);
 }
 
 void PkTransaction::slotFinished(Transaction::Exit status)

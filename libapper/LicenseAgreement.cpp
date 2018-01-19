@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,6 +21,7 @@
 #include "LicenseAgreement.h"
 #include "ui_LicenseAgreement.h"
 
+#include <QPushButton>
 #include <KLocalizedString>
 
 #include <Transaction>
@@ -36,9 +37,11 @@ LicenseAgreement::LicenseAgreement(const QString &eulaID, const QString &package
 {
     ui->setupUi(this);
 
-//    setButtons(KDialog::Cancel | KDialog::Yes);
-//    setButtonText(KDialog::Yes, i18n("Accept Agreement"));
     setWindowTitle(i18n("License Agreement Required"));
+
+    QPushButton *yesBt = ui->buttonBox->button(QDialogButtonBox::Yes);
+    yesBt->setText(i18n("Accept Agreement"));
+
     ui->title->setText(i18n("License required for %1 by %2", Transaction::packageName(packageID), vendor));
 
     ui->textbrowser->setText(licenseAgreement);

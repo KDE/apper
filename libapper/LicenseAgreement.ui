@@ -54,5 +54,38 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>LicenseAgreement</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>119</x>
+     <y>445</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>30</x>
+     <y>435</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>LicenseAgreement</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>350</x>
+     <y>444</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>410</x>
+     <y>467</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

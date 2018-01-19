@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2012 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -47,8 +47,6 @@ RepoSig::RepoSig(const QString &packageID,
     Q_UNUSED(keyFingerprint)
     Q_UNUSED(keyTimestamp)
     ui->setupUi(this);
-
-    setWindowTitle(i18n("Software signature is required"));
 
     ui->repoNameL->setText(repoName);
     ui->sigUrlL->setText(keyUrl);

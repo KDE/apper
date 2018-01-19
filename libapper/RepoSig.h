@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Daniel Nicoletti                           *
+ *   Copyright (C) 2008-2018 by Daniel Nicoletti                           *
  *   dantti12@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -41,7 +41,7 @@ public:
                      const QString &keyFingerprint,
                      const QString &keyTimestamp,
                      PackageKit::Transaction::SigType type,
-                     QWidget *parent = 0);
+                     QWidget *parent = nullptr);
     ~RepoSig();
 
     PackageKit::Transaction::SigType sigType() const;

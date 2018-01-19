@@ -140,9 +140,6 @@ private Q_SLOTS:
     void removePackages();
     void updatePackages();
 
-    void installSignature();
-    void acceptEula();
-
     void slotChanged();
     void slotFinished(PackageKit::Transaction::Exit status);
     void slotErrorCode(PackageKit::Transaction::Error error, const QString &details);
