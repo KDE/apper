@@ -23,6 +23,6 @@
 #cmakedefine EDIT_ORIGNS_DESKTOP_NAME "@EDIT_ORIGNS_DESKTOP_NAME@"
 
 // Define the Apper version.
-#cmakedefine APPER_VERSION "@APPER_VERSION@"
+#define APPER_VERSION "@PROJECT_VERSION@"
 
 #endif //CONFIG_H

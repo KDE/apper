@@ -49,7 +49,7 @@ UpdateDetails::UpdateDetails(QWidget *parent)
     connect(hideTB, &QToolButton::clicked, this, &UpdateDetails::hide);
 
     m_busySeq = new KPixmapSequenceOverlayPainter(this);
-    m_busySeq->setSequence(KPixmapSequence(QIcon::fromTheme(QLatin1String("process-working")).pixmap(KIconLoader::SizeSmallMedium)));
+    m_busySeq->setSequence(KIconLoader::global()->loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium));
     m_busySeq->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_busySeq->setWidget(this);
 

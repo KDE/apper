@@ -31,8 +31,8 @@ target_link_libraries(kded_apperd
 )
 
 if(DEBCONF_SUPPORT)
-target_link_libraries(kded_apperd DebconfKDE::Main)
-endif(DEBUCONF_SUPPORT)
+    target_link_libraries(kded_apperd DebconfKDE::Main)
+endif()
 
 set_target_properties(kded_apperd PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
 
