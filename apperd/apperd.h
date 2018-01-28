@@ -22,6 +22,7 @@
 #define APPERD_H
 
 #include <KDEDModule>
+#include <KPluginFactory>
 
 #include <QThread>
 
@@ -38,5 +39,7 @@ private:
     QThread *m_thread;
     ApperdThread *m_apperThread;
 };
+
+K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperD>();)
 
 #endif

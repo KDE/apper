@@ -123,4 +123,4 @@ void PkInstallPackageFiles::transactionFinished(PkTransaction::ExitStatus status
      }
 }
 
-#include "PkInstallPackageFiles.moc"
+#include "moc_PkInstallPackageFiles.cpp"

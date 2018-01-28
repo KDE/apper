@@ -328,3 +328,5 @@ bool ApperdThread::isSystemReady(bool ignoreBattery, bool ignoreMobile) const
 
     return true;
 }
+
+#include "moc_ApperdThread.cpp"

@@ -21,13 +21,9 @@
 #include "apperd.h"
 #include "ApperdThread.h"
 
-#include <KPluginFactory>
 #include <QLoggingCategory>
 
 Q_LOGGING_CATEGORY(APPER_DAEMON, "apper.daemon")
-
-K_PLUGIN_FACTORY(ApperFactory, registerPlugin<ApperD>();)
-K_EXPORT_PLUGIN(ApperFactory("apperd", "apper"))
 
 ApperD::ApperD(QObject *parent, const QList<QVariant> &) :
     KDEDModule(parent)
@@ -52,4 +48,4 @@ ApperD::~ApperD()
 //    delete m_thread;
 }
 
-#include "apperd.moc"
+#include "moc_apperd.cpp"

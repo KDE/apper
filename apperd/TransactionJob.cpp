@@ -187,4 +187,4 @@ bool TransactionJob::doKill()
     return !reply.isError() && m_transaction->role() == Transaction::RoleCancel;
 }
 
-#include "TransactionJob.moc"
+#include "moc_TransactionJob.cpp"

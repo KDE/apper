@@ -75,4 +75,4 @@ void ReviewChanges::selectionChanged()
                              !m_model->selectedPackagesToRemove().isEmpty());
 }
 
-#include "ReviewChanges.moc"
+#include "moc_ReviewChanges.cpp"

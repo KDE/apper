@@ -917,4 +917,4 @@ void ApperKCM::closeEvent(QCloseEvent *event)
 //     }
 }
 
-#include "ApperKCM.moc"
+#include "moc_ApperKCM.cpp"

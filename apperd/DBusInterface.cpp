@@ -119,3 +119,5 @@ void DBusInterface::transactionFinished()
     }
 #endif // HAVE_DEBCONFKDE
 }
+
+#include "moc_DBusInterface.cpp"

@@ -798,3 +798,5 @@ void PackageDetails::files(const QString &packageID, const QStringList &files)
     Q_UNUSED(packageID)
     m_currentFileList = files;
 }
+
+#include "moc_PackageDetails.cpp"

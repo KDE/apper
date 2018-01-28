@@ -83,4 +83,4 @@ void PkSearchFile::notFound()
     sendErrorFinished(NoPackagesFound, msg);
 }
 
-#include "PkSearchFile.moc"
+#include "moc_PkSearchFile.cpp"

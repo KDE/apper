@@ -191,3 +191,5 @@ void PkInterface::show(SessionTask *widget)
 //    KWindowSystem::forceActiveWindow(widget->winId());
 //    KWindowSystem::setMainWindow(widget, widget->parentWId());
 }
+
+#include "moc_PkInterface.cpp"

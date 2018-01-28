@@ -145,4 +145,4 @@ void PkRemovePackageByFiles::notFound()
     sendErrorFinished(NoPackagesFound, QLatin1String("no package found"));
 }
 
-#include "PkRemovePackageByFiles.moc"
+#include "moc_PkRemovePackageByFiles.cpp"

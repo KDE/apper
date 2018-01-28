@@ -153,3 +153,5 @@ QString TransactionModel::getTypeLine(const QStringList &lines, Transaction::Sta
         return QString();
     }
 }
+
+#include "moc_TransactionModel.cpp"

@@ -49,3 +49,5 @@ void GraphicsOpacityDropShadowEffect::draw(QPainter *painter)
     painter->setOpacity(m_opacity);
     QGraphicsDropShadowEffect::draw(painter);
 }
+
+#include "moc_GraphicsOpacityDropShadowEffect.cpp"

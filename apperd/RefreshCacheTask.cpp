@@ -83,3 +83,5 @@ void RefreshCacheTask::notificationClosed()
     m_notification->deleteLater();
     m_notification = 0;
 }
+
+#include "moc_RefreshCacheTask.cpp"

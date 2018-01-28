@@ -109,4 +109,4 @@ void PkInstallPlasmaResources::notFound()
     sendErrorFinished(NoPackagesFound, msg);
 }
 
-#include "PkInstallPlasmaResources.moc"
+#include "moc_PkInstallPlasmaResources.cpp"

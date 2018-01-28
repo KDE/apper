@@ -48,7 +48,6 @@ void AptRebootListener::checkForReboot()
     }
 }
 
-
 void AptRebootListener::slotDirectoryChanged(const QString &path)
 {
     if (path == reboot_required_path) {
@@ -56,4 +55,4 @@ void AptRebootListener::slotDirectoryChanged(const QString &path)
     }
 }
 
-#include <RebootListener.moc>
+#include "moc_RebootListener.cpp"

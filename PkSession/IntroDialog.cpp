@@ -77,4 +77,4 @@ void IntroDialog::setDescription(const QString &description)
     ui->descriptionL->setText(description);
 }
 
-#include "IntroDialog.moc"
+#include "moc_IntroDialog.cpp"

@@ -44,3 +44,5 @@ bool TransactionFilterModel::lessThan(const QModelIndex &left,
         return QSortFilterProxyModel::lessThan(left, right);
     }
 }
+
+#include "moc_TransactionFilterModel.cpp"

@@ -64,8 +64,7 @@ void TransactionHistory::setFilterRegExp(const QString &regexp)
 void TransactionHistory::on_treeView_customContextMenuRequested(const QPoint &pos)
 {
     auto menu = new QMenu(this);
-    QAction *action;
-    action = menu->addAction(i18n("Refresh transactions list"));
+    QAction *action = menu->addAction(i18n("Refresh transactions list"));
     connect(action, &QAction::triggered, this, &TransactionHistory::refreshList);
     menu->exec(treeView->viewport()->mapToGlobal(pos));
     delete menu;
@@ -84,3 +83,5 @@ void TransactionHistory::refreshList()
     text = i18n("Time since last cache refresh: %1", KFormat().formatSpelloutDuration(time));
     timeCacheLabel->setText(text);
 }
+
+#include "moc_TransactionHistory.cpp"

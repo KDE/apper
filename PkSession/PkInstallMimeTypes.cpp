@@ -103,4 +103,4 @@ void PkInstallMimeTypes::notFound()
 //               "Applications that can open this type of file",
 //               m_foundPackages.size()));
 
-#include "PkInstallMimeTypes.moc"
+#include "moc_PkInstallMimeTypes.cpp"

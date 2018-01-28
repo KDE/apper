@@ -57,3 +57,5 @@ bool AbstractIsRunning::isRunning() const
 {
     return m_running > 0;
 }
+
+#include "moc_AbstractIsRunning.cpp"

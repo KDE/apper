@@ -92,3 +92,5 @@ int PkSession::newInstance()
 PkSession::~PkSession()
 {
 }
+
+#include "moc_PkSession.cpp"

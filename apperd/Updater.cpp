@@ -321,3 +321,5 @@ bool Updater::updatePackages(const QStringList &packages, bool downloadOnly, con
 
     return true;
 }
+
+#include "moc_Updater.cpp"

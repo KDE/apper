@@ -105,3 +105,5 @@ void ScreenShotViewer::fadeIn()
 
     anim->start();
 }
+
+#include "moc_ScreenShotViewer.cpp"

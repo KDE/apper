@@ -115,4 +115,4 @@ void PkInstallProvideFiles::addPackage(Transaction::Info info, const QString &pa
     }
 }
 
-#include "PkInstallProvideFiles.moc"
+#include "moc_PkInstallProvideFiles.cpp"

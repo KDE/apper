@@ -102,3 +102,5 @@ void ApplicationSortFilterModel::sortNow()
 {
     sort(0);
 }
+
+#include "moc_ApplicationSortFilterModel.cpp"

@@ -338,3 +338,5 @@ Transaction::Filters FiltersMenu::filters() const
     }
     return filters;
 }
+
+#include "moc_FiltersMenu.cpp"

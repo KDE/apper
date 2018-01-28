@@ -86,4 +86,4 @@ void PkInstallPrinterDrivers::notFound()
     sendErrorFinished(NoPackagesFound, QLatin1String("failed to find printer driver"));
 }
 
-#include "PkInstallPrinterDrivers.moc"
+#include "moc_PkInstallPrinterDrivers.cpp"

@@ -64,4 +64,4 @@ void PkIsInstalled::searchFinished(PkTransaction::ExitStatus status)
     }
 }
 
-#include "PkIsInstalled.moc"
+#include "moc_PkIsInstalled.cpp"

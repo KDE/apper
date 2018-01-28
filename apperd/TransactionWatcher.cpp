@@ -341,3 +341,5 @@ void TransactionWatcher::suppressSleep(bool enable, int &inhibitCookie, const QS
         inhibitCookie = -1;
     }
 }
+
+#include "moc_TransactionWatcher.cpp"

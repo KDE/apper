@@ -665,4 +665,4 @@ bool SessionTask::showWarning() const
     return m_interactions & Warning;
 }
 
-#include "SessionTask.moc"
+#include "moc_SessionTask.cpp"

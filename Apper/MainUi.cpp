@@ -86,4 +86,4 @@ void MainUi::closeEvent(QCloseEvent *event)
     emit finished();
 }
 
-#include "MainUi.moc"
+#include "moc_MainUi.cpp"

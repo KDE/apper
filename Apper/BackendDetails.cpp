@@ -107,4 +107,4 @@ void BackendDetails::daemonChanged()
     ui->archCB->setChecked(filters & Transaction::FilterNotArch);
 }
 
-#include "BackendDetails.moc"
+#include "moc_BackendDetails.cpp"

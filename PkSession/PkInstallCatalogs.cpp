@@ -271,4 +271,4 @@ void PkInstallCatalogs::searchFinished(PkTransaction::ExitStatus status)
     }
 }
 
-#include "PkInstallCatalogs.moc"
+#include "moc_PkInstallCatalogs.cpp"

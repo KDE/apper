@@ -144,4 +144,4 @@ void PkInstallGStreamerResources::notFound()
     sendErrorFinished(NoPackagesFound, QLatin1String("failed to find codec"));
 }
 
-#include "PkInstallGStreamerResources.moc"
+#include "moc_PkInstallGStreamerResources.cpp"

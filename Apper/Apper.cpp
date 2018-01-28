@@ -236,4 +236,4 @@ void Apper::invoke(const QString &method_name, const QStringList &args)
     QTimer::singleShot(0, this, &Apper::appClose);
 }
 
-#include "Apper.moc"
+#include "moc_Apper.cpp"

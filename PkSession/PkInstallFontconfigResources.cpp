@@ -161,4 +161,4 @@ void PkInstallFontconfigResources::searchFailed()
     sendErrorFinished(Failed, QLatin1String("failed to search for provides"));
 }
 
-#include "PkInstallFontconfigResources.moc"
+#include "moc_PkInstallFontconfigResources.cpp"

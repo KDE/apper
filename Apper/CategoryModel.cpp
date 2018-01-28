@@ -417,3 +417,5 @@ QList<CategoryMatcher> CategoryModel::parseCategories(QXmlStreamReader &xml)
 
     return ret;
 }
+
+#include "moc_CategoryModel.cpp"

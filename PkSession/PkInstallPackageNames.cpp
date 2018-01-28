@@ -130,4 +130,4 @@ void PkInstallPackageNames::addPackage(Transaction::Info info, const QString &pa
     }
 }
 
-#include "PkInstallPackageNames.moc"
+#include "moc_PkInstallPackageNames.cpp"
