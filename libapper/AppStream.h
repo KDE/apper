@@ -45,7 +45,7 @@ class Q_DECL_EXPORT AppStreamHelper : public QObject {
         QList<AppStream::Component> applications(const QString &pkgName) const;
         QString genericIcon(const QString &pkgName) const;
         QStringList findPkgNames(const CategoryMatcher &parser) const;
-        QString thumbnail(const QString &pkgName) const;
+        QUrl thumbnail(const QString &pkgName) const;
         QUrl screenshot(const QString &pkgName) const;
 
     private:

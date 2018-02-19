@@ -27,6 +27,7 @@
 #include <KPixmapSequenceOverlayPainter>
 #include <KJob>
 
+#include <QUrl>
 #include <QWidget>
 #include <QSortFilterProxyModel>
 #include <QPropertyAnimation>
@@ -77,7 +78,7 @@ private:
     void fadeOut(FadeWidgets widgets);
     void setupDescription();
     QVector<QPair<QString, QString> > locateApplication(const QString &_relPath, const QString &menuId) const;
-    QString thumbnail(const QString &pkgName) const;
+    QUrl thumbnail(const QString &pkgName) const;
     QUrl screenshot(const QString &pkgName) const;
 
     Ui::PackageDetails *ui;
@@ -128,8 +129,8 @@ private:
     QSortFilterProxyModel *m_requiresProxy;
 
     // Screen shot buffer
-    QString      m_currentScreenshot;
-    QHash<QString, QString> m_screenshotPath;
+    QUrl      m_currentScreenshot;
+    QHash<QUrl, QString> m_screenshotPath;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(PackageDetails::FadeWidgets)

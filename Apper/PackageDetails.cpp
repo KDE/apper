@@ -175,7 +175,7 @@ PackageDetails::PackageDetails(QWidget *parent)
     // after finished it checks in display() to see if it shouldn't show
     // up again. The property animation is always the same, the only different thing
     // is the Forward or Backward property
-    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(ui->stackedWidget);
+    auto effect = new QGraphicsOpacityEffect(ui->stackedWidget);
     effect->setOpacity(0);
     ui->stackedWidget->setGraphicsEffect(effect);
     m_fadeStacked = new QPropertyAnimation(effect, "opacity", this);
@@ -187,7 +187,7 @@ PackageDetails::PackageDetails(QWidget *parent)
     // It's is impossible due to some limitation in Qt to set two effects on the same
     // Widget
     m_fadeScreenshot = new QPropertyAnimation(effect, "opacity", this);
-    GraphicsOpacityDropShadowEffect *shadow = new GraphicsOpacityDropShadowEffect(ui->screenshotL);
+    auto shadow = new GraphicsOpacityDropShadowEffect(ui->screenshotL);
     shadow->setOpacity(0);
     shadow->setBlurRadius(BLUR_RADIUS);
     shadow->setOffset(2);
@@ -201,12 +201,12 @@ PackageDetails::PackageDetails(QWidget *parent)
     connect(m_fadeScreenshot, SIGNAL(finished()), this, SLOT(display()));
 
     // This pannel expanding
-    QPropertyAnimation *anim1 = new QPropertyAnimation(this, "maximumSize", this);
+    auto anim1 = new QPropertyAnimation(this, "maximumSize", this);
     anim1->setDuration(500);
     anim1->setEasingCurve(QEasingCurve::OutQuart);
     anim1->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
     anim1->setEndValue(QSize(QWIDGETSIZE_MAX, FINAL_HEIGHT));
-    QPropertyAnimation *anim2 = new QPropertyAnimation(this, "minimumSize", this);
+    auto anim2 = new QPropertyAnimation(this, "minimumSize", this);
     anim2->setDuration(500);
     anim2->setEasingCurve(QEasingCurve::OutQuart);
     anim2->setStartValue(QSize(QWIDGETSIZE_MAX, 0));
@@ -300,13 +300,13 @@ void PackageDetails::setPackage(const QModelIndex &index)
 
     m_currentScreenshot = thumbnail(Transaction::packageName(m_packageID));
     qCDebug(APPER) << "current screenshot" << m_currentScreenshot;
-    if (!m_currentScreenshot.isNull()) {
+    if (!m_currentScreenshot.isEmpty()) {
         if (m_screenshotPath.contains(m_currentScreenshot)) {
             display();
         } else {
             auto tempFile = new QTemporaryFile;
             tempFile->open();
-            KIO::FileCopyJob *job = KIO::file_copy(QUrl(m_currentScreenshot),
+            KIO::FileCopyJob *job = KIO::file_copy(m_currentScreenshot,
                                                    QUrl(tempFile->fileName()),
                                                    -1,
                                                    KIO::Overwrite | KIO::HideProgressInfo);
@@ -437,7 +437,7 @@ void PackageDetails::resultJob(KJob *job)
 {
     KIO::FileCopyJob *fJob = qobject_cast<KIO::FileCopyJob*>(job);
     if (!fJob->error()) {
-        m_screenshotPath[fJob->srcUrl().url()] = fJob->destUrl().toLocalFile();
+        m_screenshotPath[fJob->srcUrl()] = fJob->destUrl().toLocalFile();
         display();
     }
 }
@@ -724,13 +724,13 @@ QVector<QPair<QString, QString> > PackageDetails::locateApplication(const QStrin
     return ret;
 }
 
-QString PackageDetails::thumbnail(const QString &pkgName) const
+QUrl PackageDetails::thumbnail(const QString &pkgName) const
 {
 #ifndef HAVE_APPSTREAM
     Q_UNUSED(pkgName)
-    return QString();
+    return QUrl();
 #else
-    return QString();//AppStream::instance()->thumbnail(pkgName);
+    return AppStreamHelper::instance()->thumbnail(pkgName);
 #endif
 }
 

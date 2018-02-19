@@ -196,20 +196,32 @@ QStringList AppStreamHelper::findPkgNames(const CategoryMatcher &parser) const
     return packages;
 }
 
-QString AppStreamHelper::thumbnail(const QString &pkgName) const
+QUrl AppStreamHelper::thumbnail(const QString &pkgName) const
 {
+    QUrl url;
 #ifdef HAVE_APPSTREAM
-    QString url = QLatin1String("");
     if (m_appInfo.contains(pkgName)) {
         AppStream::Component app = m_appInfo.value(pkgName);
-//        )
-//        url = app.icon();
+        const QList<AppStream::Screenshot> screenshots = app.screenshots();
+        for (const AppStream::Screenshot &screenshot : screenshots) {
+            const QList<AppStream::Image> images = screenshot.images();
+            for (const AppStream::Image &image : images) {
+                if (image.kind() == AppStream::Image::KindThumbnail) {
+                    url = image.url();
+                    break;
+                }
+            }
+
+            if (screenshot.isDefault() && !url.isEmpty()) {
+                break;
+            }
+        }
     }
 
     return url;
 #else
     Q_UNUSED(pkgName)
-    return QString();
+    return url;
 #endif //HAVE_APPSTREAM
 }
 
