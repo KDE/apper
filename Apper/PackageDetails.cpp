@@ -46,6 +46,7 @@
 #include <KFormat>
 #include <KIO/Job>
 #include <QMenu>
+#include <QDir>
 
 #include <QLoggingCategory>
 
@@ -299,15 +300,15 @@ void PackageDetails::setPackage(const QModelIndex &index)
     m_appName           = index.data(PackageModel::NameRole).toString();
 
     m_currentScreenshot = thumbnail(Transaction::packageName(m_packageID));
-    qCDebug(APPER) << "current screenshot" << m_currentScreenshot;
+    qCDebug(APPER) << "current thumbnail" << m_currentScreenshot;
     if (!m_currentScreenshot.isEmpty()) {
         if (m_screenshotPath.contains(m_currentScreenshot)) {
             display();
         } else {
-            auto tempFile = new QTemporaryFile;
+            auto tempFile = new QTemporaryFile(QDir::tempPath() + QLatin1String("/apper.XXXXXX.png"));
             tempFile->open();
             KIO::FileCopyJob *job = KIO::file_copy(m_currentScreenshot,
-                                                   QUrl(tempFile->fileName()),
+                                                   QUrl::fromLocalFile(tempFile->fileName()),
                                                    -1,
                                                    KIO::Overwrite | KIO::HideProgressInfo);
             connect(job, &KIO::FileCopyJob::result, this, &PackageDetails::resultJob);

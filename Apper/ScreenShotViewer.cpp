@@ -21,6 +21,7 @@
 #include "ScreenShotViewer.h"
 
 #include <QIcon>
+#include <QDir>
 #include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
@@ -48,12 +49,10 @@ ScreenShotViewer::ScreenShotViewer(const QUrl &url, QWidget *parent)
     setWidget(m_screenshotL);
     setWindowIcon(QIcon::fromTheme(QLatin1String("layer-visible-on")));
 
-    auto tempFile = new QTemporaryFile;
-//    tempFile->setPrefix("appgetfull");
-//    tempFile->setSuffix(".png");
+    auto tempFile = new QTemporaryFile(QDir::tempPath() + QLatin1String("/apper.XXXXXX.png"));
     tempFile->open();
     KIO::FileCopyJob *job = KIO::file_copy(url,
-                                           QUrl(tempFile->fileName()),
+                                           QUrl::fromLocalFile(tempFile->fileName()),
                                            -1,
                                            KIO::Overwrite | KIO::HideProgressInfo);
     connect(job, &KIO::FileCopyJob::result, this, &ScreenShotViewer::resultJob);
