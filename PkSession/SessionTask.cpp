@@ -230,8 +230,7 @@ void SessionTask::setInfo(const QString &title, const QString &text, const QStri
     info->setDescription(text);
     info->setDetails(details);
     setMainWidget(info);
-//    setButtons(KDialog::Close);
-//    button(KDialog::Close)->setFocus();
+    showCloseButton();
 
     if (qobject_cast<PkTransaction*>(sender())) {
         // if we have a sender this method was caller by PkTransaction
@@ -249,8 +248,7 @@ void SessionTask::setError(const QString &title, const QString &text, const QStr
     info->setIcon(QIcon::fromTheme(QLatin1String("dialog-error")));
     info->setDetails(details);
     setMainWidget(info);
-//    setButtons(KDialog::Close);
-//    button(KDialog::Close)->setFocus();
+    showCloseButton();
 
     if (qobject_cast<PkTransaction*>(sender())) {
         // if we have a sender this method was caller by PkTransaction
@@ -268,8 +266,7 @@ void SessionTask::setFinish(const QString &title, const QString &text, QWidget *
     info->setIcon(QIcon::fromTheme(QLatin1String("dialog-ok-apply")));
     info->addWidget(widget);
     setMainWidget(info);
-//    setButtons(KDialog::Close);
-//    button(KDialog::Close)->setFocus();
+    showCloseButton();
 }
 
 void SessionTask::setTitle(const QString &title)
