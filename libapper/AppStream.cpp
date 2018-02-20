@@ -180,7 +180,7 @@ QString AppStreamHelper::genericIcon(const QString &pkgName) const
     return QString();
 }
 
-QStringList AppStreamHelper::findPkgNames(const CategoryMatcher &parser) const
+QStringList AppStreamHelper::findPkgNames(const CategoryMatcher &/*parser*/) const
 {
     QStringList packages;
 
@@ -201,14 +201,17 @@ QUrl AppStreamHelper::thumbnail(const QString &pkgName) const
     QUrl url;
 #ifdef HAVE_APPSTREAM
     if (m_appInfo.contains(pkgName)) {
+        AppStream::Image thumb;
         AppStream::Component app = m_appInfo.value(pkgName);
         const QList<AppStream::Screenshot> screenshots = app.screenshots();
         for (const AppStream::Screenshot &screenshot : screenshots) {
             const QList<AppStream::Image> images = screenshot.images();
             for (const AppStream::Image &image : images) {
                 if (image.kind() == AppStream::Image::KindThumbnail) {
-                    url = image.url();
-                    break;
+                    if (thumb.kind() == AppStream::Image::KindUnknown || image.size().height() < thumb.size().height()) {
+                        thumb = image;
+                        url = image.url();
+                    }
                 }
             }
 
