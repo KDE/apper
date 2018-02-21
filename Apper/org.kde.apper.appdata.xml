@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component type="desktop">
-  <id>org.kde.apper.desktop</id>
-  <metadata_license>CC0-1.0</metadata_license>
+<component type="desktop-application">
+  <id>org.kde.apper</id>
+  <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-2.0+</project_license>
+
   <name>Apper</name>
   <name xml:lang="ar">آپر</name>
   <name xml:lang="ast">Apper</name>
@@ -35,6 +36,7 @@
   <name xml:lang="x-test">xxApperxx</name>
   <name xml:lang="zh-CN">Apper</name>
   <name xml:lang="zh-TW">Apper</name>
+
   <summary>KDE application and package management tool</summary>
   <summary xml:lang="ar">أداة «كدي» لإدارة التّطبيقات والحزم</summary>
   <summary xml:lang="ast">Ferramienta KDE de xestión d'aplicaciones y paquetes</summary>
@@ -67,6 +69,7 @@
   <summary xml:lang="x-test">xxKDE application and package management toolxx</summary>
   <summary xml:lang="zh-CN">KDE 应用程序和包管理工具</summary>
   <summary xml:lang="zh-TW">KDE 應用程式與軟體套件管理工具</summary>
+
   <description>
     <p>
       Apper is a graphical management tool for packages and applications
@@ -323,6 +326,7 @@
       <li xml:lang="zh-TW">與 KDE Plasma 桌面高度整合</li>
     </ul>
   </description>
+
   <screenshots>
     <screenshot type="default">
       <image>https://userbase.kde.org/images.userbase/0/06/Apper-window.png</image>
@@ -357,11 +361,13 @@
       <caption xml:lang="x-test">xxThe main window showing a description of the selected packagexx</caption>
       <caption xml:lang="zh-CN">主窗口显示了选中包的说明</caption>
       <caption xml:lang="zh-TW">主視窗顯示選取的套件的描述</caption>
-      <image>https://userbase.kde.org/images.userbase/0/07/Apper-window1.png</image>
+      <image>https://dantti.files.wordpress.com/2018/02/screenshot_20180220_173026.png</image>
     </screenshot>
   </screenshots>
-  <url type="homepage">https://projects.kde.org/projects/extragear/sysadmin/apper/</url>
+
+  <url type="homepage">https://www.kde.org/applications/system/apper/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=apper</url>
+
   <project_group>KDE</project_group>
   <developer_name>The KDE Community</developer_name>
   <developer_name xml:lang="ar">مجتمع «كدي»</developer_name>
@@ -393,6 +399,9 @@
   <developer_name xml:lang="x-test">xxThe KDE Communityxx</developer_name>
   <developer_name xml:lang="zh-CN">KDE 社区</developer_name>
   <developer_name xml:lang="zh-TW">KDE 社群</developer_name>
+
+  <launchable type="desktop-id">org.kde.apper.desktop</launchable>
+
   <provides>
     <binary>apper</binary>
   </provides>
