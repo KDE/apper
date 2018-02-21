@@ -59,7 +59,10 @@ target_link_libraries(apper_private
     KF5::I18n
     Qt5::Core
     PK::packagekitqt5
-    AppStreamQt
 )
+
+if(APPSTREAM)
+    target_link_libraries(apper_private AppStreamQt)
+endif()
 
 install(TARGETS apper_private DESTINATION ${CMAKE_INSTALL_LIBDIR}/apper)
