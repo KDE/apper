@@ -154,7 +154,7 @@ Settings::~Settings()
 void Settings::on_editOriginsPB_clicked()
 {
 #ifdef EDIT_ORIGNS_DESKTOP_NAME
-    KToolInvocation::startServiceByDesktopName(EDIT_ORIGNS_DESKTOP_NAME);
+    KToolInvocation::startServiceByDesktopName(QLatin1String(EDIT_ORIGNS_DESKTOP_NAME));
 #endif //EDIT_ORIGNS_DESKTOP_NAME
 }
 
