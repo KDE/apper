@@ -486,7 +486,7 @@ Name[uk]=Доступне оновлення дистрибутива
 Name[wa]=I gn a on metaedje a livea del distribucion
 Name[x-test]=xxA distribution upgrade is availablexx
 Name[zh_CN]=发行版升级可用
-Name[zh_TW]=可進行發行版升級
+Name[zh_TW]=可進行散布版升級
 Action=Sound|Popup
 
 [Event/DistroUpgradeFinished]
@@ -531,7 +531,7 @@ Name[uk]=Оновлення дистрибутива завершено
 Name[wa]=Li metaedje a livea del distribucion est tot fwait
 Name[x-test]=xxThe distribution upgrade completedxx
 Name[zh_CN]=发行版升级完成
-Name[zh_TW]=發行版升級程序完成
+Name[zh_TW]=散布版升級程序完成
 Action=Sound|Popup
 
 [Event/DistroUpgradeError]
@@ -576,5 +576,5 @@ Name[uk]=Спроба оновлення дистрибутива заверши
 Name[wa]=Li metaedje a livea del distribucion s' a fini avou ene aroke
 Name[x-test]=xxThe distribution upgrade completed with an errorxx
 Name[zh_CN]=发行版升级完成，有一个错误
-Name[zh_TW]=發行版升級程序完成，但是有錯誤
+Name[zh_TW]=散布版升級程序完成，但是有錯誤
 Action=Sound|Popup
