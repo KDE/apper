@@ -66,7 +66,7 @@
   <summary xml:lang="uk">Програма KDE для керування пакунками</summary>
   <summary xml:lang="x-test">xxKDE application and package management toolxx</summary>
   <summary xml:lang="zh-CN">KDE 应用程序和包管理工具</summary>
-  <summary xml:lang="zh-TW">KDE 應用程式與軟體套件管理工具</summary>
+  <summary xml:lang="zh-TW">KDE 應用程式與軟體包管理工具</summary>
   <description>
     <p>
       Apper is a graphical management tool for packages and applications
@@ -101,7 +101,7 @@
     <p xml:lang="uk">Apper — графічний інтерфейс для керування пакунками та програмами, які є частиною дистрибутива Linux.</p>
     <p xml:lang="x-test">xxApper is a graphical management tool for packages and applications provided by a Linux distribution.xx</p>
     <p xml:lang="zh-CN">Apper 是个提供给 Linux 发行版的图形化包及应用程序管理工具。</p>
-    <p xml:lang="zh-TW">Apper 是一套管理軟體與應用程式套件的圖形化工具。</p>
+    <p xml:lang="zh-TW">Apper 是一套管理 Linux 散布版中軟體包與應用程式的圖形化工具。</p>
     <p>
       It allows installing new software as well as keeping the system up to
       date by installing updates.
@@ -198,7 +198,7 @@
       <li xml:lang="uk">Однаковий для усіх дистрибутивів інтерфейс для керування пакунками програмного забезпечення.</li>
       <li xml:lang="x-test">xxDistribution-agnostic management of software packagesxx</li>
       <li xml:lang="zh-CN">发行版无关的软件包管理</li>
-      <li xml:lang="zh-TW">軟體套件管理，不管發行套件為何</li>
+      <li xml:lang="zh-TW">軟體包管理，不管散布版為何</li>
       <li>Application management for users unexperienced with packages</li>
       <li xml:lang="ar">إدارة التّطبيقات لمن ليس لديه خبرة مع الحزم</li>
       <li xml:lang="ast">Xestión d'aplicaciones pa usuarios inespertos pa con paquetes</li>
@@ -356,7 +356,7 @@
       <caption xml:lang="uk">Головне вікно, у якому буде показано опис позначеного пакунка.</caption>
       <caption xml:lang="x-test">xxThe main window showing a description of the selected packagexx</caption>
       <caption xml:lang="zh-CN">主窗口显示了选中包的说明</caption>
-      <caption xml:lang="zh-TW">主視窗顯示選取的套件的描述</caption>
+      <caption xml:lang="zh-TW">主視窗顯示選取的軟體包的描述</caption>
       <image>https://dantti.files.wordpress.com/2018/02/screenshot_20180220_173026.png</image>
     </screenshot>
   </screenshots>
