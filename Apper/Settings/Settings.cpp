@@ -27,6 +27,7 @@
 #include <Enum.h>
 #include <PkStrings.h>
 
+#include <QAction>
 #include <QTimer>
 #include <QSortFilterProxyModel>
 

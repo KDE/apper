@@ -23,6 +23,7 @@
 
 #include <QDialog>
 
+#include <QButtonGroup>
 #include <QToolButton>
 
 namespace Ui {
