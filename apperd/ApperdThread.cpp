@@ -96,7 +96,7 @@ void ApperdThread::init()
 
     // Watch for changes in the KDE proxy settings
     auto proxyWatch = new KDirWatch(this);
-    confWatch->addFile(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/kioslaverc"));
+    proxyWatch->addFile(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/kioslaverc"));
     connect(proxyWatch, SIGNAL(dirty(QString)), this, SLOT(proxyChanged()));
     connect(proxyWatch, SIGNAL(created(QString)), this, SLOT(proxyChanged()));
     connect(proxyWatch, SIGNAL(deleted(QString)), this, SLOT(proxyChanged()));
