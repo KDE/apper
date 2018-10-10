@@ -2,7 +2,6 @@
 IconName=system-software-install
 Name=Apper
 Name[ar]=آپر
-Name[ast]=Apper
 Name[bg]=Apper
 Name[bs]=Apper
 Name[ca]=Apper
@@ -45,7 +44,6 @@ Name[zh_CN]=Apper
 Name[zh_TW]=Apper
 Comment=Apper Notification
 Comment[ar]=إخطار آپر
-Comment[ast]=Avisu d'Apper
 Comment[bs]=Informisanje programa Apper
 Comment[ca]=Notificació de l'Apper
 Comment[ca@valencia]=Notificació de l'Apper
@@ -87,7 +85,6 @@ Comment[zh_TW]=Apper 通知
 [Event/ShowUpdates]
 Name=New updates available
 Name[ar]=تحديثات جديدة متوفّرة
-Name[ast]=Anovamientos disponibles
 Name[bg]=Има налични нови обновления
 Name[bs]=Nove nadogradnje su dostupne
 Name[ca]=Hi ha noves actualitzacions disponibles
@@ -132,7 +129,6 @@ Action=Sound|Popup
 [Event/AutoInstallingUpdates]
 Name=Updates are being installed
 Name[ar]=التّحديثات تُثبّت
-Name[ast]=Tán instalándose anovamientos
 Name[bg]=Обновяванията се инсталират
 Name[bs]=Nadogradnje su instalirane
 Name[ca]=S'estan instal·lant les actualitzacions
@@ -179,7 +175,6 @@ Action=Sound|Popup
 [Event/DownloadingUpdates]
 Name=Updates are being downloaded
 Name[ar]=التّحديثات تُنزّل
-Name[ast]=Tán baxándose anovamientos
 Name[bs]=Nadogradnje su preuzete
 Name[ca]=S'estan baixant les actualitzacions
 Name[ca@valencia]=S'estan baixant les actualitzacions
@@ -222,7 +217,6 @@ Action=Sound|Popup
 [Event/RestartRequired]
 Name=A System Restart is Required
 Name[ar]=إعادة تشغيل النّظام مطلوبة
-Name[ast]=Ríquese un reaniciu del sistema
 Name[bg]=Нужен е рестарт на системата
 Name[bs]=Pokretanje sistema je potrebno
 Name[ca]=Cal reiniciar el sistema
@@ -268,7 +262,6 @@ Action=Sound|Popup
 [Event/TransactionFailed]
 Name=A transaction failed to complete successfully
 Name[ar]=فشل اكتمال عمليّة ما بنجاح
-Name[ast]=Falló al completase con ésitu una trasaición
 Name[bg]=Грешка при извършване на прехвърлянето
 Name[bs]=Transakcija se nije uspjela završiti korektno
 Name[ca]=No s'ha pogut completar la transacció
@@ -314,7 +307,6 @@ Action=Sound|Popup
 [Event/UpdatesComplete]
 Name=Updates finished installing
 Name[ar]=انتهى تثبيت التّحديثات
-Name[ast]=Finó la instalación d'anovamientos
 Name[bg]=Приключено с инсталирането на обновления
 Name[bs]=Nadogradnje završile s instalacijom
 Name[ca]=Les actualitzacions s'han acabat d'instal·lar
@@ -360,7 +352,6 @@ Action=Sound|Popup
 [Event/TransactionMessage]
 Name=Message from the software manager
 Name[ar]=رسالة من مدير البرمجيّات
-Name[ast]=Mensaxe del xestor de software
 Name[bs]=Poruka od menadžera softvera
 Name[ca]=Missatge des del gestor de programari
 Name[ca@valencia]=Missatge des del gestor de programari
@@ -402,7 +393,6 @@ Action=Sound|Popup
 [Event/TransactionError]
 Name=A transaction error occurred
 Name[ar]=حدث خطأ في عمليّة
-Name[ast]=Asocedió un fallu de transaición
 Name[bg]=Възникна грешка при прехвърляне
 Name[bs]=Desila se transakcijska greška
 Name[ca]=Hi ha hagut un error durant la transacció
@@ -447,7 +437,6 @@ Action=Sound|Popup
 [Event/DistroUpgradeAvailable]
 Name=A distribution upgrade is available
 Name[ar]=ترقية التّوزيعة متوفّرة
-Name[ast]=Hai disponible una anovamientu de la distribución
 Name[bg]=Налично е обновление на дистрибуцията
 Name[bs]=Dostupna je nadogradnja distribucije
 Name[ca]=Hi ha disponible una actualització de la distribució
@@ -492,7 +481,6 @@ Action=Sound|Popup
 [Event/DistroUpgradeFinished]
 Name=The distribution upgrade completed
 Name[ar]=اكتملت ترقية التّوزيعة
-Name[ast]=Completóse l'anovamientu de distribución
 Name[bg]=Обновяването на дистрибуцията приключи
 Name[bs]=Završena je nadogradnja distribucije
 Name[ca]=S'ha completat l'actualització de la distribució
@@ -537,7 +525,6 @@ Action=Sound|Popup
 [Event/DistroUpgradeError]
 Name=The distribution upgrade completed with an error
 Name[ar]=اكتملت ترقية التّوزيعة بخطأ
-Name[ast]=L'anovamientu de distribución completóse con un fallu
 Name[bg]=Имаше грешка при обновяване на дистрибуцията
 Name[bs]=Nadogradnja distribucije je završila s greškom
 Name[ca]=S'ha completat l'actualització de la distribució amb un error

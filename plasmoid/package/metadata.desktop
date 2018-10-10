@@ -2,7 +2,6 @@
 Encoding=UTF-8
 Name=Software Updater
 Name[ar]=محدّث البرمجيّات
-Name[ast]=Anovador de software
 Name[bs]=Nadograđivač softvera
 Name[ca]=Actualitzador de programari
 Name[ca@valencia]=Actualitzador de programari
@@ -43,7 +42,6 @@ Name[zh_CN]=软件更新程序
 Name[zh_TW]=軟體更新程式
 Comment=Displays and updates software
 Comment[ar]=يعرض البرمجيّات ويحدّثها
-Comment[ast]=Amuesa y anueva software
 Comment[bs]=Prikazuje i nadograđuje softver
 Comment[ca]=Mostra i actualitza el programari
 Comment[ca@valencia]=Mostra i actualitza el programari
