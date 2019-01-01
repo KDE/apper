@@ -5,6 +5,7 @@
   <project_license>GPL-2.0+</project_license>
   <name>Apper</name>
   <name xml:lang="ar">آپر</name>
+  <name xml:lang="ast">Apper</name>
   <name xml:lang="bs">Apper</name>
   <name xml:lang="ca">Apper</name>
   <name xml:lang="ca-valencia">Apper</name>
@@ -138,6 +139,7 @@
     <p xml:lang="zh-TW">它可以安裝新軟體，或更新軟體。</p>
     <p>Features:</p>
     <p xml:lang="ar">الميزات:</p>
+    <p xml:lang="ast">Carauterístiques:</p>
     <p xml:lang="bs">Svojstva:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="ca-valencia">Característiques:</p>
@@ -367,6 +369,7 @@
   <project_group>KDE</project_group>
   <developer_name>The KDE Community</developer_name>
   <developer_name xml:lang="ar">مجتمع «كدي»</developer_name>
+  <developer_name xml:lang="ast">La comunidá de KDE</developer_name>
   <developer_name xml:lang="bs">KDE zajednica</developer_name>
   <developer_name xml:lang="ca">La comunitat KDE</developer_name>
   <developer_name xml:lang="ca-valencia">La comunitat KDE</developer_name>
