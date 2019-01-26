@@ -56,7 +56,7 @@ PkSession::PkSession(QObject* parent) : QObject(parent)
 void PkSession::prepareToClose()
 {
     if (isRunning()) {
-        qCDebug(APPER_SESSION) << "Stoping Timer";
+        qCDebug(APPER_SESSION) << "Stopping Timer";
         m_closeT->stop();
     } else {
         qCDebug(APPER_SESSION) << "Starting Timer: " << MINUTE;
