@@ -86,6 +86,7 @@ Comment[zh_TW]=Apper 通知
 [Event/ShowUpdates]
 Name=New updates available
 Name[ar]=تحديثات جديدة متوفّرة
+Name[ast]=Anovamientos disponibles
 Name[bg]=Има налични нови обновления
 Name[bs]=Nove nadogradnje su dostupne
 Name[ca]=Hi ha noves actualitzacions disponibles
