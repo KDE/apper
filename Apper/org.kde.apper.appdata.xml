@@ -39,6 +39,7 @@
   <name xml:lang="zh-TW">Apper</name>
   <summary>KDE application and package management tool</summary>
   <summary xml:lang="ar">أداة «كدي» لإدارة التّطبيقات والحزم</summary>
+  <summary xml:lang="ast">Ferramienta de xestión de paquetes y aplicaciones de KDE</summary>
   <summary xml:lang="bs">KDE aplikacija i alat za upravljanje paketom</summary>
   <summary xml:lang="ca">Eina de gestió d'aplicacions i paquets del KDE</summary>
   <summary xml:lang="ca-valencia">Eina de gestió d'aplicacions i paquets del KDE</summary>
@@ -76,6 +77,7 @@
       provided by a Linux distribution.
     </p>
     <p xml:lang="ar">«آپر» هي أداة إدارة رسوميّة للحزم والتّطبيقات التي توفّرها توزيعة لينكس.</p>
+    <p xml:lang="ast">Apper ye una ferramienta gráfica de xestión de paquetes forníos por una distribución de GNU/Linux.</p>
     <p xml:lang="bs">Apper je grafički alat za upravljanje paketima i aplikacijama obezbjeđenim od strane Linux distribucije.</p>
     <p xml:lang="ca">L'Apper és una eina de gestió gràfica per paquets i aplicacions proporcionats per una distribució Linux.</p>
     <p xml:lang="ca-valencia">L'Apper és una eina de gestió gràfica per paquets i aplicacions proporcionats per una distribució Linux.</p>
@@ -110,6 +112,7 @@
       date by installing updates.
     </p>
     <p xml:lang="ar">يسمح لك «آپر» بتثبيت برمجيّات جديد كما وإبقاء النّظام محدّثًا بتثبيت التّحديثات.</p>
+    <p xml:lang="ast">Permite la instalación de software nuevu amás de caltener el sistema anováu instalando los anovamientos.</p>
     <p xml:lang="bs">Dopušta instaliranje novog softvera kao i održavanje sistema instaliranjem ažuriranja.</p>
     <p xml:lang="ca">Permet instal·lar programari nou i també mantenir el sistema al dia instal·lant les actualitzacions.</p>
     <p xml:lang="ca-valencia">Permet instal·lar programari nou i també mantindre el sistema al dia instal·lant les actualitzacions.</p>
@@ -339,6 +342,7 @@
     <screenshot>
       <caption>The main window showing a description of the selected package</caption>
       <caption xml:lang="ar">النّافذة الرّئيسيّة تعرض وصفًا للحزمة المحدّدة</caption>
+      <caption xml:lang="ast">La ventana principal amuesa una descripción de los paquetes esbillaos</caption>
       <caption xml:lang="bs">Glavni prozor prikazuje opis označenog paketa</caption>
       <caption xml:lang="ca">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
       <caption xml:lang="ca-valencia">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
