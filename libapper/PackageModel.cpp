@@ -491,7 +491,7 @@ void PackageModel::clearSelectedNotPresent()
 
         if (notFound) {
             // Uncheck the package If it's not in the model
-            m_checkedPackages.erase(it);
+            it = m_checkedPackages.erase(it);
             uncheckPackageLogic(package.packageID);
         } else {
             ++it;
