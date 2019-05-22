@@ -137,5 +137,5 @@ Comment[zh_CN]=获取和管理软件的程序
 Comment[zh_TW]=取得並管理軟體的應用程式
 
 Terminal=false
-Categories=Qt;KDE;System;Settings;PackageManager;
+Categories=Qt;KDE;System;PackageManager;
 InitialPreference=10
