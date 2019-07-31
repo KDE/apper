@@ -127,7 +127,7 @@
     <p xml:lang="fr">Ceci permet d'installer de nouveaux logiciels et de maintenir à jour ceux déjà installés.</p>
     <p xml:lang="gl">Permite instalar novos programas e manter o sistema ao día mediante a instalación de actualizacións.</p>
     <p xml:lang="hu">Lehetővé teszi új szoftverek telepítését, valamit a rendszer naprakészen tartását frissítések telepítésével.</p>
-    <p xml:lang="id">Ia memungkinkan menginstal software baru serta menjaga sistem tetap terupdate dengan menginstal yang update.</p>
+    <p xml:lang="id">Ia memungkinkan menginstal software baru serta menjaga sistem tetap terbarukan dengan menginstal pembaruan.</p>
     <p xml:lang="it">Consente di installare nuovo software e di mantenere aggiornato il sistema tramite aggiornamenti.</p>
     <p xml:lang="ko">새 프로그램 설치, 업데이트 설치를 사용할 수 있습니다.</p>
     <p xml:lang="nds">Du kannst dor nieg Paketen mit installeren un Opfrischen för't Systeem inspelen.</p>
@@ -256,7 +256,7 @@
       <li xml:lang="fr">Éditeur pour les sources d'applications et le paramétrage de Packagekit</li>
       <li xml:lang="gl">Editor de fontes de software e configuración de PackageKit.</li>
       <li xml:lang="hu">Szerkesztő a szoftverforrásokhoz és PackageKit beállításokhoz</li>
-      <li xml:lang="id">Editor untuk setelan PackageKit dan sumber software</li>
+      <li xml:lang="id">Editor untuk pengaturan PackageKit dan sumber software</li>
       <li xml:lang="it">Editor delle fonti software e delle impostazioni di PackageKit</li>
       <li xml:lang="ko">소프트웨어 원본 및 PackageKit 설정 편집기</li>
       <li xml:lang="nds">Editor för Software-Borns un PackageKit-Instellen</li>
@@ -286,7 +286,7 @@
       <li xml:lang="fr">Notification système de mise à jour ou d'installation</li>
       <li xml:lang="gl">Notificador e instalador de actualizacións de software do sistema.</li>
       <li xml:lang="hu">Rendszerszoftver frissítések értesítő és telepítő</li>
-      <li xml:lang="id">Penginstal dan penotifikasi update software sistem</li>
+      <li xml:lang="id">Penginstal dan penotifikasi pembaruan software sistem</li>
       <li xml:lang="it">Gestore di sistema per la notifica e l'installazione degli aggiornamenti software</li>
       <li xml:lang="ko">시스템 소프트웨어 업데이트 알림 및 설치</li>
       <li xml:lang="nds">Gifft Bescheed över Software-Opfrischen un installeert de ok</li>
