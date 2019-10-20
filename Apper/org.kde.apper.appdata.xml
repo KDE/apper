@@ -52,7 +52,7 @@
   <summary xml:lang="es">Herramienta de gestión de aplicaciones y paquetes de KDE</summary>
   <summary xml:lang="fi">KDE:n sovellusten ja pakettien hallintatyökalu</summary>
   <summary xml:lang="fr">Outil KDE de gestion des applications et des paquets</summary>
-  <summary xml:lang="gl">Ferramenta de KDE para xestionar aplicativos e paquetes</summary>
+  <summary xml:lang="gl">Ferramenta de KDE para xestionar aplicacións e paquetes</summary>
   <summary xml:lang="hu">KDE alkalmazás és csomagkezelő eszköz</summary>
   <summary xml:lang="id">Alat pengelolaan paket dan aplikasi KDE</summary>
   <summary xml:lang="it">Strumento di gestione dei pacchetti e delle applicazioni di KDE</summary>
@@ -90,7 +90,7 @@
     <p xml:lang="es">Apper es una herramienta gráfica para gestión de los paquetes y de los aplicaciones proporcionadas por una distribución de Linux.</p>
     <p xml:lang="fi">Apper on graafinen hallintatyökalu Linux-jakelun tarjoamille paketeille ja sovelluksille.</p>
     <p xml:lang="fr">Apper est une interface graphique pour gérer les applications et les paquets fournis par une distribution Linux.</p>
-    <p xml:lang="gl">Apper é unha ferramenta gráfica de xestión de paquetes para paquetes e aplicativos que fornecen as distribucións de Linux.</p>
+    <p xml:lang="gl">Apper é unha ferramenta gráfica de xestión de paquetes para paquetes e aplicacións que fornecen as distribucións de Linux.</p>
     <p xml:lang="hu">Az Apper egy grafikus kezelőeszköz a Linux disztribúció által szolgáltatott csomagokhoz és alkalmazásokhoz.</p>
     <p xml:lang="id">Apper adalah alat pengelolaan grafis untuk paket dan aplikasi yang disediakan oleh distribusi Linux.</p>
     <p xml:lang="it">Apper è uno strumento a interfaccia grafica per la gestione dei pacchetti e delle applicazioni fornite da una distribuzione Linux.</p>
@@ -223,7 +223,7 @@
       <li xml:lang="es">Gestión de aplicaciones para usuarios sin experiencia en el manejo de paquetes</li>
       <li xml:lang="fi">Sovellusten hallinta käyttäjille, joilla ei ole kokemusta paketeista</li>
       <li xml:lang="fr">Application de gestion de paquets pour utilisateurs débutants</li>
-      <li xml:lang="gl">Xestión de aplicativos para usuarios sen experiencia con paquetes.</li>
+      <li xml:lang="gl">Xestión de aplicacións para usuarios sen experiencia con paquetes</li>
       <li xml:lang="hu">Alkalmazáskezelés a csomagokban tapasztalatlan felhasználóknak</li>
       <li xml:lang="id">Pengelolaan aplikasi untuk pengguna yang takberpengalaman dengan paket-paket</li>
       <li xml:lang="it">Gestione delle applicazioni per gli utenti con poca esperienza sui pacchetti</li>
