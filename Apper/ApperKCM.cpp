@@ -35,6 +35,7 @@
 #include <QSignalMapper>
 #include <QTimer>
 #include <QPointer>
+#include <QKeyEvent>
 
 #include <PackageModel.h>
 #include <ApplicationSortFilterModel.h>
