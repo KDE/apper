@@ -35,9 +35,9 @@
 
 int main(int argc, char **argv)
 {
+    Apper app(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("system-software-install")));
 
-    Apper app(argc, argv);
     KLocalizedString::setApplicationDomain("apper");
 
     KAboutData aboutData(QLatin1String("apper"), // DO NOT change this catalog unless you know it will not break translations!
