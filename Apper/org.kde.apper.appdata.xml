@@ -36,6 +36,7 @@
   <name xml:lang="sv">Apper</name>
   <name xml:lang="tr">Apper</name>
   <name xml:lang="uk">Apper</name>
+  <name xml:lang="x-test">xxApperxx</name>
   <name xml:lang="zh-CN">Apper</name>
   <name xml:lang="zh-TW">Apper</name>
   <summary>KDE application and package management tool</summary>
@@ -70,6 +71,7 @@
   <summary xml:lang="sv">KDE-program och pakethanteringsverktyg</summary>
   <summary xml:lang="tr">KDE uygulama ve paket yönetim aracı</summary>
   <summary xml:lang="uk">Програма KDE для керування пакунками</summary>
+  <summary xml:lang="x-test">xxKDE application and package management toolxx</summary>
   <summary xml:lang="zh-CN">KDE 应用程序和包管理工具</summary>
   <summary xml:lang="zh-TW">KDE 應用程式與軟體包管理工具</summary>
   <description>
@@ -106,6 +108,7 @@
     <p xml:lang="sv">Apper är ett grafiskt hanteringsverktyg för paket och program som tillhandahålls av en Linux-distribution.</p>
     <p xml:lang="tr">Apper, Linux dağıtımları tarafından sağlanan uygulamalar ve paketler için grafiksel yönetim aracıdır.</p>
     <p xml:lang="uk">Apper — графічний інтерфейс для керування пакунками та програмами, які є частиною дистрибутива Linux.</p>
+    <p xml:lang="x-test">xxApper is a graphical management tool for packages and applications provided by a Linux distribution.xx</p>
     <p xml:lang="zh-CN">Apper 是个提供给 Linux 发行版的图形化包及应用程序管理工具。</p>
     <p xml:lang="zh-TW">Apper 是一套管理 Linux 散布版中軟體包與應用程式的圖形化工具。</p>
     <p>
@@ -141,6 +144,7 @@
     <p xml:lang="sv">Det tillåter att ny programvara installeras, samt att hålla systemet uppdaterat genom att installera uppdateringar.</p>
     <p xml:lang="tr">Güncellemeleri yaparak, sistemini güncel tutmanın yanı sıra, yeni yazılımları yüklemenizede olanak tanır.</p>
     <p xml:lang="uk">Ця програма надає змогу встановлювати нове програмне забезпечення та підтримувати актуальність системи шляхом встановлення оновлень.</p>
+    <p xml:lang="x-test">xxIt allows installing new software as well as keeping the system up to date by installing updates.xx</p>
     <p xml:lang="zh-CN">用它可安装新软件及通过安装更新来保持系统在最新状态。</p>
     <p xml:lang="zh-TW">它可以安裝新軟體，或更新軟體。</p>
     <p>Features:</p>
@@ -176,6 +180,7 @@
     <p xml:lang="sv">Funktioner:</p>
     <p xml:lang="tr">Özellikler:</p>
     <p xml:lang="uk">Можливості:</p>
+    <p xml:lang="x-test">xxFeatures:xx</p>
     <p xml:lang="zh-CN">功能：</p>
     <p xml:lang="zh-TW">功能：</p>
     <ul>
@@ -208,6 +213,7 @@
       <li xml:lang="sv">Hantering av programvarupaket oberoende av distribution</li>
       <li xml:lang="tr">Yazılım paketleri için dağıtım bağımsız yönetim</li>
       <li xml:lang="uk">Однаковий для усіх дистрибутивів інтерфейс для керування пакунками програмного забезпечення.</li>
+      <li xml:lang="x-test">xxDistribution-agnostic management of software packagesxx</li>
       <li xml:lang="zh-CN">发行版无关的软件包管理</li>
       <li xml:lang="zh-TW">軟體包管理，不管散布版為何</li>
       <li>Application management for users unexperienced with packages</li>
@@ -239,6 +245,7 @@
       <li xml:lang="sv">Programhantering för användare som är ovana vid paket</li>
       <li xml:lang="tr">Paketler ile deneyimi olmayan kullanıcılar için uygulama yönetimi</li>
       <li xml:lang="uk">Доступ до керування пакунками навіть для користувачів без досвіду.</li>
+      <li xml:lang="x-test">xxApplication management for users unexperienced with packagesxx</li>
       <li xml:lang="zh-CN">给没有包管理经验用户的应用程序管理</li>
       <li xml:lang="zh-TW">讓不熟悉軟體管理的使用者可以輕鬆管理軟體</li>
       <li>Editor for software sources and PackageKit settings</li>
@@ -270,6 +277,7 @@
       <li xml:lang="sv">Editor för programvarukällor och PackageKit-inställningar</li>
       <li xml:lang="tr">Yazılım kaynakları ve PackageKit ayarları için düzenleyici</li>
       <li xml:lang="uk">Редактор джерел програмного забезпечення та параметрів PackageKit.</li>
+      <li xml:lang="x-test">xxEditor for software sources and PackageKit settingsxx</li>
       <li xml:lang="zh-CN">软件源及 PackageKit 设定编辑器</li>
       <li xml:lang="zh-TW">編輯軟體來源設定</li>
       <li>System software updates notifier and installer</li>
@@ -301,6 +309,7 @@
       <li xml:lang="sv">Underrättelse vid uppdateringar och installation av systemprogramvara</li>
       <li xml:lang="tr">Sistem yazılım güncelleme uyarıcı ve kurucu</li>
       <li xml:lang="uk">Засоби сповіщення та встановлення оновлень програмного забезпечення системи.</li>
+      <li xml:lang="x-test">xxSystem software updates notifier and installerxx</li>
       <li xml:lang="zh-CN">系统软件更新通知器及安装器</li>
       <li xml:lang="zh-TW">系統軟體更新通知與安裝</li>
       <li>Close integration with the KDE Plasma desktop</li>
@@ -333,6 +342,7 @@
       <li xml:lang="sv">Nära integrering med KDE:s Plasma-skrivbord</li>
       <li xml:lang="tr">KDE Plasma masaüstü ile birlikte tümleştirme</li>
       <li xml:lang="uk">Тісна інтеграція зі стільничним середовищем Плазми KDE.</li>
+      <li xml:lang="x-test">xxClose integration with the KDE Plasma desktopxx</li>
       <li xml:lang="zh-CN">与 KDE Plasma 桌面紧密结合</li>
       <li xml:lang="zh-TW">與 KDE Plasma 桌面高度整合</li>
     </ul>
@@ -370,6 +380,7 @@
       <caption xml:lang="sv">Huvudfönstret som visar en beskrivning av det markerade paketet</caption>
       <caption xml:lang="tr">Seçili paketlerin açıklamalarını ana pencereden gösterme</caption>
       <caption xml:lang="uk">Головне вікно, у якому буде показано опис позначеного пакунка.</caption>
+      <caption xml:lang="x-test">xxThe main window showing a description of the selected packagexx</caption>
       <caption xml:lang="zh-CN">主窗口显示了选中包的说明</caption>
       <caption xml:lang="zh-TW">主視窗顯示選取的軟體包的描述</caption>
       <image>https://dantti.files.wordpress.com/2018/02/screenshot_20180220_173026.png</image>
@@ -408,6 +419,7 @@
   <developer_name xml:lang="sv">KDE-gemenskapen</developer_name>
   <developer_name xml:lang="tr">KDE Topluluğu</developer_name>
   <developer_name xml:lang="uk">Спільнота KDE</developer_name>
+  <developer_name xml:lang="x-test">xxThe KDE Communityxx</developer_name>
   <developer_name xml:lang="zh-CN">KDE 社区</developer_name>
   <developer_name xml:lang="zh-TW">KDE 社群</developer_name>
   <launchable type="desktop-id">org.kde.apper.desktop</launchable>
