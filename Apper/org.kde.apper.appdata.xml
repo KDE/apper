@@ -82,7 +82,7 @@
     <p xml:lang="ar">«آپر» هي أداة إدارة رسوميّة للحزم والتّطبيقات التي توفّرها توزيعة لينكس.</p>
     <p xml:lang="ast">Apper ye una ferramienta gráfica de xestión de paquetes forníos por una distribución de GNU/Linux.</p>
     <p xml:lang="bs">Apper je grafički alat za upravljanje paketima i aplikacijama obezbjeđenim od strane Linux distribucije.</p>
-    <p xml:lang="ca">L'Apper és una eina de gestió gràfica per paquets i aplicacions proporcionats per una distribució Linux.</p>
+    <p xml:lang="ca">L'Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
     <p xml:lang="ca-valencia">L'Apper és una eina de gestió gràfica per paquets i aplicacions proporcionats per una distribució Linux.</p>
     <p xml:lang="cs">Apper je grafický nástroj pro správu balíčků a aplikací poskytovaných linuxovou distribucí.</p>
     <p xml:lang="da">Apper er et grafisk værktøj til at håndtere pakker og programmer som leveres af en Linux-distribution.</p>
@@ -219,7 +219,7 @@
       <li>Application management for users unexperienced with packages</li>
       <li xml:lang="ar">إدارة التّطبيقات لمن ليس لديه خبرة مع الحزم</li>
       <li xml:lang="bs">Upravljanje aplikacijom za korisnike bez iskustva sa paketima</li>
-      <li xml:lang="ca">Gestió d'aplicacions per usuaris sense experiència amb els paquets</li>
+      <li xml:lang="ca">Gestió d'aplicacions per a usuaris sense experiència amb els paquets</li>
       <li xml:lang="ca-valencia">Gestió d'aplicacions per usuaris sense experiència amb els paquets</li>
       <li xml:lang="cs">Správa aplikací pro uživatele, jež nemají zkušenosti s balíčky</li>
       <li xml:lang="da">Programhåndtering for brugere som ikke er så erfarne med pakker</li>
@@ -251,7 +251,7 @@
       <li>Editor for software sources and PackageKit settings</li>
       <li xml:lang="ar">محرّر لمصادر البرمجيّات وإعدادات «عدّة الحزم»</li>
       <li xml:lang="bs">Uređivač izvora softvera i PackageKit postavki</li>
-      <li xml:lang="ca">Editor per fonts de programari i paràmetres del PackageKit</li>
+      <li xml:lang="ca">Editor per a fonts de programari i paràmetres del PackageKit</li>
       <li xml:lang="ca-valencia">Editor per fonts de programari i paràmetres del PackageKit</li>
       <li xml:lang="cs">Editor zdrojů softwaru a nastavení PackageKitu</li>
       <li xml:lang="da">Editor til softwarekilder og PackageKit-indstillinger</li>
