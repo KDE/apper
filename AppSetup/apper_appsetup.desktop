@@ -32,6 +32,7 @@ Name[sv]=Limba paketinstallation
 Name[tr]=Limba Paket Yükleyici
 Name[uk]=Програма для встановлення пакунків Limba
 Name[x-test]=xxLimba Package Installerxx
+Name[zh_CN]=Limba 软件包安装器
 Name[zh_TW]=Limba 軟體包安裝程式
 GenericName=3rd-party software installer
 GenericName[ar]=مثبّت برمجيّات من طرف ثالث
@@ -104,6 +105,7 @@ Comment[sv]=Program för att installera programvara från tredje part
 Comment[tr]=Üçüncü parti yazılımları yüklemek için bir araç
 Comment[uk]=Інструмент для встановлення програмного забезпечення зі сторонніх джерел
 Comment[x-test]=xxTool to install software from 3rd-party sourcesxx
+Comment[zh_CN]=从第三方源安装软件的工具
 Comment[zh_TW]=從第三方來源安裝軟體的工具
 
 Categories=Qt;KDE;System;Settings;PackageManager;
