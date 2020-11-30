@@ -6,6 +6,7 @@
   <name>Apper</name>
   <name xml:lang="ar">آپر</name>
   <name xml:lang="ast">Apper</name>
+  <name xml:lang="az">Apper</name>
   <name xml:lang="bs">Apper</name>
   <name xml:lang="ca">Apper</name>
   <name xml:lang="ca-valencia">Apper</name>
@@ -42,6 +43,7 @@
   <summary>KDE application and package management tool</summary>
   <summary xml:lang="ar">أداة «كدي» لإدارة التّطبيقات والحزم</summary>
   <summary xml:lang="ast">Ferramienta de xestión de paquetes y aplicaciones de KDE</summary>
+  <summary xml:lang="az">KDE tətbiqi və paket idarəetmə aləti</summary>
   <summary xml:lang="bs">KDE aplikacija i alat za upravljanje paketom</summary>
   <summary xml:lang="ca">Eina de gestió d'aplicacions i paquets del KDE</summary>
   <summary xml:lang="ca-valencia">Eina de gestió d'aplicacions i paquets del KDE</summary>
@@ -81,6 +83,7 @@
     </p>
     <p xml:lang="ar">«آپر» هي أداة إدارة رسوميّة للحزم والتّطبيقات التي توفّرها توزيعة لينكس.</p>
     <p xml:lang="ast">Apper ye una ferramienta gráfica de xestión de paquetes forníos por una distribución de GNU/Linux.</p>
+    <p xml:lang="az">Apper, Linux distribütoru tərəfindən təqdim olunan paketlərin və tətbiqlərin qrafik idarəetmə alətidir.</p>
     <p xml:lang="bs">Apper je grafički alat za upravljanje paketima i aplikacijama obezbjeđenim od strane Linux distribucije.</p>
     <p xml:lang="ca">L'Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
     <p xml:lang="ca-valencia">L'Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
@@ -117,6 +120,7 @@
     </p>
     <p xml:lang="ar">يسمح لك «آپر» بتثبيت برمجيّات جديد كما وإبقاء النّظام محدّثًا بتثبيت التّحديثات.</p>
     <p xml:lang="ast">Permite la instalación de software nuevu amás de caltener el sistema anováu instalando los anovamientos.</p>
+    <p xml:lang="az">Bu yeni proqram təminatını quraşdırmağa və həmçinin yenilənmələri quraşdırmaqla sistemi aktual vəziyyətdə saxlamağa imkan verir.</p>
     <p xml:lang="bs">Dopušta instaliranje novog softvera kao i održavanje sistema instaliranjem ažuriranja.</p>
     <p xml:lang="ca">Permet instal·lar programari nou i també mantenir el sistema al dia instal·lant les actualitzacions.</p>
     <p xml:lang="ca-valencia">Permet instal·lar programari nou i també mantindre el sistema al dia instal·lant les actualitzacions.</p>
@@ -150,6 +154,7 @@
     <p>Features:</p>
     <p xml:lang="ar">الميزات:</p>
     <p xml:lang="ast">Carauterístiques:</p>
+    <p xml:lang="az">İmkanlar:</p>
     <p xml:lang="bs">Svojstva:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="ca-valencia">Característiques:</p>
@@ -186,6 +191,7 @@
     <ul>
       <li>Distribution-agnostic management of software packages</li>
       <li xml:lang="ar">إدارة حزم برمجيّات التّوزيعة</li>
+      <li xml:lang="az">Proqram təminatı paketlırinin distribütordan asılı olmadan idarə edilməsi</li>
       <li xml:lang="bs">Distribucijsko-nevezano upravljanje softverskim paketima</li>
       <li xml:lang="ca">Gestió de paquets de programari independent de la distribució</li>
       <li xml:lang="ca-valencia">Gestió de paquets de programari independent de la distribució</li>
@@ -218,6 +224,7 @@
       <li xml:lang="zh-TW">軟體包管理，不管散布版為何</li>
       <li>Application management for users unexperienced with packages</li>
       <li xml:lang="ar">إدارة التّطبيقات لمن ليس لديه خبرة مع الحزم</li>
+      <li xml:lang="az">Tətbiqlərin az təcrübəli istifadəçilər tərəfindən idarə olunması</li>
       <li xml:lang="bs">Upravljanje aplikacijom za korisnike bez iskustva sa paketima</li>
       <li xml:lang="ca">Gestió d'aplicacions per a usuaris sense experiència amb els paquets</li>
       <li xml:lang="ca-valencia">Gestió d'aplicacions per a usuaris sense experiència amb els paquets</li>
@@ -250,6 +257,7 @@
       <li xml:lang="zh-TW">讓不熟悉軟體管理的使用者可以輕鬆管理軟體</li>
       <li>Editor for software sources and PackageKit settings</li>
       <li xml:lang="ar">محرّر لمصادر البرمجيّات وإعدادات «عدّة الحزم»</li>
+      <li xml:lang="az">Proq. təminatı mənbələri üçün redaktor və PackageKit ayarları</li>
       <li xml:lang="bs">Uređivač izvora softvera i PackageKit postavki</li>
       <li xml:lang="ca">Editor per a fonts de programari i paràmetres del PackageKit</li>
       <li xml:lang="ca-valencia">Editor per a fonts de programari i paràmetres del PackageKit</li>
@@ -282,6 +290,7 @@
       <li xml:lang="zh-TW">編輯軟體來源設定</li>
       <li>System software updates notifier and installer</li>
       <li xml:lang="ar">مُخطر لتحديثات برمجيّات النّظام وتثبيتها</li>
+      <li xml:lang="az">Sistemin proq. təminatı yenilənmələri bildirici və quraşdırıcısı</li>
       <li xml:lang="bs">Obavještenja i instalacijski program ažuriranja sistemskog softvera</li>
       <li xml:lang="ca">Notificador i instal·lador d'actualitzacions de programari del sistema</li>
       <li xml:lang="ca-valencia">Notificador i instal·lador d'actualitzacions de programari del sistema</li>
@@ -314,6 +323,7 @@
       <li xml:lang="zh-TW">系統軟體更新通知與安裝</li>
       <li>Close integration with the KDE Plasma desktop</li>
       <li xml:lang="ar">التّكامل مع سطح مكتب «بلازما»</li>
+      <li xml:lang="az">KDE Plasma İş Masası ilə sıx yanaşma</li>
       <li xml:lang="bs">Zatvori integraciju sa KDE Plazma radnom površinom</li>
       <li xml:lang="ca">Integració estreta amb l'escriptori Plasma del KDE</li>
       <li xml:lang="ca-valencia">Integració estreta amb l'escriptori Plasma del KDE</li>
@@ -355,6 +365,7 @@
       <caption>The main window showing a description of the selected package</caption>
       <caption xml:lang="ar">النّافذة الرّئيسيّة تعرض وصفًا للحزمة المحدّدة</caption>
       <caption xml:lang="ast">La ventana principal amuesa una descripción de los paquetes esbillaos</caption>
+      <caption xml:lang="az">Əsas pəncərə seçilmiş paketin təsvirini göstərir</caption>
       <caption xml:lang="bs">Glavni prozor prikazuje opis označenog paketa</caption>
       <caption xml:lang="ca">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
       <caption xml:lang="ca-valencia">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
@@ -392,6 +403,7 @@
   <developer_name>The KDE Community</developer_name>
   <developer_name xml:lang="ar">مجتمع «كدي»</developer_name>
   <developer_name xml:lang="ast">La comunidá de KDE</developer_name>
+  <developer_name xml:lang="az">KDE Cəmiyyəti</developer_name>
   <developer_name xml:lang="bs">KDE zajednica</developer_name>
   <developer_name xml:lang="ca">La comunitat KDE</developer_name>
   <developer_name xml:lang="ca-valencia">La comunitat KDE</developer_name>
