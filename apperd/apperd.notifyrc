@@ -130,7 +130,7 @@ Name[tr]=Yeni güncelleştirmeler var
 Name[uk]=Доступні оновлення
 Name[wa]=I gn des noveas metaedjes a djoû
 Name[x-test]=xxNew updates availablexx
-Name[zh_CN]=无可用更新
+Name[zh_CN]=有更新可用
 Name[zh_TW]=有可用的更新
 Action=Sound|Popup
 
@@ -178,7 +178,7 @@ Name[tr]=Güncellemeler yükleniyor
 Name[uk]=Оновлення, які буде встановлено
 Name[wa]=Des metaedjes a djoû sont-st a l' astalaedje
 Name[x-test]=xxUpdates are being installedxx
-Name[zh_CN]=已经安装更新
+Name[zh_CN]=更新正在安装
 Name[zh_TW]=正在安裝更新中
 Action=Sound|Popup
 
@@ -223,6 +223,7 @@ Name[tr]=Güncellemeler indiriliyor
 Name[uk]=Отримуємо оновлення
 Name[wa]=Les metaedjes a djoû sont-st a l' aberwetaedje
 Name[x-test]=xxUpdates are being downloadedxx
+Name[zh_CN]=更新正在下载
 Name[zh_TW]=正在下載更新中
 Action=Sound|Popup
 
@@ -317,7 +318,7 @@ Name[tr]=Bir aktarım başarılı bir şekilde tamamlanamadı
 Name[uk]=Операцію не вдалося успішно завершити
 Name[wa]=Ene tranzaccion n' s' a nén savou fini comifåt
 Name[x-test]=xxA transaction failed to complete successfullyxx
-Name[zh_CN]=一个过程没有成功完成
+Name[zh_CN]=软件包处理过程无法成功完成
 Name[zh_TW]=操作無法成功完成
 Action=Sound|Popup
 
@@ -407,7 +408,7 @@ Name[tr]=Yazılım yöneticisinden ileti
 Name[uk]=Повідомлення від засобу керування пакунками
 Name[wa]=Messaedje do manaedjeu des programes
 Name[x-test]=xxMessage from the software managerxx
-Name[zh_CN]=软件管理器的信息
+Name[zh_CN]=软件包管理器信息
 Name[zh_TW]=軟體管理員來的訊息
 Action=Sound|Popup
 
@@ -453,7 +454,7 @@ Name[tr]=Bir işlem hatası oluştu
 Name[uk]=Під час операції сталася помилка.
 Name[wa]=Åk n' a nén stî avou l' tranzaccion
 Name[x-test]=xxA transaction error occurredxx
-Name[zh_CN]=出现过程错误
+Name[zh_CN]=软件包处理过程出错
 Name[zh_TW]=執行操作發生錯誤
 Action=Sound|Popup
 
@@ -593,6 +594,6 @@ Name[tr]=Dağıtım güncellemesi bir hata ile tamamlandı
 Name[uk]=Спроба оновлення дистрибутива завершилася повідомленням про помилку
 Name[wa]=Li metaedje a livea del distribucion s' a fini avou ene aroke
 Name[x-test]=xxThe distribution upgrade completed with an errorxx
-Name[zh_CN]=发行版升级完成，有一个错误
+Name[zh_CN]=发行版升级完成，但发生了错误
 Name[zh_TW]=散布版升級程序完成，但是有錯誤
 Action=Sound|Popup
