@@ -47,7 +47,7 @@
   <summary xml:lang="az">KDE tətbiqi və paket idarəetmə aləti</summary>
   <summary xml:lang="bs">KDE aplikacija i alat za upravljanje paketom</summary>
   <summary xml:lang="ca">Eina de gestió d'aplicacions i paquets del KDE</summary>
-  <summary xml:lang="ca-valencia">Eina de gestió d'aplicacions i paquets del KDE</summary>
+  <summary xml:lang="ca-valencia">Eina de gestió d'aplicacions i paquets de KDE</summary>
   <summary xml:lang="cs">Nástroj KDE pro správu aplikací a balíčků</summary>
   <summary xml:lang="da">KDE-værktøj til håndtering af programmer og pakker</summary>
   <summary xml:lang="de">KDE-Dienstprogramm für Paketverwaltung</summary>
@@ -335,7 +335,7 @@
       <li xml:lang="az">KDE Plasma İş Masası ilə sıx yanaşma</li>
       <li xml:lang="bs">Zatvori integraciju sa KDE Plazma radnom površinom</li>
       <li xml:lang="ca">Integració estreta amb l'escriptori Plasma del KDE</li>
-      <li xml:lang="ca-valencia">Integració estreta amb l'escriptori Plasma del KDE</li>
+      <li xml:lang="ca-valencia">Integració estreta amb l'escriptori Plasma de KDE</li>
       <li xml:lang="cs">Integrace s grafickým prostředím KDE Plasma</li>
       <li xml:lang="da">Tæt integration med KDE's Plasma-skrivebordsmiljø</li>
       <li xml:lang="de">Einbindung in die KDE-Plasma-Arbeitsfläche</li>
