@@ -88,7 +88,7 @@
     <p xml:lang="az">Apper, Linux distribütoru tərəfindən təqdim olunan paketlərin və tətbiqlərin qrafik idarəetmə alətidir.</p>
     <p xml:lang="bs">Apper je grafički alat za upravljanje paketima i aplikacijama obezbjeđenim od strane Linux distribucije.</p>
     <p xml:lang="ca">L'Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
-    <p xml:lang="ca-valencia">L'Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
+    <p xml:lang="ca-valencia">Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
     <p xml:lang="cs">Apper je grafický nástroj pro správu balíčků a aplikací poskytovaných linuxovou distribucí.</p>
     <p xml:lang="da">Apper er et grafisk værktøj til at håndtere pakker og programmer som leveres af en Linux-distribution.</p>
     <p xml:lang="de">Apper ist ein graphisches Verwaltungsprogramm für Software-Pakete und Anwendungen, die von Linux-Distributionen angeboten werden.</p>
@@ -378,7 +378,7 @@
       <caption xml:lang="az">Əsas pəncərə seçilmiş paketin təsvirini göstərir</caption>
       <caption xml:lang="bs">Glavni prozor prikazuje opis označenog paketa</caption>
       <caption xml:lang="ca">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
-      <caption xml:lang="ca-valencia">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
+      <caption xml:lang="ca-valencia">La finestra principal d'Apper mostrant una descripció del paquet seleccionat</caption>
       <caption xml:lang="da">Hovedvinduet viser en beskrivelse af den valgte pakke</caption>
       <caption xml:lang="de">Das  Hauptfenster mit einer Beschreibung des ausgewählten Pakets</caption>
       <caption xml:lang="el">Το κύριο παράθυρο εμφανίζει μια περιγραφή του επιλεγμένου πακέτου</caption>
