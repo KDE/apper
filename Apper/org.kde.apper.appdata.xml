@@ -126,7 +126,7 @@
     <p xml:lang="az">Bu yeni proqram təminatını quraşdırmağa və həmçinin yenilənmələri quraşdırmaqla sistemi aktual vəziyyətdə saxlamağa imkan verir.</p>
     <p xml:lang="bs">Dopušta instaliranje novog softvera kao i održavanje sistema instaliranjem ažuriranja.</p>
     <p xml:lang="ca">Permet instal·lar programari nou i també mantenir el sistema al dia instal·lant les actualitzacions.</p>
-    <p xml:lang="ca-valencia">Permet instalar programari nou i també mantindre el sistema al dia instalant les actualitzacions.</p>
+    <p xml:lang="ca-valencia">Permet instalar programari nou i també mantindre el sistema al dia instalant les actualisacions.</p>
     <p xml:lang="cs">Umožňuje instalaci nového softwaru stejně jako udržování systému aktuálního za pomocí instalace aktualizací.</p>
     <p xml:lang="da">Det muliggør installation af ny software og at holde systemet opdateret ved at installere opdateringer.</p>
     <p xml:lang="de">Ermöglicht die Installation neuer Software und die Aktualisierung des Systems durch Installation von Aktualisierungen.</p>
@@ -301,7 +301,7 @@
       <li xml:lang="az">Sistemin proq. təminatı yenilənmələri bildirici və quraşdırıcısı</li>
       <li xml:lang="bs">Obavještenja i instalacijski program ažuriranja sistemskog softvera</li>
       <li xml:lang="ca">Notificador i instal·lador d'actualitzacions de programari del sistema</li>
-      <li xml:lang="ca-valencia">Notificador i instalador d'actualitzacions de programari del sistema</li>
+      <li xml:lang="ca-valencia">Notificador i instalador d'actualisacions de programari del sistema</li>
       <li xml:lang="da">Bekendtgørelse og installation af opdateringer af systemsoftware</li>
       <li xml:lang="de">Benachrichtigung und Installation von Softwareaktualisierungen des Systems</li>
       <li xml:lang="el">Ειδοποιήσεις και εγκατάσταση ενημερώσεων λογισμικού συστήματος</li>
