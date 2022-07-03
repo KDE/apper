@@ -39,7 +39,7 @@
   <name xml:lang="tr">Apper</name>
   <name xml:lang="uk">Apper</name>
   <name xml:lang="x-test">xxApperxx</name>
-  <name xml:lang="zh-CN">Apper</name>
+  <name xml:lang="zh-CN">Apper 软件包管理器</name>
   <name xml:lang="zh-TW">Apper</name>
   <summary>KDE application and package management tool</summary>
   <summary xml:lang="ar">أداة «كدي» لإدارة التّطبيقات والحزم</summary>
@@ -267,7 +267,7 @@
       <li xml:lang="az">Proq. təminatı mənbələri üçün redaktor və PackageKit ayarları</li>
       <li xml:lang="bs">Uređivač izvora softvera i PackageKit postavki</li>
       <li xml:lang="ca">Editor per a fonts de programari i paràmetres del PackageKit</li>
-      <li xml:lang="ca-valencia">Editor per a fonts de programari i paràmetres del PackageKit</li>
+      <li xml:lang="ca-valencia">Editor per a fonts de programari i paràmetres de PackageKit</li>
       <li xml:lang="cs">Editor zdrojů softwaru a nastavení PackageKitu</li>
       <li xml:lang="da">Editor til softwarekilder og PackageKit-indstillinger</li>
       <li xml:lang="de">Editor für Paketquellen und Einstellungen für PackageKit</li>
