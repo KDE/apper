@@ -24,5 +24,5 @@ qt5_use_modules(apperplugin Quick Core)
 
 set_target_properties(apperplugin PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
 
-install(TARGETS apperplugin DESTINATION ${CMAKE_INSTALL_QTQUICKIMPORTSDIR}/org/kde/apper)
-install(FILES qmldir DESTINATION ${CMAKE_INSTALL_QTQUICKIMPORTSDIR}/org/kde/apper)
+install(TARGETS apperplugin DESTINATION ${KDE_INSTALL_QTQUICKIMPORTSDIR}/org/kde/apper)
+install(FILES qmldir DESTINATION ${KDE_INSTALL_QTQUICKIMPORTSDIR}/org/kde/apper)

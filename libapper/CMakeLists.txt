@@ -65,4 +65,4 @@ if(APPSTREAM)
     target_link_libraries(apper_private AppStreamQt)
 endif()
 
-install(TARGETS apper_private DESTINATION ${CMAKE_INSTALL_LIBDIR}/apper)
+install(TARGETS apper_private DESTINATION ${KDE_INSTALL_LIBDIR}/apper)

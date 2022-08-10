@@ -32,5 +32,5 @@ target_link_libraries(apper-appsetup
         apper_private
 )
 
-install(TARGETS apper-appsetup RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES apper_appsetup.desktop DESTINATION ${CMAKE_INSTALL_APPDIR})
+install(TARGETS apper-appsetup RUNTIME DESTINATION ${KDE_INSTALL_BINDIR})
+install(FILES apper_appsetup.desktop DESTINATION ${KDE_INSTALL_APPDIR})

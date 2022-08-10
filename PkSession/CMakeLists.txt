@@ -51,7 +51,7 @@ target_link_libraries(apper-pk-session
 
 set_target_properties(apper-pk-session PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
 
-install(TARGETS apper-pk-session DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
+install(TARGETS apper-pk-session DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
 include(MacroDBusAddActivationService)
 dbus_add_activation_service(org.freedesktop.PackageKit.service.in)

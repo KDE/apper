@@ -36,6 +36,6 @@ endif()
 
 set_target_properties(kded_apperd PROPERTIES INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/apper)
 
-install(TARGETS kded_apperd DESTINATION ${CMAKE_INSTALL_QTPLUGINDIR})
-install(FILES apperd.notifyrc DESTINATION ${CMAKE_INSTALL_DATADIR}/apperd)
-install(FILES apperd.desktop DESTINATION ${CMAKE_INSTALL_KSERVICES5DIR}/kded)
+install(TARGETS kded_apperd DESTINATION ${KDE_INSTALL_QTPLUGINDIR})
+install(FILES apperd.notifyrc DESTINATION ${KDE_INSTALL_DATADIR}/apperd)
+install(FILES apperd.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR}/kded)
