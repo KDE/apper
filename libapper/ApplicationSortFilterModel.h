@@ -35,7 +35,7 @@ class Q_DECL_EXPORT ApplicationSortFilterModel : public QSortFilterProxyModel
     Q_PROPERTY(Transaction::Info infoFilter READ infoFilter WRITE setInfoFilter NOTIFY changed)
     Q_PROPERTY(bool applicationFilter READ applicationFilter WRITE setApplicationFilter NOTIFY changed)
 public:
-    explicit ApplicationSortFilterModel(QObject *parent = 0);
+    explicit ApplicationSortFilterModel(QObject *parent = nullptr);
 
     PackageModel* sourcePkgModel() const;
     void setSourcePkgModel(PackageModel *packageModel);

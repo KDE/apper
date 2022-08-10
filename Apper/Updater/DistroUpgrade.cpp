@@ -92,7 +92,7 @@ void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exi
         KMessageBox::sorry(this, i18n("Distribution upgrade process exited with code %1.", exitCode));
     }
     m_distroUpgradeProcess->deleteLater();
-    m_distroUpgradeProcess = 0;
+    m_distroUpgradeProcess = nullptr;
 }
 
 void DistroUpgrade::distroUpgradeError(QProcess::ProcessError error)

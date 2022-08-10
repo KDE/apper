@@ -31,7 +31,7 @@ class LicenseAgreement : public QDialog
 {
     Q_OBJECT
 public:
-    explicit LicenseAgreement(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement, QWidget *parent = 0);
+    explicit LicenseAgreement(const QString &eulaID, const QString &packageID, const QString &vendor, const QString &licenseAgreement, QWidget *parent = nullptr);
     ~LicenseAgreement() override;
 
     QString id() const;

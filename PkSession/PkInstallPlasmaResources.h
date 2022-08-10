@@ -32,7 +32,7 @@ public:
                              const QStringList &resources,
                              const QString &interaction,
                              const QDBusMessage &message,
-                             QWidget *parent = 0);
+                             QWidget *parent = nullptr);
     ~PkInstallPlasmaResources() override;
 
 protected:

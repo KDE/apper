@@ -29,7 +29,7 @@ class TransactionHistory : public QWidget, Ui::TransactionHistory
 {
     Q_OBJECT
 public:
-    explicit TransactionHistory(QWidget *parent = 0);
+    explicit TransactionHistory(QWidget *parent = nullptr);
     ~TransactionHistory() override;
 
 public Q_SLOTS:

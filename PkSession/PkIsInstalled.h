@@ -30,7 +30,7 @@ public:
     PkIsInstalled(const QString &package_name,
                   const QString &interaction,
                   const QDBusMessage &message,
-                  QWidget *parent = 0);
+                  QWidget *parent = nullptr);
     ~PkIsInstalled() override;
 
 private Q_SLOTS:

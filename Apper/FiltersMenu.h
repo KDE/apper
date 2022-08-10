@@ -30,7 +30,7 @@ class FiltersMenu : public QMenu
 {
 Q_OBJECT
 public:
-    explicit FiltersMenu(QWidget *parent = 0);
+    explicit FiltersMenu(QWidget *parent = nullptr);
     ~FiltersMenu() override;
 
     void setFilters(Transaction::Filters filters);

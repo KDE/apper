@@ -33,7 +33,7 @@ class TransactionJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit TransactionJob(Transaction *transaction, QObject *parent = 0);
+    explicit TransactionJob(Transaction *transaction, QObject *parent = nullptr);
     ~TransactionJob() override;
 
     void start() override;

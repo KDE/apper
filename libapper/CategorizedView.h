@@ -27,7 +27,7 @@ class Q_DECL_EXPORT CategorizedView : public KCategorizedView
 {
     Q_OBJECT
 public:
-    explicit CategorizedView(QWidget *parent = 0);
+    explicit CategorizedView(QWidget *parent = nullptr);
 
     void setModel(QAbstractItemModel *model) override;
 };

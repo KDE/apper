@@ -31,7 +31,7 @@ class BackendDetails : public QDialog
 {
     Q_OBJECT
 public:
-    explicit BackendDetails(QWidget *parent = 0);
+    explicit BackendDetails(QWidget *parent = nullptr);
     ~BackendDetails() override;
 
     void daemonChanged();

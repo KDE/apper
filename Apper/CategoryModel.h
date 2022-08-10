@@ -39,7 +39,7 @@ public:
         GroupRole,
         CategoryRole
     } Roles;
-    explicit CategoryModel(QObject *parent = 0);
+    explicit CategoryModel(QObject *parent = nullptr);
     ~CategoryModel() override;
 
     void setRoles(PackageKit::Transaction::Roles roles);
@@ -63,7 +63,7 @@ private:
     void fillWithStandardGroups();
     void fillWithServiceGroups();
     QStandardItem* findCategory(const QString &categoryId, const QModelIndex &parent = QModelIndex()) const;
-    void parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent = 0);
+    void parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent = nullptr);
     QList<CategoryMatcher> parseCategories(QXmlStreamReader &xml);
 
     PackageKit::Transaction::Roles  m_roles;

@@ -32,7 +32,7 @@ class Q_DECL_EXPORT InfoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit InfoWidget(QWidget *parent = 0);
+    explicit InfoWidget(QWidget *parent = nullptr);
     ~InfoWidget() override;
 
     void setDescription(const QString &description);

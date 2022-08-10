@@ -30,7 +30,7 @@ class RefreshCacheTask : public QObject
 {
     Q_OBJECT
 public:
-    explicit RefreshCacheTask(QObject *parent = 0);
+    explicit RefreshCacheTask(QObject *parent = nullptr);
 
 public Q_SLOTS:
     void refreshCache();

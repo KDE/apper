@@ -40,7 +40,7 @@ public:
         RoleId,
         RoleRepo
     };
-    explicit PkTransactionProgressModel(QObject *parent = 0);
+    explicit PkTransactionProgressModel(QObject *parent = nullptr);
     ~PkTransactionProgressModel() override;
 
     void clear();

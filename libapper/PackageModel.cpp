@@ -52,8 +52,8 @@ PackageModel::PackageModel(QObject *parent)
 : QAbstractItemModel(parent),
   m_finished(false),
   m_checkable(false),
-  m_fetchSizesTransaction(0),
-  m_fetchInstalledVersionsTransaction(0)
+  m_fetchSizesTransaction(nullptr),
+  m_fetchInstalledVersionsTransaction(nullptr)
 {
     m_installedEmblem = PkIcons::getIcon(QLatin1String("dialog-ok-apply"), QString()).pixmap(16, 16);
 
@@ -296,7 +296,7 @@ QVariant PackageModel::data(const QModelIndex &index, int role) const
                                                              ICON_SIZE,
                                                              KIconLoader::DefaultState,
                                                              QStringList(),
-                                                             0L,
+                                                             nullptr,
                                                              true);
                 }
 
@@ -465,8 +465,8 @@ void PackageModel::clear()
     beginRemoveRows(QModelIndex(), 0, m_packages.size());
     m_finished = false;
     m_packages.clear();
-    m_fetchSizesTransaction = 0;
-    m_fetchInstalledVersionsTransaction = 0;
+    m_fetchSizesTransaction = nullptr;
+    m_fetchInstalledVersionsTransaction = nullptr;
 
     if (m_getUpdatesTransaction) {
         m_getUpdatesTransaction->disconnect(this);
@@ -797,7 +797,7 @@ void PackageModel::uncheckPackage(const QString &packageID,
 
 void PackageModel::uncheckPackageLogic(const QString &packageID, bool forceEmitUnchecked, bool emitDataChanged)
 {
-    if (forceEmitUnchecked || sender() == 0) {
+    if (forceEmitUnchecked || sender() == nullptr) {
         // The package might be removed by rmSelectedPackage
         // If we don't copy it the browse model won't uncheck there
         // right package

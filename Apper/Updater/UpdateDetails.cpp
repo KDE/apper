@@ -142,7 +142,7 @@ void UpdateDetails::display()
 
     // set transaction to 0 as if PK crashes
     // UpdateDetails won't be emmited
-    m_transaction = 0;
+    m_transaction = nullptr;
 
     if (!m_show) {
         hide();

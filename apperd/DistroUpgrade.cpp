@@ -34,8 +34,8 @@ Q_DECLARE_LOGGING_CATEGORY(APPER_DAEMON)
 
 DistroUpgrade::DistroUpgrade(QObject *parent) :
     QObject(parent),
-    m_distroUpgradeProcess(0),
-    m_transaction(0)
+    m_distroUpgradeProcess(nullptr),
+    m_transaction(nullptr)
 {
 }
 
@@ -83,7 +83,7 @@ void DistroUpgrade::distroUpgrade(PackageKit::Transaction::DistroUpgrade type, c
         return;
     }
 
-    auto notify = new KNotification(QLatin1String("DistroUpgradeAvailable"), 0, KNotification::Persistent);
+    auto notify = new KNotification(QLatin1String("DistroUpgradeAvailable"), nullptr, KNotification::Persistent);
     notify->setComponentName(QLatin1String("apperd"));
     notify->setTitle(i18n("Distribution upgrade available"));
     notify->setText(description);
@@ -101,7 +101,7 @@ void DistroUpgrade::checkDistroFinished(Transaction::Exit status, uint enlapsed)
 {
     Q_UNUSED(status)
     Q_UNUSED(enlapsed)
-    m_transaction = 0;
+    m_transaction = nullptr;
 }
 
 void DistroUpgrade::handleDistroUpgradeAction(uint action)
@@ -147,7 +147,7 @@ void DistroUpgrade::distroUpgradeFinished(int exitCode, QProcess::ExitStatus exi
     }*/
     notify->sendEvent();
     m_distroUpgradeProcess->deleteLater();
-    m_distroUpgradeProcess = 0;
+    m_distroUpgradeProcess = nullptr;
 //     suppressSleep(false);
 }
 

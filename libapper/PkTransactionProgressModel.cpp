@@ -191,7 +191,7 @@ QStandardItem* PkTransactionProgressModel::findLastItem(const QString &packageID
             return stdItem;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 #include "moc_PkTransactionProgressModel.cpp"

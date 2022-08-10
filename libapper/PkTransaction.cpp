@@ -92,11 +92,11 @@ PkTransaction::PkTransaction(QObject *parent) :
     d->originalRole = Transaction::RoleUnknown;
     d->role = Transaction::RoleUnknown;
     d->error = Transaction::ErrorUnknown;
-    d->launcher = 0;
-    d->simulateModel = 0;
+    d->launcher = nullptr;
+    d->simulateModel = nullptr;
     d->progressModel = new PkTransactionProgressModel(this);
     d->parentWindow = qobject_cast<QWidget*>(parent);
-    d->transaction = 0;
+    d->transaction = nullptr;
 }
 
 PkTransaction::~PkTransaction()
@@ -204,7 +204,7 @@ void PkTransaction::requeueTransaction()
     // Delete the simulate model
     if (d->simulateModel) {
         d->simulateModel->deleteLater();
-        d->simulateModel = 0;
+        d->simulateModel = nullptr;
     }
 
     // We are not handling any required action yet for the requeued transaction.
@@ -382,9 +382,9 @@ void PkTransaction::slotFinished(Transaction::Exit status)
     // Clear the model to don't keep trash when reusing the transaction
     d->progressModel->clear();
 
-    Requirements *requires = 0;
+    Requirements *requires = nullptr;
     Transaction::Role _role = qobject_cast<Transaction*>(sender())->role();
-    d->transaction = 0; // Will be deleted later
+    d->transaction = nullptr; // Will be deleted later
     qCDebug(APPER_LIB) << status << _role;
 
     switch (_role) {
@@ -607,7 +607,7 @@ void PkTransaction::setExitStatus(int status)
     qCDebug(APPER_LIB) << status;
     if (d->launcher) {
         d->launcher->deleteLater();
-        d->launcher = 0;
+        d->launcher = nullptr;
     }
 
     d->exitStatus = static_cast<PkTransaction::ExitStatus>(status);

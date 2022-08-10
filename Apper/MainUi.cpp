@@ -35,7 +35,7 @@ Q_DECLARE_LOGGING_CATEGORY(APPER)
 
 MainUi::MainUi(QWidget *parent) :
     QMainWindow(parent),
-    m_apperModule(0)
+    m_apperModule(nullptr)
 {
     setWindowIcon(QIcon::fromTheme(QLatin1String("system-software-install")));
     setWindowTitle(i18n("Apper"));

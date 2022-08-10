@@ -36,7 +36,7 @@ class TransactionWatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit TransactionWatcher(bool packagekitIsRunning, QObject *parent = 0);
+    explicit TransactionWatcher(bool packagekitIsRunning, QObject *parent = nullptr);
     ~TransactionWatcher() override;
 
 public Q_SLOTS:
@@ -51,7 +51,7 @@ private Q_SLOTS:
     void errorActivated(uint action);
     void requireRestart(PackageKit::Transaction::Restart type, const QString &packageID);
     void finished(PackageKit::Transaction::Exit exit);
-    void transactionChanged(Transaction *transaction = 0, bool interactive = false);
+    void transactionChanged(Transaction *transaction = nullptr, bool interactive = false);
 
     void logout();
 

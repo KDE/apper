@@ -73,7 +73,7 @@ public:
         double     size = 0;
     } InternalPackage;
 
-    explicit PackageModel(QObject *parent = 0);
+    explicit PackageModel(QObject *parent = nullptr);
 
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -154,7 +154,7 @@ private:
     QPixmap                         m_installedEmblem;
     QVector<InternalPackage>        m_packages;
     QHash<QString, InternalPackage> m_checkedPackages;
-    PackageKit::Transaction *m_getUpdatesTransaction = 0;
+    PackageKit::Transaction *m_getUpdatesTransaction = nullptr;
     PackageKit::Transaction *m_fetchSizesTransaction;
     PackageKit::Transaction *m_fetchInstalledVersionsTransaction;
     QHash<int, QByteArray> m_roles;

@@ -49,7 +49,7 @@ public:
         FadeScreenshot = 0x2
     };
     Q_DECLARE_FLAGS(FadeWidgets, FadeWidget)
-    explicit PackageDetails(QWidget *parent = 0);
+    explicit PackageDetails(QWidget *parent = nullptr);
     ~PackageDetails() override;
 
     void init(PackageKit::Transaction::Roles roles);

@@ -33,7 +33,7 @@ public:
                       const QStringList &files,
                       const QString &interaction,
                       const QDBusMessage &message,
-                      QWidget *parent = 0);
+                      QWidget *parent = nullptr);
     ~PkInstallCatalogs() override;
 
 protected:

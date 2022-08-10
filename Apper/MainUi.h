@@ -28,7 +28,7 @@ class MainUi : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit MainUi(QWidget *parent = 0);
+    explicit MainUi(QWidget *parent = nullptr);
     ~MainUi() override;
 
     void showAll();

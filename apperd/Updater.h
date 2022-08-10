@@ -33,7 +33,7 @@ class Updater : public QObject
 {
     Q_OBJECT
 public:
-    explicit Updater(QObject *parent = 0);
+    explicit Updater(QObject *parent = nullptr);
     ~Updater() override;
 
     void setConfig(const QVariantHash &configs);

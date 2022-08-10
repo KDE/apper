@@ -29,7 +29,7 @@ class AbstractIsRunning : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractIsRunning(QObject *parent = 0);
+    explicit AbstractIsRunning(QObject *parent = nullptr);
     ~AbstractIsRunning() override;
 
     bool isRunning() const;

@@ -48,7 +48,7 @@ using namespace PackageKit;
 
 Updater::Updater(QObject* parent) :
     QObject(parent),
-    m_getUpdatesT(0)
+    m_getUpdatesT(nullptr)
 {
     // in case registration fails due to another user or application running
     // keep an eye on it so we can register when available
@@ -120,7 +120,7 @@ void Updater::packageToUpdate(Transaction::Info info, const QString &packageID, 
 
 void Updater::getUpdateFinished()
 {
-    m_getUpdatesT = 0;
+    m_getUpdatesT = nullptr;
     if (!m_updateList.isEmpty()) {
         auto transaction = qobject_cast<Transaction*>(sender());
 
@@ -264,7 +264,7 @@ void Updater::showUpdatesPopup()
 {
     m_oldUpdateList = m_updateList;
 
-    auto notify = new KNotification(QLatin1String("ShowUpdates"), 0, KNotification::Persistent);
+    auto notify = new KNotification(QLatin1String("ShowUpdates"), nullptr, KNotification::Persistent);
     notify->setComponentName(QLatin1String("apperd"));
     connect(notify, &KNotification::action1Activated, this, &Updater::reviewUpdates);
     connect(notify, &KNotification::action2Activated, this, &Updater::installUpdates);

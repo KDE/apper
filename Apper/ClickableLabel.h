@@ -27,7 +27,7 @@ class ClickableLabel : public QLabel
 {
 Q_OBJECT
 public:
-    explicit ClickableLabel(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit ClickableLabel(QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
 Q_SIGNALS:
     void clicked();

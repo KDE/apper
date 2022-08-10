@@ -30,7 +30,7 @@ public:
     PkSearchFile(const QString &file_name,
                  const QString &interaction,
                  const QDBusMessage &message,
-                 QWidget *parent = 0);
+                 QWidget *parent = nullptr);
     ~PkSearchFile() override;
 
 protected:

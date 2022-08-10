@@ -27,7 +27,7 @@ class FilesModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    explicit FilesModel(const QStringList &files, const QStringList &mimes, QObject *parent = 0);
+    explicit FilesModel(const QStringList &files, const QStringList &mimes, QObject *parent = nullptr);
 
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
     QStringList mimeTypes() const override;

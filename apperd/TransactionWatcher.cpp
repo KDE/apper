@@ -135,7 +135,7 @@ void TransactionWatcher::transactionReady()
 
 void TransactionWatcher::showRebootNotificationApt() {
     // Create the notification about this transaction
-    auto notify = new KNotification(QLatin1String("RestartRequired"), 0, KNotification::Persistent);
+    auto notify = new KNotification(QLatin1String("RestartRequired"), nullptr, KNotification::Persistent);
     connect(notify, QOverload<uint>::of(&KNotification::activated), this, &TransactionWatcher::logout);
     notify->setComponentName(QLatin1String("apperd"));
 
@@ -166,7 +166,7 @@ void TransactionWatcher::finished(PackageKit::Transaction::Exit exit)
         QStringList restartPackages = transaction->property("restartPackages").toStringList();
 
         // Create the notification about this transaction
-        auto notify = new KNotification(QLatin1String("RestartRequired"), 0, KNotification::Persistent);
+        auto notify = new KNotification(QLatin1String("RestartRequired"), nullptr, KNotification::Persistent);
         connect(notify, QOverload<uint>::of(&KNotification::activated), this, &TransactionWatcher::logout);
         notify->setComponentName(QLatin1String("apperd"));
         notify->setProperty("restartType", qVariantFromValue(type));
@@ -219,7 +219,7 @@ void TransactionWatcher::transactionChanged(Transaction *transaction, bool inter
 
 void TransactionWatcher::errorCode(PackageKit::Transaction::Error err, const QString &details)
 {
-    auto notify = new KNotification(QLatin1String("TransactionError"), 0, KNotification::Persistent);
+    auto notify = new KNotification(QLatin1String("TransactionError"), nullptr, KNotification::Persistent);
     notify->setComponentName(QLatin1String("apperd"));
     notify->setTitle(PkStrings::error(err));
     notify->setText(PkStrings::errorMessage(err));
@@ -242,7 +242,7 @@ void TransactionWatcher::errorActivated(uint action)
     if (action == 1) {
         Transaction::Error error = notify->property("ErrorType").value<Transaction::Error>();
         QString details = notify->property("Details").toString();
-        KMessageBox::detailedSorry(0,
+        KMessageBox::detailedSorry(nullptr,
                                    PkStrings::errorMessage(error),
                                    details.replace(QLatin1Char('\n'), QLatin1String("<br>")),
                                    PkStrings::error(error),

@@ -267,7 +267,7 @@ bool ApplicationsDelegate::editorEvent(QEvent *event,
         setData = true;
     }
 
-    const QWidget *widget = 0;
+    const QWidget *widget = nullptr;
     if (const QStyleOptionViewItem *v = qstyleoption_cast<const QStyleOptionViewItem *>(&option)) {
         widget = v->widget;
     }

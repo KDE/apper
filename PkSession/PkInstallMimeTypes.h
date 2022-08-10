@@ -32,7 +32,7 @@ public:
                        const QStringList &mime_types,
                        const QString &interaction,
                        const QDBusMessage &message,
-                       QWidget *parent = 0);
+                       QWidget *parent = nullptr);
     ~PkInstallMimeTypes() override;
 
 private Q_SLOTS:

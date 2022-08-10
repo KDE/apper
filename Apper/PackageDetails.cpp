@@ -73,11 +73,11 @@ Q_DECLARE_METATYPE(KPixmapSequenceOverlayPainter**)
 PackageDetails::PackageDetails(QWidget *parent)
  : QWidget(parent),
    ui(new Ui::PackageDetails),
-   m_busySeq(0),
+   m_busySeq(nullptr),
    m_display(false),
    m_hideVersion(false),
    m_hideArch(false),
-   m_transaction(0),
+   m_transaction(nullptr),
    m_hasDetails(false),
    m_hasFileList(false)
 {
@@ -360,7 +360,7 @@ void PackageDetails::actionActivated(QAction *action)
                    this, SLOT(files(QString,QStringList)));
         disconnect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit,uint)),
                    this, SLOT(finished()));
-        m_transaction = 0;
+        m_transaction = nullptr;
     }
 
     // Check to see if we don't already have the required data
@@ -772,7 +772,7 @@ void PackageDetails::finished()
     if (m_busySeq) {
         m_busySeq->stop();
     }
-    m_transaction = 0;
+    m_transaction = nullptr;
 
     auto transaction = qobject_cast<PackageKit::Transaction*>(sender());
     qCDebug(APPER);

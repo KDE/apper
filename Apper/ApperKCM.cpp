@@ -110,7 +110,7 @@ ApperKCM::ApperKCM(QWidget *parent) :
 
 
     // If no action was set we can't use this search
-    if (m_currentAction == 0) {
+    if (m_currentAction == nullptr) {
         m_genericActionK->setEnabled(false);
         ui->searchKLE->setEnabled(false);
     } else {
@@ -496,7 +496,7 @@ void ApperKCM::setPage(const QString &page)
                 return;
             }
 
-            if (m_settingsPage == 0) {
+            if (m_settingsPage == nullptr) {
                 m_settingsPage = new Settings(m_roles, this);
                 connect(m_settingsPage, &Settings::changed, this, &ApperKCM::checkChanged);
                 connect(m_settingsPage, &Settings::refreshCache, this, &ApperKCM::refreshCache);
@@ -577,7 +577,7 @@ void ApperKCM::on_backTB_clicked()
         ui->filtersTB->setEnabled(true);
         ui->widget->setEnabled(true);
         m_history->deleteLater();
-        m_history = 0;
+        m_history = nullptr;
     } else if (ui->stackedWidget->currentWidget() == ui->pageHome) {
         if (m_groupsModel->setParentIndex()) {
             // if we are able to set a new parent item
@@ -700,7 +700,7 @@ void ApperKCM::search()
         qCWarning(APPER) << "Search type not defined yet";
         emit caption();
         disconnectTransaction();
-        m_searchTransaction = 0;
+        m_searchTransaction = nullptr;
         return;
     }
     connect(m_searchTransaction, &Transaction::finished, ui->browseView->busyCursor(), &KPixmapSequenceOverlayPainter::stop);
@@ -892,7 +892,7 @@ void ApperKCM::finished()
     // search methods
     setCurrentActionEnabled(m_currentAction);
     setCurrentActionCancel(false);
-    m_searchTransaction = 0;
+    m_searchTransaction = nullptr;
 }
 
 void ApperKCM::keyPressEvent(QKeyEvent *event)

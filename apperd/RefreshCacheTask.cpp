@@ -30,8 +30,8 @@
 
 RefreshCacheTask::RefreshCacheTask(QObject *parent) :
     QObject(parent),
-    m_transaction(0),
-    m_notification(0),
+    m_transaction(nullptr),
+    m_notification(nullptr),
     m_lastError(Transaction::ErrorUnknown),
     m_cacheAge(3600)
 {
@@ -54,7 +54,7 @@ void RefreshCacheTask::refreshCacheFinished(PackageKit::Transaction::Exit status
 {
     Q_UNUSED(runtime)
 
-    m_transaction = 0;
+    m_transaction = nullptr;
     if (status == Transaction::ExitSuccess) {
         m_lastError = Transaction::ErrorUnknown;
         m_lastErrorString.clear();
@@ -81,7 +81,7 @@ void RefreshCacheTask::errorCode(Transaction::Error error, const QString &errorM
 void RefreshCacheTask::notificationClosed()
 {
     m_notification->deleteLater();
-    m_notification = 0;
+    m_notification = nullptr;
 }
 
 #include "moc_RefreshCacheTask.cpp"

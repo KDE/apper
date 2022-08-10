@@ -61,7 +61,7 @@ public:
 
 PkTransactionWidget::PkTransactionWidget(QWidget *parent) :
     QWidget(parent),
-    m_trans(0),
+    m_trans(nullptr),
     m_keepScrollBarAtBottom(true),
     m_handlingActionRequired(false),
     m_showingError(false),
@@ -151,7 +151,7 @@ void PkTransactionWidget::setTransaction(PkTransaction *trans, Transaction::Role
 
 void PkTransactionWidget::unsetTransaction()
 {
-    if (m_trans == 0) {
+    if (m_trans == nullptr) {
         return;
     }
 
@@ -169,7 +169,7 @@ void PkTransactionWidget::updateUi()
 {
     // sets the action icon to be the window icon
     auto transaction = qobject_cast<PkTransaction*>(sender());
-    if (transaction == 0 && (transaction = m_trans) == 0) {
+    if (transaction == nullptr && (transaction = m_trans) == nullptr) {
         qCWarning(APPER_LIB) << "no transaction object";
         return;
     }

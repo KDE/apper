@@ -264,7 +264,7 @@ void CategoryModel::fillWithServiceGroups()
 void CategoryModel::parseMenu(QXmlStreamReader &xml, const QString &parentIcon, QStandardItem *parent)
 {
     QString icon = parentIcon;
-    QStandardItem *item = 0;
+    QStandardItem *item = nullptr;
     while(!xml.atEnd() &&
           !(xml.tokenType() == QXmlStreamReader::EndElement &&
             xml.name() == QLatin1String("Menu"))) {

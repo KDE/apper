@@ -27,7 +27,7 @@ class CheckableHeader : public QHeaderView
 {
 Q_OBJECT
 public:
-    explicit CheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
+    explicit CheckableHeader(Qt::Orientation orientation, QWidget *parent = nullptr);
 
     int sectionSizeHint(int logicalIndex) const;
     QSize sizeHint() const override;

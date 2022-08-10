@@ -39,7 +39,7 @@ class SessionTask : public QDialog
     Q_OBJECT
     Q_ENUMS(Errors)
 public:
-    SessionTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent = 0);
+    SessionTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent = nullptr);
     ~SessionTask() override;
 
     typedef enum{
@@ -99,13 +99,13 @@ protected:
     virtual void searchFailed();
     virtual void searchSuccess();
     virtual void commitFailed();
-    virtual void commitSuccess(QWidget *widget = 0);
+    virtual void commitSuccess(QWidget *widget = nullptr);
 
     void showCloseButton();
     bool foundPackages() const;
     int  foundPackagesSize() const;
     PackageModel* model() const;
-    void setTransaction(Transaction::Role role, PkTransaction *transaction = 0);
+    void setTransaction(Transaction::Role role, PkTransaction *transaction = nullptr);
     void finishTaskOk();
     void sendErrorFinished(DBusError error, const QString &msg);
     bool sendMessageFinished(const QDBusMessage &message);
@@ -115,7 +115,7 @@ protected Q_SLOTS:
     void setTitle(const QString &title);
     void setInfo(const QString &title, const QString &text, const QString &details = QString());
     void setError(const QString &title, const QString &text, const QString &details = QString());
-    void setFinish(const QString &title, const QString &text, QWidget *widget = 0);
+    void setFinish(const QString &title, const QString &text, QWidget *widget = nullptr);
     virtual void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
     virtual void searchFinished(PkTransaction::ExitStatus status);
     virtual void commitFinished(PkTransaction::ExitStatus status);

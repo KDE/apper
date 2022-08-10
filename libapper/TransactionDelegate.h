@@ -27,7 +27,7 @@ class TransactionDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    explicit TransactionDelegate(QObject *parent = 0);
+    explicit TransactionDelegate(QObject *parent = nullptr);
 
     void  paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;

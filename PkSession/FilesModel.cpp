@@ -83,7 +83,7 @@ bool FilesModel::insertFiles(const QList<QUrl> &urls)
         }
 
         QFileInfo fileInfo(path);
-        QStandardItem *item = 0;
+        QStandardItem *item = nullptr;
         if (fileInfo.isFile()) {
             QMimeDatabase db;
             QMimeType mime = db.mimeTypeForFile(path, QMimeDatabase::MatchContent);

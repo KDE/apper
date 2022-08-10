@@ -525,7 +525,7 @@ void SessionTask::parseInteraction(const QString &interaction)
                        | Finished
                        | Warning;
     } else if (interactions.contains(QLatin1String("never"))) {
-        m_interactions = 0;
+        m_interactions = {};
     }
 
     // show custom options
@@ -595,7 +595,7 @@ PackageModel *SessionTask::model() const
 
 void SessionTask::setTransaction(Transaction::Role role, PkTransaction *t)
 {
-    if (m_pkTransaction == 0) {
+    if (m_pkTransaction == nullptr) {
         m_pkTransaction = new PkTransactionWidget(this);
         m_pkTransaction->hideCancelButton();
 

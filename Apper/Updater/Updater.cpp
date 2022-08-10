@@ -264,7 +264,7 @@ void Updater::load()
 
 void Updater::getUpdatesFinished()
 {
-    m_updatesT = 0;
+    m_updatesT = nullptr;
     m_updatesModel->clearSelectedNotPresent();
     checkEnableUpdateButton();
     if (m_updatesModel->rowCount() == 0) {

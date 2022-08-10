@@ -43,7 +43,7 @@
 
 Apper::Apper(int& argc, char** argv)
  : QApplication(argc, argv),
-   m_pkUi(0),
+   m_pkUi(nullptr),
    m_running(0)
 {
     setQuitOnLastWindowClosed(false);
@@ -69,7 +69,7 @@ void Apper::kcmFinished()
 {
     // kcm is finished we set to 0 to be able to quit
     m_pkUi->deleteLater();
-    m_pkUi = 0;
+    m_pkUi = nullptr;
     appClose();
 }
 
