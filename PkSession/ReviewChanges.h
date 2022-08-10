@@ -33,7 +33,7 @@ class ReviewChanges : public QWidget
     Q_OBJECT
 public:
     explicit ReviewChanges(PackageModel *model, QWidget *parent = 0);
-    ~ReviewChanges();
+    ~ReviewChanges() override;
 
     PackageModel* model() const;
 

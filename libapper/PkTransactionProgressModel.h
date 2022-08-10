@@ -41,11 +41,11 @@ public:
         RoleRepo
     };
     explicit PkTransactionProgressModel(QObject *parent = 0);
-    ~PkTransactionProgressModel();
+    ~PkTransactionProgressModel() override;
 
     void clear();
 
-    virtual QHash<int,QByteArray> roleNames() const override;
+    QHash<int,QByteArray> roleNames() const override;
 
 public Q_SLOTS:
     void currentPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);

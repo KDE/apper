@@ -29,7 +29,7 @@ class MainUi : public QMainWindow
     Q_OBJECT
 public:
     explicit MainUi(QWidget *parent = 0);
-    ~MainUi();
+    ~MainUi() override;
 
     void showAll();
     void showUpdates();
@@ -39,7 +39,7 @@ Q_SIGNALS:
     void finished();
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     ApperKCM *m_apperModule;

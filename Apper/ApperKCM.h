@@ -46,7 +46,7 @@ class ApperKCM : public QWidget
     Q_PROPERTY(QString page READ page WRITE setPage USER true)
 public:
     ApperKCM(QWidget *parent);
-    ~ApperKCM();
+    ~ApperKCM() override;
     
     QString page() const;
 
@@ -84,7 +84,7 @@ private Q_SLOTS:
     void refreshCache();
 
 protected:
-    virtual void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     void disconnectTransaction();
@@ -94,7 +94,7 @@ private:
     void setCurrentActionCancel(bool cancel);
 
     void setActionCancel(bool enabled);
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
 
     Ui::ApperKCM *ui;
     KToolBarPopupAction *m_genericActionK;

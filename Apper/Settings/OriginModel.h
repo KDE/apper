@@ -34,9 +34,9 @@ public:
         RepoInitialState
     } RepoRole;
     explicit OriginModel(QObject *parent = 0);
-    ~OriginModel();
+    ~OriginModel() override;
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
     QVariantHash changes() const;
 

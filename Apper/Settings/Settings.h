@@ -38,7 +38,7 @@ class Settings : public QWidget
     Q_OBJECT
 public:
     Settings(Transaction::Roles roles, QWidget *parent);
-    ~Settings();
+    ~Settings() override;
 
     bool hasChanges() const;
 

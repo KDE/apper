@@ -75,12 +75,12 @@ public:
 
     explicit PackageModel(QObject *parent = 0);
 
-    Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     Q_INVOKABLE bool allSelected() const;
     Q_INVOKABLE QStringList selectedPackagesToInstall() const;
@@ -97,10 +97,10 @@ public:
     bool checkable() const;
     void setCheckable(bool checkable);
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex &index) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &index) const override;
 
-    virtual QHash<int,QByteArray> roleNames() const override;
+    QHash<int,QByteArray> roleNames() const override;
 
 public Q_SLOTS:
     void addSelectedPackagesFromModel(PackageModel *model);

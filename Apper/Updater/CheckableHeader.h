@@ -30,7 +30,7 @@ public:
     explicit CheckableHeader(Qt::Orientation orientation, QWidget *parent = 0);
 
     int sectionSizeHint(int logicalIndex) const;
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 public Q_SLOTS:
     void setCheckState(Qt::CheckState state);
@@ -40,11 +40,11 @@ Q_SIGNALS:
     void toggled(bool checked);
 
 protected:
-    void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const;
-    void mouseMoveEvent(QMouseEvent *event);
-    void leaveEvent(QEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    QSize sectionSizeFromContents(int logicalIndex) const;
+    void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void leaveEvent(QEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    QSize sectionSizeFromContents(int logicalIndex) const override;
 
 private:
     bool insideCheckBox(const QRect &rect, const QPoint &pos) const;

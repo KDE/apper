@@ -32,10 +32,10 @@ public:
                            const QString &interaction,
                            const QDBusMessage &message,
                            QWidget *parent = 0);
-    ~PkInstallPrinterDrivers();
+    ~PkInstallPrinterDrivers() override;
 
 protected:
-    virtual void notFound();
+    void notFound() override;
 
 private:
     QStringList    m_resources;

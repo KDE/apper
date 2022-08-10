@@ -32,7 +32,7 @@ class BrowseView : public QWidget, Ui::BrowseView
     Q_OBJECT
 public:
     explicit BrowseView(QWidget *parent = 0);
-    ~BrowseView();
+    ~BrowseView() override;
 
     void init(PackageKit::Transaction::Roles roles);
 

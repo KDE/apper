@@ -28,10 +28,10 @@ class TransactionFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit TransactionFilterModel(QObject *parent = 0);
-    ~TransactionFilterModel();
+    ~TransactionFilterModel() override;
 
 protected:
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 };
 
 #endif

@@ -32,12 +32,12 @@ public:
                                  const QString &interaction,
                                  const QDBusMessage &message,
                                  QWidget *parent = 0);
-    ~PkInstallFontconfigResources();
+    ~PkInstallFontconfigResources() override;
 
 protected:
-    virtual void search();
-    virtual void notFound();
-    virtual void searchFailed();
+    void search() override;
+    void notFound() override;
+    void searchFailed() override;
 
 private:
     QStringList  m_resources;

@@ -40,11 +40,11 @@ public:
         CategoryRole
     } Roles;
     explicit CategoryModel(QObject *parent = 0);
-    ~CategoryModel();
+    ~CategoryModel() override;
 
     void setRoles(PackageKit::Transaction::Roles roles);
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     void setRootIndex(const QModelIndex &index);
     bool setParentIndex();
     bool hasParent() const;

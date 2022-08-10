@@ -36,7 +36,7 @@ class Q_DECL_EXPORT ApplicationLauncher : public QDialog
     Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)
 public:
     explicit ApplicationLauncher(QWidget *parent = 0);
-    ~ApplicationLauncher();
+    ~ApplicationLauncher() override;
 
     bool embedded() const;
     void setEmbedded(bool embedded);

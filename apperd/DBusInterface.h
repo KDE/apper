@@ -36,7 +36,7 @@ class DBusInterface : public QObject, protected QDBusContext
     Q_CLASSINFO("D-Bus Interface", "org.kde.apperd")
 public:
     explicit DBusInterface(QObject *parent = 0);
-    ~DBusInterface();
+    ~DBusInterface() override;
 
     void RefreshCache();
     void SetupDebconfDialog(const QString &tid, const QString &socketPath, uint xidParent);

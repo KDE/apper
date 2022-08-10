@@ -32,14 +32,14 @@ public:
                           const QString &interaction,
                           const QDBusMessage &message,
                           QWidget *parent = 0);
-    ~PkInstallProvideFiles();
+    ~PkInstallProvideFiles() override;
 
 protected:
-    virtual void search();
-    virtual void notFound();
+    void search() override;
+    void notFound() override;
 
 private Q_SLOTS:
-    void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
+    void addPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary) override;
 
 private:
     QStringList m_args;

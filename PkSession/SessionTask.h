@@ -40,7 +40,7 @@ class SessionTask : public QDialog
     Q_ENUMS(Errors)
 public:
     SessionTask(uint xid, const QString &interaction, const QDBusMessage &message, QWidget *parent = 0);
-    ~SessionTask();
+    ~SessionTask() override;
 
     typedef enum{
         Failed,

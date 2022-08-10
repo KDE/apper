@@ -31,10 +31,10 @@ public:
                   const QString &interaction,
                   const QDBusMessage &message,
                   QWidget *parent = 0);
-    ~PkIsInstalled();
+    ~PkIsInstalled() override;
 
 private Q_SLOTS:
-    void searchFinished(PkTransaction::ExitStatus status);
+    void searchFinished(PkTransaction::ExitStatus status) override;
 
 private:
     QString      m_packageName;

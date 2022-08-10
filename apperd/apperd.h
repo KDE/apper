@@ -33,7 +33,7 @@ class ApperD : public KDEDModule
 
 public:
     ApperD(QObject *parent, const QList<QVariant>&);
-    ~ApperD();
+    ~ApperD() override;
 
 private:
     QThread *m_thread;

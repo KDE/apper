@@ -32,7 +32,7 @@ class BackendDetails : public QDialog
     Q_OBJECT
 public:
     explicit BackendDetails(QWidget *parent = 0);
-    ~BackendDetails();
+    ~BackendDetails() override;
 
     void daemonChanged();
 

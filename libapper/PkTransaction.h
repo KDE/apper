@@ -43,7 +43,7 @@ public:
         Cancelled
     } ExitStatus;
     explicit PkTransaction(QObject *parent = 0);
-    ~PkTransaction();
+    ~PkTransaction() override;
 
     void setupTransaction(Transaction *transaction);
 

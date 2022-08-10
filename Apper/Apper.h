@@ -30,7 +30,7 @@ class Apper : public QApplication
 
 public:
     Apper(int& argc, char** argv);
-    virtual ~Apper();
+    ~Apper() override;
 
     void activate(const QStringList& arguments, const QString& workingDirectory);
 

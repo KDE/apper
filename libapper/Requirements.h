@@ -37,7 +37,7 @@ class Requirements : public QDialog
     Q_PROPERTY(bool embedded READ embedded WRITE setEmbedded USER true)
 public:
     explicit Requirements(PackageModel *model, QWidget *parent = 0);
-    ~Requirements();
+    ~Requirements() override;
 
     bool embedded() const;
     void setEmbedded(bool embedded);

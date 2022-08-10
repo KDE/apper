@@ -32,11 +32,11 @@ public:
                                 const QString &interaction,
                                 const QDBusMessage &message,
                                 QWidget *parent = 0);
-    ~PkInstallGStreamerResources();
+    ~PkInstallGStreamerResources() override;
 
 protected:
-    virtual void search();
-    virtual void notFound();
+    void search() override;
+    void notFound() override;
 
 private:
     QStringList m_resources;

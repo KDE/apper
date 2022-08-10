@@ -50,7 +50,7 @@ public:
     };
     Q_DECLARE_FLAGS(FadeWidgets, FadeWidget)
     explicit PackageDetails(QWidget *parent = 0);
-    ~PackageDetails();
+    ~PackageDetails() override;
 
     void init(PackageKit::Transaction::Roles roles);
 

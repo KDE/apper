@@ -36,7 +36,7 @@ class ApperdThread : public QObject
     Q_OBJECT
 public:
     explicit ApperdThread(QObject *parent = 0);
-    ~ApperdThread();
+    ~ApperdThread() override;
 
     static bool nameHasOwner(const QString &name, const QDBusConnection &connection);
 

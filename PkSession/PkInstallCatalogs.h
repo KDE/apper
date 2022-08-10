@@ -34,13 +34,13 @@ public:
                       const QString &interaction,
                       const QDBusMessage &message,
                       QWidget *parent = 0);
-    ~PkInstallCatalogs();
+    ~PkInstallCatalogs() override;
 
 protected:
-    virtual void search();
+    void search() override;
 
 protected Q_SLOTS:
-    virtual void searchFinished(PkTransaction::ExitStatus status);
+    void searchFinished(PkTransaction::ExitStatus status) override;
 
 private Q_SLOTS:
     void modelChanged();

@@ -37,7 +37,7 @@ class TransactionWatcher : public QObject
     Q_OBJECT
 public:
     explicit TransactionWatcher(bool packagekitIsRunning, QObject *parent = 0);
-    ~TransactionWatcher();
+    ~TransactionWatcher() override;
 
 public Q_SLOTS:
     void watchTransactionInteractive(const QDBusObjectPath &tid);

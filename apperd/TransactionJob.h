@@ -34,9 +34,9 @@ class TransactionJob : public KJob
     Q_OBJECT
 public:
     explicit TransactionJob(Transaction *transaction, QObject *parent = 0);
-    ~TransactionJob();
+    ~TransactionJob() override;
 
-    virtual void start();
+    void start() override;
     bool isFinished() const;
     Transaction *transaction() const;
 
@@ -50,7 +50,7 @@ private Q_SLOTS:
     void updateJob();
 
 protected:
-    virtual bool doKill();
+    bool doKill() override;
     void emitDescription();
 
 private:

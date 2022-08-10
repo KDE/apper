@@ -32,7 +32,7 @@ class PkInterface : public AbstractIsRunning, protected QDBusContext
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.PackageKit")
 public:
     explicit PkInterface(QObject *parent = 0);
-    ~PkInterface();
+    ~PkInterface() override;
 
 public Q_SLOTS:
     void InstallCatalogs(uint xid, const QStringList &files, const QString &interaction);

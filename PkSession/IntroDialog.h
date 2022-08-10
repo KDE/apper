@@ -34,7 +34,7 @@ class IntroDialog : public QWidget
     Q_OBJECT
 public:
     explicit IntroDialog(QWidget *parent = 0);
-    ~IntroDialog();
+    ~IntroDialog() override;
 
     void setDescription(const QString &description);
     void setModel(QAbstractItemModel *model);

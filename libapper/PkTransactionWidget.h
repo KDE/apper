@@ -40,7 +40,7 @@ class Q_DECL_EXPORT PkTransactionWidget : public QWidget
     Q_OBJECT
 public:
     explicit PkTransactionWidget(QWidget *parent = 0);
-    ~PkTransactionWidget();
+    ~PkTransactionWidget() override;
 
     void setTransaction(PkTransaction *trans, Transaction::Role role);
     void hideCancelButton();

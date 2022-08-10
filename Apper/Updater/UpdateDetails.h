@@ -37,7 +37,7 @@ class UpdateDetails : public QWidget, Ui::UpdateDetails
 Q_OBJECT
 public:
     explicit UpdateDetails(QWidget *parent = 0);
-    ~UpdateDetails();
+    ~UpdateDetails() override;
 
     void setPackage(const QString &packageId, Transaction::Info updateInfo);
 

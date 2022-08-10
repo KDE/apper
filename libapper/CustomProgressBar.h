@@ -28,9 +28,9 @@ class CustomProgressBar : public QProgressBar
     Q_OBJECT
 public:
     explicit CustomProgressBar(QWidget *parent = 0);
-    ~CustomProgressBar();
+    ~CustomProgressBar() override;
 
-    QString text() const;
+    QString text() const override;
 
     void setRemaining(uint remaining);
 

@@ -52,8 +52,8 @@ Q_SIGNALS:
     void changed();
 
 private:
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 
     Transaction::Info m_info;
     bool m_applicationsOnly;

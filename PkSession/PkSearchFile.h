@@ -31,11 +31,11 @@ public:
                  const QString &interaction,
                  const QDBusMessage &message,
                  QWidget *parent = 0);
-    ~PkSearchFile();
+    ~PkSearchFile() override;
 
 protected:
-    virtual void notFound();
-    virtual void searchSuccess();
+    void notFound() override;
+    void searchSuccess() override;
 
 private:
     QString      m_fileName;

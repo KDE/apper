@@ -29,10 +29,10 @@ class FilesModel : public QStandardItemModel
 public:
     explicit FilesModel(const QStringList &files, const QStringList &mimes, QObject *parent = 0);
 
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
-    QStringList mimeTypes() const;
-    Qt::DropActions supportedDropActions() const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    QStringList mimeTypes() const override;
+    Qt::DropActions supportedDropActions() const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
     QStringList files() const;
     bool onlyApplications() const;
 

@@ -33,11 +33,11 @@ public:
                        const QString &interaction,
                        const QDBusMessage &message,
                        QWidget *parent = 0);
-    ~PkInstallMimeTypes();
+    ~PkInstallMimeTypes() override;
 
 private Q_SLOTS:
-    virtual void search();
-    virtual void notFound();
+    void search() override;
+    void notFound() override;
 
 private:
     FilesModel *m_model;

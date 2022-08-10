@@ -34,7 +34,7 @@ class ScreenShotViewer : public QScrollArea
 Q_OBJECT
 public:
     explicit ScreenShotViewer(const QUrl &url, QWidget *parent = nullptr);
-    ~ScreenShotViewer();
+    ~ScreenShotViewer() override;
 
 private Q_SLOTS:
     void resultJob(KJob *);

@@ -30,7 +30,7 @@ class PkSession : public QObject
     Q_OBJECT
 public:
     explicit PkSession(QObject* parent = nullptr);
-    virtual ~PkSession();
+    ~PkSession() override;
     int newInstance();
 
 private Q_SLOTS:

@@ -30,7 +30,7 @@ class TransactionHistory : public QWidget, Ui::TransactionHistory
     Q_OBJECT
 public:
     explicit TransactionHistory(QWidget *parent = 0);
-    ~TransactionHistory();
+    ~TransactionHistory() override;
 
 public Q_SLOTS:
     void setFilterRegExp(const QString &regexp);

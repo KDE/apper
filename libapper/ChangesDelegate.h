@@ -33,12 +33,12 @@ class Q_DECL_EXPORT ChangesDelegate: public KExtendableItemDelegate
 public:
     explicit ChangesDelegate(QAbstractItemView *parent);
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     bool editorEvent(QEvent *event,
                      QAbstractItemModel *model,
                      const QStyleOptionViewItem &option,
-                     const QModelIndex &index);
+                     const QModelIndex &index) override;
     void setExtendPixmapWidth(int width);
     void setViewport(QWidget *viewport);
 

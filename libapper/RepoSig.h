@@ -42,7 +42,7 @@ public:
                      const QString &keyTimestamp,
                      PackageKit::Transaction::SigType type,
                      QWidget *parent = nullptr);
-    ~RepoSig();
+    ~RepoSig() override;
 
     PackageKit::Transaction::SigType sigType() const;
     QString keyID() const;

@@ -34,14 +34,14 @@ public:
                            const QString &interaction,
                            const QDBusMessage &message,
                            QWidget *parent = 0);
-    ~PkRemovePackageByFiles();
+    ~PkRemovePackageByFiles() override;
 
 protected:
-    virtual void search();
-    virtual void notFound();
+    void search() override;
+    void notFound() override;
 
 protected Q_SLOTS:
-    void searchFinished(PkTransaction::ExitStatus status);
+    void searchFinished(PkTransaction::ExitStatus status) override;
 
 private Q_SLOTS:
     void modelChanged();

@@ -31,12 +31,12 @@ class CategoryDrawer : public KCategoryDrawer
 public:
     explicit CategoryDrawer(KCategorizedView *view);
 
-    virtual void drawCategory(const QModelIndex &index,
+    void drawCategory(const QModelIndex &index,
                               int sortRole,
                               const QStyleOption &option,
-                              QPainter *painter) const;
+                              QPainter *painter) const override;
 
-    virtual int categoryHeight(const QModelIndex &index, const QStyleOption &option) const;
+    int categoryHeight(const QModelIndex &index, const QStyleOption &option) const override;
 };
 
 #endif

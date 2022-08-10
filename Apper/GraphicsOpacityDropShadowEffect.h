@@ -29,12 +29,12 @@ class GraphicsOpacityDropShadowEffect : public QGraphicsDropShadowEffect
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity USER true)
 public:
     explicit GraphicsOpacityDropShadowEffect(QObject *parent = 0);
-    ~GraphicsOpacityDropShadowEffect();
+    ~GraphicsOpacityDropShadowEffect() override;
 
     qreal opacity() const;
     void  setOpacity(qreal opacity);
 
-    virtual void draw(QPainter *painter);
+    void draw(QPainter *painter) override;
 
 private:
     qreal m_opacity;

@@ -42,7 +42,7 @@ class Updater : public QWidget
     Q_OBJECT
 public:
     Updater(Transaction::Roles roles, QWidget *parent);
-    ~Updater();
+    ~Updater() override;
 
     bool hasChanges() const;
     QStringList packagesToUpdate() const;

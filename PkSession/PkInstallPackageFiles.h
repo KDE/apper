@@ -34,10 +34,10 @@ public:
                           const QString &interaction,
                           const QDBusMessage &message,
                           QWidget *parent = 0);
-    ~PkInstallPackageFiles();
+    ~PkInstallPackageFiles() override;
 
 private:
-    virtual void commit();
+    void commit() override;
 
 private Q_SLOTS:
     void transactionFinished(PkTransaction::ExitStatus status);

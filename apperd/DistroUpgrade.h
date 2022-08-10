@@ -32,7 +32,7 @@ class DistroUpgrade : public QObject
     Q_OBJECT
 public:
     explicit DistroUpgrade(QObject *parent = 0);
-    ~DistroUpgrade();
+    ~DistroUpgrade() override;
 
     void setConfig(const QVariantHash &configs);
 
