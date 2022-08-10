@@ -327,7 +327,7 @@ void ApperKCM::checkChanged()
 void ApperKCM::errorCode(PackageKit::Transaction::Error error, const QString &details)
 {
     if (error != Transaction::ErrorTransactionCancelled) {
-        KMessageBox::detailedSorry(this, PkStrings::errorMessage(error), details, PkStrings::error(error), KMessageBox::Notify);
+        KMessageBox::detailedError(this, PkStrings::errorMessage(error), details, PkStrings::error(error), KMessageBox::Notify);
     }
 }
 
@@ -688,7 +688,7 @@ void ApperKCM::search()
             emit caption(m_searchParentCategory.data().toString());
         } else {
             ui->browseView->setParentCategory(m_searchParentCategory);
-            KMessageBox::sorry(this, i18n("Could not find an application that matched this category"));
+            KMessageBox::error(this, i18n("Could not find an application that matched this category"));
             emit caption();
             disconnectTransaction();
             m_searchTransaction = 0;

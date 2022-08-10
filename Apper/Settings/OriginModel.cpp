@@ -90,7 +90,7 @@ void OriginModel::finished()
 void OriginModel::errorCode(PackageKit::Transaction::Error error, const QString &details)
 {
     if (error != Transaction::ErrorTransactionCancelled) {
-        KMessageBox::detailedSorry(nullptr, PkStrings::errorMessage(error), details, PkStrings::error(error), KMessageBox::Notify);
+        KMessageBox::detailedError(nullptr, PkStrings::errorMessage(error), details, PkStrings::error(error), KMessageBox::Notify);
     }
 }
 

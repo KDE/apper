@@ -728,9 +728,9 @@ void PkTransaction::showSorry(const QString &title, const QString &description, 
     auto widget = qobject_cast<PkTransactionWidget *>(d->parentWindow);
     if (!widget || widget->isCancelVisible()) {
         if (details.isEmpty()) {
-            KMessageBox::sorry(d->parentWindow, description, title);
+            KMessageBox::error(d->parentWindow, description, title);
         } else {
-            KMessageBox::detailedSorry(d->parentWindow, description, details, title);
+            KMessageBox::detailedError(d->parentWindow, description, details, title);
         }
     } else {
         emit sorry(title, description, details);

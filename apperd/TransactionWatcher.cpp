@@ -242,7 +242,7 @@ void TransactionWatcher::errorActivated(uint action)
     if (action == 1) {
         Transaction::Error error = notify->property("ErrorType").value<Transaction::Error>();
         QString details = notify->property("Details").toString();
-        KMessageBox::detailedSorry(nullptr,
+        KMessageBox::detailedError(nullptr,
                                    PkStrings::errorMessage(error),
                                    details.replace(QLatin1Char('\n'), QLatin1String("<br>")),
                                    PkStrings::error(error),

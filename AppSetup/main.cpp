@@ -76,7 +76,7 @@ int main(int argc, char** argv)
     
     // Check if we have a package
     if (fname.isEmpty()) {
-        KMessageBox::sorry (0, i18n("We did not receive a path to an IPK package as parameter."),
+        KMessageBox::error (0, i18n("We did not receive a path to an IPK package as parameter."),
                             i18n("Package not found!"));
         return 1;
     }

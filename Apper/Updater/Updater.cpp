@@ -341,7 +341,7 @@ void Updater::on_packageView_customContextMenuRequested(const QPoint &pos)
 
 void Updater::errorCode(PackageKit::Transaction::Error error, const QString &details)
 {
-    KMessageBox::detailedSorry(this,
+    KMessageBox::detailedError(this,
                                PkStrings::errorMessage(error),
                                details,
                                PkStrings::error(error),

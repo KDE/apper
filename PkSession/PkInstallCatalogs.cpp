@@ -182,7 +182,7 @@ void PkInstallCatalogs::search()
 
     if (showWarning() && filesFailedToOpen.size()) {
         // TODO display a nicer message informing of already installed ones
-        KMessageBox::sorry(this,
+        KMessageBox::error(this,
                            i18np("Catalog %2 failed to open",
                                  "Catalogs %2 failed to open",
                                  filesFailedToOpen.size(),
