@@ -1,0 +1,251 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Manual d'usuari de l'Apper</title>
+<authorgroup>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+</authorgroup>
+<date
+>28 de novembre de 2016</date>
+<releaseinfo
+>apper 0.9.3</releaseinfo>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper</command
+></refname>
+<refpurpose
+>Una aplicació i gestor de paquets que utilitza PackageKit</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper</command
+> <group choice="opt"
+><option
+>--updates</option
+> </group
+> <group choice="opt"
+><option
+>--settings</option
+> </group
+> <group choice="opt"
+><option
+>--backend-details</option
+> </group
+> <group choice="opt"
+><option
+>--type</option
+><replaceable
+> tipus-MIME</replaceable
+></group
+> <group choice="opt"
+><option
+>--name</option
+><replaceable
+> nom</replaceable
+></group
+> <group choice="opt"
+><option
+>--file</option
+><replaceable
+> fitxer</replaceable
+></group
+> <group choice="opt"
+><option
+>--resource</option
+><replaceable
+> origen</replaceable
+></group
+> <group choice="opt"
+><option
+>--catalog</option
+><replaceable
+> fitxer</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+<para
+>Apper és la interfície per a PackageKit</para>
+<para
+>Apper és capaç de gestionar paquets, aplicacions i actualitzacions en una forma de distribució creuada gràcies al projecte PackageKit.</para>
+<para
+>Proporciona als usuaris de &Linux; una sola aplicació que poden aprendre i utilitzar a qualsevol distribució on es trobin.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opcions</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--updates</option
+></term>
+<listitem
+><para
+>Mostra les actualitzacions disponibles.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--settings</option
+></term>
+<listitem
+><para
+>Mostra la pàgina de configuració de l'Apper.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--backend-details</option
+></term>
+<listitem
+><para
+>Mostra informació quant al dorsal que utilitza PackageKit.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--type</option
+> <replaceable
+>tipus-MIME</replaceable
+></term>
+<listitem
+><para
+>Crida l'instal·lador de tipus MIME.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--name</option
+> <replaceable
+>nom</replaceable
+></term>
+<listitem
+><para
+>Instal·la el paquet anomenat <replaceable
+>nom</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--file</option
+> <replaceable
+>fitxer</replaceable
+></term>
+<listitem
+><para
+>Instal·la el paquet que conté el fitxer <replaceable
+>fitxer</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--resource</option
+> <replaceable
+>origen</replaceable
+></term>
+<listitem
+><para
+>Instal·la un recurs d'origen.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--catalog</option
+> <replaceable
+>fitxer</replaceable
+></term>
+<listitem
+><para
+>Instal·la el catàleg de paquets al <replaceable
+>fitxer</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Vegeu també</title>
+<simplelist>
+<member
+>Podeu trobar més informació quant a Apper en <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>el lloc web d'Apper</ulink
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
+</refsect1>
+
+<refsect1>
+<title
+>Autors</title>
+<para
+>El mantenidor de l'Apper és en Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; Aquesta pàgina de manual va ser escrita per en Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

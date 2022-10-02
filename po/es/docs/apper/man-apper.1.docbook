@@ -1,0 +1,251 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>El manual de usuario de Apper</title>
+<authorgroup>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+</authorgroup>
+<date
+>28-11-2016</date>
+<releaseinfo
+>apper 0.9.3</releaseinfo>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper</command
+></refname>
+<refpurpose
+>Un gestor de aplicaciones y paquetes que usa PackageKit</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper</command
+> <group choice="opt"
+><option
+>--updates</option
+> </group
+> <group choice="opt"
+><option
+>--settings</option
+> </group
+> <group choice="opt"
+><option
+>--backend-details</option
+> </group
+> <group choice="opt"
+><option
+>--type</option
+><replaceable
+> tipoMIME</replaceable
+></group
+> <group choice="opt"
+><option
+>--name</option
+><replaceable
+> nombre</replaceable
+></group
+> <group choice="opt"
+><option
+>--file</option
+><replaceable
+> archivo</replaceable
+></group
+> <group choice="opt"
+><option
+>--resource</option
+><replaceable
+> tipo de letra</replaceable
+></group
+> <group choice="opt"
+><option
+>--catalog</option
+><replaceable
+> archivo</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+<para
+>Apper es una interfaz para PackageKit</para>
+<para
+>Apper es capaz de gestionar paquetes, aplicaciones y actualizaciones de forma independiente de la distribución gracias al proyecto PackageKit.</para>
+<para
+>Proporciona a los usuarios de &Linux; una única aplicación que pueden aprender a usar en cualquier distribución.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opciones</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--updates</option
+></term>
+<listitem
+><para
+>Muestra las actualizaciones disponibles</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--settings</option
+></term>
+<listitem
+><para
+>Muestra la página de configuración de Apper.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--backend-details</option
+></term>
+<listitem
+><para
+>Muestra información sobre el motor que está usando Package Kit.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--type</option
+> <replaceable
+>tipoMIME</replaceable
+></term>
+<listitem
+><para
+>Llama al instalador del tipo MIME.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--name</option
+> <replaceable
+>nombre</replaceable
+></term>
+<listitem
+><para
+>Instala el paquete con el <replaceable
+>nombre</replaceable
+> indicado.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--file</option
+> <replaceable
+>archivo</replaceable
+></term>
+<listitem
+><para
+>Instala el paquete que proporciona el archivo con el <replaceable
+>nombre</replaceable
+> indicado.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--resource</option
+> <replaceable
+>ipo de letra</replaceable
+></term>
+<listitem
+><para
+>Instala un recurso de tipo de letra.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--catalog</option
+> <replaceable
+>archivo</replaceable
+></term>
+<listitem
+><para
+>Instala el catálogo del paquete contenido en el <replaceable
+>archivo</replaceable
+> indicado.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Ver también</title>
+<simplelist>
+<member
+>Puede encontrar más información sobre Apper en <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>el sitio web de Apper</ulink
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+<para
+>El encargado de Apper es Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; esta página de manual ha sido escrita por Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

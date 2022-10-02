@@ -1,0 +1,251 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Användarhandbok Apper</title>
+<authorgroup>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+</authorgroup>
+<date
+>2016-11-28</date>
+<releaseinfo
+>apper 0.9.3</releaseinfo>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper</command
+></refname>
+<refpurpose
+>En program- och pakethanterare som använder PackageKit</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper</command
+> <group choice="opt"
+><option
+>--updates</option
+> </group
+> <group choice="opt"
+><option
+>--settings</option
+> </group
+> <group choice="opt"
+><option
+>--backend-details</option
+> </group
+> <group choice="opt"
+><option
+>--type</option
+><replaceable
+> Mime-typ</replaceable
+></group
+> <group choice="opt"
+><option
+>--name</option
+><replaceable
+> namn</replaceable
+></group
+> <group choice="opt"
+><option
+>--file</option
+><replaceable
+> fil</replaceable
+></group
+> <group choice="opt"
+><option
+>--resource</option
+><replaceable
+> teckensnitt</replaceable
+></group
+> <group choice="opt"
+><option
+>--catalog</option
+><replaceable
+> fil</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+<para
+>Apper är gränssnittet till PackageKit</para>
+<para
+>Apper kan hantera paket, program och uppdateringar på ett distributionsoberoende sätt tack vara PackageKit-projektet.</para>
+<para
+>Det tillhandahåller ett enda program för &Linux;-användare som de kan lära sig och använda oberoende av vilken distribution de använder.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Väljare</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--updates</option
+></term>
+<listitem
+><para
+>Visa tillgängliga uppdateringar</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--settings</option
+></term>
+<listitem
+><para
+>Visa Appers inställningssida.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--backend-details</option
+></term>
+<listitem
+><para
+>Visa information om bakgrundsprogrammet som PackageKit för närvarande använder.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--type</option
+> <replaceable
+>Mime-typ</replaceable
+></term>
+<listitem
+><para
+>Anropa installation av Mime-typ.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--name</option
+> <replaceable
+>namn</replaceable
+></term>
+<listitem
+><para
+>Installera paket vid namn <replaceable
+>namn</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--file</option
+> <replaceable
+>fil</replaceable
+></term>
+<listitem
+><para
+>Installera paket som tillhandahåller filen <replaceable
+>fil</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--resource</option
+> <replaceable
+>teckensnitt</replaceable
+></term>
+<listitem
+><para
+>Installera en teckensnittsresurs.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--catalog</option
+> <replaceable
+>fil</replaceable
+></term>
+<listitem
+><para
+>Installera paketkatalogen i <replaceable
+>fil</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Se också</title>
+<simplelist>
+<member
+>Mer information om Apper finns på <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>Appers hemsida</ulink
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
+</refsect1>
+
+<refsect1>
+<title
+>Upphovsmän</title>
+<para
+>Underhållare av Apper är Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>. Den här manualsidan är skriven av Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

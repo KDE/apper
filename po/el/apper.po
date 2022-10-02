@@ -1,0 +1,5444 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Toussis Manolis <manolis@koppermind.homelinux.org>, 2008.
+# Dimitrios Glentadakis <dglent@gmail.com>, 2011, 2012.
+# Antonis Geralis <capoiosct@gmail.com>, 2012.
+# Stelios <sstavra@gmail.com>, 2012, 2013, 2015, 2018.
+msgid ""
+msgstr ""
+"Project-Id-Version: apper\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-03-28 16:13+0000\n"
+"PO-Revision-Date: 2018-12-18 11:12+0200\n"
+"Last-Translator: Stelios <sstavra@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 2.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Αντώνης Γέραλης"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "capoiosct@gmail.com"
+
+#: Apper/Apper.cpp:91
+#, kde-format
+msgid "Show updates"
+msgstr "Εμφάνιση ενημερώσεων"
+
+#: Apper/Apper.cpp:94
+#, kde-format
+msgid "Show settings"
+msgstr "Εμφάνιση ρυθμίσεων"
+
+#: Apper/Apper.cpp:97
+#, kde-format
+msgid "Show backend details"
+msgstr "Εμφάνιση πληροφοριών συστήματος υποστήριξης"
+
+#: Apper/Apper.cpp:100
+#, kde-format
+msgid "Mime type installer"
+msgstr "Εγκατάσταση τύπων mime"
+
+#: Apper/Apper.cpp:103
+#, kde-format
+msgid "Package name installer"
+msgstr "Εγκατάσταση πακέτων κατ' όνομα"
+
+#: Apper/Apper.cpp:106
+#, kde-format
+msgid "Single file installer"
+msgstr "Εγκατάσταση μεμονωμένων αρχείων"
+
+#: Apper/Apper.cpp:109
+#, kde-format
+msgid "Font resource installer"
+msgstr "Εγκατάσταση γραμματοσειρών"
+
+#: Apper/Apper.cpp:112
+#, kde-format
+msgid "Catalog installer"
+msgstr "Εγκατάσταση καταλόγων"
+
+#: Apper/Apper.cpp:115
+#, kde-format
+msgid "Single package remover"
+msgstr "Αφαίρεση ενός πακέτου"
+
+#: Apper/Apper.cpp:118
+#, kde-format
+msgid "Package file to install"
+msgstr "Αρχείο πακέτου για εγκατάσταση"
+
+#: Apper/ApperKCM.cpp:94 Apper/ApperKCM.cpp:293
+#, kde-format
+msgid "Find"
+msgstr "Εύρεση"
+
+#: Apper/ApperKCM.cpp:175
+#, kde-format
+msgid "Some software changes were made"
+msgstr "Έχουν γίνει κάποιες αλλαγές στο λογισμικό"
+
+#: Apper/ApperKCM.cpp:176 apperd/Updater.cpp:287
+#, kde-format
+msgid "Review"
+msgstr "Επιθεώρηση"
+
+#: Apper/ApperKCM.cpp:179
+#, kde-format
+msgid "Discard"
+msgstr "Απόρριψη"
+
+#: Apper/ApperKCM.cpp:182
+#, kde-format
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+#: Apper/ApperKCM.cpp:206 Apper/ApperKCM.cpp:563
+#, kde-format
+msgid "History"
+msgstr "Ιστορικό"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, Settings)
+#: Apper/ApperKCM.cpp:210 Apper/ApperKCM.cpp:520 Apper/Settings/Settings.ui:14
+#, kde-format
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: Apper/ApperKCM.cpp:270 Apper/ApperKCM.cpp:271 Apper/ApperKCM.cpp:272
+#: Apper/ApperKCM.cpp:273
+#, kde-format
+msgid "&Cancel"
+msgstr "&Ακύρωση"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:280 Apper/ApperKCM.ui:427
+#, kde-format
+msgid "Find by &name"
+msgstr "Εύρεση κατά ό&νομα"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:281 Apper/ApperKCM.ui:437
+#, kde-format
+msgid "Find by f&ile name"
+msgstr "Εύρεση κατά όνομα α&ρχείου"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:282 Apper/ApperKCM.ui:432
+#, kde-format
+msgid "Find by &description"
+msgstr "Εύρεση κατά &περιγραφή"
+
+#: Apper/ApperKCM.cpp:460
+#, kde-format
+msgid ""
+"The settings of the current module have changed.\n"
+"Do you want to apply the changes or discard them?"
+msgstr ""
+"Οι ρυθμίσεις του τρέχοντος αρθρώματος τροποποιήθηκαν.\n"
+"Επιθυμείτε την εφαρμογή των τροποποιήσεων ή την απόρριψή τους;"
+
+#: Apper/ApperKCM.cpp:462
+#, kde-format
+msgid "Apply Settings"
+msgstr "Εφαρμογή ρυθμίσεων"
+
+#: Apper/ApperKCM.cpp:547 Apper/CategoryModel.cpp:59
+#, kde-format
+msgid "Updates"
+msgstr "Ενημερώσεις"
+
+#: Apper/ApperKCM.cpp:616
+#, kde-format
+msgid "Pending Changes"
+msgstr "Εκκρεμείς αλλαγές"
+
+#: Apper/ApperKCM.cpp:679 Apper/CategoryModel.cpp:51
+#, kde-format
+msgid "Installed Software"
+msgstr "Εγκατεστημένο λογισμικό"
+
+#: Apper/ApperKCM.cpp:691
+#, kde-format
+msgid "Could not find an application that matched this category"
+msgstr "Αδυναμία εύρεσης εφαρμογής που να ταιριάζει σε αυτήν την κατηγορία"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, ApperKCM)
+#: Apper/ApperKCM.ui:20
+#, kde-format
+msgid "Add and Remove Software"
+msgstr "Προσθήκη και αφαίρεση λογισμικού"
+
+#. i18n: ectx: property (text), widget (QToolButton, backTB)
+#: Apper/ApperKCM.ui:47 AppSetup/SetupWizard.cpp:87
+#, kde-format
+msgid "Back"
+msgstr "Πίσω"
+
+#. i18n: ectx: property (clickMessage), widget (QLineEdit, searchKLE)
+#: Apper/ApperKCM.ui:188
+#, kde-format
+msgid "Search packages"
+msgstr "Αναζήτηση πακέτων"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#. i18n: ectx: property (text), widget (QToolButton, filtersTB)
+#: Apper/ApperKCM.ui:237 Apper/BackendDetails.ui:373
+#, kde-format
+msgid "Filters"
+msgstr "Φίλτρα"
+
+#. i18n: ectx: property (text), widget (QPushButton, updatePB)
+#: Apper/ApperKCM.ui:299
+#, kde-format
+msgid "Update"
+msgstr "Ενημέρωση"
+
+#. i18n: ectx: property (text), widget (QPushButton, checkUpdatesPB)
+#: Apper/ApperKCM.ui:312
+#, kde-format
+msgid "Check for new Updates"
+msgstr "Έλεγχος για νέες ενημερώσεις"
+
+#. i18n: ectx: property (text), widget (QPushButton, generalSettingsPB)
+#: Apper/ApperKCM.ui:346
+#, kde-format
+msgid "General Settings"
+msgstr "Γενικές ρυθμίσεις"
+
+#. i18n: ectx: property (text), widget (QPushButton, repoSettingsPB)
+#: Apper/ApperKCM.ui:365
+#, kde-format
+msgid "Software Origins"
+msgstr "Πηγές λογισμικού"
+
+#: Apper/BackendDetails.cpp:36
+#, kde-format
+msgid "Backend Details"
+msgstr "Λεπτομέρειες συστήματος υποστήριξης"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: Apper/BackendDetails.ui:23
+#, kde-format
+msgid "Methods"
+msgstr "Μέθοδοι"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getUpdatesCB)
+#: Apper/BackendDetails.ui:32
+#, kde-format
+msgid "Get Updates"
+msgstr "Ανάκτηση ενημερώσεων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, refreshCacheCB)
+#: Apper/BackendDetails.ui:42 Apper/Settings/Settings.cpp:61
+#, kde-format
+msgid "Refresh Cache"
+msgstr "Ανανέωση λανθάνουσας μνήμης"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchNameCB)
+#: Apper/BackendDetails.ui:52
+#, kde-format
+msgid "Search Name"
+msgstr "Αναζήτηση ονόματος"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDependsCB)
+#: Apper/BackendDetails.ui:62
+#, kde-format
+msgid "Get Package Depends"
+msgstr "Ανάκτηση εξαρτήσεων πακέτου"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchDetailsCB)
+#: Apper/BackendDetails.ui:72
+#, kde-format
+msgid "Search Details"
+msgstr "Αναζήτηση λεπτομερειών"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getRequiresCB)
+#: Apper/BackendDetails.ui:82
+#, kde-format
+msgid "Get Package Requires"
+msgstr "Ανάκτηση απαιτήσεων πακέτου"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchGroupCB)
+#: Apper/BackendDetails.ui:92
+#, kde-format
+msgid "Search Group"
+msgstr "Αναζήτηση ομάδων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getUpdateDetailCB)
+#: Apper/BackendDetails.ui:102
+#, kde-format
+msgid "Get Update Detail"
+msgstr "Ανάκτηση λεπτομερειών ενημέρωσης"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchFileCB)
+#: Apper/BackendDetails.ui:112
+#, kde-format
+msgid "Search File"
+msgstr "Αναζήτηση αρχείου"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDescriptionCB)
+#: Apper/BackendDetails.ui:122
+#, kde-format
+msgid "Get Package Description"
+msgstr "Ανάκτηση περιγραφής πακέτου"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getFilesCB)
+#: Apper/BackendDetails.ui:132
+#, kde-format
+msgid "Get Package Files"
+msgstr "Ανάκτηση αρχείων πακέτου"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDistroUpgradesCB)
+#: Apper/BackendDetails.ui:142
+#, kde-format
+msgid "Get Distro Upgrades"
+msgstr "Ανάκτηση αναβαθμίσεων διανομής"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installPackageCB)
+#: Apper/BackendDetails.ui:152
+#, kde-format
+msgid "Install Packages"
+msgstr "Εγκατάσταση πακέτων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, updatePackageCB)
+#: Apper/BackendDetails.ui:162
+#, kde-format
+msgid "Update Packages"
+msgstr "Ενημέρωση πακέτων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, removePackageCB)
+#: Apper/BackendDetails.ui:172
+#, kde-format
+msgid "Remove Packages"
+msgstr "Αφαίρεση πακέτων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installFileCB)
+#: Apper/BackendDetails.ui:182
+#, kde-format
+msgid "Install Files"
+msgstr "Εγκατάσταση αρχείων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, resolveCB)
+#: Apper/BackendDetails.ui:192
+#, kde-format
+msgid "Resolve"
+msgstr "Επίλυση"
+
+#. i18n: ectx: property (text), widget (QCheckBox, cancelCB)
+#: Apper/BackendDetails.ui:202
+#, kde-format
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getPackagesCB)
+#: Apper/BackendDetails.ui:212
+#, kde-format
+msgid "Get Packages"
+msgstr "Λήψη των πακέτων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, whatProvidesCB)
+#: Apper/BackendDetails.ui:222
+#, kde-format
+msgid "What Provides"
+msgstr "Τι παρέχει"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repositorySetEnableCB)
+#: Apper/BackendDetails.ui:232
+#, kde-format
+msgid "Set Repository Data"
+msgstr "Ορισμός δεδομένων των αποθετηρίων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repositoryEnableCB)
+#: Apper/BackendDetails.ui:242
+#, kde-format
+msgid "Enable Repository"
+msgstr "Ενεργοποίηση αποθετηρίου"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getRepositoryListCB)
+#: Apper/BackendDetails.ui:252
+#, kde-format
+msgid "Get Repository List"
+msgstr "Ανάκτηση λίστας αποθετηρίων"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repairSystemCB)
+#: Apper/BackendDetails.ui:262
+#, kde-format
+msgid "Repair System"
+msgstr "Επισκευή συστήματος"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: Apper/BackendDetails.ui:278
+#, kde-format
+msgid "About Backend"
+msgstr "Σχετικά με το σύστημα υποστήριξης"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: Apper/BackendDetails.ui:284
+#, kde-format
+msgid "Backend name:"
+msgstr "Όνομα συστήματος υποστήριξης:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: Apper/BackendDetails.ui:298
+#, kde-format
+msgid "Backend description:"
+msgstr "Περιγραφή συστήματος υποστήριξης:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: Apper/BackendDetails.ui:312
+#, kde-format
+msgid "Backend author:"
+msgstr "Συγγραφέας συστήματος υποστήριξης:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: Apper/BackendDetails.ui:326
+#, kde-format
+msgid "Distribution ID:"
+msgstr "Ταυτότητα διανομής:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: Apper/BackendDetails.ui:343
+#, kde-format
+msgid "PackageKit"
+msgstr "PackageKit"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: Apper/BackendDetails.ui:349
+#, kde-format
+msgid "Version:"
+msgstr "Έκδοση:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installedCB)
+#: Apper/BackendDetails.ui:382 Apper/FiltersMenu.cpp:60
+#: libapper/PkStrings.cpp:404
+#, kde-format
+msgid "Installed"
+msgstr "Εγκατεστημένο"
+
+#. i18n: ectx: property (text), widget (QCheckBox, developmentCB)
+#: Apper/BackendDetails.ui:392 Apper/FiltersMenu.cpp:89
+#, kde-format
+msgid "Development"
+msgstr "Ανάπτυξη"
+
+#. i18n: ectx: property (text), widget (QCheckBox, visibleCB)
+#: Apper/BackendDetails.ui:402
+#, kde-format
+msgid "Package is visible"
+msgstr "Το πακέτο είναι ορατό"
+
+#. i18n: ectx: property (text), widget (QCheckBox, newestCB)
+#: Apper/BackendDetails.ui:412
+#, kde-format
+msgid "Newest"
+msgstr "Νεότερα"
+
+#. i18n: ectx: property (text), widget (QCheckBox, guiCB)
+#: Apper/BackendDetails.ui:422
+#, kde-format
+msgid "GUI"
+msgstr "Γραφικό περιβάλλον"
+
+#. i18n: ectx: property (text), widget (QCheckBox, freeCB)
+#: Apper/BackendDetails.ui:432
+#, kde-format
+msgid "Free software"
+msgstr "Ελεύθερο λογισμικό"
+
+#. i18n: ectx: property (text), widget (QCheckBox, supportedCB)
+#: Apper/BackendDetails.ui:442
+#, kde-format
+msgid "Supported"
+msgstr "Υποστηριζόμενο"
+
+#. i18n: ectx: property (text), widget (QCheckBox, archCB)
+#: Apper/BackendDetails.ui:452
+#, kde-format
+msgid "Only native"
+msgstr "Μόνο εγγενείς"
+
+#: Apper/BrowseView.cpp:89 Apper/Updater/Updater.cpp:105
+#, kde-format
+msgid "Show Versions"
+msgstr "Εμφάνιση εκδόσεων"
+
+#: Apper/BrowseView.cpp:96 Apper/Updater/Updater.cpp:119
+#, kde-format
+msgid "Show Architectures"
+msgstr "Εμφάνιση αρχιτεκτονικών"
+
+#: Apper/BrowseView.cpp:103 Apper/Updater/Updater.cpp:126
+#, kde-format
+msgid "Show Origins"
+msgstr "Εμφάνιση προελεύσεων"
+
+#: Apper/BrowseView.cpp:110 Apper/Updater/Updater.cpp:133
+#, kde-format
+msgid "Show Sizes"
+msgstr "Εμφάνιση μεγεθών"
+
+#: Apper/BrowseView.cpp:282
+#, kde-format
+msgid "Export installed packages"
+msgstr "Εξαγωγή εγκατεστημένων πακέτων"
+
+#: Apper/BrowseView.cpp:306
+#, kde-format
+msgid "Install packages from catalog"
+msgstr "Εγκατάσταση πακέτων από κατάλογο"
+
+#. i18n: ectx: property (text), widget (QPushButton, exportInstalledPB)
+#: Apper/BrowseView.ui:140
+#, kde-format
+msgid "Export Installed Package List..."
+msgstr "Εξαγωγή λίστας εγκατεστημένων πακέτων..."
+
+#. i18n: ectx: property (text), widget (QPushButton, importInstalledPB)
+#: Apper/BrowseView.ui:150
+#, kde-format
+msgid "Install Packages from List..."
+msgstr "Εγκατάσταση πακέτων από λίστα..."
+
+#: Apper/CategoryModel.cpp:54 Apper/CategoryModel.cpp:62
+#, kde-format
+msgid "Lists"
+msgstr "Λίστες"
+
+#: Apper/CategoryModel.cpp:167 Apper/CategoryModel.cpp:362
+#, kde-format
+msgid "Categories"
+msgstr "Κατηγορίες"
+
+#: Apper/CategoryModel.cpp:224
+#, kde-format
+msgid "Groups"
+msgstr "Ομάδες"
+
+#: Apper/FiltersMenu.cpp:36
+#, kde-format
+msgid "Collections"
+msgstr "Συλλογές"
+
+#: Apper/FiltersMenu.cpp:45
+#, kde-format
+msgid "Only collections"
+msgstr "Μόνο συλλογές"
+
+#: Apper/FiltersMenu.cpp:52
+#, kde-format
+msgid "Exclude collections"
+msgstr "Εξαίρεση συλλογών"
+
+#: Apper/FiltersMenu.cpp:67
+#, kde-format
+msgid "Only installed"
+msgstr "Μόνο εγκατεστημένο"
+
+#: Apper/FiltersMenu.cpp:74
+#, kde-format
+msgid "Only available"
+msgstr "Μόνο διαθέσιμο"
+
+#: Apper/FiltersMenu.cpp:81 Apper/FiltersMenu.cpp:110 Apper/FiltersMenu.cpp:139
+#: Apper/FiltersMenu.cpp:168 Apper/FiltersMenu.cpp:197
+#: Apper/FiltersMenu.cpp:226
+#, kde-format
+msgid "No filter"
+msgstr "Χωρίς φίλτρο"
+
+#: Apper/FiltersMenu.cpp:96
+#, kde-format
+msgid "Only development"
+msgstr "Μόνο πακέτα ανάπτυξης"
+
+#: Apper/FiltersMenu.cpp:103
+#, kde-format
+msgid "Only end user files"
+msgstr "Μόνο αρχεία τελικού χρήστη"
+
+#: Apper/FiltersMenu.cpp:118
+#, kde-format
+msgid "Graphical"
+msgstr "Γραφικά"
+
+#: Apper/FiltersMenu.cpp:125
+#, kde-format
+msgid "Only graphical"
+msgstr "Μόνο εφαρμογές με γραφικό περιβάλλον"
+
+#: Apper/FiltersMenu.cpp:132
+#, kde-format
+msgid "Only text"
+msgstr "Μόνο εφαρμογές γραμμής εντολών"
+
+#: Apper/FiltersMenu.cpp:147
+#, kde-format
+msgctxt "Filter for free packages"
+msgid "Free"
+msgstr "Ελεύθερα"
+
+#: Apper/FiltersMenu.cpp:154
+#, kde-format
+msgid "Only free software"
+msgstr "Μόνο ελεύθερο λογισμικό"
+
+#: Apper/FiltersMenu.cpp:161
+#, kde-format
+msgid "Only non-free software"
+msgstr "Μόνο μη ελεύθερο λογισμικό"
+
+#: Apper/FiltersMenu.cpp:176
+#, kde-format
+msgctxt "Filter for supported packages"
+msgid "Supported"
+msgstr "Υποστηριζόμενο"
+
+#: Apper/FiltersMenu.cpp:183
+#, kde-format
+msgid "Only supported software"
+msgstr "Μόνο υποστηριζόμενο λογισμικό"
+
+#: Apper/FiltersMenu.cpp:190
+#, kde-format
+msgid "Only non-supported software"
+msgstr "Μόνο μη υποστηριζόμενο λογισμικό"
+
+#: Apper/FiltersMenu.cpp:205
+#, kde-format
+msgctxt "Filter for source packages"
+msgid "Source"
+msgstr "Πηγή"
+
+#: Apper/FiltersMenu.cpp:212
+#, kde-format
+msgid "Only sourcecode"
+msgstr "Μόνο αρχεία πηγαίου κώδικα"
+
+#: Apper/FiltersMenu.cpp:219
+#, kde-format
+msgid "Only non-sourcecode"
+msgstr "Μόνο αρχεία δυαδικής μορφής"
+
+#: Apper/FiltersMenu.cpp:236
+#, kde-format
+msgid "Hide Subpackages"
+msgstr "Απόκρυψη υποπακέτων"
+
+#: Apper/FiltersMenu.cpp:240
+#, kde-format
+msgid "Only show one package, not subpackages"
+msgstr "Εμφάνιση μόνο ενός πακέτου, όχι υποπακέτα"
+
+#: Apper/FiltersMenu.cpp:244
+#, kde-format
+msgid "Only Newest Packages"
+msgstr "Μόνο νέα πακέτα"
+
+#: Apper/FiltersMenu.cpp:249
+#, kde-format
+msgid "Only show the newest available package"
+msgstr "Εμφάνιση μόνο του νεότερου διαθέσιμου πακέτου"
+
+#: Apper/FiltersMenu.cpp:253
+#, kde-format
+msgid "Only Native Packages"
+msgstr "Μόνο εγγενή πακέτα"
+
+#: Apper/FiltersMenu.cpp:258
+#, kde-format
+msgid "Only show packages matching the machine architecture"
+msgstr ""
+"Εμφάνιση μόνο των κατάλληλων πακέτων για την αρχιτεκτονική του συστήματος"
+
+#: Apper/FiltersMenu.cpp:264
+#, kde-format
+msgid "Only Show Applications"
+msgstr "Εμφάνιση μόνο των εφαρμογών"
+
+#: Apper/FiltersMenu.cpp:267
+#, kde-format
+msgid "Hide packages that are not applications"
+msgstr "Απόκρυψη πακέτων που δεν είναι εφαρμογές"
+
+#: Apper/main.cpp:44 Apper/MainUi.cpp:41
+#, kde-format
+msgid "Apper"
+msgstr "Apper"
+
+#: Apper/main.cpp:46
+#, kde-format
+msgid "Apper is an application to get and manage software"
+msgstr "Το Apper είναι μια εφαρμογή για την λήψη και τη διαχείριση λογισμικού"
+
+#: Apper/main.cpp:48
+#, kde-format
+msgid "(C) 2008-2018 Daniel Nicoletti"
+msgstr "(C) 2008-2018 Daniel Nicoletti"
+
+#: Apper/main.cpp:49 PkSession/main.cpp:54
+#, kde-format
+msgid "Adrien Bustany"
+msgstr "Adrien Bustany"
+
+#: Apper/main.cpp:49 PkSession/main.cpp:54
+#, kde-format
+msgid "libpackagekit-qt and other stuff"
+msgstr "libpackagekit-qt και άλλα στοιχεία"
+
+#: Apper/main.cpp:50
+#, kde-format
+msgid "Matthias Klumpp"
+msgstr "Matthias Klumpp"
+
+#: Apper/PackageDetails.cpp:88
+#, kde-format
+msgid "Display"
+msgstr "Εμφάνιση"
+
+#: Apper/PackageDetails.cpp:93 AppSetup/SetupWizard.cpp:186
+#, kde-format
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: Apper/PackageDetails.cpp:99
+#, kde-format
+msgid "Depends On"
+msgstr "Εξαρτάται από"
+
+#: Apper/PackageDetails.cpp:126
+#, kde-format
+msgid "Required By"
+msgstr "Απαιτείται από"
+
+#: Apper/PackageDetails.cpp:153
+#, kde-format
+msgid "File List"
+msgstr "Λίστα αρχείων"
+
+#: Apper/PackageDetails.cpp:523
+#, kde-format
+msgid "No files were found."
+msgstr "Δεν βρέθηκαν αρχεία."
+
+#: Apper/PackageDetails.cpp:571
+#, kde-format
+msgid "Could not fetch software details"
+msgstr "Αδυναμία ανάκτησης λεπτομερειών λογισμικού"
+
+#: Apper/PackageDetails.cpp:613
+#, kde-format
+msgid "Applications"
+msgstr "Εφαρμογές"
+
+#. i18n: ectx: property (text), widget (QLabel, licenseL)
+#: Apper/PackageDetails.ui:164
+#, kde-format
+msgid "License:"
+msgstr "Άδεια χρήσης:"
+
+#. i18n: ectx: property (text), widget (QPushButton, menuTB)
+#: Apper/PackageDetails.ui:394
+#, kde-format
+msgid "More..."
+msgstr "Περισσότερα..."
+
+#. i18n: ectx: property (text), widget (QToolButton, hideTB)
+#: Apper/PackageDetails.ui:404 Apper/Updater/UpdateDetails.ui:29
+#, kde-format
+msgid "Hide"
+msgstr "Απόκρυψη"
+
+#: Apper/ScreenShotViewer.cpp:89
+#, kde-format
+msgid "Could not find screen shot."
+msgstr "Αδυναμία εύρεσης στιγμιότυπου."
+
+#: Apper/Settings/OriginModel.cpp:37
+#, kde-format
+msgid "Origin of Packages"
+msgstr "Προέλευση πακέτων"
+
+#: Apper/Settings/Settings.cpp:65
+#, kde-format
+msgid "A repository was changed, it's highly recommended to refresh the cache"
+msgstr ""
+"Ένα αποθετήριο άλλαξε, συνιστάται να ανανεώσετε οπωσδήποτε τη λανθάνουσα "
+"μνήμη"
+
+#: Apper/Settings/Settings.cpp:95
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Never"
+msgstr "Ποτέ"
+
+#: Apper/Settings/Settings.cpp:98
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Only stable"
+msgstr "Μόνο σταθερά"
+
+#: Apper/Settings/Settings.cpp:103
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Stable and development"
+msgstr "Σταθερά και σε ανάπτυξη"
+
+#: Apper/Settings/Settings.cpp:107
+#, kde-format
+msgctxt "Hourly refresh the package cache"
+msgid "Hourly"
+msgstr "Ωριαία"
+
+#: Apper/Settings/Settings.cpp:108
+#, kde-format
+msgctxt "Daily refresh the package cache"
+msgid "Daily"
+msgstr "Καθημερινά"
+
+#: Apper/Settings/Settings.cpp:109
+#, kde-format
+msgctxt "Weekly refresh the package cache"
+msgid "Weekly"
+msgstr "Εβδομαδιαία"
+
+#: Apper/Settings/Settings.cpp:110
+#, kde-format
+msgctxt "Monthly refresh the package cache"
+msgid "Monthly"
+msgstr "Μηνιαία"
+
+#: Apper/Settings/Settings.cpp:111
+#, kde-format
+msgctxt "Never refresh package cache"
+msgid "Never"
+msgstr "Ποτέ"
+
+#: Apper/Settings/Settings.cpp:113
+#, kde-format
+msgctxt "No updates will be automatically installed"
+msgid "None"
+msgstr "Καμία"
+
+#: Apper/Settings/Settings.cpp:114
+#, kde-format
+msgid "Download only"
+msgstr "Μόνο λήψη"
+
+#: Apper/Settings/Settings.cpp:115
+#, kde-format
+msgid "Security only"
+msgstr "Μόνο ασφαλείας"
+
+#: Apper/Settings/Settings.cpp:116
+#, kde-format
+msgid "All updates"
+msgstr "Όλες οι ενημερώσεις"
+
+#. i18n: ectx: property (text), widget (QLabel, intervalL)
+#: Apper/Settings/Settings.ui:74
+#, kde-format
+msgid "Check for new updates:"
+msgstr "Έλεγχος για νέες ενημερώσεις:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesMobileCB)
+#. i18n: ectx: property (text), widget (QCheckBox, installUpdatesMobileCB)
+#: Apper/Settings/Settings.ui:115 Apper/Settings/Settings.ui:183
+#, kde-format
+msgid "when on a mobile broadband network connection"
+msgstr "όταν χρησιμοποιείται κινητή ευρυζωνική σύνδεση"
+
+#. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesBatteryCB)
+#. i18n: ectx: property (text), widget (QCheckBox, installUpdatesBatteryCB)
+#: Apper/Settings/Settings.ui:122 Apper/Settings/Settings.ui:176
+#, kde-format
+msgid "when running on battery"
+msgstr "όταν λειτουργεί με μπαταρία"
+
+#. i18n: ectx: property (text), widget (QLabel, autoInsL)
+#: Apper/Settings/Settings.ui:141
+#, kde-format
+msgid "Automatically update:"
+msgstr "Αυτόματη ενημέρωση:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, appLauncherCB)
+#: Apper/Settings/Settings.ui:199
+#, kde-format
+msgid "Show application launcher after installing new applications"
+msgstr "Εμφάνιση εκτελεστή εφαρμογών ύστερα από την εγκατάσταση νέων εφαρμογών"
+
+#. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
+#: Apper/Settings/Settings.ui:206
+#, kde-format
+msgid "Show confirmation dialog when installing or updating packages"
+msgstr ""
+"Εμφάνιση διαλόγου επιβεβαίωσης κατά την εγκατάσταση ή την ενημέρωση πακέτων"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: Apper/Settings/Settings.ui:213
+#, kde-format
+msgid "Check for distribution upgrades:"
+msgstr "Έλεγχος για αναβαθμίσεις της διανομής:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showOriginsCB)
+#: Apper/Settings/Settings.ui:270
+#, kde-format
+msgid "&Show origins of debug and development packages"
+msgstr "&Εμφάνιση προελεύσεων πακέτων αποσφαλμάτωσης και ανάπτυξης"
+
+#. i18n: ectx: property (text), widget (QPushButton, editOriginsPB)
+#: Apper/Settings/Settings.ui:290
+#, kde-format
+msgid "Edit Origins"
+msgstr "Επεξεργασία προελεύσεων"
+
+#: Apper/TransactionHistory.cpp:67
+#, kde-format
+msgid "Refresh transactions list"
+msgstr "Ανανέωση λίστας συναλλαγών"
+
+#: Apper/TransactionHistory.cpp:83
+#, kde-format
+msgid "Time since last cache refresh: %1"
+msgstr "Χρόνος από την τελευταία ανανέωση μνήμης: %1"
+
+#: Apper/TransactionModel.cpp:43
+#, kde-format
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#: Apper/TransactionModel.cpp:44 libapper/PackageModel.cpp:220
+#, kde-format
+msgid "Action"
+msgstr "Ενέργεια"
+
+#: Apper/TransactionModel.cpp:45 apperd/TransactionWatcher.cpp:230
+#: AppSetup/SetupWizard.cpp:149
+#, kde-format
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#: Apper/TransactionModel.cpp:46
+#, kde-format
+msgctxt "Machine user who issued the transaction"
+msgid "Username"
+msgstr "Όνομα χρήστη"
+
+#: Apper/TransactionModel.cpp:47
+#, kde-format
+msgid "Application"
+msgstr "Εφαρμογή"
+
+#: Apper/Updater/DistroUpgrade.cpp:39
+#, kde-format
+msgid "Upgrade"
+msgstr "Αναβάθμιση"
+
+#: Apper/Updater/DistroUpgrade.cpp:50
+#, kde-format
+msgid "Distribution upgrade available: %1"
+msgstr "Υπάρχει διαθέσιμη αναβάθμιση διανομής: %1"
+
+#: Apper/Updater/DistroUpgrade.cpp:65
+#, kde-format
+msgid ""
+"You are about to upgrade your distribution to the latest version. This is "
+"usually a very lengthy process and takes a lot longer than simply upgrading "
+"your packages."
+msgstr ""
+"Ετοιμάζεστε να αναβαθμίσετε την διανομή σας στην τελευταία έκδοση. Αυτή "
+"είναι συνήθως μια πολλή χρονοβόρα διεργασία και παίρνει πολύ περισσότερο "
+"χρόνο από την απλή αναβάθμιση των πακέτων σας."
+
+#: Apper/Updater/DistroUpgrade.cpp:70
+#, kde-format
+msgid "It is recommended to plug in your computer before proceeding."
+msgstr ""
+"Προτείνεται η σύνδεση του υπολογιστή σας στην τροφοδοσία ρεύματος πριν "
+"προχωρήσετε."
+
+#: Apper/Updater/DistroUpgrade.cpp:72
+#, kde-format
+msgid ""
+"It is recommended that you keep your computer plugged in while the upgrade "
+"is being performed."
+msgstr ""
+"Προτείνεται η παραμονή του υπολογιστή σας στην τροφοδοσία ρεύματος ενώ "
+"γίνεται αναβάθμιση."
+
+#: Apper/Updater/DistroUpgrade.cpp:90
+#, kde-format
+msgid "Distribution upgrade complete."
+msgstr "Η αναβάθμιση της διανομής ολοκληρώθηκε."
+
+#: Apper/Updater/DistroUpgrade.cpp:92 apperd/DistroUpgrade.cpp:144
+#, kde-format
+msgid "Distribution upgrade process exited with code %1."
+msgstr "Η διεργασία αναβάθμισης της διανομής τερματίστηκε με κωδικό %1."
+
+#: Apper/Updater/DistroUpgrade.cpp:104 apperd/DistroUpgrade.cpp:162
+#, kde-format
+msgid "The distribution upgrade process failed to start."
+msgstr "Η διεργασία αναβάθμισης της διανομής απέτυχε να ξεκινήσει."
+
+#: Apper/Updater/DistroUpgrade.cpp:108 apperd/DistroUpgrade.cpp:165
+#, kde-format
+msgid ""
+"The distribution upgrade process crashed some time after starting "
+"successfully."
+msgstr ""
+"Η διεργασία αναβάθμισης της διανομής κατέρρευσε λίγο μετά την έναρξη με "
+"επιτυχία."
+
+#: Apper/Updater/DistroUpgrade.cpp:112 apperd/DistroUpgrade.cpp:168
+#, kde-format
+msgid "The distribution upgrade process failed with an unknown error."
+msgstr "Η διεργασία αναβάθμισης της διανομής απέτυχε με άγνωστο σφάλμα."
+
+#: Apper/Updater/UpdateDetails.cpp:183
+#, kde-format
+msgid "This update will add new features and expand functionality."
+msgstr ""
+"Αυτή η ενημέρωση θα προσθέσει νέα χαρακτηριστικά και θα επεκτείνει την "
+"λειτουργικότητα."
+
+#: Apper/Updater/UpdateDetails.cpp:187
+#, kde-format
+msgid "This update will fix bugs and other non-critical problems."
+msgstr "Αυτή η ενημέρωση θα διορθώσει σφάλματα και άλλα μη κρίσιμα προβλήματα"
+
+#: Apper/Updater/UpdateDetails.cpp:191
+#, kde-format
+msgid "This update is important as it may solve critical problems."
+msgstr ""
+"Αυτή η ενημέρωση είναι σημαντική, διότι μπορεί να λύσει κρίσιμα προβλήματα."
+
+#: Apper/Updater/UpdateDetails.cpp:195
+#, kde-format
+msgid ""
+"This update is needed to fix a security vulnerability with this package."
+msgstr ""
+"Αυτή η ενημέρωση είναι απαραίτητη για να διορθώσει ένα θέμα ευπάθειας "
+"ασφαλείας με αυτό το πακέτο."
+
+#: Apper/Updater/UpdateDetails.cpp:199
+#, kde-format
+msgid "This update is blocked."
+msgstr "Αυτή η ενημέρωση είναι φραγμένη."
+
+#: Apper/Updater/UpdateDetails.cpp:206
+#, kde-format
+msgid "This notification was issued on %1 and last updated on %2."
+msgstr "Αυτή η ειδοποίηση εκδόθηκε στις %1 και ενημερώθηκε στις %2."
+
+#: Apper/Updater/UpdateDetails.cpp:212
+#, kde-format
+msgid "This notification was issued on %1."
+msgstr "Αυτή η ειδοποίηση εκδόθηκε στις %1."
+
+#: Apper/Updater/UpdateDetails.cpp:229
+#, kde-format
+msgid "For more information about this update please visit this website:"
+msgid_plural ""
+"For more information about this update please visit these websites:"
+msgstr[0] ""
+"Για περισσότερες πληροφορίες σχετικά με αυτήν την αναβάθμιση παρακαλώ "
+"επισκεφτείτε την ιστοσελίδα:"
+msgstr[1] ""
+"Για περισσότερες πληροφορίες σχετικά με αυτήν την αναβάθμιση παρακαλώ "
+"επισκεφτείτε τις ιστοσελίδες:"
+
+#: Apper/Updater/UpdateDetails.cpp:239
+#, kde-format
+msgid ""
+"For more information about bugs fixed by this update please visit this "
+"website:"
+msgid_plural ""
+"For more information about bugs fixed by this update please visit these "
+"websites:"
+msgstr[0] ""
+"Για περισσότερες πληροφορίες σχετικά με τα σφάλματα που διορθώθηκαν από "
+"αυτήν την αναβάθμιση παρακαλώ επισκεφτείτε την ιστοσελίδα:"
+msgstr[1] ""
+"Για περισσότερες πληροφορίες σχετικά με τα σφάλματα που διορθώθηκαν από "
+"αυτήν την αναβάθμιση παρακαλώ επισκεφτείτε τις ιστοσελίδες:"
+
+#: Apper/Updater/UpdateDetails.cpp:249
+#, kde-format
+msgid ""
+"For more information about this security update please visit this website:"
+msgid_plural ""
+"For more information about this security update please visit these websites:"
+msgstr[0] ""
+"Για περισσότερες πληροφορίες σχετικά με αυτήν την αναβάθμιση ασφαλείας "
+"παρακαλώ επισκεφτείτε την ιστοσελίδα:"
+msgstr[1] ""
+"Για περισσότερες πληροφορίες σχετικά με αυτήν την αναβάθμιση ασφαλείας "
+"παρακαλώ επισκεφτείτε τις ιστοσελίδες:"
+
+#: Apper/Updater/UpdateDetails.cpp:259
+#, kde-format
+msgid ""
+"The computer will have to be restarted after the update for the changes to "
+"take effect."
+msgstr ""
+"Απαιτείται επανεκκίνηση του υπολογιστή μετά από αυτήν την ενημέρωση για την "
+"εφαρμογή των αλλαγών."
+
+#: Apper/Updater/UpdateDetails.cpp:263
+#, kde-format
+msgid ""
+"You will need to log out and back in after the update for the changes to "
+"take effect."
+msgstr ""
+"Θα χρειαστεί να αποσυνδεθείτε και να συνδεθείτε εκ νέου μετά την ενημέρωση, "
+"για να εφαρμοστούν οι αλλαγές."
+
+#: Apper/Updater/UpdateDetails.cpp:270
+#, kde-format
+msgid ""
+"The classification of this update is unstable which means it is not designed "
+"for production use."
+msgstr ""
+"Αυτή η ενημέρωση είναι ταξινομημένη ως ασταθής. Επομένως, δεν έχει "
+"σχεδιαστεί για χρήση σε συστήματα παραγωγής."
+
+#: Apper/Updater/UpdateDetails.cpp:274
+#, kde-format
+msgid ""
+"This is a test update, and is not designed for normal use. Please report any "
+"problems or regressions you encounter."
+msgstr ""
+"Αυτή η ενημέρωση είναι δοκιμαστική και δεν έχει σχεδιαστεί για κανονική "
+"χρήση. Παρακαλώ, αναφέρετε τυχόν προβλήματα ή οπισθοδρομήσεις."
+
+#: Apper/Updater/UpdateDetails.cpp:284
+#, kde-format
+msgid ""
+"The developer logs will be shown as no description is available for this "
+"update:"
+msgstr ""
+"Αυτή η ενημέρωση δεν διαθέτει περιγραφή, επομένως εμφανίζονται οι καταγραφές "
+"του δημιουργού:"
+
+#: Apper/Updater/UpdateDetails.cpp:292
+#, kde-format
+msgid "Updates:"
+msgstr "Ενημερώσεις:"
+
+#: Apper/Updater/UpdateDetails.cpp:302
+#, kde-format
+msgid "Obsoletes:"
+msgstr "Πεπαλαιωμένες:"
+
+#: Apper/Updater/UpdateDetails.cpp:312
+#, kde-format
+msgid "Repository: %1"
+msgstr "Αποθετήριο: %1"
+
+#: Apper/Updater/UpdateDetails.cpp:334
+#, kde-format
+msgid "No update description was found."
+msgstr "Δεν βρέθηκε περιγραφή ενημέρωσης."
+
+#: Apper/Updater/Updater.cpp:112
+#, kde-format
+msgid "Show Current Versions"
+msgstr "Εμφάνιση τρεχουσών εκδόσεων"
+
+#: Apper/Updater/Updater.cpp:241
+#, kde-format
+msgid "Estimated download size: %1"
+msgstr "Εκτιμώμενο μέγεθος λήψης: %1"
+
+#: Apper/Updater/Updater.cpp:335
+#, kde-format
+msgid "Check for new updates"
+msgstr "Έλεγχος για νέες ενημερώσεις"
+
+#: apperd/DistroUpgrade.cpp:88
+#, kde-format
+msgid "Distribution upgrade available"
+msgstr "Υπάρχει διαθέσιμη αναβάθμιση διανομής"
+
+#: apperd/DistroUpgrade.cpp:92
+#, kde-format
+msgid "Start upgrade now"
+msgstr "Εκκίνηση της αναβάθμισης τώρα"
+
+#: apperd/DistroUpgrade.cpp:141
+#, kde-format
+msgid "Distribution upgrade finished. "
+msgstr "Η αναβάθμιση της διανομής ολοκληρώθηκε. "
+
+#: apperd/TransactionWatcher.cpp:142
+#, kde-format
+msgid "The system update has completed"
+msgstr "Η ενημέρωση του συστήματος ολοκληρώθηκε"
+
+#: apperd/TransactionWatcher.cpp:149 apperd/TransactionWatcher.cpp:191
+#, kde-format
+msgid "Restart"
+msgstr "Επανεκκίνηση"
+
+#: apperd/TransactionWatcher.cpp:182
+#, kde-format
+msgid "Package: %2"
+msgid_plural "Packages: %2"
+msgstr[0] "Πακέτο: %2"
+msgstr[1] "Πακέτα: %2"
+
+#: apperd/Updater.cpp:156
+#, kde-format
+msgid "Updates are being automatically installed."
+msgstr "Γίνεται αυτόματη εγκατάσταση των ενημερώσεων."
+
+#: apperd/Updater.cpp:166
+#, kde-format
+msgid "Security updates are being automatically installed."
+msgstr "Γίνεται αυτόματη εγκατάσταση των ενημερώσεων ασφαλείας."
+
+#: apperd/Updater.cpp:176
+#, kde-format
+msgid "Updates are being automatically downloaded."
+msgstr "Γίνεται αυτόματη λήψη των ενημερώσεων."
+
+#: apperd/Updater.cpp:210
+#, kde-format
+msgid "System update was successful."
+msgstr "Η ενημέρωση συστήματος ήταν επιτυχής."
+
+#: apperd/Updater.cpp:217
+#, kde-format
+msgid "The software update failed."
+msgstr "Η ενημέρωση λογισμικού απέτυχε."
+
+#: apperd/Updater.cpp:271
+#, kde-format
+msgid "There is one new update"
+msgid_plural "There are %1 new updates"
+msgstr[0] "Υπάρχει μία νέα ενημέρωση"
+msgstr[1] "Υπάρχουν %1 νέες ενημερώσεις"
+
+#: apperd/Updater.cpp:289 AppSetup/SetupWizard.cpp:260
+#: libapper/ApplicationsDelegate.cpp:44
+#, kde-format
+msgid "Install"
+msgstr "Εγκατάσταση"
+
+#: AppSetup/main.cpp:43
+#, kde-format
+msgid "KDE Application Installer"
+msgstr "Εγκατάσταση εφαρμογών του KDE"
+
+#: AppSetup/main.cpp:46
+#, kde-format
+msgctxt "@info:credit"
+msgid "Daniel Nicoletti"
+msgstr "Daniel Nicoletti"
+
+#: AppSetup/main.cpp:46 AppSetup/main.cpp:48
+#, kde-format
+msgid "Developer"
+msgstr "Προγραμματιστής"
+
+#: AppSetup/main.cpp:48
+#, kde-format
+msgctxt "@info:credit"
+msgid "Matthias Klumpp"
+msgstr "Matthias Klumpp"
+
+#: AppSetup/main.cpp:61
+#, kde-format
+msgid "Show verbose information"
+msgstr "Εμφάνιση αναλυτικών πληροφοριών"
+
+#: AppSetup/main.cpp:62
+#, kde-format
+msgid "IPK package filename"
+msgstr "Όνομα αρχείου πακέτου IPK"
+
+#: AppSetup/main.cpp:79
+#, kde-format
+msgid "We did not receive a path to an IPK package as parameter."
+msgstr "Δεν λάβαμε μια διαδρομή σε ένα πακέτο IPK ως παράμετρο."
+
+#: AppSetup/main.cpp:80
+#, kde-format
+msgid "Package not found!"
+msgstr "Το πακέτο δε βρέθηκε!"
+
+#: AppSetup/SetupWizard.cpp:85 libapper/Requirements.cpp:57
+#: PkSession/SessionTask.cpp:73
+#, kde-format
+msgid "Continue"
+msgstr "Συνέχεια"
+
+#: AppSetup/SetupWizard.cpp:109
+#, kde-format
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: AppSetup/SetupWizard.cpp:110
+#, kde-format
+msgid "An error occurred"
+msgstr "Συνέβη ένα σφάλμα"
+
+#: AppSetup/SetupWizard.cpp:137
+#, kde-format
+msgid "Welcome!"
+msgstr "Καλώς ήρθατε!"
+
+#: AppSetup/SetupWizard.cpp:138
+#, kde-format
+msgid "Welcome to the installation of %1!"
+msgstr "Καλώς ήρθατε στην εγκατάσταση του %1!"
+
+#: AppSetup/SetupWizard.cpp:139
+#, kde-format
+msgid ""
+"Please be careful while installing a 3rd-party application.<br>It might "
+"eventually <b>damage</b> your system or have <b>malicious behaviour</b>, "
+"like spying out your passwords.<br>Please do only install this software if "
+"you <b>trust its publisher</b>."
+msgstr ""
+"Παρακαλώ να είστε προσεκτικοί κατά την εγκατάσταση εφαρμογής τρίτων.<br> "
+"Μπορεί τελικά <b>να βλάψει</b> το σύστημά σας ή να έχει <b>κακόβουλη "
+"συμπεριφορά</b>, όπως να καταγράφει τους κωδικούς πρόσβασής σας.<br> "
+"Παρακαλώ να μην εγκαταστήσετε το λογισμικό αυτό παρά μόνο αν <b>εμπιστεύεστε "
+"τον εκδότη του</b>."
+
+#: AppSetup/SetupWizard.cpp:150
+#, kde-format
+msgid "Details about this installation"
+msgstr "Λεπτομέρειες σχετικά με αυτήν την εγκατάσταση"
+
+#: AppSetup/SetupWizard.cpp:185
+#, kde-format
+msgid "Application description"
+msgstr "Περιγραφή εφαρμογής"
+
+#: AppSetup/SetupWizard.cpp:193
+#, kde-format
+msgid "Running installation"
+msgstr "Εκτέλεση εγκατάστασης"
+
+#: AppSetup/SetupWizard.cpp:194
+#, kde-format
+msgid "Installing %1..."
+msgstr "Εγκατάσταση του %1..."
+
+#: AppSetup/SetupWizard.cpp:234
+#, kde-format
+msgid "Installation finished!"
+msgstr "Η εγκατάσταση ολοκληρώθηκε!"
+
+#: AppSetup/SetupWizard.cpp:235
+#, kde-format
+msgid "%1 has been installed successfully!"
+msgstr "Το %1 εγκαταστάθηκε με επιτυχία!"
+
+#: libapper/ApplicationLauncher.cpp:97
+#, kde-format
+msgid "New application available"
+msgid_plural "New applications available"
+msgstr[0] "Νέα διαθέσιμη εφαρμογή"
+msgstr[1] "Νέες διαθέσιμες εφαρμογές"
+
+#: libapper/ApplicationLauncher.cpp:100
+#, kde-format
+msgid "The following application was just installed. Click on it to launch:"
+msgid_plural ""
+"The following applications were just installed. Click on them to launch:"
+msgstr[0] ""
+"Η ακόλουθη εφαρμογή μόλις εγκαταστάθηκε. Κάντε κλικ για να ξεκινήσει:"
+msgstr[1] ""
+"Οι ακόλουθες εφαρμογές μόλις εγκαταστάθηκαν. Κάντε κλικ για να ξεκινήσουν:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showCB)
+#: libapper/ApplicationLauncher.ui:81
+#, kde-format
+msgid "Do not show this dialog again"
+msgstr "Να μην εμφανιστεί αυτός ο διάλογος ξανά"
+
+#: libapper/ApplicationsDelegate.cpp:46
+#, kde-format
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#: libapper/ApplicationsDelegate.cpp:48 libapper/ChangesDelegate.cpp:59
+#, kde-format
+msgid "Deselect"
+msgstr "Αποεπιλογή"
+
+#: libapper/ChangesDelegate.cpp:55
+#, kde-format
+msgid "Do not Install"
+msgstr "Να μην γίνει εγκατάσταση"
+
+#: libapper/ChangesDelegate.cpp:57
+#, kde-format
+msgid "Do not Remove"
+msgstr "Να μη γίνει αφαίρεση"
+
+#: libapper/CustomProgressBar.cpp:38
+#, kde-format
+msgid "%1 remaining"
+msgstr "απομένουν %1"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, LicenseAgreement)
+#: libapper/LicenseAgreement.cpp:40 libapper/LicenseAgreement.ui:14
+#, kde-format
+msgid "License Agreement Required"
+msgstr "Απαιτείται αποδοχή άδειας χρήσης"
+
+#: libapper/LicenseAgreement.cpp:43
+#, kde-format
+msgid "Accept Agreement"
+msgstr "Αποδοχή άδειας χρήσης"
+
+#: libapper/LicenseAgreement.cpp:45
+#, kde-format
+msgid "License required for %1 by %2"
+msgstr "Απαιτείται αποδοχή άδειας χρήσης για το %1 από %2"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: libapper/LicenseAgreement.ui:40
+#, kde-format
+msgid "Please read the following important information before continuing:"
+msgstr "Παρακαλώ διαβάστε τις παρακάτω σημαντικές πληροφορίες πριν συνεχίσετε:"
+
+#: libapper/PackageModel.cpp:201
+#, kde-format
+msgid "Name"
+msgstr "Όνομα"
+
+#: libapper/PackageModel.cpp:205
+#, kde-format
+msgid "Version"
+msgstr "Έκδοση"
+
+#: libapper/PackageModel.cpp:208
+#, kde-format
+msgid "Installed Version"
+msgstr "Εγκατεστημένη έκδοση"
+
+#: libapper/PackageModel.cpp:211
+#, kde-format
+msgid "Arch"
+msgstr "Αρχιτεκτονικές."
+
+#: libapper/PackageModel.cpp:214
+#, kde-format
+msgid "Origin"
+msgstr "Πηγή"
+
+#: libapper/PackageModel.cpp:217
+#, kde-format
+msgid "Size"
+msgstr "Μέγεθος"
+
+#: libapper/PackageModel.cpp:332
+#, kde-format
+msgid ""
+"Version: %1\n"
+"Architecture: %2"
+msgstr ""
+"Έκδοση: %1\n"
+"Αρχιτεκτονική: %2"
+
+#: libapper/PackageModel.cpp:379
+#, kde-format
+msgid "To be Removed"
+msgstr "Προς αφαίρεση"
+
+#: libapper/PackageModel.cpp:381
+#, kde-format
+msgid "To be Installed"
+msgstr "Προς εγκατάσταση"
+
+#: libapper/PkStrings.cpp:38
+#, kde-format
+msgctxt "This is when the transaction status is not known"
+msgid "Unknown state"
+msgstr "Άγνωστη κατάσταση"
+
+#: libapper/PkStrings.cpp:41
+#, kde-format
+msgctxt "transaction state, the daemon is in the process of starting"
+msgid "Waiting for service to start"
+msgstr "Αναμονή εκκίνησης της υπηρεσίας"
+
+#: libapper/PkStrings.cpp:44
+#, kde-format
+msgctxt "transaction state, the transaction is waiting for another to complete"
+msgid "Waiting for other tasks"
+msgstr "Αναμονή για άλλες διεργασίες"
+
+#: libapper/PkStrings.cpp:47
+#, kde-format
+msgctxt "transaction state, just started"
+msgid "Running task"
+msgstr "Εκτέλεση διεργασίας"
+
+#: libapper/PkStrings.cpp:50
+#, kde-format
+msgctxt "transaction state, is querying data"
+msgid "Querying"
+msgstr "Ερώτηση"
+
+#: libapper/PkStrings.cpp:53
+#, kde-format
+msgctxt "transaction state, getting data from a server"
+msgid "Getting information"
+msgstr "Λήψη πληροφοριών"
+
+#: libapper/PkStrings.cpp:56
+#, kde-format
+msgctxt "transaction state, removing packages"
+msgid "Removing packages"
+msgstr "Αφαίρεση πακέτων"
+
+#: libapper/PkStrings.cpp:61
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading at %1/s, %2 remaining"
+msgstr "Γίνεται λήψη με %1/s, απομένουν %2"
+
+#: libapper/PkStrings.cpp:67
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading at %1/s"
+msgstr "Γίνεται λήψη με %1/s"
+
+#: libapper/PkStrings.cpp:72
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading, %1 remaining"
+msgstr "Γίνεται λήψη, απομένουν %1"
+
+#: libapper/PkStrings.cpp:76
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading"
+msgstr "Γίνεται λήψη"
+
+#: libapper/PkStrings.cpp:80
+#, kde-format
+msgctxt "transaction state, installing packages"
+msgid "Installing packages"
+msgstr "Εγκατάσταση πακέτων"
+
+#: libapper/PkStrings.cpp:83
+#, kde-format
+msgctxt "transaction state, refreshing internal lists"
+msgid "Refreshing software list"
+msgstr "Ανανέωση λίστας λογισμικού"
+
+#: libapper/PkStrings.cpp:86
+#, kde-format
+msgctxt "transaction state, installing updates"
+msgid "Updating packages"
+msgstr "Ενημέρωση πακέτων"
+
+#: libapper/PkStrings.cpp:89
+#, kde-format
+msgctxt "transaction state, removing old packages, and cleaning config files"
+msgid "Cleaning up packages"
+msgstr "Εκκαθάριση πακέτων"
+
+#: libapper/PkStrings.cpp:92
+#, kde-format
+msgctxt "transaction state, obsoleting old packages"
+msgid "Obsoleting packages"
+msgstr "Σημείωση πακέτων ως πεπαλαιωμένων"
+
+#: libapper/PkStrings.cpp:95
+#, kde-format
+msgctxt "transaction state, checking the transaction before we do it"
+msgid "Resolving dependencies"
+msgstr "Επίλυση εξαρτήσεων"
+
+#: libapper/PkStrings.cpp:98
+#, kde-format
+msgctxt ""
+"transaction state, checking if we have all the security keys for the "
+"operation"
+msgid "Checking signatures"
+msgstr "Έλεγχος υπογραφών"
+
+#: libapper/PkStrings.cpp:101
+#, kde-format
+msgctxt "transaction state, when we're doing a test transaction"
+msgid "Testing changes"
+msgstr "Έλεγχος τροποποιήσεων"
+
+#: libapper/PkStrings.cpp:104
+#, kde-format
+msgctxt "transaction state, when we're writing to the system package database"
+msgid "Committing changes"
+msgstr "Υποβολή τροποποιήσεων"
+
+#: libapper/PkStrings.cpp:107
+#, kde-format
+msgctxt "transaction state, requesting data from a server"
+msgid "Requesting data"
+msgstr "Αίτημα δεδομένων"
+
+#: libapper/PkStrings.cpp:110
+#, kde-format
+msgctxt "transaction state, all done!"
+msgid "Finished"
+msgstr "Ολοκληρώθηκε"
+
+#: libapper/PkStrings.cpp:113
+#, kde-format
+msgctxt "transaction state, in the process of cancelling"
+msgid "Cancelling"
+msgstr "Ακύρωση"
+
+#: libapper/PkStrings.cpp:116
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading repository information"
+msgstr "Λήψη πληροφοριών αποθετηρίων"
+
+#: libapper/PkStrings.cpp:119
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading list of packages"
+msgstr "Λήψη λίστας των πακέτων"
+
+#: libapper/PkStrings.cpp:122
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading file lists"
+msgstr "Λήψη λίστας αρχείων"
+
+#: libapper/PkStrings.cpp:125
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading lists of changes"
+msgstr "Λήψη λίστας τροποποιήσεων"
+
+#: libapper/PkStrings.cpp:128
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading groups"
+msgstr "Λήψη ομάδων"
+
+#: libapper/PkStrings.cpp:131
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading update information"
+msgstr "Λήψη πληροφοριών ενημέρωσης"
+
+#: libapper/PkStrings.cpp:134
+#, kde-format
+msgctxt "transaction state, repackaging delta files"
+msgid "Repackaging files"
+msgstr "Αναδημιουργία πακέτων"
+
+#: libapper/PkStrings.cpp:137
+#, kde-format
+msgctxt "transaction state, loading databases"
+msgid "Loading cache"
+msgstr "Φόρτωση λανθάνουσας μνήμης"
+
+#: libapper/PkStrings.cpp:140
+#, kde-format
+msgctxt "transaction state, scanning for running processes"
+msgid "Scanning installed applications"
+msgstr "Σάρωση εγκατεστημένων εφαρμογών"
+
+#: libapper/PkStrings.cpp:143
+#, kde-format
+msgctxt ""
+"transaction state, generating a list of packages installed on the system"
+msgid "Generating package lists"
+msgstr "Δημιουργία λιστών πακέτων"
+
+#: libapper/PkStrings.cpp:146
+#, kde-format
+msgctxt "transaction state, when we're waiting for the native tools to exit"
+msgid "Waiting for package manager lock"
+msgstr "Αναμονή αποκλειστικής χρήσης της εφαρμογής διαχείρισης πακέτων"
+
+#: libapper/PkStrings.cpp:149
+#, kde-format
+msgctxt "waiting for user to type in a password"
+msgid "Waiting for authentication"
+msgstr "Αναμονή για πιστοποίηση"
+
+#: libapper/PkStrings.cpp:152
+#, kde-format
+msgctxt "we are updating the list of processes"
+msgid "Updating the list of running applications"
+msgstr "Ενημέρωση της λίστας των εφαρμογών που εκτελούνται"
+
+#: libapper/PkStrings.cpp:155
+#, kde-format
+msgctxt "we are checking executable files in use"
+msgid "Checking for applications currently in use"
+msgstr "Έλεγχος για εφαρμογές σε χρήση"
+
+#: libapper/PkStrings.cpp:158
+#, kde-format
+msgctxt "we are checking for libraries in use"
+msgid "Checking for libraries currently in use"
+msgstr "Έλεγχος για βιβλιοθήκες σε χρήση"
+
+#: libapper/PkStrings.cpp:161
+#, kde-format
+msgctxt "we are copying package files to prepare to install"
+msgid "Copying files"
+msgstr "Αντιγραφή αρχείων"
+
+#: libapper/PkStrings.cpp:164
+#, kde-format
+msgctxt "we are running hooks pre or post transaction"
+msgid "Running hooks"
+msgstr "Εκτέλεση τροποποιήσεων"
+
+#: libapper/PkStrings.cpp:179
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Downloaded"
+msgstr "Ελήφθη"
+
+#: libapper/PkStrings.cpp:181
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Updated"
+msgstr "Ενημερώθηκε"
+
+#: libapper/PkStrings.cpp:183
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Installed"
+msgstr "Εγκαταστάθηκε"
+
+#: libapper/PkStrings.cpp:185
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Removed"
+msgstr "Αφαιρέθηκε"
+
+#: libapper/PkStrings.cpp:187
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Cleaned Up"
+msgstr "Έχει εκκαθαριστεί"
+
+#: libapper/PkStrings.cpp:189
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Obsoleted"
+msgstr "Έχει σημειωθεί ως πεπαλαιωμένο"
+
+#: libapper/PkStrings.cpp:200
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Unknown role type"
+msgstr "Άγνωστος τύπος ρόλου"
+
+#: libapper/PkStrings.cpp:202
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting dependencies"
+msgstr "Ανάκτηση εξαρτήσεων"
+
+#: libapper/PkStrings.cpp:204
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting update detail"
+msgstr "Ανάκτηση λεπτομερειών ενημέρωσης"
+
+#: libapper/PkStrings.cpp:207
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting details"
+msgstr "Ανάκτηση λεπτομερειών"
+
+#: libapper/PkStrings.cpp:209
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting requires"
+msgstr "Ανάκτηση απαιτήσεων"
+
+#: libapper/PkStrings.cpp:211
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting updates"
+msgstr "Ανάκτηση ενημερώσεων"
+
+#: libapper/PkStrings.cpp:213
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching details"
+msgstr "Αναζήτηση λεπτομερειών"
+
+#: libapper/PkStrings.cpp:215
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching for file"
+msgstr "Αναζήτηση για αρχείο"
+
+#: libapper/PkStrings.cpp:217
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching groups"
+msgstr "Αναζήτηση ομάδων"
+
+#: libapper/PkStrings.cpp:219
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching by package name"
+msgstr "Αναζήτηση κατά όνομα πακέτου"
+
+#: libapper/PkStrings.cpp:222
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating removal"
+msgstr "Προσομοιώνει τη διαγραφή"
+
+#: libapper/PkStrings.cpp:224 libapper/PkStrings.cpp:231
+#: libapper/PkStrings.cpp:272
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading packages"
+msgstr "Λήψη πακέτων"
+
+#: libapper/PkStrings.cpp:226
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Removing"
+msgstr "Αφαίρεση"
+
+#: libapper/PkStrings.cpp:229
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating install"
+msgstr "Προσομοιώνει την εγκατάσταση"
+
+#: libapper/PkStrings.cpp:233
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing"
+msgstr "Εγκατάσταση"
+
+#: libapper/PkStrings.cpp:236
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating file install"
+msgstr "Προσομοιώνει την εγκατάσταση"
+
+#: libapper/PkStrings.cpp:238
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading required packages"
+msgstr "Κάνει λήψη απαιτούμενων πακέτων"
+
+#: libapper/PkStrings.cpp:240
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing file"
+msgstr "Εγκατάσταση αρχείου"
+
+#: libapper/PkStrings.cpp:242
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Refreshing package cache"
+msgstr "Ανανέωση μνήμης πακέτων"
+
+#: libapper/PkStrings.cpp:245
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating update"
+msgstr "Προσομοιώνει την ενημέρωση"
+
+#: libapper/PkStrings.cpp:247
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading updates"
+msgstr "Κάνει λήψη ενημερώσεων"
+
+#: libapper/PkStrings.cpp:249
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Updating packages"
+msgstr "Ενημέρωση πακέτων"
+
+#: libapper/PkStrings.cpp:251
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Canceling"
+msgstr "Ακύρωση"
+
+#: libapper/PkStrings.cpp:253
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting list of repositories"
+msgstr "Ανάκτηση λίστας χώρων αποθήκευσης"
+
+#: libapper/PkStrings.cpp:255
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Enabling repository"
+msgstr "Ενεργοποίηση αποθετηρίου"
+
+#: libapper/PkStrings.cpp:257
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Setting repository data"
+msgstr "Ορισμός δεδομένων αποθετηρίου"
+
+#: libapper/PkStrings.cpp:259
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Resolving"
+msgstr "Επίλυση"
+
+#: libapper/PkStrings.cpp:262
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting file list"
+msgstr "Ανάκτηση λίστας αρχείων"
+
+#: libapper/PkStrings.cpp:264
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting what provides"
+msgstr "Λήψη πακέτων που να παρέχουν τα αρχεία"
+
+#: libapper/PkStrings.cpp:266
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing signature"
+msgstr "Εγκατάσταση υπογραφής"
+
+#: libapper/PkStrings.cpp:268
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting package lists"
+msgstr "Λήψη λιστών πακέτων"
+
+#: libapper/PkStrings.cpp:270
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Accepting EULA"
+msgstr "Αποδοχή της άδειας χρήσης (EULA)"
+
+#: libapper/PkStrings.cpp:274
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting distribution upgrade information"
+msgstr "Ανάκτηση πληροφοριών αναβάθμισης διανομής"
+
+#: libapper/PkStrings.cpp:276
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting categories"
+msgstr "Ανάκτηση κατηγοριών"
+
+#: libapper/PkStrings.cpp:278
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting old transactions"
+msgstr "Λήψη παλαιών συναλλαγών"
+
+#: libapper/PkStrings.cpp:280
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Repairing system"
+msgstr "Επισκευή συστήματος"
+
+#: libapper/PkStrings.cpp:282
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Removing repository"
+msgstr "Αφαίρεση αποθετηρίου"
+
+#: libapper/PkStrings.cpp:284
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Upgrading the system"
+msgstr "Αναβάθμιση του συστήματος"
+
+#: libapper/PkStrings.cpp:299
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Unknown role type"
+msgstr "Άγνωστος τύπος ρόλου"
+
+#: libapper/PkStrings.cpp:301
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got dependencies"
+msgstr "Ελήφθησαν οι εξαρτήσεις"
+
+#: libapper/PkStrings.cpp:303
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got update detail"
+msgstr "Ελήφθησαν οι λεπτομέρειες ενημέρωσης"
+
+#: libapper/PkStrings.cpp:306
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got details"
+msgstr "Ελήφθησαν οι λεπτομέρειες"
+
+#: libapper/PkStrings.cpp:308
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got requires"
+msgstr "Ελήφθησαν οι απαιτήσεις"
+
+#: libapper/PkStrings.cpp:310
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got updates"
+msgstr "Ελήφθησαν οι ενημερώσεις"
+
+#: libapper/PkStrings.cpp:312
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for package details"
+msgstr "Έγινε αναζήτηση για λεπτομέρειες πακέτου"
+
+#: libapper/PkStrings.cpp:314
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for file"
+msgstr "Έγινε αναζήτηση για το αρχείο"
+
+#: libapper/PkStrings.cpp:316
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched groups"
+msgstr "Έγινε αναζήτηση ομάδων"
+
+#: libapper/PkStrings.cpp:318
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for package name"
+msgstr "Έγινε αναζήτηση για όνομα πακέτου"
+
+#: libapper/PkStrings.cpp:320
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Removed packages"
+msgstr "Αφαιρέθηκαν τα πακέτα"
+
+#: libapper/PkStrings.cpp:322
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed packages"
+msgstr "Εγκαταστάθηκαν τα πακέτα"
+
+#: libapper/PkStrings.cpp:324
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed local files"
+msgstr "Εγκαταστάθηκαν τα τοπικά αρχεία "
+
+#: libapper/PkStrings.cpp:326
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Refreshed package cache"
+msgstr "Ανανεώθηκε η μνήμη πακέτων"
+
+#: libapper/PkStrings.cpp:328
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Updated packages"
+msgstr "Ενημερώθηκαν τα πακέτα"
+
+#: libapper/PkStrings.cpp:330
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Canceled"
+msgstr "Ακυρώθηκε"
+
+#: libapper/PkStrings.cpp:332
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got list of repositories"
+msgstr "Ελήφθη η λίστα των αποθετηρίων"
+
+#: libapper/PkStrings.cpp:334
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Enabled repository"
+msgstr "Ενεργοποιήθηκε το αποθετήριο"
+
+#: libapper/PkStrings.cpp:336
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Set repository data"
+msgstr "Ρυθμίστηκαν τα δεδομένα των αποθετηρίων"
+
+#: libapper/PkStrings.cpp:338
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Resolved"
+msgstr "Καθορίστηκαν"
+
+#: libapper/PkStrings.cpp:341
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got file list"
+msgstr "Ελήφθη η λίστα αρχείων"
+
+#: libapper/PkStrings.cpp:343
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got what provides"
+msgstr "Ελήφθησαν τα πακέτα που παρέχουν τα αρχεία"
+
+#: libapper/PkStrings.cpp:345
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed signature"
+msgstr "Εγκαταστάθηκε η υπογραφή"
+
+#: libapper/PkStrings.cpp:347
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got package lists"
+msgstr "Ελήφθησαν οι λίστες πακέτων"
+
+#: libapper/PkStrings.cpp:349
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Accepted EULA"
+msgstr "Έγινε αποδεκτή η άδεια χρήσης (EULA)"
+
+#: libapper/PkStrings.cpp:351
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Downloaded packages"
+msgstr "Ελήφθησαν τα πακέτα"
+
+#: libapper/PkStrings.cpp:353
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got distribution upgrades"
+msgstr "Ελήφθησαν οι αναβαθμίσεις της διανομής"
+
+#: libapper/PkStrings.cpp:355
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got categories"
+msgstr "Ελήφθησαν οι κατηγορίες"
+
+#: libapper/PkStrings.cpp:357
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got old transactions"
+msgstr "Ελήφθησαν οι παλαιές συναλλαγές"
+
+#: libapper/PkStrings.cpp:359
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Repaired system"
+msgstr "Επισκευάσθηκε το σύστημα"
+
+#: libapper/PkStrings.cpp:361
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Removed repository"
+msgstr "Εγινε διαγραφή του αποθετηρίου"
+
+#: libapper/PkStrings.cpp:363
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Upgraded the system"
+msgstr "Αναβαθμίστηκε το σύστημα"
+
+#: libapper/PkStrings.cpp:373
+#, kde-format
+msgid "Downloading"
+msgstr "Λήψη"
+
+#: libapper/PkStrings.cpp:375
+#, kde-format
+msgid "Updating"
+msgstr "Ενημέρωση"
+
+#: libapper/PkStrings.cpp:377
+#, kde-format
+msgid "Installing"
+msgstr "Εγκατάσταση"
+
+#: libapper/PkStrings.cpp:379
+#, kde-format
+msgid "Removing"
+msgstr "Αφαίρεση"
+
+#: libapper/PkStrings.cpp:381
+#, kde-format
+msgid "Cleaning up"
+msgstr "Εκκαθάριση"
+
+#: libapper/PkStrings.cpp:383
+#, kde-format
+msgid "Obsoleting"
+msgstr "Σημείωση πεπαλαιωμένων"
+
+#: libapper/PkStrings.cpp:385
+#, kde-format
+msgid "Reinstalling"
+msgstr "Επανεγκατάσταση"
+
+#: libapper/PkStrings.cpp:387
+#, kde-format
+msgid "Preparing"
+msgstr "Προετοιμασία"
+
+#: libapper/PkStrings.cpp:389
+#, kde-format
+msgid "Decompressing"
+msgstr "Αποσυμπίεση"
+
+#: libapper/PkStrings.cpp:400
+#, kde-format
+msgid "Downloaded"
+msgstr "Ελήφθη"
+
+#: libapper/PkStrings.cpp:402
+#, kde-format
+msgid "Updated"
+msgstr "Ενημερώθηκε"
+
+#: libapper/PkStrings.cpp:406
+#, kde-format
+msgid "Removed"
+msgstr "Αφαιρέθηκε"
+
+#: libapper/PkStrings.cpp:408
+#, kde-format
+msgid "Cleaned up"
+msgstr "Εκκαθαρίστηκε"
+
+#: libapper/PkStrings.cpp:410
+#, kde-format
+msgid "Obsoleted"
+msgstr "Πεπαλαιωμένο"
+
+#: libapper/PkStrings.cpp:412
+#, kde-format
+msgid "Reinstalled"
+msgstr "Επανεγκατεστάθηκε"
+
+#: libapper/PkStrings.cpp:414
+#, kde-format
+msgid "Prepared"
+msgstr "Προετοιμάστηκε"
+
+#: libapper/PkStrings.cpp:416
+#, kde-format
+msgid "Decompressed"
+msgstr "Αποσυμπιέστηκε"
+
+#: libapper/PkStrings.cpp:427
+#, kde-format
+msgid "No network connection available"
+msgstr "Μη διαθέσιμη σύνδεση δικτύου"
+
+#: libapper/PkStrings.cpp:429
+#, kde-format
+msgid "No package cache is available"
+msgstr "Δεν υπάρχει διαθέσιμη μνήμη πακέτων"
+
+#: libapper/PkStrings.cpp:431
+#, kde-format
+msgid "Out of memory"
+msgstr "Τέλος μνήμης"
+
+#: libapper/PkStrings.cpp:433
+#, kde-format
+msgid "Failed to create a thread"
+msgstr "Αποτυχία δημιουργίας ενός νήματος"
+
+#: libapper/PkStrings.cpp:435
+#, kde-format
+msgid "Not supported by this backend"
+msgstr "Δεν υποστηρίζεται από αυτό το σύστημα υποστήριξης"
+
+#: libapper/PkStrings.cpp:437
+#, kde-format
+msgid "An internal system error has occurred"
+msgstr "Συνέβη ένα εσωτερικό σφάλμα του συστήματος"
+
+#: libapper/PkStrings.cpp:439
+#, kde-format
+msgid "A security trust relationship is not present"
+msgstr "Μια έμπιστη ασφάλεια συσχέτισης δεν είναι παρούσα"
+
+#: libapper/PkStrings.cpp:441
+#, kde-format
+msgid "The package is not installed"
+msgstr "Το πακέτο δεν είναι εγκατεστημένο"
+
+#: libapper/PkStrings.cpp:443
+#, kde-format
+msgid "The package was not found"
+msgstr "Το πακέτο δε βρέθηκε"
+
+#: libapper/PkStrings.cpp:445
+#, kde-format
+msgid "The package is already installed"
+msgstr "Το πακέτο είναι ήδη εγκατεστημένο"
+
+#: libapper/PkStrings.cpp:447
+#, kde-format
+msgid "The package download failed"
+msgstr "Αποτυχία λήψης του πακέτου"
+
+#: libapper/PkStrings.cpp:449
+#, kde-format
+msgid "The group was not found"
+msgstr "Η ομάδα δε βρέθηκε"
+
+#: libapper/PkStrings.cpp:451
+#, kde-format
+msgid "The group list was invalid"
+msgstr "Δεν ήταν έγκυρη η λίστα των ομάδων"
+
+#: libapper/PkStrings.cpp:453
+#, kde-format
+msgid "Dependency resolution failed"
+msgstr "Αποτυχία επίλυσης εξαρτήσεων"
+
+#: libapper/PkStrings.cpp:455
+#, kde-format
+msgid "Search filter was invalid"
+msgstr "Δεν ήταν έγκυρο το φίλτρο αναζήτησης"
+
+#: libapper/PkStrings.cpp:457
+#, kde-format
+msgid "The package identifier was not well formed"
+msgstr "Το αναγνωριστικό πακέτου δεν έχει σωστή μορφή"
+
+#: libapper/PkStrings.cpp:459
+#, kde-format
+msgid "Transaction error"
+msgstr "Σφάλμα συναλλαγής"
+
+#: libapper/PkStrings.cpp:461
+#, kde-format
+msgid "Repository name was not found"
+msgstr "Δε βρέθηκε το όνομα του αποθετηρίου"
+
+#: libapper/PkStrings.cpp:463
+#, kde-format
+msgid "Could not remove a protected system package"
+msgstr "Αδυναμία αφαίρεσης ενός προστατευμένου πακέτου του συστήματος"
+
+#: libapper/PkStrings.cpp:465
+#, kde-format
+msgid "The task was canceled"
+msgstr "Η εργασία ακυρώθηκε"
+
+#: libapper/PkStrings.cpp:467
+#, kde-format
+msgid "The task was forcibly canceled"
+msgstr "Η εργασία ακυρώθηκε δια της βίας"
+
+#: libapper/PkStrings.cpp:469
+#, kde-format
+msgid "Reading the config file failed"
+msgstr "Αποτυχία ανάγνωσης από αρχείο ρυθμίσεων"
+
+#: libapper/PkStrings.cpp:471
+#, kde-format
+msgid "The task cannot be cancelled"
+msgstr "Η εργασία δεν μπορεί να ακυρωθεί"
+
+#: libapper/PkStrings.cpp:473
+#, kde-format
+msgid "Source packages cannot be installed"
+msgstr "Αδυναμία εγκατάστασης πακέτων πηγαίου κώδικα"
+
+#: libapper/PkStrings.cpp:475
+#, kde-format
+msgid "The license agreement failed"
+msgstr "Αποτυχία αποδοχής της άδειας χρήσης"
+
+#: libapper/PkStrings.cpp:477
+#, kde-format
+msgid "Local file conflict between packages"
+msgstr "Σύγκρουση μεταξύ πακέτων για τοπικά αρχεία"
+
+#: libapper/PkStrings.cpp:479
+#, kde-format
+msgid "Packages are not compatible"
+msgstr "Τα πακέτα δεν είναι συμβατά μεταξύ τους"
+
+#: libapper/PkStrings.cpp:481
+#, kde-format
+msgid "Problem connecting to a software origin"
+msgstr "Πρόβλημα κατά τη σύνδεση με μια πηγή λογισμικού"
+
+#: libapper/PkStrings.cpp:483
+#, kde-format
+msgid "Failed to initialize"
+msgstr "Αποτυχία αρχικοποίησης"
+
+#: libapper/PkStrings.cpp:485
+#, kde-format
+msgid "Failed to finalize"
+msgstr "Αποτυχία ολοκλήρωσης"
+
+#: libapper/PkStrings.cpp:487
+#, kde-format
+msgid "Cannot get lock"
+msgstr "Αδυναμία αποκλειστικής χρήσης"
+
+#: libapper/PkStrings.cpp:489
+#, kde-format
+msgid "No packages to update"
+msgstr "Κανένα πακέτο προς ενημέρωση"
+
+#: libapper/PkStrings.cpp:491
+#, kde-format
+msgid "Cannot write repository configuration"
+msgstr "Αδυναμία εγγραφής της διαμόρφωσης των αποθετηρίων"
+
+#: libapper/PkStrings.cpp:493
+#, kde-format
+msgid "Local install failed"
+msgstr "Αποτυχία τοπικής εγκατάστασης"
+
+#: libapper/PkStrings.cpp:495
+#, kde-format
+msgid "Bad GPG signature"
+msgstr "Κακή υπογραφή GPG"
+
+#: libapper/PkStrings.cpp:497
+#, kde-format
+msgid "Missing GPG signature"
+msgstr "Λείπει η υπογραφή GPG"
+
+#: libapper/PkStrings.cpp:499
+#, kde-format
+msgid "Repository configuration invalid"
+msgstr "Μη έγκυρη διαμόρφωση αποθετηρίων"
+
+#: libapper/PkStrings.cpp:501
+#, kde-format
+msgid "Invalid package file"
+msgstr "Μη έγκυρο αρχείο πακέτου"
+
+#: libapper/PkStrings.cpp:503
+#, kde-format
+msgid "Package install blocked"
+msgstr "Απαγόρευση εγκατάστασης πακέτου"
+
+#: libapper/PkStrings.cpp:505
+#, kde-format
+msgid "Package is corrupt"
+msgstr "Το πακέτο είναι κατεστραμμένο"
+
+#: libapper/PkStrings.cpp:507
+#, kde-format
+msgid "All packages are already installed"
+msgstr "Είναι ήδη εγκατεστημένα όλα τα πακέτα"
+
+#: libapper/PkStrings.cpp:509
+#, kde-format
+msgid "The specified file could not be found"
+msgstr "Δε βρέθηκε το ζητούμενο αρχείο"
+
+#: libapper/PkStrings.cpp:511
+#, kde-format
+msgid "No more mirrors are available"
+msgstr "Δεν υπάρχουν άλλοι διαθέσιμοι εναλλακτικοί σύνδεσμοι"
+
+#: libapper/PkStrings.cpp:513
+#, kde-format
+msgid "No distribution upgrade data is available"
+msgstr "Δεν υπάρχουν διαθέσιμες πληροφορίες για αναβαθμίσεις της διανομής"
+
+#: libapper/PkStrings.cpp:515
+#, kde-format
+msgid "Package is incompatible with this system"
+msgstr "Το πακέτο δεν είναι συμβατό με το σύστημά σας"
+
+#: libapper/PkStrings.cpp:517
+#, kde-format
+msgid "No space is left on the disk"
+msgstr "Δεν υπάρχει διαθέσιμος χώρος στο δίσκο"
+
+#: libapper/PkStrings.cpp:519 libapper/PkTransaction.cpp:341
+#, kde-format
+msgid "A media change is required"
+msgstr "Απαιτείται αλλαγή μέσου"
+
+#: libapper/PkStrings.cpp:521
+#, kde-format
+msgid "Authorization failed"
+msgstr "Αποτυχία ταυτοποίησης"
+
+#: libapper/PkStrings.cpp:523
+#, kde-format
+msgid "Update not found"
+msgstr "Δε βρέθηκε η ενημέρωση "
+
+#: libapper/PkStrings.cpp:525
+#, kde-format
+msgid "Cannot install from untrusted origin"
+msgstr "Αποτυχία εγκατάστασης από τη μη έμπιστη πηγή"
+
+#: libapper/PkStrings.cpp:527
+#, kde-format
+msgid "Cannot update from untrusted origin"
+msgstr "Αποτυχία ενημέρωσης από τη μη έμπιστη πηγή"
+
+#: libapper/PkStrings.cpp:529
+#, kde-format
+msgid "Cannot get the file list"
+msgstr "Αδυναμία λήψης της λίστας αρχείων"
+
+#: libapper/PkStrings.cpp:531
+#, kde-format
+msgid "Cannot get package requires"
+msgstr "Αδυναμία λήψης των απαιτούμενων του πακέτου"
+
+#: libapper/PkStrings.cpp:533
+#, kde-format
+msgid "Cannot disable origin"
+msgstr "Αδυναμία απενεργοποίησης της πηγής"
+
+#: libapper/PkStrings.cpp:535
+#, kde-format
+msgid "The download failed"
+msgstr "Αποτυχία λήψης"
+
+#: libapper/PkStrings.cpp:537
+#, kde-format
+msgid "Package failed to configure"
+msgstr "Αποτυχία διαμόρφωσης του πακέτου"
+
+#: libapper/PkStrings.cpp:539
+#, kde-format
+msgid "Package failed to build"
+msgstr "Αποτυχία δημιουργίας πακέτου"
+
+#: libapper/PkStrings.cpp:541
+#, kde-format
+msgid "Package failed to install"
+msgstr "Αποτυχία εγκατάστασης πακέτου"
+
+#: libapper/PkStrings.cpp:543
+#, kde-format
+msgid "Package failed to be removed"
+msgstr "Αποτυχία αφαίρεσης πακέτου"
+
+#: libapper/PkStrings.cpp:545
+#, kde-format
+msgid "Update failed due to running process"
+msgstr "Αποτυχία ενημέρωσης λόγω κάποιας ενεργούς διαδικασίας"
+
+#: libapper/PkStrings.cpp:547
+#, kde-format
+msgid "The package database was changed"
+msgstr "Η βάση δεδομένων των πακέτων έχει αλλάξει"
+
+#: libapper/PkStrings.cpp:549
+#, kde-format
+msgid "Virtual provide type is not supported"
+msgstr "Ο εικονικός τύπος παροχής δεν υποστηρίζεται"
+
+#: libapper/PkStrings.cpp:551
+#, kde-format
+msgid "Install root is invalid"
+msgstr "Η εγκατάσταση του υπερχρήστη είναι λανθασμένη"
+
+#: libapper/PkStrings.cpp:553
+#, kde-format
+msgid "Cannot fetch install sources"
+msgstr "Αδυναμία ανάκτησης πηγών εγκατάστασης"
+
+#: libapper/PkStrings.cpp:555
+#, kde-format
+msgid "Rescheduled due to priority"
+msgstr "Αναπρογραμματισμός λόγω προτεραιότητας"
+
+#: libapper/PkStrings.cpp:557
+#, kde-format
+msgid "Unfinished transaction"
+msgstr "Ανολοκλήρωτη συναλλαγή"
+
+#: libapper/PkStrings.cpp:559
+#, kde-format
+msgid "Lock required"
+msgstr "Απαιτείται κλείδωμα"
+
+#: libapper/PkStrings.cpp:561
+#, kde-format
+msgid "Unknown error"
+msgstr "Άγνωστο σφάλμα"
+
+#: libapper/PkStrings.cpp:571
+#, kde-format
+msgid ""
+"There is no network connection available.\n"
+"Please check your connection settings and try again"
+msgstr ""
+"Δεν υπάρχει διαθέσιμη σύνδεση δικτύου.\n"
+"Παρακαλώ ελέγξτε τις ρυθμίσεις δικτύου σας και προσπαθήστε ξανά."
+
+#: libapper/PkStrings.cpp:574
+#, kde-format
+msgid ""
+"The package list needs to be rebuilt.\n"
+"This should have been done by the backend automatically."
+msgstr ""
+"Θα πρέπει να δημιουργηθεί εκ νέου η λίστα πακέτων.\n"
+"Αυτό θα έπρεπε να είχε γίνει αυτόματα από το σύστημα υποστήριξης."
+
+#: libapper/PkStrings.cpp:577
+#, kde-format
+msgid ""
+"The service that is responsible for handling user requests is out of "
+"memory.\n"
+"Please close some programs or restart your computer."
+msgstr ""
+"Εξαντλήθηκε η μνήμη της υπηρεσίας που διαχειρίζεται τα αιτήματα των "
+"χρηστών.\n"
+"Παρακαλώ κλείστε μερικά προγράμματα ή επανεκκινήστε τον υπολογιστή σας."
+
+#: libapper/PkStrings.cpp:580
+#, kde-format
+msgid "A thread could not be created to service the user request."
+msgstr "Αδυναμία δημιουργίας νήματος για να ικανοποιηθεί το αίτημα του χρήστη."
+
+#: libapper/PkStrings.cpp:582
+#, kde-format
+msgid ""
+"The action is not supported by this backend.\n"
+"Please report a bug as this should not have happened."
+msgstr ""
+"Αυτή η ενέργεια δεν υποστηρίζεται από το σύστημα υποστήριξης.\n"
+"Παρακαλώ, αναφέρετε το σφάλμα επειδή δεν θα έπρεπε να είχε συμβεί αυτό."
+
+#: libapper/PkStrings.cpp:585
+#, kde-format
+msgid ""
+"A problem that we were not expecting has occurred.\n"
+"Please report this bug with the error description."
+msgstr ""
+"Συνέβη ένα μη αναμενόμενο σφάλμα.\n"
+"Παρακαλώ αναφέρετε αυτό το σφάλμα μαζί με αναλυτική περιγραφή του."
+
+#: libapper/PkStrings.cpp:588
+#, kde-format
+msgid ""
+"A security trust relationship could not be made with the software origin.\n"
+"Please check your software signature settings."
+msgstr ""
+"Αδυναμία εγκαθίδρυσης σχέσης εμπιστοσύνης και ασφαλείας με την πηγή "
+"λογισμικού.\n"
+"Παρακαλώ ελέγξτε τις ρυθμίσεις ασφαλείας σας."
+
+#: libapper/PkStrings.cpp:591
+#, kde-format
+msgid ""
+"The package that is trying to be removed or updated is not already installed."
+msgstr ""
+"Το πακέτο που πρόκειται να διαγραφεί ή να ενημερωθεί δεν είναι εγκατεστημένο."
+
+#: libapper/PkStrings.cpp:593
+#, kde-format
+msgid ""
+"The package that is being modified was not found on your system or in any "
+"software origin."
+msgstr ""
+"Το πακέτο που προσπαθείτε να τροποποιήσετε δε βρέθηκε στο σύστημά σας ή στις "
+"πηγές λογισμικού."
+
+#: libapper/PkStrings.cpp:595
+#, kde-format
+msgid "The package that is trying to be installed is already installed."
+msgstr "Το πακέτο που πρόκειται να εγκατασταθεί είναι ήδη εγκατεστημένο."
+
+#: libapper/PkStrings.cpp:597
+#, kde-format
+msgid ""
+"The package download failed.\n"
+"Please check your network connectivity."
+msgstr ""
+"Αποτυχία λήψης του πακέτου.\n"
+"Παρακαλώ ελέγξτε τη σύνδεση του δικτύου."
+
+#: libapper/PkStrings.cpp:600
+#, kde-format
+msgid ""
+"The group type was not found.\n"
+"Please check your group list and try again."
+msgstr ""
+"Δε βρέθηκε ο τύπος της ομάδας.\n"
+"Παρακαλώ ελέγξτε τη λίστα ομάδων σας και προσπαθήστε ξανά."
+
+#: libapper/PkStrings.cpp:603
+#, kde-format
+msgid ""
+"The group list could not be loaded.\n"
+"Refreshing your cache may help, although this is normally a software origin "
+"error."
+msgstr ""
+"Αδυναμία φόρτωσης της λίστας ομάδων.\n"
+"Η ανανέωση της λανθάνουσας μνήμης μπορεί να βοηθήσει, αλλά συνήθως πρόκειται "
+"για σφάλμα της πηγής λογισμικού."
+
+#: libapper/PkStrings.cpp:607
+#, kde-format
+msgid ""
+"A package dependency could not be found.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Αδυναμία εύρεσης μιας εξάρτησης πακέτου.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:610
+#, kde-format
+msgid "The search filter was not correctly formed."
+msgstr "Το φίλτρο αναζήτησης δεν είχε τη σωστή μορφή."
+
+#: libapper/PkStrings.cpp:612
+#, kde-format
+msgid ""
+"The package identifier was not well formed when sent to the system daemon.\n"
+"This normally indicates an internal bug and should be reported."
+msgstr ""
+"Το αναγνωριστικό πακέτου δεν είχε κατάλληλη μορφή όταν απεστάλη στον "
+"εξυπηρετητή.\n"
+"Αυτό υποδηλώνει συνήθως ένα εσωτερικό σφάλμα και θα πρέπει να αναφερθεί."
+
+#: libapper/PkStrings.cpp:615
+#, kde-format
+msgid ""
+"An error occurred while running the transaction.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Συνέβη ένα ακαθόριστο σφάλμα εργασίας.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:618
+#, kde-format
+msgid ""
+"The remote software origin name was not found.\n"
+"You may need to enable an item in Software Origins."
+msgstr ""
+"Δε βρέθηκε το όνομα της απομακρυσμένης πηγής λογισμικού.\n"
+"Ίσως πρέπει να ενεργοποιήσετε κάποια επιπλέον πηγή λογισμικού."
+
+#: libapper/PkStrings.cpp:621
+#, kde-format
+msgid "Removing a protected system package is not allowed."
+msgstr "Δεν επιτρέπεται η αφαίρεση ενός προστατευμένου πακέτου του συστήματος."
+
+#: libapper/PkStrings.cpp:623
+#, kde-format
+msgid "The task was canceled successfully and no packages were changed."
+msgstr "Η διεργασία ακυρώθηκε με επιτυχία και δεν άλλαξε κανένα πακέτο."
+
+#: libapper/PkStrings.cpp:625
+#, kde-format
+msgid ""
+"The task was canceled successfully and no packages were changed.\n"
+"The backend did not exit cleanly."
+msgstr ""
+"Η ακύρωση της εργασίας ήταν επιτυχής και κανένα πακέτο δεν άλλαξε.\n"
+"Το σύστημα υποστήριξης δεν τερματίστηκε ομαλά."
+
+#: libapper/PkStrings.cpp:628
+#, kde-format
+msgid ""
+"The native package configuration file could not be opened.\n"
+"Please make sure your system's configuration is valid."
+msgstr ""
+"Αδυναμία ανοίγματος του αρχείου διαμόρφωσης του εγγενούς πακέτου.\n"
+"Παρακαλώ, βεβαιωθείτε ότι η διαμόρφωση του συστήματος είναι έγκυρη."
+
+#: libapper/PkStrings.cpp:631
+#, kde-format
+msgid "The task is not safe to be cancelled at this time."
+msgstr "Μη ασφαλής η ακύρωση της διεργασίας αυτήν τη στιγμή."
+
+#: libapper/PkStrings.cpp:633
+#, kde-format
+msgid ""
+"Source packages are not normally installed this way.\n"
+"Check the extension of the file you are trying to install."
+msgstr ""
+"Τα πακέτα πηγαίου κώδικα συνήθως εγκαθιστώνται με αυτή τη μέθοδο.\n"
+" Ελέγξτε την επέκταση του αρχείου που προσπαθείτε να εγκαταστήσετε."
+
+#: libapper/PkStrings.cpp:636
+#, kde-format
+msgid ""
+"The license agreement was not agreed to.\n"
+"To use this software you have to accept the license."
+msgstr ""
+"Δεν αποδεχθήκατε την άδεια χρήσης.\n"
+"Για να χρησιμοποιήσετε αυτό το λογισμικό πρέπει να αποδεχθείτε την άδεια."
+
+#: libapper/PkStrings.cpp:639
+#, kde-format
+msgid ""
+"Two packages provide the same file.\n"
+"This is usually due to mixing packages for different software origins."
+msgstr ""
+"Δύο πακέτα παρέχουν το ίδιο αρχείο.\n"
+"Αυτό συνήθως οφείλεται στην ανάμιξη πακέτων από διαφορετικές πηγές "
+"λογισμικού."
+
+#: libapper/PkStrings.cpp:642
+#, kde-format
+msgid ""
+"Multiple packages exist that are not compatible with each other.\n"
+"This is usually due to mixing packages from different software origins."
+msgstr ""
+"Υπάρχουν πολλαπλά πακέτα μη συμβατά μεταξύ τους.\n"
+"Αυτό συνήθως οφείλεται στην ανάμιξη πακέτων από διαφορετικές πηγές "
+"λογισμικού."
+
+#: libapper/PkStrings.cpp:645
+#, kde-format
+msgid ""
+"There was a (possibly temporary) problem connecting to a software origins.\n"
+"Please check the detailed error for further details."
+msgstr ""
+"Υπήρξε ένα (πιθανώς προσωρινό) πρόβλημα στη σύνδεση με μια πηγή λογισμικού.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:648
+#, kde-format
+msgid ""
+"Failed to initialize packaging backend.\n"
+"This may occur if other packaging tools are being used simultaneously."
+msgstr ""
+"Αποτυχία αρχικοποίησης του συστήματος υποστήριξης.\n"
+"Αυτό ίσως οφείλεται στην ταυτόχρονη λειτουργία πολλαπλών εργαλείων "
+"διαχείρισης πακέτων."
+
+#: libapper/PkStrings.cpp:651
+#, kde-format
+msgid ""
+"Failed to close down the backend instance.\n"
+"This error can normally be ignored."
+msgstr "Απέτυχε ο τερματισμός του συστήματος υποστήριξης. Συνήθως, αυτό το σφάλμα μπορεί να αγνοηθεί."
+
+#: libapper/PkStrings.cpp:654
+#, kde-format
+msgid ""
+"Cannot get the exclusive lock on the packaging backend.\n"
+"Please close any other legacy packaging tools that may be open."
+msgstr ""
+"Αδύνατη η αποκλειστική χρήση του συστήματος υποστήριξης.\n"
+"Παρακαλώ, κλείστε οποιοδήποτε άλλο εργαλείο διαχείρισης πακέτων παραμένει "
+"ανοιχτό."
+
+#: libapper/PkStrings.cpp:657
+#, kde-format
+msgid "None of the selected packages could be updated."
+msgstr "Κανένα από τα επιλεγμένα πακέτα δεν μπορεί να ενημερωθεί."
+
+#: libapper/PkStrings.cpp:659
+#, kde-format
+msgid "The repository configuration could not be modified."
+msgstr "Δεν ήταν δυνατή η τροποποίηση της διαμόρφωσης των αποθετηρίων."
+
+#: libapper/PkStrings.cpp:661
+#, kde-format
+msgid ""
+"Installing the local file failed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Αποτυχία εγκατάστασης του τοπικού αρχείου.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:664
+#, kde-format
+msgid "The package signature could not be verified."
+msgstr "Δεν ήταν δυνατή η επαλήθευση της υπογραφής ασφαλείας του πακέτου."
+
+#: libapper/PkStrings.cpp:666
+#, kde-format
+msgid ""
+"The package signature was missing and this package is untrusted.\n"
+"This package was not signed with a GPG key when created."
+msgstr ""
+"Λείπει η υπογραφή του πακέτου και επομένως αυτό δεν είναι έμπιστο.\n"
+"Αυτό πακέτο δεν υπογράφηκε με ένα κλειδί GPG κατά τη δημιουργία του."
+
+#: libapper/PkStrings.cpp:669
+#, kde-format
+msgid "Repository configuration was invalid and could not be read."
+msgstr ""
+"Η διαμόρφωση των αποθετηρίων δεν είναι έγκυρη και δεν ήταν δυνατή η ανάγνωσή "
+"της."
+
+#: libapper/PkStrings.cpp:671
+#, kde-format
+msgid ""
+"The package you are attempting to install is not valid.\n"
+"The package file could be corrupt, or not a proper package."
+msgstr ""
+"Το πακέτο που προσπαθείτε να εγκαταστήσετε δεν είναι έγκυρο.\n"
+" Το αρχείο του πακέτου μπορεί να είναι κατεστραμμένο, ή να μην αποτελεί "
+"πακέτο."
+
+#: libapper/PkStrings.cpp:674
+#, kde-format
+msgid ""
+"Installation of this package was prevented by your packaging system's "
+"configuration."
+msgstr ""
+"Η διαμόρφωση του εργαλείου διαχείρισης λογισμικού εμπόδισε την εγκατάσταση "
+"αυτού του πακέτου."
+
+#: libapper/PkStrings.cpp:676
+#, kde-format
+msgid ""
+"The package that was downloaded is corrupt and needs to be downloaded again."
+msgstr "Το πακέτο που ελήφθη είναι κατεστραμμένο και πρέπει να ληφθεί ξανά."
+
+#: libapper/PkStrings.cpp:678
+#, kde-format
+msgid ""
+"All of the packages selected for install are already installed on the system."
+msgstr ""
+"Όλα τα επιλεγμένα πακέτα για εγκατάσταση είναι ήδη εγκατεστημένα στο σύστημά "
+"σας."
+
+#: libapper/PkStrings.cpp:680
+#, kde-format
+msgid ""
+"The specified file could not be found on the system.\n"
+"Check that the file still exists and has not been deleted."
+msgstr ""
+"Δε βρέθηκε το ζητούμενο αρχείο στο σύστημά σας.\n"
+"Ελέγξτε ότι το αρχείο υπάρχει ακόμη και δεν έχει διαγραφεί."
+
+#: libapper/PkStrings.cpp:683
+#, kde-format
+msgid ""
+"Required data could not be found on any of the configured software origins.\n"
+"There were no more download mirrors that could be tried."
+msgstr ""
+"Δε βρέθηκαν τα απαιτούμενα δεδομένα σε καμία από τις διαμορφωμένες πηγές "
+"λογισμικού.\n"
+"Δεν υπάρχουν άλλοι εναλλακτικοί σύνδεσμοι που να μπορούν να χρησιμοποιηθούν "
+"για τη λήψη."
+
+#: libapper/PkStrings.cpp:686
+#, kde-format
+msgid ""
+"Required upgrade data could not be found in any of the configured software "
+"origins.\n"
+"The list of distribution upgrades will be unavailable."
+msgstr ""
+"Δε βρέθηκαν οι απαιτούμενες πληροφορίες για αναβαθμίσεις σε καμία από τις "
+"διαμορφωμένες πηγές λογισμικού.\n"
+"Δε θα είναι διαθέσιμη η λίστα των αναβαθμίσεων της διανομής."
+
+#: libapper/PkStrings.cpp:689
+#, kde-format
+msgid ""
+"The package that is trying to be installed is incompatible with this system."
+msgstr ""
+"Το πακέτο που προσπαθείτε να εγκαταστήσετε δεν είναι συμβατό με αυτό το "
+"σύστημα."
+
+#: libapper/PkStrings.cpp:691
+#, kde-format
+msgid ""
+"There is insufficient space on the device.\n"
+"Free some space on the system disk to perform this operation."
+msgstr ""
+"Δεν υπάρχει αρκετός ελεύθερος χώρος στο δίσκο.\n"
+"Ελευθερώστε χώρο στο δίσκο για να εκτελέσετε αυτή την λειτουργία."
+
+#: libapper/PkStrings.cpp:694
+#, kde-format
+msgid "Additional media is required to complete the transaction."
+msgstr "Απαιτούνται επιπλέον μέσα για την ολοκλήρωση της συναλλαγής."
+
+#: libapper/PkStrings.cpp:696
+#, kde-format
+msgid ""
+"You have failed to provide correct authentication.\n"
+"Please check any passwords or account settings."
+msgstr ""
+"Δεν παρείχατε σωστά στοιχεία πιστοποίησης.\n"
+"Παρακαλώ ελέγξτε τις ρυθμίσεις και τον κωδικό πρόσβασης του λογαριασμού σας."
+
+#: libapper/PkStrings.cpp:699
+#, kde-format
+msgid ""
+"The specified update could not be found.\n"
+"It could have already been installed or no longer available on the remote "
+"server."
+msgstr ""
+"Δε βρέθηκε η ζητούμενη ενημέρωση.\n"
+"Μπορεί να έχει ήδη εγκατασταθεί, ή να μη διατίθεται πλέον από τον "
+"απομακρυσμένο εξυπηρετητή."
+
+#: libapper/PkStrings.cpp:702
+#, kde-format
+msgid "The package could not be installed from untrusted origin."
+msgstr "Δεν ήταν δυνατή η εγκατάσταση του πακέτου από τη μη έμπιστη πηγή."
+
+#: libapper/PkStrings.cpp:704
+#, kde-format
+msgid "The package could not be updated from untrusted origin."
+msgstr "Δεν ήταν δυνατή η ενημέρωση του πακέτου από τη μη έμπιστη πηγή."
+
+#: libapper/PkStrings.cpp:706
+#, kde-format
+msgid "The file list is not available for this package."
+msgstr "Δεν είναι διαθέσιμη η λίστα αρχείων αυτού του πακέτου."
+
+#: libapper/PkStrings.cpp:708
+#, kde-format
+msgid "The information about what requires this package could not be obtained."
+msgstr "Δεν ήταν δυνατή η λήψη πληροφοριών για το τι απαιτεί αυτό το πακέτο."
+
+#: libapper/PkStrings.cpp:710
+#, kde-format
+msgid "The specified software origin could not be disabled."
+msgstr "Δεν ήταν δυνατή η απενεργοποίηση της ζητούμενης πηγής λογισμικού."
+
+#: libapper/PkStrings.cpp:712
+#, kde-format
+msgid ""
+"The download could not be done automatically and should be done manually.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Η μεταφόρτωση δεν μπορεί να γίνει αυτόματα και πρέπει να γίνει χειροκίνητα.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:715
+#, kde-format
+msgid ""
+"One of the selected packages failed to configure correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Ένα από τα επιλεγμένα πακέτα απέτυχε να διαμορφωθεί σωστά.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:718
+#, kde-format
+msgid ""
+"One of the selected packages failed to build correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Ένα από τα επιλεγμένα πακέτα απέτυχε να δημιουργηθεί σωστά.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:721
+#, kde-format
+msgid ""
+"One of the selected packages failed to install correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Ένα από τα επιλεγμένα πακέτα απέτυχε να εγκατασταθεί σωστά.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:724
+#, kde-format
+msgid ""
+"One of the selected packages failed to be removed correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Ένα από τα επιλεγμένα πακέτα απέτυχε να αφαιρεθεί σωστά.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:727
+#, kde-format
+msgid ""
+"A program is running that has to be closed before the update can proceed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Ένα πρόγραμμα είναι ενεργό και θα πρέπει να κλείσει προτού να μπορέσει να "
+"προχωρήσει η ενημέρωση.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:730
+#, kde-format
+msgid "The package database was changed while the request was running."
+msgstr "Η βάση δεδομένων των πακέτων άλλαξε ενώ το αίτημα ήταν ενεργό."
+
+#: libapper/PkStrings.cpp:732
+#, kde-format
+msgid "The virtual provide type is not supported by this system."
+msgstr "Ο εικονικός τύπος παροχής δεν υποστηρίζεται από το σύστημα."
+
+#: libapper/PkStrings.cpp:734
+#, kde-format
+msgid "The install root is invalid. Please contact your administrator."
+msgstr ""
+"Η εγκατάσταση του υπερχρήστη είναι λανθασμένη. Παρακαλώ επικοινωνήστε με το "
+"διαχειριστή του συστήματός σας."
+
+#: libapper/PkStrings.cpp:736
+#, kde-format
+msgid "The list of software could not be downloaded."
+msgstr "Δεν ήταν δυνατή η λήψη της λίστας λογισμικού."
+
+#: libapper/PkStrings.cpp:738
+#, kde-format
+msgid ""
+"The transaction has been cancelled and will be retried when the system is "
+"idle."
+msgstr "Η εργασία ακυρώθηκε και θα επαναληφθεί όταν το σύστημα είναι αδρανές."
+
+#: libapper/PkStrings.cpp:740
+#, kde-format
+msgid "A previous package management transaction was interrupted."
+msgstr "Μια προηγούμενη συναλλαγή διαχείρισης πακέτων διακόπηκε."
+
+#: libapper/PkStrings.cpp:742
+#, kde-format
+msgid "A package manager lock is required."
+msgstr "Απαιτείται κλείδωμα του διαχειριστή πακέτων."
+
+#: libapper/PkStrings.cpp:744
+#, kde-format
+msgid ""
+"Unknown error, please report a bug.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Άγνωστο σφάλμα, παρακαλώ αναφέρετε ένα σφάλμα κώδικα.\n"
+"Περισσότερες πληροφορίες είναι διαθέσιμες στη λεπτομερή αναφορά."
+
+#: libapper/PkStrings.cpp:755
+#, kde-format
+msgctxt "The group type"
+msgid "Accessibility"
+msgstr "Προσβασιμότητα"
+
+#: libapper/PkStrings.cpp:757
+#, kde-format
+msgctxt "The group type"
+msgid "Accessories"
+msgstr "Βοηθήματα"
+
+#: libapper/PkStrings.cpp:759
+#, kde-format
+msgctxt "The group type"
+msgid "Education"
+msgstr "Εκπαίδευση"
+
+#: libapper/PkStrings.cpp:761
+#, kde-format
+msgctxt "The group type"
+msgid "Games"
+msgstr "Παιχνίδια"
+
+#: libapper/PkStrings.cpp:763
+#, kde-format
+msgctxt "The group type"
+msgid "Graphics"
+msgstr "Γραφικά"
+
+#: libapper/PkStrings.cpp:765
+#, kde-format
+msgctxt "The group type"
+msgid "Internet"
+msgstr "Διαδίκτυο"
+
+#: libapper/PkStrings.cpp:767
+#, kde-format
+msgctxt "The group type"
+msgid "Office"
+msgstr "Γραφείο"
+
+#: libapper/PkStrings.cpp:769
+#, kde-format
+msgctxt "The group type"
+msgid "Others"
+msgstr "Άλλα"
+
+#: libapper/PkStrings.cpp:771
+#, kde-format
+msgctxt "The group type"
+msgid "Development"
+msgstr "Ανάπτυξη"
+
+#: libapper/PkStrings.cpp:773
+#, kde-format
+msgctxt "The group type"
+msgid "Multimedia"
+msgstr "Πολυμέσα"
+
+#: libapper/PkStrings.cpp:775
+#, kde-format
+msgctxt "The group type"
+msgid "System"
+msgstr "Σύστημα"
+
+#: libapper/PkStrings.cpp:777
+#, kde-format
+msgctxt "The group type"
+msgid "GNOME desktop"
+msgstr "GNOME"
+
+#: libapper/PkStrings.cpp:779
+#, kde-format
+msgctxt "The group type"
+msgid "KDE desktop"
+msgstr "KDE"
+
+#: libapper/PkStrings.cpp:781
+#, kde-format
+msgctxt "The group type"
+msgid "XFCE desktop"
+msgstr "XFCE"
+
+#: libapper/PkStrings.cpp:783
+#, kde-format
+msgctxt "The group type"
+msgid "Other desktops"
+msgstr "Άλλες επιφάνειες εργασίας"
+
+#: libapper/PkStrings.cpp:785
+#, kde-format
+msgctxt "The group type"
+msgid "Publishing"
+msgstr "Τυπογραφία"
+
+#: libapper/PkStrings.cpp:787
+#, kde-format
+msgctxt "The group type"
+msgid "Servers"
+msgstr "Εξυπηρετητές"
+
+#: libapper/PkStrings.cpp:789
+#, kde-format
+msgctxt "The group type"
+msgid "Fonts"
+msgstr "Γραμματοσειρές"
+
+#: libapper/PkStrings.cpp:791
+#, kde-format
+msgctxt "The group type"
+msgid "Admin tools"
+msgstr "Εργαλεία διαχείρισης"
+
+#: libapper/PkStrings.cpp:793
+#, kde-format
+msgctxt "The group type"
+msgid "Legacy"
+msgstr "Παλαιά"
+
+#: libapper/PkStrings.cpp:795
+#, kde-format
+msgctxt "The group type"
+msgid "Localization"
+msgstr "Τοπικότητα"
+
+#: libapper/PkStrings.cpp:797
+#, kde-format
+msgctxt "The group type"
+msgid "Virtualization"
+msgstr "Εικονικοποίηση"
+
+#: libapper/PkStrings.cpp:799
+#, kde-format
+msgctxt "The group type"
+msgid "Security"
+msgstr "Ασφάλεια"
+
+#: libapper/PkStrings.cpp:801
+#, kde-format
+msgctxt "The group type"
+msgid "Power management"
+msgstr "Διαχείριση ενέργειας"
+
+#: libapper/PkStrings.cpp:803
+#, kde-format
+msgctxt "The group type"
+msgid "Communication"
+msgstr "Επικοινωνίες"
+
+#: libapper/PkStrings.cpp:805
+#, kde-format
+msgctxt "The group type"
+msgid "Network"
+msgstr "Δίκτυο"
+
+#: libapper/PkStrings.cpp:807
+#, kde-format
+msgctxt "The group type"
+msgid "Maps"
+msgstr "Χάρτες"
+
+#: libapper/PkStrings.cpp:809
+#, kde-format
+msgctxt "The group type"
+msgid "Software sources"
+msgstr "Πηγές λογισμικού"
+
+#: libapper/PkStrings.cpp:811
+#, kde-format
+msgctxt "The group type"
+msgid "Science"
+msgstr "Επιστήμη"
+
+#: libapper/PkStrings.cpp:813
+#, kde-format
+msgctxt "The group type"
+msgid "Documentation"
+msgstr "Τεκμηρίωση"
+
+#: libapper/PkStrings.cpp:815
+#, kde-format
+msgctxt "The group type"
+msgid "Electronics"
+msgstr "Ηλεκτρονικά"
+
+#: libapper/PkStrings.cpp:817
+#, kde-format
+msgctxt "The group type"
+msgid "Package collections"
+msgstr "Συλλογές πακέτων"
+
+#: libapper/PkStrings.cpp:819
+#, kde-format
+msgctxt "The group type"
+msgid "Vendor"
+msgstr "Κατασκευαστής"
+
+#: libapper/PkStrings.cpp:821
+#, kde-format
+msgctxt "The group type"
+msgid "Newest packages"
+msgstr "Νεότερα πακέτα"
+
+#: libapper/PkStrings.cpp:823
+#, kde-format
+msgctxt "The group type"
+msgid "Unknown group"
+msgstr "Άγνωστη ομάδα"
+
+#: libapper/PkStrings.cpp:834
+#, kde-format
+msgctxt "The type of update"
+msgid "Trivial update"
+msgstr "Ενημέρωση ήσσονος σημασίας"
+
+#: libapper/PkStrings.cpp:836
+#, kde-format
+msgctxt "The type of update"
+msgid "Normal update"
+msgstr "Κανονική ενημέρωση"
+
+#: libapper/PkStrings.cpp:838
+#, kde-format
+msgctxt "The type of update"
+msgid "Important update"
+msgstr "Σημαντική ενημέρωση"
+
+#: libapper/PkStrings.cpp:840
+#, kde-format
+msgctxt "The type of update"
+msgid "Security update"
+msgstr "Ενημέρωση ασφαλείας"
+
+#: libapper/PkStrings.cpp:842
+#, kde-format
+msgctxt "The type of update"
+msgid "Bug fix update"
+msgstr "Ενημέρωση διόρθωσης σφάλματος"
+
+#: libapper/PkStrings.cpp:844
+#, kde-format
+msgctxt "The type of update"
+msgid "Enhancement update"
+msgstr "Ενημέρωση βελτίωσης"
+
+#: libapper/PkStrings.cpp:846
+#, kde-format
+msgctxt "The type of update"
+msgid "Blocked update"
+msgstr "Φραγμένη ενημέρωση"
+
+#: libapper/PkStrings.cpp:849
+#, kde-format
+msgctxt "The type of update"
+msgid "Installed"
+msgstr "Εγκατεστημένη"
+
+#: libapper/PkStrings.cpp:852
+#, kde-format
+msgctxt "The type of update"
+msgid "Available"
+msgstr "Διαθέσιμη"
+
+#: libapper/PkStrings.cpp:854
+#, kde-format
+msgctxt "The type of update"
+msgid "Unknown update"
+msgstr "Άγνωστη ενημέρωση"
+
+#: libapper/PkStrings.cpp:865
+#, kde-format
+msgid "No Updates Available"
+msgstr "Μη διαθέσιμες ενημερώσεις"
+
+#: libapper/PkStrings.cpp:868
+#, kde-format
+msgctxt "Some updates were selected on the view"
+msgid "1 Update Selected"
+msgid_plural "%1 Updates Selected"
+msgstr[0] "1 Επιλεγμένη ενημέρωση"
+msgstr[1] "%1 Επιλεγμένες ενημερώσεις"
+
+#: libapper/PkStrings.cpp:872
+#, kde-format
+msgctxt "Some updates are being shown on the screen"
+msgid "1 Update"
+msgid_plural "%1 Updates"
+msgstr[0] "1 Ενημέρωση"
+msgstr[1] "%1 Ενημερώσεις"
+
+#: libapper/PkStrings.cpp:875
+#, kde-format
+msgctxt "Type of update, in the case it's just an update"
+msgid "%1, %2"
+msgstr "%1, %2"
+
+#: libapper/PkStrings.cpp:876
+#, kde-format
+msgctxt "Part of: %1 Updates, %1 Selected"
+msgid "%1 Update"
+msgid_plural "%1 Updates"
+msgstr[0] "%1 Ενημέρωση"
+msgstr[1] "%1 Ενημερώσεις"
+
+#: libapper/PkStrings.cpp:877
+#, kde-format
+msgctxt "Part of: %1 Updates, %1 Selected"
+msgid "%1 Selected"
+msgid_plural "%1 Selected"
+msgstr[0] "%1 Επιλεγμένη"
+msgstr[1] "%1 Επιλεγμένες"
+
+#: libapper/PkStrings.cpp:881
+#, kde-format
+msgid "No Packages"
+msgstr "Κανένα πακέτο"
+
+#: libapper/PkStrings.cpp:883
+#, kde-format
+msgid "1 Package"
+msgid_plural "%1 Packages"
+msgstr[0] "1 Πακέτο"
+msgstr[1] "%1 Πακέτα"
+
+#: libapper/PkStrings.cpp:891
+#, kde-format
+msgid "No restart is necessary"
+msgstr "Δε θα χρειαστεί επανεκκίνηση"
+
+#: libapper/PkStrings.cpp:893
+#, kde-format
+msgid "You will be required to restart this application"
+msgstr "Θα χρειαστεί να επανεκκινήσετε την εφαρμογή"
+
+#: libapper/PkStrings.cpp:895
+#, kde-format
+msgid "You will be required to log out and back in"
+msgstr "Θα χρειαστεί να αποσυνδεθείτε και να συνδεθείτε εκ νέου"
+
+#: libapper/PkStrings.cpp:897
+#, kde-format
+msgid "A restart will be required"
+msgstr "Θα χρειαστεί επανεκκίνηση"
+
+#: libapper/PkStrings.cpp:899
+#, kde-format
+msgid "You will be required to log out and back in due to a security update."
+msgstr ""
+"Θα χρειαστεί να αποσυνδεθείτε και να συνδεθείτε εκ νέου, γιατί το απαιτεί "
+"μια ενημέρωση ασφαλείας."
+
+#: libapper/PkStrings.cpp:901
+#, kde-format
+msgid "A restart will be required due to a security update."
+msgstr "Θα χρειαστεί επανεκκίνηση, γιατί το απαιτεί μια ενημέρωση ασφαλείας."
+
+#: libapper/PkStrings.cpp:914
+#, kde-format
+msgid "No restart is required"
+msgstr "Δεν απαιτείται επανεκκίνηση"
+
+#: libapper/PkStrings.cpp:916
+#, kde-format
+msgid "A restart is required"
+msgstr "Απαιτείται επανεκκίνηση"
+
+#: libapper/PkStrings.cpp:918
+#, kde-format
+msgid "You need to log out and log back in"
+msgstr "Πρέπει να αποσυνδεθείτε και να συνδεθείτε εκ νέου"
+
+#: libapper/PkStrings.cpp:920
+#, kde-format
+msgid "You need to restart the application"
+msgstr "Απαιτείται επανεκκίνηση της εφαρμογής"
+
+#: libapper/PkStrings.cpp:922
+#, kde-format
+msgid "You need to log out and log back in to remain secure."
+msgstr ""
+"Θα χρειαστεί να αποσυνδεθείτε και να συνδεθείτε εκ νέου για να παραμένετε "
+"ασφαλής"
+
+#: libapper/PkStrings.cpp:924
+#, kde-format
+msgid "A restart is required to remain secure."
+msgstr "Θα χρειαστεί επανεκκίνηση, για να παραμείνει το σύστημα σας ασφαλές"
+
+#: libapper/PkStrings.cpp:937
+#, kde-format
+msgid "Stable"
+msgstr "Σταθερή"
+
+#: libapper/PkStrings.cpp:939
+#, kde-format
+msgid "Unstable"
+msgstr "Ασταθής"
+
+#: libapper/PkStrings.cpp:941
+#, kde-format
+msgid "Testing"
+msgstr "Δοκιμαστική"
+
+#: libapper/PkStrings.cpp:954
+#, kde-format
+msgid "Please insert the CD labeled '%1', and press continue."
+msgstr "Παρακαλώ εισάγετε το CD με ετικέτα '%1' και πατήστε συνέχεια."
+
+#: libapper/PkStrings.cpp:956
+#, kde-format
+msgid "Please insert the DVD labeled '%1', and press continue."
+msgstr "Παρακαλώ εισάγετε το DVD με ετικέτα '%1' και πατήστε συνέχεια."
+
+#: libapper/PkStrings.cpp:958
+#, kde-format
+msgid "Please insert the disc labeled '%1', and press continue."
+msgstr "Παρακαλώ εισάγετε το δίσκο με ετικέτα '%1' και πατήστε συνέχεια."
+
+#: libapper/PkStrings.cpp:960 libapper/PkStrings.cpp:963
+#, kde-format
+msgid "Please insert the medium labeled '%1', and press continue."
+msgstr "Παρακαλώ εισάγετε το μέσο με ετικέτα '%1' και πατήστε συνέχεια."
+
+#: libapper/PkStrings.cpp:1014
+#, kde-format
+msgid "You do not have the necessary privileges to perform this action."
+msgstr ""
+"Δεν έχετε τα προνόμια που απαιτούνται για την εκτέλεση αυτής της ενέργειας."
+
+#: libapper/PkStrings.cpp:1016
+#, kde-format
+msgid "Could not get a transaction id from packagekitd."
+msgstr ""
+"Δεν ήταν δυνατή η λήψη ενός αναγνωριστικού συναλλαγής από το packagekitd."
+
+#: libapper/PkStrings.cpp:1018
+#, kde-format
+msgid "Cannot connect to this transaction id."
+msgstr "Αδυναμία σύνδεσης σε αυτό το αναγνωριστικό συναλλαγής."
+
+#: libapper/PkStrings.cpp:1020
+#, kde-format
+msgid "This action is unknown."
+msgstr "Αυτή η ενέργεια είναι άγνωστη."
+
+#: libapper/PkStrings.cpp:1022
+#, kde-format
+msgid "The packagekitd service could not be started."
+msgstr "Δεν ήταν δυνατή η εκκίνηση της υπηρεσίας packagekitd."
+
+#: libapper/PkStrings.cpp:1024
+#, kde-format
+msgid "The query is not valid."
+msgstr "Δεν είναι έγκυρη η ερώτηση."
+
+#: libapper/PkStrings.cpp:1026
+#, kde-format
+msgid "The file is not valid."
+msgstr "Δεν είναι έγκυρο το αρχείο."
+
+#: libapper/PkStrings.cpp:1028
+#, kde-format
+msgid "This function is not yet supported."
+msgstr "Αυτή η λειτουργία δεν υποστηρίζεται ακόμα."
+
+#: libapper/PkStrings.cpp:1030
+#, kde-format
+msgid "Could not talk to packagekitd."
+msgstr "Δεν ήταν δυνατή η επικοινωνία με το packagekitd."
+
+#: libapper/PkStrings.cpp:1032
+#, kde-format
+msgid "Error talking to packagekitd."
+msgstr "Σφάλμα στην επικοινωνία με το packagekitd."
+
+#: libapper/PkStrings.cpp:1035 libapper/PkStrings.cpp:1038
+#, kde-format
+msgid "An unknown error happened."
+msgstr "Συνέβη ένα άγνωστο σφάλμα."
+
+#: libapper/PkStrings.cpp:1053
+#, kde-format
+msgid "Your system is up to date"
+msgstr "Το σύστημα σας είναι ενημερωμένο"
+
+#: libapper/PkStrings.cpp:1055
+#, kde-format
+msgid "You have no updates"
+msgstr "Δεν έχετε ενημερώσεις"
+
+#: libapper/PkStrings.cpp:1057
+#, kde-format
+msgid "Last check for updates was more than a month ago"
+msgstr "Ο τελευταία έλεγχος για ενημερώσεις έγινε πριν από ένα μήνα"
+
+#: libapper/PkStrings.cpp:1065
+#, kde-format
+msgid "Verified %1 ago"
+msgstr "Έγινε έλεγχος πριν από %1"
+
+#: libapper/PkStrings.cpp:1067
+#, kde-format
+msgid "It's strongly recommended that you check for new updates now"
+msgstr "Συνιστάται ιδιαίτερα να ελέγξετε για νέες ενημερώσεις άμεσα"
+
+#: libapper/PkTransaction.cpp:264
+#, kde-format
+msgid ""
+"You are about to install unsigned packages that can compromise your system, "
+"as it is impossible to verify if the software came from a trusted source.\n"
+"\n"
+"Are you sure you want to proceed with the installation?"
+msgstr ""
+"Πρόκειται να εγκαταστήσετε ανυπόγραφα πακέτα που μπορούν να παραβιάσουν το "
+"σύστημά σας, καθώς είναι αδύνατο να εξακριβωθεί αν το λογισμικό προέρχεται "
+"από αξιόπιστη πηγή.\n"
+"\n"
+"Είστε βέβαιοι ότι θέλετε να προχωρήσετε με την εγκατάσταση;"
+
+#: libapper/PkTransaction.cpp:267
+#, kde-format
+msgid "Installing unsigned software"
+msgstr "Εγκατάσταση μη υπογεγραμμένου λογισμικού"
+
+#: libapper/PkTransactionWidget.cpp:229 libapper/PkTransactionWidget.cpp:242
+#, kde-format
+msgid "%1 (%2%)"
+msgstr "%1 (%2%)"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/PkTransactionWidget.ui:47
+#, kde-format
+msgid "icon"
+msgstr "εικονίδιο"
+
+#. i18n: ectx: property (text), widget (QLabel, currentL)
+#: libapper/PkTransactionWidget.ui:73
+#, kde-format
+msgid "Downloading Packages"
+msgstr "Λήψη πακέτων"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RepoSig)
+#: libapper/RepoSig.ui:14
+#, kde-format
+msgid "Software signature is required"
+msgstr "Απαιτείται υπογραφή λογισμικού"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: libapper/RepoSig.ui:47
+#, kde-format
+msgid "Repository name:"
+msgstr "Όνομα αποθετηρίου:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: libapper/RepoSig.ui:73
+#, kde-format
+msgid "Signature URL:"
+msgstr "URL υπογραφής:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: libapper/RepoSig.ui:99
+#, kde-format
+msgid "Signature user identifier:"
+msgstr "Αναγνωριστικό χρήστη υπογραφής:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: libapper/RepoSig.ui:125
+#, kde-format
+msgid "Signature identifier:"
+msgstr "Αναγνωριστικό υπογραφής:"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/RepoSig.ui:147
+#, kde-format
+msgid "Do you trust the origin of packages?"
+msgstr "Εμπιστεύεστε την προέλευση των πακέτων;"
+
+#: libapper/Requirements.cpp:55
+#, kde-format
+msgid "Additional changes"
+msgstr "Πρόσθετες τροποποιήσεις"
+
+#: libapper/Requirements.cpp:82
+#, kde-format
+msgid "1 package to remove"
+msgid_plural "%1 packages to remove"
+msgstr[0] "1 πακέτο προς αφαίρεση"
+msgstr[1] "%1 πακέτα προς αφαίρεση"
+
+#: libapper/Requirements.cpp:97
+#, kde-format
+msgid "1 package to downgrade"
+msgid_plural "%1 packages to downgrade"
+msgstr[0] "1 πακέτο προς υποβάθμιση"
+msgstr[1] "%1 πακέτα προς υποβάθμιση"
+
+#: libapper/Requirements.cpp:112
+#, kde-format
+msgid "1 package to reinstall"
+msgid_plural "%1 packages to reinstall"
+msgstr[0] "1 πακέτο προς επανεγκατάσταση"
+msgstr[1] "%1 πακέτα προς επανεγκατάσταση"
+
+#: libapper/Requirements.cpp:125
+#, kde-format
+msgid "1 package to install"
+msgid_plural "%1 packages to install"
+msgstr[0] "1 πακέτο προς εγκατάσταση"
+msgstr[1] "%1 πακέτα προς εγκατάσταση"
+
+#: libapper/Requirements.cpp:138
+#, kde-format
+msgid "1 package to update"
+msgid_plural "%1 packages to update"
+msgstr[0] "1 πακέτο προς ενημέρωση"
+msgstr[1] "%1 πακέτα προς ενημέρωση"
+
+#: libapper/Requirements.cpp:151
+#, kde-format
+msgid "1 untrusted package"
+msgid_plural "%1 untrusted packages"
+msgstr[0] "1 αναξιόπιστο πακέτο"
+msgstr[1] "%1 αναξιόπιστα πακέτα"
+
+#: libapper/Requirements.cpp:199
+#, kde-format
+msgctxt "how many bytes are required for download"
+msgid "Need to get %1 of archives"
+msgstr "Απαιτείται η λήψη αρχείων %1"
+
+#: libapper/Requirements.cpp:258
+#, kde-format
+msgid ""
+"You are about to install unsigned packages that can compromise your system, "
+"as it is impossible to verify if the software came from a trusted source."
+msgstr ""
+"Πρόκειται να εγκαταστήσετε ανυπόγραφα πακέτα που μπορούν να παραβιάσουν το "
+"σύστημά σας, καθώς είναι αδύνατο να εξακριβωθεί αν το λογισμικό προέρχεται "
+"από αξιόπιστη πηγή."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/Requirements.ui:28
+#, kde-format
+msgid "Additional changes are required to complete the task"
+msgstr "Απαιτούνται πρόσθετες αλλαγές για να ολοκληρωθεί η εργασία"
+
+#. i18n: ectx: property (text), widget (QCheckBox, confirmCB)
+#: libapper/Requirements.ui:101
+#, kde-format
+msgid "Do not confirm when installing or updating additional packages"
+msgstr ""
+"Να μην απαιτείται επιβεβαίωση κατά την εγκατάσταση ή την ενημέρωση επιπλέον "
+"πακέτων"
+
+#. i18n: ectx: property (text), widget (QLabel, descriptionL)
+#: PkSession/IntroDialog.ui:65
+#, kde-format
+msgid "TextLabel"
+msgstr "Ετικέτα κειμένου"
+
+#: PkSession/main.cpp:48
+#, kde-format
+msgid "Apper PackageKit Session helper"
+msgstr "Βοηθός συνεδρίας Apper PackageKit"
+
+#: PkSession/main.cpp:51
+#, kde-format
+msgid "Daniel Nicoletti"
+msgstr "Daniel Nicoletti"
+
+#: PkSession/main.cpp:52
+#, kde-format
+msgid "Trever Fischer"
+msgstr "Trever Fischer"
+
+#: PkSession/PkInstallCatalogs.cpp:47
+#, kde-format
+msgid "Install Packages Catalogs"
+msgstr "Εγκατάσταση καταλόγων πακέτων"
+
+#: PkSession/PkInstallCatalogs.cpp:66
+#, kde-format
+msgid "You can drop more catalogs in here"
+msgstr "Μπορείτε να ρίξετε περισσότερους καταλόγους εδώ"
+
+#: PkSession/PkInstallCatalogs.cpp:85
+#, kde-format
+msgid "No supported catalog was found"
+msgstr "Δεν βρέθηκαν υποστηριζόμενοι κατάλογοι"
+
+#: PkSession/PkInstallCatalogs.cpp:87
+#, kde-format
+msgid "Do you want to install this catalog?"
+msgid_plural "Do you want to install these catalogs?"
+msgstr[0] "Θέλετε να εγκαταστήσετε αυτόν τον κατάλογο;"
+msgstr[1] "Θέλετε να εγκαταστήσετε αυτούς τους καταλόγους;"
+
+#: PkSession/PkInstallCatalogs.cpp:96
+#, kde-format
+msgid "An application wants to install a catalog"
+msgid_plural "An application wants to install catalogs"
+msgstr[0] "Μια εφαρμογή επιθυμεί να εγκαταστήσει έναν κατάλογο"
+msgstr[1] "Μια εφαρμογή επιθυμεί να εγκαταστήσει καταλόγους"
+
+#: PkSession/PkInstallCatalogs.cpp:100
+#, kde-format
+msgid "The application <i>%2</i> wants to install a catalog"
+msgid_plural "The application <i>%2</i> wants to install catalogs"
+msgstr[0] "Η εφαρμογή <i>%2</i> επιθυμεί να εγκαταστήσει έναν κατάλογο"
+msgstr[1] "Η εφαρμογή <i>%2</i> επιθυμεί να εγκαταστήσει καταλόγους"
+
+#: PkSession/PkInstallCatalogs.cpp:137
+#, kde-format
+msgid "Not supported"
+msgstr "Δεν υποστηρίζεται"
+
+#: PkSession/PkInstallCatalogs.cpp:138
+#, kde-format
+msgid ""
+"Your backend does not support any of the needed methods to install a catalog"
+msgstr ""
+"Το σύστημα υποστήριξης δεν υποστηρίζει καμία από τις απαιτούμενες μεθόδους "
+"για την εγκατάσταση καταλόγου"
+
+#: PkSession/PkInstallCatalogs.cpp:178
+#, kde-format
+msgid "Catalog not found"
+msgstr "Ο κατάλογος δε βρέθηκε"
+
+#: PkSession/PkInstallCatalogs.cpp:179
+#, kde-format
+msgid "Could not find a catalog to install"
+msgstr "Αδυναμία εύρεσης καταλόγου για εγκατάσταση"
+
+#: PkSession/PkInstallCatalogs.cpp:186
+#, kde-format
+msgid "Catalog %2 failed to open"
+msgid_plural "Catalogs %2 failed to open"
+msgstr[0] "Αποτυχία ανοίγματος του καταλόγου %2"
+msgstr[1] "Αποτυχία ανοίγματος των καταλόγων %2"
+
+#: PkSession/PkInstallCatalogs.cpp:190
+#, kde-format
+msgid "Failed to open"
+msgstr "Αποτυχία ανοίγματος"
+
+#: PkSession/PkInstallCatalogs.cpp:196
+#, kde-format
+msgid "Catalog is Empty"
+msgstr "Ο κατάλογος είναι κενός"
+
+#: PkSession/PkInstallCatalogs.cpp:197
+#, kde-format
+msgid "Could not find any package to install in this catalog"
+msgstr "Αδυναμία εύρεσης πακέτου για εγκατάσταση σε αυτόν τον κατάλογο"
+
+#: PkSession/PkInstallFontconfigResources.cpp:43
+#, kde-format
+msgid "Installs new Fonts"
+msgstr "Εγκαθιστά νέες γραμματοσειρές"
+
+#: PkSession/PkInstallFontconfigResources.cpp:74
+#, kde-format
+msgid "Could interpret request"
+msgstr "Επιτυχία διερμηνείας αιτήματος"
+
+#: PkSession/PkInstallFontconfigResources.cpp:74
+#, kde-format
+msgid "Please verify if the request was valid"
+msgstr "Παρακαλώ επαληθεύστε την εγκυρότητα του αιτήματος"
+
+#: PkSession/PkInstallFontconfigResources.cpp:108
+#, kde-format
+msgid ""
+"An additional font is required to view this document correctly.\n"
+"Do you want to search for a suitable package now?"
+msgid_plural ""
+"Additional fonts are required to view this document correctly.\n"
+"Do you want to search for suitable packages now?"
+msgstr[0] ""
+"Μια επιπλέον γραμματοσειρά απαιτείται για να δείτε αυτό το έγγραφο σωστά.\n"
+"Θέλετε να αναζητήσετε το κατάλληλο πακέτο;"
+msgstr[1] ""
+"Επιπλέον γραμματοσειρές απαιτούνται για να δείτε αυτό το έγγραφο σωστά.\n"
+"Θέλετε να αναζητήσετε τα κατάλληλα πακέτα;"
+
+#: PkSession/PkInstallFontconfigResources.cpp:118
+#, kde-format
+msgid "A program wants to install a font"
+msgid_plural "A program wants to install fonts"
+msgstr[0] "Ένα πρόγραμμα επιθυμεί να εγκαταστήσει μια γραμματοσειρά"
+msgstr[1] "Ένα πρόγραμμα επιθυμεί να εγκαταστήσει γραμματοσειρές"
+
+#: PkSession/PkInstallFontconfigResources.cpp:122
+#, kde-format
+msgid "The application %2 wants to install a font"
+msgid_plural "The application %2 wants to install fonts"
+msgstr[0] "Η εφαρμογή %2 επιθυμεί να εγκαταστήσει μια γραμματοσειρά"
+msgstr[1] "Η εφαρμογή %2 επιθυμεί να εγκαταστήσει γραμματοσειρές"
+
+#: PkSession/PkInstallFontconfigResources.cpp:148
+#: PkSession/PkInstallFontconfigResources.cpp:157
+#, kde-format
+msgid "Failed to find font"
+msgstr "Αποτυχία εύρεσης γραμματοσειράς"
+
+#: PkSession/PkInstallFontconfigResources.cpp:150
+#, kde-format
+msgid "No new fonts could be found for this document"
+msgstr "Δε βρέθηκαν κατάλληλες νέες γραμματοσειρές για αυτό το έγγραφο"
+
+#: PkSession/PkInstallFontconfigResources.cpp:159
+#, kde-format
+msgid "Failed to search for provides"
+msgstr "Αποτυχία αναζήτησης για πακέτα που να παρέχουν το αρχείο"
+
+#: PkSession/PkInstallGStreamerResources.cpp:40
+#, kde-format
+msgid "Install GStreamer Resources"
+msgstr "Εγκατάσταση των πόρων του GStreamer"
+
+#: PkSession/PkInstallGStreamerResources.cpp:68
+#, kde-format
+msgid "The following plugin is required. Do you want to search for this now?"
+msgid_plural ""
+"The following plugins are required. Do you want to search for these now?"
+msgstr[0] "Το ακόλουθο πρόσθετο απαιτείται. Θέλετε να το αναζητήσετε τώρα;"
+msgstr[1] "Τα ακόλουθα πρόσθετα απαιτούνται. Θέλετε να τα αναζητήσετε τώρα;"
+
+#: PkSession/PkInstallGStreamerResources.cpp:80
+#, kde-format
+msgid "A program requires an additional plugin to decode this file"
+msgid_plural "A program requires additional plugins to decode this file"
+msgstr[0] ""
+"Ένα πρόγραμμα απαιτεί ένα επιπλέον πρόσθετο για την αποκωδικοποίηση αυτού "
+"του αρχείου"
+msgstr[1] ""
+"Ένα πρόγραμμα απαιτεί επιπλέον πρόσθετα για την αποκωδικοποίηση αυτού του "
+"αρχείου"
+
+#: PkSession/PkInstallGStreamerResources.cpp:85
+#, kde-format
+msgid "A program requires an additional plugin to encode this file"
+msgid_plural "A program requires additional plugins to encode this file"
+msgstr[0] ""
+"Ένα πρόγραμμα απαιτεί ένα επιπλέον πρόσθετο για την κωδικοποίηση αυτού του "
+"αρχείου"
+msgstr[1] ""
+"Ένα πρόγραμμα απαιτεί επιπλέον πρόσθετα για την κωδικοποίηση αυτού του "
+"αρχείου"
+
+#: PkSession/PkInstallGStreamerResources.cpp:90
+#, kde-format
+msgid "A program requires an additional plugin for this operation"
+msgid_plural "A program requires additional plugins for this operation"
+msgstr[0] "Ένα πρόγραμμα απαιτεί ένα επιπλέον πρόσθετο για αυτή τη λειτουργία"
+msgstr[1] "Ένα πρόγραμμα απαιτεί επιπλέον πρόσθετα για αυτή τη λειτουργία"
+
+#: PkSession/PkInstallGStreamerResources.cpp:97
+#, kde-format
+msgid "%2 requires an additional plugin to decode this file"
+msgid_plural "%2 requires additional plugins to decode this file"
+msgstr[0] ""
+"Το %2 απαιτεί ένα επιπλέον πρόσθετο για την αποκωδικοποίηση αυτού του αρχείου"
+msgstr[1] ""
+"Το %2 απαιτεί επιπλέον πρόσθετα για την αποκωδικοποίηση αυτού του αρχείου"
+
+#: PkSession/PkInstallGStreamerResources.cpp:103
+#, kde-format
+msgid "%2 requires an additional plugin to encode this file"
+msgid_plural "%2 requires additional plugins to encode this file"
+msgstr[0] ""
+"Το %2 απαιτεί ένα επιπλέον πρόσθετο για την κωδικοποίηση αυτού του αρχείου"
+msgstr[1] ""
+"Το %2 απαιτεί επιπλέον πρόσθετα για την κωδικοποίηση αυτού του αρχείου"
+
+#: PkSession/PkInstallGStreamerResources.cpp:109
+#, kde-format
+msgid "%2 requires an additional plugin for this operation"
+msgid_plural "%2 requires additional plugins for this operation"
+msgstr[0] "Το %2 απαιτεί ένα επιπλέον πρόσθετο για αυτήν τη λειτουργία"
+msgstr[1] "Το %2 απαιτεί επιπλέον πρόσθετα για αυτήν τη λειτουργία"
+
+#: PkSession/PkInstallGStreamerResources.cpp:139
+#, kde-format
+msgid "No results found"
+msgstr "Δε βρέθηκαν αποτελέσματα"
+
+#: PkSession/PkInstallGStreamerResources.cpp:141
+#, kde-format
+msgid "Could not find plugin in any configured software source"
+msgstr "Αδυναμία εύρεσης πρόσθετου σε διαμορφωμένη πηγή λογισμικού"
+
+#: PkSession/PkInstallMimeTypes.cpp:41
+#, kde-format
+msgid "Install Support for File Types"
+msgstr "Εγκατάσταση υποστήριξης για τύπους αρχείου"
+
+#: PkSession/PkInstallMimeTypes.cpp:51
+#, kde-format
+msgid "Do you want to search for a program that can open this file type?"
+msgid_plural ""
+"Do you want to search for a program that can open these file types?"
+msgstr[0] ""
+"Θέλετε να αναζητήσετε τώρα ένα πρόγραμμα που να μπορεί να ανοίξει αυτόν τον "
+"τύπο αρχείου;"
+msgstr[1] ""
+"Θέλετε να αναζητήσετε τώρα ένα πρόγραμμα που να μπορεί να ανοίξει αυτούς "
+"τους τύπους αρχείου;"
+
+#: PkSession/PkInstallMimeTypes.cpp:56
+#, kde-format
+msgid "No valid file types were provided"
+msgstr "Δε δόθηκαν έγκυροι τύποι αρχείου"
+
+#: PkSession/PkInstallMimeTypes.cpp:63
+#, kde-format
+msgid "A program is requiring support to open this kind of files"
+msgid_plural "A program is requiring support to open these kinds of files"
+msgstr[0] ""
+"Ένα πρόγραμμα απαιτεί υποστήριξη για να ανοίξει αυτόν τον τύπο αρχείου"
+msgstr[1] ""
+"Ένα πρόγραμμα απαιτεί υποστήριξη για να ανοίξει αυτούς τους τύπους αρχείου"
+
+#: PkSession/PkInstallMimeTypes.cpp:67
+#, kde-format
+msgid "The application %2 is requiring support to open this kind of files"
+msgid_plural ""
+"The application %2 is requiring support to open these kinds of files"
+msgstr[0] ""
+"Η εφαρμογή %2 απαιτεί υποστήριξη για να ανοίξει αυτόν τον τύπο αρχείου"
+msgstr[1] ""
+"Η εφαρμογή %2 απαιτεί υποστήριξη για να ανοίξει αυτούς τους τύπους αρχείου"
+
+#: PkSession/PkInstallMimeTypes.cpp:94
+#, kde-format
+msgid "Could not find software"
+msgstr "Αδυναμία εύρεσης λογισμικού"
+
+#: PkSession/PkInstallMimeTypes.cpp:96
+#, kde-format
+msgid "No new applications can be found to handle this type of file"
+msgstr ""
+"Δε βρέθηκαν εφαρμογές που να μπορούν να χειριστούν αυτόν τον τύπο αρχείου"
+
+#: PkSession/PkInstallPackageFiles.cpp:40
+#, kde-format
+msgid "Install Packages Files"
+msgstr "Εγκατάσταση αρχείων πακέτων"
+
+#: PkSession/PkInstallPackageFiles.cpp:44
+#: PkSession/PkRemovePackageByFiles.cpp:45
+#, kde-format
+msgid "You can drop more files in here"
+msgstr "Μπορείτε να αποθέσετε περισσότερα αρχεία εδώ"
+
+#: PkSession/PkInstallPackageFiles.cpp:53
+#, kde-format
+msgid "Not Supported"
+msgstr "Δεν υποστηρίζεται"
+
+#: PkSession/PkInstallPackageFiles.cpp:54
+#, kde-format
+msgid "Your current backend does not support installing files"
+msgstr "Το τρέχον σύστημα υποστήριξης δεν υποστηρίζει την εγκατάσταση πακέτων"
+
+#: PkSession/PkInstallPackageFiles.cpp:69
+#: PkSession/PkRemovePackageByFiles.cpp:65
+#, kde-format
+msgid "No supported files were provided"
+msgstr "Δε δόθηκαν υποστηριζόμενα αρχεία"
+
+#: PkSession/PkInstallPackageFiles.cpp:71
+#, kde-format
+msgid "Press <i>Continue</i> if you want to install this file"
+msgid_plural "Press <i>Continue</i> if you want to install these files"
+msgstr[0] "Πιέστε <i>Συνέχεια</i> εάν θέλετε να εγκαταστήσετε αυτό το αρχείο"
+msgstr[1] ""
+"Πιέστε <i>Συνέχεια</i> εάν επιθυμείτε να εγκαταστήσετε αυτά τα αρχεία"
+
+#: PkSession/PkInstallPackageFiles.cpp:80
+#: PkSession/PkInstallPackageNames.cpp:72
+#, kde-format
+msgid "An application wants to install a package"
+msgid_plural "An application wants to install packages"
+msgstr[0] "Μια εφαρμογή επιθυμεί να εγκαταστήσει ένα πακέτο"
+msgstr[1] "Μια εφαρμογή επιθυμεί να εγκαταστήσει πακέτα"
+
+#: PkSession/PkInstallPackageFiles.cpp:84
+#: PkSession/PkInstallPackageNames.cpp:76
+#, kde-format
+msgid "The application <i>%2</i> wants to install a package"
+msgid_plural "The application <i>%2</i> wants to install packages"
+msgstr[0] "Η εφαρμογή <i>%2</i> επιθυμεί να εγκαταστήσει ένα πακέτο"
+msgstr[1] "Η εφαρμογή <i>%2</i> επιθυμεί να εγκαταστήσει πακέτα"
+
+#: PkSession/PkInstallPackageFiles.cpp:106
+#, kde-format
+msgid "Installation Complete"
+msgstr "Η εγκατάσταση ολοκληρώθηκε"
+
+#: PkSession/PkInstallPackageFiles.cpp:107
+#, kde-format
+msgid "File was installed successfully"
+msgid_plural "Files were installed successfully"
+msgstr[0] "Το αρχείο εγκαταστάθηκε με επιτυχία"
+msgstr[1] "Τα αρχεία εγκαταστάθηκαν με επιτυχία"
+
+#: PkSession/PkInstallPackageFiles.cpp:118
+#, kde-format
+msgid "Failed to install files"
+msgstr "Αποτυχία εγκατάστασης αρχείων"
+
+#: PkSession/PkInstallPackageFiles.cpp:119
+#: PkSession/PkInstallPackageFiles.cpp:121
+#, kde-format
+msgid "Could not install files"
+msgstr "Αποτυχία εγκατάστασης αρχείων"
+
+#: PkSession/PkInstallPackageNames.cpp:43
+#, kde-format
+msgid "Install Packages by Name"
+msgstr "Εγκατάσταση πακέτων με βάση το όνομα"
+
+#: PkSession/PkInstallPackageNames.cpp:59
+#, kde-format
+msgid "No package names were provided"
+msgstr "Δε δόθηκαν ονόματα πακέτων"
+
+#: PkSession/PkInstallPackageNames.cpp:62
+#, kde-format
+msgid "Do you want to search for and install this package now?"
+msgid_plural "Do you want to search for and install these packages now?"
+msgstr[0] "Θέλετε να αναζητήσετε τώρα αυτό το πακέτο και να το εγκαταστήσετε;"
+msgstr[1] "Θέλετε να αναζητήσετε τώρα αυτά τα πακέτα και να τα εγκαταστήσετε;"
+
+#: PkSession/PkInstallPackageNames.cpp:101
+#, kde-format
+msgid "Failed to install packages"
+msgstr "Αποτυχία εγκατάστασης πακέτων"
+
+#: PkSession/PkInstallPackageNames.cpp:102
+#, kde-format
+msgid "The package %2 is already installed"
+msgid_plural "The packages %2 are already installed"
+msgstr[0] "Το πακέτο %2 είναι ήδη εγκατεστημένο"
+msgstr[1] "Τα πακέτα %2 είναι ήδη εγκατεστημένα"
+
+#: PkSession/PkInstallPackageNames.cpp:110
+#: PkSession/PkRemovePackageByFiles.cpp:140 PkSession/PkSearchFile.cpp:82
+#, kde-format
+msgid "Could not find %1"
+msgstr "Αδύνατη η εύρεση του %1"
+
+#: PkSession/PkInstallPackageNames.cpp:111
+#, kde-format
+msgid "The package could not be found in any software source"
+msgid_plural "The packages could not be found in any software source"
+msgstr[0] "Το πακέτο δε βρέθηκε σε καμία πηγή λογισμικού"
+msgstr[1] "Τα πακέτα δε βρέθηκαν σε καμία πηγή λογισμικού"
+
+#: PkSession/PkInstallPlasmaResources.cpp:41
+#, kde-format
+msgid "Install Plasma Resources"
+msgstr "Εγκατάσταση των πόρων του Plasma"
+
+#: PkSession/PkInstallPlasmaResources.cpp:53
+#, kde-format
+msgid "%1 data engine"
+msgstr "%1 μηχανή δεδομένων"
+
+#: PkSession/PkInstallPlasmaResources.cpp:55
+#, kde-format
+msgid "%1 script engine"
+msgstr "%1 μηχανή σεναρίων"
+
+#: PkSession/PkInstallPlasmaResources.cpp:67
+#, kde-format
+msgid "No supported resources were provided"
+msgstr "Δε δόθηκαν υποστηριζόμενοι πόροι"
+
+#: PkSession/PkInstallPlasmaResources.cpp:69
+#, kde-format
+msgid "The following service is required. Do you want to search for this now?"
+msgid_plural ""
+"The following services are required. Do you want to search for these now?"
+msgstr[0] "Απαιτείται η ακόλουθη υπηρεσία. Θέλετε να την αναζητήσετε τώρα;"
+msgstr[1] "Απαιτούνται οι ακόλουθες υπηρεσίες. Θέλετε να τις αναζητήσετε τώρα;"
+
+#: PkSession/PkInstallPlasmaResources.cpp:78
+#, kde-format
+msgid "Plasma requires an additional service for this operation"
+msgid_plural "Plasma requires additional services for this operation"
+msgstr[0] "Το Plasma απαιτεί μια επιπλέον υπηρεσία για αυτήν την λειτουργία"
+msgstr[1] "Το Plasma απαιτεί επιπλέον υπηρεσίες για αυτήν την λειτουργία"
+
+#: PkSession/PkInstallPlasmaResources.cpp:103
+#, kde-format
+msgid "Failed to search for Plasma service"
+msgstr "Αποτυχία αναζήτησης υπηρεσίας Plasma"
+
+#: PkSession/PkInstallPlasmaResources.cpp:106
+#, kde-format
+msgid "Could not find service in any configured software source"
+msgstr "Αδυναμία εύρεσης υπηρεσίας σε διαμορφωμένη πηγή λογισμικού"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:41
+#, kde-format
+msgid "Install Printer Drivers"
+msgstr "Εγκατάσταση οδηγών εκτυπωτή"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:82
+#, kde-format
+msgid "Failed to search for printer driver"
+msgstr "Αποτυχία αναζήτησης για οδηγό εκτυπωτή"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:83
+#, kde-format
+msgid "Could not find printer driver in any configured software source"
+msgstr "Αδυναμία εύρεσης οδηγών εκτυπωτή σε διαμορφωμένες πηγές λογισμικού"
+
+#: PkSession/PkInstallProvideFiles.cpp:41
+#, kde-format
+msgid "Install Packages that Provides Files"
+msgstr "Εγκατάσταση πακέτων που παρέχουν τα αρχεία"
+
+#: PkSession/PkInstallProvideFiles.cpp:50
+#, kde-format
+msgid "No files were provided"
+msgstr "Δε δόθηκαν αρχεία"
+
+#: PkSession/PkInstallProvideFiles.cpp:53
+#, kde-format
+msgid "Do you want to search for this now?"
+msgid_plural "Do you want to search for these now?"
+msgstr[0] "Θέλετε να το αναζητήσετε τώρα;"
+msgstr[1] "Θέλετε να τα αναζητήσετε τώρα;"
+
+#: PkSession/PkInstallProvideFiles.cpp:63
+#, kde-format
+msgid "A program wants to install a file"
+msgid_plural "A program wants to install files"
+msgstr[0] "Ένα πρόγραμμα επιθυμεί να εγκαταστήσει ένα αρχείο"
+msgstr[1] "Ένα πρόγραμμα επιθυμεί να εγκαταστήσει αρχεία"
+
+#: PkSession/PkInstallProvideFiles.cpp:67
+#, kde-format
+msgid "The application %2 is asking to install a file"
+msgid_plural "The application %2 is asking to install files"
+msgstr[0] "Η εφαρμογή %2 ζητάει να εγκαταστήσει ένα αρχείο"
+msgstr[1] "Η εφαρμογή %2 ζητάει να εγκαταστήσει αρχεία"
+
+#: PkSession/PkInstallProvideFiles.cpp:93
+#, kde-format
+msgid "Failed to install file"
+msgstr "Αποτυχία εγκατάστασης αρχείου"
+
+#: PkSession/PkInstallProvideFiles.cpp:94
+#, kde-format
+msgid "The %1 package already provides this file"
+msgstr "Το πακέτο %1 ήδη παρέχει αυτό το αρχείο"
+
+#: PkSession/PkInstallProvideFiles.cpp:100
+#, kde-format
+msgid "Failed to find package"
+msgstr "Αποτυχία εύρεσης πακέτου"
+
+#: PkSession/PkInstallProvideFiles.cpp:101
+#, kde-format
+msgid "The file could not be found in any packages"
+msgid_plural "The files could not be found in any packages"
+msgstr[0] "Το αρχείο δε βρέθηκε σε κανένα πακέτο"
+msgstr[1] "Τα αρχεία δε βρέθηκαν σε κανένα πακέτο"
+
+#: PkSession/PkIsInstalled.cpp:40
+#, kde-format
+msgid "Querying if a Package is Installed"
+msgstr "Ερώτηση αν ένα πακέτο είναι εγκατεστημένο"
+
+#: PkSession/PkIsInstalled.cpp:61
+#, kde-format
+msgid "User canceled the transaction"
+msgstr "Ο χρήστης ματαίωσε την αλλαγή"
+
+#: PkSession/PkIsInstalled.cpp:63
+#, kde-format
+msgid "An unknown error happened"
+msgstr "Συνέβη ένα άγνωστο σφάλμα"
+
+#: PkSession/PkRemovePackageByFiles.cpp:42
+#, kde-format
+msgid "Remove Packages that Provides Files"
+msgstr "Αφαίρεση πακέτων που παρέχουν τα αρχεία"
+
+#: PkSession/PkRemovePackageByFiles.cpp:68
+#, kde-format
+msgid "Do you want to remove the following application?"
+msgid_plural "Do you want to remove the following applications?"
+msgstr[0] "Θέλετε να αφαιρέσετε την ακόλουθη εφαρμογή;"
+msgstr[1] "Θέλετε να αφαιρέσετε τις ακόλουθες εφαρμογές;"
+
+#: PkSession/PkRemovePackageByFiles.cpp:72
+#, kde-format
+msgid "Do you want to search for a package providing this file?"
+msgid_plural "Do you want to search for a package providing these files?"
+msgstr[0] "Θέλετε να αναζητήσετε για ένα πακέτο που παρέχει αυτό το αρχείο;"
+msgstr[1] "Θέλετε να αναζητήσετε για ένα πακέτο που παρέχει αυτά τα αρχεία;"
+
+#: PkSession/PkRemovePackageByFiles.cpp:83
+#, kde-format
+msgid "An application is asking to remove an application"
+msgid_plural "An application is asking to remove applications"
+msgstr[0] "Μια εφαρμογή ζητάει να αφαιρέσει μια εφαρμογή"
+msgstr[1] "Μια εφαρμογή ζητάει να αφαιρέσει εφαρμογές"
+
+#: PkSession/PkRemovePackageByFiles.cpp:87
+#, kde-format
+msgid "An application is asking to remove a file"
+msgid_plural "An application is asking to remove files"
+msgstr[0] "Μια εφαρμογή ζητάει να αφαιρέσει ένα αρχείο"
+msgstr[1] "Μια εφαρμογή ζητάει να αφαιρέσει αρχεία"
+
+#: PkSession/PkRemovePackageByFiles.cpp:93
+#, kde-format
+msgid "The application <i>%2</i> is asking to remove an application"
+msgid_plural "The application <i>%2</i> is asking to remove applications"
+msgstr[0] "Η εφαρμογή <i>%2</i> ζητάει να αφαιρέσει μια εφαρμογή"
+msgstr[1] "Η εφαρμογή <i>%2</i> ζητάει να αφαιρέσει εφαρμογές"
+
+#: PkSession/PkRemovePackageByFiles.cpp:98
+#, kde-format
+msgid "The application <i>%2</i> is asking to remove a file"
+msgid_plural "The application <i>%2</i> is asking to remove files"
+msgstr[0] "Η εφαρμογή <i>%2</i> ζητάει να αφαιρέσει ένα αρχείο"
+msgstr[1] "Η εφαρμογή <i>%2</i> ζητάει να αφαιρέσει αρχεία"
+
+#: PkSession/PkRemovePackageByFiles.cpp:104
+#, kde-format
+msgid "No application was found"
+msgstr "Δε βρέθηκαν εφαρμογές"
+
+#: PkSession/PkRemovePackageByFiles.cpp:141
+#, kde-format
+msgid "The file could not be found in any installed package"
+msgid_plural "The files could not be found in any installed package"
+msgstr[0] "Το αρχείο δε βρέθηκε σε κανένα εγκατεστημένο πακέτο"
+msgstr[1] "Τα αρχεία δε βρέθηκαν σε κανένα εγκατεστημένο πακέτο"
+
+#: PkSession/PkSearchFile.cpp:42
+#, kde-format
+msgid "Search Packages that Provides Files"
+msgstr "Αναζήτηση πακέτων που παρέχουν τα αρχεία"
+
+#: PkSession/PkSearchFile.cpp:81
+#, kde-format
+msgid "The file name could not be found in any software source"
+msgstr "Δε βρέθηκε το όνομα του αρχείου σε καμία πηγή λογισμικού"
+
+#: PkSession/ReviewChanges.cpp:51
+#, kde-format
+msgid "The following package was found"
+msgid_plural "The following packages were found"
+msgstr[0] "Το ακόλουθο πακέτο βρέθηκε"
+msgstr[1] "Τα ακόλουθα πακέτα βρέθηκαν"
+
+#: PkSession/SessionTask.cpp:371
+#, kde-format
+msgid "There are no packages to Install or Remove"
+msgstr "Δεν υπάρχει κανένα πακέτο για εγκατάσταση ή αφαίρεση"
+
+#: PkSession/SessionTask.cpp:372
+#, kde-format
+msgid "This action should not happen"
+msgstr "Αυτή η ενέργεια δεν πρέπει να συμβεί"
+
+#: PkSession/SessionTask.cpp:401
+#, kde-format
+msgid "Could not find"
+msgstr "Αδυναμία εύρεσης"
+
+#: PkSession/SessionTask.cpp:402 PkSession/SessionTask.cpp:411
+#, kde-format
+msgid "No packages were found that meet the request"
+msgstr "Αδυναμία εύρεσης απαιτούμενων πακέτων"
+
+#: PkSession/SessionTask.cpp:410
+#, kde-format
+msgid "Failed to find"
+msgstr "Αποτυχία εύρεσης"
+
+#. i18n("Failed to commit transaction"),
+#. PkStrings::errsearchFailedorMessage(m_pkTransaction->error()));
+#: PkSession/SessionTask.cpp:431
+#, kde-format
+msgid "Transaction did not finish with success"
+msgstr "Αποτυχία ολοκλήρωσης συναλλαγής"
+
+#: PkSession/SessionTask.cpp:437
+#, kde-format
+msgid "Task completed"
+msgstr "Ολοκληρώθηκε η εργασία"
+
+#: PkSession/SessionTask.cpp:437
+#, kde-format
+msgid "All operations were committed successfully"
+msgstr "Όλες οι λειτουργίες καταχωρήθηκαν με επιτυχία"
+
+#~ msgid "KDE interface for managing software"
+#~ msgstr "Διασύνδεση του KDE για τη διαχείριση λογισμικού"
+
+#~ msgid "A mirror is possibly broken"
+#~ msgstr "Ίσως δε λειτουργεί ένας εναλλακτικός σύνδεσμος"
+
+#~ msgid "The connection was refused"
+#~ msgstr "Η σύνδεση απορρίφθηκε"
+
+#~ msgid "The parameter was invalid"
+#~ msgstr "Δεν ήταν έγκυρη η παράμετρος"
+
+#~ msgid "The priority was invalid"
+#~ msgstr "Δεν ήταν έγκυρη η προτεραιότητα"
+
+#~ msgid "Backend warning"
+#~ msgstr "Προειδοποίηση από το σύστημα υποστήριξης"
+
+#~ msgid "Daemon warning"
+#~ msgstr "Προειδοποίηση από την υπηρεσία"
+
+#~ msgid "The package list cache is being rebuilt"
+#~ msgstr "Δημιουργείται εκ νέου η μνήμη της λίστας πακέτων"
+
+#~ msgid "An untrusted package was installed"
+#~ msgstr "Εγκαταστάθηκε ένα μη έμπιστο πακέτο"
+
+#~ msgid "A newer package exists"
+#~ msgstr "Υπάρχει ένα νεότερο πακέτο"
+
+#~ msgid "Could not find package"
+#~ msgstr "Δε βρέθηκε το πακέτο"
+
+#~ msgid "Configuration files were changed"
+#~ msgstr "Τροποποιήθηκαν αρχεία διαμόρφωσης"
+
+#~ msgid "Package is already installed"
+#~ msgstr "Το πακέτο είναι ήδη εγκατεστημένο"
+
+#~ msgid "Automatic cleanup is being ignored"
+#~ msgstr "Η αυτόματη εκκαθάριση αγνοήθηκε"
+
+#~ msgid "Software source download failed"
+#~ msgstr "Απέτυχε η λήψη της πηγής του λογισμικού"
+
+#~ msgid "This software source is for developers only"
+#~ msgstr "Αυτή η πηγή λογισμικού είναι μόνο για προγραμματιστές"
+
+#~ msgid "Other updates have been held back"
+#~ msgstr "Άλλες ενημερώσεις κρατήθηκαν πίσω"
+
+#~ msgid "Application Manager"
+#~ msgstr "Διαχειριστής Εφαρμογών"
+
+#, fuzzy
+#~| msgid "(C) 2012, Matthias Klumpp"
+#~ msgid "(C) 2014, Matthias Klumpp"
+#~ msgstr "(C) 2012, Matthias Klumpp"
+
+#~ msgid "This package has the following security level: <b>%1</b>"
+#~ msgstr "Το πακέτο αυτό έχει το ακόλουθο επίπεδο ασφάλειας: <b>%1</b>"
+
+#~ msgid "It was signed with a key belonging to these user-ids: %1"
+#~ msgstr "Υπογράφηκε με κλειδί που ανήκει σε αυτές τις ταυτότητες χρηστών: %1"
+
+#~ msgid "Security hints"
+#~ msgstr "Συμβουλές ασφαλείας"
+
+#~ msgid "Current backend does not support installing files."
+#~ msgstr "Το σύστημα υποστήριξης δεν υποστηρίζει την εγκατάσταση αρχείων."
+
+#~ msgid "Current backend does not support installing packages."
+#~ msgstr "Το σύστημα υποστήριξης δεν υποστηρίζει την εγκατάσταση πακέτων."
+
+#~ msgid "The current backend does not support removing packages."
+#~ msgstr "Το σύστημα υποστήριξης δεν υποστηρίζει την αφαίρεση πακέτων."
+
+#~ msgid "The current backend does not support updating packages."
+#~ msgstr "Το σύστημα υποστήριξης δεν υποστηρίζει την ενημέρωση πακέτων."
+
+#~ msgid "I agree to the above terms and conditions"
+#~ msgstr "Συμφωνώ με τους παραπάνω όρους και προϋποθέσεις"
+
+#~ msgid "I don't agree"
+#~ msgstr "Δεν συμφωνώ"
+
+#~ msgid "Install for all users"
+#~ msgstr "Εγκατάσταση για όλους τους χρήστες"
+
+#~ msgid "Software license"
+#~ msgstr "Άδεια χρήσης λογισμικού"
+
+#~ msgid "Please read the following terms and conditions carefully!"
+#~ msgstr "Παρακαλώ διαβάστε τους παρακάτω όρους και προϋποθέσεις προσεκτικά!"
+
+#~ msgid ""
+#~ "Installing this package will make the following native packages obsolete. "
+#~ "You might consider removing them manually."
+#~ msgstr ""
+#~ "Η εγκατάσταση αυτού του πακέτου θα κάνει τα ακόλουθα εγγενή πακέτα "
+#~ "πεπαλαιωμένα. Ίσως να θέλετε να τα αφαιρέσετε χειροκίνητα."
+
+#~ msgid "Similar native packages found"
+#~ msgstr "Βρέθηκαν παρόμοια εγγενή πακέτα"
+
+#~ msgid ""
+#~ "You want to install this application as root!\n"
+#~ "This can damage your system or install malicious software for all users.\n"
+#~ "Please only proceed, if you really know what you're doing!\n"
+#~ "Continue?"
+#~ msgstr ""
+#~ "Θέλετε να εγκαταστήσετε αυτή την εφαρμογή ως υπερχρήστης!\n"
+#~ "Αυτό μπορεί να βλάψει το σύστημά σας ή να εγκαταστήσει κακόβουλο "
+#~ "λογισμικό για όλους τους χρήστες.\n"
+#~ "Παρακαλώ να προχωρήσετε μόνο, εάν γνωρίζετε πραγματικά τι κάνετε!\n"
+#~ "Συνέχεια;"
+
+#~ msgid "Really install as superuser?"
+#~ msgstr "Είστε σίγουροι ότι θέλετε να κάνετε εγκατάσταση ως υπερχρήστης;"
+
+#~ msgid "Upgrade System"
+#~ msgstr "Αναβάθμιση του συστήματος"
+
+#~ msgid "Failed to simulate file install"
+#~ msgstr "Αποτυχία προσομοίωσης εγκατάστασης αρχείου"
+
+#~ msgid "Failed to simulate package install"
+#~ msgstr "Αποτυχία προσομοίωσης εγκατάστασης πακέτου"
+
+#~ msgid "Failed to simulate package removal"
+#~ msgstr "Αποτυχία προσομοίωσης αφαίρεσης πακέτου"
+
+#~ msgid "Failed to simulate package update"
+#~ msgstr "Αποτυχία προσομοίωσης ενημέρωσης πακέτου"
+
+#~ msgid "Failed to install package"
+#~ msgstr "Αποτυχία εγκατάστασης πακέτου"
+
+#~ msgid "Failed to remove package"
+#~ msgstr "Αποτυχία αφαίρεσης πακέτου"
+
+#~ msgid "Failed to update package"
+#~ msgstr "Αποτυχία ενημέρωσης πακέτου"
+
+#~ msgid "Failed to install signature"
+#~ msgstr "Αποτυχία εγκατάστασης υπογραφής"
+
+#~ msgid "Failed to start resolve transaction"
+#~ msgstr "Αποτυχία εκκίνησης συναλλαγής επίλυσης"
+
+#~ msgid "Failed to start search file transaction"
+#~ msgstr "Αποτυχία εκκίνησης συναλλαγής εύρεσης αρχείων"
+
+#~ msgid "(C) 2008-2012 Daniel Nicoletti"
+#~ msgstr "(C) 2008-2012 Daniel Nicoletti"
+
+#~ msgid "(C) 2008-2011 Daniel Nicoletti"
+#~ msgstr "(C) 2008-2011 Daniel Nicoletti"
+
+#~ msgid "You have one update"
+#~ msgid_plural "You have %1 updates"
+#~ msgstr[0] "Έχετε μία ενημέρωση"
+#~ msgstr[1] "Έχετε %1 ενημερώσεις"
+
+#~ msgid "Failed to set origin data"
+#~ msgstr "Αποτυχία ρύθμισης δεδομένων προέλευσης"
+
+#~ msgid "Software Updater"
+#~ msgstr "Ενημερώσεις Λογισμικού"
+
+#~ msgid "Click to upgrade to %1"
+#~ msgstr "Κάντε κλικ για αναβάθμιση σε %1"
+
+#~ msgid "Apper Sentinel"
+#~ msgstr "Apper Sentinel"
+
+#~ msgid "Review Updates"
+#~ msgstr "Αναθεώρηση ενημερώσεων"
+
+#~ msgid "Configure"
+#~ msgstr "Διαμόρφωση"
+
+#~ msgid "Check for updates:"
+#~ msgstr "Έλεγχος ενημερώσεων:"
+
+#~ msgctxt "transaction state, downloading package files"
+#~ msgid "Downloading packages"
+#~ msgstr "Λήψη πακέτων"
+
+#~ msgid "Packages: %1"
+#~ msgstr "Πακέτα: %1"
+
+#~ msgid "Ignore"
+#~ msgstr "Αγνόηση"
+
+#~ msgid "Transactions"
+#~ msgstr "Συναλλαγές"
+
+#~ msgid "%1% - %2"
+#~ msgstr "%1% - %2"
+
+#~ msgid "%1"
+#~ msgstr "%1"
+
+#~ msgid "Hide this icon"
+#~ msgstr "Απόκρυψη αυτού του εικονιδίου"
+
+#~ msgid "One message from the software manager"
+#~ msgid_plural "%1 messages from the software manager"
+#~ msgstr[0] "Ένα μήνυμα από το διαχειριστή λογισμικού"
+#~ msgstr[1] "%1 μηνύματα από το διαχειριστή λογισμικού"
+
+#~ msgid "Show messages"
+#~ msgstr "Εμφάνιση μηνυμάτων"
+
+#~ msgid "Failed to refresh package cache"
+#~ msgstr "Αποτυχία ανανέωσης μνήμης πακέτων"
+
+#~ msgid ""
+#~ "Allows you to hide the window whilst keeping the transaction task running."
+#~ msgstr ""
+#~ "Σας επιτρέπει να αποκρύψετε το παράθυρο, διατηρώντας ταυτόχρονα τη "
+#~ "διεργασίας συναλλαγής σε εκτέλεση."
+
+#~ msgid "Package"
+#~ msgstr "Πακέτο"
+
+#~ msgctxt "Shown when you have not set a weather provider"
+#~ msgid "Please Configure"
+#~ msgstr "Διαμορφώστε"
+
+#~ msgctxt ""
+#~ "%1 is the weather condition, %2 is the temperature, both come from the "
+#~ "weather provider"
+#~ msgid "%1 %2"
+#~ msgstr "%1 %2"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Updating system"
+#~ msgstr "Ενημέρωση συστήματος"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Updated system"
+#~ msgstr "Ενημερώθηκε το σύστημα"
+
+#~ msgid "Update System"
+#~ msgstr "Ενημέρωση συστήματος"
+
+#~ msgctxt "transaction state, when we return to a previous system state"
+#~ msgid "Rolling back"
+#~ msgstr "Επαναφορά σε προηγούμενη έκδοση"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Rolling back"
+#~ msgstr "Επαναφορά σε προηγούμενη έκδοση"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Simulating the install of files"
+#~ msgstr "Προσομοίωση της εγκατάστασης αρχείων"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Rolled back"
+#~ msgstr "Έγινε επαναφορά"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the install of files"
+#~ msgstr "Προσομοίωθηκε η εγκατάσταση των αρχείων"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the install"
+#~ msgstr "Προσομοίωθηκε η εγκατάσταση"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the remove"
+#~ msgstr "Προσομοίωθηκε η αφαίρεση"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the update"
+#~ msgstr "Προσομοίωθηκε η ενημέρωση"
+
+#~ msgid "Simulate Install Files"
+#~ msgstr "Προσομοίωση εγκατάστασης αρχείων"
+
+#~ msgid "Simulate Install Packages"
+#~ msgstr "Προσομοίωση εγκατάστασης πακέτων"
+
+#~ msgid "Simulate Remove Packages"
+#~ msgstr "Προσομοίωση αφαίρεσης πακέτων"
+
+#~ msgid "Simulate Update Packages"
+#~ msgstr "Προσομοίωση ενημέρωσης πακέτων"
+
+#, fuzzy
+#~ msgid "Update Settings"
+#~ msgstr "Ενημέρωση"
+
+#, fuzzy
+#~ msgid "Notify when updates are available"
+#~ msgstr "Ειδοποίηση διαθεσιμότητας ενημερώσεων"
+
+#, fuzzy
+#~ msgid "Failed to commit transaction"
+#~ msgstr "Συναλλαγές"
+
+#, fuzzy
+#~ msgid "Failed to accept EULA"
+#~ msgstr "Αποτυχία ολοκλήρωσης"
+
+#, fuzzy
+#~ msgid "Actions"
+#~ msgstr "Εκπαίδευση"
+
+#, fuzzy
+#~ msgid "(C) 2008-2010 Daniel Nicoletti"
+#~ msgstr "(C) 2008 Daniel Nicoletti"
+
+#, fuzzy
+#~ msgid "Press <i>Continue</i> if you want to remove"
+#~ msgstr "Επιθυμείτε την εγκατάσταση του αρχείου;"
+
+#, fuzzy
+#~ msgid "%2 wants to install a font"
+#~ msgid_plural "%2 wants to install fonts"
+#~ msgstr[0] "Επιθυμείτε την εγκατάσταση του αρχείου;"
+#~ msgstr[1] "Επιθυμείτε την εγκατάσταση αυτών των αρχείων;"
+
+#, fuzzy
+#~ msgid "Failed to search for plugin"
+#~ msgstr "Αποτυχία αρχικοποίησης"
+
+#, fuzzy
+#~ msgctxt "Search for a new mime type"
+#~ msgid "Search"
+#~ msgstr "Αποτυχία αναζήτησης"
+
+#, fuzzy
+#~ msgid "An application wants to install a package:"
+#~ msgid_plural "An application wants to install packages:"
+#~ msgstr[0] "1 εγκατεστημένο πακέτο"
+#~ msgstr[1] "1 εγκατεστημένο πακέτο"
+
+#, fuzzy
+#~ msgid "The application <i>%2</i> wants to install a package:"
+#~ msgid_plural "The application <i>%2</i> wants to install packages:"
+#~ msgstr[0] "1 εγκατεστημένο πακέτο"
+#~ msgstr[1] "1 εγκατεστημένο πακέτο"
+
+#, fuzzy
+#~ msgid "Install catalog"
+#~ msgid_plural "Install catalogs"
+#~ msgstr[0] "Εγκατάσταση τώρα"
+#~ msgstr[1] "Εγκατάσταση τώρα"
+
+#, fuzzy
+#~ msgctxt "Parse the catalog search and install it"
+#~ msgid "Install"
+#~ msgstr "Εγκατάσταση"
+
+#, fuzzy
+#~ msgid "%2 wants to install a file"
+#~ msgid_plural "%2 wants to install files"
+#~ msgstr[0] "Επιθυμείτε την εγκατάσταση του αρχείου;"
+#~ msgstr[1] "Επιθυμείτε την εγκατάσταση αυτών των αρχείων;"
+
+#, fuzzy
+#~ msgctxt "Search for a package that provides these files and install it"
+#~ msgid "Install"
+#~ msgstr "Εγκατάσταση"
+
+#, fuzzy
+#~ msgid "%2 wants to remove a file"
+#~ msgid_plural "%2 wants to remove files"
+#~ msgstr[0] "Επιθυμείτε την εγκατάσταση του αρχείου;"
+#~ msgstr[1] "Επιθυμείτε την εγκατάσταση αυτών των αρχείων;"
+
+#, fuzzy
+#~ msgid "The following file is going to be removed:"
+#~ msgid_plural "The following files are going to be removed:"
+#~ msgstr[0] "Τα παρακάτω πακέτα θα αφαιρεθούν επίσης λόγω εξαρτήσεων"
+#~ msgstr[1] "Τα παρακάτω πακέτα θα αφαιρεθούν επίσης λόγω εξαρτήσεων"
+
+#, fuzzy
+#~ msgctxt "Search for a package and remove"
+#~ msgid "Search"
+#~ msgstr "Αποτυχία αναζήτησης"
+
+#, fuzzy
+#~ msgid "Informative text"
+#~ msgstr "Πληροφορίες"
+
+#, fuzzy
+#~ msgid "KPackageKit Error"
+#~ msgstr "KPackageKit"
+
+#, fuzzy
+#~ msgid ""
+#~ "An additional package is required: <ul><li>%2</li></ul>Do you want to "
+#~ "search for and install this package now?"
+#~ msgid_plural ""
+#~ "Additional packages are required: <ul><li>%2</li></ul>Do you want to "
+#~ "search for and install these packages now?"
+#~ msgstr[0] "Επιθυμείτε την εγκατάσταση του αρχείου;"
+#~ msgstr[1] "Επιθυμείτε την εγκατάσταση αυτών των αρχείων;"
+
+#, fuzzy
+#~ msgid "A program wants to install a package"
+#~ msgid_plural "A program wants to install packages"
+#~ msgstr[0] "1 εγκατεστημένο πακέτο"
+#~ msgstr[1] "1 εγκατεστημένο πακέτο"
+
+#, fuzzy
+#~ msgid "%2 wants to install a package"
+#~ msgid_plural "%2 wants to install packages"
+#~ msgstr[0] "1 εγκατεστημένο πακέτο"
+#~ msgstr[1] "1 εγκατεστημένο πακέτο"
+
+#, fuzzy
+#~ msgctxt "Search for a package and install it"
+#~ msgid "Install"
+#~ msgstr "Εγκατάσταση"
+
+#, fuzzy
+#~ msgid "Architecture"
+#~ msgstr "Αρχιτεκτονικές"
+
+#, fuzzy
+#~ msgctxt "Search for packages"
+#~ msgid "Search"
+#~ msgstr "Αποτυχία αναζήτησης"
+
+#, fuzzy
+#~ msgid "This item is not supported by your backend, or it is not a file. "
+#~ msgid_plural ""
+#~ "These items are not supported by your backend, or they are not files."
+#~ msgstr[0] ""
+#~ "Το αντικείμενο δεν υποστηρίζεται από το σύστημα υποστήριξης ή δεν "
+#~ "πρόκειται για αρχείο"
+#~ msgstr[1] ""
+#~ "Τα αντικείμενα δεν υποστηρίζονται από το σύστημα υποστήριξης ή δεν "
+#~ "πρόκειται για αρχεία"
+
+#~ msgid "Impossible to install"
+#~ msgstr "Αδύνατη η εγκατάσταση"
+
+#~ msgid "Install?"
+#~ msgstr "Εγκατάσταση;"
+
+#, fuzzy
+#~ msgid "The file was not installed"
+#~ msgid_plural "The files were not installed"
+#~ msgstr[0] "Το πακέτο δεν είναι εγκατεστημένο"
+#~ msgstr[1] "Το πακέτο δεν είναι εγκατεστημένο"
+
+#, fuzzy
+#~ msgid "Apper Tray Icon"
+#~ msgstr "Έξυπνο εικονίδιο συστήματος"
+
+#, fuzzy
+#~ msgid "Refresh package list"
+#~ msgstr "Ανανέωση λίστας πακέτων"
+
+#, fuzzy
+#~ msgid "Application Manager Settings"
+#~ msgstr "Ρυθμίσεις"
+
+#, fuzzy
+#~ msgid "Update Software"
+#~ msgstr "Ενημέρωση συστήματος"
+
+#, fuzzy
+#~ msgid "Review and Update Software"
+#~ msgstr "Μη σημαντική ενημέρωση"
+
+#, fuzzy
+#~ msgid "Get and Remove Software"
+#~ msgstr "Προσθήκη και αφαίρεση λογισμικού"
+
+#, fuzzy
+#~ msgid "KPackageKit settings"
+#~ msgstr "Ρυθμίσεις KPackageKit"
+
+#, fuzzy
+#~ msgid "KPackageKit Tray Icon"
+#~ msgstr "KPackageKit - διεργασία"
+
+#~ msgid "Only native architectures"
+#~ msgstr "Μόνο εγγενείς αρχιτεκτονικές"
+
+#~ msgid "Only non-native architectures"
+#~ msgstr "Μόνο μη εγγενείς αρχιτεκτονικές"
+
+#, fuzzy
+#~ msgid "Hide packages"
+#~ msgstr "Απόκρυψη υποπακέτων"
+
+#, fuzzy
+#~ msgid "(C) 2008-2009 Daniel Nicoletti"
+#~ msgstr "(C) 2008 Daniel Nicoletti"
+
+#, fuzzy
+#~ msgctxt "Type of update, in the case it's just an update"
+#~ msgid "%1 Updates, %2 Selected"
+#~ msgstr "1 ενημέρωση"
+
+#, fuzzy
+#~ msgid "Rollback"
+#~ msgstr "Επαναφορά σε προηγούμενη έκδοση"
+
+#, fuzzy
+#~ msgctxt "The transaction finished it's job"
+#~ msgid "Finished"
+#~ msgstr "Ολοκληρώθηκε"
+
+#, fuzzy
+#~ msgid "Type filter"
+#~ msgstr "Κανένα φίλτρο"
+
+#~ msgid "Home Page"
+#~ msgstr "Αρχική σελίδα"
+
+#, fuzzy
+#~ msgctxt "Group of the package"
+#~ msgid "Group"
+#~ msgstr "Ομάδα"
+
+#, fuzzy
+#~ msgid "Installed Packages"
+#~ msgstr "1 εγκατεστημένο πακέτο"
+
+#, fuzzy
+#~ msgid "The following package will be installed"
+#~ msgid_plural "The following packages will be installed"
+#~ msgstr[0] "Τα παρακάτω πακέτα θα εγκατασταθούν επίσης λόγω εξαρτήσεων"
+#~ msgstr[1] "Τα παρακάτω πακέτα θα εγκατασταθούν επίσης λόγω εξαρτήσεων"
+
+#, fuzzy
+#~ msgid "The following package will be installed:"
+#~ msgid_plural "The following packages will be installed:"
+#~ msgstr[0] "Τα παρακάτω πακέτα θα εγκατασταθούν επίσης λόγω εξαρτήσεων"
+#~ msgstr[1] "Τα παρακάτω πακέτα θα εγκατασταθούν επίσης λόγω εξαρτήσεων"
+
+#~ msgid "Install Now"
+#~ msgstr "Εγκατάσταση τώρα"
+
+#, fuzzy
+#~ msgid "The following package will be removed:"
+#~ msgid_plural "The following packages will be removed:"
+#~ msgstr[0] "Τα παρακάτω πακέτα θα αφαιρεθούν επίσης λόγω εξαρτήσεων"
+#~ msgstr[1] "Τα παρακάτω πακέτα θα αφαιρεθούν επίσης λόγω εξαρτήσεων"
+
+#, fuzzy
+#~ msgid "Remove Now"
+#~ msgstr "Αφαίρεση"
+
+#, fuzzy
+#~ msgid "The following package will be removed and installed:"
+#~ msgid_plural "The following packages will be removed and installed:"
+#~ msgstr[0] "Τα παρακάτω πακέτα θα πρέπει επίσης να αφαιρεθούν/εγκατασταθούν:"
+#~ msgstr[1] "Τα παρακάτω πακέτα θα πρέπει επίσης να αφαιρεθούν/εγκατασταθούν:"
+
+#, fuzzy
+#~ msgid "The following file is required:"
+#~ msgid_plural "The following files are required:"
+#~ msgstr[0] "Τα παρακάτω πακέτα θα αφαιρεθούν επίσης λόγω εξαρτήσεων"
+#~ msgstr[1] "Τα παρακάτω πακέτα θα αφαιρεθούν επίσης λόγω εξαρτήσεων"
+
+#, fuzzy
+#~ msgid "%1 wants to install a file"
+#~ msgid_plural "%1 wants to install files"
+#~ msgstr[0] "Επιθυμείτε την εγκατάσταση του αρχείου;"
+#~ msgstr[1] "Επιθυμείτε την εγκατάσταση αυτών των αρχείων;"
+
+#, fuzzy
+#~ msgid "backend name here"
+#~ msgstr "Όνομα πακέτου"
+
+#, fuzzy
+#~ msgid "backend author name here"
+#~ msgstr "Όνομα πακέτου"
+
+#, fuzzy
+#~ msgid "backend description here"
+#~ msgstr "Όνομα πακέτου"
+
+#, fuzzy
+#~ msgid "InstallPackage"
+#~ msgstr "1 εγκατεστημένο πακέτο"
+
+#, fuzzy
+#~ msgid "RepositoryEnable"
+#~ msgstr "Όνομα χώρου αποθήκευσης:"
+
+#, fuzzy
+#~ msgid "RepositorySetEnable"
+#~ msgstr "Όνομα χώρου αποθήκευσης:"
+
+#, fuzzy
+#~ msgid "GetDepends"
+#~ msgstr "Εξαρτάται από"
+
+#, fuzzy
+#~ msgid "GetRequires"
+#~ msgstr "Ανάκτηση απαιτήσεων"
+
+#, fuzzy
+#~ msgid "GetFiles"
+#~ msgstr "Λεπτομέρειες"
+
+#~ msgid "Not now"
+#~ msgstr "Όχι τώρα"
+
+#~ msgid "Do you recognise the user and trust this key?"
+#~ msgstr "Αναγνωρίζετε τον χρήστη και εμπιστεύεστε το κλειδί του;"
+
+#, fuzzy
+#~ msgctxt "State of the upgrade (ie testing, unstable..)"
+#~ msgid "State"
+#~ msgstr "Κατάσταση"
+
+#~ msgid "Issued"
+#~ msgstr "Εκδόθηκε"
+
+#~ msgid "New version"
+#~ msgstr "Νέα έκδοση"
+
+#, fuzzy
+#~ msgid "Changes"
+#~ msgstr "Καταγραφή αλλαγών"
+
+#, fuzzy
+#~ msgid "Bugzilla"
+#~ msgstr "Αρχική σελίδα Bugzilla"
+
+#, fuzzy
+#~ msgid "Notice"
+#~ msgstr "Ειδοποίηση"
+
+#~ msgid "1 trivial update"
+#~ msgid_plural "%1 trivial updates"
+#~ msgstr[0] "1 μη σημαντική ενημέρωση"
+#~ msgstr[1] "%1 μη σημαντικές ενημερώσεις"
+
+#~ msgid "1 important update"
+#~ msgid_plural "%1 important updates"
+#~ msgstr[0] "1 σημαντική ενημέρωση"
+#~ msgstr[1] "%1 σημαντικές ενημερώσεις"
+
+#~ msgid "1 security update"
+#~ msgid_plural "%1 security updates"
+#~ msgstr[0] "1 ενημέρωση ασφαλείας"
+#~ msgstr[1] "%1 ενημερώσεις ασφαλείας"
+
+#~ msgid "1 bug fix update"
+#~ msgid_plural "%1 bug fix updates"
+#~ msgstr[0] "1 ενημέρωση διόρθωσης σφάλματος"
+#~ msgstr[1] "%1 ενημερώσεις διόρθωσης σφάλματος"
+
+#~ msgid "1 enhancement update"
+#~ msgid_plural "%1 enhancement updates"
+#~ msgstr[0] "1 ενημέρωση βελτίωσης"
+#~ msgstr[1] "%1 ενημερώσεις βελτίωσης"
+
+#~ msgid "1 blocked update"
+#~ msgid_plural "%1 blocked updates"
+#~ msgstr[0] "1 ενημέρωση φραγής"
+#~ msgstr[1] "%1 ενημερώσεις φραγής"
+
+#~ msgid "1 available package"
+#~ msgid_plural "%1 available packages"
+#~ msgstr[0] "1 διαθέσιμο πακέτο"
+#~ msgstr[1] "%1 διαθέσιμα πακέτα"
+
+#~ msgid "1 unknown update"
+#~ msgid_plural "%1 unknown updates"
+#~ msgstr[0] "1 άγνωστη ενημέρωση"
+#~ msgstr[1] "%1 άγνωστες ενημερώσεις"
+
+#, fuzzy
+#~ msgid "1 trivial update selected"
+#~ msgid_plural "%1 trivial updates selected"
+#~ msgstr[0] "1 μη σημαντική ενημέρωση"
+#~ msgstr[1] "%1 μη σημαντικές ενημερώσεις"
+
+#, fuzzy
+#~ msgid "1 important update selected"
+#~ msgid_plural "%1 important updates selected"
+#~ msgstr[0] "1 σημαντική ενημέρωση"
+#~ msgstr[1] "%1 σημαντικές ενημερώσεις"
+
+#, fuzzy
+#~ msgid "1 security update selected"
+#~ msgid_plural "%1 security updates selected"
+#~ msgstr[0] "1 ενημέρωση ασφαλείας"
+#~ msgstr[1] "%1 ενημερώσεις ασφαλείας"
+
+#, fuzzy
+#~ msgid "1 bug fix update selected"
+#~ msgid_plural "%1 bug fix updates selected"
+#~ msgstr[0] "1 ενημέρωση διόρθωσης σφάλματος"
+#~ msgstr[1] "%1 ενημερώσεις διόρθωσης σφάλματος"
+
+#, fuzzy
+#~ msgid "1 enhancement update selected"
+#~ msgid_plural "%1 enhancement updates selected"
+#~ msgstr[0] "1 ενημέρωση βελτίωσης"
+#~ msgstr[1] "%1 ενημερώσεις βελτίωσης"
+
+#, fuzzy
+#~ msgid "1 installed package selected to be removed"
+#~ msgid_plural "%1 installed packages selected to be removed"
+#~ msgstr[0] "1 εγκατεστημένο πακέτο"
+#~ msgstr[1] "%1 εγκατεστημένα πακέτα"
+
+#, fuzzy
+#~ msgid "1 available package selected to be installed"
+#~ msgid_plural "%1 available packages selected to be installed"
+#~ msgstr[0] "Όλα τα πακέτα είναι ήδη εγκατεστημένα"
+#~ msgstr[1] "Όλα τα πακέτα είναι ήδη εγκατεστημένα"
+
+#, fuzzy
+#~ msgid "%1 trivial update"
+#~ msgid_plural "%1 trivial updates, %2 selected"
+#~ msgstr[0] "1 μη σημαντική ενημέρωση"
+#~ msgstr[1] "%1 μη σημαντικές ενημερώσεις"
+
+#, fuzzy
+#~ msgid "%1 important update"
+#~ msgid_plural "%1 important updates, %2 selected"
+#~ msgstr[0] "1 σημαντική ενημέρωση"
+#~ msgstr[1] "%1 σημαντικές ενημερώσεις"
+
+#, fuzzy
+#~ msgid "%1 security update"
+#~ msgid_plural "%1 security updates, %2 selected"
+#~ msgstr[0] "1 ενημέρωση ασφαλείας"
+#~ msgstr[1] "%1 ενημερώσεις ασφαλείας"
+
+#, fuzzy
+#~ msgid "%1 bug fix update"
+#~ msgid_plural "%1 bug fix updates, %2 selected"
+#~ msgstr[0] "1 ενημέρωση διόρθωσης σφάλματος"
+#~ msgstr[1] "%1 ενημερώσεις διόρθωσης σφάλματος"
+
+#, fuzzy
+#~ msgid "%1 enhancement update"
+#~ msgid_plural "%1 enhancement updates, %2 selected"
+#~ msgstr[0] "1 ενημέρωση βελτίωσης"
+#~ msgstr[1] "%1 ενημερώσεις βελτίωσης"
+
+#, fuzzy
+#~ msgid "%1 blocked update"
+#~ msgid_plural "%1 blocked updates"
+#~ msgstr[0] "1 ενημέρωση φραγής"
+#~ msgstr[1] "%1 ενημερώσεις φραγής"
+
+#, fuzzy
+#~ msgid "%1 installed package"
+#~ msgid_plural "%1 installed packages, %2 selected to be removed"
+#~ msgstr[0] "1 εγκατεστημένο πακέτο"
+#~ msgstr[1] "%1 εγκατεστημένα πακέτα"
+
+#, fuzzy
+#~ msgid "%1 available package"
+#~ msgid_plural "%1 available packages, %2 selected to be installed"
+#~ msgstr[0] "1 διαθέσιμο πακέτο"
+#~ msgstr[1] "%1 διαθέσιμα πακέτα"
+
+#, fuzzy
+#~ msgid "%1 unknown update"
+#~ msgid_plural "%1 unknown updates"
+#~ msgstr[0] "1 άγνωστη ενημέρωση"
+#~ msgstr[1] "%1 άγνωστες ενημερώσεις"
+
+#, fuzzy
+#~ msgctxt "Type of update, in the case it's just an update"
+#~ msgid "%1 update"
+#~ msgid_plural "%1 updates, %2 selected"
+#~ msgstr[0] "1 ενημέρωση"
+#~ msgstr[1] "%1 ενημερώσεις"
+
+#, fuzzy
+#~ msgid "Add and remove software"
+#~ msgstr "Προσθήκη και αφαίρεση λογισμικού"
+
+#, fuzzy
+#~ msgid "List of changes"
+#~ msgstr "Έλεγχος τροποποιήσεων"
+
+#, fuzzy
+#~ msgctxt "Groups of packages"
+#~ msgid "Group:"
+#~ msgid_plural "Groups:"
+#~ msgstr[0] "Ομάδα"
+#~ msgstr[1] "Ομάδα"
+
+#~ msgid "View in groups"
+#~ msgstr "Προβολή σε ομάδες"
+
+#~ msgid "Display packages in groups according to status"
+#~ msgstr "Εμφάνιση πακέτω σε ομάδες ανάλογα με την κατάστασή τους"
+
+#~ msgid "All Packages"
+#~ msgstr "Όλα τα πακέτα"
+
+#, fuzzy
+#~ msgid "Select All Updates"
+#~ msgstr "Ενημέρωση ασφαλείας"
+
+#, fuzzy
+#~ msgctxt "The time that the transaction took to complete"
+#~ msgid "Finished in %1."
+#~ msgstr "Ολοκλήρωση αναζήτησης σε %1"
+
+#~ msgid "Refresh"
+#~ msgstr "Ανανέωση"
+
+#, fuzzy
+#~ msgid "Transaction"
+#~ msgstr "Συναλλαγές"
+
+#~ msgid "libfoo"
+#~ msgstr "libfoo"
+
+#, fuzzy
+#~ msgid "Show Updates View"
+#~ msgstr "Ενημερώσεις"
+
+#, fuzzy
+#~ msgid "<br /><i>And another update</i>"
+#~ msgid_plural "<br /><i>And %1 more updates</i>"
+#~ msgstr[0] "<b>Έχετε μία ενημέρωση:</b>"
+#~ msgstr[1] "<b>Έχετε %1 ενημερώσεις:</b>"
+
+#, fuzzy
+#~ msgid "This item is not supported by your backend, or it is not a file."
+#~ msgid_plural ""
+#~ "These items are not supported by your backend, or they are not files."
+#~ msgstr[0] ""
+#~ "Το αντικείμενο δεν υποστηρίζεται από το σύστημα υποστήριξης ή δεν "
+#~ "πρόκειται για αρχείο"
+#~ msgstr[1] ""
+#~ "Τα αντικείμενα δεν υποστηρίζονται από το σύστημα υποστήριξης ή δεν "
+#~ "πρόκειται για αρχεία"
+
+#, fuzzy
+#~ msgid "An additional package is required:"
+#~ msgid_plural "Additional packages are required:"
+#~ msgstr[0] "<br />Απαιτείται επανεκκίνηση του συστήματος"
+#~ msgstr[1] "<br />Απαιτείται επανεκκίνηση του συστήματος"
+
+#, fuzzy
+#~ msgid "All packages"
+#~ msgstr "Όλα τα πακέτα"
+
+#~ msgid "Package Name"
+#~ msgstr "Όνομα πακέτου"
+
+#~ msgid "KPackageKit Settings"
+#~ msgstr "Ρυθμίσεις KPackageKit"
+
+#~ msgid "Notify when long tasks have been completed"
+#~ msgstr "Ειδοποίηση ολοκλήρωσης χρονοβόρων διεργασιών"
+
+#~ msgid "KPackageKit - Transaction"
+#~ msgstr "KPackageKit - διεργασία"
+
+#~ msgid "A library to do foo"
+#~ msgstr "Μια βιβλιοθήκη χωρίς λειτουργία"
+
+#~ msgid "The following packages will also be installed as dependencies"
+#~ msgstr "Τα παρακάτω πακέτα θα εγκατασταθούν επίσης λόγω εξαρτήσεων"
+
+#~ msgid "The following packages will also be removed for dependencies"
+#~ msgstr "Τα παρακάτω πακέτα θα αφαιρεθούν επίσης λόγω εξαρτήσεων"
+
+#~ msgid "The following packages also have to be removed/installed:"
+#~ msgstr "Τα παρακάτω πακέτα θα πρέπει επίσης να αφαιρεθούν/εγκατασταθούν:"
+
+#, fuzzy
+#~ msgid "Installing updates."
+#~ msgstr "Εγκατάσταση υπογραφής"
+
+#, fuzzy
+#~ msgid "Apply all available updates"
+#~ msgstr "1 διαθέσιμο πακέτο"
+
+#, fuzzy
+#~ msgid "Free"
+#~ msgstr "Ελεύθερα"
+
+#~ msgid "KPackageKit Update"
+#~ msgstr "Ενημέρωση KPackageKit"
+
+#, fuzzy
+#~ msgid "A system restart is required"
+#~ msgstr "<br />Απαιτείται επανεκκίνηση του συστήματος"
+
+#~ msgid "An application restart is required after this update"
+#~ msgstr "Απαιτείται επανεκκίνηση εφαρμογής μετά από αυτήν την ενημέρωση"
+
+#~ msgid "A system restart is required after this update"
+#~ msgstr "Απαιτείται επανεκκίνηση του συστήματος μετά από αυτήν την ενημέρωση"
+
+#, fuzzy
+#~ msgid "KPackageKit user interface"
+#~ msgstr "Γραφικό περιβάλλον και ειδοποίηση του KPackageKit"
+
+#~ msgid "(C) 2008 Daniel Nicoletti"
+#~ msgstr "(C) 2008 Daniel Nicoletti"
+
+#, fuzzy
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Applying service pack"
+#~ msgstr "Πακέτο διορθώσεων"
+
+#, fuzzy
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Applied service pack"
+#~ msgstr "Πακέτο διορθώσεων"
+
+#, fuzzy
+#~ msgid "Downloading software changelogs"
+#~ msgstr "Λήψη λίστας των τροποποιήσεων"
+
+#~ msgid "Error KPackageKit"
+#~ msgstr "Σφάλμα KPackageKit"
+
+#, fuzzy
+#~ msgid "Don't ask anymore"
+#~ msgstr "Χωρίς ερώτηση ξανά"
+
+#, fuzzy
+#~ msgid "Sorry, an error occurred"
+#~ msgstr "Δυστυχώς συνέβη ένα σφάλμα"
+
+#, fuzzy
+#~ msgid "Find by description"
+#~ msgstr "Περιγραφή"
+
+#~ msgid "Review Changes - KPackageKit"
+#~ msgstr "Επισκόπηση τροποποιήσεων - KPackageKit"
+
+#~ msgid "The following packages will be INSTALLED/REMOVED:"
+#~ msgstr "Τα παρακάτω πακέτα θα ΕΓΚΑΤΑΣΤΑΘΟΥΝ/ΑΦΑΙΡΕΘΟΥΝ:"
+
+#~ msgid ""
+#~ "You selected the following packages to be INSTALLED/REMOVED, press ok to "
+#~ "proceed:"
+#~ msgstr ""
+#~ "Έχετε επιλέξει τα παρακάτω πακέτα για ΕΓΚΑΤΑΣΤΑΣΗ/ΑΦΑΙΡΕΣΗ, πιέστε "
+#~ "Εντάξει για  συνέχεια:"
+
+#, fuzzy
+#~ msgid "Searching for prerequesites"
+#~ msgstr "Αναζήτηση αρχείου"
+
+#~ msgid "Vendor Home Page"
+#~ msgstr "Αρχική σελίδα προμηθευτή"
+
+#~ msgid "CVE Home Page"
+#~ msgstr "Αρχική σελίδα CVE"
+
+#~ msgid "4 minutes"
+#~ msgstr "4 λεπτά"
+
+#~ msgid "Search canceled"
+#~ msgstr "Ακύρωση αναζήτησης"
+
+#~ msgid "Search finished with unknown status"
+#~ msgstr "Τέλος αναζήτησης με άγνωστη κατάσταση"
+
+#, fuzzy
+#~ msgid "&Find File"
+#~ msgstr "&Αναζήτηση"
+
+#~ msgid "Restart Computer Now"
+#~ msgstr "Επανεκκίνηση υπολογιστή τώρα"
+
+#~ msgid "<b>Updates are being installed</b>"
+#~ msgstr "<b>Γίνεται εγκατάσταση των ενημερώσεων</b>"
+
+#~ msgid "Cancel Update"
+#~ msgstr "Ακύρωση ενημέρωσης"
+
+#~ msgid "Smartly display/install Updates"
+#~ msgstr "Έξυπνη εμφάνιση/εγκατάσταση ενημερώσεων"
+
+#~ msgid "kpackagekit-smart-icon"
+#~ msgstr "kpackagekit-smart-icon"
+
+#~ msgid "KPackageKit-Smart-Icon application for showing running transactions"
+#~ msgstr ""
+#~ "Εφαρμογή KPackageKit-Smart-Icon για την εμφάνιση των εκτελούμενων "
+#~ "διεργασιών"
+
+#~ msgid "Sorry, an error occured"
+#~ msgstr "Δυστυχώς, συνέβη ένα σφάλμα"
+
+#~ msgid "Wait - KPackageKit"
+#~ msgstr "Αναμονή - KPackageKit"
+
+#~ msgid "Checking required packages"
+#~ msgstr "Έλεγχος απαιτούμενων πακέτων"
+
+#~ msgid "Checking for dependencies"
+#~ msgstr "Έλεγχος εξαρτήσεων"

@@ -1,0 +1,4854 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Jean Cayron <jean.cayron@base.be>, 2011, 2012.
+# Djan Cayron <jean.cayron@gmail.com>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-03-28 16:13+0000\n"
+"PO-Revision-Date: 2012-12-30 11:08+0100\n"
+"Last-Translator: Jean Cayron <jean.cayron@base.be>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
+"Language: wa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 1.5\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Djan Cayron"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "jean.cayron@gmail.com"
+
+#: Apper/Apper.cpp:91
+#, kde-format
+msgid "Show updates"
+msgstr "Mostrer metaedjes a djoû"
+
+#: Apper/Apper.cpp:94
+#, kde-format
+msgid "Show settings"
+msgstr "Mostrer apontiaedjes"
+
+#: Apper/Apper.cpp:97
+#, kde-format
+msgid "Show backend details"
+msgstr "Mostrer totafwait sol bouye di fond"
+
+#: Apper/Apper.cpp:100
+#, kde-format
+msgid "Mime type installer"
+msgstr "Astaleu d' sôres mime"
+
+#: Apper/Apper.cpp:103
+#, kde-format
+msgid "Package name installer"
+msgstr "Astaleu sol no des pacaedjes"
+
+#: Apper/Apper.cpp:106
+#, kde-format
+msgid "Single file installer"
+msgstr "Astaleu d' mierseu fitchî"
+
+#: Apper/Apper.cpp:109
+#, kde-format
+msgid "Font resource installer"
+msgstr "Astaleu di rsources po les fontes"
+
+#: Apper/Apper.cpp:112
+#, kde-format
+msgid "Catalog installer"
+msgstr "Astaleu d' catalogue"
+
+#: Apper/Apper.cpp:115
+#, kde-format
+msgid "Single package remover"
+msgstr "Oisteu d' mierseu pacaedje"
+
+#: Apper/Apper.cpp:118
+#, kde-format
+msgid "Package file to install"
+msgstr "Fitchî d' pacaedje a-z astaler"
+
+#: Apper/ApperKCM.cpp:94 Apper/ApperKCM.cpp:293
+#, kde-format
+msgid "Find"
+msgstr "Trover"
+
+#: Apper/ApperKCM.cpp:175
+#, fuzzy, kde-format
+#| msgid "Software Manager Messages"
+msgid "Some software changes were made"
+msgstr "Messaedjes do Manaedjeu des programes"
+
+#: Apper/ApperKCM.cpp:176 apperd/Updater.cpp:287
+#, kde-format
+msgid "Review"
+msgstr "Rilever"
+
+#: Apper/ApperKCM.cpp:179
+#, kde-format
+msgid "Discard"
+msgstr ""
+
+#: Apper/ApperKCM.cpp:182
+#, kde-format
+msgid "Apply"
+msgstr ""
+
+#: Apper/ApperKCM.cpp:206 Apper/ApperKCM.cpp:563
+#, kde-format
+msgid "History"
+msgstr "Istwere"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, Settings)
+#: Apper/ApperKCM.cpp:210 Apper/ApperKCM.cpp:520 Apper/Settings/Settings.ui:14
+#, kde-format
+msgid "Settings"
+msgstr "Apontiaedjes"
+
+#: Apper/ApperKCM.cpp:270 Apper/ApperKCM.cpp:271 Apper/ApperKCM.cpp:272
+#: Apper/ApperKCM.cpp:273
+#, kde-format
+msgid "&Cancel"
+msgstr "&Rinoncî"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:280 Apper/ApperKCM.ui:427
+#, kde-format
+msgid "Find by &name"
+msgstr "Trover sol &no"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:281 Apper/ApperKCM.ui:437
+#, kde-format
+msgid "Find by f&ile name"
+msgstr "Trover sol &no do fitchî"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:282 Apper/ApperKCM.ui:432
+#, kde-format
+msgid "Find by &description"
+msgstr "Trover sol &discrijhaedje"
+
+#: Apper/ApperKCM.cpp:460
+#, kde-format
+msgid ""
+"The settings of the current module have changed.\n"
+"Do you want to apply the changes or discard them?"
+msgstr ""
+"Les apontiaedjes do module do moumint ont candjî.\n"
+"Voloz vs mete en ouve les candjmint oudonbén les rovyî ?"
+
+#: Apper/ApperKCM.cpp:462
+#, kde-format
+msgid "Apply Settings"
+msgstr "Mete èn ouve les apontiaedjes"
+
+#: Apper/ApperKCM.cpp:547 Apper/CategoryModel.cpp:59
+#, kde-format
+msgid "Updates"
+msgstr "Metaedjes a djoû"
+
+#: Apper/ApperKCM.cpp:616
+#, kde-format
+msgid "Pending Changes"
+msgstr "Candjmints ki s' vont fé"
+
+#: Apper/ApperKCM.cpp:679 Apper/CategoryModel.cpp:51
+#, kde-format
+msgid "Installed Software"
+msgstr "Programe d' astalé"
+
+#: Apper/ApperKCM.cpp:691
+#, kde-format
+msgid "Could not find an application that matched this category"
+msgstr ""
+"Dji n' a savou trover d' programeki corespondeut a cisse categoreye cial"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, ApperKCM)
+#: Apper/ApperKCM.ui:20
+#, kde-format
+msgid "Add and Remove Software"
+msgstr "Radjouter eyet oister des programes"
+
+#. i18n: ectx: property (text), widget (QToolButton, backTB)
+#: Apper/ApperKCM.ui:47 AppSetup/SetupWizard.cpp:87
+#, kde-format
+msgid "Back"
+msgstr "Èn erî"
+
+#. i18n: ectx: property (clickMessage), widget (QLineEdit, searchKLE)
+#: Apper/ApperKCM.ui:188
+#, kde-format
+msgid "Search packages"
+msgstr "Trover des pacaedjes"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#. i18n: ectx: property (text), widget (QToolButton, filtersTB)
+#: Apper/ApperKCM.ui:237 Apper/BackendDetails.ui:373
+#, kde-format
+msgid "Filters"
+msgstr "Passetes"
+
+#. i18n: ectx: property (text), widget (QPushButton, updatePB)
+#: Apper/ApperKCM.ui:299
+#, fuzzy, kde-format
+#| msgid "Updates"
+msgid "Update"
+msgstr "Metaedjes a djoû"
+
+#. i18n: ectx: property (text), widget (QPushButton, checkUpdatesPB)
+#: Apper/ApperKCM.ui:312
+#, kde-format
+msgid "Check for new Updates"
+msgstr "Cachî après des noveas metaedjes a djoû"
+
+#. i18n: ectx: property (text), widget (QPushButton, generalSettingsPB)
+#: Apper/ApperKCM.ui:346
+#, kde-format
+msgid "General Settings"
+msgstr "Apontiaedjes djenerås"
+
+#. i18n: ectx: property (text), widget (QPushButton, repoSettingsPB)
+#: Apper/ApperKCM.ui:365
+#, kde-format
+msgid "Software Origins"
+msgstr "Oridjenes do programe"
+
+#: Apper/BackendDetails.cpp:36
+#, kde-format
+msgid "Backend Details"
+msgstr "Totafwait sol bouye di fond"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: Apper/BackendDetails.ui:23
+#, kde-format
+msgid "Methods"
+msgstr "Metôdes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getUpdatesCB)
+#: Apper/BackendDetails.ui:32
+#, kde-format
+msgid "Get Updates"
+msgstr "Aler cweri les metaedjes a djoû"
+
+#. i18n: ectx: property (text), widget (QCheckBox, refreshCacheCB)
+#: Apper/BackendDetails.ui:42 Apper/Settings/Settings.cpp:61
+#, kde-format
+msgid "Refresh Cache"
+msgstr "Rafrister l' muchete"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchNameCB)
+#: Apper/BackendDetails.ui:52
+#, kde-format
+msgid "Search Name"
+msgstr "Cweri après l' no"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDependsCB)
+#: Apper/BackendDetails.ui:62
+#, kde-format
+msgid "Get Package Depends"
+msgstr "Aler cweri les aloyances do pacaedje"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchDetailsCB)
+#: Apper/BackendDetails.ui:72
+#, kde-format
+msgid "Search Details"
+msgstr "Detays do cweraedje"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getRequiresCB)
+#: Apper/BackendDetails.ui:82
+#, kde-format
+msgid "Get Package Requires"
+msgstr "Aler cweri çou kel pacaedje a mezåjhe"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchGroupCB)
+#: Apper/BackendDetails.ui:92
+#, kde-format
+msgid "Search Group"
+msgstr "Cweri après des groupes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getUpdateDetailCB)
+#: Apper/BackendDetails.ui:102
+#, kde-format
+msgid "Get Update Detail"
+msgstr "Aler cweri les detays do metaedje a djoû"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchFileCB)
+#: Apper/BackendDetails.ui:112
+#, kde-format
+msgid "Search File"
+msgstr "Cweri après des fitchîs"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDescriptionCB)
+#: Apper/BackendDetails.ui:122
+#, kde-format
+msgid "Get Package Description"
+msgstr "Aler cweri li discrijhaedje do pacaedje"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getFilesCB)
+#: Apper/BackendDetails.ui:132
+#, kde-format
+msgid "Get Package Files"
+msgstr "Aler cweri les fitchîs do pacaedje"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDistroUpgradesCB)
+#: Apper/BackendDetails.ui:142
+#, kde-format
+msgid "Get Distro Upgrades"
+msgstr "Aler cweri les metaedjes a livea del distribucion"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installPackageCB)
+#: Apper/BackendDetails.ui:152
+#, kde-format
+msgid "Install Packages"
+msgstr "Astaler pacaedjes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, updatePackageCB)
+#: Apper/BackendDetails.ui:162
+#, kde-format
+msgid "Update Packages"
+msgstr "Metaedje a djoû pacaedjes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, removePackageCB)
+#: Apper/BackendDetails.ui:172
+#, kde-format
+msgid "Remove Packages"
+msgstr "Oister pacaedjes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installFileCB)
+#: Apper/BackendDetails.ui:182
+#, kde-format
+msgid "Install Files"
+msgstr "Astaler fitchîs"
+
+#. i18n: ectx: property (text), widget (QCheckBox, resolveCB)
+#: Apper/BackendDetails.ui:192
+#, kde-format
+msgid "Resolve"
+msgstr "Rezoude"
+
+#. i18n: ectx: property (text), widget (QCheckBox, cancelCB)
+#: Apper/BackendDetails.ui:202
+#, kde-format
+msgid "Cancel"
+msgstr "Rinoncî"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getPackagesCB)
+#: Apper/BackendDetails.ui:212
+#, kde-format
+msgid "Get Packages"
+msgstr "Aler cweri les pacaedjes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, whatProvidesCB)
+#: Apper/BackendDetails.ui:222
+#, kde-format
+msgid "What Provides"
+msgstr "Çou ki dene"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repositorySetEnableCB)
+#: Apper/BackendDetails.ui:232
+#, kde-format
+msgid "Set Repository Data"
+msgstr "Defini les dinêyes do depot"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repositoryEnableCB)
+#: Apper/BackendDetails.ui:242
+#, kde-format
+msgid "Enable Repository"
+msgstr "Mete èn alaedje depot"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getRepositoryListCB)
+#: Apper/BackendDetails.ui:252
+#, kde-format
+msgid "Get Repository List"
+msgstr "Aler cweri l' djivêye des depots"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repairSystemCB)
+#: Apper/BackendDetails.ui:262
+#, kde-format
+msgid "Repair System"
+msgstr "Remantchî l' sistinme"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: Apper/BackendDetails.ui:278
+#, kde-format
+msgid "About Backend"
+msgstr "Åd fwait do programe fondmint"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: Apper/BackendDetails.ui:284
+#, kde-format
+msgid "Backend name:"
+msgstr "No do programe fondmint :"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: Apper/BackendDetails.ui:298
+#, kde-format
+msgid "Backend description:"
+msgstr "Discrijhaedje do programe fondmint :"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: Apper/BackendDetails.ui:312
+#, kde-format
+msgid "Backend author:"
+msgstr "Oteur do programe fondmint :"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: Apper/BackendDetails.ui:326
+#, kde-format
+msgid "Distribution ID:"
+msgstr "ID del distribucion :"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: Apper/BackendDetails.ui:343
+#, fuzzy, kde-format
+#| msgid "KPackageKit"
+msgid "PackageKit"
+msgstr "KPackageKit"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: Apper/BackendDetails.ui:349
+#, fuzzy, kde-format
+#| msgid "Version"
+msgid "Version:"
+msgstr "Modêye"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installedCB)
+#: Apper/BackendDetails.ui:382 Apper/FiltersMenu.cpp:60
+#: libapper/PkStrings.cpp:404
+#, kde-format
+msgid "Installed"
+msgstr "Astalé"
+
+#. i18n: ectx: property (text), widget (QCheckBox, developmentCB)
+#: Apper/BackendDetails.ui:392 Apper/FiltersMenu.cpp:89
+#, kde-format
+msgid "Development"
+msgstr "Diswalpaedje"
+
+#. i18n: ectx: property (text), widget (QCheckBox, visibleCB)
+#: Apper/BackendDetails.ui:402
+#, kde-format
+msgid "Package is visible"
+msgstr "Li pacaedje est veyåve"
+
+#. i18n: ectx: property (text), widget (QCheckBox, newestCB)
+#: Apper/BackendDetails.ui:412
+#, kde-format
+msgid "Newest"
+msgstr "Les pus noûs"
+
+#. i18n: ectx: property (text), widget (QCheckBox, guiCB)
+#: Apper/BackendDetails.ui:422
+#, kde-format
+msgid "GUI"
+msgstr "Eterfaces grafikes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, freeCB)
+#: Apper/BackendDetails.ui:432
+#, kde-format
+msgid "Free software"
+msgstr "Libes programes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, supportedCB)
+#: Apper/BackendDetails.ui:442
+#, kde-format
+msgid "Supported"
+msgstr "Sopoirtés"
+
+#. i18n: ectx: property (text), widget (QCheckBox, archCB)
+#: Apper/BackendDetails.ui:452
+#, kde-format
+msgid "Only native"
+msgstr "Seulmint askepieye pol sistinme"
+
+#: Apper/BrowseView.cpp:89 Apper/Updater/Updater.cpp:105
+#, kde-format
+msgid "Show Versions"
+msgstr "Mostrer modêyes"
+
+#: Apper/BrowseView.cpp:96 Apper/Updater/Updater.cpp:119
+#, kde-format
+msgid "Show Architectures"
+msgstr "Mostrer årtchitecteures"
+
+#: Apper/BrowseView.cpp:103 Apper/Updater/Updater.cpp:126
+#, kde-format
+msgid "Show Origins"
+msgstr "Mostrer oridjenes"
+
+#: Apper/BrowseView.cpp:110 Apper/Updater/Updater.cpp:133
+#, kde-format
+msgid "Show Sizes"
+msgstr "Mostrer grandeus"
+
+#: Apper/BrowseView.cpp:282
+#, fuzzy, kde-format
+#| msgid "Export Installed Package List..."
+msgid "Export installed packages"
+msgstr "Ebaguer l' djivêye des pacaedjes d' astalés..."
+
+#: Apper/BrowseView.cpp:306
+#, fuzzy, kde-format
+#| msgid "Install Packages Catalogs"
+msgid "Install packages from catalog"
+msgstr "Astaler catalogues di pacaedjes"
+
+#. i18n: ectx: property (text), widget (QPushButton, exportInstalledPB)
+#: Apper/BrowseView.ui:140
+#, kde-format
+msgid "Export Installed Package List..."
+msgstr "Ebaguer l' djivêye des pacaedjes d' astalés..."
+
+#. i18n: ectx: property (text), widget (QPushButton, importInstalledPB)
+#: Apper/BrowseView.ui:150
+#, kde-format
+msgid "Install Packages from List..."
+msgstr "Astaler pacaedjes a pårti d' ene djivêye..."
+
+#: Apper/CategoryModel.cpp:54 Apper/CategoryModel.cpp:62
+#, kde-format
+msgid "Lists"
+msgstr "Djivêyes"
+
+#: Apper/CategoryModel.cpp:167 Apper/CategoryModel.cpp:362
+#, kde-format
+msgid "Categories"
+msgstr "Categoreyes"
+
+#: Apper/CategoryModel.cpp:224
+#, kde-format
+msgid "Groups"
+msgstr "Groupes"
+
+#: Apper/FiltersMenu.cpp:36
+#, kde-format
+msgid "Collections"
+msgstr "Ramexhnêyes"
+
+#: Apper/FiltersMenu.cpp:45
+#, kde-format
+msgid "Only collections"
+msgstr "Les ramexhnêyes seulmint"
+
+#: Apper/FiltersMenu.cpp:52
+#, kde-format
+msgid "Exclude collections"
+msgstr "Pont d' ramexhnêyes"
+
+#: Apper/FiltersMenu.cpp:67
+#, kde-format
+msgid "Only installed"
+msgstr "Çou k' est astalé seulmint"
+
+#: Apper/FiltersMenu.cpp:74
+#, kde-format
+msgid "Only available"
+msgstr "Çou k' est disponibe seulmint"
+
+#: Apper/FiltersMenu.cpp:81 Apper/FiltersMenu.cpp:110 Apper/FiltersMenu.cpp:139
+#: Apper/FiltersMenu.cpp:168 Apper/FiltersMenu.cpp:197
+#: Apper/FiltersMenu.cpp:226
+#, kde-format
+msgid "No filter"
+msgstr "Nole passete"
+
+#: Apper/FiltersMenu.cpp:96
+#, kde-format
+msgid "Only development"
+msgstr "Diswalpaedje seulmint"
+
+#: Apper/FiltersMenu.cpp:103
+#, kde-format
+msgid "Only end user files"
+msgstr "Les fitchîs po ls uzeus finås seulmint"
+
+#: Apper/FiltersMenu.cpp:118
+#, kde-format
+msgid "Graphical"
+msgstr "Grafike"
+
+#: Apper/FiltersMenu.cpp:125
+#, kde-format
+msgid "Only graphical"
+msgstr "Çou k' est grafike seulmint"
+
+#: Apper/FiltersMenu.cpp:132
+#, kde-format
+msgid "Only text"
+msgstr "Scrijhaedje seulmint"
+
+#: Apper/FiltersMenu.cpp:147
+#, kde-format
+msgctxt "Filter for free packages"
+msgid "Free"
+msgstr "Libe"
+
+#: Apper/FiltersMenu.cpp:154
+#, kde-format
+msgid "Only free software"
+msgstr "Les libes programes seulmint"
+
+#: Apper/FiltersMenu.cpp:161
+#, kde-format
+msgid "Only non-free software"
+msgstr "Les programes nén libes seulmint"
+
+#: Apper/FiltersMenu.cpp:176
+#, kde-format
+msgctxt "Filter for supported packages"
+msgid "Supported"
+msgstr "Sopoirtés"
+
+#: Apper/FiltersMenu.cpp:183
+#, kde-format
+msgid "Only supported software"
+msgstr "Les programes sopoirtés seulmint"
+
+#: Apper/FiltersMenu.cpp:190
+#, kde-format
+msgid "Only non-supported software"
+msgstr "Les programes nén sopoirtés seulmint"
+
+#: Apper/FiltersMenu.cpp:205
+#, kde-format
+msgctxt "Filter for source packages"
+msgid "Source"
+msgstr "Sourdant"
+
+#: Apper/FiltersMenu.cpp:212
+#, kde-format
+msgid "Only sourcecode"
+msgstr "Çou k' est do côde sourdant seulmint"
+
+#: Apper/FiltersMenu.cpp:219
+#, kde-format
+msgid "Only non-sourcecode"
+msgstr "Çou k' i n' est nén do côde sourdant seulmint"
+
+#: Apper/FiltersMenu.cpp:236
+#, kde-format
+msgid "Hide Subpackages"
+msgstr "Catchî pacaedjes efant"
+
+#: Apper/FiltersMenu.cpp:240
+#, kde-format
+msgid "Only show one package, not subpackages"
+msgstr "En mostrer k' on seu pacaedje, nén les pacaedjes efant"
+
+#: Apper/FiltersMenu.cpp:244
+#, kde-format
+msgid "Only Newest Packages"
+msgstr "Les pacaedjes les pus noûs seulmint"
+
+#: Apper/FiltersMenu.cpp:249
+#, kde-format
+msgid "Only show the newest available package"
+msgstr "En mostrer kel pus noû pacaedje k' i gn a"
+
+#: Apper/FiltersMenu.cpp:253
+#, kde-format
+msgid "Only Native Packages"
+msgstr "Les pacaedjes askepyîs pol sistinme seulmint"
+
+#: Apper/FiltersMenu.cpp:258
+#, kde-format
+msgid "Only show packages matching the machine architecture"
+msgstr ""
+"Èn mostrer ki les pacaedjes ki corespondèt a l' årtchitecteure di l' éndjole"
+
+#: Apper/FiltersMenu.cpp:264
+#, kde-format
+msgid "Only Show Applications"
+msgstr "Èn mostrer k' les programes"
+
+#: Apper/FiltersMenu.cpp:267
+#, kde-format
+msgid "Hide packages that are not applications"
+msgstr "Catchî les pacaedjes k' i n' sont nén des programes"
+
+#: Apper/main.cpp:44 Apper/MainUi.cpp:41
+#, kde-format
+msgid "Apper"
+msgstr "Apper"
+
+#: Apper/main.cpp:46
+#, fuzzy, kde-format
+#| msgid "Apper is an Application to Get and Manage Software"
+msgid "Apper is an application to get and manage software"
+msgstr "Apper est on programe po cweri eyet manaedjî ses programes"
+
+#: Apper/main.cpp:48
+#, fuzzy, kde-format
+#| msgid "(C) 2008-2011 Daniel Nicoletti"
+msgid "(C) 2008-2018 Daniel Nicoletti"
+msgstr "© 2008-2011 Daniel Nicoletti"
+
+#: Apper/main.cpp:49 PkSession/main.cpp:54
+#, kde-format
+msgid "Adrien Bustany"
+msgstr "Adrien Bustany"
+
+#: Apper/main.cpp:49 PkSession/main.cpp:54
+#, kde-format
+msgid "libpackagekit-qt and other stuff"
+msgstr "libpackagekit-qt eyet d' ôtès afwaires"
+
+#: Apper/main.cpp:50
+#, fuzzy, kde-format
+#| msgctxt "@info:credit"
+#| msgid "Matthias Klumpp"
+msgid "Matthias Klumpp"
+msgstr "Matthias Klumpp"
+
+#: Apper/PackageDetails.cpp:88
+#, kde-format
+msgid "Display"
+msgstr "Håynaedje"
+
+#: Apper/PackageDetails.cpp:93 AppSetup/SetupWizard.cpp:186
+#, kde-format
+msgid "Description"
+msgstr "Discrijhaedje"
+
+#: Apper/PackageDetails.cpp:99
+#, kde-format
+msgid "Depends On"
+msgstr "Dipind di"
+
+#: Apper/PackageDetails.cpp:126
+#, kde-format
+msgid "Required By"
+msgstr "Dimandé pa"
+
+#: Apper/PackageDetails.cpp:153
+#, kde-format
+msgid "File List"
+msgstr "Djivêye des fitchîs"
+
+#: Apper/PackageDetails.cpp:523
+#, kde-format
+msgid "No files were found."
+msgstr "Dji n' a trové nou fitchî."
+
+#: Apper/PackageDetails.cpp:571
+#, kde-format
+msgid "Could not fetch software details"
+msgstr "Dji n' sai cweri les detays do programe"
+
+#: Apper/PackageDetails.cpp:613
+#, kde-format
+msgid "Applications"
+msgstr "Programes"
+
+#. i18n: ectx: property (text), widget (QLabel, licenseL)
+#: Apper/PackageDetails.ui:164
+#, kde-format
+msgid "License:"
+msgstr "Licince :"
+
+#. i18n: ectx: property (text), widget (QPushButton, menuTB)
+#: Apper/PackageDetails.ui:394
+#, kde-format
+msgid "More..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QToolButton, hideTB)
+#: Apper/PackageDetails.ui:404 Apper/Updater/UpdateDetails.ui:29
+#, kde-format
+msgid "Hide"
+msgstr "Catchî"
+
+#: Apper/ScreenShotViewer.cpp:89
+#, kde-format
+msgid "Could not find screen shot."
+msgstr "Dji n' a savou trover d' waitroûlêye."
+
+#: Apper/Settings/OriginModel.cpp:37
+#, kde-format
+msgid "Origin of Packages"
+msgstr "Di wice ki les pacaedjes vinèt"
+
+#: Apper/Settings/Settings.cpp:65
+#, kde-format
+msgid "A repository was changed, it's highly recommended to refresh the cache"
+msgstr ""
+
+#: Apper/Settings/Settings.cpp:95
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Never"
+msgstr "Måy"
+
+#: Apper/Settings/Settings.cpp:98
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Only stable"
+msgstr "Stocasse seulmint"
+
+#: Apper/Settings/Settings.cpp:103
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Stable and development"
+msgstr "Stocasse et diswalpaedje"
+
+#: Apper/Settings/Settings.cpp:107
+#, kde-format
+msgctxt "Hourly refresh the package cache"
+msgid "Hourly"
+msgstr "Totes les eures"
+
+#: Apper/Settings/Settings.cpp:108
+#, kde-format
+msgctxt "Daily refresh the package cache"
+msgid "Daily"
+msgstr "Tos les djoûs"
+
+#: Apper/Settings/Settings.cpp:109
+#, kde-format
+msgctxt "Weekly refresh the package cache"
+msgid "Weekly"
+msgstr "Totes les samwinnes"
+
+#: Apper/Settings/Settings.cpp:110
+#, kde-format
+msgctxt "Monthly refresh the package cache"
+msgid "Monthly"
+msgstr "Tos les moes"
+
+#: Apper/Settings/Settings.cpp:111
+#, kde-format
+msgctxt "Never refresh package cache"
+msgid "Never"
+msgstr "Måy"
+
+#: Apper/Settings/Settings.cpp:113
+#, kde-format
+msgctxt "No updates will be automatically installed"
+msgid "None"
+msgstr "Nouk"
+
+#: Apper/Settings/Settings.cpp:114
+#, kde-format
+msgid "Download only"
+msgstr "Ni fé k' aberweter"
+
+#: Apper/Settings/Settings.cpp:115
+#, kde-format
+msgid "Security only"
+msgstr "Såvrité seulmint"
+
+#: Apper/Settings/Settings.cpp:116
+#, kde-format
+msgid "All updates"
+msgstr "Tos les metaedjes a djoû"
+
+#. i18n: ectx: property (text), widget (QLabel, intervalL)
+#: Apper/Settings/Settings.ui:74
+#, kde-format
+msgid "Check for new updates:"
+msgstr "Cachî après des noveas metaedjes a djoû :"
+
+#. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesMobileCB)
+#. i18n: ectx: property (text), widget (QCheckBox, installUpdatesMobileCB)
+#: Apper/Settings/Settings.ui:115 Apper/Settings/Settings.ui:183
+#, kde-format
+msgid "when on a mobile broadband network connection"
+msgstr "cwand dj' so on raloyaedje al rantoele sins fyi a lådje binde"
+
+#. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesBatteryCB)
+#. i18n: ectx: property (text), widget (QCheckBox, installUpdatesBatteryCB)
+#: Apper/Settings/Settings.ui:122 Apper/Settings/Settings.ui:176
+#, kde-format
+msgid "when running on battery"
+msgstr "cwand dj' so sol batreye"
+
+#. i18n: ectx: property (text), widget (QLabel, autoInsL)
+#: Apper/Settings/Settings.ui:141
+#, kde-format
+msgid "Automatically update:"
+msgstr "Mete a djoû otomaticmint :"
+
+#. i18n: ectx: property (text), widget (QCheckBox, appLauncherCB)
+#: Apper/Settings/Settings.ui:199
+#, kde-format
+msgid "Show application launcher after installing new applications"
+msgstr ""
+"Mostrer l' enondeu des programes après aveur astalé des noveas programes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
+#: Apper/Settings/Settings.ui:206
+#, kde-format
+msgid "Show confirmation dialog when installing or updating packages"
+msgstr ""
+"Mostrer l' purnea d' racertinaedje cwand dj' astale ou met a djoû des "
+"pacaedjes"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: Apper/Settings/Settings.ui:213
+#, kde-format
+msgid "Check for distribution upgrades:"
+msgstr "Cachî après les metaedjes a livea del distribucion :"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showOriginsCB)
+#: Apper/Settings/Settings.ui:270
+#, kde-format
+msgid "&Show origins of debug and development packages"
+msgstr "Mo&strer les oridjenes des pacaedjes di disbugaedje ou d' diswalpaedje"
+
+#. i18n: ectx: property (text), widget (QPushButton, editOriginsPB)
+#: Apper/Settings/Settings.ui:290
+#, kde-format
+msgid "Edit Origins"
+msgstr "Candjî oridjenes"
+
+#: Apper/TransactionHistory.cpp:67
+#, kde-format
+msgid "Refresh transactions list"
+msgstr "Rafrister l' djivêye des tranzaccions"
+
+#: Apper/TransactionHistory.cpp:83
+#, kde-format
+msgid "Time since last cache refresh: %1"
+msgstr "Tins dispoy li dierin rafristaedje del muchete : %1"
+
+#: Apper/TransactionModel.cpp:43
+#, kde-format
+msgid "Date"
+msgstr "Date"
+
+#: Apper/TransactionModel.cpp:44 libapper/PackageModel.cpp:220
+#, kde-format
+msgid "Action"
+msgstr "Accion"
+
+#: Apper/TransactionModel.cpp:45 apperd/TransactionWatcher.cpp:230
+#: AppSetup/SetupWizard.cpp:149
+#, kde-format
+msgid "Details"
+msgstr "Detays"
+
+#: Apper/TransactionModel.cpp:46
+#, kde-format
+msgctxt "Machine user who issued the transaction"
+msgid "Username"
+msgstr "No di l' uzeu"
+
+#: Apper/TransactionModel.cpp:47
+#, kde-format
+msgid "Application"
+msgstr "Programe"
+
+#: Apper/Updater/DistroUpgrade.cpp:39
+#, kde-format
+msgid "Upgrade"
+msgstr "Mete a livea"
+
+#: Apper/Updater/DistroUpgrade.cpp:50
+#, kde-format
+msgid "Distribution upgrade available: %1"
+msgstr "I gn a on metaedje a livea del distribucion : %1"
+
+#: Apper/Updater/DistroUpgrade.cpp:65
+#, kde-format
+msgid ""
+"You are about to upgrade your distribution to the latest version. This is "
+"usually a very lengthy process and takes a lot longer than simply upgrading "
+"your packages."
+msgstr ""
+"Vos alez bén rade mete a livea vosse distribucion viè s' dierinne modêye. "
+"Çouci est les troes cwårts do tins on foirt londjin processus eyet prind "
+"bråmint d' dipus d' tins ki djusse mete a djoû vos pacaedjes."
+
+#: Apper/Updater/DistroUpgrade.cpp:70
+#, kde-format
+msgid "It is recommended to plug in your computer before proceeding."
+msgstr "Il est rkimandé d' mete vosse copiutrece sol corant divant d' edåmer."
+
+#: Apper/Updater/DistroUpgrade.cpp:72
+#, kde-format
+msgid ""
+"It is recommended that you keep your computer plugged in while the upgrade "
+"is being performed."
+msgstr ""
+"Il est rkimandé d' leyî vosse copiutrece sol corant sol tins kel metaedje a "
+"livea est ki s' fwait."
+
+#: Apper/Updater/DistroUpgrade.cpp:90
+#, kde-format
+msgid "Distribution upgrade complete."
+msgstr "Metaedje a livea del distribucion tot fwait."
+
+#: Apper/Updater/DistroUpgrade.cpp:92 apperd/DistroUpgrade.cpp:144
+#, kde-format
+msgid "Distribution upgrade process exited with code %1."
+msgstr "Li metaedje a livea del distribucion a moussî foû avou l' côde %1."
+
+#: Apper/Updater/DistroUpgrade.cpp:104 apperd/DistroUpgrade.cpp:162
+#, kde-format
+msgid "The distribution upgrade process failed to start."
+msgstr ""
+"L' enondaedje do processus di metaedje a livea del distribucion a fwait "
+"berwete."
+
+#: Apper/Updater/DistroUpgrade.cpp:108 apperd/DistroUpgrade.cpp:165
+#, kde-format
+msgid ""
+"The distribution upgrade process crashed some time after starting "
+"successfully."
+msgstr ""
+"Li processus di metaedje a livea del distribucion a tcheyou e rak après s' "
+"aveur enondé comifåt."
+
+#: Apper/Updater/DistroUpgrade.cpp:112 apperd/DistroUpgrade.cpp:168
+#, kde-format
+msgid "The distribution upgrade process failed with an unknown error."
+msgstr ""
+"Li processus di metaedje a livea del distribucion a fwait berwete avou ene "
+"aroke nén cnoxhowe."
+
+#: Apper/Updater/UpdateDetails.cpp:183
+#, kde-format
+msgid "This update will add new features and expand functionality."
+msgstr ""
+"Ci metaedje a djoû cial radjoutrè des novelès fonccions eyet stindrè ses "
+"fonccionålités."
+
+#: Apper/Updater/UpdateDetails.cpp:187
+#, kde-format
+msgid "This update will fix bugs and other non-critical problems."
+msgstr ""
+"Ci metaedje a djoû cial coridjrè des bugs eyet d' ôtes problinmes nén "
+"critikes."
+
+#: Apper/Updater/UpdateDetails.cpp:191
+#, kde-format
+msgid "This update is important as it may solve critical problems."
+msgstr ""
+"Ci metaedje a djoû cial est impôrtant ca i pôreut rezoude des problinmes "
+"critikes."
+
+#: Apper/Updater/UpdateDetails.cpp:195
+#, kde-format
+msgid ""
+"This update is needed to fix a security vulnerability with this package."
+msgstr ""
+"I fåt ç' metaedje a djoû cial po coridjî ene craeye dins l' såvrité avou ç' "
+"pacaedje la."
+
+#: Apper/Updater/UpdateDetails.cpp:199
+#, kde-format
+msgid "This update is blocked."
+msgstr "Ci metaedje a djoû cial est ehåyî."
+
+#: Apper/Updater/UpdateDetails.cpp:206
+#, kde-format
+msgid "This notification was issued on %1 and last updated on %2."
+msgstr ""
+"Ci notifiaedje la a stî eplaidî so %1 eyet metou a djoû pol dierin côp li %2."
+
+#: Apper/Updater/UpdateDetails.cpp:212
+#, kde-format
+msgid "This notification was issued on %1."
+msgstr "Ci notifiaedje la a stî eplaidî so %1."
+
+#: Apper/Updater/UpdateDetails.cpp:229
+#, kde-format
+msgid "For more information about this update please visit this website:"
+msgid_plural ""
+"For more information about this update please visit these websites:"
+msgstr[0] ""
+"Po ndè saveur di dpus so ç' metaedje a djoû cial, alez viziter ç' waibe la :"
+msgstr[1] ""
+"Po ndè saveur di dpus so ç' metaedje a djoû cial, alez viziter ces waibes "
+"lale :"
+
+#: Apper/Updater/UpdateDetails.cpp:239
+#, kde-format
+msgid ""
+"For more information about bugs fixed by this update please visit this "
+"website:"
+msgid_plural ""
+"For more information about bugs fixed by this update please visit these "
+"websites:"
+msgstr[0] ""
+"Po ndè saveur di dpus so les bugs rezoudous pa ç' metaedje a djoû cial, alez "
+"viziter ç' waibe la :"
+msgstr[1] ""
+"Po ndè saveur di dpus so les bugs rezoudous pa ç' metaedje a djoû cial, alez "
+"viziter ces waibes lale :"
+
+#: Apper/Updater/UpdateDetails.cpp:249
+#, kde-format
+msgid ""
+"For more information about this security update please visit this website:"
+msgid_plural ""
+"For more information about this security update please visit these websites:"
+msgstr[0] ""
+"Po ndè saveur di dpus so ç' metaedje a djoû d' såvrité cial, alez viziter ç' "
+"waibe la :"
+msgstr[1] ""
+"Po ndè saveur di dpus so ç' metaedje a djoû d' såvrité cial, alez viziter "
+"ces waibes lale :"
+
+#: Apper/Updater/UpdateDetails.cpp:259
+#, kde-format
+msgid ""
+"The computer will have to be restarted after the update for the changes to "
+"take effect."
+msgstr ""
+"I fårè renonder l' copiutrece après l' metaedje a djoû po les candjmints "
+"esse efectifs."
+
+#: Apper/Updater/UpdateDetails.cpp:263
+#, kde-format
+msgid ""
+"You will need to log out and back in after the update for the changes to "
+"take effect."
+msgstr ""
+"Vos vs divoz dislodjî eyet relodjî après l' metaedje a djoû po les "
+"candjmints esse efectifs."
+
+#: Apper/Updater/UpdateDetails.cpp:270
+#, kde-format
+msgid ""
+"The classification of this update is unstable which means it is not designed "
+"for production use."
+msgstr ""
+"Li classifiaedje di ç' metaedje a djoû cial est nén stocasse, ça vout dire "
+"ki ça n' est nén fwait po esse eployî pol produccion."
+
+#: Apper/Updater/UpdateDetails.cpp:274
+#, kde-format
+msgid ""
+"This is a test update, and is not designed for normal use. Please report any "
+"problems or regressions you encounter."
+msgstr ""
+"Çoucial est on metaedje a djoû d' asprouvaedje eyet n' est nén atuzlé po-z "
+"èn eployaedje normå. Evoyîz on rapoirt po tolminme ké problinme ou "
+"regression k' vos resconterrîz."
+
+#: Apper/Updater/UpdateDetails.cpp:284
+#, kde-format
+msgid ""
+"The developer logs will be shown as no description is available for this "
+"update:"
+msgstr ""
+"Les djournås do diswalpeu seront mostrés s' i gn a nou discrijhaedje po ç' "
+"metaedje a djoû cial :"
+
+#: Apper/Updater/UpdateDetails.cpp:292
+#, kde-format
+msgid "Updates:"
+msgstr "Metaedjes a djoû :"
+
+#: Apper/Updater/UpdateDetails.cpp:302
+#, kde-format
+msgid "Obsoletes:"
+msgstr "Obsoletes :"
+
+#: Apper/Updater/UpdateDetails.cpp:312
+#, kde-format
+msgid "Repository: %1"
+msgstr "Depot : %1"
+
+#: Apper/Updater/UpdateDetails.cpp:334
+#, kde-format
+msgid "No update description was found."
+msgstr "Nou discrijhaedje trové po l' metaedje a djoû."
+
+#: Apper/Updater/Updater.cpp:112
+#, kde-format
+msgid "Show Current Versions"
+msgstr "Mostrer modêyes do moumint"
+
+#: Apper/Updater/Updater.cpp:241
+#, kde-format
+msgid "Estimated download size: %1"
+msgstr "Grandeu d' aberwetaedje a l' avirance : %1"
+
+#: Apper/Updater/Updater.cpp:335
+#, kde-format
+msgid "Check for new updates"
+msgstr "Cachî après des noveas metaedjes a djoû"
+
+#: apperd/DistroUpgrade.cpp:88
+#, kde-format
+msgid "Distribution upgrade available"
+msgstr "I gn a on metaedje a livea del distribucion"
+
+#: apperd/DistroUpgrade.cpp:92
+#, kde-format
+msgid "Start upgrade now"
+msgstr "Ataker l' metaedje a livea do côp"
+
+#: apperd/DistroUpgrade.cpp:141
+#, kde-format
+msgid "Distribution upgrade finished. "
+msgstr "Metaedje a livea del distribucion fini. "
+
+#: apperd/TransactionWatcher.cpp:142
+#, kde-format
+msgid "The system update has completed"
+msgstr "Li metaedje a djoû do sistinme est tot fwait"
+
+#: apperd/TransactionWatcher.cpp:149 apperd/TransactionWatcher.cpp:191
+#, kde-format
+msgid "Restart"
+msgstr "Renonder"
+
+#: apperd/TransactionWatcher.cpp:182
+#, kde-format
+msgid "Package: %2"
+msgid_plural "Packages: %2"
+msgstr[0] "Pacaedje : %2"
+msgstr[1] "Pacaedjes : %2"
+
+#: apperd/Updater.cpp:156
+#, kde-format
+msgid "Updates are being automatically installed."
+msgstr "Les metaedjes a djoû sont-st astalés otomaticmint."
+
+#: apperd/Updater.cpp:166
+#, kde-format
+msgid "Security updates are being automatically installed."
+msgstr "Les metaedjes a djoû di såvrité sont-st astalés otomaticmint."
+
+#: apperd/Updater.cpp:176
+#, kde-format
+msgid "Updates are being automatically downloaded."
+msgstr "Les metaedjes a djoû sont-st aberwetés otomaticmint."
+
+#: apperd/Updater.cpp:210
+#, kde-format
+msgid "System update was successful."
+msgstr "Li metaedje a djoû do sistinme a stî fwait sins rujhe."
+
+#: apperd/Updater.cpp:217
+#, kde-format
+msgid "The software update failed."
+msgstr "Li metaedje a djoû do programe a fwait berwete."
+
+#: apperd/Updater.cpp:271
+#, kde-format
+msgid "There is one new update"
+msgid_plural "There are %1 new updates"
+msgstr[0] "I gn a on novea metaedje a djoû"
+msgstr[1] "I gn a %1 noveas metaedjes a djoû"
+
+#: apperd/Updater.cpp:289 AppSetup/SetupWizard.cpp:260
+#: libapper/ApplicationsDelegate.cpp:44
+#, kde-format
+msgid "Install"
+msgstr "Astaler"
+
+#: AppSetup/main.cpp:43
+#, kde-format
+msgid "KDE Application Installer"
+msgstr "Astaleu des programes di KDE"
+
+#: AppSetup/main.cpp:46
+#, kde-format
+msgctxt "@info:credit"
+msgid "Daniel Nicoletti"
+msgstr "Daniel Nicoletti"
+
+#: AppSetup/main.cpp:46 AppSetup/main.cpp:48
+#, kde-format
+msgid "Developer"
+msgstr "Diswalpeu"
+
+#: AppSetup/main.cpp:48
+#, kde-format
+msgctxt "@info:credit"
+msgid "Matthias Klumpp"
+msgstr "Matthias Klumpp"
+
+#: AppSetup/main.cpp:61
+#, kde-format
+msgid "Show verbose information"
+msgstr "Mostrer l' infôrmåcion vierbeuse"
+
+#: AppSetup/main.cpp:62
+#, kde-format
+msgid "IPK package filename"
+msgstr "No do fitchî IPK"
+
+#: AppSetup/main.cpp:79
+#, fuzzy, kde-format
+#| msgid "Sorry, we didn't get an existing IPK package as parameter."
+msgid "We did not receive a path to an IPK package as parameter."
+msgstr "Dji rgrete mins nos n' avans yeu nou pacaedje IPK come paramete."
+
+#: AppSetup/main.cpp:80
+#, kde-format
+msgid "Package not found!"
+msgstr "Pacaedje nén trové !"
+
+#: AppSetup/SetupWizard.cpp:85 libapper/Requirements.cpp:57
+#: PkSession/SessionTask.cpp:73
+#, kde-format
+msgid "Continue"
+msgstr "Tcheryî pus lon"
+
+#: AppSetup/SetupWizard.cpp:109
+#, kde-format
+msgid "Error"
+msgstr "Aroke"
+
+#: AppSetup/SetupWizard.cpp:110
+#, kde-format
+msgid "An error occurred"
+msgstr "Åk n' a nén stî"
+
+#: AppSetup/SetupWizard.cpp:137
+#, kde-format
+msgid "Welcome!"
+msgstr "Wilicome !"
+
+#: AppSetup/SetupWizard.cpp:138
+#, kde-format
+msgid "Welcome to the installation of %1!"
+msgstr "Bénvou a l' astalaedje di %1 !"
+
+#: AppSetup/SetupWizard.cpp:139
+#, fuzzy, kde-format
+#| msgid ""
+#| "Please be careful while installing 3rd-party applications.<br>They may "
+#| "eventually <b>damage</b> your system or have <b>malicious behaviour</b>, "
+#| "like spying out your passwords.<br>Please do only install this software "
+#| "if you <b>trust the publisher and the author</b> of it."
+msgid ""
+"Please be careful while installing a 3rd-party application.<br>It might "
+"eventually <b>damage</b> your system or have <b>malicious behaviour</b>, "
+"like spying out your passwords.<br>Please do only install this software if "
+"you <b>trust its publisher</b>."
+msgstr ""
+"Waitîz a vos cwand vs astalez des programes viant d' ticès djins.<br>I "
+"pôrent pa des côps <b>fé do må</b> a vosse sistinme oudon-bén aveur des "
+"<b>måhaiteyès dujhances</b> come riwaitî d' cresse après vos sicrets."
+"<br>N' astalez ci programa cial, s' i vs plait, ki si <b>vos avoz fiyate e "
+"l' eplaideu ey e l' oteur</b> di ci cial."
+
+#: AppSetup/SetupWizard.cpp:150
+#, kde-format
+msgid "Details about this installation"
+msgstr "Detays åd fwait di l' astalaedje"
+
+#: AppSetup/SetupWizard.cpp:185
+#, kde-format
+msgid "Application description"
+msgstr "Discrijhaedje do programe"
+
+#: AppSetup/SetupWizard.cpp:193
+#, kde-format
+msgid "Running installation"
+msgstr "Dji boute a l' astalaedje"
+
+#: AppSetup/SetupWizard.cpp:194
+#, kde-format
+msgid "Installing %1..."
+msgstr "Dj' astale %1..."
+
+#: AppSetup/SetupWizard.cpp:234
+#, kde-format
+msgid "Installation finished!"
+msgstr "Astalaedje fini !"
+
+#: AppSetup/SetupWizard.cpp:235
+#, kde-format
+msgid "%1 has been installed successfully!"
+msgstr "%1 a stî astalé comifåt !"
+
+#: libapper/ApplicationLauncher.cpp:97
+#, kde-format
+msgid "New application available"
+msgid_plural "New applications available"
+msgstr[0] "I gn a on novea programe di disponibe"
+msgstr[1] "I gn a des noveas programes di disponibe"
+
+#: libapper/ApplicationLauncher.cpp:100
+#, kde-format
+msgid "The following application was just installed. Click on it to launch:"
+msgid_plural ""
+"The following applications were just installed. Click on them to launch:"
+msgstr[0] ""
+"Li programe shuvant vént d' esse astalé. Clitchîz l' po l' enonder :"
+msgstr[1] ""
+"Les programes shuvants vnèt d' esse astalés. Clitchîz les po ls enonder :"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showCB)
+#: libapper/ApplicationLauncher.ui:81
+#, kde-format
+msgid "Do not show this dialog again"
+msgstr "Èn pus mostrer cisse divize cial"
+
+#: libapper/ApplicationsDelegate.cpp:46
+#, kde-format
+msgid "Remove"
+msgstr "Oister"
+
+#: libapper/ApplicationsDelegate.cpp:48 libapper/ChangesDelegate.cpp:59
+#, kde-format
+msgid "Deselect"
+msgstr "Distchoezi"
+
+#: libapper/ChangesDelegate.cpp:55
+#, kde-format
+msgid "Do not Install"
+msgstr "Èn nén astaler"
+
+#: libapper/ChangesDelegate.cpp:57
+#, kde-format
+msgid "Do not Remove"
+msgstr "Èn nén oister"
+
+#: libapper/CustomProgressBar.cpp:38
+#, kde-format
+msgid "%1 remaining"
+msgstr "I dmeure %1"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, LicenseAgreement)
+#: libapper/LicenseAgreement.cpp:40 libapper/LicenseAgreement.ui:14
+#, kde-format
+msgid "License Agreement Required"
+msgstr "I fåt esse d' acoird avou l' licince"
+
+#: libapper/LicenseAgreement.cpp:43
+#, kde-format
+msgid "Accept Agreement"
+msgstr "Accepter l' acoird"
+
+#: libapper/LicenseAgreement.cpp:45
+#, kde-format
+msgid "License required for %1 by %2"
+msgstr "I fåt ene licince po %1 di %2"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: libapper/LicenseAgreement.ui:40
+#, kde-format
+msgid "Please read the following important information before continuing:"
+msgstr ""
+"Léjhoz s' i vs plait les impôrtants pondants et djondants shuvants divant d' "
+"tcheryî pus lon :"
+
+#: libapper/PackageModel.cpp:201
+#, kde-format
+msgid "Name"
+msgstr "No"
+
+#: libapper/PackageModel.cpp:205
+#, kde-format
+msgid "Version"
+msgstr "Modêye"
+
+#: libapper/PackageModel.cpp:208
+#, kde-format
+msgid "Installed Version"
+msgstr "Modêye d' astalêye"
+
+#: libapper/PackageModel.cpp:211
+#, kde-format
+msgid "Arch"
+msgstr "Årtch"
+
+#: libapper/PackageModel.cpp:214
+#, kde-format
+msgid "Origin"
+msgstr "Oridjene"
+
+#: libapper/PackageModel.cpp:217
+#, kde-format
+msgid "Size"
+msgstr "Grandeu"
+
+#: libapper/PackageModel.cpp:332
+#, kde-format
+msgid ""
+"Version: %1\n"
+"Architecture: %2"
+msgstr ""
+"Modêye : %1\n"
+"Årtchitecteure : %2"
+
+#: libapper/PackageModel.cpp:379
+#, kde-format
+msgid "To be Removed"
+msgstr "A oister"
+
+#: libapper/PackageModel.cpp:381
+#, kde-format
+msgid "To be Installed"
+msgstr "A-z astaler"
+
+#: libapper/PkStrings.cpp:38
+#, kde-format
+msgctxt "This is when the transaction status is not known"
+msgid "Unknown state"
+msgstr "Estat nén cnoxhou"
+
+#: libapper/PkStrings.cpp:41
+#, kde-format
+msgctxt "transaction state, the daemon is in the process of starting"
+msgid "Waiting for service to start"
+msgstr "Dji ratind kel siervice s' enonde"
+
+#: libapper/PkStrings.cpp:44
+#, kde-format
+msgctxt "transaction state, the transaction is waiting for another to complete"
+msgid "Waiting for other tasks"
+msgstr "Dji ratind ls ôtès bouyes"
+
+#: libapper/PkStrings.cpp:47
+#, kde-format
+msgctxt "transaction state, just started"
+msgid "Running task"
+msgstr "Dj' enonde li bouye"
+
+#: libapper/PkStrings.cpp:50
+#, kde-format
+msgctxt "transaction state, is querying data"
+msgid "Querying"
+msgstr "Dji cwir"
+
+#: libapper/PkStrings.cpp:53
+#, kde-format
+msgctxt "transaction state, getting data from a server"
+msgid "Getting information"
+msgstr "Dji cache après ls informåcions"
+
+#: libapper/PkStrings.cpp:56
+#, kde-format
+msgctxt "transaction state, removing packages"
+msgid "Removing packages"
+msgstr "Dji oistêye les pacaedjes"
+
+#: libapper/PkStrings.cpp:61
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading at %1/s, %2 remaining"
+msgstr "Dj' aberwete a %1/s, i gn a co %2"
+
+#: libapper/PkStrings.cpp:67
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading at %1/s"
+msgstr "Dj' aberwete a %1/s"
+
+#: libapper/PkStrings.cpp:72
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading, %1 remaining"
+msgstr "Dj' aberwete, i gn a co %1"
+
+#: libapper/PkStrings.cpp:76
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading"
+msgstr "Dj' aberwete"
+
+#: libapper/PkStrings.cpp:80
+#, kde-format
+msgctxt "transaction state, installing packages"
+msgid "Installing packages"
+msgstr "Dj' astale les pacaedjes"
+
+#: libapper/PkStrings.cpp:83
+#, kde-format
+msgctxt "transaction state, refreshing internal lists"
+msgid "Refreshing software list"
+msgstr "Dji rafristêye li djivêye des programes"
+
+#: libapper/PkStrings.cpp:86
+#, kde-format
+msgctxt "transaction state, installing updates"
+msgid "Updating packages"
+msgstr "Dji met a djoû les pacaedjes"
+
+#: libapper/PkStrings.cpp:89
+#, kde-format
+msgctxt "transaction state, removing old packages, and cleaning config files"
+msgid "Cleaning up packages"
+msgstr "Dji rneteye les pacaedjes"
+
+#: libapper/PkStrings.cpp:92
+#, kde-format
+msgctxt "transaction state, obsoleting old packages"
+msgid "Obsoleting packages"
+msgstr "Dji marke les pacaedjes come trop vîs"
+
+#: libapper/PkStrings.cpp:95
+#, kde-format
+msgctxt "transaction state, checking the transaction before we do it"
+msgid "Resolving dependencies"
+msgstr "Dji rezoud ls aloyances"
+
+#: libapper/PkStrings.cpp:98
+#, kde-format
+msgctxt ""
+"transaction state, checking if we have all the security keys for the "
+"operation"
+msgid "Checking signatures"
+msgstr "Dji verifeye les sinateures"
+
+#: libapper/PkStrings.cpp:101
+#, kde-format
+msgctxt "transaction state, when we're doing a test transaction"
+msgid "Testing changes"
+msgstr "Dji saye les candjmints"
+
+#: libapper/PkStrings.cpp:104
+#, kde-format
+msgctxt "transaction state, when we're writing to the system package database"
+msgid "Committing changes"
+msgstr "Dji spåde les candjmints"
+
+#: libapper/PkStrings.cpp:107
+#, kde-format
+msgctxt "transaction state, requesting data from a server"
+msgid "Requesting data"
+msgstr "Dji dmande les dnêyes"
+
+#: libapper/PkStrings.cpp:110
+#, kde-format
+msgctxt "transaction state, all done!"
+msgid "Finished"
+msgstr "Fini"
+
+#: libapper/PkStrings.cpp:113
+#, kde-format
+msgctxt "transaction state, in the process of cancelling"
+msgid "Cancelling"
+msgstr "Dji rnonce"
+
+#: libapper/PkStrings.cpp:116
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading repository information"
+msgstr "Dj' aberwete les informåcions sol depot"
+
+#: libapper/PkStrings.cpp:119
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading list of packages"
+msgstr "Dj' aberwete li djivêye des pacaedjes"
+
+#: libapper/PkStrings.cpp:122
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading file lists"
+msgstr "Dj' aberwete les djivêyes des fitchîs"
+
+#: libapper/PkStrings.cpp:125
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading lists of changes"
+msgstr "Dj' aberwete les djivêyes des candjmints"
+
+#: libapper/PkStrings.cpp:128
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading groups"
+msgstr "Dj' aberwete les groupes"
+
+#: libapper/PkStrings.cpp:131
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading update information"
+msgstr "Dj' aberwete les informåcions sol metaedje a djoû"
+
+#: libapper/PkStrings.cpp:134
+#, kde-format
+msgctxt "transaction state, repackaging delta files"
+msgid "Repackaging files"
+msgstr "Dji rpacaedje les fitchîs"
+
+#: libapper/PkStrings.cpp:137
+#, kde-format
+msgctxt "transaction state, loading databases"
+msgid "Loading cache"
+msgstr "Dji tchedje li muchete"
+
+#: libapper/PkStrings.cpp:140
+#, kde-format
+msgctxt "transaction state, scanning for running processes"
+msgid "Scanning installed applications"
+msgstr "Dji corwaite les programes astalés"
+
+#: libapper/PkStrings.cpp:143
+#, kde-format
+msgctxt ""
+"transaction state, generating a list of packages installed on the system"
+msgid "Generating package lists"
+msgstr "Dji fwait les djivêyes des pacaedjes"
+
+#: libapper/PkStrings.cpp:146
+#, kde-format
+msgctxt "transaction state, when we're waiting for the native tools to exit"
+msgid "Waiting for package manager lock"
+msgstr "Dji ratind kel manaedjeu des pacaedjes s' eclawe"
+
+#: libapper/PkStrings.cpp:149
+#, kde-format
+msgctxt "waiting for user to type in a password"
+msgid "Waiting for authentication"
+msgstr "Dji ratind l' otintifiaedje"
+
+#: libapper/PkStrings.cpp:152
+#, kde-format
+msgctxt "we are updating the list of processes"
+msgid "Updating the list of running applications"
+msgstr "Dji met a djoû l' djivêye des programes ovrants"
+
+#: libapper/PkStrings.cpp:155
+#, kde-format
+msgctxt "we are checking executable files in use"
+msgid "Checking for applications currently in use"
+msgstr "Dji verifeye les programes eployîs pol moumint"
+
+#: libapper/PkStrings.cpp:158
+#, kde-format
+msgctxt "we are checking for libraries in use"
+msgid "Checking for libraries currently in use"
+msgstr "Dji verifeye les livreyes eployeyes pol moumint"
+
+#: libapper/PkStrings.cpp:161
+#, kde-format
+msgctxt "we are copying package files to prepare to install"
+msgid "Copying files"
+msgstr "Dji copeye les fitchîs"
+
+#: libapper/PkStrings.cpp:164
+#, fuzzy, kde-format
+#| msgctxt "transaction state, just started"
+#| msgid "Running task"
+msgctxt "we are running hooks pre or post transaction"
+msgid "Running hooks"
+msgstr "Dj' enonde li bouye"
+
+#: libapper/PkStrings.cpp:179
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Downloaded"
+msgstr "Aberweté"
+
+#: libapper/PkStrings.cpp:181
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Updated"
+msgstr "Metou a djoû"
+
+#: libapper/PkStrings.cpp:183
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Installed"
+msgstr "Astalé"
+
+#: libapper/PkStrings.cpp:185
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Removed"
+msgstr "Oisté"
+
+#: libapper/PkStrings.cpp:187
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Cleaned Up"
+msgstr "Netyî"
+
+#: libapper/PkStrings.cpp:189
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Obsoleted"
+msgstr "Trop vî"
+
+#: libapper/PkStrings.cpp:200
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Unknown role type"
+msgstr "Sôre di role nén cnoxhowe"
+
+#: libapper/PkStrings.cpp:202
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting dependencies"
+msgstr "Dji cache après les aloyances"
+
+#: libapper/PkStrings.cpp:204
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting update detail"
+msgstr "Dji cache après les detays des metaedjes a djoû"
+
+#: libapper/PkStrings.cpp:207
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting details"
+msgstr "Dji cache après les detays"
+
+#: libapper/PkStrings.cpp:209
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting requires"
+msgstr "Dji cache après les « dimande »"
+
+#: libapper/PkStrings.cpp:211
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting updates"
+msgstr "Dji cache après les metaedjes a djoû"
+
+#: libapper/PkStrings.cpp:213
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching details"
+msgstr "Detays do cweraedje"
+
+#: libapper/PkStrings.cpp:215
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching for file"
+msgstr "Dji cache après on fitchî"
+
+#: libapper/PkStrings.cpp:217
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching groups"
+msgstr "Groupes di cweraedje"
+
+#: libapper/PkStrings.cpp:219
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching by package name"
+msgstr "Trover sol no do pacaedje"
+
+#: libapper/PkStrings.cpp:222
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in present tense"
+#| msgid "Simulating the remove"
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating removal"
+msgstr "Dji fwait come si dj' oisteu"
+
+#: libapper/PkStrings.cpp:224 libapper/PkStrings.cpp:231
+#: libapper/PkStrings.cpp:272
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading packages"
+msgstr "Dj' aberwete  les pacaedjes"
+
+#: libapper/PkStrings.cpp:226
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Removing"
+msgstr "Dji oistêye"
+
+#: libapper/PkStrings.cpp:229
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in present tense"
+#| msgid "Simulating the install"
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating install"
+msgstr "Dji fwait come si dj' astaleu l' atalaedje"
+
+#: libapper/PkStrings.cpp:233
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing"
+msgstr "Dj' astale"
+
+#: libapper/PkStrings.cpp:236
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in present tense"
+#| msgid "Simulating the install"
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating file install"
+msgstr "Dji fwait come si dj' astaleu l' atalaedje"
+
+#: libapper/PkStrings.cpp:238
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in present tense"
+#| msgid "Downloading packages"
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading required packages"
+msgstr "Dj' aberwete  les pacaedjes"
+
+#: libapper/PkStrings.cpp:240
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing file"
+msgstr "Dj' astale li fitchî"
+
+#: libapper/PkStrings.cpp:242
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Refreshing package cache"
+msgstr "Dji rafristêye li muchete des pacaedje"
+
+#: libapper/PkStrings.cpp:245
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in present tense"
+#| msgid "Simulating the update"
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating update"
+msgstr "Dji fwait come si dj' meteu a djoû"
+
+#: libapper/PkStrings.cpp:247
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in present tense"
+#| msgid "Downloading packages"
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading updates"
+msgstr "Dj' aberwete  les pacaedjes"
+
+#: libapper/PkStrings.cpp:249
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Updating packages"
+msgstr "Dji met a djoû les pacaedjes"
+
+#: libapper/PkStrings.cpp:251
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Canceling"
+msgstr "Dji rnonce"
+
+#: libapper/PkStrings.cpp:253
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting list of repositories"
+msgstr "Dji cache après l' djivêye des depots"
+
+#: libapper/PkStrings.cpp:255
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Enabling repository"
+msgstr "Dji met en alaedje li depot"
+
+#: libapper/PkStrings.cpp:257
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Setting repository data"
+msgstr "Dji defini les dnêyes do depot"
+
+#: libapper/PkStrings.cpp:259
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Resolving"
+msgstr "Dji rezoud"
+
+#: libapper/PkStrings.cpp:262
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting file list"
+msgstr "Dji cache après l' djivêye des fitchîs"
+
+#: libapper/PkStrings.cpp:264
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting what provides"
+msgstr "Dji cache après çou k' i dene"
+
+#: libapper/PkStrings.cpp:266
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing signature"
+msgstr "Dj' astale li sinateure"
+
+#: libapper/PkStrings.cpp:268
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting package lists"
+msgstr "Dji cache après les djivêyes des pacaedjes"
+
+#: libapper/PkStrings.cpp:270
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Accepting EULA"
+msgstr "Dj' acceptêye l' EULA"
+
+#: libapper/PkStrings.cpp:274
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting distribution upgrade information"
+msgstr "Dji cache après les informåcions d' metaedje a livea del distribucion"
+
+#: libapper/PkStrings.cpp:276
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting categories"
+msgstr "Dji cache après les categoreyes"
+
+#: libapper/PkStrings.cpp:278
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting old transactions"
+msgstr "Dji cache après les viyès tranzaccions"
+
+#: libapper/PkStrings.cpp:280
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Repairing system"
+msgstr "Dji remantche li sistinme"
+
+#: libapper/PkStrings.cpp:282
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in present tense"
+#| msgid "Enabling repository"
+msgctxt "The role of the transaction, in present tense"
+msgid "Removing repository"
+msgstr "Dji met en alaedje li depot"
+
+#: libapper/PkStrings.cpp:284
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in present tense"
+#| msgid "Upgrading system"
+msgctxt "The role of the transaction, in present tense"
+msgid "Upgrading the system"
+msgstr "Dji met a livea l' sistinme"
+
+#: libapper/PkStrings.cpp:299
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Unknown role type"
+msgstr "Sôre di role nén cnoxhowe"
+
+#: libapper/PkStrings.cpp:301
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got dependencies"
+msgstr "Dj' a ls aloyances"
+
+#: libapper/PkStrings.cpp:303
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got update detail"
+msgstr "Dj' a les detays pol metaedje a djoû"
+
+#: libapper/PkStrings.cpp:306
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got details"
+msgstr "Dj' a les detays"
+
+#: libapper/PkStrings.cpp:308
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got requires"
+msgstr "Dj' a les « dimande »"
+
+#: libapper/PkStrings.cpp:310
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got updates"
+msgstr "Dj' a les metaedjes a djoû"
+
+#: libapper/PkStrings.cpp:312
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for package details"
+msgstr "Detays so les fitchîs cachîs après"
+
+#: libapper/PkStrings.cpp:314
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for file"
+msgstr "Fitchîs cachîs après"
+
+#: libapper/PkStrings.cpp:316
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched groups"
+msgstr "Groupes cachîs après"
+
+#: libapper/PkStrings.cpp:318
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for package name"
+msgstr "No d' fitchîs cachîs après"
+
+#: libapper/PkStrings.cpp:320
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Removed packages"
+msgstr "Pacaedjes oistés"
+
+#: libapper/PkStrings.cpp:322
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed packages"
+msgstr "Pacaedjes astalés"
+
+#: libapper/PkStrings.cpp:324
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed local files"
+msgstr "Fitchîs locås astalés"
+
+#: libapper/PkStrings.cpp:326
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Refreshed package cache"
+msgstr "Muchete des pacaedjes rafristêye"
+
+#: libapper/PkStrings.cpp:328
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Updated packages"
+msgstr "Pacaedjes metous a djoû"
+
+#: libapper/PkStrings.cpp:330
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Canceled"
+msgstr "Rinoncî"
+
+#: libapper/PkStrings.cpp:332
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got list of repositories"
+msgstr "Dj' a l' djivêye des depots"
+
+#: libapper/PkStrings.cpp:334
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Enabled repository"
+msgstr "Depot en alaedje"
+
+#: libapper/PkStrings.cpp:336
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Set repository data"
+msgstr "Defini les dinêyes do depot"
+
+#: libapper/PkStrings.cpp:338
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Resolved"
+msgstr "Rezoudou"
+
+#: libapper/PkStrings.cpp:341
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got file list"
+msgstr "Dj' a yeu l'  djivêye des fitchîs"
+
+#: libapper/PkStrings.cpp:343
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got what provides"
+msgstr "Dj' a yeu çou ki dene"
+
+#: libapper/PkStrings.cpp:345
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed signature"
+msgstr "Sinateure astalêye"
+
+#: libapper/PkStrings.cpp:347
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got package lists"
+msgstr "Dj' a yeu l' djivêye des pacaedjes"
+
+#: libapper/PkStrings.cpp:349
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Accepted EULA"
+msgstr "EULA accepté"
+
+#: libapper/PkStrings.cpp:351
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Downloaded packages"
+msgstr "Pacaedjes aberwetés"
+
+#: libapper/PkStrings.cpp:353
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got distribution upgrades"
+msgstr "Dj' a yeu les metaedjes a livea del distribucion"
+
+#: libapper/PkStrings.cpp:355
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got categories"
+msgstr "Dj' a yeu les categoreyes"
+
+#: libapper/PkStrings.cpp:357
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got old transactions"
+msgstr "Dj' a yeu les viyès tranzaccions"
+
+#: libapper/PkStrings.cpp:359
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Repaired system"
+msgstr "Sistinme remantchî"
+
+#: libapper/PkStrings.cpp:361
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in past tense"
+#| msgid "Enabled repository"
+msgctxt "The role of the transaction, in past tense"
+msgid "Removed repository"
+msgstr "Depot en alaedje"
+
+#: libapper/PkStrings.cpp:363
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in past tense"
+#| msgid "Upgraded system"
+msgctxt "The role of the transaction, in past tense"
+msgid "Upgraded the system"
+msgstr "Sistinme metou a djoû"
+
+#: libapper/PkStrings.cpp:373
+#, kde-format
+msgid "Downloading"
+msgstr "Dj' aberwete "
+
+#: libapper/PkStrings.cpp:375
+#, kde-format
+msgid "Updating"
+msgstr "Dji met a djoû"
+
+#: libapper/PkStrings.cpp:377
+#, kde-format
+msgid "Installing"
+msgstr "Dj' astale"
+
+#: libapper/PkStrings.cpp:379
+#, kde-format
+msgid "Removing"
+msgstr "Dji oistêye"
+
+#: libapper/PkStrings.cpp:381
+#, kde-format
+msgid "Cleaning up"
+msgstr "Dji rneteye"
+
+#: libapper/PkStrings.cpp:383
+#, kde-format
+msgid "Obsoleting"
+msgstr "Dji rind forpassé"
+
+#: libapper/PkStrings.cpp:385
+#, kde-format
+msgid "Reinstalling"
+msgstr "Dji rastale"
+
+#: libapper/PkStrings.cpp:387
+#, kde-format
+msgid "Preparing"
+msgstr "Dj' aprestêye"
+
+#: libapper/PkStrings.cpp:389
+#, kde-format
+msgid "Decompressing"
+msgstr "Dji disrastrind"
+
+#: libapper/PkStrings.cpp:400
+#, kde-format
+msgid "Downloaded"
+msgstr "Aberweté"
+
+#: libapper/PkStrings.cpp:402
+#, kde-format
+msgid "Updated"
+msgstr "Metou a djoû"
+
+#: libapper/PkStrings.cpp:406
+#, kde-format
+msgid "Removed"
+msgstr "Oisté"
+
+#: libapper/PkStrings.cpp:408
+#, kde-format
+msgid "Cleaned up"
+msgstr "Netyî"
+
+#: libapper/PkStrings.cpp:410
+#, kde-format
+msgid "Obsoleted"
+msgstr "Trop vî"
+
+#: libapper/PkStrings.cpp:412
+#, kde-format
+msgid "Reinstalled"
+msgstr "Rastalé"
+
+#: libapper/PkStrings.cpp:414
+#, kde-format
+msgid "Prepared"
+msgstr "Apresté"
+
+#: libapper/PkStrings.cpp:416
+#, kde-format
+msgid "Decompressed"
+msgstr "Disrastrindou"
+
+#: libapper/PkStrings.cpp:427
+#, kde-format
+msgid "No network connection available"
+msgstr "I gn a pont d' raloyaedje rantoele di disponibe"
+
+#: libapper/PkStrings.cpp:429
+#, kde-format
+msgid "No package cache is available"
+msgstr "I gn a pont d' muchete des pacaedjes"
+
+#: libapper/PkStrings.cpp:431
+#, kde-format
+msgid "Out of memory"
+msgstr "Pupont d' memwere"
+
+#: libapper/PkStrings.cpp:433
+#, kde-format
+msgid "Failed to create a thread"
+msgstr "L' ahivaedje d' ene lignoûle a fwait berwete"
+
+#: libapper/PkStrings.cpp:435
+#, kde-format
+msgid "Not supported by this backend"
+msgstr "Nén sopoirté pa c' fondmint ci"
+
+#: libapper/PkStrings.cpp:437
+#, kde-format
+msgid "An internal system error has occurred"
+msgstr "Ene divintrinne aroke sistinme s' a passé"
+
+#: libapper/PkStrings.cpp:439
+#, kde-format
+msgid "A security trust relationship is not present"
+msgstr "I gn a pont d' loyaedje fiyåve di såvrité"
+
+#: libapper/PkStrings.cpp:441
+#, kde-format
+msgid "The package is not installed"
+msgstr "Li pacaedje n' est nén astalé"
+
+#: libapper/PkStrings.cpp:443
+#, kde-format
+msgid "The package was not found"
+msgstr "Dji n' a nén trové l' pacaedje"
+
+#: libapper/PkStrings.cpp:445
+#, kde-format
+msgid "The package is already installed"
+msgstr "Li pacaedje est ddja astalé"
+
+#: libapper/PkStrings.cpp:447
+#, kde-format
+msgid "The package download failed"
+msgstr "L' aberwetaedje do pacaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:449
+#, kde-format
+msgid "The group was not found"
+msgstr "Dji n' a nén trové l' groupe"
+
+#: libapper/PkStrings.cpp:451
+#, kde-format
+msgid "The group list was invalid"
+msgstr "Li djivêye des groupes n' esteut nén valåbe"
+
+#: libapper/PkStrings.cpp:453
+#, kde-format
+msgid "Dependency resolution failed"
+msgstr "Li rezoudaedje des aloyances a fwait berwete"
+
+#: libapper/PkStrings.cpp:455
+#, kde-format
+msgid "Search filter was invalid"
+msgstr "Li passete di cweraedje n' esteut nén valåbe"
+
+#: libapper/PkStrings.cpp:457
+#, kde-format
+msgid "The package identifier was not well formed"
+msgstr "L' idintifieu do pacaedje n' esteut nén bén a môde di djin"
+
+#: libapper/PkStrings.cpp:459
+#, kde-format
+msgid "Transaction error"
+msgstr "Aroke di tranzaccion"
+
+#: libapper/PkStrings.cpp:461
+#, kde-format
+msgid "Repository name was not found"
+msgstr "Dji n' a nén trové l' pno do depot"
+
+#: libapper/PkStrings.cpp:463
+#, kde-format
+msgid "Could not remove a protected system package"
+msgstr "Dji n' a sepou oister on pacaedje sistinme waerantî"
+
+#: libapper/PkStrings.cpp:465
+#, kde-format
+msgid "The task was canceled"
+msgstr "Dj' a rnoncî al bouye"
+
+#: libapper/PkStrings.cpp:467
+#, kde-format
+msgid "The task was forcibly canceled"
+msgstr "Dj' a rnoncî pal foice al bouye"
+
+#: libapper/PkStrings.cpp:469
+#, kde-format
+msgid "Reading the config file failed"
+msgstr "Li ljhaedje do fitchî d' apontiaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:471
+#, kde-format
+msgid "The task cannot be cancelled"
+msgstr "Dji n' sai nén rnoncî al bouye"
+
+#: libapper/PkStrings.cpp:473
+#, kde-format
+msgid "Source packages cannot be installed"
+msgstr "Les pacaedjes sourdants n' savèt nén esse astalés"
+
+#: libapper/PkStrings.cpp:475
+#, kde-format
+msgid "The license agreement failed"
+msgstr "L' acoird di licince a fwait berwete"
+
+#: libapper/PkStrings.cpp:477
+#, kde-format
+msgid "Local file conflict between packages"
+msgstr "Afrontmint d' fitchîs locås etur pacaedjes"
+
+#: libapper/PkStrings.cpp:479
+#, kde-format
+msgid "Packages are not compatible"
+msgstr "Les pacaedjes ni sont nén copatibes"
+
+#: libapper/PkStrings.cpp:481
+#, kde-format
+msgid "Problem connecting to a software origin"
+msgstr "Åk n' a nén stî come dji m' raloyive a ene oridjene di programes"
+
+#: libapper/PkStrings.cpp:483
+#, kde-format
+msgid "Failed to initialize"
+msgstr "L' inicialijhaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:485
+#, kde-format
+msgid "Failed to finalize"
+msgstr "Li finixhaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:487
+#, kde-format
+msgid "Cannot get lock"
+msgstr "Dji n' sai eclawer"
+
+#: libapper/PkStrings.cpp:489
+#, kde-format
+msgid "No packages to update"
+msgstr "Pont d' pacaedjes a mete a djoû"
+
+#: libapper/PkStrings.cpp:491
+#, kde-format
+msgid "Cannot write repository configuration"
+msgstr "Dji n' sai scrire l' apontiaedje do depot"
+
+#: libapper/PkStrings.cpp:493
+#, kde-format
+msgid "Local install failed"
+msgstr "L' astalaedje locå a fwait berwete"
+
+#: libapper/PkStrings.cpp:495
+#, kde-format
+msgid "Bad GPG signature"
+msgstr "Mwaijhe sinateure GPG"
+
+#: libapper/PkStrings.cpp:497
+#, kde-format
+msgid "Missing GPG signature"
+msgstr "I manke li sinateure GPG"
+
+#: libapper/PkStrings.cpp:499
+#, kde-format
+msgid "Repository configuration invalid"
+msgstr "Apontiaedje do depot nén valåbe"
+
+#: libapper/PkStrings.cpp:501
+#, kde-format
+msgid "Invalid package file"
+msgstr "Fitchî pacaedje nén valåbe"
+
+#: libapper/PkStrings.cpp:503
+#, kde-format
+msgid "Package install blocked"
+msgstr "Astalaedje do pacaedje bloké"
+
+#: libapper/PkStrings.cpp:505
+#, kde-format
+msgid "Package is corrupt"
+msgstr "Li pacaedje est cron"
+
+#: libapper/PkStrings.cpp:507
+#, kde-format
+msgid "All packages are already installed"
+msgstr "Tos les pacaedjes sont ddja astalés"
+
+#: libapper/PkStrings.cpp:509
+#, kde-format
+msgid "The specified file could not be found"
+msgstr "Dji n' a savou trover l' sipecifyî fitchî"
+
+#: libapper/PkStrings.cpp:511
+#, kde-format
+msgid "No more mirrors are available"
+msgstr "I gn a pont d' ôte muroe d' disponibe"
+
+#: libapper/PkStrings.cpp:513
+#, kde-format
+msgid "No distribution upgrade data is available"
+msgstr "Nou metaedje a djoû del distribucion di disponibe"
+
+#: libapper/PkStrings.cpp:515
+#, kde-format
+msgid "Package is incompatible with this system"
+msgstr "Li pacaedje n' est nén compatibe avou ç' sistinme cial"
+
+#: libapper/PkStrings.cpp:517
+#, kde-format
+msgid "No space is left on the disk"
+msgstr "I gn a pupont d' plaece sol plake"
+
+#: libapper/PkStrings.cpp:519 libapper/PkTransaction.cpp:341
+#, kde-format
+msgid "A media change is required"
+msgstr "I fåt on candjmint d' media"
+
+#: libapper/PkStrings.cpp:521
+#, kde-format
+msgid "Authorization failed"
+msgstr "L' otorijhåcion a fwait berwete"
+
+#: libapper/PkStrings.cpp:523
+#, kde-format
+msgid "Update not found"
+msgstr "Metaedje a djoû nén trové"
+
+#: libapper/PkStrings.cpp:525
+#, kde-format
+msgid "Cannot install from untrusted origin"
+msgstr "Dji n' sai astaler dispoy ene oridjene nén fiyåve"
+
+#: libapper/PkStrings.cpp:527
+#, kde-format
+msgid "Cannot update from untrusted origin"
+msgstr "Dji n' sai mete a djoû dispoy ene oridjene nén fiyåve"
+
+#: libapper/PkStrings.cpp:529
+#, kde-format
+msgid "Cannot get the file list"
+msgstr "Dji n' sai aler cweri après l' djivêye des fitchîs"
+
+#: libapper/PkStrings.cpp:531
+#, kde-format
+msgid "Cannot get package requires"
+msgstr "Dji n' sai aler cweri après çou k' les pacaedjes ont mezåjhe"
+
+#: libapper/PkStrings.cpp:533
+#, kde-format
+msgid "Cannot disable origin"
+msgstr "Dji n' sai essocter l' oridjene"
+
+#: libapper/PkStrings.cpp:535
+#, kde-format
+msgid "The download failed"
+msgstr "L' aberwetaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:537
+#, kde-format
+msgid "Package failed to configure"
+msgstr "L' apontiaedje do pacaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:539
+#, kde-format
+msgid "Package failed to build"
+msgstr "Li bastixhaedje do pacaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:541
+#, kde-format
+msgid "Package failed to install"
+msgstr "L' astalaedje do pacaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:543
+#, kde-format
+msgid "Package failed to be removed"
+msgstr "Li oistaedje do pacaedje a fwait berwete"
+
+#: libapper/PkStrings.cpp:545
+#, kde-format
+msgid "Update failed due to running process"
+msgstr "Li metaedje a djoû a fwait berwete a cåze di processus ovrants"
+
+#: libapper/PkStrings.cpp:547
+#, kde-format
+msgid "The package database was changed"
+msgstr "Li båze di dnêyes des pacaedje a stî candjeye"
+
+#: libapper/PkStrings.cpp:549
+#, kde-format
+msgid "Virtual provide type is not supported"
+msgstr "Li sôre di donaedje forveyou n' est nén sopoirtêye"
+
+#: libapper/PkStrings.cpp:551
+#, kde-format
+msgid "Install root is invalid"
+msgstr "L' astalaedje raecene n' est nén valåbe"
+
+#: libapper/PkStrings.cpp:553
+#, kde-format
+msgid "Cannot fetch install sources"
+msgstr "Dji n' sai aler cweri après les sourdants d' astalaedje"
+
+#: libapper/PkStrings.cpp:555
+#, kde-format
+msgid "Rescheduled due to priority"
+msgstr "Riprogramé a cåze d' ene prumiristé"
+
+#: libapper/PkStrings.cpp:557
+#, kde-format
+msgid "Unfinished transaction"
+msgstr "Tranzaccion nén fineye"
+
+#: libapper/PkStrings.cpp:559
+#, kde-format
+msgid "Lock required"
+msgstr "Eclawaedje reki"
+
+#: libapper/PkStrings.cpp:561
+#, kde-format
+msgid "Unknown error"
+msgstr "Aroke nén cnoxhowe"
+
+#: libapper/PkStrings.cpp:571
+#, kde-format
+msgid ""
+"There is no network connection available.\n"
+"Please check your connection settings and try again"
+msgstr ""
+"I gn a pont d' raloyaedje rantoele di disponibe.\n"
+"Waitîz vos tchuzes di raloyaedjes s' i vs plait eyet sayîz co on côp"
+
+#: libapper/PkStrings.cpp:574
+#, kde-format
+msgid ""
+"The package list needs to be rebuilt.\n"
+"This should have been done by the backend automatically."
+msgstr ""
+"Li djivêye des pacaedjes a dandjî d' esse ricostrute.\n"
+"Ça duvreut ddja esse awè stî fwait otomaticmint pal boye di fond."
+
+#: libapper/PkStrings.cpp:577
+#, kde-format
+msgid ""
+"The service that is responsible for handling user requests is out of "
+"memory.\n"
+"Please close some programs or restart your computer."
+msgstr ""
+"Li siervice ki doet apougnî les dmandes des uzeus n' a pupont d' memwere.\n"
+"Cloyoz kékes programes s' i vs plait oudon-bén renonder voste éndjole."
+
+#: libapper/PkStrings.cpp:580
+#, kde-format
+msgid "A thread could not be created to service the user request."
+msgstr ""
+"Ene lignoûle n' a nén savou esse ahivêye po siervi l' dimande di l' uzeu."
+
+#: libapper/PkStrings.cpp:582
+#, kde-format
+msgid ""
+"The action is not supported by this backend.\n"
+"Please report a bug as this should not have happened."
+msgstr ""
+"Li faitindje n' est nén sopoirté pa ç' programe fondmint cial.\n"
+"Rapoirtez on bug s' i vs plait ca çoula n' åreu djamåy divou ariver."
+
+#: libapper/PkStrings.cpp:585
+#, kde-format
+msgid ""
+"A problem that we were not expecting has occurred.\n"
+"Please report this bug with the error description."
+msgstr ""
+"On problinme k' on n' s' î ratindeu nén s' a passé.\n"
+"Rapoirtez ç' bug la s' i vs plait avou l' discrijhaedje di l' aroke."
+
+#: libapper/PkStrings.cpp:588
+#, kde-format
+msgid ""
+"A security trust relationship could not be made with the software origin.\n"
+"Please check your software signature settings."
+msgstr ""
+"Dji n' a savou fé d' loyaedje fiyåve di såvrité avou l' oridjene do "
+"programe.\n"
+"Verifyîz vos apontiaedjes des sinateures des programes, s' i vs plait."
+
+#: libapper/PkStrings.cpp:591
+#, kde-format
+msgid ""
+"The package that is trying to be removed or updated is not already installed."
+msgstr ""
+"Li pacaedje k' on saye di oister oudonbén d' mete a djoû n' est nén co "
+"astalé."
+
+#: libapper/PkStrings.cpp:593
+#, kde-format
+msgid ""
+"The package that is being modified was not found on your system or in any "
+"software origin."
+msgstr ""
+"Li pacaedje k' est å candjadje n' a nén stî trové ni so vosse sistinme, ni "
+"so tolminme kéne oridjene di programe."
+
+#: libapper/PkStrings.cpp:595
+#, kde-format
+msgid "The package that is trying to be installed is already installed."
+msgstr "Li pacaedje k' on saye d' astaler est ddja astalé."
+
+#: libapper/PkStrings.cpp:597
+#, kde-format
+msgid ""
+"The package download failed.\n"
+"Please check your network connectivity."
+msgstr ""
+"L' aberwetaedje do pacaedje a fwait berwete.\n"
+"Waitîz vosse raloyaedje al rantoele, s' i vs plait."
+
+#: libapper/PkStrings.cpp:600
+#, kde-format
+msgid ""
+"The group type was not found.\n"
+"Please check your group list and try again."
+msgstr ""
+"Dji n' a nén trové sôre do groupe.\n"
+"Waitîz vosse djivêye des groupe, s' i vs plaît, eyet sayîz co on côp."
+
+#: libapper/PkStrings.cpp:603
+#, kde-format
+msgid ""
+"The group list could not be loaded.\n"
+"Refreshing your cache may help, although this is normally a software origin "
+"error."
+msgstr ""
+"Dji n' a savou tcherdjî l' djivêye di groupes.\n"
+"Rafrister vosse muchete pôreut aidî minme si c' est normålmint ene aroke "
+"d' oridjene di programes."
+
+#: libapper/PkStrings.cpp:607
+#, kde-format
+msgid ""
+"A package dependency could not be found.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Dji n' a savou trover ene des aloyances.\n"
+"Vos savoz ndè saveur dipus e spepieus rapoirt."
+
+#: libapper/PkStrings.cpp:610
+#, kde-format
+msgid "The search filter was not correctly formed."
+msgstr "Li passete di ceraedje n' esteut nén foirmé comifåt."
+
+#: libapper/PkStrings.cpp:612
+#, kde-format
+msgid ""
+"The package identifier was not well formed when sent to the system daemon.\n"
+"This normally indicates an internal bug and should be reported."
+msgstr ""
+"L' idintifieu do pacaedje n' esteut nén bén a môde di djin cwand il a stî "
+"evoyî å démon do sistinme.\n"
+"Ça vout dire les troes cwårts do tins ki c' est on dvintrin bug et dveur "
+"esse rapoirté."
+
+#: libapper/PkStrings.cpp:615
+#, kde-format
+msgid ""
+"An error occurred while running the transaction.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Ene aroke s' a passé cwand dj' fijheu l' tranzaccion.\n"
+"I gn a pus d' informåcions dins l' sipepieus rapoirt."
+
+#: libapper/PkStrings.cpp:618
+#, kde-format
+msgid ""
+"The remote software origin name was not found.\n"
+"You may need to enable an item in Software Origins."
+msgstr ""
+"Dji n' a nén trové l' no d' l' oridjene di programes då lon.\n"
+"Vos dvoz kécfeye mete èn alaedje on cayet ezès Oridjenes des programes."
+
+#: libapper/PkStrings.cpp:621
+#, kde-format
+msgid "Removing a protected system package is not allowed."
+msgstr "Oister on pacaedje sistinme waeranti n' est nén permetou."
+
+#: libapper/PkStrings.cpp:623
+#, kde-format
+msgid "The task was canceled successfully and no packages were changed."
+msgstr "Dj' a rnoncî al bouye comifåt eyet nou pacaedje n' a stî candjî."
+
+#: libapper/PkStrings.cpp:625
+#, kde-format
+msgid ""
+"The task was canceled successfully and no packages were changed.\n"
+"The backend did not exit cleanly."
+msgstr ""
+"Dj' a rnoncî al bouye comifåt eyet nou pacaedje n' a stî candjî.\n"
+"Li bouye di fond n' a nén moussî foû d' ene façon prôpe."
+
+#: libapper/PkStrings.cpp:628
+#, kde-format
+msgid ""
+"The native package configuration file could not be opened.\n"
+"Please make sure your system's configuration is valid."
+msgstr ""
+"Dji n' a savou drovi l' fitchî d' apontiaedje des pacaedjes do sistinme.\n"
+"Waitîz bén ki l' apontiaedje di vosse sistinme est valåbe."
+
+#: libapper/PkStrings.cpp:631
+#, kde-format
+msgid "The task is not safe to be cancelled at this time."
+msgstr "I n' est nén såve di rnoncî al bouye pol moumint."
+
+#: libapper/PkStrings.cpp:633
+#, kde-format
+msgid ""
+"Source packages are not normally installed this way.\n"
+"Check the extension of the file you are trying to install."
+msgstr ""
+"Les pacaedjes sourdants n' sont normålmint nén astalés d' cisse manire la.\n"
+"Waitîz l' cawete do fitchî k' vos sayîz d' astaler."
+
+#: libapper/PkStrings.cpp:636
+#, kde-format
+msgid ""
+"The license agreement was not agreed to.\n"
+"To use this software you have to accept the license."
+msgstr ""
+"L' acoird di licince n' a nén stî accepté.\n"
+"Po vs siervi di c' programe ci, vos dvoz accepter l' licince."
+
+#: libapper/PkStrings.cpp:639
+#, kde-format
+msgid ""
+"Two packages provide the same file.\n"
+"This is usually due to mixing packages for different software origins."
+msgstr ""
+"Deus pacaedjes dinèt l' minme fitchî.\n"
+"C' est les troes cwårts do tins a cåze di maxhaedjes di pacaedjes po "
+"diferinnès oridjenes di programes."
+
+#: libapper/PkStrings.cpp:642
+#, kde-format
+msgid ""
+"Multiple packages exist that are not compatible with each other.\n"
+"This is usually due to mixing packages from different software origins."
+msgstr ""
+"Sacwants pacaedjes egzistèt ki n' sont nén compatibes eshonne.\n"
+"C' est les troes cwårts do tins a cåze di maxhaedjes di pacaedjes di "
+"diferinnès oridjenes di programes."
+
+#: libapper/PkStrings.cpp:645
+#, kde-format
+msgid ""
+"There was a (possibly temporary) problem connecting to a software origins.\n"
+"Please check the detailed error for further details."
+msgstr ""
+"Åk n' a nén stî come dji m' raloyive a ene oridjene di programes (kécfeye k' "
+"ça pasrè).\n"
+"Waitîz bén l' sipepieus rapoirt d' aroke po ndè saveur dipus."
+
+#: libapper/PkStrings.cpp:648
+#, kde-format
+msgid ""
+"Failed to initialize packaging backend.\n"
+"This may occur if other packaging tools are being used simultaneously."
+msgstr ""
+"L' inicialijhaedje del bouye di fond di pacaedjaedje a fwait berwete.\n"
+"Ça s' pout passer si ds ôtès usteyes di pacaedjaedje sont-st eployîs å minme "
+"moumint."
+
+#: libapper/PkStrings.cpp:651
+#, kde-format
+msgid ""
+"Failed to close down the backend instance.\n"
+"This error can normally be ignored."
+msgstr ""
+"Li cloyaedje di l' instance del bouye di fond a fwait berwete.\n"
+"On pout normålmint passer houte ciste aroke la."
+
+#: libapper/PkStrings.cpp:654
+#, kde-format
+msgid ""
+"Cannot get the exclusive lock on the packaging backend.\n"
+"Please close any other legacy packaging tools that may be open."
+msgstr ""
+"Dji n' sai awè l' eclawaedje del bouye di fond d' pacaedjaedje por mi tot "
+"seu.\n"
+"Cloyoz s' i vs plait tote ôte usteye d' pacaedjaedje eritêye ki pôrént awè "
+"stî drovowe."
+
+#: libapper/PkStrings.cpp:657
+#, kde-format
+msgid "None of the selected packages could be updated."
+msgstr "Nou des pacaedjes tchoezis n' a plou esse metou a djoû."
+
+#: libapper/PkStrings.cpp:659
+#, kde-format
+msgid "The repository configuration could not be modified."
+msgstr "Dji n' a savou candjî l' apontiaedje do depot."
+
+#: libapper/PkStrings.cpp:661
+#, kde-format
+msgid ""
+"Installing the local file failed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"L' astalaedje do fitchî locå a fwait berwete.\n"
+"I gn a pus d' informåcions dins l' sipepieus rapoirt."
+
+#: libapper/PkStrings.cpp:664
+#, kde-format
+msgid "The package signature could not be verified."
+msgstr "Li sinateure do pacaedje n' a nén polou esse verifieye."
+
+#: libapper/PkStrings.cpp:666
+#, kde-format
+msgid ""
+"The package signature was missing and this package is untrusted.\n"
+"This package was not signed with a GPG key when created."
+msgstr ""
+"I mankéve li sinateure do pacaedje eyet ç' pacaedje cial est nén fiyåve.\n"
+"Ci pacaedje cial n' a nén stî siné avou ene clé GPG cwand il a stî ahivé."
+
+#: libapper/PkStrings.cpp:669
+#, kde-format
+msgid "Repository configuration was invalid and could not be read."
+msgstr ""
+"L' apontiaedje do depot n' esteut nén valåbe eyet dji n' l' a savou lére."
+
+#: libapper/PkStrings.cpp:671
+#, kde-format
+msgid ""
+"The package you are attempting to install is not valid.\n"
+"The package file could be corrupt, or not a proper package."
+msgstr ""
+"Li pacaedje ki vs sayîz d' astaler n' est nén valåbe.\n"
+"Li fitchî do pacaedje pôreut esse cron oudonbén ça n' est nén on vraiy "
+"pacaedje."
+
+#: libapper/PkStrings.cpp:674
+#, kde-format
+msgid ""
+"Installation of this package was prevented by your packaging system's "
+"configuration."
+msgstr ""
+"L' astalaedje di ç' pacaedje cial a stî espaitchî pa l' apontiaedje da vosse "
+"sistinme di pacaedjaedje."
+
+#: libapper/PkStrings.cpp:676
+#, kde-format
+msgid ""
+"The package that was downloaded is corrupt and needs to be downloaded again."
+msgstr "Li pacaedje aberweté est cron ey a dandjî d' resse aberweté."
+
+#: libapper/PkStrings.cpp:678
+#, kde-format
+msgid ""
+"All of the packages selected for install are already installed on the system."
+msgstr ""
+"Tos les pacaedjes tchoezis po l' astalaedje sont ddja astalés sol sistinme."
+
+#: libapper/PkStrings.cpp:680
+#, kde-format
+msgid ""
+"The specified file could not be found on the system.\n"
+"Check that the file still exists and has not been deleted."
+msgstr ""
+"Dji n' a savou trover l' fitchî di specifyî sol sistinme.\n"
+"Waitî kel fitchî egzistêye co et n' a nén stî disfacé."
+
+#: libapper/PkStrings.cpp:683
+#, kde-format
+msgid ""
+"Required data could not be found on any of the configured software origins.\n"
+"There were no more download mirrors that could be tried."
+msgstr ""
+"Dji n' a savou trover les dnêyes k' i fåt so nole des oridjenes di programes "
+"d' apontieyes.\n"
+"I gn aveu pupont d' muroe d' aberwetaedje a sayî."
+
+#: libapper/PkStrings.cpp:686
+#, kde-format
+msgid ""
+"Required upgrade data could not be found in any of the configured software "
+"origins.\n"
+"The list of distribution upgrades will be unavailable."
+msgstr ""
+"Dji n' a savou trover les dnêyes k' i fåt pol metaedje a livea dins nole des "
+"oridjenes di programes d' apontieyes.\n"
+"Vos n' alez nén aveur li djivêye des metaedjes a livea del distribucion."
+
+#: libapper/PkStrings.cpp:689
+#, kde-format
+msgid ""
+"The package that is trying to be installed is incompatible with this system."
+msgstr ""
+"Li pacaedje ki dj' saye d' astaler n' est nén compatibe avou ç' sistinme "
+"cial."
+
+#: libapper/PkStrings.cpp:691
+#, kde-format
+msgid ""
+"There is insufficient space on the device.\n"
+"Free some space on the system disk to perform this operation."
+msgstr ""
+"Gn a pont d' plaece assez so l' éndjin.\n"
+"Fijhoz on pô d' plaece sol plake do sistinme po fé ciste operåcion la."
+
+#: libapper/PkStrings.cpp:694
+#, kde-format
+msgid "Additional media is required to complete the transaction."
+msgstr "I fåt èn ôte media po fini l' tranzaccion."
+
+#: libapper/PkStrings.cpp:696
+#, kde-format
+msgid ""
+"You have failed to provide correct authentication.\n"
+"Please check any passwords or account settings."
+msgstr ""
+"Vos n' avoz nén savou dner l' otintifiaedje k' i fåt.\n"
+"Verifyîz tos les scret et totes les tchuzes do conte."
+
+#: libapper/PkStrings.cpp:699
+#, kde-format
+msgid ""
+"The specified update could not be found.\n"
+"It could have already been installed or no longer available on the remote "
+"server."
+msgstr ""
+"Dji n' a savou trover l' metaedje a djoû d' sipecifyî. Il a motoit ddja stî "
+"astalé oudon-bén n' est pus disponibe sol sierveu då lon."
+
+#: libapper/PkStrings.cpp:702
+#, kde-format
+msgid "The package could not be installed from untrusted origin."
+msgstr "Dji n' a savou astaler l' pacaedje a pårti d' ene oridjene nén fiyåve."
+
+#: libapper/PkStrings.cpp:704
+#, kde-format
+msgid "The package could not be updated from untrusted origin."
+msgstr ""
+"Dji n' a savou mete a djoû l' pacaedje a pårti d' ene oridjene nén fiyåve."
+
+#: libapper/PkStrings.cpp:706
+#, kde-format
+msgid "The file list is not available for this package."
+msgstr "I gn a pont d' djivêye des fitchîs po ç' pacaedje la."
+
+#: libapper/PkStrings.cpp:708
+#, kde-format
+msgid "The information about what requires this package could not be obtained."
+msgstr "Dji n' a savou aveur l' informåcion so ç' k' i fåt po ç' pacaedje la."
+
+#: libapper/PkStrings.cpp:710
+#, kde-format
+msgid "The specified software origin could not be disabled."
+msgstr "Dji n' a savou essocter l' oridjene di programe di specifieye."
+
+#: libapper/PkStrings.cpp:712
+#, kde-format
+msgid ""
+"The download could not be done automatically and should be done manually.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Dji n' a savou fé otomaticmint l' aberwetaedje. I doet esse fwait al mwin.\n"
+"Vos ploz ndè saveur dipus e spepieus rapoirt."
+
+#: libapper/PkStrings.cpp:715
+#, kde-format
+msgid ""
+"One of the selected packages failed to configure correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Onk des pacaedjes di tchoezis n' s' a nén apontyî comifåt.\n"
+"Vos ploz ndè saveur dipus e spepieus rapoirt."
+
+#: libapper/PkStrings.cpp:718
+#, kde-format
+msgid ""
+"One of the selected packages failed to build correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Onk des pacaedjes di tchoezis n' s' a nén basti comifåt.\n"
+"Vos ploz ndè saveur dipus e spepieus rapoirt."
+
+#: libapper/PkStrings.cpp:721
+#, kde-format
+msgid ""
+"One of the selected packages failed to install correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Onk des pacaedjes di tchoezis n' s' a nén astalé comifåt.\n"
+"Vos ploz ndè saveur dipus e spepieus rapoirt."
+
+#: libapper/PkStrings.cpp:724
+#, kde-format
+msgid ""
+"One of the selected packages failed to be removed correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Onk des pacaedjes di tchoezis n' s' a nén oisté comifåt.\n"
+"Vos ploz ndè saveur dipus e spepieus rapoirt."
+
+#: libapper/PkStrings.cpp:727
+#, kde-format
+msgid ""
+"A program is running that has to be closed before the update can proceed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"I gn a on programe ovrant ki doet esse cloyou divant k' on sepe fé l' "
+"metaedje a djoû.\n"
+"Vos ploz ndè saveur dipus e spepieus rapoirt."
+
+#: libapper/PkStrings.cpp:730
+#, kde-format
+msgid "The package database was changed while the request was running."
+msgstr ""
+"Li båze di dnêyes des pacaedjes a candjî sol tins k' dji fjheu l' dimande."
+
+#: libapper/PkStrings.cpp:732
+#, kde-format
+msgid "The virtual provide type is not supported by this system."
+msgstr ""
+"Li sôre di donaedje forveyowe n' est nén sopoirtêye pa ç' sistinme cial."
+
+#: libapper/PkStrings.cpp:734
+#, kde-format
+msgid "The install root is invalid. Please contact your administrator."
+msgstr ""
+"Li raecene po l' astalaedje n' est nén valåbe. Houkîz vosse manaedjeu s' i "
+"vs plait."
+
+#: libapper/PkStrings.cpp:736
+#, kde-format
+msgid "The list of software could not be downloaded."
+msgstr "Dji n' a savou aberweter l' djivêye des programes."
+
+#: libapper/PkStrings.cpp:738
+#, kde-format
+msgid ""
+"The transaction has been cancelled and will be retried when the system is "
+"idle."
+msgstr ""
+"Il a stî rnoncî al tranzaccion eyet esse rissayeye cwand l' sistinme ni frè "
+"rén."
+
+#: libapper/PkStrings.cpp:740
+#, kde-format
+msgid "A previous package management transaction was interrupted."
+msgstr ""
+"Ene tranzaccion di manaedjmint des pacaedjes ki s' a passé a stî djokêye."
+
+#: libapper/PkStrings.cpp:742
+#, kde-format
+msgid "A package manager lock is required."
+msgstr "Èn eclawaedje do manaedjeu des pacaedjes est reki."
+
+#: libapper/PkStrings.cpp:744
+#, kde-format
+msgid ""
+"Unknown error, please report a bug.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Aroke nén cnoxhowe, rapoirtez on bug s' i vs plait.\n"
+"I gn a pus d' informåcions dins l' sipepieus rapoirt."
+
+#: libapper/PkStrings.cpp:755
+#, kde-format
+msgctxt "The group type"
+msgid "Accessibility"
+msgstr "Accessibilité"
+
+#: libapper/PkStrings.cpp:757
+#, kde-format
+msgctxt "The group type"
+msgid "Accessories"
+msgstr "Usteyes"
+
+#: libapper/PkStrings.cpp:759
+#, kde-format
+msgctxt "The group type"
+msgid "Education"
+msgstr "Sicolaedje"
+
+#: libapper/PkStrings.cpp:761
+#, kde-format
+msgctxt "The group type"
+msgid "Games"
+msgstr "Djeus"
+
+#: libapper/PkStrings.cpp:763
+#, kde-format
+msgctxt "The group type"
+msgid "Graphics"
+msgstr "Imådjes"
+
+#: libapper/PkStrings.cpp:765
+#, kde-format
+msgctxt "The group type"
+msgid "Internet"
+msgstr "Daegntoele"
+
+#: libapper/PkStrings.cpp:767
+#, kde-format
+msgctxt "The group type"
+msgid "Office"
+msgstr "Burotike"
+
+#: libapper/PkStrings.cpp:769
+#, kde-format
+msgctxt "The group type"
+msgid "Others"
+msgstr "Ôtes"
+
+#: libapper/PkStrings.cpp:771
+#, kde-format
+msgctxt "The group type"
+msgid "Development"
+msgstr "Diswalpaedje"
+
+#: libapper/PkStrings.cpp:773
+#, kde-format
+msgctxt "The group type"
+msgid "Multimedia"
+msgstr "Multimedia"
+
+#: libapper/PkStrings.cpp:775
+#, kde-format
+msgctxt "The group type"
+msgid "System"
+msgstr "Sistinme"
+
+#: libapper/PkStrings.cpp:777
+#, kde-format
+msgctxt "The group type"
+msgid "GNOME desktop"
+msgstr "Sicribanne GNOME"
+
+#: libapper/PkStrings.cpp:779
+#, kde-format
+msgctxt "The group type"
+msgid "KDE desktop"
+msgstr "Sicribanne KDE"
+
+#: libapper/PkStrings.cpp:781
+#, kde-format
+msgctxt "The group type"
+msgid "XFCE desktop"
+msgstr "Sicribanne XFCE"
+
+#: libapper/PkStrings.cpp:783
+#, kde-format
+msgctxt "The group type"
+msgid "Other desktops"
+msgstr "Ôtes sicribannes"
+
+#: libapper/PkStrings.cpp:785
+#, kde-format
+msgctxt "The group type"
+msgid "Publishing"
+msgstr "Eplaidaedje"
+
+#: libapper/PkStrings.cpp:787
+#, kde-format
+msgctxt "The group type"
+msgid "Servers"
+msgstr "Sierveus"
+
+#: libapper/PkStrings.cpp:789
+#, kde-format
+msgctxt "The group type"
+msgid "Fonts"
+msgstr "Fontes"
+
+#: libapper/PkStrings.cpp:791
+#, kde-format
+msgctxt "The group type"
+msgid "Admin tools"
+msgstr "Usteyes di manaedjmint"
+
+#: libapper/PkStrings.cpp:793
+#, kde-format
+msgctxt "The group type"
+msgid "Legacy"
+msgstr "Eritaedje"
+
+#: libapper/PkStrings.cpp:795
+#, kde-format
+msgctxt "The group type"
+msgid "Localization"
+msgstr "Locålizaedje"
+
+#: libapper/PkStrings.cpp:797
+#, kde-format
+msgctxt "The group type"
+msgid "Virtualization"
+msgstr "Forvoeyaedje"
+
+#: libapper/PkStrings.cpp:799
+#, kde-format
+msgctxt "The group type"
+msgid "Security"
+msgstr "Såvrité"
+
+#: libapper/PkStrings.cpp:801
+#, kde-format
+msgctxt "The group type"
+msgid "Power management"
+msgstr "Manaedjmint di l' enerdjeye"
+
+#: libapper/PkStrings.cpp:803
+#, kde-format
+msgctxt "The group type"
+msgid "Communication"
+msgstr "Comunicåcion"
+
+#: libapper/PkStrings.cpp:805
+#, kde-format
+msgctxt "The group type"
+msgid "Network"
+msgstr "Rantoele"
+
+#: libapper/PkStrings.cpp:807
+#, kde-format
+msgctxt "The group type"
+msgid "Maps"
+msgstr "Mapes"
+
+#: libapper/PkStrings.cpp:809
+#, kde-format
+msgctxt "The group type"
+msgid "Software sources"
+msgstr "Sourdants do programe"
+
+#: libapper/PkStrings.cpp:811
+#, kde-format
+msgctxt "The group type"
+msgid "Science"
+msgstr "Siyince"
+
+#: libapper/PkStrings.cpp:813
+#, kde-format
+msgctxt "The group type"
+msgid "Documentation"
+msgstr "Documintåcion"
+
+#: libapper/PkStrings.cpp:815
+#, kde-format
+msgctxt "The group type"
+msgid "Electronics"
+msgstr "Electronike"
+
+#: libapper/PkStrings.cpp:817
+#, kde-format
+msgctxt "The group type"
+msgid "Package collections"
+msgstr "Ramexhnêye di pacaedjes"
+
+#: libapper/PkStrings.cpp:819
+#, kde-format
+msgctxt "The group type"
+msgid "Vendor"
+msgstr "Vindeu"
+
+#: libapper/PkStrings.cpp:821
+#, kde-format
+msgctxt "The group type"
+msgid "Newest packages"
+msgstr "Pacaedjes les pus noûs"
+
+#: libapper/PkStrings.cpp:823
+#, kde-format
+msgctxt "The group type"
+msgid "Unknown group"
+msgstr "Groupe nén cnoxhou"
+
+#: libapper/PkStrings.cpp:834
+#, kde-format
+msgctxt "The type of update"
+msgid "Trivial update"
+msgstr "Biesse metaedje a djoû"
+
+#: libapper/PkStrings.cpp:836
+#, kde-format
+msgctxt "The type of update"
+msgid "Normal update"
+msgstr "Metaedje a djoû normå"
+
+#: libapper/PkStrings.cpp:838
+#, kde-format
+msgctxt "The type of update"
+msgid "Important update"
+msgstr "Impôrtant metaedje a djoû"
+
+#: libapper/PkStrings.cpp:840
+#, kde-format
+msgctxt "The type of update"
+msgid "Security update"
+msgstr "Metaedje a djoû di såvrité"
+
+#: libapper/PkStrings.cpp:842
+#, kde-format
+msgctxt "The type of update"
+msgid "Bug fix update"
+msgstr "Metaedje a djoû coridjant des bugs"
+
+#: libapper/PkStrings.cpp:844
+#, kde-format
+msgctxt "The type of update"
+msgid "Enhancement update"
+msgstr "Metaedje a djoû d' amidraedje"
+
+#: libapper/PkStrings.cpp:846
+#, kde-format
+msgctxt "The type of update"
+msgid "Blocked update"
+msgstr "Metaedje a djoû ehåyî"
+
+#: libapper/PkStrings.cpp:849
+#, kde-format
+msgctxt "The type of update"
+msgid "Installed"
+msgstr "Astalé"
+
+#: libapper/PkStrings.cpp:852
+#, kde-format
+msgctxt "The type of update"
+msgid "Available"
+msgstr "Disponibe"
+
+#: libapper/PkStrings.cpp:854
+#, kde-format
+msgctxt "The type of update"
+msgid "Unknown update"
+msgstr "Metaedje a djoû nén cnoxhou"
+
+#: libapper/PkStrings.cpp:865
+#, kde-format
+msgid "No Updates Available"
+msgstr "I gn a pont d' metaedje a djoû"
+
+#: libapper/PkStrings.cpp:868
+#, kde-format
+msgctxt "Some updates were selected on the view"
+msgid "1 Update Selected"
+msgid_plural "%1 Updates Selected"
+msgstr[0] "On metaedje a djoû di tchoezi"
+msgstr[1] "%1 metaedjes a djoû di tchoezis"
+
+#: libapper/PkStrings.cpp:872
+#, kde-format
+msgctxt "Some updates are being shown on the screen"
+msgid "1 Update"
+msgid_plural "%1 Updates"
+msgstr[0] "On metaedje a djoû"
+msgstr[1] "%1 metaedjes a djoû"
+
+#: libapper/PkStrings.cpp:875
+#, kde-format
+msgctxt "Type of update, in the case it's just an update"
+msgid "%1, %2"
+msgstr "%1, %2"
+
+#: libapper/PkStrings.cpp:876
+#, kde-format
+msgctxt "Part of: %1 Updates, %1 Selected"
+msgid "%1 Update"
+msgid_plural "%1 Updates"
+msgstr[0] "%1 metaedje a djoû"
+msgstr[1] "%1 metaedjes a djoû"
+
+#: libapper/PkStrings.cpp:877
+#, kde-format
+msgctxt "Part of: %1 Updates, %1 Selected"
+msgid "%1 Selected"
+msgid_plural "%1 Selected"
+msgstr[0] "%1 di tchoezi"
+msgstr[1] "%1 di tchoezis"
+
+#: libapper/PkStrings.cpp:881
+#, kde-format
+msgid "No Packages"
+msgstr "Nou pacaedje"
+
+#: libapper/PkStrings.cpp:883
+#, kde-format
+msgid "1 Package"
+msgid_plural "%1 Packages"
+msgstr[0] "On pacaedje"
+msgstr[1] "%1 pacaedjes"
+
+#: libapper/PkStrings.cpp:891
+#, kde-format
+msgid "No restart is necessary"
+msgstr "I n' fåt rén renonder"
+
+#: libapper/PkStrings.cpp:893
+#, kde-format
+msgid "You will be required to restart this application"
+msgstr "I fårè k' vos renondoxhe ci programe cial"
+
+#: libapper/PkStrings.cpp:895
+#, kde-format
+msgid "You will be required to log out and back in"
+msgstr "I fårè k' vos vs dislodjoxhe del session eyet s' relodjî"
+
+#: libapper/PkStrings.cpp:897
+#, kde-format
+msgid "A restart will be required"
+msgstr "Vos dvoz renonder l' éndjole"
+
+#: libapper/PkStrings.cpp:899
+#, kde-format
+msgid "You will be required to log out and back in due to a security update."
+msgstr ""
+"I fårè k' vos vs dislodjoxhe del session eyet s' relodjî a cåze d' on "
+"metaedje a djoû di såvrité."
+
+#: libapper/PkStrings.cpp:901
+#, kde-format
+msgid "A restart will be required due to a security update."
+msgstr "Vos dvoz renonder l' éndjole a cåze d' on metaedje a djoû d' såvrité."
+
+#: libapper/PkStrings.cpp:914
+#, kde-format
+msgid "No restart is required"
+msgstr "Nén dandjî d' renonder"
+
+#: libapper/PkStrings.cpp:916
+#, kde-format
+msgid "A restart is required"
+msgstr "I fåt renonder"
+
+#: libapper/PkStrings.cpp:918
+#, kde-format
+msgid "You need to log out and log back in"
+msgstr "Vos avoz dandjî d' vos dislodjî del session eyet s' relodjî"
+
+#: libapper/PkStrings.cpp:920
+#, kde-format
+msgid "You need to restart the application"
+msgstr "Vos avoz dandjî d' renonder l' programe"
+
+#: libapper/PkStrings.cpp:922
+#, kde-format
+msgid "You need to log out and log back in to remain secure."
+msgstr ""
+"Vos avoz dandjî d' vos dislodjî del session eyet s' relodjî po dmorer al "
+"coete."
+
+#: libapper/PkStrings.cpp:924
+#, kde-format
+msgid "A restart is required to remain secure."
+msgstr "I fåt renonder po dmorer al coete."
+
+#: libapper/PkStrings.cpp:937
+#, kde-format
+msgid "Stable"
+msgstr "Stocaesse"
+
+#: libapper/PkStrings.cpp:939
+#, kde-format
+msgid "Unstable"
+msgstr "Nén stocaesse"
+
+#: libapper/PkStrings.cpp:941
+#, kde-format
+msgid "Testing"
+msgstr "Sayes"
+
+#: libapper/PkStrings.cpp:954
+#, kde-format
+msgid "Please insert the CD labeled '%1', and press continue."
+msgstr ""
+"Tchôkîz l' plake lazer CD lomêye « %1 » eyet tchôkî so tcheryî pus lon."
+
+#: libapper/PkStrings.cpp:956
+#, kde-format
+msgid "Please insert the DVD labeled '%1', and press continue."
+msgstr "Tchôkîz l' plake DVD lomêye « %1 » eyet tchôkî so tcheryî pus lon."
+
+#: libapper/PkStrings.cpp:958
+#, kde-format
+msgid "Please insert the disc labeled '%1', and press continue."
+msgstr "Tchôkîz l' plake lomêye « %1 » eyet tchôkî so tcheryî pus lon."
+
+#: libapper/PkStrings.cpp:960 libapper/PkStrings.cpp:963
+#, kde-format
+msgid "Please insert the medium labeled '%1', and press continue."
+msgstr "Tchôkîz l' media lomé « %1 » eyet tchôkî so tcheryî pus lon."
+
+#: libapper/PkStrings.cpp:1014
+#, kde-format
+msgid "You do not have the necessary privileges to perform this action."
+msgstr "Vos n' avoz nén les droets k' i fåt po fé ç' faitindje la."
+
+#: libapper/PkStrings.cpp:1016
+#, kde-format
+msgid "Could not get a transaction id from packagekitd."
+msgstr "Dji n' a savou rçure di tranzaccion di packagekitd."
+
+#: libapper/PkStrings.cpp:1018
+#, kde-format
+msgid "Cannot connect to this transaction id."
+msgstr "Dji n' mi sai raloyî a ciste id di tranzaccion la."
+
+#: libapper/PkStrings.cpp:1020
+#, kde-format
+msgid "This action is unknown."
+msgstr "Ciste accion n' est nén cnoxhowe."
+
+#: libapper/PkStrings.cpp:1022
+#, kde-format
+msgid "The packagekitd service could not be started."
+msgstr "Dji n' a savou enonder l' siervice packagekitd."
+
+#: libapper/PkStrings.cpp:1024
+#, kde-format
+msgid "The query is not valid."
+msgstr "Li cweraedje n' est nén valåbe."
+
+#: libapper/PkStrings.cpp:1026
+#, kde-format
+msgid "The file is not valid."
+msgstr "Li fitchî n' est nén valåbe."
+
+#: libapper/PkStrings.cpp:1028
+#, kde-format
+msgid "This function is not yet supported."
+msgstr "Cisse fonccion la n' est nén co sopoirtêye."
+
+#: libapper/PkStrings.cpp:1030
+#, kde-format
+msgid "Could not talk to packagekitd."
+msgstr "Dji n' a savou cåzer avou packagekitd."
+
+#: libapper/PkStrings.cpp:1032
+#, fuzzy, kde-format
+#| msgid "Could not talk to packagekitd."
+msgid "Error talking to packagekitd."
+msgstr "Dji n' a savou cåzer avou packagekitd."
+
+#: libapper/PkStrings.cpp:1035 libapper/PkStrings.cpp:1038
+#, kde-format
+msgid "An unknown error happened."
+msgstr "Åk n' a nén stî, aroke nén cnoxhowe."
+
+#: libapper/PkStrings.cpp:1053
+#, kde-format
+msgid "Your system is up to date"
+msgstr "Vosse sistinme est a djoû"
+
+#: libapper/PkStrings.cpp:1055
+#, kde-format
+msgid "You have no updates"
+msgstr "Vos n' avoz nou metaedje a djoû"
+
+#: libapper/PkStrings.cpp:1057
+#, kde-format
+msgid "Last check for updates was more than a month ago"
+msgstr ""
+"Li dierin côp k' dj' a waitî après des metaedjes a djoû c' esteut gn a dpus "
+"d' on moes did ci"
+
+#: libapper/PkStrings.cpp:1065
+#, kde-format
+msgid "Verified %1 ago"
+msgstr "Verifyî gn a %1"
+
+#: libapper/PkStrings.cpp:1067
+#, kde-format
+msgid "It's strongly recommended that you check for new updates now"
+msgstr ""
+"Dji vs ricomande vormint d' waitî après des noveas metaedjes a djoû do côp"
+
+#: libapper/PkTransaction.cpp:264
+#, kde-format
+msgid ""
+"You are about to install unsigned packages that can compromise your system, "
+"as it is impossible to verify if the software came from a trusted source.\n"
+"\n"
+"Are you sure you want to proceed with the installation?"
+msgstr ""
+"Vos alez bén rade astaler des pacaedjes nén sinés k' pôrént rinde cron vosse "
+"sistinme ca ça n' est nén possibe di verifyî sel programe a vént d' sourdant "
+"fiyåve.\n"
+"\n"
+"Voloz vs fé cist astalaedje po do bon ?"
+
+#: libapper/PkTransaction.cpp:267
+#, kde-format
+msgid "Installing unsigned software"
+msgstr "Dj' astale on programe nén siné"
+
+#: libapper/PkTransactionWidget.cpp:229 libapper/PkTransactionWidget.cpp:242
+#, kde-format
+msgid "%1 (%2%)"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/PkTransactionWidget.ui:47
+#, kde-format
+msgid "icon"
+msgstr "imådjete"
+
+#. i18n: ectx: property (text), widget (QLabel, currentL)
+#: libapper/PkTransactionWidget.ui:73
+#, kde-format
+msgid "Downloading Packages"
+msgstr "Dj' aberwete  les pacaedjes"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RepoSig)
+#: libapper/RepoSig.ui:14
+#, kde-format
+msgid "Software signature is required"
+msgstr "I fåt l' sinateure do programe"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: libapper/RepoSig.ui:47
+#, kde-format
+msgid "Repository name:"
+msgstr "No do depot :"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: libapper/RepoSig.ui:73
+#, kde-format
+msgid "Signature URL:"
+msgstr "URL del sinateure :"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: libapper/RepoSig.ui:99
+#, kde-format
+msgid "Signature user identifier:"
+msgstr "Idintifieu del sinateure di l' uzeu :"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: libapper/RepoSig.ui:125
+#, kde-format
+msgid "Signature identifier:"
+msgstr "Idintifieu del sinateure :"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/RepoSig.ui:147
+#, kde-format
+msgid "Do you trust the origin of packages?"
+msgstr "Est çki ciste oridjene di pacaedjes la est fiyåve ?"
+
+#: libapper/Requirements.cpp:55
+#, kde-format
+msgid "Additional changes"
+msgstr "Ôtes candjmints"
+
+#: libapper/Requirements.cpp:82
+#, kde-format
+msgid "1 package to remove"
+msgid_plural "%1 packages to remove"
+msgstr[0] "On pacaedje a oister"
+msgstr[1] "%1 pacaedjes a oister"
+
+#: libapper/Requirements.cpp:97
+#, kde-format
+msgid "1 package to downgrade"
+msgid_plural "%1 packages to downgrade"
+msgstr[0] "On pacaedje a dismete a djoû"
+msgstr[1] "%1 pacaedjes a dismete a djoû"
+
+#: libapper/Requirements.cpp:112
+#, kde-format
+msgid "1 package to reinstall"
+msgid_plural "%1 packages to reinstall"
+msgstr[0] "On pacaedje a rastaler"
+msgstr[1] "%1 pacaedjes a rastaler"
+
+#: libapper/Requirements.cpp:125
+#, kde-format
+msgid "1 package to install"
+msgid_plural "%1 packages to install"
+msgstr[0] "On pacaedje a-z astaler"
+msgstr[1] "%1 pacaedjes a-z astaler"
+
+#: libapper/Requirements.cpp:138
+#, kde-format
+msgid "1 package to update"
+msgid_plural "%1 packages to update"
+msgstr[0] "On pacaedje a mete a djoû"
+msgstr[1] "%1 pacaedjes a mete a djoû"
+
+#: libapper/Requirements.cpp:151
+#, kde-format
+msgid "1 untrusted package"
+msgid_plural "%1 untrusted packages"
+msgstr[0] "On pacaedjes nén fiyåve"
+msgstr[1] "%1 pacaedjes nén fiyåves"
+
+#: libapper/Requirements.cpp:199
+#, kde-format
+msgctxt "how many bytes are required for download"
+msgid "Need to get %1 of archives"
+msgstr ""
+
+#: libapper/Requirements.cpp:258
+#, kde-format
+msgid ""
+"You are about to install unsigned packages that can compromise your system, "
+"as it is impossible to verify if the software came from a trusted source."
+msgstr ""
+"Vos alez bén rade astaler des pacaedjes nén sinés k' pôrént rinde cron vosse "
+"sistinme ca i n' est nén possibe di verifyî sel programe vént d' on sourdant "
+"fiyåve."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/Requirements.ui:28
+#, kde-format
+msgid "Additional changes are required to complete the task"
+msgstr "I fårè fé ls ôtes candjmints shuvants po fini l' bouye"
+
+#. i18n: ectx: property (text), widget (QCheckBox, confirmCB)
+#: libapper/Requirements.ui:101
+#, kde-format
+msgid "Do not confirm when installing or updating additional packages"
+msgstr ""
+"Èn nén racertiner cwand on-z astale ou met a djoû des ôtes pacaedjes di dpus"
+
+#. i18n: ectx: property (text), widget (QLabel, descriptionL)
+#: PkSession/IntroDialog.ui:65
+#, kde-format
+msgid "TextLabel"
+msgstr "Etikete tecse"
+
+#: PkSession/main.cpp:48
+#, kde-format
+msgid "Apper PackageKit Session helper"
+msgstr "Aidant del session PackageKit d' Apper"
+
+#: PkSession/main.cpp:51
+#, kde-format
+msgid "Daniel Nicoletti"
+msgstr "Daniel Nicoletti"
+
+#: PkSession/main.cpp:52
+#, kde-format
+msgid "Trever Fischer"
+msgstr "Trever Fischer"
+
+#: PkSession/PkInstallCatalogs.cpp:47
+#, kde-format
+msgid "Install Packages Catalogs"
+msgstr "Astaler catalogues di pacaedjes"
+
+#: PkSession/PkInstallCatalogs.cpp:66
+#, kde-format
+msgid "You can drop more catalogs in here"
+msgstr "Vos ploz poizer d' ôtes catalogues chal"
+
+#: PkSession/PkInstallCatalogs.cpp:85
+#, kde-format
+msgid "No supported catalog was found"
+msgstr "Dji n' a trové nou catalogue sopoirté"
+
+#: PkSession/PkInstallCatalogs.cpp:87
+#, kde-format
+msgid "Do you want to install this catalog?"
+msgid_plural "Do you want to install these catalogs?"
+msgstr[0] "Voloz astaler ç' catalogue cial ?"
+msgstr[1] "Voloz astaler ces catalogues cial ?"
+
+#: PkSession/PkInstallCatalogs.cpp:96
+#, kde-format
+msgid "An application wants to install a catalog"
+msgid_plural "An application wants to install catalogs"
+msgstr[0] "On programe vout astaler on catalogue"
+msgstr[1] "On programe vout astaler des catalogues"
+
+#: PkSession/PkInstallCatalogs.cpp:100
+#, kde-format
+msgid "The application <i>%2</i> wants to install a catalog"
+msgid_plural "The application <i>%2</i> wants to install catalogs"
+msgstr[0] "Li programe <i>%2</i> vout astaler on catalogue"
+msgstr[1] "Li programe <i>%2</i> vout astaler des catalogues"
+
+#: PkSession/PkInstallCatalogs.cpp:137
+#, kde-format
+msgid "Not supported"
+msgstr "Nén sopoirté"
+
+#: PkSession/PkInstallCatalogs.cpp:138
+#, kde-format
+msgid ""
+"Your backend does not support any of the needed methods to install a catalog"
+msgstr ""
+"Vosse programe fondmint n' sopoite nole des metôdes ki dj' avans mezåjhe po-"
+"z astaler on catalogue"
+
+#: PkSession/PkInstallCatalogs.cpp:178
+#, kde-format
+msgid "Catalog not found"
+msgstr "Catalogue nén trové"
+
+#: PkSession/PkInstallCatalogs.cpp:179
+#, kde-format
+msgid "Could not find a catalog to install"
+msgstr "Dji n' a savou trover d' catalogue a astaler"
+
+#: PkSession/PkInstallCatalogs.cpp:186
+#, kde-format
+msgid "Catalog %2 failed to open"
+msgid_plural "Catalogs %2 failed to open"
+msgstr[0] "Li drovaedje do catalogue %2 a fwait berwete"
+msgstr[1] "Li drovaedje des catalogues %2 a fwait berwete"
+
+#: PkSession/PkInstallCatalogs.cpp:190
+#, kde-format
+msgid "Failed to open"
+msgstr "Li drovaedje a fwait berwete"
+
+#: PkSession/PkInstallCatalogs.cpp:196
+#, kde-format
+msgid "Catalog is Empty"
+msgstr "Li catalogue est vude"
+
+#: PkSession/PkInstallCatalogs.cpp:197
+#, kde-format
+msgid "Could not find any package to install in this catalog"
+msgstr "Dji n' a savou trover d' pacaedje a astaler dins ç' catalogue cial"
+
+#: PkSession/PkInstallFontconfigResources.cpp:43
+#, kde-format
+msgid "Installs new Fonts"
+msgstr "Astaler novelès fontes"
+
+#: PkSession/PkInstallFontconfigResources.cpp:74
+#, kde-format
+msgid "Could interpret request"
+msgstr "Dj' a savou ratourner l' dimande"
+
+#: PkSession/PkInstallFontconfigResources.cpp:74
+#, kde-format
+msgid "Please verify if the request was valid"
+msgstr "Verifyîz s' i vs plait kel dimande est valåbe"
+
+#: PkSession/PkInstallFontconfigResources.cpp:108
+#, kde-format
+msgid ""
+"An additional font is required to view this document correctly.\n"
+"Do you want to search for a suitable package now?"
+msgid_plural ""
+"Additional fonts are required to view this document correctly.\n"
+"Do you want to search for suitable packages now?"
+msgstr[0] ""
+"I fåt ene fonte di dpus po vey ci documint cial comifåt.\n"
+"Voloz trover do côp on pacaedje ki fwait ça ?"
+msgstr[1] ""
+"I fåt des fonte di dpus po vey ci documint cial comifåt.\n"
+"Voloz trover do côp des pacaedjes ki fjhèt ça ?"
+
+#: PkSession/PkInstallFontconfigResources.cpp:118
+#, kde-format
+msgid "A program wants to install a font"
+msgid_plural "A program wants to install fonts"
+msgstr[0] "On programe vout astaler ene fonte"
+msgstr[1] "On programe vout astaler des fontes"
+
+#: PkSession/PkInstallFontconfigResources.cpp:122
+#, kde-format
+msgid "The application %2 wants to install a font"
+msgid_plural "The application %2 wants to install fonts"
+msgstr[0] "Li programe %2 vout astaler ene fonte"
+msgstr[1] "Li programe %2 vout astaler des fontes"
+
+#: PkSession/PkInstallFontconfigResources.cpp:148
+#: PkSession/PkInstallFontconfigResources.cpp:157
+#, kde-format
+msgid "Failed to find font"
+msgstr "Li cweraedje del fonte a fwait berwete"
+
+#: PkSession/PkInstallFontconfigResources.cpp:150
+#, kde-format
+msgid "No new fonts could be found for this document"
+msgstr "Dji n' a savou trover d' novele fonte po c' documint cial"
+
+#: PkSession/PkInstallFontconfigResources.cpp:159
+#, kde-format
+msgid "Failed to search for provides"
+msgstr "Li cweraedje des « dene » a fwait berwete"
+
+#: PkSession/PkInstallGStreamerResources.cpp:40
+#, kde-format
+msgid "Install GStreamer Resources"
+msgstr "Astaler rissources di GStreamer"
+
+#: PkSession/PkInstallGStreamerResources.cpp:68
+#, kde-format
+msgid "The following plugin is required. Do you want to search for this now?"
+msgid_plural ""
+"The following plugins are required. Do you want to search for these now?"
+msgstr[0] "I fåt l' tchôke-divins shuvant. Voloz vs cachî do côp après ci la ?"
+msgstr[1] ""
+"I fåt les tchôkes-divins shuvants. Voloz vs cachî do côp après ces la ?"
+
+#: PkSession/PkInstallGStreamerResources.cpp:80
+#, kde-format
+msgid "A program requires an additional plugin to decode this file"
+msgid_plural "A program requires additional plugins to decode this file"
+msgstr[0] ""
+"On programe a mezåjhe d' on tchôke-divins d' dipus po discôder ç' fitchî la"
+msgstr[1] ""
+"On programe a mezåjhe di tchôkes-divins d' dipus po discôder ç' fitchî la"
+
+#: PkSession/PkInstallGStreamerResources.cpp:85
+#, kde-format
+msgid "A program requires an additional plugin to encode this file"
+msgid_plural "A program requires additional plugins to encode this file"
+msgstr[0] ""
+"On programe a mezåjhe d' on tchôke-divins d' dipus po-z ecôder ç' fitchî la"
+msgstr[1] ""
+"On programe a mezåjhe di tchôkes-divins d' dipus po-z ecôder ç' fitchî la"
+
+#: PkSession/PkInstallGStreamerResources.cpp:90
+#, kde-format
+msgid "A program requires an additional plugin for this operation"
+msgid_plural "A program requires additional plugins for this operation"
+msgstr[0] ""
+"On programe a mezåjhe d' on tchôke-divins d' dipus po ciste operåcion la"
+msgstr[1] ""
+"On programe a mezåjhe di tchôkes-divins d' dipus po ces operåcions lale"
+
+#: PkSession/PkInstallGStreamerResources.cpp:97
+#, kde-format
+msgid "%2 requires an additional plugin to decode this file"
+msgid_plural "%2 requires additional plugins to decode this file"
+msgstr[0] "%2 a mezåjhe d' on tchôke-divins d' dipus po discôder ç' fitchî la"
+msgstr[1] "%2 a mezåjhe di tchôkes-divins d' dipus po discôder ç' fitchî la"
+
+#: PkSession/PkInstallGStreamerResources.cpp:103
+#, kde-format
+msgid "%2 requires an additional plugin to encode this file"
+msgid_plural "%2 requires additional plugins to encode this file"
+msgstr[0] "%2 a mezåjhe d' on tchôke-divins d' dipus po-z ecôder ç' fitchî la"
+msgstr[1] "%2 a mezåjhe di tchôkes-divins d' dipus po-z ecôder ç' fitchî la"
+
+#: PkSession/PkInstallGStreamerResources.cpp:109
+#, kde-format
+msgid "%2 requires an additional plugin for this operation"
+msgid_plural "%2 requires additional plugins for this operation"
+msgstr[0] "%2 a mezåjhe d' on tchôke-divins d' dipus po ciste operåcion la"
+msgstr[1] "%2 a mezåjhe di tchôkes-divins d' dipus po ces operåcions lale"
+
+#: PkSession/PkInstallGStreamerResources.cpp:139
+#, kde-format
+msgid "No results found"
+msgstr "Pont d' rizultat d' trové"
+
+#: PkSession/PkInstallGStreamerResources.cpp:141
+#, kde-format
+msgid "Could not find plugin in any configured software source"
+msgstr ""
+"Dji n' a savou trover l' tchôke-divins dins nou sourdant des programes "
+"d' apontyî"
+
+#: PkSession/PkInstallMimeTypes.cpp:41
+#, kde-format
+msgid "Install Support for File Types"
+msgstr "Sopoirt d' astalaedje po les sôres di fitchîs"
+
+#: PkSession/PkInstallMimeTypes.cpp:51
+#, kde-format
+msgid "Do you want to search for a program that can open this file type?"
+msgid_plural ""
+"Do you want to search for a program that can open these file types?"
+msgstr[0] "Voloz vs trover on programe ki sait drovi cisse sôre di fitchî la ?"
+msgstr[1] "Voloz vs trover on programe ki sait drovi ces sôres di fitchî la ?"
+
+#: PkSession/PkInstallMimeTypes.cpp:56
+#, kde-format
+msgid "No valid file types were provided"
+msgstr "Nole sôre di fitchî valåbe di dnêye"
+
+#: PkSession/PkInstallMimeTypes.cpp:63
+#, kde-format
+msgid "A program is requiring support to open this kind of files"
+msgid_plural "A program is requiring support to open these kinds of files"
+msgstr[0] "On programe dimande do sopoirt po drovi cisse sôre di fitchîs la"
+msgstr[1] "On programe dimande do sopoirt po drovi ces sôres di fitchîs la"
+
+#: PkSession/PkInstallMimeTypes.cpp:67
+#, kde-format
+msgid "The application %2 is requiring support to open this kind of files"
+msgid_plural ""
+"The application %2 is requiring support to open these kinds of files"
+msgstr[0] "Li programe %2 dimande do sopoirt po drovi cisse sôre di fitchîs la"
+msgstr[1] "Li programe %2 dimande do sopoirt po drovi ces sôres di fitchîs la"
+
+#: PkSession/PkInstallMimeTypes.cpp:94
+#, kde-format
+msgid "Could not find software"
+msgstr "Dji n' a savou trover l' programe"
+
+#: PkSession/PkInstallMimeTypes.cpp:96
+#, kde-format
+msgid "No new applications can be found to handle this type of file"
+msgstr ""
+"Dji n' a savou trover nou novea programe po-z apougnî cisse sôre di fitchî la"
+
+#: PkSession/PkInstallPackageFiles.cpp:40
+#, kde-format
+msgid "Install Packages Files"
+msgstr "Astaler les fitchîs di pacaedje"
+
+#: PkSession/PkInstallPackageFiles.cpp:44
+#: PkSession/PkRemovePackageByFiles.cpp:45
+#, kde-format
+msgid "You can drop more files in here"
+msgstr "Vos ploz poizer d' ôtes fitchîs cial"
+
+#: PkSession/PkInstallPackageFiles.cpp:53
+#, kde-format
+msgid "Not Supported"
+msgstr "Nén sopoirté"
+
+#: PkSession/PkInstallPackageFiles.cpp:54
+#, kde-format
+msgid "Your current backend does not support installing files"
+msgstr ""
+"Vosse programe fondmint do moumint n' sopoite nén l' astalaedje di fitchîs"
+
+#: PkSession/PkInstallPackageFiles.cpp:69
+#: PkSession/PkRemovePackageByFiles.cpp:65
+#, kde-format
+msgid "No supported files were provided"
+msgstr "Nou fitchî di sopoirté n' a stî dné"
+
+#: PkSession/PkInstallPackageFiles.cpp:71
+#, kde-format
+msgid "Press <i>Continue</i> if you want to install this file"
+msgid_plural "Press <i>Continue</i> if you want to install these files"
+msgstr[0] "Tchôkî so <i>Tcheryî pus lon</i> si vs voloz astaler ç' fitchî la"
+msgstr[1] "Tchôkî so <i>Tcheryî pus lon</i> si vs voloz astaler ces fitchîs la"
+
+#: PkSession/PkInstallPackageFiles.cpp:80
+#: PkSession/PkInstallPackageNames.cpp:72
+#, kde-format
+msgid "An application wants to install a package"
+msgid_plural "An application wants to install packages"
+msgstr[0] "On programe vout astaler on pacaedje"
+msgstr[1] "On programe vout astaler des pacaedjes"
+
+#: PkSession/PkInstallPackageFiles.cpp:84
+#: PkSession/PkInstallPackageNames.cpp:76
+#, kde-format
+msgid "The application <i>%2</i> wants to install a package"
+msgid_plural "The application <i>%2</i> wants to install packages"
+msgstr[0] "Li programe <i>%2</i> vout astaler on pacaedje"
+msgstr[1] "Li programe <i>%2</i> vout astaler des pacaedjes"
+
+#: PkSession/PkInstallPackageFiles.cpp:106
+#, kde-format
+msgid "Installation Complete"
+msgstr "Astalaedje tot fwait"
+
+#: PkSession/PkInstallPackageFiles.cpp:107
+#, kde-format
+msgid "File was installed successfully"
+msgid_plural "Files were installed successfully"
+msgstr[0] "Li fitchî a stî astalé comifåt"
+msgstr[1] "Les fitchîs ont stî astalés comifåt"
+
+#: PkSession/PkInstallPackageFiles.cpp:118
+#, kde-format
+msgid "Failed to install files"
+msgstr "L' astalaedje des fitchîs a fwait berwete"
+
+#: PkSession/PkInstallPackageFiles.cpp:119
+#: PkSession/PkInstallPackageFiles.cpp:121
+#, kde-format
+msgid "Could not install files"
+msgstr "Dji n' a savou astaler les fitchîs"
+
+#: PkSession/PkInstallPackageNames.cpp:43
+#, kde-format
+msgid "Install Packages by Name"
+msgstr "Astaler pacaedjes sol no"
+
+#: PkSession/PkInstallPackageNames.cpp:59
+#, kde-format
+msgid "No package names were provided"
+msgstr "Nou no d' pacaedje di dné"
+
+#: PkSession/PkInstallPackageNames.cpp:62
+#, kde-format
+msgid "Do you want to search for and install this package now?"
+msgid_plural "Do you want to search for and install these packages now?"
+msgstr[0] "Voloz vs cachî do côp après ç' pacaedje la et l' astaler ?"
+msgstr[1] "Voloz vs cachî do côp après ces pacaedjes la et ls astaler ?"
+
+#: PkSession/PkInstallPackageNames.cpp:101
+#, kde-format
+msgid "Failed to install packages"
+msgstr "L' astalaedje des pacaedjes a fwait berwete"
+
+#: PkSession/PkInstallPackageNames.cpp:102
+#, kde-format
+msgid "The package %2 is already installed"
+msgid_plural "The packages %2 are already installed"
+msgstr[0] "Li pacaedje %2 est ddja astalé"
+msgstr[1] "Les pacaedjes %2 sont ddja astalés"
+
+#: PkSession/PkInstallPackageNames.cpp:110
+#: PkSession/PkRemovePackageByFiles.cpp:140 PkSession/PkSearchFile.cpp:82
+#, kde-format
+msgid "Could not find %1"
+msgstr "Dji n' a savou trover %1"
+
+#: PkSession/PkInstallPackageNames.cpp:111
+#, kde-format
+msgid "The package could not be found in any software source"
+msgid_plural "The packages could not be found in any software source"
+msgstr[0] "Dji n' a savou trover l' pacaedje dins nou sourdant di programes"
+msgstr[1] ""
+"Dji n' a savou trover l' trover les pacaedjes dins nou sourdant di programes"
+
+#: PkSession/PkInstallPlasmaResources.cpp:41
+#, kde-format
+msgid "Install Plasma Resources"
+msgstr "Astaler rissources di Plasma"
+
+#: PkSession/PkInstallPlasmaResources.cpp:53
+#, kde-format
+msgid "%1 data engine"
+msgstr "Moteur di dnêyes %1"
+
+#: PkSession/PkInstallPlasmaResources.cpp:55
+#, kde-format
+msgid "%1 script engine"
+msgstr "Moteur di scripe %1"
+
+#: PkSession/PkInstallPlasmaResources.cpp:67
+#, kde-format
+msgid "No supported resources were provided"
+msgstr "Nole rissources di sopoirtêyes n' ont stî dnêyes"
+
+#: PkSession/PkInstallPlasmaResources.cpp:69
+#, kde-format
+msgid "The following service is required. Do you want to search for this now?"
+msgid_plural ""
+"The following services are required. Do you want to search for these now?"
+msgstr[0] "I fåt l' siervice shuvant. Voloz vs cachî do côp après ci la ?"
+msgstr[1] "I fåt les siervices shuvants. Voloz vs cachî do côp après ces la ?"
+
+#: PkSession/PkInstallPlasmaResources.cpp:78
+#, kde-format
+msgid "Plasma requires an additional service for this operation"
+msgid_plural "Plasma requires additional services for this operation"
+msgstr[0] "Plasma a mezåjhe d' on siervice di dpus po ciste operåcion la"
+msgstr[1] "Plasma a mezåjhe di siervices di dpus po ciste operåcion la"
+
+#: PkSession/PkInstallPlasmaResources.cpp:103
+#, kde-format
+msgid "Failed to search for Plasma service"
+msgstr "Li cweraedje do siervice di Plasma a fwait berwete"
+
+#: PkSession/PkInstallPlasmaResources.cpp:106
+#, kde-format
+msgid "Could not find service in any configured software source"
+msgstr ""
+"Dji n' a savou trover l' siervice dins nou sourdant des programes d' apontyî"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:41
+#, kde-format
+msgid "Install Printer Drivers"
+msgstr "Astaler mineus d' sicrirece"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:82
+#, kde-format
+msgid "Failed to search for printer driver"
+msgstr "Li cweraedje do mineu del sicrirece a fwait berwete"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:83
+#, kde-format
+msgid "Could not find printer driver in any configured software source"
+msgstr ""
+"Dji n' a savou trover l' mineu del sicrirece dins nou sourdant des programes "
+"d' apontyî"
+
+#: PkSession/PkInstallProvideFiles.cpp:41
+#, kde-format
+msgid "Install Packages that Provides Files"
+msgstr "Astaler les pacaedjes ki dnèt les fitchîs"
+
+#: PkSession/PkInstallProvideFiles.cpp:50
+#, kde-format
+msgid "No files were provided"
+msgstr "Nou fitchî di dné"
+
+#: PkSession/PkInstallProvideFiles.cpp:53
+#, kde-format
+msgid "Do you want to search for this now?"
+msgid_plural "Do you want to search for these now?"
+msgstr[0] "Voloz vs cachî do côp après çouci ?"
+msgstr[1] "Voloz vs cachî do côp après ces ci ?"
+
+#: PkSession/PkInstallProvideFiles.cpp:63
+#, kde-format
+msgid "A program wants to install a file"
+msgid_plural "A program wants to install files"
+msgstr[0] "On programe vout astaler on fitchî"
+msgstr[1] "On programe vout astaler des fitchîs"
+
+#: PkSession/PkInstallProvideFiles.cpp:67
+#, kde-format
+msgid "The application %2 is asking to install a file"
+msgid_plural "The application %2 is asking to install files"
+msgstr[0] "Li programe %2 vout astaler on fitchî"
+msgstr[1] "Li programe %2 vout astaler des fitchîs"
+
+#: PkSession/PkInstallProvideFiles.cpp:93
+#, fuzzy, kde-format
+#| msgid "Failed to install file"
+#| msgid_plural "Failed to install files"
+msgid "Failed to install file"
+msgstr "L' astalaedje do fitchî a fwait berwete"
+
+#: PkSession/PkInstallProvideFiles.cpp:94
+#, kde-format
+msgid "The %1 package already provides this file"
+msgstr "Li pacaedje %1 dene dedja c' fitchî la"
+
+#: PkSession/PkInstallProvideFiles.cpp:100
+#, kde-format
+msgid "Failed to find package"
+msgstr "Li cweraedje do pacaedje a fwait berwete"
+
+#: PkSession/PkInstallProvideFiles.cpp:101
+#, kde-format
+msgid "The file could not be found in any packages"
+msgid_plural "The files could not be found in any packages"
+msgstr[0] "Dji n' a savou trover l' fitchî dins nou pacaedje"
+msgstr[1] "Dji n' a savou trover l' fitchî dins nou pacaedje"
+
+#: PkSession/PkIsInstalled.cpp:40
+#, kde-format
+msgid "Querying if a Package is Installed"
+msgstr "Dji cwir après s' i gn on pacaedje est astalé"
+
+#: PkSession/PkIsInstalled.cpp:61
+#, kde-format
+msgid "User canceled the transaction"
+msgstr "L' uzeu a rnoncî al tranzaccion"
+
+#: PkSession/PkIsInstalled.cpp:63
+#, kde-format
+msgid "An unknown error happened"
+msgstr "Åk n' a nén stî, aroke nén cnoxhowe"
+
+#: PkSession/PkRemovePackageByFiles.cpp:42
+#, kde-format
+msgid "Remove Packages that Provides Files"
+msgstr "Oister les pacaedjes ki dnèt les fitchîs"
+
+#: PkSession/PkRemovePackageByFiles.cpp:68
+#, kde-format
+msgid "Do you want to remove the following application?"
+msgid_plural "Do you want to remove the following applications?"
+msgstr[0] "Voloz vs oister li programe shuvant ?"
+msgstr[1] "Voloz vs oister les programes shuvants ?"
+
+#: PkSession/PkRemovePackageByFiles.cpp:72
+#, kde-format
+msgid "Do you want to search for a package providing this file?"
+msgid_plural "Do you want to search for a package providing these files?"
+msgstr[0] "Voloz vs trover des pacaedjes ki dnèt ç' fitchî la ?"
+msgstr[1] "Voloz vs trover des pacaedjes ki dnèt ces fitchîs la ?"
+
+#: PkSession/PkRemovePackageByFiles.cpp:83
+#, kde-format
+msgid "An application is asking to remove an application"
+msgid_plural "An application is asking to remove applications"
+msgstr[0] "On programe vout oister on programe"
+msgstr[1] "On programe vout oister des programes"
+
+#: PkSession/PkRemovePackageByFiles.cpp:87
+#, kde-format
+msgid "An application is asking to remove a file"
+msgid_plural "An application is asking to remove files"
+msgstr[0] "On programe vout oister on fitchî"
+msgstr[1] "On programe vout oister des fitchîs"
+
+#: PkSession/PkRemovePackageByFiles.cpp:93
+#, kde-format
+msgid "The application <i>%2</i> is asking to remove an application"
+msgid_plural "The application <i>%2</i> is asking to remove applications"
+msgstr[0] "Li programe <i>%2</i> vout oister on programe"
+msgstr[1] "Li programe <i>%2</i> vout oister des programes"
+
+#: PkSession/PkRemovePackageByFiles.cpp:98
+#, kde-format
+msgid "The application <i>%2</i> is asking to remove a file"
+msgid_plural "The application <i>%2</i> is asking to remove files"
+msgstr[0] "Li programe <i>%2</i> vout oister on fitchî"
+msgstr[1] "Li programe <i>%2</i> vout oister des fitchîs"
+
+#: PkSession/PkRemovePackageByFiles.cpp:104
+#, kde-format
+msgid "No application was found"
+msgstr "Nou programe di trové"
+
+#: PkSession/PkRemovePackageByFiles.cpp:141
+#, kde-format
+msgid "The file could not be found in any installed package"
+msgid_plural "The files could not be found in any installed package"
+msgstr[0] "Dji n' a savou trover l' fitchî dins nou pacaedje d' astalé"
+msgstr[1] "Dji n' a savou trover les fitchîs dins nou pacaedje d' astalé"
+
+#: PkSession/PkSearchFile.cpp:42
+#, kde-format
+msgid "Search Packages that Provides Files"
+msgstr "Trover des pacaedjes ki dnèt les fitchîs"
+
+#: PkSession/PkSearchFile.cpp:81
+#, kde-format
+msgid "The file name could not be found in any software source"
+msgstr "Dji n' a savou trover l' no do fitchî dins nou sourdant di programes"
+
+#: PkSession/ReviewChanges.cpp:51
+#, kde-format
+msgid "The following package was found"
+msgid_plural "The following packages were found"
+msgstr[0] "Li pacaedje shuvant a stî trové"
+msgstr[1] "Les pacaedjes shuvants ont stî trovés"
+
+#: PkSession/SessionTask.cpp:371
+#, kde-format
+msgid "There are no packages to Install or Remove"
+msgstr "I gn a pont d' pacaedje a astaler ou oister"
+
+#: PkSession/SessionTask.cpp:372
+#, kde-format
+msgid "This action should not happen"
+msgstr "Ciste accion la n' si dvreut nén passer"
+
+#: PkSession/SessionTask.cpp:401
+#, kde-format
+msgid "Could not find"
+msgstr "Dji n' a savou trover"
+
+#: PkSession/SessionTask.cpp:402 PkSession/SessionTask.cpp:411
+#, kde-format
+msgid "No packages were found that meet the request"
+msgstr "Dji n' a trové nou pacaedje ki respondeu al dimande"
+
+#: PkSession/SessionTask.cpp:410
+#, kde-format
+msgid "Failed to find"
+msgstr "Li cweraedje a fwait berwete"
+
+#. i18n("Failed to commit transaction"),
+#. PkStrings::errsearchFailedorMessage(m_pkTransaction->error()));
+#: PkSession/SessionTask.cpp:431
+#, kde-format
+msgid "Transaction did not finish with success"
+msgstr "Li tranzaccion n' s' a nén fini comifåt"
+
+#: PkSession/SessionTask.cpp:437
+#, kde-format
+msgid "Task completed"
+msgstr "Bouye tote fwaite"
+
+#: PkSession/SessionTask.cpp:437
+#, kde-format
+msgid "All operations were committed successfully"
+msgstr "Totes les operåcions ont stî fwaites comifåt"
+
+#~ msgid "KDE interface for managing software"
+#~ msgstr "Eterface di KDE po manaedjî les programes"
+
+#~ msgid "A mirror is possibly broken"
+#~ msgstr "On muroe est motoit scheté"
+
+#~ msgid "The connection was refused"
+#~ msgstr "Li raloyaedje a stî rfuzé"
+
+#~ msgid "The parameter was invalid"
+#~ msgstr "Li paramete n' esteut nén valåbe"
+
+#~ msgid "The priority was invalid"
+#~ msgstr "Li prumiristé n' esteut nén valåbe"
+
+#~ msgid "Backend warning"
+#~ msgstr "Adviertixhmint del bouye di fond"
+
+#~ msgid "Daemon warning"
+#~ msgstr "Adviertixhmint do démon"
+
+#~ msgid "The package list cache is being rebuilt"
+#~ msgstr "Li djivêye des pacaedjes est a esse ricostrute"
+
+#~ msgid "An untrusted package was installed"
+#~ msgstr "On pacaedje nén fiyåve a stî astalé"
+
+#~ msgid "A newer package exists"
+#~ msgstr "On programe pis noûs egzistêye"
+
+#~ msgid "Could not find package"
+#~ msgstr "Dji n' a savou trover l' pacaedje"
+
+#~ msgid "Configuration files were changed"
+#~ msgstr "Les fitchîs d' apontiaedje ont stî candjîs"
+
+#~ msgid "Package is already installed"
+#~ msgstr "Li pacaedje est ddja astalé"
+
+#~ msgid "Automatic cleanup is being ignored"
+#~ msgstr "Dji passe houte do rnetiaedje otomatike"
+
+#~ msgid "Software source download failed"
+#~ msgstr "L' aberwetaedje do sourdant di programes a fwait berwete"
+
+#~ msgid "This software source is for developers only"
+#~ msgstr "Ci sourdant d' programes la n' est k' po les programeus"
+
+#~ msgid "Other updates have been held back"
+#~ msgstr "D' ôtes metaedjes a djoû ont stî wårdés"
+
+#~ msgid "Application Manager"
+#~ msgstr "Manaedjeu des programes"
+
+#, fuzzy
+#~| msgid "(C) 2012, Matthias Klumpp"
+#~ msgid "(C) 2014, Matthias Klumpp"
+#~ msgstr "© 2012, Matthias Klumpp"
+
+#~ msgid "This package has the following security level: <b>%1</b>"
+#~ msgstr "Çou pacaejde ci a l' livea di såvrité shuvant : <b>%1</b>"
+
+#~ msgid "It was signed with a key belonging to these user-ids: %1"
+#~ msgstr "Il a stî siné avou ene clé apårtinant a ces id d' uzeu : %1"
+
+#~ msgid "Security hints"
+#~ msgstr "Propôzucions di såvrité"
+
+#~ msgid "Current backend does not support installing files."
+#~ msgstr ""
+#~ "Li programe fondmint do moumint n' sopoite nén l' astalaedje di fitchîs."
+
+#~ msgid "Current backend does not support installing packages."
+#~ msgstr ""
+#~ "Li programe fondmint do moumint n' sopoite nén l' astalaedje di pacaedjes."
+
+#~ msgid "The current backend does not support removing packages."
+#~ msgstr ""
+#~ "Li programe fondmint do moumint n' sopoite nén l' oistaedje des pacaedjes."
+
+#~ msgid "The current backend does not support updating packages."
+#~ msgstr ""
+#~ "Li programe fondmint do moumint n' sopoite nén l' metaedje a djoû des "
+#~ "pacaedjes."
+
+#~ msgid "I agree to the above terms and conditions"
+#~ msgstr "Dji so d' acoird so les termes eyet condicions cial pa dzeu"
+
+#~ msgid "I don't agree"
+#~ msgstr "Dji n' so nén d' acoird"
+
+#~ msgid "Install for all users"
+#~ msgstr "Astaler po tos les uzeus"
+
+#~ msgid "Software license"
+#~ msgstr "Licince do programe"
+
+#~ msgid "Please read the following terms and conditions carefully!"
+#~ msgstr "Lijhoz bén s' i vs plait les termes eyet condicions shuvants !"
+
+#~ msgid ""
+#~ "Installing this package will make the following native packages obsolete. "
+#~ "You might consider removing them manually."
+#~ msgstr ""
+#~ "L' astalaedje di ç' pacaedje cial rindrè forpassés les pacaedjes shuvants "
+#~ "askepyîs pol sistinme. Vos dvrîz tuzer a lzès oister al mwin."
+
+#~ msgid "Similar native packages found"
+#~ msgstr "Minmes pacaedjes, mins askepyîs pols sistinme, trovés"
+
+#~ msgid ""
+#~ "You want to install this application as root!\n"
+#~ "This can damage your system or install malicious software for all users.\n"
+#~ "Please only proceed, if you really know what you're doing!\n"
+#~ "Continue?"
+#~ msgstr ""
+#~ "Vos vloz astalez ç' programe cial come root !\n"
+#~ "Çoucial pôreut fé sketer vosse sistinme oudon-bén astaler des måhaitîs "
+#~ "programes po tos les uzeus.\n"
+#~ "Nel fijhoz ki si vos savoz vormint çou k' vos estoz a fé !\n"
+#~ "Tcheryî pus lon ?"
+
+#~ msgid "Really install as superuser?"
+#~ msgstr "Astaler po do bon come super-uzeu ?"
+
+#~ msgid "Upgrade System"
+#~ msgstr "Mete a livea l' sistinme"
+
+#~ msgid "Failed to simulate file install"
+#~ msgstr "Li fijhaedje come s' on astaléve li fitchî a fwait berwete"
+
+#~ msgid "Failed to simulate package install"
+#~ msgstr "Li fijhaedje come s' on astaléve li pacaedje a fwait berwete"
+
+#~ msgid "Failed to simulate package removal"
+#~ msgstr "Li fijhaedje come s' on oistéve li pacaedje a fwait berwete"
+
+#~ msgid "Failed to simulate package update"
+#~ msgstr "Li fijhaedje come s' on meteu a djoû li pacaedje a fwait berwete"
+
+#~ msgid "Failed to install package"
+#~ msgstr "L' astalaedje des pacaedjes a fwait berwete"
+
+#~ msgid "Failed to remove package"
+#~ msgstr "Li oistaedje des pacaedjes a fwait berwete"
+
+#~ msgid "Failed to update package"
+#~ msgstr "Li metaedje a djoû des pacaedjes a fwait berwete"
+
+#~ msgid "Failed to install signature"
+#~ msgstr "L' astalaedje del sinateure a fwait berwete"
+
+#~ msgid "Failed to start resolve transaction"
+#~ msgstr "L' enondaedje del tranzaccion di rezoudaedje a fwait berwete"
+
+#~ msgid "Failed to start search file transaction"
+#~ msgstr ""
+#~ "L' enondaedje del tranzaccion di cweraedje do fitchî a fwait berwete"
+
+#~ msgid "(C) 2008-2012 Daniel Nicoletti"
+#~ msgstr "© 2008-2012 Daniel Nicoletti"
+
+#~ msgid "(C) 2008-2011 Daniel Nicoletti"
+#~ msgstr "© 2008-2011 Daniel Nicoletti"
+
+#~ msgid "You have one update"
+#~ msgid_plural "You have %1 updates"
+#~ msgstr[0] "Vos avoz on metaedje a djoû"
+#~ msgstr[1] "Vos avoz %1 metaedjes a djoû"
+
+#~ msgid "Failed to set origin data"
+#~ msgstr "Li definixhaedje di l' oridjinne des dnêyes a fwait berwete"
+
+#~ msgid "Software Updater"
+#~ msgstr "Meteu a djoû des programes"
+
+#~ msgid "Click to upgrade to %1"
+#~ msgstr "Clitchîz po mete a livea viè %1"
+
+#~ msgid "Configure"
+#~ msgstr "Apontyî"
+
+#~ msgid "Apper Sentinel"
+#~ msgstr "Gåre d' Apper"
+
+#~ msgid "Check for updates:"
+#~ msgstr "Cweri après des metaedjes a djoû :"
+
+#~ msgctxt "transaction state, downloading package files"
+#~ msgid "Downloading packages"
+#~ msgstr "Dj' aberwete  les pacaedjes"
+
+#~ msgid "Packages: %1"
+#~ msgstr "Pacaedjes : %1"
+
+#~ msgid "Ignore"
+#~ msgstr "Passer houte"
+
+#~ msgid "Transactions"
+#~ msgstr "Tranzaccions"
+
+#~ msgid "%1% - %2"
+#~ msgstr "%1% - %2"
+
+#~ msgid "%1"
+#~ msgstr "%1"
+
+#~ msgid "Hide this icon"
+#~ msgstr "Catchî ciste imådjete cial"
+
+#~ msgid "One message from the software manager"
+#~ msgid_plural "%1 messages from the software manager"
+#~ msgstr[0] "On messaedje do manaedjeu des programes"
+#~ msgstr[1] "%1 messaedjes do manaedjeu des programes"
+
+#~ msgid "Show messages"
+#~ msgstr "Mostrer messaedjes"
+
+#~ msgid "Failed to refresh package cache"
+#~ msgstr "Li rafristaedje del muchete des pacaedjes a fwait berwete"
+
+#~ msgid ""
+#~ "Allows you to hide the window whilst keeping the transaction task running."
+#~ msgstr ""
+#~ "Vos permet d' catchî l' finiesse sol tins kel bouye del tranzaccion "
+#~ "continouwe a ovrer."
+
+#~ msgid "Package"
+#~ msgstr "Pacaedje"
+
+#, fuzzy
+#~| msgid "Configure"
+#~ msgctxt "Shown when you have not set a weather provider"
+#~ msgid "Please Configure"
+#~ msgstr "Apontyî"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Updating system"
+#~ msgstr "Dji met a djoû l' sistinme"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Updated system"
+#~ msgstr "Sistinme metou a djoû"
+
+#~ msgid "Update System"
+#~ msgstr "Mete a djoû l' sistinme"
+
+#~ msgctxt "transaction state, when we return to a previous system state"
+#~ msgid "Rolling back"
+#~ msgstr "Dji rerôle"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Rolling back"
+#~ msgstr "Dji rrôle"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Simulating the install of files"
+#~ msgstr "Dji fwait come si dj' astaleu les fitchîs"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Rolled back"
+#~ msgstr "Rirôlé"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the install of files"
+#~ msgstr "Dj' a fwait come si dj' astaleu les fitchîs"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the install"
+#~ msgstr "Dj' a fwait come si dj' astaleu les fitchîs"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the remove"
+#~ msgstr "Dj' a fwait come si dj' oisteu"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the update"
+#~ msgstr "Dj' a fwait come si dj' meteu a djoû"
+
+#~ msgid "Simulate Install Files"
+#~ msgstr "Fé come s' on astaléve des fitchîs"
+
+#~ msgid "Simulate Install Packages"
+#~ msgstr "Fé come s' on astaléve des pacaedjes"
+
+#~ msgid "Simulate Remove Packages"
+#~ msgstr "Fé come s' on astaléve des pacaedjes"
+
+#~ msgid "Simulate Update Packages"
+#~ msgstr "Fé come s' on meteu a djoû des pacaedjes"
+
+#, fuzzy
+#~| msgid "Failed to start resolve transaction"
+#~ msgid "Failed to commit transaction"
+#~ msgstr "L' enondaedje del tranzaccion di rezoudaedje A fwait berwete"
+
+#~ msgid "(C) 2008-2010 Daniel Nicoletti"
+#~ msgstr "© 2008-2010 Daniel Nicoletti"
+
+#, fuzzy
+#~| msgid "Press <i>Continue</i> if you want to install this file:"
+#~| msgid_plural "Press <i>Continue</i> if you want to install these files:"
+#~ msgid "Press <i>Continue</i> if you want to remove"
+#~ msgstr "Tchôkî so <i>Continouwer</i> si vs voloz astaler ç' fitchî la :"
+
+#, fuzzy
+#~| msgid "Failed to remove package"
+#~ msgid "Do you want to remove a package:"
+#~ msgid_plural "Do you want to remove packages:"
+#~ msgstr[0] "Li oistaedje des pacaedjes a fwait berwete"
+#~ msgstr[1] "Li oistaedje des pacaedjes a fwait berwete"
+
+#~ msgid "Application that can open this type of file"
+#~ msgid_plural "Applications that can open this type of file"
+#~ msgstr[0] "Programe ki sait drovi cisse sôre la d' fitchî"
+#~ msgstr[1] "Programes ki savèt drovi cisse sôre la d' fitchî"
+
+#~ msgid "Failed to search for plugin"
+#~ msgstr "Li cweraedje do tchôke-divins a fwait berwete"
+
+#~ msgid ""
+#~ "An additional program is required to open this type of file:<ul><li>%1</"
+#~ "li></ul>Do you want to search for a program to open this file type now?"
+#~ msgstr ""
+#~ "I fåt èn ôte programe po drovi cisse sôre la d' fitchî : <ul><li>%1</li></"
+#~ "ul>Voloz vs do côp cachî après on programe po drovi cisse sôre di fitchî ?"
+
+#~ msgid "A program requires a new mime type"
+#~ msgid_plural "A program requires new mime types"
+#~ msgstr[0] "On programe a dandjî d' ene novele sôre mime"
+#~ msgstr[1] "On programe a dandjî di novelès sôres mime"
+
+#~ msgid "%2 requires a new mime type"
+#~ msgid_plural "%2 requires new mime types"
+#~ msgstr[0] "%2 a dandjî d' ene novele sôre mime"
+#~ msgstr[1] "%2 a dandjî di novelès sôres mime"
+
+#~ msgctxt "Search for a new mime type"
+#~ msgid "Search"
+#~ msgstr "Trover"
+
+#~ msgid "did not agree to search"
+#~ msgstr "n' a nén stî d' acoird po cweri"
+
+#~ msgctxt "Parse the catalog search and install it"
+#~ msgid "Install"
+#~ msgstr "Astaler"
+
+#~ msgid "A program wants to remove a file"
+#~ msgid_plural "A program wants to remove files"
+#~ msgstr[0] "On programe vout oister on fitchî"
+#~ msgstr[1] "On programe vout oister des fitchîs"
+
+#~ msgid "%2 wants to remove a file"
+#~ msgid_plural "%2 wants to remove files"
+#~ msgstr[0] "%2 vout oister on fitchî"
+#~ msgstr[1] "%2 vout oister des fitchîs"
+
+#~ msgid "The following file is going to be removed:"
+#~ msgid_plural "The following files are going to be removed:"
+#~ msgstr[0] "Li fitchî shuvant va esse dizastalé :"
+#~ msgstr[1] "Les fitchîs shuvant vont esse dizastalé :"
+
+#~ msgctxt "Search for a package and remove"
+#~ msgid "Search"
+#~ msgstr "Trover"

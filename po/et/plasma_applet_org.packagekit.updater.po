@@ -1,0 +1,60 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the apper package.
+#
+# Marek Laane <qiilaq69@gmail.com>, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: apper\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 02:52+0200\n"
+"PO-Revision-Date: 2019-12-07 14:39+0200\n"
+"Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
+"Language-Team: Estonian <kde-et@lists.linux.ee>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 19.08.1\n"
+
+#: package/contents/ui/ChangelogView.qml:31
+msgid "Failed to get update details"
+msgstr "Uuendamise üksikasjade hankimine nurjus"
+
+#: package/contents/ui/ChangelogView.qml:94
+msgid "Version: %1"
+msgstr "Versioon: %1"
+
+#: package/contents/ui/ChangelogView.qml:100
+msgid "Updates: %1"
+msgstr "Uuendused: %1"
+
+#: package/contents/ui/main.qml:39
+msgid "Software Updates"
+msgstr "Tarkvarauuendused"
+
+#: package/contents/ui/main.qml:65 package/contents/ui/main.qml:218
+msgid "Check for new updates"
+msgstr "Kontrolli uuendusi"
+
+#: package/contents/ui/main.qml:119
+msgid "Failed to get updates"
+msgstr "Uuenduste hankimine nurjus"
+
+#: package/contents/ui/main.qml:164
+msgid "You have one update"
+msgid_plural "You have %1 updates"
+msgstr[0] "Sulle on üks uuendus"
+msgstr[1] "Sulle on %1 uuendust"
+
+#: package/contents/ui/main.qml:169
+msgid "Your system is up to date"
+msgstr "Sinu süsteem on täiesti värske"
+
+#: package/contents/ui/Transaction.qml:76
+msgid "Cancel"
+msgstr "Loobu"
+
+#: package/contents/ui/Updates.qml:79
+msgid "Install"
+msgstr "Paigalda"

@@ -1,0 +1,251 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Gebruikershandleiding voor Apper</title>
+<authorgroup>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+</authorgroup>
+<date
+>2016-11-28</date>
+<releaseinfo
+>apper 0.9.3</releaseinfo>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper</command
+></refname>
+<refpurpose
+>Een beheerder van toepassingen en pakketten met behulp van PackageKit</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper</command
+> <group choice="opt"
+><option
+>--updates</option
+> </group
+> <group choice="opt"
+><option
+>--settings</option
+> </group
+> <group choice="opt"
+><option
+>--backend-details</option
+> </group
+> <group choice="opt"
+><option
+>--type</option
+><replaceable
+> mime-type</replaceable
+></group
+> <group choice="opt"
+><option
+>--name</option
+><replaceable
+> naam</replaceable
+></group
+> <group choice="opt"
+><option
+>--file</option
+><replaceable
+> bestand</replaceable
+></group
+> <group choice="opt"
+><option
+>--resource</option
+><replaceable
+> lettertype</replaceable
+></group
+> <group choice="opt"
+><option
+>--catalog</option
+><replaceable
+> bestand</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+<para
+>Apper is een interface voor PackageKit</para>
+<para
+>Apper kan pakketten, toepassingen en het bijwerken beheren op een manier die in verschillende distributies werkt, dankzij het project PackageKit.</para>
+<para
+>Het biedt &Linux; gebruikers een enkele toepassing die ze kunnen leren en gebruiken in de door hen gebruikte distributie.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opties</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--updates</option
+></term>
+<listitem
+><para
+>Beschikbare zaken voor bijwerken tonen</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--settings</option
+></term>
+<listitem
+><para
+>De instellingenpagina van Apper tonen.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--backend-details</option
+></term>
+<listitem
+><para
+>Informatie over het gebruik op dit moment van de backend PackageKit tonen.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--type</option
+> <replaceable
+>mime-type</replaceable
+></term>
+<listitem
+><para
+>Roep het installatieprogramma van een mime-type aan.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--name</option
+> <replaceable
+>naam</replaceable
+></term>
+<listitem
+><para
+>Pakket met de naam <replaceable
+>naam</replaceable
+> installeren.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--file</option
+> <replaceable
+>bestand</replaceable
+></term>
+<listitem
+><para
+>Pakket dat bestand <replaceable
+>bestand</replaceable
+> levert installeren.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--resource</option
+> <replaceable
+>lettertype</replaceable
+></term>
+<listitem
+><para
+>Een lettertype installeren.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--catalog</option
+> <replaceable
+>bestand</replaceable
+></term>
+<listitem
+><para
+>De pakketcatalogus in <replaceable
+>bestand</replaceable
+> installeren.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Zie ook</title>
+<simplelist>
+<member
+>Meer informatie over Apper is te vinden op <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>de website van Apper</ulink
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+<para
+>De onderhouder van Apper is Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; Deze manual-page is geschreven door Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

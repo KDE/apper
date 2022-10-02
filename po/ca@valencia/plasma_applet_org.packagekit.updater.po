@@ -1,0 +1,63 @@
+# Translation of plasma_applet_org.packagekit.updater.po to Catalan (Valencian)
+# Copyright (C) 2014 This_file_is_part_of_KDE
+# This file is distributed under the license LGPL version 2.1 or
+# version 3 or later versions approved by the membership of KDE e.V.
+#
+# Josep M. Ferrer <txemaq@gmail.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: apper\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 02:52+0200\n"
+"PO-Revision-Date: 2014-02-09 22:52+0100\n"
+"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
+"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
+"Language: ca@valencia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Accelerator-Marker: &\n"
+"X-Generator: Lokalize 1.4\n"
+
+#: package/contents/ui/ChangelogView.qml:31
+msgid "Failed to get update details"
+msgstr "No s'han pogut obtindre els detalls de les actualitzacions"
+
+#: package/contents/ui/ChangelogView.qml:94
+msgid "Version: %1"
+msgstr "Versió: %1"
+
+#: package/contents/ui/ChangelogView.qml:100
+msgid "Updates: %1"
+msgstr "Actualitzacions: %1"
+
+#: package/contents/ui/main.qml:39
+msgid "Software Updates"
+msgstr "Actualitzacions de programari"
+
+#: package/contents/ui/main.qml:65 package/contents/ui/main.qml:218
+msgid "Check for new updates"
+msgstr "Comprova si hi ha actualitzacions noves"
+
+#: package/contents/ui/main.qml:119
+msgid "Failed to get updates"
+msgstr "No s'han pogut obtindre les actualitzacions"
+
+#: package/contents/ui/main.qml:164
+msgid "You have one update"
+msgid_plural "You have %1 updates"
+msgstr[0] "HI ha una actualització"
+msgstr[1] "Hi ha %1 actualitzacions"
+
+#: package/contents/ui/main.qml:169
+msgid "Your system is up to date"
+msgstr "El sistema està actualitzat"
+
+#: package/contents/ui/Transaction.qml:76
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#: package/contents/ui/Updates.qml:79
+msgid "Install"
+msgstr "Instal·la"

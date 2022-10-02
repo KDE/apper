@@ -1,0 +1,5753 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2013, 2014, 2020, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kpackagekit\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-03-28 16:13+0000\n"
+"PO-Revision-Date: 2021-05-15 17:12+0100\n"
+"Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Lokalize 19.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Sergiu Bivol"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sergiu@cip.md"
+
+#: Apper/Apper.cpp:91
+#, kde-format
+msgid "Show updates"
+msgstr "Arată actualizările"
+
+#: Apper/Apper.cpp:94
+#, kde-format
+msgid "Show settings"
+msgstr "Arată configurările"
+
+#: Apper/Apper.cpp:97
+#, kde-format
+msgid "Show backend details"
+msgstr "Arată detalii despre platformă"
+
+#: Apper/Apper.cpp:100
+#, kde-format
+msgid "Mime type installer"
+msgstr "Instalator de tipuri MIME"
+
+#: Apper/Apper.cpp:103
+#, kde-format
+msgid "Package name installer"
+msgstr "Instalator de denumiri de pachete"
+
+#: Apper/Apper.cpp:106
+#, kde-format
+msgid "Single file installer"
+msgstr "Instalator de fișiere singulare"
+
+#: Apper/Apper.cpp:109
+#, kde-format
+msgid "Font resource installer"
+msgstr "Instalator de resurse cu fonturi"
+
+#: Apper/Apper.cpp:112
+#, kde-format
+msgid "Catalog installer"
+msgstr "Instalator de cataloage"
+
+#: Apper/Apper.cpp:115
+#, kde-format
+msgid "Single package remover"
+msgstr "Eliminator de pachete singulare"
+
+#: Apper/Apper.cpp:118
+#, kde-format
+msgid "Package file to install"
+msgstr "Fișierul cu pachet de instalat"
+
+#: Apper/ApperKCM.cpp:94 Apper/ApperKCM.cpp:293
+#, kde-format
+msgid "Find"
+msgstr "Caută"
+
+#: Apper/ApperKCM.cpp:175
+#, kde-format
+msgid "Some software changes were made"
+msgstr "Au fost operate câteva modificări de programe"
+
+#: Apper/ApperKCM.cpp:176 apperd/Updater.cpp:287
+#, kde-format
+msgid "Review"
+msgstr "Recenzie"
+
+#: Apper/ApperKCM.cpp:179
+#, kde-format
+msgid "Discard"
+msgstr "Aruncă"
+
+#: Apper/ApperKCM.cpp:182
+#, kde-format
+msgid "Apply"
+msgstr "Aplică"
+
+#: Apper/ApperKCM.cpp:206 Apper/ApperKCM.cpp:563
+#, kde-format
+msgid "History"
+msgstr "Istoric"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, Settings)
+#: Apper/ApperKCM.cpp:210 Apper/ApperKCM.cpp:520 Apper/Settings/Settings.ui:14
+#, kde-format
+msgid "Settings"
+msgstr "Configurări"
+
+#: Apper/ApperKCM.cpp:270 Apper/ApperKCM.cpp:271 Apper/ApperKCM.cpp:272
+#: Apper/ApperKCM.cpp:273
+#, kde-format
+msgid "&Cancel"
+msgstr "&Renunță"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:280 Apper/ApperKCM.ui:427
+#, kde-format
+msgid "Find by &name"
+msgstr "Caută după de&numire"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:281 Apper/ApperKCM.ui:437
+#, kde-format
+msgid "Find by f&ile name"
+msgstr "Găsește după denum&ire"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:282 Apper/ApperKCM.ui:432
+#, kde-format
+msgid "Find by &description"
+msgstr "Găsește după &descriere"
+
+#: Apper/ApperKCM.cpp:460
+#, kde-format
+msgid ""
+"The settings of the current module have changed.\n"
+"Do you want to apply the changes or discard them?"
+msgstr ""
+"Configurările modulului actual s-au modificat.\n"
+"Doriți să aplicați modificările sau să le aruncați?"
+
+#: Apper/ApperKCM.cpp:462
+#, kde-format
+msgid "Apply Settings"
+msgstr "Aplică configurările"
+
+#: Apper/ApperKCM.cpp:547 Apper/CategoryModel.cpp:59
+#, kde-format
+msgid "Updates"
+msgstr "Actualizări"
+
+#: Apper/ApperKCM.cpp:616
+#, kde-format
+msgid "Pending Changes"
+msgstr "Modificări în așteptare"
+
+#: Apper/ApperKCM.cpp:679 Apper/CategoryModel.cpp:51
+#, kde-format
+msgid "Installed Software"
+msgstr "Aplicații instalate"
+
+#: Apper/ApperKCM.cpp:691
+#, kde-format
+msgid "Could not find an application that matched this category"
+msgstr "Nu s-au găsit aplicații care să se potrivească cu această categorie"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, ApperKCM)
+#: Apper/ApperKCM.ui:20
+#, kde-format
+msgid "Add and Remove Software"
+msgstr "Adaugă și elimină programe"
+
+#. i18n: ectx: property (text), widget (QToolButton, backTB)
+#: Apper/ApperKCM.ui:47 AppSetup/SetupWizard.cpp:87
+#, kde-format
+msgid "Back"
+msgstr "Înapoi"
+
+#. i18n: ectx: property (clickMessage), widget (QLineEdit, searchKLE)
+#: Apper/ApperKCM.ui:188
+#, kde-format
+msgid "Search packages"
+msgstr "Caută pachete"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#. i18n: ectx: property (text), widget (QToolButton, filtersTB)
+#: Apper/ApperKCM.ui:237 Apper/BackendDetails.ui:373
+#, kde-format
+msgid "Filters"
+msgstr "Filtre"
+
+#. i18n: ectx: property (text), widget (QPushButton, updatePB)
+#: Apper/ApperKCM.ui:299
+#, kde-format
+msgid "Update"
+msgstr "Actualizează"
+
+#. i18n: ectx: property (text), widget (QPushButton, checkUpdatesPB)
+#: Apper/ApperKCM.ui:312
+#, kde-format
+msgid "Check for new Updates"
+msgstr "Verifică pentru actualizări noi"
+
+#. i18n: ectx: property (text), widget (QPushButton, generalSettingsPB)
+#: Apper/ApperKCM.ui:346
+#, kde-format
+msgid "General Settings"
+msgstr "Configurări generale"
+
+#. i18n: ectx: property (text), widget (QPushButton, repoSettingsPB)
+#: Apper/ApperKCM.ui:365
+#, kde-format
+msgid "Software Origins"
+msgstr "Origini software"
+
+#: Apper/BackendDetails.cpp:36
+#, kde-format
+msgid "Backend Details"
+msgstr "Detalii despre platformă"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: Apper/BackendDetails.ui:23
+#, kde-format
+msgid "Methods"
+msgstr "Metode"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getUpdatesCB)
+#: Apper/BackendDetails.ui:32
+#, kde-format
+msgid "Get Updates"
+msgstr "Obține actualizări"
+
+#. i18n: ectx: property (text), widget (QCheckBox, refreshCacheCB)
+#: Apper/BackendDetails.ui:42 Apper/Settings/Settings.cpp:61
+#, kde-format
+msgid "Refresh Cache"
+msgstr "Reîmprospătează cache"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchNameCB)
+#: Apper/BackendDetails.ui:52
+#, kde-format
+msgid "Search Name"
+msgstr "Caută denumire"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDependsCB)
+#: Apper/BackendDetails.ui:62
+#, kde-format
+msgid "Get Package Depends"
+msgstr "Obține dependențele pachetului"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchDetailsCB)
+#: Apper/BackendDetails.ui:72
+#, kde-format
+msgid "Search Details"
+msgstr "Caută detalii"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getRequiresCB)
+#: Apper/BackendDetails.ui:82
+#, kde-format
+msgid "Get Package Requires"
+msgstr "Obține necesitățile pachetului"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchGroupCB)
+#: Apper/BackendDetails.ui:92
+#, kde-format
+msgid "Search Group"
+msgstr "Caută grup"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getUpdateDetailCB)
+#: Apper/BackendDetails.ui:102
+#, kde-format
+msgid "Get Update Detail"
+msgstr "Obține detaliile actualizării"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchFileCB)
+#: Apper/BackendDetails.ui:112
+#, kde-format
+msgid "Search File"
+msgstr "Caută fișier"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDescriptionCB)
+#: Apper/BackendDetails.ui:122
+#, kde-format
+msgid "Get Package Description"
+msgstr "Obține descrierea pachetului"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getFilesCB)
+#: Apper/BackendDetails.ui:132
+#, kde-format
+msgid "Get Package Files"
+msgstr "Obține fișierele pachetului"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDistroUpgradesCB)
+#: Apper/BackendDetails.ui:142
+#, kde-format
+msgid "Get Distro Upgrades"
+msgstr "Obține actualizări de distribuție"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installPackageCB)
+#: Apper/BackendDetails.ui:152
+#, kde-format
+msgid "Install Packages"
+msgstr "Instalează pachete"
+
+#. i18n: ectx: property (text), widget (QCheckBox, updatePackageCB)
+#: Apper/BackendDetails.ui:162
+#, kde-format
+msgid "Update Packages"
+msgstr "Actualizează pachete"
+
+#. i18n: ectx: property (text), widget (QCheckBox, removePackageCB)
+#: Apper/BackendDetails.ui:172
+#, kde-format
+msgid "Remove Packages"
+msgstr "Elimină pachete"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installFileCB)
+#: Apper/BackendDetails.ui:182
+#, kde-format
+msgid "Install Files"
+msgstr "Instalează fișiere"
+
+#. i18n: ectx: property (text), widget (QCheckBox, resolveCB)
+#: Apper/BackendDetails.ui:192
+#, kde-format
+msgid "Resolve"
+msgstr "Rezolvă"
+
+#. i18n: ectx: property (text), widget (QCheckBox, cancelCB)
+#: Apper/BackendDetails.ui:202
+#, kde-format
+msgid "Cancel"
+msgstr "Renunță"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getPackagesCB)
+#: Apper/BackendDetails.ui:212
+#, kde-format
+msgid "Get Packages"
+msgstr "Obține pachete"
+
+#. i18n: ectx: property (text), widget (QCheckBox, whatProvidesCB)
+#: Apper/BackendDetails.ui:222
+#, kde-format
+msgid "What Provides"
+msgstr "Ce oferă"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repositorySetEnableCB)
+#: Apper/BackendDetails.ui:232
+#, kde-format
+msgid "Set Repository Data"
+msgstr "Stabilește datele depozitului"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repositoryEnableCB)
+#: Apper/BackendDetails.ui:242
+#, kde-format
+msgid "Enable Repository"
+msgstr "Activează depozit"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getRepositoryListCB)
+#: Apper/BackendDetails.ui:252
+#, kde-format
+msgid "Get Repository List"
+msgstr "Obține lista depozitelor"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repairSystemCB)
+#: Apper/BackendDetails.ui:262
+#, kde-format
+msgid "Repair System"
+msgstr "Repară sistemul"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: Apper/BackendDetails.ui:278
+#, kde-format
+msgid "About Backend"
+msgstr "Despre platformă"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: Apper/BackendDetails.ui:284
+#, kde-format
+msgid "Backend name:"
+msgstr "Denumire platformă:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: Apper/BackendDetails.ui:298
+#, kde-format
+msgid "Backend description:"
+msgstr "Descriere platformă:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: Apper/BackendDetails.ui:312
+#, kde-format
+msgid "Backend author:"
+msgstr "Autor platformă:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: Apper/BackendDetails.ui:326
+#, kde-format
+msgid "Distribution ID:"
+msgstr "Id. distribuție:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: Apper/BackendDetails.ui:343
+#, kde-format
+msgid "PackageKit"
+msgstr "PackageKit"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: Apper/BackendDetails.ui:349
+#, kde-format
+msgid "Version:"
+msgstr "Versiune:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installedCB)
+#: Apper/BackendDetails.ui:382 Apper/FiltersMenu.cpp:60
+#: libapper/PkStrings.cpp:404
+#, kde-format
+msgid "Installed"
+msgstr "Instalate"
+
+#. i18n: ectx: property (text), widget (QCheckBox, developmentCB)
+#: Apper/BackendDetails.ui:392 Apper/FiltersMenu.cpp:89
+#, kde-format
+msgid "Development"
+msgstr "Dezvoltare"
+
+#. i18n: ectx: property (text), widget (QCheckBox, visibleCB)
+#: Apper/BackendDetails.ui:402
+#, kde-format
+msgid "Package is visible"
+msgstr "Pachetul este vizibil"
+
+#. i18n: ectx: property (text), widget (QCheckBox, newestCB)
+#: Apper/BackendDetails.ui:412
+#, kde-format
+msgid "Newest"
+msgstr "Cel mai nou"
+
+#. i18n: ectx: property (text), widget (QCheckBox, guiCB)
+#: Apper/BackendDetails.ui:422
+#, kde-format
+msgid "GUI"
+msgstr "Interfață grafică"
+
+#. i18n: ectx: property (text), widget (QCheckBox, freeCB)
+#: Apper/BackendDetails.ui:432
+#, kde-format
+msgid "Free software"
+msgstr "Programe libere"
+
+#. i18n: ectx: property (text), widget (QCheckBox, supportedCB)
+#: Apper/BackendDetails.ui:442
+#, kde-format
+msgid "Supported"
+msgstr "Susținut"
+
+#. i18n: ectx: property (text), widget (QCheckBox, archCB)
+#: Apper/BackendDetails.ui:452
+#, kde-format
+msgid "Only native"
+msgstr "Numai nativ"
+
+#: Apper/BrowseView.cpp:89 Apper/Updater/Updater.cpp:105
+#, kde-format
+msgid "Show Versions"
+msgstr "Arată versiunile"
+
+#: Apper/BrowseView.cpp:96 Apper/Updater/Updater.cpp:119
+#, kde-format
+msgid "Show Architectures"
+msgstr "Arată arhitecturile"
+
+#: Apper/BrowseView.cpp:103 Apper/Updater/Updater.cpp:126
+#, kde-format
+msgid "Show Origins"
+msgstr "Arată originile"
+
+#: Apper/BrowseView.cpp:110 Apper/Updater/Updater.cpp:133
+#, kde-format
+msgid "Show Sizes"
+msgstr "Arată dimensiunile"
+
+#: Apper/BrowseView.cpp:282
+#, kde-format
+msgid "Export installed packages"
+msgstr "Exportă pachetele instalate"
+
+#: Apper/BrowseView.cpp:306
+#, kde-format
+msgid "Install packages from catalog"
+msgstr "Instalează pachete din catalog"
+
+#. i18n: ectx: property (text), widget (QPushButton, exportInstalledPB)
+#: Apper/BrowseView.ui:140
+#, kde-format
+msgid "Export Installed Package List..."
+msgstr "Export listă de pachete instalate..."
+
+#. i18n: ectx: property (text), widget (QPushButton, importInstalledPB)
+#: Apper/BrowseView.ui:150
+#, kde-format
+msgid "Install Packages from List..."
+msgstr "Instalare pachete din listă..."
+
+#: Apper/CategoryModel.cpp:54 Apper/CategoryModel.cpp:62
+#, kde-format
+msgid "Lists"
+msgstr "Liste"
+
+#: Apper/CategoryModel.cpp:167 Apper/CategoryModel.cpp:362
+#, kde-format
+msgid "Categories"
+msgstr "Categorii"
+
+#: Apper/CategoryModel.cpp:224
+#, kde-format
+msgid "Groups"
+msgstr "Grupuri"
+
+#: Apper/FiltersMenu.cpp:36
+#, kde-format
+msgid "Collections"
+msgstr "Colecții"
+
+#: Apper/FiltersMenu.cpp:45
+#, kde-format
+msgid "Only collections"
+msgstr "Numai colecții"
+
+#: Apper/FiltersMenu.cpp:52
+#, kde-format
+msgid "Exclude collections"
+msgstr "Exclude colecțiile"
+
+#: Apper/FiltersMenu.cpp:67
+#, kde-format
+msgid "Only installed"
+msgstr "Numai instalate"
+
+#: Apper/FiltersMenu.cpp:74
+#, kde-format
+msgid "Only available"
+msgstr "Numai disponibile"
+
+#: Apper/FiltersMenu.cpp:81 Apper/FiltersMenu.cpp:110 Apper/FiltersMenu.cpp:139
+#: Apper/FiltersMenu.cpp:168 Apper/FiltersMenu.cpp:197
+#: Apper/FiltersMenu.cpp:226
+#, kde-format
+msgid "No filter"
+msgstr "Niciun filtru"
+
+#: Apper/FiltersMenu.cpp:96
+#, kde-format
+msgid "Only development"
+msgstr "Numai dezvoltare"
+
+#: Apper/FiltersMenu.cpp:103
+#, kde-format
+msgid "Only end user files"
+msgstr "Numai fișierele utilizatorului final"
+
+#: Apper/FiltersMenu.cpp:118
+#, kde-format
+msgid "Graphical"
+msgstr "Grafic"
+
+#: Apper/FiltersMenu.cpp:125
+#, kde-format
+msgid "Only graphical"
+msgstr "Numai grafic"
+
+#: Apper/FiltersMenu.cpp:132
+#, kde-format
+msgid "Only text"
+msgstr "Numai textual"
+
+#: Apper/FiltersMenu.cpp:147
+#, kde-format
+msgctxt "Filter for free packages"
+msgid "Free"
+msgstr "Liber"
+
+#: Apper/FiltersMenu.cpp:154
+#, kde-format
+msgid "Only free software"
+msgstr "Numai programe libere"
+
+#: Apper/FiltersMenu.cpp:161
+#, kde-format
+msgid "Only non-free software"
+msgstr "Numai programe non-libere"
+
+#: Apper/FiltersMenu.cpp:176
+#, kde-format
+msgctxt "Filter for supported packages"
+msgid "Supported"
+msgstr "Susținut"
+
+#: Apper/FiltersMenu.cpp:183
+#, kde-format
+msgid "Only supported software"
+msgstr "Numai programe susținute"
+
+#: Apper/FiltersMenu.cpp:190
+#, kde-format
+msgid "Only non-supported software"
+msgstr "Numai programe nesusținute"
+
+#: Apper/FiltersMenu.cpp:205
+#, kde-format
+msgctxt "Filter for source packages"
+msgid "Source"
+msgstr "Sursă"
+
+#: Apper/FiltersMenu.cpp:212
+#, kde-format
+msgid "Only sourcecode"
+msgstr "Numai cod-sursă"
+
+#: Apper/FiltersMenu.cpp:219
+#, kde-format
+msgid "Only non-sourcecode"
+msgstr "Numai non-cod sursă"
+
+#: Apper/FiltersMenu.cpp:236
+#, kde-format
+msgid "Hide Subpackages"
+msgstr "Ascunde subpachete"
+
+#: Apper/FiltersMenu.cpp:240
+#, kde-format
+msgid "Only show one package, not subpackages"
+msgstr "Arată numai un pachet, nu subpachete"
+
+#: Apper/FiltersMenu.cpp:244
+#, kde-format
+msgid "Only Newest Packages"
+msgstr "Numai cele mai noi pachete"
+
+#: Apper/FiltersMenu.cpp:249
+#, kde-format
+msgid "Only show the newest available package"
+msgstr "Arată numai cel mai nou pachet disponibil"
+
+#: Apper/FiltersMenu.cpp:253
+#, kde-format
+msgid "Only Native Packages"
+msgstr "Numai pachete native"
+
+#: Apper/FiltersMenu.cpp:258
+#, kde-format
+msgid "Only show packages matching the machine architecture"
+msgstr "Arată numai pachetele ce se potrivesc cu arhitectura mașinii"
+
+#: Apper/FiltersMenu.cpp:264
+#, kde-format
+msgid "Only Show Applications"
+msgstr "Arată numai aplicații"
+
+#: Apper/FiltersMenu.cpp:267
+#, kde-format
+msgid "Hide packages that are not applications"
+msgstr "Ascunde pachetele care nu sunt aplicații"
+
+#: Apper/main.cpp:44 Apper/MainUi.cpp:41
+#, kde-format
+msgid "Apper"
+msgstr "Apper"
+
+#: Apper/main.cpp:46
+#, kde-format
+msgid "Apper is an application to get and manage software"
+msgstr "Apper este un program pentru obținerea și gestiunea programelor"
+
+#: Apper/main.cpp:48
+#, kde-format
+msgid "(C) 2008-2018 Daniel Nicoletti"
+msgstr "(C) 2008-2018 Daniel Nicoletti"
+
+#: Apper/main.cpp:49 PkSession/main.cpp:54
+#, kde-format
+msgid "Adrien Bustany"
+msgstr "Adrien Bustany"
+
+#: Apper/main.cpp:49 PkSession/main.cpp:54
+#, kde-format
+msgid "libpackagekit-qt and other stuff"
+msgstr "libpackagekit-qt și alte chestii"
+
+#: Apper/main.cpp:50
+#, kde-format
+msgid "Matthias Klumpp"
+msgstr "Matthias Klumpp"
+
+#: Apper/PackageDetails.cpp:88
+#, kde-format
+msgid "Display"
+msgstr "Afișare"
+
+#: Apper/PackageDetails.cpp:93 AppSetup/SetupWizard.cpp:186
+#, kde-format
+msgid "Description"
+msgstr "Descriere"
+
+#: Apper/PackageDetails.cpp:99
+#, kde-format
+msgid "Depends On"
+msgstr "Depinde de"
+
+#: Apper/PackageDetails.cpp:126
+#, kde-format
+msgid "Required By"
+msgstr "Cerut de"
+
+#: Apper/PackageDetails.cpp:153
+#, kde-format
+msgid "File List"
+msgstr "Listă de fișiere"
+
+#: Apper/PackageDetails.cpp:523
+#, kde-format
+msgid "No files were found."
+msgstr "Niciun fișier găsit."
+
+#: Apper/PackageDetails.cpp:571
+#, kde-format
+msgid "Could not fetch software details"
+msgstr "Nu se pot prelua detalii despre aplicație"
+
+#: Apper/PackageDetails.cpp:613
+#, kde-format
+msgid "Applications"
+msgstr "Aplicații"
+
+#. i18n: ectx: property (text), widget (QLabel, licenseL)
+#: Apper/PackageDetails.ui:164
+#, kde-format
+msgid "License:"
+msgstr "Licență:"
+
+#. i18n: ectx: property (text), widget (QPushButton, menuTB)
+#: Apper/PackageDetails.ui:394
+#, kde-format
+msgid "More..."
+msgstr "Mai multe..."
+
+#. i18n: ectx: property (text), widget (QToolButton, hideTB)
+#: Apper/PackageDetails.ui:404 Apper/Updater/UpdateDetails.ui:29
+#, kde-format
+msgid "Hide"
+msgstr "Ascunde"
+
+#: Apper/ScreenShotViewer.cpp:89
+#, kde-format
+msgid "Could not find screen shot."
+msgstr "Captura de ecran nu a putut fi găsită."
+
+#: Apper/Settings/OriginModel.cpp:37
+#, kde-format
+msgid "Origin of Packages"
+msgstr "Originea pachetelor"
+
+#: Apper/Settings/Settings.cpp:65
+#, kde-format
+msgid "A repository was changed, it's highly recommended to refresh the cache"
+msgstr "A fost modificat un depozit, se recomandă să reîmprospătați cache-ul"
+
+#: Apper/Settings/Settings.cpp:95
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Never"
+msgstr "Niciodată"
+
+#: Apper/Settings/Settings.cpp:98
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Only stable"
+msgstr "Numai stabile"
+
+#: Apper/Settings/Settings.cpp:103
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Stable and development"
+msgstr "Stabile și dezvoltare"
+
+#: Apper/Settings/Settings.cpp:107
+#, kde-format
+msgctxt "Hourly refresh the package cache"
+msgid "Hourly"
+msgstr "La fiecare oră"
+
+#: Apper/Settings/Settings.cpp:108
+#, kde-format
+msgctxt "Daily refresh the package cache"
+msgid "Daily"
+msgstr "Zilnic"
+
+#: Apper/Settings/Settings.cpp:109
+#, kde-format
+msgctxt "Weekly refresh the package cache"
+msgid "Weekly"
+msgstr "Săptămînal"
+
+#: Apper/Settings/Settings.cpp:110
+#, kde-format
+msgctxt "Monthly refresh the package cache"
+msgid "Monthly"
+msgstr "Lunar"
+
+#: Apper/Settings/Settings.cpp:111
+#, kde-format
+msgctxt "Never refresh package cache"
+msgid "Never"
+msgstr "Niciodată"
+
+#: Apper/Settings/Settings.cpp:113
+#, kde-format
+msgctxt "No updates will be automatically installed"
+msgid "None"
+msgstr "Niciuna"
+
+#: Apper/Settings/Settings.cpp:114
+#, kde-format
+msgid "Download only"
+msgstr "Numai descărcare"
+
+#: Apper/Settings/Settings.cpp:115
+#, kde-format
+msgid "Security only"
+msgstr "Numai de securitate"
+
+#: Apper/Settings/Settings.cpp:116
+#, kde-format
+msgid "All updates"
+msgstr "Toate actualizările"
+
+#. i18n: ectx: property (text), widget (QLabel, intervalL)
+#: Apper/Settings/Settings.ui:74
+#, kde-format
+msgid "Check for new updates:"
+msgstr "Verifică pentru actualizări noi:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesMobileCB)
+#. i18n: ectx: property (text), widget (QCheckBox, installUpdatesMobileCB)
+#: Apper/Settings/Settings.ui:115 Apper/Settings/Settings.ui:183
+#, kde-format
+msgid "when on a mobile broadband network connection"
+msgstr "de pe o conexiune de bandă largă mobilă"
+
+#. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesBatteryCB)
+#. i18n: ectx: property (text), widget (QCheckBox, installUpdatesBatteryCB)
+#: Apper/Settings/Settings.ui:122 Apper/Settings/Settings.ui:176
+#, kde-format
+msgid "when running on battery"
+msgstr "la rularea de pe acumulator"
+
+#. i18n: ectx: property (text), widget (QLabel, autoInsL)
+#: Apper/Settings/Settings.ui:141
+#, kde-format
+msgid "Automatically update:"
+msgstr "Actualizează automat:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, appLauncherCB)
+#: Apper/Settings/Settings.ui:199
+#, kde-format
+msgid "Show application launcher after installing new applications"
+msgstr "Arată lansatorul aplicației la instalarea noilor aplicații"
+
+#. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
+#: Apper/Settings/Settings.ui:206
+#, kde-format
+msgid "Show confirmation dialog when installing or updating packages"
+msgstr "Arată dialogul de confirmare la instalarea sau actualizarea pachetelor"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: Apper/Settings/Settings.ui:213
+#, kde-format
+msgid "Check for distribution upgrades:"
+msgstr "Verifică după actualizări de distribuție:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showOriginsCB)
+#: Apper/Settings/Settings.ui:270
+#, kde-format
+msgid "&Show origins of debug and development packages"
+msgstr "&Arată originile pachetelor de depanare și dezvoltare"
+
+#. i18n: ectx: property (text), widget (QPushButton, editOriginsPB)
+#: Apper/Settings/Settings.ui:290
+#, kde-format
+msgid "Edit Origins"
+msgstr "Modifică origini"
+
+#: Apper/TransactionHistory.cpp:67
+#, kde-format
+msgid "Refresh transactions list"
+msgstr "Înnoiește lista cu tranzacții"
+
+#: Apper/TransactionHistory.cpp:83
+#, kde-format
+msgid "Time since last cache refresh: %1"
+msgstr "Durata de la ultima actualizare cache: %1"
+
+#: Apper/TransactionModel.cpp:43
+#, kde-format
+msgid "Date"
+msgstr "Dată"
+
+#: Apper/TransactionModel.cpp:44 libapper/PackageModel.cpp:220
+#, kde-format
+msgid "Action"
+msgstr "Acțiune"
+
+#: Apper/TransactionModel.cpp:45 apperd/TransactionWatcher.cpp:230
+#: AppSetup/SetupWizard.cpp:149
+#, kde-format
+msgid "Details"
+msgstr "Detalii"
+
+#: Apper/TransactionModel.cpp:46
+#, kde-format
+msgctxt "Machine user who issued the transaction"
+msgid "Username"
+msgstr "Utilizator"
+
+#: Apper/TransactionModel.cpp:47
+#, kde-format
+msgid "Application"
+msgstr "Aplicație"
+
+#: Apper/Updater/DistroUpgrade.cpp:39
+#, kde-format
+msgid "Upgrade"
+msgstr "Înnoire"
+
+#: Apper/Updater/DistroUpgrade.cpp:50
+#, kde-format
+msgid "Distribution upgrade available: %1"
+msgstr "Este disponibilă o înnoire a distribuției: %1"
+
+#: Apper/Updater/DistroUpgrade.cpp:65
+#, kde-format
+msgid ""
+"You are about to upgrade your distribution to the latest version. This is "
+"usually a very lengthy process and takes a lot longer than simply upgrading "
+"your packages."
+msgstr ""
+"Sînteți pe cale de a vă actualiza distribuția la ultima versiune. De obicei, "
+"acesta este un proces îndelungat și durează mai mult decît o simplă "
+"actualizare a pachetelor."
+
+#: Apper/Updater/DistroUpgrade.cpp:70
+#, kde-format
+msgid "It is recommended to plug in your computer before proceeding."
+msgstr ""
+"Este recomandat să conectați calculatorul la alimentare înainte de a "
+"continua."
+
+#: Apper/Updater/DistroUpgrade.cpp:72
+#, kde-format
+msgid ""
+"It is recommended that you keep your computer plugged in while the upgrade "
+"is being performed."
+msgstr ""
+"Este recomandat să păstrați calculatorul conectat la alimentare pe parcursul "
+"procesului de actualizare."
+
+#: Apper/Updater/DistroUpgrade.cpp:90
+#, kde-format
+msgid "Distribution upgrade complete."
+msgstr "Actualizarea distribuției s-a încheiat."
+
+#: Apper/Updater/DistroUpgrade.cpp:92 apperd/DistroUpgrade.cpp:144
+#, kde-format
+msgid "Distribution upgrade process exited with code %1."
+msgstr "Procesul de actualizare a distribuției a ieșit cu codul %1."
+
+#: Apper/Updater/DistroUpgrade.cpp:104 apperd/DistroUpgrade.cpp:162
+#, kde-format
+msgid "The distribution upgrade process failed to start."
+msgstr "Pornirea procesului de actualizare a distribuției a eșuat."
+
+#: Apper/Updater/DistroUpgrade.cpp:108 apperd/DistroUpgrade.cpp:165
+#, kde-format
+msgid ""
+"The distribution upgrade process crashed some time after starting "
+"successfully."
+msgstr ""
+"Procesul de actualizare a disctribuției a eșuat la puțin timp de la pornirea "
+"reușită."
+
+#: Apper/Updater/DistroUpgrade.cpp:112 apperd/DistroUpgrade.cpp:168
+#, kde-format
+msgid "The distribution upgrade process failed with an unknown error."
+msgstr "Procesul de acualizare a distribuției a eșuat cu o eroare necunoscută."
+
+#: Apper/Updater/UpdateDetails.cpp:183
+#, kde-format
+msgid "This update will add new features and expand functionality."
+msgstr ""
+"Această actualizare va adăuga caracteristici noi și va extinde "
+"funcționalitatea."
+
+#: Apper/Updater/UpdateDetails.cpp:187
+#, kde-format
+msgid "This update will fix bugs and other non-critical problems."
+msgstr "Această actualizare va rezolva defecțiuni și alte probleme necritice."
+
+#: Apper/Updater/UpdateDetails.cpp:191
+#, kde-format
+msgid "This update is important as it may solve critical problems."
+msgstr ""
+"Această actualizare este importantă deoarece poate rezolva probleme critice."
+
+#: Apper/Updater/UpdateDetails.cpp:195
+#, kde-format
+msgid ""
+"This update is needed to fix a security vulnerability with this package."
+msgstr ""
+"Această actualizare este necesară pentru a rezolva o vulnerabilitate de "
+"securitate din acest pachet."
+
+#: Apper/Updater/UpdateDetails.cpp:199
+#, kde-format
+msgid "This update is blocked."
+msgstr "Această actualizare este blocată."
+
+#: Apper/Updater/UpdateDetails.cpp:206
+#, kde-format
+msgid "This notification was issued on %1 and last updated on %2."
+msgstr ""
+"Această notificare a fost emisă pe %1 și actualizată ultima dată pe %2."
+
+#: Apper/Updater/UpdateDetails.cpp:212
+#, kde-format
+msgid "This notification was issued on %1."
+msgstr "Această notificare a fost emisă pe %1."
+
+#: Apper/Updater/UpdateDetails.cpp:229
+#, kde-format
+msgid "For more information about this update please visit this website:"
+msgid_plural ""
+"For more information about this update please visit these websites:"
+msgstr[0] ""
+"Pentru informații suplimentare despre această actualizare consultați acest "
+"sait:"
+msgstr[1] ""
+"Pentru informații suplimentare despre această actualizare consultați aceste "
+"saituri:"
+msgstr[2] ""
+"Pentru informații suplimentare despre această actualizare consultați aceste "
+"saituri:"
+
+#: Apper/Updater/UpdateDetails.cpp:239
+#, kde-format
+msgid ""
+"For more information about bugs fixed by this update please visit this "
+"website:"
+msgid_plural ""
+"For more information about bugs fixed by this update please visit these "
+"websites:"
+msgstr[0] ""
+"Pentru informații suplimentare despre defectele rezolvate de această "
+"actualizare consultați acest sait:"
+msgstr[1] ""
+"Pentru informații suplimentare despre defectele rezolvate de această "
+"actualizare consultați aceste saituri:"
+msgstr[2] ""
+"Pentru informații suplimentare despre defectele rezolvate de această "
+"actualizare consultați aceste saituri:"
+
+#: Apper/Updater/UpdateDetails.cpp:249
+#, kde-format
+msgid ""
+"For more information about this security update please visit this website:"
+msgid_plural ""
+"For more information about this security update please visit these websites:"
+msgstr[0] ""
+"Pentru informații suplimentare despre această actualizare de securitate "
+"consultați acest sait:"
+msgstr[1] ""
+"Pentru informații suplimentare despre această actualizare de securitate "
+"consultați aceste saituri:"
+msgstr[2] ""
+"Pentru informații suplimentare despre această actualizare de securitate "
+"consultați aceste saituri:"
+
+#: Apper/Updater/UpdateDetails.cpp:259
+#, kde-format
+msgid ""
+"The computer will have to be restarted after the update for the changes to "
+"take effect."
+msgstr ""
+"Calculatorul va trebui repornit după actualizare pentru ca modificările să "
+"intre în vigoare."
+
+#: Apper/Updater/UpdateDetails.cpp:263
+#, kde-format
+msgid ""
+"You will need to log out and back in after the update for the changes to "
+"take effect."
+msgstr ""
+"Va trebui să ieșiți din sistem și să vă autentificați din nou după "
+"actualizare pentru ca modificările să intre în vigoare."
+
+#: Apper/Updater/UpdateDetails.cpp:270
+#, kde-format
+msgid ""
+"The classification of this update is unstable which means it is not designed "
+"for production use."
+msgstr ""
+"Această actualizare este clasificată ca fiind instabilă, ceea ce înseamnă că "
+"nu a fost destinată utilizării în producție."
+
+#: Apper/Updater/UpdateDetails.cpp:274
+#, kde-format
+msgid ""
+"This is a test update, and is not designed for normal use. Please report any "
+"problems or regressions you encounter."
+msgstr ""
+"Această actualizare este una de probă și nu este destinată utilizării "
+"normale. Raportați orice probleme sau regresiuni pe care le întâlniți."
+
+#: Apper/Updater/UpdateDetails.cpp:284
+#, kde-format
+msgid ""
+"The developer logs will be shown as no description is available for this "
+"update:"
+msgstr ""
+"Vor fi afișate jurnalele de dezvoltare întrucât nu e disponibilă nicio "
+"descriere pentru această actualizare:"
+
+#: Apper/Updater/UpdateDetails.cpp:292
+#, kde-format
+msgid "Updates:"
+msgstr "Actualizări:"
+
+#: Apper/Updater/UpdateDetails.cpp:302
+#, kde-format
+msgid "Obsoletes:"
+msgstr "Învechește:"
+
+#: Apper/Updater/UpdateDetails.cpp:312
+#, kde-format
+msgid "Repository: %1"
+msgstr "Depozit: %1"
+
+#: Apper/Updater/UpdateDetails.cpp:334
+#, kde-format
+msgid "No update description was found."
+msgstr "Nu a fost găsită nicio descriere a actualizării."
+
+#: Apper/Updater/Updater.cpp:112
+#, kde-format
+msgid "Show Current Versions"
+msgstr "Arată versiunile curente"
+
+#: Apper/Updater/Updater.cpp:241
+#, kde-format
+msgid "Estimated download size: %1"
+msgstr "Dimensiune estimată a descărcării: %1"
+
+#: Apper/Updater/Updater.cpp:335
+#, kde-format
+msgid "Check for new updates"
+msgstr "Verifică pentru actualizări noi"
+
+#: apperd/DistroUpgrade.cpp:88
+#, kde-format
+msgid "Distribution upgrade available"
+msgstr "Este disponibilă o înnoire a distribuției"
+
+#: apperd/DistroUpgrade.cpp:92
+#, kde-format
+msgid "Start upgrade now"
+msgstr "Începe înnoirea acum"
+
+#: apperd/DistroUpgrade.cpp:141
+#, kde-format
+msgid "Distribution upgrade finished. "
+msgstr "Înnoirea distribuției s-a sfârșit. "
+
+#: apperd/TransactionWatcher.cpp:142
+#, kde-format
+msgid "The system update has completed"
+msgstr "Actualizarea sistemului s-a încheiat"
+
+#: apperd/TransactionWatcher.cpp:149 apperd/TransactionWatcher.cpp:191
+#, kde-format
+msgid "Restart"
+msgstr "Repornește"
+
+#: apperd/TransactionWatcher.cpp:182
+#, kde-format
+msgid "Package: %2"
+msgid_plural "Packages: %2"
+msgstr[0] "Pachet: %2"
+msgstr[1] "Pachete: %2"
+msgstr[2] "Pachete: %2"
+
+#: apperd/Updater.cpp:156
+#, kde-format
+msgid "Updates are being automatically installed."
+msgstr "Actualizările se instalează automat."
+
+#: apperd/Updater.cpp:166
+#, kde-format
+msgid "Security updates are being automatically installed."
+msgstr "Actualizările de securitate sunt instalate automat."
+
+#: apperd/Updater.cpp:176
+#, kde-format
+msgid "Updates are being automatically downloaded."
+msgstr "Actualizările se descarcă automat."
+
+#: apperd/Updater.cpp:210
+#, kde-format
+msgid "System update was successful."
+msgstr "Actualizarea sistemului a reușit."
+
+#: apperd/Updater.cpp:217
+#, kde-format
+msgid "The software update failed."
+msgstr "Actualizarea programului a eșuat."
+
+#: apperd/Updater.cpp:271
+#, kde-format
+msgid "There is one new update"
+msgid_plural "There are %1 new updates"
+msgstr[0] "Este o actualizare nouă"
+msgstr[1] "Sunt %1 actualizări noi"
+msgstr[2] "Sunt %1 de actualizări noi"
+
+#: apperd/Updater.cpp:289 AppSetup/SetupWizard.cpp:260
+#: libapper/ApplicationsDelegate.cpp:44
+#, kde-format
+msgid "Install"
+msgstr "Instalează"
+
+#: AppSetup/main.cpp:43
+#, kde-format
+msgid "KDE Application Installer"
+msgstr "Instalator de aplicații KDE"
+
+#: AppSetup/main.cpp:46
+#, kde-format
+msgctxt "@info:credit"
+msgid "Daniel Nicoletti"
+msgstr "Daniel Nicoletti"
+
+#: AppSetup/main.cpp:46 AppSetup/main.cpp:48
+#, kde-format
+msgid "Developer"
+msgstr "Dezvoltator"
+
+#: AppSetup/main.cpp:48
+#, kde-format
+msgctxt "@info:credit"
+msgid "Matthias Klumpp"
+msgstr "Matthias Klumpp"
+
+#: AppSetup/main.cpp:61
+#, kde-format
+msgid "Show verbose information"
+msgstr "Arată informații detaliate"
+
+#: AppSetup/main.cpp:62
+#, kde-format
+msgid "IPK package filename"
+msgstr "Denumire pachet IPK"
+
+#: AppSetup/main.cpp:79
+#, kde-format
+msgid "We did not receive a path to an IPK package as parameter."
+msgstr ""
+
+#: AppSetup/main.cpp:80
+#, kde-format
+msgid "Package not found!"
+msgstr "Pachetul nu a fost găsit!"
+
+#: AppSetup/SetupWizard.cpp:85 libapper/Requirements.cpp:57
+#: PkSession/SessionTask.cpp:73
+#, kde-format
+msgid "Continue"
+msgstr "Continuă"
+
+#: AppSetup/SetupWizard.cpp:109
+#, kde-format
+msgid "Error"
+msgstr "Eroare"
+
+#: AppSetup/SetupWizard.cpp:110
+#, kde-format
+msgid "An error occurred"
+msgstr "A intervenit o eroare"
+
+#: AppSetup/SetupWizard.cpp:137
+#, kde-format
+msgid "Welcome!"
+msgstr "Bun venit!"
+
+#: AppSetup/SetupWizard.cpp:138
+#, kde-format
+msgid "Welcome to the installation of %1!"
+msgstr "Bun venit în instalarea %1!"
+
+#: AppSetup/SetupWizard.cpp:139
+#, kde-format
+msgid ""
+"Please be careful while installing a 3rd-party application.<br>It might "
+"eventually <b>damage</b> your system or have <b>malicious behaviour</b>, "
+"like spying out your passwords.<br>Please do only install this software if "
+"you <b>trust its publisher</b>."
+msgstr ""
+
+#: AppSetup/SetupWizard.cpp:150
+#, kde-format
+msgid "Details about this installation"
+msgstr "Detalii despre această instalare"
+
+#: AppSetup/SetupWizard.cpp:185
+#, kde-format
+msgid "Application description"
+msgstr "Descrierea aplicației"
+
+#: AppSetup/SetupWizard.cpp:193
+#, kde-format
+msgid "Running installation"
+msgstr "Rulează instalarea"
+
+#: AppSetup/SetupWizard.cpp:194
+#, kde-format
+msgid "Installing %1..."
+msgstr "Se instalează %1..."
+
+#: AppSetup/SetupWizard.cpp:234
+#, kde-format
+msgid "Installation finished!"
+msgstr "Instalare încheiată!"
+
+#: AppSetup/SetupWizard.cpp:235
+#, kde-format
+msgid "%1 has been installed successfully!"
+msgstr "%1 a fost instalat cu succes!"
+
+#: libapper/ApplicationLauncher.cpp:97
+#, kde-format
+msgid "New application available"
+msgid_plural "New applications available"
+msgstr[0] "Este disponibilă o aplicație nouă"
+msgstr[1] "Sunt disponibile aplicații noi"
+msgstr[2] "Sunt disponibile aplicații noi"
+
+#: libapper/ApplicationLauncher.cpp:100
+#, kde-format
+msgid "The following application was just installed. Click on it to launch:"
+msgid_plural ""
+"The following applications were just installed. Click on them to launch:"
+msgstr[0] ""
+"Următoarea aplicație a fost instalată acum. Apăsați pentru a o lansa:"
+msgstr[1] ""
+"Următoarele aplicații au fost instalate acum. Apăsați pentru a le lansa:"
+msgstr[2] ""
+"Următoarele aplicații au fost instalate acum. Apăsați pentru a le lansa:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showCB)
+#: libapper/ApplicationLauncher.ui:81
+#, kde-format
+msgid "Do not show this dialog again"
+msgstr "Nu mai arăta acest dialog"
+
+#: libapper/ApplicationsDelegate.cpp:46
+#, kde-format
+msgid "Remove"
+msgstr "Elimină"
+
+#: libapper/ApplicationsDelegate.cpp:48 libapper/ChangesDelegate.cpp:59
+#, kde-format
+msgid "Deselect"
+msgstr "Deselectează"
+
+#: libapper/ChangesDelegate.cpp:55
+#, kde-format
+msgid "Do not Install"
+msgstr "Nu instala"
+
+#: libapper/ChangesDelegate.cpp:57
+#, kde-format
+msgid "Do not Remove"
+msgstr "Nu elimina"
+
+#: libapper/CustomProgressBar.cpp:38
+#, kde-format
+msgid "%1 remaining"
+msgstr "%1 rămas"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, LicenseAgreement)
+#: libapper/LicenseAgreement.cpp:40 libapper/LicenseAgreement.ui:14
+#, kde-format
+msgid "License Agreement Required"
+msgstr "Acord de licență necesar"
+
+#: libapper/LicenseAgreement.cpp:43
+#, kde-format
+msgid "Accept Agreement"
+msgstr "Acceptă acordul"
+
+#: libapper/LicenseAgreement.cpp:45
+#, kde-format
+msgid "License required for %1 by %2"
+msgstr "Licență cerută pentru %1 de către %2"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: libapper/LicenseAgreement.ui:40
+#, kde-format
+msgid "Please read the following important information before continuing:"
+msgstr "Citiți următoarea informație importantă înainte de a continua:"
+
+#: libapper/PackageModel.cpp:201
+#, kde-format
+msgid "Name"
+msgstr "Denumire"
+
+#: libapper/PackageModel.cpp:205
+#, kde-format
+msgid "Version"
+msgstr "Versiune"
+
+#: libapper/PackageModel.cpp:208
+#, kde-format
+msgid "Installed Version"
+msgstr "Versiune instalată"
+
+#: libapper/PackageModel.cpp:211
+#, kde-format
+msgid "Arch"
+msgstr "Arhit."
+
+#: libapper/PackageModel.cpp:214
+#, kde-format
+msgid "Origin"
+msgstr "Origine"
+
+#: libapper/PackageModel.cpp:217
+#, kde-format
+msgid "Size"
+msgstr "Dimensiune"
+
+#: libapper/PackageModel.cpp:332
+#, kde-format
+msgid ""
+"Version: %1\n"
+"Architecture: %2"
+msgstr ""
+"Versiune: %1\n"
+"Arhitectură: %2"
+
+#: libapper/PackageModel.cpp:379
+#, kde-format
+msgid "To be Removed"
+msgstr "De eliminat"
+
+#: libapper/PackageModel.cpp:381
+#, kde-format
+msgid "To be Installed"
+msgstr "De instalat"
+
+#: libapper/PkStrings.cpp:38
+#, kde-format
+msgctxt "This is when the transaction status is not known"
+msgid "Unknown state"
+msgstr "Stare necunoscută"
+
+#: libapper/PkStrings.cpp:41
+#, kde-format
+msgctxt "transaction state, the daemon is in the process of starting"
+msgid "Waiting for service to start"
+msgstr "Se așteaptă pornirea serviciului"
+
+#: libapper/PkStrings.cpp:44
+#, kde-format
+msgctxt "transaction state, the transaction is waiting for another to complete"
+msgid "Waiting for other tasks"
+msgstr "Se așteaptă alte sarcini"
+
+#: libapper/PkStrings.cpp:47
+#, kde-format
+msgctxt "transaction state, just started"
+msgid "Running task"
+msgstr "Se execută sarcina"
+
+#: libapper/PkStrings.cpp:50
+#, kde-format
+msgctxt "transaction state, is querying data"
+msgid "Querying"
+msgstr "Se interoghează"
+
+#: libapper/PkStrings.cpp:53
+#, kde-format
+msgctxt "transaction state, getting data from a server"
+msgid "Getting information"
+msgstr "Se obțin informații"
+
+#: libapper/PkStrings.cpp:56
+#, kde-format
+msgctxt "transaction state, removing packages"
+msgid "Removing packages"
+msgstr "Se elimină pachete"
+
+#: libapper/PkStrings.cpp:61
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading at %1/s, %2 remaining"
+msgstr "Se descarcă cu %1/s, %2 rămas"
+
+#: libapper/PkStrings.cpp:67
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading at %1/s"
+msgstr "Se descarcă cu %1/s"
+
+#: libapper/PkStrings.cpp:72
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading, %1 remaining"
+msgstr "Se descarcă, %1 rămas"
+
+#: libapper/PkStrings.cpp:76
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading"
+msgstr "Se descarcă"
+
+#: libapper/PkStrings.cpp:80
+#, kde-format
+msgctxt "transaction state, installing packages"
+msgid "Installing packages"
+msgstr "Se instalează pachete"
+
+#: libapper/PkStrings.cpp:83
+#, kde-format
+msgctxt "transaction state, refreshing internal lists"
+msgid "Refreshing software list"
+msgstr "Se împrospătează lista de programe"
+
+#: libapper/PkStrings.cpp:86
+#, kde-format
+msgctxt "transaction state, installing updates"
+msgid "Updating packages"
+msgstr "Se actualizează pachete"
+
+#: libapper/PkStrings.cpp:89
+#, kde-format
+msgctxt "transaction state, removing old packages, and cleaning config files"
+msgid "Cleaning up packages"
+msgstr "Se curăță pachete"
+
+#: libapper/PkStrings.cpp:92
+#, kde-format
+msgctxt "transaction state, obsoleting old packages"
+msgid "Obsoleting packages"
+msgstr "Se învechesc pachete"
+
+#: libapper/PkStrings.cpp:95
+#, kde-format
+msgctxt "transaction state, checking the transaction before we do it"
+msgid "Resolving dependencies"
+msgstr "Se rezolvă dependențe"
+
+#: libapper/PkStrings.cpp:98
+#, kde-format
+msgctxt ""
+"transaction state, checking if we have all the security keys for the "
+"operation"
+msgid "Checking signatures"
+msgstr "Se verifică semnături"
+
+#: libapper/PkStrings.cpp:101
+#, kde-format
+msgctxt "transaction state, when we're doing a test transaction"
+msgid "Testing changes"
+msgstr "Se testează modificările"
+
+#: libapper/PkStrings.cpp:104
+#, kde-format
+msgctxt "transaction state, when we're writing to the system package database"
+msgid "Committing changes"
+msgstr "Se comit modificările"
+
+#: libapper/PkStrings.cpp:107
+#, kde-format
+msgctxt "transaction state, requesting data from a server"
+msgid "Requesting data"
+msgstr "Se cer date"
+
+#: libapper/PkStrings.cpp:110
+#, kde-format
+msgctxt "transaction state, all done!"
+msgid "Finished"
+msgstr "Încheiat"
+
+#: libapper/PkStrings.cpp:113
+#, kde-format
+msgctxt "transaction state, in the process of cancelling"
+msgid "Cancelling"
+msgstr "Se renunță"
+
+#: libapper/PkStrings.cpp:116
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading repository information"
+msgstr "Se descarcă informații din depozit"
+
+#: libapper/PkStrings.cpp:119
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading list of packages"
+msgstr "Se descarcă lista de pachete"
+
+#: libapper/PkStrings.cpp:122
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading file lists"
+msgstr "Se descarcă listele cu fișiere"
+
+#: libapper/PkStrings.cpp:125
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading lists of changes"
+msgstr "Se descarcă listele cu modificări"
+
+#: libapper/PkStrings.cpp:128
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading groups"
+msgstr "Se descarcă grupuri"
+
+#: libapper/PkStrings.cpp:131
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading update information"
+msgstr "Se descarcă informații despre actualizări"
+
+#: libapper/PkStrings.cpp:134
+#, kde-format
+msgctxt "transaction state, repackaging delta files"
+msgid "Repackaging files"
+msgstr "Se reîmpachetează fișiere"
+
+#: libapper/PkStrings.cpp:137
+#, kde-format
+msgctxt "transaction state, loading databases"
+msgid "Loading cache"
+msgstr "Se încarcă cache-ul"
+
+#: libapper/PkStrings.cpp:140
+#, kde-format
+msgctxt "transaction state, scanning for running processes"
+msgid "Scanning installed applications"
+msgstr "Se citesc aplicațiile instalate"
+
+#: libapper/PkStrings.cpp:143
+#, kde-format
+msgctxt ""
+"transaction state, generating a list of packages installed on the system"
+msgid "Generating package lists"
+msgstr "Se generează liste de pachete"
+
+#: libapper/PkStrings.cpp:146
+#, kde-format
+msgctxt "transaction state, when we're waiting for the native tools to exit"
+msgid "Waiting for package manager lock"
+msgstr "Se așteaptă lacătul gestionarului de pachete"
+
+#: libapper/PkStrings.cpp:149
+#, kde-format
+msgctxt "waiting for user to type in a password"
+msgid "Waiting for authentication"
+msgstr "Se așteaptă autentificarea"
+
+#: libapper/PkStrings.cpp:152
+#, kde-format
+msgctxt "we are updating the list of processes"
+msgid "Updating the list of running applications"
+msgstr "Se actualizează lista aplicațiilor ce rulează"
+
+#: libapper/PkStrings.cpp:155
+#, kde-format
+msgctxt "we are checking executable files in use"
+msgid "Checking for applications currently in use"
+msgstr "Se verifică aplicațiile aflate în uz"
+
+#: libapper/PkStrings.cpp:158
+#, kde-format
+msgctxt "we are checking for libraries in use"
+msgid "Checking for libraries currently in use"
+msgstr "Se verifică bibliotecile aflate în uz"
+
+#: libapper/PkStrings.cpp:161
+#, kde-format
+msgctxt "we are copying package files to prepare to install"
+msgid "Copying files"
+msgstr "Se copiază fișiere"
+
+#: libapper/PkStrings.cpp:164
+#, kde-format
+msgctxt "we are running hooks pre or post transaction"
+msgid "Running hooks"
+msgstr "Se execută rutinele"
+
+#: libapper/PkStrings.cpp:179
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Downloaded"
+msgstr "Descărcat"
+
+#: libapper/PkStrings.cpp:181
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Updated"
+msgstr "Actualizat"
+
+#: libapper/PkStrings.cpp:183
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Installed"
+msgstr "Instalat"
+
+#: libapper/PkStrings.cpp:185
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Removed"
+msgstr "Eliminat"
+
+#: libapper/PkStrings.cpp:187
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Cleaned Up"
+msgstr "Curățat"
+
+#: libapper/PkStrings.cpp:189
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Obsoleted"
+msgstr "Învechit"
+
+#: libapper/PkStrings.cpp:200
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Unknown role type"
+msgstr "Tip de rol necunoscut"
+
+#: libapper/PkStrings.cpp:202
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting dependencies"
+msgstr "Se obțin dependențele"
+
+#: libapper/PkStrings.cpp:204
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting update detail"
+msgstr "Se obțin detalii despre actualizare"
+
+#: libapper/PkStrings.cpp:207
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting details"
+msgstr "Se obțin detaliile"
+
+#: libapper/PkStrings.cpp:209
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting requires"
+msgstr "Se obțin cerințele"
+
+#: libapper/PkStrings.cpp:211
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting updates"
+msgstr "Se obțin actualizări"
+
+#: libapper/PkStrings.cpp:213
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching details"
+msgstr "Se caută detalii"
+
+#: libapper/PkStrings.cpp:215
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching for file"
+msgstr "Se caută fișier"
+
+#: libapper/PkStrings.cpp:217
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching groups"
+msgstr "Se caută grupuri"
+
+#: libapper/PkStrings.cpp:219
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching by package name"
+msgstr "Se caută după denumirea pachetului"
+
+#: libapper/PkStrings.cpp:222
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating removal"
+msgstr "Se simulează eliminarea"
+
+#: libapper/PkStrings.cpp:224 libapper/PkStrings.cpp:231
+#: libapper/PkStrings.cpp:272
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading packages"
+msgstr "Se descarcă pachete"
+
+#: libapper/PkStrings.cpp:226
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Removing"
+msgstr "Se elimină"
+
+#: libapper/PkStrings.cpp:229
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating install"
+msgstr "Se simulează instalarea"
+
+#: libapper/PkStrings.cpp:233
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing"
+msgstr "Se instalează"
+
+#: libapper/PkStrings.cpp:236
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating file install"
+msgstr "Se simulează instalarea fișierului"
+
+#: libapper/PkStrings.cpp:238
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading required packages"
+msgstr "Se descarcă pachetele necesare"
+
+#: libapper/PkStrings.cpp:240
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing file"
+msgstr "Se instalează fișierul"
+
+#: libapper/PkStrings.cpp:242
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Refreshing package cache"
+msgstr "Se împrospătează cache-ul de pachete"
+
+#: libapper/PkStrings.cpp:245
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating update"
+msgstr "Se simulează actualizarea"
+
+#: libapper/PkStrings.cpp:247
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading updates"
+msgstr "Se descarcă actualizări"
+
+#: libapper/PkStrings.cpp:249
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Updating packages"
+msgstr "Se actualizează pachete"
+
+#: libapper/PkStrings.cpp:251
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Canceling"
+msgstr "Se renunță"
+
+#: libapper/PkStrings.cpp:253
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting list of repositories"
+msgstr "Se obține lista de depozite"
+
+#: libapper/PkStrings.cpp:255
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Enabling repository"
+msgstr "Se activează depozitul"
+
+#: libapper/PkStrings.cpp:257
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Setting repository data"
+msgstr "Se stabilesc datele depozitului"
+
+#: libapper/PkStrings.cpp:259
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Resolving"
+msgstr "Se rezolvă"
+
+#: libapper/PkStrings.cpp:262
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting file list"
+msgstr "Se obține lista de fișiere"
+
+#: libapper/PkStrings.cpp:264
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting what provides"
+msgstr "Se obțin ce oferă"
+
+#: libapper/PkStrings.cpp:266
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing signature"
+msgstr "Instalare semnătură"
+
+#: libapper/PkStrings.cpp:268
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting package lists"
+msgstr "Se obțin liste de pachete"
+
+#: libapper/PkStrings.cpp:270
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Accepting EULA"
+msgstr "Acceptare ALUF"
+
+#: libapper/PkStrings.cpp:274
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting distribution upgrade information"
+msgstr "Se obțin informații de înnoire a distribuției"
+
+#: libapper/PkStrings.cpp:276
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting categories"
+msgstr "Se obțin categoriile"
+
+#: libapper/PkStrings.cpp:278
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting old transactions"
+msgstr "Se obțin tranzacții vechi"
+
+#: libapper/PkStrings.cpp:280
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Repairing system"
+msgstr "Se repară sistemul"
+
+#: libapper/PkStrings.cpp:282
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Removing repository"
+msgstr "Se elimină depozitul"
+
+#: libapper/PkStrings.cpp:284
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Upgrading the system"
+msgstr "Se înnoiește sistemul"
+
+#: libapper/PkStrings.cpp:299
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Unknown role type"
+msgstr "Tip de rol necunoscut"
+
+#: libapper/PkStrings.cpp:301
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got dependencies"
+msgstr "Dependențe obținute"
+
+#: libapper/PkStrings.cpp:303
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got update detail"
+msgstr "Detalii actualizare obținute"
+
+#: libapper/PkStrings.cpp:306
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got details"
+msgstr "Detalii obținute"
+
+#: libapper/PkStrings.cpp:308
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got requires"
+msgstr "Cerințe obținute"
+
+#: libapper/PkStrings.cpp:310
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got updates"
+msgstr "Actualizări obținute"
+
+#: libapper/PkStrings.cpp:312
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for package details"
+msgstr "Căutat detalii pachet"
+
+#: libapper/PkStrings.cpp:314
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for file"
+msgstr "Căutat fișier"
+
+#: libapper/PkStrings.cpp:316
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched groups"
+msgstr "Căutat grupuri"
+
+#: libapper/PkStrings.cpp:318
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for package name"
+msgstr "Căutat denumire pachet"
+
+#: libapper/PkStrings.cpp:320
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Removed packages"
+msgstr "Eliminat pachete"
+
+#: libapper/PkStrings.cpp:322
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed packages"
+msgstr "Instalat pachete"
+
+#: libapper/PkStrings.cpp:324
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed local files"
+msgstr "Instalat fișiere locale"
+
+#: libapper/PkStrings.cpp:326
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Refreshed package cache"
+msgstr "Înnoit cache pachete"
+
+#: libapper/PkStrings.cpp:328
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Updated packages"
+msgstr "Actualizat pachete"
+
+#: libapper/PkStrings.cpp:330
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Canceled"
+msgstr "Anulat"
+
+#: libapper/PkStrings.cpp:332
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got list of repositories"
+msgstr "Obținut listă de depozite"
+
+#: libapper/PkStrings.cpp:334
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Enabled repository"
+msgstr "Activat depozit"
+
+#: libapper/PkStrings.cpp:336
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Set repository data"
+msgstr "Stabilit date depozit"
+
+#: libapper/PkStrings.cpp:338
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Resolved"
+msgstr "Rezolvat"
+
+#: libapper/PkStrings.cpp:341
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got file list"
+msgstr "Obținut listă de fișiere"
+
+#: libapper/PkStrings.cpp:343
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got what provides"
+msgstr "Obținut ce oferă"
+
+#: libapper/PkStrings.cpp:345
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed signature"
+msgstr "Instalat semnătură"
+
+#: libapper/PkStrings.cpp:347
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got package lists"
+msgstr "Obținut liste de pachete"
+
+#: libapper/PkStrings.cpp:349
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Accepted EULA"
+msgstr "Acceptat EULA"
+
+#: libapper/PkStrings.cpp:351
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Downloaded packages"
+msgstr "Descărcat pachete"
+
+#: libapper/PkStrings.cpp:353
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got distribution upgrades"
+msgstr "Obținut actualizări distribuție"
+
+#: libapper/PkStrings.cpp:355
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got categories"
+msgstr "Obținut categorii"
+
+#: libapper/PkStrings.cpp:357
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got old transactions"
+msgstr "Obținut tranzacții vechi"
+
+#: libapper/PkStrings.cpp:359
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Repaired system"
+msgstr "Reparat sistemul"
+
+#: libapper/PkStrings.cpp:361
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Removed repository"
+msgstr "Eliminat depozit"
+
+#: libapper/PkStrings.cpp:363
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Upgraded the system"
+msgstr "Înnoit sistemul"
+
+#: libapper/PkStrings.cpp:373
+#, kde-format
+msgid "Downloading"
+msgstr "Se descarcă"
+
+#: libapper/PkStrings.cpp:375
+#, kde-format
+msgid "Updating"
+msgstr "Se actualizează"
+
+#: libapper/PkStrings.cpp:377
+#, kde-format
+msgid "Installing"
+msgstr "Se instalează"
+
+#: libapper/PkStrings.cpp:379
+#, kde-format
+msgid "Removing"
+msgstr "Se elimină"
+
+#: libapper/PkStrings.cpp:381
+#, kde-format
+msgid "Cleaning up"
+msgstr "Se curăță"
+
+#: libapper/PkStrings.cpp:383
+#, kde-format
+msgid "Obsoleting"
+msgstr "Se învechește"
+
+#: libapper/PkStrings.cpp:385
+#, kde-format
+msgid "Reinstalling"
+msgstr "Se reinstalează"
+
+#: libapper/PkStrings.cpp:387
+#, kde-format
+msgid "Preparing"
+msgstr "Se pregătește"
+
+#: libapper/PkStrings.cpp:389
+#, kde-format
+msgid "Decompressing"
+msgstr "Se decomprimă"
+
+#: libapper/PkStrings.cpp:400
+#, kde-format
+msgid "Downloaded"
+msgstr "Descărcat"
+
+#: libapper/PkStrings.cpp:402
+#, kde-format
+msgid "Updated"
+msgstr "Actualizat"
+
+#: libapper/PkStrings.cpp:406
+#, kde-format
+msgid "Removed"
+msgstr "Eliminat"
+
+#: libapper/PkStrings.cpp:408
+#, kde-format
+msgid "Cleaned up"
+msgstr "Curățat"
+
+#: libapper/PkStrings.cpp:410
+#, kde-format
+msgid "Obsoleted"
+msgstr "Învechit"
+
+#: libapper/PkStrings.cpp:412
+#, kde-format
+msgid "Reinstalled"
+msgstr "Reinstalat"
+
+#: libapper/PkStrings.cpp:414
+#, kde-format
+msgid "Prepared"
+msgstr "Pregătit"
+
+#: libapper/PkStrings.cpp:416
+#, kde-format
+msgid "Decompressed"
+msgstr "Decomprimat"
+
+#: libapper/PkStrings.cpp:427
+#, kde-format
+msgid "No network connection available"
+msgstr "Nicio conexiune de rețea disponibilă"
+
+#: libapper/PkStrings.cpp:429
+#, kde-format
+msgid "No package cache is available"
+msgstr "Nu este disponibil niciun cache al pachetelor"
+
+#: libapper/PkStrings.cpp:431
+#, kde-format
+msgid "Out of memory"
+msgstr "Memorie insuficientă"
+
+#: libapper/PkStrings.cpp:433
+#, kde-format
+msgid "Failed to create a thread"
+msgstr "Crearea unui fir a eșuat"
+
+#: libapper/PkStrings.cpp:435
+#, kde-format
+msgid "Not supported by this backend"
+msgstr "Nesusținut de această platformă"
+
+#: libapper/PkStrings.cpp:437
+#, kde-format
+msgid "An internal system error has occurred"
+msgstr "A intervenit o eroare internă a sistemului"
+
+#: libapper/PkStrings.cpp:439
+#, kde-format
+msgid "A security trust relationship is not present"
+msgstr "Nu este prezentă o relație de încredere de securitate"
+
+#: libapper/PkStrings.cpp:441
+#, kde-format
+msgid "The package is not installed"
+msgstr "Pachetul nu este instalat"
+
+#: libapper/PkStrings.cpp:443
+#, kde-format
+msgid "The package was not found"
+msgstr "Pachetul nu a fost găsit"
+
+#: libapper/PkStrings.cpp:445
+#, kde-format
+msgid "The package is already installed"
+msgstr "Pachetul este instalat deja"
+
+#: libapper/PkStrings.cpp:447
+#, kde-format
+msgid "The package download failed"
+msgstr "Descărcarea pachetului a eșuat"
+
+#: libapper/PkStrings.cpp:449
+#, kde-format
+msgid "The group was not found"
+msgstr "Grupul nu a fost găsit"
+
+#: libapper/PkStrings.cpp:451
+#, kde-format
+msgid "The group list was invalid"
+msgstr "Lista grupurilor nu era validă"
+
+#: libapper/PkStrings.cpp:453
+#, kde-format
+msgid "Dependency resolution failed"
+msgstr "Rezolvarea dependențelor a eșuat"
+
+#: libapper/PkStrings.cpp:455
+#, kde-format
+msgid "Search filter was invalid"
+msgstr "Filtrul de căutare nu era valid"
+
+#: libapper/PkStrings.cpp:457
+#, kde-format
+msgid "The package identifier was not well formed"
+msgstr "Identificatorul pachetului nu era format corect"
+
+#: libapper/PkStrings.cpp:459
+#, kde-format
+msgid "Transaction error"
+msgstr "Eroare tranzacție"
+
+#: libapper/PkStrings.cpp:461
+#, kde-format
+msgid "Repository name was not found"
+msgstr "Denumirea depozitului nu a fost găsită"
+
+#: libapper/PkStrings.cpp:463
+#, kde-format
+msgid "Could not remove a protected system package"
+msgstr "Nu s-a putut elimina un pachet de sistem protejat"
+
+#: libapper/PkStrings.cpp:465
+#, kde-format
+msgid "The task was canceled"
+msgstr "Sarcina a fost anulată"
+
+#: libapper/PkStrings.cpp:467
+#, kde-format
+msgid "The task was forcibly canceled"
+msgstr "Sarcina a fost anulată forțat"
+
+#: libapper/PkStrings.cpp:469
+#, kde-format
+msgid "Reading the config file failed"
+msgstr "Citirea fișierului de configurare a eșuat"
+
+#: libapper/PkStrings.cpp:471
+#, kde-format
+msgid "The task cannot be cancelled"
+msgstr "Sarcina nu poate fi anulată"
+
+#: libapper/PkStrings.cpp:473
+#, kde-format
+msgid "Source packages cannot be installed"
+msgstr "Pachetele sursă nu pot fi instalate"
+
+#: libapper/PkStrings.cpp:475
+#, kde-format
+msgid "The license agreement failed"
+msgstr "Acordul de licență a eșuat"
+
+#: libapper/PkStrings.cpp:477
+#, kde-format
+msgid "Local file conflict between packages"
+msgstr "Conflict de fișier local între pachete"
+
+#: libapper/PkStrings.cpp:479
+#, kde-format
+msgid "Packages are not compatible"
+msgstr "Pachetele nu sunt compatibile"
+
+#: libapper/PkStrings.cpp:481
+#, kde-format
+msgid "Problem connecting to a software origin"
+msgstr "Problemă cu conectarea la o origine de programe"
+
+#: libapper/PkStrings.cpp:483
+#, kde-format
+msgid "Failed to initialize"
+msgstr "Inițializarea a eșuat"
+
+#: libapper/PkStrings.cpp:485
+#, kde-format
+msgid "Failed to finalize"
+msgstr "Finalizarea a eșuat"
+
+#: libapper/PkStrings.cpp:487
+#, kde-format
+msgid "Cannot get lock"
+msgstr "Nu se poate obține lacătul"
+
+#: libapper/PkStrings.cpp:489
+#, kde-format
+msgid "No packages to update"
+msgstr "Niciun pachet de actualizat"
+
+#: libapper/PkStrings.cpp:491
+#, kde-format
+msgid "Cannot write repository configuration"
+msgstr "Configurarea depozitului nu poate fi scrisă"
+
+#: libapper/PkStrings.cpp:493
+#, kde-format
+msgid "Local install failed"
+msgstr "Instalarea locală a eșuat"
+
+#: libapper/PkStrings.cpp:495
+#, kde-format
+msgid "Bad GPG signature"
+msgstr "Semnătură GPG greșită"
+
+#: libapper/PkStrings.cpp:497
+#, kde-format
+msgid "Missing GPG signature"
+msgstr "Semnătură GPG lipsă"
+
+#: libapper/PkStrings.cpp:499
+#, kde-format
+msgid "Repository configuration invalid"
+msgstr "Configurare depozit nevalidă"
+
+#: libapper/PkStrings.cpp:501
+#, kde-format
+msgid "Invalid package file"
+msgstr "Fișier cu pachet nevalid"
+
+#: libapper/PkStrings.cpp:503
+#, kde-format
+msgid "Package install blocked"
+msgstr "Instalare pachet blocată"
+
+#: libapper/PkStrings.cpp:505
+#, kde-format
+msgid "Package is corrupt"
+msgstr "Pachetul este corupt"
+
+#: libapper/PkStrings.cpp:507
+#, kde-format
+msgid "All packages are already installed"
+msgstr "Toate pachetele sunt instalate deja"
+
+#: libapper/PkStrings.cpp:509
+#, kde-format
+msgid "The specified file could not be found"
+msgstr "Fișierul specificat nu a fost găsit"
+
+#: libapper/PkStrings.cpp:511
+#, kde-format
+msgid "No more mirrors are available"
+msgstr "Nu mai sunt oglinzi disponibile"
+
+#: libapper/PkStrings.cpp:513
+#, kde-format
+msgid "No distribution upgrade data is available"
+msgstr "Nu sunt disponibile date de actualizare a distribuției"
+
+#: libapper/PkStrings.cpp:515
+#, kde-format
+msgid "Package is incompatible with this system"
+msgstr "Pachetul este incompatibil cu acest sistem"
+
+#: libapper/PkStrings.cpp:517
+#, kde-format
+msgid "No space is left on the disk"
+msgstr "Nu a mai rămas spațiu pe disc"
+
+#: libapper/PkStrings.cpp:519 libapper/PkTransaction.cpp:341
+#, kde-format
+msgid "A media change is required"
+msgstr "Este necesară o schimbare a mediului"
+
+#: libapper/PkStrings.cpp:521
+#, kde-format
+msgid "Authorization failed"
+msgstr "Autorizare eșuată"
+
+#: libapper/PkStrings.cpp:523
+#, kde-format
+msgid "Update not found"
+msgstr "Actualizarea nu a fost găsită"
+
+#: libapper/PkStrings.cpp:525
+#, kde-format
+msgid "Cannot install from untrusted origin"
+msgstr "Nu se poate instala din origine fără încredere"
+
+#: libapper/PkStrings.cpp:527
+#, kde-format
+msgid "Cannot update from untrusted origin"
+msgstr "Nu se poate actualiza din origine fără încredere"
+
+#: libapper/PkStrings.cpp:529
+#, kde-format
+msgid "Cannot get the file list"
+msgstr "Nu se poate obține lista fișierelor"
+
+#: libapper/PkStrings.cpp:531
+#, kde-format
+msgid "Cannot get package requires"
+msgstr "Nu se pot obține cerințele pachetului"
+
+#: libapper/PkStrings.cpp:533
+#, kde-format
+msgid "Cannot disable origin"
+msgstr "Nu se poate dezactiva originea"
+
+#: libapper/PkStrings.cpp:535
+#, kde-format
+msgid "The download failed"
+msgstr "Descărcarea a eșuat"
+
+#: libapper/PkStrings.cpp:537
+#, kde-format
+msgid "Package failed to configure"
+msgstr "Configurarea pachetului a eșuat"
+
+#: libapper/PkStrings.cpp:539
+#, kde-format
+msgid "Package failed to build"
+msgstr "Compilarea pachetului a eșuat"
+
+#: libapper/PkStrings.cpp:541
+#, kde-format
+msgid "Package failed to install"
+msgstr "Instalarea pachetului a eșuat"
+
+#: libapper/PkStrings.cpp:543
+#, kde-format
+msgid "Package failed to be removed"
+msgstr "Eliminarea pachetului a eșuat"
+
+#: libapper/PkStrings.cpp:545
+#, kde-format
+msgid "Update failed due to running process"
+msgstr "Actualizarea a eșuat din cauza unui proces ce rulează"
+
+#: libapper/PkStrings.cpp:547
+#, kde-format
+msgid "The package database was changed"
+msgstr "Baza de date cu pachete s-a modificat"
+
+#: libapper/PkStrings.cpp:549
+#, kde-format
+msgid "Virtual provide type is not supported"
+msgstr ""
+
+#: libapper/PkStrings.cpp:551
+#, kde-format
+msgid "Install root is invalid"
+msgstr "Rădăcina instalării nu este validă"
+
+#: libapper/PkStrings.cpp:553
+#, kde-format
+msgid "Cannot fetch install sources"
+msgstr "Nu se pot prelua sursele de instalare"
+
+#: libapper/PkStrings.cpp:555
+#, kde-format
+msgid "Rescheduled due to priority"
+msgstr "Reprogramat din cauza priorității"
+
+#: libapper/PkStrings.cpp:557
+#, kde-format
+msgid "Unfinished transaction"
+msgstr "Tranzacție nefinalizată"
+
+#: libapper/PkStrings.cpp:559
+#, kde-format
+msgid "Lock required"
+msgstr "Lacăt necesar"
+
+#: libapper/PkStrings.cpp:561
+#, kde-format
+msgid "Unknown error"
+msgstr "Eroare necunoscută"
+
+#: libapper/PkStrings.cpp:571
+#, kde-format
+msgid ""
+"There is no network connection available.\n"
+"Please check your connection settings and try again"
+msgstr ""
+"Nu este disponibilă nicio conexiune la rețea.\n"
+"Verificați configurările conexiunii și reîncercați"
+
+#: libapper/PkStrings.cpp:574
+#, kde-format
+msgid ""
+"The package list needs to be rebuilt.\n"
+"This should have been done by the backend automatically."
+msgstr ""
+"Lista de pachete trebuie reconstruită.\n"
+"Acest lucru trebuia să fi fost făcut automat de către platformă."
+
+#: libapper/PkStrings.cpp:577
+#, kde-format
+msgid ""
+"The service that is responsible for handling user requests is out of "
+"memory.\n"
+"Please close some programs or restart your computer."
+msgstr ""
+"Serviciul responsabil de manipularea cererilor utilizatorului nu mai are "
+"memorie.\n"
+"Închideți unele programe sau reporniți calculatorul."
+
+#: libapper/PkStrings.cpp:580
+#, kde-format
+msgid "A thread could not be created to service the user request."
+msgstr "Nu s-a putut crea un fir pentru a servi cererea utilizatorului."
+
+#: libapper/PkStrings.cpp:582
+#, kde-format
+msgid ""
+"The action is not supported by this backend.\n"
+"Please report a bug as this should not have happened."
+msgstr ""
+"Acțiunea nu este susținută de această platformă.\n"
+"Raportați o eroare, întrucât aceasta nu trebuia să se întâmple."
+
+#: libapper/PkStrings.cpp:585
+#, kde-format
+msgid ""
+"A problem that we were not expecting has occurred.\n"
+"Please report this bug with the error description."
+msgstr ""
+"A intervenit o problemă neprevăzută.\n"
+"Raportați această eroare împreună cu descrierea sa."
+
+#: libapper/PkStrings.cpp:588
+#, kde-format
+msgid ""
+"A security trust relationship could not be made with the software origin.\n"
+"Please check your software signature settings."
+msgstr ""
+
+#: libapper/PkStrings.cpp:591
+#, kde-format
+msgid ""
+"The package that is trying to be removed or updated is not already installed."
+msgstr ""
+"Pachetul care se încearcă a fi eliminat sau actualizat nu este instalat încă."
+
+#: libapper/PkStrings.cpp:593
+#, fuzzy, kde-format
+#| msgid ""
+#| "The package that is being modified was not found on your system or in any "
+#| "software source."
+msgid ""
+"The package that is being modified was not found on your system or in any "
+"software origin."
+msgstr ""
+"Pachetul în curs de modificare nu a fost găsit pe sistemul dumneavoastră sau "
+"într-o sursă software."
+
+#: libapper/PkStrings.cpp:595
+#, kde-format
+msgid "The package that is trying to be installed is already installed."
+msgstr "Pachetul care se încearcă a fi instalat este instalat deja."
+
+#: libapper/PkStrings.cpp:597
+#, kde-format
+msgid ""
+"The package download failed.\n"
+"Please check your network connectivity."
+msgstr ""
+"Descărcarea pachetului a eșuat.\n"
+"Verificați conexiunea la rețea."
+
+#: libapper/PkStrings.cpp:600
+#, kde-format
+msgid ""
+"The group type was not found.\n"
+"Please check your group list and try again."
+msgstr ""
+"Tipul grupului nu a fost găsit.\n"
+"Verificați lista de grupuri și reîncercați."
+
+#: libapper/PkStrings.cpp:603
+#, fuzzy, kde-format
+#| msgid ""
+#| "The group list could not be loaded.\n"
+#| "Refreshing your cache may help, although this is normally a software "
+#| "source error."
+msgid ""
+"The group list could not be loaded.\n"
+"Refreshing your cache may help, although this is normally a software origin "
+"error."
+msgstr ""
+"Lista de grupuri nu a putut fi încărcată.\n"
+"Reîmprospătarea cache-ului poate să ajute, cu toate că de obicei aceasta "
+"este o eroare cu sursa software."
+
+#: libapper/PkStrings.cpp:607
+#, kde-format
+msgid ""
+"A package dependency could not be found.\n"
+"More information is available in the detailed report."
+msgstr ""
+"O dependență a pachetului nu a putut fi găsită.\n"
+"În raportul detaliat sunt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:610
+#, kde-format
+msgid "The search filter was not correctly formed."
+msgstr "Filtrul de căutare nu a fost format corect."
+
+#: libapper/PkStrings.cpp:612
+#, kde-format
+msgid ""
+"The package identifier was not well formed when sent to the system daemon.\n"
+"This normally indicates an internal bug and should be reported."
+msgstr ""
+"Identificatorul pachetului nu era format corect la trimiterea către demonul "
+"de sistem.\n"
+"De obicei, aceasta indică o defecțiune internă ce trebuie raportată."
+
+#: libapper/PkStrings.cpp:615
+#, kde-format
+msgid ""
+"An error occurred while running the transaction.\n"
+"More information is available in the detailed report."
+msgstr ""
+"În timpul derulării tranzacției a intervenit o eroare.\n"
+"În raportul detaliat sunt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:618
+#, fuzzy, kde-format
+#| msgid ""
+#| "The remote software source name was not found.\n"
+#| "You may need to enable an item in Software Sources."
+msgid ""
+"The remote software origin name was not found.\n"
+"You may need to enable an item in Software Origins."
+msgstr ""
+"Sursa software distantă nu a fost găsită.\n"
+"Poate fi nevoie să activați un element în Surse software."
+
+#: libapper/PkStrings.cpp:621
+#, kde-format
+msgid "Removing a protected system package is not allowed."
+msgstr "Eliminarea unui pachet de sistem protejat nu este permisă."
+
+#: libapper/PkStrings.cpp:623
+#, kde-format
+msgid "The task was canceled successfully and no packages were changed."
+msgstr "Sarcina a fost anulată cu succes și nu a fost modificat niciun pachet."
+
+#: libapper/PkStrings.cpp:625
+#, kde-format
+msgid ""
+"The task was canceled successfully and no packages were changed.\n"
+"The backend did not exit cleanly."
+msgstr ""
+"Sarcina a fost anulată cu succes și nu a fost modificat niciun pachet.\n"
+"Platforma nu a ieșit curat."
+
+#: libapper/PkStrings.cpp:628
+#, kde-format
+msgid ""
+"The native package configuration file could not be opened.\n"
+"Please make sure your system's configuration is valid."
+msgstr ""
+
+#: libapper/PkStrings.cpp:631
+#, kde-format
+msgid "The task is not safe to be cancelled at this time."
+msgstr "Sarcina nu poate fi anulată în siguranță în acest moment."
+
+#: libapper/PkStrings.cpp:633
+#, kde-format
+msgid ""
+"Source packages are not normally installed this way.\n"
+"Check the extension of the file you are trying to install."
+msgstr ""
+"De obicei, pachetele-sursă nu se instalează în acest mod.\n"
+"Verificați extensia fișierului pe care încercați să-l instalați."
+
+#: libapper/PkStrings.cpp:636
+#, kde-format
+msgid ""
+"The license agreement was not agreed to.\n"
+"To use this software you have to accept the license."
+msgstr ""
+"Acordul de licență nu a fost acceptat.\n"
+"Utilizarea acestui program necesită acceptarea licenței."
+
+#: libapper/PkStrings.cpp:639
+#, fuzzy, kde-format
+#| msgid ""
+#| "Two packages provide the same file.\n"
+#| "This is usually due to mixing packages for different software sources."
+msgid ""
+"Two packages provide the same file.\n"
+"This is usually due to mixing packages for different software origins."
+msgstr ""
+"Două pachete furnizează același fișier.\n"
+"De obicei, aceasta se datorează amestecării pachetelor din diferite surse "
+"software."
+
+#: libapper/PkStrings.cpp:642
+#, fuzzy, kde-format
+#| msgid ""
+#| "Multiple packages exist that are not compatible with each other.\n"
+#| "This is usually due to mixing packages from different software sources."
+msgid ""
+"Multiple packages exist that are not compatible with each other.\n"
+"This is usually due to mixing packages from different software origins."
+msgstr ""
+"Există mai multe pachete care nu sînt intercompatibile.\n"
+"De obicei, aceasta se datorează amestecării pachetelor din diferite surse "
+"software."
+
+#: libapper/PkStrings.cpp:645
+#, fuzzy, kde-format
+#| msgid ""
+#| "There was a (possibly temporary) problem connecting to a software "
+#| "source.\n"
+#| "Please check the detailed error for further details."
+msgid ""
+"There was a (possibly temporary) problem connecting to a software origins.\n"
+"Please check the detailed error for further details."
+msgstr ""
+"În timpul conectării la sursa software a intervenit o problemă (posibil "
+"temporară).\n"
+"Verificați eroarea detaliată pentru informații suplimentare."
+
+#: libapper/PkStrings.cpp:648
+#, kde-format
+msgid ""
+"Failed to initialize packaging backend.\n"
+"This may occur if other packaging tools are being used simultaneously."
+msgstr ""
+
+#: libapper/PkStrings.cpp:651
+#, kde-format
+msgid ""
+"Failed to close down the backend instance.\n"
+"This error can normally be ignored."
+msgstr ""
+
+#: libapper/PkStrings.cpp:654
+#, kde-format
+msgid ""
+"Cannot get the exclusive lock on the packaging backend.\n"
+"Please close any other legacy packaging tools that may be open."
+msgstr ""
+
+#: libapper/PkStrings.cpp:657
+#, kde-format
+msgid "None of the selected packages could be updated."
+msgstr "Niciunul din pachetele alese nu a putut fi actualizat."
+
+#: libapper/PkStrings.cpp:659
+#, kde-format
+msgid "The repository configuration could not be modified."
+msgstr "Configurația depozitului nu a putut fi modificată."
+
+#: libapper/PkStrings.cpp:661
+#, kde-format
+msgid ""
+"Installing the local file failed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Instalarea fișierului local a eșuat.\n"
+"În raportul detaliat sunt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:664
+#, kde-format
+msgid "The package signature could not be verified."
+msgstr "Semnătura pachetului nu a putut fi verificată."
+
+#: libapper/PkStrings.cpp:666
+#, kde-format
+msgid ""
+"The package signature was missing and this package is untrusted.\n"
+"This package was not signed with a GPG key when created."
+msgstr ""
+"Semnătura pachetului lipsea și pachetul nu este de încredere.\n"
+"Acest pachet nu a fost semnat cu o cheie GPG la creare."
+
+#: libapper/PkStrings.cpp:669
+#, kde-format
+msgid "Repository configuration was invalid and could not be read."
+msgstr "Configurația depozitelor era greșită și nu a putut fi citită."
+
+#: libapper/PkStrings.cpp:671
+#, kde-format
+msgid ""
+"The package you are attempting to install is not valid.\n"
+"The package file could be corrupt, or not a proper package."
+msgstr ""
+"Pachetul pe care încercați să-l instalați nu este valid.\n"
+"Fișierul pachetului poate fi deteriorat, sau nu este un pachet corespunzător."
+
+#: libapper/PkStrings.cpp:674
+#, kde-format
+msgid ""
+"Installation of this package was prevented by your packaging system's "
+"configuration."
+msgstr ""
+"Instalarea acestui pachet a fost împiedicată de configurația sistemului de "
+"pachete."
+
+#: libapper/PkStrings.cpp:676
+#, kde-format
+msgid ""
+"The package that was downloaded is corrupt and needs to be downloaded again."
+msgstr "Pachetul ce a fost descărcat este corupt și trebuie descărcat din nou."
+
+#: libapper/PkStrings.cpp:678
+#, kde-format
+msgid ""
+"All of the packages selected for install are already installed on the system."
+msgstr "Toate pachetele alese pentru instalare sunt instalate deja în sistem."
+
+#: libapper/PkStrings.cpp:680
+#, kde-format
+msgid ""
+"The specified file could not be found on the system.\n"
+"Check that the file still exists and has not been deleted."
+msgstr ""
+"Fișierul specificat nu a putut fi găsit în sistem.\n"
+"Verificați dacă fișierul există și nu a fost șters."
+
+#: libapper/PkStrings.cpp:683
+#, kde-format
+msgid ""
+"Required data could not be found on any of the configured software origins.\n"
+"There were no more download mirrors that could be tried."
+msgstr ""
+
+#: libapper/PkStrings.cpp:686
+#, kde-format
+msgid ""
+"Required upgrade data could not be found in any of the configured software "
+"origins.\n"
+"The list of distribution upgrades will be unavailable."
+msgstr ""
+
+#: libapper/PkStrings.cpp:689
+#, kde-format
+msgid ""
+"The package that is trying to be installed is incompatible with this system."
+msgstr ""
+"Pachetul care se încearcă a fi instalat nu este compatibil cu acest sistem."
+
+#: libapper/PkStrings.cpp:691
+#, kde-format
+msgid ""
+"There is insufficient space on the device.\n"
+"Free some space on the system disk to perform this operation."
+msgstr ""
+"Pe dispozitiv nu este spațiu suficient.\n"
+"Pentru a îndeplini această operațiune, eliberați niște spațiu pe discul "
+"sistemului."
+
+#: libapper/PkStrings.cpp:694
+#, kde-format
+msgid "Additional media is required to complete the transaction."
+msgstr "Pentru încheierea tranzacției este necesar un mediu suplimentar."
+
+#: libapper/PkStrings.cpp:696
+#, kde-format
+msgid ""
+"You have failed to provide correct authentication.\n"
+"Please check any passwords or account settings."
+msgstr ""
+
+#: libapper/PkStrings.cpp:699
+#, kde-format
+msgid ""
+"The specified update could not be found.\n"
+"It could have already been installed or no longer available on the remote "
+"server."
+msgstr ""
+
+#: libapper/PkStrings.cpp:702
+#, fuzzy, kde-format
+#| msgid "The package could not be found in any software source"
+#| msgid_plural "The packages could not be found in any software source"
+msgid "The package could not be installed from untrusted origin."
+msgstr "Pachetul nu a putut fi găsit în nicio sursă software"
+
+#: libapper/PkStrings.cpp:704
+#, fuzzy, kde-format
+#| msgid "The package could not be found in any software source"
+#| msgid_plural "The packages could not be found in any software source"
+msgid "The package could not be updated from untrusted origin."
+msgstr "Pachetul nu a putut fi găsit în nicio sursă software"
+
+#: libapper/PkStrings.cpp:706
+#, fuzzy, kde-format
+#| msgid "The file could not be found in any packages"
+#| msgid_plural "The files could not be found in any packages"
+msgid "The file list is not available for this package."
+msgstr "Fișierul nu a fost găsit în niciun pachet"
+
+#: libapper/PkStrings.cpp:708
+#, kde-format
+msgid "The information about what requires this package could not be obtained."
+msgstr ""
+
+#: libapper/PkStrings.cpp:710
+#, fuzzy, kde-format
+#| msgid "The specified file could not be found"
+msgid "The specified software origin could not be disabled."
+msgstr "Fișierul specificat nu a fost găsit"
+
+#: libapper/PkStrings.cpp:712
+#, fuzzy, kde-format
+#| msgid ""
+#| "A package dependency could not be found.\n"
+#| "More information is available in the detailed report."
+msgid ""
+"The download could not be done automatically and should be done manually.\n"
+"More information is available in the detailed report."
+msgstr ""
+"O dependență a pachetului n a putut fi găsită.\n"
+"În raportul detaliat sînt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:715
+#, fuzzy, kde-format
+#| msgid ""
+#| "Installing the local file failed.\n"
+#| "More information is available in the detailed report."
+msgid ""
+"One of the selected packages failed to configure correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Instalarea fișierului local a eșuat.\n"
+"În raportul detaliat sînt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:718
+#, fuzzy, kde-format
+#| msgid ""
+#| "Installing the local file failed.\n"
+#| "More information is available in the detailed report."
+msgid ""
+"One of the selected packages failed to build correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Instalarea fișierului local a eșuat.\n"
+"În raportul detaliat sînt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:721
+#, fuzzy, kde-format
+#| msgid ""
+#| "Installing the local file failed.\n"
+#| "More information is available in the detailed report."
+msgid ""
+"One of the selected packages failed to install correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Instalarea fișierului local a eșuat.\n"
+"În raportul detaliat sînt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:724
+#, fuzzy, kde-format
+#| msgid ""
+#| "Installing the local file failed.\n"
+#| "More information is available in the detailed report."
+msgid ""
+"One of the selected packages failed to be removed correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Instalarea fișierului local a eșuat.\n"
+"În raportul detaliat sînt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:727
+#, fuzzy, kde-format
+#| msgid ""
+#| "An error occurred while running the transaction.\n"
+#| "More information is available in the detailed report."
+msgid ""
+"A program is running that has to be closed before the update can proceed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"În timpul derulării tranzacției a intervenit o eroare.\n"
+"În raportul detaliat sînt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:730
+#, kde-format
+msgid "The package database was changed while the request was running."
+msgstr ""
+
+#: libapper/PkStrings.cpp:732
+#, kde-format
+msgid "The virtual provide type is not supported by this system."
+msgstr ""
+
+#: libapper/PkStrings.cpp:734
+#, kde-format
+msgid "The install root is invalid. Please contact your administrator."
+msgstr ""
+
+#: libapper/PkStrings.cpp:736
+#, fuzzy, kde-format
+#| msgid "The specified file could not be found"
+msgid "The list of software could not be downloaded."
+msgstr "Fișierul specificat nu a fost găsit"
+
+#: libapper/PkStrings.cpp:738
+#, kde-format
+msgid ""
+"The transaction has been cancelled and will be retried when the system is "
+"idle."
+msgstr ""
+
+#: libapper/PkStrings.cpp:740
+#, kde-format
+msgid "A previous package management transaction was interrupted."
+msgstr ""
+
+#: libapper/PkStrings.cpp:742
+#, fuzzy, kde-format
+#| msgid "A media change is required"
+msgid "A package manager lock is required."
+msgstr "Este necesară o schimbare a mediului"
+
+#: libapper/PkStrings.cpp:744
+#, kde-format
+msgid ""
+"Unknown error, please report a bug.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Eroare necunoscută, raportați o defecțiune.\n"
+"În raportul detaliat sunt disponibile informații suplimentare."
+
+#: libapper/PkStrings.cpp:755
+#, kde-format
+msgctxt "The group type"
+msgid "Accessibility"
+msgstr "Accesibilitate"
+
+#: libapper/PkStrings.cpp:757
+#, kde-format
+msgctxt "The group type"
+msgid "Accessories"
+msgstr "Accesorii"
+
+#: libapper/PkStrings.cpp:759
+#, kde-format
+msgctxt "The group type"
+msgid "Education"
+msgstr "Educație"
+
+#: libapper/PkStrings.cpp:761
+#, kde-format
+msgctxt "The group type"
+msgid "Games"
+msgstr "Jocuri"
+
+#: libapper/PkStrings.cpp:763
+#, kde-format
+msgctxt "The group type"
+msgid "Graphics"
+msgstr "Grafică"
+
+#: libapper/PkStrings.cpp:765
+#, kde-format
+msgctxt "The group type"
+msgid "Internet"
+msgstr "Internet"
+
+#: libapper/PkStrings.cpp:767
+#, kde-format
+msgctxt "The group type"
+msgid "Office"
+msgstr "Birou"
+
+#: libapper/PkStrings.cpp:769
+#, fuzzy, kde-format
+#| msgctxt "The group type"
+#| msgid "Other"
+msgctxt "The group type"
+msgid "Others"
+msgstr "Altele"
+
+#: libapper/PkStrings.cpp:771
+#, kde-format
+msgctxt "The group type"
+msgid "Development"
+msgstr "Dezvoltare"
+
+#: libapper/PkStrings.cpp:773
+#, kde-format
+msgctxt "The group type"
+msgid "Multimedia"
+msgstr "Multimedia"
+
+#: libapper/PkStrings.cpp:775
+#, kde-format
+msgctxt "The group type"
+msgid "System"
+msgstr "Sistem"
+
+#: libapper/PkStrings.cpp:777
+#, kde-format
+msgctxt "The group type"
+msgid "GNOME desktop"
+msgstr "Biroul GNOME"
+
+#: libapper/PkStrings.cpp:779
+#, kde-format
+msgctxt "The group type"
+msgid "KDE desktop"
+msgstr "Biroul KDE"
+
+#: libapper/PkStrings.cpp:781
+#, kde-format
+msgctxt "The group type"
+msgid "XFCE desktop"
+msgstr "Biroul XFCE"
+
+#: libapper/PkStrings.cpp:783
+#, kde-format
+msgctxt "The group type"
+msgid "Other desktops"
+msgstr "Alte birouri"
+
+#: libapper/PkStrings.cpp:785
+#, kde-format
+msgctxt "The group type"
+msgid "Publishing"
+msgstr "Editare"
+
+#: libapper/PkStrings.cpp:787
+#, kde-format
+msgctxt "The group type"
+msgid "Servers"
+msgstr "Servere"
+
+#: libapper/PkStrings.cpp:789
+#, kde-format
+msgctxt "The group type"
+msgid "Fonts"
+msgstr "Fonturi"
+
+#: libapper/PkStrings.cpp:791
+#, kde-format
+msgctxt "The group type"
+msgid "Admin tools"
+msgstr "Unelte de administrare"
+
+#: libapper/PkStrings.cpp:793
+#, kde-format
+msgctxt "The group type"
+msgid "Legacy"
+msgstr "Depășite"
+
+#: libapper/PkStrings.cpp:795
+#, kde-format
+msgctxt "The group type"
+msgid "Localization"
+msgstr "Traducere"
+
+#: libapper/PkStrings.cpp:797
+#, kde-format
+msgctxt "The group type"
+msgid "Virtualization"
+msgstr "Virtualizare"
+
+#: libapper/PkStrings.cpp:799
+#, kde-format
+msgctxt "The group type"
+msgid "Security"
+msgstr "Securitate"
+
+#: libapper/PkStrings.cpp:801
+#, kde-format
+msgctxt "The group type"
+msgid "Power management"
+msgstr "Gestiunea alimentării"
+
+#: libapper/PkStrings.cpp:803
+#, kde-format
+msgctxt "The group type"
+msgid "Communication"
+msgstr "Comunicații"
+
+#: libapper/PkStrings.cpp:805
+#, kde-format
+msgctxt "The group type"
+msgid "Network"
+msgstr "Rețea"
+
+#: libapper/PkStrings.cpp:807
+#, kde-format
+msgctxt "The group type"
+msgid "Maps"
+msgstr "Hărți"
+
+#: libapper/PkStrings.cpp:809
+#, kde-format
+msgctxt "The group type"
+msgid "Software sources"
+msgstr "Surse de programe"
+
+#: libapper/PkStrings.cpp:811
+#, kde-format
+msgctxt "The group type"
+msgid "Science"
+msgstr "Știință"
+
+#: libapper/PkStrings.cpp:813
+#, kde-format
+msgctxt "The group type"
+msgid "Documentation"
+msgstr "Documentație"
+
+#: libapper/PkStrings.cpp:815
+#, kde-format
+msgctxt "The group type"
+msgid "Electronics"
+msgstr "Electronică"
+
+#: libapper/PkStrings.cpp:817
+#, kde-format
+msgctxt "The group type"
+msgid "Package collections"
+msgstr "Colecții de pachete"
+
+#: libapper/PkStrings.cpp:819
+#, kde-format
+msgctxt "The group type"
+msgid "Vendor"
+msgstr "Vânzător"
+
+#: libapper/PkStrings.cpp:821
+#, kde-format
+msgctxt "The group type"
+msgid "Newest packages"
+msgstr "Cele mai noi pachete"
+
+#: libapper/PkStrings.cpp:823
+#, kde-format
+msgctxt "The group type"
+msgid "Unknown group"
+msgstr "Grup necunoscut"
+
+#: libapper/PkStrings.cpp:834
+#, kde-format
+msgctxt "The type of update"
+msgid "Trivial update"
+msgstr "Actualizare trivială"
+
+#: libapper/PkStrings.cpp:836
+#, kde-format
+msgctxt "The type of update"
+msgid "Normal update"
+msgstr "Actualizare normală"
+
+#: libapper/PkStrings.cpp:838
+#, kde-format
+msgctxt "The type of update"
+msgid "Important update"
+msgstr "Actualizare importantă"
+
+#: libapper/PkStrings.cpp:840
+#, kde-format
+msgctxt "The type of update"
+msgid "Security update"
+msgstr "Actualizare de securitate"
+
+#: libapper/PkStrings.cpp:842
+#, kde-format
+msgctxt "The type of update"
+msgid "Bug fix update"
+msgstr "Corecție de erori"
+
+#: libapper/PkStrings.cpp:844
+#, kde-format
+msgctxt "The type of update"
+msgid "Enhancement update"
+msgstr "Actualizare de îmbunătățire"
+
+#: libapper/PkStrings.cpp:846
+#, kde-format
+msgctxt "The type of update"
+msgid "Blocked update"
+msgstr "Actualizare blocată"
+
+#: libapper/PkStrings.cpp:849
+#, kde-format
+msgctxt "The type of update"
+msgid "Installed"
+msgstr "Instalat"
+
+#: libapper/PkStrings.cpp:852
+#, kde-format
+msgctxt "The type of update"
+msgid "Available"
+msgstr "Disponibil"
+
+#: libapper/PkStrings.cpp:854
+#, kde-format
+msgctxt "The type of update"
+msgid "Unknown update"
+msgstr "Actualizare necunoscută"
+
+#: libapper/PkStrings.cpp:865
+#, kde-format
+msgid "No Updates Available"
+msgstr "Nicio actualizare disponibilă"
+
+#: libapper/PkStrings.cpp:868
+#, kde-format
+msgctxt "Some updates were selected on the view"
+msgid "1 Update Selected"
+msgid_plural "%1 Updates Selected"
+msgstr[0] "1 actualizare aleasă"
+msgstr[1] "%1 actualizări alese"
+msgstr[2] "%1 de actualizări alese"
+
+#: libapper/PkStrings.cpp:872
+#, kde-format
+msgctxt "Some updates are being shown on the screen"
+msgid "1 Update"
+msgid_plural "%1 Updates"
+msgstr[0] "1 actualizare"
+msgstr[1] "%1 actualizări"
+msgstr[2] "%1 de actualizări"
+
+#: libapper/PkStrings.cpp:875
+#, kde-format
+msgctxt "Type of update, in the case it's just an update"
+msgid "%1, %2"
+msgstr "%1, %2"
+
+#: libapper/PkStrings.cpp:876
+#, kde-format
+msgctxt "Part of: %1 Updates, %1 Selected"
+msgid "%1 Update"
+msgid_plural "%1 Updates"
+msgstr[0] "%1 actualizare"
+msgstr[1] "%1 actualizări"
+msgstr[2] "%1 de actualizări"
+
+#: libapper/PkStrings.cpp:877
+#, kde-format
+msgctxt "Part of: %1 Updates, %1 Selected"
+msgid "%1 Selected"
+msgid_plural "%1 Selected"
+msgstr[0] "%1 aleasă"
+msgstr[1] "%1 alese"
+msgstr[2] "%1 alese"
+
+#: libapper/PkStrings.cpp:881
+#, kde-format
+msgid "No Packages"
+msgstr "Niciun pachet"
+
+#: libapper/PkStrings.cpp:883
+#, kde-format
+msgid "1 Package"
+msgid_plural "%1 Packages"
+msgstr[0] "1 pachet"
+msgstr[1] "%1 pachete"
+msgstr[2] "%1 de pachete"
+
+#: libapper/PkStrings.cpp:891
+#, kde-format
+msgid "No restart is necessary"
+msgstr "Nu este necesară o repornire"
+
+#: libapper/PkStrings.cpp:893
+#, kde-format
+msgid "You will be required to restart this application"
+msgstr "Va trebui să reporniți această aplicație"
+
+#: libapper/PkStrings.cpp:895
+#, kde-format
+msgid "You will be required to log out and back in"
+msgstr "Va trebui să vă reautentificați"
+
+#: libapper/PkStrings.cpp:897
+#, kde-format
+msgid "A restart will be required"
+msgstr "Va fi necesară o repornire"
+
+#: libapper/PkStrings.cpp:899
+#, fuzzy, kde-format
+#| msgid "You will be required to log off and back on after this update"
+msgid "You will be required to log out and back in due to a security update."
+msgstr "După această actualizare va trebui să vă reautentificați"
+
+#: libapper/PkStrings.cpp:901
+#, fuzzy, kde-format
+#| msgid "A restart will be required"
+msgid "A restart will be required due to a security update."
+msgstr "Va fi necesară o repornire"
+
+#: libapper/PkStrings.cpp:914
+#, kde-format
+msgid "No restart is required"
+msgstr "Repornirea nu este necesară"
+
+#: libapper/PkStrings.cpp:916
+#, kde-format
+msgid "A restart is required"
+msgstr "Este necesară o repornire"
+
+#: libapper/PkStrings.cpp:918
+#, kde-format
+msgid "You need to log out and log back in"
+msgstr "Trebuie să vă reautentificați"
+
+#: libapper/PkStrings.cpp:920
+#, kde-format
+msgid "You need to restart the application"
+msgstr "Trebuie să reporniți aplicația"
+
+#: libapper/PkStrings.cpp:922
+#, fuzzy, kde-format
+#| msgid "You need to log out and log back in"
+msgid "You need to log out and log back in to remain secure."
+msgstr "Trebuie să vă reautentificați"
+
+#: libapper/PkStrings.cpp:924
+#, fuzzy, kde-format
+#| msgid "A restart is required"
+msgid "A restart is required to remain secure."
+msgstr "Este necesară o repornire"
+
+#: libapper/PkStrings.cpp:937
+#, kde-format
+msgid "Stable"
+msgstr "Stabil"
+
+#: libapper/PkStrings.cpp:939
+#, kde-format
+msgid "Unstable"
+msgstr "Instabil"
+
+#: libapper/PkStrings.cpp:941
+#, kde-format
+msgid "Testing"
+msgstr "Testare"
+
+#: libapper/PkStrings.cpp:954
+#, kde-format
+msgid "Please insert the CD labeled '%1', and press continue."
+msgstr "Introduceți CD-ul cu eticheta „%1” și apăsați Continuă."
+
+#: libapper/PkStrings.cpp:956
+#, kde-format
+msgid "Please insert the DVD labeled '%1', and press continue."
+msgstr "Introduceți DVD-ul cu eticheta „%1” și apăsați Continuă."
+
+#: libapper/PkStrings.cpp:958
+#, kde-format
+msgid "Please insert the disc labeled '%1', and press continue."
+msgstr "Introduceți discul cu eticheta „%1” și apăsați Continuă."
+
+#: libapper/PkStrings.cpp:960 libapper/PkStrings.cpp:963
+#, kde-format
+msgid "Please insert the medium labeled '%1', and press continue."
+msgstr "Introduceți mediul cu eticheta „%1” și apăsați Continuă."
+
+#: libapper/PkStrings.cpp:1014
+#, kde-format
+msgid "You do not have the necessary privileges to perform this action."
+msgstr "Nu aveți privilegiile necesare pentru îndeplinirea acestei acțiuni."
+
+#: libapper/PkStrings.cpp:1016
+#, fuzzy, kde-format
+#| msgid "Could not remove a protected system package"
+msgid "Could not get a transaction id from packagekitd."
+msgstr "Nu s-a putut elimina un pachet de sistem protejat"
+
+#: libapper/PkStrings.cpp:1018
+#, kde-format
+msgid "Cannot connect to this transaction id."
+msgstr ""
+
+#: libapper/PkStrings.cpp:1020
+#, kde-format
+msgid "This action is unknown."
+msgstr ""
+
+#: libapper/PkStrings.cpp:1022
+#, fuzzy, kde-format
+#| msgid "The package signature could not be verified."
+msgid "The packagekitd service could not be started."
+msgstr "Semnătura pachetului nu a putut fi verificată."
+
+#: libapper/PkStrings.cpp:1024
+#, fuzzy, kde-format
+#| msgid "The priority was invalid"
+msgid "The query is not valid."
+msgstr "Prioritatea nu era validă"
+
+#: libapper/PkStrings.cpp:1026
+#, fuzzy, kde-format
+#| msgid "The file was not installed"
+#| msgid_plural "The files were not installed"
+msgid "The file is not valid."
+msgstr "Fișierul nu a fost instalat"
+
+#: libapper/PkStrings.cpp:1028
+#, kde-format
+msgid "This function is not yet supported."
+msgstr ""
+
+#: libapper/PkStrings.cpp:1030
+#, fuzzy, kde-format
+#| msgid "Could not find package"
+msgid "Could not talk to packagekitd."
+msgstr "Pachetul nu a putut fi găsit"
+
+#: libapper/PkStrings.cpp:1032
+#, fuzzy, kde-format
+#| msgid "Could not find package"
+msgid "Error talking to packagekitd."
+msgstr "Pachetul nu a putut fi găsit"
+
+#: libapper/PkStrings.cpp:1035 libapper/PkStrings.cpp:1038
+#, fuzzy, kde-format
+#| msgid "Unknown error"
+msgid "An unknown error happened."
+msgstr "Eroare necunoscută"
+
+#: libapper/PkStrings.cpp:1053
+#, kde-format
+msgid "Your system is up to date"
+msgstr ""
+
+#: libapper/PkStrings.cpp:1055
+#, fuzzy, kde-format
+#| msgid "No packages to update"
+msgid "You have no updates"
+msgstr "Niciun pachet de actualizat"
+
+#: libapper/PkStrings.cpp:1057
+#, kde-format
+msgid "Last check for updates was more than a month ago"
+msgstr ""
+
+#: libapper/PkStrings.cpp:1065
+#, kde-format
+msgid "Verified %1 ago"
+msgstr ""
+
+#: libapper/PkStrings.cpp:1067
+#, kde-format
+msgid "It's strongly recommended that you check for new updates now"
+msgstr ""
+
+#: libapper/PkTransaction.cpp:264
+#, fuzzy, kde-format
+#| msgid ""
+#| "<br />Installing unsigned packages can compromise your system, as it is "
+#| "impossible to verify if the software came from a trusted source. Are you "
+#| "sure you want to continue installation?"
+msgid ""
+"You are about to install unsigned packages that can compromise your system, "
+"as it is impossible to verify if the software came from a trusted source.\n"
+"\n"
+"Are you sure you want to proceed with the installation?"
+msgstr ""
+"<br />Instalarea pachetelor nesemnate vă poate compromite sistemul, întrucît "
+"este imposibil de verificat dacă programele provin dintr-o sursă de "
+"încredere. Sigur doriți să continuați instalarea?"
+
+#: libapper/PkTransaction.cpp:267
+#, kde-format
+msgid "Installing unsigned software"
+msgstr "Instalare programe nesemnate"
+
+#: libapper/PkTransactionWidget.cpp:229 libapper/PkTransactionWidget.cpp:242
+#, kde-format
+msgid "%1 (%2%)"
+msgstr "%1 (%2%)"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/PkTransactionWidget.ui:47
+#, kde-format
+msgid "icon"
+msgstr "pictogramă"
+
+#. i18n: ectx: property (text), widget (QLabel, currentL)
+#: libapper/PkTransactionWidget.ui:73
+#, kde-format
+msgid "Downloading Packages"
+msgstr "Descărcare pachete"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RepoSig)
+#: libapper/RepoSig.ui:14
+#, kde-format
+msgid "Software signature is required"
+msgstr "Este necesară semnătura programului"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: libapper/RepoSig.ui:47
+#, kde-format
+msgid "Repository name:"
+msgstr "Denumire depozit:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: libapper/RepoSig.ui:73
+#, kde-format
+msgid "Signature URL:"
+msgstr "URL semnătură:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: libapper/RepoSig.ui:99
+#, fuzzy, kde-format
+#| msgid "Signature identifier:"
+msgid "Signature user identifier:"
+msgstr "Identificator semnătură:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: libapper/RepoSig.ui:125
+#, kde-format
+msgid "Signature identifier:"
+msgstr "Identificator semnătură:"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/RepoSig.ui:147
+#, kde-format
+msgid "Do you trust the origin of packages?"
+msgstr "Aveți încredere în originea acestor pachete?"
+
+#: libapper/Requirements.cpp:55
+#, kde-format
+msgid "Additional changes"
+msgstr "Modificări suplimentare"
+
+#: libapper/Requirements.cpp:82
+#, kde-format
+msgid "1 package to remove"
+msgid_plural "%1 packages to remove"
+msgstr[0] "1 pachet de eliminat"
+msgstr[1] "%1 pachete de eliminat"
+msgstr[2] "%1 de pachete de eliminat"
+
+#: libapper/Requirements.cpp:97
+#, fuzzy, kde-format
+#| msgid "No packages to update"
+msgid "1 package to downgrade"
+msgid_plural "%1 packages to downgrade"
+msgstr[0] "Niciun pachet de actualizat"
+msgstr[1] "Niciun pachet de actualizat"
+msgstr[2] "Niciun pachet de actualizat"
+
+#: libapper/Requirements.cpp:112
+#, fuzzy, kde-format
+#| msgid "Package file to install"
+msgid "1 package to reinstall"
+msgid_plural "%1 packages to reinstall"
+msgstr[0] "Fișierul cu pachet de instalat"
+msgstr[1] "Fișierul cu pachet de instalat"
+msgstr[2] "Fișierul cu pachet de instalat"
+
+#: libapper/Requirements.cpp:125
+#, kde-format
+msgid "1 package to install"
+msgid_plural "%1 packages to install"
+msgstr[0] "1 pachet de instalat"
+msgstr[1] "%1 pachete de instalat"
+msgstr[2] "%1 de pachete de instalat"
+
+#: libapper/Requirements.cpp:138
+#, kde-format
+msgid "1 package to update"
+msgid_plural "%1 packages to update"
+msgstr[0] "1 pachet de actualizat"
+msgstr[1] "%1 pachete de actualizat"
+msgstr[2] "%1 de pachete de actualizat"
+
+#: libapper/Requirements.cpp:151
+#, fuzzy, kde-format
+#| msgid "1 installed package"
+#| msgid_plural "%1 installed packages"
+msgid "1 untrusted package"
+msgid_plural "%1 untrusted packages"
+msgstr[0] "1 pachet instalat"
+msgstr[1] "%1 pachete instalate"
+msgstr[2] "%1 de pachete instalate"
+
+#: libapper/Requirements.cpp:199
+#, kde-format
+msgctxt "how many bytes are required for download"
+msgid "Need to get %1 of archives"
+msgstr ""
+
+#: libapper/Requirements.cpp:258
+#, fuzzy, kde-format
+#| msgid ""
+#| "<br />Installing unsigned packages can compromise your system, as it is "
+#| "impossible to verify if the software came from a trusted source. Are you "
+#| "sure you want to continue installation?"
+msgid ""
+"You are about to install unsigned packages that can compromise your system, "
+"as it is impossible to verify if the software came from a trusted source."
+msgstr ""
+"<br />Instalarea pachetelor nesemnate vă poate compromite sistemul, întrucît "
+"este imposibil de verificat dacă programele provin dintr-o sursă de "
+"încredere. Sigur doriți să continuați instalarea?"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/Requirements.ui:28
+#, fuzzy, kde-format
+#| msgid "Additional media is required to complete the transaction."
+msgid "Additional changes are required to complete the task"
+msgstr "Pentru încheierea tranzacției este necesar un mediu suplimentar."
+
+#. i18n: ectx: property (text), widget (QCheckBox, confirmCB)
+#: libapper/Requirements.ui:101
+#, kde-format
+msgid "Do not confirm when installing or updating additional packages"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, descriptionL)
+#: PkSession/IntroDialog.ui:65
+#, kde-format
+msgid "TextLabel"
+msgstr "TextLabel"
+
+#: PkSession/main.cpp:48
+#, kde-format
+msgid "Apper PackageKit Session helper"
+msgstr ""
+
+#: PkSession/main.cpp:51
+#, kde-format
+msgid "Daniel Nicoletti"
+msgstr "Daniel Nicoletti"
+
+#: PkSession/main.cpp:52
+#, kde-format
+msgid "Trever Fischer"
+msgstr "Trever Fischer"
+
+#: PkSession/PkInstallCatalogs.cpp:47
+#, kde-format
+msgid "Install Packages Catalogs"
+msgstr "Instalează cataloage de pachete"
+
+#: PkSession/PkInstallCatalogs.cpp:66
+#, kde-format
+msgid "You can drop more catalogs in here"
+msgstr ""
+
+#: PkSession/PkInstallCatalogs.cpp:85
+#, fuzzy, kde-format
+#| msgid "No update description was found."
+msgid "No supported catalog was found"
+msgstr "Nu a fost găsită nicio descriere a actualizării."
+
+#: PkSession/PkInstallCatalogs.cpp:87
+#, kde-format
+msgid "Do you want to install this catalog?"
+msgid_plural "Do you want to install these catalogs?"
+msgstr[0] "Doriți să instalați acest catalog?"
+msgstr[1] "Doriți să instalați aceste cataloage?"
+msgstr[2] "Doriți să instalați aceste cataloage?"
+
+#: PkSession/PkInstallCatalogs.cpp:96
+#, fuzzy, kde-format
+#| msgid "A program wants to install a package"
+#| msgid_plural "A program wants to install packages"
+msgid "An application wants to install a catalog"
+msgid_plural "An application wants to install catalogs"
+msgstr[0] "Un program dorește să instaleze un pachet"
+msgstr[1] "Un program dorește să instaleze pachete"
+msgstr[2] "Un program dorește să instaleze pachete"
+
+#: PkSession/PkInstallCatalogs.cpp:100
+#, fuzzy, kde-format
+#| msgid "%1 wants to install a package"
+#| msgid_plural "%1 wants to install packages"
+msgid "The application <i>%2</i> wants to install a catalog"
+msgid_plural "The application <i>%2</i> wants to install catalogs"
+msgstr[0] "%1 dorește să instaleze un pachet"
+msgstr[1] "%1 dorește să instaleze pachete"
+msgstr[2] "%1 dorește să instaleze pachete"
+
+#: PkSession/PkInstallCatalogs.cpp:137
+#, kde-format
+msgid "Not supported"
+msgstr "Nu este susținut"
+
+#: PkSession/PkInstallCatalogs.cpp:138
+#, fuzzy, kde-format
+#| msgid "Current backend does not support installing packages."
+msgid ""
+"Your backend does not support any of the needed methods to install a catalog"
+msgstr "Platforma curentă nu susține instalarea pachetelor."
+
+#: PkSession/PkInstallCatalogs.cpp:178
+#, kde-format
+msgid "Catalog not found"
+msgstr "Catalogul nu a fost găsit"
+
+#: PkSession/PkInstallCatalogs.cpp:179
+#, fuzzy, kde-format
+#| msgid "Could not find package"
+msgid "Could not find a catalog to install"
+msgstr "Pachetul nu a putut fi găsit"
+
+#: PkSession/PkInstallCatalogs.cpp:186
+#, fuzzy, kde-format
+#| msgid "Package file to install"
+msgid "Catalog %2 failed to open"
+msgid_plural "Catalogs %2 failed to open"
+msgstr[0] "Fișierul cu pachet de instalat"
+msgstr[1] "Fișierul cu pachet de instalat"
+msgstr[2] "Fișierul cu pachet de instalat"
+
+#: PkSession/PkInstallCatalogs.cpp:190
+#, kde-format
+msgid "Failed to open"
+msgstr "Deschidere eșuată"
+
+#: PkSession/PkInstallCatalogs.cpp:196
+#, kde-format
+msgid "Catalog is Empty"
+msgstr "Catalogul e gol"
+
+#: PkSession/PkInstallCatalogs.cpp:197
+#, fuzzy, kde-format
+#| msgid "Do you want to install this file?"
+#| msgid_plural "Do you want to install these files?"
+msgid "Could not find any package to install in this catalog"
+msgstr "Doriți să instalați acest fișier?"
+
+#: PkSession/PkInstallFontconfigResources.cpp:43
+#, kde-format
+msgid "Installs new Fonts"
+msgstr "Instalează fonturi noi"
+
+#: PkSession/PkInstallFontconfigResources.cpp:74
+#, kde-format
+msgid "Could interpret request"
+msgstr ""
+
+#: PkSession/PkInstallFontconfigResources.cpp:74
+#, kde-format
+msgid "Please verify if the request was valid"
+msgstr ""
+
+#: PkSession/PkInstallFontconfigResources.cpp:108
+#, fuzzy, kde-format
+#| msgid ""
+#| "An additional program is required to open this type of file:<br />%1<br/"
+#| ">Do you want to search for a program to open this file type now?"
+msgid ""
+"An additional font is required to view this document correctly.\n"
+"Do you want to search for a suitable package now?"
+msgid_plural ""
+"Additional fonts are required to view this document correctly.\n"
+"Do you want to search for suitable packages now?"
+msgstr[0] ""
+"Este necesar un program suplimentar pentru deschiderea acestui tip de "
+"fișier: <br />%1<br />Doriți să căutați acum un program pentru deschiderea "
+"acestui tip de fișier?"
+msgstr[1] ""
+"Este necesar un program suplimentar pentru deschiderea acestui tip de "
+"fișier: <br />%1<br />Doriți să căutați acum un program pentru deschiderea "
+"acestui tip de fișier?"
+msgstr[2] ""
+"Este necesar un program suplimentar pentru deschiderea acestui tip de "
+"fișier: <br />%1<br />Doriți să căutați acum un program pentru deschiderea "
+"acestui tip de fișier?"
+
+#: PkSession/PkInstallFontconfigResources.cpp:118
+#, fuzzy, kde-format
+#| msgid "A program wants to install a file"
+#| msgid_plural "A program wants to install files"
+msgid "A program wants to install a font"
+msgid_plural "A program wants to install fonts"
+msgstr[0] "Un program dorește să instaleze un fișier"
+msgstr[1] "Un program dorește să instaleze fișiere"
+msgstr[2] "Un program dorește să instaleze fișiere"
+
+#: PkSession/PkInstallFontconfigResources.cpp:122
+#, fuzzy, kde-format
+#| msgid "%1 wants to install a package"
+#| msgid_plural "%1 wants to install packages"
+msgid "The application %2 wants to install a font"
+msgid_plural "The application %2 wants to install fonts"
+msgstr[0] "%1 dorește să instaleze un pachet"
+msgstr[1] "%1 dorește să instaleze pachete"
+msgstr[2] "%1 dorește să instaleze pachete"
+
+#: PkSession/PkInstallFontconfigResources.cpp:148
+#: PkSession/PkInstallFontconfigResources.cpp:157
+#, fuzzy, kde-format
+#| msgid "Failed to find software"
+msgid "Failed to find font"
+msgstr "Eșec la găsirea programelor"
+
+#: PkSession/PkInstallFontconfigResources.cpp:150
+#, fuzzy, kde-format
+#| msgid "No new applications can be found to handle this type of file"
+msgid "No new fonts could be found for this document"
+msgstr "Nu pot fi găsite aplicații noi care să manipuleze acest tip de fișier"
+
+#: PkSession/PkInstallFontconfigResources.cpp:159
+#, fuzzy, kde-format
+#| msgid "Failed to initialize"
+msgid "Failed to search for provides"
+msgstr "Eșec la inițializare"
+
+#: PkSession/PkInstallGStreamerResources.cpp:40
+#, kde-format
+msgid "Install GStreamer Resources"
+msgstr "Instalează resurse GStreamer"
+
+#: PkSession/PkInstallGStreamerResources.cpp:68
+#, fuzzy, kde-format
+#| msgid "Do you want to search for this now?"
+#| msgid_plural "Do you want to search for these now?"
+msgid "The following plugin is required. Do you want to search for this now?"
+msgid_plural ""
+"The following plugins are required. Do you want to search for these now?"
+msgstr[0] "Doriți să-l căutați acum?"
+msgstr[1] "Doriți să le căutați acum?"
+msgstr[2] "Doriți să le căutați acum?"
+
+#: PkSession/PkInstallGStreamerResources.cpp:80
+#, fuzzy, kde-format
+#| msgid "A program requires a new mime type"
+#| msgid_plural "A program requires new mime types"
+msgid "A program requires an additional plugin to decode this file"
+msgid_plural "A program requires additional plugins to decode this file"
+msgstr[0] "Un program cere un nou tip MIME"
+msgstr[1] "Un program cere tipuri MIME noi"
+msgstr[2] "Un program cere tipuri MIME noi"
+
+#: PkSession/PkInstallGStreamerResources.cpp:85
+#, fuzzy, kde-format
+#| msgid "A program requires a new mime type"
+#| msgid_plural "A program requires new mime types"
+msgid "A program requires an additional plugin to encode this file"
+msgid_plural "A program requires additional plugins to encode this file"
+msgstr[0] "Un program cere un nou tip MIME"
+msgstr[1] "Un program cere tipuri MIME noi"
+msgstr[2] "Un program cere tipuri MIME noi"
+
+#: PkSession/PkInstallGStreamerResources.cpp:90
+#, fuzzy, kde-format
+#| msgid "A program requires a new mime type"
+#| msgid_plural "A program requires new mime types"
+msgid "A program requires an additional plugin for this operation"
+msgid_plural "A program requires additional plugins for this operation"
+msgstr[0] "Un program cere un nou tip MIME"
+msgstr[1] "Un program cere tipuri MIME noi"
+msgstr[2] "Un program cere tipuri MIME noi"
+
+#: PkSession/PkInstallGStreamerResources.cpp:97
+#, kde-format
+msgid "%2 requires an additional plugin to decode this file"
+msgid_plural "%2 requires additional plugins to decode this file"
+msgstr[0] "%2 cere o extensie suplimentară pentru a decodifica acest fișier"
+msgstr[1] "%2 cere extensii suplimentare pentru a decodifica acest fișier"
+msgstr[2] "%2 cere extensii suplimentare pentru a decodifica acest fișier"
+
+#: PkSession/PkInstallGStreamerResources.cpp:103
+#, kde-format
+msgid "%2 requires an additional plugin to encode this file"
+msgid_plural "%2 requires additional plugins to encode this file"
+msgstr[0] "%2 cere o extensie suplimentară pentru a codifica acest fișier"
+msgstr[1] "%2 cere extensii suplimentare pentru a codifica acest fișier"
+msgstr[2] "%2 cere extensii suplimentare pentru a codifica acest fișier"
+
+#: PkSession/PkInstallGStreamerResources.cpp:109
+#, kde-format
+msgid "%2 requires an additional plugin for this operation"
+msgid_plural "%2 requires additional plugins for this operation"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: PkSession/PkInstallGStreamerResources.cpp:139
+#, kde-format
+msgid "No results found"
+msgstr "Niciun rezultat găsit"
+
+#: PkSession/PkInstallGStreamerResources.cpp:141
+#, fuzzy, kde-format
+#| msgid "The package could not be found in any software source"
+#| msgid_plural "The packages could not be found in any software source"
+msgid "Could not find plugin in any configured software source"
+msgstr "Pachetul nu a putut fi găsit în nicio sursă software"
+
+#: PkSession/PkInstallMimeTypes.cpp:41
+#, kde-format
+msgid "Install Support for File Types"
+msgstr "Instalează suport pentru tipuri de fișiere"
+
+#: PkSession/PkInstallMimeTypes.cpp:51
+#, fuzzy, kde-format
+#| msgid ""
+#| "Do you want to search for packages containing this file and remove it now?"
+#| msgid_plural ""
+#| "Do you want to search for packages containing these files and remove them "
+#| "now?"
+msgid "Do you want to search for a program that can open this file type?"
+msgid_plural ""
+"Do you want to search for a program that can open these file types?"
+msgstr[0] ""
+"Doriți să căutați pachete ce conțin acest fișier și să-l eliminați acum?"
+msgstr[1] ""
+"Doriți să căutați pachete ce conțin acest fișier și să-l eliminați acum?"
+msgstr[2] ""
+"Doriți să căutați pachete ce conțin acest fișier și să-l eliminați acum?"
+
+#: PkSession/PkInstallMimeTypes.cpp:56
+#, fuzzy, kde-format
+#| msgid "No files were found."
+msgid "No valid file types were provided"
+msgstr "Niciun fișier găsit."
+
+#: PkSession/PkInstallMimeTypes.cpp:63
+#, fuzzy, kde-format
+#| msgid "A program requires a new mime type"
+#| msgid_plural "A program requires new mime types"
+msgid "A program is requiring support to open this kind of files"
+msgid_plural "A program is requiring support to open these kinds of files"
+msgstr[0] "Un program cere un nou tip MIME"
+msgstr[1] "Un program cere tipuri MIME noi"
+msgstr[2] "Un program cere tipuri MIME noi"
+
+#: PkSession/PkInstallMimeTypes.cpp:67
+#, fuzzy, kde-format
+#| msgid "A program requires a new mime type"
+#| msgid_plural "A program requires new mime types"
+msgid "The application %2 is requiring support to open this kind of files"
+msgid_plural ""
+"The application %2 is requiring support to open these kinds of files"
+msgstr[0] "Un program cere un nou tip MIME"
+msgstr[1] "Un program cere tipuri MIME noi"
+msgstr[2] "Un program cere tipuri MIME noi"
+
+#: PkSession/PkInstallMimeTypes.cpp:94
+#, fuzzy, kde-format
+#| msgid "Failed to find software"
+msgid "Could not find software"
+msgstr "Eșec la găsirea programelor"
+
+#: PkSession/PkInstallMimeTypes.cpp:96
+#, kde-format
+msgid "No new applications can be found to handle this type of file"
+msgstr "Nu pot fi găsite aplicații noi care să manipuleze acest tip de fișier"
+
+#: PkSession/PkInstallPackageFiles.cpp:40
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in past tense"
+#| msgid "Installed packages"
+msgid "Install Packages Files"
+msgstr "Instalat pachete"
+
+#: PkSession/PkInstallPackageFiles.cpp:44
+#: PkSession/PkRemovePackageByFiles.cpp:45
+#, kde-format
+msgid "You can drop more files in here"
+msgstr ""
+
+#: PkSession/PkInstallPackageFiles.cpp:53
+#, kde-format
+msgid "Not Supported"
+msgstr "Nu este susținut"
+
+#: PkSession/PkInstallPackageFiles.cpp:54
+#, fuzzy, kde-format
+#| msgid "Current backend does not support installing packages."
+msgid "Your current backend does not support installing files"
+msgstr "Platforma curentă nu susține instalarea pachetelor."
+
+#: PkSession/PkInstallPackageFiles.cpp:69
+#: PkSession/PkRemovePackageByFiles.cpp:65
+#, fuzzy, kde-format
+#| msgid "No files were found."
+msgid "No supported files were provided"
+msgstr "Niciun fișier găsit."
+
+#: PkSession/PkInstallPackageFiles.cpp:71
+#, kde-format
+msgid "Press <i>Continue</i> if you want to install this file"
+msgid_plural "Press <i>Continue</i> if you want to install these files"
+msgstr[0] "Apăsați <i>Continuare</i> dacă doriți să instalați acest fișier"
+msgstr[1] "Apăsați <i>Continuare</i> dacă doriți să instalați aceste fișiere"
+msgstr[2] "Apăsați <i>Continuare</i> dacă doriți să instalați aceste fișiere"
+
+#: PkSession/PkInstallPackageFiles.cpp:80
+#: PkSession/PkInstallPackageNames.cpp:72
+#, kde-format
+msgid "An application wants to install a package"
+msgid_plural "An application wants to install packages"
+msgstr[0] "O aplicație dorește să instaleze un pachet"
+msgstr[1] "O aplicație dorește să instaleze pachete"
+msgstr[2] "O aplicație dorește să instaleze pachete"
+
+#: PkSession/PkInstallPackageFiles.cpp:84
+#: PkSession/PkInstallPackageNames.cpp:76
+#, fuzzy, kde-format
+#| msgid "%1 wants to install a package"
+#| msgid_plural "%1 wants to install packages"
+msgid "The application <i>%2</i> wants to install a package"
+msgid_plural "The application <i>%2</i> wants to install packages"
+msgstr[0] "%1 dorește să instaleze un pachet"
+msgstr[1] "%1 dorește să instaleze pachete"
+msgstr[2] "%1 dorește să instaleze pachete"
+
+#: PkSession/PkInstallPackageFiles.cpp:106
+#, kde-format
+msgid "Installation Complete"
+msgstr "Instalare încheiată"
+
+#: PkSession/PkInstallPackageFiles.cpp:107
+#, kde-format
+msgid "File was installed successfully"
+msgid_plural "Files were installed successfully"
+msgstr[0] "Fișierul a fost instalat cu succes"
+msgstr[1] "Fișierele au fost instalate cu succes"
+msgstr[2] "Fișierele au fost instalate cu succes"
+
+#: PkSession/PkInstallPackageFiles.cpp:118
+#, kde-format
+msgid "Failed to install files"
+msgstr "Eșec la instalarea fișierelor"
+
+#: PkSession/PkInstallPackageFiles.cpp:119
+#: PkSession/PkInstallPackageFiles.cpp:121
+#, kde-format
+msgid "Could not install files"
+msgstr "Fișierele nu au putut fi instalate"
+
+#: PkSession/PkInstallPackageNames.cpp:43
+#, kde-format
+msgid "Install Packages by Name"
+msgstr "Instalează pachete după denumire"
+
+#: PkSession/PkInstallPackageNames.cpp:59
+#, fuzzy, kde-format
+#| msgid "No files were found."
+msgid "No package names were provided"
+msgstr "Niciun fișier găsit."
+
+#: PkSession/PkInstallPackageNames.cpp:62
+#, kde-format
+msgid "Do you want to search for and install this package now?"
+msgid_plural "Do you want to search for and install these packages now?"
+msgstr[0] "Doriți să căutați și să instalați acest pachet acum?"
+msgstr[1] "Doriți să căutați și să instalați aceste pachete acum?"
+msgstr[2] "Doriți să căutați și să instalați aceste pachete acum?"
+
+#: PkSession/PkInstallPackageNames.cpp:101
+#, kde-format
+msgid "Failed to install packages"
+msgstr "Eșec la instalarea pachetelor"
+
+#: PkSession/PkInstallPackageNames.cpp:102
+#, kde-format
+msgid "The package %2 is already installed"
+msgid_plural "The packages %2 are already installed"
+msgstr[0] "Pachetul %2 este instalat deja"
+msgstr[1] "Pachetele %2 sunt instalate deja"
+msgstr[2] "Pachetele %2 sunt instalate deja"
+
+#: PkSession/PkInstallPackageNames.cpp:110
+#: PkSession/PkRemovePackageByFiles.cpp:140 PkSession/PkSearchFile.cpp:82
+#, kde-format
+msgid "Could not find %1"
+msgstr "%1 nu poate fi găsit"
+
+#: PkSession/PkInstallPackageNames.cpp:111
+#, kde-format
+msgid "The package could not be found in any software source"
+msgid_plural "The packages could not be found in any software source"
+msgstr[0] "Pachetul nu a putut fi găsit în nicio sursă software"
+msgstr[1] "Pachetele nu au putut fi găsite în nicio sursă software"
+msgstr[2] "Pachetele nu au putut fi găsite în nicio sursă software"
+
+#: PkSession/PkInstallPlasmaResources.cpp:41
+#, kde-format
+msgid "Install Plasma Resources"
+msgstr "Instalează resurse Plasma"
+
+#: PkSession/PkInstallPlasmaResources.cpp:53
+#, kde-format
+msgid "%1 data engine"
+msgstr "Motor de date %1"
+
+#: PkSession/PkInstallPlasmaResources.cpp:55
+#, kde-format
+msgid "%1 script engine"
+msgstr "Motor de scripturi %1"
+
+#: PkSession/PkInstallPlasmaResources.cpp:67
+#, fuzzy, kde-format
+#| msgid "No files were found."
+msgid "No supported resources were provided"
+msgstr "Niciun fișier găsit."
+
+#: PkSession/PkInstallPlasmaResources.cpp:69
+#, fuzzy, kde-format
+#| msgid "Do you want to search for this now?"
+#| msgid_plural "Do you want to search for these now?"
+msgid "The following service is required. Do you want to search for this now?"
+msgid_plural ""
+"The following services are required. Do you want to search for these now?"
+msgstr[0] "Doriți să-l căutați acum?"
+msgstr[1] "Doriți să le căutați acum?"
+msgstr[2] "Doriți să le căutați acum?"
+
+#: PkSession/PkInstallPlasmaResources.cpp:78
+#, fuzzy, kde-format
+#| msgid "A program requires a new mime type"
+#| msgid_plural "A program requires new mime types"
+msgid "Plasma requires an additional service for this operation"
+msgid_plural "Plasma requires additional services for this operation"
+msgstr[0] "Un program cere un nou tip MIME"
+msgstr[1] "Un program cere tipuri MIME noi"
+msgstr[2] "Un program cere tipuri MIME noi"
+
+#: PkSession/PkInstallPlasmaResources.cpp:103
+#, fuzzy, kde-format
+#| msgid "Failed to initialize"
+msgid "Failed to search for Plasma service"
+msgstr "Eșec la inițializare"
+
+#: PkSession/PkInstallPlasmaResources.cpp:106
+#, fuzzy, kde-format
+#| msgid "The package could not be found in any software source"
+#| msgid_plural "The packages could not be found in any software source"
+msgid "Could not find service in any configured software source"
+msgstr "Pachetul nu a putut fi găsit în nicio sursă software"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:41
+#, kde-format
+msgid "Install Printer Drivers"
+msgstr "Instalează drivere de imprimantă"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:82
+#, fuzzy, kde-format
+#| msgid "Failed to initialize"
+msgid "Failed to search for printer driver"
+msgstr "Eșec la inițializare"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:83
+#, fuzzy, kde-format
+#| msgid "The package could not be found in any software source"
+#| msgid_plural "The packages could not be found in any software source"
+msgid "Could not find printer driver in any configured software source"
+msgstr "Pachetul nu a putut fi găsit în nicio sursă software"
+
+#: PkSession/PkInstallProvideFiles.cpp:41
+#, fuzzy, kde-format
+#| msgctxt "The role of the transaction, in past tense"
+#| msgid "Installed packages"
+msgid "Install Packages that Provides Files"
+msgstr "Instalat pachete"
+
+#: PkSession/PkInstallProvideFiles.cpp:50
+#, fuzzy, kde-format
+#| msgid "No files were found."
+msgid "No files were provided"
+msgstr "Niciun fișier găsit."
+
+#: PkSession/PkInstallProvideFiles.cpp:53
+#, fuzzy, kde-format
+#| msgid "Do you want to search for and install this package now?"
+#| msgid_plural "Do you want to search for and install these packages now?"
+msgid "Do you want to search for this now?"
+msgid_plural "Do you want to search for these now?"
+msgstr[0] "Doriți să căutați și să instalați acest pachet acum?"
+msgstr[1] "Doriți să căutați și să instalați aceste pachete acum?"
+msgstr[2] "Doriți să căutați și să instalați aceste pachete acum?"
+
+#: PkSession/PkInstallProvideFiles.cpp:63
+#, kde-format
+msgid "A program wants to install a file"
+msgid_plural "A program wants to install files"
+msgstr[0] "Un program dorește să instaleze un fișier"
+msgstr[1] "Un program dorește să instaleze fișiere"
+msgstr[2] "Un program dorește să instaleze fișiere"
+
+#: PkSession/PkInstallProvideFiles.cpp:67
+#, fuzzy, kde-format
+#| msgid "%1 wants to install a package"
+#| msgid_plural "%1 wants to install packages"
+msgid "The application %2 is asking to install a file"
+msgid_plural "The application %2 is asking to install files"
+msgstr[0] "%1 dorește să instaleze un pachet"
+msgstr[1] "%1 dorește să instaleze pachete"
+msgstr[2] "%1 dorește să instaleze pachete"
+
+#: PkSession/PkInstallProvideFiles.cpp:93
+#, fuzzy, kde-format
+#| msgid "Failed to install file"
+#| msgid_plural "Failed to install files"
+msgid "Failed to install file"
+msgstr "Eșec la instalarea fișierului"
+
+#: PkSession/PkInstallProvideFiles.cpp:94
+#, kde-format
+msgid "The %1 package already provides this file"
+msgstr "Pachetul %1 furnizează deja acest fișier"
+
+#: PkSession/PkInstallProvideFiles.cpp:100
+#, kde-format
+msgid "Failed to find package"
+msgstr "Eșec la găsirea pachetului"
+
+#: PkSession/PkInstallProvideFiles.cpp:101
+#, kde-format
+msgid "The file could not be found in any packages"
+msgid_plural "The files could not be found in any packages"
+msgstr[0] "Fișierul nu a fost găsit în niciun pachet"
+msgstr[1] "Fișierele nu au fost găsite în niciun pachet"
+msgstr[2] "Fișierele nu au fost găsite în niciun pachet"
+
+#: PkSession/PkIsInstalled.cpp:40
+#, fuzzy, kde-format
+#| msgid "The package is not installed"
+msgid "Querying if a Package is Installed"
+msgstr "Pachetul nu este instalat"
+
+#: PkSession/PkIsInstalled.cpp:61
+#, kde-format
+msgid "User canceled the transaction"
+msgstr "Utilizatorul a anulat tranzacția"
+
+#: PkSession/PkIsInstalled.cpp:63
+#, kde-format
+msgid "An unknown error happened"
+msgstr "A avut loc o eroare necunoscută"
+
+#: PkSession/PkRemovePackageByFiles.cpp:42
+#, fuzzy, kde-format
+#| msgid "RemovePackage"
+msgid "Remove Packages that Provides Files"
+msgstr "Elimină pachet"
+
+#: PkSession/PkRemovePackageByFiles.cpp:68
+#, fuzzy, kde-format
+#| msgid "You need to restart the application"
+msgid "Do you want to remove the following application?"
+msgid_plural "Do you want to remove the following applications?"
+msgstr[0] "Trebuie să reporniți aplicația"
+msgstr[1] "Trebuie să reporniți aplicația"
+msgstr[2] "Trebuie să reporniți aplicația"
+
+#: PkSession/PkRemovePackageByFiles.cpp:72
+#, fuzzy, kde-format
+#| msgid ""
+#| "Do you want to search for packages containing this file and remove it now?"
+#| msgid_plural ""
+#| "Do you want to search for packages containing these files and remove them "
+#| "now?"
+msgid "Do you want to search for a package providing this file?"
+msgid_plural "Do you want to search for a package providing these files?"
+msgstr[0] ""
+"Doriți să căutați pachete ce conțin acest fișier și să-l eliminați acum?"
+msgstr[1] ""
+"Doriți să căutați pachete ce conțin acest fișier și să-l eliminați acum?"
+msgstr[2] ""
+"Doriți să căutați pachete ce conțin acest fișier și să-l eliminați acum?"
+
+#: PkSession/PkRemovePackageByFiles.cpp:83
+#, fuzzy, kde-format
+#| msgid "%1 wants to install a package"
+#| msgid_plural "%1 wants to install packages"
+msgid "An application is asking to remove an application"
+msgid_plural "An application is asking to remove applications"
+msgstr[0] "%1 dorește să instaleze un pachet"
+msgstr[1] "%1 dorește să instaleze pachete"
+msgstr[2] "%1 dorește să instaleze pachete"
+
+#: PkSession/PkRemovePackageByFiles.cpp:87
+#, fuzzy, kde-format
+#| msgid "%1 wants to install a package"
+#| msgid_plural "%1 wants to install packages"
+msgid "An application is asking to remove a file"
+msgid_plural "An application is asking to remove files"
+msgstr[0] "%1 dorește să instaleze un pachet"
+msgstr[1] "%1 dorește să instaleze pachete"
+msgstr[2] "%1 dorește să instaleze pachete"
+
+#: PkSession/PkRemovePackageByFiles.cpp:93
+#, fuzzy, kde-format
+#| msgid "%1 wants to install a package"
+#| msgid_plural "%1 wants to install packages"
+msgid "The application <i>%2</i> is asking to remove an application"
+msgid_plural "The application <i>%2</i> is asking to remove applications"
+msgstr[0] "%1 dorește să instaleze un pachet"
+msgstr[1] "%1 dorește să instaleze pachete"
+msgstr[2] "%1 dorește să instaleze pachete"
+
+#: PkSession/PkRemovePackageByFiles.cpp:98
+#, fuzzy, kde-format
+#| msgid "%1 wants to install a package"
+#| msgid_plural "%1 wants to install packages"
+msgid "The application <i>%2</i> is asking to remove a file"
+msgid_plural "The application <i>%2</i> is asking to remove files"
+msgstr[0] "%1 dorește să instaleze un pachet"
+msgstr[1] "%1 dorește să instaleze pachete"
+msgstr[2] "%1 dorește să instaleze pachete"
+
+#: PkSession/PkRemovePackageByFiles.cpp:104
+#, kde-format
+msgid "No application was found"
+msgstr "Nu a fost găsită nicio aplicație"
+
+#: PkSession/PkRemovePackageByFiles.cpp:141
+#, kde-format
+msgid "The file could not be found in any installed package"
+msgid_plural "The files could not be found in any installed package"
+msgstr[0] "Fișierul nu a fost găsit în niciun pachet instalat"
+msgstr[1] "Fișierele nu au fost găsite în niciun pachet instalat"
+msgstr[2] "Fișierele nu au fost găsite în niciun pachet instalat"
+
+#: PkSession/PkSearchFile.cpp:42
+#, kde-format
+msgid "Search Packages that Provides Files"
+msgstr "Caută pachete care furnizează fișiere"
+
+#: PkSession/PkSearchFile.cpp:81
+#, fuzzy, kde-format
+#| msgid "The package could not be found in any software source"
+#| msgid_plural "The packages could not be found in any software source"
+msgid "The file name could not be found in any software source"
+msgstr "Pachetul nu a putut fi găsit în nicio sursă software"
+
+#: PkSession/ReviewChanges.cpp:51
+#, kde-format
+msgid "The following package was found"
+msgid_plural "The following packages were found"
+msgstr[0] "Următorul pachet a fost găsit"
+msgstr[1] "Următoarele pachete au fost găsite"
+msgstr[2] "Următoarele pachete au fost găsite"
+
+#: PkSession/SessionTask.cpp:371
+#, kde-format
+msgid "There are no packages to Install or Remove"
+msgstr "Nu sunt pachete de instalat sau eliminat"
+
+#: PkSession/SessionTask.cpp:372
+#, kde-format
+msgid "This action should not happen"
+msgstr ""
+
+#: PkSession/SessionTask.cpp:401
+#, kde-format
+msgid "Could not find"
+msgstr "Nu s-a putut găsi"
+
+#: PkSession/SessionTask.cpp:402 PkSession/SessionTask.cpp:411
+#, kde-format
+msgid "No packages were found that meet the request"
+msgstr "Nu au fost găsite pachete care să satisfacă cererea"
+
+#: PkSession/SessionTask.cpp:410
+#, kde-format
+msgid "Failed to find"
+msgstr "Găsirea a eșuat"
+
+#. i18n("Failed to commit transaction"),
+#. PkStrings::errsearchFailedorMessage(m_pkTransaction->error()));
+#: PkSession/SessionTask.cpp:431
+#, kde-format
+msgid "Transaction did not finish with success"
+msgstr "Tranzacția nu s-a încheiat reușit"
+
+#: PkSession/SessionTask.cpp:437
+#, kde-format
+msgid "Task completed"
+msgstr "Sarcină încheiată"
+
+#: PkSession/SessionTask.cpp:437
+#, kde-format
+msgid "All operations were committed successfully"
+msgstr "Toate operațiile au fost comise cu succes"
+
+#~ msgid "KDE interface for managing software"
+#~ msgstr "Interfață KDE pentru gestiunea programelor"
+
+#~ msgid "A mirror is possibly broken"
+#~ msgstr "O oglindă este probabil deteriorată"
+
+#~ msgid "The connection was refused"
+#~ msgstr "Conexiunea a fost refuzată"
+
+#~ msgid "The parameter was invalid"
+#~ msgstr "Parametrul nu era valid"
+
+#~ msgid "The priority was invalid"
+#~ msgstr "Prioritatea nu era validă"
+
+#~ msgid "Backend warning"
+#~ msgstr "Avertizare platformă"
+
+#~ msgid "Daemon warning"
+#~ msgstr "Avertizare demon"
+
+#~ msgid "The package list cache is being rebuilt"
+#~ msgstr "Cache-ul listei de pachete este reconstruit"
+
+#~ msgid "An untrusted package was installed"
+#~ msgstr "A fost instalat un pachet fără încredere"
+
+#~ msgid "A newer package exists"
+#~ msgstr "Există un pachet mai nou"
+
+#~ msgid "Could not find package"
+#~ msgstr "Pachetul nu a putut fi găsit"
+
+#~ msgid "Configuration files were changed"
+#~ msgstr "Fișierele de configurare au fost modificate"
+
+#~ msgid "Package is already installed"
+#~ msgstr "Pachetul este instalat deja"
+
+#, fuzzy
+#~| msgid "The package download failed"
+#~ msgid "Software source download failed"
+#~ msgstr "Descărcarea pachetului a eșuat"
+
+#~ msgid "Application Manager"
+#~ msgstr "Gestionar de aplicații"
+
+#, fuzzy
+#~| msgid "(C) 2012, Matthias Klumpp"
+#~ msgid "(C) 2014, Matthias Klumpp"
+#~ msgstr "(C) 2012, Matthias Klumpp"
+
+#~ msgid "This package has the following security level: <b>%1</b>"
+#~ msgstr "Acest pachet are următorul nivel de securitate: <b>%1</b>"
+
+#~ msgid "Security hints"
+#~ msgstr "Indicii de securitate"
+
+#, fuzzy
+#~| msgid "Current backend does not support installing packages."
+#~ msgid "Current backend does not support installing files."
+#~ msgstr "Platforma curentă nu susține instalarea pachetelor."
+
+#~ msgid "Current backend does not support installing packages."
+#~ msgstr "Platforma curentă nu susține instalarea pachetelor."
+
+#~ msgid "The current backend does not support removing packages."
+#~ msgstr "Platforma curentă nu susține eliminarea pachetelor."
+
+#, fuzzy
+#~| msgid "The current backend does not support removing packages."
+#~ msgid "The current backend does not support updating packages."
+#~ msgstr "Platforma curentă nu susține eliminarea pachetelor."
+
+#~ msgid "I agree to the above terms and conditions"
+#~ msgstr "Sînt de acord cu acești termeni și condiții"
+
+#~ msgid "I don't agree"
+#~ msgstr "Nu sînt de acord"
+
+#~ msgid "Install for all users"
+#~ msgstr "Instalează pentru toți utilizatorii"
+
+#~ msgid "Software license"
+#~ msgstr "Licența aplicației"
+
+#~ msgid "Please read the following terms and conditions carefully!"
+#~ msgstr "Citiți următorii termeni și condiții cu atenție!"
+
+#~ msgid "Similar native packages found"
+#~ msgstr "Pachete native similare găsite"
+
+#~ msgid "Really install as superuser?"
+#~ msgstr "Sigur instalați ca administrator?"
+
+#~ msgid "Upgrade System"
+#~ msgstr "Actualizează sistemul"
+
+#, fuzzy
+#~| msgid "Failed to update package lists"
+#~ msgid "Failed to simulate file install"
+#~ msgstr "Eșec la actualizarea listelor de pachete"
+
+#, fuzzy
+#~| msgid "Failed to update package lists"
+#~ msgid "Failed to simulate package install"
+#~ msgstr "Eșec la actualizarea listelor de pachete"
+
+#, fuzzy
+#~| msgid "Failed to update package lists"
+#~ msgid "Failed to simulate package removal"
+#~ msgstr "Eșec la actualizarea listelor de pachete"
+
+#, fuzzy
+#~| msgid "Failed to update package lists"
+#~ msgid "Failed to simulate package update"
+#~ msgstr "Eșec la actualizarea listelor de pachete"
+
+#~ msgid "Failed to install package"
+#~ msgstr "Eșec la instalarea pachetului"
+
+#~ msgid "Failed to remove package"
+#~ msgstr "Eșec la eliminarea pachetului"
+
+#, fuzzy
+#~| msgid "Failed to find package"
+#~ msgid "Failed to update package"
+#~ msgstr "Eșec la găsirea pachetului"
+
+#, fuzzy
+#~| msgid "Failed to install file"
+#~| msgid_plural "Failed to install files"
+#~ msgid "Failed to install signature"
+#~ msgstr "Eșec la instalarea fișierului"
+
+#~ msgid "Failed to start resolve transaction"
+#~ msgstr "Pornirea tranzacției de rezolvare a eșuat"
+
+#~ msgid "Failed to start search file transaction"
+#~ msgstr "Pornirea tranzacției de căutare a fișierelor a eșuat"
+
+#~ msgid "(C) 2008-2012 Daniel Nicoletti"
+#~ msgstr "(C) 2008-2012 Daniel Nicoletti"
+
+#~ msgid "(C) 2008-2011 Daniel Nicoletti"
+#~ msgstr "(C) 2008-2011 Daniel Nicoletti"
+
+#~ msgid "You have one update"
+#~ msgid_plural "You have %1 updates"
+#~ msgstr[0] "Aveți o actualizare"
+#~ msgstr[1] "Aveți %1 actualizări"
+#~ msgstr[2] "Aveți %1 de actualizări"
+
+#~ msgid "Failed to set origin data"
+#~ msgstr "Eșec la stabilirea datelor de origine"
+
+#~ msgid "Click to upgrade to %1"
+#~ msgstr "Apăsați pentru a actualiza la %1"
+
+#, fuzzy
+#~| msgid "Software update"
+#~ msgid "Software Updater"
+#~ msgstr "Actualizare de programe"
+
+#, fuzzy
+#~| msgid "Review and update"
+#~ msgid "Review Updates"
+#~ msgstr "Revizuiește și actualizează"
+
+#, fuzzy
+#~| msgid "Confirm"
+#~ msgid "Configure"
+#~ msgstr "Confirmă"
+
+#, fuzzy
+#~| msgid "Settings"
+#~ msgid "Apper Sentinel"
+#~ msgstr "Configurări"
+
+#, fuzzy
+#~| msgid "Check for Updates:"
+#~ msgid "Check for updates:"
+#~ msgstr "Verifică pentru actualizări:"
+
+#, fuzzy
+#~| msgctxt "The transaction state"
+#~| msgid "Downloading packages"
+#~ msgctxt "transaction state, downloading package files"
+#~ msgid "Downloading packages"
+#~ msgstr "Descărcare pachete"
+
+#, fuzzy
+#~| msgid "Package: %1"
+#~| msgid_plural "Packages: %1"
+#~ msgid "Packages: %1"
+#~ msgstr "Pachet: %1"
+
+#~ msgid "Ignore"
+#~ msgstr "Ignoră"
+
+#~ msgid "Transactions"
+#~ msgstr "Tranzacții"
+
+#~ msgid "%1% - %2"
+#~ msgstr "%1% - %2"
+
+#~ msgid "%1"
+#~ msgstr "%1"
+
+#~ msgid "Hide this icon"
+#~ msgstr "Ascunde această pictogramă"
+
+#, fuzzy
+#~| msgid "One message from the package manager"
+#~| msgid_plural "%1 messages from the package manager"
+#~ msgid "One message from the software manager"
+#~ msgid_plural "%1 messages from the software manager"
+#~ msgstr[0] "Un mesaj de la gestionarul de pachete"
+#~ msgstr[1] "%1 mesaje de la gestionarul de pachete"
+#~ msgstr[2] "%1 de mesaje de la gestionarul de pachete"
+
+#~ msgid "Show messages"
+#~ msgstr "Arată mesaje"
+
+#, fuzzy
+#~| msgid "Failed to refresh package lists"
+#~ msgid "Failed to refresh package cache"
+#~ msgstr "Eșec la înnoirea listelor de pachete"
+
+#~ msgid ""
+#~ "Allows you to hide the window whilst keeping the transaction task running."
+#~ msgstr ""
+#~ "Vă permite să ascundeți fereastra, păstrînd sarcina tranzacției în rulare."
+
+#~ msgid "Package"
+#~ msgstr "Pachet"
+
+#, fuzzy
+#~| msgid "Confirm"
+#~ msgctxt "Shown when you have not set a weather provider"
+#~ msgid "Please Configure"
+#~ msgstr "Confirmă"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Updating system"
+#~ msgstr "Actualizare sistem"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Updated system"
+#~ msgstr "Actualizat sistem"
+
+#, fuzzy
+#~| msgid "UpdateSystem"
+#~ msgid "Update System"
+#~ msgstr "Actualizează sistem"
+
+#, fuzzy
+#~| msgctxt "The transaction state"
+#~| msgid "Rolling back"
+#~ msgctxt "transaction state, when we return to a previous system state"
+#~ msgid "Rolling back"
+#~ msgstr "Revenire"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Rolling back"
+#~ msgstr "Revenire"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Simulating the install of files"
+#~ msgstr "Se simulează instalarea fișierelor"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Rolled back"
+#~ msgstr "Revenit"
+
+#, fuzzy
+#~| msgid "Failed to install file"
+#~| msgid_plural "Failed to install files"
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the install of files"
+#~ msgstr "Eșec la instalarea fișierului"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the install"
+#~ msgstr "Simulat instalarea"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the remove"
+#~ msgstr "Simulat eliminarea"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the update"
+#~ msgstr "Simulat actualizarea"
+
+#, fuzzy
+#~| msgid "Installed"
+#~ msgid "Simulate Install Files"
+#~ msgstr "Instalate"
+
+#, fuzzy
+#~| msgid "InstallPackage"
+#~ msgid "Simulate Install Packages"
+#~ msgstr "Instalează pachet"
+
+#, fuzzy
+#~| msgid "RemovePackage"
+#~ msgid "Simulate Remove Packages"
+#~ msgstr "Elimină pachet"
+
+#, fuzzy
+#~| msgid "UpdatePackage"
+#~ msgid "Simulate Update Packages"
+#~ msgstr "Actualizează pachete"
+
+#, fuzzy
+#~| msgid "Updating"
+#~ msgid "Update Settings"
+#~ msgstr "Actualizare"
+
+#~ msgid "Notify when updates are available"
+#~ msgstr "Notifică cînd sînt disponibile actualizări"
+
+#, fuzzy
+#~| msgid "Failed to start resolve transaction"
+#~ msgid "Failed to commit transaction"
+#~ msgstr "Pornirea tranzacției de rezolvare a eșuat"
+
+#, fuzzy
+#~| msgid "Failed to finalize"
+#~ msgid "Failed to accept EULA"
+#~ msgstr "Eșec la finalizare"
+
+#, fuzzy
+#~| msgid "Action"
+#~ msgid "Actions"
+#~ msgstr "Acțiune"
+
+#, fuzzy
+#~| msgid "(C) 2008-2009 Daniel Nicoletti"
+#~ msgid "(C) 2008-2010 Daniel Nicoletti"
+#~ msgstr "(C) 2008-2009 Daniel Nicoletti"
+
+#, fuzzy
+#~| msgid "Do you want to install this file?"
+#~| msgid_plural "Do you want to install these files?"
+#~ msgid "Press <i>Continue</i> if you want to remove"
+#~ msgstr "Doriți să instalați acest fișier?"
+
+#, fuzzy
+#~| msgid "Do you want to search for and install this package now?"
+#~| msgid_plural "Do you want to search for and install these packages now?"
+#~ msgid "Do you want to remove a package:"
+#~ msgid_plural "Do you want to remove packages:"
+#~ msgstr[0] "Doriți să căutați și să instalați acest pachet acum?"
+#~ msgstr[1] "Doriți să căutați și să instalați aceste pachete acum?"
+#~ msgstr[2] "Doriți să căutați și să instalați aceste pachete acum?"
+
+#, fuzzy
+#~| msgid "%1 wants to install a file"
+#~| msgid_plural "%1 wants to install files"
+#~ msgid "%2 wants to install a font"
+#~ msgid_plural "%2 wants to install fonts"
+#~ msgstr[0] "%1 dorește să instaleze un fișier"
+#~ msgstr[1] "%1 dorește să instaleze fișiere"
+#~ msgstr[2] "%1 dorește să instaleze fișiere"
+
+#~ msgid "Application that can open this type of file"
+#~ msgid_plural "Applications that can open this type of file"
+#~ msgstr[0] "Aplicația care poate deschide acest tip de fișier"
+#~ msgstr[1] "Aplicațiile care pot deschide acest tip de fișier"
+#~ msgstr[2] "Aplicațiile care pot deschide acest tip de fișier"
+
+#, fuzzy
+#~| msgid "Failed to initialize"
+#~ msgid "Failed to search for plugin"
+#~ msgstr "Eșec la inițializare"
+
+#, fuzzy
+#~| msgid ""
+#~| "An additional program is required to open this type of file:<br />%1<br/"
+#~| ">Do you want to search for a program to open this file type now?"
+#~ msgid ""
+#~ "An additional program is required to open this type of file:<ul><li>%1</"
+#~ "li></ul>Do you want to search for a program to open this file type now?"
+#~ msgstr ""
+#~ "Este necesar un program suplimentar pentru deschiderea acestui tip de "
+#~ "fișier: <br />%1<br />Doriți să căutați acum un program pentru "
+#~ "deschiderea acestui tip de fișier?"
+
+#~ msgid "A program requires a new mime type"
+#~ msgid_plural "A program requires new mime types"
+#~ msgstr[0] "Un program cere un nou tip MIME"
+#~ msgstr[1] "Un program cere tipuri MIME noi"
+#~ msgstr[2] "Un program cere tipuri MIME noi"
+
+#, fuzzy
+#~| msgid "%1 requires a new mime type"
+#~| msgid_plural "%1 requires new mime types"
+#~ msgid "%2 requires a new mime type"
+#~ msgid_plural "%2 requires new mime types"
+#~ msgstr[0] "%1 cere un nou tip MIME"
+#~ msgstr[1] "%1 cere tipuri MIME noi"
+#~ msgstr[2] "%1 cere tipuri MIME noi"
+
+#~ msgctxt "Search for a new mime type"
+#~ msgid "Search"
+#~ msgstr "Caută"
+
+#, fuzzy
+#~| msgid "A program wants to install a package"
+#~| msgid_plural "A program wants to install packages"
+#~ msgid "An application wants to install a package:"
+#~ msgid_plural "An application wants to install packages:"
+#~ msgstr[0] "Un program dorește să instaleze un pachet"
+#~ msgstr[1] "Un program dorește să instaleze pachete"
+#~ msgstr[2] "Un program dorește să instaleze pachete"
+
+#, fuzzy
+#~| msgid "%1 wants to install a package"
+#~| msgid_plural "%1 wants to install packages"
+#~ msgid "The application <i>%2</i> wants to install a package:"
+#~ msgid_plural "The application <i>%2</i> wants to install packages:"
+#~ msgstr[0] "%1 dorește să instaleze un pachet"
+#~ msgstr[1] "%1 dorește să instaleze pachete"
+#~ msgstr[2] "%1 dorește să instaleze pachete"
+
+#, fuzzy
+#~| msgid "Install Now"
+#~ msgid "Install catalog"
+#~ msgid_plural "Install catalogs"
+#~ msgstr[0] "Instalează acum"
+#~ msgstr[1] "Instalează acum"
+#~ msgstr[2] "Instalează acum"
+
+#, fuzzy
+#~| msgid "Install"
+#~ msgctxt "Parse the catalog search and install it"
+#~ msgid "Install"
+#~ msgstr "Instalează"
+
+#, fuzzy
+#~| msgid "%1 wants to install a file"
+#~| msgid_plural "%1 wants to install files"
+#~ msgid "%2 wants to install a file"
+#~ msgid_plural "%2 wants to install files"
+#~ msgstr[0] "%1 dorește să instaleze un fișier"
+#~ msgstr[1] "%1 dorește să instaleze fișiere"
+#~ msgstr[2] "%1 dorește să instaleze fișiere"
+
+#~ msgctxt "Search for a package that provides these files and install it"
+#~ msgid "Install"
+#~ msgstr "Instalează"
+
+#~ msgid "Form"
+#~ msgstr "Formular"
+
+#~ msgid "A program wants to remove a file"
+#~ msgid_plural "A program wants to remove files"
+#~ msgstr[0] "Un program dorește să elimine un fișier"
+#~ msgstr[1] "Un program dorește să elimine fișiere"
+#~ msgstr[2] "Un program dorește să elimine fișiere"
+
+#, fuzzy
+#~| msgid "%1 wants to remove a file"
+#~| msgid_plural "%1 wants to remove files"
+#~ msgid "%2 wants to remove a file"
+#~ msgid_plural "%2 wants to remove files"
+#~ msgstr[0] "%1 dorește să elimine un fișier"
+#~ msgstr[1] "%1 dorește să elimine fișiere"
+#~ msgstr[2] "%1 dorește să elimine fișiere"
+
+#~ msgid "The following file is going to be removed:"
+#~ msgid_plural "The following files are going to be removed:"
+#~ msgstr[0] "Următorul fișier este pe cale de a fi eliminat:"
+#~ msgstr[1] "Următoarele fișiere sînt pe cale de a fi eliminate:"
+#~ msgstr[2] "Următoarele fișiere sînt pe cale de a fi eliminate:"
+
+#~ msgctxt "Search for a package and remove"
+#~ msgid "Search"
+#~ msgstr "Caută"
+
+#, fuzzy
+#~| msgid "Information"
+#~ msgid "Informative text"
+#~ msgstr "Informație"
+
+#~ msgid "KPackageKit Error"
+#~ msgstr "Eroare KPackageKit"
+
+#, fuzzy
+#~| msgid "Do you want to search for and install this package now?"
+#~| msgid_plural "Do you want to search for and install these packages now?"
+#~ msgid ""
+#~ "An additional package is required: <ul><li>%2</li></ul>Do you want to "
+#~ "search for and install this package now?"
+#~ msgid_plural ""
+#~ "Additional packages are required: <ul><li>%2</li></ul>Do you want to "
+#~ "search for and install these packages now?"
+#~ msgstr[0] "Doriți să căutați și să instalați acest pachet acum?"
+#~ msgstr[1] "Doriți să căutați și să instalați aceste pachete acum?"
+#~ msgstr[2] "Doriți să căutați și să instalați aceste pachete acum?"
+
+#~ msgid "A program wants to install a package"
+#~ msgid_plural "A program wants to install packages"
+#~ msgstr[0] "Un program dorește să instaleze un pachet"
+#~ msgstr[1] "Un program dorește să instaleze pachete"
+#~ msgstr[2] "Un program dorește să instaleze pachete"
+
+#, fuzzy
+#~| msgid "%1 wants to install a package"
+#~| msgid_plural "%1 wants to install packages"
+#~ msgid "%2 wants to install a package"
+#~ msgid_plural "%2 wants to install packages"
+#~ msgstr[0] "%1 dorește să instaleze un pachet"
+#~ msgstr[1] "%1 dorește să instaleze pachete"
+#~ msgstr[2] "%1 dorește să instaleze pachete"
+
+#~ msgctxt "Search for a package and install it"
+#~ msgid "Install"
+#~ msgstr "Instalează"
+
+#, fuzzy
+#~| msgid "Architectures"
+#~ msgid "Architecture"
+#~ msgstr "Arhitecturi"
+
+#, fuzzy
+#~| msgctxt "Search for a package and remove"
+#~| msgid "Search"
+#~ msgctxt "Search for packages"
+#~ msgid "Search"
+#~ msgstr "Caută"
+
+#, fuzzy
+#~| msgid ""
+#~| "The action is not supported by this backend.\n"
+#~| "Please report a bug as this should not have happened."
+#~ msgid "This item is not supported by your backend, or it is not a file. "
+#~ msgid_plural ""
+#~ "These items are not supported by your backend, or they are not files."
+#~ msgstr[0] ""
+#~ "Acțiunea nu este susținută de această platformă.\n"
+#~ "Raportați o eroare, întrucît aceasta nu trebuia să se întîmple."
+#~ msgstr[1] ""
+#~ "Acțiunea nu este susținută de această platformă.\n"
+#~ "Raportați o eroare, întrucît aceasta nu trebuia să se întîmple."
+#~ msgstr[2] ""
+#~ "Acțiunea nu este susținută de această platformă.\n"
+#~ "Raportați o eroare, întrucît aceasta nu trebuia să se întîmple."
+
+#~ msgid "Impossible to install"
+#~ msgstr "Imposibil de instalat"
+
+#~ msgid "Install?"
+#~ msgstr "Instalați?"
+
+#~ msgid "The file was not installed"
+#~ msgid_plural "The files were not installed"
+#~ msgstr[0] "Fișierul nu a fost instalat"
+#~ msgstr[1] "Fișierele nu au fost instalate"
+#~ msgstr[2] "Fișierele nu au fost instalate"
+
+#, fuzzy
+#~| msgid "Smart Tray Icon"
+#~ msgid "Apper Tray Icon"
+#~ msgstr "Pictogramă inteligentă pentru tavă"
+
+#~ msgid "Refresh package list"
+#~ msgstr "Actualizează lista cu pachete"
+
+#~ msgid "Logout"
+#~ msgstr "Ieșire"
+
+#, fuzzy
+#~| msgid "Settings"
+#~ msgid "Application Manager Settings"
+#~ msgstr "Configurări"
+
+#, fuzzy
+#~| msgid "UpdateSystem"
+#~ msgid "Update Software"
+#~ msgstr "Actualizează sistem"
+
+#, fuzzy
+#~| msgid "Review and update"
+#~ msgid "Review and Update Software"
+#~ msgstr "Revizuiește și actualizează"
+
+#, fuzzy
+#~| msgid "Add and Remove Software"
+#~ msgid "Get and Remove Software"
+#~ msgstr "Adaugă și elimină programe"
+
+#~ msgid "KPackageKit settings"
+#~ msgstr "Configurări KPackageKit"
+
+#~ msgid "KPackageKit Tray Icon"
+#~ msgstr "Pictogramă KPackageKit pentru tavă"
+
+#~ msgid "Only native architectures"
+#~ msgstr "Numai arhitecturi native"
+
+#~ msgid "Only non-native architectures"
+#~ msgstr "Numai arhitecturi non-native"
+
+#, fuzzy
+#~| msgid "Hide subpackages"
+#~ msgid "Hide packages"
+#~ msgstr "Ascunde subpachete"
+
+#~ msgid "Message"
+#~ msgstr "Mesaj"
+
+#~ msgid "(C) 2008-2009 Daniel Nicoletti"
+#~ msgstr "(C) 2008-2009 Daniel Nicoletti"
+
+#, fuzzy
+#~| msgctxt "Type of update, in the case it's just an update"
+#~| msgid "1 update selected"
+#~| msgid_plural "%1 updates selected"
+#~ msgctxt "Type of update, in the case it's just an update"
+#~ msgid "%1 Updates, %2 Selected"
+#~ msgstr "1 actualizare aleasă"
+
+#~ msgid "Rollback"
+#~ msgstr "Revenire"
+
+#, fuzzy
+#~| msgctxt "The transaction state"
+#~| msgid "Finished"
+#~ msgctxt "The transaction finished it's job"
+#~ msgid "Finished"
+#~ msgstr "Terminat"
+
+#~ msgid "Type filter"
+#~ msgstr "Filtru tipuri"
+
+#~ msgid "Time since last cache refresh: 5 hours"
+#~ msgstr "Timp de la ultima reîmprospătare cache: 5 ore"
+
+#~ msgid "KDE interface for updating software"
+#~ msgstr "Interfață KDE pentru actualizarea programelor"
+
+#~ msgid "Home Page"
+#~ msgstr "Pagină de pornire"
+
+#~ msgctxt "Group of the package"
+#~ msgid "Group"
+#~ msgstr "Grup"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Installed packages"
+#~ msgid "Installed Packages"
+#~ msgstr "Instalat pachete"
+
+#~ msgid "The following package will be installed"
+#~ msgid_plural "The following packages will be installed"
+#~ msgstr[0] "Următorul pachet va fi instalat"
+#~ msgstr[1] "Următoarele pachete vor fi instalate"
+#~ msgstr[2] "Următoarele pachete vor fi instalate"
+
+#~ msgid "The following package will be installed:"
+#~ msgid_plural "The following packages will be installed:"
+#~ msgstr[0] "Următorul pachet va fi instalat:"
+#~ msgstr[1] "Următoarele pachete vor fi instalate:"
+#~ msgstr[2] "Următoarele pachete vor fi instalate:"
+
+#~ msgid "Install Now"
+#~ msgstr "Instalează acum"
+
+#~ msgid "The following package will be removed:"
+#~ msgid_plural "The following packages will be removed:"
+#~ msgstr[0] "Următorul pachet va fi eliminat:"
+#~ msgstr[1] "Următoarele pachete vor fi eliminate:"
+#~ msgstr[2] "Următoarele pachete vor fi eliminate:"
+
+#~ msgid "Remove Now"
+#~ msgstr "Elimină acum"
+
+#~ msgid "The following package will be removed and installed:"
+#~ msgid_plural "The following packages will be removed and installed:"
+#~ msgstr[0] "Următorul pachet va fi eliminat și instalat:"
+#~ msgstr[1] "Următoarele pachete vor fi eliminate și instalate:"
+#~ msgstr[2] "Următoarele pachete vor fi eliminate și instalate:"
+
+#~ msgid "The following file is required:"
+#~ msgid_plural "The following files are required:"
+#~ msgstr[0] "Următorul fișier este necesar:"
+#~ msgstr[1] "Următoarele fișiere sînt necesare:"
+#~ msgstr[2] "Următoarele fișiere sînt necesare:"
+
+#~ msgid "%1 wants to install a file"
+#~ msgid_plural "%1 wants to install files"
+#~ msgstr[0] "%1 dorește să instaleze un fișier"
+#~ msgstr[1] "%1 dorește să instaleze fișiere"
+#~ msgstr[2] "%1 dorește să instaleze fișiere"
+
+#~ msgid "backend name here"
+#~ msgstr "aici vine denumirea platformei"
+
+#~ msgid "backend author name here"
+#~ msgstr "aici vine autorul platformei"
+
+#, fuzzy
+#~| msgid "backend name here"
+#~ msgid "backend description here"
+#~ msgstr "aici vine denumirea platformei"
+
+#~ msgid "InstallPackage"
+#~ msgstr "Instalează pachet"
+
+#~ msgid "RepositoryEnable"
+#~ msgstr "Activează depozit"
+
+#, fuzzy
+#~| msgid "Repository name:"
+#~ msgid "RepositorySetEnable"
+#~ msgstr "Denumire depozit:"
+
+#, fuzzy
+#~| msgid "Depends on"
+#~ msgid "GetDepends"
+#~ msgstr "Depinde de"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Got requires"
+#~ msgid "GetRequires"
+#~ msgstr "Cerințe obținute"
+
+#, fuzzy
+#~| msgid "Details"
+#~ msgid "GetFiles"
+#~ msgstr "Detalii"
+
+#~ msgid "Not now"
+#~ msgstr "Nu acum"
+
+#~ msgid "Do you recognise the user and trust this key?"
+#~ msgstr "Recunoașteți utilizatorul și aveți încredere în această cheie?"
+
+#~ msgid "Type"
+#~ msgstr "Tip"
+
+#~ msgctxt "State of the upgrade (ie testing, unstable..)"
+#~ msgid "State"
+#~ msgstr "Stare"
+
+#~ msgid "Issued"
+#~ msgstr "Emis"
+
+#~ msgid "New version"
+#~ msgstr "Versiune nouă"
+
+#~ msgid "Changes"
+#~ msgstr "Modificări"
+
+#~ msgid "Vendor"
+#~ msgstr "Vînzător"
+
+#~ msgid "Bugzilla"
+#~ msgstr "Bugzilla"
+
+#~ msgid "CVE"
+#~ msgstr "CVE"
+
+#~ msgid "Notice"
+#~ msgstr "Atenționare"
+
+#~ msgid "1 trivial update"
+#~ msgid_plural "%1 trivial updates"
+#~ msgstr[0] "1 actualizare trivială"
+#~ msgstr[1] "%1 actualizări triviale"
+#~ msgstr[2] "%1 de actualizări triviale"
+
+#~ msgid "1 important update"
+#~ msgid_plural "%1 important updates"
+#~ msgstr[0] "1 actualizare importantă"
+#~ msgstr[1] "%1 actualizări importante"
+#~ msgstr[2] "%1 de actualizări importante"
+
+#~ msgid "1 security update"
+#~ msgid_plural "%1 security updates"
+#~ msgstr[0] "1 actualizare de securitate"
+#~ msgstr[1] "%1 actualizări de securitate"
+#~ msgstr[2] "%1 de actualizări de securitate"
+
+#~ msgid "1 bug fix update"
+#~ msgid_plural "%1 bug fix updates"
+#~ msgstr[0] "1 corecție de erori"
+#~ msgstr[1] "%1 corecții de erori"
+#~ msgstr[2] "%1 de corecții de erori"
+
+#~ msgid "1 enhancement update"
+#~ msgid_plural "%1 enhancement updates"
+#~ msgstr[0] "1 îmbunătățire"
+#~ msgstr[1] "%1 îmbunătățiri"
+#~ msgstr[2] "%1 de îmbunătățiri"
+
+#~ msgid "1 blocked update"
+#~ msgid_plural "%1 blocked updates"
+#~ msgstr[0] "1 actualizare blocată"
+#~ msgstr[1] "%1 actualizări blocate"
+#~ msgstr[2] "%1 de actualizări blocate"
+
+#~ msgid "1 available package"
+#~ msgid_plural "%1 available packages"
+#~ msgstr[0] "1 pachet disponibil"
+#~ msgstr[1] "%1 pachete disponibile"
+#~ msgstr[2] "%1 de pachete disponibile"
+
+#~ msgid "1 unknown update"
+#~ msgid_plural "%1 unknown updates"
+#~ msgstr[0] "1 actualizare necunoscută"
+#~ msgstr[1] "%1 de actualizări necunoscute"
+#~ msgstr[2] "%1 actualizări necunoscute"
+
+#~ msgid "1 trivial update selected"
+#~ msgid_plural "%1 trivial updates selected"
+#~ msgstr[0] "1 actualizare trivială aleasă"
+#~ msgstr[1] "%1 actualizări triviale alese"
+#~ msgstr[2] "%1 de actualizări triviale alese"
+
+#~ msgid "1 important update selected"
+#~ msgid_plural "%1 important updates selected"
+#~ msgstr[0] "1 actualizare importantă aleasă"
+#~ msgstr[1] "%1 actualizări importante alese"
+#~ msgstr[2] "%1 de actualizări importante alese"
+
+#~ msgid "1 security update selected"
+#~ msgid_plural "%1 security updates selected"
+#~ msgstr[0] "1 actualizare de securitate aleasă"
+#~ msgstr[1] "%1 actualizări de securitate alese"
+#~ msgstr[2] "%1 de actualizări de securitate alese"
+
+#~ msgid "1 bug fix update selected"
+#~ msgid_plural "%1 bug fix updates selected"
+#~ msgstr[0] "1 corecție de erori aleasă"
+#~ msgstr[1] "%1 corecții de erori alese"
+#~ msgstr[2] "%1 de corecții de erori alese"
+
+#~ msgid "1 enhancement update selected"
+#~ msgid_plural "%1 enhancement updates selected"
+#~ msgstr[0] "1 îmbunătățire aleasă"
+#~ msgstr[1] "%1 îmbunătățiri alese"
+#~ msgstr[2] "%1 de îmbunătățiri alese"
+
+#~ msgid "1 installed package selected to be removed"
+#~ msgid_plural "%1 installed packages selected to be removed"
+#~ msgstr[0] "1 pachet instalat ales pentru a fi eliminat"
+#~ msgstr[1] "%1 pachete instalate alese pentru a fi eliminate"
+#~ msgstr[2] "%1 de pachete instalate alese pentru a fi eliminate"
+
+#~ msgid "1 available package selected to be installed"
+#~ msgid_plural "%1 available packages selected to be installed"
+#~ msgstr[0] "1 pachet disponibil ales pentru a fi instalat"
+#~ msgstr[1] "%1 pachete disponibile alese pentru a fi instalate"
+#~ msgstr[2] "%1 de pachete disponibile alese pentru a fi instalate"
+
+#~ msgid "%1 trivial update"
+#~ msgid_plural "%1 trivial updates, %2 selected"
+#~ msgstr[0] "%1 actualizare trivială"
+#~ msgstr[1] "%1 actualizări triviale, %2 alese"
+#~ msgstr[2] "%1 de actualizări triviale, %2 alese"
+
+#~ msgid "%1 important update"
+#~ msgid_plural "%1 important updates, %2 selected"
+#~ msgstr[0] "%1 actualizare importantă"
+#~ msgstr[1] "%1 actualizări importante, %2 alese"
+#~ msgstr[2] "%1 de actualizări importante, %2 alese"
+
+#~ msgid "%1 security update"
+#~ msgid_plural "%1 security updates, %2 selected"
+#~ msgstr[0] "%1 actualizare de securitate"
+#~ msgstr[1] "%1 actualizări de securitate, %2 alese"
+#~ msgstr[2] "%1 de actualizări de securitate, %2 alese"
+
+#~ msgid "%1 bug fix update"
+#~ msgid_plural "%1 bug fix updates, %2 selected"
+#~ msgstr[0] "%1 corecție de erori"
+#~ msgstr[1] "%1 corecții de erori, %2 alese"
+#~ msgstr[2] "%1 de corecții de erori, %2 alese"
+
+#~ msgid "%1 enhancement update"
+#~ msgid_plural "%1 enhancement updates, %2 selected"
+#~ msgstr[0] "%1 îmbunătățire"
+#~ msgstr[1] "%1 îmbunătățiri, %2 alese"
+#~ msgstr[2] "%1 de îmbunătățiri, %2 alese"
+
+#~ msgid "%1 blocked update"
+#~ msgid_plural "%1 blocked updates"
+#~ msgstr[0] "%1 actualizare blocată"
+#~ msgstr[1] "%1 actualizări blocate"
+#~ msgstr[2] "%1 de actualizări blocate"
+
+#~ msgid "%1 installed package"
+#~ msgid_plural "%1 installed packages, %2 selected to be removed"
+#~ msgstr[0] "%1 pachet instalat"
+#~ msgstr[1] "%1 pachete instalate, %2 alese pentru a fi eliminate"
+#~ msgstr[2] "%1 de pachete instalate, %2 alese pentru a fi eliminate"
+
+#~ msgid "%1 available package"
+#~ msgid_plural "%1 available packages, %2 selected to be installed"
+#~ msgstr[0] "%1 pachet disponibil"
+#~ msgstr[1] "%1 pachete disponibile, %2 alese pentru a fi instalate"
+#~ msgstr[2] "%1 de pachete disponibile, %2 alese pentru a fi instalate"
+
+#~ msgid "%1 unknown update"
+#~ msgid_plural "%1 unknown updates"
+#~ msgstr[0] "%1 actualizare necunoscută"
+#~ msgstr[1] "%1 actualizări necunoscute"
+#~ msgstr[2] "%1 de actualizări necunoscute"
+
+#~ msgctxt "Type of update, in the case it's just an update"
+#~ msgid "%1 update"
+#~ msgid_plural "%1 updates, %2 selected"
+#~ msgstr[0] "%1 actualizare"
+#~ msgstr[1] "%1 actualizări, %2 alese"
+#~ msgstr[2] "%1 de actualizări, %2 alese"
+
+#~ msgid "Add and remove software"
+#~ msgstr "Adaugă și elimină programe"
+
+#~ msgid "List of changes"
+#~ msgstr "Lista modificărilor"
+
+#~ msgctxt "Groups of packages"
+#~ msgid "Group:"
+#~ msgid_plural "Groups:"
+#~ msgstr[0] "Grup:"
+#~ msgstr[1] "Grupuri:"
+#~ msgstr[2] "Grupuri:"
+
+#~ msgid "View in groups"
+#~ msgstr "Vizualizare în grupuri"
+
+#~ msgid "Display packages in groups according to status"
+#~ msgstr "Afișează pachetele în grupuri potrivit stării"
+
+#~ msgid "All Packages"
+#~ msgstr "Toate pachetele"
+
+#, fuzzy
+#~| msgid "Select all updates"
+#~ msgid "Select All Updates"
+#~ msgstr "Alege toate actualizările"
+
+#, fuzzy
+#~| msgid "Finished in %1."
+#~ msgctxt "The time that the transaction took to complete"
+#~ msgid "Finished in %1."
+#~ msgstr "Încheiat în %1."
+
+#~ msgid "Refresh"
+#~ msgstr "Reîmprospătează"
+
+#, fuzzy
+#~| msgid "Transactions"
+#~ msgid "Transaction"
+#~ msgstr "Tranzacții"
+
+#~ msgid "libfoo"
+#~ msgstr "libfoo"
+
+#, fuzzy
+#~| msgid "Show updates"
+#~ msgid "Show Updates View"
+#~ msgstr "Arată actualizările"
+
+#~ msgid "You have %1"
+#~ msgstr "Aveți %1"
+
+#~ msgid "<br /><i>And another update</i>"
+#~ msgid_plural "<br /><i>And %1 more updates</i>"
+#~ msgstr[0] "<br /><i>Și încă o actualizare</i>"
+#~ msgstr[1] "<br /><i>Și încă %1 actualizări</i>"
+#~ msgstr[2] "<br /><i>Și încă %1 de actualizări</i>"
+
+#~ msgid "An additional package is required:"
+#~ msgid_plural "Additional packages are required:"
+#~ msgstr[0] "Este necesar un pachet suplimentar:"
+#~ msgstr[1] "Sînt necesare pachete suplimentare:"
+#~ msgstr[2] "Sînt necesare pachete suplimentare:"
+
+#~ msgid ""
+#~ "An additional program is required to open this type of file:<br />%1<br/"
+#~ ">Do you want to search for a program to open this file type now?"
+#~ msgstr ""
+#~ "Este necesar un program suplimentar pentru deschiderea acestui tip de "
+#~ "fișier: <br />%1<br />Doriți să căutați acum un program pentru "
+#~ "deschiderea acestui tip de fișier?"
+
+#~ msgid "All packages"
+#~ msgstr "Toate pachetele"
+
+#, fuzzy
+#~| msgid "You do not have the necessary privileges to perform this action."
+#~ msgid "You don't have the necessary privileges to perform this action."
+#~ msgstr "Nu aveți privilegiile necesare pentru îndeplinirea acestei acțiuni."
+
+#~ msgid "Package Name"
+#~ msgstr "Denumire pachet"
+
+#~ msgid "KPackageKit Settings"
+#~ msgstr "Configurări KPackageKit"
+
+#~ msgid "Notify when long tasks have been completed"
+#~ msgstr "Notifică la finalizarea sarcinilor îndelungate"
+
+#~ msgid "KPackageKit - Transaction"
+#~ msgstr "KPackageKit - Tranzacție"
+
+#~ msgid "A library to do foo"
+#~ msgstr "O bibliotecă de făcut foo"
+
+#~ msgid "The following packages will also be installed as dependencies"
+#~ msgstr "Următoarele pachete vor fi instalate ca dependențe"
+
+#~ msgid "The following packages will also be removed for dependencies"
+#~ msgstr "Următoarele pachete vor fi eliminate din cauza dependențelor"
+
+#~ msgid "The following packages also have to be removed/installed:"
+#~ msgstr "Următoarele pachete de asemenea trebuiesc eliminate/instalate:"
+
+#~ msgid "Installing updates."
+#~ msgstr "Instalare actualizări."
+
+#~ msgid "Apply all available updates"
+#~ msgstr "Aplică toate actualizările disponibile"
+
+#, fuzzy
+#~| msgctxt "Filter for free packages"
+#~| msgid "Free"
+#~ msgid "Free"
+#~ msgstr "Liber"
+
+#~ msgid "KPackageKit Update"
+#~ msgstr "Actualizare KPackageKit"
+
+#~ msgid "A system restart is required"
+#~ msgstr "Este necesară o repornire a sistemului"
+
+#~ msgid "An application restart is required after this update"
+#~ msgstr "După această actualizare este necesară o repornire a aplicației"
+
+#~ msgid "A system restart is required after this update"
+#~ msgstr "După această actualizare este necesară o repornire a sistemului"
+
+#, fuzzy
+#~| msgid "You have %1"
+#~ msgid "You have a message"
+#~ msgid_plural "You have messages"
+#~ msgstr[0] "Aveți %1"
+#~ msgstr[1] "Aveți %1"
+#~ msgstr[2] "Aveți %1"
+
+#~ msgid "KPackageKit user interface"
+#~ msgstr "Interfață cu utilizatorul KPackageKit"
+
+#, fuzzy
+#~| msgid "Install"
+#~ msgctxt "Search for a new mime type"
+#~ msgid "Install"
+#~ msgstr "Instalează"
+
+#~ msgid "(C) 2008 Daniel Nicoletti"
+#~ msgstr "(C) 2008 Daniel Nicoletti"
+
+#, fuzzy
+#~| msgid "Service pack"
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Applying service pack"
+#~ msgstr "Pachet de servicii"
+
+#, fuzzy
+#~| msgid "Service pack"
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Applied service pack"
+#~ msgstr "Pachet de servicii"
+
+#~ msgid "Downloading software changelogs"
+#~ msgstr "Descărcare jurnale cu modificări ale programelor"
+
+#~ msgid "Error KPackageKit"
+#~ msgstr "Eroare KPackageKit"
+
+#~ msgid "Don't ask anymore"
+#~ msgstr "Nu mai întreba"
+
+#~ msgid "Sorry, an error occurred"
+#~ msgstr "A intervenit o eroare"
+
+#, fuzzy
+#~| msgid "Description"
+#~ msgid "Find by description"
+#~ msgstr "Descriere"
+
+#~ msgid "Review Changes - KPackageKit"
+#~ msgstr "Revizuire modificări - KPackageKit"
+
+#~ msgid "The following packages will be INSTALLED/REMOVED:"
+#~ msgstr "Următoarele pachete vor fi INSTALATE/ELIMINATE:"
+
+#~ msgid ""
+#~ "You selected the following packages to be INSTALLED/REMOVED, press ok to "
+#~ "proceed:"
+#~ msgstr ""
+#~ "Ați ales următoarele pachete pentru a fi INSTALATE/ELIMINATE, apăsați OK "
+#~ "pentru a purcede:"
+
+#, fuzzy
+#~| msgid "Searching for file"
+#~ msgid "Searching for prerequesites"
+#~ msgstr "Căutare fișier"
+
+#~ msgid "Vendor Home Page"
+#~ msgstr "Pagina vînzătorului"
+
+#~ msgid "CVE Home Page"
+#~ msgstr "Pagina CVE"
+
+#~ msgid "4 minutes"
+#~ msgstr "4 minute"
+
+#~ msgid "Search canceled"
+#~ msgstr "Căutare anulată"
+
+#~ msgid "Search finished with unknown status"
+#~ msgstr "Căutare încheiată cu stare necunoscută"
+
+#, fuzzy
+#~| msgid "&Find"
+#~ msgid "&Find File"
+#~ msgstr "&Caută"
+
+#~ msgid "Restart Computer Now"
+#~ msgstr "Repornește calculatorul acum"
+
+#~ msgid "<b>Updates are being installed</b>"
+#~ msgstr "<b>Actualizările se instalează</b>"
+
+#~ msgid "Cancel Update"
+#~ msgstr "Anulează actualizarea"
+
+#~ msgid "Smartly display/install Updates"
+#~ msgstr "Afișează/instalează actualizările inteligent"
+
+#~ msgid "kpackagekit-smart-icon"
+#~ msgstr "kpackagekit-smart-icon"
+
+#~ msgid "Sorry, an error occured"
+#~ msgstr "Îmi pare rău, a intervenit o eroare"

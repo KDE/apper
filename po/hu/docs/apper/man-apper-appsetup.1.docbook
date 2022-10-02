@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Hungarian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>KDE felhasználói kézikönyv</title>
+<authorgroup>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+</authorgroup>
+<date
+>2012. február 24.</date>
+<productname
+>K Desktop Environment</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper-appsetup</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper-appsetup</command
+></refname>
+<refpurpose
+>Listaller alkalmazástelepítő KDE felhasználói felület</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper-appsetup</command
+> <group choice="opt"
+><option
+>--verbose</option
+> </group
+> <arg choice="opt"
+>Általános KDE opciók</arg
+> <arg choice="opt"
+>Általános Qt opciók</arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Leírás</title>
+<para
+>Az Apper a &kde; felület a PackageKithez</para>
+<para
+>Az Apper képes csomagok, alkalmazások és frissítések kezelésére disztribúciófüggetlen módon, hála a PackageKit projektnek.</para>
+<para
+>Egységes felületet biztosít a Linux felhasználóknak, akik megtanulhatják és használhatják bármelyik disztribúción.</para>
+<para
+>Ez a kis segédalkalmazás egy grafikus felületet biztosít a Listaller alkalmazástelepítőhöz, amely lehetővé teszi Listaller csomagok telepítését az Apper használatával.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opciók</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--verbose</option
+></term>
+<listitem
+><para
+>Váltás részletes módba</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Lásd még</title>
+
+<para
+>További információk találhatók az Apperről <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>az Apper weboldalán</ulink
+>.</para>
+</refsect1>
+
+<refsect1>
+<title
+>Szerzők</title>
+<para
+>Az Apper karbantartója Daniel Nicoletti (<email
+>dantti12@gmail.com</email
+>); Ezt a kézikönyvoldalt Matthias Klumpp (<email
+>matthias@tenstral.net</email
+>) írta.</para>
+</refsect1>
+
+</refentry>

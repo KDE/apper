@@ -1,0 +1,123 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Інструкція користувача apper-appsetup</title>
+<authorgroup>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+</authorgroup>
+<date
+>28 листопада 2016 року</date>
+<releaseinfo
+>apper-appsetup 0.9.3</releaseinfo>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper-appsetup</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper-appsetup</command
+></refname>
+<refpurpose
+>Графічний інтерфейс до програми для встановлення програм Limba.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper-appsetup</command
+> <group choice="opt"
+><option
+>--verbose</option
+> </group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+<para
+>Apper — інтерфейс до PackageKit.</para>
+<para
+>Apper може керувати пакунками, програмами і оновленнями у багатьох дистрибутивах завдяки проєкту PackageKit.</para>
+<para
+>Надає користувачам &Linux; єдину програму, ознайомлення з можливостями якої надасть змогу встановлювати пакунки у будь-якому дистрибутиві.</para>
+<para
+>Невеличка допоміжна програма з графічним інтерфейсом до програми для встановлення програм Limba. За допомогою цієї програми можна встановлювати пакунки Limba, використовуючи Apper.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Параметри</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--verbose</option
+></term>
+<listitem
+><para
+>Перемкнути програму у режим показу докладних повідомлень.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Прочитайте також</title>
+
+<simplelist>
+<member
+>Докладніші відомості щодо Apper можна знайти на <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>сайті Apper</ulink
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
+</refsect1>
+
+<refsect1>
+<title
+>Автори</title>
+<para
+>Супровідником Apper є Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>. Цю сторінку довідника створив Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

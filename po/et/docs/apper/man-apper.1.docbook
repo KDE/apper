@@ -1,0 +1,273 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Estonian  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>KDE kasutaja käsiraamat</title>
+<authorgroup>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+</authorgroup>
+<date
+>2011-10-10</date>
+<productname
+>KDE töökeskkond</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper</command
+></refname>
+<refpurpose
+>PackageKiti kasutab rakenduste ja tarkvarapakettide haldur</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper</command
+> <group choice="opt"
+><option
+>--updates</option
+> </group
+> <group choice="opt"
+><option
+>--settings</option
+> </group
+> <group choice="opt"
+><option
+>--backend-details</option
+> </group
+> <group choice="opt"
+><option
+>--install-mime-type</option
+><replaceable
+> MIME tüüp</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-package-name</option
+><replaceable
+> nimi</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-provide-file</option
+><replaceable
+> fail</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-font-resource</option
+><replaceable
+> font</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-catalog</option
+><replaceable
+> fail</replaceable
+></group
+> <group choice="opt"
+><option
+>--remove-package-by-file</option
+><replaceable
+> failinimi</replaceable
+></group
+> <arg choice="opt"
+>KDE üldised võtmed</arg
+> <arg choice="opt"
+>Qt üldised võtmed</arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Kirjeldus</title>
+<para
+>Apper on PackageKiti &kde; liides</para>
+<para
+>Apper suudab hallata tarkvarapakette, rakendusi ja uuendusi distributsioonidest sõltumata tänu PackageKiti projektile.</para>
+<para
+>See pakub Linuxi kasutajale üheainsa rakenduse, mille abil võib tundma õppida ja kasutada mis tahes distributsiooni.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Võtmed</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--updates</option
+></term>
+<listitem
+><para
+>Saadaolevate uuenduste näitamine.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--settings</option
+></term>
+<listitem
+><para
+>Apperi seadistustedialoogi näitamine.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--backend-details</option
+> <replaceable
+>nimi</replaceable
+></term>
+<listitem
+><para
+>PackageKiti parajasti kasutatava taustaprogrammi teabe näitamine.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-mime-type</option
+> <replaceable
+>MIME tüüp</replaceable
+></term>
+<listitem
+><para
+>MIME tüübi paigaldaja avamine.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-package-name</option
+> <replaceable
+>nimi</replaceable
+></term>
+<listitem
+><para
+>Tarkvarapaketi nimega <replaceable
+>nimi</replaceable
+> paigaldamine.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-provide-file</option
+> <replaceable
+>fail</replaceable
+></term>
+<listitem
+><para
+>Faili <replaceable
+>fail</replaceable
+> pakkuva tarkvarapaketi paigaldamine.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-font-resource</option
+> <replaceable
+>font</replaceable
+></term>
+<listitem
+><para
+>Fondiressursi paigaldamine.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-catalog</option
+> <replaceable
+>fail</replaceable
+></term>
+<listitem
+><para
+>Failis <replaceable
+>fail</replaceable
+> leiduva paketikataloogi paigaldamine.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--remove-package-by-file</option
+> <replaceable
+>failinimi</replaceable
+></term>
+<listitem
+><para
+>Faili <replaceable
+>failinimi</replaceable
+> sisaldava tarkvarapaketi eemaldamine.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Vaata ka</title>
+
+<para
+>Rohkem teavet Apperi kohta leiab <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>Apperi veebilehelt</ulink
+>.</para>
+</refsect1>
+
+<refsect1>
+<title
+>Autorid</title>
+<para
+>Apperi hooldaja on Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; käesoleva manuaalilehekülje kirjutas Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

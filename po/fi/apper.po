@@ -1,0 +1,5146 @@
+# Copyright © 2010, 2011, 2012 This_file_is_part_of_KDE
+# This file is distributed under the same license as the apper package.
+# Tommi Nieminen <translator@legisign.org>, 2010, 2012, 2018, 2020, 2022.
+# Lasse Liehu <lasse.liehu@gmail.com>, 2012, 2013, 2014, 2015, 2016.
+# Jiri Grönroos <jiri.gronroos+kde@iki.fi>, 2012.
+#
+# KDE Finnish translation sprint participants:
+# Author: Artnay
+# Author: Lliehu
+msgid ""
+msgstr ""
+"Project-Id-Version: apper\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-03-28 16:13+0000\n"
+"PO-Revision-Date: 2022-07-29 11:29+0300\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-POT-Import-Date: 2013-01-13 20:43:19+0000\n"
+"X-Generator: Lokalize 20.12.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Jiri Grönroos, Lasse Liehu, Tommi Nieminen"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+"jiri.gronroos+kde@iki.fi, lasse.liehu@gmail.com, translator@legisign.org"
+
+#: Apper/Apper.cpp:91
+#, kde-format
+msgid "Show updates"
+msgstr "Näytä päivitykset"
+
+#: Apper/Apper.cpp:94
+#, kde-format
+msgid "Show settings"
+msgstr "Näytä asetukset"
+
+#: Apper/Apper.cpp:97
+#, kde-format
+msgid "Show backend details"
+msgstr "Näytä taustaosan yksityiskohdat"
+
+#: Apper/Apper.cpp:100
+#, kde-format
+msgid "Mime type installer"
+msgstr "MIME-tyypin asentaja"
+
+#: Apper/Apper.cpp:103
+#, kde-format
+msgid "Package name installer"
+msgstr "Paketin nimen asennus"
+
+#: Apper/Apper.cpp:106
+#, kde-format
+msgid "Single file installer"
+msgstr "Yksittäisen tiedoston asennus"
+
+#: Apper/Apper.cpp:109
+#, kde-format
+msgid "Font resource installer"
+msgstr "Fonttiresurssin asennus"
+
+#: Apper/Apper.cpp:112
+#, kde-format
+msgid "Catalog installer"
+msgstr "Hakemiston asennus"
+
+#: Apper/Apper.cpp:115
+#, kde-format
+msgid "Single package remover"
+msgstr "Yksittäisen paketin poisto"
+
+#: Apper/Apper.cpp:118
+#, kde-format
+msgid "Package file to install"
+msgstr "Asennettava pakettitiedosto"
+
+#: Apper/ApperKCM.cpp:94 Apper/ApperKCM.cpp:293
+#, kde-format
+msgid "Find"
+msgstr "Etsi"
+
+#: Apper/ApperKCM.cpp:175
+#, kde-format
+msgid "Some software changes were made"
+msgstr "Tehtiin joitakin ohjelmamuutoksia"
+
+#: Apper/ApperKCM.cpp:176 apperd/Updater.cpp:287
+#, kde-format
+msgid "Review"
+msgstr "Tarkastele"
+
+#: Apper/ApperKCM.cpp:179
+#, kde-format
+msgid "Discard"
+msgstr "Hylkää"
+
+#: Apper/ApperKCM.cpp:182
+#, kde-format
+msgid "Apply"
+msgstr "Käytä"
+
+#: Apper/ApperKCM.cpp:206 Apper/ApperKCM.cpp:563
+#, kde-format
+msgid "History"
+msgstr "Historia"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, Settings)
+#: Apper/ApperKCM.cpp:210 Apper/ApperKCM.cpp:520 Apper/Settings/Settings.ui:14
+#, kde-format
+msgid "Settings"
+msgstr "Asetukset"
+
+#: Apper/ApperKCM.cpp:270 Apper/ApperKCM.cpp:271 Apper/ApperKCM.cpp:272
+#: Apper/ApperKCM.cpp:273
+#, kde-format
+msgid "&Cancel"
+msgstr "&Peru"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:280 Apper/ApperKCM.ui:427
+#, kde-format
+msgid "Find by &name"
+msgstr "Etsi &nimellä"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:281 Apper/ApperKCM.ui:437
+#, kde-format
+msgid "Find by f&ile name"
+msgstr "Etsi t&iedoston nimellä"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
+#: Apper/ApperKCM.cpp:282 Apper/ApperKCM.ui:432
+#, kde-format
+msgid "Find by &description"
+msgstr "Etsi &kuvauksella"
+
+#: Apper/ApperKCM.cpp:460
+#, kde-format
+msgid ""
+"The settings of the current module have changed.\n"
+"Do you want to apply the changes or discard them?"
+msgstr ""
+"Nykyisen asetusosion asetukset ovat muuttuneet.\n"
+"Haluatko ottaa muutokset käyttöön vai hylätä ne?"
+
+#: Apper/ApperKCM.cpp:462
+#, kde-format
+msgid "Apply Settings"
+msgstr "Ota muutokset käyttöön"
+
+#: Apper/ApperKCM.cpp:547 Apper/CategoryModel.cpp:59
+#, kde-format
+msgid "Updates"
+msgstr "Päivitykset"
+
+#: Apper/ApperKCM.cpp:616
+#, kde-format
+msgid "Pending Changes"
+msgstr "Odottavat muutokset"
+
+#: Apper/ApperKCM.cpp:679 Apper/CategoryModel.cpp:51
+#, kde-format
+msgid "Installed Software"
+msgstr "Asennetut ohjelmat"
+
+#: Apper/ApperKCM.cpp:691
+#, kde-format
+msgid "Could not find an application that matched this category"
+msgstr "Luokkaa vastaavaa sovellusta ei löytynyt"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, ApperKCM)
+#: Apper/ApperKCM.ui:20
+#, kde-format
+msgid "Add and Remove Software"
+msgstr "Lisää ja poista ohjelmia"
+
+#. i18n: ectx: property (text), widget (QToolButton, backTB)
+#: Apper/ApperKCM.ui:47 AppSetup/SetupWizard.cpp:87
+#, kde-format
+msgid "Back"
+msgstr "Takaisin"
+
+#. i18n: ectx: property (clickMessage), widget (QLineEdit, searchKLE)
+#: Apper/ApperKCM.ui:188
+#, kde-format
+msgid "Search packages"
+msgstr "Etsi paketteja"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#. i18n: ectx: property (text), widget (QToolButton, filtersTB)
+#: Apper/ApperKCM.ui:237 Apper/BackendDetails.ui:373
+#, kde-format
+msgid "Filters"
+msgstr "Suodattimet"
+
+#. i18n: ectx: property (text), widget (QPushButton, updatePB)
+#: Apper/ApperKCM.ui:299
+#, kde-format
+msgid "Update"
+msgstr "Päivitä"
+
+#. i18n: ectx: property (text), widget (QPushButton, checkUpdatesPB)
+#: Apper/ApperKCM.ui:312
+#, kde-format
+msgid "Check for new Updates"
+msgstr "Tarkista uudet päivitykset"
+
+#. i18n: ectx: property (text), widget (QPushButton, generalSettingsPB)
+#: Apper/ApperKCM.ui:346
+#, kde-format
+msgid "General Settings"
+msgstr "Yleisasetukset"
+
+#. i18n: ectx: property (text), widget (QPushButton, repoSettingsPB)
+#: Apper/ApperKCM.ui:365
+#, kde-format
+msgid "Software Origins"
+msgstr "Ohjelmistojen alkuperä"
+
+#: Apper/BackendDetails.cpp:36
+#, kde-format
+msgid "Backend Details"
+msgstr "Taustaosan yksityiskohdat"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: Apper/BackendDetails.ui:23
+#, kde-format
+msgid "Methods"
+msgstr "Menetelmät"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getUpdatesCB)
+#: Apper/BackendDetails.ui:32
+#, kde-format
+msgid "Get Updates"
+msgstr "Nouda päivitykset"
+
+#. i18n: ectx: property (text), widget (QCheckBox, refreshCacheCB)
+#: Apper/BackendDetails.ui:42 Apper/Settings/Settings.cpp:61
+#, kde-format
+msgid "Refresh Cache"
+msgstr "Päivitä välimuisti"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchNameCB)
+#: Apper/BackendDetails.ui:52
+#, kde-format
+msgid "Search Name"
+msgstr "Etsi nimeä"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDependsCB)
+#: Apper/BackendDetails.ui:62
+#, kde-format
+msgid "Get Package Depends"
+msgstr "Nouda paketin riippuvuudet"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchDetailsCB)
+#: Apper/BackendDetails.ui:72
+#, kde-format
+msgid "Search Details"
+msgstr "Etsi yksityiskohtia"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getRequiresCB)
+#: Apper/BackendDetails.ui:82
+#, kde-format
+msgid "Get Package Requires"
+msgstr "Nouda paketin vaatimukset"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchGroupCB)
+#: Apper/BackendDetails.ui:92
+#, kde-format
+msgid "Search Group"
+msgstr "Etsi ryhmää"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getUpdateDetailCB)
+#: Apper/BackendDetails.ui:102
+#, kde-format
+msgid "Get Update Detail"
+msgstr "Nouda päivityksen yksityiskohdat"
+
+#. i18n: ectx: property (text), widget (QCheckBox, searchFileCB)
+#: Apper/BackendDetails.ui:112
+#, kde-format
+msgid "Search File"
+msgstr "Etsi tiedostoa"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDescriptionCB)
+#: Apper/BackendDetails.ui:122
+#, kde-format
+msgid "Get Package Description"
+msgstr "Nouda paketin kuvaus"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getFilesCB)
+#: Apper/BackendDetails.ui:132
+#, kde-format
+msgid "Get Package Files"
+msgstr "Nouda paketin tiedostot"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getDistroUpgradesCB)
+#: Apper/BackendDetails.ui:142
+#, kde-format
+msgid "Get Distro Upgrades"
+msgstr "Nouda jakelupäivitykset"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installPackageCB)
+#: Apper/BackendDetails.ui:152
+#, kde-format
+msgid "Install Packages"
+msgstr "Asenna paketteja"
+
+#. i18n: ectx: property (text), widget (QCheckBox, updatePackageCB)
+#: Apper/BackendDetails.ui:162
+#, kde-format
+msgid "Update Packages"
+msgstr "Päivitä paketteja"
+
+#. i18n: ectx: property (text), widget (QCheckBox, removePackageCB)
+#: Apper/BackendDetails.ui:172
+#, kde-format
+msgid "Remove Packages"
+msgstr "Poista paketteja"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installFileCB)
+#: Apper/BackendDetails.ui:182
+#, kde-format
+msgid "Install Files"
+msgstr "Asenna tiedostoja"
+
+#. i18n: ectx: property (text), widget (QCheckBox, resolveCB)
+#: Apper/BackendDetails.ui:192
+#, kde-format
+msgid "Resolve"
+msgstr "Ratkaise"
+
+#. i18n: ectx: property (text), widget (QCheckBox, cancelCB)
+#: Apper/BackendDetails.ui:202
+#, kde-format
+msgid "Cancel"
+msgstr "Peru"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getPackagesCB)
+#: Apper/BackendDetails.ui:212
+#, kde-format
+msgid "Get Packages"
+msgstr "Nouda paketteja"
+
+#. i18n: ectx: property (text), widget (QCheckBox, whatProvidesCB)
+#: Apper/BackendDetails.ui:222
+#, kde-format
+msgid "What Provides"
+msgstr "Mikä tarjoaa"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repositorySetEnableCB)
+#: Apper/BackendDetails.ui:232
+#, kde-format
+msgid "Set Repository Data"
+msgstr "Aseta ohjelmalähteen tiedot"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repositoryEnableCB)
+#: Apper/BackendDetails.ui:242
+#, kde-format
+msgid "Enable Repository"
+msgstr "Ota ohjelmalähde käyttöön"
+
+#. i18n: ectx: property (text), widget (QCheckBox, getRepositoryListCB)
+#: Apper/BackendDetails.ui:252
+#, kde-format
+msgid "Get Repository List"
+msgstr "Nouda ohjelmalähteiden luettelo"
+
+#. i18n: ectx: property (text), widget (QCheckBox, repairSystemCB)
+#: Apper/BackendDetails.ui:262
+#, kde-format
+msgid "Repair System"
+msgstr "Korjaa järjestelmä"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: Apper/BackendDetails.ui:278
+#, kde-format
+msgid "About Backend"
+msgstr "Tietoa taustaosasta"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: Apper/BackendDetails.ui:284
+#, kde-format
+msgid "Backend name:"
+msgstr "Taustaosan nimi:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: Apper/BackendDetails.ui:298
+#, kde-format
+msgid "Backend description:"
+msgstr "Taustaosan kuvaus:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: Apper/BackendDetails.ui:312
+#, kde-format
+msgid "Backend author:"
+msgstr "Taustaosan tekijä:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: Apper/BackendDetails.ui:326
+#, kde-format
+msgid "Distribution ID:"
+msgstr "Jakelutunniste:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: Apper/BackendDetails.ui:343
+#, kde-format
+msgid "PackageKit"
+msgstr "PackageKit"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: Apper/BackendDetails.ui:349
+#, kde-format
+msgid "Version:"
+msgstr "Versio:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, installedCB)
+#: Apper/BackendDetails.ui:382 Apper/FiltersMenu.cpp:60
+#: libapper/PkStrings.cpp:404
+#, kde-format
+msgid "Installed"
+msgstr "Asennetut"
+
+#. i18n: ectx: property (text), widget (QCheckBox, developmentCB)
+#: Apper/BackendDetails.ui:392 Apper/FiltersMenu.cpp:89
+#, kde-format
+msgid "Development"
+msgstr "Kehitystyökalut"
+
+#. i18n: ectx: property (text), widget (QCheckBox, visibleCB)
+#: Apper/BackendDetails.ui:402
+#, kde-format
+msgid "Package is visible"
+msgstr "Paketti on näkyvissä"
+
+#. i18n: ectx: property (text), widget (QCheckBox, newestCB)
+#: Apper/BackendDetails.ui:412
+#, kde-format
+msgid "Newest"
+msgstr "Uusimmat"
+
+#. i18n: ectx: property (text), widget (QCheckBox, guiCB)
+#: Apper/BackendDetails.ui:422
+#, kde-format
+msgid "GUI"
+msgstr "Käyttöliittymä"
+
+#. i18n: ectx: property (text), widget (QCheckBox, freeCB)
+#: Apper/BackendDetails.ui:432
+#, kde-format
+msgid "Free software"
+msgstr "Vapaat ohjelmat"
+
+#. i18n: ectx: property (text), widget (QCheckBox, supportedCB)
+#: Apper/BackendDetails.ui:442
+#, kde-format
+msgid "Supported"
+msgstr "Tuetut"
+
+#. i18n: ectx: property (text), widget (QCheckBox, archCB)
+#: Apper/BackendDetails.ui:452
+#, kde-format
+msgid "Only native"
+msgstr "Vain natiivit"
+
+#: Apper/BrowseView.cpp:89 Apper/Updater/Updater.cpp:105
+#, kde-format
+msgid "Show Versions"
+msgstr "Näytä versiot"
+
+#: Apper/BrowseView.cpp:96 Apper/Updater/Updater.cpp:119
+#, kde-format
+msgid "Show Architectures"
+msgstr "Näytä arkkitehtuurit"
+
+#: Apper/BrowseView.cpp:103 Apper/Updater/Updater.cpp:126
+#, kde-format
+msgid "Show Origins"
+msgstr "Näytä alkuperät"
+
+#: Apper/BrowseView.cpp:110 Apper/Updater/Updater.cpp:133
+#, kde-format
+msgid "Show Sizes"
+msgstr "Näytä koot"
+
+#: Apper/BrowseView.cpp:282
+#, kde-format
+msgid "Export installed packages"
+msgstr "Vie asennettujen pakettien luettelo"
+
+#: Apper/BrowseView.cpp:306
+#, kde-format
+msgid "Install packages from catalog"
+msgstr "Asenna luettelon paketit"
+
+#. i18n: ectx: property (text), widget (QPushButton, exportInstalledPB)
+#: Apper/BrowseView.ui:140
+#, kde-format
+msgid "Export Installed Package List..."
+msgstr "Vie asennettujen pakettien luettelo…"
+
+#. i18n: ectx: property (text), widget (QPushButton, importInstalledPB)
+#: Apper/BrowseView.ui:150
+#, kde-format
+msgid "Install Packages from List..."
+msgstr "Asenna paketit luettelosta…"
+
+#: Apper/CategoryModel.cpp:54 Apper/CategoryModel.cpp:62
+#, kde-format
+msgid "Lists"
+msgstr "Luettelot"
+
+#: Apper/CategoryModel.cpp:167 Apper/CategoryModel.cpp:362
+#, kde-format
+msgid "Categories"
+msgstr "Luokat"
+
+#: Apper/CategoryModel.cpp:224
+#, kde-format
+msgid "Groups"
+msgstr "Ryhmät"
+
+#: Apper/FiltersMenu.cpp:36
+#, kde-format
+msgid "Collections"
+msgstr "Kokoelmat"
+
+#: Apper/FiltersMenu.cpp:45
+#, kde-format
+msgid "Only collections"
+msgstr "Vain kokoelmat"
+
+#: Apper/FiltersMenu.cpp:52
+#, kde-format
+msgid "Exclude collections"
+msgstr "Sulje pois kokoelmat"
+
+#: Apper/FiltersMenu.cpp:67
+#, kde-format
+msgid "Only installed"
+msgstr "Vain asennetut"
+
+#: Apper/FiltersMenu.cpp:74
+#, kde-format
+msgid "Only available"
+msgstr "Vain saatavilla olevat"
+
+#: Apper/FiltersMenu.cpp:81 Apper/FiltersMenu.cpp:110 Apper/FiltersMenu.cpp:139
+#: Apper/FiltersMenu.cpp:168 Apper/FiltersMenu.cpp:197
+#: Apper/FiltersMenu.cpp:226
+#, kde-format
+msgid "No filter"
+msgstr "Ei suodatinta"
+
+#: Apper/FiltersMenu.cpp:96
+#, kde-format
+msgid "Only development"
+msgstr "Vain kehitysversiot"
+
+#: Apper/FiltersMenu.cpp:103
+#, kde-format
+msgid "Only end user files"
+msgstr "Vain loppukäyttäjän tiedostot"
+
+#: Apper/FiltersMenu.cpp:118
+#, kde-format
+msgid "Graphical"
+msgstr "Graafiset"
+
+#: Apper/FiltersMenu.cpp:125
+#, kde-format
+msgid "Only graphical"
+msgstr "Vain graafiset"
+
+#: Apper/FiltersMenu.cpp:132
+#, kde-format
+msgid "Only text"
+msgstr "Vain tekstitilan ohjelmat"
+
+#: Apper/FiltersMenu.cpp:147
+#, kde-format
+msgctxt "Filter for free packages"
+msgid "Free"
+msgstr "Vapaat"
+
+#: Apper/FiltersMenu.cpp:154
+#, kde-format
+msgid "Only free software"
+msgstr "Vain vapaat ohjelmat"
+
+#: Apper/FiltersMenu.cpp:161
+#, kde-format
+msgid "Only non-free software"
+msgstr "Vain ei-vapaat ohjelmat"
+
+#: Apper/FiltersMenu.cpp:176
+#, kde-format
+msgctxt "Filter for supported packages"
+msgid "Supported"
+msgstr "Tuettu"
+
+#: Apper/FiltersMenu.cpp:183
+#, kde-format
+msgid "Only supported software"
+msgstr "Vain tuetut ohjelmat"
+
+#: Apper/FiltersMenu.cpp:190
+#, kde-format
+msgid "Only non-supported software"
+msgstr "Vain ei-tuetut ohjelmat"
+
+#: Apper/FiltersMenu.cpp:205
+#, kde-format
+msgctxt "Filter for source packages"
+msgid "Source"
+msgstr "Lähdekoodi"
+
+#: Apper/FiltersMenu.cpp:212
+#, kde-format
+msgid "Only sourcecode"
+msgstr "Vain lähdekoodi"
+
+#: Apper/FiltersMenu.cpp:219
+#, kde-format
+msgid "Only non-sourcecode"
+msgstr "Vain ei-lähdekoodi"
+
+#: Apper/FiltersMenu.cpp:236
+#, kde-format
+msgid "Hide Subpackages"
+msgstr "Piilota alipaketit"
+
+#: Apper/FiltersMenu.cpp:240
+#, kde-format
+msgid "Only show one package, not subpackages"
+msgstr "Näytä vain yksi paketti, ei alipaketteja"
+
+#: Apper/FiltersMenu.cpp:244
+#, kde-format
+msgid "Only Newest Packages"
+msgstr "Vain uusimmat paketit"
+
+#: Apper/FiltersMenu.cpp:249
+#, kde-format
+msgid "Only show the newest available package"
+msgstr "Näytä vain uusin saatavilla oleva paketti"
+
+#: Apper/FiltersMenu.cpp:253
+#, kde-format
+msgid "Only Native Packages"
+msgstr "Vain natiivipaketit"
+
+#: Apper/FiltersMenu.cpp:258
+#, kde-format
+msgid "Only show packages matching the machine architecture"
+msgstr "Näytä vain koneen arkkitehtuuria vastaavat paketit"
+
+#: Apper/FiltersMenu.cpp:264
+#, kde-format
+msgid "Only Show Applications"
+msgstr "Näytä vain sovellukset"
+
+#: Apper/FiltersMenu.cpp:267
+#, kde-format
+msgid "Hide packages that are not applications"
+msgstr "Piilota paketit, jotka eivät ole sovelluksia"
+
+#: Apper/main.cpp:44 Apper/MainUi.cpp:41
+#, kde-format
+msgid "Apper"
+msgstr "Apper"
+
+#: Apper/main.cpp:46
+#, kde-format
+msgid "Apper is an application to get and manage software"
+msgstr "Apper on ohjelmistojen hankkimis- ja hallintasovellus"
+
+#: Apper/main.cpp:48
+#, kde-format
+msgid "(C) 2008-2018 Daniel Nicoletti"
+msgstr "© 2008–18 Daniel Nicoletti"
+
+#: Apper/main.cpp:49 PkSession/main.cpp:54
+#, kde-format
+msgid "Adrien Bustany"
+msgstr "Adrien Bustany"
+
+#: Apper/main.cpp:49 PkSession/main.cpp:54
+#, kde-format
+msgid "libpackagekit-qt and other stuff"
+msgstr "libpackagekit-qt ja muuta"
+
+#: Apper/main.cpp:50
+#, kde-format
+msgid "Matthias Klumpp"
+msgstr "Matthias Klumpp"
+
+#: Apper/PackageDetails.cpp:88
+#, kde-format
+msgid "Display"
+msgstr "Näytä"
+
+#: Apper/PackageDetails.cpp:93 AppSetup/SetupWizard.cpp:186
+#, kde-format
+msgid "Description"
+msgstr "Kuvaus"
+
+#: Apper/PackageDetails.cpp:99
+#, kde-format
+msgid "Depends On"
+msgstr "Riippuvuudet"
+
+#: Apper/PackageDetails.cpp:126
+#, kde-format
+msgid "Required By"
+msgstr "Tarvitsevat paketit"
+
+#: Apper/PackageDetails.cpp:153
+#, kde-format
+msgid "File List"
+msgstr "Tiedostoluettelo"
+
+#: Apper/PackageDetails.cpp:523
+#, kde-format
+msgid "No files were found."
+msgstr "Tiedostoja ei löytynyt."
+
+#: Apper/PackageDetails.cpp:571
+#, kde-format
+msgid "Could not fetch software details"
+msgstr "Ohjelman yksityiskohtia ei voitu noutaa"
+
+#: Apper/PackageDetails.cpp:613
+#, kde-format
+msgid "Applications"
+msgstr "Sovellukset"
+
+#. i18n: ectx: property (text), widget (QLabel, licenseL)
+#: Apper/PackageDetails.ui:164
+#, kde-format
+msgid "License:"
+msgstr "Lisenssi:"
+
+#. i18n: ectx: property (text), widget (QPushButton, menuTB)
+#: Apper/PackageDetails.ui:394
+#, kde-format
+msgid "More..."
+msgstr "Lisää…"
+
+#. i18n: ectx: property (text), widget (QToolButton, hideTB)
+#: Apper/PackageDetails.ui:404 Apper/Updater/UpdateDetails.ui:29
+#, kde-format
+msgid "Hide"
+msgstr "Piilota"
+
+#: Apper/ScreenShotViewer.cpp:89
+#, kde-format
+msgid "Could not find screen shot."
+msgstr "Kuvankaappausta ei löytynyt."
+
+#: Apper/Settings/OriginModel.cpp:37
+#, kde-format
+msgid "Origin of Packages"
+msgstr "Pakettien alkuperä"
+
+#: Apper/Settings/Settings.cpp:65
+#, kde-format
+msgid "A repository was changed, it's highly recommended to refresh the cache"
+msgstr ""
+"Ohjelmalähdettä muutettiin; välimuistin päivittäminen on erittäin "
+"suositeltavaa"
+
+#: Apper/Settings/Settings.cpp:95
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Never"
+msgstr "Ei koskaan"
+
+#: Apper/Settings/Settings.cpp:98
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Only stable"
+msgstr "Vain vakaat versiot"
+
+#: Apper/Settings/Settings.cpp:103
+#, kde-format
+msgctxt "Inform about distribution upgrades"
+msgid "Stable and development"
+msgstr "Vain kehitysversiot"
+
+#: Apper/Settings/Settings.cpp:107
+#, kde-format
+msgctxt "Hourly refresh the package cache"
+msgid "Hourly"
+msgstr "Tunnin välein"
+
+#: Apper/Settings/Settings.cpp:108
+#, kde-format
+msgctxt "Daily refresh the package cache"
+msgid "Daily"
+msgstr "Päivittäin"
+
+#: Apper/Settings/Settings.cpp:109
+#, kde-format
+msgctxt "Weekly refresh the package cache"
+msgid "Weekly"
+msgstr "Viikoittain"
+
+#: Apper/Settings/Settings.cpp:110
+#, kde-format
+msgctxt "Monthly refresh the package cache"
+msgid "Monthly"
+msgstr "Kuukausittain"
+
+#: Apper/Settings/Settings.cpp:111
+#, kde-format
+msgctxt "Never refresh package cache"
+msgid "Never"
+msgstr "Ei koskaan"
+
+#: Apper/Settings/Settings.cpp:113
+#, kde-format
+msgctxt "No updates will be automatically installed"
+msgid "None"
+msgstr "Ei mitään"
+
+#: Apper/Settings/Settings.cpp:114
+#, kde-format
+msgid "Download only"
+msgstr "Ainoastaan lataa"
+
+#: Apper/Settings/Settings.cpp:115
+#, kde-format
+msgid "Security only"
+msgstr "Vain tietoturvapäivitykset"
+
+#: Apper/Settings/Settings.cpp:116
+#, kde-format
+msgid "All updates"
+msgstr "Kaikki päivitykset"
+
+#. i18n: ectx: property (text), widget (QLabel, intervalL)
+#: Apper/Settings/Settings.ui:74
+#, kde-format
+msgid "Check for new updates:"
+msgstr "Tarkista uudet päivitykset:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesMobileCB)
+#. i18n: ectx: property (text), widget (QCheckBox, installUpdatesMobileCB)
+#: Apper/Settings/Settings.ui:115 Apper/Settings/Settings.ui:183
+#, kde-format
+msgid "when on a mobile broadband network connection"
+msgstr "oltaessa mobiiliverkkoyhteydessä"
+
+#. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesBatteryCB)
+#. i18n: ectx: property (text), widget (QCheckBox, installUpdatesBatteryCB)
+#: Apper/Settings/Settings.ui:122 Apper/Settings/Settings.ui:176
+#, kde-format
+msgid "when running on battery"
+msgstr "oltaessa akkuvirralla"
+
+#. i18n: ectx: property (text), widget (QLabel, autoInsL)
+#: Apper/Settings/Settings.ui:141
+#, kde-format
+msgid "Automatically update:"
+msgstr "Päivitä automaattisesti:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, appLauncherCB)
+#: Apper/Settings/Settings.ui:199
+#, kde-format
+msgid "Show application launcher after installing new applications"
+msgstr "Näytä sovelluskäynnistin uusien sovellusten asentamisen jälkeen"
+
+#. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
+#: Apper/Settings/Settings.ui:206
+#, kde-format
+msgid "Show confirmation dialog when installing or updating packages"
+msgstr "Näytä vahvistusikkuna pakettien asennuksen tai päivityksen jälkeen"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: Apper/Settings/Settings.ui:213
+#, kde-format
+msgid "Check for distribution upgrades:"
+msgstr "Tarkista jakelupäivitykset:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showOriginsCB)
+#: Apper/Settings/Settings.ui:270
+#, kde-format
+msgid "&Show origins of debug and development packages"
+msgstr "&Näytä virheenpaikannus- ja kehityspakettien alkuperä"
+
+#. i18n: ectx: property (text), widget (QPushButton, editOriginsPB)
+#: Apper/Settings/Settings.ui:290
+#, kde-format
+msgid "Edit Origins"
+msgstr "Muokkaa alkuperiä"
+
+#: Apper/TransactionHistory.cpp:67
+#, kde-format
+msgid "Refresh transactions list"
+msgstr "Päivitä toimenpideluettelo"
+
+#: Apper/TransactionHistory.cpp:83
+#, kde-format
+msgid "Time since last cache refresh: %1"
+msgstr "Aikaa edellisestä välimuistin päivityksestä: %1"
+
+#: Apper/TransactionModel.cpp:43
+#, kde-format
+msgid "Date"
+msgstr "Päiväys"
+
+#: Apper/TransactionModel.cpp:44 libapper/PackageModel.cpp:220
+#, kde-format
+msgid "Action"
+msgstr "Toiminto"
+
+#: Apper/TransactionModel.cpp:45 apperd/TransactionWatcher.cpp:230
+#: AppSetup/SetupWizard.cpp:149
+#, kde-format
+msgid "Details"
+msgstr "Yksityiskohdat"
+
+#: Apper/TransactionModel.cpp:46
+#, kde-format
+msgctxt "Machine user who issued the transaction"
+msgid "Username"
+msgstr "Käyttäjätunnus"
+
+#: Apper/TransactionModel.cpp:47
+#, kde-format
+msgid "Application"
+msgstr "Sovellus"
+
+#: Apper/Updater/DistroUpgrade.cpp:39
+#, kde-format
+msgid "Upgrade"
+msgstr "Päivitä"
+
+#: Apper/Updater/DistroUpgrade.cpp:50
+#, kde-format
+msgid "Distribution upgrade available: %1"
+msgstr "Saatavilla on jakelupäivitys: %1"
+
+#: Apper/Updater/DistroUpgrade.cpp:65
+#, kde-format
+msgid ""
+"You are about to upgrade your distribution to the latest version. This is "
+"usually a very lengthy process and takes a lot longer than simply upgrading "
+"your packages."
+msgstr ""
+"Alkamassa on päivitys jakelusi viimeisimpään versioon. Tämä on yleensä "
+"pitkällinen prosessi ja kestää kauemmin kuin pelkkä pakettien päivittäminen."
+
+#: Apper/Updater/DistroUpgrade.cpp:70
+#, kde-format
+msgid "It is recommended to plug in your computer before proceeding."
+msgstr "On suositeltavaa kytkeytyä verkkovirtaan, ennen kuin jatketaan."
+
+#: Apper/Updater/DistroUpgrade.cpp:72
+#, kde-format
+msgid ""
+"It is recommended that you keep your computer plugged in while the upgrade "
+"is being performed."
+msgstr ""
+"On suositeltavaa, että pidät koneen verkkovirrassa päivityksen ollessa "
+"käynnissä."
+
+#: Apper/Updater/DistroUpgrade.cpp:90
+#, kde-format
+msgid "Distribution upgrade complete."
+msgstr "Jakelupäivitys on valmis."
+
+#: Apper/Updater/DistroUpgrade.cpp:92 apperd/DistroUpgrade.cpp:144
+#, kde-format
+msgid "Distribution upgrade process exited with code %1."
+msgstr "Jakelupäivitysprosessi päättyi koodiin %1."
+
+#: Apper/Updater/DistroUpgrade.cpp:104 apperd/DistroUpgrade.cpp:162
+#, kde-format
+msgid "The distribution upgrade process failed to start."
+msgstr "Jakelupäivitysprosessi ei onnistunut käynnistymään."
+
+#: Apper/Updater/DistroUpgrade.cpp:108 apperd/DistroUpgrade.cpp:165
+#, kde-format
+msgid ""
+"The distribution upgrade process crashed some time after starting "
+"successfully."
+msgstr "Jakelupäivitysprosessi kaatui pian käynnistyttyään onnistuneesti."
+
+#: Apper/Updater/DistroUpgrade.cpp:112 apperd/DistroUpgrade.cpp:168
+#, kde-format
+msgid "The distribution upgrade process failed with an unknown error."
+msgstr "Jakelupäivitysprosessi epäonnistui tuntemattoman virheen takia."
+
+#: Apper/Updater/UpdateDetails.cpp:183
+#, kde-format
+msgid "This update will add new features and expand functionality."
+msgstr "Tämä päivitys lisää uusia piirteitä ja laajentaa toiminnallisuutta."
+
+#: Apper/Updater/UpdateDetails.cpp:187
+#, kde-format
+msgid "This update will fix bugs and other non-critical problems."
+msgstr "Tämä päivitys korjaa virheitä ja muita ei-vakavia ongelmia."
+
+#: Apper/Updater/UpdateDetails.cpp:191
+#, kde-format
+msgid "This update is important as it may solve critical problems."
+msgstr "Tämä päivitys on tärkeä ja voi ratkaista vakavia ongelmia."
+
+#: Apper/Updater/UpdateDetails.cpp:195
+#, kde-format
+msgid ""
+"This update is needed to fix a security vulnerability with this package."
+msgstr ""
+"Tätä päivitystä tarvitaan korjaamaan haavoittuvuus paketin turvallisuudessa."
+
+#: Apper/Updater/UpdateDetails.cpp:199
+#, kde-format
+msgid "This update is blocked."
+msgstr "Tämä päivitys on estetty."
+
+#: Apper/Updater/UpdateDetails.cpp:206
+#, kde-format
+msgid "This notification was issued on %1 and last updated on %2."
+msgstr "Tämä ilmoitus julkaistiin %1 ja päivitettiin viimeksi %2."
+
+#: Apper/Updater/UpdateDetails.cpp:212
+#, kde-format
+msgid "This notification was issued on %1."
+msgstr "Tämä ilmoitus julkaistiin %1."
+
+#: Apper/Updater/UpdateDetails.cpp:229
+#, kde-format
+msgid "For more information about this update please visit this website:"
+msgid_plural ""
+"For more information about this update please visit these websites:"
+msgstr[0] "Lisätietoa tästä päivityksestä saa sivulta:"
+msgstr[1] "Lisätietoa tästä päivityksestä saa näiltä sivuilta:"
+
+#: Apper/Updater/UpdateDetails.cpp:239
+#, kde-format
+msgid ""
+"For more information about bugs fixed by this update please visit this "
+"website:"
+msgid_plural ""
+"For more information about bugs fixed by this update please visit these "
+"websites:"
+msgstr[0] "Lisätietoa tämän päivityksen korjaamista virheistä saa sivulta:"
+msgstr[1] ""
+"Lisätietoa tämän päivityksen korjaamista virheistä saa näiltä sivuilta:"
+
+#: Apper/Updater/UpdateDetails.cpp:249
+#, kde-format
+msgid ""
+"For more information about this security update please visit this website:"
+msgid_plural ""
+"For more information about this security update please visit these websites:"
+msgstr[0] "Lisätietoa tästä turvallisuuspäivityksestä saa sivulta:"
+msgstr[1] "Lisätietoa tästä turvallisuuspäivityksestä saa näiltä sivuilta:"
+
+#: Apper/Updater/UpdateDetails.cpp:259
+#, kde-format
+msgid ""
+"The computer will have to be restarted after the update for the changes to "
+"take effect."
+msgstr ""
+"Tietokone on päivityksen jälkeen käynnistettävä uudelleen, jotta muutokset "
+"tulisivat voimaan."
+
+#: Apper/Updater/UpdateDetails.cpp:263
+#, kde-format
+msgid ""
+"You will need to log out and back in after the update for the changes to "
+"take effect."
+msgstr ""
+"Päivityksen jälkeen on kirjauduttava ulos ja takaisin sisään, jotta "
+"muutokset tulisivat voimaan."
+
+#: Apper/Updater/UpdateDetails.cpp:270
+#, kde-format
+msgid ""
+"The classification of this update is unstable which means it is not designed "
+"for production use."
+msgstr ""
+"Päivityksen luokitus on epävakaa, joten sitä ei ole tarkoitettu "
+"tuotantokäyttöön."
+
+#: Apper/Updater/UpdateDetails.cpp:274
+#, kde-format
+msgid ""
+"This is a test update, and is not designed for normal use. Please report any "
+"problems or regressions you encounter."
+msgstr ""
+"Tämä on testipäivitys, jota ei ole tarkoitettu tavalliseen käyttöön. Ilmoita "
+"kohtaamistasi ongelmista."
+
+#: Apper/Updater/UpdateDetails.cpp:284
+#, kde-format
+msgid ""
+"The developer logs will be shown as no description is available for this "
+"update:"
+msgstr ""
+"Näytetään kehittäjän loki, koska päivityksestä ei ole saatavilla kuvausta:"
+
+#: Apper/Updater/UpdateDetails.cpp:292
+#, kde-format
+msgid "Updates:"
+msgstr "Päivittää:"
+
+#: Apper/Updater/UpdateDetails.cpp:302
+#, kde-format
+msgid "Obsoletes:"
+msgstr "Vanhentaa:"
+
+#: Apper/Updater/UpdateDetails.cpp:312
+#, kde-format
+msgid "Repository: %1"
+msgstr "Ohjelmalähde: %1"
+
+#: Apper/Updater/UpdateDetails.cpp:334
+#, kde-format
+msgid "No update description was found."
+msgstr "Päivityskuvausta ei löytynyt."
+
+#: Apper/Updater/Updater.cpp:112
+#, kde-format
+msgid "Show Current Versions"
+msgstr "Näytä nykyiset versiot"
+
+#: Apper/Updater/Updater.cpp:241
+#, kde-format
+msgid "Estimated download size: %1"
+msgstr "Arvioitu latauskoko: %1"
+
+#: Apper/Updater/Updater.cpp:335
+#, kde-format
+msgid "Check for new updates"
+msgstr "Tarkista uudet päivitykset"
+
+#: apperd/DistroUpgrade.cpp:88
+#, kde-format
+msgid "Distribution upgrade available"
+msgstr "Saatavilla on jakelupäivitys"
+
+#: apperd/DistroUpgrade.cpp:92
+#, kde-format
+msgid "Start upgrade now"
+msgstr "Käynnistä päivitys nyt"
+
+#: apperd/DistroUpgrade.cpp:141
+#, kde-format
+msgid "Distribution upgrade finished. "
+msgstr "Jakelupäivitys valmis. "
+
+#: apperd/TransactionWatcher.cpp:142
+#, kde-format
+msgid "The system update has completed"
+msgstr "Järjestelmäpäivitys on valmistunut"
+
+#: apperd/TransactionWatcher.cpp:149 apperd/TransactionWatcher.cpp:191
+#, kde-format
+msgid "Restart"
+msgstr "Käynnistä uudelleen"
+
+#: apperd/TransactionWatcher.cpp:182
+#, kde-format
+msgid "Package: %2"
+msgid_plural "Packages: %2"
+msgstr[0] "Paketti: %2"
+msgstr[1] "Paketit: %2"
+
+#: apperd/Updater.cpp:156
+#, kde-format
+msgid "Updates are being automatically installed."
+msgstr "Päivityksiä asennetaan automaattisesti."
+
+#: apperd/Updater.cpp:166
+#, kde-format
+msgid "Security updates are being automatically installed."
+msgstr "Turvallisuuspäivityksiä asennetaan automaattisesti."
+
+#: apperd/Updater.cpp:176
+#, kde-format
+msgid "Updates are being automatically downloaded."
+msgstr "Päivityksiä ladataan automaattisesti."
+
+#: apperd/Updater.cpp:210
+#, kde-format
+msgid "System update was successful."
+msgstr "Järjestelmän päivitys onnistui."
+
+#: apperd/Updater.cpp:217
+#, kde-format
+msgid "The software update failed."
+msgstr "Ohjelmistopäivitys epäonnistui."
+
+#: apperd/Updater.cpp:271
+#, kde-format
+msgid "There is one new update"
+msgid_plural "There are %1 new updates"
+msgstr[0] "Yksi uusi päivitys"
+msgstr[1] "%1 uutta päivitystä"
+
+#: apperd/Updater.cpp:289 AppSetup/SetupWizard.cpp:260
+#: libapper/ApplicationsDelegate.cpp:44
+#, kde-format
+msgid "Install"
+msgstr "Asenna"
+
+#: AppSetup/main.cpp:43
+#, kde-format
+msgid "KDE Application Installer"
+msgstr "KDE:n sovellusasennusohjelma"
+
+#: AppSetup/main.cpp:46
+#, kde-format
+msgctxt "@info:credit"
+msgid "Daniel Nicoletti"
+msgstr "Daniel Nicoletti"
+
+#: AppSetup/main.cpp:46 AppSetup/main.cpp:48
+#, kde-format
+msgid "Developer"
+msgstr "Kehittäjä"
+
+#: AppSetup/main.cpp:48
+#, kde-format
+msgctxt "@info:credit"
+msgid "Matthias Klumpp"
+msgstr "Matthias Klumpp"
+
+#: AppSetup/main.cpp:61
+#, kde-format
+msgid "Show verbose information"
+msgstr "Näytä yksityiskohtaiset tiedot"
+
+#: AppSetup/main.cpp:62
+#, kde-format
+msgid "IPK package filename"
+msgstr "IPK-paketin tiedostonimi"
+
+#: AppSetup/main.cpp:79
+#, kde-format
+msgid "We did not receive a path to an IPK package as parameter."
+msgstr "IPK-paketin sijaintia ei saatu parametrina."
+
+#: AppSetup/main.cpp:80
+#, kde-format
+msgid "Package not found!"
+msgstr "Pakettia ei löytynyt!"
+
+#: AppSetup/SetupWizard.cpp:85 libapper/Requirements.cpp:57
+#: PkSession/SessionTask.cpp:73
+#, kde-format
+msgid "Continue"
+msgstr "Jatka"
+
+#: AppSetup/SetupWizard.cpp:109
+#, kde-format
+msgid "Error"
+msgstr "Virhe"
+
+#: AppSetup/SetupWizard.cpp:110
+#, kde-format
+msgid "An error occurred"
+msgstr "Tapahtui virhe"
+
+#: AppSetup/SetupWizard.cpp:137
+#, kde-format
+msgid "Welcome!"
+msgstr "Tervetuloa!"
+
+#: AppSetup/SetupWizard.cpp:138
+#, kde-format
+msgid "Welcome to the installation of %1!"
+msgstr "Tervetuloa asentamaan %1!"
+
+#: AppSetup/SetupWizard.cpp:139
+#, kde-format
+msgid ""
+"Please be careful while installing a 3rd-party application.<br>It might "
+"eventually <b>damage</b> your system or have <b>malicious behaviour</b>, "
+"like spying out your passwords.<br>Please do only install this software if "
+"you <b>trust its publisher</b>."
+msgstr ""
+"Ole varovainen asentaessasi kolmannen osapuolen sovellusta.<br>Se saattaa "
+"lopulta <b>vahingoittaa</b> järjestelmääsi tai <b>käyttäytyä vihamielisesti</"
+"b> kuten urkkia salasanojasi.<br>Asenna tämä sovellus vain, jos <b>luotat "
+"sen julkaisijaan</b>."
+
+#: AppSetup/SetupWizard.cpp:150
+#, kde-format
+msgid "Details about this installation"
+msgstr "Tämän asennuksen yksityiskohdat"
+
+#: AppSetup/SetupWizard.cpp:185
+#, kde-format
+msgid "Application description"
+msgstr "Sovelluksen kuvaus"
+
+#: AppSetup/SetupWizard.cpp:193
+#, kde-format
+msgid "Running installation"
+msgstr "Suoritetaan asennusta"
+
+#: AppSetup/SetupWizard.cpp:194
+#, kde-format
+msgid "Installing %1..."
+msgstr "Asennetaan %1…"
+
+#: AppSetup/SetupWizard.cpp:234
+#, kde-format
+msgid "Installation finished!"
+msgstr "Asennus valmis!"
+
+#: AppSetup/SetupWizard.cpp:235
+#, kde-format
+msgid "%1 has been installed successfully!"
+msgstr "%1 on onnistuneesti asennettu!"
+
+#: libapper/ApplicationLauncher.cpp:97
+#, kde-format
+msgid "New application available"
+msgid_plural "New applications available"
+msgstr[0] "Uusi sovellus saatavilla"
+msgstr[1] "Uusia sovelluksia saatavilla"
+
+#: libapper/ApplicationLauncher.cpp:100
+#, kde-format
+msgid "The following application was just installed. Click on it to launch:"
+msgid_plural ""
+"The following applications were just installed. Click on them to launch:"
+msgstr[0] "Seuraava sovellus asennettiin juuri. Käynnistä se napsauttamalla:"
+msgstr[1] ""
+"Seuraavat sovellukset asennettiin juuri. Käynnistä ne napsauttamalla:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showCB)
+#: libapper/ApplicationLauncher.ui:81
+#, kde-format
+msgid "Do not show this dialog again"
+msgstr "Älä näytä tätä ikkunaa uudelleen"
+
+#: libapper/ApplicationsDelegate.cpp:46
+#, kde-format
+msgid "Remove"
+msgstr "Poista"
+
+#: libapper/ApplicationsDelegate.cpp:48 libapper/ChangesDelegate.cpp:59
+#, kde-format
+msgid "Deselect"
+msgstr "Poista valinta"
+
+#: libapper/ChangesDelegate.cpp:55
+#, kde-format
+msgid "Do not Install"
+msgstr "Älä asenna"
+
+#: libapper/ChangesDelegate.cpp:57
+#, kde-format
+msgid "Do not Remove"
+msgstr "Älä poista"
+
+#: libapper/CustomProgressBar.cpp:38
+#, kde-format
+msgid "%1 remaining"
+msgstr "%1 jäljellä"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, LicenseAgreement)
+#: libapper/LicenseAgreement.cpp:40 libapper/LicenseAgreement.ui:14
+#, kde-format
+msgid "License Agreement Required"
+msgstr "Lisenssi on hyväksyttävä"
+
+#: libapper/LicenseAgreement.cpp:43
+#, kde-format
+msgid "Accept Agreement"
+msgstr "Hyväksy sopimus"
+
+#: libapper/LicenseAgreement.cpp:45
+#, kde-format
+msgid "License required for %1 by %2"
+msgstr "%2 vaatii lisenssin paketille %1"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: libapper/LicenseAgreement.ui:40
+#, kde-format
+msgid "Please read the following important information before continuing:"
+msgstr "Lue tarkasti seuraava teksti, ennen kuin jatkat:"
+
+#: libapper/PackageModel.cpp:201
+#, kde-format
+msgid "Name"
+msgstr "Nimi"
+
+#: libapper/PackageModel.cpp:205
+#, kde-format
+msgid "Version"
+msgstr "Versio"
+
+#: libapper/PackageModel.cpp:208
+#, kde-format
+msgid "Installed Version"
+msgstr "Asennettu versio"
+
+#: libapper/PackageModel.cpp:211
+#, kde-format
+msgid "Arch"
+msgstr "Arkkitehtuuri"
+
+#: libapper/PackageModel.cpp:214
+#, kde-format
+msgid "Origin"
+msgstr "Alkuperä"
+
+#: libapper/PackageModel.cpp:217
+#, kde-format
+msgid "Size"
+msgstr "Koko"
+
+#: libapper/PackageModel.cpp:332
+#, kde-format
+msgid ""
+"Version: %1\n"
+"Architecture: %2"
+msgstr ""
+"Versio: %1\n"
+"Arkkitehtuuri: %2"
+
+#: libapper/PackageModel.cpp:379
+#, kde-format
+msgid "To be Removed"
+msgstr "Poistetaan"
+
+#: libapper/PackageModel.cpp:381
+#, kde-format
+msgid "To be Installed"
+msgstr "Asennetaan"
+
+#: libapper/PkStrings.cpp:38
+#, kde-format
+msgctxt "This is when the transaction status is not known"
+msgid "Unknown state"
+msgstr "Tuntematon tila"
+
+#: libapper/PkStrings.cpp:41
+#, kde-format
+msgctxt "transaction state, the daemon is in the process of starting"
+msgid "Waiting for service to start"
+msgstr "Odotetaan palvelun käynnistyvän"
+
+#: libapper/PkStrings.cpp:44
+#, kde-format
+msgctxt "transaction state, the transaction is waiting for another to complete"
+msgid "Waiting for other tasks"
+msgstr "Odotetaan muita tehtäviä"
+
+#: libapper/PkStrings.cpp:47
+#, kde-format
+msgctxt "transaction state, just started"
+msgid "Running task"
+msgstr "Käynnissä oleva tehtävä"
+
+#: libapper/PkStrings.cpp:50
+#, kde-format
+msgctxt "transaction state, is querying data"
+msgid "Querying"
+msgstr "Kysellään"
+
+#: libapper/PkStrings.cpp:53
+#, kde-format
+msgctxt "transaction state, getting data from a server"
+msgid "Getting information"
+msgstr "Noudetaan tietoa"
+
+#: libapper/PkStrings.cpp:56
+#, kde-format
+msgctxt "transaction state, removing packages"
+msgid "Removing packages"
+msgstr "Poistetaan paketteja"
+
+#: libapper/PkStrings.cpp:61
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading at %1/s, %2 remaining"
+msgstr "Ladataan nopeudella %1/s, %2 jäljellä"
+
+#: libapper/PkStrings.cpp:67
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading at %1/s"
+msgstr "Ladataan nopeudella %1/s"
+
+#: libapper/PkStrings.cpp:72
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading, %1 remaining"
+msgstr "Ladataan, %1 jäljellä"
+
+#: libapper/PkStrings.cpp:76
+#, kde-format
+msgctxt "transaction state, downloading package files"
+msgid "Downloading"
+msgstr "Ladataan"
+
+#: libapper/PkStrings.cpp:80
+#, kde-format
+msgctxt "transaction state, installing packages"
+msgid "Installing packages"
+msgstr "Asennetaan paketteja"
+
+#: libapper/PkStrings.cpp:83
+#, kde-format
+msgctxt "transaction state, refreshing internal lists"
+msgid "Refreshing software list"
+msgstr "Päivitetään ohjelmaluetteloa"
+
+#: libapper/PkStrings.cpp:86
+#, kde-format
+msgctxt "transaction state, installing updates"
+msgid "Updating packages"
+msgstr "Päivitetään paketteja"
+
+#: libapper/PkStrings.cpp:89
+#, kde-format
+msgctxt "transaction state, removing old packages, and cleaning config files"
+msgid "Cleaning up packages"
+msgstr "Siivotaan paketteja"
+
+#: libapper/PkStrings.cpp:92
+#, kde-format
+msgctxt "transaction state, obsoleting old packages"
+msgid "Obsoleting packages"
+msgstr "Vanhennetaan paketteja"
+
+#: libapper/PkStrings.cpp:95
+#, kde-format
+msgctxt "transaction state, checking the transaction before we do it"
+msgid "Resolving dependencies"
+msgstr "Ratkaistaan riippuvuuksia"
+
+#: libapper/PkStrings.cpp:98
+#, kde-format
+msgctxt ""
+"transaction state, checking if we have all the security keys for the "
+"operation"
+msgid "Checking signatures"
+msgstr "Tarkistetaan allekirjoituksia"
+
+#: libapper/PkStrings.cpp:101
+#, kde-format
+msgctxt "transaction state, when we're doing a test transaction"
+msgid "Testing changes"
+msgstr "Testataan muutoksia"
+
+#: libapper/PkStrings.cpp:104
+#, kde-format
+msgctxt "transaction state, when we're writing to the system package database"
+msgid "Committing changes"
+msgstr "Toteutetaan muutoksia"
+
+#: libapper/PkStrings.cpp:107
+#, kde-format
+msgctxt "transaction state, requesting data from a server"
+msgid "Requesting data"
+msgstr "Pyydetään dataa"
+
+#: libapper/PkStrings.cpp:110
+#, kde-format
+msgctxt "transaction state, all done!"
+msgid "Finished"
+msgstr "Valmis"
+
+#: libapper/PkStrings.cpp:113
+#, kde-format
+msgctxt "transaction state, in the process of cancelling"
+msgid "Cancelling"
+msgstr "Perutaan"
+
+#: libapper/PkStrings.cpp:116
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading repository information"
+msgstr "Ladataan ohjelmalähdetietoa"
+
+#: libapper/PkStrings.cpp:119
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading list of packages"
+msgstr "Ladataan pakettiluetteloa"
+
+#: libapper/PkStrings.cpp:122
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading file lists"
+msgstr "Ladataan tiedostoluetteloita"
+
+#: libapper/PkStrings.cpp:125
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading lists of changes"
+msgstr "Ladataan muutosluetteloita"
+
+#: libapper/PkStrings.cpp:128
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading groups"
+msgstr "Ladataan ryhmiä"
+
+#: libapper/PkStrings.cpp:131
+#, kde-format
+msgctxt "transaction state, downloading metadata"
+msgid "Downloading update information"
+msgstr "Ladataan päivitystietoja"
+
+#: libapper/PkStrings.cpp:134
+#, kde-format
+msgctxt "transaction state, repackaging delta files"
+msgid "Repackaging files"
+msgstr "Paketoidaan tiedostoja uudelleen"
+
+#: libapper/PkStrings.cpp:137
+#, kde-format
+msgctxt "transaction state, loading databases"
+msgid "Loading cache"
+msgstr "Ladataan välimuistia"
+
+#: libapper/PkStrings.cpp:140
+#, kde-format
+msgctxt "transaction state, scanning for running processes"
+msgid "Scanning installed applications"
+msgstr "Etsitään asennettuja sovelluksia"
+
+#: libapper/PkStrings.cpp:143
+#, kde-format
+msgctxt ""
+"transaction state, generating a list of packages installed on the system"
+msgid "Generating package lists"
+msgstr "Luodaan pakettiluetteloita"
+
+#: libapper/PkStrings.cpp:146
+#, kde-format
+msgctxt "transaction state, when we're waiting for the native tools to exit"
+msgid "Waiting for package manager lock"
+msgstr "Odotetaan paketinhallinnan lukitusta"
+
+#: libapper/PkStrings.cpp:149
+#, kde-format
+msgctxt "waiting for user to type in a password"
+msgid "Waiting for authentication"
+msgstr "Odotetaan tunnistautumista"
+
+#: libapper/PkStrings.cpp:152
+#, kde-format
+msgctxt "we are updating the list of processes"
+msgid "Updating the list of running applications"
+msgstr "Päivitetään käynnissä olevien sovellusten luetteloa"
+
+#: libapper/PkStrings.cpp:155
+#, kde-format
+msgctxt "we are checking executable files in use"
+msgid "Checking for applications currently in use"
+msgstr "Tarkistetaan käytössä olevia sovelluksia"
+
+#: libapper/PkStrings.cpp:158
+#, kde-format
+msgctxt "we are checking for libraries in use"
+msgid "Checking for libraries currently in use"
+msgstr "Tarkistetaan käytössä olevia kirjastoja"
+
+#: libapper/PkStrings.cpp:161
+#, kde-format
+msgctxt "we are copying package files to prepare to install"
+msgid "Copying files"
+msgstr "Kopioidaan tiedostoja"
+
+#: libapper/PkStrings.cpp:164
+#, kde-format
+msgctxt "we are running hooks pre or post transaction"
+msgid "Running hooks"
+msgstr "Suoritetaan alitehtäviä"
+
+#: libapper/PkStrings.cpp:179
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Downloaded"
+msgstr "Ladattu"
+
+#: libapper/PkStrings.cpp:181
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Updated"
+msgstr "Päivitetty"
+
+#: libapper/PkStrings.cpp:183
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Installed"
+msgstr "Asennettu"
+
+#: libapper/PkStrings.cpp:185
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Removed"
+msgstr "Poistettu"
+
+#: libapper/PkStrings.cpp:187
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Cleaned Up"
+msgstr "Siivottu"
+
+#: libapper/PkStrings.cpp:189
+#, kde-format
+msgctxt "The action of the package, in past tense"
+msgid "Obsoleted"
+msgstr "Vanhennettu"
+
+#: libapper/PkStrings.cpp:200
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Unknown role type"
+msgstr "Tuntematon roolityyppi"
+
+#: libapper/PkStrings.cpp:202
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting dependencies"
+msgstr "Selvitetään riippuvuuksia"
+
+#: libapper/PkStrings.cpp:204
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting update detail"
+msgstr "Selvitetään päivityksen yksityiskohtia"
+
+#: libapper/PkStrings.cpp:207
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting details"
+msgstr "Selvitetään yksityiskohtia"
+
+#: libapper/PkStrings.cpp:209
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting requires"
+msgstr "Selvitetään vaatimuksia"
+
+#: libapper/PkStrings.cpp:211
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting updates"
+msgstr "Selvitetään päivityksiä"
+
+#: libapper/PkStrings.cpp:213
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching details"
+msgstr "Etsitään yksityiskohtia"
+
+#: libapper/PkStrings.cpp:215
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching for file"
+msgstr "Etsitään tiedostoja"
+
+#: libapper/PkStrings.cpp:217
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching groups"
+msgstr "Etsitään ryhmiä"
+
+#: libapper/PkStrings.cpp:219
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Searching by package name"
+msgstr "Etsitään pakettien nimiä"
+
+#: libapper/PkStrings.cpp:222
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating removal"
+msgstr "Simuloidaan poisto"
+
+#: libapper/PkStrings.cpp:224 libapper/PkStrings.cpp:231
+#: libapper/PkStrings.cpp:272
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading packages"
+msgstr "Ladataan paketteja"
+
+#: libapper/PkStrings.cpp:226
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Removing"
+msgstr "Poistetaan"
+
+#: libapper/PkStrings.cpp:229
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating install"
+msgstr "Simuloidaan asennus"
+
+#: libapper/PkStrings.cpp:233
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing"
+msgstr "Asennetaan"
+
+#: libapper/PkStrings.cpp:236
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating file install"
+msgstr "Simuloidaan tiedoston asennus"
+
+#: libapper/PkStrings.cpp:238
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading required packages"
+msgstr "Ladataan vaadittuja paketteja"
+
+#: libapper/PkStrings.cpp:240
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing file"
+msgstr "Asennetaan tiedostoa"
+
+#: libapper/PkStrings.cpp:242
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Refreshing package cache"
+msgstr "Päivitetään pakettivälimuistia"
+
+#: libapper/PkStrings.cpp:245
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Simulating update"
+msgstr "Simuloidaan päivitys"
+
+#: libapper/PkStrings.cpp:247
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Downloading updates"
+msgstr "Päivityksiä ladataan"
+
+#: libapper/PkStrings.cpp:249
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Updating packages"
+msgstr "Päivitetään paketteja"
+
+#: libapper/PkStrings.cpp:251
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Canceling"
+msgstr "Perutaan"
+
+#: libapper/PkStrings.cpp:253
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting list of repositories"
+msgstr "Noudetaan ohjelmalähdeluetteloa"
+
+#: libapper/PkStrings.cpp:255
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Enabling repository"
+msgstr "Otetaan ohjelmalähdettä käyttöön"
+
+#: libapper/PkStrings.cpp:257
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Setting repository data"
+msgstr "Asetetaan ohjelmalähteen tietoja"
+
+#: libapper/PkStrings.cpp:259
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Resolving"
+msgstr "Ratkaistaan"
+
+#: libapper/PkStrings.cpp:262
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting file list"
+msgstr "Noudetaan tiedostoluetteloa"
+
+#: libapper/PkStrings.cpp:264
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting what provides"
+msgstr "Noudetaan tarjoajien luetteloa"
+
+#: libapper/PkStrings.cpp:266
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Installing signature"
+msgstr "Asennetaan allekirjoitusta"
+
+#: libapper/PkStrings.cpp:268
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting package lists"
+msgstr "Noudetaan pakettiluetteloja"
+
+#: libapper/PkStrings.cpp:270
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Accepting EULA"
+msgstr "Hyväksytään loppukäyttäjäsopimusta (EULA)"
+
+#: libapper/PkStrings.cpp:274
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting distribution upgrade information"
+msgstr "Noudetaan jakelun päivitystietoja"
+
+#: libapper/PkStrings.cpp:276
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting categories"
+msgstr "Selvitetään luokkia"
+
+#: libapper/PkStrings.cpp:278
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Getting old transactions"
+msgstr "Selvitetään vanhoja toimenpiteitä"
+
+#: libapper/PkStrings.cpp:280
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Repairing system"
+msgstr "Korjataan järjestelmää"
+
+#: libapper/PkStrings.cpp:282
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Removing repository"
+msgstr "Poistetaan ohjelmalähdettä"
+
+#: libapper/PkStrings.cpp:284
+#, kde-format
+msgctxt "The role of the transaction, in present tense"
+msgid "Upgrading the system"
+msgstr "Päivitetään järjestelmää"
+
+#: libapper/PkStrings.cpp:299
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Unknown role type"
+msgstr "Tuntematon roolin tyyppi"
+
+#: libapper/PkStrings.cpp:301
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got dependencies"
+msgstr "Selvitettiin riippuvuudet"
+
+#: libapper/PkStrings.cpp:303
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got update detail"
+msgstr "Selvitettiin päivityksen yksityiskohdat"
+
+#: libapper/PkStrings.cpp:306
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got details"
+msgstr "Selvitettiin yksityiskohdat"
+
+#: libapper/PkStrings.cpp:308
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got requires"
+msgstr "Selvitettiin vaatimukset"
+
+#: libapper/PkStrings.cpp:310
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got updates"
+msgstr "Selvitettiin päivitykset"
+
+#: libapper/PkStrings.cpp:312
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for package details"
+msgstr "Etsittiin pakettien yksityiskohtia"
+
+#: libapper/PkStrings.cpp:314
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for file"
+msgstr "Etsittiin tiedostoja"
+
+#: libapper/PkStrings.cpp:316
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched groups"
+msgstr "Etsittiin ryhmiä"
+
+#: libapper/PkStrings.cpp:318
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Searched for package name"
+msgstr "Etsittiin pakettia nimellä"
+
+#: libapper/PkStrings.cpp:320
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Removed packages"
+msgstr "Poistettiin paketit"
+
+#: libapper/PkStrings.cpp:322
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed packages"
+msgstr "Asennettiin paketit"
+
+#: libapper/PkStrings.cpp:324
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed local files"
+msgstr "Asennettiin paikallistiedostot"
+
+#: libapper/PkStrings.cpp:326
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Refreshed package cache"
+msgstr "Päivitettiin pakettivälimuisti"
+
+#: libapper/PkStrings.cpp:328
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Updated packages"
+msgstr "Päivitettiin paketit"
+
+#: libapper/PkStrings.cpp:330
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Canceled"
+msgstr "Peruttiin"
+
+#: libapper/PkStrings.cpp:332
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got list of repositories"
+msgstr "Noudettiin ohjelmalähdeluettelo"
+
+#: libapper/PkStrings.cpp:334
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Enabled repository"
+msgstr "Otettiin ohjelmalähde käyttöön"
+
+#: libapper/PkStrings.cpp:336
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Set repository data"
+msgstr "Asetettiin ohjelmalähteen tiedot"
+
+#: libapper/PkStrings.cpp:338
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Resolved"
+msgstr "Ratkaistiin"
+
+#: libapper/PkStrings.cpp:341
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got file list"
+msgstr "Saatiin tiedostoluettelo"
+
+#: libapper/PkStrings.cpp:343
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got what provides"
+msgstr "Saatiin tarjoaja"
+
+#: libapper/PkStrings.cpp:345
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Installed signature"
+msgstr "Asennettiin allekirjoitus"
+
+#: libapper/PkStrings.cpp:347
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got package lists"
+msgstr "Saatiin pakettiluettelot"
+
+#: libapper/PkStrings.cpp:349
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Accepted EULA"
+msgstr "Hyväksyttiin käyttöehdot"
+
+#: libapper/PkStrings.cpp:351
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Downloaded packages"
+msgstr "Ladattiin paketit"
+
+#: libapper/PkStrings.cpp:353
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got distribution upgrades"
+msgstr "Saatiin jakelupäivitykset"
+
+#: libapper/PkStrings.cpp:355
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got categories"
+msgstr "Saatiin luokat"
+
+#: libapper/PkStrings.cpp:357
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Got old transactions"
+msgstr "Saatiin vanhat toimenpiteet"
+
+#: libapper/PkStrings.cpp:359
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Repaired system"
+msgstr "Korjattiin järjestelmä"
+
+#: libapper/PkStrings.cpp:361
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Removed repository"
+msgstr "Poistettiin ohjelmalähde"
+
+#: libapper/PkStrings.cpp:363
+#, kde-format
+msgctxt "The role of the transaction, in past tense"
+msgid "Upgraded the system"
+msgstr "Järjestelmä päivitettiin"
+
+#: libapper/PkStrings.cpp:373
+#, kde-format
+msgid "Downloading"
+msgstr "Ladataan"
+
+#: libapper/PkStrings.cpp:375
+#, kde-format
+msgid "Updating"
+msgstr "Päivitetään"
+
+#: libapper/PkStrings.cpp:377
+#, kde-format
+msgid "Installing"
+msgstr "Asennetaan"
+
+#: libapper/PkStrings.cpp:379
+#, kde-format
+msgid "Removing"
+msgstr "Poistetaan"
+
+#: libapper/PkStrings.cpp:381
+#, kde-format
+msgid "Cleaning up"
+msgstr "Siivotaan"
+
+#: libapper/PkStrings.cpp:383
+#, kde-format
+msgid "Obsoleting"
+msgstr "Vanhennetaan"
+
+#: libapper/PkStrings.cpp:385
+#, kde-format
+msgid "Reinstalling"
+msgstr "Asennetaan uudelleen"
+
+#: libapper/PkStrings.cpp:387
+#, kde-format
+msgid "Preparing"
+msgstr "Valmistellaan"
+
+#: libapper/PkStrings.cpp:389
+#, kde-format
+msgid "Decompressing"
+msgstr "Puretaan"
+
+#: libapper/PkStrings.cpp:400
+#, kde-format
+msgid "Downloaded"
+msgstr "Ladattu"
+
+#: libapper/PkStrings.cpp:402
+#, kde-format
+msgid "Updated"
+msgstr "Päivitetty"
+
+#: libapper/PkStrings.cpp:406
+#, kde-format
+msgid "Removed"
+msgstr "Poistettu"
+
+#: libapper/PkStrings.cpp:408
+#, kde-format
+msgid "Cleaned up"
+msgstr "Siivottu"
+
+#: libapper/PkStrings.cpp:410
+#, kde-format
+msgid "Obsoleted"
+msgstr "Vanhennettu"
+
+#: libapper/PkStrings.cpp:412
+#, kde-format
+msgid "Reinstalled"
+msgstr "Asennettu uudelleen"
+
+#: libapper/PkStrings.cpp:414
+#, kde-format
+msgid "Prepared"
+msgstr "Valmisteltu"
+
+#: libapper/PkStrings.cpp:416
+#, kde-format
+msgid "Decompressed"
+msgstr "Purettu"
+
+#: libapper/PkStrings.cpp:427
+#, kde-format
+msgid "No network connection available"
+msgstr "Ei verkkoyhteyttä käytettävissä"
+
+#: libapper/PkStrings.cpp:429
+#, kde-format
+msgid "No package cache is available"
+msgstr "Ei pakettivälimuistia käytettävissä"
+
+#: libapper/PkStrings.cpp:431
+#, kde-format
+msgid "Out of memory"
+msgstr "Muisti loppui"
+
+#: libapper/PkStrings.cpp:433
+#, kde-format
+msgid "Failed to create a thread"
+msgstr "Säikeen luonti epäonnistui"
+
+#: libapper/PkStrings.cpp:435
+#, kde-format
+msgid "Not supported by this backend"
+msgstr "Tämä taustaosa ei tue"
+
+#: libapper/PkStrings.cpp:437
+#, kde-format
+msgid "An internal system error has occurred"
+msgstr "Tapahtui sisäinen virhe"
+
+# ”Security trust relationship” on outo käsite, ja englanninkielinen viesti on muutenkin outo. Kyse on GPG-virheestä.
+#: libapper/PkStrings.cpp:439
+#, kde-format
+msgid "A security trust relationship is not present"
+msgstr "Aitouden varmentaminen epäonnistui"
+
+#: libapper/PkStrings.cpp:441
+#, kde-format
+msgid "The package is not installed"
+msgstr "Pakettia ei ole asennettu"
+
+#: libapper/PkStrings.cpp:443
+#, kde-format
+msgid "The package was not found"
+msgstr "Pakettia ei löytynyt"
+
+#: libapper/PkStrings.cpp:445
+#, kde-format
+msgid "The package is already installed"
+msgstr "Paketti on jo asennettu"
+
+#: libapper/PkStrings.cpp:447
+#, kde-format
+msgid "The package download failed"
+msgstr "Paketin lataus epäonnistui"
+
+#: libapper/PkStrings.cpp:449
+#, kde-format
+msgid "The group was not found"
+msgstr "Ryhmää ei löytynyt"
+
+#: libapper/PkStrings.cpp:451
+#, kde-format
+msgid "The group list was invalid"
+msgstr "Ryhmäluettelo ei ollut kelvollinen"
+
+#: libapper/PkStrings.cpp:453
+#, kde-format
+msgid "Dependency resolution failed"
+msgstr "Riippuvuuksien ratkaisu epäonnistui"
+
+#: libapper/PkStrings.cpp:455
+#, kde-format
+msgid "Search filter was invalid"
+msgstr "Hakusuodatin oli virheellinen"
+
+#: libapper/PkStrings.cpp:457
+#, kde-format
+msgid "The package identifier was not well formed"
+msgstr "Paketin tunniste ei ollut kelvollinen"
+
+#: libapper/PkStrings.cpp:459
+#, kde-format
+msgid "Transaction error"
+msgstr "Toimenpidevirhe"
+
+#: libapper/PkStrings.cpp:461
+#, kde-format
+msgid "Repository name was not found"
+msgstr "Ohjelmistolähteen nimeä ei löytynyt"
+
+#: libapper/PkStrings.cpp:463
+#, kde-format
+msgid "Could not remove a protected system package"
+msgstr "Suojatun järjestelmäpaketin poisto ei onnistunut"
+
+#: libapper/PkStrings.cpp:465
+#, kde-format
+msgid "The task was canceled"
+msgstr "Toiminto peruttiin"
+
+#: libapper/PkStrings.cpp:467
+#, kde-format
+msgid "The task was forcibly canceled"
+msgstr "Tehtävä peruttiin väkisin"
+
+#: libapper/PkStrings.cpp:469
+#, kde-format
+msgid "Reading the config file failed"
+msgstr "Asetustiedoston luku epäonnistui"
+
+#: libapper/PkStrings.cpp:471
+#, kde-format
+msgid "The task cannot be cancelled"
+msgstr "Toimintoa ei voi perua"
+
+#: libapper/PkStrings.cpp:473
+#, kde-format
+msgid "Source packages cannot be installed"
+msgstr "Lähdekoodipaketteja ei voi asentaa"
+
+#: libapper/PkStrings.cpp:475
+#, kde-format
+msgid "The license agreement failed"
+msgstr "Lisenssisopimus epäonnistui"
+
+#: libapper/PkStrings.cpp:477
+#, kde-format
+msgid "Local file conflict between packages"
+msgstr "Paikallinen tiedosto on ristiriidassa pakettien kanssa"
+
+#: libapper/PkStrings.cpp:479
+#, kde-format
+msgid "Packages are not compatible"
+msgstr "Paketit eivät ole yhteensopivia"
+
+#: libapper/PkStrings.cpp:481
+#, kde-format
+msgid "Problem connecting to a software origin"
+msgstr "Ongelma yhdistettäessä ohjelmalähteeseen"
+
+#: libapper/PkStrings.cpp:483
+#, kde-format
+msgid "Failed to initialize"
+msgstr "Alustaminen epäonnistui"
+
+#: libapper/PkStrings.cpp:485
+#, kde-format
+msgid "Failed to finalize"
+msgstr "Viimeistely epäonnistui"
+
+#: libapper/PkStrings.cpp:487
+#, kde-format
+msgid "Cannot get lock"
+msgstr "Lukitus epäonnistui"
+
+#: libapper/PkStrings.cpp:489
+#, kde-format
+msgid "No packages to update"
+msgstr "Ei päivitettäviä paketteja"
+
+#: libapper/PkStrings.cpp:491
+#, kde-format
+msgid "Cannot write repository configuration"
+msgstr "Ohjelmalähteen asetuksia ei voi kirjoittaa"
+
+#: libapper/PkStrings.cpp:493
+#, kde-format
+msgid "Local install failed"
+msgstr "Paikallisasennus epäonnistui"
+
+#: libapper/PkStrings.cpp:495
+#, kde-format
+msgid "Bad GPG signature"
+msgstr "Virheellinen GPG-allekirjoitus"
+
+#: libapper/PkStrings.cpp:497
+#, kde-format
+msgid "Missing GPG signature"
+msgstr "Puuttuva GPG-allekirjoitus"
+
+#: libapper/PkStrings.cpp:499
+#, kde-format
+msgid "Repository configuration invalid"
+msgstr "Ohjelmalähteen asetukset virheelliset"
+
+#: libapper/PkStrings.cpp:501
+#, kde-format
+msgid "Invalid package file"
+msgstr "Virheellinen pakettitiedosto"
+
+#: libapper/PkStrings.cpp:503
+#, kde-format
+msgid "Package install blocked"
+msgstr "Paketin asennus estetty"
+
+#: libapper/PkStrings.cpp:505
+#, kde-format
+msgid "Package is corrupt"
+msgstr "Paketti on korruptoitunut"
+
+#: libapper/PkStrings.cpp:507
+#, kde-format
+msgid "All packages are already installed"
+msgstr "Kaikki paketit on jo asennettu"
+
+#: libapper/PkStrings.cpp:509
+#, kde-format
+msgid "The specified file could not be found"
+msgstr "Annettua tiedostoa ei löydy"
+
+#: libapper/PkStrings.cpp:511
+#, kde-format
+msgid "No more mirrors are available"
+msgstr "Peilipalvelimia ei ole enempää saatavilla"
+
+#: libapper/PkStrings.cpp:513
+#, kde-format
+msgid "No distribution upgrade data is available"
+msgstr "Jakelupäivitystietoa ei ole saatavilla"
+
+#: libapper/PkStrings.cpp:515
+#, kde-format
+msgid "Package is incompatible with this system"
+msgstr "Paketti ei ole yhteensopiva järjestelmän kanssa"
+
+#: libapper/PkStrings.cpp:517
+#, kde-format
+msgid "No space is left on the disk"
+msgstr "Levyllä ei ole tarpeeksi tilaa"
+
+#: libapper/PkStrings.cpp:519 libapper/PkTransaction.cpp:341
+#, kde-format
+msgid "A media change is required"
+msgstr "Tietovälineen vaihto tarpeen"
+
+#: libapper/PkStrings.cpp:521
+#, kde-format
+msgid "Authorization failed"
+msgstr "Varmennus epäonnistui"
+
+#: libapper/PkStrings.cpp:523
+#, kde-format
+msgid "Update not found"
+msgstr "Päivitystä ei löytynyt"
+
+#: libapper/PkStrings.cpp:525
+#, kde-format
+msgid "Cannot install from untrusted origin"
+msgstr "Ei-luotettavasta lähteestä ei voi asentaa"
+
+#: libapper/PkStrings.cpp:527
+#, kde-format
+msgid "Cannot update from untrusted origin"
+msgstr "Ei-luotettavasta lähteestä ei voi päivittää"
+
+#: libapper/PkStrings.cpp:529
+#, kde-format
+msgid "Cannot get the file list"
+msgstr "Tiedostoluetteloa ei saada"
+
+#: libapper/PkStrings.cpp:531
+#, kde-format
+msgid "Cannot get package requires"
+msgstr "Paketin vaatimuksia ei saada"
+
+#: libapper/PkStrings.cpp:533
+#, kde-format
+msgid "Cannot disable origin"
+msgstr "Alkuperää ei voi poistaa käytöstä"
+
+#: libapper/PkStrings.cpp:535
+#, kde-format
+msgid "The download failed"
+msgstr "Lataus epäonnistui"
+
+#: libapper/PkStrings.cpp:537
+#, kde-format
+msgid "Package failed to configure"
+msgstr "Paketin asetusten tekeminen epäonnistui"
+
+#: libapper/PkStrings.cpp:539
+#, kde-format
+msgid "Package failed to build"
+msgstr "Paketin koostaminen epäonnistui"
+
+#: libapper/PkStrings.cpp:541
+#, kde-format
+msgid "Package failed to install"
+msgstr "Paketin asennus epäonnistui"
+
+#: libapper/PkStrings.cpp:543
+#, kde-format
+msgid "Package failed to be removed"
+msgstr "Paketin poisto epäonnistui"
+
+#: libapper/PkStrings.cpp:545
+#, kde-format
+msgid "Update failed due to running process"
+msgstr "Päivitys epäonnistui käynnissä olevan prosessin takia"
+
+#: libapper/PkStrings.cpp:547
+#, kde-format
+msgid "The package database was changed"
+msgstr "Pakettitietokanta muuttui"
+
+#: libapper/PkStrings.cpp:549
+#, kde-format
+msgid "Virtual provide type is not supported"
+msgstr "Virtuaalista tarjoajatyyppiä ei tueta"
+
+# *** TARKISTA: Install root = asennuksen juurikansio?
+#: libapper/PkStrings.cpp:551
+#, kde-format
+msgid "Install root is invalid"
+msgstr "Asennuksen pääkansio on virheellinen"
+
+#: libapper/PkStrings.cpp:553
+#, kde-format
+msgid "Cannot fetch install sources"
+msgstr "Asennuslähteitä ei saa noudetuksi"
+
+#: libapper/PkStrings.cpp:555
+#, kde-format
+msgid "Rescheduled due to priority"
+msgstr "Ajastettu uudelleen prioriteetin takia"
+
+#: libapper/PkStrings.cpp:557
+#, kde-format
+msgid "Unfinished transaction"
+msgstr "Keskeneräinen toimenpide"
+
+#: libapper/PkStrings.cpp:559
+#, kde-format
+msgid "Lock required"
+msgstr "Lukitusta vaaditaan"
+
+#: libapper/PkStrings.cpp:561
+#, kde-format
+msgid "Unknown error"
+msgstr "Tuntematon virhe"
+
+#: libapper/PkStrings.cpp:571
+#, kde-format
+msgid ""
+"There is no network connection available.\n"
+"Please check your connection settings and try again"
+msgstr ""
+"Verkkoyhteys ei ole käytettävissä.\n"
+"Tarkista verkkoasetukset ja koeta uudelleen"
+
+#: libapper/PkStrings.cpp:574
+#, kde-format
+msgid ""
+"The package list needs to be rebuilt.\n"
+"This should have been done by the backend automatically."
+msgstr ""
+"Pakettiluettelo täytyy koostaa uudelleen.\n"
+"Taustaosan olisi pitänyt tehdä tämä automaattisesti."
+
+#: libapper/PkStrings.cpp:577
+#, kde-format
+msgid ""
+"The service that is responsible for handling user requests is out of "
+"memory.\n"
+"Please close some programs or restart your computer."
+msgstr ""
+"Käyttäjän pyyntöihin vastaavalta palvelulta on muisti lopussa.\n"
+"Sulje joitakin ohjelmia tai käynnistä tietokone uudelleen."
+
+#: libapper/PkStrings.cpp:580
+#, kde-format
+msgid "A thread could not be created to service the user request."
+msgstr "Ei voi luoda säiettä vastaamaan käyttäjän pyyntöön."
+
+#: libapper/PkStrings.cpp:582
+#, kde-format
+msgid ""
+"The action is not supported by this backend.\n"
+"Please report a bug as this should not have happened."
+msgstr ""
+"Tämä taustaosa ei tue toimintoa.\n"
+"Ilmoita viasta, koska näin ei pitäisi käydä."
+
+#: libapper/PkStrings.cpp:585
+#, kde-format
+msgid ""
+"A problem that we were not expecting has occurred.\n"
+"Please report this bug with the error description."
+msgstr ""
+"Sattui ongelma, jota emme osanneet ennakoida.\n"
+"Ilmoita tästä virheestä kuvauksen kera."
+
+# ”Security trust relationship” on outo käsite, ja englanninkielinen viesti on muutenkin outo. Kyse on GPG-virheestä.
+#: libapper/PkStrings.cpp:588
+#, kde-format
+msgid ""
+"A security trust relationship could not be made with the software origin.\n"
+"Please check your software signature settings."
+msgstr ""
+"Ohjelmistolähteen aitouden varmentaminen epäonnistui.\n"
+"Tarkista allekirjoitusasetukset."
+
+#: libapper/PkStrings.cpp:591
+#, kde-format
+msgid ""
+"The package that is trying to be removed or updated is not already installed."
+msgstr "Pakettia, jota yritetään poistaa tai päivittää, ei ole vielä asennettu"
+
+#: libapper/PkStrings.cpp:593
+#, kde-format
+msgid ""
+"The package that is being modified was not found on your system or in any "
+"software origin."
+msgstr ""
+"Pakettia, jota ollaan muuttamassa, ei löytynyt järjestelmästä eikä "
+"ohjelmistolähteistä"
+
+#: libapper/PkStrings.cpp:595
+#, kde-format
+msgid "The package that is trying to be installed is already installed."
+msgstr "Asennettava paketti on jo asennettu."
+
+#: libapper/PkStrings.cpp:597
+#, kde-format
+msgid ""
+"The package download failed.\n"
+"Please check your network connectivity."
+msgstr ""
+"Pakettien lataus epäonnistui.\n"
+"Tarkista verkkoyhteytesi tila."
+
+#: libapper/PkStrings.cpp:600
+#, kde-format
+msgid ""
+"The group type was not found.\n"
+"Please check your group list and try again."
+msgstr ""
+"Ryhmän tyyppiä ei löytynyt.\n"
+"Tarkista ryhmäluettelo ja yritä uudelleen."
+
+#: libapper/PkStrings.cpp:603
+#, kde-format
+msgid ""
+"The group list could not be loaded.\n"
+"Refreshing your cache may help, although this is normally a software origin "
+"error."
+msgstr ""
+"Ryhmäluetteloa ei voitu ladata.\n"
+"Välimuistin päivittäminen voi auttaa, vaikka tämä on tavallisesti "
+"ohjelmistolähteen virhe."
+
+#: libapper/PkStrings.cpp:607
+#, kde-format
+msgid ""
+"A package dependency could not be found.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Paketin riippuvuuksia ei löytynyt.\n"
+"Lisätietoa löytyy yksityiskohtaisesta raportista."
+
+#: libapper/PkStrings.cpp:610
+#, kde-format
+msgid "The search filter was not correctly formed."
+msgstr "Hakusuodatinta ei ole muodostettu oikein."
+
+#: libapper/PkStrings.cpp:612
+#, kde-format
+msgid ""
+"The package identifier was not well formed when sent to the system daemon.\n"
+"This normally indicates an internal bug and should be reported."
+msgstr ""
+"Paketin tunnistetta ei muodostettu oikein lähetettäessä sitä "
+"järjestelmäpalveluun.\n"
+"Tämä on yleensä sisäinen ohjelmavirhe ja siitä tulisi ilmoittaa."
+
+#: libapper/PkStrings.cpp:615
+#, kde-format
+msgid ""
+"An error occurred while running the transaction.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Toimenpidettä suoritettaessa sattui virhe.\n"
+"Lisätietoa löytyy yksityiskohtaisesta raportista."
+
+#: libapper/PkStrings.cpp:618
+#, kde-format
+msgid ""
+"The remote software origin name was not found.\n"
+"You may need to enable an item in Software Origins."
+msgstr ""
+"Etäohjelmistolähteen nimeä ei löytynyt.\n"
+"Jokin ohjelmistolähde on otettava käyttöön."
+
+#: libapper/PkStrings.cpp:621
+#, kde-format
+msgid "Removing a protected system package is not allowed."
+msgstr "Suojattua järjestelmäpakettia ei sallita poistaa."
+
+#: libapper/PkStrings.cpp:623
+#, kde-format
+msgid "The task was canceled successfully and no packages were changed."
+msgstr "Toiminto peruttiin onnistuneesti eikä paketteja muutettu."
+
+#: libapper/PkStrings.cpp:625
+#, kde-format
+msgid ""
+"The task was canceled successfully and no packages were changed.\n"
+"The backend did not exit cleanly."
+msgstr ""
+"Tehtävä peruttiin onnistuneesti eikä paketteja muutettu.\n"
+"Taustaosa ei päättynyt siististi."
+
+#: libapper/PkStrings.cpp:628
+#, kde-format
+msgid ""
+"The native package configuration file could not be opened.\n"
+"Please make sure your system's configuration is valid."
+msgstr ""
+"Natiivipaketin asetustiedostoa ei voitu avata.\n"
+"Varmista, että järjestelmäsi asetukset ovat kelvolliset."
+
+#: libapper/PkStrings.cpp:631
+#, kde-format
+msgid "The task is not safe to be cancelled at this time."
+msgstr "Toimintoa ei voi turvallisesti perua tällä hetkellä."
+
+#: libapper/PkStrings.cpp:633
+#, kde-format
+msgid ""
+"Source packages are not normally installed this way.\n"
+"Check the extension of the file you are trying to install."
+msgstr ""
+"Lähdekoodipaketteja ei tavallisesti asenneta näin.\n"
+"Tarkista asennettavan tiedoston tiedostopääte."
+
+#: libapper/PkStrings.cpp:636
+#, kde-format
+msgid ""
+"The license agreement was not agreed to.\n"
+"To use this software you have to accept the license."
+msgstr ""
+"Lisenssisopimusta ei ole hyväksytty.\n"
+"Ohjelmistoa ei voi käyttää hyväksymättä lisenssiä."
+
+#: libapper/PkStrings.cpp:639
+#, kde-format
+msgid ""
+"Two packages provide the same file.\n"
+"This is usually due to mixing packages for different software origins."
+msgstr ""
+"Kaksi pakettia tarjoaa saman tiedoston.\n"
+"Näin käy yleensä sekoitettaessa eri ohjelmistolähteiden paketteja."
+
+#: libapper/PkStrings.cpp:642
+#, kde-format
+msgid ""
+"Multiple packages exist that are not compatible with each other.\n"
+"This is usually due to mixing packages from different software origins."
+msgstr ""
+"Useammat olemassa olevat paketit eivät ole yhteensopivia keskenään.\n"
+"Näin käy yleensä sekoitettaessa eri ohjelmistolähteiden paketteja."
+
+#: libapper/PkStrings.cpp:645
+#, kde-format
+msgid ""
+"There was a (possibly temporary) problem connecting to a software origins.\n"
+"Please check the detailed error for further details."
+msgstr ""
+"Sattui (ehkä hetkellinen) virhe yhdistettäessä ohjelmistolähteeseen.\n"
+"Katso lisätietoja yksityiskohtaisesta virheilmoituksesta."
+
+#: libapper/PkStrings.cpp:648
+#, kde-format
+msgid ""
+"Failed to initialize packaging backend.\n"
+"This may occur if other packaging tools are being used simultaneously."
+msgstr ""
+"Pakettitaustaosan alustus epäonnistui.\n"
+"Näin voi käydä, jos useampi pakettityökalu on käytössä yhtä aikaa."
+
+#: libapper/PkStrings.cpp:651
+#, kde-format
+msgid ""
+"Failed to close down the backend instance.\n"
+"This error can normally be ignored."
+msgstr ""
+"Taustaosainstanssin sulkeminen epäonnistui.\n"
+"Tämän virheen voi yleensä jättää huomiotta."
+
+#: libapper/PkStrings.cpp:654
+#, kde-format
+msgid ""
+"Cannot get the exclusive lock on the packaging backend.\n"
+"Please close any other legacy packaging tools that may be open."
+msgstr ""
+"Pakettitaustaosaa ei saada lukituksi yksin tämän ohjelman käyttöön.\n"
+"Sulje mahdollisesti avoinna olevat muut pakettityökalut."
+
+#: libapper/PkStrings.cpp:657
+#, kde-format
+msgid "None of the selected packages could be updated."
+msgstr "Yhtäkään valittua pakettia ei voitu päivittää."
+
+#: libapper/PkStrings.cpp:659
+#, kde-format
+msgid "The repository configuration could not be modified."
+msgstr "Ohjelmistolähteiden asetuksia ei voitu muuttaa."
+
+#: libapper/PkStrings.cpp:661
+#, kde-format
+msgid ""
+"Installing the local file failed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Paikallistiedoston asennus epäonnistui.\n"
+"Lisätietoja on saatavilla yksityiskohtaisessa raportissa."
+
+#: libapper/PkStrings.cpp:664
+#, kde-format
+msgid "The package signature could not be verified."
+msgstr "Paketin allekirjoitusta ei voitu tarkistaa."
+
+#: libapper/PkStrings.cpp:666
+#, kde-format
+msgid ""
+"The package signature was missing and this package is untrusted.\n"
+"This package was not signed with a GPG key when created."
+msgstr ""
+"Paketilta puuttuu allekirjoitus eikä pakettiin siten voi luottaa.\n"
+"Pakettia ei allekirjoitettu GPG-avaimella sitä luotaessa."
+
+#: libapper/PkStrings.cpp:669
+#, kde-format
+msgid "Repository configuration was invalid and could not be read."
+msgstr "Ohjelmalähteen asetus on virheellinen eikä sitä voi lukea."
+
+#: libapper/PkStrings.cpp:671
+#, kde-format
+msgid ""
+"The package you are attempting to install is not valid.\n"
+"The package file could be corrupt, or not a proper package."
+msgstr ""
+"Asennettavaksi tarkoitettu paketti ei ole kelvollinen.\n"
+"Paketti on saattanut korruptoitua tai vaihtoehtoisesti se ei ole kelvollinen "
+"pakettitiedosto."
+
+#: libapper/PkStrings.cpp:674
+#, kde-format
+msgid ""
+"Installation of this package was prevented by your packaging system's "
+"configuration."
+msgstr "Pakettijärjestelmäsi asetukset estivät tämän paketin asentamisen."
+
+#: libapper/PkStrings.cpp:676
+#, kde-format
+msgid ""
+"The package that was downloaded is corrupt and needs to be downloaded again."
+msgstr "Ladattu paketti on korruptoitunut, joten se tulee ladata uudelleen."
+
+#: libapper/PkStrings.cpp:678
+#, kde-format
+msgid ""
+"All of the packages selected for install are already installed on the system."
+msgstr "Kaikki valitut paketit on jo asennettu tähän järjestelmään."
+
+#: libapper/PkStrings.cpp:680
+#, kde-format
+msgid ""
+"The specified file could not be found on the system.\n"
+"Check that the file still exists and has not been deleted."
+msgstr ""
+"Annettua tiedostoa ei löydy järjestelmästä.\n"
+"Tarkista, että tiedosto on yhä olemassa eikä sitä ole poistettu."
+
+#: libapper/PkStrings.cpp:683
+#, kde-format
+msgid ""
+"Required data could not be found on any of the configured software origins.\n"
+"There were no more download mirrors that could be tried."
+msgstr ""
+"Vaadittua tietoa ei löytynyt asetetuista ohjelmistolähteistä.\n"
+"Sellaisia peilipalvelimia ei ollut, joita olisi voinut kokeilla."
+
+#: libapper/PkStrings.cpp:686
+#, kde-format
+msgid ""
+"Required upgrade data could not be found in any of the configured software "
+"origins.\n"
+"The list of distribution upgrades will be unavailable."
+msgstr ""
+"Vaadittua päivitystietoa ei löytynyt asetetuista ohjelmistolähteistä.\n"
+"Jakelupäivitysten luettelo ei ole käytettävissä."
+
+#: libapper/PkStrings.cpp:689
+#, kde-format
+msgid ""
+"The package that is trying to be installed is incompatible with this system."
+msgstr ""
+"Asennettavaksi tarkoitettu paketti ei ole yhteensopiva tämän järjestelmän "
+"kanssa."
+
+#: libapper/PkStrings.cpp:691
+#, kde-format
+msgid ""
+"There is insufficient space on the device.\n"
+"Free some space on the system disk to perform this operation."
+msgstr ""
+"Koneen kiintolevyllä ei riitä vapaata tilaa.\n"
+"Suorittaaksesi toimenpiteen vapauta ensin levytilaa."
+
+#: libapper/PkStrings.cpp:694
+#, kde-format
+msgid "Additional media is required to complete the transaction."
+msgstr "Lisätietovälineitä vaaditaan toimenpiteen loppuun saattamiseksi."
+
+#: libapper/PkStrings.cpp:696
+#, kde-format
+msgid ""
+"You have failed to provide correct authentication.\n"
+"Please check any passwords or account settings."
+msgstr ""
+"Et onnistunut tunnistautumaan oikein.\n"
+"Tarkista salasanasi ja tiliesi asetukset."
+
+#: libapper/PkStrings.cpp:699
+#, kde-format
+msgid ""
+"The specified update could not be found.\n"
+"It could have already been installed or no longer available on the remote "
+"server."
+msgstr ""
+"Määritettyä päivitystä ei löytynyt.\n"
+"Se on voitu jo asentaa tai sitä ei enää ole saatavilla etäpalvelimelta."
+
+#: libapper/PkStrings.cpp:702
+#, kde-format
+msgid "The package could not be installed from untrusted origin."
+msgstr "Pakettia ei voitu asentaa ei-luotettavasta lähteestä."
+
+#: libapper/PkStrings.cpp:704
+#, kde-format
+msgid "The package could not be updated from untrusted origin."
+msgstr "Pakettia ei voitu päivittää ei-luotetusta lähteestä."
+
+#: libapper/PkStrings.cpp:706
+#, kde-format
+msgid "The file list is not available for this package."
+msgstr "Paketin tiedostoluettelo ei ole saatavilla."
+
+#: libapper/PkStrings.cpp:708
+#, kde-format
+msgid "The information about what requires this package could not be obtained."
+msgstr "Tietoa siitä, mikä tätä pakettia vaatii, ei saada hankituksi."
+
+#: libapper/PkStrings.cpp:710
+#, kde-format
+msgid "The specified software origin could not be disabled."
+msgstr "Määritettyä ohjelmistolähdettä ei voitu poistaa käytöstä."
+
+#: libapper/PkStrings.cpp:712
+#, kde-format
+msgid ""
+"The download could not be done automatically and should be done manually.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Latausta ei voitu tehdä automaattisesti, joten se pitää tehdä käsin.\n"
+"Lisätietoa löytyy yksityiskohtaisesta raportista."
+
+#: libapper/PkStrings.cpp:715
+#, kde-format
+msgid ""
+"One of the selected packages failed to configure correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Yhden valitun paketin asetuksia ei saatu tehdyksi oikein.\n"
+"Lisätietoa löytyy yksityiskohtaisesta raportista."
+
+#: libapper/PkStrings.cpp:718
+#, kde-format
+msgid ""
+"One of the selected packages failed to build correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Yhtä valituista paketeista ei saatu koostetuksi oikein.\n"
+"Lisätietoa löytyy yksityiskohtaisesta raportista."
+
+#: libapper/PkStrings.cpp:721
+#, kde-format
+msgid ""
+"One of the selected packages failed to install correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Yksi valituista paketeista ei onnistunut asentumaan oikein.\n"
+"Lisätietoa löytyy yksityiskohtaisesta raportista."
+
+#: libapper/PkStrings.cpp:724
+#, kde-format
+msgid ""
+"One of the selected packages failed to be removed correctly.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Yhtä valituista paketeista ei saatu poistetuksi oikein.\n"
+"Lisätietoa löytyy yksityiskohtaisesta raportista."
+
+#: libapper/PkStrings.cpp:727
+#, kde-format
+msgid ""
+"A program is running that has to be closed before the update can proceed.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Sellainen ohjelma on käynnissä, joka täytyy sulkea ennen päivityksen "
+"jatkamista.\n"
+"Lisätietoa löytyy yksityiskohtaisesta raportista."
+
+#: libapper/PkStrings.cpp:730
+#, kde-format
+msgid "The package database was changed while the request was running."
+msgstr "Pakettitietokanta muuttui pyyntöä suoritettaessa."
+
+#: libapper/PkStrings.cpp:732
+#, kde-format
+msgid "The virtual provide type is not supported by this system."
+msgstr "Tämä järjestelmä ei tue virtuaalista tarjoajatyyppiä."
+
+#: libapper/PkStrings.cpp:734
+#, kde-format
+msgid "The install root is invalid. Please contact your administrator."
+msgstr ""
+"Asennuksen pääkansio on virheellinen. Ota yhteyttä järjestelmän ylläpitäjään."
+
+#: libapper/PkStrings.cpp:736
+#, kde-format
+msgid "The list of software could not be downloaded."
+msgstr "Ohjelmistoluetteloa ei saatu ladatuksi."
+
+#: libapper/PkStrings.cpp:738
+#, kde-format
+msgid ""
+"The transaction has been cancelled and will be retried when the system is "
+"idle."
+msgstr "Toimenpide peruttiin, ja sitä jatketaan järjestelmän ollessa jouten."
+
+#: libapper/PkStrings.cpp:740
+#, kde-format
+msgid "A previous package management transaction was interrupted."
+msgstr "Aiempi paketinhallintatoimenpide keskeytettiin."
+
+#: libapper/PkStrings.cpp:742
+#, kde-format
+msgid "A package manager lock is required."
+msgstr "Paketinhallinnan lukitus vaaditaan."
+
+#: libapper/PkStrings.cpp:744
+#, kde-format
+msgid ""
+"Unknown error, please report a bug.\n"
+"More information is available in the detailed report."
+msgstr ""
+"Tuntematon virhe, ilmoita viasta.\n"
+"Lisätietoja on saatavilla yksityiskohtaisessa raportissa."
+
+#: libapper/PkStrings.cpp:755
+#, kde-format
+msgctxt "The group type"
+msgid "Accessibility"
+msgstr "Esteettömyys"
+
+#: libapper/PkStrings.cpp:757
+#, kde-format
+msgctxt "The group type"
+msgid "Accessories"
+msgstr "Apuohjelmat"
+
+#: libapper/PkStrings.cpp:759
+#, kde-format
+msgctxt "The group type"
+msgid "Education"
+msgstr "Opetus"
+
+#: libapper/PkStrings.cpp:761
+#, kde-format
+msgctxt "The group type"
+msgid "Games"
+msgstr "Pelit"
+
+#: libapper/PkStrings.cpp:763
+#, kde-format
+msgctxt "The group type"
+msgid "Graphics"
+msgstr "Grafiikka"
+
+#: libapper/PkStrings.cpp:765
+#, kde-format
+msgctxt "The group type"
+msgid "Internet"
+msgstr "Internet"
+
+#: libapper/PkStrings.cpp:767
+#, kde-format
+msgctxt "The group type"
+msgid "Office"
+msgstr "Toimisto"
+
+#: libapper/PkStrings.cpp:769
+#, kde-format
+msgctxt "The group type"
+msgid "Others"
+msgstr "Muut"
+
+#: libapper/PkStrings.cpp:771
+#, kde-format
+msgctxt "The group type"
+msgid "Development"
+msgstr "Kehitys"
+
+#: libapper/PkStrings.cpp:773
+#, kde-format
+msgctxt "The group type"
+msgid "Multimedia"
+msgstr "Multimedia"
+
+#: libapper/PkStrings.cpp:775
+#, kde-format
+msgctxt "The group type"
+msgid "System"
+msgstr "Järjestelmä"
+
+#: libapper/PkStrings.cpp:777
+#, kde-format
+msgctxt "The group type"
+msgid "GNOME desktop"
+msgstr "Gnome-työpöytä"
+
+#: libapper/PkStrings.cpp:779
+#, kde-format
+msgctxt "The group type"
+msgid "KDE desktop"
+msgstr "KDE-työpöytä"
+
+#: libapper/PkStrings.cpp:781
+#, kde-format
+msgctxt "The group type"
+msgid "XFCE desktop"
+msgstr "XFCE-työpöytä"
+
+#: libapper/PkStrings.cpp:783
+#, kde-format
+msgctxt "The group type"
+msgid "Other desktops"
+msgstr "Muut työpöydät"
+
+#: libapper/PkStrings.cpp:785
+#, kde-format
+msgctxt "The group type"
+msgid "Publishing"
+msgstr "Julkaisu"
+
+#: libapper/PkStrings.cpp:787
+#, kde-format
+msgctxt "The group type"
+msgid "Servers"
+msgstr "Palvelimet"
+
+#: libapper/PkStrings.cpp:789
+#, kde-format
+msgctxt "The group type"
+msgid "Fonts"
+msgstr "Fontit"
+
+#: libapper/PkStrings.cpp:791
+#, kde-format
+msgctxt "The group type"
+msgid "Admin tools"
+msgstr "Ylläpitotyökalut"
+
+#: libapper/PkStrings.cpp:793
+#, kde-format
+msgctxt "The group type"
+msgid "Legacy"
+msgstr "Yhteensopivuus"
+
+#: libapper/PkStrings.cpp:795
+#, kde-format
+msgctxt "The group type"
+msgid "Localization"
+msgstr "Kotoistus"
+
+#: libapper/PkStrings.cpp:797
+#, kde-format
+msgctxt "The group type"
+msgid "Virtualization"
+msgstr "Virtualisointi"
+
+#: libapper/PkStrings.cpp:799
+#, kde-format
+msgctxt "The group type"
+msgid "Security"
+msgstr "Tietoturva"
+
+#: libapper/PkStrings.cpp:801
+#, kde-format
+msgctxt "The group type"
+msgid "Power management"
+msgstr "Virranhallinta"
+
+#: libapper/PkStrings.cpp:803
+#, kde-format
+msgctxt "The group type"
+msgid "Communication"
+msgstr "Viestintä"
+
+#: libapper/PkStrings.cpp:805
+#, kde-format
+msgctxt "The group type"
+msgid "Network"
+msgstr "Verkko"
+
+#: libapper/PkStrings.cpp:807
+#, kde-format
+msgctxt "The group type"
+msgid "Maps"
+msgstr "Kartat"
+
+#: libapper/PkStrings.cpp:809
+#, kde-format
+msgctxt "The group type"
+msgid "Software sources"
+msgstr "Ohjelmistolähteet"
+
+#: libapper/PkStrings.cpp:811
+#, kde-format
+msgctxt "The group type"
+msgid "Science"
+msgstr "Tiede"
+
+#: libapper/PkStrings.cpp:813
+#, kde-format
+msgctxt "The group type"
+msgid "Documentation"
+msgstr "Ohjeet"
+
+#: libapper/PkStrings.cpp:815
+#, kde-format
+msgctxt "The group type"
+msgid "Electronics"
+msgstr "Elektroniikka"
+
+#: libapper/PkStrings.cpp:817
+#, kde-format
+msgctxt "The group type"
+msgid "Package collections"
+msgstr "Pakettikokoelmat"
+
+#: libapper/PkStrings.cpp:819
+#, kde-format
+msgctxt "The group type"
+msgid "Vendor"
+msgstr "Valmistaja"
+
+#: libapper/PkStrings.cpp:821
+#, kde-format
+msgctxt "The group type"
+msgid "Newest packages"
+msgstr "Uusimmat paketit"
+
+#: libapper/PkStrings.cpp:823
+#, kde-format
+msgctxt "The group type"
+msgid "Unknown group"
+msgstr "Tuntematon ryhmä"
+
+#: libapper/PkStrings.cpp:834
+#, kde-format
+msgctxt "The type of update"
+msgid "Trivial update"
+msgstr "Ongelmaton päivitys"
+
+#: libapper/PkStrings.cpp:836
+#, kde-format
+msgctxt "The type of update"
+msgid "Normal update"
+msgstr "Tavallinen päivitys"
+
+#: libapper/PkStrings.cpp:838
+#, kde-format
+msgctxt "The type of update"
+msgid "Important update"
+msgstr "Tärkeä päivitys"
+
+#: libapper/PkStrings.cpp:840
+#, kde-format
+msgctxt "The type of update"
+msgid "Security update"
+msgstr "Turvapäivitys"
+
+#: libapper/PkStrings.cpp:842
+#, kde-format
+msgctxt "The type of update"
+msgid "Bug fix update"
+msgstr "Viankorjauspäivitys"
+
+#: libapper/PkStrings.cpp:844
+#, kde-format
+msgctxt "The type of update"
+msgid "Enhancement update"
+msgstr "Parannuspäivitys"
+
+#: libapper/PkStrings.cpp:846
+#, kde-format
+msgctxt "The type of update"
+msgid "Blocked update"
+msgstr "Estetty päivitys"
+
+#: libapper/PkStrings.cpp:849
+#, kde-format
+msgctxt "The type of update"
+msgid "Installed"
+msgstr "Asennettu"
+
+#: libapper/PkStrings.cpp:852
+#, kde-format
+msgctxt "The type of update"
+msgid "Available"
+msgstr "Saatavilla"
+
+#: libapper/PkStrings.cpp:854
+#, kde-format
+msgctxt "The type of update"
+msgid "Unknown update"
+msgstr "Tuntematon päivitys"
+
+#: libapper/PkStrings.cpp:865
+#, kde-format
+msgid "No Updates Available"
+msgstr "Päivityksiä ei saatavilla"
+
+#: libapper/PkStrings.cpp:868
+#, kde-format
+msgctxt "Some updates were selected on the view"
+msgid "1 Update Selected"
+msgid_plural "%1 Updates Selected"
+msgstr[0] "Yksi päivitys valittu"
+msgstr[1] "%1 päivitystä valittu"
+
+#: libapper/PkStrings.cpp:872
+#, kde-format
+msgctxt "Some updates are being shown on the screen"
+msgid "1 Update"
+msgid_plural "%1 Updates"
+msgstr[0] "1 päivitys"
+msgstr[1] "%1 päivitystä"
+
+#: libapper/PkStrings.cpp:875
+#, kde-format
+msgctxt "Type of update, in the case it's just an update"
+msgid "%1, %2"
+msgstr "%1, %2"
+
+#: libapper/PkStrings.cpp:876
+#, kde-format
+msgctxt "Part of: %1 Updates, %1 Selected"
+msgid "%1 Update"
+msgid_plural "%1 Updates"
+msgstr[0] "1 päivitys"
+msgstr[1] "%1 päivitystä"
+
+#: libapper/PkStrings.cpp:877
+#, kde-format
+msgctxt "Part of: %1 Updates, %1 Selected"
+msgid "%1 Selected"
+msgid_plural "%1 Selected"
+msgstr[0] "%1 valittu"
+msgstr[1] "%1 valittu"
+
+#: libapper/PkStrings.cpp:881
+#, kde-format
+msgid "No Packages"
+msgstr "Ei paketteja"
+
+#: libapper/PkStrings.cpp:883
+#, kde-format
+msgid "1 Package"
+msgid_plural "%1 Packages"
+msgstr[0] "1 paketti"
+msgstr[1] "%1 pakettia"
+
+#: libapper/PkStrings.cpp:891
+#, kde-format
+msgid "No restart is necessary"
+msgstr "Uudelleenkäynnistys ei ole tarpeen"
+
+#: libapper/PkStrings.cpp:893
+#, kde-format
+msgid "You will be required to restart this application"
+msgstr "Tämä sovellus on käynnistettävä uudelleen"
+
+#: libapper/PkStrings.cpp:895
+#, kde-format
+msgid "You will be required to log out and back in"
+msgstr "On kirjauduttava ulos ja takaisin sisään"
+
+#: libapper/PkStrings.cpp:897
+#, kde-format
+msgid "A restart will be required"
+msgstr "Uudelleenkäynnistys tarvitaan"
+
+#: libapper/PkStrings.cpp:899
+#, kde-format
+msgid "You will be required to log out and back in due to a security update."
+msgstr "Turvapäivityksen takia on kirjauduttava ulos ja takaisin sisään."
+
+#: libapper/PkStrings.cpp:901
+#, kde-format
+msgid "A restart will be required due to a security update."
+msgstr "Turvapäivityksen takia järjestelmä on käynnistettävä uudelleen."
+
+#: libapper/PkStrings.cpp:914
+#, kde-format
+msgid "No restart is required"
+msgstr "Uudelleenkäynnistystä ei tarvita"
+
+#: libapper/PkStrings.cpp:916
+#, kde-format
+msgid "A restart is required"
+msgstr "Uudelleenkäynnistys tarvitaan"
+
+#: libapper/PkStrings.cpp:918
+#, kde-format
+msgid "You need to log out and log back in"
+msgstr "Kirjaudu uudelleen"
+
+#: libapper/PkStrings.cpp:920
+#, kde-format
+msgid "You need to restart the application"
+msgstr "Sovellus tulee käynnistää uudelleen"
+
+#: libapper/PkStrings.cpp:922
+#, kde-format
+msgid "You need to log out and log back in to remain secure."
+msgstr "Tietoturvan vuoksi vaaditaan uudelleenkirjautuminen."
+
+#: libapper/PkStrings.cpp:924
+#, kde-format
+msgid "A restart is required to remain secure."
+msgstr "Tietoturvan vuoksi vaaditaan uudelleenkäynnistys."
+
+#: libapper/PkStrings.cpp:937
+#, kde-format
+msgid "Stable"
+msgstr "Vakaa"
+
+#: libapper/PkStrings.cpp:939
+#, kde-format
+msgid "Unstable"
+msgstr "Epävakaa"
+
+#: libapper/PkStrings.cpp:941
+#, kde-format
+msgid "Testing"
+msgstr "Testattava"
+
+#: libapper/PkStrings.cpp:954
+#, kde-format
+msgid "Please insert the CD labeled '%1', and press continue."
+msgstr "Syötä CD, jonka nimiö on ”%1”, ja paina Jatka."
+
+#: libapper/PkStrings.cpp:956
+#, kde-format
+msgid "Please insert the DVD labeled '%1', and press continue."
+msgstr "Syötä DVD, jonka nimiö on ”%1”, ja paina Jatka."
+
+#: libapper/PkStrings.cpp:958
+#, kde-format
+msgid "Please insert the disc labeled '%1', and press continue."
+msgstr "Syötä levy, jonka nimiö on ”%1”, ja paina Jatka."
+
+#: libapper/PkStrings.cpp:960 libapper/PkStrings.cpp:963
+#, kde-format
+msgid "Please insert the medium labeled '%1', and press continue."
+msgstr "Syötä tietoväline, jonka nimiö on ”%1”, ja paina Jatka."
+
+#: libapper/PkStrings.cpp:1014
+#, kde-format
+msgid "You do not have the necessary privileges to perform this action."
+msgstr "Sinulla ei ole tämän toiminnon suorittamiseen vaadittavia oikeuksia."
+
+#: libapper/PkStrings.cpp:1016
+#, kde-format
+msgid "Could not get a transaction id from packagekitd."
+msgstr "Ei saatu toimenpiteen tunnistetta packagekitd:ltä."
+
+#: libapper/PkStrings.cpp:1018
+#, kde-format
+msgid "Cannot connect to this transaction id."
+msgstr "Tämän tunnisteen toimenpiteeseen ei saada yhteyttä."
+
+#: libapper/PkStrings.cpp:1020
+#, kde-format
+msgid "This action is unknown."
+msgstr "Tuntematon toiminto."
+
+#: libapper/PkStrings.cpp:1022
+#, kde-format
+msgid "The packagekitd service could not be started."
+msgstr "Packagekitd-palvelua ei voitu käynnistää."
+
+#: libapper/PkStrings.cpp:1024
+#, kde-format
+msgid "The query is not valid."
+msgstr "Kysely ei ole kelvollinen."
+
+#: libapper/PkStrings.cpp:1026
+#, kde-format
+msgid "The file is not valid."
+msgstr "Tiedosto ei ole kelvollinen."
+
+#: libapper/PkStrings.cpp:1028
+#, kde-format
+msgid "This function is not yet supported."
+msgstr "Tämä toiminto ei ole vielä tuettu."
+
+#: libapper/PkStrings.cpp:1030
+#, kde-format
+msgid "Could not talk to packagekitd."
+msgstr "Tiedonvälitys packagekitd:n kanssa epäonnistui."
+
+#: libapper/PkStrings.cpp:1032
+#, kde-format
+msgid "Error talking to packagekitd."
+msgstr "Virhe juteltaessa packagekitd:lle."
+
+#: libapper/PkStrings.cpp:1035 libapper/PkStrings.cpp:1038
+#, kde-format
+msgid "An unknown error happened."
+msgstr "Tapahtui tuntematon virhe."
+
+#: libapper/PkStrings.cpp:1053
+#, kde-format
+msgid "Your system is up to date"
+msgstr "Järjestelmäsi on ajan tasalla"
+
+#: libapper/PkStrings.cpp:1055
+#, kde-format
+msgid "You have no updates"
+msgstr "Tarjolla ei ole päivityksiä"
+
+#: libapper/PkStrings.cpp:1057
+#, kde-format
+msgid "Last check for updates was more than a month ago"
+msgstr "Viimeisin päivitystarkistus oli yli kuukausi sitten"
+
+#: libapper/PkStrings.cpp:1065
+#, kde-format
+msgid "Verified %1 ago"
+msgstr "Tarkistettu %1 sitten"
+
+#: libapper/PkStrings.cpp:1067
+#, kde-format
+msgid "It's strongly recommended that you check for new updates now"
+msgstr "On hyvin suositeltavaa tarkistaa uudet päivitykset nyt"
+
+#: libapper/PkTransaction.cpp:264
+#, kde-format
+msgid ""
+"You are about to install unsigned packages that can compromise your system, "
+"as it is impossible to verify if the software came from a trusted source.\n"
+"\n"
+"Are you sure you want to proceed with the installation?"
+msgstr ""
+"Olet asentamassa allekirjoittamattomia paketteja. Ne voivat vaarantaa "
+"järjestelmän, koska on mahdotonta tarkistaa, tulevatko ohjelmat luotetusta "
+"lähteestä.\n"
+"Haluatko varmasti jatkaa asennusta?"
+
+#: libapper/PkTransaction.cpp:267
+#, kde-format
+msgid "Installing unsigned software"
+msgstr "Asenna allekirjoittamaton ohjelma"
+
+#: libapper/PkTransactionWidget.cpp:229 libapper/PkTransactionWidget.cpp:242
+#, kde-format
+msgid "%1 (%2%)"
+msgstr "%1 (%2%)"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/PkTransactionWidget.ui:47
+#, kde-format
+msgid "icon"
+msgstr "kuvake"
+
+#. i18n: ectx: property (text), widget (QLabel, currentL)
+#: libapper/PkTransactionWidget.ui:73
+#, kde-format
+msgid "Downloading Packages"
+msgstr "Ladataan paketteja"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RepoSig)
+#: libapper/RepoSig.ui:14
+#, kde-format
+msgid "Software signature is required"
+msgstr "Vaaditaan ohjelman allekirjoitus"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: libapper/RepoSig.ui:47
+#, kde-format
+msgid "Repository name:"
+msgstr "Ohjelmalähteen nimi:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: libapper/RepoSig.ui:73
+#, kde-format
+msgid "Signature URL:"
+msgstr "Allekirjoituksen osoite:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: libapper/RepoSig.ui:99
+#, kde-format
+msgid "Signature user identifier:"
+msgstr "Allekirjoituksen käyttäjätunniste:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: libapper/RepoSig.ui:125
+#, kde-format
+msgid "Signature identifier:"
+msgstr "Allekirjoituksen tunniste:"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/RepoSig.ui:147
+#, kde-format
+msgid "Do you trust the origin of packages?"
+msgstr "Luotatko pakettien alkuperään?"
+
+#: libapper/Requirements.cpp:55
+#, kde-format
+msgid "Additional changes"
+msgstr "Lisämuutokset"
+
+#: libapper/Requirements.cpp:82
+#, kde-format
+msgid "1 package to remove"
+msgid_plural "%1 packages to remove"
+msgstr[0] "Yksi paketti poistetaan"
+msgstr[1] "%1 pakettia poistetaan"
+
+#: libapper/Requirements.cpp:97
+#, kde-format
+msgid "1 package to downgrade"
+msgid_plural "%1 packages to downgrade"
+msgstr[0] "1 paketti päivitetään vanhemmaksi"
+msgstr[1] "%1 pakettia päivitetään vanhemmaksi"
+
+#: libapper/Requirements.cpp:112
+#, kde-format
+msgid "1 package to reinstall"
+msgid_plural "%1 packages to reinstall"
+msgstr[0] "Yksi paketti asennetaan uudelleen"
+msgstr[1] "%1 pakettia asennetaan uudelleen"
+
+#: libapper/Requirements.cpp:125
+#, kde-format
+msgid "1 package to install"
+msgid_plural "%1 packages to install"
+msgstr[0] "Yksi paketti asennetaan"
+msgstr[1] "%1 pakettia asennetaan"
+
+#: libapper/Requirements.cpp:138
+#, kde-format
+msgid "1 package to update"
+msgid_plural "%1 packages to update"
+msgstr[0] "1 paketti päivitetään"
+msgstr[1] "%1 pakettia päivitetään"
+
+#: libapper/Requirements.cpp:151
+#, kde-format
+msgid "1 untrusted package"
+msgid_plural "%1 untrusted packages"
+msgstr[0] "1 epäluotettava paketti"
+msgstr[1] "%1 epäluotettavaa pakettia"
+
+#: libapper/Requirements.cpp:199
+#, kde-format
+msgctxt "how many bytes are required for download"
+msgid "Need to get %1 of archives"
+msgstr "Tarvitsee hakea %1 arkistoja"
+
+#: libapper/Requirements.cpp:258
+#, kde-format
+msgid ""
+"You are about to install unsigned packages that can compromise your system, "
+"as it is impossible to verify if the software came from a trusted source."
+msgstr ""
+"Olet asentamassa allekirjoittamattomia paketteja. Ne voivat vaarantaa "
+"järjestelmän, koska on mahdotonta tarkistaa, tulevatko ohjelmat luotetusta "
+"lähteestä."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: libapper/Requirements.ui:28
+#, kde-format
+msgid "Additional changes are required to complete the task"
+msgstr "Tehtävän viimeistelemiseen tarvitaan lisämuutoksia."
+
+# *** TARKISTA: Epäselvä; onko kyse siitä, että pyydetään olemaan pyytämättä vahvistuksia, vai siitä, että pyydetään olemaan automaattisesti hyväksymättä?
+#. i18n: ectx: property (text), widget (QCheckBox, confirmCB)
+#: libapper/Requirements.ui:101
+#, kde-format
+msgid "Do not confirm when installing or updating additional packages"
+msgstr "Älä vahvista lisäpakettien asennusta tai päivitystä"
+
+#. i18n: ectx: property (text), widget (QLabel, descriptionL)
+#: PkSession/IntroDialog.ui:65
+#, kde-format
+msgid "TextLabel"
+msgstr "Tekstiselite"
+
+#: PkSession/main.cpp:48
+#, kde-format
+msgid "Apper PackageKit Session helper"
+msgstr "Apperin PackageKit-istuntoapulainen"
+
+#: PkSession/main.cpp:51
+#, kde-format
+msgid "Daniel Nicoletti"
+msgstr "Daniel Nicoletti"
+
+#: PkSession/main.cpp:52
+#, kde-format
+msgid "Trever Fischer"
+msgstr "Trever Fischer"
+
+#: PkSession/PkInstallCatalogs.cpp:47
+#, kde-format
+msgid "Install Packages Catalogs"
+msgstr "Asenna pakettiluettelot"
+
+#: PkSession/PkInstallCatalogs.cpp:66
+#, kde-format
+msgid "You can drop more catalogs in here"
+msgstr "Voit pudottaa lisää luetteloja tähän"
+
+#: PkSession/PkInstallCatalogs.cpp:85
+#, kde-format
+msgid "No supported catalog was found"
+msgstr "Tuettuja luetteloja ei löytynyt"
+
+#: PkSession/PkInstallCatalogs.cpp:87
+#, kde-format
+msgid "Do you want to install this catalog?"
+msgid_plural "Do you want to install these catalogs?"
+msgstr[0] "Haluatko asentaa tämän luettelon?"
+msgstr[1] "Haluatko asentaa nämä luettelot?"
+
+#: PkSession/PkInstallCatalogs.cpp:96
+#, kde-format
+msgid "An application wants to install a catalog"
+msgid_plural "An application wants to install catalogs"
+msgstr[0] "Sovellus haluaa asentaa luettelon"
+msgstr[1] "Sovellus haluaa asentaa luetteloita"
+
+#: PkSession/PkInstallCatalogs.cpp:100
+#, kde-format
+msgid "The application <i>%2</i> wants to install a catalog"
+msgid_plural "The application <i>%2</i> wants to install catalogs"
+msgstr[0] "Sovellus <i>%2</i> haluaa asentaa luettelon"
+msgstr[1] "Sovellus <i>%2</i> haluaa asentaa luetteloita"
+
+#: PkSession/PkInstallCatalogs.cpp:137
+#, kde-format
+msgid "Not supported"
+msgstr "Ei tuettu"
+
+#: PkSession/PkInstallCatalogs.cpp:138
+#, kde-format
+msgid ""
+"Your backend does not support any of the needed methods to install a catalog"
+msgstr ""
+"Taustaosasi ei tue mitään luettelon asentamiseen tarvittavaa menetelmää"
+
+#: PkSession/PkInstallCatalogs.cpp:178
+#, kde-format
+msgid "Catalog not found"
+msgstr "Luetteloa ei löytynyt"
+
+#: PkSession/PkInstallCatalogs.cpp:179
+#, kde-format
+msgid "Could not find a catalog to install"
+msgstr "Asennettavaa luetteloa ei löytynyt"
+
+#: PkSession/PkInstallCatalogs.cpp:186
+#, kde-format
+msgid "Catalog %2 failed to open"
+msgid_plural "Catalogs %2 failed to open"
+msgstr[0] "Luetteloa %2 ei onnistuttu avaamaan"
+msgstr[1] "Luetteloja %2 ei onnistuttu avaamaan"
+
+#: PkSession/PkInstallCatalogs.cpp:190
+#, kde-format
+msgid "Failed to open"
+msgstr "Avaaminen epäonnistui"
+
+#: PkSession/PkInstallCatalogs.cpp:196
+#, kde-format
+msgid "Catalog is Empty"
+msgstr "Luettelo on tyhjä"
+
+#: PkSession/PkInstallCatalogs.cpp:197
+#, kde-format
+msgid "Could not find any package to install in this catalog"
+msgstr "Luettelosta ei löytynyt asennettavia paketteja"
+
+#: PkSession/PkInstallFontconfigResources.cpp:43
+#, kde-format
+msgid "Installs new Fonts"
+msgstr "Asentaa uusia fontteja"
+
+#: PkSession/PkInstallFontconfigResources.cpp:74
+#, kde-format
+msgid "Could interpret request"
+msgstr "Voi tulkita pyynnön"
+
+#: PkSession/PkInstallFontconfigResources.cpp:74
+#, kde-format
+msgid "Please verify if the request was valid"
+msgstr "Varmista, onko pyyntö hyväksyttävä"
+
+#: PkSession/PkInstallFontconfigResources.cpp:108
+#, kde-format
+msgid ""
+"An additional font is required to view this document correctly.\n"
+"Do you want to search for a suitable package now?"
+msgid_plural ""
+"Additional fonts are required to view this document correctly.\n"
+"Do you want to search for suitable packages now?"
+msgstr[0] ""
+"Tämän tiedoston näyttämiseksi oikein tarvitaan lisäfontti.\n"
+"Haluatko etsiä sopivaa pakettia nyt?"
+msgstr[1] ""
+"Tämän tiedoston näyttämiseksi oikein tarvitaan lisäfontteja.\n"
+"Haluatko etsiä sopivia paketteja nyt?"
+
+#: PkSession/PkInstallFontconfigResources.cpp:118
+#, kde-format
+msgid "A program wants to install a font"
+msgid_plural "A program wants to install fonts"
+msgstr[0] "Ohjelma haluaa asentaa fontin"
+msgstr[1] "Ohjelma haluaa asentaa fontteja"
+
+#: PkSession/PkInstallFontconfigResources.cpp:122
+#, kde-format
+msgid "The application %2 wants to install a font"
+msgid_plural "The application %2 wants to install fonts"
+msgstr[0] "Sovellus %2 haluaa asentaa fontin"
+msgstr[1] "Sovellus %2 haluaa asentaa fontteja"
+
+#: PkSession/PkInstallFontconfigResources.cpp:148
+#: PkSession/PkInstallFontconfigResources.cpp:157
+#, kde-format
+msgid "Failed to find font"
+msgstr "Fonttia ei löytynyt"
+
+#: PkSession/PkInstallFontconfigResources.cpp:150
+#, kde-format
+msgid "No new fonts could be found for this document"
+msgstr "Ei löytynyt uusia fontteja tähän tiedostoon"
+
+#: PkSession/PkInstallFontconfigResources.cpp:159
+#, kde-format
+msgid "Failed to search for provides"
+msgstr "Tarjoajien haku epäonnistui"
+
+#: PkSession/PkInstallGStreamerResources.cpp:40
+#, kde-format
+msgid "Install GStreamer Resources"
+msgstr "Asenna GStreamer-resursseja"
+
+#: PkSession/PkInstallGStreamerResources.cpp:68
+#, kde-format
+msgid "The following plugin is required. Do you want to search for this now?"
+msgid_plural ""
+"The following plugins are required. Do you want to search for these now?"
+msgstr[0] "Seuraavaa liitännäistä vaaditaan. Haluatko etsiä sitä nyt?"
+msgstr[1] "Seuraavia liitännäisiä vaaditaan. Haluatko etsiä niitä nyt?"
+
+#: PkSession/PkInstallGStreamerResources.cpp:80
+#, kde-format
+msgid "A program requires an additional plugin to decode this file"
+msgid_plural "A program requires additional plugins to decode this file"
+msgstr[0] "Sovellus vaatii ylimääräisen liitännäisen tiedoston käyttämiseksi"
+msgstr[1] "Sovellus vaatii ylimääräisiä liitännäisiä tiedoston käyttämiseksi"
+
+#: PkSession/PkInstallGStreamerResources.cpp:85
+#, kde-format
+msgid "A program requires an additional plugin to encode this file"
+msgid_plural "A program requires additional plugins to encode this file"
+msgstr[0] "Sovellus vaatii ylimääräisen liitännäisen tiedoston käyttämiseksi"
+msgstr[1] "Sovellus vaatii ylimääräisiä liitännäisiä tiedoston käyttämiseksi"
+
+#: PkSession/PkInstallGStreamerResources.cpp:90
+#, kde-format
+msgid "A program requires an additional plugin for this operation"
+msgid_plural "A program requires additional plugins for this operation"
+msgstr[0] "Sovellus vaatii ylimääräisen liitännäisen tätä toimintoa varten"
+msgstr[1] "Sovellus vaatii ylimääräisiä liitännäisiä tätä toimintoa varten"
+
+#: PkSession/PkInstallGStreamerResources.cpp:97
+#, kde-format
+msgid "%2 requires an additional plugin to decode this file"
+msgid_plural "%2 requires additional plugins to decode this file"
+msgstr[0] "%2 vaatii lisäliitännäisen tämän tiedoston purkamiseen"
+msgstr[1] "%2 vaatii lisäliitännäisiä tämän tiedoston purkamiseen"
+
+#: PkSession/PkInstallGStreamerResources.cpp:103
+#, kde-format
+msgid "%2 requires an additional plugin to encode this file"
+msgid_plural "%2 requires additional plugins to encode this file"
+msgstr[0] "%2 vaatii lisäliitännäisen tämän tiedoston koodaamiseen"
+msgstr[1] "%2 vaatii lisäliitännäisiä tämän tiedoston koodaamiseen"
+
+#: PkSession/PkInstallGStreamerResources.cpp:109
+#, kde-format
+msgid "%2 requires an additional plugin for this operation"
+msgid_plural "%2 requires additional plugins for this operation"
+msgstr[0] "%2 vaatii ylimääräisen liitännäisen tätä toimintoa varten"
+msgstr[1] "%2 vaatii ylimääräisiä liitännäisiä tätä toimintoa varten"
+
+#: PkSession/PkInstallGStreamerResources.cpp:139
+#, kde-format
+msgid "No results found"
+msgstr "Ei hakutuloksia"
+
+#: PkSession/PkInstallGStreamerResources.cpp:141
+#, kde-format
+msgid "Could not find plugin in any configured software source"
+msgstr "Liitännäistä ei löytynyt yhdestäkään ohjelmistolähteestä"
+
+#: PkSession/PkInstallMimeTypes.cpp:41
+#, kde-format
+msgid "Install Support for File Types"
+msgstr "Asenna tuki eri tiedostotyypeille"
+
+#: PkSession/PkInstallMimeTypes.cpp:51
+#, kde-format
+msgid "Do you want to search for a program that can open this file type?"
+msgid_plural ""
+"Do you want to search for a program that can open these file types?"
+msgstr[0] "Haluatko etsiä tämän tiedostotyypin avaavaa ohjelmaa?"
+msgstr[1] "Haluatko etsiä nämä tiedostotyypit avaavaa ohjelmaa?"
+
+#: PkSession/PkInstallMimeTypes.cpp:56
+#, kde-format
+msgid "No valid file types were provided"
+msgstr "Kelvollisia tiedostotyyppejä ei tarjottu"
+
+# Sama suomennos sopii kumpaankin
+#: PkSession/PkInstallMimeTypes.cpp:63
+#, kde-format
+msgid "A program is requiring support to open this kind of files"
+msgid_plural "A program is requiring support to open these kinds of files"
+msgstr[0] "Ohjelma vaatii tuen näille tiedostoille"
+msgstr[1] "Ohjelma vaatii tuen näille tiedostoille"
+
+# Sama suomennos sopii kumpaankin
+#: PkSession/PkInstallMimeTypes.cpp:67
+#, kde-format
+msgid "The application %2 is requiring support to open this kind of files"
+msgid_plural ""
+"The application %2 is requiring support to open these kinds of files"
+msgstr[0] "Sovellus %2 vaatii tukea näiden tiedostojen avaamiseksi"
+msgstr[1] "Sovellus %2 vaatii tukea näiden tiedostojen avaamiseksi"
+
+#: PkSession/PkInstallMimeTypes.cpp:94
+#, kde-format
+msgid "Could not find software"
+msgstr "Ohjelmia ei löytynyt"
+
+#: PkSession/PkInstallMimeTypes.cpp:96
+#, kde-format
+msgid "No new applications can be found to handle this type of file"
+msgstr "Tätä tiedostotyyppiä käsitteleviä uusia sovelluksia ei löytynyt"
+
+#: PkSession/PkInstallPackageFiles.cpp:40
+#, kde-format
+msgid "Install Packages Files"
+msgstr "Asenna pakettitiedostoja"
+
+#: PkSession/PkInstallPackageFiles.cpp:44
+#: PkSession/PkRemovePackageByFiles.cpp:45
+#, kde-format
+msgid "You can drop more files in here"
+msgstr "Voit vetää lisää tiedostoja tähän"
+
+#: PkSession/PkInstallPackageFiles.cpp:53
+#, kde-format
+msgid "Not Supported"
+msgstr "Ei tuettu"
+
+#: PkSession/PkInstallPackageFiles.cpp:54
+#, kde-format
+msgid "Your current backend does not support installing files"
+msgstr "Taustaosasi ei tue tiedostojen asentamista"
+
+#: PkSession/PkInstallPackageFiles.cpp:69
+#: PkSession/PkRemovePackageByFiles.cpp:65
+#, kde-format
+msgid "No supported files were provided"
+msgstr "Tuettuja tiedostoja ei tarjottu"
+
+#: PkSession/PkInstallPackageFiles.cpp:71
+#, kde-format
+msgid "Press <i>Continue</i> if you want to install this file"
+msgid_plural "Press <i>Continue</i> if you want to install these files"
+msgstr[0] "Paina <i>Jatka</i>, jos haluat asentaa tämän tiedoston"
+msgstr[1] "Paina <i>Jatka</i>, jos haluat asentaa nämä tiedostot"
+
+#: PkSession/PkInstallPackageFiles.cpp:80
+#: PkSession/PkInstallPackageNames.cpp:72
+#, kde-format
+msgid "An application wants to install a package"
+msgid_plural "An application wants to install packages"
+msgstr[0] "Sovellus haluaa asentaa paketin"
+msgstr[1] "Sovellus haluaa asentaa paketteja"
+
+#: PkSession/PkInstallPackageFiles.cpp:84
+#: PkSession/PkInstallPackageNames.cpp:76
+#, kde-format
+msgid "The application <i>%2</i> wants to install a package"
+msgid_plural "The application <i>%2</i> wants to install packages"
+msgstr[0] "Sovellus <i>%2</i> haluaa asentaa paketin"
+msgstr[1] "Sovellus <i>%2</i> haluaa asentaa paketteja"
+
+#: PkSession/PkInstallPackageFiles.cpp:106
+#, kde-format
+msgid "Installation Complete"
+msgstr "Asennus valmis"
+
+#: PkSession/PkInstallPackageFiles.cpp:107
+#, kde-format
+msgid "File was installed successfully"
+msgid_plural "Files were installed successfully"
+msgstr[0] "Tiedosto asennettiin onnistuneesti"
+msgstr[1] "Tiedostot asennettiin onnistuneesti"
+
+#: PkSession/PkInstallPackageFiles.cpp:118
+#, kde-format
+msgid "Failed to install files"
+msgstr "Tiedostojen asennus epäonnistui"
+
+#: PkSession/PkInstallPackageFiles.cpp:119
+#: PkSession/PkInstallPackageFiles.cpp:121
+#, kde-format
+msgid "Could not install files"
+msgstr "Tiedostoja ei saatu asennetuksi"
+
+#: PkSession/PkInstallPackageNames.cpp:43
+#, kde-format
+msgid "Install Packages by Name"
+msgstr "Asenna paketteja nimen perusteella"
+
+#: PkSession/PkInstallPackageNames.cpp:59
+#, kde-format
+msgid "No package names were provided"
+msgstr "Pakettien nimiä ei tarjottu"
+
+#: PkSession/PkInstallPackageNames.cpp:62
+#, kde-format
+msgid "Do you want to search for and install this package now?"
+msgid_plural "Do you want to search for and install these packages now?"
+msgstr[0] "Haluatko etsiä ja asentaa tämän paketin nyt?"
+msgstr[1] "Haluatko etsiä ja asentaa nämä paketit nyt?"
+
+#: PkSession/PkInstallPackageNames.cpp:101
+#, kde-format
+msgid "Failed to install packages"
+msgstr "Pakettien asennus epäonnistui"
+
+#: PkSession/PkInstallPackageNames.cpp:102
+#, kde-format
+msgid "The package %2 is already installed"
+msgid_plural "The packages %2 are already installed"
+msgstr[0] "Paketti %2 on jo asennettu"
+msgstr[1] "Paketit %2 on jo asennettu"
+
+#: PkSession/PkInstallPackageNames.cpp:110
+#: PkSession/PkRemovePackageByFiles.cpp:140 PkSession/PkSearchFile.cpp:82
+#, kde-format
+msgid "Could not find %1"
+msgstr "Kohdetta %1 ei löytynyt"
+
+#: PkSession/PkInstallPackageNames.cpp:111
+#, kde-format
+msgid "The package could not be found in any software source"
+msgid_plural "The packages could not be found in any software source"
+msgstr[0] "Pakettia ei löytynyt yhdestäkään ohjelmistolähteestä"
+msgstr[1] "Paketteja ei löytynyt yhdestäkään ohjelmistolähteestä"
+
+#: PkSession/PkInstallPlasmaResources.cpp:41
+#, kde-format
+msgid "Install Plasma Resources"
+msgstr "Asenna Plasma-resursseja"
+
+#: PkSession/PkInstallPlasmaResources.cpp:53
+#, kde-format
+msgid "%1 data engine"
+msgstr "%1-tietomoottori"
+
+#: PkSession/PkInstallPlasmaResources.cpp:55
+#, kde-format
+msgid "%1 script engine"
+msgstr "%1-skriptimoottori"
+
+#: PkSession/PkInstallPlasmaResources.cpp:67
+#, kde-format
+msgid "No supported resources were provided"
+msgstr "Tuettuja resursseja ei tarjottu"
+
+#: PkSession/PkInstallPlasmaResources.cpp:69
+#, kde-format
+msgid "The following service is required. Do you want to search for this now?"
+msgid_plural ""
+"The following services are required. Do you want to search for these now?"
+msgstr[0] "Seuraava palvelu vaaditaan. Haluatko etsiä sitä nyt?"
+msgstr[1] "Seuraavat palvelut vaaditaan. Haluatko etsiä niitä nyt?"
+
+#: PkSession/PkInstallPlasmaResources.cpp:78
+#, kde-format
+msgid "Plasma requires an additional service for this operation"
+msgid_plural "Plasma requires additional services for this operation"
+msgstr[0] "Plasma vaatii lisäpalvelun tähän toimintoon"
+msgstr[1] "Plasma vaatii lisäpalveluja tähän toimintoon"
+
+#: PkSession/PkInstallPlasmaResources.cpp:103
+#, kde-format
+msgid "Failed to search for Plasma service"
+msgstr "Plasma-palvelujen haku epäonnistui"
+
+#: PkSession/PkInstallPlasmaResources.cpp:106
+#, kde-format
+msgid "Could not find service in any configured software source"
+msgstr "Palvelua ei löytynyt yhdestäkään asetetusta ohjelmistolähteestä"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:41
+#, kde-format
+msgid "Install Printer Drivers"
+msgstr "Asenna tulostinajureita"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:82
+#, kde-format
+msgid "Failed to search for printer driver"
+msgstr "Tulostinajurin haku epäonnistui"
+
+#: PkSession/PkInstallPrinterDrivers.cpp:83
+#, kde-format
+msgid "Could not find printer driver in any configured software source"
+msgstr "Tulostinajuria ei löytynyt yhdestäkään asetetusta ohjelmistolähteestä"
+
+#: PkSession/PkInstallProvideFiles.cpp:41
+#, kde-format
+msgid "Install Packages that Provides Files"
+msgstr "Asenna tiedostoja tarjoavia paketteja"
+
+#: PkSession/PkInstallProvideFiles.cpp:50
+#, kde-format
+msgid "No files were provided"
+msgstr "Tiedostoja ei tarjottu"
+
+#: PkSession/PkInstallProvideFiles.cpp:53
+#, kde-format
+msgid "Do you want to search for this now?"
+msgid_plural "Do you want to search for these now?"
+msgstr[0] "Haluatko etsiä kyseisen tiedoston nyt?"
+msgstr[1] "Haluatko etsiä kyseisiä tiedostoja nyt?"
+
+#: PkSession/PkInstallProvideFiles.cpp:63
+#, kde-format
+msgid "A program wants to install a file"
+msgid_plural "A program wants to install files"
+msgstr[0] "Ohjelma haluaa asentaa tiedoston"
+msgstr[1] "Ohjelma haluaa asentaa tiedostoja"
+
+#: PkSession/PkInstallProvideFiles.cpp:67
+#, kde-format
+msgid "The application %2 is asking to install a file"
+msgid_plural "The application %2 is asking to install files"
+msgstr[0] "Sovellus %2 pyytää asentamaan tiedoston"
+msgstr[1] "Sovellus %2 pyytää asentamaan tiedostoja"
+
+#: PkSession/PkInstallProvideFiles.cpp:93
+#, kde-format
+msgid "Failed to install file"
+msgstr "Tiedoston asennus epäonnistui"
+
+#: PkSession/PkInstallProvideFiles.cpp:94
+#, kde-format
+msgid "The %1 package already provides this file"
+msgstr "Paketti %1 sisältää jo kyseisen tiedoston"
+
+#: PkSession/PkInstallProvideFiles.cpp:100
+#, kde-format
+msgid "Failed to find package"
+msgstr "Pakettia ei löytynyt"
+
+#: PkSession/PkInstallProvideFiles.cpp:101
+#, kde-format
+msgid "The file could not be found in any packages"
+msgid_plural "The files could not be found in any packages"
+msgstr[0] "Tiedostoa ei löytynyt yhdestäkään paketista"
+msgstr[1] "Tiedostoja ei löytynyt yhdestäkään paketista"
+
+#: PkSession/PkIsInstalled.cpp:40
+#, kde-format
+msgid "Querying if a Package is Installed"
+msgstr "Kysellään, onko paketti asennettu"
+
+#: PkSession/PkIsInstalled.cpp:61
+#, kde-format
+msgid "User canceled the transaction"
+msgstr "Käyttäjä perui toimenpiteen"
+
+#: PkSession/PkIsInstalled.cpp:63
+#, kde-format
+msgid "An unknown error happened"
+msgstr "Tapahtui tuntematon virhe"
+
+#: PkSession/PkRemovePackageByFiles.cpp:42
+#, kde-format
+msgid "Remove Packages that Provides Files"
+msgstr "Poista tiedostot tarjavat paketit"
+
+#: PkSession/PkRemovePackageByFiles.cpp:68
+#, kde-format
+msgid "Do you want to remove the following application?"
+msgid_plural "Do you want to remove the following applications?"
+msgstr[0] "Haluatko poistaa seuraavan sovelluksen?"
+msgstr[1] "Haluatko poistaa seuraavat sovellukset?"
+
+#: PkSession/PkRemovePackageByFiles.cpp:72
+#, kde-format
+msgid "Do you want to search for a package providing this file?"
+msgid_plural "Do you want to search for a package providing these files?"
+msgstr[0] "Haluatko etsiä tämän tiedoston tarjoavaa pakettia?"
+msgstr[1] "Haluatko etsiä nämä tiedostot tarjoavaa pakettia?"
+
+#: PkSession/PkRemovePackageByFiles.cpp:83
+#, kde-format
+msgid "An application is asking to remove an application"
+msgid_plural "An application is asking to remove applications"
+msgstr[0] "Sovellus pyytää poistamaan sovelluksen"
+msgstr[1] "Sovellus pyytää poistamaan sovelluksia"
+
+#: PkSession/PkRemovePackageByFiles.cpp:87
+#, kde-format
+msgid "An application is asking to remove a file"
+msgid_plural "An application is asking to remove files"
+msgstr[0] "Sovellus pyytää poistamaan tiedoston"
+msgstr[1] "Sovellus pyytää poistamaan tiedostoja"
+
+#: PkSession/PkRemovePackageByFiles.cpp:93
+#, kde-format
+msgid "The application <i>%2</i> is asking to remove an application"
+msgid_plural "The application <i>%2</i> is asking to remove applications"
+msgstr[0] "Sovellus <i>%2</i> pyytää poistamaan sovelluksen"
+msgstr[1] "Sovellus <i>%2</i> pyytää poistamaan sovelluksia"
+
+#: PkSession/PkRemovePackageByFiles.cpp:98
+#, kde-format
+msgid "The application <i>%2</i> is asking to remove a file"
+msgid_plural "The application <i>%2</i> is asking to remove files"
+msgstr[0] "Sovellus <i>%2</i> pyytää poistamaan tiedoston"
+msgstr[1] "Sovellus <i>%2</i> pyytää poistamaan tiedostoja"
+
+#: PkSession/PkRemovePackageByFiles.cpp:104
+#, kde-format
+msgid "No application was found"
+msgstr "Sovelluksia ei löytynyt"
+
+#: PkSession/PkRemovePackageByFiles.cpp:141
+#, kde-format
+msgid "The file could not be found in any installed package"
+msgid_plural "The files could not be found in any installed package"
+msgstr[0] "Tiedostoa ei löytynyt yhdestäkään asennetusta paketista"
+msgstr[1] "Tiedostoja ei löytynyt yhdestäkään asennetusta paketista"
+
+#: PkSession/PkSearchFile.cpp:42
+#, kde-format
+msgid "Search Packages that Provides Files"
+msgstr "Etsi tiedostoja tarjoavia paketteja"
+
+#: PkSession/PkSearchFile.cpp:81
+#, kde-format
+msgid "The file name could not be found in any software source"
+msgstr "Tiedostonimeä ei löytynyt mistään ohjelmistolähteestä"
+
+#: PkSession/ReviewChanges.cpp:51
+#, kde-format
+msgid "The following package was found"
+msgid_plural "The following packages were found"
+msgstr[0] "Seuraava paketti löytyi"
+msgstr[1] "Seuraavat paketit löytyivät"
+
+#: PkSession/SessionTask.cpp:371
+#, kde-format
+msgid "There are no packages to Install or Remove"
+msgstr "Asennettavia tai poistettavia paketteja ei ole"
+
+#: PkSession/SessionTask.cpp:372
+#, kde-format
+msgid "This action should not happen"
+msgstr "Tätä toimintoa ei pitäisi sattua"
+
+#: PkSession/SessionTask.cpp:401
+#, kde-format
+msgid "Could not find"
+msgstr "Ei löydetty"
+
+#: PkSession/SessionTask.cpp:402 PkSession/SessionTask.cpp:411
+#, kde-format
+msgid "No packages were found that meet the request"
+msgstr "Pyyntöä vastaavia paketteja ei löytynyt"
+
+#: PkSession/SessionTask.cpp:410
+#, kde-format
+msgid "Failed to find"
+msgstr "Ei löytynyt"
+
+#. i18n("Failed to commit transaction"),
+#. PkStrings::errsearchFailedorMessage(m_pkTransaction->error()));
+#: PkSession/SessionTask.cpp:431
+#, kde-format
+msgid "Transaction did not finish with success"
+msgstr "Toimenpide ei päättynyt onnistuneesti"
+
+#: PkSession/SessionTask.cpp:437
+#, kde-format
+msgid "Task completed"
+msgstr "Tehtävä valmis"
+
+#: PkSession/SessionTask.cpp:437
+#, kde-format
+msgid "All operations were committed successfully"
+msgstr "Kaikki toiminnot suoritettiin onnistuneesti"
+
+#~ msgid "KDE interface for managing software"
+#~ msgstr "Ohjelmistonhallinnan KDE-liittymä"
+
+#~ msgid "A mirror is possibly broken"
+#~ msgstr "Peilipalvelin on luultavasti rikki"
+
+#~ msgid "The connection was refused"
+#~ msgstr "Yhteys torjuttiin"
+
+#~ msgid "The parameter was invalid"
+#~ msgstr "Parametri oli virheellinen"
+
+#~ msgid "The priority was invalid"
+#~ msgstr "Prioriteetti oli virheellinen"
+
+#~ msgid "Backend warning"
+#~ msgstr "Taustaosan varoitus"
+
+#~ msgid "Daemon warning"
+#~ msgstr "Palvelun varoitus"
+
+#~ msgid "The package list cache is being rebuilt"
+#~ msgstr "Pakettivälimuistia uudelleenrakennetaan"
+
+#~ msgid "An untrusted package was installed"
+#~ msgstr "Asennettiin epäluotettava paketti"
+
+#~ msgid "A newer package exists"
+#~ msgstr "Uudempi paketti on olemassa"
+
+#~ msgid "Could not find package"
+#~ msgstr "Pakettia ei löytynyt"
+
+#~ msgid "Configuration files were changed"
+#~ msgstr "Määritystiedostoja muutettiin"
+
+#~ msgid "Package is already installed"
+#~ msgstr "Paketti on jo asennettu"
+
+#~ msgid "Automatic cleanup is being ignored"
+#~ msgstr "Automaattinen siivous ohitetaan"
+
+#~ msgid "Software source download failed"
+#~ msgstr "Ohjelman lähdekoodin lataus epäonnistui"
+
+#~ msgid "This software source is for developers only"
+#~ msgstr "Tämä ohjelman lähdekoodi on vain kehittäjille"
+
+#~ msgid "Other updates have been held back"
+#~ msgstr "Muut päivitykset on jätetty odottamaan"
+
+#~ msgid "Application Manager"
+#~ msgstr "Sovelluksenhallinta"
+
+#~ msgid "(C) 2014, Matthias Klumpp"
+#~ msgstr "© 2014 Matthias Klumpp"
+
+#~ msgid "This package has the following security level: <b>%1</b>"
+#~ msgstr "Tällä paketilla on seuraava turvataso: <b>%1</b>"
+
+#~ msgid "It was signed with a key belonging to these user-ids: %1"
+#~ msgstr "Se on allekirjoitettu seuraavien käyttäjätunnisteiden avaimilla: %1"
+
+#~ msgid "Security hints"
+#~ msgstr "Turvallisuusvinkit"
+
+#~ msgid "Current backend does not support installing files."
+#~ msgstr "Nykyinen taustaosa ei tue tiedostojen asentamista."
+
+#~ msgid "Current backend does not support installing packages."
+#~ msgstr "Nykyinen taustaosa ei tue pakettien asentamista."
+
+#~ msgid "The current backend does not support removing packages."
+#~ msgstr "Nykyinen taustaosa ei tue pakettien poistamista."
+
+#~ msgid "The current backend does not support updating packages."
+#~ msgstr "Nykyinen taustaosa ei tue pakettien päivittämistä."
+
+#~ msgid "I agree to the above terms and conditions"
+#~ msgstr "Hyväksyn yllä annetut käyttöehdot"
+
+#~ msgid "I don't agree"
+#~ msgstr "En hyväksy"
+
+#~ msgid "Install for all users"
+#~ msgstr "Asenna kaikille käyttäjille"
+
+#~ msgid "Software license"
+#~ msgstr "Ohjelmalisenssi"
+
+#~ msgid "Please read the following terms and conditions carefully!"
+#~ msgstr "Lue tarkasti seuraavat käyttöehdot!"
+
+#~ msgid ""
+#~ "Installing this package will make the following native packages obsolete. "
+#~ "You might consider removing them manually."
+#~ msgstr ""
+#~ "Tämän paketin asennus vanhentaa seuraavat natiivipaketit. Voit haluta "
+#~ "poistaa ne käsin."
+
+#~ msgid "Similar native packages found"
+#~ msgstr "Löytyi samankaltaisia natiivipaketteja"
+
+#~ msgid ""
+#~ "You want to install this application as root!\n"
+#~ "This can damage your system or install malicious software for all users.\n"
+#~ "Please only proceed, if you really know what you're doing!\n"
+#~ "Continue?"
+#~ msgstr ""
+#~ "Haluat asentaa tämän sovelluksen pääkäyttäjänä!\n"
+#~ "Tästä voi olla vahinkoa järjestelmällesi tai sen kaikille käyttäjille.\n"
+#~ "Jatka vain, jos tiedät, mitä teet!\n"
+#~ "Jatketaanko?"
+
+#~ msgid "Really install as superuser?"
+#~ msgstr "Asennetaanko varmasti pääkäyttäjänä?"
+
+#~ msgid "Upgrade System"
+#~ msgstr "Päivitä järjestelmä"
+
+#~ msgid "Failed to simulate file install"
+#~ msgstr "Tiedoston asentamisen simulointi epäonnistui"
+
+#~ msgid "Failed to simulate package install"
+#~ msgstr "Paketin asentamisen simulointi epäonnistui"
+
+#~ msgid "Failed to simulate package removal"
+#~ msgstr "Pakettien poistoa ei onnistuttu simuloimaan"
+
+#~ msgid "Failed to simulate package update"
+#~ msgstr "Paketin päivityksen simulointi epäonnistui"
+
+#~ msgid "Failed to install package"
+#~ msgstr "Paketin asennus epäonnistui"
+
+#~ msgid "Failed to remove package"
+#~ msgstr "Paketin poisto epäonnistui"
+
+#~ msgid "Failed to update package"
+#~ msgstr "Paketin päivitys epäonnistui"
+
+#~ msgid "Failed to install signature"
+#~ msgstr "Allekirjoituksen asennus epäonnistui"
+
+#~ msgid "Failed to start resolve transaction"
+#~ msgstr "Ratkaisutoimenpidettä ei saatu käynnistetyksi"
+
+#~ msgid "Failed to start search file transaction"
+#~ msgstr "Tiedoston etsintätoimenpidettä ei saatu käynnistetyksi"
+
+#~ msgid "(C) 2008-2012 Daniel Nicoletti"
+#~ msgstr "© 2008–2012 Daniel Nicoletti"
+
+#~ msgid "(C) 2008-2011 Daniel Nicoletti"
+#~ msgstr "© 2008–2011 Daniel Nicoletti"
+
+# ”Sinulla” ~ ”Sinulle” kuulostaa hassulta, kun päivitykset eivät ole käyttäjän vaan järjestelmän!
+#~ msgid "You have one update"
+#~ msgid_plural "You have %1 updates"
+#~ msgstr[0] "Tarjolla on yksi päivitys"
+#~ msgstr[1] "Tarjolla on %1 päivitystä"
+
+#~ msgid "Failed to set origin data"
+#~ msgstr "Alkuperätietoa ei onnistuttu asettamaan"
+
+#~ msgid "Software Updater"
+#~ msgstr "Ohjelmapäivitys"
+
+#~ msgid "Click to upgrade to %1"
+#~ msgstr "Napsauta päivittääksesi versioon %1"
+
+#~ msgid "Review Updates"
+#~ msgstr "Tarkastele päivityksiä"
+
+#~ msgid "Configure"
+#~ msgstr "Asetukset"
+
+#~ msgid "Apper Sentinel"
+#~ msgstr "Apper-vahti"
+
+#~ msgid "Check for updates:"
+#~ msgstr "Tarkista päivitykset:"
+
+#~ msgctxt "transaction state, downloading package files"
+#~ msgid "Downloading packages"
+#~ msgstr "Ladataan paketteja"
+
+#~ msgid "Packages: %1"
+#~ msgstr "Paketit: %1"
+
+#~ msgid "Ignore"
+#~ msgstr "Ohita"
+
+#~ msgid "Transactions"
+#~ msgstr "Tapahtumat"
+
+#~ msgid "%1% - %2"
+#~ msgstr "%1% - %2"
+
+#~ msgid "%1"
+#~ msgstr "%1"
+
+#~ msgid "Hide this icon"
+#~ msgstr "Piilota tämä kuvake"
+
+#~ msgid "One message from the software manager"
+#~ msgid_plural "%1 messages from the software manager"
+#~ msgstr[0] "Yksi viesti ohjelmistonhallinnalta"
+#~ msgstr[1] "%1 viestiä ohjelmistonhallinnalta"
+
+#~ msgid "Show messages"
+#~ msgstr "Näytä viestit"
+
+#, fuzzy
+#~| msgid "Failed to remove package"
+#~ msgid "Failed to refresh package cache"
+#~ msgstr "Paketin poisto epäonnistui"
+
+#~ msgid ""
+#~ "Allows you to hide the window whilst keeping the transaction task running."
+#~ msgstr "Sallii sinun piilottaa ikkunan toimenpiteiden ollessa käynnissä."
+
+#~ msgid "Package"
+#~ msgstr "Paketti"
+
+#, fuzzy
+#~| msgid "Continue"
+#~ msgctxt "Shown when you have not set a weather provider"
+#~ msgid "Please Configure"
+#~ msgstr "Jatka"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Updating system"
+#~ msgstr "Päivitetään järjestelmää"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Updated system"
+#~ msgstr "Päivitettiin järjestelmä"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Updated system"
+#~ msgid "Update System"
+#~ msgstr "Päivitettiin järjestelmä"
+
+#~ msgctxt "transaction state, when we return to a previous system state"
+#~ msgid "Rolling back"
+#~ msgstr "Kumotaan muutoksia"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Rolling back"
+#~ msgstr "Kumotaan muutoksia"
+
+#~ msgctxt "The role of the transaction, in present tense"
+#~ msgid "Simulating the install of files"
+#~ msgstr "Simuloidaan tiedostojen asennusta"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Rolled back"
+#~ msgstr "Kumottiin muutokset"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the install of files"
+#~ msgstr "Simuloidaan tiedostojen asennusta"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the install"
+#~ msgstr "Simuloitiin asennus"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the remove"
+#~ msgstr "Simuloitiin poisto"
+
+#~ msgctxt "The role of the transaction, in past tense"
+#~ msgid "Simulated the update"
+#~ msgstr "Simuloitiin päivitys"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Simulated the install of files"
+#~ msgid "Simulate Install Files"
+#~ msgstr "Simuloidaan tiedostojen asennusta"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Installed packages"
+#~ msgid "Simulate Install Packages"
+#~ msgstr "Asennetut paketit"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Removed packages"
+#~ msgid "Simulate Remove Packages"
+#~ msgstr "Poistetut paketit"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Updated packages"
+#~ msgid "Simulate Update Packages"
+#~ msgstr "Päivitetyt paketit"
+
+#, fuzzy
+#~| msgid "Update settings"
+#~ msgid "Update Settings"
+#~ msgstr "Päivitysasetukset"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in present tense"
+#~| msgid "Getting old transactions"
+#~ msgid "Failed to commit transaction"
+#~ msgstr "Selvitetään vanhoja toimenpiteitä"
+
+#, fuzzy
+#~| msgid "Failed to open"
+#~ msgid "Failed to accept EULA"
+#~ msgstr "Avaaminen epäonnistui"
+
+#~ msgid "Actions"
+#~ msgstr "Toiminnot"
+
+#, fuzzy
+#~| msgid "(C) 2008-2009 Daniel Nicoletti"
+#~ msgid "(C) 2008-2010 Daniel Nicoletti"
+#~ msgstr "(C) 2008-2009 Daniel Nicoletti"
+
+#, fuzzy
+#~| msgid "Do you want to install this file?"
+#~| msgid_plural "Do you want to install these files?"
+#~ msgid "Press <i>Continue</i> if you want to remove"
+#~ msgstr "Haluatko asentaa tämän tiedoston?"
+
+#, fuzzy
+#~| msgid "Failed to remove package"
+#~ msgid "Do you want to remove a package:"
+#~ msgid_plural "Do you want to remove packages:"
+#~ msgstr[0] "Paketin poisto epäonnistui"
+#~ msgstr[1] "Paketin poisto epäonnistui"
+
+#~ msgid "%2 wants to install a font"
+#~ msgid_plural "%2 wants to install fonts"
+#~ msgstr[0] "%2 haluaa asentaa kirjasimen"
+#~ msgstr[1] "%2 haluaa asentaa kirjasimia"
+
+#~ msgctxt "Search for a new mime type"
+#~ msgid "Search"
+#~ msgstr "Etsi"
+
+#, fuzzy
+#~| msgid "A program wants to install a package"
+#~| msgid_plural "A program wants to install packages"
+#~ msgid "An application wants to install a package:"
+#~ msgid_plural "An application wants to install packages:"
+#~ msgstr[0] "Ohjelma haluaa asentaa paketin"
+#~ msgstr[1] "Ohjelma haluaa asentaa paketit"
+
+#, fuzzy
+#~| msgid "%2 wants to install a package"
+#~| msgid_plural "%2 wants to install packages"
+#~ msgid "The application <i>%2</i> wants to install a package:"
+#~ msgid_plural "The application <i>%2</i> wants to install packages:"
+#~ msgstr[0] "%2 haluaa asentaa paketin"
+#~ msgstr[1] "%2 haluaa asentaa paketit"
+
+#~ msgctxt "Parse the catalog search and install it"
+#~ msgid "Install"
+#~ msgstr "Asenna"
+
+#~ msgid ""
+#~ "The following file is required: <ul><li>%2</li></ul>Do you want to search "
+#~ "for this now?"
+#~ msgid_plural ""
+#~ "The following files are required: <ul><li>%2</li></ul>Do you want to "
+#~ "search for these now?"
+#~ msgstr[0] ""
+#~ "Seuraava tiedosto vaaditaan: <ul><li>%2</li></ul>Haluatko etsiä kyseistä "
+#~ "tiedostoa nyt?"
+#~ msgstr[1] ""
+#~ "Seuraavat tiedostot vaaditaan: <ul><li>%2</li></ul>Haluatko etsiä "
+#~ "kyseisiä tiedostoja nyt?"
+
+#~ msgid "%2 wants to install a file"
+#~ msgid_plural "%2 wants to install files"
+#~ msgstr[0] "%2 haluaa asentaa tiedoston"
+#~ msgstr[1] "%2 haluaa asentaa tiedostoja"
+
+#~ msgctxt "Search for a package that provides these files and install it"
+#~ msgid "Install"
+#~ msgstr "Asenna"
+
+#~ msgid "A program wants to remove a file"
+#~ msgid_plural "A program wants to remove files"
+#~ msgstr[0] "Ohjelma haluaa poistaa tiedoston"
+#~ msgstr[1] "Ohjelma haluaa poistaa tiedostot"
+
+#~ msgid "%2 wants to remove a file"
+#~ msgid_plural "%2 wants to remove files"
+#~ msgstr[0] "%2 haluaa poistaa tiedoston"
+#~ msgstr[1] "%2 haluaa poistaa tiedostot"
+
+#~ msgid "The following file is going to be removed:"
+#~ msgid_plural "The following files are going to be removed:"
+#~ msgstr[0] "Seuraava tiedosto poistetaan:"
+#~ msgstr[1] "Seuraavat tiedostot poistetaan:"
+
+#~ msgctxt "Search for a package and remove"
+#~ msgid "Search"
+#~ msgstr "Etsi"
+
+#~ msgid "KPackageKit Error"
+#~ msgstr "KPackageKit-virhe"
+
+#~ msgid "A program wants to install a package"
+#~ msgid_plural "A program wants to install packages"
+#~ msgstr[0] "Ohjelma haluaa asentaa paketin"
+#~ msgstr[1] "Ohjelma haluaa asentaa paketit"
+
+#~ msgid "%2 wants to install a package"
+#~ msgid_plural "%2 wants to install packages"
+#~ msgstr[0] "%2 haluaa asentaa paketin"
+#~ msgstr[1] "%2 haluaa asentaa paketit"
+
+#~ msgctxt "Search for a package and install it"
+#~ msgid "Install"
+#~ msgstr "Asenna"
+
+#, fuzzy
+#~| msgid "Architectures"
+#~ msgid "Architecture"
+#~ msgstr "Arkkitehtuurit"
+
+#~ msgctxt "Search for packages"
+#~ msgid "Search"
+#~ msgstr "Etsi"
+
+#~ msgid "Install?"
+#~ msgstr "Asennetaanko?"
+
+#~ msgid "The file was not installed"
+#~ msgid_plural "The files were not installed"
+#~ msgstr[0] "Tiedostoa ei asennettu"
+#~ msgstr[1] "Tiedostoja ei asennettu"
+
+#, fuzzy
+#~| msgid "KPackageKit Tray Icon"
+#~ msgid "Apper Tray Icon"
+#~ msgstr "KPackagekit-ohjelman ilmoitusalueen kuvake"
+
+#~ msgid "Refresh package list"
+#~ msgstr "Päivitä pakettiluettelo"
+
+#~ msgid "Logout"
+#~ msgstr "Kirjaudu ulos"
+
+#, fuzzy
+#~| msgid "Settings"
+#~ msgid "Application Manager Settings"
+#~ msgstr "Asetukset"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Updated system"
+#~ msgid "Update Software"
+#~ msgstr "Päivitettiin järjestelmä"
+
+#, fuzzy
+#~| msgid "Review and update"
+#~ msgid "Review and Update Software"
+#~ msgstr "Tarkista ja päivitä"
+
+#, fuzzy
+#~| msgid "Add and Remove Software"
+#~ msgid "Get and Remove Software"
+#~ msgstr "Lisää ja poista ohjelmia"
+
+#~ msgid "KPackageKit settings"
+#~ msgstr "KPackageKit-asetukset"
+
+#~ msgid "Only native architectures"
+#~ msgstr "Vain natiivit arkkitehtuurit"
+
+#~ msgid "Only non-native architectures"
+#~ msgstr "Vain ei-natiivit arkkitehtuurit"
+
+#, fuzzy
+#~| msgid "Hide subpackages"
+#~ msgid "Hide packages"
+#~ msgstr "Piilota alipaketit"
+
+#~ msgid "Message"
+#~ msgstr "Viesti"
+
+#~ msgid "(C) 2008-2009 Daniel Nicoletti"
+#~ msgstr "(C) 2008-2009 Daniel Nicoletti"
+
+#, fuzzy
+#~| msgctxt "Type of update, in the case it's just an update"
+#~| msgid "1 update selected"
+#~| msgid_plural "%1 updates selected"
+#~ msgctxt "Type of update, in the case it's just an update"
+#~ msgid "%1 Updates, %2 Selected"
+#~ msgstr "Yksi päivitys valittu"
+
+#~ msgid "Rollback"
+#~ msgstr "Kumoa päivitys"
+
+#, fuzzy
+#~| msgctxt "transaction state, all done!"
+#~| msgid "Finished"
+#~ msgctxt "The transaction finished it's job"
+#~ msgid "Finished"
+#~ msgstr "Valmis"
+
+#~ msgid "Time since last cache refresh: 5 hours"
+#~ msgstr "Aikaa viimeisestä verestyksestä: 5 tuntia"
+
+#~ msgid "KDE interface for updating software"
+#~ msgstr "KDE-käyttöliittymä ohjelmistojen päivittämiseen"
+
+#~ msgid "Home Page"
+#~ msgstr "Aloitussivu"
+
+#~ msgctxt "Group of the package"
+#~ msgid "Group"
+#~ msgstr "Ryhmä"
+
+#, fuzzy
+#~| msgctxt "The role of the transaction, in past tense"
+#~| msgid "Installed packages"
+#~ msgid "Installed Packages"
+#~ msgstr "Asennetut paketit"
+
+#~ msgid "The following package will be installed"
+#~ msgid_plural "The following packages will be installed"
+#~ msgstr[0] "Seuraava paketti asennetaan"
+#~ msgstr[1] "Seuraavat paketit asennetaan"
+
+#~ msgid "The following package will be installed:"
+#~ msgid_plural "The following packages will be installed:"
+#~ msgstr[0] "Seuraava paketti asennetaan:"
+#~ msgstr[1] "Seuraavat paketit asennetaan:"
+
+#~ msgid "Install Now"
+#~ msgstr "Asenna nyt"
+
+#~ msgid "The following package will be removed:"
+#~ msgid_plural "The following packages will be removed:"
+#~ msgstr[0] "Seuraava paketti poistetaan:"
+#~ msgstr[1] "Seuraavat paketit poistetaan:"
+
+#~ msgid "Remove Now"
+#~ msgstr "Poista nyt"
+
+#~ msgid "The following package will be removed and installed:"
+#~ msgid_plural "The following packages will be removed and installed:"
+#~ msgstr[0] "Seuraava paketti poistetaan ja asennetaan:"
+#~ msgstr[1] "Seuraavat paketit poistetaan ja asennetaan:"
+
+#~ msgid "The following file is required:"
+#~ msgid_plural "The following files are required:"
+#~ msgstr[0] "Seuraava tiedosto vaaditaan:"
+#~ msgstr[1] "Seuraavat tiedostot vaaditaan:"
+
+#~ msgid "%1 wants to install a file"
+#~ msgid_plural "%1 wants to install files"
+#~ msgstr[0] "%1 haluaa asentaa tiedoston"
+#~ msgstr[1] "%1 haluaa asentaa tiedostoja"
+
+#~ msgid "backend name here"
+#~ msgstr "tähän taustaosan nimi"
+
+#~ msgid "backend author name here"
+#~ msgstr "tähän taustaosan tekijän nimi"
+
+#~ msgid "backend description here"
+#~ msgstr "tähän taustaosan kuvaus"
+
+#~ msgid "Not now"
+#~ msgstr "Ei nyt"
+
+#~ msgid "Type"
+#~ msgstr "Tyyppi"
+
+#~ msgctxt "State of the upgrade (ie testing, unstable..)"
+#~ msgid "State"
+#~ msgstr "Tila"
+
+#~ msgid "Issued"
+#~ msgstr "Julkaistu"
+
+#~ msgid "New version"
+#~ msgstr "Uusi versio"
+
+#~ msgid "Changes"
+#~ msgstr "Muutokset"
+
+#~ msgid "Vendor"
+#~ msgstr "Valmistaja"
+
+#~ msgid "Bugzilla"
+#~ msgstr "Bugzilla"
+
+#~ msgid "CVE"
+#~ msgstr "CVE"
+
+#~ msgid "1 important update"
+#~ msgid_plural "%1 important updates"
+#~ msgstr[0] "1 tärkeä päivitys"
+#~ msgstr[1] "%1 tärkeää päivitystä"
+
+#~ msgid "1 security update"
+#~ msgid_plural "%1 security updates"
+#~ msgstr[0] "1 turvapäivitys"
+#~ msgstr[1] "%1 turvapäivitystä"
+
+#~ msgid "1 bug fix update"
+#~ msgid_plural "%1 bug fix updates"
+#~ msgstr[0] "Yksi ohjelmistovirheen korjaava päivitys"
+#~ msgstr[1] "%1 ohjelmistovirheitä korjaavaa pakettia"
+
+#~ msgid "1 enhancement update"
+#~ msgid_plural "%1 enhancement updates"
+#~ msgstr[0] "Yksi parannuspäivitys"
+#~ msgstr[1] "%1 parannuspäivitystä"
+
+#~ msgid "1 blocked update"
+#~ msgid_plural "%1 blocked updates"
+#~ msgstr[0] "Yksi estetty päivitys"
+#~ msgstr[1] "%1 estettyä päivitystä"
+
+#~ msgid "1 available package"
+#~ msgid_plural "%1 available packages"
+#~ msgstr[0] "Yksi saatavilla oleva paketti"
+#~ msgstr[1] "%1 saatavilla olevaa pakettia"
+
+#~ msgid "1 unknown update"
+#~ msgid_plural "%1 unknown updates"
+#~ msgstr[0] "1 tuntematon päivitys"
+#~ msgstr[1] "%1 tuntematonta päivitystä"
+
+#~ msgid "1 trivial update selected"
+#~ msgid_plural "%1 trivial updates selected"
+#~ msgstr[0] "1 vähäinen päivitys valittu"
+#~ msgstr[1] "%1 vähäistä päivitystä valittu"
+
+#~ msgid "1 important update selected"
+#~ msgid_plural "%1 important updates selected"
+#~ msgstr[0] "Yksi tärkeä päivitys valittu"
+#~ msgstr[1] "%1 tärkeää päivitystä valittu"
+
+#~ msgid "1 security update selected"
+#~ msgid_plural "%1 security updates selected"
+#~ msgstr[0] "Yksi turvapäivitys valittu"
+#~ msgstr[1] "%1 turvapäivitystä valittu"
+
+#~ msgid "1 bug fix update selected"
+#~ msgid_plural "%1 bug fix updates selected"
+#~ msgstr[0] "Yksi ohjelmistovirheen korjaava päivitys valittu"
+#~ msgstr[1] "%1 ohjelmistovirhettä korjaavaa päivitystä valittu"
+
+#~ msgid "1 enhancement update selected"
+#~ msgid_plural "%1 enhancement updates selected"
+#~ msgstr[0] "Yksi parannuspäivitys valittu"
+#~ msgstr[1] "%1 parannuspäivitystä valittu"
+
+#~ msgid "1 installed package selected to be removed"
+#~ msgid_plural "%1 installed packages selected to be removed"
+#~ msgstr[0] "Yksi asennettu paketti valittu poistettavaksi"
+#~ msgstr[1] "%1 asennettua pakettia valittu poistettavaksi"
+
+#~ msgid "1 available package selected to be installed"
+#~ msgid_plural "%1 available packages selected to be installed"
+#~ msgstr[0] "Yksi saatavilla oleva paketti valittu asennettavaksi"
+#~ msgstr[1] "%1 saatavilla olevaa pakettia valittu asennettavaksi"
+
+#~ msgid "%1 trivial update"
+#~ msgid_plural "%1 trivial updates, %2 selected"
+#~ msgstr[0] "%1 vähäinen päivitys"
+#~ msgstr[1] "%1 vähäistä päivitystä, %2 valittu"
+
+#~ msgid "%1 important update"
+#~ msgid_plural "%1 important updates, %2 selected"
+#~ msgstr[0] "%1 tärkeä päivitys"
+#~ msgstr[1] "%1 tärkeää päivitystä, %2 valittu"
+
+#~ msgid "%1 security update"
+#~ msgid_plural "%1 security updates, %2 selected"
+#~ msgstr[0] "%1 turvapäivitys"
+#~ msgstr[1] "%1 turvapäivitystä, %2 valittu"
+
+#~ msgid "%1 bug fix update"
+#~ msgid_plural "%1 bug fix updates, %2 selected"
+#~ msgstr[0] "%1 viankorjauspäivitys"
+#~ msgstr[1] "%1 viankorjauspäivitystä, %2 valittu"
+
+#~ msgid "%1 blocked update"
+#~ msgid_plural "%1 blocked updates"
+#~ msgstr[0] "%1 estetty päivitys"
+#~ msgstr[1] "%1 estettyä päivitystä"
+
+#~ msgid "%1 installed package"
+#~ msgid_plural "%1 installed packages, %2 selected to be removed"
+#~ msgstr[0] "%1 asennettu paketti"
+#~ msgstr[1] "%1 asennettua pakettia, %2 valittu poistettavaksi"
+
+#~ msgid "%1 available package"
+#~ msgid_plural "%1 available packages, %2 selected to be installed"
+#~ msgstr[0] "%1 saatavilla oleva paketti"
+#~ msgstr[1] "%1 saatavilla olevaa pakettia, %2 valittu asennettavaksi"
+
+#~ msgid "%1 unknown update"
+#~ msgid_plural "%1 unknown updates"
+#~ msgstr[0] "Yksi tuntematon päivitys"
+#~ msgstr[1] "%1 tuntematonta päivitystä"
+
+#~ msgctxt "Type of update, in the case it's just an update"
+#~ msgid "%1 update"
+#~ msgid_plural "%1 updates, %2 selected"
+#~ msgstr[0] "%1 päivitys"
+#~ msgstr[1] "%1 päivitystä, %2 valittu"
+
+#~ msgid "Add and remove software"
+#~ msgstr "Lisää ja poista sovelluksia"
+
+#~ msgid "Text search"
+#~ msgstr "Tekstihaku"
+
+#~ msgid "List of changes"
+#~ msgstr "Luettelo muutoksista"
+
+#~ msgctxt "Groups of packages"
+#~ msgid "Group:"
+#~ msgid_plural "Groups:"
+#~ msgstr[0] "Ryhmä:"
+#~ msgstr[1] "Ryhmät:"
+
+#~ msgid "View in groups"
+#~ msgstr "Ryhmittele"
+
+#~ msgid "Display packages in groups according to status"
+#~ msgstr "Näytä paketit tilan mukaisesti ryhmiteltynä"
+
+#~ msgid "All Packages"
+#~ msgstr "Kaikki paketit"
+
+#, fuzzy
+#~| msgid "Select all updates"
+#~ msgid "Select All Updates"
+#~ msgstr "Valitse kaikki päivitykset"
+
+#, fuzzy
+#~| msgid "Finished in %1."
+#~ msgctxt "The time that the transaction took to complete"
+#~ msgid "Finished in %1."
+#~ msgstr "Päättynyt ajassa %1."
+
+#~ msgid "Transaction"
+#~ msgstr "Toimenpide"
+
+#~ msgid "libfoo"
+#~ msgstr "libfoo"
+
+#, fuzzy
+#~| msgid "Show updates"
+#~ msgid "Show Updates View"
+#~ msgstr "Näytä päivitykset"
+
+#~ msgid "&Edit Software Sources"
+#~ msgstr "&Muokkaa ohjelmistolähteitä"
+
+#~ msgid "You have %1"
+#~ msgstr "Tarjolla %1"

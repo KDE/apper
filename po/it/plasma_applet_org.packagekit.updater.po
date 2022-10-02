@@ -1,0 +1,59 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Federico Zenith <federico.zenith@member.fsf.org>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 02:52+0200\n"
+"PO-Revision-Date: 2013-06-25 21:50+0200\n"
+"Last-Translator: Federico Zenith <federico.zenith@member.fsf.org>\n"
+"Language-Team: Italian <kde-i18n-it@kde.org>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: package/contents/ui/ChangelogView.qml:31
+msgid "Failed to get update details"
+msgstr "Dettagli di aggiornamento irrecuperabili"
+
+#: package/contents/ui/ChangelogView.qml:94
+msgid "Version: %1"
+msgstr "Versione: %1"
+
+#: package/contents/ui/ChangelogView.qml:100
+msgid "Updates: %1"
+msgstr "Aggiornamenti: %1"
+
+#: package/contents/ui/main.qml:39
+msgid "Software Updates"
+msgstr "Aggiornamenti del software"
+
+#: package/contents/ui/main.qml:65 package/contents/ui/main.qml:218
+msgid "Check for new updates"
+msgstr "Controlla aggiornamenti"
+
+#: package/contents/ui/main.qml:119
+msgid "Failed to get updates"
+msgstr "Impossibile ottenere aggiornamenti"
+
+#: package/contents/ui/main.qml:164
+msgid "You have one update"
+msgid_plural "You have %1 updates"
+msgstr[0] "Hai un aggiornamento"
+msgstr[1] "Hai %1 aggiornamenti"
+
+#: package/contents/ui/main.qml:169
+msgid "Your system is up to date"
+msgstr "Il tuo sistema è aggiornato"
+
+#: package/contents/ui/Transaction.qml:76
+msgid "Cancel"
+msgstr "Annulla"
+
+#: package/contents/ui/Updates.qml:79
+msgid "Install"
+msgstr "Installa"

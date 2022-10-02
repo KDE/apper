@@ -1,0 +1,123 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Manual d'usuari de l'apper-appsetup</title>
+<authorgroup>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+</authorgroup>
+<date
+>28 de novembre de 2016</date>
+<releaseinfo
+>apper-appsetup 0.9.3</releaseinfo>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper-appsetup</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper-appsetup</command
+></refname>
+<refpurpose
+>Una IGU de l'instal·lador d'aplicacions Limba</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper-appsetup</command
+> <group choice="opt"
+><option
+>--verbose</option
+> </group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripció</title>
+<para
+>Apper és la interfície per a PackageKit</para>
+<para
+>Apper és capaç de gestionar paquets, aplicacions i actualitzacions en una forma de distribució creuada gràcies al projecte PackageKit.</para>
+<para
+>Proporciona als usuaris de &Linux; una sola aplicació que poden aprendre i utilitzar a qualsevol distribució on es trobin.</para>
+<para
+>Aquesta petita aplicació d'ajuda proporciona una interfície gràfica per a la distribució independent de l'instal·lador d'aplicacions Limba, i això permet la instal·lació de paquets Limba amb Apper.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opcions</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--verbose</option
+></term>
+<listitem
+><para
+>Canvia l'eina al mode de sortida detallada.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Vegeu també</title>
+
+<simplelist>
+<member
+>Podeu trobar més informació quant a Apper en <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>el lloc web d'Apper</ulink
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
+</refsect1>
+
+<refsect1>
+<title
+>Autors</title>
+<para
+>El mantenidor de l'Apper és en Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; Aquesta pàgina de manual va ser escrita per en Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

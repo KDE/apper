@@ -1,0 +1,273 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Brazilian-Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Manual do usuário do KDE</title>
+<authorgroup>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+</authorgroup>
+<date
+>10/10/2011</date>
+<productname
+>KDE</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper</command
+></refname>
+<refpurpose
+>Um gerenciador de aplicativos e pacotes que usa o PackageKit</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper</command
+> <group choice="opt"
+><option
+>--updates</option
+> </group
+> <group choice="opt"
+><option
+>--settings</option
+> </group
+> <group choice="opt"
+><option
+>--backend-details</option
+> </group
+> <group choice="opt"
+><option
+>--install-mime-type</option
+><replaceable
+> tipo-MIME</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-package-name</option
+><replaceable
+> nome</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-provide-file</option
+><replaceable
+> arquivo</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-font-resource</option
+><replaceable
+>fonte</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-catalog</option
+><replaceable
+> arquivo</replaceable
+></group
+> <group choice="opt"
+><option
+>--remove-package-by-file</option
+><replaceable
+> arquivo</replaceable
+></group
+> <arg choice="opt"
+>Opções Genéricas do KDE</arg
+> <arg choice="opt"
+>Opções Genéricas do Qt</arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Description</title>
+<para
+>O Apper é a interface para &kde; do PackageKit</para>
+<para
+>O Apper é capaz de gerenciar os pacotes, aplicativos e atualizações em diversas distribuições graças ao projeto PackageKit.</para>
+<para
+>Ele oferece aos usuários do Linux um aplicativo único que eles podem aprender e usar, seja qual for a distribuição que estiverem usando.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opções</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--updates</option
+></term>
+<listitem
+><para
+>Mostra as atualizações disponíveis</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--settings</option
+></term>
+<listitem
+><para
+>Mostra a página de configuração do Apper.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--backend-details</option
+> <replaceable
+>nome</replaceable
+></term>
+<listitem
+><para
+>Mostra informações sobre a infraestrutura que o PackageKit está usando no momento.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-mime-type</option
+> <replaceable
+>tipo-MIME</replaceable
+></term>
+<listitem
+><para
+>Invoca o instalador de tipos MIME.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-package-name</option
+> <replaceable
+>nome</replaceable
+></term>
+<listitem
+><para
+>Instala o pacote chamado <replaceable
+>nome</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-provide-file</option
+> <replaceable
+>arquivo</replaceable
+></term>
+<listitem
+><para
+>Instala o pacote que contém o arquivo <replaceable
+>arquivo</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-font-resource</option
+> <replaceable
+>fonte</replaceable
+></term>
+<listitem
+><para
+>Instala um determinado recurso de fonte.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-catalog</option
+> <replaceable
+>arquivo</replaceable
+></term>
+<listitem
+><para
+>Instala o catálogo de pacotes no <replaceable
+>arquivo</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--remove-package-by-file</option
+> <replaceable
+>arquivo</replaceable
+></term>
+<listitem
+><para
+>Remove o pacote que contém o arquivo <replaceable
+>arquivo</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Veja também</title>
+
+<para
+>Mais informações sobre o Apper podem ser encontradas no <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>site do Apper</ulink
+>.</para>
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+<para
+>O mantenedor do Apper é Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; Esta página de manual foi escrita por Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

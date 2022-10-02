@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Estonian  "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>KDE kasutaja käsiraamat</title>
+<authorgroup>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+</authorgroup>
+<date
+>2014-08-24</date>
+<productname
+>KDE töökeskkond</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper-appsetup</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper-appsetup</command
+></refname>
+<refpurpose
+>Limba rakenduste paigaldaja KDE graafiline kasutajaliides</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper-appsetup</command
+> <group choice="opt"
+><option
+>--verbose</option
+> </group
+> <arg choice="opt"
+>KDE üldised võtmed</arg
+> <arg choice="opt"
+>Qt üldised võtmed</arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Kirjeldus</title>
+<para
+>Apper on PackageKiti &kde; liides</para>
+<para
+>Apper suudab hallata tarkvarapakette, rakendusi ja uuendusi distributsioonidest sõltumata tänu PackageKiti projektile.</para>
+<para
+>See pakub Linuxi kasutajale üheainsa rakenduse, mille abil võib tundma õppida ja kasutada mis tahes distributsiooni.</para>
+<para
+>Käesolev väike abirakendus pakub graafilist kasutajaliidest distributsioonidest sõltumatule Limba rakenduste paigaldajale, mis võimaldab paigaldada Limba tarkvarapakette Apperi vahendusel.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Võtmed</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--verbose</option
+></term>
+<listitem
+><para
+>Tööriista lülitamine jutukasse režiimi</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Vaata ka</title>
+
+<para
+>Rohkem teavet Apperi kohta leiab <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>Apperi veebilehelt</ulink
+>.</para>
+</refsect1>
+
+<refsect1>
+<title
+>Autorid</title>
+<para
+>Apperi hooldaja on Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; käesoleva manuaalilehekülje kirjutas Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

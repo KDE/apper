@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Brazilian-Portuguese "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Manual do usuário do KDE</title>
+<authorgroup>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+</authorgroup>
+<date
+>24/08/2014</date>
+<productname
+>KDE</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper-appsetup</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper-appsetup</command
+></refname>
+<refpurpose
+>Uma interface gráfica para KDE do instalador de aplicativos Limba</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper-appsetup</command
+> <group choice="opt"
+><option
+>--verbose</option
+> </group
+> <arg choice="opt"
+>Opções Genéricas do KDE</arg
+> <arg choice="opt"
+>Opções Genéricas do Qt</arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descrição</title>
+<para
+>O Apper é a interface para &kde; do PackageKit</para>
+<para
+>O Apper é capaz de gerenciar os pacotes, aplicativos e atualizações em diversas distribuições graças ao projeto PackageKit.</para>
+<para
+>Ele oferece aos usuários do Linux um aplicativo único que eles podem aprender e usar, seja qual for a distribuição que estiverem usando.</para>
+<para
+>Este pequeno utilitário oferece uma interface gráfica para o instalador de aplicativos agnóstico da distribuição que é o Limba, o que possibilita a instalação dos pacotes do Limba com o Apper.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opções</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--verbose</option
+></term>
+<listitem
+><para
+>Muda a ferramenta para o modo descritivo</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Veja também</title>
+
+<para
+>Mais informações sobre o Apper podem ser encontradas no <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>site do Apper</ulink
+>.</para>
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+<para
+>O mantenedor do Apper é Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; Esta página de manual foi escrita por Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>

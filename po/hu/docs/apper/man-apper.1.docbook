@@ -1,0 +1,273 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Hungarian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>KDE felhasználói kézikönyv</title>
+<authorgroup>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+</authorgroup>
+<date
+>2011. október 10.</date>
+<productname
+>K Desktop Environment</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper</command
+></refname>
+<refpurpose
+>A PackageKitet használó alkalmazás- és csomagkezelő</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper</command
+> <group choice="opt"
+><option
+>--updates</option
+> </group
+> <group choice="opt"
+><option
+>--settings</option
+> </group
+> <group choice="opt"
+><option
+>--backend-details</option
+> </group
+> <group choice="opt"
+><option
+>--install-mime-type</option
+><replaceable
+> MIME-típus</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-package-name</option
+><replaceable
+> név</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-provide-file</option
+><replaceable
+> fájl</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-font-resource</option
+><replaceable
+> betűkészlet</replaceable
+></group
+> <group choice="opt"
+><option
+>--install-catalog</option
+><replaceable
+> fájl</replaceable
+></group
+> <group choice="opt"
+><option
+>--remove-package-by-file</option
+><replaceable
+> fájlnév</replaceable
+></group
+> <arg choice="opt"
+>Általános KDE opciók</arg
+> <arg choice="opt"
+>Általános Qt opciók</arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Leírás</title>
+<para
+>Az Apper a &kde; felület a PackageKithez</para>
+<para
+>Az Apper képes csomagok, alkalmazások és frissítések kezelésére disztribúciófüggetlen módon, hála a PackageKit projektnek.</para>
+<para
+>Egységes felületet biztosít a Linux felhasználóknak, akik megtanulhatják és használhatják bármelyik disztribúción.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Opciók</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--updates</option
+></term>
+<listitem
+><para
+>Elérhető frissítések megjelenítése</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--settings</option
+></term>
+<listitem
+><para
+>Az Apper beállítóoldalának megjelenítése.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--backend-details</option
+> <replaceable
+>név</replaceable
+></term>
+<listitem
+><para
+>Információk megjelenítése a használt PackageKit modulról.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-mime-type</option
+> <replaceable
+>MIME-típus</replaceable
+></term>
+<listitem
+><para
+>A MIME-típus telepítő meghívása.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-package-name</option
+> <replaceable
+>név</replaceable
+></term>
+<listitem
+><para
+>A <replaceable
+>név</replaceable
+> nevű csomag telepítése.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-provide-file</option
+> <replaceable
+>fájl</replaceable
+></term>
+<listitem
+><para
+>A <replaceable
+>fájl</replaceable
+> nevű fájlt biztosító csomag telepítése.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-font-resource</option
+> <replaceable
+>betűkészlet</replaceable
+></term>
+<listitem
+><para
+>Betűkészlet telepítése.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--install-catalog</option
+> <replaceable
+>fájl</replaceable
+></term>
+<listitem
+><para
+>A <replaceable
+>fájl</replaceable
+> nevű fájlban lévő csomagkatalógus telepítése.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--remove-package-by-file</option
+> <replaceable
+>fájlnév</replaceable
+></term>
+<listitem
+><para
+>A <replaceable
+>fájlnév</replaceable
+> nevű fájlt tartalmazó csomag eltávolítása.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Lásd még</title>
+
+<para
+>További információk találhatók az Apperről <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>az Apper weboldalán</ulink
+>.</para>
+</refsect1>
+
+<refsect1>
+<title
+>Szerzők</title>
+<para
+>Az Apper karbantartója Daniel Nicoletti (<email
+>dantti12@gmail.com</email
+>); Ezt a kézikönyvoldalt Matthias Klumpp (<email
+>matthias@tenstral.net</email
+>) írta.</para>
+</refsect1>
+
+</refentry>
