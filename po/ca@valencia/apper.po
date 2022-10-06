@@ -123,7 +123,7 @@ msgstr "Opcions"
 #: Apper/ApperKCM.cpp:273
 #, kde-format
 msgid "&Cancel"
-msgstr "&Cancel·la"
+msgstr "C&ancel·la"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
 #: Apper/ApperKCM.cpp:280 Apper/ApperKCM.ui:427
