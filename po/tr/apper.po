@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: extragear-sysadmin-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2022-05-03 13:29+0300\n"
+"PO-Revision-Date: 2022-10-08 12:38+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.04.0\n"
+"X-Generator: Lokalize 22.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -247,7 +247,7 @@ msgstr "Güncellemeleri Al"
 #: Apper/BackendDetails.ui:42 Apper/Settings/Settings.cpp:61
 #, kde-format
 msgid "Refresh Cache"
-msgstr "Önbelleği Tazele"
+msgstr "Önbelleği Yenile"
 
 #. i18n: ectx: property (text), widget (QCheckBox, searchNameCB)
 #: Apper/BackendDetails.ui:52
@@ -910,7 +910,7 @@ msgstr "Aktarım listesini yenile"
 #: Apper/TransactionHistory.cpp:83
 #, kde-format
 msgid "Time since last cache refresh: %1"
-msgstr "Son önbellek tazelemesinden sonra geçen süre: %1"
+msgstr "Son önbellek yenilemesinden sonra geçen süre: %1"
 
 #: Apper/TransactionModel.cpp:43
 #, kde-format
@@ -1850,7 +1850,7 @@ msgstr "Dosya yükleniyor"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Refreshing package cache"
-msgstr "Paket önbelleği tazeleniyor"
+msgstr "Paket önbelleği yenileniyor"
 
 #: libapper/PkStrings.cpp:245
 #, kde-format
@@ -2048,7 +2048,7 @@ msgstr "Kurulu yerel dosyalar"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Refreshed package cache"
-msgstr "Paket önbelleği tazelendi"
+msgstr "Paket önbelleği yenilendi"
 
 #: libapper/PkStrings.cpp:328
 #, kde-format
