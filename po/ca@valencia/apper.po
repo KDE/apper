@@ -81,7 +81,7 @@ msgstr "Eliminador de paquets solts"
 #: Apper/Apper.cpp:118
 #, kde-format
 msgid "Package file to install"
-msgstr "Fitxer de paquet que cal instal·lar"
+msgstr "Fitxer de paquet que s'ha d'instal·lar"
 
 #: Apper/ApperKCM.cpp:94 Apper/ApperKCM.cpp:293
 #, kde-format
@@ -3722,8 +3722,8 @@ msgstr[1] "%1 paquets que s'han d'eliminar"
 #, kde-format
 msgid "1 package to downgrade"
 msgid_plural "%1 packages to downgrade"
-msgstr[0] "1 paquet que cal desactualitzar"
-msgstr[1] "%1 paquets que cal desactualitzar"
+msgstr[0] "1 paquet que s'ha de desactualitzar"
+msgstr[1] "%1 paquets que s'han de desactualitzar"
 
 #: libapper/Requirements.cpp:112
 #, kde-format
