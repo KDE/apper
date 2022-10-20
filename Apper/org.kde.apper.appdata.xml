@@ -5,7 +5,6 @@
   <project_license>GPL-2.0+</project_license>
   <name>Apper</name>
   <name xml:lang="ar">آپر</name>
-  <name xml:lang="ast">Apper</name>
   <name xml:lang="az">Apper</name>
   <name xml:lang="bs">Apper</name>
   <name xml:lang="ca">Apper</name>
@@ -44,7 +43,6 @@
   <name xml:lang="zh-TW">Apper</name>
   <summary>KDE application and package management tool</summary>
   <summary xml:lang="ar">أداة «كدي» لإدارة التّطبيقات والحزم</summary>
-  <summary xml:lang="ast">Ferramienta de xestión de paquetes y aplicaciones de KDE</summary>
   <summary xml:lang="az">KDE tətbiqi və paket idarəetmə aləti</summary>
   <summary xml:lang="bs">KDE aplikacija i alat za upravljanje paketom</summary>
   <summary xml:lang="ca">Eina de gestió d'aplicacions i paquets del KDE</summary>
@@ -85,7 +83,6 @@
       provided by a Linux distribution.
     </p>
     <p xml:lang="ar">«آپر» هي أداة إدارة رسوميّة للحزم والتّطبيقات التي توفّرها توزيعة لينكس.</p>
-    <p xml:lang="ast">Apper ye una ferramienta gráfica de xestión de paquetes forníos por una distribución de GNU/Linux.</p>
     <p xml:lang="az">Apper, Linux distribütoru tərəfindən təqdim olunan paketlərin və tətbiqlərin qrafik idarəetmə alətidir.</p>
     <p xml:lang="bs">Apper je grafički alat za upravljanje paketima i aplikacijama obezbjeđenim od strane Linux distribucije.</p>
     <p xml:lang="ca">L'Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
@@ -123,7 +120,6 @@
       date by installing updates.
     </p>
     <p xml:lang="ar">يسمح لك «آپر» بتثبيت برمجيّات جديد كما وإبقاء النّظام محدّثًا بتثبيت التّحديثات.</p>
-    <p xml:lang="ast">Permite la instalación de software nuevu amás de caltener el sistema anováu instalando los anovamientos.</p>
     <p xml:lang="az">Bu yeni proqram təminatını quraşdırmağa və həmçinin yenilənmələri quraşdırmaqla sistemi aktual vəziyyətdə saxlamağa imkan verir.</p>
     <p xml:lang="bs">Dopušta instaliranje novog softvera kao i održavanje sistema instaliranjem ažuriranja.</p>
     <p xml:lang="ca">Permet instal·lar programari nou i també mantenir el sistema al dia instal·lant les actualitzacions.</p>
@@ -158,7 +154,6 @@
     <p xml:lang="zh-TW">它可以安裝新軟體，或更新軟體。</p>
     <p>Features:</p>
     <p xml:lang="ar">الميزات:</p>
-    <p xml:lang="ast">Carauterístiques:</p>
     <p xml:lang="az">İmkanlar:</p>
     <p xml:lang="bs">Svojstva:</p>
     <p xml:lang="ca">Característiques:</p>
@@ -375,7 +370,6 @@
     <screenshot>
       <caption>The main window showing a description of the selected package</caption>
       <caption xml:lang="ar">النّافذة الرّئيسيّة تعرض وصفًا للحزمة المحدّدة</caption>
-      <caption xml:lang="ast">La ventana principal amuesa una descripción de los paquetes esbillaos</caption>
       <caption xml:lang="az">Əsas pəncərə seçilmiş paketin təsvirini göstərir</caption>
       <caption xml:lang="bs">Glavni prozor prikazuje opis označenog paketa</caption>
       <caption xml:lang="ca">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
@@ -414,7 +408,6 @@
   <project_group>KDE</project_group>
   <developer_name>The KDE Community</developer_name>
   <developer_name xml:lang="ar">مجتمع «كدي»</developer_name>
-  <developer_name xml:lang="ast">La comunidá de KDE</developer_name>
   <developer_name xml:lang="az">KDE Cəmiyyəti</developer_name>
   <developer_name xml:lang="bs">KDE zajednica</developer_name>
   <developer_name xml:lang="ca">La comunitat KDE</developer_name>
