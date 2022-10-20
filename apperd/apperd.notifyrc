@@ -2,7 +2,6 @@
 IconName=system-software-install
 Name=Apper
 Name[ar]=آپر
-Name[ast]=Apper
 Name[az]=Apper
 Name[bg]=Apper
 Name[bs]=Apper
@@ -91,7 +90,6 @@ Comment[zh_TW]=Apper 通知
 [Event/ShowUpdates]
 Name=New updates available
 Name[ar]=تحديثات جديدة متوفّرة
-Name[ast]=Anovamientos disponibles
 Name[az]=Yeni yenilənmələr mövcuddur
 Name[bg]=Има налични нови обновления
 Name[bs]=Nove nadogradnje su dostupne
@@ -231,7 +229,6 @@ Action=Sound|Popup
 [Event/RestartRequired]
 Name=A System Restart is Required
 Name[ar]=إعادة تشغيل النّظام مطلوبة
-Name[ast]=Ríquese un reaniciu del sistema
 Name[az]=Sistemi yenidən başlatmaq tələb olunur
 Name[bg]=Нужен е рестарт на системата
 Name[bs]=Pokretanje sistema je potrebno
@@ -508,7 +505,6 @@ Action=Sound|Popup
 [Event/DistroUpgradeFinished]
 Name=The distribution upgrade completed
 Name[ar]=اكتملت ترقية التّوزيعة
-Name[ast]=Completóse l'anovamientu de la distribución
 Name[az]=Distribütor yenilənməsi başa çatdı
 Name[bg]=Обновяването на дистрибуцията приключи
 Name[bs]=Završena je nadogradnja distribucije
@@ -555,7 +551,6 @@ Action=Sound|Popup
 [Event/DistroUpgradeError]
 Name=The distribution upgrade completed with an error
 Name[ar]=اكتملت ترقية التّوزيعة بخطأ
-Name[ast]=Completóse l'anovamientu de la distribución con un fallu
 Name[az]=Distribütor yenilənməsi xəta ilə başa çatdı
 Name[bg]=Имаше грешка при обновяване на дистрибуцията
 Name[bs]=Nadogradnja distribucije je završila s greškom
