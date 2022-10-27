@@ -2745,7 +2745,7 @@ msgid ""
 "You may need to enable an item in Software Origins."
 msgstr ""
 "No s'ha trobat el nom de l'origen remot de programari.\n"
-"Caldria activar un element a «Orígens de programari»."
+"Caldria activar un element en «Orígens de programari»."
 
 #: libapper/PkStrings.cpp:621
 #, kde-format
