@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: apper\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2022-09-15 10:24+0200\n"
+"PO-Revision-Date: 2022-12-06 22:22+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -170,7 +170,7 @@ msgstr "დაყენებული პროგრამები"
 #: Apper/ApperKCM.cpp:691
 #, kde-format
 msgid "Could not find an application that matched this category"
-msgstr ""
+msgstr "აპლიკაცია, რომელიც ამ კატეგორიას ემთხვევა, ვერ ვიპოვე"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, ApperKCM)
 #: Apper/ApperKCM.ui:20
@@ -465,7 +465,7 @@ msgstr "მხარდაჭერილი"
 #: Apper/BackendDetails.ui:452
 #, kde-format
 msgid "Only native"
-msgstr ""
+msgstr "მხოლოდ მშობლიური პაკეტები"
 
 #: Apper/BrowseView.cpp:89 Apper/Updater/Updater.cpp:105
 #, kde-format
@@ -647,27 +647,27 @@ msgstr "მხოლოდ უახლესი პაკეტების ჩ
 #: Apper/FiltersMenu.cpp:249
 #, kde-format
 msgid "Only show the newest available package"
-msgstr ""
+msgstr "პაკეტების მხოლოდ უკანასკნელი ვერსიების ჩვენება"
 
 #: Apper/FiltersMenu.cpp:253
 #, kde-format
 msgid "Only Native Packages"
-msgstr ""
+msgstr "მხოლოდ მშობლიური პაკეტები"
 
 #: Apper/FiltersMenu.cpp:258
 #, kde-format
 msgid "Only show packages matching the machine architecture"
-msgstr ""
+msgstr "მხოლოდ მანქანის არქიტექტურის შესაბამისი პაკეტების ჩვენება"
 
 #: Apper/FiltersMenu.cpp:264
 #, kde-format
 msgid "Only Show Applications"
-msgstr ""
+msgstr "მხოლოდ აპლიკეციების ჩვენება"
 
 #: Apper/FiltersMenu.cpp:267
 #, kde-format
 msgid "Hide packages that are not applications"
-msgstr ""
+msgstr "არა-აპლიკაციების პაკეტების განახლება"
 
 #: Apper/main.cpp:44 Apper/MainUi.cpp:41
 #, kde-format
@@ -677,7 +677,7 @@ msgstr "Apper"
 #: Apper/main.cpp:46
 #, kde-format
 msgid "Apper is an application to get and manage software"
-msgstr ""
+msgstr "Apper-ი პროგრამების გადმოსაწერი და დასაყენებელი პროგრამაა"
 
 #: Apper/main.cpp:48
 #, kde-format
@@ -692,7 +692,7 @@ msgstr "Adrien Bustany"
 #: Apper/main.cpp:49 PkSession/main.cpp:54
 #, kde-format
 msgid "libpackagekit-qt and other stuff"
-msgstr ""
+msgstr "libpackagekit-qt და სხვები"
 
 #: Apper/main.cpp:50
 #, kde-format
@@ -732,7 +732,7 @@ msgstr "ფაილების გარეშე."
 #: Apper/PackageDetails.cpp:571
 #, kde-format
 msgid "Could not fetch software details"
-msgstr ""
+msgstr "პროგრამის დეტალების გამოთხოვის შეცდომა"
 
 #: Apper/PackageDetails.cpp:613
 #, kde-format
@@ -760,7 +760,7 @@ msgstr "დამალვა"
 #: Apper/ScreenShotViewer.cpp:89
 #, kde-format
 msgid "Could not find screen shot."
-msgstr ""
+msgstr "ეკრანის ანაბეჭდის ვერ ვიპოვე."
 
 #: Apper/Settings/OriginModel.cpp:37
 #, kde-format
@@ -770,7 +770,7 @@ msgstr "პაკეტების წყარო"
 #: Apper/Settings/Settings.cpp:65
 #, kde-format
 msgid "A repository was changed, it's highly recommended to refresh the cache"
-msgstr ""
+msgstr "რეპოზიტორია შეიცვალა. რეკომენდებულია ქეშის განახლება"
 
 #: Apper/Settings/Settings.cpp:95
 #, kde-format
@@ -788,7 +788,7 @@ msgstr "მხოლოდ სტაბილური"
 #, kde-format
 msgctxt "Inform about distribution upgrades"
 msgid "Stable and development"
-msgstr ""
+msgstr "სტაბილური და არასტაბილური"
 
 #: Apper/Settings/Settings.cpp:107
 #, kde-format
@@ -824,7 +824,7 @@ msgstr "არასდროს"
 #, kde-format
 msgctxt "No updates will be automatically installed"
 msgid "None"
-msgstr ""
+msgstr "არაფერი"
 
 #: Apper/Settings/Settings.cpp:114
 #, kde-format
@@ -852,60 +852,60 @@ msgstr "განახლებების შემოწმება:"
 #: Apper/Settings/Settings.ui:115 Apper/Settings/Settings.ui:183
 #, kde-format
 msgid "when on a mobile broadband network connection"
-msgstr ""
+msgstr "მობილური ინტერნეტის ქონისას"
 
 #. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesBatteryCB)
 #. i18n: ectx: property (text), widget (QCheckBox, installUpdatesBatteryCB)
 #: Apper/Settings/Settings.ui:122 Apper/Settings/Settings.ui:176
 #, kde-format
 msgid "when running on battery"
-msgstr ""
+msgstr "ელემენტის მოხმარების დროს"
 
 #. i18n: ectx: property (text), widget (QLabel, autoInsL)
 #: Apper/Settings/Settings.ui:141
 #, kde-format
 msgid "Automatically update:"
-msgstr ""
+msgstr "ავტომატურის განახლება:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, appLauncherCB)
 #: Apper/Settings/Settings.ui:199
 #, kde-format
 msgid "Show application launcher after installing new applications"
-msgstr ""
+msgstr "ახალი აპლიკაციების დაყენების შემდეგ აპლიკაციების გამშვების ჩვენება"
 
 #. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
 #: Apper/Settings/Settings.ui:206
 #, kde-format
 msgid "Show confirmation dialog when installing or updating packages"
-msgstr ""
+msgstr "აპლიკაციების დაყენებისას და განახლებისას დადასტურების ფანჯრის გამოტანა"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: Apper/Settings/Settings.ui:213
 #, kde-format
 msgid "Check for distribution upgrades:"
-msgstr ""
+msgstr "დისტრიბუტივის ვერსიის განახლების შემოწმება:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showOriginsCB)
 #: Apper/Settings/Settings.ui:270
 #, kde-format
 msgid "&Show origins of debug and development packages"
-msgstr ""
+msgstr "სატესტო და გასამართი პაკეტების წყაროს &ჩვენება"
 
 #. i18n: ectx: property (text), widget (QPushButton, editOriginsPB)
 #: Apper/Settings/Settings.ui:290
 #, kde-format
 msgid "Edit Origins"
-msgstr ""
+msgstr "წყაროების ჩასწორება"
 
 #: Apper/TransactionHistory.cpp:67
 #, kde-format
 msgid "Refresh transactions list"
-msgstr ""
+msgstr "ტრანზაქციების სიის განახლება"
 
 #: Apper/TransactionHistory.cpp:83
 #, kde-format
 msgid "Time since last cache refresh: %1"
-msgstr ""
+msgstr "დრო ქეშის უკანასკნელი განახლების შემდეგ: %1"
 
 #: Apper/TransactionModel.cpp:43
 #, kde-format
@@ -942,7 +942,7 @@ msgstr "განახლება"
 #: Apper/Updater/DistroUpgrade.cpp:50
 #, kde-format
 msgid "Distribution upgrade available: %1"
-msgstr ""
+msgstr "ხელმისაწვდომია დისტრიბუტივის ვერსიის განახლება: %1"
 
 #: Apper/Updater/DistroUpgrade.cpp:65
 #, kde-format
@@ -951,11 +951,13 @@ msgid ""
 "usually a very lengthy process and takes a lot longer than simply upgrading "
 "your packages."
 msgstr ""
+"აპირებთ, თქვენი დისტრიბუტივის ვერსია უკანასკნელამდე აწიოთ. ეს ჩვეულებრივ "
+"ძალიან გრძელი პროცესია და პაკეტების განახლებაზე გაცილებით მეტი დრო სჭირდება."
 
 #: Apper/Updater/DistroUpgrade.cpp:70
 #, kde-format
 msgid "It is recommended to plug in your computer before proceeding."
-msgstr ""
+msgstr "გაგრძელებამდე რეკომენდებულია კომპიუტერს კვების ბლოკი მიუერთოთ."
 
 #: Apper/Updater/DistroUpgrade.cpp:72
 #, kde-format
@@ -967,7 +969,7 @@ msgstr ""
 #: Apper/Updater/DistroUpgrade.cpp:90
 #, kde-format
 msgid "Distribution upgrade complete."
-msgstr ""
+msgstr "დისტრიბუტივის ვერსიის აწევა დასრულდა."
 
 #: Apper/Updater/DistroUpgrade.cpp:92 apperd/DistroUpgrade.cpp:144
 #, kde-format
@@ -977,7 +979,7 @@ msgstr ""
 #: Apper/Updater/DistroUpgrade.cpp:104 apperd/DistroUpgrade.cpp:162
 #, kde-format
 msgid "The distribution upgrade process failed to start."
-msgstr ""
+msgstr "დისტრიბუტივის ვერსიის აწევის პროცესის დაწყების შეცდომა."
 
 #: Apper/Updater/DistroUpgrade.cpp:108 apperd/DistroUpgrade.cpp:165
 #, kde-format
@@ -985,11 +987,14 @@ msgid ""
 "The distribution upgrade process crashed some time after starting "
 "successfully."
 msgstr ""
+"დისტრიბუტივის ვერსიის აწევის პროცესი წარმატებით გაშვებიდან ცოტა ხნის შემდეგ "
+"ავარიულად დასრულდა."
 
 #: Apper/Updater/DistroUpgrade.cpp:112 apperd/DistroUpgrade.cpp:168
 #, kde-format
 msgid "The distribution upgrade process failed with an unknown error."
 msgstr ""
+"დისტრიბუტივის ვერსიის აწევის პროცესი უცნობი მიზეზით ავარიულად დასრულდა."
 
 #: Apper/Updater/UpdateDetails.cpp:183
 #, kde-format
@@ -1015,7 +1020,7 @@ msgstr ""
 #: Apper/Updater/UpdateDetails.cpp:199
 #, kde-format
 msgid "This update is blocked."
-msgstr ""
+msgstr "ეს განახლება დაბლოკილია."
 
 #: Apper/Updater/UpdateDetails.cpp:206
 #, kde-format
@@ -1108,17 +1113,17 @@ msgstr "რეპოზიტორია: %1"
 #: Apper/Updater/UpdateDetails.cpp:334
 #, kde-format
 msgid "No update description was found."
-msgstr ""
+msgstr "განახლების გადმოწერა არ არსებობს."
 
 #: Apper/Updater/Updater.cpp:112
 #, kde-format
 msgid "Show Current Versions"
-msgstr ""
+msgstr "მიმდინარე ვერსიების ჩვენება"
 
 #: Apper/Updater/Updater.cpp:241
 #, kde-format
 msgid "Estimated download size: %1"
-msgstr ""
+msgstr "გადმოწერის დაახლოებითი ზომა: %1"
 
 #: Apper/Updater/Updater.cpp:335
 #, kde-format
@@ -1128,22 +1133,22 @@ msgstr "განახლებების შემოწმება"
 #: apperd/DistroUpgrade.cpp:88
 #, kde-format
 msgid "Distribution upgrade available"
-msgstr ""
+msgstr "ხელმისაწვდომია დისტრიბუტივის ვერსიის განახლება"
 
 #: apperd/DistroUpgrade.cpp:92
 #, kde-format
 msgid "Start upgrade now"
-msgstr ""
+msgstr "განახლებების ახლავე დაწყება"
 
 #: apperd/DistroUpgrade.cpp:141
 #, kde-format
 msgid "Distribution upgrade finished. "
-msgstr ""
+msgstr "დისტრიბუტივის ვერსიის აწევა დასრულდა. "
 
 #: apperd/TransactionWatcher.cpp:142
 #, kde-format
 msgid "The system update has completed"
-msgstr ""
+msgstr "სისტემის განახლება დასრულდა"
 
 #: apperd/TransactionWatcher.cpp:149 apperd/TransactionWatcher.cpp:191
 #, kde-format
@@ -1160,34 +1165,34 @@ msgstr[1] "პაკეტი: %2"
 #: apperd/Updater.cpp:156
 #, kde-format
 msgid "Updates are being automatically installed."
-msgstr ""
+msgstr "განახლებები ავტომატურად დადგება."
 
 #: apperd/Updater.cpp:166
 #, kde-format
 msgid "Security updates are being automatically installed."
-msgstr ""
+msgstr "უსაფრთხოების განახლებები ავტომატურად დადგება."
 
 #: apperd/Updater.cpp:176
 #, kde-format
 msgid "Updates are being automatically downloaded."
-msgstr ""
+msgstr "განახლებები ავტომატურად გადმოიწერება."
 
 #: apperd/Updater.cpp:210
 #, kde-format
 msgid "System update was successful."
-msgstr ""
+msgstr "სისტემის განახლება წარმატებით დასრულდა."
 
 #: apperd/Updater.cpp:217
 #, kde-format
 msgid "The software update failed."
-msgstr ""
+msgstr "პროგრამების განახლების შეცდომა."
 
 #: apperd/Updater.cpp:271
 #, kde-format
 msgid "There is one new update"
 msgid_plural "There are %1 new updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ერთი ახალი განახლება"
+msgstr[1] "%1 ახალი განახლება"
 
 #: apperd/Updater.cpp:289 AppSetup/SetupWizard.cpp:260
 #: libapper/ApplicationsDelegate.cpp:44
@@ -1198,7 +1203,7 @@ msgstr "დაყენება"
 #: AppSetup/main.cpp:43
 #, kde-format
 msgid "KDE Application Installer"
-msgstr ""
+msgstr "KDE-ის აპლიკაციების დაყენება"
 
 #: AppSetup/main.cpp:46
 #, kde-format
@@ -1220,12 +1225,12 @@ msgstr "Matthias Klumpp"
 #: AppSetup/main.cpp:61
 #, kde-format
 msgid "Show verbose information"
-msgstr ""
+msgstr "მეტი ინფორმაციის ჩვენება"
 
 #: AppSetup/main.cpp:62
 #, kde-format
 msgid "IPK package filename"
-msgstr ""
+msgstr "IPK პაკეტის ფაილის სახელი"
 
 #: AppSetup/main.cpp:79
 #, kde-format
@@ -1235,7 +1240,7 @@ msgstr ""
 #: AppSetup/main.cpp:80
 #, kde-format
 msgid "Package not found!"
-msgstr ""
+msgstr "პაკეტი ვერ ვიპოვე!"
 
 #: AppSetup/SetupWizard.cpp:85 libapper/Requirements.cpp:57
 #: PkSession/SessionTask.cpp:73
@@ -1261,7 +1266,7 @@ msgstr "მოგესალმებით!"
 #: AppSetup/SetupWizard.cpp:138
 #, kde-format
 msgid "Welcome to the installation of %1!"
-msgstr ""
+msgstr "მოგესალმებით %1-ის დაყენების პროგრამაში!"
 
 #: AppSetup/SetupWizard.cpp:139
 #, kde-format
@@ -1275,39 +1280,39 @@ msgstr ""
 #: AppSetup/SetupWizard.cpp:150
 #, kde-format
 msgid "Details about this installation"
-msgstr ""
+msgstr "დეტალები ამ დაყენების შესახებ"
 
 #: AppSetup/SetupWizard.cpp:185
 #, kde-format
 msgid "Application description"
-msgstr ""
+msgstr "აპლიკაციის აღწერა"
 
 #: AppSetup/SetupWizard.cpp:193
 #, kde-format
 msgid "Running installation"
-msgstr ""
+msgstr "მიმდინარეობს დაყენება"
 
 #: AppSetup/SetupWizard.cpp:194
 #, kde-format
 msgid "Installing %1..."
-msgstr ""
+msgstr "%1-ის დაყენება..."
 
 #: AppSetup/SetupWizard.cpp:234
 #, kde-format
 msgid "Installation finished!"
-msgstr ""
+msgstr "დაყენება დასრულდა!"
 
 #: AppSetup/SetupWizard.cpp:235
 #, kde-format
 msgid "%1 has been installed successfully!"
-msgstr ""
+msgstr "%1-ის დაყენება წარმატებულია!"
 
 #: libapper/ApplicationLauncher.cpp:97
 #, kde-format
 msgid "New application available"
 msgid_plural "New applications available"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ხელმისაწვდომია ახალი აპლიკაცია"
+msgstr[1] "ხელმისაწვდომია ახალი აპლიკაციები"
 
 #: libapper/ApplicationLauncher.cpp:100
 #, kde-format
@@ -1321,7 +1326,7 @@ msgstr[1] ""
 #: libapper/ApplicationLauncher.ui:81
 #, kde-format
 msgid "Do not show this dialog again"
-msgstr ""
+msgstr "ეს ფანჯარა აღარ მაჩვენო"
 
 #: libapper/ApplicationsDelegate.cpp:46
 #, kde-format
@@ -1336,12 +1341,12 @@ msgstr "მონიშვნის მოხსნა"
 #: libapper/ChangesDelegate.cpp:55
 #, kde-format
 msgid "Do not Install"
-msgstr ""
+msgstr "არ დააყენო"
 
 #: libapper/ChangesDelegate.cpp:57
 #, kde-format
 msgid "Do not Remove"
-msgstr ""
+msgstr "არ წაშალო"
 
 #: libapper/CustomProgressBar.cpp:38
 #, kde-format
@@ -1352,12 +1357,12 @@ msgstr "დარჩენილია %1"
 #: libapper/LicenseAgreement.cpp:40 libapper/LicenseAgreement.ui:14
 #, kde-format
 msgid "License Agreement Required"
-msgstr ""
+msgstr "სალიცენზიო ხელშეკრულება აუცილებელია"
 
 #: libapper/LicenseAgreement.cpp:43
 #, kde-format
 msgid "Accept Agreement"
-msgstr ""
+msgstr "ლიცენზიის _მიღება"
 
 #: libapper/LicenseAgreement.cpp:45
 #, kde-format
@@ -1406,16 +1411,18 @@ msgid ""
 "Version: %1\n"
 "Architecture: %2"
 msgstr ""
+"ვერსია: %1\n"
+"არქიტექტურა: %2"
 
 #: libapper/PackageModel.cpp:379
 #, kde-format
 msgid "To be Removed"
-msgstr ""
+msgstr "წაიშლება"
 
 #: libapper/PackageModel.cpp:381
 #, kde-format
 msgid "To be Installed"
-msgstr ""
+msgstr "დაყენდება"
 
 #: libapper/PkStrings.cpp:38
 #, kde-format
@@ -1463,19 +1470,19 @@ msgstr "პაკეტების წაშლა"
 #, kde-format
 msgctxt "transaction state, downloading package files"
 msgid "Downloading at %1/s, %2 remaining"
-msgstr ""
+msgstr "გადმოწერის სიჩქარე %1/s, %2 დარჩენილი"
 
 #: libapper/PkStrings.cpp:67
 #, kde-format
 msgctxt "transaction state, downloading package files"
 msgid "Downloading at %1/s"
-msgstr ""
+msgstr "გადმოწერის სიჩქარე %1/s"
 
 #: libapper/PkStrings.cpp:72
 #, kde-format
 msgctxt "transaction state, downloading package files"
 msgid "Downloading, %1 remaining"
-msgstr ""
+msgstr "გადმოწერა, დარჩენილია %1"
 
 #: libapper/PkStrings.cpp:76
 #, kde-format
@@ -1658,7 +1665,7 @@ msgstr "ფაილების ასლი"
 #, kde-format
 msgctxt "we are running hooks pre or post transaction"
 msgid "Running hooks"
-msgstr ""
+msgstr "დამხმარე პროცესების გაშვება"
 
 #: libapper/PkStrings.cpp:179
 #, kde-format
@@ -1688,7 +1695,7 @@ msgstr "ამოღებულია"
 #, kde-format
 msgctxt "The action of the package, in past tense"
 msgid "Cleaned Up"
-msgstr ""
+msgstr "მოსუფთავებულია"
 
 #: libapper/PkStrings.cpp:189
 #, kde-format
@@ -1700,67 +1707,67 @@ msgstr "ამოღებულია"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Unknown role type"
-msgstr ""
+msgstr "უცნობი როლის ტიპი"
 
 #: libapper/PkStrings.cpp:202
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting dependencies"
-msgstr ""
+msgstr "დამოკიდებულებების მიღება"
 
 #: libapper/PkStrings.cpp:204
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting update detail"
-msgstr ""
+msgstr "განახლების დეტალების მიღება"
 
 #: libapper/PkStrings.cpp:207
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting details"
-msgstr ""
+msgstr "დეტალების მიღება"
 
 #: libapper/PkStrings.cpp:209
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting requires"
-msgstr ""
+msgstr "საჭიროებების მიღება"
 
 #: libapper/PkStrings.cpp:211
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting updates"
-msgstr ""
+msgstr "განახლებების მღება"
 
 #: libapper/PkStrings.cpp:213
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Searching details"
-msgstr ""
+msgstr "დეტალების ძებნა"
 
 #: libapper/PkStrings.cpp:215
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Searching for file"
-msgstr ""
+msgstr "ფაილის ძებნა"
 
 #: libapper/PkStrings.cpp:217
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Searching groups"
-msgstr ""
+msgstr "ჯგუფების ძებნა"
 
 #: libapper/PkStrings.cpp:219
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Searching by package name"
-msgstr ""
+msgstr "პაკეტის სახელით ძებნა"
 
 #: libapper/PkStrings.cpp:222
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Simulating removal"
-msgstr ""
+msgstr "წაშლის სიმულაცია"
 
 #: libapper/PkStrings.cpp:224 libapper/PkStrings.cpp:231
 #: libapper/PkStrings.cpp:272
@@ -1779,7 +1786,7 @@ msgstr "წაშლა"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Simulating install"
-msgstr ""
+msgstr "დაყენების სიმულაცია"
 
 #: libapper/PkStrings.cpp:233
 #, kde-format
@@ -1791,37 +1798,37 @@ msgstr "დაყენება"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Simulating file install"
-msgstr ""
+msgstr "ფაილის დაყენების სიმულაცია"
 
 #: libapper/PkStrings.cpp:238
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Downloading required packages"
-msgstr ""
+msgstr "საჭირო პაკეტების გადმოწერა"
 
 #: libapper/PkStrings.cpp:240
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Installing file"
-msgstr ""
+msgstr "ფაილის დაყენება"
 
 #: libapper/PkStrings.cpp:242
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Refreshing package cache"
-msgstr ""
+msgstr "პაკეტების ქეშის განახლება"
 
 #: libapper/PkStrings.cpp:245
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Simulating update"
-msgstr ""
+msgstr "განახლების სიმულაცია"
 
 #: libapper/PkStrings.cpp:247
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Downloading updates"
-msgstr ""
+msgstr "განახლებების გადმოწერა"
 
 #: libapper/PkStrings.cpp:249
 #, kde-format
@@ -1833,187 +1840,187 @@ msgstr "პაკეტების განახლება"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Canceling"
-msgstr ""
+msgstr "გაუქმება"
 
 #: libapper/PkStrings.cpp:253
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting list of repositories"
-msgstr ""
+msgstr "რეპოზიტორიების სიის მიღება"
 
 #: libapper/PkStrings.cpp:255
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Enabling repository"
-msgstr ""
+msgstr "რეპოზიტორიის ჩართვა"
 
 #: libapper/PkStrings.cpp:257
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Setting repository data"
-msgstr ""
+msgstr "რეპოზიტორიის მონაცემების დაყენება"
 
 #: libapper/PkStrings.cpp:259
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Resolving"
-msgstr ""
+msgstr "ამოხსნა"
 
 #: libapper/PkStrings.cpp:262
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting file list"
-msgstr ""
+msgstr "ფაილების სიის მიღება"
 
 #: libapper/PkStrings.cpp:264
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting what provides"
-msgstr ""
+msgstr "მომწოდებლების მიღება"
 
 #: libapper/PkStrings.cpp:266
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Installing signature"
-msgstr ""
+msgstr "ხელმოწერის დაყენება"
 
 #: libapper/PkStrings.cpp:268
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting package lists"
-msgstr ""
+msgstr "პაკეტების სიის მიღება"
 
 #: libapper/PkStrings.cpp:270
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Accepting EULA"
-msgstr ""
+msgstr "EULA-ზე დათანხმება"
 
 #: libapper/PkStrings.cpp:274
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting distribution upgrade information"
-msgstr ""
+msgstr "დისტრიბუტივის ვერსიის აწევის ინფორმაციის მიღება"
 
 #: libapper/PkStrings.cpp:276
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting categories"
-msgstr ""
+msgstr "კატეგორიების მიღება"
 
 #: libapper/PkStrings.cpp:278
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting old transactions"
-msgstr ""
+msgstr "ძველი ტრანზაქციების მიღება"
 
 #: libapper/PkStrings.cpp:280
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Repairing system"
-msgstr ""
+msgstr "სისტემის შეკეთება"
 
 #: libapper/PkStrings.cpp:282
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Removing repository"
-msgstr ""
+msgstr "რეპოზიტორიის წაშლა"
 
 #: libapper/PkStrings.cpp:284
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Upgrading the system"
-msgstr ""
+msgstr "სისტემის განახლება"
 
 #: libapper/PkStrings.cpp:299
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Unknown role type"
-msgstr ""
+msgstr "უცნობი როლის ტიპი"
 
 #: libapper/PkStrings.cpp:301
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got dependencies"
-msgstr ""
+msgstr "დამოკიდებულებები მიღებულია"
 
 #: libapper/PkStrings.cpp:303
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got update detail"
-msgstr ""
+msgstr "განახლების დეტალები მიღებულია"
 
 #: libapper/PkStrings.cpp:306
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got details"
-msgstr ""
+msgstr "დეტალები მიღებულია"
 
 #: libapper/PkStrings.cpp:308
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got requires"
-msgstr ""
+msgstr "საჭიროებები მიღებულია"
 
 #: libapper/PkStrings.cpp:310
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got updates"
-msgstr ""
+msgstr "განახლებები მიღებულია"
 
 #: libapper/PkStrings.cpp:312
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Searched for package details"
-msgstr ""
+msgstr "პაკეტების დეტალების ძებნა დასრულებულია"
 
 #: libapper/PkStrings.cpp:314
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Searched for file"
-msgstr ""
+msgstr "ფაილის ძებნა დასრულებულია"
 
 #: libapper/PkStrings.cpp:316
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Searched groups"
-msgstr ""
+msgstr "ჯგუფების ძებნა დასრულებულია"
 
 #: libapper/PkStrings.cpp:318
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Searched for package name"
-msgstr ""
+msgstr "პაკეტის სახელით ძებნა დასრულებულია"
 
 #: libapper/PkStrings.cpp:320
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Removed packages"
-msgstr ""
+msgstr "წაშლილი პაკეტები"
 
 #: libapper/PkStrings.cpp:322
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed packages"
-msgstr ""
+msgstr "დაყენებული პაკეტები"
 
 #: libapper/PkStrings.cpp:324
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed local files"
-msgstr ""
+msgstr "დაყენებული ლოკალური ფაილები"
 
 #: libapper/PkStrings.cpp:326
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Refreshed package cache"
-msgstr ""
+msgstr "პაკეტების ქეში წარმატებით განახლდა"
 
 #: libapper/PkStrings.cpp:328
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Updated packages"
-msgstr ""
+msgstr "განახლებული პაკეტები"
 
 #: libapper/PkStrings.cpp:330
 #, kde-format
@@ -2025,19 +2032,19 @@ msgstr "გაუქმებულია"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got list of repositories"
-msgstr ""
+msgstr "რეპოზიტორიების სია მიღებულია"
 
 #: libapper/PkStrings.cpp:334
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Enabled repository"
-msgstr ""
+msgstr "რეპოზიტორია ჩართულია"
 
 #: libapper/PkStrings.cpp:336
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Set repository data"
-msgstr ""
+msgstr "რეპოზიტორიის მონაცემები დაყენებულია"
 
 #: libapper/PkStrings.cpp:338
 #, kde-format
@@ -2049,73 +2056,73 @@ msgstr "გადაწყვეტილია"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got file list"
-msgstr ""
+msgstr "ფაილების სია მიღებულია"
 
 #: libapper/PkStrings.cpp:343
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got what provides"
-msgstr ""
+msgstr "მომწოდებლების სია მიღებულია"
 
 #: libapper/PkStrings.cpp:345
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed signature"
-msgstr ""
+msgstr "ხელმოწერა დაყენებულია"
 
 #: libapper/PkStrings.cpp:347
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got package lists"
-msgstr ""
+msgstr "პაკეტების სია მიღებულია"
 
 #: libapper/PkStrings.cpp:349
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Accepted EULA"
-msgstr ""
+msgstr "EULA-ზე თანხმობა მიცემულია"
 
 #: libapper/PkStrings.cpp:351
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Downloaded packages"
-msgstr ""
+msgstr "პაკეტები გადმოწერილი"
 
 #: libapper/PkStrings.cpp:353
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got distribution upgrades"
-msgstr ""
+msgstr "დისტრიბუტივის ვერსიის აწევა მიღებულია"
 
 #: libapper/PkStrings.cpp:355
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got categories"
-msgstr ""
+msgstr "კატეგორიები მიღებულია"
 
 #: libapper/PkStrings.cpp:357
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got old transactions"
-msgstr ""
+msgstr "ძველი ტრანზაქციები მიღებულია"
 
 #: libapper/PkStrings.cpp:359
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Repaired system"
-msgstr ""
+msgstr "სისტემის შეკეთება წარმატებულია"
 
 #: libapper/PkStrings.cpp:361
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Removed repository"
-msgstr ""
+msgstr "წაშლილი რეპოზიტორია"
 
 #: libapper/PkStrings.cpp:363
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Upgraded the system"
-msgstr ""
+msgstr "სისტემა განახლდა"
 
 #: libapper/PkStrings.cpp:373
 #, kde-format
@@ -2140,7 +2147,7 @@ msgstr "წაშლა"
 #: libapper/PkStrings.cpp:381
 #, kde-format
 msgid "Cleaning up"
-msgstr ""
+msgstr "მოსუფთავება"
 
 #: libapper/PkStrings.cpp:383
 #, kde-format
@@ -2180,7 +2187,7 @@ msgstr "ამოღებულია"
 #: libapper/PkStrings.cpp:408
 #, kde-format
 msgid "Cleaned up"
-msgstr ""
+msgstr "მოსუფთავებულია"
 
 #: libapper/PkStrings.cpp:410
 #, kde-format
@@ -2195,22 +2202,22 @@ msgstr "გადაყენდა"
 #: libapper/PkStrings.cpp:414
 #, kde-format
 msgid "Prepared"
-msgstr ""
+msgstr "მომზადებულია"
 
 #: libapper/PkStrings.cpp:416
 #, kde-format
 msgid "Decompressed"
-msgstr ""
+msgstr "გაშლილია"
 
 #: libapper/PkStrings.cpp:427
 #, kde-format
 msgid "No network connection available"
-msgstr ""
+msgstr "ქსელური შეერთებების გარეშე"
 
 #: libapper/PkStrings.cpp:429
 #, kde-format
 msgid "No package cache is available"
-msgstr ""
+msgstr "პაკეტების ქეში მიუწვდომელია"
 
 #: libapper/PkStrings.cpp:431
 #, kde-format
@@ -2220,127 +2227,127 @@ msgstr "არასაკმარისი მეხსიერება"
 #: libapper/PkStrings.cpp:433
 #, kde-format
 msgid "Failed to create a thread"
-msgstr ""
+msgstr "ნაკადის შექმნის შეცდომა"
 
 #: libapper/PkStrings.cpp:435
 #, kde-format
 msgid "Not supported by this backend"
-msgstr ""
+msgstr "მხარდაუჭერელია ამ უკანაბოლოს მიერ"
 
 #: libapper/PkStrings.cpp:437
 #, kde-format
 msgid "An internal system error has occurred"
-msgstr ""
+msgstr "ნაპოვნია სისტემის შიდა შეცდომა"
 
 #: libapper/PkStrings.cpp:439
 #, kde-format
 msgid "A security trust relationship is not present"
-msgstr ""
+msgstr "უსაფრთხო ნდობის ურთიერთობა არ დამყარებულა"
 
 #: libapper/PkStrings.cpp:441
 #, kde-format
 msgid "The package is not installed"
-msgstr ""
+msgstr "პაკეტი დაყენებული არაა"
 
 #: libapper/PkStrings.cpp:443
 #, kde-format
 msgid "The package was not found"
-msgstr ""
+msgstr "პაკეტი ვერ ვიპოვე"
 
 #: libapper/PkStrings.cpp:445
 #, kde-format
 msgid "The package is already installed"
-msgstr ""
+msgstr "პაკეტი უკვე დაყენებულია"
 
 #: libapper/PkStrings.cpp:447
 #, kde-format
 msgid "The package download failed"
-msgstr ""
+msgstr "პაკეტის გადმოწერის შეცდომა"
 
 #: libapper/PkStrings.cpp:449
 #, kde-format
 msgid "The group was not found"
-msgstr ""
+msgstr "ჯგუფი არ არსებობს"
 
 #: libapper/PkStrings.cpp:451
 #, kde-format
 msgid "The group list was invalid"
-msgstr ""
+msgstr "ჯგუფების სია არასწორია"
 
 #: libapper/PkStrings.cpp:453
 #, kde-format
 msgid "Dependency resolution failed"
-msgstr ""
+msgstr "დამოკიდებულებების ამოხსნის შეცდომა"
 
 #: libapper/PkStrings.cpp:455
 #, kde-format
 msgid "Search filter was invalid"
-msgstr ""
+msgstr "ძებნის ფილტრი არსწორია"
 
 #: libapper/PkStrings.cpp:457
 #, kde-format
 msgid "The package identifier was not well formed"
-msgstr ""
+msgstr "პაკეტის იდენტიფიკატორი არასწორია"
 
 #: libapper/PkStrings.cpp:459
 #, kde-format
 msgid "Transaction error"
-msgstr ""
+msgstr "ტრანზაქციის შეცდომა"
 
 #: libapper/PkStrings.cpp:461
 #, kde-format
 msgid "Repository name was not found"
-msgstr ""
+msgstr "რეპოზიტორიის სახელი ვერ ვიპოვე"
 
 #: libapper/PkStrings.cpp:463
 #, kde-format
 msgid "Could not remove a protected system package"
-msgstr ""
+msgstr "დაცული სისტემური პაკეტის წაშლა შეუძლებელია"
 
 #: libapper/PkStrings.cpp:465
 #, kde-format
 msgid "The task was canceled"
-msgstr ""
+msgstr "დავალება გაუქმდა"
 
 #: libapper/PkStrings.cpp:467
 #, kde-format
 msgid "The task was forcibly canceled"
-msgstr ""
+msgstr "დავალება ნაძალადევად გაუქმდა"
 
 #: libapper/PkStrings.cpp:469
 #, kde-format
 msgid "Reading the config file failed"
-msgstr ""
+msgstr "კონფიგურაციის ფაილის წაკითხვის შეცდომა"
 
 #: libapper/PkStrings.cpp:471
 #, kde-format
 msgid "The task cannot be cancelled"
-msgstr ""
+msgstr "ამოცანის გაუქმება შეუძლებელია"
 
 #: libapper/PkStrings.cpp:473
 #, kde-format
 msgid "Source packages cannot be installed"
-msgstr ""
+msgstr "წყაროს პაკეტის დაყენება შეუძლებელია"
 
 #: libapper/PkStrings.cpp:475
 #, kde-format
 msgid "The license agreement failed"
-msgstr ""
+msgstr "სალიცენზიო შეთანხმების თანხმობის შეცდომა"
 
 #: libapper/PkStrings.cpp:477
 #, kde-format
 msgid "Local file conflict between packages"
-msgstr ""
+msgstr "ლოკალური ფაილის კონფლიქტი პაკეტებს შორის"
 
 #: libapper/PkStrings.cpp:479
 #, kde-format
 msgid "Packages are not compatible"
-msgstr ""
+msgstr "პაკეტები არათავსებადია"
 
 #: libapper/PkStrings.cpp:481
 #, kde-format
 msgid "Problem connecting to a software origin"
-msgstr ""
+msgstr "პროგრამის წყაროსთან დაკავშირების პრობლემა"
 
 #: libapper/PkStrings.cpp:483
 #, kde-format
@@ -2350,12 +2357,12 @@ msgstr "ინიციალიზაციის შეცდომა"
 #: libapper/PkStrings.cpp:485
 #, kde-format
 msgid "Failed to finalize"
-msgstr ""
+msgstr "დასრულების პრობლემა"
 
 #: libapper/PkStrings.cpp:487
 #, kde-format
 msgid "Cannot get lock"
-msgstr ""
+msgstr "ბლოკის მიღების შეცდომა"
 
 #: libapper/PkStrings.cpp:489
 #, kde-format
@@ -2365,7 +2372,7 @@ msgstr "განახლების პაკეტები არ არი
 #: libapper/PkStrings.cpp:491
 #, kde-format
 msgid "Cannot write repository configuration"
-msgstr ""
+msgstr "რეპოზიტორიის კონფიგურაციის ჩაწერის შეცდომა"
 
 #: libapper/PkStrings.cpp:493
 #, kde-format
@@ -2375,17 +2382,17 @@ msgstr "ლოკალურად დაყენების შეცდო�
 #: libapper/PkStrings.cpp:495
 #, kde-format
 msgid "Bad GPG signature"
-msgstr ""
+msgstr "არასწორი GPG ხელმოწერა"
 
 #: libapper/PkStrings.cpp:497
 #, kde-format
 msgid "Missing GPG signature"
-msgstr ""
+msgstr "GPG ხელმოწერა არ არსებობს"
 
 #: libapper/PkStrings.cpp:499
 #, kde-format
 msgid "Repository configuration invalid"
-msgstr ""
+msgstr "რეპოზიტორიის კონფიგურაციის შეცდომა"
 
 #: libapper/PkStrings.cpp:501
 #, kde-format
@@ -2400,142 +2407,142 @@ msgstr "პაკეტის დაყენება დაბლოკილ�
 #: libapper/PkStrings.cpp:505
 #, kde-format
 msgid "Package is corrupt"
-msgstr ""
+msgstr "პაკეტი დაზიანებულია"
 
 #: libapper/PkStrings.cpp:507
 #, kde-format
 msgid "All packages are already installed"
-msgstr ""
+msgstr "ყველა პაკეტი უკვე დაყენებულია"
 
 #: libapper/PkStrings.cpp:509
 #, kde-format
 msgid "The specified file could not be found"
-msgstr ""
+msgstr "მითითებული ფაილი ვერ მოიძებნა"
 
 #: libapper/PkStrings.cpp:511
 #, kde-format
 msgid "No more mirrors are available"
-msgstr ""
+msgstr "მეტი სარკე მიუწვდომელია"
 
 #: libapper/PkStrings.cpp:513
 #, kde-format
 msgid "No distribution upgrade data is available"
-msgstr ""
+msgstr "დისტრიბუტივის ვერსიის აწევის ინფორმაცია მიუწვდომელია"
 
 #: libapper/PkStrings.cpp:515
 #, kde-format
 msgid "Package is incompatible with this system"
-msgstr ""
+msgstr "პაკეტი ამ სისტემასთან თავსებადი არაა"
 
 #: libapper/PkStrings.cpp:517
 #, kde-format
 msgid "No space is left on the disk"
-msgstr ""
+msgstr "დისკზე ადგილი აღარ დარჩა"
 
 #: libapper/PkStrings.cpp:519 libapper/PkTransaction.cpp:341
 #, kde-format
 msgid "A media change is required"
-msgstr ""
+msgstr "საჭიროა დისკის შეცვლა"
 
 #: libapper/PkStrings.cpp:521
 #, kde-format
 msgid "Authorization failed"
-msgstr ""
+msgstr "ავტორიზაციის შეცდომა"
 
 #: libapper/PkStrings.cpp:523
 #, kde-format
 msgid "Update not found"
-msgstr ""
+msgstr "განახლება ვერ ვიპოვე"
 
 #: libapper/PkStrings.cpp:525
 #, kde-format
 msgid "Cannot install from untrusted origin"
-msgstr ""
+msgstr "არასანდო წყაროდან დაყენება შეუძლებელია"
 
 #: libapper/PkStrings.cpp:527
 #, kde-format
 msgid "Cannot update from untrusted origin"
-msgstr ""
+msgstr "არასანდო წყაროდან განახლება შეუძლებელია"
 
 #: libapper/PkStrings.cpp:529
 #, kde-format
 msgid "Cannot get the file list"
-msgstr ""
+msgstr "ფაილების სიის მიღების შეცდომა"
 
 #: libapper/PkStrings.cpp:531
 #, kde-format
 msgid "Cannot get package requires"
-msgstr ""
+msgstr "პაკეტების საჭიროებების მიღების შეცდომა"
 
 #: libapper/PkStrings.cpp:533
 #, kde-format
 msgid "Cannot disable origin"
-msgstr ""
+msgstr "წყაროს გათიშვის შეცდომა"
 
 #: libapper/PkStrings.cpp:535
 #, kde-format
 msgid "The download failed"
-msgstr ""
+msgstr "გადმოწერის შეცდომა"
 
 #: libapper/PkStrings.cpp:537
 #, kde-format
 msgid "Package failed to configure"
-msgstr ""
+msgstr "პაკეტის მორგების შეცდომა"
 
 #: libapper/PkStrings.cpp:539
 #, kde-format
 msgid "Package failed to build"
-msgstr ""
+msgstr "პაკეტის აგების შეცდომა"
 
 #: libapper/PkStrings.cpp:541
 #, kde-format
 msgid "Package failed to install"
-msgstr ""
+msgstr "პაკეტის დაყენების შეცდომა"
 
 #: libapper/PkStrings.cpp:543
 #, kde-format
 msgid "Package failed to be removed"
-msgstr ""
+msgstr "პაკეტის წაშლის შეცდომა"
 
 #: libapper/PkStrings.cpp:545
 #, kde-format
 msgid "Update failed due to running process"
-msgstr ""
+msgstr "განახლების შეცდომა გაშვებული პროცესის გამო"
 
 #: libapper/PkStrings.cpp:547
 #, kde-format
 msgid "The package database was changed"
-msgstr ""
+msgstr "პაკეტების ბაზა შეიცვალა"
 
 #: libapper/PkStrings.cpp:549
 #, kde-format
 msgid "Virtual provide type is not supported"
-msgstr ""
+msgstr "ვირტუალური მომწოდებლის ტიპი მხარდაუჭერელია"
 
 #: libapper/PkStrings.cpp:551
 #, kde-format
 msgid "Install root is invalid"
-msgstr ""
+msgstr "დაყენების root საქაღალდე არასწორია"
 
 #: libapper/PkStrings.cpp:553
 #, kde-format
 msgid "Cannot fetch install sources"
-msgstr ""
+msgstr "დაყენების წყაროების გამოთხოვის შეცდომა"
 
 #: libapper/PkStrings.cpp:555
 #, kde-format
 msgid "Rescheduled due to priority"
-msgstr ""
+msgstr "გადაგეგმილია პრიორიტეტის გამო"
 
 #: libapper/PkStrings.cpp:557
 #, kde-format
 msgid "Unfinished transaction"
-msgstr ""
+msgstr "დაუსრულებელი ტრანზაქცია"
 
 #: libapper/PkStrings.cpp:559
 #, kde-format
 msgid "Lock required"
-msgstr ""
+msgstr "საჭიროა დაბლოკვა"
 
 #: libapper/PkStrings.cpp:561
 #, kde-format
@@ -2594,7 +2601,7 @@ msgstr ""
 #, kde-format
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
-msgstr ""
+msgstr "პაკეტი, რომლის განახლებას ან წაშლას ცდილობთ, დაყენებული არაა."
 
 #: libapper/PkStrings.cpp:593
 #, kde-format
@@ -2602,11 +2609,13 @@ msgid ""
 "The package that is being modified was not found on your system or in any "
 "software origin."
 msgstr ""
+"პაკეტი, რომლის შეცვლასაც ცდილობთ, თქვენს სისტემაში და ხელმისაწვდომ წყაროებში "
+"ვერ ვიპოვე."
 
 #: libapper/PkStrings.cpp:595
 #, kde-format
 msgid "The package that is trying to be installed is already installed."
-msgstr ""
+msgstr "პაკეტი, რომლის დაყენებასაც ცდილობთ, უკვე დაყენებულია."
 
 #: libapper/PkStrings.cpp:597
 #, kde-format
@@ -2640,7 +2649,7 @@ msgstr ""
 #: libapper/PkStrings.cpp:610
 #, kde-format
 msgid "The search filter was not correctly formed."
-msgstr ""
+msgstr "ძებნის ფილტრი არასწორადაა დაწერილი."
 
 #: libapper/PkStrings.cpp:612
 #, kde-format
@@ -2666,12 +2675,12 @@ msgstr ""
 #: libapper/PkStrings.cpp:621
 #, kde-format
 msgid "Removing a protected system package is not allowed."
-msgstr ""
+msgstr "დაცული სისტემური პაკეტის წაშლა შეუძლებელია."
 
 #: libapper/PkStrings.cpp:623
 #, kde-format
 msgid "The task was canceled successfully and no packages were changed."
-msgstr ""
+msgstr "ამოცანა წარმატებულად გაუქმდა და პაკეტები არ შეცვლილა."
 
 #: libapper/PkStrings.cpp:625
 #, kde-format
@@ -2800,13 +2809,13 @@ msgstr ""
 #, kde-format
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
-msgstr ""
+msgstr "გადმოწერილი პაკეტი დაზიანებულია და თავიდან გადმოწერას საჭიროებს."
 
 #: libapper/PkStrings.cpp:678
 #, kde-format
 msgid ""
 "All of the packages selected for install are already installed on the system."
-msgstr ""
+msgstr "დასაყენებლად მონიშნული ყველა პაკეტ ამ სისტემაზე უკვე დაყენებულია."
 
 #: libapper/PkStrings.cpp:680
 #, kde-format
@@ -2866,27 +2875,27 @@ msgstr ""
 #: libapper/PkStrings.cpp:702
 #, kde-format
 msgid "The package could not be installed from untrusted origin."
-msgstr ""
+msgstr "პაკეტის არასანდო წყაროდან დაყენება შეუძლებელია."
 
 #: libapper/PkStrings.cpp:704
 #, kde-format
 msgid "The package could not be updated from untrusted origin."
-msgstr ""
+msgstr "პაკეტის არასანდო წყაროდან განაზლება შეუძლებელია."
 
 #: libapper/PkStrings.cpp:706
 #, kde-format
 msgid "The file list is not available for this package."
-msgstr ""
+msgstr "ამ პაკეტისთვის ფაილების სია ხელმისაწვდომი არაა."
 
 #: libapper/PkStrings.cpp:708
 #, kde-format
 msgid "The information about what requires this package could not be obtained."
-msgstr ""
+msgstr "ინფორმაცია იმაზე, რას სჭირდება ეს პაკეტი, ხელმიუწვდომელია."
 
 #: libapper/PkStrings.cpp:710
 #, kde-format
 msgid "The specified software origin could not be disabled."
-msgstr ""
+msgstr "პროგრამების მითითებული წყაროს გათიშვა შეუძლებელია."
 
 #: libapper/PkStrings.cpp:712
 #, kde-format
@@ -2933,22 +2942,23 @@ msgstr ""
 #: libapper/PkStrings.cpp:730
 #, kde-format
 msgid "The package database was changed while the request was running."
-msgstr ""
+msgstr "პაკეტების მონაცემთა ბაზა მოთხოვნის მიმდინარეობისას შეიცვალა."
 
 #: libapper/PkStrings.cpp:732
 #, kde-format
 msgid "The virtual provide type is not supported by this system."
-msgstr ""
+msgstr "ვირტუალური მომწოდებლის ტიპი ამ სისტემაზე მხარდაუჭერელია."
 
 #: libapper/PkStrings.cpp:734
 #, kde-format
 msgid "The install root is invalid. Please contact your administrator."
 msgstr ""
+"დაყენების საწყისი საქაღალდე არასწორია. დაუკავშირდით თქვენს ადმინისტრატორს."
 
 #: libapper/PkStrings.cpp:736
 #, kde-format
 msgid "The list of software could not be downloaded."
-msgstr ""
+msgstr "პროგრამების სიის გადმოწერა შეუძლებელია."
 
 #: libapper/PkStrings.cpp:738
 #, kde-format
@@ -2965,7 +2975,7 @@ msgstr ""
 #: libapper/PkStrings.cpp:742
 #, kde-format
 msgid "A package manager lock is required."
-msgstr ""
+msgstr "პაკეტების მმართველის ბლოკი აუცილებელია."
 
 #: libapper/PkStrings.cpp:744
 #, kde-format
@@ -3044,25 +3054,25 @@ msgstr "სისტემა"
 #, kde-format
 msgctxt "The group type"
 msgid "GNOME desktop"
-msgstr ""
+msgstr "სამუშაო გარემო GNOME"
 
 #: libapper/PkStrings.cpp:779
 #, kde-format
 msgctxt "The group type"
 msgid "KDE desktop"
-msgstr ""
+msgstr "KDE Plasma სამუშაო მაგდა"
 
 #: libapper/PkStrings.cpp:781
 #, kde-format
 msgctxt "The group type"
 msgid "XFCE desktop"
-msgstr ""
+msgstr "სამუშაო გარემო XFCE"
 
 #: libapper/PkStrings.cpp:783
 #, kde-format
 msgctxt "The group type"
 msgid "Other desktops"
-msgstr ""
+msgstr "სხვა სამუშაო გარემოები"
 
 #: libapper/PkStrings.cpp:785
 #, kde-format
@@ -3086,7 +3096,7 @@ msgstr "ფონტები"
 #, kde-format
 msgctxt "The group type"
 msgid "Admin tools"
-msgstr ""
+msgstr "ადმინისტრირების ხელსაწყოები"
 
 #: libapper/PkStrings.cpp:793
 #, kde-format
@@ -3116,7 +3126,7 @@ msgstr "უსაფრთხოება"
 #, kde-format
 msgctxt "The group type"
 msgid "Power management"
-msgstr ""
+msgstr "ენერგიის მართვა"
 
 #: libapper/PkStrings.cpp:803
 #, kde-format
@@ -3140,7 +3150,7 @@ msgstr "რუკები"
 #, kde-format
 msgctxt "The group type"
 msgid "Software sources"
-msgstr ""
+msgstr "პროგრამების წყაროები"
 
 #: libapper/PkStrings.cpp:811
 #, kde-format
@@ -3164,7 +3174,7 @@ msgstr "ელექტრონიკა"
 #, kde-format
 msgctxt "The group type"
 msgid "Package collections"
-msgstr ""
+msgstr "პაკეტების კოლექციები"
 
 #: libapper/PkStrings.cpp:819
 #, kde-format
@@ -3176,55 +3186,55 @@ msgstr "მომწოდებელი"
 #, kde-format
 msgctxt "The group type"
 msgid "Newest packages"
-msgstr ""
+msgstr "უახლესი პაკეტები"
 
 #: libapper/PkStrings.cpp:823
 #, kde-format
 msgctxt "The group type"
 msgid "Unknown group"
-msgstr ""
+msgstr "უცნობი ჯგუფი"
 
 #: libapper/PkStrings.cpp:834
 #, kde-format
 msgctxt "The type of update"
 msgid "Trivial update"
-msgstr ""
+msgstr "ჩვეულებრივი განახლება"
 
 #: libapper/PkStrings.cpp:836
 #, kde-format
 msgctxt "The type of update"
 msgid "Normal update"
-msgstr ""
+msgstr "ნორმალური განახლება"
 
 #: libapper/PkStrings.cpp:838
 #, kde-format
 msgctxt "The type of update"
 msgid "Important update"
-msgstr ""
+msgstr "მნიშვნელოვანი განახლება"
 
 #: libapper/PkStrings.cpp:840
 #, kde-format
 msgctxt "The type of update"
 msgid "Security update"
-msgstr ""
+msgstr "უსაფრთხოების განახლება"
 
 #: libapper/PkStrings.cpp:842
 #, kde-format
 msgctxt "The type of update"
 msgid "Bug fix update"
-msgstr ""
+msgstr "შეცდომების გასწორების განახლება"
 
 #: libapper/PkStrings.cpp:844
 #, kde-format
 msgctxt "The type of update"
 msgid "Enhancement update"
-msgstr ""
+msgstr "გაფართოების განახლება"
 
 #: libapper/PkStrings.cpp:846
 #, kde-format
 msgctxt "The type of update"
 msgid "Blocked update"
-msgstr ""
+msgstr "დაბლოკილი განახლება"
 
 #: libapper/PkStrings.cpp:849
 #, kde-format
@@ -3242,7 +3252,7 @@ msgstr "ხელმისაწვდომია"
 #, kde-format
 msgctxt "The type of update"
 msgid "Unknown update"
-msgstr ""
+msgstr "უცნობი განახლება"
 
 #: libapper/PkStrings.cpp:865
 #, kde-format
@@ -3254,110 +3264,110 @@ msgstr "განახლება ხელმისაწვდომი ა�
 msgctxt "Some updates were selected on the view"
 msgid "1 Update Selected"
 msgid_plural "%1 Updates Selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "მონიშნულია 1 განახლება"
+msgstr[1] "მონიშნულია %1 განახლება"
 
 #: libapper/PkStrings.cpp:872
 #, kde-format
 msgctxt "Some updates are being shown on the screen"
 msgid "1 Update"
 msgid_plural "%1 Updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 განახლება"
+msgstr[1] "%1 განახლება"
 
 #: libapper/PkStrings.cpp:875
 #, kde-format
 msgctxt "Type of update, in the case it's just an update"
 msgid "%1, %2"
-msgstr ""
+msgstr "%1, %2"
 
 #: libapper/PkStrings.cpp:876
 #, kde-format
 msgctxt "Part of: %1 Updates, %1 Selected"
 msgid "%1 Update"
 msgid_plural "%1 Updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 განახლება"
+msgstr[1] "%1 განახლება"
 
 #: libapper/PkStrings.cpp:877
 #, kde-format
 msgctxt "Part of: %1 Updates, %1 Selected"
 msgid "%1 Selected"
 msgid_plural "%1 Selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 მონიშნულია"
+msgstr[1] "%1 მონიშნულია"
 
 #: libapper/PkStrings.cpp:881
 #, kde-format
 msgid "No Packages"
-msgstr ""
+msgstr "პაკეტების გარეშე"
 
 #: libapper/PkStrings.cpp:883
 #, kde-format
 msgid "1 Package"
 msgid_plural "%1 Packages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 პაკეტი"
+msgstr[1] "%1 პაკეტი"
 
 #: libapper/PkStrings.cpp:891
 #, kde-format
 msgid "No restart is necessary"
-msgstr ""
+msgstr "გადატვირთვა საჭირო არაა"
 
 #: libapper/PkStrings.cpp:893
 #, kde-format
 msgid "You will be required to restart this application"
-msgstr ""
+msgstr "საჭიროა აპლიკაციის გადატვირთვა"
 
 #: libapper/PkStrings.cpp:895
 #, kde-format
 msgid "You will be required to log out and back in"
-msgstr ""
+msgstr "საჭიროა გასვლა და შემოსვლა"
 
 #: libapper/PkStrings.cpp:897
 #, kde-format
 msgid "A restart will be required"
-msgstr ""
+msgstr "საჭიროა კომპიუტერის გადატვირთვა"
 
 #: libapper/PkStrings.cpp:899
 #, kde-format
 msgid "You will be required to log out and back in due to a security update."
-msgstr ""
+msgstr "საჭიროა გასვლა და შემოსვლა, უსაფრთხოების განახლების გამო."
 
 #: libapper/PkStrings.cpp:901
 #, kde-format
 msgid "A restart will be required due to a security update."
-msgstr ""
+msgstr "უსაფრთხოების განახლების გამო საჭიროა გადატვირთვა."
 
 #: libapper/PkStrings.cpp:914
 #, kde-format
 msgid "No restart is required"
-msgstr ""
+msgstr "გადატვირთვა საჭირო არაა"
 
 #: libapper/PkStrings.cpp:916
 #, kde-format
 msgid "A restart is required"
-msgstr ""
+msgstr "გადატვრთვა საჭიროა"
 
 #: libapper/PkStrings.cpp:918
 #, kde-format
 msgid "You need to log out and log back in"
-msgstr ""
+msgstr "საჭიროა გახვიდეთ და ისევ შემოხვიდეთ"
 
 #: libapper/PkStrings.cpp:920
 #, kde-format
 msgid "You need to restart the application"
-msgstr ""
+msgstr "საჭიროა აპლიკაციის გადატვირთვა"
 
 #: libapper/PkStrings.cpp:922
 #, kde-format
 msgid "You need to log out and log back in to remain secure."
-msgstr ""
+msgstr "უსაფრთხოდ ყოფნისთვის საჭიროა გახვიდეთ და თავიდან შემოხვიდეთ."
 
 #: libapper/PkStrings.cpp:924
 #, kde-format
 msgid "A restart is required to remain secure."
-msgstr ""
+msgstr "უსაფრთხოდ ყოფნისთვის გადატვირთვა აუცილებელია."
 
 #: libapper/PkStrings.cpp:937
 #, kde-format
@@ -3407,47 +3417,47 @@ msgstr ""
 #: libapper/PkStrings.cpp:1018
 #, kde-format
 msgid "Cannot connect to this transaction id."
-msgstr ""
+msgstr "ამ ტრანზაქციის ID-ზე მიერთების შეცდომა."
 
 #: libapper/PkStrings.cpp:1020
 #, kde-format
 msgid "This action is unknown."
-msgstr ""
+msgstr "ქმედება უცნობია."
 
 #: libapper/PkStrings.cpp:1022
 #, kde-format
 msgid "The packagekitd service could not be started."
-msgstr ""
+msgstr "Packagekitd სერვისის გაშვების შეცდომა."
 
 #: libapper/PkStrings.cpp:1024
 #, kde-format
 msgid "The query is not valid."
-msgstr ""
+msgstr "მოთხოვნა არასწორია."
 
 #: libapper/PkStrings.cpp:1026
 #, kde-format
 msgid "The file is not valid."
-msgstr ""
+msgstr "ფაილი არასწორია."
 
 #: libapper/PkStrings.cpp:1028
 #, kde-format
 msgid "This function is not yet supported."
-msgstr ""
+msgstr "ეს ფუნქცია ჯერ მხარდაჭერილი არაა."
 
 #: libapper/PkStrings.cpp:1030
 #, kde-format
 msgid "Could not talk to packagekitd."
-msgstr ""
+msgstr "Packagekitd-სთან საუბარი შეუძლებელია."
 
 #: libapper/PkStrings.cpp:1032
 #, kde-format
 msgid "Error talking to packagekitd."
-msgstr ""
+msgstr "Packagekitd-სთან საუბარი შეუძლებელია."
 
 #: libapper/PkStrings.cpp:1035 libapper/PkStrings.cpp:1038
 #, kde-format
 msgid "An unknown error happened."
-msgstr ""
+msgstr "უცნობი შეცდომა."
 
 #: libapper/PkStrings.cpp:1053
 #, kde-format
@@ -3457,7 +3467,7 @@ msgstr "თქვენი უკვე სისტემა განახლ
 #: libapper/PkStrings.cpp:1055
 #, kde-format
 msgid "You have no updates"
-msgstr ""
+msgstr "განახლებების გარეშე"
 
 #: libapper/PkStrings.cpp:1057
 #, kde-format
@@ -3467,7 +3477,7 @@ msgstr ""
 #: libapper/PkStrings.cpp:1065
 #, kde-format
 msgid "Verified %1 ago"
-msgstr ""
+msgstr "შემოწმებულია %1-ის წინ"
 
 #: libapper/PkStrings.cpp:1067
 #, kde-format
@@ -3486,12 +3496,12 @@ msgstr ""
 #: libapper/PkTransaction.cpp:267
 #, kde-format
 msgid "Installing unsigned software"
-msgstr ""
+msgstr "ხელმოუწერელი პროგრამების დაყენება"
 
 #: libapper/PkTransactionWidget.cpp:229 libapper/PkTransactionWidget.cpp:242
 #, kde-format
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%2%)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: libapper/PkTransactionWidget.ui:47
@@ -3503,96 +3513,96 @@ msgstr "ხატულა"
 #: libapper/PkTransactionWidget.ui:73
 #, kde-format
 msgid "Downloading Packages"
-msgstr ""
+msgstr "პაკეტების გადმოწერა"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RepoSig)
 #: libapper/RepoSig.ui:14
 #, kde-format
 msgid "Software signature is required"
-msgstr ""
+msgstr "პროგრამის ხელმოწერა აუცილებელია"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: libapper/RepoSig.ui:47
 #, kde-format
 msgid "Repository name:"
-msgstr ""
+msgstr "რეპოზიტორიის სახელი:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: libapper/RepoSig.ui:73
 #, kde-format
 msgid "Signature URL:"
-msgstr ""
+msgstr "ხელმოწერის URL:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: libapper/RepoSig.ui:99
 #, kde-format
 msgid "Signature user identifier:"
-msgstr ""
+msgstr "ხელმოწერის მომხმარებლის იდენტიფიკატორი:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: libapper/RepoSig.ui:125
 #, kde-format
 msgid "Signature identifier:"
-msgstr ""
+msgstr "ხელმოწერის იდენტიფიკატორი:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: libapper/RepoSig.ui:147
 #, kde-format
 msgid "Do you trust the origin of packages?"
-msgstr ""
+msgstr "ენდობით პაკეტების ამ წყაროს?"
 
 #: libapper/Requirements.cpp:55
 #, kde-format
 msgid "Additional changes"
-msgstr ""
+msgstr "დამატებითი ცვლილებები"
 
 #: libapper/Requirements.cpp:82
 #, kde-format
 msgid "1 package to remove"
 msgid_plural "%1 packages to remove"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "წაიშლება 1 პაკეტი"
+msgstr[1] "წაიშლება %1 პაკეტი"
 
 #: libapper/Requirements.cpp:97
 #, kde-format
 msgid "1 package to downgrade"
 msgid_plural "%1 packages to downgrade"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 პაკეტის ვერსიის დაწევა"
+msgstr[1] "%1 პაკეტის ვერსიის დაწევა"
 
 #: libapper/Requirements.cpp:112
 #, kde-format
 msgid "1 package to reinstall"
 msgid_plural "%1 packages to reinstall"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 პაკეტის თავიდან დაყენება"
+msgstr[1] "%1 პაკეტის თავიდან დაყენება"
 
 #: libapper/Requirements.cpp:125
 #, kde-format
 msgid "1 package to install"
 msgid_plural "%1 packages to install"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 პაკეტის დაყენება"
+msgstr[1] "%1 პაკეტის დაყენება"
 
 #: libapper/Requirements.cpp:138
 #, kde-format
 msgid "1 package to update"
 msgid_plural "%1 packages to update"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 პაკეტი განახლდება"
+msgstr[1] "%1 პაკეტი განახლდება"
 
 #: libapper/Requirements.cpp:151
 #, kde-format
 msgid "1 untrusted package"
 msgid_plural "%1 untrusted packages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 არასანდო პაკეტი"
+msgstr[1] "%1 არასანდო პაკეტი"
 
 #: libapper/Requirements.cpp:199
 #, kde-format
 msgctxt "how many bytes are required for download"
 msgid "Need to get %1 of archives"
-msgstr ""
+msgstr "საჭიროა %1 არქივის მიღება"
 
 #: libapper/Requirements.cpp:258
 #, kde-format
@@ -3637,7 +3647,7 @@ msgstr "Trever Fischer"
 #: PkSession/PkInstallCatalogs.cpp:47
 #, kde-format
 msgid "Install Packages Catalogs"
-msgstr ""
+msgstr "პაკეტის კატალოგების დაყენება"
 
 #: PkSession/PkInstallCatalogs.cpp:66
 #, kde-format
@@ -3647,14 +3657,14 @@ msgstr ""
 #: PkSession/PkInstallCatalogs.cpp:85
 #, kde-format
 msgid "No supported catalog was found"
-msgstr ""
+msgstr "მხარდაჭერილი კატალოგები ვერ ვიპოვე"
 
 #: PkSession/PkInstallCatalogs.cpp:87
 #, kde-format
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "გნებავთ ამ კატალოგის დაყენება?"
+msgstr[1] "გნებავთ ამ კატალოგების დაყენება?"
 
 #: PkSession/PkInstallCatalogs.cpp:96
 #, kde-format
@@ -3684,29 +3694,29 @@ msgstr ""
 #: PkSession/PkInstallCatalogs.cpp:178
 #, kde-format
 msgid "Catalog not found"
-msgstr ""
+msgstr "კატალოგის პოვნა შეუძლებელია"
 
 #: PkSession/PkInstallCatalogs.cpp:179
 #, kde-format
 msgid "Could not find a catalog to install"
-msgstr ""
+msgstr "დასაყენებელი კატალოგი ვერ ვიპოვე"
 
 #: PkSession/PkInstallCatalogs.cpp:186
 #, kde-format
 msgid "Catalog %2 failed to open"
 msgid_plural "Catalogs %2 failed to open"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "კატალოგის %2 გახსნის შეცდომა"
+msgstr[1] "კატალოგის %2 გახსნის შეცდომა"
 
 #: PkSession/PkInstallCatalogs.cpp:190
 #, kde-format
 msgid "Failed to open"
-msgstr ""
+msgstr "გახსნის შეცდომა"
 
 #: PkSession/PkInstallCatalogs.cpp:196
 #, kde-format
 msgid "Catalog is Empty"
-msgstr ""
+msgstr "კატალოგი ცარიელია"
 
 #: PkSession/PkInstallCatalogs.cpp:197
 #, kde-format
@@ -3716,17 +3726,17 @@ msgstr ""
 #: PkSession/PkInstallFontconfigResources.cpp:43
 #, kde-format
 msgid "Installs new Fonts"
-msgstr ""
+msgstr "დააყენებ ახალ ფონტებს"
 
 #: PkSession/PkInstallFontconfigResources.cpp:74
 #, kde-format
 msgid "Could interpret request"
-msgstr ""
+msgstr "მოთხოვნის თარგმნის შეცდომა"
 
 #: PkSession/PkInstallFontconfigResources.cpp:74
 #, kde-format
 msgid "Please verify if the request was valid"
-msgstr ""
+msgstr "შეამოწმეთ, სწორია თუ არა მოთხოვნა"
 
 #: PkSession/PkInstallFontconfigResources.cpp:108
 #, kde-format
@@ -3743,8 +3753,8 @@ msgstr[1] ""
 #, kde-format
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "პროგრამა ფონტის დაყენებას ცდილობს"
+msgstr[1] "პროგრამა ფონტების დაყენებას ცდილობს"
 
 #: PkSession/PkInstallFontconfigResources.cpp:122
 #, kde-format
@@ -3757,7 +3767,7 @@ msgstr[1] ""
 #: PkSession/PkInstallFontconfigResources.cpp:157
 #, kde-format
 msgid "Failed to find font"
-msgstr ""
+msgstr "ფონტის მოძებნის შეცდომა"
 
 #: PkSession/PkInstallFontconfigResources.cpp:150
 #, kde-format
@@ -3767,12 +3777,12 @@ msgstr ""
 #: PkSession/PkInstallFontconfigResources.cpp:159
 #, kde-format
 msgid "Failed to search for provides"
-msgstr ""
+msgstr "მომწოდებლების ძებნის შეცდომა"
 
 #: PkSession/PkInstallGStreamerResources.cpp:40
 #, kde-format
 msgid "Install GStreamer Resources"
-msgstr ""
+msgstr "GStreaker-ის რესურსების დაყენება"
 
 #: PkSession/PkInstallGStreamerResources.cpp:68
 #, kde-format
@@ -3837,7 +3847,7 @@ msgstr ""
 #: PkSession/PkInstallMimeTypes.cpp:41
 #, kde-format
 msgid "Install Support for File Types"
-msgstr ""
+msgstr "ფაილის ტიპების მხარდაჭერის დაყენება"
 
 #: PkSession/PkInstallMimeTypes.cpp:51
 #, kde-format
@@ -3850,7 +3860,7 @@ msgstr[1] ""
 #: PkSession/PkInstallMimeTypes.cpp:56
 #, kde-format
 msgid "No valid file types were provided"
-msgstr ""
+msgstr "მითითებული ფაილის ტიპები არასწორია"
 
 #: PkSession/PkInstallMimeTypes.cpp:63
 #, kde-format
@@ -3870,7 +3880,7 @@ msgstr[1] ""
 #: PkSession/PkInstallMimeTypes.cpp:94
 #, kde-format
 msgid "Could not find software"
-msgstr ""
+msgstr "პროგრამების მოძებნის შეცდომა"
 
 #: PkSession/PkInstallMimeTypes.cpp:96
 #, kde-format
@@ -3880,7 +3890,7 @@ msgstr ""
 #: PkSession/PkInstallPackageFiles.cpp:40
 #, kde-format
 msgid "Install Packages Files"
-msgstr ""
+msgstr "პაკეტის ფაილების დაყენება"
 
 #: PkSession/PkInstallPackageFiles.cpp:44
 #: PkSession/PkRemovePackageByFiles.cpp:45
@@ -3902,7 +3912,7 @@ msgstr ""
 #: PkSession/PkRemovePackageByFiles.cpp:65
 #, kde-format
 msgid "No supported files were provided"
-msgstr ""
+msgstr "მიწოდებული ფაილები მხარდაუჭერელია"
 
 #: PkSession/PkInstallPackageFiles.cpp:71
 #, kde-format
@@ -3930,7 +3940,7 @@ msgstr[1] ""
 #: PkSession/PkInstallPackageFiles.cpp:106
 #, kde-format
 msgid "Installation Complete"
-msgstr ""
+msgstr "დაყენება დასრულებულია"
 
 #: PkSession/PkInstallPackageFiles.cpp:107
 #, kde-format
@@ -3942,23 +3952,23 @@ msgstr[1] ""
 #: PkSession/PkInstallPackageFiles.cpp:118
 #, kde-format
 msgid "Failed to install files"
-msgstr ""
+msgstr "ფაილების დაყენების შეცდომა"
 
 #: PkSession/PkInstallPackageFiles.cpp:119
 #: PkSession/PkInstallPackageFiles.cpp:121
 #, kde-format
 msgid "Could not install files"
-msgstr ""
+msgstr "ფაილების დაყენება შეუძლებელია"
 
 #: PkSession/PkInstallPackageNames.cpp:43
 #, kde-format
 msgid "Install Packages by Name"
-msgstr ""
+msgstr "პაკეტების სახელით მოძებნა"
 
 #: PkSession/PkInstallPackageNames.cpp:59
 #, kde-format
 msgid "No package names were provided"
-msgstr ""
+msgstr "პაკეტის სახელები მიწოდებული არაა"
 
 #: PkSession/PkInstallPackageNames.cpp:62
 #, kde-format
@@ -3970,7 +3980,7 @@ msgstr[1] ""
 #: PkSession/PkInstallPackageNames.cpp:101
 #, kde-format
 msgid "Failed to install packages"
-msgstr ""
+msgstr "პაკეტების დაყენების შეცდომა"
 
 #: PkSession/PkInstallPackageNames.cpp:102
 #, kde-format
@@ -3995,22 +4005,22 @@ msgstr[1] ""
 #: PkSession/PkInstallPlasmaResources.cpp:41
 #, kde-format
 msgid "Install Plasma Resources"
-msgstr ""
+msgstr "Plasma-ის რესურსების დაყენება"
 
 #: PkSession/PkInstallPlasmaResources.cpp:53
 #, kde-format
 msgid "%1 data engine"
-msgstr ""
+msgstr "%1 მონაცემების ძრავა"
 
 #: PkSession/PkInstallPlasmaResources.cpp:55
 #, kde-format
 msgid "%1 script engine"
-msgstr ""
+msgstr "%1 სკრიპტის ძრავა"
 
 #: PkSession/PkInstallPlasmaResources.cpp:67
 #, kde-format
 msgid "No supported resources were provided"
-msgstr ""
+msgstr "მიწოდებული რესურსები მხარდაუჭერელია"
 
 #: PkSession/PkInstallPlasmaResources.cpp:69
 #, kde-format
@@ -4030,7 +4040,7 @@ msgstr[1] ""
 #: PkSession/PkInstallPlasmaResources.cpp:103
 #, kde-format
 msgid "Failed to search for Plasma service"
-msgstr ""
+msgstr "Plasma-ის სერვისის მოძებნის შეცდომა"
 
 #: PkSession/PkInstallPlasmaResources.cpp:106
 #, kde-format
@@ -4040,12 +4050,12 @@ msgstr ""
 #: PkSession/PkInstallPrinterDrivers.cpp:41
 #, kde-format
 msgid "Install Printer Drivers"
-msgstr ""
+msgstr "პრინტერის დრაივერების დაყენება"
 
 #: PkSession/PkInstallPrinterDrivers.cpp:82
 #, kde-format
 msgid "Failed to search for printer driver"
-msgstr ""
+msgstr "პრინტერის დრაივერის მოძებნის შეცდომა"
 
 #: PkSession/PkInstallPrinterDrivers.cpp:83
 #, kde-format
@@ -4060,7 +4070,7 @@ msgstr ""
 #: PkSession/PkInstallProvideFiles.cpp:50
 #, kde-format
 msgid "No files were provided"
-msgstr ""
+msgstr "ფაილები მოწოდებული არაა"
 
 #: PkSession/PkInstallProvideFiles.cpp:53
 #, kde-format
@@ -4086,7 +4096,7 @@ msgstr[1] ""
 #: PkSession/PkInstallProvideFiles.cpp:93
 #, kde-format
 msgid "Failed to install file"
-msgstr ""
+msgstr "ფაილის დაყენების შეცდომა"
 
 #: PkSession/PkInstallProvideFiles.cpp:94
 #, kde-format
@@ -4209,7 +4219,7 @@ msgstr ""
 #: PkSession/SessionTask.cpp:401
 #, kde-format
 msgid "Could not find"
-msgstr ""
+msgstr "ვერ ვიპოვე"
 
 #: PkSession/SessionTask.cpp:402 PkSession/SessionTask.cpp:411
 #, kde-format
@@ -4219,21 +4229,21 @@ msgstr ""
 #: PkSession/SessionTask.cpp:410
 #, kde-format
 msgid "Failed to find"
-msgstr ""
+msgstr "ვერ ვიპოვე"
 
 #. i18n("Failed to commit transaction"),
 #. PkStrings::errsearchFailedorMessage(m_pkTransaction->error()));
 #: PkSession/SessionTask.cpp:431
 #, kde-format
 msgid "Transaction did not finish with success"
-msgstr ""
+msgstr "ტრანზაქცია წარმატებულად არ დასრულებულა"
 
 #: PkSession/SessionTask.cpp:437
 #, kde-format
 msgid "Task completed"
-msgstr ""
+msgstr "ამოცანა დასრულდა"
 
 #: PkSession/SessionTask.cpp:437
 #, kde-format
 msgid "All operations were committed successfully"
-msgstr ""
+msgstr "ყველა ოპერაცია წარმატებით დასრულდა"
