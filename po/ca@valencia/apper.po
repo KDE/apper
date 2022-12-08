@@ -3935,7 +3935,7 @@ msgstr "No s'ha pogut trobar el tipus de lletra"
 #: PkSession/PkInstallFontconfigResources.cpp:150
 #, kde-format
 msgid "No new fonts could be found for this document"
-msgstr "No es poden trobar tipus de lletra nous per a este document"
+msgstr "No es troben tipus de lletra nous per a este document"
 
 #: PkSession/PkInstallFontconfigResources.cpp:159
 #, kde-format
@@ -4360,7 +4360,7 @@ msgstr "No s'ha trobat l'aplicació"
 msgid "The file could not be found in any installed package"
 msgid_plural "The files could not be found in any installed package"
 msgstr[0] "El fitxer no es pot trobar en cap dels paquets instal·lats"
-msgstr[1] "Els fitxers no es poden trobar en cap dels paquets instal·lats"
+msgstr[1] "Els fitxers no es troben en cap dels paquets instal·lats"
 
 #: PkSession/PkSearchFile.cpp:42
 #, kde-format
