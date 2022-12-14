@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: apper\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2022-12-06 22:22+0100\n"
+"PO-Revision-Date: 2022-12-13 17:07+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -964,7 +964,7 @@ msgstr "გაგრძელებამდე რეკომენდებ�
 msgid ""
 "It is recommended that you keep your computer plugged in while the upgrade "
 "is being performed."
-msgstr ""
+msgstr "განახლებისას რეკომენდებულია კომპიუტერი კვებაზე შეერთებული გქონდეთ."
 
 #: Apper/Updater/DistroUpgrade.cpp:90
 #, kde-format
@@ -974,7 +974,7 @@ msgstr "დისტრიბუტივის ვერსიის აწე�
 #: Apper/Updater/DistroUpgrade.cpp:92 apperd/DistroUpgrade.cpp:144
 #, kde-format
 msgid "Distribution upgrade process exited with code %1."
-msgstr ""
+msgstr "დისტრიბუტივის განახლების პროცესი დასრულდა კოდით %1."
 
 #: Apper/Updater/DistroUpgrade.cpp:104 apperd/DistroUpgrade.cpp:162
 #, kde-format
@@ -999,23 +999,25 @@ msgstr ""
 #: Apper/Updater/UpdateDetails.cpp:183
 #, kde-format
 msgid "This update will add new features and expand functionality."
-msgstr ""
+msgstr "ეს განახლება ახალ თვისებებს დაამატებს და ფუნქციონალს გააფართოვებს."
 
 #: Apper/Updater/UpdateDetails.cpp:187
 #, kde-format
 msgid "This update will fix bugs and other non-critical problems."
-msgstr ""
+msgstr "ეს განახლება შეცდომებს და სხვა არაკრიტიკულ პრობლემებს ჩაასწორებს."
 
 #: Apper/Updater/UpdateDetails.cpp:191
 #, kde-format
 msgid "This update is important as it may solve critical problems."
-msgstr ""
+msgstr "ეს განახლება მნიშვნელოვანია და შეიძლება, თქვენი პრობლემები გადაჭრას."
 
 #: Apper/Updater/UpdateDetails.cpp:195
 #, kde-format
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
+"ეს განახლება აუცილებელია, რომ ამ პაკეტის უსაფრთხოების მოწყვლადობის "
+"აღმოფხვრისთვის."
 
 #: Apper/Updater/UpdateDetails.cpp:199
 #, kde-format
@@ -1025,12 +1027,12 @@ msgstr "ეს განახლება დაბლოკილია."
 #: Apper/Updater/UpdateDetails.cpp:206
 #, kde-format
 msgid "This notification was issued on %1 and last updated on %2."
-msgstr ""
+msgstr "%1-ზე გაფრთხილება გაგზავნილია და ბოლოს განახლებულია %2-ზე."
 
 #: Apper/Updater/UpdateDetails.cpp:212
 #, kde-format
 msgid "This notification was issued on %1."
-msgstr ""
+msgstr "%1-ზე გაფრთხილება გაგზავნილია."
 
 #: Apper/Updater/UpdateDetails.cpp:229
 #, kde-format
@@ -1038,7 +1040,9 @@ msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
 msgstr[0] ""
+"ამ განახლების შესახებ მეტი ინფორმაციის მისაღებად ეწვიეთ ამ ვებგვერდს:"
 msgstr[1] ""
+"ამ განახლების შესახებ მეტი ინფორმაციის მისაღებად ეწვიეთ ამ ვებგვერდს:"
 
 #: Apper/Updater/UpdateDetails.cpp:239
 #, kde-format
@@ -1049,7 +1053,11 @@ msgid_plural ""
 "For more information about bugs fixed by this update please visit these "
 "websites:"
 msgstr[0] ""
+"ამ განახლებაში გასწორებული შეცდომების შესახებ მეტი ინფორმაციის მისაღებად "
+"ეწვიეთ ამ ვებგვერდებს:"
 msgstr[1] ""
+"ამ განახლებაში გასწორებული შეცდომების შესახებ მეტი ინფორმაციის მისაღებად "
+"ეწვიეთ ამ ვებგვერდებს:"
 
 #: Apper/Updater/UpdateDetails.cpp:249
 #, kde-format
@@ -1058,21 +1066,25 @@ msgid ""
 msgid_plural ""
 "For more information about this security update please visit these websites:"
 msgstr[0] ""
+"ამ უსაფრთხოების განახლების შესახებ მეტი ინფორმაციის მისაღებად ეწვიეთ ამ "
+"ვებგვერდებს:"
 msgstr[1] ""
+"ამ უსაფრთხოების განახლების შესახებ მეტი ინფორმაციის მისაღებად ეწვიეთ ამ "
+"ვებგვერდებს:"
 
 #: Apper/Updater/UpdateDetails.cpp:259
 #, kde-format
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
-msgstr ""
+msgstr "განახლების ძალაში შესასვლელად საჭიროა, გადატვირთოთ კომპიუტერი."
 
 #: Apper/Updater/UpdateDetails.cpp:263
 #, kde-format
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
-msgstr ""
+msgstr "ცვლილებების ძალაში შესასვლელად საჭიროა, გახვიდეთ და შემოხვიდეთ."
 
 #: Apper/Updater/UpdateDetails.cpp:270
 #, kde-format
@@ -1080,6 +1092,8 @@ msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
 msgstr ""
+"ამ განახლების კლასიფიკაციაა არასტაბილური, რაც ნიშნავს, რომ ის საწარმოო "
+"გამოყენებაში არ უნდა გავიდეს."
 
 #: Apper/Updater/UpdateDetails.cpp:274
 #, kde-format
@@ -1087,6 +1101,8 @@ msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
 msgstr ""
+"ეს სატესტო განახლებაა. ის არაა განკუთვნილი ნორმალური გამოყენებისთვის. გთხოვთ "
+"შეგვატყობინოთ ნებისმიერი პრობლემის შესახებ, რომელიც გაგიჩნდებათ."
 
 #: Apper/Updater/UpdateDetails.cpp:284
 #, kde-format
@@ -1094,6 +1110,8 @@ msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
+"ამ განახლებისთვის აღწერის არარსებობის გამო პროგრამისტის ჟურნალი იქნება "
+"ნაჩვენები:"
 
 #: Apper/Updater/UpdateDetails.cpp:292
 #, kde-format
@@ -1235,7 +1253,7 @@ msgstr "IPK პაკეტის ფაილის სახელი"
 #: AppSetup/main.cpp:79
 #, kde-format
 msgid "We did not receive a path to an IPK package as parameter."
-msgstr ""
+msgstr "IPK პაკეტამდე ბილიკი პარამეტრად არ მიგვიღია."
 
 #: AppSetup/main.cpp:80
 #, kde-format
@@ -1276,6 +1294,10 @@ msgid ""
 "like spying out your passwords.<br>Please do only install this software if "
 "you <b>trust its publisher</b>."
 msgstr ""
+"ფრთხილად იყავით მესამე პირების აპლიკაციებთან.<br>მან შეიძლება <br>დააზიანოს</"
+"b> თქვენი სისტემა ან <b>არასასურველი ქცევით</b>გამოირჩეოდეს, მაგალითად "
+"პაროლებს გპარავდეთ.<br> ნუ დააყენებთ პროგრამას, თუ <br>გამომცემლის არ "
+"გჯერათ</br>."
 
 #: AppSetup/SetupWizard.cpp:150
 #, kde-format
@@ -1319,8 +1341,8 @@ msgstr[1] "ხელმისაწვდომია ახალი აპლ�
 msgid "The following application was just installed. Click on it to launch:"
 msgid_plural ""
 "The following applications were just installed. Click on them to launch:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "პროგრამა დაყენებულია. გასაშვებად დააწკაპუნეთ:"
+msgstr[1] "პროგრამა დაყენებულია. გასაშვებად დააწკაპუნეთ:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showCB)
 #: libapper/ApplicationLauncher.ui:81
@@ -1367,13 +1389,13 @@ msgstr "ლიცენზიის _მიღება"
 #: libapper/LicenseAgreement.cpp:45
 #, kde-format
 msgid "License required for %1 by %2"
-msgstr ""
+msgstr "%1-სთვის ლიცენზია მოთხოვნილია %2-ის მიერ"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: libapper/LicenseAgreement.ui:40
 #, kde-format
 msgid "Please read the following important information before continuing:"
-msgstr ""
+msgstr "გაგრძელებამდე გთხოვთ წაიკითხოთ შემდეგი მნიშვნელოვანი ინფორმაცია:"
 
 #: libapper/PackageModel.cpp:201
 #, kde-format
@@ -2555,6 +2577,8 @@ msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again"
 msgstr ""
+"ქსელი ხელმიუწვდომელია.\n"
+"გადაამოწმეთ მიერთება და თავიდან სცადეთ"
 
 #: libapper/PkStrings.cpp:574
 #, kde-format
@@ -2562,6 +2586,8 @@ msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
 msgstr ""
+"საჭიროა პაკეტის თავიდან აგება.\n"
+"ეს უკანაბოლოს მიერ ავტომატურად უნდა მომხდარიყო."
 
 #: libapper/PkStrings.cpp:577
 #, kde-format
@@ -2570,11 +2596,14 @@ msgid ""
 "memory.\n"
 "Please close some programs or restart your computer."
 msgstr ""
+"მომხმარებლის მოთხოვნებს დამუშავებაზე პასუხისმგებელი სერვისისთვის მეხსიერება "
+"საკმარისი არაა.\n"
+"დახურეთ ზოგიერთი პროგრამა ან გადატვირთეთ კომპიუტერი."
 
 #: libapper/PkStrings.cpp:580
 #, kde-format
 msgid "A thread could not be created to service the user request."
-msgstr ""
+msgstr "მომხმარებლის მოთხოვნის დამუშავების ნაკადის შექმნის შეცდომა."
 
 #: libapper/PkStrings.cpp:582
 #, kde-format
@@ -2582,6 +2611,8 @@ msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug as this should not have happened."
 msgstr ""
+"ეს ქმედება მხარდაუჭერელია ამ უკანაბოლოს მიერ.\n"
+"შეავსეთ ანგარიში შეცდომის შესახებ. ეს არ უნდა მომხდარიყო."
 
 #: libapper/PkStrings.cpp:585
 #, kde-format
@@ -2589,6 +2620,8 @@ msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug with the error description."
 msgstr ""
+"პრობლემა, რომელსაც არ ველოდით, რომ გამოჩნდებოდა.\n"
+"შეავსეთ შეცდომის ანგარიში და აღწერეთ შეცდომა."
 
 #: libapper/PkStrings.cpp:588
 #, kde-format
@@ -2596,6 +2629,8 @@ msgid ""
 "A security trust relationship could not be made with the software origin.\n"
 "Please check your software signature settings."
 msgstr ""
+"პროგრამის წყაროსთან უსაფრთხო ნდობის ურთიერთობის დამყარების შეცდომა.\n"
+"შეამოწმეთ პროგრამების ხელმოწერის პარამეტრები."
 
 #: libapper/PkStrings.cpp:591
 #, kde-format
@@ -2623,6 +2658,8 @@ msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
 msgstr ""
+"პაკეტის გადმოწერის შეცდომა.\n"
+"შეამოწმეთ ქსელი."
 
 #: libapper/PkStrings.cpp:600
 #, kde-format
@@ -2630,6 +2667,8 @@ msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
 msgstr ""
+"ჯგუფის ტიპი არ არსებობს.\n"
+"შეამოწმეთ ჯგუფების სია და თავიდან სცადეთ."
 
 #: libapper/PkStrings.cpp:603
 #, kde-format
@@ -2638,6 +2677,9 @@ msgid ""
 "Refreshing your cache may help, although this is normally a software origin "
 "error."
 msgstr ""
+"ჯგუფების სიის ჩატვირთვის შეცდომა.\n"
+"შეიძლება გიშველოთ ქეშის განახლებამ, თუმცა, ჩვეულებრივ, ეს პროგრამის წყაროს "
+"შეცდომაა."
 
 #: libapper/PkStrings.cpp:607
 #, kde-format
@@ -2645,6 +2687,8 @@ msgid ""
 "A package dependency could not be found.\n"
 "More information is available in the detailed report."
 msgstr ""
+"პაკეტის დამოკიდებულება ვერ ვიპოვე.\n"
+"მეტი ინფორმაცია დეტალურ ანგარიშშია ხელმისაწვდომი."
 
 #: libapper/PkStrings.cpp:610
 #, kde-format
@@ -2657,6 +2701,9 @@ msgid ""
 "The package identifier was not well formed when sent to the system daemon.\n"
 "This normally indicates an internal bug and should be reported."
 msgstr ""
+"პაკეტის იდენტიფიკატორის აღწერა შეუძლებელია, როცა ის სისტემის დემონტან "
+"გაიგზავნა.\n"
+"როგორც წესი, ეს შიდა შეცდომას აღწერას და ის უნდა გადააგზავნოთ."
 
 #: libapper/PkStrings.cpp:615
 #, kde-format
@@ -2664,6 +2711,8 @@ msgid ""
 "An error occurred while running the transaction.\n"
 "More information is available in the detailed report."
 msgstr ""
+"შეცდომა ტრანზაქციის მიმდინარეობისას.\n"
+"მეტი ინფორმაცია დეტალურ ანგარიშშია ხელმისაწვდომი."
 
 #: libapper/PkStrings.cpp:618
 #, kde-format
@@ -2671,6 +2720,8 @@ msgid ""
 "The remote software origin name was not found.\n"
 "You may need to enable an item in Software Origins."
 msgstr ""
+"პროგრამების დაშორებული წყაროს სახელი ვერ ვიპოვე.\n"
+"შეამოწმეთ მისი ჩართულობა პროგრამების წყაროებში."
 
 #: libapper/PkStrings.cpp:621
 #, kde-format
@@ -2688,6 +2739,8 @@ msgid ""
 "The task was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
 msgstr ""
+"ამოცანა წარმატებით გაუქმდა და პაკეტები არ შეცვლილა.\n"
+"უკანაბოლოს მუშაობა სუფთად არ დაუსრულებია."
 
 #: libapper/PkStrings.cpp:628
 #, kde-format
@@ -2695,11 +2748,13 @@ msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure your system's configuration is valid."
 msgstr ""
+"პაკეტის კონფიგურაციის ფაილის გახსნის შეცდომა.\n"
+"დარწმუნდით, რომ სისტემის კონფიგურაცია სწორია."
 
 #: libapper/PkStrings.cpp:631
 #, kde-format
 msgid "The task is not safe to be cancelled at this time."
-msgstr ""
+msgstr "ამოცანის გაუქმება ამჟამად უსაფრთხო არაა."
 
 #: libapper/PkStrings.cpp:633
 #, kde-format
@@ -2707,6 +2762,8 @@ msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
 msgstr ""
+"კოდის პაკეტების დაყენება ჩვეულებრივ ასე არ ხდება.\n"
+"რომელი პროგრამის დაყენებასაც აპირებთ, ფაილის გაფართოება შეამოწმეთ."
 
 #: libapper/PkStrings.cpp:636
 #, kde-format
@@ -2714,6 +2771,8 @@ msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
 msgstr ""
+"ლიცენზიის შეთანხმებას არ დაეთანხმეთ.\n"
+"პროგრამის გამოსაყენებლად ლიცენზიის დათანხმება აუცილებელია."
 
 #: libapper/PkStrings.cpp:639
 #, kde-format
@@ -2721,6 +2780,8 @@ msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages for different software origins."
 msgstr ""
+"ერთი და იგივე ფაილი ორ პაკეტშია.\n"
+"ეს ჩვეულებრივ ერთი და იგივე პაკეტის ორი წყაროდან დაყენებისას ხდება."
 
 #: libapper/PkStrings.cpp:642
 #, kde-format
@@ -2728,6 +2789,8 @@ msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software origins."
 msgstr ""
+"მრავალი პაკეტი, რომელიც არსებობს, არათავსებადია ერთმანეთთან.\n"
+"ეს ჩვეულებრივ ერთი და იგივე პაკეტის სხვადასხვა წყაროებიდან დაყენებისას ხდება."
 
 #: libapper/PkStrings.cpp:645
 #, kde-format
@@ -2735,6 +2798,8 @@ msgid ""
 "There was a (possibly temporary) problem connecting to a software origins.\n"
 "Please check the detailed error for further details."
 msgstr ""
+"(დრობითი) პრობლემა პროგრამის წყაროებთან მიერთებისას.\n"
+"მეტი დეტალებისთვის იხილეთ დეტალური შეცდომა."
 
 #: libapper/PkStrings.cpp:648
 #, kde-format
@@ -2742,6 +2807,9 @@ msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
 msgstr ""
+"პაკეტების უკანაბოლოს ინიციალიზაციის შეცდომა.\n"
+"ეს ჩვეულებრივ მაშინ ხდება, როცა პაკეტების სხვადასხვა ხელსაწყო ერთდროულად "
+"გამოიყენება."
 
 #: libapper/PkStrings.cpp:651
 #, kde-format
@@ -2749,6 +2817,8 @@ msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
 msgstr ""
+"უკანაბოლოს გაშვებული ასლის დახურვის შეცდომა.\n"
+"ეს შეცდომა, ჩვეულებრივ, შეგიძლიათ გამოტოვოთ."
 
 #: libapper/PkStrings.cpp:654
 #, kde-format
@@ -2756,16 +2826,18 @@ msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
 msgstr ""
+"პაკეტის უკანაბოლოს ექსკლუზიური ბლოკის მიღების შეცდომა.\n"
+"დახურეთ ყველა მოძველებული პაკეტების ხელსაწყო, რომელიც გაშვებული გაქვთ."
 
 #: libapper/PkStrings.cpp:657
 #, kde-format
 msgid "None of the selected packages could be updated."
-msgstr ""
+msgstr "მონიშნული პაკეტების განახლება ხელმიუწვდომელია."
 
 #: libapper/PkStrings.cpp:659
 #, kde-format
 msgid "The repository configuration could not be modified."
-msgstr ""
+msgstr "რეპოზიტორიის კონფიგურაციის შეცვლის შეცდომა."
 
 #: libapper/PkStrings.cpp:661
 #, kde-format
@@ -2773,11 +2845,13 @@ msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
 msgstr ""
+"ლოკალური ფაილის დაყენების შეცდომა.\n"
+"მეტი ინფორმაცია დეტალურ ანგარიშშია ხელმისაწვდომი."
 
 #: libapper/PkStrings.cpp:664
 #, kde-format
 msgid "The package signature could not be verified."
-msgstr ""
+msgstr "პაკეტის ხელმოწერის შემოწმება შეუძლებელია."
 
 #: libapper/PkStrings.cpp:666
 #, kde-format
@@ -2785,11 +2859,13 @@ msgid ""
 "The package signature was missing and this package is untrusted.\n"
 "This package was not signed with a GPG key when created."
 msgstr ""
+"პაკეტის ხელმოწერა არ არსებობს და ეს პაკეტი სანდო არაა.\n"
+"ეს პაკეტი შექმნისას GPG-ით არ ხელმოწერილა."
 
 #: libapper/PkStrings.cpp:669
 #, kde-format
 msgid "Repository configuration was invalid and could not be read."
-msgstr ""
+msgstr "რეპოზიტორიის კონფიგურაცია არასწორია და მისი წაკითხვა შეუძლებელია."
 
 #: libapper/PkStrings.cpp:671
 #, kde-format
@@ -3387,27 +3463,27 @@ msgstr "ტესტირება"
 #: libapper/PkStrings.cpp:954
 #, kde-format
 msgid "Please insert the CD labeled '%1', and press continue."
-msgstr ""
+msgstr "ჩადეთ '%1' ჭდის მქონე CD და გაგრძელებას დააჭირეთ."
 
 #: libapper/PkStrings.cpp:956
 #, kde-format
 msgid "Please insert the DVD labeled '%1', and press continue."
-msgstr ""
+msgstr "ჩადეთ '%1' ჭდის მქონე DVD და გაგრძელებას დააჭირეთ."
 
 #: libapper/PkStrings.cpp:958
 #, kde-format
 msgid "Please insert the disc labeled '%1', and press continue."
-msgstr ""
+msgstr "ჩადეთ '%1' ჭდის მქონე დისკი და გაგრძელებას დააჭირეთ."
 
 #: libapper/PkStrings.cpp:960 libapper/PkStrings.cpp:963
 #, kde-format
 msgid "Please insert the medium labeled '%1', and press continue."
-msgstr ""
+msgstr "ჩადეთ '%1' ჭდის მქონე მედია და გაგრძელებას დააჭირეთ."
 
 #: libapper/PkStrings.cpp:1014
 #, kde-format
 msgid "You do not have the necessary privileges to perform this action."
-msgstr ""
+msgstr "ამ ქმედების შესრულების წვდომა არ გაგაჩნიათ."
 
 #: libapper/PkStrings.cpp:1016
 #, kde-format
