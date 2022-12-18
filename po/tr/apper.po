@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: extragear-sysadmin-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2022-12-11 19:55+0300\n"
+"PO-Revision-Date: 2022-12-17 18:51+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -506,7 +506,7 @@ msgstr "Katalogdan paket kur"
 #: Apper/BrowseView.ui:140
 #, kde-format
 msgid "Export Installed Package List..."
-msgstr "Kurulu Paketler Listesini Dışarıya Aktar..."
+msgstr "Kurulu Paketler Listesini Dışa Aktar..."
 
 #. i18n: ectx: property (text), widget (QPushButton, importInstalledPB)
 #: Apper/BrowseView.ui:150
