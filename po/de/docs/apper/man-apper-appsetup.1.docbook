@@ -1,123 +1,82 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % German "INCLUDE">
+<!ENTITY % English "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
-<title
->apper-appsetup-Benutzerhandbuch</title>
+<title>apper-appsetup User's Manual</title>
 <authorgroup>
-<author
-><firstname
->Matthias</firstname
-> <surname
->Klumpp</surname
-> <email
->matthias@tenstral.net</email
-> </author>
-<author
-><firstname
->Daniel</firstname
-> <surname
->Nicoletti</surname
-> <email
->dantti12@gmail.com</email
-> </author>
+<author>
+      <firstname>Matthias</firstname>
+      <surname>Klumpp</surname>
+      <email>matthias@tenstral.net</email>
+</author>
+<author>
+      <firstname>Daniel</firstname>
+      <surname>Nicoletti</surname>
+      <email>dantti12@gmail.com</email>
+</author>
 </authorgroup>
-<date
->2016-11-28</date>
-<releaseinfo
->apper-appsetup 0.9.3</releaseinfo>
+<date>2016-11-28</date>
+<releaseinfo>apper-appsetup 0.9.3</releaseinfo>
 </refentryinfo>
 
 <refmeta>
-<refentrytitle
-><command
->apper-appsetup</command
-></refentrytitle>
-<manvolnum
->1</manvolnum>
+<refentrytitle><command>apper-appsetup</command></refentrytitle>
+<manvolnum>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname
-><command
->apper-appsetup</command
-></refname>
-<refpurpose
->Eine grafische Bedienungsoberfläche zum Limba-Installationsprogramm</refpurpose>
+<refname><command>apper-appsetup</command></refname>
+<refpurpose>A Limba application installer GUI</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-<cmdsynopsis
-><command
->apper-appsetup</command
-> <group choice="opt"
-><option
->--verbose</option
-> </group
-> </cmdsynopsis>
+<cmdsynopsis>
+<command>apper-appsetup</command>
+<group choice="opt"><option>--verbose</option> </group>
+
+</cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-<title
->Beschreibung</title>
-<para
->Apper ist eine Bedienungsoberfläche zu PackageKit</para>
-<para
->Apper kann Pakete, Anwendungen und Aktualisierungen für beliebige Distributionen verwalten, indem es PackageKit verwendet.</para>
-<para
->Es stellt &Linux;benutzern eine einzige Anwendung zur Verfügung, deren Bedienung Sie lernen und dann für jede beliebige Distribution verwenden können,</para>
-<para
->Dieses kleine Hilfsprogramm ist eine grafische Bedienungsoberfläche zum distributions-unabhängigen Installationsprogramm Limba und ermöglicht es, Limba-Pakete mit Apper zu installieren.</para>
+<title>Description</title>
+<para>Apper is an interface for PackageKit</para>
+<para>Apper is able to manage packages, applications and updates in a cross-distribution way thanks to the PackageKit project.</para>
+<para>It is providing &Linux; users a single application that they can learn and use in whatever distribution they are.</para>
+<para>This small helper application provides a GUI interface for the distro-agnostic Limba application installer, which makes
+	it possible to install Limba packages using Apper.</para>
 
 </refsect1>
 
 <refsect1>
-<title
->Optionen</title>
+<title>Options</title>
 <variablelist>
 
 <varlistentry>
-<term
-><option
->--verbose</option
-></term>
-<listitem
-><para
->Gibt ausführliche Meldungen aus</para
-></listitem>
+<term><option>--verbose</option></term>
+<listitem><para>Switch tool to verbose mode</para></listitem>
 </varlistentry>
 
 </variablelist>
 </refsect1>
 
 <refsect1>
-<title
->Siehe auch</title>
+<title>See Also</title>
 
 <simplelist>
-<member
->Weitere Informationen über Apper finden Sie auf der <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
->Apper-Webseite</ulink
->.</member>
-<member
->kf5options(7)</member>
-<member
->qt5options(7)</member>
+<member>More information about Apper can be found at <ulink
+url="http://kde-apps.org/content/show.php/Apper?content=84745">the Apper website</ulink>.</member>
+<member>kf5options(7)</member>
+<member>qt5options(7)</member>
 </simplelist>
 </refsect1>
 
 <refsect1>
-<title
->Autoren</title>
-<para
->Der Betreuer von Apper ist Daniel Nicoletti <email
->dantti12@gmail.com</email
->. Diese Handbuchseite hat Matthias Klumpp <email
->matthias@tenstral.net</email
-> geschrieben.</para>
+<title>Authors</title>
+<para>The maintainer of Apper is Daniel Nicoletti <email>dantti12@gmail.com</email>;
+This manual page was written by Matthias Klumpp <email>matthias@tenstral.net</email>.</para>
 </refsect1>
 
 </refentry>
