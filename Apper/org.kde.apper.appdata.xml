@@ -6,6 +6,7 @@
   <name>Apper</name>
   <name xml:lang="ar">آپر</name>
   <name xml:lang="az">Apper</name>
+  <name xml:lang="bg">Apper</name>
   <name xml:lang="bs">Apper</name>
   <name xml:lang="ca">Apper</name>
   <name xml:lang="ca-valencia">Apper</name>
@@ -44,6 +45,7 @@
   <summary>KDE application and package management tool</summary>
   <summary xml:lang="ar">أداة «كدي» لإدارة التّطبيقات والحزم</summary>
   <summary xml:lang="az">KDE tətbiqi və paket idarəetmə aləti</summary>
+  <summary xml:lang="bg">Инструмент за управление на приложения и пакети на KDE</summary>
   <summary xml:lang="bs">KDE aplikacija i alat za upravljanje paketom</summary>
   <summary xml:lang="ca">Eina de gestió d'aplicacions i paquets del KDE</summary>
   <summary xml:lang="ca-valencia">Eina de gestió d'aplicacions i paquets de KDE</summary>
@@ -61,6 +63,7 @@
   <summary xml:lang="hu">KDE alkalmazás és csomagkezelő eszköz</summary>
   <summary xml:lang="id">Alat pengelolaan paket dan aplikasi KDE</summary>
   <summary xml:lang="it">Strumento di gestione dei pacchetti e delle applicazioni di KDE</summary>
+  <summary xml:lang="ka">KDE-ის აპლიკაციებისა და პაკეტების მართვის ხელსაწყო</summary>
   <summary xml:lang="ko">KDE 프로그램 및 패키지 관리 도구</summary>
   <summary xml:lang="nds">KDE sien Programm- un Paketpleeg-Warktüüch</summary>
   <summary xml:lang="nl">Hulpmiddel voor beheer van pakketten van KDE toepassingen</summary>
@@ -84,6 +87,7 @@
     </p>
     <p xml:lang="ar">«آپر» هي أداة إدارة رسوميّة للحزم والتّطبيقات التي توفّرها توزيعة لينكس.</p>
     <p xml:lang="az">Apper, Linux distribütoru tərəfindən təqdim olunan paketlərin və tətbiqlərin qrafik idarəetmə alətidir.</p>
+    <p xml:lang="bg">Apper е графичен инструмент за управление на пакети и приложения, предоставени от дистрибуция на Linux.</p>
     <p xml:lang="bs">Apper je grafički alat za upravljanje paketima i aplikacijama obezbjeđenim od strane Linux distribucije.</p>
     <p xml:lang="ca">L'Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
     <p xml:lang="ca-valencia">Apper és una eina de gestió gràfica per als paquets i aplicacions proporcionats per una distribució Linux.</p>
@@ -101,6 +105,7 @@
     <p xml:lang="hu">Az Apper egy grafikus kezelőeszköz a Linux disztribúció által szolgáltatott csomagokhoz és alkalmazásokhoz.</p>
     <p xml:lang="id">Apper adalah alat pengelolaan grafis untuk paket dan aplikasi yang disediakan oleh distribusi Linux.</p>
     <p xml:lang="it">Apper è uno strumento a interfaccia grafica per la gestione dei pacchetti e delle applicazioni fornite da una distribuzione Linux.</p>
+    <p xml:lang="ka">Apper-ი გრაფიკული მართვის პროგრამაა პაკეტებისა და აპლიკაციებისთვის, რომლებსაც Linux-ის დისტრიბუტივი მოგაწოდებთ.</p>
     <p xml:lang="ko">Apper는 리눅스 배포판에서 제공하는 패키지와 프로그램 관리 도구입니다.</p>
     <p xml:lang="nds">Apper is en graafsch Pleegwarktüüch för de Paketen un Programmen, de en Distributschoon praastellt.</p>
     <p xml:lang="nl">Apper is een grafisch hulpmiddel voor beheer van pakketten en toepassingen geleverd door een Linux-distributie.</p>
@@ -121,6 +126,7 @@
     </p>
     <p xml:lang="ar">يسمح لك «آپر» بتثبيت برمجيّات جديد كما وإبقاء النّظام محدّثًا بتثبيت التّحديثات.</p>
     <p xml:lang="az">Bu yeni proqram təminatını quraşdırmağa və həmçinin yenilənmələri quraşdırmaqla sistemi aktual vəziyyətdə saxlamağa imkan verir.</p>
+    <p xml:lang="bg">Той позволява инсталиране на нов софтуер, както и поддържане на системата в актуално състояние чрез инсталиране на обновления.</p>
     <p xml:lang="bs">Dopušta instaliranje novog softvera kao i održavanje sistema instaliranjem ažuriranja.</p>
     <p xml:lang="ca">Permet instal·lar programari nou i també mantenir el sistema al dia instal·lant les actualitzacions.</p>
     <p xml:lang="ca-valencia">Permet instal·lar programari nou i també mantindre el sistema al dia instal·lant les actualitzacions.</p>
@@ -138,6 +144,7 @@
     <p xml:lang="hu">Lehetővé teszi új szoftverek telepítését, valamit a rendszer naprakészen tartását frissítések telepítésével.</p>
     <p xml:lang="id">Ia memungkinkan menginstal perangkat lunak baru serta menjaga sistem tetap terbarukan dengan menginstal pembaruan.</p>
     <p xml:lang="it">Consente di installare nuovo software e di mantenere aggiornato il sistema tramite aggiornamenti.</p>
+    <p xml:lang="ka">საშუალებას გაძლევთ, დააყენოთ ახალი პროგრამები და შეინარჩუნოთ სისტემა განახლებულ მდგომარეობაში.</p>
     <p xml:lang="ko">새 프로그램 설치, 업데이트 설치를 사용할 수 있습니다.</p>
     <p xml:lang="nds">Du kannst dor nieg Paketen mit installeren un Opfrischen för't Systeem inspelen.</p>
     <p xml:lang="nl">Het stelt u in staat nieuwe software te installeren evenals het systeem bij de tijd te houden door elementen voor bijwerken te installeren.</p>
@@ -155,6 +162,7 @@
     <p>Features:</p>
     <p xml:lang="ar">الميزات:</p>
     <p xml:lang="az">İmkanlar:</p>
+    <p xml:lang="bg">Възможности:</p>
     <p xml:lang="bs">Svojstva:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="ca-valencia">Característiques:</p>
@@ -172,6 +180,7 @@
     <p xml:lang="hu">Szolgáltatások:</p>
     <p xml:lang="id">Fitur:</p>
     <p xml:lang="it">Caratteristiche:</p>
+    <p xml:lang="ka">თვისებები:</p>
     <p xml:lang="ko">기능:</p>
     <p xml:lang="nds">Markmalen:</p>
     <p xml:lang="nl">Mogelijkheden:</p>
@@ -193,6 +202,7 @@
       <li>Distribution-agnostic management of software packages</li>
       <li xml:lang="ar">إدارة حزم برمجيّات التّوزيعة</li>
       <li xml:lang="az">Proqram təminatı paketlırinin distribütordan asılı olmadan idarə edilməsi</li>
+      <li xml:lang="bg">Управление на софтуерни пакети, съобразени с дистрибуцията</li>
       <li xml:lang="bs">Distribucijsko-nevezano upravljanje softverskim paketima</li>
       <li xml:lang="ca">Gestió de paquets de programari independent de la distribució</li>
       <li xml:lang="ca-valencia">Gestió de paquets de programari independent de la distribució</li>
@@ -210,6 +220,7 @@
       <li xml:lang="hu">Szoftvercsomagok disztribúció-agnosztikus kezelése</li>
       <li xml:lang="id">Pengelolaan paket perangkat lunak distribusi agnostik</li>
       <li xml:lang="it">Gestione dei pacchetti software indipendente dalla distribuzione</li>
+      <li xml:lang="ka">პროგრამების პაკეტების დისტრიბუტივის-აგნოსტიკური მართვა</li>
       <li xml:lang="ko">배포판 독립적 소프트웨어 패키지 관리</li>
       <li xml:lang="nds">Distributschoon-Unafhängig Pleeg vun Software-Paketen</li>
       <li xml:lang="nl">Beheer van software pakketten ongeacht de distributie</li>
@@ -227,6 +238,7 @@
       <li>Application management for users unexperienced with packages</li>
       <li xml:lang="ar">إدارة التّطبيقات لمن ليس لديه خبرة مع الحزم</li>
       <li xml:lang="az">Tətbiqlərin az təcrübəli istifadəçilər tərəfindən idarə olunması</li>
+      <li xml:lang="bg">Управление на приложения за потребители, които нямат опит с пакетите</li>
       <li xml:lang="bs">Upravljanje aplikacijom za korisnike bez iskustva sa paketima</li>
       <li xml:lang="ca">Gestió d'aplicacions per a usuaris sense experiència amb els paquets</li>
       <li xml:lang="ca-valencia">Gestió d'aplicacions per a usuaris sense experiència amb els paquets</li>
@@ -244,6 +256,7 @@
       <li xml:lang="hu">Alkalmazáskezelés a csomagokban tapasztalatlan felhasználóknak</li>
       <li xml:lang="id">Pengelolaan aplikasi untuk pengguna yang takberpengalaman dengan paket-paket</li>
       <li xml:lang="it">Gestione delle applicazioni per gli utenti con poca esperienza sui pacchetti</li>
+      <li xml:lang="ka">აპლიკაციის მართვა მომხმარებლებისთვის, ვისაც პაკეტებთან მუშაობის გამოცდილება არ გააჩნია</li>
       <li xml:lang="ko">패키지 관리 경험이 없는 사용자용 프로그램 관리</li>
       <li xml:lang="nds">Programmpleeg för Brukers, de nich veel vun Paketen af weet.</li>
       <li xml:lang="nl">Beheer van toepassingen voor gebruikers zonder ervaring met pakketten</li>
@@ -261,6 +274,7 @@
       <li>Editor for software sources and PackageKit settings</li>
       <li xml:lang="ar">محرّر لمصادر البرمجيّات وإعدادات «عدّة الحزم»</li>
       <li xml:lang="az">Proq. təminatı mənbələri üçün redaktor və PackageKit ayarları</li>
+      <li xml:lang="bg">Редактор за софтуерни източници и настройки на PackageKit</li>
       <li xml:lang="bs">Uređivač izvora softvera i PackageKit postavki</li>
       <li xml:lang="ca">Editor per a fonts de programari i paràmetres del PackageKit</li>
       <li xml:lang="ca-valencia">Editor per a fonts de programari i paràmetres de PackageKit</li>
@@ -278,6 +292,7 @@
       <li xml:lang="hu">Szerkesztő a szoftverforrásokhoz és PackageKit beállításokhoz</li>
       <li xml:lang="id">Editor untuk pengaturan PackageKit dan sumber perangkat lunak</li>
       <li xml:lang="it">Editor delle fonti software e delle impostazioni di PackageKit</li>
+      <li xml:lang="ka">რედაქტორი პროგრამის წყაროებისა და packageKit-ის პარამეტრებისთვის</li>
       <li xml:lang="ko">소프트웨어 원본 및 PackageKit 설정 편집기</li>
       <li xml:lang="nds">Editor för Software-Borns un PackageKit-Instellen</li>
       <li xml:lang="nl">Bewerker voor softwarebronnen en instellingen van PackageKit</li>
@@ -295,6 +310,7 @@
       <li>System software updates notifier and installer</li>
       <li xml:lang="ar">مُخطر لتحديثات برمجيّات النّظام وتثبيتها</li>
       <li xml:lang="az">Sistemin proq. təminatı yenilənmələri bildirici və quraşdırıcısı</li>
+      <li xml:lang="bg">Уведомява за и инсталира обновления за системния софтуер</li>
       <li xml:lang="bs">Obavještenja i instalacijski program ažuriranja sistemskog softvera</li>
       <li xml:lang="ca">Notificador i instal·lador d'actualitzacions de programari del sistema</li>
       <li xml:lang="ca-valencia">Notificador i instal·lador d'actualitzacions de programari del sistema</li>
@@ -311,6 +327,7 @@
       <li xml:lang="hu">Rendszerszoftver frissítések értesítő és telepítő</li>
       <li xml:lang="id">Penginstal dan penotifikasi pembaruan perangkat lunak sistem</li>
       <li xml:lang="it">Gestore di sistema per la notifica e l'installazione degli aggiornamenti software</li>
+      <li xml:lang="ka">სისტემური პროგრამების განახლებების შეტყობინებები და დაყენება</li>
       <li xml:lang="ko">시스템 소프트웨어 업데이트 알림 및 설치</li>
       <li xml:lang="nds">Gifft Bescheed över Software-Opfrischen un installeert de ok</li>
       <li xml:lang="nl">Melder van elementen voor bijwerken van software en toepassing voor installeren</li>
@@ -329,6 +346,7 @@
       <li>Close integration with the KDE Plasma desktop</li>
       <li xml:lang="ar">التّكامل مع سطح مكتب «بلازما»</li>
       <li xml:lang="az">KDE Plasma İş masası ilə sıx yanaşma</li>
+      <li xml:lang="bg">Тясна интеграция с работната среда KDE Plasma</li>
       <li xml:lang="bs">Zatvori integraciju sa KDE Plazma radnom površinom</li>
       <li xml:lang="ca">Integració estreta amb l'escriptori Plasma del KDE</li>
       <li xml:lang="ca-valencia">Integració estreta amb l'escriptori Plasma de KDE</li>
@@ -346,6 +364,7 @@
       <li xml:lang="hu">Szoros integráció a KDE Plasma asztallal</li>
       <li xml:lang="id">Integrasi penutupan dengan desktop KDE Plasma</li>
       <li xml:lang="it">Stretta integrazione col desktop Plasma di KDE</li>
+      <li xml:lang="ka">KDE -ის Plasma Desktop-ში ინტეგრაცია</li>
       <li xml:lang="ko">KDE Plasma 데스크톱과 통합</li>
       <li xml:lang="nds">Drang Integreren mit den KDE-Plasma-Schriefdisch</li>
       <li xml:lang="nl">Nauwe integratie in het bureaublad Plasma van KDE</li>
@@ -371,6 +390,7 @@
       <caption>The main window showing a description of the selected package</caption>
       <caption xml:lang="ar">النّافذة الرّئيسيّة تعرض وصفًا للحزمة المحدّدة</caption>
       <caption xml:lang="az">Əsas pəncərə seçilmiş paketin təsvirini göstərir</caption>
+      <caption xml:lang="bg">Основният прозорец показва описание на избрания пакет</caption>
       <caption xml:lang="bs">Glavni prozor prikazuje opis označenog paketa</caption>
       <caption xml:lang="ca">La finestra principal de l'Apper mostrant una descripció del paquet seleccionat</caption>
       <caption xml:lang="ca-valencia">La finestra principal d'Apper mostrant una descripció del paquet seleccionat</caption>
@@ -387,6 +407,7 @@
       <caption xml:lang="hu">A főablak a kijelölt csomag leírását jeleníti meg</caption>
       <caption xml:lang="id">Jendela utama menampilkan deskripsi pada paket yang dipilih</caption>
       <caption xml:lang="it">La finestra principale mostra una descrizione del pacchetto selezionato</caption>
+      <caption xml:lang="ka">მთავარი ფანჯარა, რომელიც მონიშნული პაკეტის აღწერას გაჩვენებთ</caption>
       <caption xml:lang="ko">패키지 설명을 보여 주는 주 창</caption>
       <caption xml:lang="nl">Het hoofdvenster dat een beschrijving toont van het geselecteerde pakket</caption>
       <caption xml:lang="pl">Okno główne wyświetlające opis wybranego pakietu</caption>
@@ -409,6 +430,7 @@
   <developer_name>The KDE Community</developer_name>
   <developer_name xml:lang="ar">مجتمع «كدي»</developer_name>
   <developer_name xml:lang="az">KDE Cəmiyyəti</developer_name>
+  <developer_name xml:lang="bg">Общонстта на KDE</developer_name>
   <developer_name xml:lang="bs">KDE zajednica</developer_name>
   <developer_name xml:lang="ca">La comunitat KDE</developer_name>
   <developer_name xml:lang="ca-valencia">La comunitat KDE</developer_name>
@@ -426,6 +448,7 @@
   <developer_name xml:lang="hu">A KDE közösség</developer_name>
   <developer_name xml:lang="id">Komunitas KDE</developer_name>
   <developer_name xml:lang="it">La Comunità di KDE</developer_name>
+  <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
   <developer_name xml:lang="ko">KDE 커뮤니티</developer_name>
   <developer_name xml:lang="nl">De KDE gemeenschap</developer_name>
   <developer_name xml:lang="pa">ਕੇਡੀਈ ਕਮਿਊਨਟੀ</developer_name>
