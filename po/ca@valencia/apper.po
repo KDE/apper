@@ -1271,7 +1271,7 @@ msgstr "Nom de fitxer de paquet IPK"
 #: AppSetup/main.cpp:79
 #, kde-format
 msgid "We did not receive a path to an IPK package as parameter."
-msgstr "No s'ha rebut cap camí a un paquet IPK com a paràmetre."
+msgstr "No s'ha rebut cap camí cap a un paquet IPK com a paràmetre."
 
 #: AppSetup/main.cpp:80
 #, kde-format
