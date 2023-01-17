@@ -3273,7 +3273,7 @@ msgstr "Seguretat"
 #, kde-format
 msgctxt "The group type"
 msgid "Power management"
-msgstr "Gestió d'energia"
+msgstr "Gestió de l'energia"
 
 #: libapper/PkStrings.cpp:803
 #, kde-format
