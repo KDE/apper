@@ -115,7 +115,7 @@
     <p xml:lang="sk">Apper je grafický nástroj na správu balíkov a aplikácií poskytovaných Linuxovými distribúciami.</p>
     <p xml:lang="sl">Apper je grafično orodje za upravljanje paketov in programov, ki jih ponuja vaša distribucija Linuxa.</p>
     <p xml:lang="sv">Apper är ett grafiskt hanteringsverktyg för paket och program som tillhandahålls av en Linux-distribution.</p>
-    <p xml:lang="tr">Apper, Linux dağıtımları tarafından sağlanan uygulamalar ve paketler için grafiksel yönetim aracıdır.</p>
+    <p xml:lang="tr">Apper, Linux dağıtımları tarafından sağlanan uygulamalar ve paketler için bir grafiksel yönetim aracıdır.</p>
     <p xml:lang="uk">Apper — графічний інтерфейс для керування пакунками та програмами, які є частиною дистрибутива Linux.</p>
     <p xml:lang="x-test">xxApper is a graphical management tool for packages and applications provided by a Linux distribution.xx</p>
     <p xml:lang="zh-CN">Apper 是一款用于对 Linux 发行版提供的软件包和应用程序进行管理的图形化工具。</p>
@@ -154,7 +154,7 @@
     <p xml:lang="sk">Umožní vám inštalovanie nového softvéru ako aj udržanie vášho systému aktuálneho inštalovaním aktualizácií.</p>
     <p xml:lang="sl">Dovoljuje nameščanje novih programov kot tudi vzdrževanje posodobljenega sistema z nameščanjem posodobitev.</p>
     <p xml:lang="sv">Det tillåter att ny programvara installeras, samt att hålla systemet uppdaterat genom att installera uppdateringar.</p>
-    <p xml:lang="tr">Güncellemeleri yaparak, sistemini güncel tutmanın yanı sıra, yeni yazılımları yüklemenizede olanak tanır.</p>
+    <p xml:lang="tr">Yeni yazılımlar kurmanıza izin verir ve ayrıca güncellemeleri kurarak sisteminizi güncel tutar.</p>
     <p xml:lang="uk">Ця програма надає змогу встановлювати нове програмне забезпечення та підтримувати актуальність системи шляхом встановлення оновлень.</p>
     <p xml:lang="x-test">xxIt allows installing new software as well as keeping the system up to date by installing updates.xx</p>
     <p xml:lang="zh-CN">它可以安装新软件，并且保持系统的所有软件包在最新状态。</p>
@@ -230,7 +230,7 @@
       <li xml:lang="sk">Distribučno-agnostická správa softvérových balíkov</li>
       <li xml:lang="sl">Upravljanje programskih paketov neodvisno od distribucije</li>
       <li xml:lang="sv">Hantering av programvarupaket oberoende av distribution</li>
-      <li xml:lang="tr">Yazılım paketleri için dağıtım bağımsız yönetim</li>
+      <li xml:lang="tr">Yazılım paketlerinin dağıtımdan bağımsız yönetimi</li>
       <li xml:lang="uk">Однаковий для усіх дистрибутивів інтерфейс для керування пакунками програмного забезпечення.</li>
       <li xml:lang="x-test">xxDistribution-agnostic management of software packagesxx</li>
       <li xml:lang="zh-CN">跨发行版可用的软件包管理</li>
@@ -266,7 +266,7 @@
       <li xml:lang="sk">Správa aplikácií pre používateľov bez skúseností s balíkmi</li>
       <li xml:lang="sl">Upravljanje programov za uporabnike, ki nimajo izkušenj s paketi</li>
       <li xml:lang="sv">Programhantering för användare som är ovana vid paket</li>
-      <li xml:lang="tr">Paketler ile deneyimi olmayan kullanıcılar için uygulama yönetimi</li>
+      <li xml:lang="tr">Paket yönetim deneyimi olmayan kullanıcılar için uygulama yönetimi</li>
       <li xml:lang="uk">Доступ до керування пакунками навіть для користувачів без досвіду.</li>
       <li xml:lang="x-test">xxApplication management for users unexperienced with packagesxx</li>
       <li xml:lang="zh-CN">针对不熟悉软件包概念的用户提供应用程序管理功能</li>
@@ -338,7 +338,7 @@
       <li xml:lang="sk">Pripomienkovač a inštalátor systémových softvérových aktualizácií</li>
       <li xml:lang="sl">Nameščanje in obveščanje o posodobitvah programske opreme</li>
       <li xml:lang="sv">Underrättelse vid uppdateringar och installation av systemprogramvara</li>
-      <li xml:lang="tr">Sistem yazılım güncelleme uyarıcı ve kurucu</li>
+      <li xml:lang="tr">Sistem yazılım güncellemeleri uyarıcısı ve kurucu</li>
       <li xml:lang="uk">Засоби сповіщення та встановлення оновлень програмного забезпечення системи.</li>
       <li xml:lang="x-test">xxSystem software updates notifier and installerxx</li>
       <li xml:lang="zh-CN">系统软件更新通知程序和安装程序</li>
@@ -375,7 +375,7 @@
       <li xml:lang="sk">Blízka integrácia s pracovnou plochou KDE Plasma</li>
       <li xml:lang="sl">Vključitev v namizno okolje KDE Plasma</li>
       <li xml:lang="sv">Nära integrering med KDE:s Plasma-skrivbord</li>
-      <li xml:lang="tr">KDE Plasma masaüstü tümleştirmesi</li>
+      <li xml:lang="tr">KDE Plasma masaüstü ile yakın tümleşim</li>
       <li xml:lang="uk">Тісна інтеграція зі стільничним середовищем Плазми KDE.</li>
       <li xml:lang="x-test">xxClose integration with the KDE Plasma desktopxx</li>
       <li xml:lang="zh-CN">与 KDE Plasma 桌面环境紧密结合</li>
@@ -416,7 +416,7 @@
       <caption xml:lang="sk">Hlavné okno zobrazuje popis vybraného balíka</caption>
       <caption xml:lang="sl">Glavno okno, ki prikazuje opis izbranega paketa</caption>
       <caption xml:lang="sv">Huvudfönstret som visar en beskrivning av det markerade paketet</caption>
-      <caption xml:lang="tr">Seçili paketlerin açıklamalarını ana pencereden gösterme</caption>
+      <caption xml:lang="tr">Ana pencere, seçili paketin açıklamasını gösterirken</caption>
       <caption xml:lang="uk">Головне вікно, у якому буде показано опис позначеного пакунка.</caption>
       <caption xml:lang="x-test">xxThe main window showing a description of the selected packagexx</caption>
       <caption xml:lang="zh-CN">主窗口显示所选软件包的描述</caption>
