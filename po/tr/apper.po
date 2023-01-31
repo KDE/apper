@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: extragear-sysadmin-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2023-01-19 22:39+0300\n"
+"PO-Revision-Date: 2023-01-31 01:21+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -51,17 +51,17 @@ msgstr "Arka uç ayrıntıları"
 #: Apper/Apper.cpp:100
 #, kde-format
 msgid "Mime type installer"
-msgstr "Mime türü yükleyici"
+msgstr "MIME türü kurucu"
 
 #: Apper/Apper.cpp:103
 #, kde-format
 msgid "Package name installer"
-msgstr "Paket adı yükleyicisi"
+msgstr "Paket adı kurucu"
 
 #: Apper/Apper.cpp:106
 #, kde-format
 msgid "Single file installer"
-msgstr "Tek dosya yükleyici"
+msgstr "Tek dosya kurucu"
 
 #: Apper/Apper.cpp:109
 #, kde-format
@@ -71,7 +71,7 @@ msgstr "Yazıtipi özkaynağı kurucu"
 #: Apper/Apper.cpp:112
 #, kde-format
 msgid "Catalog installer"
-msgstr "Katalog yükleyici"
+msgstr "Katalog kurucu"
 
 #: Apper/Apper.cpp:115
 #, kde-format
@@ -81,7 +81,7 @@ msgstr "Tek paket kaldırıcı"
 #: Apper/Apper.cpp:118
 #, kde-format
 msgid "Package file to install"
-msgstr "Yüklenecek paket dosyası"
+msgstr "Kurulacak paket dosyası"
 
 #: Apper/ApperKCM.cpp:94 Apper/ApperKCM.cpp:293
 #, kde-format
@@ -331,7 +331,7 @@ msgstr "Paketleri Kaldır"
 #: Apper/BackendDetails.ui:182
 #, kde-format
 msgid "Install Files"
-msgstr "Dosyaları Yükle"
+msgstr "Dosyaları Kur"
 
 #. i18n: ectx: property (text), widget (QCheckBox, resolveCB)
 #: Apper/BackendDetails.ui:192
@@ -428,7 +428,7 @@ msgstr "Sürüm:"
 #: libapper/PkStrings.cpp:404
 #, kde-format
 msgid "Installed"
-msgstr "Yüklü"
+msgstr "Kurulu"
 
 #. i18n: ectx: property (text), widget (QCheckBox, developmentCB)
 #: Apper/BackendDetails.ui:392 Apper/FiltersMenu.cpp:89
@@ -512,7 +512,7 @@ msgstr "Kurulu Paketler Listesini Dışa Aktar..."
 #: Apper/BrowseView.ui:150
 #, kde-format
 msgid "Install Packages from List..."
-msgstr "Paketleri listeden kur..."
+msgstr "Listeden Paketler Kur..."
 
 #: Apper/CategoryModel.cpp:54 Apper/CategoryModel.cpp:62
 #, kde-format
@@ -876,13 +876,13 @@ msgstr "Otomatik güncelleştir:"
 #: Apper/Settings/Settings.ui:199
 #, kde-format
 msgid "Show application launcher after installing new applications"
-msgstr "Yeni uygulamalar kurulduğunda uygulama başlatıcıyı göster"
+msgstr "Yeni uygulamalar kurulduktan sonra uygulama başlatıcıyı göster"
 
 #. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
 #: Apper/Settings/Settings.ui:206
 #, kde-format
 msgid "Show confirmation dialog when installing or updating packages"
-msgstr "Paketler yüklenirken veya güncellenirken doğrulama penceresini göster"
+msgstr "Paketleri kurarken veya güncellenirken onay penceresini göster"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: Apper/Settings/Settings.ui:213
@@ -956,8 +956,8 @@ msgid ""
 "usually a very lengthy process and takes a lot longer than simply upgrading "
 "your packages."
 msgstr ""
-"Dağıtımınızı en son sürüme yükseltmek üzeresiniz. Bu genelde çok uzun bir "
-"süreçtir ve basitçe paketlerinizi güncellemekten daha çok vakit alır."
+"Dağıtımınızı en son sürüme yükseltmek üzeresiniz. Bu, genelde çok uzun bir "
+"süreçtir ve paketlerinizi güncellemekten çok daha fazla vakit alır."
 
 #: Apper/Updater/DistroUpgrade.cpp:70
 #, kde-format
@@ -1113,8 +1113,9 @@ msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
 msgstr ""
-"Bu bir test güncellemesi olduğundan, normal kullanım için tasarlanmamıştır. "
-"Lütfen karşılaştığınız herhangi sorunu veya gerilemeyi bildirin."
+"Bu bir sınama güncellemesi olduğundan, normal kullanım için "
+"tasarlanmamıştır. Lütfen karşılaştığınız herhangi sorunu veya gerilemeyi "
+"bildirin."
 
 #: Apper/Updater/UpdateDetails.cpp:284
 #, kde-format
@@ -1133,7 +1134,7 @@ msgstr "Güncellemeler:"
 #: Apper/Updater/UpdateDetails.cpp:302
 #, kde-format
 msgid "Obsoletes:"
-msgstr "Gereksizler:"
+msgstr "Kullanılmayacaklar:"
 
 #: Apper/Updater/UpdateDetails.cpp:312
 #, kde-format
@@ -1195,12 +1196,12 @@ msgstr[1] "Paketler: %2"
 #: apperd/Updater.cpp:156
 #, kde-format
 msgid "Updates are being automatically installed."
-msgstr "Güncellemeler otomatik olarak yükleniyor."
+msgstr "Güncellemeler otomatik olarak kuruluyor."
 
 #: apperd/Updater.cpp:166
 #, kde-format
 msgid "Security updates are being automatically installed."
-msgstr "Güvenlik güncellemeleri otomatik olarak yükleniyor."
+msgstr "Güvenlik güncellemeleri otomatik olarak kuruluyor."
 
 #: apperd/Updater.cpp:176
 #, kde-format
@@ -1228,12 +1229,12 @@ msgstr[1] "%1 yeni güncelleme var"
 #: libapper/ApplicationsDelegate.cpp:44
 #, kde-format
 msgid "Install"
-msgstr "Yükle"
+msgstr "Kur"
 
 #: AppSetup/main.cpp:43
 #, kde-format
 msgid "KDE Application Installer"
-msgstr "KDE Uygulama Yükleyici"
+msgstr "KDE Uygulama Kur"
 
 #: AppSetup/main.cpp:46
 #, kde-format
@@ -1308,13 +1309,13 @@ msgid ""
 msgstr ""
 "Lütfen 3. parti uygulama kurarken dikkatli olun.<br>Kullanım sonucunda "
 "sisteminize <b>zarar verebilir</b> veya parolalarınızı izlemek gibi "
-"<b>zararlı davranışta bulunabilirler</b>.<br>Lütfen bu yazılımı yalnızca "
+"<b>zararlı davranışta bulunabilirler</b>.<br>Bu yazılımı yalnızca "
 "<b>dağıtıcısına güveniyorsanız</b> kurun."
 
 #: AppSetup/SetupWizard.cpp:150
 #, kde-format
 msgid "Details about this installation"
-msgstr "Bu kurulum hakkında bilgiler"
+msgstr "Bu kurulum hakkında ayrıntılar"
 
 #: AppSetup/SetupWizard.cpp:185
 #, kde-format
@@ -1353,7 +1354,7 @@ msgstr[1] "Yeni uygulamalar mevcut"
 msgid "The following application was just installed. Click on it to launch:"
 msgid_plural ""
 "The following applications were just installed. Click on them to launch:"
-msgstr[0] "Bu uygulama yeni kuruldu, çalıştırmak için üzerine tıklayın:"
+msgstr[0] "Bu uygulama yeni kuruldu, başlatmak için üzerine tıklayın:"
 msgstr[1] "Bu uygulamalar yeni kuruldu, çalıştırmak için üzerlerine tıklayın:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showCB)
@@ -1468,7 +1469,7 @@ msgstr "Bilinmeyen durum"
 #, kde-format
 msgctxt "transaction state, the daemon is in the process of starting"
 msgid "Waiting for service to start"
-msgstr "Servisin başlaması bekleniyor"
+msgstr "Hizmetin başlaması bekleniyor"
 
 #: libapper/PkStrings.cpp:44
 #, kde-format
@@ -1528,7 +1529,7 @@ msgstr "İndiriliyor"
 #, kde-format
 msgctxt "transaction state, installing packages"
 msgid "Installing packages"
-msgstr "Paketler yükleniyor"
+msgstr "Paketler kuruluyor"
 
 #: libapper/PkStrings.cpp:83
 #, kde-format
@@ -1552,7 +1553,7 @@ msgstr "Paketler temizleniyor"
 #, kde-format
 msgctxt "transaction state, obsoleting old packages"
 msgid "Obsoleting packages"
-msgstr "Paketler gereksiz olarak işaretleniyor"
+msgstr "Paketler kullanılmayacak olarak işaretleniyor"
 
 #: libapper/PkStrings.cpp:95
 #, kde-format
@@ -1572,13 +1573,13 @@ msgstr "İmzalar denetleniyor"
 #, kde-format
 msgctxt "transaction state, when we're doing a test transaction"
 msgid "Testing changes"
-msgstr "Değişiklikler test ediliyor"
+msgstr "Değişiklikler sınanıyor"
 
 #: libapper/PkStrings.cpp:104
 #, kde-format
 msgctxt "transaction state, when we're writing to the system package database"
 msgid "Committing changes"
-msgstr "Değişiklikler uygulanıyor"
+msgstr "Değişiklikler işleniyor"
 
 #: libapper/PkStrings.cpp:107
 #, kde-format
@@ -1632,7 +1633,7 @@ msgstr "Gruplar indiriliyor"
 #, kde-format
 msgctxt "transaction state, downloading metadata"
 msgid "Downloading update information"
-msgstr "Güncelleme bilgileri indiriliyor"
+msgstr "Güncelleme bilgisi indiriliyor"
 
 #: libapper/PkStrings.cpp:134
 #, kde-format
@@ -1657,7 +1658,7 @@ msgstr "Kurulu uygulamalar taranıyor"
 msgctxt ""
 "transaction state, generating a list of packages installed on the system"
 msgid "Generating package lists"
-msgstr "Paket listesi oluşturuluyor"
+msgstr "Paket listesi üretiliyor"
 
 #: libapper/PkStrings.cpp:146
 #, kde-format
@@ -1699,7 +1700,7 @@ msgstr "Dosyalar kopyalanıyor"
 #, kde-format
 msgctxt "we are running hooks pre or post transaction"
 msgid "Running hooks"
-msgstr "Çalışan kancalar"
+msgstr "Kancalar çalıştırılıyor"
 
 #: libapper/PkStrings.cpp:179
 #, kde-format
@@ -1717,7 +1718,7 @@ msgstr "Güncellenen"
 #, kde-format
 msgctxt "The action of the package, in past tense"
 msgid "Installed"
-msgstr "Yüklü"
+msgstr "Kurulu"
 
 #: libapper/PkStrings.cpp:185
 #, kde-format
@@ -1735,7 +1736,7 @@ msgstr "Temizlendi"
 #, kde-format
 msgctxt "The action of the package, in past tense"
 msgid "Obsoleted"
-msgstr "Gereksiz Olarak İşaretlendi"
+msgstr "Kullanılmayacak olarak işaretlendi"
 
 #: libapper/PkStrings.cpp:200
 #, kde-format
@@ -1765,7 +1766,7 @@ msgstr "Ayrıntılar alınıyor"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting requires"
-msgstr "Ön bağımlılıklar alınıyor"
+msgstr "Gereklilikler alınıyor"
 
 #: libapper/PkStrings.cpp:211
 #, kde-format
@@ -1844,7 +1845,7 @@ msgstr "Gerekli paketler indiriliyor"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Installing file"
-msgstr "Dosya yükleniyor"
+msgstr "Dosya kuruluyor"
 
 #: libapper/PkStrings.cpp:242
 #, kde-format
@@ -1916,7 +1917,7 @@ msgstr "Sağladıkları alınıyor"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Installing signature"
-msgstr "İmza yükleniyor"
+msgstr "İmza kuruluyor"
 
 #: libapper/PkStrings.cpp:268
 #, kde-format
@@ -1928,7 +1929,7 @@ msgstr "Paket listesi alınıyor"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Accepting EULA"
-msgstr "Son Kullanıcı Lisans Sözleşmesi Kabul Ediliyor"
+msgstr "Son Kullanıcı Lisans Sözleşmesi kabul ediliyor"
 
 #: libapper/PkStrings.cpp:274
 #, kde-format
@@ -2030,19 +2031,19 @@ msgstr "Paket adı ara"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Removed packages"
-msgstr "Kaldırılan paketler"
+msgstr "Paketler kaldırıldı"
 
 #: libapper/PkStrings.cpp:322
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed packages"
-msgstr "Kurulu paketler"
+msgstr "Paketler kuruldu"
 
 #: libapper/PkStrings.cpp:324
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed local files"
-msgstr "Kurulu yerel dosyalar"
+msgstr "Yerel dosyalar kuruldu"
 
 #: libapper/PkStrings.cpp:326
 #, kde-format
@@ -2054,7 +2055,7 @@ msgstr "Paket önbelleği yenilendi"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Updated packages"
-msgstr "Güncellenen paketler"
+msgstr "Paketler güncellendi"
 
 #: libapper/PkStrings.cpp:330
 #, kde-format
@@ -2102,7 +2103,7 @@ msgstr "Sağladıkları alındı"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed signature"
-msgstr "Yüklenmiş imza"
+msgstr "İmza kuruldu"
 
 #: libapper/PkStrings.cpp:347
 #, kde-format
@@ -2150,7 +2151,7 @@ msgstr "Sistem onarıldı"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Removed repository"
-msgstr "Depo Kaldırıldı"
+msgstr "Depo kaldırıldı"
 
 #: libapper/PkStrings.cpp:363
 #, kde-format
@@ -2186,7 +2187,7 @@ msgstr "Temizleniyor"
 #: libapper/PkStrings.cpp:383
 #, kde-format
 msgid "Obsoleting"
-msgstr "Gereksiz hale getiriliyor"
+msgstr "Kullanılmayacak olarak işaretleniyor"
 
 #: libapper/PkStrings.cpp:385
 #, kde-format
@@ -2211,7 +2212,7 @@ msgstr "İndirildi"
 #: libapper/PkStrings.cpp:402
 #, kde-format
 msgid "Updated"
-msgstr "Güncellenen"
+msgstr "Güncellendi"
 
 #: libapper/PkStrings.cpp:406
 #, kde-format
@@ -2226,12 +2227,12 @@ msgstr "Temizlendi"
 #: libapper/PkStrings.cpp:410
 #, kde-format
 msgid "Obsoleted"
-msgstr "Gereksiz Olarak İşaretlendi"
+msgstr "Kullanılmayacak olarak işaretlendi"
 
 #: libapper/PkStrings.cpp:412
 #, kde-format
 msgid "Reinstalled"
-msgstr "Yeniden Kuruldu"
+msgstr "Yeniden kuruldu"
 
 #: libapper/PkStrings.cpp:414
 #, kde-format
@@ -2291,7 +2292,7 @@ msgstr "Paket bulunamadı"
 #: libapper/PkStrings.cpp:445
 #, kde-format
 msgid "The package is already installed"
-msgstr "Paket zaten yüklenmiş"
+msgstr "Paket halihazırda kurulu"
 
 #: libapper/PkStrings.cpp:447
 #, kde-format
@@ -2361,7 +2362,7 @@ msgstr "Görev iptal edilemez"
 #: libapper/PkStrings.cpp:473
 #, kde-format
 msgid "Source packages cannot be installed"
-msgstr "Kaynak paketler yüklenemez"
+msgstr "Kaynak paketler kurulamıyor"
 
 #: libapper/PkStrings.cpp:475
 #, kde-format
@@ -2446,7 +2447,7 @@ msgstr "Paket bozuk"
 #: libapper/PkStrings.cpp:507
 #, kde-format
 msgid "All packages are already installed"
-msgstr "Tüm paketler zaten yüklendi"
+msgstr "Tüm paketler halihazırda kurulu"
 
 #: libapper/PkStrings.cpp:509
 #, kde-format
@@ -2476,7 +2477,7 @@ msgstr "Disk üzerinde boş alan yok"
 #: libapper/PkStrings.cpp:519 libapper/PkTransaction.cpp:341
 #, kde-format
 msgid "A media change is required"
-msgstr "Ortam değiştirmeniz gerekiyor"
+msgstr "Bir ortam değişikliği gerekiyor"
 
 #: libapper/PkStrings.cpp:521
 #, kde-format
@@ -2556,7 +2557,7 @@ msgstr "Sanal sağlama türü desteklenmiyor"
 #: libapper/PkStrings.cpp:551
 #, kde-format
 msgid "Install root is invalid"
-msgstr "Köke kurma geçersiz"
+msgstr "Kurulum kökü geçersiz"
 
 #: libapper/PkStrings.cpp:553
 #, kde-format
@@ -2571,7 +2572,7 @@ msgstr "Öncelikten dolayı yeniden zamanlandı"
 #: libapper/PkStrings.cpp:557
 #, kde-format
 msgid "Unfinished transaction"
-msgstr "Bitmemiş işlem"
+msgstr "Bitmemiş aktarım"
 
 #: libapper/PkStrings.cpp:559
 #, kde-format
@@ -2663,7 +2664,7 @@ msgstr ""
 #: libapper/PkStrings.cpp:595
 #, kde-format
 msgid "The package that is trying to be installed is already installed."
-msgstr "Yüklemek istediğiniz paket zaten yüklenmiş."
+msgstr "Kurmaya çalıştığınız paket halihazırda kurulu."
 
 #: libapper/PkStrings.cpp:597
 #, kde-format
@@ -2904,13 +2905,13 @@ msgstr ""
 #, kde-format
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
-msgstr "Karşıdan yüklenen paket bozuk ve yeniden yüklenmesi gerekiyor."
+msgstr "İndirilen paket bozuk ve yeniden indirilmesi gerekiyor."
 
 #: libapper/PkStrings.cpp:678
 #, kde-format
 msgid ""
 "All of the packages selected for install are already installed on the system."
-msgstr "Yüklemek için seçilen tüm paketler sistemde zaten yüklü."
+msgstr "Kurulum için seçilen tüm paketler sistemde halihazırda kurulu."
 
 #: libapper/PkStrings.cpp:680
 #, kde-format
@@ -2927,8 +2928,9 @@ msgid ""
 "Required data could not be found on any of the configured software origins.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
-"Gerekli veri yapılandırılmış yazılım kaynaklarının hiçbirisinde bulunamadı.\n"
-"Sınanabilen daha fazla karşıdan yükleme yansısı yoktu."
+"Gerekli veri, yapılandırılmış yazılım kaynaklarının hiçbirisinde "
+"bulunamadı.\n"
+"Sınanabilen daha fazla karşıdan indirme yansısı yoktu."
 
 #: libapper/PkStrings.cpp:686
 #, kde-format
@@ -2945,7 +2947,7 @@ msgstr ""
 #, kde-format
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
-msgstr "Yüklenmeye çalışılan paket bu sistem ile uyumsuz."
+msgstr "Kurulmaya çalışılan paket bu sistem ile uyumsuz."
 
 #: libapper/PkStrings.cpp:691
 #, kde-format
@@ -3073,7 +3075,7 @@ msgstr "Sanal sağlama türü bu sistem tarafından desteklenmiyor."
 #: libapper/PkStrings.cpp:734
 #, kde-format
 msgid "The install root is invalid. Please contact your administrator."
-msgstr "Köke kurma geçersiz. Lütfen yöneticinizle iletişime geçin."
+msgstr "Kurulum kökü geçersiz. Lütfen yöneticinizle iletişime geçin."
 
 #: libapper/PkStrings.cpp:736
 #, kde-format
@@ -3085,7 +3087,7 @@ msgstr "Yazılım listesi indirilemedi."
 msgid ""
 "The transaction has been cancelled and will be retried when the system is "
 "idle."
-msgstr "İşlem iptal edildi ve sistem boşta olduğunda yeniden denenecek."
+msgstr "Aktarım iptal edildi ve sistem boşta olduğunda yeniden denenecek."
 
 #: libapper/PkStrings.cpp:740
 #, kde-format
@@ -3508,7 +3510,7 @@ msgstr "Kararsız"
 #: libapper/PkStrings.cpp:941
 #, kde-format
 msgid "Testing"
-msgstr "Deneme"
+msgstr "Sınama"
 
 #: libapper/PkStrings.cpp:954
 #, kde-format
@@ -3538,7 +3540,7 @@ msgstr "Bu eylemi gerçekleştirmek için gerekli ayrıcalıklara sahip değilsi
 #: libapper/PkStrings.cpp:1016
 #, kde-format
 msgid "Could not get a transaction id from packagekitd."
-msgstr "Packagekitd servisinden bir aktarım kimliği alınamadı."
+msgstr "Packagekitd hizmetinden bir aktarım kimliği alınamadı."
 
 #: libapper/PkStrings.cpp:1018
 #, kde-format
@@ -3553,7 +3555,7 @@ msgstr "Bu eylem bilinmiyor."
 #: libapper/PkStrings.cpp:1022
 #, kde-format
 msgid "The packagekitd service could not be started."
-msgstr "Packagekitd servisi başlatılamadı."
+msgstr "Packagekitd hizmeti başlatılamadı."
 
 #: libapper/PkStrings.cpp:1024
 #, kde-format
@@ -3573,7 +3575,7 @@ msgstr "Bu işlev henüz desteklenmiyor."
 #: libapper/PkStrings.cpp:1030
 #, kde-format
 msgid "Could not talk to packagekitd."
-msgstr "Packagekitd servisi ile iletişim kurulamadı."
+msgstr "Packagekitd hizmeti ile iletişim kurulamadı."
 
 #: libapper/PkStrings.cpp:1032
 #, kde-format
@@ -3627,12 +3629,12 @@ msgstr ""
 #: libapper/PkTransaction.cpp:267
 #, kde-format
 msgid "Installing unsigned software"
-msgstr "İmzalanmamış yazılım yükleniyor"
+msgstr "İmzalanmamış yazılım kuruluyor"
 
 #: libapper/PkTransactionWidget.cpp:229 libapper/PkTransactionWidget.cpp:242
 #, kde-format
 msgid "%1 (%2%)"
-msgstr "%1 (%%2)"
+msgstr "%1 (%​%2)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: libapper/PkTransactionWidget.ui:47
@@ -3706,7 +3708,7 @@ msgstr[1] "%1 paket eski sürüme döndürülecek"
 msgid "1 package to reinstall"
 msgid_plural "%1 packages to reinstall"
 msgstr[0] "%1 paket yeniden kurulacak"
-msgstr[1] "%1 paket yeniden yüklenecek"
+msgstr[1] "%1 paket yeniden kurulacak"
 
 #: libapper/Requirements.cpp:125
 #, kde-format
@@ -3755,7 +3757,7 @@ msgstr "Görevi tamamlamak için ek değişiklikler gerekiyor"
 #, kde-format
 msgid "Do not confirm when installing or updating additional packages"
 msgstr ""
-"Ek paketler yüklenirken veya güncellenirken bu doğrulama penceresini gösterme"
+"Ek paketleri kurarken veya güncellerken bu doğrulama penceresini gösterme"
 
 #. i18n: ectx: property (text), widget (QLabel, descriptionL)
 #: PkSession/IntroDialog.ui:65
@@ -3766,7 +3768,7 @@ msgstr "MetinEtiketi"
 #: PkSession/main.cpp:48
 #, kde-format
 msgid "Apper PackageKit Session helper"
-msgstr "Apper PackageKit Oturum yardımcısı"
+msgstr "Apper PackageKit Oturumu yardımcısı"
 
 #: PkSession/main.cpp:51
 #, kde-format
@@ -3797,8 +3799,8 @@ msgstr "Desteklenen katalog bulunamadı"
 #, kde-format
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
-msgstr[0] "Bu kataloğu yüklemek istiyor musunuz?"
-msgstr[1] "Bu katalogları yüklemek istiyor musunuz?"
+msgstr[0] "Bu kataloğu kurmak istiyor musunuz?"
+msgstr[1] "Bu katalogları kurmak istiyor musunuz?"
 
 #: PkSession/PkInstallCatalogs.cpp:96
 #, kde-format
@@ -3824,7 +3826,7 @@ msgstr "Desteklenmeyen"
 msgid ""
 "Your backend does not support any of the needed methods to install a catalog"
 msgstr ""
-"Kullandığınız arka uç katalog yüklemek için gereken hiçbir yöntemi "
+"Kullandığınız arka uç, katalog kurmak için gereken hiçbir yöntemi "
 "desteklemiyor"
 
 #: PkSession/PkInstallCatalogs.cpp:178
@@ -3862,7 +3864,7 @@ msgstr "Bu katalog içerisinde kurulacak hiçbir paket bulunamadı"
 #: PkSession/PkInstallFontconfigResources.cpp:43
 #, kde-format
 msgid "Installs new Fonts"
-msgstr "Yeni Yazı Tipleri kur"
+msgstr "Yeni yazıtipleri kur"
 
 #: PkSession/PkInstallFontconfigResources.cpp:74
 #, kde-format
@@ -3886,7 +3888,7 @@ msgstr[0] ""
 "Bu belgeyi görüntüleyebilmek için ek yazıtipi gerekiyor.\n"
 "Uygun paketi şimdi aramak istiyor musunuz?"
 msgstr[1] ""
-"Bu belgeyi görüntüleyebilmek için ek yazı tipleri gerekiyor.\n"
+"Bu belgeyi görüntüleyebilmek için ek yazıtipleri gerekiyor.\n"
 "Uygun paketleri şimdi aramak istiyor musunuz?"
 
 #: PkSession/PkInstallFontconfigResources.cpp:118
@@ -3900,8 +3902,8 @@ msgstr[1] "Bir uygulama yazıtipi kurmak istiyor"
 #, kde-format
 msgid "The application %2 wants to install a font"
 msgid_plural "The application %2 wants to install fonts"
-msgstr[0] "%2 bir yazıtipi kurmak istiyor"
-msgstr[1] "%2 yazı tipleri kurmak istiyor"
+msgstr[0] "%2, bir yazıtipi kurmak istiyor"
+msgstr[1] "%2, yazıtipleri kurmak istiyor"
 
 #: PkSession/PkInstallFontconfigResources.cpp:148
 #: PkSession/PkInstallFontconfigResources.cpp:157
@@ -4058,7 +4060,7 @@ msgstr "Desteklenmiyor"
 #: PkSession/PkInstallPackageFiles.cpp:54
 #, kde-format
 msgid "Your current backend does not support installing files"
-msgstr "Geçerli arka ucunuz dosya yüklemeyi desteklemiyor"
+msgstr "Geçerli arka ucunuz dosyalar kurmayı desteklemiyor"
 
 #: PkSession/PkInstallPackageFiles.cpp:69
 #: PkSession/PkRemovePackageByFiles.cpp:65
@@ -4104,13 +4106,13 @@ msgstr[1] "Dosyalar başarılı bir şekilde kuruldu"
 #: PkSession/PkInstallPackageFiles.cpp:118
 #, kde-format
 msgid "Failed to install files"
-msgstr "Dosyaları yükleme başarısız"
+msgstr "Dosyaları kurma başarısız"
 
 #: PkSession/PkInstallPackageFiles.cpp:119
 #: PkSession/PkInstallPackageFiles.cpp:121
 #, kde-format
 msgid "Could not install files"
-msgstr "Dosyalar yüklenemedi"
+msgstr "Dosyalar kurulamadı"
 
 #: PkSession/PkInstallPackageNames.cpp:43
 #, kde-format
@@ -4338,8 +4340,8 @@ msgstr "Hiçbir uygulama bulunamadı"
 #, kde-format
 msgid "The file could not be found in any installed package"
 msgid_plural "The files could not be found in any installed package"
-msgstr[0] "Dosyalar hiçbir yüklü paket içerisinde bulunamadı"
-msgstr[1] "Dosyalar hiçbir yüklü paket içerisinde bulunamadı"
+msgstr[0] "Dosya hiçbir kurulu paket içinde bulunamadı"
+msgstr[1] "Dosyalar hiçbir kurulu paket içerisinde bulunamadı"
 
 #: PkSession/PkSearchFile.cpp:42
 #, kde-format
@@ -4398,4 +4400,4 @@ msgstr "Görev tamamlandı"
 #: PkSession/SessionTask.cpp:437
 #, kde-format
 msgid "All operations were committed successfully"
-msgstr "Tüm işlemler başarıyla gönderildi"
+msgstr "Tüm işlemler başarıyla işlendi"
