@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: extragear-sysadmin-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2023-02-08 20:54+0300\n"
+"PO-Revision-Date: 2023-02-15 12:00+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -129,19 +129,19 @@ msgstr "&İptal"
 #: Apper/ApperKCM.cpp:280 Apper/ApperKCM.ui:427
 #, kde-format
 msgid "Find by &name"
-msgstr "&Ada göre bul"
+msgstr "&Ada Göre Bul"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
 #: Apper/ApperKCM.cpp:281 Apper/ApperKCM.ui:437
 #, kde-format
 msgid "Find by f&ile name"
-msgstr "D&osya adına göre bul"
+msgstr "D&osya Adına Göre Bul"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
 #: Apper/ApperKCM.cpp:282 Apper/ApperKCM.ui:432
 #, kde-format
 msgid "Find by &description"
-msgstr "Açıklamaya göre &bul"
+msgstr "Açıklamaya Göre &Bul"
 
 #: Apper/ApperKCM.cpp:460
 #, kde-format
@@ -3226,7 +3226,7 @@ msgstr "Yönetici araçları"
 #, kde-format
 msgctxt "The group type"
 msgid "Legacy"
-msgstr "Kalıt"
+msgstr "Eskimiş"
 
 #: libapper/PkStrings.cpp:795
 #, kde-format
