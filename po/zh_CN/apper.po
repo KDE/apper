@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2023-02-15 11:03\n"
+"PO-Revision-Date: 2023-02-24 12:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -744,7 +744,7 @@ msgstr "应用程序"
 #: Apper/PackageDetails.ui:164
 #, kde-format
 msgid "License:"
-msgstr "许可协议："
+msgstr "许可证："
 
 #. i18n: ectx: property (text), widget (QPushButton, menuTB)
 #: Apper/PackageDetails.ui:394
@@ -2161,7 +2161,7 @@ msgstr "正准备"
 #: libapper/PkStrings.cpp:389
 #, kde-format
 msgid "Decompressing"
-msgstr "正在解压缩"
+msgstr "正在解压"
 
 #: libapper/PkStrings.cpp:400
 #, kde-format
@@ -2201,7 +2201,7 @@ msgstr "已经准备好"
 #: libapper/PkStrings.cpp:416
 #, kde-format
 msgid "Decompressed"
-msgstr "完成解压缩"
+msgstr "解压完成"
 
 #: libapper/PkStrings.cpp:427
 #, kde-format

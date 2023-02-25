@@ -6,7 +6,7 @@
 <refentry lang="&language;">
 <refentryinfo>
 <title
->Manual do usuário do KDE</title>
+>Manual do usuário do Apper</title>
 <authorgroup>
 <author
 ><firstname
@@ -26,9 +26,9 @@
 > </author>
 </authorgroup>
 <date
->10/10/2011</date>
-<productname
->KDE</productname>
+>28/11/2016</date>
+<releaseinfo
+>apper 0.9.3</releaseinfo>
 </refentryinfo>
 
 <refmeta>
@@ -67,44 +67,34 @@
 > </group
 > <group choice="opt"
 ><option
->--install-mime-type</option
+>--type</option
 ><replaceable
-> tipo-MIME</replaceable
+> tipo MIME</replaceable
 ></group
 > <group choice="opt"
 ><option
->--install-package-name</option
+>--name</option
 ><replaceable
 > nome</replaceable
 ></group
 > <group choice="opt"
 ><option
->--install-provide-file</option
+>--file</option
 ><replaceable
 > arquivo</replaceable
 ></group
 > <group choice="opt"
 ><option
->--install-font-resource</option
+>--resource</option
 ><replaceable
->fonte</replaceable
+> fonte</replaceable
 ></group
 > <group choice="opt"
 ><option
->--install-catalog</option
+>--catalog</option
 ><replaceable
 > arquivo</replaceable
 ></group
-> <group choice="opt"
-><option
->--remove-package-by-file</option
-><replaceable
-> arquivo</replaceable
-></group
-> <arg choice="opt"
->Opções Genéricas do KDE</arg
-> <arg choice="opt"
->Opções Genéricas do Qt</arg
 > </cmdsynopsis>
 </refsynopsisdiv>
 
@@ -112,11 +102,11 @@
 <title
 >Description</title>
 <para
->O Apper é a interface para &kde; do PackageKit</para>
+>O Apper é a interface para o PackageKit</para>
 <para
 >O Apper é capaz de gerenciar os pacotes, aplicativos e atualizações em diversas distribuições graças ao projeto PackageKit.</para>
 <para
->Ele oferece aos usuários do Linux um aplicativo único que eles podem aprender e usar, seja qual for a distribuição que estiverem usando.</para>
+>Ele oferece aos usuários do &Linux; um aplicativo único que eles podem aprender e usar, seja qual for a distribuição que estiverem usando.</para>
 
 </refsect1>
 
@@ -151,8 +141,6 @@
 <term
 ><option
 >--backend-details</option
-> <replaceable
->nome</replaceable
 ></term>
 <listitem
 ><para
@@ -163,9 +151,9 @@
 <varlistentry>
 <term
 ><option
->--install-mime-type</option
+>--type</option
 > <replaceable
->tipo-MIME</replaceable
+>tipo MIME</replaceable
 ></term>
 <listitem
 ><para
@@ -176,7 +164,7 @@
 <varlistentry>
 <term
 ><option
->--install-package-name</option
+>--name</option
 > <replaceable
 >nome</replaceable
 ></term>
@@ -191,7 +179,7 @@
 <varlistentry>
 <term
 ><option
->--install-provide-file</option
+>--file</option
 > <replaceable
 >arquivo</replaceable
 ></term>
@@ -206,7 +194,7 @@
 <varlistentry>
 <term
 ><option
->--install-font-resource</option
+>--resource</option
 > <replaceable
 >fonte</replaceable
 ></term>
@@ -219,7 +207,7 @@
 <varlistentry>
 <term
 ><option
->--install-catalog</option
+>--catalog</option
 > <replaceable
 >arquivo</replaceable
 ></term>
@@ -231,32 +219,22 @@
 ></listitem>
 </varlistentry>
 
-<varlistentry>
-<term
-><option
->--remove-package-by-file</option
-> <replaceable
->arquivo</replaceable
-></term>
-<listitem
-><para
->Remove o pacote que contém o arquivo <replaceable
->arquivo</replaceable
->.</para
-></listitem>
-</varlistentry>
-
 </variablelist>
 </refsect1>
 
 <refsect1>
 <title
 >Veja também</title>
-
-<para
+<simplelist>
+<member
 >Mais informações sobre o Apper podem ser encontradas no <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
 >site do Apper</ulink
->.</para>
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
 </refsect1>
 
 <refsect1>

@@ -6,7 +6,7 @@
 <refentry lang="&language;">
 <refentryinfo>
 <title
->Manual do usuário do KDE</title>
+>Manual do usuário apper-appsetup</title>
 <authorgroup>
 <author
 ><firstname
@@ -26,9 +26,9 @@
 > </author>
 </authorgroup>
 <date
->24/08/2014</date>
-<productname
->KDE</productname>
+>28/11/2016</date>
+<releaseinfo
+>apper-appsetup 0.9.3</releaseinfo>
 </refentryinfo>
 
 <refmeta>
@@ -46,7 +46,7 @@
 >apper-appsetup</command
 ></refname>
 <refpurpose
->Uma interface gráfica para KDE do instalador de aplicativos Limba</refpurpose>
+>Uma interface gráfica do instalador de aplicativos Limba</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -57,10 +57,6 @@
 ><option
 >--verbose</option
 > </group
-> <arg choice="opt"
->Opções Genéricas do KDE</arg
-> <arg choice="opt"
->Opções Genéricas do Qt</arg
 > </cmdsynopsis>
 </refsynopsisdiv>
 
@@ -68,11 +64,11 @@
 <title
 >Descrição</title>
 <para
->O Apper é a interface para &kde; do PackageKit</para>
+>O Apper é uma interface para o PackageKit</para>
 <para
 >O Apper é capaz de gerenciar os pacotes, aplicativos e atualizações em diversas distribuições graças ao projeto PackageKit.</para>
 <para
->Ele oferece aos usuários do Linux um aplicativo único que eles podem aprender e usar, seja qual for a distribuição que estiverem usando.</para>
+>Ele oferece aos usuários do &Linux; um aplicativo único que eles podem aprender e usar, seja qual for a distribuição que estiverem usando.</para>
 <para
 >Este pequeno utilitário oferece uma interface gráfica para o instalador de aplicativos agnóstico da distribuição que é o Limba, o que possibilita a instalação dos pacotes do Limba com o Apper.</para>
 
@@ -101,10 +97,16 @@
 <title
 >Veja também</title>
 
-<para
+<simplelist>
+<member
 >Mais informações sobre o Apper podem ser encontradas no <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
 >site do Apper</ulink
->.</para>
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
 </refsect1>
 
 <refsect1>
