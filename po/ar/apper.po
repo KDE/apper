@@ -1229,7 +1229,7 @@ msgstr "ثبّت"
 #: AppSetup/main.cpp:43
 #, kde-format
 msgid "KDE Application Installer"
-msgstr "مثبّت «كدي» للتّطبيقات"
+msgstr "مثبّت «كِيدِي» للتّطبيقات"
 
 #: AppSetup/main.cpp:46
 #, kde-format
@@ -3105,7 +3105,7 @@ msgstr "سطح مكتب «جنوم»"
 #, kde-format
 msgctxt "The group type"
 msgid "KDE desktop"
-msgstr "سطح مكتب «كدي»"
+msgstr "سطح مكتب «كِيدِي»"
 
 #: libapper/PkStrings.cpp:781
 #, kde-format
@@ -4491,7 +4491,7 @@ msgid "All operations were committed successfully"
 msgstr ""
 
 #~ msgid "KDE interface for managing software"
-#~ msgstr "واجهة «كدي» لإدارة البرمجيّات"
+#~ msgstr "واجهة «كِيدِي» لإدارة البرمجيّات"
 
 #~ msgid "The connection was refused"
 #~ msgstr "رُفض الاتّصال"
