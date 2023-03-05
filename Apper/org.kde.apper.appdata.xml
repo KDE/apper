@@ -43,7 +43,7 @@
   <name xml:lang="zh-CN">Apper 软件包管理器</name>
   <name xml:lang="zh-TW">Apper</name>
   <summary>KDE application and package management tool</summary>
-  <summary xml:lang="ar">أداة «كدي» لإدارة التّطبيقات والحزم</summary>
+  <summary xml:lang="ar">أداة «كِيدِي» لإدارة التّطبيقات والحزم</summary>
   <summary xml:lang="az">KDE tətbiqi və paket idarəetmə aləti</summary>
   <summary xml:lang="bg">Инструмент за управление на приложения и пакети на KDE</summary>
   <summary xml:lang="bs">KDE aplikacija i alat za upravljanje paketom</summary>
@@ -428,7 +428,7 @@
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=apper</url>
   <project_group>KDE</project_group>
   <developer_name>The KDE Community</developer_name>
-  <developer_name xml:lang="ar">مجتمع «كدي»</developer_name>
+  <developer_name xml:lang="ar">مجتمع «كِيدِي»</developer_name>
   <developer_name xml:lang="az">KDE Cəmiyyəti</developer_name>
   <developer_name xml:lang="bg">Общонстта на KDE</developer_name>
   <developer_name xml:lang="bs">KDE zajednica</developer_name>
