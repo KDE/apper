@@ -15,6 +15,7 @@
   <name xml:lang="de">Apper</name>
   <name xml:lang="el">Apper</name>
   <name xml:lang="en-GB">Apper</name>
+  <name xml:lang="eo">Apper</name>
   <name xml:lang="es">Apper</name>
   <name xml:lang="et">Apper</name>
   <name xml:lang="eu">Apper</name>
@@ -54,6 +55,7 @@
   <summary xml:lang="de">KDE-Dienstprogramm für Paketverwaltung</summary>
   <summary xml:lang="el">Εργαλείο διαχείρισης εφαρμογών και πακέτων για το KDE</summary>
   <summary xml:lang="en-GB">KDE application and package management tool</summary>
+  <summary xml:lang="eo">KDE-aplikaĵo kaj pakaĵadministra ilo</summary>
   <summary xml:lang="es">Herramienta de gestión de aplicaciones y paquetes de KDE</summary>
   <summary xml:lang="et">KDE rakenduste ja tarkvarapakettide haldamise tööriist</summary>
   <summary xml:lang="eu">Apliklazioak eta paketeak kudeatzeko KDEren tresna</summary>
@@ -96,6 +98,7 @@
     <p xml:lang="de">Apper ist ein graphisches Verwaltungsprogramm für Software-Pakete und Anwendungen, die von Linux-Distributionen angeboten werden.</p>
     <p xml:lang="el">Το apper είναι ένα εργαλείο διαχείρισης με γραφικά για πακέτα και εφαρμογές που παρέχει μια διανομή Linux.</p>
     <p xml:lang="en-GB">Apper is a graphical management tool for packages and applications provided by a Linux distribution.</p>
+    <p xml:lang="eo">Apper estas grafika administrilo por pakaĵoj kaj aplikaĵoj provizitaj de Linukso-distribuo.</p>
     <p xml:lang="es">Apper es una herramienta gráfica para gestión de los paquetes y de los aplicaciones proporcionadas por una distribución de Linux.</p>
     <p xml:lang="et">Apper Linuxi distributsiooni pakutavate tarkvarapakettide ja rakenduste graafilise haldamise tööriist.</p>
     <p xml:lang="eu">Apper, Linux banaketa batek hornitutako paketeak eta aplikazioak kudeatzeko tresna grafiko bat da.</p>
@@ -135,6 +138,7 @@
     <p xml:lang="de">Ermöglicht die Installation neuer Software und die Aktualisierung des Systems durch Installation von Aktualisierungen.</p>
     <p xml:lang="el">Επιτρέπει την εγκατάσταση νέου λογισμικού καθώς επίσης και τη διατήρηση της καλής κατάστασης του συστήματος με την εγκατάσταση ενημερώσεων.</p>
     <p xml:lang="en-GB">It allows installing new software as well as keeping the system up to date by installing updates.</p>
+    <p xml:lang="eo">Ĝi ebligas instali novan programaron same kiel teni la sistemon ĝisdatigita per instalo de aktualigoj.</p>
     <p xml:lang="es">Permite instalar nuevo software, así como mantener el sistema al día, instalando actualizaciones.</p>
     <p xml:lang="et">See võimaldab nii paigaldada uut tarkvara kui ka hoida süsteemi värskena uuenduste paigaldamise abil.</p>
     <p xml:lang="eu">Software berria instalatzen uzten du baita eguneratzeak instalatuz sistema eguneratuta mantentzen ere.</p>
@@ -171,6 +175,7 @@
     <p xml:lang="de">Leistungsmerkmale:</p>
     <p xml:lang="el">Χαρακτηριστικά:</p>
     <p xml:lang="en-GB">Features:</p>
+    <p xml:lang="eo">Trajtoj:</p>
     <p xml:lang="es">Características:</p>
     <p xml:lang="et">Omadused:</p>
     <p xml:lang="eu">Ezaugarriak:</p>
@@ -211,6 +216,7 @@
       <li xml:lang="de">Verwaltung von Software-Paketen unabhängig von der verwendeten Distribution</li>
       <li xml:lang="el">Ουδέτερη από διανομές διαχείριση πακέτων λογισμικού</li>
       <li xml:lang="en-GB">Distribution-agnostic management of software packages</li>
+      <li xml:lang="eo">Distribuagnostika administrado de programarpakaĵoj</li>
       <li xml:lang="es">Gestión de los paquetes de software independiente de la distribución</li>
       <li xml:lang="et">Tarkvarapakettide distributsioonist sõltumatu haldamine</li>
       <li xml:lang="eu">Banaketekiko independentea den software-paketeen kudeaketa</li>
@@ -247,6 +253,7 @@
       <li xml:lang="de">Verwaltung von Anwendungen für Benutzer ohne Erfahrung mit Paketverwaltungen</li>
       <li xml:lang="el">Διαχείριση εφαρμογών για χρήστες χωρίς εμπειρία με πακέτα εφαρμογών</li>
       <li xml:lang="en-GB">Application management for users inexperienced with packages</li>
+      <li xml:lang="eo">Aplika administrado por uzantoj nespertaj kun pakaĵoj</li>
       <li xml:lang="es">Gestión de aplicaciones para usuarios sin experiencia en el manejo de paquetes</li>
       <li xml:lang="et">Rakenduste haldamine kasutajatele, kes ei tunne ennast mugavalt tarkvarapakettidega majandades</li>
       <li xml:lang="eu">Paketeekin eskarmenturik ez duten erabiltzaileentzako aplikazio kudeaketa</li>
@@ -283,6 +290,7 @@
       <li xml:lang="de">Editor für Paketquellen und Einstellungen für PackageKit</li>
       <li xml:lang="el">Κειμενογράφος για πηγές λογισμικού και ρυθμίσεις του PackageKit</li>
       <li xml:lang="en-GB">Editor for software sources and PackageKit settings</li>
+      <li xml:lang="eo">Redaktilo por programaraj fontoj kaj agordoj de PackageKit</li>
       <li xml:lang="es">Editor de fuentes de software y preferencias de PackageKit</li>
       <li xml:lang="et">Tarkvarahoidlate ja PackageKiti seadistuste redaktor</li>
       <li xml:lang="eu">Software sorburuen editorea eta PackageKit ezarpenak</li>
@@ -318,6 +326,7 @@
       <li xml:lang="de">Benachrichtigung und Installation von Softwareaktualisierungen des Systems</li>
       <li xml:lang="el">Ειδοποιήσεις και εγκατάσταση ενημερώσεων λογισμικού συστήματος</li>
       <li xml:lang="en-GB">System software updates notifier and installer</li>
+      <li xml:lang="eo">Sistemprogramaro ĝisdatigas sciigilon kaj instalilon</li>
       <li xml:lang="es">Notificador e instalador de las actualizaciones del software del sistema</li>
       <li xml:lang="et">Süsteemi tarkvara uuenduste märguandja ja paigaldaja</li>
       <li xml:lang="eu">Sistemako software-eguneratze jakinarazlea eta instalatzailea</li>
@@ -355,6 +364,7 @@
       <li xml:lang="de">Einbindung in die KDE-Plasma-Arbeitsfläche</li>
       <li xml:lang="el">Στενή ενοποίηση με το περιβάλλον γραφείου KDE Plasma</li>
       <li xml:lang="en-GB">Close integration with the KDE Plasma desktop</li>
+      <li xml:lang="eo">Proksima integriĝo kun la KDE Plasma-labortablo</li>
       <li xml:lang="es">Alta integración con el escritorio Plasma de KDE</li>
       <li xml:lang="et">Tihedalt lõimitud KDE Plasma töölauaga</li>
       <li xml:lang="eu">KDE Plasma mahaigainarekiko bateratze estua</li>
@@ -398,6 +408,7 @@
       <caption xml:lang="de">Das  Hauptfenster mit einer Beschreibung des ausgewählten Pakets</caption>
       <caption xml:lang="el">Το κύριο παράθυρο εμφανίζει μια περιγραφή του επιλεγμένου πακέτου</caption>
       <caption xml:lang="en-GB">The main window showing a description of the selected package</caption>
+      <caption xml:lang="eo">La ĉefa fenestro montranta priskribon de la elektita pako</caption>
       <caption xml:lang="es">La ventana principal con una descripción del paquete seleccionado</caption>
       <caption xml:lang="et">Peaaken valitud tarkvarapaketi kirjeldusega</caption>
       <caption xml:lang="eu">Leiho nagusia, hautatutako paketearen deskribapena erakusten duela</caption>
@@ -439,6 +450,7 @@
   <developer_name xml:lang="de">Die KDE-Gemeinschaft</developer_name>
   <developer_name xml:lang="el">Η Κοινότητα του KDE</developer_name>
   <developer_name xml:lang="en-GB">The KDE Community</developer_name>
+  <developer_name xml:lang="eo">La KDE-Komunumo</developer_name>
   <developer_name xml:lang="es">La Comunidad de KDE</developer_name>
   <developer_name xml:lang="et">KDE kogukond</developer_name>
   <developer_name xml:lang="eu">KDE komunitatea</developer_name>
