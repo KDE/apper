@@ -1,80 +1,83 @@
-# Translation of kpackagekit into esperanto.
+# Translation of apper.pot into esperanto.
+# Copyright (C) 2009 Free Software Foundation, Inc.
+# This file is distributed under the same license as the apper package.
 # Axel Rousseau <axel@esperanto-jeunes.org>, 2009.
+# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: kpackagekit\n"
+"Project-Id-Version: apper\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2009-12-11 16:07+0100\n"
-"Last-Translator: Axel Rousseau <axel@esperanto-jeunes.org>\n"
+"PO-Revision-Date: 2023-03-08 22:01+0100\n"
+"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: translate-po (https://github.com/zcribe/translate-po)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: pology\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Axel Rousseau"
+msgstr "Axel Rousseau,Oliver Kellogg"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "axel@esperanto-jeunes.org"
+msgstr "axel@esperanto-jeunes.org,okellogg@users.sourceforge.net"
 
 #: Apper/Apper.cpp:91
 #, kde-format
 msgid "Show updates"
-msgstr ""
+msgstr "Montri ĝisdatigojn"
 
 #: Apper/Apper.cpp:94
 #, kde-format
 msgid "Show settings"
-msgstr ""
+msgstr "Montri agordojn"
 
 #: Apper/Apper.cpp:97
 #, kde-format
 msgid "Show backend details"
-msgstr ""
+msgstr "Montri detalojn pri backend"
 
 #: Apper/Apper.cpp:100
 #, kde-format
 msgid "Mime type installer"
-msgstr ""
+msgstr "Mime-tipa instalilo"
 
 #: Apper/Apper.cpp:103
 #, kde-format
 msgid "Package name installer"
-msgstr ""
+msgstr "Paka nomo instalilo"
 
 #: Apper/Apper.cpp:106
 #, kde-format
 msgid "Single file installer"
-msgstr ""
+msgstr "Instalilo de ununura dosiero"
 
 #: Apper/Apper.cpp:109
 #, kde-format
 msgid "Font resource installer"
-msgstr ""
+msgstr "Tipara rimeda instalilo"
 
 #: Apper/Apper.cpp:112
 #, kde-format
 msgid "Catalog installer"
-msgstr ""
+msgstr "Katalogo-instalilo"
 
 #: Apper/Apper.cpp:115
 #, kde-format
 msgid "Single package remover"
-msgstr ""
+msgstr "Ununura pakaĵforigilo"
 
 #: Apper/Apper.cpp:118
 #, kde-format
 msgid "Package file to install"
-msgstr ""
+msgstr "Paka dosiero por instali"
 
 #: Apper/ApperKCM.cpp:94 Apper/ApperKCM.cpp:293
 #, kde-format
@@ -84,23 +87,22 @@ msgstr "Trovi"
 #: Apper/ApperKCM.cpp:175
 #, kde-format
 msgid "Some software changes were made"
-msgstr ""
+msgstr "Kelkaj softvarŝanĝoj estis faritaj"
 
 #: Apper/ApperKCM.cpp:176 apperd/Updater.cpp:287
 #, kde-format
 msgid "Review"
-msgstr ""
+msgstr "Recenzo"
 
 #: Apper/ApperKCM.cpp:179
 #, kde-format
 msgid "Discard"
-msgstr ""
+msgstr "Forĵeti"
 
 #: Apper/ApperKCM.cpp:182
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply"
-msgstr "Apliki tuj"
+msgstr "Apliki"
 
 #: Apper/ApperKCM.cpp:206 Apper/ApperKCM.cpp:563
 #, kde-format
@@ -123,19 +125,19 @@ msgstr "&Rezigni"
 #: Apper/ApperKCM.cpp:280 Apper/ApperKCM.ui:427
 #, kde-format
 msgid "Find by &name"
-msgstr ""
+msgstr "Trovi per &nomo"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
 #: Apper/ApperKCM.cpp:281 Apper/ApperKCM.ui:437
 #, kde-format
 msgid "Find by f&ile name"
-msgstr ""
+msgstr "Trovi per dos&iernomo"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, reviewMessage)
 #: Apper/ApperKCM.cpp:282 Apper/ApperKCM.ui:432
 #, kde-format
 msgid "Find by &description"
-msgstr ""
+msgstr "Trovi laŭ &priskribo"
 
 #: Apper/ApperKCM.cpp:460
 #, kde-format
@@ -143,55 +145,51 @@ msgid ""
 "The settings of the current module have changed.\n"
 "Do you want to apply the changes or discard them?"
 msgstr ""
+"La agordoj de la nuna modulo ŝanĝiĝis.\n"
+"Ĉu vi volas apliki la ŝanĝojn aŭ forĵeti ilin?"
 
 #: Apper/ApperKCM.cpp:462
-#, fuzzy, kde-format
-#| msgid "Settings"
+#, kde-format
 msgid "Apply Settings"
-msgstr "Agordo"
+msgstr "Apliki Agordojn"
 
 #: Apper/ApperKCM.cpp:547 Apper/CategoryModel.cpp:59
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Updates"
-msgstr "Aktualigita"
+msgstr "Ĝisdatigoj"
 
 #: Apper/ApperKCM.cpp:616
 #, kde-format
 msgid "Pending Changes"
-msgstr ""
+msgstr "Atendantaj Ŝanĝoj"
 
 #: Apper/ApperKCM.cpp:679 Apper/CategoryModel.cpp:51
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "Installed Software"
-msgstr "Instalita"
+msgstr "Instalita Programaro"
 
 #: Apper/ApperKCM.cpp:691
 #, kde-format
 msgid "Could not find an application that matched this category"
-msgstr ""
+msgstr "Ne eblis trovi aplikaĵon, kiu kongruis kun ĉi tiu kategorio"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, ApperKCM)
 #: Apper/ApperKCM.ui:20
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Add and Remove Software"
-msgstr "Aktualigita"
+msgstr "Aldoni kaj Forigi Programaron"
 
 #. i18n: ectx: property (text), widget (QToolButton, backTB)
 #: Apper/ApperKCM.ui:47 AppSetup/SetupWizard.cpp:87
 #, kde-format
 msgid "Back"
-msgstr ""
+msgstr "Reen"
 
 #. i18n: ectx: property (clickMessage), widget (QLineEdit, searchKLE)
 #: Apper/ApperKCM.ui:188
-#, fuzzy, kde-format
-#| msgctxt "Search for packages"
-#| msgid "Search"
+#, kde-format
 msgid "Search packages"
-msgstr "Serĉi"
+msgstr "Serĉi pakaĵojn"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #. i18n: ectx: property (text), widget (QToolButton, filtersTB)
@@ -202,36 +200,32 @@ msgstr "Filtriloj"
 
 #. i18n: ectx: property (text), widget (QPushButton, updatePB)
 #: Apper/ApperKCM.ui:299
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Update"
-msgstr "Aktualigita"
+msgstr "Ĝisdatigo"
 
 #. i18n: ectx: property (text), widget (QPushButton, checkUpdatesPB)
 #: Apper/ApperKCM.ui:312
 #, kde-format
 msgid "Check for new Updates"
-msgstr ""
+msgstr "Kontroli pri novaj Ĝisdatigoj"
 
 #. i18n: ectx: property (text), widget (QPushButton, generalSettingsPB)
 #: Apper/ApperKCM.ui:346
-#, fuzzy, kde-format
-#| msgid "Settings"
+#, kde-format
 msgid "General Settings"
-msgstr "Agordo"
+msgstr "Ĝeneralaj Agordoj"
 
 #. i18n: ectx: property (text), widget (QPushButton, repoSettingsPB)
 #: Apper/ApperKCM.ui:365
-#, fuzzy, kde-format
-#| msgid "Version"
+#, kde-format
 msgid "Software Origins"
-msgstr "Versio"
+msgstr "Programaraj Originoj"
 
 #: Apper/BackendDetails.cpp:36
-#, fuzzy, kde-format
-#| msgid "Details"
+#, kde-format
 msgid "Backend Details"
-msgstr "Detaloj"
+msgstr "Backend-Detaloj"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: Apper/BackendDetails.ui:23
@@ -241,124 +235,105 @@ msgstr "Metodoj"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getUpdatesCB)
 #: Apper/BackendDetails.ui:32
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Get Updates"
-msgstr "Aktualigita"
+msgstr "Akiri Ĝisdatigojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, refreshCacheCB)
 #: Apper/BackendDetails.ui:42 Apper/Settings/Settings.cpp:61
-#, fuzzy, kde-format
-#| msgid "Refresh"
+#, kde-format
 msgid "Refresh Cache"
-msgstr "Refreŝigi"
+msgstr "Refreŝigi Kaŝmemoron"
 
 #. i18n: ectx: property (text), widget (QCheckBox, searchNameCB)
 #: Apper/BackendDetails.ui:52
-#, fuzzy, kde-format
-#| msgctxt "Search for packages"
-#| msgid "Search"
+#, kde-format
 msgid "Search Name"
-msgstr "Serĉi"
+msgstr "Serĉi Nomon"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getDependsCB)
 #: Apper/BackendDetails.ui:62
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Get Package Depends"
-msgstr "Pakaĵoj"
+msgstr "Akiri Pakon Dependas"
 
 #. i18n: ectx: property (text), widget (QCheckBox, searchDetailsCB)
 #: Apper/BackendDetails.ui:72
-#, fuzzy, kde-format
-#| msgid "Details"
+#, kde-format
 msgid "Search Details"
-msgstr "Detaloj"
+msgstr "Serĉaj Detaloj"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getRequiresCB)
 #: Apper/BackendDetails.ui:82
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Get Package Requires"
-msgstr "Pakaĵoj"
+msgstr "Akiri Pakajn 'Requires' (postulojn)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, searchGroupCB)
 #: Apper/BackendDetails.ui:92
-#, fuzzy, kde-format
-#| msgctxt "Search for packages"
-#| msgid "Search"
+#, kde-format
 msgid "Search Group"
-msgstr "Serĉi"
+msgstr "Serĉgrupo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getUpdateDetailCB)
 #: Apper/BackendDetails.ui:102
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Get Update Detail"
-msgstr "Aktualigita"
+msgstr "Akiri Ĝisdatigan Detalon"
 
 #. i18n: ectx: property (text), widget (QCheckBox, searchFileCB)
 #: Apper/BackendDetails.ui:112
-#, fuzzy, kde-format
-#| msgctxt "Search for packages"
-#| msgid "Search"
+#, kde-format
 msgid "Search File"
-msgstr "Serĉi"
+msgstr "Serĉi Dosieron"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getDescriptionCB)
 #: Apper/BackendDetails.ui:122
-#, fuzzy, kde-format
-#| msgid "Description"
+#, kde-format
 msgid "Get Package Description"
-msgstr "Priskribo"
+msgstr "Akiri Pak-Priskribon"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getFilesCB)
 #: Apper/BackendDetails.ui:132
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Get Package Files"
-msgstr "Pakaĵoj"
+msgstr "Akiri Pakodosierojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getDistroUpgradesCB)
 #: Apper/BackendDetails.ui:142
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Get Distro Upgrades"
-msgstr "Aktualigita"
+msgstr "Akiri Distro-ĝisdatigojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, installPackageCB)
 #: Apper/BackendDetails.ui:152
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Install Packages"
-msgstr "Pakaĵoj"
+msgstr "Instali Pakojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, updatePackageCB)
 #: Apper/BackendDetails.ui:162
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "Update Packages"
-msgstr "Pakaĵo"
+msgstr "Ĝisdatigi Pakojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, removePackageCB)
 #: Apper/BackendDetails.ui:172
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "Remove Packages"
-msgstr "Pakaĵo"
+msgstr "Forigi Pakojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, installFileCB)
 #: Apper/BackendDetails.ui:182
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "Install Files"
-msgstr "Instalita"
+msgstr "Instali Dosierojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, resolveCB)
 #: Apper/BackendDetails.ui:192
 #, kde-format
 msgid "Resolve"
-msgstr ""
+msgstr "Solvi"
 
 #. i18n: ectx: property (text), widget (QCheckBox, cancelCB)
 #: Apper/BackendDetails.ui:202
@@ -368,92 +343,81 @@ msgstr "Rezigni"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getPackagesCB)
 #: Apper/BackendDetails.ui:212
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "Get Packages"
-msgstr "Pakaĵo"
+msgstr "Akiri Pakojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, whatProvidesCB)
 #: Apper/BackendDetails.ui:222
 #, kde-format
 msgid "What Provides"
-msgstr ""
+msgstr "Kio Provizas"
 
 #. i18n: ectx: property (text), widget (QCheckBox, repositorySetEnableCB)
 #: Apper/BackendDetails.ui:232
-#, fuzzy, kde-format
-#| msgid "Repository"
+#, kde-format
 msgid "Set Repository Data"
-msgstr "Deponejo"
+msgstr "Agordi Deponejajn Datumojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, repositoryEnableCB)
 #: Apper/BackendDetails.ui:242
-#, fuzzy, kde-format
-#| msgid "Repository"
+#, kde-format
 msgid "Enable Repository"
-msgstr "Deponejo"
+msgstr "Ebligi Deponejon"
 
 #. i18n: ectx: property (text), widget (QCheckBox, getRepositoryListCB)
 #: Apper/BackendDetails.ui:252
-#, fuzzy, kde-format
-#| msgid "Repository"
+#, kde-format
 msgid "Get Repository List"
-msgstr "Deponejo"
+msgstr "Akiri Deponejan Liston"
 
 #. i18n: ectx: property (text), widget (QCheckBox, repairSystemCB)
 #: Apper/BackendDetails.ui:262
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Repair System"
-msgstr "Aktualigita"
+msgstr "Ripari Sistemon"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: Apper/BackendDetails.ui:278
-#, fuzzy, kde-format
-#| msgid "About backend..."
+#, kde-format
 msgid "About Backend"
-msgstr "Pri la interno..."
+msgstr "Pri Backend"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: Apper/BackendDetails.ui:284
-#, fuzzy, kde-format
-#| msgid "Details"
+#, kde-format
 msgid "Backend name:"
-msgstr "Detaloj"
+msgstr "Backend nomo:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: Apper/BackendDetails.ui:298
-#, fuzzy, kde-format
-#| msgid "Description"
+#, kde-format
 msgid "Backend description:"
-msgstr "Priskribo"
+msgstr "Backend-priskribo:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: Apper/BackendDetails.ui:312
-#, fuzzy, kde-format
-#| msgid "Description"
+#, kde-format
 msgid "Backend author:"
-msgstr "Priskribo"
+msgstr "Backend verkinto:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: Apper/BackendDetails.ui:326
 #, kde-format
 msgid "Distribution ID:"
-msgstr ""
+msgstr "Distribua ID:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
 #: Apper/BackendDetails.ui:343
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "PackageKit"
-msgstr "Pakaĵo"
+msgstr "PackageKit"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: Apper/BackendDetails.ui:349
-#, fuzzy, kde-format
-#| msgid "Version"
+#, kde-format
 msgid "Version:"
-msgstr "Versio"
+msgstr "Versio:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, installedCB)
 #: Apper/BackendDetails.ui:382 Apper/FiltersMenu.cpp:60
@@ -470,10 +434,9 @@ msgstr "Evoluigo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, visibleCB)
 #: Apper/BackendDetails.ui:402
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Package is visible"
-msgstr "Pakaĵoj"
+msgstr "Pako estas videbla"
 
 #. i18n: ectx: property (text), widget (QCheckBox, newestCB)
 #: Apper/BackendDetails.ui:412
@@ -489,89 +452,78 @@ msgstr "GUI"
 
 #. i18n: ectx: property (text), widget (QCheckBox, freeCB)
 #: Apper/BackendDetails.ui:432
-#, fuzzy, kde-format
-#| msgid "Only free software"
+#, kde-format
 msgid "Free software"
-msgstr "Nur liberaj programoj"
+msgstr "Libera programaro"
 
 #. i18n: ectx: property (text), widget (QCheckBox, supportedCB)
 #: Apper/BackendDetails.ui:442
 #, kde-format
 msgid "Supported"
-msgstr ""
+msgstr "Subtenita"
 
 #. i18n: ectx: property (text), widget (QCheckBox, archCB)
 #: Apper/BackendDetails.ui:452
-#, fuzzy, kde-format
-#| msgid "Only text"
+#, kde-format
 msgid "Only native"
-msgstr "Nur teksto"
+msgstr "Nur denaska"
 
 #: Apper/BrowseView.cpp:89 Apper/Updater/Updater.cpp:105
-#, fuzzy, kde-format
-#| msgid "Version"
+#, kde-format
 msgid "Show Versions"
-msgstr "Versio"
+msgstr "Montri Versiojn"
 
 #: Apper/BrowseView.cpp:96 Apper/Updater/Updater.cpp:119
 #, kde-format
 msgid "Show Architectures"
-msgstr ""
+msgstr "Montri Arkitekturojn"
 
 #: Apper/BrowseView.cpp:103 Apper/Updater/Updater.cpp:126
-#, fuzzy, kde-format
-#| msgid "Version"
+#, kde-format
 msgid "Show Origins"
-msgstr "Versio"
+msgstr "Montri Originojn"
 
 #: Apper/BrowseView.cpp:110 Apper/Updater/Updater.cpp:133
-#, fuzzy, kde-format
-#| msgid "Version"
+#, kde-format
 msgid "Show Sizes"
-msgstr "Versio"
+msgstr "Montri Grandecojn"
 
 #: Apper/BrowseView.cpp:282
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Export installed packages"
-msgstr "Pakaĵoj"
+msgstr "Eksporti instalitajn pakaĵojn"
 
 #: Apper/BrowseView.cpp:306
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Install packages from catalog"
-msgstr "Pakaĵoj"
+msgstr "Instali pakaĵojn el katalogo"
 
 #. i18n: ectx: property (text), widget (QPushButton, exportInstalledPB)
 #: Apper/BrowseView.ui:140
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Export Installed Package List..."
-msgstr "Pakaĵoj"
+msgstr "Eksporti Liston de Instalitaj Pakoj..."
 
 #. i18n: ectx: property (text), widget (QPushButton, importInstalledPB)
 #: Apper/BrowseView.ui:150
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Install Packages from List..."
-msgstr "Pakaĵoj"
+msgstr "Instali Pakojn el Listo..."
 
 #: Apper/CategoryModel.cpp:54 Apper/CategoryModel.cpp:62
 #, kde-format
 msgid "Lists"
-msgstr ""
+msgstr "Listoj"
 
 #: Apper/CategoryModel.cpp:167 Apper/CategoryModel.cpp:362
 #, kde-format
 msgid "Categories"
-msgstr ""
+msgstr "Kategorioj"
 
 #: Apper/CategoryModel.cpp:224
-#, fuzzy, kde-format
-#| msgctxt "Group of the package"
-#| msgid "Group"
+#, kde-format
 msgid "Groups"
-msgstr "Grupo"
+msgstr "Grupoj"
 
 #: Apper/FiltersMenu.cpp:36
 #, kde-format
@@ -581,49 +533,49 @@ msgstr "Kolektoj"
 #: Apper/FiltersMenu.cpp:45
 #, kde-format
 msgid "Only collections"
-msgstr ""
+msgstr "Nur kolektoj"
 
 #: Apper/FiltersMenu.cpp:52
 #, kde-format
 msgid "Exclude collections"
-msgstr ""
+msgstr "Ekskludi kolektojn"
 
 #: Apper/FiltersMenu.cpp:67
 #, kde-format
 msgid "Only installed"
-msgstr ""
+msgstr "Nur instalita"
 
 #: Apper/FiltersMenu.cpp:74
 #, kde-format
 msgid "Only available"
-msgstr ""
+msgstr "Nur disponebla"
 
 #: Apper/FiltersMenu.cpp:81 Apper/FiltersMenu.cpp:110 Apper/FiltersMenu.cpp:139
 #: Apper/FiltersMenu.cpp:168 Apper/FiltersMenu.cpp:197
 #: Apper/FiltersMenu.cpp:226
 #, kde-format
 msgid "No filter"
-msgstr ""
+msgstr "Neniu filtrilo"
 
 #: Apper/FiltersMenu.cpp:96
 #, kde-format
 msgid "Only development"
-msgstr ""
+msgstr "Nur evoluo"
 
 #: Apper/FiltersMenu.cpp:103
 #, kde-format
 msgid "Only end user files"
-msgstr ""
+msgstr "Nur dosieroj de finuzantoj"
 
 #: Apper/FiltersMenu.cpp:118
 #, kde-format
 msgid "Graphical"
-msgstr ""
+msgstr "Grafika"
 
 #: Apper/FiltersMenu.cpp:125
 #, kde-format
 msgid "Only graphical"
-msgstr ""
+msgstr "Nur grafika"
 
 #: Apper/FiltersMenu.cpp:132
 #, kde-format
@@ -650,19 +602,17 @@ msgstr "Nur ne-liberaj programoj"
 #, kde-format
 msgctxt "Filter for supported packages"
 msgid "Supported"
-msgstr ""
+msgstr "Subtenita"
 
 #: Apper/FiltersMenu.cpp:183
-#, fuzzy, kde-format
-#| msgid "Only free software"
+#, kde-format
 msgid "Only supported software"
-msgstr "Nur liberaj programoj"
+msgstr "Nur subtenata programaro"
 
 #: Apper/FiltersMenu.cpp:190
-#, fuzzy, kde-format
-#| msgid "Only non-free software"
+#, kde-format
 msgid "Only non-supported software"
-msgstr "Nur ne-liberaj programoj"
+msgstr "Nur nesubtenata programaro"
 
 #: Apper/FiltersMenu.cpp:205
 #, kde-format
@@ -673,72 +623,67 @@ msgstr "Fonto"
 #: Apper/FiltersMenu.cpp:212
 #, kde-format
 msgid "Only sourcecode"
-msgstr ""
+msgstr "Nur fontkodo"
 
 #: Apper/FiltersMenu.cpp:219
 #, kde-format
 msgid "Only non-sourcecode"
-msgstr ""
+msgstr "Nur ne-fonta kodo"
 
 #: Apper/FiltersMenu.cpp:236
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "Hide Subpackages"
-msgstr "Pakaĵo"
+msgstr "Kaŝi Subpakaĵojn"
 
 #: Apper/FiltersMenu.cpp:240
 #, kde-format
 msgid "Only show one package, not subpackages"
-msgstr ""
+msgstr "Montri nur unu pakaĵon, ne subpakaĵojn"
 
 #: Apper/FiltersMenu.cpp:244
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "Only Newest Packages"
-msgstr "Pakaĵo"
+msgstr "Nur Plej Novaj Pakoj"
 
 #: Apper/FiltersMenu.cpp:249
 #, kde-format
 msgid "Only show the newest available package"
-msgstr ""
+msgstr "Montri nur la plej novan disponeblan pakaĵon"
 
 #: Apper/FiltersMenu.cpp:253
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "Only Native Packages"
-msgstr "Pakaĵo"
+msgstr "Nur Denaskaj Pakoj"
 
 #: Apper/FiltersMenu.cpp:258
 #, kde-format
 msgid "Only show packages matching the machine architecture"
-msgstr ""
+msgstr "Montri nur pakaĵojn kongruajn kun la maŝinarkitekturo"
 
 #: Apper/FiltersMenu.cpp:264
-#, fuzzy, kde-format
-#| msgid "Application"
+#, kde-format
 msgid "Only Show Applications"
-msgstr "Aplikaĵo"
+msgstr "Nur Montru Aplikojn"
 
 #: Apper/FiltersMenu.cpp:267
 #, kde-format
 msgid "Hide packages that are not applications"
-msgstr ""
+msgstr "Kaŝi pakaĵojn kiuj ne estas aplikoj"
 
 #: Apper/main.cpp:44 Apper/MainUi.cpp:41
 #, kde-format
 msgid "Apper"
-msgstr ""
+msgstr "Apper"
 
 #: Apper/main.cpp:46
 #, kde-format
 msgid "Apper is an application to get and manage software"
-msgstr ""
+msgstr "Apper estas aplikaĵo por akiri kaj administri programaron"
 
 #: Apper/main.cpp:48
-#, fuzzy, kde-format
-#| msgid "(C) 2008-2009 Daniel Nicoletti"
+#, kde-format
 msgid "(C) 2008-2018 Daniel Nicoletti"
-msgstr "(C) 2008-2009 Daniel Nicoletti"
+msgstr "(C) 2008-2018 Daniel Nicoletti"
 
 #: Apper/main.cpp:49 PkSession/main.cpp:54
 #, kde-format
@@ -748,19 +693,17 @@ msgstr "Adrien Bustany"
 #: Apper/main.cpp:49 PkSession/main.cpp:54
 #, kde-format
 msgid "libpackagekit-qt and other stuff"
-msgstr ""
+msgstr "libpackagekit-qt kaj aliaj aferoj"
 
 #: Apper/main.cpp:50
 #, kde-format
 msgid "Matthias Klumpp"
-msgstr ""
+msgstr "Matthias Klumpp"
 
 #: Apper/PackageDetails.cpp:88
-#, fuzzy, kde-format
-#| msgctxt "Daily refresh the package cache"
-#| msgid "Daily"
+#, kde-format
 msgid "Display"
-msgstr "Ĉiu-tage"
+msgstr "Montri"
 
 #: Apper/PackageDetails.cpp:93 AppSetup/SetupWizard.cpp:186
 #, kde-format
@@ -770,12 +713,12 @@ msgstr "Priskribo"
 #: Apper/PackageDetails.cpp:99
 #, kde-format
 msgid "Depends On"
-msgstr ""
+msgstr "Dependas de"
 
 #: Apper/PackageDetails.cpp:126
 #, kde-format
 msgid "Required By"
-msgstr ""
+msgstr "Bezonata de"
 
 #: Apper/PackageDetails.cpp:153
 #, kde-format
@@ -785,12 +728,12 @@ msgstr "Dosierlisto"
 #: Apper/PackageDetails.cpp:523
 #, kde-format
 msgid "No files were found."
-msgstr ""
+msgstr "Neniuj dosieroj estis trovitaj."
 
 #: Apper/PackageDetails.cpp:571
 #, kde-format
 msgid "Could not fetch software details"
-msgstr ""
+msgstr "Ne eblis akiri programarajn detalojn"
 
 #: Apper/PackageDetails.cpp:613
 #, kde-format
@@ -816,21 +759,19 @@ msgid "Hide"
 msgstr "Kaŝi"
 
 #: Apper/ScreenShotViewer.cpp:89
-#, fuzzy, kde-format
-#| msgid "Could not find %1"
+#, kde-format
 msgid "Could not find screen shot."
-msgstr "Ne eblis trovi %1"
+msgstr "Ne eblis trovi ekrankopion."
 
 #: Apper/Settings/OriginModel.cpp:37
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "Origin of Packages"
-msgstr "Pakaĵo"
+msgstr "Origino de Pakoj"
 
 #: Apper/Settings/Settings.cpp:65
 #, kde-format
 msgid "A repository was changed, it's highly recommended to refresh the cache"
-msgstr ""
+msgstr "Deponejo estis ŝanĝita, estas tre rekomendite refreŝigi la kaŝmemoron"
 
 #: Apper/Settings/Settings.cpp:95
 #, kde-format
@@ -839,18 +780,16 @@ msgid "Never"
 msgstr "Neniam"
 
 #: Apper/Settings/Settings.cpp:98
-#, fuzzy, kde-format
-#| msgid "Only text"
+#, kde-format
 msgctxt "Inform about distribution upgrades"
 msgid "Only stable"
-msgstr "Nur teksto"
+msgstr "Nur stabila"
 
 #: Apper/Settings/Settings.cpp:103
-#, fuzzy, kde-format
-#| msgid "Development"
+#, kde-format
 msgctxt "Inform about distribution upgrades"
 msgid "Stable and development"
-msgstr "Evoluigo"
+msgstr "Stabila kaj disvolviĝa"
 
 #: Apper/Settings/Settings.cpp:107
 #, kde-format
@@ -889,89 +828,85 @@ msgid "None"
 msgstr "Neniu"
 
 #: Apper/Settings/Settings.cpp:114
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgid "Download only"
-msgstr "Elŝutita"
+msgstr "Nur elŝuti"
 
 #: Apper/Settings/Settings.cpp:115
 #, kde-format
 msgid "Security only"
-msgstr ""
+msgstr "Nur sekurecaj"
 
 #: Apper/Settings/Settings.cpp:116
 #, kde-format
 msgid "All updates"
-msgstr ""
+msgstr "Ĉiuj ĝisdatigoj"
 
 #. i18n: ectx: property (text), widget (QLabel, intervalL)
 #: Apper/Settings/Settings.ui:74
 #, kde-format
 msgid "Check for new updates:"
-msgstr ""
+msgstr "Kontroli pri novaj ĝisdatigoj:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesMobileCB)
 #. i18n: ectx: property (text), widget (QCheckBox, installUpdatesMobileCB)
 #: Apper/Settings/Settings.ui:115 Apper/Settings/Settings.ui:183
 #, kde-format
 msgid "when on a mobile broadband network connection"
-msgstr ""
+msgstr "kiam sur movebla larĝbenda retkonekto"
 
 #. i18n: ectx: property (text), widget (QCheckBox, checkUpdatesBatteryCB)
 #. i18n: ectx: property (text), widget (QCheckBox, installUpdatesBatteryCB)
 #: Apper/Settings/Settings.ui:122 Apper/Settings/Settings.ui:176
 #, kde-format
 msgid "when running on battery"
-msgstr ""
+msgstr "kiam funkcias per kuirilaro"
 
 #. i18n: ectx: property (text), widget (QLabel, autoInsL)
 #: Apper/Settings/Settings.ui:141
 #, kde-format
 msgid "Automatically update:"
-msgstr ""
+msgstr "Aŭtomate ĝisdatigi:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, appLauncherCB)
 #: Apper/Settings/Settings.ui:199
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Show application launcher after installing new applications"
-msgstr "Pakaĵoj"
+msgstr "Montri aplikaĵlanĉilon post instalo de novaj aplikaĵoj"
 
 #. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
 #: Apper/Settings/Settings.ui:206
 #, kde-format
 msgid "Show confirmation dialog when installing or updating packages"
-msgstr ""
+msgstr "Montri konfirman dialogon dum instalado aŭ ĝisdatigo de pakaĵoj"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: Apper/Settings/Settings.ui:213
 #, kde-format
 msgid "Check for distribution upgrades:"
-msgstr ""
+msgstr "Kontroli distribuajn ĝisdatigojn:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showOriginsCB)
 #: Apper/Settings/Settings.ui:270
 #, kde-format
 msgid "&Show origins of debug and development packages"
-msgstr ""
+msgstr "Montri originojn de &sencimigaj kaj disvolvaj pakoj"
 
 #. i18n: ectx: property (text), widget (QPushButton, editOriginsPB)
 #: Apper/Settings/Settings.ui:290
-#, fuzzy, kde-format
-#| msgid "Version"
+#, kde-format
 msgid "Edit Origins"
-msgstr "Versio"
+msgstr "Redakti Originojn"
 
 #: Apper/TransactionHistory.cpp:67
 #, kde-format
 msgid "Refresh transactions list"
-msgstr ""
+msgstr "Refreŝigi liston de transakcioj"
 
 #: Apper/TransactionHistory.cpp:83
 #, kde-format
 msgid "Time since last cache refresh: %1"
-msgstr ""
+msgstr "Tempo ekde la lasta kaŝmemoro refreŝigi: %1"
 
 #: Apper/TransactionModel.cpp:43
 #, kde-format
@@ -1008,7 +943,7 @@ msgstr "Ĝisdatigi"
 #: Apper/Updater/DistroUpgrade.cpp:50
 #, kde-format
 msgid "Distribution upgrade available: %1"
-msgstr ""
+msgstr "Disponebla ĝisdatigo de distribuo: %1"
 
 #: Apper/Updater/DistroUpgrade.cpp:65
 #, kde-format
@@ -1017,11 +952,14 @@ msgid ""
 "usually a very lengthy process and takes a lot longer than simply upgrading "
 "your packages."
 msgstr ""
+"Vi estas ĝisdatigi vian distribuon al la plej nova versio. Ĉi tio kutime "
+"estas tre longa procezo kaj daŭras multe pli longe ol simple ĝisdatigi viajn "
+"pakaĵojn."
 
 #: Apper/Updater/DistroUpgrade.cpp:70
 #, kde-format
 msgid "It is recommended to plug in your computer before proceeding."
-msgstr ""
+msgstr "Oni rekomendas konekti vian komputilon antaŭ ol daŭrigi."
 
 #: Apper/Updater/DistroUpgrade.cpp:72
 #, kde-format
@@ -1029,21 +967,23 @@ msgid ""
 "It is recommended that you keep your computer plugged in while the upgrade "
 "is being performed."
 msgstr ""
+"Oni rekomendas, ke vi tenu vian komputilon enŝovita dum la ĝisdatigo estas "
+"farita."
 
 #: Apper/Updater/DistroUpgrade.cpp:90
 #, kde-format
 msgid "Distribution upgrade complete."
-msgstr ""
+msgstr "Distribua ĝisdatigo finiĝis."
 
 #: Apper/Updater/DistroUpgrade.cpp:92 apperd/DistroUpgrade.cpp:144
 #, kde-format
 msgid "Distribution upgrade process exited with code %1."
-msgstr ""
+msgstr "Procezo de distribua ĝisdatigo foriris kun kodo %1."
 
 #: Apper/Updater/DistroUpgrade.cpp:104 apperd/DistroUpgrade.cpp:162
 #, kde-format
 msgid "The distribution upgrade process failed to start."
-msgstr ""
+msgstr "La distribua ĝisdatiga procezo malsukcesis komenci."
 
 #: Apper/Updater/DistroUpgrade.cpp:108 apperd/DistroUpgrade.cpp:165
 #, kde-format
@@ -1051,47 +991,50 @@ msgid ""
 "The distribution upgrade process crashed some time after starting "
 "successfully."
 msgstr ""
+"La distribua ĝisdatigprocezo kraŝis iom da tempo post komenciĝado sukcese."
 
 #: Apper/Updater/DistroUpgrade.cpp:112 apperd/DistroUpgrade.cpp:168
 #, kde-format
 msgid "The distribution upgrade process failed with an unknown error."
-msgstr ""
+msgstr "La distribua ĝisdatigo malsukcesis pro nekonata eraro."
 
 #: Apper/Updater/UpdateDetails.cpp:183
 #, kde-format
 msgid "This update will add new features and expand functionality."
-msgstr ""
+msgstr "Ĉi tiu ĝisdatigo aldonos novajn funkciojn kaj vastigos funkciojn."
 
 #: Apper/Updater/UpdateDetails.cpp:187
 #, kde-format
 msgid "This update will fix bugs and other non-critical problems."
-msgstr ""
+msgstr "Ĉi tiu ĝisdatigo riparos cimojn kaj aliajn ne-kritikajn problemojn."
 
 #: Apper/Updater/UpdateDetails.cpp:191
 #, kde-format
 msgid "This update is important as it may solve critical problems."
-msgstr ""
+msgstr "Ĉi tiu ĝisdatigo estas grava ĉar ĝi povas solvi kritikajn problemojn."
 
 #: Apper/Updater/UpdateDetails.cpp:195
 #, kde-format
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
+"Ĉi tiu ĝisdatigo estas necesa por ripari sekurecan vundeblecon kun ĉi tiu "
+"pako."
 
 #: Apper/Updater/UpdateDetails.cpp:199
 #, kde-format
 msgid "This update is blocked."
-msgstr ""
+msgstr "Ĉi tiu ĝisdatigo estas blokita."
 
 #: Apper/Updater/UpdateDetails.cpp:206
 #, kde-format
 msgid "This notification was issued on %1 and last updated on %2."
-msgstr ""
+msgstr "Ĉi tiu sciigo estis eldonita je %1 kaj laste ĝisdatigita je %2."
 
 #: Apper/Updater/UpdateDetails.cpp:212
 #, kde-format
 msgid "This notification was issued on %1."
-msgstr ""
+msgstr "Ĉi tiu sciigo estis eldonita je %1."
 
 #: Apper/Updater/UpdateDetails.cpp:229
 #, kde-format
@@ -1127,6 +1070,8 @@ msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr ""
+"La komputilo devos esti rekomencita post la ĝisdatigo por ke la ŝanĝoj "
+"efektiviĝu."
 
 #: Apper/Updater/UpdateDetails.cpp:263
 #, kde-format
@@ -1134,6 +1079,7 @@ msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
 msgstr ""
+"Vi devos elsaluti kaj reeniri post la ĝisdatigo por ke la ŝanĝoj ekvalidu."
 
 #: Apper/Updater/UpdateDetails.cpp:270
 #, kde-format
@@ -1141,6 +1087,8 @@ msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
 msgstr ""
+"La klasifiko de ĉi tiu ĝisdatigo estas malstabila, kio signifas, ke ĝi ne "
+"estas desegnita por produktada uzo."
 
 #: Apper/Updater/UpdateDetails.cpp:274
 #, kde-format
@@ -1148,6 +1096,8 @@ msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
 msgstr ""
+"Ĉi tio estas testa ĝisdatigo, kaj ne estas desegnita por normala uzo. "
+"Bonvolu raporti ajnajn problemojn aŭ regresojn, kiujn vi renkontas."
 
 #: Apper/Updater/UpdateDetails.cpp:284
 #, kde-format
@@ -1155,64 +1105,63 @@ msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
+"La programistoj estos montritaj ĉar neniu priskribo disponeblas por ĉi tiu "
+"ĝisdatigo:"
 
 #: Apper/Updater/UpdateDetails.cpp:292
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Updates:"
-msgstr "Aktualigita"
+msgstr "Ĝisdatigoj:"
 
 #: Apper/Updater/UpdateDetails.cpp:302
 #, kde-format
 msgid "Obsoletes:"
-msgstr ""
+msgstr "Malnoviĝintaj:"
 
 #: Apper/Updater/UpdateDetails.cpp:312
-#, fuzzy, kde-format
-#| msgid "Repository"
+#, kde-format
 msgid "Repository: %1"
-msgstr "Deponejo"
+msgstr "Deponejo: %1"
 
 #: Apper/Updater/UpdateDetails.cpp:334
 #, kde-format
 msgid "No update description was found."
-msgstr ""
+msgstr "Neniu ĝisdatiga priskribo estis trovita."
 
 #: Apper/Updater/Updater.cpp:112
-#, fuzzy, kde-format
-#| msgid "Version"
+#, kde-format
 msgid "Show Current Versions"
-msgstr "Versio"
+msgstr "Montri Nunajn Versiojn"
 
 #: Apper/Updater/Updater.cpp:241
 #, kde-format
 msgid "Estimated download size: %1"
-msgstr ""
+msgstr "Laŭtaksa elŝuta grandeco: %1"
 
 #: Apper/Updater/Updater.cpp:335
 #, kde-format
 msgid "Check for new updates"
-msgstr ""
+msgstr "Kontroli pri novaj ĝisdatigoj"
 
 #: apperd/DistroUpgrade.cpp:88
 #, kde-format
 msgid "Distribution upgrade available"
-msgstr ""
+msgstr "Disponiga ĝisdatigo havebla"
 
 #: apperd/DistroUpgrade.cpp:92
 #, kde-format
 msgid "Start upgrade now"
-msgstr ""
+msgstr "Komenci ĝisdatigon nun"
 
 #: apperd/DistroUpgrade.cpp:141
 #, kde-format
 msgid "Distribution upgrade finished. "
-msgstr ""
+msgstr "Distribua ĝisdatigo finiĝis."
 
 #: apperd/TransactionWatcher.cpp:142
 #, kde-format
 msgid "The system update has completed"
-msgstr ""
+msgstr "La sistema ĝisdatigo finiĝis"
 
 #: apperd/TransactionWatcher.cpp:149 apperd/TransactionWatcher.cpp:191
 #, kde-format
@@ -1229,27 +1178,27 @@ msgstr[1] "Pakaĵoj: %2"
 #: apperd/Updater.cpp:156
 #, kde-format
 msgid "Updates are being automatically installed."
-msgstr ""
+msgstr "Ĝisdatigoj estas aŭtomate instalitaj."
 
 #: apperd/Updater.cpp:166
 #, kde-format
 msgid "Security updates are being automatically installed."
-msgstr ""
+msgstr "Sekurecaj ĝisdatigoj estas aŭtomate instalitaj."
 
 #: apperd/Updater.cpp:176
 #, kde-format
 msgid "Updates are being automatically downloaded."
-msgstr ""
+msgstr "Ĝisdatigoj estas aŭtomate elŝutitaj."
 
 #: apperd/Updater.cpp:210
 #, kde-format
 msgid "System update was successful."
-msgstr ""
+msgstr "Sistemo ĝisdatigo sukcesis."
 
 #: apperd/Updater.cpp:217
 #, kde-format
 msgid "The software update failed."
-msgstr ""
+msgstr "La programaro ĝisdatigo malsukcesis."
 
 #: apperd/Updater.cpp:271
 #, kde-format
@@ -1262,13 +1211,12 @@ msgstr[1] ""
 #: libapper/ApplicationsDelegate.cpp:44
 #, kde-format
 msgid "Install"
-msgstr "Instalu"
+msgstr "Instali"
 
 #: AppSetup/main.cpp:43
-#, fuzzy, kde-format
-#| msgid "Application"
+#, kde-format
 msgid "KDE Application Installer"
-msgstr "Aplikaĵo"
+msgstr "KDE-Aplika Instalilo"
 
 #: AppSetup/main.cpp:46
 #, kde-format
@@ -1277,39 +1225,35 @@ msgid "Daniel Nicoletti"
 msgstr "Daniel Nicoletti"
 
 #: AppSetup/main.cpp:46 AppSetup/main.cpp:48
-#, fuzzy, kde-format
-#| msgid "Development"
+#, kde-format
 msgid "Developer"
-msgstr "Evoluigo"
+msgstr "Ellaboranto"
 
 #: AppSetup/main.cpp:48
 #, kde-format
 msgctxt "@info:credit"
 msgid "Matthias Klumpp"
-msgstr ""
+msgstr "Matthias Klumpp"
 
 #: AppSetup/main.cpp:61
 #, kde-format
 msgid "Show verbose information"
-msgstr ""
+msgstr "Montri multvortajn informojn"
 
 #: AppSetup/main.cpp:62
-#, fuzzy, kde-format
-#| msgid "1 package to remove"
-#| msgid_plural "%1 packages to remove"
+#, kde-format
 msgid "IPK package filename"
-msgstr "1 pakaĵo por forigi"
+msgstr "IPK-paka dosiernomo"
 
 #: AppSetup/main.cpp:79
 #, kde-format
 msgid "We did not receive a path to an IPK package as parameter."
-msgstr ""
+msgstr "Ni ne ricevis vojon al IPK-pakaĵo kiel parametron."
 
 #: AppSetup/main.cpp:80
-#, fuzzy, kde-format
-#| msgid "Could not find %1"
+#, kde-format
 msgid "Package not found!"
-msgstr "Ne eblis trovi %1"
+msgstr "Pako ne trovita!"
 
 #: AppSetup/SetupWizard.cpp:85 libapper/Requirements.cpp:57
 #: PkSession/SessionTask.cpp:73
@@ -1323,20 +1267,19 @@ msgid "Error"
 msgstr "Eraro"
 
 #: AppSetup/SetupWizard.cpp:110
-#, fuzzy, kde-format
-#| msgid "An error occurred."
+#, kde-format
 msgid "An error occurred"
-msgstr "Okazis eraro."
+msgstr "Okazis eraro"
 
 #: AppSetup/SetupWizard.cpp:137
 #, kde-format
 msgid "Welcome!"
-msgstr ""
+msgstr "Bonvenon!"
 
 #: AppSetup/SetupWizard.cpp:138
 #, kde-format
 msgid "Welcome to the installation of %1!"
-msgstr ""
+msgstr "Bonvenon al la instalado de %1!"
 
 #: AppSetup/SetupWizard.cpp:139
 #, kde-format
@@ -1346,49 +1289,47 @@ msgid ""
 "like spying out your passwords.<br>Please do only install this software if "
 "you <b>trust its publisher</b>."
 msgstr ""
+"Bonvolu esti singarda dum instalado de triaparta aplikaĵo.<br>Ĝi eble "
+"eventuale <b>damaĝos</b> vian sistemon aŭ havi <b>malican konduton</b>, kiel "
+"spioni viajn pasvortojn.<br>Bonvolu fari instalu ĉi tiun programon nur se vi "
+"<b>fidas ĝian eldoniston</b>."
 
 #: AppSetup/SetupWizard.cpp:150
 #, kde-format
 msgid "Details about this installation"
-msgstr ""
+msgstr "Detaloj pri ĉi tiu instalado"
 
 #: AppSetup/SetupWizard.cpp:185
-#, fuzzy, kde-format
-#| msgid "Application"
+#, kde-format
 msgid "Application description"
-msgstr "Aplikaĵo"
+msgstr "Aplika priskribo"
 
 #: AppSetup/SetupWizard.cpp:193
-#, fuzzy, kde-format
-#| msgctxt "The role of the transaction, in present tense"
-#| msgid "Installing"
+#, kde-format
 msgid "Running installation"
-msgstr "Instalas"
+msgstr "Kuranta instalado"
 
 #: AppSetup/SetupWizard.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "The role of the transaction, in present tense"
-#| msgid "Installing"
+#, kde-format
 msgid "Installing %1..."
-msgstr "Instalas"
+msgstr "Instalante %1..."
 
 #: AppSetup/SetupWizard.cpp:234
 #, kde-format
 msgid "Installation finished!"
-msgstr ""
+msgstr "Instalado finiĝis!"
 
 #: AppSetup/SetupWizard.cpp:235
 #, kde-format
 msgid "%1 has been installed successfully!"
-msgstr ""
+msgstr "%1 estas instalita sukcese!"
 
 #: libapper/ApplicationLauncher.cpp:97
-#, fuzzy, kde-format
-#| msgid "Application"
+#, kde-format
 msgid "New application available"
 msgid_plural "New applications available"
-msgstr[0] "Aplikaĵo"
-msgstr[1] "Aplikaĵo"
+msgstr[0] ""
+msgstr[1] ""
 
 #: libapper/ApplicationLauncher.cpp:100
 #, kde-format
@@ -1400,70 +1341,61 @@ msgstr[1] ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, showCB)
 #: libapper/ApplicationLauncher.ui:81
-#, fuzzy, kde-format
-#| msgid "Do not ask again"
+#, kde-format
 msgid "Do not show this dialog again"
-msgstr "Ne petu plu"
+msgstr "Ne montri ĉi tiun dialogon denove"
 
 #: libapper/ApplicationsDelegate.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Removed"
+#, kde-format
 msgid "Remove"
-msgstr "Forigita"
+msgstr "Forigi"
 
 #: libapper/ApplicationsDelegate.cpp:48 libapper/ChangesDelegate.cpp:59
-#, fuzzy, kde-format
-#| msgid "Development"
+#, kde-format
 msgid "Deselect"
-msgstr "Evoluigo"
+msgstr "Malelekti"
 
 #: libapper/ChangesDelegate.cpp:55
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "Do not Install"
-msgstr "Instalita"
+msgstr "Ne Instali"
 
 #: libapper/ChangesDelegate.cpp:57
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Removed"
+#, kde-format
 msgid "Do not Remove"
-msgstr "Forigita"
+msgstr "Ne Forigi"
 
 #: libapper/CustomProgressBar.cpp:38
 #, kde-format
 msgid "%1 remaining"
-msgstr ""
+msgstr "%1 restas"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, LicenseAgreement)
 #: libapper/LicenseAgreement.cpp:40 libapper/LicenseAgreement.ui:14
 #, kde-format
 msgid "License Agreement Required"
-msgstr ""
+msgstr "Licenca Interkonsento Bezonata"
 
 #: libapper/LicenseAgreement.cpp:43
 #, kde-format
 msgid "Accept Agreement"
-msgstr ""
+msgstr "Akcepti Interkonsenton"
 
 #: libapper/LicenseAgreement.cpp:45
 #, kde-format
 msgid "License required for %1 by %2"
-msgstr ""
+msgstr "Permesilo bezonata por %1 per %2"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: libapper/LicenseAgreement.ui:40
 #, kde-format
 msgid "Please read the following important information before continuing:"
-msgstr ""
+msgstr "Bonvolu legi la jenajn gravajn informojn antaŭ ol daŭrigi:"
 
 #: libapper/PackageModel.cpp:201
-#, fuzzy, kde-format
-#| msgctxt "The group type"
-#| msgid "Games"
+#, kde-format
 msgid "Name"
-msgstr "Ludoj"
+msgstr "Nomo"
 
 #: libapper/PackageModel.cpp:205
 #, kde-format
@@ -1471,20 +1403,19 @@ msgid "Version"
 msgstr "Versio"
 
 #: libapper/PackageModel.cpp:208
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "Installed Version"
-msgstr "Instalita"
+msgstr "Instalita Versio"
 
 #: libapper/PackageModel.cpp:211
 #, kde-format
 msgid "Arch"
-msgstr ""
+msgstr "Arko"
 
 #: libapper/PackageModel.cpp:214
 #, kde-format
 msgid "Origin"
-msgstr ""
+msgstr "Origino"
 
 #: libapper/PackageModel.cpp:217
 #, kde-format
@@ -1497,131 +1428,120 @@ msgid ""
 "Version: %1\n"
 "Architecture: %2"
 msgstr ""
+"Versio: %1\n"
+"Arkitekturo: %2"
 
 #: libapper/PackageModel.cpp:379
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Removed"
+#, kde-format
 msgid "To be Removed"
-msgstr "Forigita"
+msgstr "Forigota"
 
 #: libapper/PackageModel.cpp:381
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "To be Installed"
-msgstr "Instalita"
+msgstr "Por esti Instalita"
 
 #: libapper/PkStrings.cpp:38
-#, fuzzy, kde-format
-#| msgid "Unknown error"
+#, kde-format
 msgctxt "This is when the transaction status is not known"
 msgid "Unknown state"
-msgstr "Nekonata eraro"
+msgstr "Nekonata stato"
 
 #: libapper/PkStrings.cpp:41
 #, kde-format
 msgctxt "transaction state, the daemon is in the process of starting"
 msgid "Waiting for service to start"
-msgstr ""
+msgstr "Atendante ke servo komenciĝos"
 
 #: libapper/PkStrings.cpp:44
 #, kde-format
 msgctxt "transaction state, the transaction is waiting for another to complete"
 msgid "Waiting for other tasks"
-msgstr ""
+msgstr "Atendante aliajn taskojn"
 
 #: libapper/PkStrings.cpp:47
 #, kde-format
 msgctxt "transaction state, just started"
 msgid "Running task"
-msgstr ""
+msgstr "Kuranta tasko"
 
 #: libapper/PkStrings.cpp:50
 #, kde-format
 msgctxt "transaction state, is querying data"
 msgid "Querying"
-msgstr ""
+msgstr "Demandado"
 
 #: libapper/PkStrings.cpp:53
 #, kde-format
 msgctxt "transaction state, getting data from a server"
 msgid "Getting information"
-msgstr ""
+msgstr "Akiri informojn"
 
 #: libapper/PkStrings.cpp:56
 #, kde-format
 msgctxt "transaction state, removing packages"
 msgid "Removing packages"
-msgstr ""
+msgstr "Forigante pakaĵojn"
 
 #: libapper/PkStrings.cpp:61
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgctxt "transaction state, downloading package files"
 msgid "Downloading at %1/s, %2 remaining"
-msgstr "Elŝutita"
+msgstr "Elŝuto je %1/s, %2 restas"
 
 #: libapper/PkStrings.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgctxt "transaction state, downloading package files"
 msgid "Downloading at %1/s"
-msgstr "Elŝutita"
+msgstr "Elŝuto ĉe %1/s"
 
 #: libapper/PkStrings.cpp:72
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgctxt "transaction state, downloading package files"
 msgid "Downloading, %1 remaining"
-msgstr "Elŝutita"
+msgstr "Elŝuto, %1 restas"
 
 #: libapper/PkStrings.cpp:76
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgctxt "transaction state, downloading package files"
 msgid "Downloading"
-msgstr "Elŝutita"
+msgstr "Elŝutante"
 
 #: libapper/PkStrings.cpp:80
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgctxt "transaction state, installing packages"
 msgid "Installing packages"
-msgstr "Pakaĵoj"
+msgstr "Instalante pakaĵojn"
 
 #: libapper/PkStrings.cpp:83
 #, kde-format
 msgctxt "transaction state, refreshing internal lists"
 msgid "Refreshing software list"
-msgstr ""
+msgstr "Refreŝiga listo de programaro"
 
 #: libapper/PkStrings.cpp:86
 #, kde-format
 msgctxt "transaction state, installing updates"
 msgid "Updating packages"
-msgstr ""
+msgstr "Ĝisdatigante pakaĵojn"
 
 #: libapper/PkStrings.cpp:89
 #, kde-format
 msgctxt "transaction state, removing old packages, and cleaning config files"
 msgid "Cleaning up packages"
-msgstr ""
+msgstr "Purigado de pakaĵoj"
 
 #: libapper/PkStrings.cpp:92
 #, kde-format
 msgctxt "transaction state, obsoleting old packages"
 msgid "Obsoleting packages"
-msgstr ""
+msgstr "Malnoviĝintaj pakaĵoj"
 
 #: libapper/PkStrings.cpp:95
 #, kde-format
 msgctxt "transaction state, checking the transaction before we do it"
 msgid "Resolving dependencies"
-msgstr ""
+msgstr "Solvado de dependecoj"
 
 #: libapper/PkStrings.cpp:98
 #, kde-format
@@ -1629,25 +1549,25 @@ msgctxt ""
 "transaction state, checking if we have all the security keys for the "
 "operation"
 msgid "Checking signatures"
-msgstr ""
+msgstr "Kontrolante subskribojn"
 
 #: libapper/PkStrings.cpp:101
 #, kde-format
 msgctxt "transaction state, when we're doing a test transaction"
 msgid "Testing changes"
-msgstr ""
+msgstr "Testante ŝanĝojn"
 
 #: libapper/PkStrings.cpp:104
 #, kde-format
 msgctxt "transaction state, when we're writing to the system package database"
 msgid "Committing changes"
-msgstr ""
+msgstr "Farante ŝanĝojn"
 
 #: libapper/PkStrings.cpp:107
 #, kde-format
 msgctxt "transaction state, requesting data from a server"
 msgid "Requesting data"
-msgstr ""
+msgstr "Petante datumojn"
 
 #: libapper/PkStrings.cpp:110
 #, kde-format
@@ -1656,114 +1576,113 @@ msgid "Finished"
 msgstr "Finita"
 
 #: libapper/PkStrings.cpp:113
-#, fuzzy, kde-format
-#| msgid "Cancel"
+#, kde-format
 msgctxt "transaction state, in the process of cancelling"
 msgid "Cancelling"
-msgstr "Rezigni"
+msgstr "Nuligo"
 
 #: libapper/PkStrings.cpp:116
 #, kde-format
 msgctxt "transaction state, downloading metadata"
 msgid "Downloading repository information"
-msgstr ""
+msgstr "Elŝutante deponejajn informojn"
 
 #: libapper/PkStrings.cpp:119
 #, kde-format
 msgctxt "transaction state, downloading metadata"
 msgid "Downloading list of packages"
-msgstr ""
+msgstr "Elŝutante liston de pakaĵoj"
 
 #: libapper/PkStrings.cpp:122
 #, kde-format
 msgctxt "transaction state, downloading metadata"
 msgid "Downloading file lists"
-msgstr ""
+msgstr "Elŝutante dosierlistojn"
 
 #: libapper/PkStrings.cpp:125
 #, kde-format
 msgctxt "transaction state, downloading metadata"
 msgid "Downloading lists of changes"
-msgstr ""
+msgstr "Elŝutante listojn de ŝanĝoj"
 
 #: libapper/PkStrings.cpp:128
 #, kde-format
 msgctxt "transaction state, downloading metadata"
 msgid "Downloading groups"
-msgstr ""
+msgstr "Elŝutante grupojn"
 
 #: libapper/PkStrings.cpp:131
 #, kde-format
 msgctxt "transaction state, downloading metadata"
 msgid "Downloading update information"
-msgstr ""
+msgstr "Elŝutante ĝisdatigajn informojn"
 
 #: libapper/PkStrings.cpp:134
 #, kde-format
 msgctxt "transaction state, repackaging delta files"
 msgid "Repackaging files"
-msgstr ""
+msgstr "Repakado de dosieroj"
 
 #: libapper/PkStrings.cpp:137
 #, kde-format
 msgctxt "transaction state, loading databases"
 msgid "Loading cache"
-msgstr ""
+msgstr "Ŝarĝante kaŝmemoron"
 
 #: libapper/PkStrings.cpp:140
 #, kde-format
 msgctxt "transaction state, scanning for running processes"
 msgid "Scanning installed applications"
-msgstr ""
+msgstr "Skanante instalitajn aplikaĵojn"
 
 #: libapper/PkStrings.cpp:143
 #, kde-format
 msgctxt ""
 "transaction state, generating a list of packages installed on the system"
 msgid "Generating package lists"
-msgstr ""
+msgstr "Generante pakajn listojn"
 
 #: libapper/PkStrings.cpp:146
 #, kde-format
 msgctxt "transaction state, when we're waiting for the native tools to exit"
 msgid "Waiting for package manager lock"
-msgstr ""
+msgstr "Atendante pakaĵadministran ŝlosilon"
 
 #: libapper/PkStrings.cpp:149
 #, kde-format
 msgctxt "waiting for user to type in a password"
 msgid "Waiting for authentication"
-msgstr ""
+msgstr "Atendante aŭtentikigon"
 
 #: libapper/PkStrings.cpp:152
 #, kde-format
 msgctxt "we are updating the list of processes"
 msgid "Updating the list of running applications"
-msgstr ""
+msgstr "Ĝisdatigante la liston de kurantaj aplikaĵoj"
 
 #: libapper/PkStrings.cpp:155
 #, kde-format
 msgctxt "we are checking executable files in use"
 msgid "Checking for applications currently in use"
-msgstr ""
+msgstr "Kontrolante por aplikaĵoj nuntempe uzataj"
 
 #: libapper/PkStrings.cpp:158
 #, kde-format
 msgctxt "we are checking for libraries in use"
 msgid "Checking for libraries currently in use"
-msgstr ""
+msgstr "Kontrolante por bibliotekoj nuntempe uzataj"
 
 #: libapper/PkStrings.cpp:161
 #, kde-format
 msgctxt "we are copying package files to prepare to install"
 msgid "Copying files"
-msgstr ""
+msgstr "Kopiante dosierojn"
 
 #: libapper/PkStrings.cpp:164
 #, kde-format
 msgctxt "we are running hooks pre or post transaction"
 msgid "Running hooks"
-msgstr ""
+msgstr "Kurantaj hokoj"
 
 #: libapper/PkStrings.cpp:179
 #, kde-format
@@ -1793,86 +1712,86 @@ msgstr "Forigita"
 #, kde-format
 msgctxt "The action of the package, in past tense"
 msgid "Cleaned Up"
-msgstr ""
+msgstr "Purigita"
 
 #: libapper/PkStrings.cpp:189
 #, kde-format
 msgctxt "The action of the package, in past tense"
 msgid "Obsoleted"
-msgstr ""
+msgstr "Malnoviĝinta"
 
 #: libapper/PkStrings.cpp:200
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Unknown role type"
-msgstr ""
+msgstr "Nekonata roltipo"
 
 #: libapper/PkStrings.cpp:202
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting dependencies"
-msgstr ""
+msgstr "Akiro de dependecoj"
 
 #: libapper/PkStrings.cpp:204
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting update detail"
-msgstr ""
+msgstr "Akiro de ĝisdatigaj detaloj"
 
 #: libapper/PkStrings.cpp:207
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting details"
-msgstr ""
+msgstr "Akiro de detaloj"
 
 #: libapper/PkStrings.cpp:209
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting requires"
-msgstr ""
+msgstr "Akiri postulas"
 
 #: libapper/PkStrings.cpp:211
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting updates"
-msgstr ""
+msgstr "Ricevante ĝisdatigojn"
 
 #: libapper/PkStrings.cpp:213
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Searching details"
-msgstr ""
+msgstr "Serĉante detalojn"
 
 #: libapper/PkStrings.cpp:215
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Searching for file"
-msgstr ""
+msgstr "Serĉante dosieron"
 
 #: libapper/PkStrings.cpp:217
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Searching groups"
-msgstr ""
+msgstr "Serĉante grupojn"
 
 #: libapper/PkStrings.cpp:219
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Searching by package name"
-msgstr ""
+msgstr "Serĉante per nomo de pakaĵo"
 
 #: libapper/PkStrings.cpp:222
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Simulating removal"
-msgstr ""
+msgstr "Simulante forigon"
 
 #: libapper/PkStrings.cpp:224 libapper/PkStrings.cpp:231
 #: libapper/PkStrings.cpp:272
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Downloading packages"
-msgstr ""
+msgstr "Elŝutante pakaĵojn"
 
 #: libapper/PkStrings.cpp:226
 #, kde-format
@@ -1881,11 +1800,10 @@ msgid "Removing"
 msgstr "Forigas"
 
 #: libapper/PkStrings.cpp:229
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Simulating install"
-msgstr "Pakaĵoj"
+msgstr "Simulante instalon"
 
 #: libapper/PkStrings.cpp:233
 #, kde-format
@@ -1894,240 +1812,232 @@ msgid "Installing"
 msgstr "Instalas"
 
 #: libapper/PkStrings.cpp:236
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Simulating file install"
-msgstr "Pakaĵoj"
+msgstr "Simulante instalon de dosiero"
 
 #: libapper/PkStrings.cpp:238
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Downloading required packages"
-msgstr "Elŝutita"
+msgstr "Elŝutante bezonatajn pakaĵojn"
 
 #: libapper/PkStrings.cpp:240
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Installing file"
-msgstr ""
+msgstr "Instalante dosieron"
 
 #: libapper/PkStrings.cpp:242
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Refreshing package cache"
-msgstr ""
+msgstr "Refreŝigante pakaĵkaŝmemoron"
 
 #: libapper/PkStrings.cpp:245
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Simulating update"
-msgstr ""
+msgstr "Simulado de ĝisdatigo"
 
 #: libapper/PkStrings.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Downloading updates"
-msgstr "Elŝutita"
+msgstr "Elŝutante ĝisdatigojn"
 
 #: libapper/PkStrings.cpp:249
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Updating packages"
-msgstr ""
+msgstr "Ĝisdatigante pakaĵojn"
 
 #: libapper/PkStrings.cpp:251
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Canceling"
-msgstr ""
+msgstr "Nuligo"
 
 #: libapper/PkStrings.cpp:253
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting list of repositories"
-msgstr ""
+msgstr "Akiro de listo de deponejoj"
 
 #: libapper/PkStrings.cpp:255
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Enabling repository"
-msgstr ""
+msgstr "Ebligante deponejon"
 
 #: libapper/PkStrings.cpp:257
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Setting repository data"
-msgstr ""
+msgstr "Agordi deponejajn datumojn"
 
 #: libapper/PkStrings.cpp:259
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Resolving"
-msgstr ""
+msgstr "Solvante"
 
 #: libapper/PkStrings.cpp:262
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting file list"
-msgstr ""
+msgstr "Akirante dosierliston"
 
 #: libapper/PkStrings.cpp:264
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting what provides"
-msgstr ""
+msgstr "Akiri kio provizas"
 
 #: libapper/PkStrings.cpp:266
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Installing signature"
-msgstr ""
+msgstr "Instalante subskribon"
 
 #: libapper/PkStrings.cpp:268
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting package lists"
-msgstr ""
+msgstr "Akiro de pakaĵlistoj"
 
 #: libapper/PkStrings.cpp:270
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Accepting EULA"
-msgstr ""
+msgstr "Akceptante EULA"
 
 #: libapper/PkStrings.cpp:274
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting distribution upgrade information"
-msgstr ""
+msgstr "Akiro de distribuaj ĝisdatigaj informoj"
 
 #: libapper/PkStrings.cpp:276
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting categories"
-msgstr ""
+msgstr "Akiro de kategorioj"
 
 #: libapper/PkStrings.cpp:278
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting old transactions"
-msgstr ""
+msgstr "Akirante malnovajn transakciojn"
 
 #: libapper/PkStrings.cpp:280
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Repairing system"
-msgstr "Aktualigita"
+msgstr "Ripara sistemo"
 
 #: libapper/PkStrings.cpp:282
-#, fuzzy, kde-format
-#| msgid "Repository"
+#, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Removing repository"
-msgstr "Deponejo"
+msgstr "Forigante deponejon"
 
 #: libapper/PkStrings.cpp:284
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Upgrading the system"
-msgstr "Aktualigita"
+msgstr "Ĝisdatigante la sistemon"
 
 #: libapper/PkStrings.cpp:299
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Unknown role type"
-msgstr ""
+msgstr "Nekonata roltipo"
 
 #: libapper/PkStrings.cpp:301
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got dependencies"
-msgstr ""
+msgstr "Havas dependecojn"
 
 #: libapper/PkStrings.cpp:303
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got update detail"
-msgstr ""
+msgstr "Ricevis ĝisdatigan detalojn"
 
 #: libapper/PkStrings.cpp:306
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got details"
-msgstr ""
+msgstr "Havas detalojn"
 
 #: libapper/PkStrings.cpp:308
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got requires"
-msgstr ""
+msgstr "Got postulas"
 
 #: libapper/PkStrings.cpp:310
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got updates"
-msgstr ""
+msgstr "Ricevis ĝisdatigojn"
 
 #: libapper/PkStrings.cpp:312
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Searched for package details"
-msgstr ""
+msgstr "Serĉis detalojn pri pakaĵo"
 
 #: libapper/PkStrings.cpp:314
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Searched for file"
-msgstr ""
+msgstr "Serĉis dosieron"
 
 #: libapper/PkStrings.cpp:316
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Searched groups"
-msgstr ""
+msgstr "Serĉitaj grupoj"
 
 #: libapper/PkStrings.cpp:318
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Searched for package name"
-msgstr ""
+msgstr "Serĉis pakaĵnomon"
 
 #: libapper/PkStrings.cpp:320
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Removed packages"
-msgstr ""
+msgstr "Forigitaj pakoj"
 
 #: libapper/PkStrings.cpp:322
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed packages"
-msgstr ""
+msgstr "Instalitaj pakoj"
 
 #: libapper/PkStrings.cpp:324
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed local files"
-msgstr ""
+msgstr "Instalitaj lokaj dosieroj"
 
 #: libapper/PkStrings.cpp:326
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Refreshed package cache"
-msgstr ""
+msgstr "Refreŝigita pakaĵkaŝmemoro"
 
 #: libapper/PkStrings.cpp:328
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Updated packages"
-msgstr ""
+msgstr "Ĝisdatigitaj pakoj"
 
 #: libapper/PkStrings.cpp:330
 #, kde-format
@@ -2139,113 +2049,107 @@ msgstr "Rompita"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got list of repositories"
-msgstr ""
+msgstr "Havas liston de deponejoj"
 
 #: libapper/PkStrings.cpp:334
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Enabled repository"
-msgstr ""
+msgstr "Ebligita deponejo"
 
 #: libapper/PkStrings.cpp:336
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Set repository data"
-msgstr ""
+msgstr "Agordi deponejajn datumojn"
 
 #: libapper/PkStrings.cpp:338
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Resolved"
-msgstr ""
+msgstr "Solvita"
 
 #: libapper/PkStrings.cpp:341
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got file list"
-msgstr ""
+msgstr "Havas dosierliston"
 
 #: libapper/PkStrings.cpp:343
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got what provides"
-msgstr ""
+msgstr "Havas kion provizas"
 
 #: libapper/PkStrings.cpp:345
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed signature"
-msgstr ""
+msgstr "Instalita subskribo"
 
 #: libapper/PkStrings.cpp:347
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got package lists"
-msgstr ""
+msgstr "Havas pakajn listojn"
 
 #: libapper/PkStrings.cpp:349
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Accepted EULA"
-msgstr ""
+msgstr "Akceptita EULA"
 
 #: libapper/PkStrings.cpp:351
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Downloaded packages"
-msgstr ""
+msgstr "Elŝutitaj pakoj"
 
 #: libapper/PkStrings.cpp:353
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got distribution upgrades"
-msgstr ""
+msgstr "Ricevis distribuajn ĝisdatigojn"
 
 #: libapper/PkStrings.cpp:355
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got categories"
-msgstr ""
+msgstr "Havas kategoriojn"
 
 #: libapper/PkStrings.cpp:357
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got old transactions"
-msgstr ""
+msgstr "Ricevis malnovajn transakciojn"
 
 #: libapper/PkStrings.cpp:359
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Repaired system"
-msgstr "Aktualigita"
+msgstr "Riparita sistemo"
 
 #: libapper/PkStrings.cpp:361
-#, fuzzy, kde-format
-#| msgid "Repository"
+#, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Removed repository"
-msgstr "Deponejo"
+msgstr "Forigita deponejo"
 
 #: libapper/PkStrings.cpp:363
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Upgraded the system"
-msgstr "Aktualigita"
+msgstr "Ĝisdatigis la sistemon"
 
 #: libapper/PkStrings.cpp:373
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgid "Downloading"
-msgstr "Elŝutita"
+msgstr "Elŝutante"
 
 #: libapper/PkStrings.cpp:375
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "Updating"
-msgstr "Aktualigita"
+msgstr "Ĝisdatigo"
 
 #: libapper/PkStrings.cpp:377
 #, kde-format
@@ -2260,29 +2164,27 @@ msgstr "Forigas"
 #: libapper/PkStrings.cpp:381
 #, kde-format
 msgid "Cleaning up"
-msgstr ""
+msgstr "Purigado"
 
 #: libapper/PkStrings.cpp:383
 #, kde-format
 msgid "Obsoleting"
-msgstr ""
+msgstr "Malnoviĝinta"
 
 #: libapper/PkStrings.cpp:385
-#, fuzzy, kde-format
-#| msgctxt "The role of the transaction, in present tense"
-#| msgid "Installing"
+#, kde-format
 msgid "Reinstalling"
-msgstr "Instalas"
+msgstr "Reinstalante"
 
 #: libapper/PkStrings.cpp:387
 #, kde-format
 msgid "Preparing"
-msgstr ""
+msgstr "Preparante"
 
 #: libapper/PkStrings.cpp:389
 #, kde-format
 msgid "Decompressing"
-msgstr ""
+msgstr "Malkunpremante"
 
 #: libapper/PkStrings.cpp:400
 #, kde-format
@@ -2302,363 +2204,362 @@ msgstr "Forigita"
 #: libapper/PkStrings.cpp:408
 #, kde-format
 msgid "Cleaned up"
-msgstr ""
+msgstr "Purigis"
 
 #: libapper/PkStrings.cpp:410
 #, kde-format
 msgid "Obsoleted"
-msgstr ""
+msgstr "Malnoviĝinta"
 
 #: libapper/PkStrings.cpp:412
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "Reinstalled"
-msgstr "Instalita"
+msgstr "Reinstalita"
 
 #: libapper/PkStrings.cpp:414
 #, kde-format
 msgid "Prepared"
-msgstr ""
+msgstr "Preta"
 
 #: libapper/PkStrings.cpp:416
 #, kde-format
 msgid "Decompressed"
-msgstr ""
+msgstr "Malkunpremita"
 
 #: libapper/PkStrings.cpp:427
 #, kde-format
 msgid "No network connection available"
-msgstr ""
+msgstr "Neniu retkonekto disponebla"
 
 #: libapper/PkStrings.cpp:429
 #, kde-format
 msgid "No package cache is available"
-msgstr ""
+msgstr "Neniu paka kaŝmemoro disponeblas"
 
 #: libapper/PkStrings.cpp:431
 #, kde-format
 msgid "Out of memory"
-msgstr ""
+msgstr "Sen memoro"
 
 #: libapper/PkStrings.cpp:433
 #, kde-format
 msgid "Failed to create a thread"
-msgstr ""
+msgstr "Malsukcesis krei fadenon"
 
 #: libapper/PkStrings.cpp:435
 #, kde-format
 msgid "Not supported by this backend"
-msgstr ""
+msgstr "Ne subtenata de ĉi tiu backend"
 
 #: libapper/PkStrings.cpp:437
 #, kde-format
 msgid "An internal system error has occurred"
-msgstr ""
+msgstr "Interna sistema eraro okazis"
 
 #: libapper/PkStrings.cpp:439
 #, kde-format
 msgid "A security trust relationship is not present"
-msgstr ""
+msgstr "Sekureca fidrilato ne ĉeestas"
 
 #: libapper/PkStrings.cpp:441
 #, kde-format
 msgid "The package is not installed"
-msgstr ""
+msgstr "La pako ne estas instalita"
 
 #: libapper/PkStrings.cpp:443
 #, kde-format
 msgid "The package was not found"
-msgstr ""
+msgstr "La pako ne estis trovita"
 
 #: libapper/PkStrings.cpp:445
 #, kde-format
 msgid "The package is already installed"
-msgstr ""
+msgstr "La pako jam estas instalita"
 
 #: libapper/PkStrings.cpp:447
 #, kde-format
 msgid "The package download failed"
-msgstr ""
+msgstr "La paka elŝuto malsukcesis"
 
 #: libapper/PkStrings.cpp:449
 #, kde-format
 msgid "The group was not found"
-msgstr ""
+msgstr "La grupo ne estis trovita"
 
 #: libapper/PkStrings.cpp:451
 #, kde-format
 msgid "The group list was invalid"
-msgstr ""
+msgstr "La gruplisto estis nevalida"
 
 #: libapper/PkStrings.cpp:453
 #, kde-format
 msgid "Dependency resolution failed"
-msgstr ""
+msgstr "Dependeca rezolucio malsukcesis"
 
 #: libapper/PkStrings.cpp:455
 #, kde-format
 msgid "Search filter was invalid"
-msgstr ""
+msgstr "Serĉfiltrilo estis nevalida"
 
 #: libapper/PkStrings.cpp:457
 #, kde-format
 msgid "The package identifier was not well formed"
-msgstr ""
+msgstr "La pakidentigilo ne estis bone formita"
 
 #: libapper/PkStrings.cpp:459
 #, kde-format
 msgid "Transaction error"
-msgstr ""
+msgstr "Eraro de transakcio"
 
 #: libapper/PkStrings.cpp:461
 #, kde-format
 msgid "Repository name was not found"
-msgstr ""
+msgstr "La nomo de deponejo ne estis trovita"
 
 #: libapper/PkStrings.cpp:463
 #, kde-format
 msgid "Could not remove a protected system package"
-msgstr ""
+msgstr "Ne eblis forigi protektitan sistempakaĵon"
 
 #: libapper/PkStrings.cpp:465
 #, kde-format
 msgid "The task was canceled"
-msgstr ""
+msgstr "La tasko estis nuligita"
 
 #: libapper/PkStrings.cpp:467
 #, kde-format
 msgid "The task was forcibly canceled"
-msgstr ""
+msgstr "La tasko estis perforte nuligita"
 
 #: libapper/PkStrings.cpp:469
 #, kde-format
 msgid "Reading the config file failed"
-msgstr ""
+msgstr "Legado de la agordosiero malsukcesis"
 
 #: libapper/PkStrings.cpp:471
 #, kde-format
 msgid "The task cannot be cancelled"
-msgstr ""
+msgstr "La tasko ne povas esti nuligita"
 
 #: libapper/PkStrings.cpp:473
 #, kde-format
 msgid "Source packages cannot be installed"
-msgstr ""
+msgstr "Fontpakaĵoj ne povas esti instalitaj"
 
 #: libapper/PkStrings.cpp:475
 #, kde-format
 msgid "The license agreement failed"
-msgstr ""
+msgstr "La licenca interkonsento malsukcesis"
 
 #: libapper/PkStrings.cpp:477
 #, kde-format
 msgid "Local file conflict between packages"
-msgstr ""
+msgstr "Loka dosiera konflikto inter pakoj"
 
 #: libapper/PkStrings.cpp:479
 #, kde-format
 msgid "Packages are not compatible"
-msgstr ""
+msgstr "Pakoj ne kongruas"
 
 #: libapper/PkStrings.cpp:481
 #, kde-format
 msgid "Problem connecting to a software origin"
-msgstr ""
+msgstr "Problemo por konekti al programara origino"
 
 #: libapper/PkStrings.cpp:483
 #, kde-format
 msgid "Failed to initialize"
-msgstr ""
+msgstr "Malsukcesis pravalorigi"
 
 #: libapper/PkStrings.cpp:485
 #, kde-format
 msgid "Failed to finalize"
-msgstr ""
+msgstr "Malsukcesis fini"
 
 #: libapper/PkStrings.cpp:487
 #, kde-format
 msgid "Cannot get lock"
-msgstr ""
+msgstr "Ne povas ricevi ŝlosilon"
 
 #: libapper/PkStrings.cpp:489
 #, kde-format
 msgid "No packages to update"
-msgstr ""
+msgstr "Neniuj pakaĵoj por ĝisdatigi"
 
 #: libapper/PkStrings.cpp:491
 #, kde-format
 msgid "Cannot write repository configuration"
-msgstr ""
+msgstr "Ne povas skribi deponejan agordon"
 
 #: libapper/PkStrings.cpp:493
 #, kde-format
 msgid "Local install failed"
-msgstr ""
+msgstr "Loka instalado malsukcesis"
 
 #: libapper/PkStrings.cpp:495
 #, kde-format
 msgid "Bad GPG signature"
-msgstr ""
+msgstr "Malbona GPG-signaturo"
 
 #: libapper/PkStrings.cpp:497
 #, kde-format
 msgid "Missing GPG signature"
-msgstr ""
+msgstr "Mankas GPG-signaturo"
 
 #: libapper/PkStrings.cpp:499
 #, kde-format
 msgid "Repository configuration invalid"
-msgstr ""
+msgstr "Agordo de deponejo nevalida"
 
 #: libapper/PkStrings.cpp:501
 #, kde-format
 msgid "Invalid package file"
-msgstr ""
+msgstr "Nevalida pakaĵdosiero"
 
 #: libapper/PkStrings.cpp:503
 #, kde-format
 msgid "Package install blocked"
-msgstr ""
+msgstr "Paka instalo blokita"
 
 #: libapper/PkStrings.cpp:505
 #, kde-format
 msgid "Package is corrupt"
-msgstr ""
+msgstr "Pako estas korupta"
 
 #: libapper/PkStrings.cpp:507
 #, kde-format
 msgid "All packages are already installed"
-msgstr ""
+msgstr "Ĉiuj pakaĵoj jam estas instalitaj"
 
 #: libapper/PkStrings.cpp:509
 #, kde-format
 msgid "The specified file could not be found"
-msgstr ""
+msgstr "La specifita dosiero ne estis trovita"
 
 #: libapper/PkStrings.cpp:511
 #, kde-format
 msgid "No more mirrors are available"
-msgstr ""
+msgstr "Ne plu disponeblas speguloj"
 
 #: libapper/PkStrings.cpp:513
 #, kde-format
 msgid "No distribution upgrade data is available"
-msgstr ""
+msgstr "Neniuj distribuaj ĝisdatigaj datumoj haveblas"
 
 #: libapper/PkStrings.cpp:515
 #, kde-format
 msgid "Package is incompatible with this system"
-msgstr ""
+msgstr "Pako estas nekongrua kun ĉi tiu sistemo"
 
 #: libapper/PkStrings.cpp:517
 #, kde-format
 msgid "No space is left on the disk"
-msgstr ""
+msgstr "Neniu spaco restas sur la disko"
 
 #: libapper/PkStrings.cpp:519 libapper/PkTransaction.cpp:341
 #, kde-format
 msgid "A media change is required"
-msgstr ""
+msgstr "Necesas amaskomunikila ŝanĝo"
 
 #: libapper/PkStrings.cpp:521
 #, kde-format
 msgid "Authorization failed"
-msgstr ""
+msgstr "Rajtigo malsukcesis"
 
 #: libapper/PkStrings.cpp:523
 #, kde-format
 msgid "Update not found"
-msgstr ""
+msgstr "Ĝisdatigo ne trovita"
 
 #: libapper/PkStrings.cpp:525
 #, kde-format
 msgid "Cannot install from untrusted origin"
-msgstr ""
+msgstr "Ne povas instali de nefidinda origino"
 
 #: libapper/PkStrings.cpp:527
 #, kde-format
 msgid "Cannot update from untrusted origin"
-msgstr ""
+msgstr "Ne povas ĝisdatigi de nefidinda origino"
 
 #: libapper/PkStrings.cpp:529
 #, kde-format
 msgid "Cannot get the file list"
-msgstr ""
+msgstr "Ne povas ricevi la dosierliston"
 
 #: libapper/PkStrings.cpp:531
 #, kde-format
 msgid "Cannot get package requires"
-msgstr ""
+msgstr "Ne povas akiri pakaĵon postulas"
 
 #: libapper/PkStrings.cpp:533
 #, kde-format
 msgid "Cannot disable origin"
-msgstr ""
+msgstr "Ne povas malŝalti originon"
 
 #: libapper/PkStrings.cpp:535
 #, kde-format
 msgid "The download failed"
-msgstr ""
+msgstr "La elŝuto malsukcesis"
 
 #: libapper/PkStrings.cpp:537
 #, kde-format
 msgid "Package failed to configure"
-msgstr ""
+msgstr "Pako malsukcesis agordi"
 
 #: libapper/PkStrings.cpp:539
 #, kde-format
 msgid "Package failed to build"
-msgstr ""
+msgstr "Pako malsukcesis konstrui"
 
 #: libapper/PkStrings.cpp:541
 #, kde-format
 msgid "Package failed to install"
-msgstr ""
+msgstr "Pako malsukcesis instali"
 
 #: libapper/PkStrings.cpp:543
 #, kde-format
 msgid "Package failed to be removed"
-msgstr ""
+msgstr "Pako ne povis esti forigita"
 
 #: libapper/PkStrings.cpp:545
 #, kde-format
 msgid "Update failed due to running process"
-msgstr ""
+msgstr "Ĝisdatigo malsukcesis pro funkcianta procezo"
 
 #: libapper/PkStrings.cpp:547
 #, kde-format
 msgid "The package database was changed"
-msgstr ""
+msgstr "La paka datumbazo estis ŝanĝita"
 
 #: libapper/PkStrings.cpp:549
 #, kde-format
 msgid "Virtual provide type is not supported"
-msgstr ""
+msgstr "Virtuala proviza tipo ne estas subtenata"
 
 #: libapper/PkStrings.cpp:551
 #, kde-format
 msgid "Install root is invalid"
-msgstr ""
+msgstr "Instali radikon ne validas"
 
 #: libapper/PkStrings.cpp:553
 #, kde-format
 msgid "Cannot fetch install sources"
-msgstr ""
+msgstr "Ne povas preni instalajn fontojn"
 
 #: libapper/PkStrings.cpp:555
 #, kde-format
 msgid "Rescheduled due to priority"
-msgstr ""
+msgstr "Replanita pro prioritato"
 
 #: libapper/PkStrings.cpp:557
 #, kde-format
 msgid "Unfinished transaction"
-msgstr ""
+msgstr "Nefinita transakcio"
 
 #: libapper/PkStrings.cpp:559
 #, kde-format
 msgid "Lock required"
-msgstr ""
+msgstr "Seruro bezonata"
 
 #: libapper/PkStrings.cpp:561
 #, kde-format
@@ -2671,6 +2572,8 @@ msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again"
 msgstr ""
+"Ne ekzistas retkonekto disponebla.\n"
+"Bonvolu kontroli viajn konektajn agordojn kaj provi denove"
 
 #: libapper/PkStrings.cpp:574
 #, kde-format
@@ -2678,6 +2581,8 @@ msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
 msgstr ""
+"La pakaĵlisto devas esti rekonstruita.\n"
+"Ĉi tio devus esti farita de la backend aŭtomate."
 
 #: libapper/PkStrings.cpp:577
 #, kde-format
@@ -2686,11 +2591,13 @@ msgid ""
 "memory.\n"
 "Please close some programs or restart your computer."
 msgstr ""
+"La servo, kiu respondecas pri pritraktado de uzantpetoj, mankas memoro.\n"
+"Bonvolu fermi kelkajn programojn aŭ rekomenci vian komputilon."
 
 #: libapper/PkStrings.cpp:580
 #, kde-format
 msgid "A thread could not be created to service the user request."
-msgstr ""
+msgstr "Fadeno ne povus esti kreita por servi la uzantan peton."
 
 #: libapper/PkStrings.cpp:582
 #, kde-format
@@ -2698,6 +2605,8 @@ msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug as this should not have happened."
 msgstr ""
+"La ago ne estas subtenata de ĉi tiu backend.\n"
+"Bonvolu raporti cimon ĉar tio ne devus esti okazinta."
 
 #: libapper/PkStrings.cpp:585
 #, kde-format
@@ -2705,6 +2614,8 @@ msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug with the error description."
 msgstr ""
+"Problemo, kiun ni ne atendis, okazis.\n"
+"Bonvolu raporti ĉi tiun cimon kun la erara priskribo."
 
 #: libapper/PkStrings.cpp:588
 #, kde-format
@@ -2712,12 +2623,15 @@ msgid ""
 "A security trust relationship could not be made with the software origin.\n"
 "Please check your software signature settings."
 msgstr ""
+"Sekureca fidrilato ne eblis fari kun la programara origino.\n"
+"Bonvolu kontroli viajn programarajn subskribajn agordojn."
 
 #: libapper/PkStrings.cpp:591
 #, kde-format
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr ""
+"La pakaĵo, kiu provas esti forigita aŭ ĝisdatigita, ne estas jam instalita."
 
 #: libapper/PkStrings.cpp:593
 #, kde-format
@@ -2725,11 +2639,13 @@ msgid ""
 "The package that is being modified was not found on your system or in any "
 "software origin."
 msgstr ""
+"La pakaĵo, kiu estas modifita, ne estis trovita en via sistemo aŭ en iu ajn "
+"programara origino."
 
 #: libapper/PkStrings.cpp:595
 #, kde-format
 msgid "The package that is trying to be installed is already installed."
-msgstr ""
+msgstr "La pako kiu provas esti instalita jam estas instalita."
 
 #: libapper/PkStrings.cpp:597
 #, kde-format
@@ -2737,6 +2653,8 @@ msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
 msgstr ""
+"La elŝuto de la pakaĵo malsukcesis.\n"
+"Bonvolu kontroli vian retkonektecon."
 
 #: libapper/PkStrings.cpp:600
 #, kde-format
@@ -2744,6 +2662,8 @@ msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
 msgstr ""
+"La grupo-tipo ne estis trovita.\n"
+"Bonvolu kontroli vian grupliston kaj provi denove."
 
 #: libapper/PkStrings.cpp:603
 #, kde-format
@@ -2752,6 +2672,9 @@ msgid ""
 "Refreshing your cache may help, although this is normally a software origin "
 "error."
 msgstr ""
+"La gruplisto ne povis esti ŝargita.\n"
+"Refreŝigi vian kaŝmemoron povas helpi, kvankam ĉi tio normale estas "
+"programara origineraro."
 
 #: libapper/PkStrings.cpp:607
 #, kde-format
@@ -2759,11 +2682,13 @@ msgid ""
 "A package dependency could not be found.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Paka dependeco ne troviĝis.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:610
 #, kde-format
 msgid "The search filter was not correctly formed."
-msgstr ""
+msgstr "La serĉfiltrilo ne estis ĝuste formita."
 
 #: libapper/PkStrings.cpp:612
 #, kde-format
@@ -2771,6 +2696,8 @@ msgid ""
 "The package identifier was not well formed when sent to the system daemon.\n"
 "This normally indicates an internal bug and should be reported."
 msgstr ""
+"La pakidentigilo ne estis bone formita kiam sendita al la sistema demono.\n"
+"Tio normale indikas internan cimon kaj devus esti raportita."
 
 #: libapper/PkStrings.cpp:615
 #, kde-format
@@ -2778,6 +2705,8 @@ msgid ""
 "An error occurred while running the transaction.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Okazis eraro dum rulado de la transakcio.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:618
 #, kde-format
@@ -2785,16 +2714,18 @@ msgid ""
 "The remote software origin name was not found.\n"
 "You may need to enable an item in Software Origins."
 msgstr ""
+"La fora programara originnomo ne estis trovita.\n"
+"Vi eble devos aktivigi eron en Software Origins."
 
 #: libapper/PkStrings.cpp:621
 #, kde-format
 msgid "Removing a protected system package is not allowed."
-msgstr ""
+msgstr "Forigi protektitan sistempakaĵon ne estas permesita."
 
 #: libapper/PkStrings.cpp:623
 #, kde-format
 msgid "The task was canceled successfully and no packages were changed."
-msgstr ""
+msgstr "La tasko estis nuligita sukcese kaj neniuj pakoj estis ŝanĝitaj."
 
 #: libapper/PkStrings.cpp:625
 #, kde-format
@@ -2802,6 +2733,8 @@ msgid ""
 "The task was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
 msgstr ""
+"La tasko estis nuligita sukcese kaj neniuj pakaĵoj estis ŝanĝitaj.\n"
+"La backend ne eliris pure."
 
 #: libapper/PkStrings.cpp:628
 #, kde-format
@@ -2809,11 +2742,13 @@ msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure your system's configuration is valid."
 msgstr ""
+"La denaska paka agorda dosiero ne povus esti malfermita.\n"
+"Bonvolu certigi, ke la agordo de via sistemo estas valida."
 
 #: libapper/PkStrings.cpp:631
 #, kde-format
 msgid "The task is not safe to be cancelled at this time."
-msgstr ""
+msgstr "La tasko ne estas sekure nuligita ĉi-momente."
 
 #: libapper/PkStrings.cpp:633
 #, kde-format
@@ -2821,6 +2756,8 @@ msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
 msgstr ""
+"Fontpakaĵoj kutime ne estas instalitaj tiel.\n"
+"Kontrolu la etendon de la dosiero kiun vi provas instali."
 
 #: libapper/PkStrings.cpp:636
 #, kde-format
@@ -2828,6 +2765,8 @@ msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
 msgstr ""
+"La licenca interkonsento ne estis konsentita.\n"
+"Ne uzu ĉi tiun programon, vi devas akcepti la permesilon."
 
 #: libapper/PkStrings.cpp:639
 #, kde-format
@@ -2835,6 +2774,8 @@ msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages for different software origins."
 msgstr ""
+"Du pakaĵoj provizas la saman dosieron.\n"
+"Tio kutime estas pro miksado de pakaĵoj por malsamaj programaraj originoj."
 
 #: libapper/PkStrings.cpp:642
 #, kde-format
@@ -2842,6 +2783,8 @@ msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software origins."
 msgstr ""
+"Pluraj pakaĵoj ekzistas, kiuj ne kongruas unu kun la alia.\n"
+"Tio kutime estas pro miksado de pakaĵoj de malsamaj programaraj originoj."
 
 #: libapper/PkStrings.cpp:645
 #, kde-format
@@ -2849,6 +2792,8 @@ msgid ""
 "There was a (possibly temporary) problem connecting to a software origins.\n"
 "Please check the detailed error for further details."
 msgstr ""
+"Okazis (eble provizora) problemo konektante al programaro originoj.\n"
+"Bonvolu kontroli la detalan eraron por pliaj detaloj."
 
 #: libapper/PkStrings.cpp:648
 #, kde-format
@@ -2856,6 +2801,8 @@ msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
 msgstr ""
+"Malsukcesis pravalorigi pakaĵan backend.\n"
+"Tio povas okazi se aliaj pakaĵiloj estas uzataj samtempe."
 
 #: libapper/PkStrings.cpp:651
 #, kde-format
@@ -2863,6 +2810,8 @@ msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
 msgstr ""
+"Malsukcesis fermi la backend-instancon.\n"
+"Tiu eraro normale povas esti ignorita."
 
 #: libapper/PkStrings.cpp:654
 #, kde-format
@@ -2870,16 +2819,19 @@ msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
 msgstr ""
+"Ne povas ricevi la ekskluzivan seruron sur la paka malantaŭo.\n"
+"Bonvolu fermi iujn ajn aliajn heredaĵajn pakilojn kiuj eble estas "
+"malfermitaj."
 
 #: libapper/PkStrings.cpp:657
 #, kde-format
 msgid "None of the selected packages could be updated."
-msgstr ""
+msgstr "Neniu el la elektitaj pakaĵoj povus esti ĝisdatigita."
 
 #: libapper/PkStrings.cpp:659
 #, kde-format
 msgid "The repository configuration could not be modified."
-msgstr ""
+msgstr "La deponeja agordo ne povus esti modifita."
 
 #: libapper/PkStrings.cpp:661
 #, kde-format
@@ -2887,11 +2839,13 @@ msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Instalado de la loka dosiero malsukcesis.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:664
 #, kde-format
 msgid "The package signature could not be verified."
-msgstr ""
+msgstr "La paksignaturo ne povis esti kontrolita."
 
 #: libapper/PkStrings.cpp:666
 #, kde-format
@@ -2899,11 +2853,13 @@ msgid ""
 "The package signature was missing and this package is untrusted.\n"
 "This package was not signed with a GPG key when created."
 msgstr ""
+"La pakaĵsignaturo mankis kaj ĉi tiu pakaĵo estas nefidinda.\n"
+"Tiu pakaĵo ne estis subskribita per GPG-ŝlosilo kiam kreite."
 
 #: libapper/PkStrings.cpp:669
 #, kde-format
 msgid "Repository configuration was invalid and could not be read."
-msgstr ""
+msgstr "La agordo de la deponejo estis nevalida kaj ne legeblas."
 
 #: libapper/PkStrings.cpp:671
 #, kde-format
@@ -2911,6 +2867,8 @@ msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
 msgstr ""
+"La pakaĵo, kiun vi provas instali, ne validas.\n"
+"La pakaĵdosiero povus esti difektita aŭ ne taŭga pakaĵo."
 
 #: libapper/PkStrings.cpp:674
 #, kde-format
@@ -2918,18 +2876,19 @@ msgid ""
 "Installation of this package was prevented by your packaging system's "
 "configuration."
 msgstr ""
+"Instalado de ĉi tiu pako estis malhelpita de la agordo de via paksistemo."
 
 #: libapper/PkStrings.cpp:676
 #, kde-format
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
-msgstr ""
+msgstr "La pako elŝutita estas korupta kaj devas esti elŝutita denove."
 
 #: libapper/PkStrings.cpp:678
 #, kde-format
 msgid ""
 "All of the packages selected for install are already installed on the system."
-msgstr ""
+msgstr "Ĉiuj pakaĵoj elektitaj por instali jam estas instalitaj en la sistemo."
 
 #: libapper/PkStrings.cpp:680
 #, kde-format
@@ -2937,6 +2896,8 @@ msgid ""
 "The specified file could not be found on the system.\n"
 "Check that the file still exists and has not been deleted."
 msgstr ""
+"La specifita dosiero ne troviĝis en la sistemo.\n"
+"Kontrolu, ke la dosiero ankoraŭ ekzistas kaj ne estas forigita."
 
 #: libapper/PkStrings.cpp:683
 #, kde-format
@@ -2944,6 +2905,9 @@ msgid ""
 "Required data could not be found on any of the configured software origins.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
+"Bezonataj datumoj ne troveblas pri iu ajn el la agordita programaro "
+"origino.\n"
+"Ne estis plu elŝutaj speguloj provitaj."
 
 #: libapper/PkStrings.cpp:686
 #, kde-format
@@ -2952,12 +2916,15 @@ msgid ""
 "origins.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
+"Bezonataj ĝisdatigaj datumoj ne troveblas en iu ajn el la agordita "
+"programara origino.\n"
+"La listo de distribuaj ĝisdatigoj ne estos disponebla."
 
 #: libapper/PkStrings.cpp:689
 #, kde-format
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
-msgstr ""
+msgstr "La pako kiu provas esti instalita estas nekongrua kun ĉi tiu sistemo."
 
 #: libapper/PkStrings.cpp:691
 #, kde-format
@@ -2965,11 +2932,13 @@ msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
 msgstr ""
+"Estas nesufiĉa spaco sur la aparato.\n"
+"Liberigu iom da spaco sur la sistema disko por plenumi ĉi tiun operacion."
 
 #: libapper/PkStrings.cpp:694
 #, kde-format
 msgid "Additional media is required to complete the transaction."
-msgstr ""
+msgstr "Pliaj amaskomunikiloj estas postulataj por kompletigi la transakcion."
 
 #: libapper/PkStrings.cpp:696
 #, kde-format
@@ -2977,6 +2946,8 @@ msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
 msgstr ""
+"Vi ne sukcesis provizi ĝustan aŭtentikigon.\n"
+"Bonvolu kontroli iujn ajn pasvortojn aŭ kontajn agordojn."
 
 #: libapper/PkStrings.cpp:699
 #, kde-format
@@ -2985,31 +2956,34 @@ msgid ""
 "It could have already been installed or no longer available on the remote "
 "server."
 msgstr ""
+"La specifita ĝisdatigo ne troviĝis.\n"
+"Ĝi povus esti jam instalita aŭ ne plu disponebla en la fora servilo."
 
 #: libapper/PkStrings.cpp:702
 #, kde-format
 msgid "The package could not be installed from untrusted origin."
-msgstr ""
+msgstr "La pakaĵo ne povis esti instalita de nefidinda origino."
 
 #: libapper/PkStrings.cpp:704
 #, kde-format
 msgid "The package could not be updated from untrusted origin."
-msgstr ""
+msgstr "La pakaĵo ne povus esti ĝisdatigita de nefidinda origino."
 
 #: libapper/PkStrings.cpp:706
 #, kde-format
 msgid "The file list is not available for this package."
-msgstr ""
+msgstr "La dosierlisto ne disponeblas por ĉi tiu pako."
 
 #: libapper/PkStrings.cpp:708
 #, kde-format
 msgid "The information about what requires this package could not be obtained."
 msgstr ""
+"La informoj pri tio, kio postulas ĉi tiun pakaĵon, ne povus esti akiritaj."
 
 #: libapper/PkStrings.cpp:710
 #, kde-format
 msgid "The specified software origin could not be disabled."
-msgstr ""
+msgstr "La specifita programara origino ne povus esti malŝaltita."
 
 #: libapper/PkStrings.cpp:712
 #, kde-format
@@ -3017,6 +2991,8 @@ msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
 msgstr ""
+"La elŝuto ne povis esti farita aŭtomate kaj devus esti farita permane.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:715
 #, kde-format
@@ -3024,6 +3000,8 @@ msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Unu el la elektitaj pakaĵoj malsukcesis agordi ĝuste.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:718
 #, kde-format
@@ -3031,6 +3009,8 @@ msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Unu el la elektitaj pakaĵoj malsukcesis konstrui ĝuste.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:721
 #, kde-format
@@ -3038,6 +3018,8 @@ msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Unu el la elektitaj pakaĵoj malsukcesis instali ĝuste.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:724
 #, kde-format
@@ -3045,6 +3027,8 @@ msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Unu el la elektitaj pakaĵoj ne estis ĝuste forigita.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:727
 #, kde-format
@@ -3052,26 +3036,30 @@ msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Programo funkcias, kiu devas esti fermita antaŭ ol la ĝisdatigo povas "
+"daŭrigi.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:730
 #, kde-format
 msgid "The package database was changed while the request was running."
-msgstr ""
+msgstr "La paka datumbazo estis ŝanĝita dum la peto funkciis."
 
 #: libapper/PkStrings.cpp:732
 #, kde-format
 msgid "The virtual provide type is not supported by this system."
-msgstr ""
+msgstr "La virtuala proviza tipo ne estas subtenata de ĉi tiu sistemo."
 
 #: libapper/PkStrings.cpp:734
 #, kde-format
 msgid "The install root is invalid. Please contact your administrator."
 msgstr ""
+"La instala radiko estas nevalida. Bonvolu kontakti vian administranton."
 
 #: libapper/PkStrings.cpp:736
 #, kde-format
 msgid "The list of software could not be downloaded."
-msgstr ""
+msgstr "La listo de programaro ne eblis elŝuti."
 
 #: libapper/PkStrings.cpp:738
 #, kde-format
@@ -3079,16 +3067,18 @@ msgid ""
 "The transaction has been cancelled and will be retried when the system is "
 "idle."
 msgstr ""
+"La transakcio estis nuligita kaj estos reprovita kiam la sistemo estas "
+"neaktiva."
 
 #: libapper/PkStrings.cpp:740
 #, kde-format
 msgid "A previous package management transaction was interrupted."
-msgstr ""
+msgstr "Antaŭa pak-administra transakcio estis interrompita."
 
 #: libapper/PkStrings.cpp:742
 #, kde-format
 msgid "A package manager lock is required."
-msgstr ""
+msgstr "Pakaĵmanaĝera seruro estas postulata."
 
 #: libapper/PkStrings.cpp:744
 #, kde-format
@@ -3096,6 +3086,8 @@ msgid ""
 "Unknown error, please report a bug.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Nekonata eraro, bonvolu raporti cimon.\n"
+"Pliaj informoj haveblas en la detala raporto."
 
 #: libapper/PkStrings.cpp:755
 #, kde-format
@@ -3107,7 +3099,7 @@ msgstr "Alirebleco"
 #, kde-format
 msgctxt "The group type"
 msgid "Accessories"
-msgstr ""
+msgstr "Akcesoraĵoj"
 
 #: libapper/PkStrings.cpp:759
 #, kde-format
@@ -3140,12 +3132,10 @@ msgid "Office"
 msgstr "Laborejo"
 
 #: libapper/PkStrings.cpp:769
-#, fuzzy, kde-format
-#| msgctxt "The group type"
-#| msgid "Other"
+#, kde-format
 msgctxt "The group type"
 msgid "Others"
-msgstr "Alia"
+msgstr "Aliaj"
 
 #: libapper/PkStrings.cpp:771
 #, kde-format
@@ -3187,13 +3177,13 @@ msgstr "XFCE labortablo"
 #, kde-format
 msgctxt "The group type"
 msgid "Other desktops"
-msgstr ""
+msgstr "Aliaj labortabloj"
 
 #: libapper/PkStrings.cpp:785
 #, kde-format
 msgctxt "The group type"
 msgid "Publishing"
-msgstr ""
+msgstr "Eldonado"
 
 #: libapper/PkStrings.cpp:787
 #, kde-format
@@ -3211,25 +3201,25 @@ msgstr "Tiparoj"
 #, kde-format
 msgctxt "The group type"
 msgid "Admin tools"
-msgstr ""
+msgstr "Administraj iloj"
 
 #: libapper/PkStrings.cpp:793
 #, kde-format
 msgctxt "The group type"
 msgid "Legacy"
-msgstr ""
+msgstr "Heredaĵo"
 
 #: libapper/PkStrings.cpp:795
 #, kde-format
 msgctxt "The group type"
 msgid "Localization"
-msgstr ""
+msgstr "Lokigo"
 
 #: libapper/PkStrings.cpp:797
 #, kde-format
 msgctxt "The group type"
 msgid "Virtualization"
-msgstr ""
+msgstr "Virtualigo"
 
 #: libapper/PkStrings.cpp:799
 #, kde-format
@@ -3265,7 +3255,7 @@ msgstr "Mapoj"
 #, kde-format
 msgctxt "The group type"
 msgid "Software sources"
-msgstr ""
+msgstr "Fontoj de programaro"
 
 #: libapper/PkStrings.cpp:811
 #, kde-format
@@ -3283,13 +3273,13 @@ msgstr "Dokumentaro"
 #, kde-format
 msgctxt "The group type"
 msgid "Electronics"
-msgstr ""
+msgstr "Elektroniko"
 
 #: libapper/PkStrings.cpp:817
 #, kde-format
 msgctxt "The group type"
 msgid "Package collections"
-msgstr ""
+msgstr "Pakaj kolektoj"
 
 #: libapper/PkStrings.cpp:819
 #, kde-format
@@ -3301,55 +3291,55 @@ msgstr "Vendisto"
 #, kde-format
 msgctxt "The group type"
 msgid "Newest packages"
-msgstr ""
+msgstr "Plej novaj pakoj"
 
 #: libapper/PkStrings.cpp:823
 #, kde-format
 msgctxt "The group type"
 msgid "Unknown group"
-msgstr ""
+msgstr "Nekonata grupo"
 
 #: libapper/PkStrings.cpp:834
 #, kde-format
 msgctxt "The type of update"
 msgid "Trivial update"
-msgstr ""
+msgstr "Triviala ĝisdatigo"
 
 #: libapper/PkStrings.cpp:836
 #, kde-format
 msgctxt "The type of update"
 msgid "Normal update"
-msgstr ""
+msgstr "Normala ĝisdatigo"
 
 #: libapper/PkStrings.cpp:838
 #, kde-format
 msgctxt "The type of update"
 msgid "Important update"
-msgstr ""
+msgstr "Grava ĝisdatigo"
 
 #: libapper/PkStrings.cpp:840
 #, kde-format
 msgctxt "The type of update"
 msgid "Security update"
-msgstr ""
+msgstr "Sekureca ĝisdatigo"
 
 #: libapper/PkStrings.cpp:842
 #, kde-format
 msgctxt "The type of update"
 msgid "Bug fix update"
-msgstr ""
+msgstr "Ĝisdatigo de korekto de cimoj"
 
 #: libapper/PkStrings.cpp:844
 #, kde-format
 msgctxt "The type of update"
 msgid "Enhancement update"
-msgstr ""
+msgstr "Pliboniga ĝisdatigo"
 
 #: libapper/PkStrings.cpp:846
 #, kde-format
 msgctxt "The type of update"
 msgid "Blocked update"
-msgstr ""
+msgstr "Blokis ĝisdatigo"
 
 #: libapper/PkStrings.cpp:849
 #, kde-format
@@ -3367,30 +3357,28 @@ msgstr "Disponebla"
 #, kde-format
 msgctxt "The type of update"
 msgid "Unknown update"
-msgstr ""
+msgstr "Nekonata ĝisdatigo"
 
 #: libapper/PkStrings.cpp:865
 #, kde-format
 msgid "No Updates Available"
-msgstr ""
+msgstr "Neniuj Ĝisdatigoj Disponeblaj"
 
 #: libapper/PkStrings.cpp:868
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgctxt "Some updates were selected on the view"
 msgid "1 Update Selected"
 msgid_plural "%1 Updates Selected"
-msgstr[0] "Aktualigita"
-msgstr[1] "Aktualigita"
+msgstr[0] ""
+msgstr[1] ""
 
 #: libapper/PkStrings.cpp:872
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgctxt "Some updates are being shown on the screen"
 msgid "1 Update"
 msgid_plural "%1 Updates"
-msgstr[0] "Aktualigita"
-msgstr[1] "Aktualigita"
+msgstr[0] ""
+msgstr[1] ""
 
 #: libapper/PkStrings.cpp:875
 #, kde-format
@@ -3399,211 +3387,207 @@ msgid "%1, %2"
 msgstr "%1, %2"
 
 #: libapper/PkStrings.cpp:876
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgctxt "Part of: %1 Updates, %1 Selected"
 msgid "%1 Update"
 msgid_plural "%1 Updates"
-msgstr[0] "Aktualigita"
-msgstr[1] "Aktualigita"
+msgstr[0] ""
+msgstr[1] ""
 
 #: libapper/PkStrings.cpp:877
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgctxt "Part of: %1 Updates, %1 Selected"
 msgid "%1 Selected"
 msgid_plural "%1 Selected"
-msgstr[0] "Aktualigita"
-msgstr[1] "Aktualigita"
+msgstr[0] ""
+msgstr[1] ""
 
 #: libapper/PkStrings.cpp:881
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "No Packages"
-msgstr "Pakaĵo"
+msgstr "Neniuj Pakoj"
 
 #: libapper/PkStrings.cpp:883
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "1 Package"
 msgid_plural "%1 Packages"
-msgstr[0] "Pakaĵo"
-msgstr[1] "Pakaĵo"
+msgstr[0] ""
+msgstr[1] ""
 
 #: libapper/PkStrings.cpp:891
 #, kde-format
 msgid "No restart is necessary"
-msgstr ""
+msgstr "Neniu rekomenco estas necesa"
 
 #: libapper/PkStrings.cpp:893
 #, kde-format
 msgid "You will be required to restart this application"
-msgstr ""
+msgstr "Vi devos rekomenci ĉi tiun aplikaĵon"
 
 #: libapper/PkStrings.cpp:895
 #, kde-format
 msgid "You will be required to log out and back in"
-msgstr ""
+msgstr "Vi devos elsaluti kaj reeniri"
 
 #: libapper/PkStrings.cpp:897
 #, kde-format
 msgid "A restart will be required"
-msgstr ""
+msgstr "Rekomenco estos postulata"
 
 #: libapper/PkStrings.cpp:899
 #, kde-format
 msgid "You will be required to log out and back in due to a security update."
-msgstr ""
+msgstr "Vi devos elsaluti kaj reeniri pro sekureca ĝisdatigo."
 
 #: libapper/PkStrings.cpp:901
 #, kde-format
 msgid "A restart will be required due to a security update."
-msgstr ""
+msgstr "Rekomenco estos postulata pro sekureca ĝisdatigo."
 
 #: libapper/PkStrings.cpp:914
 #, kde-format
 msgid "No restart is required"
-msgstr ""
+msgstr "Ne necesas rekomenco"
 
 #: libapper/PkStrings.cpp:916
 #, kde-format
 msgid "A restart is required"
-msgstr ""
+msgstr "Rekomenco estas bezonata"
 
 #: libapper/PkStrings.cpp:918
 #, kde-format
 msgid "You need to log out and log back in"
-msgstr ""
+msgstr "Vi devas elsaluti kaj reensaluti"
 
 #: libapper/PkStrings.cpp:920
 #, kde-format
 msgid "You need to restart the application"
-msgstr ""
+msgstr "Vi devas rekomenci la aplikaĵon"
 
 #: libapper/PkStrings.cpp:922
 #, kde-format
 msgid "You need to log out and log back in to remain secure."
-msgstr ""
+msgstr "Vi devas elsaluti kaj reensaluti por resti sekura."
 
 #: libapper/PkStrings.cpp:924
 #, kde-format
 msgid "A restart is required to remain secure."
-msgstr ""
+msgstr "Rekomenco estas necesa por resti sekura."
 
 #: libapper/PkStrings.cpp:937
 #, kde-format
 msgid "Stable"
-msgstr ""
+msgstr "Stalo"
 
 #: libapper/PkStrings.cpp:939
 #, kde-format
 msgid "Unstable"
-msgstr ""
+msgstr "Malstabila"
 
 #: libapper/PkStrings.cpp:941
 #, kde-format
 msgid "Testing"
-msgstr ""
+msgstr "Testado"
 
 #: libapper/PkStrings.cpp:954
 #, kde-format
 msgid "Please insert the CD labeled '%1', and press continue."
-msgstr ""
+msgstr "Bonvolu enmeti la KD kun la etikedo '%1', kaj premu daŭrigi."
 
 #: libapper/PkStrings.cpp:956
 #, kde-format
 msgid "Please insert the DVD labeled '%1', and press continue."
-msgstr ""
+msgstr "Bonvolu enmeti la DVD-etikeditan '%1', kaj premu daŭrigi."
 
 #: libapper/PkStrings.cpp:958
 #, kde-format
 msgid "Please insert the disc labeled '%1', and press continue."
-msgstr ""
+msgstr "Bonvolu enmeti la diskon kun la etikedo '%1', kaj premu daŭrigi."
 
 #: libapper/PkStrings.cpp:960 libapper/PkStrings.cpp:963
 #, kde-format
 msgid "Please insert the medium labeled '%1', and press continue."
-msgstr ""
+msgstr "Bonvolu enigi la medion etikeditan '%1', kaj premu daŭrigi."
 
 #: libapper/PkStrings.cpp:1014
 #, kde-format
 msgid "You do not have the necessary privileges to perform this action."
-msgstr ""
+msgstr "Vi ne havas la necesajn privilegiojn por plenumi ĉi tiun agon."
 
 #: libapper/PkStrings.cpp:1016
 #, kde-format
 msgid "Could not get a transaction id from packagekitd."
-msgstr ""
+msgstr "Ne eblis ricevi transakcian identigilon de packagekitd."
 
 #: libapper/PkStrings.cpp:1018
 #, kde-format
 msgid "Cannot connect to this transaction id."
-msgstr ""
+msgstr "Ne povas konekti al ĉi tiu transakcia id."
 
 #: libapper/PkStrings.cpp:1020
 #, kde-format
 msgid "This action is unknown."
-msgstr ""
+msgstr "Ĉi tiu ago estas nekonata."
 
 #: libapper/PkStrings.cpp:1022
 #, kde-format
 msgid "The packagekitd service could not be started."
-msgstr ""
+msgstr "La servo packagekitd ne povis esti komencita."
 
 #: libapper/PkStrings.cpp:1024
 #, kde-format
 msgid "The query is not valid."
-msgstr ""
+msgstr "La demando ne validas."
 
 #: libapper/PkStrings.cpp:1026
 #, kde-format
 msgid "The file is not valid."
-msgstr ""
+msgstr "La dosiero ne validas."
 
 #: libapper/PkStrings.cpp:1028
 #, kde-format
 msgid "This function is not yet supported."
-msgstr ""
+msgstr "Ĉi tiu funkcio ankoraŭ ne estas subtenata."
 
 #: libapper/PkStrings.cpp:1030
 #, kde-format
 msgid "Could not talk to packagekitd."
-msgstr ""
+msgstr "Ne eblis paroli kun packagekitd."
 
 #: libapper/PkStrings.cpp:1032
 #, kde-format
 msgid "Error talking to packagekitd."
-msgstr ""
+msgstr "Eraro dum parolado al packagekitd."
 
 #: libapper/PkStrings.cpp:1035 libapper/PkStrings.cpp:1038
 #, kde-format
 msgid "An unknown error happened."
-msgstr ""
+msgstr "Nekonata eraro okazis."
 
 #: libapper/PkStrings.cpp:1053
 #, kde-format
 msgid "Your system is up to date"
-msgstr ""
+msgstr "Via sistemo estas ĝisdatigita"
 
 #: libapper/PkStrings.cpp:1055
 #, kde-format
 msgid "You have no updates"
-msgstr ""
+msgstr "Vi ne havas ĝisdatigojn"
 
 #: libapper/PkStrings.cpp:1057
 #, kde-format
 msgid "Last check for updates was more than a month ago"
-msgstr ""
+msgstr "Lasta kontrolo por ĝisdatigoj estis antaŭ pli ol monato"
 
 #: libapper/PkStrings.cpp:1065
 #, kde-format
 msgid "Verified %1 ago"
-msgstr ""
+msgstr "Kontrolita antaŭ %1"
 
 #: libapper/PkStrings.cpp:1067
 #, kde-format
 msgid "It's strongly recommended that you check for new updates now"
-msgstr ""
+msgstr "Estas forte rekomendite, ke vi nun kontrolu novajn ĝisdatigojn"
 
 #: libapper/PkTransaction.cpp:264
 #, kde-format
@@ -3613,11 +3597,16 @@ msgid ""
 "\n"
 "Are you sure you want to proceed with the installation?"
 msgstr ""
+"Vi estas instalonta nesubskribitajn pakaĵojn, kiuj povas endanĝerigi vian "
+"sistemon, ĉar estas neeble kontroli ĉu la programaro venis de fidinda "
+"fonto.\n"
+"\n"
+"Ĉu vi certas, ke vi volas daŭrigi la instaladon?"
 
 #: libapper/PkTransaction.cpp:267
 #, kde-format
 msgid "Installing unsigned software"
-msgstr ""
+msgstr "Instalante nesubskribitan programaron"
 
 #: libapper/PkTransactionWidget.cpp:229 libapper/PkTransactionWidget.cpp:242
 #, kde-format
@@ -3628,57 +3617,54 @@ msgstr "%1 (%2%)"
 #: libapper/PkTransactionWidget.ui:47
 #, kde-format
 msgid "icon"
-msgstr ""
+msgstr "ikono"
 
 #. i18n: ectx: property (text), widget (QLabel, currentL)
 #: libapper/PkTransactionWidget.ui:73
-#, fuzzy, kde-format
-#| msgctxt "The action of the package, in past tense"
-#| msgid "Downloaded"
+#, kde-format
 msgid "Downloading Packages"
-msgstr "Elŝutita"
+msgstr "Elŝutante Pakojn"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RepoSig)
 #: libapper/RepoSig.ui:14
 #, kde-format
 msgid "Software signature is required"
-msgstr ""
+msgstr "Subskribo de programaro estas postulata"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: libapper/RepoSig.ui:47
-#, fuzzy, kde-format
-#| msgid "Repository"
+#, kde-format
 msgid "Repository name:"
-msgstr "Deponejo"
+msgstr "Deponejo nomo:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: libapper/RepoSig.ui:73
 #, kde-format
 msgid "Signature URL:"
-msgstr ""
+msgstr "Subskriba URL:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: libapper/RepoSig.ui:99
 #, kde-format
 msgid "Signature user identifier:"
-msgstr ""
+msgstr "Subskriba uzantidentigilo:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: libapper/RepoSig.ui:125
 #, kde-format
 msgid "Signature identifier:"
-msgstr ""
+msgstr "Signaturidentigilo:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: libapper/RepoSig.ui:147
 #, kde-format
 msgid "Do you trust the origin of packages?"
-msgstr ""
+msgstr "Ĉu vi fidas la originon de pakoj?"
 
 #: libapper/Requirements.cpp:55
 #, kde-format
 msgid "Additional changes"
-msgstr ""
+msgstr "Pliaj ŝanĝoj"
 
 #: libapper/Requirements.cpp:82
 #, kde-format
@@ -3716,18 +3702,17 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: libapper/Requirements.cpp:151
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "1 untrusted package"
 msgid_plural "%1 untrusted packages"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] ""
+msgstr[1] ""
 
 #: libapper/Requirements.cpp:199
 #, kde-format
 msgctxt "how many bytes are required for download"
 msgid "Need to get %1 of archives"
-msgstr ""
+msgstr "Necesas akiri %1 el arkivoj"
 
 #: libapper/Requirements.cpp:258
 #, kde-format
@@ -3735,18 +3720,20 @@ msgid ""
 "You are about to install unsigned packages that can compromise your system, "
 "as it is impossible to verify if the software came from a trusted source."
 msgstr ""
+"Vi estas instalonta nesubskribitajn pakaĵojn, kiuj povas kompromiti vian "
+"sistemon, ĉar estas neeble kontroli ĉu la programaro venis de fidinda fonto."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: libapper/Requirements.ui:28
 #, kde-format
 msgid "Additional changes are required to complete the task"
-msgstr ""
+msgstr "Pliaj ŝanĝoj necesas por plenumi la taskon"
 
 #. i18n: ectx: property (text), widget (QCheckBox, confirmCB)
 #: libapper/Requirements.ui:101
 #, kde-format
 msgid "Do not confirm when installing or updating additional packages"
-msgstr ""
+msgstr "Ne konfirmu kiam vi instalas aŭ ĝisdatigas pliajn pakaĵojn"
 
 #. i18n: ectx: property (text), widget (QLabel, descriptionL)
 #: PkSession/IntroDialog.ui:65
@@ -3757,7 +3744,7 @@ msgstr "TekstaEtikedo"
 #: PkSession/main.cpp:48
 #, kde-format
 msgid "Apper PackageKit Session helper"
-msgstr ""
+msgstr "Apper PackageKit Session-helpilo"
 
 #: PkSession/main.cpp:51
 #, kde-format
@@ -3770,21 +3757,19 @@ msgid "Trever Fischer"
 msgstr "Trever Fischer"
 
 #: PkSession/PkInstallCatalogs.cpp:47
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Install Packages Catalogs"
-msgstr "Pakaĵoj"
+msgstr "Instalu Pakojn-Katalogojn"
 
 #: PkSession/PkInstallCatalogs.cpp:66
 #, kde-format
 msgid "You can drop more catalogs in here"
-msgstr ""
+msgstr "Vi povas faligi pliajn katalogojn ĉi tie"
 
 #: PkSession/PkInstallCatalogs.cpp:85
-#, fuzzy, kde-format
-#| msgid "Application"
+#, kde-format
 msgid "No supported catalog was found"
-msgstr "Aplikaĵo"
+msgstr "Neniu subtenata katalogo estis trovita"
 
 #: PkSession/PkInstallCatalogs.cpp:87
 #, kde-format
@@ -3794,43 +3779,40 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: PkSession/PkInstallCatalogs.cpp:96
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "An application wants to install a catalog"
 msgid_plural "An application wants to install catalogs"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] ""
+msgstr[1] ""
 
 #: PkSession/PkInstallCatalogs.cpp:100
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "The application <i>%2</i> wants to install a catalog"
 msgid_plural "The application <i>%2</i> wants to install catalogs"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] ""
+msgstr[1] ""
 
 #: PkSession/PkInstallCatalogs.cpp:137
 #, kde-format
 msgid "Not supported"
-msgstr ""
+msgstr "Ne subtenata"
 
 #: PkSession/PkInstallCatalogs.cpp:138
 #, kde-format
 msgid ""
 "Your backend does not support any of the needed methods to install a catalog"
 msgstr ""
+"Via backend ne subtenas iujn el la necesaj metodoj por instali katalogon"
 
 #: PkSession/PkInstallCatalogs.cpp:178
-#, fuzzy, kde-format
-#| msgid "Could not find %1"
+#, kde-format
 msgid "Catalog not found"
-msgstr "Ne eblis trovi %1"
+msgstr "Katalogo ne trovita"
 
 #: PkSession/PkInstallCatalogs.cpp:179
-#, fuzzy, kde-format
-#| msgid "Could not find %1"
+#, kde-format
 msgid "Could not find a catalog to install"
-msgstr "Ne eblis trovi %1"
+msgstr "Ne eblis trovi katalogon por instali"
 
 #: PkSession/PkInstallCatalogs.cpp:186
 #, kde-format
@@ -3842,33 +3824,32 @@ msgstr[1] ""
 #: PkSession/PkInstallCatalogs.cpp:190
 #, kde-format
 msgid "Failed to open"
-msgstr ""
+msgstr "Malsukcesis malfermi"
 
 #: PkSession/PkInstallCatalogs.cpp:196
 #, kde-format
 msgid "Catalog is Empty"
-msgstr ""
+msgstr "Katalogo estas Malplena"
 
 #: PkSession/PkInstallCatalogs.cpp:197
 #, kde-format
 msgid "Could not find any package to install in this catalog"
-msgstr ""
+msgstr "Ne eblis trovi ajnan pakaĵon por instali en ĉi tiu katalogo"
 
 #: PkSession/PkInstallFontconfigResources.cpp:43
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "Installs new Fonts"
-msgstr "Instalita"
+msgstr "Instalas novajn Tiparojn"
 
 #: PkSession/PkInstallFontconfigResources.cpp:74
 #, kde-format
 msgid "Could interpret request"
-msgstr ""
+msgstr "Povus interpreti peton"
 
 #: PkSession/PkInstallFontconfigResources.cpp:74
 #, kde-format
 msgid "Please verify if the request was valid"
-msgstr ""
+msgstr "Bonvolu kontroli ĉu la peto estis valida"
 
 #: PkSession/PkInstallFontconfigResources.cpp:108
 #, kde-format
@@ -3889,33 +3870,32 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: PkSession/PkInstallFontconfigResources.cpp:122
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "The application %2 wants to install a font"
 msgid_plural "The application %2 wants to install fonts"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] ""
+msgstr[1] ""
 
 #: PkSession/PkInstallFontconfigResources.cpp:148
 #: PkSession/PkInstallFontconfigResources.cpp:157
 #, kde-format
 msgid "Failed to find font"
-msgstr ""
+msgstr "Malsukcesis trovi tiparon"
 
 #: PkSession/PkInstallFontconfigResources.cpp:150
 #, kde-format
 msgid "No new fonts could be found for this document"
-msgstr ""
+msgstr "Neniuj novaj tiparoj troveblas por ĉi tiu dokumento"
 
 #: PkSession/PkInstallFontconfigResources.cpp:159
 #, kde-format
 msgid "Failed to search for provides"
-msgstr ""
+msgstr "Malsukcesis serĉi provizaĵojn"
 
 #: PkSession/PkInstallGStreamerResources.cpp:40
 #, kde-format
 msgid "Install GStreamer Resources"
-msgstr ""
+msgstr "Instali GStreamer-Rimedojn"
 
 #: PkSession/PkInstallGStreamerResources.cpp:68
 #, kde-format
@@ -3968,21 +3948,19 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: PkSession/PkInstallGStreamerResources.cpp:139
-#, fuzzy, kde-format
-#| msgid "Application"
+#, kde-format
 msgid "No results found"
-msgstr "Aplikaĵo"
+msgstr "Neniuj rezultoj trovitaj"
 
 #: PkSession/PkInstallGStreamerResources.cpp:141
 #, kde-format
 msgid "Could not find plugin in any configured software source"
-msgstr ""
+msgstr "Ne eblis trovi kromprogramon en iu ajn agordita programara fonto"
 
 #: PkSession/PkInstallMimeTypes.cpp:41
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "Install Support for File Types"
-msgstr "Instalita"
+msgstr "Instali Subtenon por Dosiertipoj"
 
 #: PkSession/PkInstallMimeTypes.cpp:51
 #, kde-format
@@ -3995,7 +3973,7 @@ msgstr[1] ""
 #: PkSession/PkInstallMimeTypes.cpp:56
 #, kde-format
 msgid "No valid file types were provided"
-msgstr ""
+msgstr "Neniuj validaj dosiertipoj estis disponigitaj"
 
 #: PkSession/PkInstallMimeTypes.cpp:63
 #, kde-format
@@ -4005,52 +3983,49 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: PkSession/PkInstallMimeTypes.cpp:67
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "The application %2 is requiring support to open this kind of files"
 msgid_plural ""
 "The application %2 is requiring support to open these kinds of files"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] ""
+msgstr[1] ""
 
 #: PkSession/PkInstallMimeTypes.cpp:94
-#, fuzzy, kde-format
-#| msgid "Could not find %1"
+#, kde-format
 msgid "Could not find software"
-msgstr "Ne eblis trovi %1"
+msgstr "Ne eblis trovi programaron"
 
 #: PkSession/PkInstallMimeTypes.cpp:96
 #, kde-format
 msgid "No new applications can be found to handle this type of file"
-msgstr ""
+msgstr "Neniuj novaj aplikaĵoj troveblas por trakti ĉi tiun tipon de dosiero"
 
 #: PkSession/PkInstallPackageFiles.cpp:40
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Install Packages Files"
-msgstr "Pakaĵoj"
+msgstr "Instalu Pakojn-Dosieroj"
 
 #: PkSession/PkInstallPackageFiles.cpp:44
 #: PkSession/PkRemovePackageByFiles.cpp:45
 #, kde-format
 msgid "You can drop more files in here"
-msgstr ""
+msgstr "Vi povas faligi pliajn dosierojn ĉi tie"
 
 #: PkSession/PkInstallPackageFiles.cpp:53
 #, kde-format
 msgid "Not Supported"
-msgstr ""
+msgstr "Ne Subtenata"
 
 #: PkSession/PkInstallPackageFiles.cpp:54
 #, kde-format
 msgid "Your current backend does not support installing files"
-msgstr ""
+msgstr "Via nuna backend ne subtenas instali dosierojn"
 
 #: PkSession/PkInstallPackageFiles.cpp:69
 #: PkSession/PkRemovePackageByFiles.cpp:65
 #, kde-format
 msgid "No supported files were provided"
-msgstr ""
+msgstr "Neniuj subtenataj dosieroj estis provizitaj"
 
 #: PkSession/PkInstallPackageFiles.cpp:71
 #, kde-format
@@ -4061,26 +4036,24 @@ msgstr[1] ""
 
 #: PkSession/PkInstallPackageFiles.cpp:80
 #: PkSession/PkInstallPackageNames.cpp:72
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "An application wants to install a package"
 msgid_plural "An application wants to install packages"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] ""
+msgstr[1] ""
 
 #: PkSession/PkInstallPackageFiles.cpp:84
 #: PkSession/PkInstallPackageNames.cpp:76
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "The application <i>%2</i> wants to install a package"
 msgid_plural "The application <i>%2</i> wants to install packages"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] ""
+msgstr[1] ""
 
 #: PkSession/PkInstallPackageFiles.cpp:106
 #, kde-format
 msgid "Installation Complete"
-msgstr ""
+msgstr "Instalado Kompleta"
 
 #: PkSession/PkInstallPackageFiles.cpp:107
 #, kde-format
@@ -4090,30 +4063,25 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: PkSession/PkInstallPackageFiles.cpp:118
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Failed to install files"
-msgstr "Pakaĵoj"
+msgstr "Malsukcesis instali dosierojn"
 
 #: PkSession/PkInstallPackageFiles.cpp:119
 #: PkSession/PkInstallPackageFiles.cpp:121
-#, fuzzy, kde-format
-#| msgid "Could not find %1"
+#, kde-format
 msgid "Could not install files"
-msgstr "Ne eblis trovi %1"
+msgstr "Ne eblis instali dosierojn"
 
 #: PkSession/PkInstallPackageNames.cpp:43
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Install Packages by Name"
-msgstr "Pakaĵoj"
+msgstr "Instali Pakojn laŭ Nomo"
 
 #: PkSession/PkInstallPackageNames.cpp:59
-#, fuzzy, kde-format
-#| msgid "1 package to remove"
-#| msgid_plural "%1 packages to remove"
+#, kde-format
 msgid "No package names were provided"
-msgstr "1 pakaĵo por forigi"
+msgstr "Neniuj pakaĵnomoj estis disponigitaj"
 
 #: PkSession/PkInstallPackageNames.cpp:62
 #, kde-format
@@ -4123,10 +4091,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: PkSession/PkInstallPackageNames.cpp:101
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Failed to install packages"
-msgstr "Pakaĵoj"
+msgstr "Malsukcesis instali pakaĵojn"
 
 #: PkSession/PkInstallPackageNames.cpp:102
 #, kde-format
@@ -4149,26 +4116,24 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: PkSession/PkInstallPlasmaResources.cpp:41
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Install Plasma Resources"
-msgstr "Pakaĵoj"
+msgstr "Instali Plasmajn Rimedojn"
 
 #: PkSession/PkInstallPlasmaResources.cpp:53
-#, fuzzy, kde-format
-#| msgid "Updated"
+#, kde-format
 msgid "%1 data engine"
-msgstr "Aktualigita"
+msgstr "%1 datummotoro"
 
 #: PkSession/PkInstallPlasmaResources.cpp:55
 #, kde-format
 msgid "%1 script engine"
-msgstr ""
+msgstr "%1 skriptomotoro"
 
 #: PkSession/PkInstallPlasmaResources.cpp:67
 #, kde-format
 msgid "No supported resources were provided"
-msgstr ""
+msgstr "Neniuj subtenataj rimedoj estis disponigitaj"
 
 #: PkSession/PkInstallPlasmaResources.cpp:69
 #, kde-format
@@ -4188,78 +4153,73 @@ msgstr[1] ""
 #: PkSession/PkInstallPlasmaResources.cpp:103
 #, kde-format
 msgid "Failed to search for Plasma service"
-msgstr ""
+msgstr "Malsukcesis serĉi Plasma servo"
 
 #: PkSession/PkInstallPlasmaResources.cpp:106
 #, kde-format
 msgid "Could not find service in any configured software source"
-msgstr ""
+msgstr "Ne eblis trovi servon en iu ajn agordita programara fonto"
 
 #: PkSession/PkInstallPrinterDrivers.cpp:41
-#, fuzzy, kde-format
-#| msgid "Installed"
+#, kde-format
 msgid "Install Printer Drivers"
-msgstr "Instalita"
+msgstr "Instali Presilajn Pelilojn"
 
 #: PkSession/PkInstallPrinterDrivers.cpp:82
 #, kde-format
 msgid "Failed to search for printer driver"
-msgstr ""
+msgstr "Malsukcesis serĉi presilon pelilon"
 
 #: PkSession/PkInstallPrinterDrivers.cpp:83
 #, kde-format
 msgid "Could not find printer driver in any configured software source"
-msgstr ""
+msgstr "Ne eblis trovi presilon pelilon en iu ajn agordita programara fonto"
 
 #: PkSession/PkInstallProvideFiles.cpp:41
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Install Packages that Provides Files"
-msgstr "Pakaĵoj"
+msgstr "Instali Pakojn kiuj Provizas Dosierojn"
 
 #: PkSession/PkInstallProvideFiles.cpp:50
-#, fuzzy, kde-format
-#| msgid "1 package to remove"
-#| msgid_plural "%1 packages to remove"
+#, kde-format
 msgid "No files were provided"
-msgstr "1 pakaĵo por forigi"
+msgstr "Neniuj dosieroj estis disponigitaj"
 
 #: PkSession/PkInstallProvideFiles.cpp:53
 #, kde-format
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ĉu vi volas ŝerĉi tion nun?"
+msgstr[1] "Ĉu vi volas ŝerĉi tiujn nun?"
 
 #: PkSession/PkInstallProvideFiles.cpp:63
 #, kde-format
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Programo volas instali dosieron"
+msgstr[1] "Programo volas instali dosierojn"
 
 #: PkSession/PkInstallProvideFiles.cpp:67
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "The application %2 is asking to install a file"
 msgid_plural "The application %2 is asking to install files"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] ""
+msgstr[1] ""
 
 #: PkSession/PkInstallProvideFiles.cpp:93
 #, kde-format
 msgid "Failed to install file"
-msgstr ""
+msgstr "Malsukcesis instali dosieron"
 
 #: PkSession/PkInstallProvideFiles.cpp:94
 #, kde-format
 msgid "The %1 package already provides this file"
-msgstr ""
+msgstr "La pako %1 jam provizas ĉi tiun dosieron"
 
 #: PkSession/PkInstallProvideFiles.cpp:100
 #, kde-format
 msgid "Failed to find package"
-msgstr ""
+msgstr "Malsukcesis trovi pakaĵon"
 
 #: PkSession/PkInstallProvideFiles.cpp:101
 #, kde-format
@@ -4271,78 +4231,69 @@ msgstr[1] ""
 #: PkSession/PkIsInstalled.cpp:40
 #, kde-format
 msgid "Querying if a Package is Installed"
-msgstr ""
+msgstr "Demandante ĉu Pako estas Instalita"
 
 #: PkSession/PkIsInstalled.cpp:61
 #, kde-format
 msgid "User canceled the transaction"
-msgstr ""
+msgstr "Uzanto nuligis la transakcion"
 
 #: PkSession/PkIsInstalled.cpp:63
-#, fuzzy, kde-format
-#| msgid "Unknown error"
+#, kde-format
 msgid "An unknown error happened"
-msgstr "Nekonata eraro"
+msgstr "Nekonata eraro okazis"
 
 #: PkSession/PkRemovePackageByFiles.cpp:42
-#, fuzzy, kde-format
-#| msgid "Package"
+#, kde-format
 msgid "Remove Packages that Provides Files"
-msgstr "Pakaĵo"
+msgstr "Forigi Pakojn, kiuj Provizas Dosierojn"
 
 #: PkSession/PkRemovePackageByFiles.cpp:68
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Do you want to remove the following application?"
 msgid_plural "Do you want to remove the following applications?"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] "Ĉu vi volas forigi la sekvantan aplikaĵon?"
+msgstr[1] "Ĉu vi volas forigi la sekvantajn aplikaĵojn?"
 
 #: PkSession/PkRemovePackageByFiles.cpp:72
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Do you want to search for a package providing this file?"
 msgid_plural "Do you want to search for a package providing these files?"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] "Ĉu vi volas serĉi pakon kiu liveras tiun dosieron?"
+msgstr[1] "Ĉu vi volas serĉi pakon kiu liveras tiujn dosierojn?"
 
 #: PkSession/PkRemovePackageByFiles.cpp:83
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "An application is asking to remove an application"
 msgid_plural "An application is asking to remove applications"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] "Aplikaĵo estas petanta forigi aplikaĵon"
+msgstr[1] "Aplikaĵo estas petanta forigi aplikaĵojn"
 
 #: PkSession/PkRemovePackageByFiles.cpp:87
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "An application is asking to remove a file"
 msgid_plural "An application is asking to remove files"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] "Aplikaĵo estas petanta forigi dosieron"
+msgstr[1] "Aplikaĵo estas petanta forigi dosierojn"
 
 #: PkSession/PkRemovePackageByFiles.cpp:93
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "The application <i>%2</i> is asking to remove an application"
 msgid_plural "The application <i>%2</i> is asking to remove applications"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] "La aplikaĵo <i>%2</i> estas petanta forigi aplikaĵon"
+msgstr[1] "La aplikaĵo <i>%2</i> estas petanta forigi aplikaĵojn"
 
 #: PkSession/PkRemovePackageByFiles.cpp:98
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "The application <i>%2</i> is asking to remove a file"
 msgid_plural "The application <i>%2</i> is asking to remove files"
-msgstr[0] "Pakaĵoj"
-msgstr[1] "Pakaĵoj"
+msgstr[0] "La aplikaĵo <i>%2</i> estas petanta forigi dosieron"
+msgstr[1] "La aplikaĵo <i>%2</i> estas petanta forigi dosierojn"
 
 #: PkSession/PkRemovePackageByFiles.cpp:104
-#, fuzzy, kde-format
-#| msgid "Application"
+#, kde-format
 msgid "No application was found"
-msgstr "Aplikaĵo"
+msgstr "Neniu aplikaĵo estis trovita"
 
 #: PkSession/PkRemovePackageByFiles.cpp:141
 #, kde-format
@@ -4354,276 +4305,58 @@ msgstr[1] ""
 #: PkSession/PkSearchFile.cpp:42
 #, kde-format
 msgid "Search Packages that Provides Files"
-msgstr ""
+msgstr "Serĉi Pakojn, kiuj Provizas Dosieroj"
 
 #: PkSession/PkSearchFile.cpp:81
 #, kde-format
 msgid "The file name could not be found in any software source"
-msgstr ""
+msgstr "La dosiernomo ne troveblas en iu programara fonto"
 
 #: PkSession/ReviewChanges.cpp:51
 #, kde-format
 msgid "The following package was found"
 msgid_plural "The following packages were found"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La sekvonta pako estis trovita"
+msgstr[1] "La sekvontaj pakoj estis trovitaj"
 
 #: PkSession/SessionTask.cpp:371
 #, kde-format
 msgid "There are no packages to Install or Remove"
-msgstr ""
+msgstr "Ne estas pakoj por Instali aŭ Forigi"
 
 #: PkSession/SessionTask.cpp:372
 #, kde-format
 msgid "This action should not happen"
-msgstr ""
+msgstr "Ĉi tiu ago ne devus okazi"
 
 #: PkSession/SessionTask.cpp:401
-#, fuzzy, kde-format
-#| msgid "Could not find %1"
+#, kde-format
 msgid "Could not find"
-msgstr "Ne eblis trovi %1"
+msgstr "Ne eblis trovi"
 
 #: PkSession/SessionTask.cpp:402 PkSession/SessionTask.cpp:411
 #, kde-format
 msgid "No packages were found that meet the request"
-msgstr ""
+msgstr "Neniuj pakoj estis trovitaj kiuj plenumas la peton"
 
 #: PkSession/SessionTask.cpp:410
-#, fuzzy, kde-format
-#| msgid "Packages"
+#, kde-format
 msgid "Failed to find"
-msgstr "Pakaĵoj"
+msgstr "Malsukcesis trovi"
 
 #. i18n("Failed to commit transaction"),
 #. PkStrings::errsearchFailedorMessage(m_pkTransaction->error()));
 #: PkSession/SessionTask.cpp:431
 #, kde-format
 msgid "Transaction did not finish with success"
-msgstr ""
+msgstr "Transakcio ne finiĝis kun sukceso"
 
 #: PkSession/SessionTask.cpp:437
 #, kde-format
 msgid "Task completed"
-msgstr ""
+msgstr "Tasko finita"
 
 #: PkSession/SessionTask.cpp:437
 #, kde-format
 msgid "All operations were committed successfully"
-msgstr ""
-
-#, fuzzy
-#~| msgid "Application"
-#~ msgid "Application Manager"
-#~ msgstr "Aplikaĵo"
-
-#, fuzzy
-#~| msgid "Installed"
-#~ msgid "Install for all users"
-#~ msgstr "Instalita"
-
-#, fuzzy
-#~| msgid "Package"
-#~ msgid "Similar native packages found"
-#~ msgstr "Pakaĵo"
-
-#, fuzzy
-#~| msgid "Updated"
-#~ msgid "Upgrade System"
-#~ msgstr "Aktualigita"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "Failed to simulate file install"
-#~ msgstr "Pakaĵoj"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "Failed to simulate package install"
-#~ msgstr "Pakaĵoj"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "Failed to simulate package removal"
-#~ msgstr "Pakaĵoj"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "Failed to simulate package update"
-#~ msgstr "Pakaĵoj"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "Failed to update package"
-#~ msgstr "Pakaĵoj"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "Failed to install signature"
-#~ msgstr "Pakaĵoj"
-
-#, fuzzy
-#~| msgid "(C) 2008-2009 Daniel Nicoletti"
-#~ msgid "(C) 2008-2012 Daniel Nicoletti"
-#~ msgstr "(C) 2008-2009 Daniel Nicoletti"
-
-#, fuzzy
-#~| msgid "(C) 2008-2009 Daniel Nicoletti"
-#~ msgid "(C) 2008-2011 Daniel Nicoletti"
-#~ msgstr "(C) 2008-2009 Daniel Nicoletti"
-
-#, fuzzy
-#~| msgid "Continue"
-#~ msgid "Configure"
-#~ msgstr "Daŭrigi"
-
-#, fuzzy
-#~| msgid "Settings"
-#~ msgid "Apper Sentinel"
-#~ msgstr "Agordo"
-
-#, fuzzy
-#~| msgid "Package"
-#~ msgid "Packages: %1"
-#~ msgstr "Pakaĵo"
-
-#~ msgid "Ignore"
-#~ msgstr "Ignori"
-
-#~ msgid "%1"
-#~ msgstr "%1"
-
-#~ msgid "Show messages"
-#~ msgstr "Montri mesaĝojn"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "Failed to refresh package cache"
-#~ msgstr "Pakaĵoj"
-
-#, fuzzy
-#~| msgid "Continue"
-#~ msgctxt "Shown when you have not set a weather provider"
-#~ msgid "Please Configure"
-#~ msgstr "Daŭrigi"
-
-#, fuzzy
-#~| msgid "Updated"
-#~ msgid "Update System"
-#~ msgstr "Aktualigita"
-
-#, fuzzy
-#~| msgid "Updated"
-#~ msgid "Update Settings"
-#~ msgstr "Aktualigita"
-
-#~ msgid "Actions"
-#~ msgstr "Agoj"
-
-#, fuzzy
-#~| msgid "(C) 2008-2009 Daniel Nicoletti"
-#~ msgid "(C) 2008-2010 Daniel Nicoletti"
-#~ msgstr "(C) 2008-2009 Daniel Nicoletti"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "An application wants to install a package:"
-#~ msgid_plural "An application wants to install packages:"
-#~ msgstr[0] "Pakaĵoj"
-#~ msgstr[1] "Pakaĵoj"
-
-#, fuzzy
-#~| msgid "Packages"
-#~ msgid "The application <i>%2</i> wants to install a package:"
-#~ msgid_plural "The application <i>%2</i> wants to install packages:"
-#~ msgstr[0] "Pakaĵoj"
-#~ msgstr[1] "Pakaĵoj"
-
-#~ msgid "Install catalog"
-#~ msgid_plural "Install catalogs"
-#~ msgstr[0] "Instali katalogon"
-#~ msgstr[1] "Instali katalogojn"
-
-#~ msgctxt "Parse the catalog search and install it"
-#~ msgid "Install"
-#~ msgstr "Instali"
-
-#~ msgctxt "Search for a package that provides these files and install it"
-#~ msgid "Install"
-#~ msgstr "Instali"
-
-#~ msgctxt "Search for packages"
-#~ msgid "Search"
-#~ msgstr "Serĉi"
-
-#~ msgid "Install?"
-#~ msgstr "Ĉu instali?"
-
-#~ msgid "Logout"
-#~ msgstr "Elsaluti"
-
-#, fuzzy
-#~| msgid "Settings"
-#~ msgid "Application Manager Settings"
-#~ msgstr "Agordo"
-
-#, fuzzy
-#~| msgid "Settings"
-#~ msgid "KPackageKit settings"
-#~ msgstr "Agordo"
-
-#~ msgid "Message"
-#~ msgstr "Mesaĝo"
-
-#~ msgid "(C) 2008-2009 Daniel Nicoletti"
-#~ msgstr "(C) 2008-2009 Daniel Nicoletti"
-
-#, fuzzy
-#~| msgid "Find"
-#~ msgctxt "The transaction finished it's job"
-#~ msgid "Finished"
-#~ msgstr "Trovi"
-
-#~ msgid "Home Page"
-#~ msgstr "Hejma paĝo"
-
-#~ msgctxt "Group of the package"
-#~ msgid "Group"
-#~ msgstr "Grupo"
-
-#~ msgid "Not now"
-#~ msgstr "Ne nun"
-
-#~ msgid "Type"
-#~ msgstr "Tipo"
-
-#~ msgctxt "State of the upgrade (ie testing, unstable..)"
-#~ msgid "State"
-#~ msgstr "Stato"
-
-#~ msgid "New version"
-#~ msgstr "Nova versio"
-
-#~ msgid "Vendor"
-#~ msgstr "Vendisto"
-
-#~ msgid "Bugzilla"
-#~ msgstr "Bugzilla"
-
-#~ msgid "CVE"
-#~ msgstr "CVE"
-
-#~ msgid "Notice"
-#~ msgstr "Rimarku"
-
-#~ msgctxt "Groups of packages"
-#~ msgid "Group:"
-#~ msgid_plural "Groups:"
-#~ msgstr[0] "Grupo:"
-#~ msgstr[1] "Grupoj:"
-
-#, fuzzy
-#~| msgid "Find"
-#~ msgctxt "The time that the transaction took to complete"
-#~ msgid "Finished in %1."
-#~ msgstr "Trovi"
+msgstr "Ĉiuj operacioj estis faritaj sukcese"
