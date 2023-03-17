@@ -673,12 +673,12 @@ msgstr "أخفِ الحزم التي لا تعتبر تطبيقات"
 #: Apper/main.cpp:44 Apper/MainUi.cpp:41
 #, kde-format
 msgid "Apper"
-msgstr "آپر"
+msgstr "آبر"
 
 #: Apper/main.cpp:46
 #, kde-format
 msgid "Apper is an application to get and manage software"
-msgstr "«آپر» هو تطبيق لجلب البرمجيّات وإدارتها"
+msgstr "«آبر» هو تطبيق لجلب البرمجيّات وإدارتها"
 
 #: Apper/main.cpp:48
 #, kde-format
