@@ -7,7 +7,7 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper Updates
-Name[ar]=تحديثات آپر
+Name[ar]=تحديثات آبر
 Name[az]=Apper Yenilənmələri
 Name[bg]=Обновления на Updates
 Name[bs]=Nadogradnje programa Apper

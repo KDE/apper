@@ -6,7 +6,7 @@ X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=org.kde.apper
 
 Name=Apper
-Name[ar]=آپر
+Name[ar]=آبر
 Name[az]=Apper
 Name[bg]=Apper
 Name[bs]=Apper

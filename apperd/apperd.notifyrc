@@ -1,7 +1,7 @@
 [Global]
 IconName=system-software-install
 Name=Apper
-Name[ar]=آپر
+Name[ar]=آبر
 Name[az]=Apper
 Name[bg]=Apper
 Name[bs]=Apper
@@ -47,7 +47,7 @@ Name[x-test]=xxApperxx
 Name[zh_CN]=Apper 软件包管理器
 Name[zh_TW]=Apper
 Comment=Apper Notification
-Comment[ar]=إخطار آپر
+Comment[ar]=إخطار آبر
 Comment[az]=Apper Bildirişi
 Comment[bg]=Уведомление на Apper
 Comment[bs]=Informisanje programa Apper
