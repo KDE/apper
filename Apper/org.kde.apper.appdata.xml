@@ -4,7 +4,7 @@
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-2.0+</project_license>
   <name>Apper</name>
-  <name xml:lang="ar">آپر</name>
+  <name xml:lang="ar">آبر</name>
   <name xml:lang="az">Apper</name>
   <name xml:lang="bg">Apper</name>
   <name xml:lang="bs">Apper</name>
@@ -87,7 +87,7 @@
       Apper is a graphical management tool for packages and applications
       provided by a Linux distribution.
     </p>
-    <p xml:lang="ar">«آپر» هي أداة إدارة رسوميّة للحزم والتّطبيقات التي توفّرها توزيعة لينكس.</p>
+    <p xml:lang="ar">«آبر» هي أداة إدارة رسوميّة للحزم والتّطبيقات التي توفّرها توزيعة لينكس.</p>
     <p xml:lang="az">Apper, Linux distribütoru tərəfindən təqdim olunan paketlərin və tətbiqlərin qrafik idarəetmə alətidir.</p>
     <p xml:lang="bg">Apper е графичен инструмент за управление на пакети и приложения, предоставени от дистрибуция на Linux.</p>
     <p xml:lang="bs">Apper je grafički alat za upravljanje paketima i aplikacijama obezbjeđenim od strane Linux distribucije.</p>
@@ -127,7 +127,7 @@
       It allows installing new software as well as keeping the system up to
       date by installing updates.
     </p>
-    <p xml:lang="ar">يسمح لك «آپر» بتثبيت برمجيّات جديد كما وإبقاء النّظام محدّثًا بتثبيت التّحديثات.</p>
+    <p xml:lang="ar">يسمح لك «آبر» بتثبيت برمجيّات جديد كما وإبقاء النّظام محدّثًا بتثبيت التّحديثات.</p>
     <p xml:lang="az">Bu yeni proqram təminatını quraşdırmağa və həmçinin yenilənmələri quraşdırmaqla sistemi aktual vəziyyətdə saxlamağa imkan verir.</p>
     <p xml:lang="bg">Той позволява инсталиране на нов софтуер, както и поддържане на системата в актуално състояние чрез инсталиране на обновления.</p>
     <p xml:lang="bs">Dopušta instaliranje novog softvera kao i održavanje sistema instaliranjem ažuriranja.</p>
