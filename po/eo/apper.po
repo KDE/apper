@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: apper\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2023-03-08 22:01+0100\n"
+"PO-Revision-Date: 2023-05-03 06:40+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -860,7 +860,7 @@ msgstr "kiam sur movebla larĝbenda retkonekto"
 #: Apper/Settings/Settings.ui:122 Apper/Settings/Settings.ui:176
 #, kde-format
 msgid "when running on battery"
-msgstr "kiam funkcias per kuirilaro"
+msgstr "kiam funkcias per baterio"
 
 #. i18n: ectx: property (text), widget (QLabel, autoInsL)
 #: Apper/Settings/Settings.ui:141
@@ -2459,7 +2459,7 @@ msgstr "Neniu spaco restas sur la disko"
 #: libapper/PkStrings.cpp:519 libapper/PkTransaction.cpp:341
 #, kde-format
 msgid "A media change is required"
-msgstr "Necesas amaskomunikila ŝanĝo"
+msgstr "Necesas ŝanĝi datumportilon"
 
 #: libapper/PkStrings.cpp:521
 #, kde-format
@@ -2756,8 +2756,8 @@ msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
 msgstr ""
-"Fontpakaĵoj kutime ne estas instalitaj tiel.\n"
-"Kontrolu la etendon de la dosiero kiun vi provas instali."
+"Fontpakaĵoj ne estas kutime instalitaj tiamaniere.\n"
+"Kontrolu la finaĵon de la dosiero kiun vi provas instali."
 
 #: libapper/PkStrings.cpp:636
 #, kde-format
@@ -2938,7 +2938,7 @@ msgstr ""
 #: libapper/PkStrings.cpp:694
 #, kde-format
 msgid "Additional media is required to complete the transaction."
-msgstr "Pliaj amaskomunikiloj estas postulataj por kompletigi la transakcion."
+msgstr "Pliaj datumportiloj estas postulataj por kompletigi la transakcion."
 
 #: libapper/PkStrings.cpp:696
 #, kde-format
@@ -3617,7 +3617,7 @@ msgstr "%1 (%2%)"
 #: libapper/PkTransactionWidget.ui:47
 #, kde-format
 msgid "icon"
-msgstr "ikono"
+msgstr "piktogramo"
 
 #. i18n: ectx: property (text), widget (QLabel, currentL)
 #: libapper/PkTransactionWidget.ui:73
