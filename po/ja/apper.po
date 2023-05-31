@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.0\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
@@ -1132,7 +1132,6 @@ msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
 msgstr[0] ""
-msgstr[1] ""
 
 #: Apper/Updater/UpdateDetails.cpp:239
 #, kde-format
@@ -1143,7 +1142,6 @@ msgid_plural ""
 "For more information about bugs fixed by this update please visit these "
 "websites:"
 msgstr[0] ""
-msgstr[1] ""
 
 #: Apper/Updater/UpdateDetails.cpp:249
 #, kde-format
@@ -1152,7 +1150,6 @@ msgid ""
 msgid_plural ""
 "For more information about this security update please visit these websites:"
 msgstr[0] ""
-msgstr[1] ""
 
 #: Apper/Updater/UpdateDetails.cpp:259
 #, kde-format
@@ -1262,7 +1259,6 @@ msgstr ""
 msgid "Package: %2"
 msgid_plural "Packages: %2"
 msgstr[0] "パッケージ: %2"
-msgstr[1] "パッケージ: %2"
 
 #: apperd/Updater.cpp:156
 #, kde-format
@@ -1297,7 +1293,6 @@ msgstr "ソフトウェア更新に失敗しました。"
 msgid "There is one new update"
 msgid_plural "There are %1 new updates"
 msgstr[0] "アップデートをチェック中:"
-msgstr[1] "アップデートをチェック中:"
 
 #: apperd/Updater.cpp:289 AppSetup/SetupWizard.cpp:260
 #: libapper/ApplicationsDelegate.cpp:44
@@ -1435,7 +1430,6 @@ msgstr "ファイルのインストールに成功しました"
 msgid "New application available"
 msgid_plural "New applications available"
 msgstr[0] "利用可能なネットワーク接続がありません"
-msgstr[1] "利用可能なネットワーク接続がありません"
 
 #: libapper/ApplicationLauncher.cpp:100
 #, kde-format
@@ -1443,7 +1437,6 @@ msgid "The following application was just installed. Click on it to launch:"
 msgid_plural ""
 "The following applications were just installed. Click on them to launch:"
 msgstr[0] ""
-msgstr[1] ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, showCB)
 #: libapper/ApplicationLauncher.ui:81
@@ -3520,8 +3513,7 @@ msgstr "アップデートが利用可能な場合に通知"
 msgctxt "Some updates were selected on the view"
 msgid "1 Update Selected"
 msgid_plural "%1 Updates Selected"
-msgstr[0] "1 つのアップデートが選択されました"
-msgstr[1] "%1 つのアップデートが選択されました"
+msgstr[0] "%1 つのアップデートが選択されました"
 
 #: libapper/PkStrings.cpp:872
 #, fuzzy, kde-format
@@ -3531,8 +3523,7 @@ msgstr[1] "%1 つのアップデートが選択されました"
 msgctxt "Some updates are being shown on the screen"
 msgid "1 Update"
 msgid_plural "%1 Updates"
-msgstr[0] "1 つのアップデート"
-msgstr[1] "%1 つのアップデート"
+msgstr[0] "%1 つのアップデート"
 
 #: libapper/PkStrings.cpp:875
 #, fuzzy, kde-format
@@ -3549,8 +3540,7 @@ msgstr "%1% - %2"
 msgctxt "Part of: %1 Updates, %1 Selected"
 msgid "%1 Update"
 msgid_plural "%1 Updates"
-msgstr[0] "1 つのアップデート"
-msgstr[1] "%1 つのアップデート"
+msgstr[0] "%1 つのアップデート"
 
 #: libapper/PkStrings.cpp:877
 #, fuzzy, kde-format
@@ -3560,8 +3550,7 @@ msgstr[1] "%1 つのアップデート"
 msgctxt "Part of: %1 Updates, %1 Selected"
 msgid "%1 Selected"
 msgid_plural "%1 Selected"
-msgstr[0] "1 つのアップデートが選択されました"
-msgstr[1] "%1 つのアップデートが選択されました"
+msgstr[0] "%1 つのアップデートが選択されました"
 
 #: libapper/PkStrings.cpp:881
 #, fuzzy, kde-format
@@ -3575,7 +3564,6 @@ msgstr "パッケージ"
 msgid "1 Package"
 msgid_plural "%1 Packages"
 msgstr[0] "パッケージ"
-msgstr[1] "パッケージ"
 
 #: libapper/PkStrings.cpp:891
 #, kde-format
@@ -3830,36 +3818,31 @@ msgstr "追加の変更"
 #, kde-format
 msgid "1 package to remove"
 msgid_plural "%1 packages to remove"
-msgstr[0] "1 パッケージを削除"
-msgstr[1] "%1 パッケージを削除"
+msgstr[0] "%1 パッケージを削除"
 
 #: libapper/Requirements.cpp:97
 #, kde-format
 msgid "1 package to downgrade"
 msgid_plural "%1 packages to downgrade"
-msgstr[0] "1 パッケージをダウングレード"
-msgstr[1] "%1 パッケージをダウングレード"
+msgstr[0] "%1 パッケージをダウングレード"
 
 #: libapper/Requirements.cpp:112
 #, kde-format
 msgid "1 package to reinstall"
 msgid_plural "%1 packages to reinstall"
-msgstr[0] "1 パッケージを再インストール"
-msgstr[1] "%1 パッケージを再インストール"
+msgstr[0] "%1 パッケージを再インストール"
 
 #: libapper/Requirements.cpp:125
 #, kde-format
 msgid "1 package to install"
 msgid_plural "%1 packages to install"
-msgstr[0] "1 パッケージをインストール"
-msgstr[1] "%1 パッケージをインストール"
+msgstr[0] "%1 パッケージをインストール"
 
 #: libapper/Requirements.cpp:138
 #, kde-format
 msgid "1 package to update"
 msgid_plural "%1 packages to update"
-msgstr[0] "1 パッケージをアップグレード"
-msgstr[1] "%1 パッケージをアップグレード"
+msgstr[0] "%1 パッケージをアップグレード"
 
 #: libapper/Requirements.cpp:151
 #, fuzzy, kde-format
@@ -3868,7 +3851,6 @@ msgstr[1] "%1 パッケージをアップグレード"
 msgid "1 untrusted package"
 msgid_plural "%1 untrusted packages"
 msgstr[0] "パッケージをインストール済"
-msgstr[1] "パッケージをインストール済"
 
 #: libapper/Requirements.cpp:199
 #, kde-format
@@ -3942,7 +3924,6 @@ msgstr "アップデートの記述が見つかりませんでした。"
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "<h3>以下のカタログをインストールしますか？</h3><ul><li>%2</li></ul>"
-msgstr[1] "<h3>以下のカタログをインストールしますか？</h3><ul><li>%2</li></ul>"
 
 #: PkSession/PkInstallCatalogs.cpp:96
 #, fuzzy, kde-format
@@ -3951,7 +3932,6 @@ msgstr[1] "<h3>以下のカタログをインストールしますか？</h3><ul
 msgid "An application wants to install a catalog"
 msgid_plural "An application wants to install catalogs"
 msgstr[0] "プログラムがパッケージをインストールしようとしています"
-msgstr[1] "プログラムがパッケージをインストールしようとしています"
 
 #: PkSession/PkInstallCatalogs.cpp:100
 #, fuzzy, kde-format
@@ -3960,7 +3940,6 @@ msgstr[1] "プログラムがパッケージをインストールしようとし
 msgid "The application <i>%2</i> wants to install a catalog"
 msgid_plural "The application <i>%2</i> wants to install catalogs"
 msgstr[0] "%2 がパッケージをインストールしようとしています"
-msgstr[1] "%2 がパッケージをインストールしようとしています"
 
 #: PkSession/PkInstallCatalogs.cpp:137
 #, kde-format
@@ -3992,7 +3971,6 @@ msgstr "パッケージが見つかりませんでした"
 msgid "Catalog %2 failed to open"
 msgid_plural "Catalogs %2 failed to open"
 msgstr[0] "カタログ %2 を開けませんでした"
-msgstr[1] "カタログ %2 を開けませんでした"
 
 #: PkSession/PkInstallCatalogs.cpp:190
 #, kde-format
@@ -4046,16 +4024,12 @@ msgid_plural ""
 msgstr[0] ""
 "この文書の表示には追加のフォントが必要です。適したパッケージを今すぐ検索しま"
 "すか？"
-msgstr[1] ""
-"この文書の表示には追加のフォントが必要です。適したパッケージを今すぐ検索しま"
-"すか？"
 
 #: PkSession/PkInstallFontconfigResources.cpp:118
 #, kde-format
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "プログラムがファイルをインストールしようとしています"
-msgstr[1] "プログラムがファイルをインストールしようとしています"
 
 #: PkSession/PkInstallFontconfigResources.cpp:122
 #, fuzzy, kde-format
@@ -4064,7 +4038,6 @@ msgstr[1] "プログラムがファイルをインストールしようとして
 msgid "The application %2 wants to install a font"
 msgid_plural "The application %2 wants to install fonts"
 msgstr[0] "%2 がパッケージをインストールしようとしています"
-msgstr[1] "%2 がパッケージをインストールしようとしています"
 
 #: PkSession/PkInstallFontconfigResources.cpp:148
 #: PkSession/PkInstallFontconfigResources.cpp:157
@@ -4102,16 +4075,12 @@ msgid_plural ""
 msgstr[0] ""
 "以下のプラグインが必要です: <ul><li>%2</li></ul> これの検索を今すぐ行います"
 "か？"
-msgstr[1] ""
-"以下のプラグインが必要です: <ul><li>%2</li></ul> これの検索を今すぐ行います"
-"か？"
 
 #: PkSession/PkInstallGStreamerResources.cpp:80
 #, kde-format
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "プログラムにはこのファイルをデコードする追加のプラグインが必要です"
-msgstr[1] "プログラムにはこのファイルをデコードする追加のプラグインが必要です"
 
 #: PkSession/PkInstallGStreamerResources.cpp:85
 #, kde-format
@@ -4119,36 +4088,30 @@ msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] ""
 "プログラムにはこのファイルをエンコードする追加のプラグインが必要です"
-msgstr[1] ""
-"プログラムにはこのファイルをエンコードする追加のプラグインが必要です"
 
 #: PkSession/PkInstallGStreamerResources.cpp:90
 #, kde-format
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "プログラムにはこの操作を実行する追加のプラグインが必要です"
-msgstr[1] "プログラムにはこの操作を実行する追加のプラグインが必要です"
 
 #: PkSession/PkInstallGStreamerResources.cpp:97
 #, kde-format
 msgid "%2 requires an additional plugin to decode this file"
 msgid_plural "%2 requires additional plugins to decode this file"
 msgstr[0] "%2 にはこのファイルをデコードする追加のプラグインが必要です"
-msgstr[1] "%2 にはこのファイルをデコードする追加のプラグインが必要です"
 
 #: PkSession/PkInstallGStreamerResources.cpp:103
 #, kde-format
 msgid "%2 requires an additional plugin to encode this file"
 msgid_plural "%2 requires additional plugins to encode this file"
 msgstr[0] "%2 にはこのファイルをエンコードする追加のプラグインが必要です"
-msgstr[1] "%2 にはこのファイルをエンコードする追加のプラグインが必要です"
 
 #: PkSession/PkInstallGStreamerResources.cpp:109
 #, kde-format
 msgid "%2 requires an additional plugin for this operation"
 msgid_plural "%2 requires additional plugins for this operation"
 msgstr[0] "%2 にはこの操作を実行する追加のプラグインが必要です"
-msgstr[1] "%2 にはこの操作を実行する追加のプラグインが必要です"
 
 #: PkSession/PkInstallGStreamerResources.cpp:139
 #, fuzzy, kde-format
@@ -4178,7 +4141,6 @@ msgid "Do you want to search for a program that can open this file type?"
 msgid_plural ""
 "Do you want to search for a program that can open these file types?"
 msgstr[0] "このファイルを含むパッケージを検索し削除しますか？"
-msgstr[1] "このファイルを含むパッケージを検索し削除しますか？"
 
 #: PkSession/PkInstallMimeTypes.cpp:56
 #, fuzzy, kde-format
@@ -4193,7 +4155,6 @@ msgstr "ファイルが見つかりませんでした。"
 msgid "A program is requiring support to open this kind of files"
 msgid_plural "A program is requiring support to open these kinds of files"
 msgstr[0] "プログラムにはこのファイルをデコードする追加のプラグインが必要です"
-msgstr[1] "プログラムにはこのファイルをデコードする追加のプラグインが必要です"
 
 #: PkSession/PkInstallMimeTypes.cpp:67
 #, fuzzy, kde-format
@@ -4203,7 +4164,6 @@ msgid "The application %2 is requiring support to open this kind of files"
 msgid_plural ""
 "The application %2 is requiring support to open these kinds of files"
 msgstr[0] "プログラムにはこのファイルをデコードする追加のプラグインが必要です"
-msgstr[1] "プログラムにはこのファイルをデコードする追加のプラグインが必要です"
 
 #: PkSession/PkInstallMimeTypes.cpp:94
 #, fuzzy, kde-format
@@ -4259,8 +4219,7 @@ msgstr "ファイルが見つかりませんでした。"
 #| msgid_plural "Do you want to install these files?"
 msgid "Press <i>Continue</i> if you want to install this file"
 msgid_plural "Press <i>Continue</i> if you want to install these files"
-msgstr[0] "このファイルをインストールしますか？"
-msgstr[1] "これらのファイルをインストールしますか？"
+msgstr[0] "これらのファイルをインストールしますか？"
 
 #: PkSession/PkInstallPackageFiles.cpp:80
 #: PkSession/PkInstallPackageNames.cpp:72
@@ -4270,7 +4229,6 @@ msgstr[1] "これらのファイルをインストールしますか？"
 msgid "An application wants to install a package"
 msgid_plural "An application wants to install packages"
 msgstr[0] "プログラムがパッケージをインストールしようとしています"
-msgstr[1] "プログラムがパッケージをインストールしようとしています"
 
 #: PkSession/PkInstallPackageFiles.cpp:84
 #: PkSession/PkInstallPackageNames.cpp:76
@@ -4280,7 +4238,6 @@ msgstr[1] "プログラムがパッケージをインストールしようとし
 msgid "The application <i>%2</i> wants to install a package"
 msgid_plural "The application <i>%2</i> wants to install packages"
 msgstr[0] "%2 がパッケージをインストールしようとしています"
-msgstr[1] "%2 がパッケージをインストールしようとしています"
 
 #: PkSession/PkInstallPackageFiles.cpp:106
 #, fuzzy, kde-format
@@ -4294,7 +4251,6 @@ msgstr "ファイルをインストール中"
 msgid "File was installed successfully"
 msgid_plural "Files were installed successfully"
 msgstr[0] "ファイルのインストールに成功しました"
-msgstr[1] "ファイルのインストールに成功しました"
 
 #: PkSession/PkInstallPackageFiles.cpp:118
 #, fuzzy, kde-format
@@ -4334,7 +4290,6 @@ msgstr "ファイルが見つかりませんでした。"
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "このファイルを含むパッケージを検索し削除しますか？"
-msgstr[1] "このファイルを含むパッケージを検索し削除しますか？"
 
 #: PkSession/PkInstallPackageNames.cpp:101
 #, kde-format
@@ -4346,7 +4301,6 @@ msgstr "パッケージのインストールに失敗しました"
 msgid "The package %2 is already installed"
 msgid_plural "The packages %2 are already installed"
 msgstr[0] "パッケージ %2 は既にインストールされています"
-msgstr[1] "パッケージ %2 は既にインストールされています"
 
 #: PkSession/PkInstallPackageNames.cpp:110
 #: PkSession/PkRemovePackageByFiles.cpp:140 PkSession/PkSearchFile.cpp:82
@@ -4359,7 +4313,6 @@ msgstr "%1 が見つかりませんでした"
 msgid "The package could not be found in any software source"
 msgid_plural "The packages could not be found in any software source"
 msgstr[0] "どのソフトウェア配布元にもパッケージが見つかりませんでした"
-msgstr[1] "どのソフトウェア配布元にもパッケージが見つかりませんでした"
 
 #: PkSession/PkInstallPlasmaResources.cpp:41
 #, fuzzy, kde-format
@@ -4401,9 +4354,6 @@ msgid_plural ""
 msgstr[0] ""
 "以下のプラグインが必要です: <ul><li>%2</li></ul> これの検索を今すぐ行います"
 "か？"
-msgstr[1] ""
-"以下のプラグインが必要です: <ul><li>%2</li></ul> これの検索を今すぐ行います"
-"か？"
 
 #: PkSession/PkInstallPlasmaResources.cpp:78
 #, fuzzy, kde-format
@@ -4412,7 +4362,6 @@ msgstr[1] ""
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "%2 にはこの操作を実行する追加のプラグインが必要です"
-msgstr[1] "%2 にはこの操作を実行する追加のプラグインが必要です"
 
 #: PkSession/PkInstallPlasmaResources.cpp:103
 #, fuzzy, kde-format
@@ -4464,15 +4413,13 @@ msgstr "ファイルが見つかりませんでした。"
 #, kde-format
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
-msgstr[0] "これを検索しますか?"
-msgstr[1] "これらを検索しますか?"
+msgstr[0] "これらを検索しますか?"
 
 #: PkSession/PkInstallProvideFiles.cpp:63
 #, kde-format
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "プログラムがファイルをインストールしようとしています"
-msgstr[1] "プログラムがファイルをインストールしようとしています"
 
 #: PkSession/PkInstallProvideFiles.cpp:67
 #, fuzzy, kde-format
@@ -4481,7 +4428,6 @@ msgstr[1] "プログラムがファイルをインストールしようとして
 msgid "The application %2 is asking to install a file"
 msgid_plural "The application %2 is asking to install files"
 msgstr[0] "%2 がパッケージをインストールしようとしています"
-msgstr[1] "%2 がパッケージをインストールしようとしています"
 
 #: PkSession/PkInstallProvideFiles.cpp:93
 #, fuzzy, kde-format
@@ -4505,7 +4451,6 @@ msgstr "パッケージ検索に失敗しました"
 msgid "The file could not be found in any packages"
 msgid_plural "The files could not be found in any packages"
 msgstr[0] "どのパッケージにもファイルが見つかりませんでした"
-msgstr[1] "どのパッケージにもファイルが見つかりませんでした"
 
 #: PkSession/PkIsInstalled.cpp:40
 #, fuzzy, kde-format
@@ -4535,7 +4480,6 @@ msgstr "パッケージを削除"
 msgid "Do you want to remove the following application?"
 msgid_plural "Do you want to remove the following applications?"
 msgstr[0] "アプリケーションの再起動が必要です"
-msgstr[1] "アプリケーションの再起動が必要です"
 
 #: PkSession/PkRemovePackageByFiles.cpp:72
 #, fuzzy, kde-format
@@ -4547,7 +4491,6 @@ msgstr[1] "アプリケーションの再起動が必要です"
 msgid "Do you want to search for a package providing this file?"
 msgid_plural "Do you want to search for a package providing these files?"
 msgstr[0] "このファイルを含むパッケージを検索し削除しますか？"
-msgstr[1] "このファイルを含むパッケージを検索し削除しますか？"
 
 #: PkSession/PkRemovePackageByFiles.cpp:83
 #, fuzzy, kde-format
@@ -4556,7 +4499,6 @@ msgstr[1] "このファイルを含むパッケージを検索し削除します
 msgid "An application is asking to remove an application"
 msgid_plural "An application is asking to remove applications"
 msgstr[0] "%2 がパッケージをインストールしようとしています"
-msgstr[1] "%2 がパッケージをインストールしようとしています"
 
 #: PkSession/PkRemovePackageByFiles.cpp:87
 #, fuzzy, kde-format
@@ -4565,7 +4507,6 @@ msgstr[1] "%2 がパッケージをインストールしようとしています
 msgid "An application is asking to remove a file"
 msgid_plural "An application is asking to remove files"
 msgstr[0] "%2 がパッケージをインストールしようとしています"
-msgstr[1] "%2 がパッケージをインストールしようとしています"
 
 #: PkSession/PkRemovePackageByFiles.cpp:93
 #, fuzzy, kde-format
@@ -4574,7 +4515,6 @@ msgstr[1] "%2 がパッケージをインストールしようとしています
 msgid "The application <i>%2</i> is asking to remove an application"
 msgid_plural "The application <i>%2</i> is asking to remove applications"
 msgstr[0] "%2 がパッケージをインストールしようとしています"
-msgstr[1] "%2 がパッケージをインストールしようとしています"
 
 #: PkSession/PkRemovePackageByFiles.cpp:98
 #, fuzzy, kde-format
@@ -4583,7 +4523,6 @@ msgstr[1] "%2 がパッケージをインストールしようとしています
 msgid "The application <i>%2</i> is asking to remove a file"
 msgid_plural "The application <i>%2</i> is asking to remove files"
 msgstr[0] "%2 がパッケージをインストールしようとしています"
-msgstr[1] "%2 がパッケージをインストールしようとしています"
 
 #: PkSession/PkRemovePackageByFiles.cpp:104
 #, fuzzy, kde-format
@@ -4596,7 +4535,6 @@ msgstr "アップデートの記述が見つかりませんでした。"
 msgid "The file could not be found in any installed package"
 msgid_plural "The files could not be found in any installed package"
 msgstr[0] "どのインストールされたパッケージにもファイルが見つかりませんでした"
-msgstr[1] "どのインストールされたパッケージにもファイルが見つかりませんでした"
 
 #: PkSession/PkSearchFile.cpp:42
 #, fuzzy, kde-format
@@ -4617,7 +4555,6 @@ msgstr "どのソフトウェア配布元にもファイル名が見つかりま
 msgid "The following package was found"
 msgid_plural "The following packages were found"
 msgstr[0] "以下のパッケージが削除されます"
-msgstr[1] "以下のパッケージが削除されます"
 
 #: PkSession/SessionTask.cpp:371
 #, fuzzy, kde-format
