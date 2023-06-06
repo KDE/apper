@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2023-04-23 05:17+0200\n"
+"PO-Revision-Date: 2023-06-05 12:49+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1124,7 +1124,7 @@ msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
-"Vanse a mostrar os rexistros dos desenvolvedores xa que non hai ningunha "
+"Vanse mostrar os rexistros dos desenvolvedores xa que non hai ningunha "
 "descrición para esta actualización:"
 
 #: Apper/Updater/UpdateDetails.cpp:292
@@ -1690,7 +1690,7 @@ msgstr "Comprobando a lista actual de aplicacións en uso"
 #, kde-format
 msgctxt "we are checking for libraries in use"
 msgid "Checking for libraries currently in use"
-msgstr "Comprobando as bibliotecas que se usan actualmente"
+msgstr "Comprobando as bibliotecas que se usan"
 
 #: libapper/PkStrings.cpp:161
 #, kde-format
