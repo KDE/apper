@@ -1,6 +1,6 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018.
+# Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2023.
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2011, 2012.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012, 2013.
 #
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kpackagekit\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2018-06-01 14:26+0100\n"
+"PO-Revision-Date: 2023-06-14 13:45+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 23.04.2\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -4062,7 +4062,7 @@ msgstr "Nepodporováno"
 #: PkSession/PkInstallPackageFiles.cpp:54
 #, kde-format
 msgid "Your current backend does not support installing files"
-msgstr "Aktuální backend nepodporuje instalaci souborů"
+msgstr "Aktuální podpůrná vrstva nepodporuje instalaci souborů"
 
 #: PkSession/PkInstallPackageFiles.cpp:69
 #: PkSession/PkRemovePackageByFiles.cpp:65
