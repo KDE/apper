@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2019-05-20 02:52+0200\n"
-"PO-Revision-Date: 2023-05-22 14:00\n"
+"PO-Revision-Date: 2023-06-17 04:11\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -49,7 +49,7 @@ msgstr[0] "有 %1 个更新"
 
 #: package/contents/ui/main.qml:169
 msgid "Your system is up to date"
-msgstr "系统已是最新状态"
+msgstr "系统已更新到最新状态"
 
 #: package/contents/ui/Transaction.qml:76
 msgid "Cancel"
