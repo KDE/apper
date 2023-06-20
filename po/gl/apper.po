@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2023-06-17 14:07+0200\n"
+"PO-Revision-Date: 2023-06-19 12:52+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -33,17 +33,17 @@ msgstr "mgl.branco@gmail.com"
 #: Apper/Apper.cpp:91
 #, kde-format
 msgid "Show updates"
-msgstr "Mostrar as actualizacións"
+msgstr "Amosar as actualizacións"
 
 #: Apper/Apper.cpp:94
 #, kde-format
 msgid "Show settings"
-msgstr "Mostrar a configuración"
+msgstr "Amosar a configuración"
 
 #: Apper/Apper.cpp:97
 #, kde-format
 msgid "Show backend details"
-msgstr "Mostrar os detalles da infraestrutura"
+msgstr "Amosar os detalles da infraestrutura"
 
 #: Apper/Apper.cpp:100
 #, kde-format
@@ -358,7 +358,7 @@ msgstr "O que fornece"
 #: Apper/BackendDetails.ui:232
 #, kde-format
 msgid "Set Repository Data"
-msgstr "Configurar os datos do repositorio"
+msgstr "Definir os datos do repositorio"
 
 #. i18n: ectx: property (text), widget (QCheckBox, repositoryEnableCB)
 #: Apper/BackendDetails.ui:242
@@ -472,22 +472,22 @@ msgstr "Só nativo"
 #: Apper/BrowseView.cpp:89 Apper/Updater/Updater.cpp:105
 #, kde-format
 msgid "Show Versions"
-msgstr "Mostrar as versións"
+msgstr "Amosar as versións"
 
 #: Apper/BrowseView.cpp:96 Apper/Updater/Updater.cpp:119
 #, kde-format
 msgid "Show Architectures"
-msgstr "Mostrar as arquitecturas"
+msgstr "Amosar as arquitecturas"
 
 #: Apper/BrowseView.cpp:103 Apper/Updater/Updater.cpp:126
 #, kde-format
 msgid "Show Origins"
-msgstr "Mostrar as fontes"
+msgstr "Amosar as fontes"
 
 #: Apper/BrowseView.cpp:110 Apper/Updater/Updater.cpp:133
 #, kde-format
 msgid "Show Sizes"
-msgstr "Mostrar os tamaños"
+msgstr "Amosar os tamaños"
 
 #: Apper/BrowseView.cpp:282
 #, kde-format
@@ -641,7 +641,7 @@ msgstr "Agochar os subpaquetes"
 #: Apper/FiltersMenu.cpp:240
 #, kde-format
 msgid "Only show one package, not subpackages"
-msgstr "Só mostrar un paquete, non os subpaquetes"
+msgstr "Só amosar un paquete, non os subpaquetes"
 
 #: Apper/FiltersMenu.cpp:244
 #, kde-format
@@ -651,7 +651,7 @@ msgstr "Só os paquetes máis novos"
 #: Apper/FiltersMenu.cpp:249
 #, kde-format
 msgid "Only show the newest available package"
-msgstr "Mostrar só o paquete dispoñíbel máis recente"
+msgstr "Amosar só o paquete dispoñíbel máis recente"
 
 #: Apper/FiltersMenu.cpp:253
 #, kde-format
@@ -661,12 +661,12 @@ msgstr "Só os paquetes nativos"
 #: Apper/FiltersMenu.cpp:258
 #, kde-format
 msgid "Only show packages matching the machine architecture"
-msgstr "Só mostrar os paquetes que cadren coa arquitectura do sistema"
+msgstr "Só amosar os paquetes que cadren coa arquitectura do sistema"
 
 #: Apper/FiltersMenu.cpp:264
 #, kde-format
 msgid "Only Show Applications"
-msgstr "Só mostrar aplicacións"
+msgstr "Só amosar aplicacións"
 
 #: Apper/FiltersMenu.cpp:267
 #, kde-format
@@ -877,14 +877,14 @@ msgstr "Actualizar automaticamente:"
 #, kde-format
 msgid "Show application launcher after installing new applications"
 msgstr ""
-"Mostrar o iniciador de aplicacións despois de instalar as novas aplicacións"
+"Amosar o iniciador de aplicacións despois de instalar as novas aplicacións"
 
 #. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
 #: Apper/Settings/Settings.ui:206
 #, kde-format
 msgid "Show confirmation dialog when installing or updating packages"
 msgstr ""
-"Mostrar o diálogo de confirmación cando se instale ou actualicen paquetes"
+"Amosar o diálogo de confirmación cando se instale ou actualicen paquetes"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: Apper/Settings/Settings.ui:213
@@ -896,7 +896,7 @@ msgstr "Comprobar se hai anovacións da distribución:"
 #: Apper/Settings/Settings.ui:270
 #, kde-format
 msgid "&Show origins of debug and development packages"
-msgstr "&Mostrar as fontes dos paquetes de depuración e desenvolvemento"
+msgstr "&Amosar as fontes dos paquetes de depuración e desenvolvemento"
 
 #. i18n: ectx: property (text), widget (QPushButton, editOriginsPB)
 #: Apper/Settings/Settings.ui:290
@@ -1124,7 +1124,7 @@ msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
-"Vanse mostrar os rexistros dos desenvolvedores xa que non hai ningunha "
+"Vanse amosar os rexistros dos desenvolvedores xa que non hai ningunha "
 "descrición para esta actualización:"
 
 #: Apper/Updater/UpdateDetails.cpp:292
@@ -1150,7 +1150,7 @@ msgstr "Non se atopou ningunha descrición da actualización."
 #: Apper/Updater/Updater.cpp:112
 #, kde-format
 msgid "Show Current Versions"
-msgstr "Mostrar as versións actuais"
+msgstr "Amosar as versións actuais"
 
 #: Apper/Updater/Updater.cpp:241
 #, kde-format
@@ -1257,7 +1257,7 @@ msgstr "Matthias Klumpp"
 #: AppSetup/main.cpp:61
 #, kde-format
 msgid "Show verbose information"
-msgstr "Mostrar a información verbosa"
+msgstr "Amosar a información verbosa"
 
 #: AppSetup/main.cpp:62
 #, kde-format
@@ -1363,7 +1363,7 @@ msgstr[1] ""
 #: libapper/ApplicationLauncher.ui:81
 #, kde-format
 msgid "Do not show this dialog again"
-msgstr "Non volver mostrar este diálogo"
+msgstr "Non volver amosar este diálogo"
 
 #: libapper/ApplicationsDelegate.cpp:46
 #, kde-format
@@ -2081,7 +2081,7 @@ msgstr "Repositorio activado"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Set repository data"
-msgstr "Configurar os datos do repositorio"
+msgstr "Definir os datos do repositorio"
 
 #: libapper/PkStrings.cpp:338
 #, kde-format
@@ -2279,7 +2279,7 @@ msgstr "Ocorreu un erro interno do sistema"
 #: libapper/PkStrings.cpp:439
 #, kde-format
 msgid "A security trust relationship is not present"
-msgstr "Non hai unha relación de confianza de seguranza"
+msgstr "Non hai unha relación de confianza de seguridade"
 
 #: libapper/PkStrings.cpp:441
 #, kde-format
@@ -2454,7 +2454,7 @@ msgstr "Xa están instalados todos os paquetes"
 #: libapper/PkStrings.cpp:509
 #, kde-format
 msgid "The specified file could not be found"
-msgstr "O ficheiro especificado non se puido atopar"
+msgstr "Non se puido atopar o ficheiro indicado"
 
 #: libapper/PkStrings.cpp:511
 #, kde-format
@@ -2611,15 +2611,15 @@ msgid ""
 "memory.\n"
 "Please close some programs or restart your computer."
 msgstr ""
-"O servizo responsábel da xestión dos pedidos dos usuarios esgotou a "
+"O servizo responsábel da xestión das solicitudes das usuarias esgotou a "
 "memoria.\n"
-"Pecha algún programa ou reinicie o computador."
+"Peche algúns programas ou reinicie o computador."
 
 #: libapper/PkStrings.cpp:580
 #, kde-format
 msgid "A thread could not be created to service the user request."
 msgstr ""
-"Non se puido crear unha fío de execución para servir o pedido do usuario."
+"Non se puido crear unha fío de execución para servir a solicitude da usuaria."
 
 #: libapper/PkStrings.cpp:582
 #, kde-format
@@ -2737,7 +2737,7 @@ msgid ""
 "You may need to enable an item in Software Origins."
 msgstr ""
 "Non se atopou o nome da fonte remota de software.\n"
-"Poida que teñas que activar un elemento nas fontes de software."
+"Pode que teña que activar un elemento nas fontes de software."
 
 #: libapper/PkStrings.cpp:621
 #, kde-format
@@ -2825,7 +2825,7 @@ msgid ""
 "This may occur if other packaging tools are being used simultaneously."
 msgstr ""
 "Non se puido inicializar a infraestrutura de empaquetado.\n"
-"Isto pode ocorrer se estás a empregar á vez outra ferramenta de paquetaría."
+"Isto pode ocorrer se estás a usar á vez outra ferramenta de paquetaría."
 
 #: libapper/PkStrings.cpp:651
 #, kde-format
@@ -2920,7 +2920,7 @@ msgid ""
 "The specified file could not be found on the system.\n"
 "Check that the file still exists and has not been deleted."
 msgstr ""
-"Non se puido atopar no sistema o ficheiro especificado.\n"
+"Non se puido atopar no sistema o ficheiro indicado.\n"
 "Comprobe que o ficheiro aínda existe e que non se eliminou."
 
 #: libapper/PkStrings.cpp:683
@@ -2980,7 +2980,7 @@ msgid ""
 "It could have already been installed or no longer available on the remote "
 "server."
 msgstr ""
-"Non se puido atopar a actualización que se especificou.\n"
+"Non se puido atopar a actualización que se indicou.\n"
 "Pode que xa se instalase ou que xa non estea dispoñíbel no servidor remoto."
 
 #: libapper/PkStrings.cpp:702
@@ -3008,7 +3008,7 @@ msgstr "Non se puido obter a información sobre que precisa este paquete."
 #: libapper/PkStrings.cpp:710
 #, kde-format
 msgid "The specified software origin could not be disabled."
-msgstr "Non se puido desactivar a fonte de software especificada."
+msgstr "Non se puido desactivar a fonte de software indicada."
 
 #: libapper/PkStrings.cpp:712
 #, kde-format
@@ -3834,7 +3834,7 @@ msgstr "Non permitido"
 #, kde-format
 msgid ""
 "Your backend does not support any of the needed methods to install a catalog"
-msgstr "A infraestrutura que estás a empregar non permite instalar paquetes"
+msgstr "A infraestrutura que estás a usar non permite instalar paquetes"
 
 #: PkSession/PkInstallCatalogs.cpp:178
 #, kde-format
@@ -4075,7 +4075,7 @@ msgstr "Non soportado"
 #: PkSession/PkInstallPackageFiles.cpp:54
 #, kde-format
 msgid "Your current backend does not support installing files"
-msgstr "A infraestrutura que estás a empregar non permite instalar ficheiros"
+msgstr "A infraestrutura que estás a usar non permite instalar ficheiros"
 
 #: PkSession/PkInstallPackageFiles.cpp:69
 #: PkSession/PkRemovePackageByFiles.cpp:65
@@ -4096,7 +4096,7 @@ msgstr[1] "Preme <i>Continuar</i> se queres instalar estes ficheiros"
 msgid "An application wants to install a package"
 msgid_plural "An application wants to install packages"
 msgstr[0] "Unha aplicación quere instalar un paquete"
-msgstr[1] "Un aplicativo quere instalar varios paquetes"
+msgstr[1] "Unha aplicación quere instalar varios paquetes"
 
 #: PkSession/PkInstallPackageFiles.cpp:84
 #: PkSession/PkInstallPackageNames.cpp:76
@@ -4184,7 +4184,7 @@ msgstr "Motor de datos %1"
 #: PkSession/PkInstallPlasmaResources.cpp:55
 #, kde-format
 msgid "%1 script engine"
-msgstr "%1 moto de scripts"
+msgstr "%1 motor de guións"
 
 #: PkSession/PkInstallPlasmaResources.cpp:67
 #, kde-format
