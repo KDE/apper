@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kpackagekit\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2023-06-14 13:45+0200\n"
+"PO-Revision-Date: 2023-06-22 15:03+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -4168,7 +4168,7 @@ msgstr[2] "Balíčky nebyly nalezeny v žádném zdroji software."
 #: PkSession/PkInstallPlasmaResources.cpp:41
 #, kde-format
 msgid "Install Plasma Resources"
-msgstr "Instalovat zdroje Plasmy"
+msgstr "Instalovat zdroje Plasma"
 
 #: PkSession/PkInstallPlasmaResources.cpp:53
 #, kde-format
