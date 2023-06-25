@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2023-06-19 12:52+0200\n"
+"PO-Revision-Date: 2023-06-24 10:52+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -43,12 +43,12 @@ msgstr "Amosar a configuración"
 #: Apper/Apper.cpp:97
 #, kde-format
 msgid "Show backend details"
-msgstr "Amosar os detalles da infraestrutura"
+msgstr "Amosar os detalles do motor"
 
 #: Apper/Apper.cpp:100
 #, kde-format
 msgid "Mime type installer"
-msgstr "Instalador de tipos mime"
+msgstr "Instalador de tipos MIME"
 
 #: Apper/Apper.cpp:103
 #, kde-format
@@ -226,7 +226,7 @@ msgstr "Fontes de software"
 #: Apper/BackendDetails.cpp:36
 #, kde-format
 msgid "Backend Details"
-msgstr "Detalles da infraestrutura"
+msgstr "Detalles do motor"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: Apper/BackendDetails.ui:23
@@ -382,25 +382,25 @@ msgstr "Reparar o sistema"
 #: Apper/BackendDetails.ui:278
 #, kde-format
 msgid "About Backend"
-msgstr "Sobre a infraestrutura"
+msgstr "Sobre o motor"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: Apper/BackendDetails.ui:284
 #, kde-format
 msgid "Backend name:"
-msgstr "Nome da infraestrutura:"
+msgstr "Nome do motor:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: Apper/BackendDetails.ui:298
 #, kde-format
 msgid "Backend description:"
-msgstr "Descrición da infraestrutura:"
+msgstr "Descrición do motor:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: Apper/BackendDetails.ui:312
 #, kde-format
 msgid "Backend author:"
-msgstr "Autor da infraestrutura:"
+msgstr "Autor do motor:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: Apper/BackendDetails.ui:326
@@ -2269,7 +2269,7 @@ msgstr "Non se puido crear un fío de execución separado"
 #: libapper/PkStrings.cpp:435
 #, kde-format
 msgid "Not supported by this backend"
-msgstr "Non permitido por esta infraestrutura"
+msgstr "Non permitido por este motor"
 
 #: libapper/PkStrings.cpp:437
 #, kde-format
@@ -2602,7 +2602,7 @@ msgid ""
 "This should have been done by the backend automatically."
 msgstr ""
 "Debe reconstruírse a lista de paquetes.\n"
-"Isto debía facelo automaticamente a infraestrutura."
+"Isto debía facelo automaticamente o motor."
 
 #: libapper/PkStrings.cpp:577
 #, kde-format
@@ -2627,7 +2627,7 @@ msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug as this should not have happened."
 msgstr ""
-"Esa acción non se permite pola infraestrutura.\n"
+"Esa acción non a permite o motor.\n"
 "Informe do fallo, isto non debía ocorrer."
 
 #: libapper/PkStrings.cpp:585
@@ -2756,7 +2756,7 @@ msgid ""
 "The backend did not exit cleanly."
 msgstr ""
 "A tarefa cancelouse e non se cambiou ningún paquete.\n"
-"A infraestrutura non saíu limpamente."
+"O motor non saíu limpamente."
 
 #: libapper/PkStrings.cpp:628
 #, kde-format
@@ -2824,7 +2824,7 @@ msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
 msgstr ""
-"Non se puido inicializar a infraestrutura de empaquetado.\n"
+"Non se puido inicializar o motor de empaquetado.\n"
 "Isto pode ocorrer se estás a usar á vez outra ferramenta de paquetaría."
 
 #: libapper/PkStrings.cpp:651
@@ -2833,7 +2833,7 @@ msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
 msgstr ""
-"Non se puido pechar a instancia da infraestrutura.\n"
+"Non se puido pechar a instancia do motor.\n"
 "Normalmente podes ignorar este erro."
 
 #: libapper/PkStrings.cpp:654
@@ -2842,7 +2842,7 @@ msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
 msgstr ""
-"Non se pode obter o bloqueo exclusivo na infraestrutura de paquetaría.\n"
+"Non se pode obter o bloqueo exclusivo no motor de paquetaría.\n"
 "Pecha calquera outra ferramenta de paquetaría que poidas ter aberta."
 
 #: libapper/PkStrings.cpp:657
@@ -3442,7 +3442,7 @@ msgstr[1] "%1 paquetes"
 #: libapper/PkStrings.cpp:891
 #, kde-format
 msgid "No restart is necessary"
-msgstr "Non é necesario reiniciar"
+msgstr "Non hai que reiniciar"
 
 #: libapper/PkStrings.cpp:893
 #, kde-format
@@ -3743,7 +3743,7 @@ msgstr[1] "%1 paquete que non é de confianza"
 #, kde-format
 msgctxt "how many bytes are required for download"
 msgid "Need to get %1 of archives"
-msgstr "É necesario obter %1 dos arquivos."
+msgstr "Hai que obter %1 dos arquivos."
 
 #: libapper/Requirements.cpp:258
 #, kde-format
@@ -3834,7 +3834,7 @@ msgstr "Non permitido"
 #, kde-format
 msgid ""
 "Your backend does not support any of the needed methods to install a catalog"
-msgstr "A infraestrutura que estás a usar non permite instalar paquetes"
+msgstr "O motor que está a usar non permite instalar paquetes"
 
 #: PkSession/PkInstallCatalogs.cpp:178
 #, kde-format
@@ -4075,7 +4075,7 @@ msgstr "Non soportado"
 #: PkSession/PkInstallPackageFiles.cpp:54
 #, kde-format
 msgid "Your current backend does not support installing files"
-msgstr "A infraestrutura que estás a usar non permite instalar ficheiros"
+msgstr "O motor que está a usar non permite instalar ficheiros"
 
 #: PkSession/PkInstallPackageFiles.cpp:69
 #: PkSession/PkRemovePackageByFiles.cpp:65
