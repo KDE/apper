@@ -67,7 +67,7 @@
   <summary xml:lang="id">Alat pengelolaan paket dan aplikasi KDE</summary>
   <summary xml:lang="it">Strumento di gestione dei pacchetti e delle applicazioni di KDE</summary>
   <summary xml:lang="ka">KDE-ის აპლიკაციებისა და პაკეტების მართვის ხელსაწყო</summary>
-  <summary xml:lang="ko">KDE 프로그램 및 패키지 관리 도구</summary>
+  <summary xml:lang="ko">KDE 앱 및 패키지 관리 도구</summary>
   <summary xml:lang="nds">KDE sien Programm- un Paketpleeg-Warktüüch</summary>
   <summary xml:lang="nl">Hulpmiddel voor beheer van pakketten van KDE toepassingen</summary>
   <summary xml:lang="pa">KDE ਐਪਲੀਕੇਸ਼ਨ ਤੇ ਪੈਕੇਜ ਇੰਤਜ਼ਾਮ ਟੂਲ</summary>
@@ -110,7 +110,7 @@
     <p xml:lang="id">Apper adalah alat pengelolaan grafis untuk paket dan aplikasi yang disediakan oleh distribusi Linux.</p>
     <p xml:lang="it">Apper è uno strumento a interfaccia grafica per la gestione dei pacchetti e delle applicazioni fornite da una distribuzione Linux.</p>
     <p xml:lang="ka">Apper-ი გრაფიკული მართვის პროგრამაა პაკეტებისა და აპლიკაციებისთვის, რომლებსაც Linux-ის დისტრიბუტივი მოგაწოდებთ.</p>
-    <p xml:lang="ko">Apper는 리눅스 배포판에서 제공하는 패키지와 프로그램 관리 도구입니다.</p>
+    <p xml:lang="ko">Apper는 리눅스 배포판에서 제공하는 패키지와 앱 관리 도구입니다.</p>
     <p xml:lang="nds">Apper is en graafsch Pleegwarktüüch för de Paketen un Programmen, de en Distributschoon praastellt.</p>
     <p xml:lang="nl">Apper is een grafisch hulpmiddel voor beheer van pakketten en toepassingen geleverd door een Linux-distributie.</p>
     <p xml:lang="pl">Apper jest graficznym narzędziem do zarządzania pakietami i aplikacjami dostarczanymi wraz z dystrybucjami Linuksa.</p>
@@ -266,7 +266,7 @@
       <li xml:lang="id">Pengelolaan aplikasi untuk pengguna yang takberpengalaman dengan paket-paket</li>
       <li xml:lang="it">Gestione delle applicazioni per gli utenti con poca esperienza sui pacchetti</li>
       <li xml:lang="ka">აპლიკაციის მართვა მომხმარებლებისთვის, ვისაც პაკეტებთან მუშაობის გამოცდილება არ გააჩნია</li>
-      <li xml:lang="ko">패키지 관리 경험이 없는 사용자용 프로그램 관리</li>
+      <li xml:lang="ko">패키지 관리 경험이 없는 사용자용 앱 관리</li>
       <li xml:lang="nds">Programmpleeg för Brukers, de nich veel vun Paketen af weet.</li>
       <li xml:lang="nl">Beheer van toepassingen voor gebruikers zonder ervaring met pakketten</li>
       <li xml:lang="pl">Zarządzanie aplikacjami dla użytkowników bez doświadczenia w pakietach</li>
