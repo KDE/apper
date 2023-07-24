@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the apper package.
-# Shinjo Park <kde@peremen.name>, 2020, 2021.
+# Shinjo Park <kde@peremen.name>, 2020, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: apper\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-03-28 16:13+0000\n"
-"PO-Revision-Date: 2021-05-29 23:53+0200\n"
+"PO-Revision-Date: 2023-07-24 00:29+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 20.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -169,7 +169,7 @@ msgstr "설치된 소프트웨어"
 #: Apper/ApperKCM.cpp:691
 #, kde-format
 msgid "Could not find an application that matched this category"
-msgstr "이 분류에 해당하는 프로그램을 찾을 수 없음"
+msgstr "이 분류에 해당하는 앱을 찾을 수 없음"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, ApperKCM)
 #: Apper/ApperKCM.ui:20
@@ -661,12 +661,12 @@ msgstr "머신 아키텍처와 일치하는 패키지만 표시"
 #: Apper/FiltersMenu.cpp:264
 #, kde-format
 msgid "Only Show Applications"
-msgstr "프로그램만 표시"
+msgstr "앱만 표시"
 
 #: Apper/FiltersMenu.cpp:267
 #, kde-format
 msgid "Hide packages that are not applications"
-msgstr "프로그램이 아닌 패키지 숨기기"
+msgstr "앱이 아닌 패키지 숨기기"
 
 #: Apper/main.cpp:44 Apper/MainUi.cpp:41
 #, kde-format
@@ -676,7 +676,7 @@ msgstr "Apper"
 #: Apper/main.cpp:46
 #, kde-format
 msgid "Apper is an application to get and manage software"
-msgstr "Apper는 소프트웨어를 가져오고 관리하는 프로그램입니다"
+msgstr "Apper는 소프트웨어를 가져오고 관리하는 앱입니다"
 
 #: Apper/main.cpp:48
 #, kde-format
@@ -736,7 +736,7 @@ msgstr "소프트웨어 정보를 가져올 수 없음"
 #: Apper/PackageDetails.cpp:613
 #, kde-format
 msgid "Applications"
-msgstr "프로그램"
+msgstr "앱"
 
 #. i18n: ectx: property (text), widget (QLabel, licenseL)
 #: Apper/PackageDetails.ui:164
@@ -870,7 +870,7 @@ msgstr "자동 업데이트:"
 #: Apper/Settings/Settings.ui:199
 #, kde-format
 msgid "Show application launcher after installing new applications"
-msgstr "새 프로그램을 설치한 후 프로그램 실행기 표시"
+msgstr "새 앱을 설치한 후 앱 실행기 표시"
 
 #. i18n: ectx: property (text), widget (QCheckBox, autoConfirmCB)
 #: Apper/Settings/Settings.ui:206
@@ -931,7 +931,7 @@ msgstr "사용자 이름"
 #: Apper/TransactionModel.cpp:47
 #, kde-format
 msgid "Application"
-msgstr "프로그램"
+msgstr "앱"
 
 #: Apper/Updater/DistroUpgrade.cpp:39
 #, kde-format
@@ -1201,7 +1201,7 @@ msgstr "설치"
 #: AppSetup/main.cpp:43
 #, kde-format
 msgid "KDE Application Installer"
-msgstr "KDE 프로그램 설치기"
+msgstr "KDE 앱 설치기"
 
 #: AppSetup/main.cpp:46
 #, kde-format
@@ -1274,9 +1274,9 @@ msgid ""
 "like spying out your passwords.<br>Please do only install this software if "
 "you <b>trust its publisher</b>."
 msgstr ""
-"제 3사 프로그램을 설치할 때에는 주의하십시오.<br>시스템을 <b>손상</b>시키거"
-"나 암호를 유출시키는 등 <b>악의적인 행동</b>을 할 수도 있습니다.<br><b>게시자"
-"</b>를 <b>신뢰하는</b> 경우에만 이 소프트웨어를 설치하십시오."
+"제 3사 앱을 설치할 때에는 주의하십시오.<br>시스템을 <b>손상</b>시키거나 암호"
+"를 유출시키는 등 <b>악의적인 행동</b>을 할 수도 있습니다.<br><b>게시자</b>를 "
+"<b>신뢰하는</b> 경우에만 이 소프트웨어를 설치하십시오."
 
 #: AppSetup/SetupWizard.cpp:150
 #, kde-format
@@ -1286,7 +1286,7 @@ msgstr "이 설치 정보"
 #: AppSetup/SetupWizard.cpp:185
 #, kde-format
 msgid "Application description"
-msgstr "프로그램 설명"
+msgstr "앱 설명"
 
 #: AppSetup/SetupWizard.cpp:193
 #, kde-format
@@ -1312,14 +1312,14 @@ msgstr "%1이(가) 설치되었습니다!"
 #, kde-format
 msgid "New application available"
 msgid_plural "New applications available"
-msgstr[0] "새 프로그램 사용 가능"
+msgstr[0] "새 앱 사용 가능"
 
 #: libapper/ApplicationLauncher.cpp:100
 #, kde-format
 msgid "The following application was just installed. Click on it to launch:"
 msgid_plural ""
 "The following applications were just installed. Click on them to launch:"
-msgstr[0] "다음 프로그램을 설치했습니다. 클릭하면 실행합니다:"
+msgstr[0] "다음 앱을 설치했습니다. 클릭하면 실행합니다:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showCB)
 #: libapper/ApplicationLauncher.ui:81
@@ -1499,7 +1499,7 @@ msgstr "패키지 설치 중"
 #, kde-format
 msgctxt "transaction state, refreshing internal lists"
 msgid "Refreshing software list"
-msgstr "프로그램 목록 새로 고치는 중"
+msgstr "소프트웨어 목록 새로 고치는 중"
 
 #: libapper/PkStrings.cpp:86
 #, kde-format
@@ -1615,7 +1615,7 @@ msgstr "캐시 불러오는 중"
 #, kde-format
 msgctxt "transaction state, scanning for running processes"
 msgid "Scanning installed applications"
-msgstr "설치된 프로그램 조사 중"
+msgstr "설치된 앱 조사 중"
 
 #: libapper/PkStrings.cpp:143
 #, kde-format
@@ -1640,13 +1640,13 @@ msgstr "인증 대기 중"
 #, kde-format
 msgctxt "we are updating the list of processes"
 msgid "Updating the list of running applications"
-msgstr "실행 중인 프로그램 갱신 중"
+msgstr "실행 중인 앱 갱신 중"
 
 #: libapper/PkStrings.cpp:155
 #, kde-format
 msgctxt "we are checking executable files in use"
 msgid "Checking for applications currently in use"
-msgstr "사용 중인 프로그램 점검 중"
+msgstr "사용 중인 앱 점검 중"
 
 #: libapper/PkStrings.cpp:158
 #, kde-format
@@ -3389,7 +3389,7 @@ msgstr "다시 시작할 필요 없음"
 #: libapper/PkStrings.cpp:893
 #, kde-format
 msgid "You will be required to restart this application"
-msgstr "이 프로그램을 다시 시작해야 함"
+msgstr "이 앱을 다시 시작해야 함"
 
 #: libapper/PkStrings.cpp:895
 #, kde-format
@@ -3429,7 +3429,7 @@ msgstr "로그아웃 후 다시 로그인해야 함"
 #: libapper/PkStrings.cpp:920
 #, kde-format
 msgid "You need to restart the application"
-msgstr "프로그램을 다시 시작해야 함"
+msgstr "앱을 다시 시작해야 함"
 
 #: libapper/PkStrings.cpp:922
 #, kde-format
@@ -3741,13 +3741,13 @@ msgstr[0] "이 카탈로그를 설치하시겠습니까?"
 #, kde-format
 msgid "An application wants to install a catalog"
 msgid_plural "An application wants to install catalogs"
-msgstr[0] "프로그램에서 카탈로그를 설치하려고 함"
+msgstr[0] "앱에서 카탈로그를 설치하려고 함"
 
 #: PkSession/PkInstallCatalogs.cpp:100
 #, kde-format
 msgid "The application <i>%2</i> wants to install a catalog"
 msgid_plural "The application <i>%2</i> wants to install catalogs"
-msgstr[0] "프로그램 <i>%2</i>에서 카탈로그를 설치하려고 함"
+msgstr[0] "<i>%2</i> 앱에서 카탈로그를 설치하려고 함"
 
 #: PkSession/PkInstallCatalogs.cpp:137
 #, kde-format
@@ -3828,7 +3828,7 @@ msgstr[0] "프로그램에서 글꼴을 설치하려고 함"
 #, kde-format
 msgid "The application %2 wants to install a font"
 msgid_plural "The application %2 wants to install fonts"
-msgstr[0] "프로그램 %2에서 글꼴을 설치하려고 함"
+msgstr[0] "%2 앱에서 글꼴을 설치하려고 함"
 
 #: PkSession/PkInstallFontconfigResources.cpp:148
 #: PkSession/PkInstallFontconfigResources.cpp:157
@@ -3932,7 +3932,7 @@ msgstr[0] "이 형식의 파일을 열려면 프로그램이 필요함"
 msgid "The application %2 is requiring support to open this kind of files"
 msgid_plural ""
 "The application %2 is requiring support to open these kinds of files"
-msgstr[0] "%2 프로그램에서 이 형식의 파일을 열려면 별도 지원이 필요함"
+msgstr[0] "%2 앱에서 이 형식의 파일을 열려면 별도 지원이 필요함"
 
 #: PkSession/PkInstallMimeTypes.cpp:94
 #, kde-format
@@ -3942,7 +3942,7 @@ msgstr "소프트웨어를 찾을 수 없음"
 #: PkSession/PkInstallMimeTypes.cpp:96
 #, kde-format
 msgid "No new applications can be found to handle this type of file"
-msgstr "이 형식의 파일을 처리할 새 프로그램을 찾을 수 없음"
+msgstr "이 형식의 파일을 처리할 새 앱을 찾을 수 없음"
 
 #: PkSession/PkInstallPackageFiles.cpp:40
 #, kde-format
@@ -3982,14 +3982,14 @@ msgstr[0] "이 파일을 설치하려면 <i>계속</i>을 누르십시오"
 #, kde-format
 msgid "An application wants to install a package"
 msgid_plural "An application wants to install packages"
-msgstr[0] "프로그램에서 패키지를 설치하려고 함"
+msgstr[0] "앱에서 패키지를 설치하려고 함"
 
 #: PkSession/PkInstallPackageFiles.cpp:84
 #: PkSession/PkInstallPackageNames.cpp:76
 #, kde-format
 msgid "The application <i>%2</i> wants to install a package"
 msgid_plural "The application <i>%2</i> wants to install packages"
-msgstr[0] "프로그램 <i>%2</i>에서 패키지를 설치하려고 함"
+msgstr[0] "<i>%2</i> 앱에서 패키지를 설치하려고 함"
 
 #: PkSession/PkInstallPackageFiles.cpp:106
 #, kde-format
@@ -4136,7 +4136,7 @@ msgstr[0] "프로그램에서 파일을 설치하려고 함"
 #, kde-format
 msgid "The application %2 is asking to install a file"
 msgid_plural "The application %2 is asking to install files"
-msgstr[0] "프로그램 %2에서 파일을 설치하려고 함"
+msgstr[0] "앱 %2에서 파일을 설치하려고 함"
 
 #: PkSession/PkInstallProvideFiles.cpp:93
 #, kde-format
@@ -4183,7 +4183,7 @@ msgstr "파일이 들어 있는 패키지 삭제"
 #, kde-format
 msgid "Do you want to remove the following application?"
 msgid_plural "Do you want to remove the following applications?"
-msgstr[0] "다음 프로그램을 삭제하시겠습니까?"
+msgstr[0] "다음 앱을 삭제하시겠습니까?"
 
 #: PkSession/PkRemovePackageByFiles.cpp:72
 #, kde-format
@@ -4195,30 +4195,30 @@ msgstr[0] "다음 파일이 들어 있는 패키지를 검색하시겠습니까?
 #, kde-format
 msgid "An application is asking to remove an application"
 msgid_plural "An application is asking to remove applications"
-msgstr[0] "프로그램에서 프로그램을 삭제하려고 함"
+msgstr[0] "앱에서 앱을 삭제하려고 함"
 
 #: PkSession/PkRemovePackageByFiles.cpp:87
 #, kde-format
 msgid "An application is asking to remove a file"
 msgid_plural "An application is asking to remove files"
-msgstr[0] "프로그램에서 파일을 삭제하려고 함"
+msgstr[0] "앱에서 파일을 삭제하려고 함"
 
 #: PkSession/PkRemovePackageByFiles.cpp:93
 #, kde-format
 msgid "The application <i>%2</i> is asking to remove an application"
 msgid_plural "The application <i>%2</i> is asking to remove applications"
-msgstr[0] "프로그램 <i>%2</i>에서 프로그램을 삭제하려고 함"
+msgstr[0] "<i>%2</i> 앱에서 앱을 삭제하려고 함"
 
 #: PkSession/PkRemovePackageByFiles.cpp:98
 #, kde-format
 msgid "The application <i>%2</i> is asking to remove a file"
 msgid_plural "The application <i>%2</i> is asking to remove files"
-msgstr[0] "프로그램 <i>%2</i>에서 파일을 삭제하려고 함"
+msgstr[0] "앱 <i>%2</i>에서 파일을 삭제하려고 함"
 
 #: PkSession/PkRemovePackageByFiles.cpp:104
 #, kde-format
 msgid "No application was found"
-msgstr "프로그램을 찾을 수 없음"
+msgstr "앱을 찾을 수 없음"
 
 #: PkSession/PkRemovePackageByFiles.cpp:141
 #, kde-format
