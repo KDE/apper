@@ -60,7 +60,7 @@ msgstr "단일 파일 설치 도구"
 #: Apper/Apper.cpp:109
 #, kde-format
 msgid "Font resource installer"
-msgstr "글꼴 자원 설치 도구"
+msgstr "글꼴 리소스 설치 도구"
 
 #: Apper/Apper.cpp:112
 #, kde-format
@@ -3849,7 +3849,7 @@ msgstr "제공하는 항목을 검색할 수 없음"
 #: PkSession/PkInstallGStreamerResources.cpp:40
 #, kde-format
 msgid "Install GStreamer Resources"
-msgstr "GStreamer 자원 설치"
+msgstr "GStreamer 리소스 설치"
 
 #: PkSession/PkInstallGStreamerResources.cpp:68
 #, kde-format
@@ -4055,7 +4055,7 @@ msgstr[0] "설정한 소프트웨어 원본에서 패키지를 찾을 수 없음
 #: PkSession/PkInstallPlasmaResources.cpp:41
 #, kde-format
 msgid "Install Plasma Resources"
-msgstr "Plasma 자원 설치"
+msgstr "Plasma 리소스 설치"
 
 #: PkSession/PkInstallPlasmaResources.cpp:53
 #, kde-format
@@ -4070,7 +4070,7 @@ msgstr "%1 스크립트 엔진"
 #: PkSession/PkInstallPlasmaResources.cpp:67
 #, kde-format
 msgid "No supported resources were provided"
-msgstr "지원하는 자원을 지정하지 않았음"
+msgstr "지원하는 리소스를 지정하지 않았음"
 
 #: PkSession/PkInstallPlasmaResources.cpp:69
 #, kde-format
