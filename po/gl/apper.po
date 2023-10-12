@@ -934,7 +934,7 @@ msgstr "Detalles"
 #, kde-format
 msgctxt "Machine user who issued the transaction"
 msgid "Username"
-msgstr "Nome de usuario"
+msgstr "Nome de usuaria"
 
 #: Apper/TransactionModel.cpp:47
 #, kde-format
@@ -1288,7 +1288,7 @@ msgstr "Erro"
 #: AppSetup/SetupWizard.cpp:110
 #, kde-format
 msgid "An error occurred"
-msgstr "Ocorreu un erro"
+msgstr "Produciuse un erro"
 
 #: AppSetup/SetupWizard.cpp:137
 #, kde-format
@@ -2274,7 +2274,7 @@ msgstr "Non permitido por este motor"
 #: libapper/PkStrings.cpp:437
 #, kde-format
 msgid "An internal system error has occurred"
-msgstr "Ocorreu un erro interno do sistema"
+msgstr "Produciuse un erro interno do sistema"
 
 #: libapper/PkStrings.cpp:439
 #, kde-format
@@ -3597,7 +3597,7 @@ msgstr "Erro ao comunicarse con packagekitd."
 #: libapper/PkStrings.cpp:1035 libapper/PkStrings.cpp:1038
 #, kde-format
 msgid "An unknown error happened."
-msgstr "Ocorreu un erro descoñecido."
+msgstr "Produciuse un erro descoñecido."
 
 #: libapper/PkStrings.cpp:1053
 #, kde-format
@@ -4305,7 +4305,7 @@ msgstr "O usuario cancelou a transacción"
 #: PkSession/PkIsInstalled.cpp:63
 #, kde-format
 msgid "An unknown error happened"
-msgstr "Ocorreu un erro descoñecido"
+msgstr "Produciuse un erro descoñecido"
 
 #: PkSession/PkRemovePackageByFiles.cpp:42
 #, kde-format
