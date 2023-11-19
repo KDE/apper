@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: apper\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-05 12:39+0000\n"
-"PO-Revision-Date: 2023-05-03 06:40+0100\n"
+"PO-Revision-Date: 2023-11-18 21:07+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -1042,7 +1042,9 @@ msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
 msgstr[0] ""
+"Por pliaj informoj pri ĉi tiu ĝisdatigo bonvolu viziti ĉi tiun retejon:"
 msgstr[1] ""
+"Por pliaj informoj pri ĉi tiu ĝisdatigo bonvolu viziti ĉi tiujn retejojn:"
 
 #: Apper/Updater/UpdateDetails.cpp:239
 #, kde-format
@@ -1053,7 +1055,11 @@ msgid_plural ""
 "For more information about bugs fixed by this update please visit these "
 "websites:"
 msgstr[0] ""
+"Por plia informo pri cimoj riparataj per ĉi ĝisdatigo bonvolu viziti ĉi tiun "
+"retejon:"
 msgstr[1] ""
+"Por plia informo pri cimoj riparataj per ĉi ĝisdatigo bonvolu viziti ĉi "
+"tiujn retejojn:"
 
 #: Apper/Updater/UpdateDetails.cpp:249
 #, kde-format
@@ -1062,7 +1068,9 @@ msgid ""
 msgid_plural ""
 "For more information about this security update please visit these websites:"
 msgstr[0] ""
+"Por plia informo pri ĉi sekureca ĝisdatigo bonvolu viziti ĉi tiun retejon:"
 msgstr[1] ""
+"Por plia informo pri ĉi sekureca ĝisdatigo bonvolu viziti ĉi tiujn retejojn:"
 
 #: Apper/Updater/UpdateDetails.cpp:259
 #, kde-format
@@ -1204,8 +1212,8 @@ msgstr "La programaro ĝisdatigo malsukcesis."
 #, kde-format
 msgid "There is one new update"
 msgid_plural "There are %1 new updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Estas unu nova ĝisdatigo"
+msgstr[1] "Estas %1 novaj ĝisdatigoj"
 
 #: apperd/Updater.cpp:289 AppSetup/SetupWizard.cpp:260
 #: libapper/ApplicationsDelegate.cpp:44
@@ -1328,16 +1336,17 @@ msgstr "%1 estas instalita sukcese!"
 #, kde-format
 msgid "New application available"
 msgid_plural "New applications available"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Nova aplikaĵo haveblas"
+msgstr[1] "Novaj aplikaĵoj haveblas"
 
 #: libapper/ApplicationLauncher.cpp:100
 #, kde-format
 msgid "The following application was just installed. Click on it to launch:"
 msgid_plural ""
 "The following applications were just installed. Click on them to launch:"
-msgstr[0] ""
+msgstr[0] "La sekvanta aplikaĵo estis ĵus instalita. Alklaku ĝin por lanĉi:"
 msgstr[1] ""
+"La sekvantaj aplikaĵoj estis ĵus instalitaj. Alklaku ilin por lanĉi:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showCB)
 #: libapper/ApplicationLauncher.ui:81
@@ -3369,16 +3378,16 @@ msgstr "Neniuj Ĝisdatigoj Disponeblaj"
 msgctxt "Some updates were selected on the view"
 msgid "1 Update Selected"
 msgid_plural "%1 Updates Selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Ĝisdatigo Elektita"
+msgstr[1] "%1 Ĝisdatigoj Elektitaj"
 
 #: libapper/PkStrings.cpp:872
 #, kde-format
 msgctxt "Some updates are being shown on the screen"
 msgid "1 Update"
 msgid_plural "%1 Updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 Ĝisdatigo"
+msgstr[1] "%1 Ĝisdatigoj"
 
 #: libapper/PkStrings.cpp:875
 #, kde-format
@@ -3391,16 +3400,16 @@ msgstr "%1, %2"
 msgctxt "Part of: %1 Updates, %1 Selected"
 msgid "%1 Update"
 msgid_plural "%1 Updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 Ĝisdatigo"
+msgstr[1] "%1 Ĝisdatigoj"
 
 #: libapper/PkStrings.cpp:877
 #, kde-format
 msgctxt "Part of: %1 Updates, %1 Selected"
 msgid "%1 Selected"
 msgid_plural "%1 Selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 Elektita"
+msgstr[1] "%1 Elektitaj"
 
 #: libapper/PkStrings.cpp:881
 #, kde-format
@@ -3411,8 +3420,8 @@ msgstr "Neniuj Pakoj"
 #, kde-format
 msgid "1 Package"
 msgid_plural "%1 Packages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Pako"
+msgstr[1] "%1 Pakoj"
 
 #: libapper/PkStrings.cpp:891
 #, kde-format
@@ -3677,36 +3686,36 @@ msgstr[1] "%1 pakaĵoj por forigi"
 #, kde-format
 msgid "1 package to downgrade"
 msgid_plural "%1 packages to downgrade"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 pako por malpromocii"
+msgstr[1] "%1 pakoj por malpromocii"
 
 #: libapper/Requirements.cpp:112
 #, kde-format
 msgid "1 package to reinstall"
 msgid_plural "%1 packages to reinstall"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 pako por reinstali"
+msgstr[1] "%1 pakoj por reinstali"
 
 #: libapper/Requirements.cpp:125
 #, kde-format
 msgid "1 package to install"
 msgid_plural "%1 packages to install"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 pako por instali"
+msgstr[1] "%1 pakoj por instali"
 
 #: libapper/Requirements.cpp:138
 #, kde-format
 msgid "1 package to update"
 msgid_plural "%1 packages to update"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 pako por ĝisdatigi"
+msgstr[1] "%1 pakoj por ĝisdatigi"
 
 #: libapper/Requirements.cpp:151
 #, kde-format
 msgid "1 untrusted package"
 msgid_plural "%1 untrusted packages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 nefidinda pako"
+msgstr[1] "%1 nefidindaj pakoj"
 
 #: libapper/Requirements.cpp:199
 #, kde-format
@@ -3775,22 +3784,22 @@ msgstr "Neniu subtenata katalogo estis trovita"
 #, kde-format
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ĉu vi volas instali ĉi tiun katalogon?"
+msgstr[1] "Ĉu vi volas instali ĉi tiuj katalogojn?"
 
 #: PkSession/PkInstallCatalogs.cpp:96
 #, kde-format
 msgid "An application wants to install a catalog"
 msgid_plural "An application wants to install catalogs"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Aplikaĵo volas instali katalogon"
+msgstr[1] "Aplikaĵo volas instali katalogojn"
 
 #: PkSession/PkInstallCatalogs.cpp:100
 #, kde-format
 msgid "The application <i>%2</i> wants to install a catalog"
 msgid_plural "The application <i>%2</i> wants to install catalogs"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La aplikaĵo <i>%2</i> volas instali katalogon"
+msgstr[1] "La aplikaĵo <i>%2</i> volas instali katalogojn"
 
 #: PkSession/PkInstallCatalogs.cpp:137
 #, kde-format
@@ -3818,8 +3827,8 @@ msgstr "Ne eblis trovi katalogon por instali"
 #, kde-format
 msgid "Catalog %2 failed to open"
 msgid_plural "Catalogs %2 failed to open"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Katalogo %2 ne malfermiĝis"
+msgstr[1] "Katalogoj %2 ne malfermiĝis"
 
 #: PkSession/PkInstallCatalogs.cpp:190
 #, kde-format
@@ -3860,21 +3869,25 @@ msgid_plural ""
 "Additional fonts are required to view this document correctly.\n"
 "Do you want to search for suitable packages now?"
 msgstr[0] ""
+"Plia tiparo estas bezonataj por ĝuste vidi ĉi tiun dokumenton.\n"
+"Ĉu vi volas serĉi taŭgan pakaĵon nun?"
 msgstr[1] ""
+"Pliaj tiparoj estas bezonataj por ĝuste vidi ĉi tiun dokumenton.\n"
+"Ĉu vi volas serĉi taŭgajn pakaĵojn nun?"
 
 #: PkSession/PkInstallFontconfigResources.cpp:118
 #, kde-format
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Programo volas instali tiparon"
+msgstr[1] "Programo volas instali tiparojn"
 
 #: PkSession/PkInstallFontconfigResources.cpp:122
 #, kde-format
 msgid "The application %2 wants to install a font"
 msgid_plural "The application %2 wants to install fonts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La aplikaĵo %2 volas instali tiparon"
+msgstr[1] "La aplikaĵo %2 volas instali tiparojn"
 
 #: PkSession/PkInstallFontconfigResources.cpp:148
 #: PkSession/PkInstallFontconfigResources.cpp:157
@@ -3903,49 +3916,51 @@ msgid "The following plugin is required. Do you want to search for this now?"
 msgid_plural ""
 "The following plugins are required. Do you want to search for these now?"
 msgstr[0] ""
+"La sekva kromprogramo estas bezonata. Ĉu vi volas serĉi ĉi tiun nun?"
 msgstr[1] ""
+"La sekvaj kromprogramoj estas bezonataj. Ĉu vi volas serĉi ĉi tiujn nun?"
 
 #: PkSession/PkInstallGStreamerResources.cpp:80
 #, kde-format
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Programo postulas kroman kromprogramon por malkodi ĉi tiun dosieron"
+msgstr[1] "Programo postulas kromajn kromaĵojn por malkodi ĉi tiun dosieron"
 
 #: PkSession/PkInstallGStreamerResources.cpp:85
 #, kde-format
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Programo postulas kroman kromprogramon por kodi ĉi tiun dosieron"
+msgstr[1] "Programo postulas kromajn kromaĵojn por kodi ĉi tiun dosieron"
 
 #: PkSession/PkInstallGStreamerResources.cpp:90
 #, kde-format
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Programo postulas kroman kromprogramon por ĉi tiu operacio"
+msgstr[1] "Programo postulas kromajn kromaĵojn por ĉi tiu operacio"
 
 #: PkSession/PkInstallGStreamerResources.cpp:97
 #, kde-format
 msgid "%2 requires an additional plugin to decode this file"
 msgid_plural "%2 requires additional plugins to decode this file"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%2 postulas kroman kromprogramon por malkodi ĉi tiun dosieron"
+msgstr[1] "%2 postulas kromajn kromaĵojn por malkodi ĉi tiun dosieron"
 
 #: PkSession/PkInstallGStreamerResources.cpp:103
 #, kde-format
 msgid "%2 requires an additional plugin to encode this file"
 msgid_plural "%2 requires additional plugins to encode this file"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%2 postulas kroman kromprogramon por kodi ĉi tiun dosieron"
+msgstr[1] "%2 postulas kromajn kromaĵojn por kodi ĉi tiun dosieron"
 
 #: PkSession/PkInstallGStreamerResources.cpp:109
 #, kde-format
 msgid "%2 requires an additional plugin for this operation"
 msgid_plural "%2 requires additional plugins for this operation"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%2 postulas kroman kromprogramon por ĉi tiu operacio"
+msgstr[1] "%2 postulas kromajn kromaĵojn por ĉi tiu operacio"
 
 #: PkSession/PkInstallGStreamerResources.cpp:139
 #, kde-format
@@ -3967,8 +3982,9 @@ msgstr "Instali Subtenon por Dosiertipoj"
 msgid "Do you want to search for a program that can open this file type?"
 msgid_plural ""
 "Do you want to search for a program that can open these file types?"
-msgstr[0] ""
+msgstr[0] "Ĉu vi volas serĉi programon, kiu povas malfermi ĉi tiun dosiertipo?"
 msgstr[1] ""
+"Ĉu vi volas serĉi programon, kiu povas malfermi ĉi tiujn dosiertipojn?"
 
 #: PkSession/PkInstallMimeTypes.cpp:56
 #, kde-format
@@ -3979,16 +3995,16 @@ msgstr "Neniuj validaj dosiertipoj estis disponigitaj"
 #, kde-format
 msgid "A program is requiring support to open this kind of files"
 msgid_plural "A program is requiring support to open these kinds of files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Programo postulas subtenon por malfermi ĉi tian dosieron"
+msgstr[1] "Programo postulas subtenon por malfermi ĉi tiajn dosierojn"
 
 #: PkSession/PkInstallMimeTypes.cpp:67
 #, kde-format
 msgid "The application %2 is requiring support to open this kind of files"
 msgid_plural ""
 "The application %2 is requiring support to open these kinds of files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La aplikaĵo %2 postulas subtenon por malfermi ĉi tian dosieron"
+msgstr[1] "La aplikaĵo %2 postulas subtenon por malfermi ĉi tiajn dosierojn"
 
 #: PkSession/PkInstallMimeTypes.cpp:94
 #, kde-format
