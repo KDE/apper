@@ -21,6 +21,7 @@
 
 #include <config.h>
 
+#include <optional>
 #include <AppStreamQt5/pool.h>
 #include <AppStreamQt5/icon.h>
 #include <AppStreamQt5/image.h>
@@ -62,8 +63,8 @@ bool AppStreamHelper::open()
 {
 #ifdef HAVE_APPSTREAM    
     QString error;
-    if (!m_pool->load(&error)) {
-        qCWarning(APPER_LIB) << "Unable to open AppStream metadata pool:" << error;
+    if (!m_pool->load()) {
+        qCWarning(APPER_LIB) << "Unable to open AppStream metadata pool:" << m_pool->lastError();
         return false;
     }
 
@@ -202,8 +203,8 @@ QUrl AppStreamHelper::thumbnail(const QString &pkgName) const
 #ifdef HAVE_APPSTREAM
     if (m_appInfo.contains(pkgName)) {
         AppStream::Image thumb;
-        AppStream::Component app = m_appInfo.value(pkgName);
-        const QList<AppStream::Screenshot> screenshots = app.screenshots();
+        AppStream::Component cpt = m_appInfo.value(pkgName);
+        const QList<AppStream::Screenshot> screenshots = cpt.screenshotsAll();
         for (const AppStream::Screenshot &screenshot : screenshots) {
             const QList<AppStream::Image> images = screenshot.images();
             for (const AppStream::Image &image : images) {
@@ -233,8 +234,8 @@ QUrl AppStreamHelper::screenshot(const QString &pkgName) const
     QUrl url;
 #ifdef HAVE_APPSTREAM
     if (m_appInfo.contains(pkgName)) {
-        AppStream::Component app = m_appInfo.value(pkgName);
-        const QList<AppStream::Screenshot> screenshots = app.screenshots();
+        AppStream::Component cpt = m_appInfo.value(pkgName);
+        const QList<AppStream::Screenshot> screenshots = cpt.screenshotsAll();
         for (const AppStream::Screenshot &screenshot : screenshots) {
             const QList<AppStream::Image> images = screenshot.images();
             for (const AppStream::Image &image : images) {
