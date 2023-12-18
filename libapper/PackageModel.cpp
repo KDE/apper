@@ -37,7 +37,7 @@
 #include <KFormat>
 
 #ifdef HAVE_APPSTREAM
-#include <AppStreamQt/icon.h>
+#include <AppStreamQt5/icon.h>
 #include <AppStream.h>
 #endif
 

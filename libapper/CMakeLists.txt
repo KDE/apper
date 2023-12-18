@@ -36,7 +36,7 @@ set(libapper_SRCS
 )
 
 if(APPSTREAM)
-    find_package(AppStreamQt REQUIRED)
+    find_package(AppStreamQt5 REQUIRED)
 
     set(libapper_SRCS ${libapper_SRCS} AppStream.cpp)
 endif()
@@ -62,7 +62,7 @@ target_link_libraries(apper_private
 )
 
 if(APPSTREAM)
-    target_link_libraries(apper_private AppStreamQt)
+    target_link_libraries(apper_private AppStreamQt5)
 endif()
 
 install(TARGETS apper_private DESTINATION ${KDE_INSTALL_LIBDIR}/apper)

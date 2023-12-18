@@ -21,10 +21,10 @@
 
 #include <config.h>
 
-#include <AppStreamQt/pool.h>
-#include <AppStreamQt/icon.h>
-#include <AppStreamQt/image.h>
-#include <AppStreamQt/screenshot.h>
+#include <AppStreamQt5/pool.h>
+#include <AppStreamQt5/icon.h>
+#include <AppStreamQt5/image.h>
+#include <AppStreamQt5/screenshot.h>
 
 #include "AppStream.h"
 
@@ -147,7 +147,7 @@ bool AppStreamHelper::open()
 //        m_appInfo.insertMulti(pkgName, app);
 //    }
 
-    const QList<AppStream::Component> apps = m_pool->componentsByKind(AppStream::Component::KindDesktopApp);
+    auto apps = m_pool->componentsByKind(AppStream::Component::KindDesktopApp);
     for (const AppStream::Component &app : apps) {
         const QStringList pkgNames = app.packageNames();
         for (const QString &pkgName : pkgNames) {

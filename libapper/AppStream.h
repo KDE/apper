@@ -24,7 +24,7 @@
 
 #include "CategoryMatcher.h"
 
-#include <AppStreamQt/component.h>
+#include <AppStreamQt5/component.h>
 
 #include <QObject>
 #include <QHash>
