@@ -7,13 +7,13 @@
 # obsoleteman <tulliana@gmail.com>, 2010,2012.
 # Serhat Demirkol <serhat_demirkol@yahoo.com>, 2009.
 # Volkan Gezer <volkangezer@gmail.com>, 2013-2014, 2015.
-# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: extragear-sysadmin-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-05 12:39+0000\n"
-"PO-Revision-Date: 2023-05-24 01:46+0300\n"
+"PO-Revision-Date: 2024-02-09 20:03+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.07.70\n"
+"X-Generator: Lokalize 24.01.95\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3514,22 +3514,22 @@ msgstr "Sınama"
 #: libapper/PkStrings.cpp:954
 #, kde-format
 msgid "Please insert the CD labeled '%1', and press continue."
-msgstr "Lütfen '%1' etiketli CD'yi takın ve Sürdür'e basın."
+msgstr "Lütfen ‘%1’ etiketli CD’yi takın ve Sürdür’e basın."
 
 #: libapper/PkStrings.cpp:956
 #, kde-format
 msgid "Please insert the DVD labeled '%1', and press continue."
-msgstr "Lütfen '%1' etiketli DVD'yi takın ve Sürdür'e basın."
+msgstr "Lütfen ‘%1’ etiketli DVD’yi takın ve Sürdür’e basın."
 
 #: libapper/PkStrings.cpp:958
 #, kde-format
 msgid "Please insert the disc labeled '%1', and press continue."
-msgstr "Lütfen '%1' etiketli diski takın ve Sürdür'e basın."
+msgstr "Lütfen ‘%1’ etiketli diski takın ve Sürdür’e basın."
 
 #: libapper/PkStrings.cpp:960 libapper/PkStrings.cpp:963
 #, kde-format
 msgid "Please insert the medium labeled '%1', and press continue."
-msgstr "Lütfen '%1' etiketli ortamı takın ve Sürdür'e basın."
+msgstr "Lütfen ‘%1’ etiketli ortamı takın ve Sürdür’e basın."
 
 #: libapper/PkStrings.cpp:1014
 #, kde-format
@@ -3663,7 +3663,7 @@ msgstr "Depo adı:"
 #: libapper/RepoSig.ui:73
 #, kde-format
 msgid "Signature URL:"
-msgstr "İmza URL'si:"
+msgstr "İmza URL’si:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: libapper/RepoSig.ui:99
