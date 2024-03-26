@@ -1,0 +1,251 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Slovenian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Uporabniški priročnik za Apper</title>
+<authorgroup>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+</authorgroup>
+<date
+>28.11.2016</date>
+<releaseinfo
+>apper 0.9.3</releaseinfo>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper</command
+></refname>
+<refpurpose
+>Upravljalnik aplikacij in paketov, ki uporablja PackageKit</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper</command
+> <group choice="opt"
+><option
+>--updates</option
+> </group
+> <group choice="opt"
+><option
+>--settings</option
+> </group
+> <group choice="opt"
+><option
+>--backend-details</option
+> </group
+> <group choice="opt"
+><option
+>--type</option
+><replaceable
+> mime-type</replaceable
+></group
+> <group choice="opt"
+><option
+>--name</option
+><replaceable
+> name</replaceable
+></group
+> <group choice="opt"
+><option
+>--file</option
+><replaceable
+> file</replaceable
+></group
+> <group choice="opt"
+><option
+>--resource</option
+><replaceable
+> font</replaceable
+></group
+> <group choice="opt"
+><option
+>--catalog</option
+><replaceable
+> file</replaceable
+></group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Opis</title>
+<para
+>Apper je vmesnik za PackageKit</para>
+<para
+>Apper lahko zahvaljujoč projektu PackageKit upravlja pakete, aplikacije in posodobitve na meddistribucijski način.</para>
+<para
+>Uporabnikom operacijskega sistema &Linux; zagotavlja enotno aplikacijo, ki se je lahko naučijo in jo uporabljajo v katerikoli distribuciji.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Možnosti</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--posodobitve</option
+></term>
+<listitem
+><para
+>Prikaži razpoložljive posodobitve</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--nastavitve</option
+></term>
+<listitem
+><para
+>Pokaži konfiguracijsko stran Apper.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--podrobnosti o zaledju</option
+></term>
+<listitem
+><para
+>Prikaži informacije o zaledju, ki ga PackageKit uporablja v določenem trenutku.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--type</option
+> <replaceable
+>mime-type</replaceable
+></term>
+<listitem
+><para
+>Pokličite namestitveni program tipa mime.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--name</option
+> <replaceable
+>name</replaceable
+></term>
+<listitem
+><para
+>Namesti paket z imenom <replaceable
+>name</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--file</option
+> <replaceable
+>datoteka</replaceable
+></term>
+<listitem
+><para
+>Namestitveni paket, ki zagotavlja datoteko <replaceable
+>file</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--resource</option
+> <replaceable
+>pisava</replaceable
+></term>
+<listitem
+><para
+>Namesti vir pisave.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><option
+>--catalog</option
+> <replaceable
+>datoteka</replaceable
+></term>
+<listitem
+><para
+>Namesti katalog paketov v <replaceable
+>datoteko</replaceable
+>.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Glej tudi</title>
+<simplelist>
+<member
+>Več informacij o programu Apper najdete na <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>spletišču Apper</ulink
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
+</refsect1>
+
+<refsect1>
+<title
+>Avtorji</title>
+<para
+>Vzdrževalec programa Apper je Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; to stran priročnika je napisal Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>
