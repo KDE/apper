@@ -506,13 +506,13 @@ msgstr "Instal·la paquets des d'un catàleg"
 #: Apper/BrowseView.ui:140
 #, kde-format
 msgid "Export Installed Package List..."
-msgstr "Exporta la llista de paquets instal·lats..."
+msgstr "Exporta la llista de paquets instal·lats…"
 
 #. i18n: ectx: property (text), widget (QPushButton, importInstalledPB)
 #: Apper/BrowseView.ui:150
 #, kde-format
 msgid "Install Packages from List..."
-msgstr "Instal·la paquets des d'una llista..."
+msgstr "Instal·la paquets des d'una llista…"
 
 #: Apper/CategoryModel.cpp:54 Apper/CategoryModel.cpp:62
 #, kde-format
@@ -755,7 +755,7 @@ msgstr "Llicència:"
 #: Apper/PackageDetails.ui:394
 #, kde-format
 msgid "More..."
-msgstr "Més..."
+msgstr "Més…"
 
 #. i18n: ectx: property (text), widget (QToolButton, hideTB)
 #: Apper/PackageDetails.ui:404 Apper/Updater/UpdateDetails.ui:29
@@ -1335,7 +1335,7 @@ msgstr "S'està executant la instal·lació"
 #: AppSetup/SetupWizard.cpp:194
 #, kde-format
 msgid "Installing %1..."
-msgstr "S'està instal·lant %1..."
+msgstr "S'està instal·lant %1…"
 
 #: AppSetup/SetupWizard.cpp:234
 #, kde-format
@@ -3369,7 +3369,7 @@ msgstr "Actualització de seguretat"
 #, kde-format
 msgctxt "The type of update"
 msgid "Bug fix update"
-msgstr "Actualització de correcció d'errors"
+msgstr "Actualització d'esmena d'errors"
 
 #: libapper/PkStrings.cpp:844
 #, kde-format
