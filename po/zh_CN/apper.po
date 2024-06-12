@@ -1088,7 +1088,7 @@ msgstr "这是一个测试类更新，因此并不适用于一般使用。请报
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
-msgstr "更新无可用描述，将使用开发者的日志。"
+msgstr "此更新没有可用的描述，将显示开发者的日志。"
 
 #: Apper/Updater/UpdateDetails.cpp:292
 #, kde-format
@@ -2206,7 +2206,7 @@ msgstr "解压完成"
 #: libapper/PkStrings.cpp:427
 #, kde-format
 msgid "No network connection available"
-msgstr "无可用的网络连接"
+msgstr "没有可用的网络连接"
 
 #: libapper/PkStrings.cpp:429
 #, kde-format
@@ -3326,7 +3326,7 @@ msgstr "未知更新"
 #: libapper/PkStrings.cpp:865
 #, kde-format
 msgid "No Updates Available"
-msgstr "无可用更新"
+msgstr "没有可用的更新"
 
 #: libapper/PkStrings.cpp:868
 #, kde-format
