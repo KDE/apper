@@ -224,7 +224,7 @@
       <li xml:lang="eu">Banaketekiko independentea den software-paketeen kudeaketa</li>
       <li xml:lang="fi">Jakeluriippumaton ohjelmapakettien hallinta</li>
       <li xml:lang="fr">Gestion des paquets logiciels de manière agnostique à la distribution</li>
-      <li xml:lang="gl">Non é específico de ningunha distribución.</li>
+      <li xml:lang="gl">Xestión de paquetes de programas independente de distribucións.</li>
       <li xml:lang="hu">Szoftvercsomagok disztribúció-agnosztikus kezelése</li>
       <li xml:lang="id">Pengelolaan paket perangkat lunak distribusi agnostik</li>
       <li xml:lang="it">Gestione dei pacchetti software indipendente dalla distribuzione</li>
@@ -261,7 +261,7 @@
       <li xml:lang="eu">Paketeekin eskarmenturik ez duten erabiltzaileentzako aplikazio kudeaketa</li>
       <li xml:lang="fi">Sovellusten hallinta käyttäjille, joilla ei ole kokemusta paketeista</li>
       <li xml:lang="fr">Application de gestion de paquets pour utilisateurs débutants</li>
-      <li xml:lang="gl">Xestión de aplicacións para usuarios sen experiencia con paquetes</li>
+      <li xml:lang="gl">Xestión de aplicacións para persoas usuarias sen experiencia con paquetes.</li>
       <li xml:lang="hu">Alkalmazáskezelés a csomagokban tapasztalatlan felhasználóknak</li>
       <li xml:lang="id">Pengelolaan aplikasi untuk pengguna yang takberpengalaman dengan paket-paket</li>
       <li xml:lang="it">Gestione delle applicazioni per gli utenti con poca esperienza sui pacchetti</li>
@@ -298,7 +298,7 @@
       <li xml:lang="eu">Software sorburuen editorea eta PackageKit ezarpenak</li>
       <li xml:lang="fi">Ohjelmalähteiden ja PackageKit-asetusten muokkaus</li>
       <li xml:lang="fr">Éditeur pour les sources d'applications et le paramétrage de « PackageKit ».</li>
-      <li xml:lang="gl">Editor de fontes de software e configuración de PackageKit.</li>
+      <li xml:lang="gl">Editor de fontes de programas e configuración de PackageKit.</li>
       <li xml:lang="hu">Szerkesztő a szoftverforrásokhoz és PackageKit beállításokhoz</li>
       <li xml:lang="id">Editor untuk pengaturan PackageKit dan sumber perangkat lunak</li>
       <li xml:lang="it">Editor delle fonti software e delle impostazioni di PackageKit</li>
@@ -334,7 +334,7 @@
       <li xml:lang="eu">Sistemako software-eguneratze jakinarazlea eta instalatzailea</li>
       <li xml:lang="fi">Järjestelmäohjelmiston päivitysten ilmoitin ja asennin</li>
       <li xml:lang="fr">Notification système de mise à jour ou d'installation</li>
-      <li xml:lang="gl">Notificador e instalador de actualizacións de software do sistema.</li>
+      <li xml:lang="gl">Notificador e instalador de actualizacións de programas do sistema.</li>
       <li xml:lang="hu">Rendszerszoftver frissítések értesítő és telepítő</li>
       <li xml:lang="id">Penginstal dan penotifikasi pembaruan perangkat lunak sistem</li>
       <li xml:lang="it">Gestore di sistema per la notifica e l'installazione degli aggiornamenti software</li>
