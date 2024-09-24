@@ -1,0 +1,123 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Slovenian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>apper-appsetup Uporabniški priročnik</title>
+<authorgroup>
+<author
+><firstname
+>Matthias</firstname
+> <surname
+>Klumpp</surname
+> <email
+>matthias@tenstral.net</email
+> </author>
+<author
+><firstname
+>Daniel</firstname
+> <surname
+>Nicoletti</surname
+> <email
+>dantti12@gmail.com</email
+> </author>
+</authorgroup>
+<date
+>28.11.2016</date>
+<releaseinfo
+>apper-appsetup 0.9.3</releaseinfo>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>apper-appsetup</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>apper-appsetup</command
+></refname>
+<refpurpose
+>GUI za namestitev aplikacije Limba</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>apper-appsetup</command
+> <group choice="opt"
+><option
+>--verbose</option
+> </group
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Opis</title>
+<para
+>Apper je vmesnik za PackageKit</para>
+<para
+>Apper lahko zahvaljujoč projektu PackageKit upravlja pakete, aplikacije in posodobitve na meddistribucijski način.</para>
+<para
+>Uporabnikom operacijskega sistema &Linux; zagotavlja enotno aplikacijo, ki se jo lahko naučijo in jo uporabljajo v katerikoli distribuciji.</para>
+<para
+>Ta majhna pomožna aplikacija zagotavlja grafični vmesnik za namestitveni program aplikacij Limba, ki ni odvisen od distribucij in omogoča namestitev paketov Limba s programom Apper.</para>
+
+</refsect1>
+
+<refsect1>
+<title
+>Možnosti</title>
+<variablelist>
+
+<varlistentry>
+<term
+><option
+>--besedno</option
+></term>
+<listitem
+><para
+>Orodje preklopi na podrobni način</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Glej tudi</title>
+
+<simplelist>
+<member
+>Več informacij o programu Apper najdete na <ulink url="http://kde-apps.org/content/show.php/Apper?content=84745"
+>spletišču Apper</ulink
+>.</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+</simplelist>
+</refsect1>
+
+<refsect1>
+<title
+>Avtorji</title>
+<para
+>Vzdrževalec programa Apper je Daniel Nicoletti <email
+>dantti12@gmail.com</email
+>; to stran priročnika je napisal Matthias Klumpp <email
+>matthias@tenstral.net</email
+>.</para>
+</refsect1>
+
+</refentry>
