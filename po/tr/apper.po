@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: extragear-sysadmin-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-05 12:39+0000\n"
-"PO-Revision-Date: 2024-09-23 15:31+0300\n"
+"PO-Revision-Date: 2024-09-25 19:27+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -2527,7 +2527,7 @@ msgstr "Paket yapılandırılamadı"
 #: libapper/PkStrings.cpp:539
 #, kde-format
 msgid "Package failed to build"
-msgstr "Paket inşa edilemedi"
+msgstr "Paket yapılamadı"
 
 #: libapper/PkStrings.cpp:541
 #, kde-format
@@ -3023,7 +3023,7 @@ msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"Seçilen paketlerden biri doğru bir şekilde yapılandırılamadı.\n"
+"Seçili paketlerden biri doğru bir biçimde yapılandırılamadı.\n"
 "Ayrıntılı raporda daha fazla bilgi bulabilirsiniz."
 
 #: libapper/PkStrings.cpp:718
@@ -3032,7 +3032,7 @@ msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"Seçilen paketlerden biri doğru bir şekilde inşa edilemedi.\n"
+"Seçili paketlerden biri doğru bir biçimde yapılamadı.\n"
 "Ayrıntılı raporda daha fazla bilgi bulabilirsiniz."
 
 #: libapper/PkStrings.cpp:721
@@ -3041,7 +3041,7 @@ msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"Seçilen paketlerden biri doğru bir şekilde kurulamadı.\n"
+"Seçili paketlerden biri doğru bir biçimde kurulamadı.\n"
 "Ayrıntılı raporda daha fazla bilgi bulabilirsiniz."
 
 #: libapper/PkStrings.cpp:724
@@ -3050,7 +3050,7 @@ msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"Seçilen paketlerden biri doğru bir şekilde kaldırılamadı.\n"
+"Seçili paketlerden biri doğru bir biçimde kaldırılamadı.\n"
 "Ayrıntılı raporda daha fazla bilgi bulabilirsiniz."
 
 #: libapper/PkStrings.cpp:727
