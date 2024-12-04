@@ -2583,7 +2583,7 @@ msgid ""
 "Please report a bug as this should not have happened."
 msgstr ""
 "您的后端程序不支持该操作。\n"
-"请报告错误，因为这不应该发生。"
+"请报告此程序缺陷，因为这不应该发生。"
 
 #: libapper/PkStrings.cpp:585
 #, kde-format
