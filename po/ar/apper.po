@@ -1,14 +1,14 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2017, 2018.
-# SPDX-FileCopyrightText: 2022, 2024 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2022, 2024, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-05 12:39+0000\n"
-"PO-Revision-Date: 2024-08-15 11:55+0400\n"
+"PO-Revision-Date: 2025-01-09 16:56+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -683,7 +683,7 @@ msgstr "«آبر» هو تطبيق لجلب البرمجيّات وإدارته�
 #: Apper/main.cpp:48
 #, kde-format
 msgid "(C) 2008-2018 Daniel Nicoletti"
-msgstr ""
+msgstr "(ح) 2008-2018 دانييل نيكوليتي"
 
 #: Apper/main.cpp:49 PkSession/main.cpp:54
 #, kde-format
@@ -1023,12 +1023,12 @@ msgstr "هذا التّحديث ممنوع."
 #: Apper/Updater/UpdateDetails.cpp:206
 #, kde-format
 msgid "This notification was issued on %1 and last updated on %2."
-msgstr ""
+msgstr "صدر هذا الإشعار في %1 وتحديثه آخر مرة في %2."
 
 #: Apper/Updater/UpdateDetails.cpp:212
 #, kde-format
 msgid "This notification was issued on %1."
-msgstr ""
+msgstr "صدر هذا الإشعار بتاريخ %1."
 
 #: Apper/Updater/UpdateDetails.cpp:229
 #, kde-format
@@ -1302,6 +1302,10 @@ msgid ""
 "like spying out your passwords.<br>Please do only install this software if "
 "you <b>trust its publisher</b>."
 msgstr ""
+"يرجى توخي الحذر أثناء تثبيت تطبيق تابع لجهة خارجية.<br>قد يؤدي ذلك في "
+"النهاية إلى <b>إتلاف</b> نظامك أو حدوث <b>سلوك ضار</b>، مثل التجسس على كلمات "
+"السر الخاصة بك.<br> يرجى عدم تثبيت هذا البرنامج إلا إذا كنت <b>تثق في ناشره</"
+"b>."
 
 #: AppSetup/SetupWizard.cpp:150
 #, kde-format
@@ -1391,23 +1395,23 @@ msgstr "بقي %1"
 #: libapper/LicenseAgreement.cpp:40 libapper/LicenseAgreement.ui:14
 #, kde-format
 msgid "License Agreement Required"
-msgstr ""
+msgstr "اتفاقية الترخيص مطلوبة"
 
 #: libapper/LicenseAgreement.cpp:43
 #, kde-format
 msgid "Accept Agreement"
-msgstr ""
+msgstr "قبول الاتفاقية"
 
 #: libapper/LicenseAgreement.cpp:45
 #, kde-format
 msgid "License required for %1 by %2"
-msgstr ""
+msgstr "الترخيص مطلوب لـ %1 بواسطة %2"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: libapper/LicenseAgreement.ui:40
 #, kde-format
 msgid "Please read the following important information before continuing:"
-msgstr ""
+msgstr "يرجى قراءة المعلومات الهامة التالية قبل المتابعة:"
 
 #: libapper/PackageModel.cpp:201
 #, kde-format
@@ -1672,10 +1676,10 @@ msgid "Waiting for authentication"
 msgstr "ينتظر الاستيثاق"
 
 #: libapper/PkStrings.cpp:152
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "we are updating the list of processes"
 msgid "Updating the list of running applications"
-msgstr "يحدّث قائمة التّطبيقات الجارية"
+msgstr "يحدث قائمة التطبيقات المشتغلة"
 
 #: libapper/PkStrings.cpp:155
 #, kde-format
@@ -1696,12 +1700,10 @@ msgid "Copying files"
 msgstr "ينسخ الملفّات"
 
 #: libapper/PkStrings.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "transaction state, just started"
-#| msgid "Running task"
+#, kde-format
 msgctxt "we are running hooks pre or post transaction"
 msgid "Running hooks"
-msgstr "يجري المهمّة"
+msgstr "تشغيل الخطافات"
 
 #: libapper/PkStrings.cpp:179
 #, kde-format
@@ -1737,7 +1739,7 @@ msgstr "نُظّفت"
 #, kde-format
 msgctxt "The action of the package, in past tense"
 msgid "Obsoleted"
-msgstr ""
+msgstr "مهملة"
 
 #: libapper/PkStrings.cpp:200
 #, kde-format
@@ -1767,7 +1769,7 @@ msgstr "يجلب التّفاصيل"
 #, kde-format
 msgctxt "The role of the transaction, in present tense"
 msgid "Getting requires"
-msgstr ""
+msgstr "الحصول على المتطلبات"
 
 #: libapper/PkStrings.cpp:211
 #, kde-format
@@ -2074,7 +2076,7 @@ msgstr "جلب قائمة المستودعات"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Enabled repository"
-msgstr ""
+msgstr "تمكين مستودع"
 
 #: libapper/PkStrings.cpp:336
 #, kde-format
@@ -2086,79 +2088,79 @@ msgstr "ضبط بيانات المستودعات"
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Resolved"
-msgstr ""
+msgstr "حُلت"
 
 #: libapper/PkStrings.cpp:341
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got file list"
-msgstr ""
+msgstr "الحصول على قائمة الملفات"
 
 #: libapper/PkStrings.cpp:343
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got what provides"
-msgstr ""
+msgstr "الحصول على ما تقدم"
 
 #: libapper/PkStrings.cpp:345
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Installed signature"
-msgstr ""
+msgstr "تثبيت توقيع"
 
 #: libapper/PkStrings.cpp:347
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got package lists"
-msgstr ""
+msgstr "الحصول على قوائم الحزم"
 
 #: libapper/PkStrings.cpp:349
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Accepted EULA"
-msgstr ""
+msgstr "قبول اتفاقية ترخيص المستخدم النهائي"
 
 #: libapper/PkStrings.cpp:351
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Downloaded packages"
-msgstr ""
+msgstr "تنزيل حزم"
 
 #: libapper/PkStrings.cpp:353
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got distribution upgrades"
-msgstr ""
+msgstr "الحصول على ترقيات التوزيعة"
 
 #: libapper/PkStrings.cpp:355
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got categories"
-msgstr ""
+msgstr "الحصول على فئات"
 
 #: libapper/PkStrings.cpp:357
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Got old transactions"
-msgstr ""
+msgstr "الحصول على المعاملات القديمة"
 
 #: libapper/PkStrings.cpp:359
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Repaired system"
-msgstr ""
+msgstr "إصلاح النظام"
 
 #: libapper/PkStrings.cpp:361
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Removed repository"
-msgstr ""
+msgstr "إزالة مستودع"
 
 #: libapper/PkStrings.cpp:363
 #, kde-format
 msgctxt "The role of the transaction, in past tense"
 msgid "Upgraded the system"
-msgstr ""
+msgstr "ترقية النظام"
 
 #: libapper/PkStrings.cpp:373
 #, kde-format
@@ -2228,7 +2230,7 @@ msgstr "نُظّفت"
 #: libapper/PkStrings.cpp:410
 #, kde-format
 msgid "Obsoleted"
-msgstr ""
+msgstr "مهملة"
 
 #: libapper/PkStrings.cpp:412
 #, kde-format
@@ -2278,7 +2280,7 @@ msgstr "حدث خطأ داخليّ في النّظام"
 #: libapper/PkStrings.cpp:439
 #, kde-format
 msgid "A security trust relationship is not present"
-msgstr ""
+msgstr "علاقة ثقة الأمان غير موجودة"
 
 #: libapper/PkStrings.cpp:441
 #, kde-format
@@ -2321,9 +2323,9 @@ msgid "Search filter was invalid"
 msgstr "مرشّح البحث غير صالح"
 
 #: libapper/PkStrings.cpp:457
-#, fuzzy, kde-format
+#, kde-format
 msgid "The package identifier was not well formed"
-msgstr "لم يكن معرِّف الحزمة "
+msgstr "معرف الحزمة ليس مهيئ جيدا"
 
 #: libapper/PkStrings.cpp:459
 #, kde-format
@@ -2368,12 +2370,12 @@ msgstr "تعذّر تثبيت الحزم المصدريّة"
 #: libapper/PkStrings.cpp:475
 #, kde-format
 msgid "The license agreement failed"
-msgstr ""
+msgstr "فشلت اتفاقية الترخيص"
 
 #: libapper/PkStrings.cpp:477
 #, kde-format
 msgid "Local file conflict between packages"
-msgstr ""
+msgstr "تعارض الملفات المحلية بين الحزم"
 
 #: libapper/PkStrings.cpp:479
 #, kde-format
@@ -2398,7 +2400,7 @@ msgstr "فشل الإنهاء"
 #: libapper/PkStrings.cpp:487
 #, kde-format
 msgid "Cannot get lock"
-msgstr ""
+msgstr "لا يمكن الحصول على القفل"
 
 #: libapper/PkStrings.cpp:489
 #, kde-format
@@ -2491,14 +2493,14 @@ msgid "Update not found"
 msgstr "لم يوجد التّحديث"
 
 #: libapper/PkStrings.cpp:525
-#, fuzzy, kde-format
+#, kde-format
 msgid "Cannot install from untrusted origin"
-msgstr "لا يمكن التّثبيت من مصدر غير موثوق"
+msgstr "لا يمكن التثبيت من أصل غير موثوق"
 
 #: libapper/PkStrings.cpp:527
 #, kde-format
 msgid "Cannot update from untrusted origin"
-msgstr ""
+msgstr "لا يمكن التحديث من مصدر غير موثوق به"
 
 #: libapper/PkStrings.cpp:529
 #, kde-format
@@ -2508,7 +2510,7 @@ msgstr "تعذّر جلب قائمة الملفّات"
 #: libapper/PkStrings.cpp:531
 #, kde-format
 msgid "Cannot get package requires"
-msgstr ""
+msgstr "لا يمكن الحصول على متطلبات الحزمة"
 
 #: libapper/PkStrings.cpp:533
 #, kde-format
@@ -2553,7 +2555,7 @@ msgstr "تغيّرت قاعدة بيانات الحزم"
 #: libapper/PkStrings.cpp:549
 #, kde-format
 msgid "Virtual provide type is not supported"
-msgstr ""
+msgstr "نوع العرض الافتراضي غير مدعوم"
 
 #: libapper/PkStrings.cpp:551
 #, kde-format
@@ -2568,7 +2570,7 @@ msgstr "تعذّر جلب مصادر التّثبيت"
 #: libapper/PkStrings.cpp:555
 #, kde-format
 msgid "Rescheduled due to priority"
-msgstr ""
+msgstr "إعادة الجدولة بسبب الأولوية"
 
 #: libapper/PkStrings.cpp:557
 #, kde-format
@@ -2591,6 +2593,8 @@ msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again"
 msgstr ""
+"لا يوجد اتصال متاح بالشبكة.\n"
+"الرجاء التحقق من إعدادات الاتصال والمحاولة مرة أخرى"
 
 #: libapper/PkStrings.cpp:574
 #, kde-format
@@ -2602,14 +2606,14 @@ msgstr ""
 "كان يجب أن يتمّ هذا عبر السّند آليًّا."
 
 #: libapper/PkStrings.cpp:577
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
 "Please close some programs or restart your computer."
 msgstr ""
-"الخدمة المسؤولة عن التّعامل مع طلبات المستخدم نفذت منها الذّاكرة.\n"
-"رجاء أغلق بعض البرامج أو أعد تشغيل الحاسوب."
+"الخدمة المسؤولة عن التعامل مع طلبات المستخدم نفذت ذاكرتها.\n"
+"رجاءً أغلق بعض التطبيقات أو أعد تشغيل جهازك."
 
 #: libapper/PkStrings.cpp:580
 #, kde-format
@@ -2640,24 +2644,26 @@ msgid ""
 "A security trust relationship could not be made with the software origin.\n"
 "Please check your software signature settings."
 msgstr ""
+"لا يمكن القيام بعلاقة وثوق أمنية مع أصل البرنامج.\n"
+"رجاءً تحقق من إعدادات توقيع البرنامج."
 
 #: libapper/PkStrings.cpp:591
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
-msgstr "الحزمة التي تجري محاولة إزالتها أو تحديثها غير مثبّتة أساسًا."
+msgstr "الحزمة التي تحاول أن تزال أو تحدث ليست مثبته مسبقا."
 
 #: libapper/PkStrings.cpp:593
 #, kde-format
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software origin."
-msgstr ""
+msgstr "الحزمة التي عدلت لم توجد في نظامك أو في أي أصل برنامج."
 
 #: libapper/PkStrings.cpp:595
 #, kde-format
 msgid "The package that is trying to be installed is already installed."
-msgstr ""
+msgstr "الحزمة التي تحاول التثبيت مثبته مسبقًا."
 
 #: libapper/PkStrings.cpp:597
 #, kde-format
@@ -2684,18 +2690,22 @@ msgid ""
 "Refreshing your cache may help, although this is normally a software origin "
 "error."
 msgstr ""
+"لا يمكن تحميل قائمة المجموعات.\n"
+"إنعاش ذاكرتك المؤقتة قد يساعد، بالرغم من أن هذه عادة مشكلة أصل البرنامج."
 
 #: libapper/PkStrings.cpp:607
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "A package dependency could not be found.\n"
 "More information is available in the detailed report."
-msgstr "تعذّر إيجاد اعتماديّات الحزمة.\n"
+msgstr ""
+"لا توجد اعتمادية الحزمة.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:610
 #, kde-format
 msgid "The search filter was not correctly formed."
-msgstr ""
+msgstr "مرشح البحث لم ينسق بشكل صحيح."
 
 #: libapper/PkStrings.cpp:612
 #, kde-format
@@ -2703,6 +2713,8 @@ msgid ""
 "The package identifier was not well formed when sent to the system daemon.\n"
 "This normally indicates an internal bug and should be reported."
 msgstr ""
+"معرف الحزمة لم ينسق بشكل صحيح عندما أرسل إلى خدمة النظام.\n"
+"عادة هذا يشير إلى مشكلة داخلية ويجب رفع تقرير عنها."
 
 #: libapper/PkStrings.cpp:615
 #, kde-format
@@ -2710,6 +2722,8 @@ msgid ""
 "An error occurred while running the transaction.\n"
 "More information is available in the detailed report."
 msgstr ""
+"حدث خطأ أثناء تشغيل العملية.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:618
 #, kde-format
@@ -2717,16 +2731,18 @@ msgid ""
 "The remote software origin name was not found.\n"
 "You may need to enable an item in Software Origins."
 msgstr ""
+"اسم أصل البرنامج البعيد غير موجود.\n"
+"قد تحتاج إلى تفعيل عنصر في أصول البرامج."
 
 #: libapper/PkStrings.cpp:621
 #, kde-format
 msgid "Removing a protected system package is not allowed."
-msgstr ""
+msgstr "إزالة حزمة نظام محمية غير مسموح به."
 
 #: libapper/PkStrings.cpp:623
 #, kde-format
 msgid "The task was canceled successfully and no packages were changed."
-msgstr ""
+msgstr "ألغيت المهمة بنجاح ولم يتم تغيير أي حزمة."
 
 #: libapper/PkStrings.cpp:625
 #, kde-format
@@ -2734,6 +2750,8 @@ msgid ""
 "The task was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
 msgstr ""
+"ألغيت المهمة بنجاح ولم يتم تغيير أي حزمة.\n"
+"الخلفية لم تخرج بنظافة."
 
 #: libapper/PkStrings.cpp:628
 #, kde-format
@@ -2741,11 +2759,13 @@ msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure your system's configuration is valid."
 msgstr ""
+"ملف إعدادات الحزمة الأصلية لا يمكن فتحه.\n"
+"رجاءً تأكد من أن إعدادات نظامك صالحة."
 
 #: libapper/PkStrings.cpp:631
 #, kde-format
 msgid "The task is not safe to be cancelled at this time."
-msgstr ""
+msgstr "إلغاء المهمة غير آمن في هذا الوقت."
 
 #: libapper/PkStrings.cpp:633
 #, kde-format
@@ -2753,6 +2773,8 @@ msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
 msgstr ""
+"حزم المصدر عادة لا تثبت بهذه الطريقة.\n"
+"تحقق من امتداد الملف الذي تحاول تثبيته."
 
 #: libapper/PkStrings.cpp:636
 #, kde-format
@@ -2760,6 +2782,8 @@ msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
 msgstr ""
+"لم يتم قبول اتفاقية الترخيص.\n"
+"لاستخدام البرنامج يجب أن تقبل الترخيص."
 
 #: libapper/PkStrings.cpp:639
 #, kde-format
@@ -2767,6 +2791,8 @@ msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages for different software origins."
 msgstr ""
+"حزمتان قدمتا نفس الملف.\n"
+"يحدث هذا عادة بسبب خلط حزم من أصول برامج مختلفة."
 
 #: libapper/PkStrings.cpp:642
 #, kde-format
@@ -2774,6 +2800,8 @@ msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software origins."
 msgstr ""
+"يوجد العديد من الحزم التي لا تتطابق مع بعضها البعض.\n"
+"سبب ذلك عادة هو خلط الحزم من أصول برامج مختلفة."
 
 #: libapper/PkStrings.cpp:645
 #, kde-format
@@ -2781,6 +2809,8 @@ msgid ""
 "There was a (possibly temporary) problem connecting to a software origins.\n"
 "Please check the detailed error for further details."
 msgstr ""
+"كان هنا مشكلة (متوقع أنها مؤقتة) في الاتصال بأصول البرامج.\n"
+"رجاءً تحقق من تفاصيل الخطأ للمزيد من المعلومات."
 
 #: libapper/PkStrings.cpp:648
 #, kde-format
@@ -2788,6 +2818,8 @@ msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
 msgstr ""
+"أخفقت في تهيئة خلفية الحزم.\n"
+"قد يحدث هذا إذا كان هناك أداوت حزم تستخدم في نفس الوقت."
 
 #: libapper/PkStrings.cpp:651
 #, kde-format
@@ -2795,6 +2827,8 @@ msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
 msgstr ""
+"أخفقت في إغلاق الخلفية.\n"
+"هذا الخطأ يمكن تجاهله عادة."
 
 #: libapper/PkStrings.cpp:654
 #, kde-format
@@ -2802,16 +2836,18 @@ msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
 msgstr ""
+"لم أستطع الحصول على قفل حصري لخلفية الحزم.\n"
+"رجاءً أغلق أي أداة أثرية حزم أخرى قد تكون مفتوحة."
 
 #: libapper/PkStrings.cpp:657
 #, kde-format
 msgid "None of the selected packages could be updated."
-msgstr ""
+msgstr "لا يمكن تحديث أي من الحزم المحددة."
 
 #: libapper/PkStrings.cpp:659
 #, kde-format
 msgid "The repository configuration could not be modified."
-msgstr ""
+msgstr "لا يمكن تعديل إعدادات المستودع."
 
 #: libapper/PkStrings.cpp:661
 #, kde-format
@@ -2819,11 +2855,13 @@ msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
 msgstr ""
+"فشل تثبيت الملف المحلي.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:664
 #, kde-format
 msgid "The package signature could not be verified."
-msgstr ""
+msgstr "لا يمكن التحقق من التوقيع."
 
 #: libapper/PkStrings.cpp:666
 #, kde-format
@@ -2831,11 +2869,13 @@ msgid ""
 "The package signature was missing and this package is untrusted.\n"
 "This package was not signed with a GPG key when created."
 msgstr ""
+"توقيع الحزمة مفقود وهذه الحزمة غير موثوقة.\n"
+"هذه الحزمة غير موقعة بمفتاح GPG عند إنشائها."
 
 #: libapper/PkStrings.cpp:669
 #, kde-format
 msgid "Repository configuration was invalid and could not be read."
-msgstr ""
+msgstr "إعدادات الحزمة غير صحيحة ولا يمكن قرأتها."
 
 #: libapper/PkStrings.cpp:671
 #, kde-format
@@ -2843,25 +2883,27 @@ msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
 msgstr ""
+"الحزمة التي تحاول تثبيتها غير صالحة.\n"
+"قد يكون ملف الحزمة فاسد، أو أنها ليست حزمة مناسبة."
 
 #: libapper/PkStrings.cpp:674
 #, kde-format
 msgid ""
 "Installation of this package was prevented by your packaging system's "
 "configuration."
-msgstr ""
+msgstr "تثبيت هذه الحزمة منع بواسطة إعدادات نظام الحزم."
 
 #: libapper/PkStrings.cpp:676
 #, kde-format
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
-msgstr ""
+msgstr "الحزمة المنزلة فاسدة وتحتاج إلى إعادة التنزيل مرة أخرى."
 
 #: libapper/PkStrings.cpp:678
 #, kde-format
 msgid ""
 "All of the packages selected for install are already installed on the system."
-msgstr ""
+msgstr "جميع الحزم المحدد مثبتة مسبقا في النظام."
 
 #: libapper/PkStrings.cpp:680
 #, kde-format
@@ -2869,6 +2911,8 @@ msgid ""
 "The specified file could not be found on the system.\n"
 "Check that the file still exists and has not been deleted."
 msgstr ""
+"الملف المحدد لا يمكن العثور عليه على النظام.\n"
+"تحقق من أن الملف موجود ولم يتم حذفه."
 
 #: libapper/PkStrings.cpp:683
 #, kde-format
@@ -2876,6 +2920,8 @@ msgid ""
 "Required data could not be found on any of the configured software origins.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
+"البيانات المطلوبة لا يمكن العثور عليها في أي من أصول البرامج المعدة.\n"
+"لا توجد مرايا تنزيل يمكن تجربتها."
 
 #: libapper/PkStrings.cpp:686
 #, kde-format
@@ -2884,12 +2930,14 @@ msgid ""
 "origins.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
+"بيانات الترقية المطلوبة لا يمكن العثور عليها في أي من أصول البرامج المعدة.\n"
+"قائمة ترقيات التوزيعة لن تتوفر."
 
 #: libapper/PkStrings.cpp:689
 #, kde-format
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
-msgstr ""
+msgstr "الحزمة التي تحاول تثبيتها غير متوافقة مع هذا النظام."
 
 #: libapper/PkStrings.cpp:691
 #, kde-format
@@ -2897,11 +2945,13 @@ msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
 msgstr ""
+"لا توجد مساحة كافية في الجهاز.\n"
+"أفرغ بعض المساحة على قرص النظام لتنفيذ هذه العملية."
 
 #: libapper/PkStrings.cpp:694
 #, kde-format
 msgid "Additional media is required to complete the transaction."
-msgstr ""
+msgstr "وسائط إضافية مطلوبة لإكمال هذه العملية."
 
 #: libapper/PkStrings.cpp:696
 #, kde-format
@@ -2909,6 +2959,8 @@ msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
 msgstr ""
+"أخفقت في توفير توثيق صحيح.\n"
+"رجاءً تحقق من أي كلمات المرور أو إعدادات الحساب."
 
 #: libapper/PkStrings.cpp:699
 #, kde-format
@@ -2917,31 +2969,33 @@ msgid ""
 "It could have already been installed or no longer available on the remote "
 "server."
 msgstr ""
+"التحديث المحدد لا يمكن العثور عليه.\n"
+"قد يكون مثبت مسبقا أو لا انه غير متوفر على الخادم البعيد."
 
 #: libapper/PkStrings.cpp:702
 #, kde-format
 msgid "The package could not be installed from untrusted origin."
-msgstr ""
+msgstr "لا يمكن تثبيت الحزمة من أصل غير موثوق."
 
 #: libapper/PkStrings.cpp:704
 #, kde-format
 msgid "The package could not be updated from untrusted origin."
-msgstr ""
+msgstr "لا يمكن تحديث الحزمة من أصل غير موثوق."
 
 #: libapper/PkStrings.cpp:706
 #, kde-format
 msgid "The file list is not available for this package."
-msgstr ""
+msgstr "قائمة الملفات غير متوفرة لهذه الحزمة."
 
 #: libapper/PkStrings.cpp:708
 #, kde-format
 msgid "The information about what requires this package could not be obtained."
-msgstr ""
+msgstr "المعلومات عن من يحتاج هذه الحزمة لا يمكن الحصول عليها."
 
 #: libapper/PkStrings.cpp:710
 #, kde-format
 msgid "The specified software origin could not be disabled."
-msgstr ""
+msgstr "أصل البرنامج المحدد لا يمكن تعطيله."
 
 #: libapper/PkStrings.cpp:712
 #, kde-format
@@ -2949,6 +3003,8 @@ msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
 msgstr ""
+"التنزيل لا يمكن أن يتم تلقائيًا ويجب أن يتم يدويًا.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:715
 #, kde-format
@@ -2956,6 +3012,8 @@ msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"أحد الحزم المحددة أخفقت في إعدادها بشكل صحيح.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:718
 #, kde-format
@@ -2963,6 +3021,8 @@ msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"أحد الحزم المحددة أخفقت في البناء بشكل صحيح.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:721
 #, kde-format
@@ -2970,6 +3030,8 @@ msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"أحد الحزم المحددة أخفقت في التثبيت بشكل صحيح.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:724
 #, kde-format
@@ -2977,50 +3039,54 @@ msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
+"أحد الحزم المحددة أخفقت في إزالتها بشكل صحيح.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:727
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
-msgstr "هناك برنامج يعمل ويجب إغلاقه قبل إكمال التّحديث.\n"
+msgstr ""
+"برنامج يعمل يجب إغلاقه قبل الاستمرار بالتحديث.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:730
 #, kde-format
 msgid "The package database was changed while the request was running."
-msgstr ""
+msgstr "غيرت قاعدة بيانات الحزم أثناء عمل طلب."
 
 #: libapper/PkStrings.cpp:732
 #, kde-format
 msgid "The virtual provide type is not supported by this system."
-msgstr ""
+msgstr "لا يدعم هذا النظام نوع التزويد الافتراضي."
 
 #: libapper/PkStrings.cpp:734
 #, kde-format
 msgid "The install root is invalid. Please contact your administrator."
-msgstr ""
+msgstr "جذر التثبيت غير صحيح. رجاءً تواصل مع مدير النظام."
 
 #: libapper/PkStrings.cpp:736
 #, kde-format
 msgid "The list of software could not be downloaded."
-msgstr ""
+msgstr "لا يمكن تنزيل قائمة البرامج."
 
 #: libapper/PkStrings.cpp:738
 #, kde-format
 msgid ""
 "The transaction has been cancelled and will be retried when the system is "
 "idle."
-msgstr ""
+msgstr "العملية ألغيت وسيتم إعادة المحاولة عندما يكون النظام خامل."
 
 #: libapper/PkStrings.cpp:740
 #, kde-format
 msgid "A previous package management transaction was interrupted."
-msgstr ""
+msgstr "عملية إدارة الحزم السابقة تم مقاطعتها."
 
 #: libapper/PkStrings.cpp:742
 #, kde-format
 msgid "A package manager lock is required."
-msgstr ""
+msgstr "قفل مدير الحزم مطلوب."
 
 #: libapper/PkStrings.cpp:744
 #, kde-format
@@ -3028,6 +3094,8 @@ msgid ""
 "Unknown error, please report a bug.\n"
 "More information is available in the detailed report."
 msgstr ""
+"خطأ غير معروف، الرجاء رفع تقرير المشكلة.\n"
+"المزيد من المعلومات متوفرة في التقرير المفصل."
 
 #: libapper/PkStrings.cpp:755
 #, kde-format
@@ -3159,7 +3227,7 @@ msgstr "التّوطين"
 #, kde-format
 msgctxt "The group type"
 msgid "Virtualization"
-msgstr ""
+msgstr "محاكاة افتراضية"
 
 #: libapper/PkStrings.cpp:799
 #, kde-format
@@ -3243,7 +3311,7 @@ msgstr "مجموعة مجهولة"
 #, kde-format
 msgctxt "The type of update"
 msgid "Trivial update"
-msgstr ""
+msgstr "تحديث طفيف"
 
 #: libapper/PkStrings.cpp:836
 #, kde-format
@@ -3392,17 +3460,17 @@ msgstr "سيُطلب منك الخروج والعودة"
 #: libapper/PkStrings.cpp:897
 #, kde-format
 msgid "A restart will be required"
-msgstr ""
+msgstr "إعادة التشغيل مطلوبة"
 
 #: libapper/PkStrings.cpp:899
 #, kde-format
 msgid "You will be required to log out and back in due to a security update."
-msgstr ""
+msgstr "ستحتاج إلى تسجيل الخروج والدخول مرة أخرى نظرا لوجود تحديث أمني."
 
 #: libapper/PkStrings.cpp:901
 #, kde-format
 msgid "A restart will be required due to a security update."
-msgstr ""
+msgstr "إعادة التشغيل مطلوبة نظرا لوجود تحديث أمني."
 
 #: libapper/PkStrings.cpp:914
 #, kde-format
@@ -3450,19 +3518,19 @@ msgid "Testing"
 msgstr "اختباريّ"
 
 #: libapper/PkStrings.cpp:954
-#, fuzzy, kde-format
+#, kde-format
 msgid "Please insert the CD labeled '%1', and press continue."
-msgstr "رجاء أدرج ال"
+msgstr "الرجاء إدخال القرص المضغوط المسمى '%1' ثم الضغط على \"متابعة\"."
 
 #: libapper/PkStrings.cpp:956
 #, kde-format
 msgid "Please insert the DVD labeled '%1', and press continue."
-msgstr ""
+msgstr "الرجاء إدخال قرص DVD المسمى '%1' ثم الضغط على \"متابعة\"."
 
 #: libapper/PkStrings.cpp:958
 #, kde-format
 msgid "Please insert the disc labeled '%1', and press continue."
-msgstr ""
+msgstr "الرجاء إدخال القرص المسمى '%1' ثم الضغط على \"متابعة\"."
 
 #: libapper/PkStrings.cpp:960 libapper/PkStrings.cpp:963
 #, kde-format
@@ -3477,7 +3545,7 @@ msgstr "لا صلاحيّة كافية لديك لتنفيذ هذا الإجرا
 #: libapper/PkStrings.cpp:1016
 #, kde-format
 msgid "Could not get a transaction id from packagekitd."
-msgstr ""
+msgstr "لا يمكن الحصول على معرف العملية من packagekitd."
 
 #: libapper/PkStrings.cpp:1018
 #, kde-format
@@ -3542,7 +3610,7 @@ msgstr "آخر التماس عن التّحديثات كان منذ شهر"
 #: libapper/PkStrings.cpp:1065
 #, kde-format
 msgid "Verified %1 ago"
-msgstr ""
+msgstr "متحقّق منه منذ %1"
 
 #: libapper/PkStrings.cpp:1067
 #, kde-format
@@ -3557,6 +3625,10 @@ msgid ""
 "\n"
 "Are you sure you want to proceed with the installation?"
 msgstr ""
+"أنت على وشك تثبيت حزم غير موقعة يمكنها اختراق نظامك، حيث أنه من المستحيل "
+"التحقق مما إذا كان البرنامج يأتي من مصدر موثوق.\n"
+"\n"
+"هل أنت متأكد من رغبتك في متابعة التثبيت؟"
 
 #: libapper/PkTransaction.cpp:267
 #, kde-format
@@ -3691,7 +3763,7 @@ msgstr[5] ""
 #, kde-format
 msgctxt "how many bytes are required for download"
 msgid "Need to get %1 of archives"
-msgstr ""
+msgstr "تحتاج إلى الحصول على %1 من الأرشيف"
 
 #: libapper/Requirements.cpp:258
 #, kde-format
@@ -3699,6 +3771,8 @@ msgid ""
 "You are about to install unsigned packages that can compromise your system, "
 "as it is impossible to verify if the software came from a trusted source."
 msgstr ""
+"أنت على وشك تثبيت حزم غير موقعة يمكنها اختراق نظامك، حيث أنه من المستحيل "
+"التحقق مما إذا كان البرنامج يأتي من مصدر موثوق."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: libapper/Requirements.ui:28
@@ -3710,7 +3784,7 @@ msgstr "هناك تغييرات أخرى مطلوبة لإكمال المهمّ�
 #: libapper/Requirements.ui:101
 #, kde-format
 msgid "Do not confirm when installing or updating additional packages"
-msgstr ""
+msgstr "لا تقم بالتأكيد عند تثبيت أو تحديث الحزم الإضافية"
 
 #. i18n: ectx: property (text), widget (QLabel, descriptionL)
 #: PkSession/IntroDialog.ui:65
@@ -3721,7 +3795,7 @@ msgstr "لصيقة نصّيّة"
 #: PkSession/main.cpp:48
 #, kde-format
 msgid "Apper PackageKit Session helper"
-msgstr ""
+msgstr "مساعد جلسة Apper PackageKit"
 
 #: PkSession/main.cpp:51
 #, kde-format
@@ -3731,22 +3805,22 @@ msgstr "Daniel Nicoletti"
 #: PkSession/main.cpp:52
 #, kde-format
 msgid "Trever Fischer"
-msgstr ""
+msgstr "تريفر فيشر"
 
 #: PkSession/PkInstallCatalogs.cpp:47
 #, kde-format
 msgid "Install Packages Catalogs"
-msgstr ""
+msgstr "تثبيت كتالوجات الحزم"
 
 #: PkSession/PkInstallCatalogs.cpp:66
 #, kde-format
 msgid "You can drop more catalogs in here"
-msgstr ""
+msgstr "يمكنك وضع المزيد من الكتالوجات هنا"
 
 #: PkSession/PkInstallCatalogs.cpp:85
 #, kde-format
 msgid "No supported catalog was found"
-msgstr ""
+msgstr "لم يعثر على كتالوج معتمد"
 
 #: PkSession/PkInstallCatalogs.cpp:87
 #, kde-format
@@ -3790,7 +3864,7 @@ msgstr "ليس مدعومًا"
 #, kde-format
 msgid ""
 "Your backend does not support any of the needed methods to install a catalog"
-msgstr ""
+msgstr "الواجهة الخلفية لديك لا تدعم أيًا من الطرق المطلوبة لتثبيت الكتالوج"
 
 #: PkSession/PkInstallCatalogs.cpp:178
 #, kde-format
@@ -3836,7 +3910,7 @@ msgstr "يثبّت خطوطًا جديدة"
 #: PkSession/PkInstallFontconfigResources.cpp:74
 #, kde-format
 msgid "Could interpret request"
-msgstr ""
+msgstr "يمكن مقاطعة الطلب"
 
 #: PkSession/PkInstallFontconfigResources.cpp:74
 #, kde-format
@@ -3899,7 +3973,7 @@ msgstr "فشل البحث عن موفّرين"
 #: PkSession/PkInstallGStreamerResources.cpp:40
 #, kde-format
 msgid "Install GStreamer Resources"
-msgstr ""
+msgstr "تثبيت موارد GStreamer"
 
 #: PkSession/PkInstallGStreamerResources.cpp:68
 #, fuzzy, kde-format
@@ -4063,7 +4137,7 @@ msgstr "ليس مدعومًا"
 #: PkSession/PkInstallPackageFiles.cpp:54
 #, kde-format
 msgid "Your current backend does not support installing files"
-msgstr ""
+msgstr "الواجهة الخلفية الحالية لديك لا تدعم تثبيت الملفات"
 
 #: PkSession/PkInstallPackageFiles.cpp:69
 #: PkSession/PkRemovePackageByFiles.cpp:65
@@ -4258,7 +4332,7 @@ msgstr "تعذّر إيجاد مشغّل الطّابعة في أيّ مصدر �
 #: PkSession/PkInstallProvideFiles.cpp:41
 #, kde-format
 msgid "Install Packages that Provides Files"
-msgstr ""
+msgstr "تثبيت الحزم التي توفر الملفات"
 
 #: PkSession/PkInstallProvideFiles.cpp:50
 #, kde-format
@@ -4487,7 +4561,7 @@ msgstr "اكتملت المهمّة"
 #: PkSession/SessionTask.cpp:437
 #, kde-format
 msgid "All operations were committed successfully"
-msgstr ""
+msgstr "نُفذت كافة العمليات بنجاح"
 
 #~ msgid "KDE interface for managing software"
 #~ msgstr "واجهة «كِيدِي» لإدارة البرمجيّات"
